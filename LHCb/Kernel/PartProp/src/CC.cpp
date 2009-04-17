@@ -1,4 +1,4 @@
-// $Id: CC.cpp,v 1.1 2008-12-13 14:48:22 ibelyaev Exp $
+// $Id: CC.cpp,v 1.2 2009-04-17 13:12:47 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,9 +17,9 @@ namespace
   // ========================================================================
   /** simple function to make charge conjugated inside the original string. 
    *  All substrings are subsutututed by their charge conjugates 
-   *  @param orig the original sring 
-   *  @param map_ the full map of substitutions 
-   *  @param pos the starting position 
+   *  @param decay the original sring 
+   *  @param map_  the full map of substitutions 
+   *  @param pos   the starting position 
    *  @return charge-conjugated string 
    */
   inline std::string cc_
@@ -61,13 +61,12 @@ namespace
     return _p < aux.size() ? cc_ ( aux , map_ , _p ) : aux ;       // RETURN
   }
   // ==========================================================================
-} // end of anonympous namespace 
+} // end of anonymous namespace 
 // ============================================================================
 /* simple function to make charge conjugated inside the original string. 
  *  All substrings are subsutututed by their charge conjugates 
- *  @param orig the original sring 
- *  @param map_ the full map of substitutions 
- *  @param pos the starting position 
+ *  @param decay the original sring 
+ *  @param map_  the full map of substitutions 
  *  @return charge-conjugated string 
  */
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.h,v 1.2 2009-03-09 17:27:45 ibelyaev Exp $
+// $Id: ParticleProperty.h,v 1.3 2009-04-17 13:12:47 cattanem Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_PARTICLEPROPERTY_H
 #define LHCBKERNEL_PARTICLEPROPERTY_H 1
@@ -61,10 +61,10 @@ namespace LHCb
      *  @param tlife      the nominal lifetime of the particle
      *  @param maxWidth   the maximal width of the particle (used in generator)
      *  @param evtgen     the name of particle in EvtGen program  
-     *  @param pythia     the ID for th eparticle used in Pythia generator
+     *  @param pythia     the ID for the particle used in Pythia generator
      */
     ParticleProperty
-    ( const std::string&      particle , 
+    ( const std::string&      name     , 
       const LHCb::ParticleID& pid      ,
       const double            charge   , 
       const double            mass     , 
@@ -85,7 +85,7 @@ namespace LHCb
      *  @param maxWidth   the maximal width of the particle (used in generator)
      */
     ParticleProperty
-    ( const std::string&      particle   , 
+    ( const std::string&      name       , 
       const LHCb::ParticleID& pid        ,
       const double            charge     , 
       const double            mass       , 
@@ -354,7 +354,7 @@ namespace LHCb
      *
      *    MsgStream& log = ... ;
      *    LHCb::ParticleProperties::printAsTable ( props , log , svc ) ; 
-     *    log << endreq ;
+     *    log << endmsg ;
      *
      *   @endcode 
      *
@@ -384,7 +384,7 @@ namespace LHCb
      *  MsgStream& log = ... ;
      *  log << "LEPTONS" << std::endl ;
      *  LHCb::ParticleProperties::printAsTable ( leptons , log , svc ) ;
-     *  log << endreq ;
+     *  log << endmsg ;
      *
      *  @endcode
      *

@@ -1,4 +1,4 @@
-// $Id: PartPropAlg.cpp,v 1.3 2009-03-09 17:27:45 ibelyaev Exp $
+// $Id: PartPropAlg.cpp,v 1.4 2009-04-17 13:12:47 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -155,7 +155,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Invalid = " << invalid.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( invalid , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }  
   // ==========================================================================
   { // get all not from quarks 
@@ -171,7 +171,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Has no quarks = " << noquarks.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( noquarks , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }  
   // ==========================================================================
   { // get all 'fundamental'
@@ -188,7 +188,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Fundamental (0,100] = " << fundamental.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( fundamental , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }  
   // ==========================================================================
   { // get all leptons 
@@ -204,7 +204,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Leptons = " << leptons.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( leptons , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }
   // ==========================================================================
   { // get all long-lived (>1um)
@@ -221,7 +221,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Long-lived(>1mu) = " << longlived.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( longlived , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }
   // =========================================================================
   { // get all nuclea
@@ -237,7 +237,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
     log << MSG::INFO << " # Nuclea  = " << nuclea.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( nuclea , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }
   // ==========================================================================
   { // get all beauty baryons 
@@ -256,7 +256,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
         << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( bbaryons , log , svc ) ;
-    log << endreq ;
+    log << endmsg ;
   }
   // ==========================================================================
   

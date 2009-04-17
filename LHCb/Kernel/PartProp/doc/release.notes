@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.13 2009-03-09 17:27:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2009-04-17 13:12:47 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-17 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Fix some (but not all...) doxygen warnings
 
 ! 2009-03-09 - Vanya BELYAEV
 
