@@ -40,6 +40,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1RandomDecision"                    :   70,
     "Hlt1PhysicsDecision"                   :   71,
     "Hlt1L0ForcedDecision"                  :   72,
+    "Hlt1RawBankConversionDecision"         :   73,
     # XP
     "Hlt1XPressDecision"                    :   80,
     # MU
@@ -89,6 +90,9 @@ HltANNSvc().Hlt1SelectionID = {
     'Hlt1L0AllHadronCandidates'             :10012,
     'Hlt1L0AllLocalPi0Candidates'           :10013,
     'Hlt1L0AllGlobalPi0Candidates'          :10014,
+    #
+    'RZVelo'                                :10100,
+    'PV2D'                                  :10101,
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
