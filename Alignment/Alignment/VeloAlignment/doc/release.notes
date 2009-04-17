@@ -1,6 +1,10 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+! 17/04/2009 Johan Blouw
+  - added python/VeloAlignment/Configuration.py
+  - modified cmt/requirements so that it will process configurabals
+
 !=============================================================================
 ! 06/06/2008 - Marco Gersabeck  ** v4r5 **
 
