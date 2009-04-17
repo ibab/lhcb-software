@@ -5,13 +5,22 @@ from HltConf.HltLine import Hlt1Line as Line
 #
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
-    __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025 } } # overrule inherited default
+    __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
+                               , 'Hlt1VeloAlign' : 0.000001 } } # overrule inherited default
 
     def __apply_configuration__(self) : 
+        from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
+        Line( 'VeloAlign'
+            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
+            , prescale = self.prescale
+            , postscale = self.postscale
+            , algos = [ PatVeloAlignTrackFilter('HltVeloAlignFilter') ] 
+            )
+
         Line( 'XPress' 
-            ,  ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
-            ,  prescale = self.prescale
-            ,  postscale = self.postscale
+            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
+            , prescale = self.prescale
+            , postscale = self.postscale
             )
 
 

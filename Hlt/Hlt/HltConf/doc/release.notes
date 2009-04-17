@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.212 2009-04-16 21:26:15 graven Exp $ 
+! $Id: release.notes,v 1.213 2009-04-17 13:54:41 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-16 - Gerhard Raven
+ - add a VeloAlign Hlt1Line
 
 ! 2009-04-16 - Gerhard Raven
  - allow updates of InputLocations of Hlt2Members during Hlt2Line.clone
