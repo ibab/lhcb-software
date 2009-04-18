@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.3 2008-12-10 07:47:35 cattanem Exp $
+// $Id: L0DUEmulatorTool.h,v 1.4 2009-04-18 23:21:43 odescham Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -43,15 +43,13 @@ private:
   StatusCode fillData();
   StatusCode dataTree(LHCb::L0DUElementaryData* data, LHCb::L0DUElementaryData::Map dataMap);
 
-  bool cleanMuon(int i, int j);
-
   //
   LHCb::L0DUReport             m_report;              ///<  L0DU Report
-  std::map<std::string,int>    m_muonMap;             ///<  Mapping of L0 muon input
-  bool                         m_muonCleaning;        ///<  Activate muon cleaning
+  bool                         m_muCleaning;          ///<  Activate muon cleaning
   bool                         m_muZeroSup;           ///<  Activate muon 0-suppression
-  std::vector<int>             m_muonMaxIndices;      ///<  Array of muon index in decreasing-Pt order
-  long                         m_muonCleaningPattern; ///<  Pattern of muon cleaning 
+  std::vector<int>             m_muHighest;           ///<  Array of  index of the 3 highest muon (Pt-decreasing order)
+  int                          m_muPattern;           ///<  Pattern of muon cleaning 
+  int                          m_nMu;
   IL0ProcessorDataDecoder*  m_decoder;
   IL0CondDBProvider*        m_condDB;  
   LHCb::L0DUConfig*         m_config;

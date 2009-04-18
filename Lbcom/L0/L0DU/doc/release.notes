@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.155 2009-04-10 14:53:19 odescham Exp $
+! $Id: release.notes,v 1.156 2009-04-18 23:21:43 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-04-17 - Olivier Deschamps
+  - L0DEmulatorTool/L0DUFromRawTool : speed-up processing 
 
 ! 2009-04-09 - Olivier Deschamps
   - L0DUConfigProvider : protection against missing config description

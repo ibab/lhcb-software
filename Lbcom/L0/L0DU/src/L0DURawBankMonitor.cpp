@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.12 2009-04-18 00:17:12 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.13 2009-04-18 23:21:43 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -477,7 +477,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     int id = ((*it).second)->id() ;
     if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
       debug() << "Emulator check error for channel " << (*it).first << endreq;
-      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/" + one.str(),
+      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + one.str(),
               "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
       check = false;
     }
@@ -489,7 +489,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     int id = ((*it).second)->id() ;
     if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
       debug() << "Emulator check error for condition " << (*it).first << endreq;
-      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/" + two.str(), 
+      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + two.str(), 
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;
     }
