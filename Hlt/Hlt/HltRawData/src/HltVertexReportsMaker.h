@@ -1,14 +1,13 @@
-// $Id: HltVertexReportsMaker.h,v 1.3 2009-02-24 13:50:27 graven Exp $
+// $Id: HltVertexReportsMaker.h,v 1.4 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltBaseAlg.h"
-
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltVertexReports.h"
-
 #include "Kernel/IANNSvc.h"
+#include "HltBase/IHltDataSvc.h"
 
 
 /** @class HltvertexReportsMaker HltvertexReportsMaker.h
@@ -19,7 +18,7 @@
  *  Algorithm to translate HltSummary  into HltVertexReports
  *
  */
-class HltVertexReportsMaker : public HltBaseAlg {
+class HltVertexReportsMaker : public GaudiAlgorithm {
 public:
 
   /// Standard constructor
@@ -29,7 +28,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
@@ -43,6 +41,7 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
+  IHltDataSvc* m_hltDataSvc;  
 
 
 };

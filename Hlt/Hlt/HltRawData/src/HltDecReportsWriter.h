@@ -1,11 +1,10 @@
-// $Id: HltDecReportsWriter.h,v 1.2 2009-02-02 18:00:25 tskwarni Exp $
+// $Id: HltDecReportsWriter.h,v 1.3 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTDECREPORTSWRITER_H 
 #define HLTDECREPORTSWRITER_H 1
 
 // Include files
 // from Gaudi
-//#include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltBase/HltBaseAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltDecReport.h"
 
 /** @class HltDecReportsWriter HltDecReportsWriter.h
@@ -17,8 +16,7 @@
  *  Algorithm to convert HltDecReports container on TES to HLT Raw Bank
  *
  */
-//class HltDecReportsWriter : public GaudiAlgorithm {
-class HltDecReportsWriter : public HltBaseAlg {
+class HltDecReportsWriter : public GaudiAlgorithm {
 public: 
 
   enum HeaderIDs { kSourceID=0,
@@ -32,10 +30,9 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 
-protected:
+private:
 
   /// location of input
   StringProperty m_inputHltDecReportsLocation;
@@ -43,18 +40,6 @@ protected:
   /// location of output
   StringProperty m_outputRawEventLocation;
 
-private:
-
-  class UDless {
-  public:
-    bool operator() (unsigned int elem1, unsigned int elem2 )const;
-  };
-
-  //  static bool UDless( unsigned int elem1, unsigned int elem2 )
-  //{
-  //    return elem1 < elem2;
-  //};
-  
 
 };
 #endif // HLTDECREPORTSWRITER_H

@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.5 2008-10-24 19:33:22 tskwarni Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.6 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,13 +24,21 @@ DECLARE_ALGORITHM_FACTORY( HltDecReportsWriter );
 
 using namespace LHCb;
 
+namespace {
+  class UDless {
+  public:
+    bool operator() (unsigned int elem1, unsigned int elem2 )const
+        { return elem1 < elem2; }
+  };
+}
+
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltDecReportsWriter::HltDecReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : HltBaseAlg ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
 
   declareProperty("InputHltDecReportsLocation",
@@ -48,8 +56,8 @@ HltDecReportsWriter::~HltDecReportsWriter() {}
 // Initialization
 //=============================================================================
 StatusCode HltDecReportsWriter::initialize() {
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltBaseAlg
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -125,20 +133,3 @@ StatusCode HltDecReportsWriter::execute() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltDecReportsWriter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return HltBaseAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-
-
-bool HltDecReportsWriter::UDless::operator()( unsigned int elem1, unsigned int elem2 )const
-{
-  return elem1 < elem2;
-}

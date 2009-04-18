@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.cpp,v 1.6 2009-01-06 08:48:31 graven Exp $
+// $Id: HltSelReportsReader.cpp,v 1.7 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +44,6 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsReader );
 HltSelReportsReader::HltSelReportsReader( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
-  //  : HltBaseAlg( name , pSvcLocator )
 {
 
   declareProperty("OutputHltSelReportsLocation",
@@ -65,7 +64,6 @@ HltSelReportsReader::~HltSelReportsReader() {}
 //=============================================================================
 StatusCode HltSelReportsReader::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  // StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -576,7 +574,6 @@ StatusCode HltSelReportsReader::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-  //  return HltBaseAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

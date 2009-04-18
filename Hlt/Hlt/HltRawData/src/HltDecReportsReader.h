@@ -1,11 +1,10 @@
-// $Id: HltDecReportsReader.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsReader.h,v 1.2 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTDECREPORTSREADER_H 
 #define HLTDECREPORTSREADER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-//#include "HltBase/HltBaseAlg.h"
 #include "Event/HltDecReport.h"
 
 #include "Kernel/IANNSvc.h"
@@ -21,13 +20,7 @@
  *
  */
 class HltDecReportsReader : public GaudiAlgorithm {
-//class HltDecReportsReader : public HltBaseAlg {
 public: 
-
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
-  };
-
   /// Standard constructor
   HltDecReportsReader( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -35,10 +28,11 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-
-protected:
+private:
+  enum HeaderIDs { kSourceID=0,
+                   kVersionNumber=0 
+  };
 
   /// location of input H
   StringProperty m_outputHltDecReportsLocation;
@@ -48,9 +42,6 @@ protected:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
-
-private:
-  
 
 };
 #endif // HLTDECREPORTSREADER_H

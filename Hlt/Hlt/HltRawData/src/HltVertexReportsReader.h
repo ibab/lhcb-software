@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsReader.h,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsReader.h,v 1.2 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTVERTEXREPORTSREADER_H 
 #define HLTVERTEXREPORTSREADER_H 1
 

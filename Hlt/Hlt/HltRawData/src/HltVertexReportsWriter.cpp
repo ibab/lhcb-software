@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsWriter.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltVertexReportsWriter.cpp,v 1.3 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -11,6 +11,20 @@
 #include "HltVertexReportsWriter.h"
 
 using namespace LHCb;
+
+float floatFromInt(unsigned int i)
+{
+        union IntFloat { unsigned int mInt; float mFloat; };
+        IntFloat a; a.mInt=i;
+        return a.mFloat;
+}
+
+unsigned int doubleToInt(double d)
+{
+        union IntFloat { unsigned int mInt; float mFloat; };
+        IntFloat a; a.mFloat = float(d);
+        return a.mInt;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -28,7 +42,7 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsWriter );
 //=============================================================================
 HltVertexReportsWriter::HltVertexReportsWriter( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-  : HltBaseAlg ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
 
   declareProperty("InputHltVertexReportsLocation",
@@ -48,8 +62,8 @@ HltVertexReportsWriter::~HltVertexReportsWriter() {}
 // Initialization
 //=============================================================================
 StatusCode HltVertexReportsWriter::initialize() {
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltBaseAlg
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -165,29 +179,5 @@ StatusCode HltVertexReportsWriter::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltVertexReportsWriter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return HltBaseAlg::finalize();  // must be called after all other actions
-}
-
-float HltVertexReportsWriter::floatFromInt(unsigned int i)
-{
-        union IntFloat { unsigned int mInt; float mFloat; };
-        IntFloat a; a.mInt=i;
-        return a.mFloat;
-}
-
-unsigned int HltVertexReportsWriter::doubleToInt(double d)
-{
-        union IntFloat { unsigned int mInt; float mFloat; };
-        IntFloat a; a.mFloat = float(d);
-        return a.mInt;
 }
 

@@ -1,11 +1,10 @@
-// $Id: HltSelReportsWriter.h,v 1.2 2008-12-15 21:41:25 tskwarni Exp $
+// $Id: HltSelReportsWriter.h,v 1.3 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTSELREPORTSWRITER_H 
 #define HLTSELREPORTSWRITER_H 1
 
 // Include files
 // from Gaudi
-//#include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltBase/HltBaseAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Event/HltObjectSummary.h"
 
@@ -22,8 +21,7 @@
  *  Algorithm to convert HltSelReports and HltObjectSummarys containers on TES to HltSelCandidates Raw Bank
  *
  */
-//class HltSelReportsWriter : public GaudiAlgorithm {
-class HltSelReportsWriter :  public HltBaseAlg {
+class HltSelReportsWriter : public GaudiAlgorithm {
 public: 
 
   enum HeaderIDs { kVersionNumber=0 };
@@ -35,9 +33,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   /// location of input H
   StringProperty m_inputHltSelReportsLocation;
@@ -49,7 +46,6 @@ protected:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
 
-private:
 
   typedef std::set<unsigned int> LhcbidSequence;
   typedef std::vector< LhcbidSequence* > LhcbidSequences;

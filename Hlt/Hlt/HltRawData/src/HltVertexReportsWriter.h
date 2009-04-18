@@ -1,10 +1,10 @@
-// $Id: HltVertexReportsWriter.h,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsWriter.h,v 1.2 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTVERTEXREPORTSWRITER_H 
 #define HLTVERTEXREPORTSWRITER_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltBaseAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Kernel/IANNSvc.h"
 
@@ -17,12 +17,8 @@
  *  Algorithm to translate HltSummary  into HltVertexReports
  *
  */
-class HltVertexReportsWriter : public HltBaseAlg {
+class HltVertexReportsWriter : public GaudiAlgorithm {
 public:
-
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
-  };
 
 
 
@@ -33,14 +29,12 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  static float floatFromInt(unsigned int i);
-  static unsigned int doubleToInt(double d);
-
-protected:
 
 private:
+  enum HeaderIDs { kSourceID=0,
+                   kVersionNumber=0 
+  };
+
 
 
   // ----------------------- data members 

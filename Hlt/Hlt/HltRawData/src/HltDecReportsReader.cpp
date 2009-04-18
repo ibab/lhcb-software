@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.5 2008-12-11 15:27:55 tskwarni Exp $
+// $Id: HltDecReportsReader.cpp,v 1.6 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,6 @@ using namespace LHCb;
 HltDecReportsReader::HltDecReportsReader( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
-  //  : HltBaseAlg ( name , pSvcLocator )
 {
 
   declareProperty("OutputHltDecReportsLocation",
@@ -53,8 +52,7 @@ HltDecReportsReader::~HltDecReportsReader() {}
 //=============================================================================
 StatusCode HltDecReportsReader::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  //  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltBaseAlg
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -197,17 +195,6 @@ StatusCode HltDecReportsReader::execute() {
   
   
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltDecReportsReader::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-  // return HltBaseAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

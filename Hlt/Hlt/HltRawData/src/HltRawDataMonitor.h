@@ -1,4 +1,4 @@
-// $Id: HltRawDataMonitor.h,v 1.2 2009-02-24 13:50:27 graven Exp $
+// $Id: HltRawDataMonitor.h,v 1.3 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTRAWDATAMONITOR_H 
 #define HLTRAWDATAMONITOR_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/IANNSvc.h"
-//#include "GaudiAlg/GaudiHistos.h" // change to GaudiHistoAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "AIDA/IHistogram1D.h"

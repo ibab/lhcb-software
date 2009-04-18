@@ -1,14 +1,15 @@
-// $Id: HltSelReportsMaker.h,v 1.4 2009-02-24 13:50:27 graven Exp $
+// $Id: HltSelReportsMaker.h,v 1.5 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltBaseAlg.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/Track.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Kernel/IANNSvc.h"
+#include "HltBase/IHltDataSvc.h"
 
 namespace LHCb {
   class CaloCluster;  
@@ -25,7 +26,7 @@ namespace LHCb {
  *  Algorithm to translate HltSummary  into HltSelResults and associated HltObjectSummaries
  *
  */
-class HltSelReportsMaker : public HltBaseAlg {
+class HltSelReportsMaker : public GaudiAlgorithm {
 public:
 
   enum OutputInfoLevel { kMinInfoLevel=0, ///< lhcbIDs only
@@ -48,7 +49,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
@@ -116,6 +116,7 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
+  IHltDataSvc* m_hltDataSvc;  
 
   /// for setting per selection properties
   typedef std::map<std::string,int> SelectionSetting;

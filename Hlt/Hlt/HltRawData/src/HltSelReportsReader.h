@@ -1,11 +1,10 @@
-// $Id: HltSelReportsReader.h,v 1.2 2008-12-15 21:41:25 tskwarni Exp $
+// $Id: HltSelReportsReader.h,v 1.3 2009-04-18 18:52:37 graven Exp $
 #ifndef HLTSELREPORTSREADER_H 
 #define HLTSELREPORTSREADER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-//#include "HltBase/HltBaseAlg.h"
 
 #include "Kernel/IANNSvc.h"
 
@@ -20,7 +19,6 @@
  *
  */
 class HltSelReportsReader : public GaudiAlgorithm {
-//class HltSelReportsReader :  public HltBaseAlg {
 public: 
 
   enum HeaderIDs { kVersionNumber=0 };
@@ -36,7 +34,7 @@ public:
 
   static float floatFromInt(unsigned int i);
 
-protected:
+private:
 
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
@@ -48,11 +46,7 @@ protected:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
 
-private:
-
-
 
 };
-
 
 #endif // HLTSELREPORTSREADER_H

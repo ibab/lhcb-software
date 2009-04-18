@@ -1,8 +1,8 @@
-// $Id: HltLumiWriter.cpp,v 1.6 2008-09-18 21:45:07 graven Exp $
+// $Id: HltLumiWriter.cpp,v 1.7 2009-04-18 18:52:37 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "HltBase/ANNSvc.h"
+#include "Kernel/IANNSvc.h"
 
 #include "boost/foreach.hpp"
 

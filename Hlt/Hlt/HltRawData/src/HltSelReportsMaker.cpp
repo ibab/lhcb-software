@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.9 2009-02-24 13:50:27 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.10 2009-04-18 18:52:37 graven Exp $
 // #define DEBUGCODE
 // Include files 
 
@@ -13,8 +13,10 @@
 #include "Event/Particle.h"
 
 
-#include "Kernel/CaloCellCode.h"
+//#include "Kernel/CaloCellCode.h"
 
+#include "HltBase/stringKey.h"
+#include "HltBase/IHltDataSvc.h"
 // local
 #include "HltSelReportsMaker.h"
 
@@ -36,7 +38,9 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsMaker );
 //=============================================================================
 HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-  : HltBaseAlg ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_hltANNSvc (0)
+  , m_hltDataSvc(0)
 {
 
   declareProperty("OutputHltSelReportsLocation",
@@ -79,7 +83,6 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   declareProperty("InfoLevelCaloCluster", m_infoLevelCaloCluster = ((unsigned int)kMaxInfoLevel) );
   declareProperty("InfoLevelCaloClusterDebug", m_infoLevelCaloClusterDebug = ((unsigned int)kMaxInfoLevel) );
 
-  m_hltANNSvc = 0;
 
   m_debugMode=0;
   m_event=0;
@@ -94,12 +97,13 @@ HltSelReportsMaker::~HltSelReportsMaker() {}
 // Initialization
 //=============================================================================
 StatusCode HltSelReportsMaker::initialize() {
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by HltBaseAlg
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
 
   return StatusCode::SUCCESS;
 }
@@ -139,7 +143,7 @@ StatusCode HltSelReportsMaker::execute() {
   if( exist<HltDecReports>(m_inputHltDecReportsLocation) ){    
     decReports = get<HltDecReports>(m_inputHltDecReportsLocation);
   }  else {
-    Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
+    Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 10 );
   }
 
 
@@ -151,7 +155,7 @@ StatusCode HltSelReportsMaker::execute() {
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
 
   // get trigger selection names 
-  std::vector<stringKey> selectionIDs = dataSvc().selectionKeys(); 
+  std::vector<stringKey> selectionIDs = m_hltDataSvc->selectionKeys(); 
 #ifdef DEBUGCODE
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() <<" Selection Names Found =" ;
@@ -182,7 +186,7 @@ StatusCode HltSelReportsMaker::execute() {
      ContainedObject* candidate(0);
      
      // try dataSvc first
-     const Hlt::Selection* sel = dataSvc().selection(name,this);
+     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
      if ( sel != 0 ) {
 
 #ifdef DEBUGCODE
@@ -220,7 +224,7 @@ StatusCode HltSelReportsMaker::execute() {
          
          std::ostringstream mess;
          mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
-         Warning( mess.str(),StatusCode::SUCCESS, 20 );
+         Warning( mess.str(),StatusCode::SUCCESS, 10 );
          continue;
          
        }
@@ -248,7 +252,7 @@ StatusCode HltSelReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       Warning( " selectionName="+selName+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 20 );
+       Warning( " selectionName="+selName+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 10 );
        continue;
      }
  
@@ -274,7 +278,7 @@ StatusCode HltSelReportsMaker::execute() {
              rank = rankCaloCluster( candi );
            } else { 
              Warning( " Unsupported data type among candidates - skip selection ID=" 
-                      +selName,StatusCode::SUCCESS, 20 );
+                      +selName,StatusCode::SUCCESS, 10 );
              continue;    
            }
          }
@@ -297,7 +301,7 @@ StatusCode HltSelReportsMaker::execute() {
      std::vector<ContainedObject*> candidates;
      
      // try dataSvc first
-     const Hlt::Selection* sel = dataSvc().selection(name,this);
+     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
      if ( sel != 0 ) {
 
 
@@ -328,7 +332,7 @@ StatusCode HltSelReportsMaker::execute() {
        } else {
          
          Warning( " Unsupported data type  - skip selection ID=" 
-                  +selName,StatusCode::SUCCESS, 20 );
+                  +selName,StatusCode::SUCCESS, 10 );
          continue;
          
        }
@@ -342,7 +346,7 @@ StatusCode HltSelReportsMaker::execute() {
 
      // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
-         Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 20 );
+         Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 10 );
          continue;        
      }
 
@@ -388,14 +392,14 @@ StatusCode HltSelReportsMaker::execute() {
                hos = storeCaloCluster( candi );
              } else { 
                Warning(" Unsupported data type in Hlt Trigger Summary - skip remaining candidates too, selection ID=" 
-                       +selName,StatusCode::SUCCESS, 20 );
+                       +selName,StatusCode::SUCCESS, 10 );
                break;       
              }
            }
          }
        }
        if( !hos ){
-         Warning(" Could not store supported candidate - skip remaining candidates too ",StatusCode::SUCCESS, 20 );
+         Warning(" Could not store supported candidate - skip remaining candidates too ",StatusCode::SUCCESS, 10 );
          break;
        } 
        selSumOut.addToSubstructure(hos);
@@ -404,7 +408,7 @@ StatusCode HltSelReportsMaker::execute() {
      // insert selection into the container
      if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
        Warning(" Failed to add Hlt selection name "+selName
-               +" to its container ",StatusCode::SUCCESS, 20 );
+               +" to its container ",StatusCode::SUCCESS, 10 );
 
      }    
      
@@ -553,17 +557,6 @@ StatusCode HltSelReportsMaker::execute() {
   
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelReportsMaker::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return HltBaseAlg::finalize();  // must be called after all other actions
-}
-
 
 // -------------------------------------
 // store Track in HltObjectSummary store
@@ -840,7 +833,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object->proto();
     if( !pp ){
-      Warning(" Particle with no daughters and no protoparticle, skipped ",StatusCode::SUCCESS, 20 );
+      Warning(" Particle with no daughters and no protoparticle, skipped ",StatusCode::SUCCESS, 10 );
     } else {
       const Track* track=pp->track();
       if( track ){
@@ -855,7 +848,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
                 m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
               } else {
                 Warning(" Found track which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value()
-                        ,StatusCode::SUCCESS,20 );
+                        ,StatusCode::SUCCESS,10 );
               }
             }
             if( m_HLTmuonTracks ){          

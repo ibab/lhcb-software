@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.6 2009-01-16 06:14:20 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.7 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -38,8 +38,7 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsWriter );
 //=============================================================================
 HltSelReportsWriter::HltSelReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : HltBaseAlg( name , pSvcLocator )
-  //  : GaudiAlgorithm ( name , pSvcLocator )
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
 
   declareProperty("InputHltSelReportsLocation",
@@ -59,8 +58,7 @@ HltSelReportsWriter::~HltSelReportsWriter() {}
 // Initialization
 //=============================================================================
 StatusCode HltSelReportsWriter::initialize() {
-  //  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -427,17 +425,6 @@ StatusCode HltSelReportsWriter::execute() {
 
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelReportsWriter::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  //  return GaudiAlgorithm::finalize();  // must be called after all other actions
-  return HltBaseAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

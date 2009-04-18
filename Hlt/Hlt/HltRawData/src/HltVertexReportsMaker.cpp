@@ -1,10 +1,13 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.6 2009-02-24 13:50:27 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.7 2009-04-18 18:52:37 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/RecVertex.h"
+
+#include "HltBase/stringKey.h"
+#include "HltBase/HltSelection.h"
 
 // local
 #include "HltVertexReportsMaker.h"
@@ -27,16 +30,16 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsMaker );
 //=============================================================================
 HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-  : HltBaseAlg ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_hltANNSvc(0) 
+  , m_hltDataSvc(0)
 {
 
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
 
-  declareProperty("VertexSelections",
-    m_vertexSelections);
+  declareProperty("VertexSelections", m_vertexSelections);
 
-  m_hltANNSvc = 0;
 
 }
 //=============================================================================
@@ -48,12 +51,13 @@ HltVertexReportsMaker::~HltVertexReportsMaker() {}
 // Initialization
 //=============================================================================
 StatusCode HltVertexReportsMaker::initialize() {
-  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by HltBaseAlg
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
 
   return StatusCode::SUCCESS;
 }
@@ -92,35 +96,30 @@ StatusCode HltVertexReportsMaker::execute() {
      std::vector<const ContainedObject*> candidates;
 
      // try dataSvc first
-     const Hlt::Selection* sel = dataSvc().selection(name,this);
-     if ( sel != 0 ) {
-
-
-        // unsuccessful selections can't save candidates
-       if( !sel->decision() )continue;
-
-       if (sel->classID() != LHCb::RecVertex::classID()) {
-         Error(" Selection name "+selName+" did not select vertices. ");
-         continue;
-       }
-       
-
-       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);      
-       // number of candidates
-       int noc = tsel.size();
-       // empty selections have nothing to save
-       if( !noc )continue;
-
-       for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
-         candidates.push_back( (const ContainedObject*)(*it) );
-       }
-         
-     } else {
+     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
+     if ( sel == 0 ) {
 
        Error(" Selection name "+selName+" not in dataSvc "
              ,StatusCode::SUCCESS, 20 );
        continue;
-       
+     }
+
+      // unsuccessful selections can't save candidates
+     if( !sel->decision() )continue;
+
+     if (sel->classID() != LHCb::RecVertex::classID()) {
+       Error(" Selection name "+selName+" did not select vertices. ");
+       continue;
+     }
+     
+     const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);      
+     // number of candidates
+     int noc = tsel.size();
+     // empty selections have nothing to save
+     if( !noc )continue;
+
+     for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
+       candidates.push_back( (const ContainedObject*)(*it) );
      }
      
      if( ! candidates.size() )continue;
@@ -142,7 +141,6 @@ StatusCode HltVertexReportsMaker::execute() {
      }
 
      SmartRefVector<VertexBase> pVtxs;
-
     
      // create output container for vertices and put it on TES
      VertexBase::Container* verticesOutput = new VertexBase::Container();
@@ -175,24 +173,10 @@ StatusCode HltVertexReportsMaker::execute() {
   }
   
   if ( msgLevel(MSG::VERBOSE) ){
-
     verbose() << " ======= HltVertexReports size= " << outputSummary->size() << endmsg;
-
     verbose() << *outputSummary << endmsg;
-
   }
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltVertexReportsMaker::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return HltBaseAlg::finalize();  // must be called after all other actions
-}
-
 
