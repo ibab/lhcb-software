@@ -72,7 +72,6 @@
       </method>
       <method name      = "emulatedPreDecision" desc = "get the channel emulated trigger value (NOT applying downscaling)" type  = "bool" >
         <code> 
-          emulate();
           return emulate()->m_emulatedPreDecision;
         </code>
       </method>
