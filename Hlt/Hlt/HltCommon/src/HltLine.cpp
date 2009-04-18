@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.19 2009-04-03 12:13:08 graven Exp $
+// $Id: HltLine.cpp,v 1.20 2009-04-18 11:51:19 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -21,6 +21,7 @@
 #include "GaudiKernel/ListItem.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -156,7 +157,6 @@ HltLine::HltLine( const std::string& name,
   , m_hltANNSvc(0)
   , m_hltDataSvc(0)
   , m_selection(0)
-  , m_errorRate(0)
   , m_acceptRate(0)
 {
   for (unsigned i=0; i<m_stages.size(); ++i) {
@@ -175,6 +175,8 @@ HltLine::HltLine( const std::string& name,
 // Destructor
 //=============================================================================
 HltLine::~HltLine() { };
+
+
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -227,12 +229,8 @@ StatusCode HltLine::initialize() {
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
   m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
-  m_cpuHisto   = book1D(name()+" CPU time",name()+" CPU time",0,1000);
-  m_timeHisto  = book1D(name()+" Wall time",name()+" Wall time",0,1000);
+  m_timeHisto  = book1D(name()+" walltime",name()+" log(wall time/ms)",-3,6);
   m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
-  m_stepHistoNorma  = book1D(name()+" rejection stage norma", 
-                             name()+ " rejection stage norma",
-                             -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
   std::vector<std::string> stepLabels;
   for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
@@ -241,18 +239,14 @@ StatusCode HltLine::initialize() {
   if (!setBinLabels( m_stepHisto, stepLabels )) {
     error() << " Could not set bin labels in step histo " << endmsg;
   }
-  if (!setBinLabels( m_stepHistoNorma, stepLabels )) {
-    error() << " Could not set bin labels in step normal histo" << endmsg;
-  }
 
   //== and the counters
   declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
-  declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
+  counter("#errors"); // do not export to DIM -- we have a histogram for this..
+  //declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
 
   m_acceptRate=0;
-  m_errorRate=0;
   declareInfo("COUNTER_TO_RATE["+m_decision+"Accept]", m_acceptRate, m_decision + " Accept Rate");
-  declareInfo("COUNTER_TO_RATE["+m_decision+"Error]",  m_errorRate,  m_decision + " Error Rate");
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
   
@@ -263,14 +257,12 @@ StatusCode HltLine::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltLine::execute() {
+  longlong startClock = System::currentTime( System::microSec );
   
   /// lock the context 
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
   
   if ( m_measureTime ) m_timerTool->start( m_timer );
-
-  longlong startClock = System::currentTime( System::microSec );
-  longlong startCPU   = System::cpuTime( System::microSec );
 
   debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
@@ -315,6 +307,14 @@ StatusCode HltLine::execute() {
      if ( !accept ) break;
      report.setExecutionStage( i+1 );
   }
+  // plot the wall clock time spent...
+  double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
+  fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
+
+  if (elapsedTime>5000) { //TODO: flag an error..
+      report.setErrorBits( report.errorBits() | 0x2 );
+  }
+
   report.setDecision(accept ? 1u : 0u);
   report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
   if ( !m_ignoreFilter ) setFilterPassed( accept );
@@ -327,14 +327,12 @@ StatusCode HltLine::execute() {
   counter("#accept") += accept;
   if (accept) ++m_acceptRate;
   counter("#errors") += ( report.errorBits()!=0);
-  if (report.errorBits()!=0) ++m_errorRate;
 
   fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
   // make stair plot
   SubAlgos::const_iterator i = m_subAlgo.begin();
   while ( i != m_subAlgo.end() ) {
-     debug() <<  " checking " << i->first->name() << " passed=" << (i->first->filterPassed()?"yes":"no") << endmsg;
      if (i->first->filterPassed()) {
         i+=i->second;
      } else {
@@ -346,27 +344,7 @@ StatusCode HltLine::execute() {
         // _after_ the daughters...
      }
   }
-  debug() <<  " filling histo at " << (i==m_subAlgo.end()?std::string("end"):i->first->name()) << endmsg;
   fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);
-  /// fill the step normalized histogram 
-  int n0 = m_stepHisto->allEntries();
-  for (size_t i = 0; i < m_subAlgo.size(); i++) {
-    double ni = m_stepHisto->binEntries(i);
-    double fi0 = m_stepHistoNorma->binHeight(i);
-    double fi  = ni/double(n0);
-    double x = m_stepHisto->axis().binLowerEdge(i) + 0.5*m_stepHisto->axis().binWidth(i);
-    m_stepHistoNorma->fill(x,-fi0+fi);
-  }
-  
-
-  // Plot the distribution of the # of (output) candidates (in case we have any)
-
-  // plot the CPU & wall clock time spent...
-  longlong elapsedTime = System::currentTime( System::microSec ) - startClock;
-  fill( m_timeHisto, elapsedTime ,1.0);
-  longlong elapsedCPU = System::cpuTime( System::microSec ) - startCPU;
-  fill( m_cpuHisto, elapsedCPU  ,1.0);
-
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
   return m_returnOK ? StatusCode::SUCCESS : result;

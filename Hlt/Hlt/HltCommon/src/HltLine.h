@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.10 2009-03-06 14:41:06 hernando Exp $
+// $Id: HltLine.h,v 1.11 2009-04-18 11:51:19 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -129,10 +129,8 @@ private:
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
   AIDA::IHistogram1D* m_stageHisto;
   AIDA::IHistogram1D* m_errorHisto;
-  AIDA::IHistogram1D *m_cpuHisto;
   AIDA::IHistogram1D *m_timeHisto;
   AIDA::IHistogram1D *m_stepHisto;
-  AIDA::IHistogram1D *m_stepHistoNorma;
   mutable IANNSvc *m_hltANNSvc;
   mutable IHltDataSvc *m_hltDataSvc;
   Hlt::Selection* m_selection;
