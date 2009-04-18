@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.12 2008-08-10 18:27:03 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.13 2009-04-18 12:12:35 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -166,14 +166,13 @@ StatusCode HltGenConfig::generateConfig() const {
     vector<ConfigTreeNode::digest_type> depRefs; 
   
     typedef StatusCode (ISvcLocator::*getService_t)(const std::string&,IService*&);
+    getService_t getService = &ISvcLocator::getService;
     StatusCode 
-    sc = getDependencies<IService>(   m_svcConfig.begin(),
-                                    m_svcConfig.end(), 
-                                    bl::bind( (getService_t)&ISvcLocator::getService, serviceLocator(), bl::_1, bl::_2 ),
+    sc = getDependencies<IService>( m_svcConfig.begin(), m_svcConfig.end(), 
+                                    bl::bind( getService, serviceLocator(), bl::_1, bl::_2 ),
                                     std::back_inserter(depRefs));
     if (sc.isFailure()) return sc;
-    sc = getDependencies<IAlgorithm>( m_topConfig.begin(),
-                                    m_topConfig.end(), 
+    sc = getDependencies<IAlgorithm>( m_topConfig.begin(), m_topConfig.end(), 
                                     bl::bind( &IAlgManager::getAlgorithm, m_appMgr, bl::_1, bl::_2 ),
                                     std::back_inserter(depRefs));
     if (sc.isFailure()) return sc;
