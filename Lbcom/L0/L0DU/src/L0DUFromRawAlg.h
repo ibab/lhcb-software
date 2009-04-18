@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.h,v 1.1 2007-10-31 15:04:45 odescham Exp $
+// $Id: L0DUFromRawAlg.h,v 1.2 2009-04-18 00:17:12 odescham Exp $
 #ifndef L0DUFROMRAWALG_H 
 #define L0DUFROMRAWALG_H 1
 
@@ -44,7 +44,6 @@ private:
   unsigned long m_sizeMin;
   unsigned long m_size;
   unsigned long m_evt;
-  
-  
+  bool m_proc;
 };
 #endif // L0DUFROMRAWALG_H

@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.6 2008-12-10 07:47:35 cattanem Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.7 2009-04-18 00:17:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -77,11 +77,6 @@ StatusCode L0DUEmulatorTool::fillData(){
   
   LHCb::L0DUElementaryData::Map& dataMap = m_config->data();
 
-
-  // -------------------------------------
-  // Data processing of hardcoded data
-  // ------------------------------------
-  // Calo
   setDataValue( dataMap["Electron(Et)"] , L0DUBase::Electron::Et        );
   setDataValue( dataMap["Photon(Et)"]   , L0DUBase::Photon::Et          );
   setDataValue( dataMap["Hadron(Et)"]   , L0DUBase::Hadron::Et          );
@@ -103,85 +98,104 @@ StatusCode L0DUEmulatorTool::fillData(){
 
 
 
-
   // The Muon case
-  m_muonMap.clear();
-  m_muonMap["M0"]     = digit( L0DUBase::Muon1::Pt      ) ;
-  m_muonMap["M0(Add)"]= digit( L0DUBase::Muon1::Address)  | (0 << 13)  ;
-  m_muonMap["M0(Sgn)"]= digit( L0DUBase::Muon1::Sign    ) ;
-  m_muonMap["M1"]     = digit( L0DUBase::Muon2::Pt      ) ;
-  m_muonMap["M1(Add)"]= digit( L0DUBase::Muon2::Address)  | (1 << 13) ;
-  m_muonMap["M1(Sgn)"]= digit( L0DUBase::Muon2::Sign    ) ;
-  m_muonMap["M2"]     = digit( L0DUBase::Muon3::Pt      ) ;
-  m_muonMap["M2(Add)"]= digit( L0DUBase::Muon3::Address)  | (2 << 13) ;
-  m_muonMap["M2(Sgn)"]= digit( L0DUBase::Muon3::Sign    ) ;
-  m_muonMap["M3"]     = digit( L0DUBase::Muon4::Pt      ) ;
-  m_muonMap["M3(Add)"]= digit( L0DUBase::Muon4::Address)  | (3 << 13) ;
-  m_muonMap["M3(Sgn)"]= digit( L0DUBase::Muon4::Sign    ) ;
-  m_muonMap["M4"]     = digit( L0DUBase::Muon5::Pt      ) ;
-  m_muonMap["M4(Add)"]= digit( L0DUBase::Muon5::Address)  | (4 << 13) ;
-  m_muonMap["M4(Sgn)"]= digit( L0DUBase::Muon5::Sign    ) ; 
-  m_muonMap["M5"]     = digit( L0DUBase::Muon6::Pt      ) ;
-  m_muonMap["M5(Add)"]= digit( L0DUBase::Muon6::Address)  | (5 << 13) ;
-  m_muonMap["M5(Sgn)"]= digit( L0DUBase::Muon6::Sign    ) ;
-  m_muonMap["M6"]     = digit( L0DUBase::Muon7::Pt      ) ;
-  m_muonMap["M6(Add)"]= digit( L0DUBase::Muon7::Address)  | (6 << 13) ;
-  m_muonMap["M6(Sgn)"]= digit( L0DUBase::Muon7::Sign    ) ;
-  m_muonMap["M7"]     = digit( L0DUBase::Muon8::Pt      ) ;
-  m_muonMap["M7(Add)"]= digit( L0DUBase::Muon8::Address)  | (7 << 13) ;
-  m_muonMap["M7(Sgn)"]= digit( L0DUBase::Muon8::Sign    ) ;
-  //
-  verbose() << "Muon data mapped " << endreq;
-  
+  std::vector<int> muonVec;
+  int pt1 = digit( L0DUBase::Muon1::Pt   );
+  int pt2 = digit( L0DUBase::Muon2::Pt   );
+  muonVec.push_back( pt1 );
+  if(m_muonCleaning && pt1 == pt2)  m_muonCleaningPattern |= 1<<1 ; else muonVec.push_back( pt2 );
 
-  // intra-quarter ghost cleaning (if required)
-  m_muonCleaningPattern = 0;
-  if( cleanMuon(0,1) ) {m_muonMap["M1"]=0; m_muonCleaningPattern |= 1<<1;}
-  if( cleanMuon(2,3) ) {m_muonMap["M3"]=0; m_muonCleaningPattern |= 1<<3;}
-  if( cleanMuon(4,5) ) {m_muonMap["M5"]=0; m_muonCleaningPattern |= 1<<5;}
-  if( cleanMuon(6,7) ) {m_muonMap["M7"]=0; m_muonCleaningPattern |= 1<<7;}
+  int pt3 = digit( L0DUBase::Muon3::Pt   );
+  int pt4 = digit( L0DUBase::Muon4::Pt   );
+  muonVec.push_back(  pt3 );
+  if(m_muonCleaning && pt3 == pt4) m_muonCleaningPattern |= 1<<3  ; else muonVec.push_back( pt4 );
 
-  verbose() << "Muon cleaning done " << endreq;
-  
-  m_muonMaxIndices.clear();
-  // Select the 3 highest Muons
-  for(int i=0 ; i !=3 ; i++){
-    std::stringstream num("");
-    num << (i+1);
+  int pt5 = digit( L0DUBase::Muon5::Pt   );
+  int pt6 = digit( L0DUBase::Muon6::Pt   );
+  muonVec.push_back(  pt5 );
+  if(m_muonCleaning && pt5 == pt6)  m_muonCleaningPattern |= 1<<5 ; else muonVec.push_back( pt6 );
+
+  int pt7 = digit( L0DUBase::Muon7::Pt   );
+  int pt8 = digit( L0DUBase::Muon8::Pt   );
+  muonVec.push_back(  pt7 );
+  if(m_muonCleaning && pt7 == pt8)  m_muonCleaningPattern |= 1<<7 ; else muonVec.push_back( pt8 );
+
+  // get the 3 highest muon
+  std::vector<int> highest;
+  for(int i=0 ; i != 3 ; i++){
     int maxPt = -1;    
     int imax = -1;
-    for(int  j=0 ; j !=8 ; j++){
+    for(unsigned int  j=0 ; j != muonVec.size() ; j++){
       bool ok=true;
-      for(unsigned int k=0 ; k !=m_muonMaxIndices.size() ; k++)if( j== m_muonMaxIndices[k])ok=false;
+      for(unsigned int k=0 ; k !=highest.size() ; k++)if( j == highest[k])ok=false;
       if(!ok)continue;
-      std::stringstream num("");
-      num << j;
-      if( maxPt < m_muonMap["M"+num.str()]){
-        maxPt= m_muonMap["M"+num.str()];
+      int pt = muonVec[j];
+      if( maxPt < pt ){
+        maxPt= pt ;
         imax=j;
       }
     }
     if(-1 == imax){
       Error("Error in muon processing").ignore();
     }else{
-      std::stringstream numax("");
-      numax << imax;
-      m_muonMaxIndices.push_back(imax);
-      //
-      dataMap["Muon"+num.str()+"(Pt)"]->setOperand(m_muonMap["M"+numax.str()] , scale(L0DUBase::Muon1::Pt) 
-                                                   ,max(L0DUBase::Muon1::Pt) );
-      dataMap["Muon"+num.str()+"(Add)"]->setOperand(m_muonMap["M"+numax.str()+"(Add)"], scale(L0DUBase::Muon1::Address) 
-                                                    ,max(L0DUBase::Muon1::Address));
-      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(m_muonMap["M"+numax.str()+"(Sgn)"], scale(L0DUBase::Muon1::Sign) 
-                                                    ,max(L0DUBase::Muon1::Sign) );
+      highest.push_back(imax);
     }
   }
-  verbose() << "Muon sorted " << endreq;
+  if( msgLevel(MSG::VERBOSE))verbose() << "Muon sorted " << endreq;
 
-  const unsigned long dimuon = dataMap["Muon1(Pt)"]->digit()+dataMap["Muon2(Pt)"]->digit();
-  dataMap["DiMuon(Pt)"]->setOperand( dimuon , scale( L0DUBase::Muon1::Pt)  , max(L0DUBase::Muon1::Pt)*2+1);
-
-  verbose() << "DiMuon OK " << endreq;
+  int dimuon = 0;
+  for(unsigned int i = 0; i != highest.size();++i){
+    int k = highest[i];
+    int pt = muonVec[k];
+    if(i<2)dimuon += pt;
+    std::stringstream num("");
+    num << i+1;
+    dataMap["Muon"+num.str()+"(Pt)"]->setOperand( pt ,scale(L0DUBase::Muon2::Pt) ,max(L0DUBase::Muon2::Pt) );
+    if( k == 0 ){
+      int add = digit( L0DUBase::Muon1::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon1::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon1::Address),max(L0DUBase::Muon1::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon1::Sign)   ,max(L0DUBase::Muon1::Sign) );
+    }else if( k == 1 ){
+      int add = digit( L0DUBase::Muon2::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon2::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon2::Address),max(L0DUBase::Muon2::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon2::Sign)   ,max(L0DUBase::Muon2::Sign) );
+    }else if( k == 2 ){
+      int add = digit( L0DUBase::Muon3::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon3::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon3::Address),max(L0DUBase::Muon3::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon3::Sign)   ,max(L0DUBase::Muon3::Sign) );
+    }else if( k == 3 ){
+      int add = digit( L0DUBase::Muon4::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon4::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon4::Address),max(L0DUBase::Muon4::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon4::Sign)   ,max(L0DUBase::Muon4::Sign) );
+    }else if( k == 4 ){
+      int add = digit( L0DUBase::Muon5::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon5::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon5::Address),max(L0DUBase::Muon5::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon5::Sign)   ,max(L0DUBase::Muon5::Sign) );
+    }else if( k == 5 ){
+      int add = digit( L0DUBase::Muon6::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon6::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon6::Address),max(L0DUBase::Muon6::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon6::Sign)   ,max(L0DUBase::Muon6::Sign) );
+    }else if( k == 6 ){
+      int add = digit( L0DUBase::Muon7::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon7::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon7::Address),max(L0DUBase::Muon7::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon7::Sign)   ,max(L0DUBase::Muon7::Sign) );
+    }else if( k == 7 ){
+      int add = digit( L0DUBase::Muon8::Address)  | (0 << 13)  ;
+      int sgn = digit( L0DUBase::Muon8::Sign    ) ;
+      dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , scale(L0DUBase::Muon8::Address),max(L0DUBase::Muon8::Address));
+      dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , scale(L0DUBase::Muon8::Sign)   ,max(L0DUBase::Muon8::Sign) );
+    }
+  }
+  dataMap["DiMuon(Pt)"]->setOperand( dimuon , scale( L0DUBase::Muon1::Pt)  , max(L0DUBase::Muon1::Pt)*2+1);  
+  if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endreq;
+  
 
 
   // -------------------------------------
@@ -210,7 +224,8 @@ StatusCode L0DUEmulatorTool::fillData(){
 void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data, 
                                     const unsigned int  base[L0DUBase::Index::Size]){
   l0Data->setOperand( digit( base ) , scale(base) , max(base)  );
-  verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endreq;
+  if( msgLevel(MSG::VERBOSE))
+    verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endreq;
 }
 //===========================================================================================================
 StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0DUElementaryData::Map dataMap   ){  
@@ -243,10 +258,12 @@ StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0D
 //===========================================================================================================
 StatusCode L0DUEmulatorTool::processing(){
   if(fillData().isFailure())return StatusCode::FAILURE;  
-  m_config->emulate();
-  //
-  verbose() << "End of processing ... summary : " << endreq;
-  verbose() << m_config->summary() << endreq;
+    //
+  if( msgLevel(MSG::VERBOSE)) {
+    m_config->emulate();  // process the actual emulation when summary is requested - if not will be done on-Demand
+    verbose() << "End of processing ... summary : " << endreq;
+    verbose() << m_config->summary() << endreq;
+  }
   //
   return StatusCode::SUCCESS;
 }
@@ -254,7 +271,8 @@ StatusCode L0DUEmulatorTool::processing(){
 const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
   m_report.clear();
   m_report.setConfiguration(m_config);
-  
+
+  m_config->emulate();  
   if( !m_config->emulated() ){
     error() << " Report is requested but the emulator has not been processed ... return empty report" << endreq;
     return m_report;
@@ -315,12 +333,13 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
 
   std::vector<unsigned int> l0Block;
 
+
+  emulatedReport(); // emulate the report
+
   if( !m_config->emulated() ){
     error() << " rawBank is requested but the emulator has not been processed ... return empty bank" << endreq;
     return l0Block;
   }
-
-  emulatedReport(); // emulate the report
   
 
   // Version 0 : preliminary version used for DC06 simulated data

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.5 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.6 2009-04-18 00:17:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +35,7 @@ L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
   declareProperty( "ReportLocation"       , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "ProcessorDataLocation", m_proDataLoc         =  LHCb::L0ProcessorDataLocation::L0DU );
   declareProperty( "L0DUFromRawToolType"  , m_fromRawTool = "L0DUFromRawTool" );
+  declareProperty( "ProcessorDataOnTES"   , m_proc = true );
 }
 //=============================================================================
 // Destructor
@@ -78,16 +79,18 @@ StatusCode L0DUFromRawAlg::execute() {
   // put the report and processor data on TES
   LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
   put (report , m_L0DUReportLocation );
-  LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
-  put (datas  , m_proDataLoc );
 
   
   // clone Processor Data and put it on TES
-  for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
-      it != m_fromRaw->L0ProcessorDatas()->end(); it++){
-    LHCb::L0ProcessorData* data = new  LHCb::L0ProcessorData( **it );
-    datas->insert (data);
-  }  
+  if( m_proc){
+    LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
+    put (datas  , m_proDataLoc );
+    for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
+        it != m_fromRaw->L0ProcessorDatas()->end(); it++){
+      LHCb::L0ProcessorData* data = new  LHCb::L0ProcessorData( **it );
+      datas->insert (data);
+    }  
+  }
   
   m_evt++;
   m_size += m_fromRaw->size();

@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.11 2009-04-08 11:16:53 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.12 2009-04-18 00:17:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -73,6 +73,7 @@ StatusCode L0DURawBankMonitor::initialize() {
 
   // get the L0tools
   m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool );
+  m_fromRaw->fillDataMap();
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);

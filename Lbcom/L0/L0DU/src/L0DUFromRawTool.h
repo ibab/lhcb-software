@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.9 2008-12-10 07:47:35 cattanem Exp $
+// $Id: L0DUFromRawTool.h,v 1.10 2009-04-18 00:17:12 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -42,7 +42,9 @@ public:
   unsigned int status(){  return m_status; }
   unsigned int size(){return m_size;  }
   unsigned long roStatus(){return m_roStatus.status();  }
-    
+  void fillDataMap(bool fill = true){m_fill = fill;}
+  
+
   LHCb::L0DUReport report(){return m_report;}
   LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
   
@@ -51,10 +53,11 @@ protected:
 private:
   bool decoding(int ibank);
   bool getL0DUBanksFromRaw();
-  void encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
-  void fillProcessorData();
+  inline void encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
+  inline void dataMap(std::string name, unsigned int data );
+  void fillBCIDData();
   double scale(unsigned int base);
-  bool nextData();
+  inline bool nextData();
   void putStatusOnTES();
   //
   std::string m_rawLocation;
@@ -93,5 +96,41 @@ private:
   unsigned int* m_data;
   unsigned int  m_source;
   bool m_warn;
+  bool m_fill;
+  bool m_emu;
 };
 #endif // L0DUFROMRAWTOOL_H
+
+
+
+
+inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
+  LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
+  unsigned int word = fiber->word();  
+  word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
+  fiber->setWord( word);
+  if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
+    fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber2 ]  )  ;
+    word = fiber->word();
+    unsigned int val = data >> base[L0DUBase::Index::Offset];
+    word |= ( ( val << base[L0DUBase::Index::Shift2]) & base[L0DUBase::Index::Mask2] );
+    fiber->setWord( word);
+  }
+  if(name != "")dataMap(name,data);
+}
+
+inline void L0DUFromRawTool::dataMap(std::string name, unsigned int data){
+  if(m_fill)m_dataMap[name]=data;
+}
+
+inline bool L0DUFromRawTool::nextData(){
+  if( NULL == ++m_data){
+    Error("READOUTSTATUS : No more data in bank --> CORRUPTION",StatusCode::SUCCESS).ignore();
+    m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted );
+    m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Incomplete);
+    return false;
+  }else{
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endreq;
+  }
+  return true;
+}
