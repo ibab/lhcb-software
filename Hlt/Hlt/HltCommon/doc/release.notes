@@ -11,6 +11,9 @@
     o remove the 'errorrate' counter, as it is available as histogram
     o remove the 'normalized stepplot' -- this should be made in the
       monitoring task running in the monitoring farm instead
+    o for events taking more than 5 ms in a given line, set 2nd error 
+      bit in corresponding DecReport
+      
 
 
 ! 2009-04-13 - Wouter Hulsbergen
