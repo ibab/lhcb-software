@@ -43,6 +43,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1RawBankConversionDecision"         :   73,
     # XP
     "Hlt1XPressDecision"                    :   80,
+    "Hlt1VeloAlignDecision"                 :   81,
     # MU
     "Hlt1SingleMuonNoIPL0Decision"          :  100,
     "Hlt1SingleMuonNoIPGECDecision"         :  101,
