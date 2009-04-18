@@ -3,6 +3,15 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-04-18 - Gerhard Raven
+ - cleanup in HltLine, reduce the # of published histograms to avoid 
+   overloading the Adders in the HLT farm: 
+    o remove CPU time as, on linux, it is measured in ms granularity -- 
+      only plot realtime, as that is available us granularity
+    o remove the 'errorrate' counter, as it is available as histogram
+    o remove the 'normalized stepplot' -- this should be made in the
+      monitoring task running in the monitoring farm instead
+
 
 ! 2009-04-13 - Wouter Hulsbergen
  - add HltFixedRateScaler which uses IHltReferenceClockSvc to downscale a 
