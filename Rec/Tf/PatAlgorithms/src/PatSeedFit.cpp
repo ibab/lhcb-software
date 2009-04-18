@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.1 2009-03-04 15:13:22 smenzeme Exp $
+// $Id: PatSeedFit.cpp,v 1.2 2009-04-18 09:41:04 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -10,6 +10,7 @@
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
+#include "TfKernel/RecoFuncs.h"
 
 #include "PatSeedFit.h"
 #include "PatSeedTool.h"
@@ -166,12 +167,20 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
     
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
       if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) {
-	//updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
+	 updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
 	pattrack->addCoord( ihit ) ;
       }
     }
     
     bool success = fitTrack( *pattrack, m_maxChi2, 0, false, false) ;
+
+    BOOST_FOREACH( PatFwdHit* ihit, hits ) {
+    if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
+    updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
+    }
+
+    success = fitTrack( *pattrack, m_maxChi2, 0, false, false) ;
+
     
     LHCb::State temp(Gaudi::TrackVector(pattrack->xAtZ(m_zReference), 
 					pattrack->yAtZ(m_zReference),

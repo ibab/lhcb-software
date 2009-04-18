@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-04-18 - Stephanie Hansmann-Menzemer
+ - add correction for tilde of straws to fitter initialization code
 
 !========================== PatAlgorithms v3r16 2009-04-07 ===================
 ! 2009-04-07 - Olivier Callot
