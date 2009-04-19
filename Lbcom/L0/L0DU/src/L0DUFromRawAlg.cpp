@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.6 2009-04-18 00:17:12 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.7 2009-04-19 23:00:43 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,7 @@ L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
   declareProperty( "ProcessorDataLocation", m_proDataLoc         =  LHCb::L0ProcessorDataLocation::L0DU );
   declareProperty( "L0DUFromRawToolType"  , m_fromRawTool = "L0DUFromRawTool" );
   declareProperty( "ProcessorDataOnTES"   , m_proc = true );
+  declareProperty( "L0DUReportOnTES"      , m_rept = true );
 }
 //=============================================================================
 // Destructor
@@ -74,14 +75,17 @@ StatusCode L0DUFromRawAlg::execute() {
   // decode the bank
 
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
-  
-  LHCb::L0DUReport rep = m_fromRaw->report();
-  // put the report and processor data on TES
-  LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
-  put (report , m_L0DUReportLocation );
 
-  
-  // clone Processor Data and put it on TES
+
+  // L0DUReport on TES
+  if(m_rept){
+    LHCb::L0DUReport rep = m_fromRaw->report();
+    // put the report and processor data on TES
+    LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
+    put (report , m_L0DUReportLocation );
+  }
+
+  // Clone Processor Data and put it on TES
   if( m_proc){
     LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
     put (datas  , m_proDataLoc );
@@ -98,30 +102,32 @@ StatusCode L0DUFromRawAlg::execute() {
   if( m_fromRaw->size() < m_sizeMin )m_sizeMin = m_fromRaw->size();
 
   // print out (CHECKS)
-  if(report->configuration() != NULL && ( msgLevel( MSG::DEBUG) ) ){
-    debug() << "Bank size : " << m_fromRaw->size() << " (bytes) " << endreq;
-    LHCb::L0DUChannel::Map& channels = m_fromRaw->report().configuration()->channels();
-    debug() << "________________ Trigger decision from raw ____________________ L0-yes = " 
+  if( msgLevel( MSG::DEBUG)){
+    if( m_fromRaw->report().configuration() != NULL ){
+      debug() << "Bank size : " << m_fromRaw->size() << " (bytes) " << endreq;
+      LHCb::L0DUChannel::Map& channels = m_fromRaw->report().configuration()->channels();
+      debug() << "________________ Trigger decision from raw ____________________ L0-yes = " 
               << m_fromRaw->report().decision() << endreq;
-    verbose() << "Rebuilt decision from summary : " << m_fromRaw->report().decisionFromSummary() << endreq;
-    for(LHCb::L0DUChannel::Map::iterator it = channels.begin();channels.end()!=it;it++){
-      std::string name = ((*it).second)->name();
-      verbose() << "Channel Decision " << name << " : " << m_fromRaw->report().channelDecisionByName( name ) << endreq;
+      verbose() << "Rebuilt decision from summary : " << m_fromRaw->report().decisionFromSummary() << endreq;
+      for(LHCb::L0DUChannel::Map::iterator it = channels.begin();channels.end()!=it;it++){
+        std::string name = ((*it).second)->name();
+        verbose() << "Channel Decision " << name << " : " << m_fromRaw->report().channelDecisionByName( name ) << endreq;
+      }
+      LHCb::L0DUElementaryCondition::Map& conds = m_fromRaw->report().configuration()->conditions();
+      for(LHCb::L0DUElementaryCondition::Map::iterator it = conds.begin();conds.end()!=it;it++){
+        std::string name = ((*it).second)->name();
+        verbose() << "Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endreq;
+      }
+      // This works only with L0DU rawBank version > 0
+      if(m_fromRaw->version() != 0){
+        bool emul = m_fromRaw->report().configuration()->emulatedDecision ();
+        debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " << emul ;      
+        if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endreq;
+        verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endreq;
+      }
     }
-    LHCb::L0DUElementaryCondition::Map& conds = m_fromRaw->report().configuration()->conditions();
-    for(LHCb::L0DUElementaryCondition::Map::iterator it = conds.begin();conds.end()!=it;it++){
-    std::string name = ((*it).second)->name();
-    verbose() << "Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endreq;
-    }
-    // This works only with L0DU rawBank version > 0
-    if(m_fromRaw->version() != 0){
-      bool emul = m_fromRaw->report().configuration()->emulatedDecision ();
-      debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " << emul ;
-      
-      if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endreq;
-      verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endreq;
-    }
-   }
+  }
+  
 
   
   return StatusCode::SUCCESS;
