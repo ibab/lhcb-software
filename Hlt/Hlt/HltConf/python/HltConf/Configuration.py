@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.66 2009-04-17 11:53:39 snies Exp $"
+__version__ = "$Id: Configuration.py,v 1.67 2009-04-19 14:37:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -70,8 +70,10 @@ class HltConf(LHCbConfigurableUser):
             #
             #  main HLT sequencer
             # 
+            from Configurables import L0DUFromRawAlg
             Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                                , Members = [ Sequence('Hlt1') 
+                                , Members = [ L0DUFromRawAlg()
+                                            , Sequence('Hlt1') 
                                             , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
                                             , Sequence('HltEndSequence') 
                                             ] )
@@ -176,11 +178,11 @@ class HltConf(LHCbConfigurableUser):
                                   ("SingleMuon" , "Hlt1.*SingleMuon.*Decision"),
                                   ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
                                   ("MounTrack"  , "Hlt1.*MuonTrack.*Decision"),
-                                  ("Lumi"       , "Hlt1.*Lumi.*Decision"),
                                   ("Velo"       , "Hlt1.*Velo.*Decision"),
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("IgnoreLumi" , ".*IgnoreLumi.*"),
+                                  ("Lumi"       , "Hlt1.*Lumi.*Decision"),
                                   ("Global"     , ".*Global.*")]
 
         # prepare compiled regex patterns         
@@ -192,20 +194,12 @@ class HltConf(LHCbConfigurableUser):
           patterns.append(re.compile(pattern_string))
           group_labels.append(name) 
 
-        import pprint
-        pp = pprint.PrettyPrinter(indent=4)
-
-        pp.pprint( alley_string_patterns)
- 
-        pp.pprint( patterns)
-        
         # prepare the group map dictionary
         decision_group_map = {}
         for decision_name in HltGlobalMonitor().Hlt1Decisions: 
           for pos in range(len(patterns)):
             m = patterns[pos].match(decision_name)
-            if m:
-              if not decision_name in decision_group_map:
+            if m and not decision_name in decision_group_map:
                 decision_group_map[decision_name]=pos
 
 
