@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.67 2009-04-19 14:37:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.68 2009-04-19 14:40:32 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -183,7 +183,9 @@ class HltConf(LHCbConfigurableUser):
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("IgnoreLumi" , ".*IgnoreLumi.*"),
                                   ("Lumi"       , "Hlt1.*Lumi.*Decision"),
-                                  ("Global"     , ".*Global.*")]
+                                  ("Global"     , ".*Global.*"),
+                                  ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
+                                ]
 
         # prepare compiled regex patterns         
         # and a list of names for the Labels  
