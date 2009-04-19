@@ -116,6 +116,9 @@ class L0Conf(LHCbConfigurableUser) :
                 importOptions("$L0DUROOT/options/Boole.opts")
                 seq.Members+= [GaudiSequencer("L0SimulationSeq") ]
 
+            if self.getProp("DecodeL0DU"):
+                seq.Members+= [ GaudiSequencer("L0DUFromRawSeq") ]
+
             if self.getProp("DecodeL0"):
                 seq.Members+= [ GaudiSequencer("L0FromRawSeq") ]
 

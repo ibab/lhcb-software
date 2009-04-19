@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.156 2009-04-18 23:21:43 odescham Exp $
+! $Id: release.notes,v 1.157 2009-04-19 07:56:08 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-04-19 - Julien Cogan
+ - L0Conf : Implement missing action for DecodeL0DU property
 
 ! 2009-04-17 - Olivier Deschamps
   - L0DEmulatorTool/L0DUFromRawTool : speed-up processing 
