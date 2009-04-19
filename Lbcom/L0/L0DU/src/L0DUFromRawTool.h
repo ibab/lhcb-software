@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.10 2009-04-18 00:17:12 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.11 2009-04-19 00:40:29 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -98,6 +98,7 @@ private:
   bool m_warn;
   bool m_fill;
   bool m_emu;
+  bool m_encode;
 };
 #endif // L0DUFROMRAWTOOL_H
 
@@ -105,6 +106,8 @@ private:
 
 
 inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
+  if(name != "")dataMap(name,data);
+  if(!m_encode)return;
   LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
   word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
@@ -115,8 +118,7 @@ inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const
     unsigned int val = data >> base[L0DUBase::Index::Offset];
     word |= ( ( val << base[L0DUBase::Index::Shift2]) & base[L0DUBase::Index::Mask2] );
     fiber->setWord( word);
-  }
-  if(name != "")dataMap(name,data);
+  }  
 }
 
 inline void L0DUFromRawTool::dataMap(std::string name, unsigned int data){

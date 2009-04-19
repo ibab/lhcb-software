@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.20 2009-04-18 00:17:12 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.21 2009-04-19 00:40:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -39,8 +39,9 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "ForceSummarySize"        , m_sumSize=-1);        // WARNING : for experts only
   declareProperty( "ForceTCK"                , m_force = -1);        // WARNING : for experts only
   declareProperty( "FullWarning"             , m_warn = false);
-  declareProperty( "FillDataMap"             , m_fill = false);
-  declareProperty( "Emulate"                 , m_emu  = true);
+  declareProperty( "FillDataMap"             , m_fill = false);   // WARNING : default is false
+  declareProperty( "EncodeProcessorData"     , m_encode = true);  // EXPERT USAGE
+  declareProperty( "Emulate"                 , m_emu  = true);    // EXPERT USAGE
 }
 //=============================================================================
 // Destructor
@@ -54,6 +55,8 @@ StatusCode L0DUFromRawTool::initialize(){
   debug() << "Initialize" << endreq;
   StatusCode sc = GaudiTool::initialize();
    if(sc.isFailure())return sc;
+
+   if(!m_encode)m_emu = false;
 
   // get the configuration provider tool
   m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName);
@@ -638,7 +641,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     // -----------------------------------------------
     if ( msgLevel( MSG::VERBOSE) )verbose() << " ... fill processor Data ..." <<endreq;
     // encode BCIDs from input data in rawBank
-    fillBCIDData();
+    if(m_encode)fillBCIDData();
     //  emulate the config for later usage (monitoring) 
     if(m_emu){
       if(NULL != config)m_emuTool->process(config , m_processorDatas).ignore();
