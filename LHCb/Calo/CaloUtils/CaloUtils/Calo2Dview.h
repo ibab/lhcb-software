@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.6 2009-04-06 15:48:40 odescham Exp $
+// $Id: Calo2Dview.h,v 1.7 2009-04-20 15:42:36 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -84,6 +84,8 @@ protected:
   bool m_1d;
   int m_bin1d;
   std::string m_lab;
+  bool m_profile;
+  std::string m_prof;
 private:
   int centre(int x , int area);
   std::string getUnit(std::string unit, int calo, int area);

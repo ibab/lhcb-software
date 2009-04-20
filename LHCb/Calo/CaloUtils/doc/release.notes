@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.117 2009-04-10 14:49:09 odescham Exp $
+! $Id: release.notes,v 1.118 2009-04-20 15:42:36 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+
+! 2009-04-20 - Olivier Deschamps
+ - Calo2Dview : add protection + 1D profile allowed
 
 ! 2009-04-10 - Olivier Deschamps
  - Calo2Dview : fix bug in 'electronics' 2D view for Spd

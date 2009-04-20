@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.14 2009-04-10 14:49:09 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.15 2009-04-20 15:42:36 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,7 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_flux(false)
 {
   declareProperty( "OneDimension"   ,  m_1d  = false);         // 1D histo (value versus CaloCellID) default is 2D view
+  declareProperty( "Profile"        ,  m_profile  = false);         // 1D histo profile type ?
   declareProperty( "Bin1D"          ,  m_bin1d  = 16384);      // 1D histo binning (default : full 14 bits dynamics)
   declareProperty( "GeometricalView",  m_geo = true);          // 2D :  true : geometrical (x,y) | false : readout (FEB,channel)
   declareProperty( "Threshold"      ,  m_threshold  );         // threshold on the input value (bin weight)
@@ -52,6 +53,7 @@ Calo2Dview::Calo2Dview( const std::string& name,
   declareProperty( "Flux"           ,  m_flux  );              // bin weight is normalized to the cell area (for both views)
   declareProperty( "SplitAreas"     ,  m_split = false  );     // produce one view per area (for geometrical view only)
   declareProperty( "xLabelOptions"  , m_lab ="v" );            // Crate-FEB text label on Xaxis (readout view only)
+  declareProperty( "ProfileError"   ,  m_prof = "");
   setHistoDir( name );
 }
 //=============================================================================
@@ -68,7 +70,9 @@ StatusCode Calo2Dview::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  //protection against splitting when non-goemetrical view or 1D is requested.
   if( !m_geo)m_split =false;
+  if (m_1d) { m_split = false; }
 
 
   // Calo parameters :
@@ -168,7 +172,10 @@ AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string 
 
   // 1D view : caloCellID as xAxis
   if( m_1d ){
-    GaudiHistoAlg::book1D(unit, title , 0.,(double) m_bin1d , m_bin1d);
+    if(m_profile) 
+      GaudiHistoAlg::bookProfile1D(unit, title , 0.,(double) m_bin1d , m_bin1d, m_prof);
+    else
+      GaudiHistoAlg::book1D(unit, title , 0.,(double) m_bin1d , m_bin1d);
     return NULL;
   }
 
@@ -367,7 +374,10 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
   // -------------- 1D view
   if( m_1d ){
-    fill(histo1D(lun), id.index() , value);
+    if(m_profile)
+      fill(profile1D(lun), (double) id.index() , value , 1.);
+    else
+      fill(histo1D(lun), (double) id.index() , value);
     return NULL;
   }
   // -------------- Electronics 2D view (crate/feb .vs. channel)
