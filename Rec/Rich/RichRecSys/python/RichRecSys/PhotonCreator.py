@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.6 2009-03-04 12:05:13 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.7 2009-04-20 15:03:50 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -51,11 +51,9 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # -----------------------------------------------------------------------
         # Photon predictor (a.k.a. pre-selection)
 
-        predictor = RichTools().photonPredictor()
-
         # Configure creator with the correct predictor
-        creator.addTool( predictor, name = "Predictor" )
-
+        creator.addTool( RichTools().photonPredictor(), name = "Predictor" )
+ 
         # -----------------------------------------------------------------------
         # Photon reconstruction (i.e. calculating the CK theta/phi values)
 
@@ -78,7 +76,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Predictor cuts
             # ================================================================
             # No # sigma cut
-            predictor.NSigma                 = [ 99999, 99999, 99999 ]
+            creator.Predictor.NSigma         = [ 99999, 99999, 99999 ]
             # ================================================================
 
             # ================================================================
@@ -94,10 +92,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Predictor cuts
             # ================================================================
             # Min and max search window for track centre - hit seperation
-            predictor.MinTrackROI            = [ 0,     0,     0     ]
-            predictor.MaxTrackROI            = [ 99999, 99999, 99999 ]
+            creator.Predictor.MinTrackROI    = [ 0,     0,     0     ]
+            creator.Predictor.MaxTrackROI    = [ 99999, 99999, 99999 ]
                # No # sigma cut
-            predictor.NSigma                 = [ 99999, 99999, 99999 ]
+            creator.Predictor.NSigma         = [ 99999, 99999, 99999 ]
             # ================================================================
 
             # ================================================================

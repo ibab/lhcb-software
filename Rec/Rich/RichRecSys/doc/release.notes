@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-04-20 - Chris Jones
+ - Fix configuration bug where photon predictor settings where not properly 
+   set when running under non-default settings.
+
 ! 2009-04-07 - Chris Jones
  - Add option to Track Creator Configurable to allow user to set a custom
    input track location
