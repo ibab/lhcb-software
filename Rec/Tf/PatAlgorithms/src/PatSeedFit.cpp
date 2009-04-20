@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.2 2009-04-18 09:41:04 smenzeme Exp $
+// $Id: PatSeedFit.cpp,v 1.3 2009-04-20 06:24:33 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -106,8 +106,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
       LHCb::STChannelID stChan = ihit->stID() ;
       const DeSTSector* stSector = m_itDet->findSector( stChan );
       if(stSector==0) {
-          error() << "No sector found for IT hit!" << endreq ;
-          return StatusCode::FAILURE ;
+          return Error( "No sector found for IT hit!" );
       }
 
       LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
@@ -118,8 +117,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
           sthits.push_back( sthit ) ;
           hits.push_back( new PatFwdHit( *sthit ) ) ;
       } else {
-          error() << "Cannot find lite cluster!" << endreq ;
-          return StatusCode::FAILURE ;
+          return Error("Cannot find lite cluster!");
       }
       
     } else if( ihit->detectorType()==LHCb::LHCbID::OT ) {
@@ -127,8 +125,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
       LHCb::OTChannelID otid = ihit->otID() ;
       const DeOTModule* module = m_otDet->findModule( otid ) ;
       if(module==0) {
-	error() << "No module found for OT hit!" << endreq ;
-	return StatusCode::FAILURE ;
+        return Error("No module found for OT hit!");
       }
 
       LHCb::OTLiteTime otlitetime = m_otdecoder->time( otid );// *module ) ;
@@ -172,14 +169,14 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
       }
     }
     
-    bool success = fitTrack( *pattrack, m_maxChi2, 0, false, false) ;
+    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false).ignore() ;
 
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
     if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
     updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
     }
 
-    success = fitTrack( *pattrack, m_maxChi2, 0, false, false) ;
+    sc = fitTrack( *pattrack, m_maxChi2, 0, false, false).ignore() ;
 
     
     LHCb::State temp(Gaudi::TrackVector(pattrack->xAtZ(m_zReference), 
@@ -189,7 +186,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 		     m_zReference, LHCb::State::AtT);
 
     double qOverP, sigmaQOverP;
-    success = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
+    sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
     /*
     if(states.size()>0 && states.begin().location()<=LHCb::State::EndVelo) {
       //success = m_momentumTool->calculate(&(track.firstState()), &temp, qOverP, sigmaQOverP, true) ;
@@ -205,7 +202,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
     */
     //else success = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
 
-    if(!success) {
+    if(sc.isFailure()) {
       // if our momentum tool doesn't succeed, we have to try ourselves
       qOverP = pattrack->curvature() ;
       sigmaQOverP = qOverP; // be conservative
@@ -231,7 +228,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
     // cleanup the track
     delete pattrack ;
   } else {
-    info() << "Not enough SEED hits! "<<hits.size()  << endreq ;
+    info() << "Not enough SEED hits! "<<hits.size()  << endmsg ;
   }
   
   // deletthe hits

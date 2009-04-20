@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.7 2009-04-07 12:17:23 ocallot Exp $
+// $Id: PatDownstream.cpp,v 1.8 2009-04-20 06:24:33 cattanem Exp $
 // Include files 
 
 // from boost
@@ -97,31 +97,29 @@ StatusCode PatDownstream::initialize() {
     m_debugTool = tool<IPatDebugTTTool>( m_debugToolName );
   }  
 
-  info() << "========================================"  << endreq
-         << " deltaP             = " << m_deltaP        << endreq
-         << " xPredTol           = " << m_xPredTol      << endreq
-         << " TolMatch           = " << m_tolMatch      << endreq
-         << " TolUV              = " << m_tolUV         << endreq
-         << " MaxDistance        = " << m_maxDistance   << endreq
-         << " MaxChisq           = " << m_maxChisq      << endreq
-         << "========================================"  << endreq;
+  info() << "========================================"  << endmsg
+         << " deltaP             = " << m_deltaP        << endmsg
+         << " xPredTol           = " << m_xPredTol      << endmsg
+         << " TolMatch           = " << m_tolMatch      << endmsg
+         << " TolUV              = " << m_tolUV         << endmsg
+         << " MaxDistance        = " << m_maxDistance   << endmsg
+         << " MaxChisq           = " << m_maxChisq      << endmsg
+         << "========================================"  << endmsg;
   
   info() << "zMagnetParams ";
   for ( unsigned int kk = 0; m_zMagnetParams.size() > kk ; kk++) {
     info() << m_zMagnetParams[kk] << " ";
   }
-  info() << endreq << "momentumParams ";
+  info() << endmsg << "momentumParams ";
   for ( unsigned int kk = 0; m_momentumParams.size() > kk ; kk++) {
     info() << m_momentumParams[kk] << " ";
   }
-  info() << endreq ;
+  info() << endmsg ;
   if ( 3 > m_zMagnetParams.size() ) {
-    warning() << "Not enough zMagnetParams" << endreq;
-    return StatusCode::FAILURE;
+    return Warning( "Not enough zMagnetParams" );
   }
   if ( 3 > m_momentumParams.size() ) {
-    warning() << "Not enough momentumParams" << endreq;
-    return StatusCode::FAILURE;
+    return Warning( "Not enough momentumParams" );
   }
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
@@ -182,7 +180,7 @@ StatusCode PatDownstream::execute() {
         myInTracks.insert( tr );
         debug() << " will be processed";
       }
-      debug() << endreq;
+      debug() << endmsg;
     }
   } else {  //== Copy tracks without ancestor...
     for ( LHCb::Tracks::const_iterator itT = inTracks->begin();
@@ -195,7 +193,7 @@ StatusCode PatDownstream::execute() {
   }
 
   debug() << "-- Started from " << inTracks->size() << " Seed, left with " 
-          << myInTracks.size() << " tracks after Matched removal." << endreq;
+          << myInTracks.size() << " tracks after Matched removal." << endmsg;
 
   //==========================================================================
   // Get the output container ( created by PatDataStore )
@@ -239,16 +237,16 @@ StatusCode PatDownstream::execute() {
                         .001/track.state()->qOverP(), .001*track.moment(),
                         track.xAtZ( m_zTTa ), track.yAtZ( m_zTTa ), deltaP,
                         track.errXMag(), track.errYMag() )
-             << endreq;
+             << endmsg;
       info() << format( " Y slope %8.6f computed %8.6f", track.state()->ty(), track.slopeY() ) 
-             << endreq;
+             << endmsg;
 
       if ( m_debugTool ) m_debugTool->debugTTClusterOnTrack( tr, ttCoords.begin(), ttCoords.end() );      
     }
     
     
     if ( m_deltaP < fabs(deltaP) ) {
-      if ( m_printing ) info() << "   --- deltaP " << deltaP << " -- rejected" << endreq;
+      if ( m_printing ) info() << "   --- deltaP " << deltaP << " -- rejected" << endmsg;
       continue;
     }
 
@@ -260,7 +258,7 @@ StatusCode PatDownstream::execute() {
     m_uvHits.clear();
     
     //== Collect all hits compatible with the extrapolation, region by region.
-    if ( m_printing ) info() << "-- collect hits with tolerance " << xPredTol << endreq;
+    if ( m_printing ) info() << "-- collect hits with tolerance " << xPredTol << endmsg;
     
     for ( int kSta = 0; m_ttHitManager->maxStations() > kSta; ++kSta ) {
       for ( int kLay = 0; m_ttHitManager->maxLayers() > kLay; ++kLay ) {
@@ -295,7 +293,7 @@ StatusCode PatDownstream::execute() {
                                 hit->planeCode(), hit->z(), hit->x(), pos, 
                                 hit->hit()->sthit()->cluster().highThreshold(), hit->x() - pos);
               if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-              info() << endreq;
+              info() << endmsg;
             }
           }
         }
@@ -335,10 +333,10 @@ StatusCode PatDownstream::execute() {
         double tolMatch = m_tolMatch + 5. * fabs( track.slopeY() );
 
         if ( m_printing ) {
-          info() << endreq 
+          info() << endmsg 
                  << format( "... start plane %1d x%8.2f z%8.1f slope%8.2f tolMatch%7.3f",
                             myPlane, posX, meanZ, 1000. * slopeX, tolMatch )
-                 << endreq;
+                 << endmsg;
         }        
         
         findMatchingHits( track, myPlane, tolMatch );
@@ -347,7 +345,7 @@ StatusCode PatDownstream::execute() {
 
         addUVHits( track ); // Make it momentum dependent ?
         if ( 3 > track.hits().size() ) {
-          if ( m_printing ) info() << " === not enough hits" << endreq;
+          if ( m_printing ) info() << " === not enough hits" << endmsg;
           continue;
         }
         
@@ -356,7 +354,7 @@ StatusCode PatDownstream::execute() {
 
         //== Enough mesures to have Chi2/ndof.
         if ( 3 > nbMeasureOK ) {
-          if ( m_printing ) info() << " === not enough points" << endreq;
+          if ( m_printing ) info() << " === not enough points" << endmsg;
           continue;
         }
 
@@ -368,17 +366,17 @@ StatusCode PatDownstream::execute() {
           if ( (*itH1)->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )  ) ++nbUsed;
         }
         if ( 2 > nbHigh ) {
-          if ( m_printing ) info() << " === not enough high threshold points" << endreq;
+          if ( m_printing ) info() << " === not enough high threshold points" << endmsg;
           continue;
         }
         if ( nbMeasureOK == nbUsed ) {
-          if ( m_printing ) info() << " === is a clone" << endreq;
+          if ( m_printing ) info() << " === is a clone" << endmsg;
           continue;
         }
 
         //== Good enough Chi2/ndof
         if ( m_maxChisq < track.chisq() ) {
-          if ( m_printing ) info() << " === Chisq too big " << track.chisq() << endreq;
+          if ( m_printing ) info() << " === Chisq too big " << track.chisq() << endmsg;
           continue;
         }
         
@@ -386,21 +384,21 @@ StatusCode PatDownstream::execute() {
         if ( maxPoints <= nbMeasureOK ) {
           //== Same : Keep if better Chi2
           if ( minChisq < track.chisq() ) {
-            if ( m_printing ) info() << " === Chisq bigger than previous " << track.chisq() << endreq;
+            if ( m_printing ) info() << " === Chisq bigger than previous " << track.chisq() << endmsg;
             continue;
           }
           if ( track.chisq() < minChisq ) minChisq = track.chisq();
           maxPoints = nbMeasureOK;
           if ( maxPoints > 4 ) maxPoints = 4;
         } else {
-          if ( m_printing ) info() << " === less points than previous" << endreq;
+          if ( m_printing ) info() << " === less points than previous" << endmsg;
           continue;
         }
 
         deltaP = track.moment() * track.state()->qOverP() - 1.;
         //== Compatible momentum
         if ( m_deltaP < fabs(deltaP) ) {
-          if ( m_printing ) info() << " === Deltap too big " << deltaP << endreq;
+          if ( m_printing ) info() << " === Deltap too big " << deltaP << endmsg;
           continue;
         }
 
@@ -408,9 +406,9 @@ StatusCode PatDownstream::execute() {
           info() << format( "  *** Good candidate ***  slope%8.2f displX%8.2f Y%8.2f Chi2%8.2f", 
                              1000.*track.slopeX(), track.displX(), track.displY(), track.chisq() );
           if ( 0 == bestHits.size() ) {
-            info() << " OK"  << endreq;
+            info() << " OK"  << endmsg;
           } else {
-            info() << " Better" << endreq;
+            info() << " Better" << endmsg;
           }
         }
 
@@ -435,7 +433,7 @@ StatusCode PatDownstream::execute() {
                               icID.sector(), icID.strip(), xCoord,
                               track.distance( *itH1 ), (*itH1)->hit()->sthit()->cluster().highThreshold() ) ;
             if ( m_debugTool ) m_debugTool->debugTTCluster( info(), *itH1 );
-            info() << endreq;
+            info() << endmsg;
           }
         }
         bestTrack = track;
@@ -447,7 +445,7 @@ StatusCode PatDownstream::execute() {
     if ( 0 == nbOK ) {
       if ( m_printing ) {
         info() << format( "Track %3d P=%7.2f GeV --- discarded, not enough planes",
-                             tr->key(),  .001*track.moment() ) << endreq;
+                             tr->key(),  .001*track.moment() ) << endmsg;
       }
     } else {
       //=== Store the tracks
@@ -489,7 +487,7 @@ StatusCode PatDownstream::execute() {
       finalTracks->insert( dTr);
     }
   }
-  debug() << "Found " << finalTracks->size() << " tracks." << endreq;
+  debug() << "Found " << finalTracks->size() << " tracks." << endmsg;
   
   return StatusCode::SUCCESS;
 };
@@ -590,7 +588,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
         if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-        info() << endreq;
+        info() << endmsg;
       }
     }
     double a1 = sz  * sz - s0  * sz2;
@@ -618,7 +616,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
 
     if ( m_printing ) {
       info() << format( "  dx %7.3f dsl %7.6f dy %7.3f, displY %7.2f", 
-                        dx, dsl, dy, track.displY() ) << endreq;
+                        dx, dsl, dy, track.displY() ) << endmsg;
     }
     
     if ( 4 > nbUV ) track.updateX( dx, dsl );
@@ -640,7 +638,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
         if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-        info() << endreq;
+        info() << endmsg;
       }
       chisq += dist * dist * hit->hit()->weight();
       if ( maxDist < fabs(dist) ) {
@@ -660,7 +658,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
         if ( m_printing ) {
           info() << "   remove Y incompatible hit measure = " << hit->x() 
               << " : y " << yTrack << " min " << hit->hit()->yMin()
-              << " max " << hit->hit()->yMax() << endreq;
+              << " max " << hit->hit()->yMax() << endmsg;
         }
         track.hits().erase( itH );
         maxDist = 0.;  // avoid deleting worst, may be already gone...
@@ -674,13 +672,13 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       track.hits().erase( worst );
       if ( 2 < track.hits().size() ) {
         again = true;
-        if ( m_printing ) info() << "   remove worst and retry" << endreq;
+        if ( m_printing ) info() << "   remove worst and retry" << endmsg;
         continue;
       }
     } 
     
     if ( m_printing ) {
-      info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chisq, maxDist, m_maxDistance ) << endreq;
+      info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chisq, maxDist, m_maxDistance ) << endmsg;
     }    
   } while (again);
 }

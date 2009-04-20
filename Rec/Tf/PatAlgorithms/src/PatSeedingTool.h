@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.15 2008-10-07 15:05:44 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.16 2009-04-20 06:24:33 cattanem Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -520,7 +520,7 @@ inline void PatSeedingTool::addNeighbour(PatSeedTrack& track,
   restoreCoordinate(hit2);
   track.addCoord(hit2);	// and add to track
   if ( m_printing ) info() << "   + hit sta " << hit2->hit()->station() <<
-    " lay " << hit2->hit()->layer() << " x = " << hit2->x() << endreq;
+    " lay " << hit2->hit()->layer() << " x = " << hit2->x() << endmsg;
 }
 
 inline void PatSeedingTool::combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,

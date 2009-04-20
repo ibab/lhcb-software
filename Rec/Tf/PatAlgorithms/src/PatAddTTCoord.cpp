@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatAddTTCoord.cpp,v 1.2 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -57,8 +57,7 @@ StatusCode PatAddTTCoord::initialize ( ) {
 StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& ,
                                          std::vector<LHCb::STCluster*>& ,
                                          std::vector<double>& ) {
-  warning() << "The method AddTTClusters returning clusters and chi2 is NOT implemented." << endreq;
-  return StatusCode::FAILURE;
+  return Warning("The method AddTTClusters returning clusters and chi2 is NOT implemented.");
 }
 
 //=========================================================================
@@ -66,7 +65,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& ,
 //=========================================================================
 double PatAddTTCoord::distanceToStrip( const LHCb::Track& ,
                                        const LHCb::STCluster&  ) {
-  warning() << "The method distanceToStrip is NOT implemented." << endreq;
+  warning() << "The method distanceToStrip is NOT implemented." << endmsg;
   return 1.e30;
 }
 //=========================================================================
@@ -80,7 +79,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
   PatTTHits myTtCoords;
   bool debugging = msgLevel( MSG::DEBUG );
 
-  if ( debugging ) debug() << "--- Entering addTTClusters ---" << endreq;
+  if ( debugging ) debug() << "--- Entering addTTClusters ---" << endmsg;
 
   double tol = m_ttTol + m_ttTolSlope / track.p();
 
@@ -90,8 +89,9 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
   PatTTHits selected;
   LHCb::State state = track.closestState( m_zTTProj );
 
-  debug() << "State z " << state.z() << " x " << state.x() << " y " << state.y()
-          << " tx " << state.tx() << " ty " << state.ty() << " p " << track.p() << endreq;
+  if ( debugging ) debug() << "State z " << state.z() << " x " << state.x() <<
+                     " y " << state.y() << " tx " << state.tx() << " ty " <<
+                     state.ty() << " p " << track.p() << endmsg;
 
   Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits();
   for ( itTT = range.begin(); range.end() != itTT; ++itTT ) {
@@ -117,7 +117,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
   PatTTHits::iterator itSel;
 
   // if ( debugging ) {
-  //info() << " preselected " << selected.size() << " TTCord, tol = " << tol << endreq;
+  //info() << " preselected " << selected.size() << " TTCord, tol = " << tol << endmsg;
   //for ( itSel = selected.begin(); selected.end() != itSel; ++itSel ) {
   //  PatTTHit* tt = *itSel;
   //  info() << format( "  hit proj %7.2f plane %2d", tt->projection(), tt->planeCode() );
@@ -125,7 +125,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
   //        tt->MCKeys().end() != itM; ++itM ) {
   //    info() << " " << *itM;
   //  }
-  //  info() << endreq;
+  //  info() << endmsg;
   //}
   //}
 
@@ -160,7 +160,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
       if ( 3 > nbPlane ) continue;
       if ( myTtCoords.size() > goodTT.size() ) continue;
       if ( debugging ) info() << "Start fit, first proj " << firstProj << " nbPlane " << nbPlane
-                              << " size " << goodTT.size() << endreq;
+                              << " size " << goodTT.size() << endmsg;
 
       double offset = 0.;
       double slope  = 0.;
@@ -238,7 +238,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
         if ( debugging && worstDiff > 0. ) {
           info() << format( " chi2 %10.2f nDoF%2d wors %8.2f proj %6.2f offset %8.3f slope %10.6f offsetY %10.6f",
                             chi2, nDoF, worstDiff, (*worst)->projection(), offset, slope, offsetY)
-                 << endreq;
+                 << endmsg;
         }
         //== remove last point if bad fit...
         if ( worstDiff > 0. &&
@@ -251,7 +251,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
 
       if ( bestChi2 > chi2 && goodTT.size() >= myTtCoords.size() ) {
         if ( debugging ) {
-          info() << "*** Store this candidate, nbTT = " << goodTT.size() << " chi2 " << chi2 << endreq;
+          info() << "*** Store this candidate, nbTT = " << goodTT.size() << " chi2 " << chi2 << endmsg;
           for ( itSel = goodTT.begin(); goodTT.end() != itSel; ++itSel ) {
             PatTTHit* tt = *itSel;
             double z     = tt->z();
@@ -265,7 +265,7 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
             //    tt->MCKeys().end() != itM; ++itM ) {
             //  msg << " " << *itM;
             //}
-            msg << endreq;
+            msg << endmsg;
           }
         }
         myTtCoords = goodTT;

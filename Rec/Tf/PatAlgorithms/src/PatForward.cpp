@@ -1,4 +1,4 @@
-// $Id: PatForward.cpp,v 1.5 2008-12-02 14:43:15 wouter Exp $
+// $Id: PatForward.cpp,v 1.6 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -80,7 +80,7 @@ bool PatForward::acceptTrack(const LHCb::Track& track) {
   ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
   if (m_trackSelector) ok = ok && (m_trackSelector->accept(track));
 
-  verbose() << "For track " << track.key() << " accept flag =" << ok << endreq;
+  verbose() << "For track " << track.key() << " accept flag =" << ok << endmsg;
   return ok;
 }
 
@@ -173,7 +173,7 @@ StatusCode PatForward::execute() {
       debug() << "=== In total, produced " 
 	      << outputTracks->size() - oriSize  << " tracks from "
 	      << inputTracks->size() << " Velo tracks in " << t << " ms" 
-	      << endreq;
+	      << endmsg;
     }
     return StatusCode::SUCCESS;
   }
@@ -218,11 +218,11 @@ StatusCode PatForward::execute() {
         if ( msgLevel ( MSG::DEBUG ) ) {
           debug() << format( "Track %3d and %3d nT0 %2d nT1 %2d nCommon %2d nbTT : %2d, %2d  chi20 %8.3f 1 %8.3f",
                              (*itT)->key(), (*itT1)->key(), nb0, nb1, nbCommon, nbTT0, nbTT1,
-                             (*itT)->chi2PerDoF(), (*itT1)->chi2PerDoF() ) << endreq;
+                             (*itT)->chi2PerDoF(), (*itT1)->chi2PerDoF() ) << endmsg;
         }
         if ( nb0   > nb1   + m_deltaNumberInT  ||
              nbTT0 > nbTT1 + m_deltaNumberInTT   ) {
-          debug() << "    erase " << (*itT1)->key() << " and restart " << endreq;
+          debug() << "    erase " << (*itT1)->key() << " and restart " << endmsg;
           outputTracks->erase( itT1 );
           itT  = outputTracks->begin();
           itT1 = itT;
@@ -230,7 +230,7 @@ StatusCode PatForward::execute() {
         }
         if ( nb1   > nb0   + m_deltaNumberInT  ||
              nbTT1 > nbTT0 + m_deltaNumberInTT    ) {
-          debug() << "    erase " << (*itT)->key() << " and restart " << endreq;
+          debug() << "    erase " << (*itT)->key() << " and restart " << endmsg;
           outputTracks->erase( itT );
           itT  = outputTracks->begin();
           itT1 = itT;
@@ -244,7 +244,7 @@ StatusCode PatForward::execute() {
     double t = m_timerTool->stop( m_fwdTime );
     debug() << "=== In total, produced " <<  outputTracks->size() - oriSize  << " tracks from "
             << inputTracks->size() << " Velo tracks in " << t << " ms"
-            << endreq;
+            << endmsg;
   }
 
   return StatusCode::SUCCESS;

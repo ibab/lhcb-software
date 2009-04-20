@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.11 2008-10-23 07:49:18 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.12 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -218,7 +218,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     }
     if ( 0 <= bestRegion ) {
       // remove other regions !
-      debug() << "========= Keep only hits of region " << bestRegion << endreq;
+      debug() << "========= Keep only hits of region " << bestRegion << endmsg;
       for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
 	unsigned int region = (*itH)->hit()->region();
 	if (region != Tf::RegionID::OT)
@@ -248,7 +248,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   if ( isDebug ) {
     debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
                        minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
-            << endreq;
+            << endmsg;
   }
 
   //== Better range ? Remove first, try to complete, measure spread...
@@ -267,7 +267,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
         if ( isDebug ) {
           debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
                              minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
-                  << endreq;
+                  << endmsg;
         }
       }
     }
@@ -300,7 +300,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   PatFwdPlaneCounter planeCount( itBeg, itEnd );
   if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
-                         << " size " << itEnd - itBeg << endreq;
+                         << " size " << itEnd - itBeg << endmsg;
 
 
   // initial value;
@@ -334,7 +334,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     if ( maxChi2 < highestChi2 ) {
       planeCount.removeHit( worst );
       worst->setSelected( false );
-      verbose() << "--- Remove worst and retry, plane count = " << planeCount.nbDifferent() << endreq;
+      verbose() << "--- Remove worst and retry, plane count = " << planeCount.nbDifferent() << endmsg;
     }
 
 
@@ -346,7 +346,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       if ( highestChi2 > maxChi2 ) {
         minChi2 = highestChi2 - 0.0001;  // down't find again the worst...
       }
-      debug() << "Collect all hits with chi2 below " << minChi2 << endreq;
+      debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
       PatFwdHits::iterator oldItBeg = itBeg;
       for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
         PatFwdHit* hit = *itH;
@@ -367,11 +367,11 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       if ( hasNewHits ) {
         PatFwdPlaneCounter temp( itBeg, itEnd );
         planeCount = temp;  // update counter...
-        debug() << "   new plane count " << planeCount.nbDifferent() << endreq;
+        debug() << "   new plane count " << planeCount.nbDifferent() << endmsg;
         //setRlDefault( track, itBeg, itEnd );
         highestChi2 = 2*maxChi2; // force an iteration...
       } else {
-        debug() << "   no new hit added to the track." << endreq;
+        debug() << "   no new hit added to the track." << endmsg;
       }
     }
   }
@@ -397,7 +397,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   if ( minPlanes > planeCount.nbDifferent() ) return false;
 
   if ( isDebug ) debug() << "+++ Stereo fit, planeCount " << planeCount.nbDifferent()
-                         << " size " << track.coordEnd() - track.coordBegin() << endreq;
+                         << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
   updateHitsForTrack( track, track.coordBegin(), track.coordEnd() );
   setRlDefault( track, track.coordBegin(), track.coordEnd() );
@@ -425,7 +425,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
       line.solve();
       double day = line.ax();
       double dby = line.bx();
-      verbose() << "    day " << day << " dby " << dby << endreq;
+      verbose() << "    day " << day << " dby " << dby << endmsg;
 
       track.updateParameters( 0., 0., 0., 0., day, dby );
       updateHitsForTrack( track, track.coordBegin(), track.coordEnd() );
@@ -451,7 +451,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
     if ( highestChi2 > maxChi2 ) {
       planeCount.removeHit( worst );
       worst->setSelected( false );
-      debug() << " Remove hit and try again " << endreq;
+      debug() << " Remove hit and try again " << endmsg;
       //== Remove in one go all hits with bad contribution...
       if ( 1000. < highestChi2 ) {
         for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
@@ -470,7 +470,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
       if ( minPlanes > planeCount.nbDifferent() ) {
         debug() << " Abandon: Only " << planeCount.nbDifferent() << " planes, min " << minPlanes
-                << " highestChi2 " << highestChi2 << endreq;
+                << " highestChi2 " << highestChi2 << endmsg;
         return false;
       }
     }
@@ -484,7 +484,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   }
 
   debug() << ".. OK with " << planeCount.nbDifferent() << " planes, min " << minPlanes
-          << " highestChi2 " << highestChi2 << endreq;
+          << " highestChi2 " << highestChi2 << endmsg;
   if ( minPlanes > planeCount.nbDifferent() ) return false;
   return true;
 }
@@ -545,7 +545,7 @@ void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
 
     if ( msgLevel( MSG::VERBOSE )  ) {
       verbose() << format( " dax %10.4f dbx%10.4f dcx %10.4f distCent %10.2f",
-                           dax, dbx*1.e3, dcx*1.e6, distAtMagnetCenter( track ) ) << endreq;
+                           dax, dbx*1.e3, dcx*1.e6, distAtMagnetCenter( track ) ) << endmsg;
     }
 
     if ( fabs( dax ) < 5.e-3 &&
@@ -569,7 +569,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
   double dist      = distAtMagnetCenter( track );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
   totChi2 = dist * dist / errCenter;
-  debug() << "   chi2 magnet center " << totChi2 << " dist " << dist << " err " << errCenter << endreq;
+  debug() << "   chi2 magnet center " << totChi2 << " dist " << dist << " err " << errCenter << endmsg;
 
   PatFwdHits::iterator itH;
   for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
@@ -635,7 +635,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 
     std::sort( temp.begin(), temp.end(), Tf::increasingByX<PatForwardHit>() ); 
 
-    if ( msgLevel( MSG::DEBUG ) ) debug() << "-- Hit of plane " << planeCode << endreq;
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "-- Hit of plane " << planeCode << endmsg;
 
     double prevDistM = 10.;
     double prevDistP = 10.;
@@ -669,7 +669,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
-                           hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endreq;
+                           hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
       }
     }
   }

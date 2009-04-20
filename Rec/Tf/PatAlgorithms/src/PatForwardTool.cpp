@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.13 2009-01-16 10:10:01 cattanem Exp $
+// $Id: PatForwardTool.cpp,v 1.14 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -132,7 +132,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     debug() << format( "**** Velo track %3d  x%8.2f  y%8.2f  tx%9.5f  ty%9.5f q/p = %8.6f",
                        tr->key(), track.xStraight( m_zAfterVelo ),
                        track.yStraight( m_zAfterVelo ),
-                       track.slX(), track.slY(), 1000. * track.qOverP() ) << endreq;
+                       track.slX(), track.slY(), 1000. * track.qOverP() ) << endmsg;
   }
 
 
@@ -162,7 +162,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       if ( isDebug ) {
         debug() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
                 << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
-                << endreq;
+                << endmsg;
         debugFwdHits( temp );
       }
 
@@ -178,9 +178,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
         if ( minOTX <= nbHit || inCenter ) {
           xCandidates.push_back( temp );
-          debug() << "+++ Store candidate " << xCandidates.size()-1 << endreq;
+          debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
         } else {
-          debug() << " --- not enough hits " << nbHit << endreq;
+          debug() << " --- not enough hits " << nbHit << endmsg;
         }
       }
 
@@ -194,13 +194,13 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   }
 
   if ( isDebug ) {
-    debug() << "************ List of X candidates , N = " << xCandidates.size() << endreq;
+    debug() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
     for ( itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
       debug() << "Candidate " << itL - xCandidates.begin()
-              << " Chi2/nDof = " << (*itL).chi2PerDoF() << endreq;
+              << " Chi2/nDof = " << (*itL).chi2PerDoF() << endmsg;
       debugFwdHits( *itL );
     }
-    if ( xCandidates.size() > 0 ) debug() << "---- Now get the stereo hits on these ---" << endreq;
+    if ( xCandidates.size() > 0 ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
   }
 
   //== Now try to get space track from these X track.
@@ -213,7 +213,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   for ( itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
     debug() << "--- Candidate " << itL - xCandidates.begin()
             << "  X cord size " << (*itL).coordEnd() - (*itL).coordBegin()
-            << endreq;
+            << endmsg;
 
     PatFwdHits::iterator itH;
     for ( itH = (*itL).coordBegin(); (*itL).coordEnd() != itH ; ++itH ) {
@@ -233,7 +233,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     
     double tol = m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
 
-    debug() << "Adding stereo coordinates, tol = " << tol << endreq;
+    debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
 
     if ( !fillStereoList( temp, tol ) ) continue; // Get the stereo coordinates
 
@@ -249,7 +249,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     if ( isDebug ) {
       debug() << "  ... fit OK  chi2 " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
               << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
-              << endreq;
+              << endmsg;
       debugFwdHits( temp );
     }
 
@@ -258,7 +258,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double yTol = m_yCompatibleTolFinal;
     if ( !m_fwdTool->removeYIncompatible( temp, yTol, minPlanes ) ) continue;
     temp.cleanCoords();
-    debug() << "  ... Y is compatible" << endreq;
+    debug() << "  ... Y is compatible" << endmsg;
 
     double quality = 0.;
 
@@ -266,12 +266,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     PatFwdPlaneCounter fullCount( temp.coordBegin(), temp.coordEnd() );
     int nbY = fullCount.nbStereo();
     if ( 4 > nbY ) {
-      debug() << "Not enough Y planes : " << nbY << endreq;
+      debug() << "Not enough Y planes : " << nbY << endmsg;
       continue;
     }
 
     if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
-      debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endreq;
+      debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
       continue;
     }
 
@@ -292,11 +292,11 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     bool inCenter = m_centerOTYSize > fabs( temp.y( 0. ) );
     if ( !inCenter ) {
       if ( m_minHits > nbHit ){
-        debug() << "  --- Not enough hits : " << nbHit << endreq;
+        debug() << "  --- Not enough hits : " << nbHit << endmsg;
         continue;
       }
       if ( temp.nbIT() == 0 && temp.nbOT() < m_minOTHits ) {
-        debug() << " Too few OT for OT only track : " << temp.nbOT() << endreq;
+        debug() << " Too few OT for OT only track : " << temp.nbOT() << endmsg;
         continue;
       }
     }
@@ -349,7 +349,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double bestQuality = 1000.;
     int maxOT = 0;
 
-    debug() << "Require enough planes : " << minPlanes << endreq;
+    debug() << "Require enough planes : " << minPlanes << endmsg;
     std::vector<PatFwdTrackCandidate> tempCandidates( goodCandidates );
     goodCandidates.clear();
     for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
@@ -359,7 +359,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         if ( (*itL).quality() < bestQuality ) bestQuality = (*itL).quality();
       } else {
         debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : not enough planes = " << tmp.nbDifferent() << endreq;
+                << " : not enough planes = " << tmp.nbDifferent() << endmsg;
       }
     }
     // remove worst quality
@@ -372,7 +372,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         if ( 2*(*itL).nbIT() + (*itL).nbOT() > maxOT ) maxOT =  2*(*itL).nbIT()+(*itL).nbOT();
       } else {
         debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : quality too low = " << (*itL).quality() << endreq;
+                << " : quality too low = " << (*itL).quality() << endmsg;
       }
     }
     // remove if sensibly less OT
@@ -385,12 +385,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         goodCandidates.push_back( *itL );
       } else {
         debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : not enough OT = " << (*itL).nbOT() << " mini " << maxOT << endreq;
+                << " : not enough OT = " << (*itL).nbOT() << " mini " << maxOT << endmsg;
       }
     }
   }
 
-  debug() << "Storing " << goodCandidates.size() << " good tracks " << endreq;
+  debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
   //=== Store tracks...
   for ( itL = goodCandidates.begin(); goodCandidates.end() != itL; ++itL ) {
     LHCb::Track* fwTra = tr->clone();
@@ -456,10 +456,10 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     if ( NULL != m_addTTClusterTool ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
       if (sc.isFailure())
-        debug()<<" Failure in adding TT clusters to track"<<endreq;
+        debug()<<" Failure in adding TT clusters to track"<<endmsg;
     }
   }
-  debug() << "Finished track" << endreq;
+  debug() << "Finished track" << endmsg;
   return StatusCode::SUCCESS;
 }
 //=========================================================================
@@ -608,7 +608,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   int minYPlanes = 4;
   double maxSpread = 3.;
 
-  debug() << "List size = " << temp.size() << endreq;
+  debug() << "List size = " << temp.size() << endmsg;
   if ( minYPlanes > (int)temp.size() ) return false;
 
 
@@ -623,7 +623,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
                          hit->hit()->layer(),
                          hit->hit()->region(),
                          hit->hasPrevious(),
-                         hit->hasNext() ) << endreq;
+                         hit->hasNext() ) << endmsg;
     }
   }
 
@@ -648,7 +648,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     if (  spread < (*itE)->projection() - (*itP)->projection() ) {
       while( spread < (*itE)->projection() - (*itP)->projection() ) itP++;
       --itP; // as there will be a ++ in the loop !
-      verbose() << "   not enough planes in spread" << endreq;
+      verbose() << "   not enough planes in spread" << endmsg;
       continue;
     }
 
@@ -659,10 +659,10 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minYPlanes > planeCount.nbDifferent() ) {
-      debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endreq;
+      debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endmsg;
       continue;
     }
-    verbose() << endreq;
+    verbose() << endmsg;
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
@@ -672,7 +672,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
       planeCount.removeHit( *itP );
       ++itP;
       verbose() << " try to extend from itP : " << (*itP)->projection()
-                << " itF " << (*itF)->projection() << endreq;
+                << " itF " << (*itF)->projection() << endmsg;
       while ( itF < temp.end() &&
               spread > (*itF)->projection() - (*itP)->projection() ) {
         planeCount.addHit( *itF++ );
@@ -686,7 +686,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
       PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
-                << endreq;
+                << endmsg;
     }
     //== We have the first list. The best one ????
     PatFwdPlaneCounter cnt( itB, itE );
@@ -706,7 +706,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   if ( minYPlanes > (int)bestList.size() ) return false;
   debug() << "...Selected " << bestList.size() << " hits from " << (*bestList.begin())->projection()
-          << " to " << (*bestList.rbegin())->projection() << endreq;
+          << " to " << (*bestList.rbegin())->projection() << endmsg;
 
 
 
@@ -751,7 +751,7 @@ void PatForwardTool::debugFwdHits ( PatFwdTrackCandidate& track, MsgStream& msg 
        if ( (*itM) == m_MCKey ) msg << " <=*** ";
        }
     */
-    msg << endreq;
+    msg << endmsg;
   }
 }
 
@@ -774,7 +774,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   if ( 0 != track.qOverP() && !m_withoutBField) {
     debug() << "   xExtrap = " << xExtrap
             << " q/p " << track.qOverP()
-            << " predict " << xExtrap + (m_rangePerMeV * track.qOverP()) << endreq;
+            << " predict " << xExtrap + (m_rangePerMeV * track.qOverP()) << endmsg;
     xExtrap += m_rangePerMeV * track.qOverP();
     maxRange = m_minRange + m_rangeErrorFraction * m_rangePerMeV * fabs( track.qOverP() );
   }
@@ -783,7 +783,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   double maxProj  = xExtrap + maxRange;
 
   debug() << "Search X coordinates, xMin " << minProj
-          << " xMax " << maxProj << endreq;
+          << " xMax " << maxProj << endmsg;
 
 
   fillXList( track, minProj, maxProj );
@@ -822,10 +822,10 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minXPlanes > planeCount.nbDifferent() ) {
-      verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endreq;
+      verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endmsg;
       continue;
     }
-    verbose() << endreq;
+    verbose() << endmsg;
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
@@ -847,7 +847,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
-                << endreq;
+                << endmsg;
     }
     //== Try to merge the lists, if the first new point is close to the last one...
     PatFwdHits temp( itB, itE );       // Create a copy of the list

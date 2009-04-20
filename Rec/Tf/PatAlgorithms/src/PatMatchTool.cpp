@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.7 2009-02-09 14:33:13 albrecht Exp $
+// $Id: PatMatchTool.cpp,v 1.8 2009-04-20 06:24:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     if(msgLevel( MSG::DEBUG )) 
       debug() << "Candidate Velo " << vTr->key() << " used " << veloUsed[ vTr->key()] 
               << " Seed " << sTr->key() << " used " << seedUsed[ sTr->key()] 
-              << " dist " << (*itM).dist() << endreq;
+              << " dist " << (*itM).dist() << endmsg;
     
     if ( veloUsed[ vTr->key()] ) continue;
     if ( seedUsed[ sTr->key()] ) continue;

@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.8 2009-01-16 10:10:01 cattanem Exp $
+// $Id: PatSeedTool.cpp,v 1.9 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 #include <cmath>
@@ -57,7 +57,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   if ( minPlanes > track.nPlanes() ) return false;
 
   if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
-    << " size " << track.coordEnd() - track.coordBegin() << endreq;
+    << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
   if ( !xOnly ) track.updateHits( );
 
@@ -94,7 +94,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	const double day = line.ax(), dby = line.bx();
 
 	if ( isDebug )
-	  info() << "    day " << day << " dby " << dby << endreq;
+	  info() << "    day " << day << " dby " << dby << endmsg;
 	if ( fabs( dby ) > 1.0 ) {
 	  // if we get a track with stereo hits on it which do not
 	  // belong together, the y fit may diverge. the problem about
@@ -104,7 +104,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	  // become nan. to avoid this bad case, we stop the fit
 	  // iteration - and throw away the track in its entirety
 	  if ( isDebug )
-	    info() << "    fabs(dby) > 1.0, abandoning track!" << endreq;
+	    info() << "    fabs(dby) > 1.0, abandoning track!" << endmsg;
 	  return false;
 	}
 	// update track parameters
@@ -138,7 +138,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	if ( !hit->isSelected() ) continue;
 	printTCoord( msg, track, hit );
 	if ( *worst == hit ) msg << " -- worst";
-	msg << endreq;
+	msg << endmsg;
       }
     }
 
@@ -146,13 +146,13 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
       // remove worst outlier if above threshold
       (*worst)->hit()->isX()?(--nDoF):(--nDoFS);
       track.removeCoord( worst );
-      if ( isDebug ) info() << " Remove hit and try again " << endreq;
+      if ( isDebug ) info() << " Remove hit and try again " << endmsg;
 
       if ( minPlanes > track.nPlanes() ||
 	  (!ignoreX && (0 > nDoF)) || ((0 != nStereo) && (0 > nDoFS))) {
 	if ( isDebug ) info() << " Abandon: Only " << track.nPlanes()
 	  << " planes, min " << minPlanes  << " highestChi2 " << highestChi2
-	    << " nDoF " << nDoF << " nDoFS " << nDoFS << endreq;
+	    << " nDoF " << nDoF << " nDoFS " << nDoFS << endmsg;
 	return false;
       }
     }
@@ -180,7 +180,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   } while ( highestChi2 > maxChi2 );
 
   if ( isDebug ) info() << ".. OK with " << track.nPlanes() << " planes, min " << minPlanes
-    << " highestChi2 " << highestChi2 << endreq;
+    << " highestChi2 " << highestChi2 << endmsg;
   if ( minPlanes > track.nPlanes() ) return false;
   return true;
 }
@@ -205,7 +205,7 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
 
     if ( msgLevel( MSG::VERBOSE ) || forceDebug  ) {
       info() << format( " dax %10.4f dbx%10.4f dcx %10.4f ",
-	  parabola.ax(), 1e3 * parabola.bx(), 1e6 * parabola.cx() ) << endreq;
+	  parabola.ax(), 1e3 * parabola.bx(), 1e6 * parabola.cx() ) << endmsg;
     }
 
     // wait until stable, due to OT.
@@ -274,7 +274,7 @@ void PatSeedTool::fitInitialXProjection (
       bestMask = mask;
     }
     if ( forceDebug )
-      info() << format( "     mask %2d chi2 %10.2f", mask, totChi2) << endreq;
+      info() << format( "     mask %2d chi2 %10.2f", mask, totChi2) << endmsg;
   }
   // fix ambiguities to best combination
   seeds[0]->setRlAmb( ((bestMask << 1) & 2) - 1 );
@@ -312,7 +312,7 @@ bool PatSeedTool::fitInitialStereoProjection (
   if ( 2 > nStereo ) return false;
   firstLine.solve();
   if ( forceDebug ) info() << "    day " << firstLine.ax() << " dby "
-    << firstLine.bx() << " initial" << endreq;
+    << firstLine.bx() << " initial" << endmsg;
   track.updateYParameters( firstLine.ax(), firstLine.bx() );
   return true;
 }

@@ -1,4 +1,4 @@
-// $Id: PatMakeV0.cpp,v 1.4 2009-01-20 15:49:30 cattanem Exp $
+// $Id: PatMakeV0.cpp,v 1.5 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -447,7 +447,7 @@ StatusCode PatMakeV0::execute() {
 void PatMakeV0::selectSols(){
   m_selected.clear();
 
-  debug() << " nSolutions " << m_solutions.size() << endreq;
+  debug() << " nSolutions " << m_solutions.size() << endmsg;
 
   // select as solution for the pair the best V0 vtx fit chi2
   // on the negative track (positive is already single by construction)
@@ -478,7 +478,7 @@ void PatMakeV0::selectSols(){
 
   if(m_selected.size() > 0 ) m_nSolSelect->fill((double) m_selected.size() );
 
-  debug() << "   Selected " << m_selected.size() << "  V0 candidates" << endreq;
+  debug() << "   Selected " << m_selected.size() << "  V0 candidates" << endmsg;
 
   for ( itS = m_selected.begin(); m_selected.end() != itS; ++itS ) {
     PatV0Candidate& cand = (*itS);
@@ -507,7 +507,7 @@ void PatMakeV0::selectSols(){
     m_zRecSelect->fill( cand.zVtxKs() );
     debug() << "   Pos " << cand.posTrk()->key()
             << " Neg " << cand.negTrk()->key()
-            << " z " << cand.zVtxKs() << " mass " << cand.massKs() << endreq;
+            << " z " << cand.zVtxKs() << " mass " << cand.massKs() << endmsg;
     // provisional output
     LHCb::Track* sel = cand.negTrk()->clone();
     m_outputContainer->add( sel );

@@ -1,4 +1,4 @@
-// $Id: PatMakeV0.h,v 1.2 2008-11-06 16:38:14 cattanem Exp $
+// $Id: PatMakeV0.h,v 1.3 2009-04-20 06:24:33 cattanem Exp $
 #ifndef PATMAKEKSHORT_H
 #define PATMAKEKSHORT_H 1
 
@@ -366,7 +366,7 @@ private:
     double test1=(zX1-m_zKsMin) * (zX1-m_zRefRich1);
     double test2=(zX2-m_zKsMin) * (zX2-m_zRefRich1);
 
-    debug() << "      zX1 " << zX1 << " zX2 " << zX2 << " test1 " << test1 << " test2 " << test2 << endreq;
+    debug() << "      zX1 " << zX1 << " zX2 " << zX2 << " test1 " << test1 << " test2 " << test2 << endmsg;
 
     if( test1 > 0 && test2 > 0)return StatusCode::FAILURE;
 
@@ -380,7 +380,7 @@ private:
     }
     m_xV0Vtx = pos.x( m_zV0Vtx );
     m_yV0Vtx = .5 * ( pos.y( m_zV0Vtx ) + neg.y( m_zV0Vtx ) );
-    debug() << "     Found vertex z " << m_zV0Vtx << " x " << m_xV0Vtx << " y "<< m_yV0Vtx << endreq;
+    debug() << "     Found vertex z " << m_zV0Vtx << " x " << m_xV0Vtx << " y "<< m_yV0Vtx << endmsg;
     return StatusCode::SUCCESS;
   }
 //-------------------------------------------------------------------------------

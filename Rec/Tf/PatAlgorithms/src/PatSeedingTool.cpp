@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.27 2008-11-06 16:38:14 cattanem Exp $
+// $Id: PatSeedingTool.cpp,v 1.28 2009-04-20 06:24:33 cattanem Exp $
 // Include files
 
 #include <cmath>
@@ -240,7 +240,7 @@ StatusCode PatSeedingTool::initialize() {
     return Error ( "Not enough DriftRadiusRange values" );
   if (m_driftRadiusRange[0] > m_driftRadiusRange[1]) {
     warning() << "swapping values in DriftRadiusRange such that "
-      "lower limit <= upper limit" << endreq;
+      "lower limit <= upper limit" << endmsg;
     std::swap(m_driftRadiusRange[0], m_driftRadiusRange[1]);
   }
 
@@ -255,7 +255,7 @@ StatusCode PatSeedingTool::initialize() {
 
 StatusCode PatSeedingTool::finalize() {
   if (m_measureTime) {
-    info() << name() << " finalizing now..." << endreq;
+    info() << name() << " finalizing now..." << endmsg;
 
   }
   return GaudiTool::finalize();
@@ -375,7 +375,7 @@ void PatSeedingTool::killClonesAndStore(
       else
 	p = scaleFactor / denom;
       info() << "** Store track, estimated P " << p << " nCoord "
-	<< track->nCoords() << " chi2 " << track->chi2() << endreq;
+	<< track->nCoords() << " chi2 " << track->chi2() << endmsg;
       BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
 	debugFwdHit( hit, info() );
     }
@@ -405,7 +405,7 @@ StatusCode PatSeedingTool::performTracking(
       if (0 == state) return StatusCode::SUCCESS;
       
       warning() << "Skipping very hot event! (" << nHitsIT << " IT hits "
-	<< nHitsOT << " OT hits)" << endreq;
+	<< nHitsOT << " OT hits)" << endmsg;
       // Create a ProcStatus if it does not already exist
       LHCb::ProcStatus* procStat =
 	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
@@ -544,7 +544,7 @@ void PatSeedingTool::collectPerRegion(
 
 	if ( msgLevel( MSG::DEBUG ) )
 	  debug() << "Found " << pool.size()
-	    << " x candidates" << endreq;
+	    << " x candidates" << endmsg;
 
 	if ( m_measureTime ) {
 	  m_timer->stop( m_timeX );
@@ -572,7 +572,7 @@ void PatSeedingTool::collectPerRegion(
 	      if (&tmp == &track) break;
 	      ++nTrack;
 	    }
-	    info() << "--- X candidate " << nTrack << endreq;
+	    info() << "--- X candidate " << nTrack << endmsg;
 	    BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
 	      info() << format( "dist %7.3f ", track.distance( hit ) );
 	      debugFwdHit( hit, info() );
@@ -585,7 +585,7 @@ void PatSeedingTool::collectPerRegion(
 	  int minNbPlanes = m_minTotalPlanes - track.nPlanes();
 
 	  if ( m_printing ) {
-	    info() << "--- Initial list of stereo hits " << endreq;
+	    info() << "--- Initial list of stereo hits " << endmsg;
 	    BOOST_FOREACH( PatFwdHit* hit, stereo ) {
 	      if ( hit->isIgnored() ) continue;
 	      restoreCoordinate(hit);
@@ -601,7 +601,7 @@ void PatSeedingTool::collectPerRegion(
 	  if ( !ok ) continue;
 
 	  if ( m_printing ) {
-	    info() << "--- After filtering of stereo hits " << endreq;
+	    info() << "--- After filtering of stereo hits " << endmsg;
 	    BOOST_FOREACH( PatFwdHit* hit, stereo ) {
 	      if ( hit->isIgnored() ) continue;
 	      restoreCoordinate(hit);
@@ -614,11 +614,11 @@ void PatSeedingTool::collectPerRegion(
 	  ok = fitLineInY( stereo, y0, sl );
 
 	  if ( !ok ) {
-	    if ( m_printing ) info() << "  -- fitLineInY failed" << endreq;
+	    if ( m_printing ) info() << "  -- fitLineInY failed" << endmsg;
 	    continue;
 	  }
 	  if ( 0 != state && !isGoodSlope(state, false, sl) ) {
-	    if ( m_printing ) info() << "  -- ty not compatible with state given" << endreq;
+	    if ( m_printing ) info() << "  -- ty not compatible with state given" << endmsg;
 	    continue;
 	  }
 	  double yAtOrigin = y0;
@@ -628,11 +628,11 @@ void PatSeedingTool::collectPerRegion(
 
 	  if ( m_printing ) {
 	    info() << format( "  Y0 %10.1f corr %10.1f yAtOrigin%10.1f  sl%10.7f  curv*E6 %8.4f",
-		y0, yCorr, yAtOrigin, sl, 1.e6*track.curvature() ) << endreq;
+		y0, yCorr, yAtOrigin, sl, 1.e6*track.curvature() ) << endmsg;
 	  }
 
 	  if ( m_maxYAtOrigin < fabs( yAtOrigin ) ) {
-	    if ( m_printing ) info() << "  -- yAtOrigin too big : " << yAtOrigin << endreq;
+	    if ( m_printing ) info() << "  -- yAtOrigin too big : " << yAtOrigin << endmsg;
 	    // we might want to keep OT tracks for a second pass
 	    if (!isRegionOT(reg)) continue;
 	    // unless they point nowhere near the vertex
@@ -645,7 +645,7 @@ void PatSeedingTool::collectPerRegion(
 	  }
 
 	  if ( m_printing ) {
-	    info() << "Fitted line y0 " << y0 << " sl " << sl << endreq;
+	    info() << "Fitted line y0 " << y0 << " sl " << sl << endmsg;
 	    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
 	      if ( hit->isIgnored() ) continue;
 	      info() << format( "dist %7.3f ",  hit->projection() - y0 - hit->z() * sl );
@@ -665,7 +665,7 @@ void PatSeedingTool::collectPerRegion(
 		  info() << "Not enough OT stereo in some station : "
 		    << nInStation[0] << " "
 		    << nInStation[1] << " "
-		    << nInStation[2] << endreq;
+		    << nInStation[2] << endmsg;
 		continue;
 	      }
 	    }
@@ -694,24 +694,24 @@ void PatSeedingTool::collectPerRegion(
 	      m_otNHitsLowThresh > track.nCoords() &&
 	      2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
 	    if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
-	      << track.nCoords() << " coordinates" << endreq;
+	      << track.nCoords() << " coordinates" << endmsg;
 	    continue;
 	  }
 
 	  track.setYParams( y0, sl );
 
 	  track.sort();
-	  if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endreq;
+	  if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endmsg;
 	  ok = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minTotalPlanes, false, m_printing );
 
 	  if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
-	    << ", nPlanes = " << track.nPlanes() << endreq;
+	    << ", nPlanes = " << track.nPlanes() << endmsg;
 	  if ( isRegionOT(reg) &&   // OT
 	      m_otNHitsLowThresh > track.nCoords() &&  // short track -> not too many neighbours
 	      2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
 	    if ( m_printing ) {
 	      info()  << "Too many on side " << track.nbOnSide() << " with only "
-		<< track.nCoords() << " coordinates" << endreq;
+		<< track.nCoords() << " coordinates" << endmsg;
 	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
 		debugFwdHit( hit, info() );
 	    }
@@ -719,12 +719,12 @@ void PatSeedingTool::collectPerRegion(
 	  }
 
 	  if ( m_maxFinalTrackChi2 < track.chi2() || !ok ) {
-	    if ( m_printing ) info() << "Chi2 too big" << endreq;
+	    if ( m_printing ) info() << "Chi2 too big" << endmsg;
 	    continue;
 	  }
 
 	  if ( 0 != state && !isGoodSlope(state, false, track.ySlope(0.)) ) {
-	    if ( m_printing ) info() << "  -- ty not compatible with state given" << endreq;
+	    if ( m_printing ) info() << "  -- ty not compatible with state given" << endmsg;
 	    continue;
 	  }
 
@@ -751,7 +751,7 @@ void PatSeedingTool::collectITOT(
 {
   if ( m_measureTime ) m_timer->start( m_timeItOt );
 
-  if ( m_printing ) info() << "=== remaining IT coord ====" << endreq;
+  if ( m_printing ) info() << "=== remaining IT coord ====" << endmsg;
   m_tolCollect = m_tolCollectIT;
 
   for ( unsigned reg = m_nOTReg; reg < m_nReg; ++reg ) {
@@ -774,7 +774,7 @@ void PatSeedingTool::collectITOT(
 
 	m_printing = msgLevel( MSG::VERBOSE );
 	if ( m_printing ) info() << "*IT* hit sta " << sta << " lay 0 x = " <<
-	  hit0->hit()->xAtYEq0() << endreq;
+	  hit0->hit()->xAtYEq0() << endmsg;
 
 	// open search window into layer 3
 	PatRange x3Range = magnetRange(hit0->hit()->xAtYEq0(), zScaling);
@@ -810,7 +810,7 @@ void PatSeedingTool::collectITOT(
 
 	  if ( m_printing ) info() << "     hit sta " << sta << " lay 3 x = "
 	    << hit3->hit()->xAtYEq0() << " x1Min " << x1Range.min() << " x1Max "
-	      << x1Range.max() << endreq;
+	      << x1Range.max() << endmsg;
 
 	  HitRange rangeH1 = hitsInRange( x1Range, sta, 1,reg );
 	  for ( HitRange::const_iterator itH1 = rangeH1.begin();
@@ -837,7 +837,7 @@ void PatSeedingTool::collectITOT(
 
 	    if ( m_printing ) info() << "     hit sta " << sta << " lay 1 x = "
 	      << hit1->hit()->xAtYEq0() << " x2Min " << x2Range.min() << " x2Max "
-		<< x2Range.max() << endreq;
+		<< x2Range.max() << endmsg;
 
 	    HitRange rangeH2 = hitsInRange( x2Range, sta, 2, reg );
 	    for ( HitRange::const_iterator itH2 = rangeH2.begin();
@@ -853,7 +853,7 @@ void PatSeedingTool::collectITOT(
 	      restoreCoordinate(hit3);
 
 	      if ( m_printing )
-		info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endreq;
+		info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endmsg;
 
 	      // ok, we have a seed
 	      pool.push_back(
@@ -861,7 +861,7 @@ void PatSeedingTool::collectITOT(
 		    m_zReference, m_dRatio, m_initialArrow ) );
 	      PatSeedTrack& track = pool.back();
 	      if ( 3 > track.nbHighThreshold() ) {
-		if ( m_printing ) info() << "   less than 3 with high threshold" << endreq;
+		if ( m_printing ) info() << "   less than 3 with high threshold" << endmsg;
 		// unfortunately not good enough, so pop it off again
 		pool.pop_back();
 		continue;
@@ -874,7 +874,7 @@ void PatSeedingTool::collectITOT(
 	      addNeighbour(track, hit3, itH3, rangeH3);
 
 	      if ( m_printing ) {
-		info() << "--- IT point -- " << endreq;
+		info() << "--- IT point -- " << endmsg;
 		BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
 		  debugFwdHit( hit, info() );
 	      }
@@ -885,7 +885,7 @@ void PatSeedingTool::collectITOT(
     }
 
     // follow these track segments into OT and IT and collect more hits there
-    if ( m_printing ) info() << "===== Candidates Type " << reg << endreq;
+    if ( m_printing ) info() << "===== Candidates Type " << reg << endmsg;
     finalSelection.reserve(pool.size());
     for ( std::vector<PatSeedTrack>::iterator itT = pool.begin();
 	pool.end() != itT; ++itT ) {
@@ -898,7 +898,7 @@ void PatSeedingTool::collectITOT(
       if ( m_printing ) info() << "   candidate " << itT - pool.begin()
 	<< " y(0) = " << track.yAtZ( 0. )
 	  << " ySlope " << track.ySlope( 0. )
-	  << endreq;
+	  << endmsg;
       PatFwdHit* firstHit = *track.coordBegin();
 
       unsigned ITSta = firstHit->hit()->station();
@@ -929,7 +929,7 @@ void PatSeedingTool::collectITOT(
 	    if (0 != state)
 	      xRange.intersect(predictXinRegion(state,sta,lay,otTyp));
 	    if ( m_printing ) {
-	      info() << "** Search in sta " << sta << " lay " << lay << " xPred " << xPred << endreq;
+	      info() << "** Search in sta " << sta << " lay " << lay << " xPred " << xPred << endmsg;
 	    }
 
 	    HitRange rangeXX = hitsInRange( xRange,sta,lay,otTyp );
@@ -953,7 +953,7 @@ void PatSeedingTool::collectITOT(
 	  nbSta++;
 	  int minPlanes = 3 * nbSta + 2;
 	  fitOK = m_seedTool->fitTrack( track, m_maxChi2HitOT, minPlanes, false, m_printing );
-	  if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endreq;
+	  if ( m_printing ) info() << "*** refitted track candidate status " << fitOK << endmsg;
 	}
       }
       // Try in IT again if needed
@@ -980,7 +980,7 @@ void PatSeedingTool::collectITOT(
 		xRange.intersect(predictXinRegion(state,sta,lay,testReg));
 	      if ( m_printing ) {
 		info() << "** Search in IT sta " << sta << " lay " << lay << " region " << testReg
-		  << " xPred " << xPred << endreq;
+		  << " xPred " << xPred << endmsg;
 	      }
 
 	      HitRange rangeYY = hitsInRange( xRange, sta, lay, testReg );
@@ -1011,7 +1011,7 @@ void PatSeedingTool::collectITOT(
 
       if ( m_printing ) {
 	info() << " --- We have found " << nbSta << " stations, fitOK " <<
-	  fitOK << "." << endreq;
+	  fitOK << "." << endmsg;
 	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
 	  debugFwdHit( hit, info() );
       }
@@ -1022,7 +1022,7 @@ void PatSeedingTool::collectITOT(
 	    (*(track.coordBegin() + (track.nCoords() - 1)))->z());
 	if ( m_tolCollect / dz / dz < fabs( track.curvature() ) ) {
 	  if ( m_printing ) info() << "    magnet off: curvature too high: "
-	    << track.curvature() << endreq;
+	    << track.curvature() << endmsg;
 	  continue;
 	}
       }
@@ -1106,7 +1106,7 @@ void PatSeedingTool::collectLowQualTracks(
 
     // check for compatibility with state (if we have one)
     if ( 0 != state && !isGoodSlope(state, false, sl) ) {
-      if ( m_printing ) info() << "  -- ty not compatible with state given" << endreq;
+      if ( m_printing ) info() << "  -- ty not compatible with state given" << endmsg;
       continue;
     }
 
@@ -1132,7 +1132,7 @@ void PatSeedingTool::collectLowQualTracks(
 	  if ( m_printing ) info() << "Not enough OT stereo in some station : "
 	    << nInStation[0] << " "
 	      << nInStation[1] << " "
-	      << nInStation[2] << endreq;
+	      << nInStation[2] << endmsg;
 	  continue;
 	}
       }
@@ -1141,21 +1141,21 @@ void PatSeedingTool::collectLowQualTracks(
     if ( isOT && m_otNHitsLowThresh > track.nCoords() &&
 	2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
       if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
-	<< track.nCoords() << " coordinates" << endreq;
+	<< track.nCoords() << " coordinates" << endmsg;
       continue;
     }
 
     track.sort();
-    if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endreq;
+    if ( m_printing ) info() << "-- Before fit, nPlanes = " << track.nPlanes() << endmsg;
     ok = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minTotalPlanes - 1, false, m_printing );
 
     if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
-      << ", nPlanes = " << track.nPlanes() << endreq;
+      << ", nPlanes = " << track.nPlanes() << endmsg;
     if ( isOT && m_otNHitsLowThresh > track.nCoords() &&  // OT short track -> not too many neighbours
 	2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
       if ( m_printing ) {
 	info()  << "Too many on side " << track.nbOnSide() << " with only "
-	  << track.nCoords() << " coordinates" << endreq;
+	  << track.nCoords() << " coordinates" << endmsg;
 	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
 	  debugFwdHit( hit, info() );
       }
@@ -1163,7 +1163,7 @@ void PatSeedingTool::collectLowQualTracks(
     }
 
     if ( m_maxFinalTrackChi2 < track.chi2() || !ok) {
-      if ( m_printing ) info() << "Chi2 too big" << endreq;
+      if ( m_printing ) info() << "Chi2 too big" << endmsg;
       continue;
     }
     // if a track makes it up to this point, it's valid, and we add it
@@ -1187,7 +1187,7 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
   out->setHistory( LHCb::Track::PatSeeding );
   out->setPatRecStatus( LHCb::Track::PatRecIDs );
 
-  debug() << "==== Storing track " << outputTracks.size() << endreq;
+  debug() << "==== Storing track " << outputTracks.size() << endmsg;
   BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
     out->addToLhcbIDs( hit->hit()->lhcbID() );
     //== Tag used coordinates
@@ -1270,7 +1270,7 @@ void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) cons
   //    coord->MCKeys().end() != itM; ++itM ) {
   //msg << " " << *itM;
   //}
-  msg << endreq;
+  msg << endmsg;
 }
 
 //=========================================================================
@@ -1286,7 +1286,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
   bool printing = msgLevel ( MSG::VERBOSE );
 
   if ( printing ) {
-    info() << ".. Compare new track:" << endreq;
+    info() << ".. Compare new track:" << endmsg;
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
       debugFwdHit( hit, info() );
   }
@@ -1328,7 +1328,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       info() << "Track " << nTrack << " size " <<  othertrack.nCoords()
 	<< " chi2 " << othertrack.chi2() << " has <= " << nCommonMax
 	<< " hit shared with current track of size " << track.nCoords()
-	<< " chi2 " << track.chi2() << endreq;
+	<< " chi2 " << track.chi2() << endmsg;
       BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
 	debugFwdHit( hit, info() );
     }
@@ -1342,7 +1342,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       qual2 += m_qualityWeights[1] * othertrack.chi2();
     }
     if ( qual1 < qual2 ) {
-      if ( printing ) info() << "  new is shorter / higher chi2 -> ignore new" << endreq;
+      if ( printing ) info() << "  new is shorter / higher chi2 -> ignore new" << endmsg;
       return;
     }
     // reuse an entry instead of erasing the old and allocating a new one,
@@ -1350,17 +1350,17 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
     // erasing because erasing might involve moving a lot of data around
     // to close the resulting gap...
     if ( !stored ) {
-      if ( printing ) info() << "  replacing old" << endreq;
+      if ( printing ) info() << "  replacing old" << endmsg;
       othertrack = track;
       stored = true;
     } else {
-      if ( printing ) info() << "  invalidating old" << endreq;
+      if ( printing ) info() << "  invalidating old" << endmsg;
       othertrack.setValid(false);
       lastInvalidTrack = &othertrack;
     }
   } // end of loop over pool
   if ( !stored ) {
-    if ( printing ) info() << "  Store new one" << endreq;
+    if ( printing ) info() << "  Store new one" << endmsg;
     // if we can reuse an invalid entry, we do so
     if (0 != lastInvalidTrack)
       *lastInvalidTrack = track;
@@ -1368,7 +1368,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       pool.push_back( track );
   }
   if ( m_printing ) {
-    info() << " ****** stored track " << endreq;
+    info() << " ****** stored track " << endmsg;
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
       debugFwdHit( hit, info() );
   }
@@ -1451,7 +1451,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       x2Range.intersect(predictXinRegion(state, 2,lay2,reg2));
 
     if ( m_printing ) info() << " x2Min " << x2Range.min() <<
-      " x2Max " << x2Range.max() << endreq;
+      " x2Max " << x2Range.max() << endmsg;
 
     HitRange rangeX2 = hitsInRange( x2Range, 2, lay2, reg2 );
     for ( itH2 = rangeX2.begin(); rangeX2.end() != itH2; ++itH2 ) {
@@ -1495,7 +1495,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       if (0 != state) x1Range.intersect(predictXinRegion(state, 1, lay1, reg1));
 
       if ( m_printing ) info() << " x1Min " << x1Range.min() << " x1Max " <<
-	x1Range.max() << " linear " << x0 + dz * slope << endreq;
+	x1Range.max() << " linear " << x0 + dz * slope << endmsg;
 
       HitRange rangeX1 = hitsInRange( x1Range, 1, lay1, reg1 );
       for ( itH1 = rangeX1.begin(); rangeX1.end() != itH1; ++itH1 ) {
@@ -1507,10 +1507,10 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 
 	if (hit1->hasNext() && rangeX1.end() != (itH1 + 1) && !(*(itH1 + 1))->isUsed()) {
 	  hit1 = *(++itH1);
-	  if ( m_printing ) info() << "         ==> found hit1 " << x1 << " + " << hit1->x() << endreq;
+	  if ( m_printing ) info() << "         ==> found hit1 " << x1 << " + " << hit1->x() << endmsg;
 	  combineCluster(*(itH1 - 1), *itH1, x1, z1);
 	} else if ( m_printing ) {
-	  info() << "         ==> found hit1 " << x1 << endreq;
+	  info() << "         ==> found hit1 " << x1 << endmsg;
 	}
 	// isolation in station 1?
 	if (m_enforceIsolation && !isIsolated(itH1, rangeX1))
@@ -1570,7 +1570,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 		    "found%2d nbMissed%2d", sta, olay,
 		    track.xAtZ( regionZ0(sta,olay,regc) ),
 		    track.nCoords() - nCoordsBefore,  nbMissed )
-		  << endreq;
+		  << endmsg;
 	      }
 	      if ( m_maxMisses < nbMissed ) break;
 	    }
@@ -1581,15 +1581,15 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	if ( m_maxMisses < nbMissed ) continue;
 
 	//== Fit the track
-	if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endreq;
+	if ( m_printing ) info() << " -- start fitting, nCoord = " << track.nCoords() << endmsg;
 	track.sort();
 	bool fitOK = m_seedTool->fitTrack( track, m_maxChi2Hit, m_minXPlanes, true, m_printing );
 	if ( !fitOK ) {
-	  if ( m_printing ) info() << "    -- fit failed" << endreq;
+	  if ( m_printing ) info() << "    -- fit failed" << endmsg;
 	  continue;
 	}
 	if ( m_maxTrackChi2 < track.chi2() ) {
-	  if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endreq;
+	  if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endmsg;
 	  continue;
 	}
 
@@ -1598,7 +1598,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	  double dz = 0.5 * (z2 - z0);
 	  if (m_tolCollect / dz / dz < fabs(track.curvature())) {
 	    if ( m_printing ) info() << "    magnet off: curvature too high: "
-	      << track.curvature() << endreq;
+	      << track.curvature() << endmsg;
 	    continue;
 	  }
 	}
@@ -1607,24 +1607,24 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	if ( isRegionOT(reg0) && 8 > track.nCoords() ) {
 	  fitOK = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
 	  if ( !fitOK ) {
-	    if ( m_printing ) info() << "    -- re-fit with final Chi2 failed" << endreq;
+	    if ( m_printing ) info() << "    -- re-fit with final Chi2 failed" << endmsg;
 	    continue;
 	  }  
 
 	  if ( 2 * ( track.nCoords() - track.nPlanes() + 1 ) < track.nbOnSide() ) {
 	    if ( m_printing ) info() << "    -- only " << track.nCoords() << " and " << track.nbOnSide()
-	      << " neighbouring OT hits" << endreq;
+	      << " neighbouring OT hits" << endmsg;
 	    continue;
 	  }
 	  if ( m_maxTrackChi2LowMult < track.chi2() ) {
-	    if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endreq;
+	    if ( m_printing ) info() << "    -- global chi2 too high " << track.chi2() << endmsg;
 	    continue;
 	  }
 	}
 
 	if ( isRegionIT(reg0) && 3 > track.nbHighThreshold() ) {
 	  if ( m_printing ) info() << "    -- only " << track.nbHighThreshold()
-	    << " high threshold IT hits" << endreq;
+	    << " high threshold IT hits" << endmsg;
 	  continue;
 	}
 
@@ -1704,7 +1704,7 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
 
 	if ( m_printing )
 	  info() << format( "Stereo in sta%2d lay%2d region%2d xMin %7.2f xmax %7.2f",
-	      sta, sLay, testRegion, range.min(), range.max() ) << endreq;
+	      sta, sLay, testRegion, range.min(), range.max() ) << endmsg;
 
 	boost::array<unsigned char, 20> nDense;
 	if ( m_enforceIsolation )
@@ -1793,7 +1793,7 @@ bool PatSeedingTool::findBestRange (
   if ( m_printing ) {
     info() << format( "        range minDist %7.2f from %8.3f to %8.3f minNbPlanes %2d",
 	minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), minNbPlanes )
-      << endreq;
+      << endmsg;
   }
 
   //== Better range ? Remove first, try to complete, measure spread...
@@ -1814,7 +1814,7 @@ bool PatSeedingTool::findBestRange (
 	  info() << format( " better range minDist %7.2f from %8.3f to %8.3f minNbPlanes %2d",
 	      minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(),
 	      minNbPlanes )
-	    << endreq;
+	    << endmsg;
 	}
       }
     }
@@ -1845,7 +1845,7 @@ bool PatSeedingTool::findBestRange (
   if ( m_printing ) {
     info() << format( "  final range minDist %7.2f from %8.3f to %8.3f minNbPlanes %2d",
 	minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), minNbPlanes )
-      << endreq;
+      << endmsg;
   }
 
   // remove other hits - we don't want to ignore lots of hits in fitLineInY
@@ -1980,8 +1980,8 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
     double d0 = seeds[0]->driftDistance()/fabs(seeds[0]->hit()->dxDy());
     double d2 = seeds[2]->driftDistance()/fabs(seeds[2]->hit()->dxDy());
     if ( m_printing ) {
-      info() << format( "  0: z %8.2f y %7.2f d %7.2f", z0, x0, d0 ) << endreq;
-      info() << format( "  2: z %8.2f y %7.2f d %7.2f", z2, x2, d2 ) << endreq;
+      info() << format( "  0: z %8.2f y %7.2f d %7.2f", z0, x0, d0 ) << endmsg;
+      info() << format( "  2: z %8.2f y %7.2f d %7.2f", z2, x2, d2 ) << endmsg;
     }
 
     double minChi2 = 1e42;
@@ -2001,11 +2001,11 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
 	// resolve ambiguity towards line defined by y0, sl
 	dist = std::min(fabs(dist - drift), fabs(dist + drift));
 	if ( m_printing ) info() << format( "    z%8.2f proj%8.2f drift%8.2f dist%8.2f",
-	    hit->z(), hit->projection(), drift, dist ) << endreq;
+	    hit->z(), hit->projection(), drift, dist ) << endmsg;
 	chi2 += dist * dist;
       }
       if ( m_printing ) info() << format( "-- y fit: mask%2d y0 %8.2f sl%10.6f chi2 %12.2f",
-	  mask, y0, sl, chi2 ) << endreq;
+	  mask, y0, sl, chi2 ) << endmsg;
       if ( chi2 < minChi2 ) {
 	// current mask is best combination so far, save parameters and fix
 	// ambiguities
