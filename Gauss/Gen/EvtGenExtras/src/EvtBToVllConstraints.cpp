@@ -40,36 +40,6 @@ EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 	//
 	CQ1 = (*C)(11);
 	CQ2 = (*C)(12);
-	
-	DEBUGPRINT("Cb1[1]", Cb1_1);
-	DEBUGPRINT("Cb1[2]", Cb1_2);
-	DEBUGPRINT("Cb1[3]", Cb1_3);
-	DEBUGPRINT("Cb1[4]", Cb1_4);
-	DEBUGPRINT("Cb1[5]", Cb1_5);
-	DEBUGPRINT("Cb1[6]", Cb1_6);
-	
-	DEBUGPRINT("Ceff1[7]", Ceff1_7);
-	DEBUGPRINT("Ceff1[8]", Ceff1_8);
-	DEBUGPRINT("Cb1[9]", Cb1_9);
-	DEBUGPRINT("Cb1[10]", Cb1_10);
-	
-	DEBUGPRINT("Ceffp1[7]", Ceffp1_7);
-	DEBUGPRINT("Ceffp1[8]", Ceffp1_8);
-	DEBUGPRINT("Cbp1[9]", Cbp1_9);
-	DEBUGPRINT("Cbp1[10]", Cbp1_10);
-	
-	DEBUGPRINT("C7NP", C7NP);
-	DEBUGPRINT("C8NP", C8NP);
-	DEBUGPRINT("C9NP", C9NP);
-	DEBUGPRINT("C10NP", C10NP);
-	
-	DEBUGPRINT("C7sm", C7sm);
-	DEBUGPRINT("C8sm", C8sm);
-	DEBUGPRINT("C9sm", C9sm);
-	DEBUGPRINT("C10sm", C10sm);
-	
-	DEBUGPRINT("CQ1", CQ2);
-	DEBUGPRINT("CQ2", CQ2);
 
 	//Calculate some CKM factors from unitarity
 	Vub = constants::AbsVub/Power(Complex(constants::E),Complex(0,constants::gamma));
@@ -79,12 +49,6 @@ EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 			(constants::Vcb*Sqrt(1 - Power(constants::Vus,2)/(1 - Power(constants::AbsVub,2))))/
 			Sqrt(1 - Power(constants::AbsVub,2));
 	Vtb = Sqrt(1 - Power(constants::AbsVub,2))*Sqrt(1 - Power(constants::Vcb,2)/(1 - Power(constants::AbsVub,2)));
-	
-	DEBUGPRINT("Vub", Vub);
-	DEBUGPRINT("Vts", Vts);
-	DEBUGPRINT("Vtb", Vtb);
-
-	
 
 }
 
@@ -100,10 +64,7 @@ double EvtBToVllConstraints::getBrBsToMuMu() const{
 		     Sqrt(1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*constants::tauBs*
 		     (Power(Abs(P),2) + (1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*
 		        Power(Abs(S),2))*Power(Abs(Vtb*conj(Vts)),2))/(16.*Power(constants::Pi,3));
-	
-	DEBUGPRINT("S", S);
-	DEBUGPRINT("P", P);
-	DEBUGPRINT("BRBmumu", result);
+	DEBUGPRINT("BRBmumu", result);//V
 	return real(result);//branching fractions are real!
 	
 }
@@ -117,33 +78,26 @@ double EvtBToVllConstraints::getBrBToXsGamma() const{
 	 * (3.55 +/- 0.24) e-4 from Experiment
 	 */
 	
-	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
-	qcd::WCPtrNaked CNP = fact.parameters->CNP_mw.get();
-	
-	EvtComplex dC71 = 0;
-	EvtComplex dC81 = 0;
+	qcd::WCPtrNaked CR = fact.parameters->getCR_mw();
+	qcd::WCPtrNaked CNP = fact.parameters->getCNP_mw();
+
 	EvtComplex dC70 = (*CNP)(7);
 	EvtComplex dC7P0 = (*CR)(7);
-	EvtComplex dC80 = (*CNP)(7);
+	EvtComplex dC80 = (*CNP)(8);
 	EvtComplex dC8P0 = (*CR)(8);
+
+	const double a(2.98);
+	const EvtComplex a7(-7.184,0.612);
+	const double a77(4.743);
+	const EvtComplex a8(-2.225,-0.557);
+	const double a88(0.789);
+	const EvtComplex a78(2.454,-0.884);
 	
-	EvtComplex a(2.98);
-	EvtComplex a7(-7.184,0.612);
-	EvtComplex b77(0.084);
-	EvtComplex b7(-0.075);
-	EvtComplex a77(4.743);
-	EvtComplex a8(-2.225,-0.557);
-	EvtComplex b88(0.007);
-	EvtComplex b8(-0.022);
-	EvtComplex a88(0.789);
-	EvtComplex a78(2.454,-0.884);
-	EvtComplex b78(0.025);
-	
-	EvtComplex result = (0.000315*(a + a77*(Power(Abs(dC70),2) + Power(Abs(dC7P0),2)) + 
+	EvtComplex result = (3.15e-4/a)*(a + a77*(Power(Abs(dC70),2) + Power(Abs(dC7P0),2)) + 
 		       	a88*(Power(Abs(dC80),2) + Power(Abs(dC8P0),2)) + 
-		       	Re(a7*dC70 + a8*dC80 + a78*(dC70*Conjugate(dC80) + dC7P0*Conjugate(dC8P0)))))/a;
+		       	Re(a7*dC70 + a8*dC80 + a78*(dC70*Conjugate(dC80) + dC7P0*Conjugate(dC8P0))));
 	
-	DEBUGPRINT("BRBXsgamma", result);
+	DEBUGPRINT("BRBXsgamma: ", result);//V
 	return real(result);
 	
 }
@@ -225,7 +179,7 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 			         ((*C)(9) + qcd::Y(constants::mb*constants::mb*sh,*C));
 		};
 		
-		EvtComplex getC10new(const double sh, const double mu) const{
+		EvtComplex getC10new(const double sh, const double) const{
 			return (*C)(10)*(1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi);
 		};
 		
@@ -301,6 +255,8 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		report(WARNING,"EvtGen") << "Result: " << result << " Error: " << error << std::endl;
 	}
 	gsl_integration_workspace_free(w);
+	result *= 0.1074;
+	DEBUGPRINT("Br(B->X_s mu mu): ", result);//V
 	return result;
 }
 

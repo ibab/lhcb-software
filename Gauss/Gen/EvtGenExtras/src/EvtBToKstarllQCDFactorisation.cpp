@@ -53,7 +53,7 @@ const double QCDFactorisation::im_f_2_9[4][2] = {{-0.98225, 0.35815}, {1.5026, -
 EvtBToVllParameters::EvtBToVllParameters(bool _includeRHC,
 		qcd::WCPtr _C_mb, qcd::WCPtr _C_mb3,
 		qcd::WCPtr _CR_mb, qcd::WCPtr _CR_mb3,
-		qcd::WCPtr _CNP_mw):
+		qcd::WCPtr _CNP_mw, qcd::WCPtr _CR_mw):
 		includeRHC(_includeRHC),
 		C_mb(_C_mb),C_mb3(_C_mb3),
 		CR_mb(_CR_mb),CR_mb3(_CR_mb3),
@@ -61,7 +61,7 @@ EvtBToVllParameters::EvtBToVllParameters(bool _includeRHC,
 		C_mb3_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*C_mb3)),
 		CR_mb_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb)),
 		CR_mb3_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*CR_mb3)),
-		CNP_mw(_CNP_mw),isBbar(true){
+		CNP_mw(_CNP_mw),CR_mw(_CR_mw),isBbar(true){
 }
 
 void EvtBToVllParameters::setParentID(const EvtId parentID){
@@ -98,53 +98,33 @@ void QCDFactorisation::init(){
 	parameters = new EvtBToVllParameters(model.hasRightHandedCurrents(),
 			qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
 			qcd::WCPtr(_mb->second),qcd::WCPtr(_mb3->second),
-			CNP_mw);
+			CNP_mw,CR_mw);
 	
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb()->getOperatorBasis());
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
 	
-	DEBUGPRINT("C_mw: ", (*C_mw));//V
-	DEBUGPRINT("CNP_mw: ", (*CNP_mw));
-	DEBUGPRINT("CR_mw: ", (*CR_mw));//V
+	std::cout << "Using physics model: " << model.getModelName() << std::endl;
+	std::cout << "Meson: " << parameters->flavourString() << std::endl;
+	std::cout << "Left-handed Wilson coefficients are: " << std::endl;
+	std::cout << "\t(m_W): " << (*C_mw) <<std::endl;
+	std::cout << "\t(m_b): " << *(parameters->getC_mb()) <<std::endl;
+	std::cout << "\t(m_h): " << *(parameters->getC_mb3()) <<std::endl;
+	
+	std::cout << "Right-handed Wilson coefficients are: " << std::endl;
+	std::cout << "\t(m_W): " << *(parameters->getCR_mw()) <<std::endl;
+	std::cout << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
+	std::cout << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
 
-	const bool saveFlavour = parameters->getisBbar();
-	parameters->setBbar(true);
-	DEBUGPRINT("Flavour: ", parameters->flavourString());
-	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));//V
-	DEBUGPRINT("C_mb3: ", *(parameters->getC_mb3()));//V
-	DEBUGPRINT("CR_mb: ", *(parameters->getCR_mb()));//V
-	DEBUGPRINT("CR_mb3: ", *(parameters->getCR_mb3()));//V
-	
-	parameters->setBbar(false);
-	DEBUGPRINT("Flavour: ", parameters->flavourString());
-	DEBUGPRINT("C_mb: ", *(parameters->getC_mb()));//V
-	DEBUGPRINT("C_mb3: ", *(parameters->getC_mb3()));//V
-	DEBUGPRINT("CR_mb: ", *(parameters->getCR_mb()));//V
-	DEBUGPRINT("CR_mb3: ", *(parameters->getCR_mb3()));//V
-	parameters->setBbar(saveFlavour);
-	
-	report(NOTICE,"EvtGen") << "Using physics model: " << model.getModelName() << std::endl;
-	report(NOTICE,"EvtGen") << "Meson: " << parameters->flavourString() << std::endl;
-	report(NOTICE,"EvtGen") << "Left-handed Wilson coefficients are: " << std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_W): " << (*C_mw) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->getC_mb()) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->getC_mb3()) <<std::endl;
-	
-	report(NOTICE,"EvtGen") << "Right-handed Wilson coefficients are: " << std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_W): " << (*CR_mw) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
-	report(NOTICE,"EvtGen") << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
-	
 	EvtBToVllConstraints constrain(*this);
 	if(calcAFBZero){
-		double afbZero = constrain.findAFBZero();
-		report(NOTICE,"EvtGen") << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
 		double brBsToMuMu = constrain.getBrBsToMuMu();
-		report(NOTICE,"EvtGen") << "BR(B_s->\\mu\\mu) is: " << brBsToMuMu <<std::endl;
+		std::cout << "BR(B_s->\\mu\\mu) is: " << brBsToMuMu <<std::endl;
 		double brBToXsGamma = constrain.getBrBToXsGamma();
-		report(NOTICE,"EvtGen") << "BR(B_d->X_s\\gamma) is: " << brBToXsGamma <<std::endl;
+		std::cout << "BR(B_d->X_s\\gamma) is: " << brBToXsGamma <<std::endl;
 		double brBToXsll = constrain.getBrBToXsll();
-		report(NOTICE,"EvtGen") << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
+		std::cout << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
+		double afbZero = constrain.findAFBZero();
+		std::cout << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
 	}
 	
 #if 1

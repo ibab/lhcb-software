@@ -32,7 +32,7 @@ public:
 	EvtBToVllParameters(bool _includeRHC,
 			qcd::WCPtr _C_mb, qcd::WCPtr _C_mb3,
 			qcd::WCPtr _CR_mb, qcd::WCPtr _CR_mb3,
-			qcd::WCPtr _CNP_mw);
+			qcd::WCPtr _CNP_mw, qcd::WCPtr _CR_mw);
 	
 	//must be called to get correct WC sets
 	void setParentID(const EvtId parentID);
@@ -61,6 +61,9 @@ public:
 	qcd::WCPtrNaked getCNP_mw() const{
 			return CNP_mw.get();
 	}
+	qcd::WCPtrNaked getCR_mw() const{
+			return CR_mw.get();
+	}
 	
 	
 	std::string flavourString() const;
@@ -81,6 +84,7 @@ private:
 	const qcd::WCPtr CR_mb3_conj;
 	//
 	const qcd::WCPtr CNP_mw;
+	const qcd::WCPtr CR_mw;
 	
 	bool isBbar;
 };
