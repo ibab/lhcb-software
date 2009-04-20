@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.11 2009-04-19 00:40:29 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.12 2009-04-20 09:48:33 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -99,6 +99,7 @@ private:
   bool m_fill;
   bool m_emu;
   bool m_encode;
+  bool m_stat;
 };
 #endif // L0DUFROMRAWTOOL_H
 

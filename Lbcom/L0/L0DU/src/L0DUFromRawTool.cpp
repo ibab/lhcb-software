@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.21 2009-04-19 00:40:29 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.22 2009-04-20 09:48:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,7 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "FillDataMap"             , m_fill = false);   // WARNING : default is false
   declareProperty( "EncodeProcessorData"     , m_encode = true);  // EXPERT USAGE
   declareProperty( "Emulate"                 , m_emu  = true);    // EXPERT USAGE
+  declareProperty( "StatusOnTES"             , m_stat = true);    // EXPERT USAGE
 }
 //=============================================================================
 // Destructor
@@ -96,7 +97,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     m_report.clear();
     m_report.setValid( false );
   }
-  putStatusOnTES();
+  if(m_stat)putStatusOnTES();
   return ok;
 }
 
@@ -127,8 +128,8 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
     m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::ErrorBank );
   }
   
-  
-  debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
+   if ( msgLevel( MSG::DEBUG) )
+     debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
     if(m_warn)Warning("READOUTSTATUS : no L0DU bank found in rawEvent",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
