@@ -28,13 +28,33 @@ template<typename T> T Chop(const T value){
 	return chop(value);
 }
 
+template<typename T> EvtComplex Abs( const T value ){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return abs(tmp);
+}
+
 template<>
 double Chop(const double value);
-EvtComplex Complex(const double re, const double im);
+EvtComplex Complex(const double re, const double im = 0.0);
 
 template<typename T> EvtComplex ArcTan( const T value ){
 	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
 	return atan(tmp);
+}
+
+template<typename T> double Re( const T value ){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return real(tmp);
+}
+
+template<typename T> double Im( const T value ){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return imag(tmp);
+}
+
+template<typename T> EvtComplex Conjugate( const T value ){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return conj(tmp);
 }
 
 template<typename T> unsigned int KroneckerDelta( const T i, const T j){
@@ -49,6 +69,11 @@ template<typename T> EvtComplex Log( const T value ){
 template<typename T> EvtComplex Power( const T value, const double index){
 	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
 	return (index == 2) ? tmp*tmp : pow(tmp, index);
+}
+
+template<typename T> EvtComplex Power( const T value, const T index){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return pow(tmp,index);
 }
 
 EvtComplex Sqrt(const EvtComplex value);

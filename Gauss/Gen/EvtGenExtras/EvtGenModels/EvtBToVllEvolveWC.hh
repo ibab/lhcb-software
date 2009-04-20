@@ -33,8 +33,8 @@ public:
 			const WilsonCoefficients<WilsonType>&);
 	result_type operator()(const argument_type& scale); 
 	
-	WilsonType runC7(const WilsonType C7h, const WilsonType C8h, const argument_type& scale) const;
-	WilsonType runC8(const WilsonType C8h, const argument_type& scale) const;
+	static WilsonType runC7(const WilsonType C7h, const WilsonType C8h, const argument_type& scale);
+	static WilsonType runC8(const WilsonType C8h, const argument_type& scale);
 	
 	const static unsigned int dimension = 10;
 

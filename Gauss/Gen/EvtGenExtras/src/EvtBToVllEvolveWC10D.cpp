@@ -43,7 +43,7 @@ using constants::Pi;
  * currently the code only deals with C'_{7-10}.
  */
 
-qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC7(const qcd::WilsonType C7h, const qcd::WilsonType C8h, const argument_type& scale) const{
+qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC7(const qcd::WilsonType C7h, const qcd::WilsonType C8h, const argument_type& scale){
 	switch(scale){
 	case MU_MW:
 		return C7h;
@@ -55,7 +55,7 @@ qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC7(const qcd::WilsonType C7h, cons
 		return C7h;//no running
 	}
 }
-qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC8(const qcd::WilsonType C8h, const argument_type& scale) const{
+qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC8(const qcd::WilsonType C8h, const argument_type& scale){
 	switch(scale){
 	case MU_MW:
 		return C8h;

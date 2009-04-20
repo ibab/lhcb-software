@@ -1,4 +1,308 @@
 #include "EvtGenModels/EvtBToVllConstraints.hh"
+#include "EvtGenModels/EvtBToVllEvolveWC.hh"
+#include "EvtGenModels/EvtBToVllQCDUtils.hh"
+
+#include "gsl/gsl_integration.h"
+
+EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
+		fact(_fact){
+	
+	qcd::WCPtrNaked C = fact.parameters->C_mb.get();
+	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
+	qcd::WCPtrNaked CNP = fact.parameters->CNP_mw.get();
+	
+	Cb1_1 = (*C)(1);
+	Cb1_2 = (*C)(2);
+	Cb1_3 = (*C)(3);
+	Cb1_4 = (*C)(4);
+	Cb1_5 = (*C)(5);
+	Cb1_6 = (*C)(6);
+	//
+	Ceff1_7 = (*C)(7);
+	Ceff1_8 = (*C)(8);
+	Cb1_9 = (*C)(9);
+	Cb1_10 = (*C)(10);
+	//
+	Ceffp1_7 = (*CR)(7);
+	Ceffp1_8 = (*CR)(8);
+	Cbp1_9 = (*CR)(9);
+	Cbp1_10 = (*CR)(10);
+	//
+	C7NP = qcd::EvtBToVllEvolveWC10D::runC7((*CNP)(7),(*CNP)(8),qcd::MU_MB);
+	C8NP = qcd::EvtBToVllEvolveWC10D::runC8((*CNP)(8),qcd::MU_MB);
+	C9NP = (*CNP)(9);
+	C10NP = (*CNP)(10);
+	//
+	C7sm = Ceff1_7 - C7NP;
+	C8sm = Ceff1_8 - C8NP;
+	C9sm = Cb1_9 - C9NP;
+	C10sm = Cb1_10 - C10NP;
+	//
+	CQ1 = (*C)(11);
+	CQ2 = (*C)(12);
+	
+	DEBUGPRINT("Cb1[1]", Cb1_1);
+	DEBUGPRINT("Cb1[2]", Cb1_2);
+	DEBUGPRINT("Cb1[3]", Cb1_3);
+	DEBUGPRINT("Cb1[4]", Cb1_4);
+	DEBUGPRINT("Cb1[5]", Cb1_5);
+	DEBUGPRINT("Cb1[6]", Cb1_6);
+	
+	DEBUGPRINT("Ceff1[7]", Ceff1_7);
+	DEBUGPRINT("Ceff1[8]", Ceff1_8);
+	DEBUGPRINT("Cb1[9]", Cb1_9);
+	DEBUGPRINT("Cb1[10]", Cb1_10);
+	
+	DEBUGPRINT("Ceffp1[7]", Ceffp1_7);
+	DEBUGPRINT("Ceffp1[8]", Ceffp1_8);
+	DEBUGPRINT("Cbp1[9]", Cbp1_9);
+	DEBUGPRINT("Cbp1[10]", Cbp1_10);
+	
+	DEBUGPRINT("C7NP", C7NP);
+	DEBUGPRINT("C8NP", C8NP);
+	DEBUGPRINT("C9NP", C9NP);
+	DEBUGPRINT("C10NP", C10NP);
+	
+	DEBUGPRINT("C7sm", C7sm);
+	DEBUGPRINT("C8sm", C8sm);
+	DEBUGPRINT("C9sm", C9sm);
+	DEBUGPRINT("C10sm", C10sm);
+	
+	DEBUGPRINT("CQ1", CQ2);
+	DEBUGPRINT("CQ2", CQ2);
+
+	//Calculate some CKM factors from unitarity
+	Vub = constants::AbsVub/Power(Complex(constants::E),Complex(0,constants::gamma));
+	Vts = -((constants::AbsVub*Power(Complex(constants::E),Complex(0,constants::gamma))*
+			Sqrt(1 - Power(constants::Vcb,2)/(1 - Power(constants::AbsVub,2)))*constants::Vus)/
+				Sqrt(1 - Power(constants::AbsVub,2))) - 
+			(constants::Vcb*Sqrt(1 - Power(constants::Vus,2)/(1 - Power(constants::AbsVub,2))))/
+			Sqrt(1 - Power(constants::AbsVub,2));
+	Vtb = Sqrt(1 - Power(constants::AbsVub,2))*Sqrt(1 - Power(constants::Vcb,2)/(1 - Power(constants::AbsVub,2)));
+	
+	DEBUGPRINT("Vub", Vub);
+	DEBUGPRINT("Vts", Vts);
+	DEBUGPRINT("Vtb", Vtb);
+
+	
+
+}
+
+double EvtBToVllConstraints::getBrBsToMuMu() const{
+	
+	//Calculates the branching fraction of Bs->MuMu
+	//using eqn 6.3 of arXiv:0811.1214
+	
+	EvtComplex S = 0.5*constants::mBs*constants::mBs*CQ1;
+	EvtComplex P = (0.5*constants::mBs*constants::mBs*CQ2) + (constants::mmu*(Cb1_10 - Cbp1_10));
+	
+	EvtComplex result = (Power(constants::alphaEM,2)*Power(constants::fBs,2)*Power(constants::GF,2)*constants::mBs*
+		     Sqrt(1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*constants::tauBs*
+		     (Power(Abs(P),2) + (1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*
+		        Power(Abs(S),2))*Power(Abs(Vtb*conj(Vts)),2))/(16.*Power(constants::Pi,3));
+	
+	DEBUGPRINT("S", S);
+	DEBUGPRINT("P", P);
+	DEBUGPRINT("BRBmumu", result);
+	return real(result);//branching fractions are real!
+	
+}
+
+double EvtBToVllConstraints::getBrBToXsGamma() const{
+	
+	/*
+	 * Taken from Matias + Lunghi, hep-ph/0612166, 
+	 * and rescaled to 3.15e-4 (cf. Hurth et al. 0807.5039)
+	 * (3.15 +/- 0.23 )e-4  from Theoretical SM
+	 * (3.55 +/- 0.24) e-4 from Experiment
+	 */
+	
+	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
+	qcd::WCPtrNaked CNP = fact.parameters->CNP_mw.get();
+	
+	EvtComplex dC71 = 0;
+	EvtComplex dC81 = 0;
+	EvtComplex dC70 = (*CNP)(7);
+	EvtComplex dC7P0 = (*CR)(7);
+	EvtComplex dC80 = (*CNP)(7);
+	EvtComplex dC8P0 = (*CR)(8);
+	
+	EvtComplex a(2.98);
+	EvtComplex a7(-7.184,0.612);
+	EvtComplex b77(0.084);
+	EvtComplex b7(-0.075);
+	EvtComplex a77(4.743);
+	EvtComplex a8(-2.225,-0.557);
+	EvtComplex b88(0.007);
+	EvtComplex b8(-0.022);
+	EvtComplex a88(0.789);
+	EvtComplex a78(2.454,-0.884);
+	EvtComplex b78(0.025);
+	
+	EvtComplex result = (0.000315*(a + a77*(Power(Abs(dC70),2) + Power(Abs(dC7P0),2)) + 
+		       	a88*(Power(Abs(dC80),2) + Power(Abs(dC8P0),2)) + 
+		       	Re(a7*dC70 + a8*dC80 + a78*(dC70*Conjugate(dC80) + dC7P0*Conjugate(dC8P0)))))/a;
+	
+	DEBUGPRINT("BRBXsgamma", result);
+	return real(result);
+	
+}
+
+double EvtBToVllConstraints::getBrBToXsll() const{
+	
+	class utils{
+	public:
+		
+		utils(const qcd::WCPtrNaked _C, const qcd::WCPtrNaked _CR, const EvtComplex _Vtb, const EvtComplex _Vts):
+			C(_C),CR(_CR),C100(0.215),C200(-0.487),nfl(5),Vtb(_Vtb),Vts(_Vts){
+		}
+
+		static double getLS0(const double sh){
+			return log(sh);
+		};
+		static EvtComplex omega9(const double sh){
+			return (-2*Power(constants::Pi,2))/9. + (5 + 9*sh - 6*Power(sh,2))/
+		    	(6.*(1 - sh)*(1 + 2*sh)) - ((5 + 4*sh)*Log(1 - sh))/(3.*(1 + 2*sh)) - 
+		    	(2*(1 - 2*sh)*sh*(1 + sh)*Log(sh))/(3.*Power(1 - sh,2)*(1 + 2*sh)) - 
+		    	(2*Log(1 - sh)*Log(sh))/3. - (4*PolyLog(2,sh))/3.;
+		};
+		
+		static EvtComplex omega7(const double sh, const double mu){
+			return (-2*Power(constants::Pi,2))/9. - (16 - 11*sh - 17*Power(sh,2))/
+		    (18.*(1 - sh)*(2 + sh)) - (8*Log(mu/constants::mb))/3. - ((8 + sh)*Log(1 - sh))/(3.*(2 + sh)) - 
+		   (2*sh*(2 - 2*sh - Power(sh,2))*Log(sh))/(3.*Power(1 - sh,2)*(2 + sh)) - 
+		   (2*Log(1 - sh)*Log(sh))/9. - (4*PolyLog(2,sh))/3.;
+		};
+		
+		static EvtComplex get_F_1_9(const double sh, const double mu){
+		
+			const double mc1 = constants::mc/constants::mb;
+			const double Lc = log(mc1);
+			const double Ls = getLS0(sh);
+			const double Lm = log(mu/constants::mb);
+			const EvtComplex IPi(0,constants::Pi);
+
+			return QCDFactorisation::inner::get_F_1_9(Lc,Lm,Ls,mc1,sh);
+		};
+		
+		static EvtComplex get_F_2_9(const double sh, const double mu){
+				
+			const double mc1 = constants::mc/constants::mb;
+			const double Lc = log(mc1);
+			const double Ls = getLS0(sh);
+			const double Lm = log(mu/constants::mb);
+			const EvtComplex IPi(0,constants::Pi);
+
+			return QCDFactorisation::inner::get_F_2_9(Lc,Lm,Ls,mc1,sh);
+		};
+		
+		static EvtComplex get_F_8_9(const double sh, const double){
+			return 11.555555555555555 - (32*Power(constants::Pi,2))/27. + 
+			   (43.851851851851855 - (40*Power(constants::Pi,2))/9.)*sh + 
+			   (105.27407407407408 - (32*Power(constants::Pi,2))/3.)*Power(sh,2) + 
+			   (204.7026455026455 - (560*Power(constants::Pi,2))/27.)*Power(sh,3) + 
+			   (16*(1 + sh + Power(sh,2) + Power(sh,3))*getLS0(sh))/9.;
+		};
+		
+		static EvtComplex f(const EvtComplex zz){
+			return 1 - 8*Power(zz,2) + 8*Power(zz,6) - Power(zz,8) - 
+			   24*Power(zz,4)*Log(zz);
+		};
+		
+		EvtComplex kappa(const EvtComplex zz) const{
+			return 1 - (2*(1.5 + (-7.75 + Power(constants::Pi,2))*Power(1 - zz,2))*
+				      qcd::alpha_s(constants::mb,nfl))/(3.*constants::Pi);
+		};
+		
+		EvtComplex getC7new(const double sh, const double mu) const{
+			return (*C)(7)*(1 + (qcd::alpha_s(constants::mb,nfl)*omega7(sh,mu))/constants::Pi);
+		};
+		
+		EvtComplex getC9new(const double sh, const double mu) const{
+			return -(qcd::alpha_s(constants::mb,nfl)*(C100*get_F_1_9(sh,mu) + C200*get_F_2_9(sh,mu) + 
+			         (*C)(8)*get_F_8_9(sh,mu)))/(4.*constants::Pi) + 
+			         (1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi)*
+			         ((*C)(9) + qcd::Y(constants::mb*constants::mb*sh,*C));
+		};
+		
+		EvtComplex getC10new(const double sh, const double mu) const{
+			return (*C)(10)*(1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi);
+		};
+		
+		EvtComplex getU(const double sh, const double mu) const{
+			
+			const double mlh = constants::mmu/constants::mb; 
+			
+			return (3*Power(constants::mb, 2)*(1 - (4*Power(mlh, 2))/sh)*sh
+					* (Power(Abs((*C)(11)), 2) + Power(Abs((*C)(12)), 2)))/2. + 6*Power(
+					mlh, 2)*(-Power(Abs(getC10new(sh,mu)), 2) + Power(Abs(getC9new(sh,mu)),
+					2) + Power(Abs((*CR)(9)), 2) - Power(Abs((*CR)(10)), 2)) + (1
+					+ (2*Power(mlh, 2)*(1 - sh))/sh + 2*sh)* (Power(
+					Abs(getC10new(sh,mu)), 2) + Power(Abs(getC9new(sh,mu)), 2) + Power(
+					Abs((*CR)(9)), 2) + Power(Abs((*CR)(10)), 2)) + 6
+					*constants::mb*mlh*Re((*C)(11)*getC10new(sh,mu)) + (1 + (2*Power(mlh,
+					2))/sh)* ((4*(2 + sh)*Power(Abs(getC7new(sh,mu)), 2))/sh + 12
+					*Re(getC7new(sh,mu)*Conjugate(getC9new(sh,mu)) + (*CR)(7)
+							*Conjugate((*CR)(9))));
+		};
+		
+		double getDiffDecayRate(const double sh) const{
+			const double mlh = constants::mmu/constants::mb;
+			return real((Power(constants::alphaEM,2)*Sqrt(1 - (4*Power(mlh,2))/sh)*Power(1 - sh,2)*
+				     getU(sh,C->getScaleValue())*Power(Abs(Vtb*Vts),2))/(4.*Power(constants::Pi,2)*Power(Abs(constants::Vcb),2)*
+				    		 f(constants::mc/constants::mb)*kappa(constants::mc/constants::mb)));
+		};
+		
+		//form dictated by gsl_function
+		static double integralFunction(double s, void* p){
+			utils* u = (utils*)p;
+			return u->getDiffDecayRate(s);
+		}
+		
+	private:
+		
+		const qcd::WCPtrNaked C;
+		const qcd::WCPtrNaked CR;
+		
+		const double C100;
+		const double C200;
+		const int nfl;
+		
+		EvtComplex Vtb;
+		EvtComplex Vts;
+		
+	};
+	
+	qcd::WCPtrNaked C = fact.parameters->C_mb.get();
+	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
+
+	utils u(C,CR,Vts,Vtb);
+	
+	double result = 0;
+	double error = 0;
+	const int nDivisions = 100;
+	const double accuracyGoal = 1e-4;
+
+	gsl_function F;
+	F.function = &utils::integralFunction;
+	F.params = &u;
+
+	const double sMin = 1/(constants::mb*constants::mb);
+	const double sMax = 6/(constants::mb*constants::mb);
+	
+	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
+	const int intCode = gsl_integration_qag(&F, sMin, sMax, 0, accuracyGoal,
+			nDivisions, GSL_INTEG_GAUSS61, w, &result, &error);
+	if (intCode != 0) {
+		report(WARNING,"EvtGen") << "Numerical integration did not return cleanly."
+				<< std::endl;
+		report(WARNING,"EvtGen") << "Return code of the integration was " << intCode
+				<< std::endl;
+		report(WARNING,"EvtGen") << "Result: " << result << " Error: " << error << std::endl;
+	}
+	gsl_integration_workspace_free(w);
+	return result;
+}
 
 double EvtBToVllConstraints::getAFB(const double q2) const{
 	

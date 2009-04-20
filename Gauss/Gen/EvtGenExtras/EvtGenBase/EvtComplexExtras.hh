@@ -11,6 +11,7 @@ EvtComplex atan(const EvtComplex& cmp);
 EvtComplex chop(const EvtComplex& cmp);
 EvtComplex log(const EvtComplex& cmp);
 EvtComplex pow(const EvtComplex& cmp, const double index);
+EvtComplex pow(const EvtComplex& cmp, const EvtComplex index);
 EvtComplex sqrt(const EvtComplex& cmp);
 EvtComplex sqrt_real(const double value);
 

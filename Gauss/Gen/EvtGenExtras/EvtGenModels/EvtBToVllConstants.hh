@@ -46,6 +46,18 @@ namespace constants{
 	static const double MZ =  91.1876;//GeV
 	static const double sw2 = 0.23;//Weak mixing angle
 	static const double Vts = -0.0416310;//+-0.003
+	static const double Vus = 0.2258;
+	static const double Vcb = 4.12e-2;
+	static const double AbsVub = 3.93e-3;
+	//used in the Constraints
+	static const double fBs = 0.268;
+	static const double mBs = 5.3663;
+	static const double pstoinvGev = 1e-12/6.582119e-25;
+	static const double tauBs = 1.425*pstoinvGev;
+	static const double gamma = (70*Pi)/180.;
+	static const double GF = 1.16637e-5;
+	
+	
 
 }
 
