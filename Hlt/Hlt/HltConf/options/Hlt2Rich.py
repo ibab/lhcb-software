@@ -3,7 +3,7 @@ from GaudiKernel.SystemOfUnits import GeV, mm
 
 seq = GaudiSequencer("HltRICHReco")
 seq.MeasureTime = True
-GaudiSequencer("SeqHlt2Charged").Members += [seq]
+#GaudiSequencer("SeqHlt2Charged").Members += [seq]
 
 richConf = RichRecSysConf()
 
