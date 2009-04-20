@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.3 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatSeedFit.cpp,v 1.4 2009-04-20 06:43:09 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -169,15 +169,16 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
       }
     }
     
-    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false).ignore() ;
+    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
+    if( sc.isFailure() Warning("First call to fitTrack failed", sc, 0 ).ignore();
 
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
     if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
     updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
     }
 
-    sc = fitTrack( *pattrack, m_maxChi2, 0, false, false).ignore() ;
-
+    sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
+    if( sc.isFailure() Warning("Second call to fitTrack failed", sc, 0 ).ignore();
     
     LHCb::State temp(Gaudi::TrackVector(pattrack->xAtZ(m_zReference), 
 					pattrack->yAtZ(m_zReference),
