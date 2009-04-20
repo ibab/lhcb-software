@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.33 2009-04-17 11:48:17 snies Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.34 2009-04-20 16:00:53 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +15,8 @@
 // AIDA
 // ============================================================================
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IAxis.h"
+
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -63,15 +65,16 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
-    , m_gpstimesec(0), m_time(0), m_virtmem(0)
+    , m_gpstimesec(0), m_time(0), m_virtmem(0), m_events(0)
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
-  declareProperty("ScanEvents",        m_scanevents = 2000 );
-  declareProperty("TotalTime",         m_totaltime  = 2000 );
-  declareProperty("TotalMemory",       m_totalmem   = 5000 );
+  declareProperty("ScanEvents",        m_scanevents = 200 );
+  declareProperty("TotalMemory",       m_totalmem   = 3000 );
+  declareProperty("TimeSize",          m_timeSize = 100 );
+  declareProperty("TimeInterval",      m_timeInterval = 1 );
   declareProperty("DecToGroup",        m_DecToGroup);
   declareProperty("GroupLabels",       m_GroupLabels);
 }
@@ -88,7 +91,7 @@ StatusCode HltGlobalMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //  m_time_ref    = time(NULL);  //time or mtime or mtimeref... zie constructor
   
-  m_L0Input         = book1D("L0 channel",-0.5,16.5,17);
+  m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
   m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
   std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
                 (ODIN::Reserve,           "Reserve")
@@ -124,11 +127,11 @@ StatusCode HltGlobalMonitor::initialize() {
 
 
 
-  m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
-                             -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
-   if (!setBinLabels(m_hltAcc, labels)) {
-    error() << "failed to set binlables on accept hist" << endmsg;
-  }
+//   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
+//                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
+//    if (!setBinLabels(m_hltAcc, labels)) {
+//     error() << "failed to set binlables on accept hist" << endmsg;
+//   }
 
   m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
                              m_Hlt1Lines.size()+1);
@@ -148,14 +151,19 @@ StatusCode HltGlobalMonitor::initialize() {
   }
 
 
-  m_hltVirtinTime  = book1D("Virtual memory per event",   -0.5, (double)m_totaltime, m_totaltime);
-  setAxisLabels( m_hltVirtinTime, "time[min]", "memory[MB]");
+  m_hltVirtinTime  = book1D("Virtual memory per event",   -m_timeSize*m_timeInterval, 0, m_timeSize );
+  setAxisLabels( m_hltVirtinTime, "time", "memory[MB]");
 
   m_hltVirtMem    = book1D("Virtual Memory",   -0.5, (double)m_totalmem, m_totalmem);
   setAxisLabels( m_hltVirtMem, "memory[MB]", "");
 
-  m_hltEventsTime  = book1D("time per event",   -0.5, (double)m_totaltime, m_totaltime);
-  setAxisLabels( m_hltEventsTime, "time/event[min]", "10^2 event");
+  m_hltEventsTime  = book1D("time per event", -m_timeSize*m_timeInterval, 0, m_timeSize );
+  setAxisLabels( m_hltEventsTime, "time", "time/event[min]");
+
+  m_hltTime  = book1D("time per event dist", -1000.0, 1000.0, 2000.0 );
+  setAxisLabels( m_hltTime, "time/event", "events");
+
+
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
@@ -172,7 +180,9 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
-  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted"));
+  declareInfo("#eventsHLT","", &counter("#events"),0,std::string("Events hlt1 input"));
+  declareInfo("#acceptHLT","",&counter("#accept"),0,std::string("Events hlt1 accepted"));
+
   return StatusCode::SUCCESS;
 };
 
@@ -196,9 +206,11 @@ StatusCode HltGlobalMonitor::execute() {
   monitorL0DU(odin,l0du,hlt);
   monitorHLT(odin,l0du,hlt);
 
-  if(  (counter("#accept").nEntries())%m_scanevents ==0) monitorMemory();
-  
-  counter("#accept") += 1;
+ if(  (m_events)%m_scanevents ==0) monitorMemory();
+
+  counter("#events")   += 1.0;
+  m_events             += 1;
+
   return StatusCode::SUCCESS;
   
 }
@@ -278,6 +290,11 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   
   fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
   
+  if (!nAcc){
+    counter("#accept") += 1;
+  }
+   
+ 
   for (size_t i = 0; i<reps.size();++i) {
 
     ++m_allCall[i];
@@ -315,11 +332,35 @@ void HltGlobalMonitor::monitorMemory() {
   m_time     = ellapsedTime(System::Min, System::Times);
   m_virtmem  = virtualMemory(System::MByte, System::Memory);
   
-  fill(m_hltVirtinTime, m_time, m_virtmem);
-  if(counter("#accept").nEntries() >0){
-    fill(m_hltEventsTime, (double)m_time/(double)(counter("#accept").nEntries()),
-         (counter("#accept").nEntries())/100);
+  storeTrend(m_hltVirtinTime,m_virtmem);
+
+  fill(m_hltVirtMem, m_virtmem, 1);
+
+
+  if(counter("#events").nEntries() >0){
+    fill(m_hltTime, (double)m_time/(double)(counter("#accept").nEntries()), 1);    
+    storeTrend(m_hltEventsTime, (double)m_time/(double)(counter("#accept").nEntries()));
+
   }
-  fill(m_hltVirtMem   , m_virtmem, 1);
+ 
 }
 
+//=============================================================================
+void HltGlobalMonitor::storeTrend(AIDA::IHistogram1D* theHist, double Value) 
+{
+  // store trends for
+  const AIDA::IAxis & axis = theHist->axis();
+  long bins = axis.bins();
+  for ( long i = 0; i < bins; ++i ) {
+    double binValue = theHist->binHeight(i);
+    double nextValue;
+    if ( i < bins - 1 ) {
+      nextValue = theHist->binHeight(i+1);
+    }
+    else {
+      nextValue = Value;
+    }
+    double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
+    theHist->fill(x, nextValue - binValue);
+  }
+}

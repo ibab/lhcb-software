@@ -33,6 +33,7 @@ private:
   void monitorL0DU(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorHLT (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorMemory();
+  void storeTrend(AIDA::IHistogram1D*H, double);
   
 
   std::string m_ODINLocation;
@@ -50,7 +51,10 @@ private:
   int m_scanevents;
   int m_totaltime;
   int m_totalmem;
+  int m_timeSize;
+  int m_timeInterval;
   long m_virtmem; 
+  int m_events;
 
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
@@ -66,13 +70,14 @@ private:
   AIDA::IHistogram1D* m_L0Hlt1Accept;
   AIDA::IHistogram1D* m_L0Hlt2Accept;
   std::vector<double> m_allAcc,m_allCall;
-  AIDA::IHistogram1D* m_hltAcc;
+  //  AIDA::IHistogram1D* m_hltAcc;
   AIDA::IHistogram1D* m_hlt1alley;
   AIDA::IHistogram1D* m_hltNAcc;
   AIDA::IHistogram1D* m_hltInclusive;
   AIDA::IHistogram1D* m_hltExclusive;
   AIDA::IHistogram1D* m_hltVirtMem;
   AIDA::IHistogram1D* m_hltVirtinTime;
+  AIDA::IHistogram1D* m_hltTime;
   AIDA::IHistogram1D* m_hltEventsTime;
 
   AIDA::IHistogram2D* m_hltCorrelations;
