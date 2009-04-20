@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.417 2009-04-08 13:30:51 jpalac Exp $
+! $Id: release.notes,v 1.418 2009-04-20 18:37:31 spradlin Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-04-20 - Patrick Spradlin
+ - src/OnOfflineTool.cpp
+   . Changed default Online PV Relator to OnlineP2PVWithIP.  It was
+     OnlineP2PVWithIPChi2.
 
 !========================== DaVinciTools v18r3 2009-04-08 ===================
 

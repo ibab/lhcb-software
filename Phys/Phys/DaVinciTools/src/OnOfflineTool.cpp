@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.19 2008-10-31 07:20:12 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.20 2009-04-20 18:37:31 spradlin Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   m_offlineVertexFitter("OfflineVertexFitter" ),
   m_onlineVertexFitter("TrgVertexFitter"),
   m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2"),
-  m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2"),
+  m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_/OnlineP2PVWithIP"),
   m_offlineTESTrunk("Phys"),
   m_onlineTESTrunk("HLT")
 {
