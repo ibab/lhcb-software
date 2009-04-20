@@ -1,6 +1,7 @@
 // define the monitoring histo production sequence
 #units "$STDOPTS/units.opts"
 MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
+                         ,"GaudiSequencer/CaloEFlowAlg"
                          ,"GaudiSequencer/CaloClusterMon"
                          ,"GaudiSequencer/CaloHypoMon"
                          ,"GaudiSequencer/CaloPIDsMon"
@@ -12,6 +13,7 @@ MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
 #include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"
 #include "$CALOMONIDSTOPTS/SpdMonitor.opts"
 #include "$CALOMONIDSTOPTS/CaloPIDsMonitor.opts"
+#include "$CALOMONIDSTOPTS/CaloEFlowAlg.opts"
 
 // define the subset of useful monitoring histos for DQ
 #include "$CALOMONIDSTOPTS/CaloDQ.opts"
