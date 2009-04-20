@@ -58,6 +58,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   if (!histogramUrlMatchGroup->IsEmpty()) {
     m_histogramType = (((TObjString *)histogramUrlMatchGroup->At(1))->
       GetString()).Data();
+    if (m_histogramType.empty()) { m_histogramType = s_CNT; }
     m_histogramUTGID = (((TObjString *)histogramUrlMatchGroup->At(2))->
       GetString()).Data(); 
 

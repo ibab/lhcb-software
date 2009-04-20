@@ -9,6 +9,8 @@
 
 #include <TH1.h>
 #include <TPad.h>
+#include <TDatime.h>
+
 class TImage;
 class TImagePalette;
 class TText;
@@ -126,6 +128,9 @@ class DbRootHist : public HistogramIdentifier
     // TODO: have a stack of offset for bracketing
     // state of histo @ clr/rst
     TH1*  m_offsetHistogram;
+    float m_trendTimeScale;
+    TDatime m_offsetTime;
+    int m_trendBin;
 
 //    HistogramIdentifier m_histogramIdentifier;
 

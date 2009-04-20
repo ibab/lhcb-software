@@ -55,6 +55,8 @@ DbRootHist::DbRootHist(const std::string & identifier,
 //  histogramImage(NULL),
   m_gauchocommentDimInfo(NULL),
   m_offsetHistogram(NULL),
+  m_trendTimeScale(s_pageRefreshRate/1000),
+  m_trendBin(1),
   m_isAnaHist(false),
   m_anaLoaded(false),
   m_analysisLib(analysisLib),
@@ -423,6 +425,13 @@ void DbRootHist::initHistogram()
                                        m_histoRootTitle.Data(),
                                        nBins, xMin, xMax);
             }
+          } else if (s_CNT == m_histogramType) {
+             gStyle->SetTimeOffset(m_offsetTime.Convert());
+             if (!rootHistogram) {
+              rootHistogram = new TH1F(m_histoRootName.Data(),m_histoRootTitle.Data(),
+                                       10, 0, 10 * m_trendTimeScale);
+             }
+             rootHistogram->GetXaxis()->SetTimeDisplay(1);
           }
         } else {
           // cannot get sources from DIM
@@ -597,12 +606,12 @@ void DbRootHist::fillHistogram()
 {
   // TODO: rebin: nBins nBinsX nBinsY initHistogram
 //  if (!m_isAnaHist && m_toRefresh) {
-  if (rootHistogram) {
+  if (rootHistogram && s_CNT != m_histogramType) {
     rootHistogram->Reset();
   }
   if (!m_isAnaHist) {
     if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
-        s_H1D == m_histogramType || s_CNT == m_histogramType ) {
+        s_H1D == m_histogramType) {
 // || s_P2D == m_histogramType          
       if (m_dimInfo) {
     // wait until data has arrived
@@ -700,12 +709,25 @@ void DbRootHist::fillHistogram()
           
         }
         rootHistogram->SetEntries(entries);
-//      } else if (s_P2D == m_histogramType) {
-//      } else if (s_CNT == m_histogramType) {
       }
     }
+      }
 //    m_toRefresh = false;
-    }
+   } else if (s_CNT == m_histogramType) {
+    int dimContent = 0;
+     if (m_dimInfo) {
+       // wait until data has arrived
+       int m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
+       while (m_serviceSize <= 0) {
+         gSystem->Sleep(m_waitTime);
+         m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
+       }
+       if (-1.0 != m_dimInfo->getInt() && rootHistogram && !m_isEmptyHisto) {
+        dimContent = m_dimInfo->getInt();
+       }    
+       rootHistogram->SetBinContent(m_trendBin, dimContent);
+       m_trendBin++;
+     }
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {

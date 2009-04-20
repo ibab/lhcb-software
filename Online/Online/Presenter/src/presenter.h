@@ -59,6 +59,11 @@ namespace pres
     EditorOnline = 2,
     EditorOffline = 3
   };
+  
+  enum SavesetType {
+    OnlineFile = 0,
+    OfflineFile = 1,
+  };  
 
   static const bool s_withHistograms    = true;
   static const bool s_withoutHistograms = false;
@@ -72,8 +77,8 @@ namespace pres
   static const bool s_checkTreeItems    = true;
   static const bool s_uncheckTreeItems  = false;
   
-  static const bool s_timeInterval    = true;
-  static const bool s_runInterval     = false;  
+  static const bool s_timeInterval      = true;
+  static const bool s_runInterval       = false;
 
   // Conventions (see HistogramIdentifier for parsing)
   static const std::string s_H1D("H1D");
@@ -82,7 +87,28 @@ namespace pres
   static const std::string s_HPD("HPD"); // legacy compat == P1D
   static const std::string s_P2D("P2D");
   static const std::string s_CNT("CNT");
+  
+  static const std::string s_DimWildcard("*");
+  static const std::string s_Mon("Mon");
   static const std::string s_gauchocomment("/gauchocomment");
+
+//  The format parameter specifies the contents of the structure in the form
+//  T:N[;T:N]*[;T] where T is the item type:
+//  (I)nteger, (C)arachter, (L)ong, (S)hort, (F)loat, (D)ouble,
+//  X(tra long) and N is the number of such items.
+//  The type alone at the end means all following items are of the same type.
+//  Example: "I:3;F:2;C" means 3 Integers, 2 Floats and Characters until the end.
+
+
+  static const std::string s_DimInteger("I");
+  static const std::string s_DimCharacter("C");
+  static const std::string s_DimLong("L");
+  static const std::string s_DimShort("S");
+  static const std::string s_DimFloat("F");
+  static const std::string s_DimDouble("D");
+
+  static TPRegexp s_DimCNTRegexp("^([ILFD])(?:(:\\d+))?");
+
   static const std::string s_hltNodePrefix("HLT");
   static const std::string s_PAGE("PAGE");
   static const std::string s_TASK("TASK");
@@ -127,15 +153,30 @@ namespace pres
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately:
 // TODO: make this lazier...
-//  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-//  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
   static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-//  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
+
   static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
-//  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})(?:-EOR)\\.root$");
- static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
+  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
+  static TPRegexp s_fileRunRegexp("^(.+)-run(\\d+)\\.root$");
+  
+ 
+//  Brunel_45044_00004599_00000034_1_Hist.root
+//  Brunel_Ex_45044_00004598_00000003_1_Hist.root
+//  DaVinci_45044_00004599.root
+//  Brunel_45044_00004599.root
+//  DaVinci_45044_00004599_00000034_2_Hist.root
+//  DaVinci_Ex_45044_00004598_00000003_2_Hist.root
+//  DaVinci_FULL_45256_00004636_00001476_2_Hist.root
+//  DaVinci_FULL_47933_00004636_Merged.root
+//  Brunel_EX_48014_00004633_00000018_1_Hist.root
+//  Brunel_FULL_44878_00004636_00001223_1_Hist.root
+//  Brunel_FULL_45027_00004636_Merged.root
+//  Brunel_FULL_45055_00004636_00001229_1_Hist.root
+
+//  static TPRegexp s_offlineJobRegexp("^([^_]+)_(Ex)?_?(\\d+)_(\\d+)_?(\\d+)?_?(\\d+)?_?(Hist)?\\.root$");
+  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci)_.+\\.root$"); 
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
