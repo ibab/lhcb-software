@@ -1,5 +1,5 @@
 package RecSys
-version v6r3
+version v6r4
 
 branches cmt doc python
  
@@ -35,7 +35,7 @@ use TrackUtils           v1r25   Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys             v4r22   Tf   # Stephanie Hansmann-Menzemer 
-use PatAlgorithms        v3r16   Tf   # Stephanie Hansmann-Menzemer
+use PatAlgorithms        v3r17   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r12   Tf   # David Hutchcroft
 use PatVeloTT            v3r6    Tf   # Mariusz Witek
 use TfTools              v1r7    Tf   # Stephanie Hansmann-Menzemer

@@ -5,6 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v6r4>2009-04-20 RecSys v6r4</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r3.
+
+- Packages modified: PatAlgorithms v3r17
+
+- In PatAlgorithms v3r17
+  . Add correction for tilt of straws to fitter initialization code
+  . Fix an untested StatusCode
+  . Replace endreq by endmsg everywhere
+
 </PRE><H1><A NAME=v6r3>2009-04-07 RecSys v6r3</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r3.
 
