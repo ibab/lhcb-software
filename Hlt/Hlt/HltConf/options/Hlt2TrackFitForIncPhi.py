@@ -88,14 +88,22 @@ Hlt2IncPhiTFKaons.DecayDescriptor = "Kaon"
 ######################################################################
 # Rich particles sequencer
 ######################################################################
+
+
 Hlt2IncPhiRichParticlesSeq = GaudiSequencer('Hlt2IncPhiRichParticlesSeq')
 Hlt2IncPhiRichParticlesSeq.MeasureTime = 1
 
 ######################################################################
 # Set up Rich ChargedProtoPAlg
 ######################################################################
+from Configurables import RichTrackCreatorConfig
+RichTrackCreatorConfig().InputTracksLocation = "Hlt/Track/TFForwardForIncPhi"
+
+
 from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg
 importOptions("$HLTCONFROOT/options/Hlt2Rich.py")
+
+
 Hlt2IncPhiRichChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiRichChargedProtoPAlg')
 Hlt2IncPhiRichChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiRichChargedProtoCombDLL')
 Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPhiRichChargedProtoPAlg
