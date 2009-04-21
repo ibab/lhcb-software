@@ -1,0 +1,20 @@
+! $Id: release.notes,v 1.1.1.1 2009-04-21 10:57:19 jblouw Exp $
+! Package     : OTCalibration
+! Responsible : Wouter Hulsbergen
+! Purpose     : Algorithm for OT rt and t0 calibration
+
+! 2009-04-21 Johan Blouw
+  - imported this package into alignment software project as 
+    Calibration/OTCAlibration v1r0
+
+! 2008-09-19
+  - Added OTWriteConditions to xml. Dumps conditions in TES to xml.
+
+! 2008-09-15
+  - adapted to change in RtRelation
+
+! 2007-09-10 Wouter Hulsbergen
+  first import
+
+! ====================================================================
+ 

@@ -1,0 +1,19 @@
+package OTCalibration
+version v1r0
+
+branches cmt src 
+
+use GSL               v*    LCG_Interfaces
+use GaudiAlg          v*
+use TrackEvent        v*    Event
+use ROOT              v*    LCG_Interfaces -no_auto_imports
+use TrackFitEvent     v*    Tr
+include_path      none
+
+
+# ================= component library ====================
+library OTCalibration *.cpp -import=ROOT
+apply_pattern component_library library=OTCalibration
+macro_append ROOT_linkopts " -lHist -lTree -lMatrix -lGraf"
+
+apply_pattern install_python_modules
