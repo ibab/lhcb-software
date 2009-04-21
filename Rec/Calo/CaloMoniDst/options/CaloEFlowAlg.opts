@@ -1,4 +1,3 @@
-#units "$STDOPTS/units.opts"
 CaloEFlowAlg.Members += {   "CaloEFlowAlg/EcalEFlowAlgo"};
 
 // define the subset of useful monitoring histos for EF

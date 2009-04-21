@@ -1,5 +1,4 @@
 // define the monitoring histo production sequence
-#units "$STDOPTS/units.opts"
 MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
                          ,"GaudiSequencer/CaloEFlowAlg"
                          ,"GaudiSequencer/CaloClusterMon"
