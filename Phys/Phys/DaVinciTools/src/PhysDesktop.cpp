@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.55 2009-02-27 16:46:17 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.56 2009-04-21 18:39:56 pkoppenb Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -8,10 +8,8 @@
 
 // local
 #include "PhysDesktop.h"
-#include "Kernel/IParticleMaker.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
-#include "Kernel/IDistanceCalculator.h"
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
 #include "Event/RecVertex.h"
@@ -87,12 +85,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_primVtxLocn(""),
     m_outputLocn     (),
-    m_pMaker         (0),
-    m_pMakerType(""),
     m_OnOffline      (0),
     m_p2VtxTable(),
-    m_distanceCalculator(0),
-    m_distanceCalculatorType(""),
     m_pvRelator(0),
     m_pvRelatorName("")
 {
@@ -104,21 +98,15 @@ PhysDesktop::PhysDesktop( const std::string& type,
   // Declare properties
   //                    loading conditions
 
-  // Type of input particles (Ax, MC, Proto) maker.
-  declareProperty( "ParticleMakerType", m_pMakerType );
-
   //                    input & output locations
   declareProperty( "InputPrimaryVertices", m_primVtxLocn );
-  m_inputLocn.clear();
-  declareProperty( "InputLocations", m_inputLocn );
+  m_inputLocations.clear();
+  declareProperty( "InputLocations", m_inputLocations );
 
 
   m_p2PVInputLocations.clear();
   
   declareProperty("P2PVInputLocations", m_p2PVInputLocations);
-
-
-  declareProperty("IDistanceCalculator", m_distanceCalculatorType);
 
   // instance of PV relator
   declareProperty( "RelatedPVFinderName", m_pvRelatorName );
@@ -143,45 +131,6 @@ StatusCode PhysDesktop::initialize()
     return StatusCode::FAILURE;
   }
 
-  // Register to the Incident service to be notified at the end of one event
-  //  incSvc()->addListener( this, IncidentType::EndEvent, 100 );
-
-  if ( m_pMakerType == "" ){
-    if (msgLevel(MSG::DEBUG)) debug() << "No ParticleMaker requested in job options"
-                                      << endmsg
-                                      << "Only previously produced particles will be loaded"
-                                      << endmsg;
-  } else {
-    // Retrieve the ParticleMaker tool:
-    if (msgLevel(MSG::DEBUG)) debug() << "Using ParticleMaker : " << m_pMakerType << endmsg;
-    m_pMaker = tool<IParticleMaker>(m_pMakerType, this);
-    if (!m_pMaker)
-    {
-      return Error( "Unable to retrieve ParticleMaker : " + m_pMakerType );
-    }
-  }
-
-  // Check if InputLocation has been set
-  if ( m_inputLocn.empty() ){
-    if ( m_pMakerType == "" ) warning() << "No inputLocations nor ParticleMaker defined" << endmsg ;
-    if (msgLevel(MSG::DEBUG)) debug() << "Empty list of input locations -> No particles from previous processing" << endmsg;
-  } else {
-    if (msgLevel(MSG::DEBUG)) {
-      debug() << "Particles and Vertices will be loaded from :- "  << endreq ;
-      for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
-            iloc != m_inputLocn.end(); ++iloc ){
-        debug() << "  -> " << *iloc ;
-      }
-      debug() << endreq ;
-    }
-  }
-
-  for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
-        iloc != m_inputLocn.end(); ++iloc ) {
-    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
-  }
-
-
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
   if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->primaryVertexLocation();
@@ -190,10 +139,6 @@ StatusCode PhysDesktop::initialize()
     debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
   }
   
-  if (""==m_distanceCalculatorType) m_distanceCalculatorType=m_OnOffline->distanceCalculatorType();
-
-  m_distanceCalculator = tool<IDistanceCalculator>(m_distanceCalculatorType, this);
-
   if (""==m_pvRelatorName) m_pvRelatorName=m_OnOffline->relatedPVFinderType();
 
   // PV relator
@@ -226,8 +171,6 @@ StatusCode PhysDesktop::initialize()
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
-  fixInputLocations(m_inputLocn.begin(), m_inputLocn.end());
-  
   return sc;
 }
 
@@ -662,11 +605,6 @@ StatusCode PhysDesktop::getEventInput(){
 
   if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
-  // Make particles with particle maker
-  if ( m_pMaker ) { 
-    StatusCode sc = makeParticles();
-    if (!sc) return sc;
-  }
 
   // Retrieve Primary vertices
   if( "None" == m_primVtxLocn ) {
@@ -687,7 +625,7 @@ StatusCode PhysDesktop::getEventInput(){
 
   // Retrieve Particles & Vertices from all previous processing
   // as specified in jobOptions
-  if (!m_inputLocn.empty()) {
+  if (!m_inputLocations.empty()) {
     StatusCode sc = getParticles();
     if (!sc) return sc;
     sc = getInputRelations();
@@ -699,60 +637,16 @@ StatusCode PhysDesktop::getEventInput(){
 }
 
 //=============================================================================
-// Make Particles
-//=============================================================================
-StatusCode PhysDesktop::makeParticles(){
-  // Make particles starting from MC or reconstruction objects
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop:Calling " << m_pMakerType
-                                        << "::makeParticles() "
-                                        << endmsg;
-
-  // Remember that these particles belong to the Desktop and are not
-  // in a TES container yet
-  LHCb::Particle::ConstVector particles;
-  StatusCode sc = m_pMaker->makeParticles(particles);
-
-  if (!sc) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " not able to make particles " << endmsg;
-    return sc;
-  }
-
-  // Flag these particles + descendant to be in PhysDesktop
-  for( LHCb::Particle::ConstVector::iterator ip = particles.begin(); ip != particles.end(); ip++ ) {
-    LHCb::Particle::ConstVector descs;
-    LHCb::Vertex::ConstVector verts;
-    findAllTree( *ip, descs, verts);
-    for( p_iter ipd = descs.begin() ; ipd != descs.end(); ipd++){
-      if (msgLevel(MSG::VERBOSE)) printOut("Inserting", (*ipd));
-      m_parts.push_back(*ipd);
-    }
-    for( v_iter ipv = verts.begin() ; ipv != verts.end(); ipv++){
-      m_secVerts.push_back(*ipv);
-    }
-  }
-
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "Number of Particles from " << m_pMakerType
-              << " : " << m_parts.size() << endmsg;
-    verbose() << "( from " << particles.size() <<" initial particles) "<< endmsg;
-    verbose() << "Number of Vertices from " << m_pMakerType
-              << " : " << m_secVerts.size() << endmsg;
-  }
-  
-  return sc;
-}
-//=============================================================================
 // Get Particles
 //=============================================================================
 StatusCode PhysDesktop::getParticles(){
 
   if (msgLevel(MSG::DEBUG)) debug() << "Looking for particles in " 
-                                    << m_inputLocn.size() 
+                                    << m_inputLocations.size() 
                                     << " places" << endmsg ;
 
-  for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
-       iloc != m_inputLocn.end(); iloc++ ) {
+  for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+       iloc != m_inputLocations.end(); iloc++ ) {
 
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
@@ -993,4 +887,50 @@ void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
 
 }
 
+//=========================================================================
+//  set InputLocations
+//=========================================================================
+StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string> & il) {
+  if ( !m_inputLocations.empty()){
+    if (!il.empty()){
+      return Error("You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix you options.");
+    } else {
+      IInterface* p = const_cast<IInterface*>( this->parent() ) ;
+      std::string n = "MyAlgorithm" ;
+      if ( 0 != p) n = nameFromInterface ( p ) ;
+      Warning("You have set the InputLocations from the PhysDesktop");
+      warning() << "Change your options to " << endmsg;
+      warning() << n << ".InputLocations = [ " ;
+      for (std::vector<std::string>::const_iterator i = m_inputLocations.begin() ; i!= m_inputLocations.end() ; i++) {
+        warning() << *i << ", " ;
+      }
+      warning() << "]" << endmsg ;
+    }
+  } else { // inputLoactions is empty
+    m_inputLocations = il ;
+  }
+
+  // Check if InputLocation has been set
+  if ( m_inputLocations.empty() ){
+    debug() << "No inputLocations defined. Can only create Particles." << endmsg ;
+  } else {
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Particles and Vertices will be loaded from :- "  << endreq ;
+      for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+            iloc != m_inputLocations.end(); ++iloc ){
+        debug() << "  -> " << *iloc ;
+      }
+      debug() << endreq ;
+    }
+  }
+
+  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+        iloc != m_inputLocations.end(); ++iloc ) {
+    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
+  }
+
+  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
+
+  return StatusCode::SUCCESS ;
+}
 //=============================================================================

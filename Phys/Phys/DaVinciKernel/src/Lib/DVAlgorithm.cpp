@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.46 2009-02-27 16:49:11 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.47 2009-04-21 18:36:08 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -74,6 +74,8 @@ DVAlgorithm::DVAlgorithm
   , m_countFilterPassed     ( 0 )
   , m_refitPVs              ( false )
 {
+  m_inputLocations.clear() ;
+  declareProperty( "InputLocations", m_inputLocations, "Input Locations forwarded to PhysDesktop" );
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"     ;
@@ -171,11 +173,9 @@ StatusCode DVAlgorithm::initialize ()
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
   
-  // initialize the base 
-  
+  // initialize the base  
   StatusCode sc = GaudiTupleAlg::initialize();
-  if ( sc.isFailure() ) { return sc; }                          // RETURN 
-  
+  if ( sc.isFailure() ) { return sc; }                          // RETURN
 
   if ( !registerContext() || 0 == contextSvc() ) 
   {
@@ -214,6 +214,7 @@ StatusCode DVAlgorithm::loadTools()
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop" << endmsg;
   desktop();
+  desktop()->setInputLocations(m_inputLocations);
   
   // vertex fitter
   IOnOffline* onof = NULL;

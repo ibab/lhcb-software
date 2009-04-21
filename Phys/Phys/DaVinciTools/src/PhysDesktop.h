@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.33 2009-02-27 16:46:17 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.34 2009-04-21 18:39:56 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -15,10 +15,8 @@
 #include "Kernel/DaVinciFun.h"
 // Forward declarations
 class IDataProviderSvc;
-class IParticleMaker;
 class IOnOffline;
 class IRelatedPVFinder ;
-class IDistanceCalculator;
 
 /** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  
@@ -49,59 +47,96 @@ public:
   
   virtual StatusCode finalize();
 
+  /// set InputLocations (for DVAlgorithm)
+  virtual StatusCode setInputLocations(const std::vector<std::string> & ) ;
+
+  /// Load Input particles and vertices (in local data) from various input
+  /// locations filled with previous processings and  
+  /// create new Particles starting from reconstruction objects as
+  /// requested in jobOptions. The creation of new Particles if delegated
+  /// to ParticleMakers. 
+  /// Only DVAlgorithm::sysExecute() should call this function.
   virtual StatusCode getEventInput();
 
+  /// Retrieve the local particle container
   virtual const LHCb::Particle::ConstVector& particles() const;
 
+  /// Retrieve the PVs from the TES
   virtual const LHCb::RecVertex::Container* primaryVertices() const;
 
+  /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
+  /// retrieve the Particle->Primary vertex relations
   virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const;
 
+  /// retrieve the Particle->Primary vertex relations
   virtual Particle2Vertex::LightTable& Particle2VertexRelations();
 
+  /// Keep for future use: Register the new particles in the Desktop, 
+  /// pass ownership, return pointer to new particle
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
+  /// Keep for future use: Register the new vertices in the Desktop, 
+  /// pass ownership, return pointer to new vertex
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
 
+  /// Keep for future use: Register re-fitted primary vertices in the Desktop, 
+  /// pass ownership, return pointer to new vertex. Vertices will only
+  /// be stored in the TES if they are related to a particle being stored
+  /// there.
   virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) ;
-  
-  
-  virtual StatusCode saveDesktop() const{
 
+  /// Save particles, vertices and particle->vertices relations to the TES  
+  virtual StatusCode saveDesktop() const{
     if (msgLevel(MSG::VERBOSE)) verbose() << "Save all new particles and vertices in desktop " << endmsg;
     return saveDesktop( m_parts, m_secVerts );
-    
   }
   
+  /// Save a vector of Particles
+  /// If a particle is composite its descendents are also saved
   virtual StatusCode saveTrees( const LHCb::Particle::ConstVector& ) const;
   
+  /// Clone all particles given by a list. This duplicates information 
+  /// on the TES and should be used only when necessary. (Used by Filters)
   virtual StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
   
+  /// Save all Particles with a given particleID code
   virtual StatusCode saveTrees(int partid) const;
 
+  /// Clean desktop
   virtual StatusCode cleanDesktop();
   
+  /// Impose output location
   virtual void imposeOutputLocation(const std::string& outputLocationString);
 
+  /// Get output location
   virtual const std::string& getOutputLocation() const { return m_outputLocn ;}
 
+  /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
+  /// Get the vertex with the highest weight in the association
+  /// between LHCb::Particle and LHCb::VertexBase
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   
+  /**
+   * Get a pointer to the Particle->PV relator tool
+   **/
   virtual const IRelatedPVFinder* relatedPVFinder() const;
 
+  /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,
                       const double weight=1.);
 
 
+  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
   virtual double weight(const LHCb::Particle*   part, 
                         const LHCb::VertexBase* vert ) const;
   
 
+  /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
 
   virtual const std::string& primaryVertexLocation() const 
@@ -136,10 +171,7 @@ private:
   void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
 
   /// Save the Particle->Vertex relations table in the Desktop to the TES
-  //===========================================================================
   void saveP2PVRelations(const LHCb::Particle::ConstVector& pToSave) const;
-
-  StatusCode makeParticles();      ///< Make particles
 
   StatusCode getPrimaryVertices(); ///< get PV
 
@@ -230,7 +262,7 @@ private: // data
   /// TES pathname for Primary Vertices 
   std::string m_primVtxLocn;
   /// TES pathname for Input Particles & Vertices from previous processing
-  std::vector<std::string> m_inputLocn;
+  std::vector<std::string> m_inputLocations;
   /// TES pathname for Output Particles & Vertices
   std::string m_outputLocn;
 
@@ -249,18 +281,9 @@ private: // data
   LHCb::RecVertex::ConstVector m_refitPVs;    ///< Local Container of re-fitted primary vertices
   LHCb::RecVertex::Container* m_primVerts;    ///< Local Container of primary vertices
 
-  IParticleMaker* m_pMaker;        ///< Reference to LHCb::Particle maker tool
-
-  /// Identify specific type of particle maker requested (Property)
-  std::string m_pMakerType;  
-
   IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
-
-  IDistanceCalculator* m_distanceCalculator;
-
-  std::string m_distanceCalculatorType;
 
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 

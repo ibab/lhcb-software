@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.418 2009-04-20 18:37:31 spradlin Exp $
+! $Id: release.notes,v 1.419 2009-04-21 18:39:56 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-04-21 - Patrick Koppenburg
+ - PhysDesktop : set InputLocations from DVAlgorithm.
+ - Remove geometry tool (wasn't used)
+ - Increment to v18r4
 
 ! 2009-04-20 - Patrick Spradlin
  - src/OnOfflineTool.cpp

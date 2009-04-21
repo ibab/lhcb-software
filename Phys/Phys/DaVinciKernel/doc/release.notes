@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.293 2009-04-21 18:36:08 pkoppenb Exp $
+!$Id: release.notes,v 1.294 2009-04-21 18:36:38 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
@@ -11,6 +11,7 @@
   
    MyAlg.InputLocations =  [ 'MyPreviousAlg' ]
 
+ - ICaloParticlemaker : use ConstVector of Particles
  - Increment to v7r5
 
 !======================== DaVinciKernel v7r4 2009-03-09 =====================
