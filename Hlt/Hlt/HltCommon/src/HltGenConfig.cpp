@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.13 2009-04-18 12:12:35 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.14 2009-04-21 18:50:05 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -6,6 +6,7 @@
 // #include <boost/type_traits/is_const.hpp>  
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include "boost/lambda/construct.hpp"
 
 
 // from Gaudi
@@ -18,6 +19,8 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/Service.h"
 
+#include "GaudiKernel/TypeNameString.h"
+
 // local
 #include "HltGenConfig.h"
 #include "HltBase/PropertyConfig.h"
@@ -27,7 +30,10 @@ using namespace std;
 using boost::assign::list_of;
 namespace bl = boost::lambda;
 
-
+ostream& operator<<(std::ostream& os,const Gaudi::Utils::TypeNameString& x)  {
+        return x.haveType()? (os << x.type() << '/' << x.name() )
+                           : (os << x.name() );
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGenConfig
@@ -142,6 +148,7 @@ HltGenConfig::generateConfig(const INamedInterface& obj) const
     return nodeRef;
 }
 
+
 template <typename COMP, typename I, typename R, typename T>
 StatusCode HltGenConfig::getDependencies(I i, I end, R resolver,T inserter) const {
     for (; i!= end; ++i) {
@@ -165,11 +172,19 @@ StatusCode HltGenConfig::getDependencies(I i, I end, R resolver,T inserter) cons
 StatusCode HltGenConfig::generateConfig() const {
     vector<ConfigTreeNode::digest_type> depRefs; 
   
-    typedef StatusCode (ISvcLocator::*getService_t)(const std::string&,IService*&);
+    typedef StatusCode (ISvcLocator::*getService_t)(const Gaudi::Utils::TypeNameString&,IService*&,bool);
+
     getService_t getService = &ISvcLocator::getService;
+
+    std::vector<Gaudi::Utils::TypeNameString> x;
+    std::transform( m_svcConfig.begin(),m_svcConfig.end(), 
+                    std::back_inserter(x),
+                    bl::constructor<Gaudi::Utils::TypeNameString>()
+                  );
+    
     StatusCode 
-    sc = getDependencies<IService>( m_svcConfig.begin(), m_svcConfig.end(), 
-                                    bl::bind( getService, serviceLocator(), bl::_1, bl::_2 ),
+    sc = getDependencies<IService>( x.begin(), x.end(), 
+                                    bl::bind( getService, serviceLocator().get(), bl::_1, bl::_2, false ),
                                     std::back_inserter(depRefs));
     if (sc.isFailure()) return sc;
     sc = getDependencies<IAlgorithm>( m_topConfig.begin(), m_topConfig.end(), 
