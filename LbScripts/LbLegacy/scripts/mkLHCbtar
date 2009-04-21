@@ -31,7 +31,7 @@
 
 import sys, os, getopt, time, commands, fnmatch
 import re
-from install_project import calculateMD5
+from LbLegacy.install_project import calculateMD5
 
 script_version = '081217'
 
