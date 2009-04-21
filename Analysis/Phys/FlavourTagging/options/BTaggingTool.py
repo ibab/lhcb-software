@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: BTaggingTool.py,v 1.2 2009-02-23 02:16:50 musy Exp $
+# $Id: BTaggingTool.py,v 1.3 2009-04-21 19:20:22 pkoppenb Exp $
 #
 # Tagging options
 #
@@ -7,22 +7,25 @@
 ##############################################################################
 from GaudiConf.Configuration import *
 
+from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter, ProtoParticleCALOFilter, ProtoParticleRICHFilter
 
-from Configurables import BTaggingTool, PhysDesktop, CombinedParticleMaker, ProtoParticleMUONFilter, ProtoParticleCALOFilter, ProtoParticleRICHFilter
+algName = "TaggerParticles"
 
-tagtool = BTaggingTool("BTaggingTool")
-pd = PhysDesktop()
+taggerParticles = CombinedParticleMaker(algName)
+taggerParticles.addTool(ProtoParticleMUONFilter("Muon"))
+taggerParticles.Muon.Selection = [ "RequiresDet='MUON' CombDLL(mu-pi)>'0.0'" ]
+taggerParticles.addTool(ProtoParticleCALOFilter("Electron"))
+taggerParticles.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'5.0'" ]
+taggerParticles.addTool(ProtoParticleRICHFilter("Kaon"))
+taggerParticles.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'8.0' CombDLL(k-p)>'-4.0'"]
 
-pd.ParticleMakerType = "CombinedParticleMaker"
-pd.addTool( CombinedParticleMaker() )
-pd.CombinedParticleMaker.ExclusiveSelection = False;
-pd.CombinedParticleMaker.addTool(ProtoParticleMUONFilter("Muon"))
-pd.CombinedParticleMaker.Muon.Selection = [ "RequiresDet='MUON' CombDLL(mu-pi)>'0.0'" ]
-pd.CombinedParticleMaker.addTool(ProtoParticleCALOFilter("Electron"))
-pd.CombinedParticleMaker.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'5.0'" ]
-pd.CombinedParticleMaker.addTool(ProtoParticleRICHFilter("Kaon"))
-pd.CombinedParticleMaker.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'8.0' CombDLL(k-p)>'-4.0'"]
+hat = '/Event/Phys/'
 
-tagtool.addTool( pd )
+dod = DataOnDemandSvc()
+dod.AlgMap.update(
+    { hat + algName + '/Particles' : 'CombinedParticleMaker/'+algName ,
+      hat + algName + '/Vertices'  : 'CombinedParticleMaker/'+algName }
+    )
+
 
 ##############################################################################

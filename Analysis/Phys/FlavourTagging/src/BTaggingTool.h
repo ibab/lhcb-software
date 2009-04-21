@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.17 2009-02-23 21:11:23 musy Exp $
+// $Id: BTaggingTool.h,v 1.18 2009-04-21 19:20:22 pkoppenb Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -7,14 +7,12 @@
 #include <string>
 #include <math.h>
 // from Gaudi
-#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event 
 #include "Event/FlavourTag.h" 
 #include "Event/RecHeader.h"
-#include "Kernel/IPhysDesktop.h"
 
 #include "ICombineTaggersTool.h" 
 #include "Kernel/ITagger.h" 
@@ -32,8 +30,7 @@
  */
 
 class BTaggingTool : public GaudiTool,
-                     virtual public IBTaggingTool,
-                     virtual public IIncidentListener  {
+                     virtual public IBTaggingTool {
 
 public: 
 
@@ -54,15 +51,12 @@ public:
   StatusCode tag( LHCb::FlavourTag& theTag, 
                   const LHCb::Particle*, const LHCb::RecVertex*, 
                   LHCb::Particle::ConstVector& ); 
-  //-------------------------------------------------------------
-  virtual void handle(const Incident&); ///< clean desktop
 
 private:
   bool isinTree( const LHCb::Particle*, 
                  std::vector<const LHCb::Particle*>& , double& );
 
   IGeomDispCalculator *m_Geom;
-  IPhysDesktop *m_physd;
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
 
@@ -74,7 +68,7 @@ private:
   double m_thetaMin, m_distphi_cut;
   double m_IPPU_cut;
 
-  std::string m_outputLocation, m_CombineTaggersName;
+  std::string m_taggerLocation, m_CombineTaggersName;
 
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;

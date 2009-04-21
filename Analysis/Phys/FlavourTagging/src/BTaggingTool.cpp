@@ -23,7 +23,6 @@ BTaggingTool::BTaggingTool( const std::string& type,
   GaudiTool ( type, name, parent ) {
 
   declareInterface<IBTaggingTool>(this);
-  declareInterface<IIncidentListener>(this);
 
   declareProperty( "CombineTaggersName",
                    m_CombineTaggersName = "CombineTaggersProbability" );
@@ -40,7 +39,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnablePionTagger",    m_EnablePionSS  = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
-  declareProperty( "OutputLocation", m_outputLocation = "Phys/BTaggingTool" );
+  declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggerParticles" );
   m_util = 0;
   m_descend =0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
@@ -51,15 +50,7 @@ BTaggingTool::~BTaggingTool() {};
 //==========================================================================
 StatusCode BTaggingTool::initialize() {
 
-  m_physd = tool<IPhysDesktop> ("PhysDesktop", this);
-  if(! m_physd) {
-    fatal() << "Unable to retrieve PhysDesktop"<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_physd->imposeOutputLocation(m_outputLocation);
-
   // Register to the Incident service to be notified 
-  incSvc()->addListener( this, IncidentType::EndEvent );
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
@@ -138,26 +129,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     return StatusCode::FAILURE;
   }
 
-  Particle::ConstVector parts ;
-  if ( !exist<Particles>( m_outputLocation+"/Particles" )) {
-    debug() << "Making tagging particles to be saved in " 
-            << m_outputLocation << endreq ;
-    if( !(m_physd->getEventInput()) ) return StatusCode::SUCCESS;
-    parts = m_physd->particles();
-    if( !(m_physd->saveDesktop()) ) return StatusCode::SUCCESS;
-  } else {
-    debug() << "Getting tagging particles saved in " 
-            << m_outputLocation << endmsg ;
-    const Particles* ptmp = get<Particles>( m_outputLocation+"/Particles" );
-    for( Particles::const_iterator icand = ptmp->begin(); 
-         icand != ptmp->end(); icand++ ) {
-      parts.push_back(*icand);
-    }
-  }
+  const Particle::Container* parts = get<Particle::Container>( m_taggerLocation+"/Particles" );
 
-  const RecVertex::Container* verts = m_physd->primaryVertices();
-  debug() << "  Nr Vertices: "  << verts->size() 
-          << "  Nr Particles: " << parts.size() <<endreq;
+  const RecVertex::Container* verts = get<RecVertex::Container>(RecVertexLocation::Primary);
+  if (msgLevel(MSG::DEBUG)) debug() << "  Nr Vertices: "  << verts->size() 
+          << "  Nr Particles: " << parts->size() <<endreq;
   
   //----------------------------
   RecVertex::Container::const_iterator iv;
@@ -170,7 +146,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     for(iv=verts->begin(); iv!=verts->end(); iv++){
       double ip, iperr;
       m_util->calcIP(AXB, *iv, ip, iperr);
-      debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
       if(iperr) if( fabs(ip/iperr) < kdmin ) {
         kdmin = fabs(ip/iperr);
         RecVert = (*iv);
@@ -187,17 +163,17 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   for(iv=verts->begin(); iv!=verts->end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
-    debug() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
+    if (msgLevel(MSG::DEBUG)) debug() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
   }
 
   //loop over Particles, preselect taggers ///////////////////preselection
   double distphi;
   theTag.setTaggedB( AXB );
-  Particle::ConstVector::const_iterator ip;
+  Particle::Container::const_iterator ip;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
-    for ( ip = parts.begin(); ip != parts.end(); ip++ ){
+    for ( ip = parts->begin(); ip != parts->end(); ip++ ){
 
       if( (*ip)->p()/GeV < 2.0 ) continue;               
       if( (*ip)->momentum().theta() < m_thetaMin ) continue;
@@ -224,7 +200,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   } else {
     //tagger candidate list is already provided, it is the user responsibility
     //to check that there is not a signal B daughter inside...
-    debug()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
+    if (msgLevel(MSG::DEBUG)) debug()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
   }
 
   //AXB is the signal B from selection
@@ -234,7 +210,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
 
   ///Choose Taggers ------------------------------------------------------ 
-  debug() <<"evaluate taggers" <<endreq;
+  if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
   Vertex::ConstVector allVtx;
   Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
   if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
@@ -283,12 +259,12 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( isBu || isBd ) taggers.push_back(&pionS);
   taggers.push_back(&vtxCh);
 
-  debug()<<"tagger mu   1-w = "<< 1-muon.omega() <<endreq;
-  debug()<<"tagger ele  1-w = "<< 1-elec.omega() <<endreq;
-  debug()<<"tagger kO   1-w = "<< 1-kaon.omega() <<endreq;
-  if( isBs ) debug()<<"tagger kS   1-w = "<< 1-kaonS.omega()<<endreq;
-  if( isBu || isBd ) debug()<<"tagger pS   1-w = "<< 1-pionS.omega()<<endreq;
-  debug()<<"tagger vtx  1-w = "<< 1-vtxCh.omega()<<endreq;
+  if (msgLevel(MSG::DEBUG)) debug()<<"tagger mu   1-w = "<< 1-muon.omega() <<endreq;
+  if (msgLevel(MSG::DEBUG)) debug()<<"tagger ele  1-w = "<< 1-elec.omega() <<endreq;
+  if (msgLevel(MSG::DEBUG)) debug()<<"tagger kO   1-w = "<< 1-kaon.omega() <<endreq;
+  if( isBs ) if (msgLevel(MSG::DEBUG)) debug()<<"tagger kS   1-w = "<< 1-kaonS.omega()<<endreq;
+  if( isBu || isBd ) if (msgLevel(MSG::DEBUG)) debug()<<"tagger pS   1-w = "<< 1-pionS.omega()<<endreq;
+  if (msgLevel(MSG::DEBUG)) debug()<<"tagger vtx  1-w = "<< 1-vtxCh.omega()<<endreq;
 
     
   //----------------------------------------------------------------------
@@ -298,7 +274,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   //approach is based on the particle type, while the 
   //"Prob" approach is based on the wrong tag fraction
 
-  debug() <<"combine taggers "<< taggers.size() <<endreq;
+  if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
   m_combine -> combineTaggers( theTag, taggers );
 
   //now only using OS taggers
@@ -314,9 +290,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   theTag.setCategoryOS( tmp_theTagOS.category() );
   theTag.setOmegaOS   ( tmp_theTagOS.omega() );
 
-  debug() <<"decision="<<theTag.decision()<<"  decisionOS="<< theTag.decisionOS()<<endreq;
-  debug() <<"omega="   <<theTag.omega()   <<"  omegaOS="   << theTag.omegaOS()<<endreq;
-  debug() <<"category="<<theTag.category()<<"  categoryOS="<< theTag.categoryOS()<<endreq;
+  if (msgLevel(MSG::DEBUG)) debug() <<"decision="<<theTag.decision()<<"  decisionOS="<< theTag.decisionOS()<<endreq;
+  if (msgLevel(MSG::DEBUG)) debug() <<"omega="   <<theTag.omega()   <<"  omegaOS="   << theTag.omegaOS()<<endreq;
+  if (msgLevel(MSG::DEBUG)) debug() <<"category="<<theTag.category()<<"  categoryOS="<< theTag.categoryOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------
   int sameside = kaonS.decision();
@@ -363,7 +339,7 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
              && fabs(pt_axp-(*ip)->pt())< 0.01 
              && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
         || axp->proto()==(*ip)->proto() ) {
-      debug() << "excluding signal part: " << axp->particleID().pid() 
+      if (msgLevel(MSG::DEBUG)) debug() << "excluding signal part: " << axp->particleID().pid() 
               << " with p="<<p_axp/Gaudi::Units::GeV 
               << " pt="<<pt_axp/Gaudi::Units::GeV 
               << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
@@ -371,13 +347,4 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
     }
   }
   return false;
-}
-//=============================================================================
-// Implementation of Listener interface
-//=============================================================================
-void BTaggingTool::handle(const Incident&){
-  StatusCode sc = m_physd->cleanDesktop();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Cleaned desktop" << endmsg ;
-  if (!sc) Exception("Could not clean Desktop");
-  return ;
 }
