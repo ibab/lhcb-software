@@ -16,43 +16,26 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06LooseAllPhotons/Particles' TYPE='GaudiSequencer/StdDC06LooseAllPhotonsSeq'",
   "DATA='/Event/Phys/StdDC06LooseAllPhotons/Vertices'  TYPE='GaudiSequencer/StdDC06LooseAllPhotonsSeq'"
 };
-StdDC06LoosePhotonsSeq.Members += { "PreLoadParticles/StdDC06LoosePhotons" };
+StdDC06LoosePhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LoosePhotons" };
 StdDC06LoosePhotonsSeq.MeasureTime = true;
-StdDC06LooseCnvPhotonsSeq.Members += { "PreLoadParticles/StdDC06LooseCnvPhotons" };
+StdDC06LooseCnvPhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LooseCnvPhotons" };
 StdDC06LooseCnvPhotonsSeq.MeasureTime = true;
-StdDC06LooseAllPhotonsSeq.Members += { "PreLoadParticles/StdDC06LooseAllPhotons" };
+StdDC06LooseAllPhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LooseAllPhotons" };
 StdDC06LooseAllPhotonsSeq.MeasureTime = true;
 
-StdDC06LoosePhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
-StdDC06LoosePhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
-StdDC06LoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = false  ;
-StdDC06LoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
-StdDC06LoosePhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
+StdDC06LoosePhotons.PhotonMaker.ConvertedPhotons = false  ;
+StdDC06LoosePhotons.PhotonMaker.UnConvertedPhotons = true  ;
+StdDC06LoosePhotons.PhotonMaker.PtCut = 200.* MeV;
 StdDC06LoosePhotons.DecayDescriptor = "Gamma" ;
 
-StdDC06LooseCnvPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
-StdDC06LooseCnvPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
-StdDC06LooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
-StdDC06LooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = false  ;
-StdDC06LooseCnvPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
+StdDC06LooseCnvPhotons.PhotonMaker.ConvertedPhotons = true  ;
+StdDC06LooseCnvPhotons.PhotonMaker.UnConvertedPhotons = false  ;
+StdDC06LooseCnvPhotons.PhotonMaker.PtCut = 200.* MeV;
 StdDC06LooseCnvPhotons.DecayDescriptor = "Gamma" ;
 
-StdDC06LooseAllPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
-StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";
-StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
-StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
-StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
+StdDC06LooseAllPhotons.PhotonMaker.ConvertedPhotons = true  ;
+StdDC06LooseAllPhotons.PhotonMaker.UnConvertedPhotons = true  ;
+StdDC06LooseAllPhotons.PhotonMaker.PtCut = 200.* MeV;
 StdDC06LooseAllPhotons.DecayDescriptor = "Gamma" ;
 
 
-
-/* --- available properties --- */
-// StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true // default true
-// StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnconvertedPhotons = true // default true
-// StdDC06LooseAllPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.'PIDTECHNIQUE'     
-// with 'PIDTECHNIQUE' = UseCaloTrMatch    (false)
-//                       UseCaloDepositiID (false)
-//                       UseShowerShape    (false)
-//                       UseClusterMass    (false)
-//                       UsePhotonID       (true)
-// StdDC06LoosePhotons.PhysDesktop.CaloParticleMaker..ConfLevelCut  = -1  ;  // default -1.0 but  Chi2 > 4 in Brunel

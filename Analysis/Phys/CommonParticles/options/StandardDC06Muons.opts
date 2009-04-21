@@ -23,11 +23,11 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightMuons/Particles'     TYPE='GaudiSequencer/StdDC06TightMuonsSeq'",
   "DATA='/Event/Phys/StdDC06TightMuons/Vertices'      TYPE='GaudiSequencer/StdDC06TightMuonsSeq'"
 };
-StdDC06NoPIDsMuonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsMuons" };
+StdDC06NoPIDsMuonsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsMuons" };
 StdDC06NoPIDsMuonsSeq.MeasureTime = true;
-StdDC06LooseMuonsSeq.Members += { "PreLoadParticles/StdDC06LooseMuons" };
+StdDC06LooseMuonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseMuons" };
 StdDC06LooseMuonsSeq.MeasureTime = true;
-StdDC06TightMuonsSeq.Members += { "PreLoadParticles/StdDC06TightMuons" };
+StdDC06TightMuonsSeq.Members += { "CombinedParticleMaker/StdDC06TightMuons" };
 StdDC06TightMuonsSeq.MeasureTime = true;
 
 // ============================================================================
@@ -35,27 +35,23 @@ StdDC06TightMuonsSeq.MeasureTime = true;
 // ============================================================================
 // @to-do Check what NoPIDs does about track selection!!!
 StdDC06NoPIDsMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-StdDC06NoPIDsMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
+StdDC06NoPIDsMuons.Particle =  "muon" ;
 StdDC06NoPIDsMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================
 // LOOSE long
 // ============================================================================
-StdDC06LooseMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06LooseMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06LooseMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
-StdDC06LooseMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON'" } ;
-StdDC06LooseMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06LooseMuons.Particles = {"muon"} ;
+StdDC06LooseMuons.Muon.Selection = {"RequiresDet='MUON'" } ;
+StdDC06LooseMuons.TrackSelector.TrackTypes = {"Long"};
 StdDC06LooseMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
-StdDC06TightMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
-StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" } ;
-StdDC06TightMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06TightMuons.Particles = {"muon"} ;
+StdDC06TightMuons.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" } ;
+StdDC06TightMuons.TrackSelector.TrackTypes = {"Long"};
 StdDC06TightMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================

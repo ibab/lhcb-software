@@ -23,11 +23,11 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightElectrons/Particles'     TYPE='GaudiSequencer/StdDC06TightElectronsSeq'",
   "DATA='/Event/Phys/StdDC06TightElectrons/Vertices'      TYPE='GaudiSequencer/StdDC06TightElectronsSeq'"
 };
-StdDC06NoPIDsElectronsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsElectrons" };
+StdDC06NoPIDsElectronsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsElectrons" };
 StdDC06NoPIDsElectronsSeq.MeasureTime = true;
-StdDC06LooseElectronsSeq.Members += { "PreLoadParticles/StdDC06LooseElectrons" };
+StdDC06LooseElectronsSeq.Members += { "CombinedParticleMaker/StdDC06LooseElectrons" };
 StdDC06LooseElectronsSeq.MeasureTime = true;
-StdDC06TightElectronsSeq.Members += { "PreLoadParticles/StdDC06TightElectrons" };
+StdDC06TightElectronsSeq.Members += { "CombinedParticleMaker/StdDC06TightElectrons" };
 StdDC06TightElectronsSeq.MeasureTime = true;
 
 // ============================================================================
@@ -35,33 +35,29 @@ StdDC06TightElectronsSeq.MeasureTime = true;
 // ============================================================================
 // @to-do Check what NoPIDs does about track selection!!!
 StdDC06NoPIDsElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-StdDC06NoPIDsElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;
+StdDC06NoPIDsElectrons.Particle =  "electron" ;
 StdDC06NoPIDsElectrons.DecayDescriptor = "Electron" ;
 
 // ============================================================================
 // LOOSE long
 // ============================================================================
-StdDC06LooseElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
-StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
-StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06LooseElectrons.Particles = {"electron"} ;
+StdDC06LooseElectrons.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
+StdDC06LooseElectrons.TrackSelector.TrackTypes = {"Long"};
 StdDC06LooseElectrons.DecayDescriptor = "Electron" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
-StdDC06TightElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
-StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'0.0'" } ;
-StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06TightElectrons.Particles = {"electron"} ;
+StdDC06TightElectrons.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'0.0'" } ;
+StdDC06TightElectrons.TrackSelector.TrackTypes = {"Long"};
 StdDC06TightElectrons.DecayDescriptor = "Electron" ;
 
 // Temporary correction on Brem energy :
-StdDC06TightElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
-StdDC06LooseElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
-StdDC06NoPIDsElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
+StdDC06TightElectrons.BremAdder.BremCor = 1.06;
+StdDC06LooseElectrons.BremAdder.BremCor = 1.06;
+StdDC06NoPIDsElectrons.BremAdder.BremCor = 1.06;
 
 // ============================================================================
 // The END 

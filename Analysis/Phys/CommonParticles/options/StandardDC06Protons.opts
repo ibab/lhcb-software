@@ -30,56 +30,48 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightProtons/Particles'   TYPE='GaudiSequencer/StdDC06TightProtonsSeq'",
   "DATA='/Event/Phys/StdDC06TightProtons/Vertices'    TYPE='GaudiSequencer/StdDC06TightProtonsSeq'"
 };
-StdDC06NoPIDsProtonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsProtons" };
+StdDC06NoPIDsProtonsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsProtons" };
 StdDC06NoPIDsProtonsSeq.MeasureTime = true;
-StdDC06LooseProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseProtons" };
+StdDC06LooseProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseProtons" };
 StdDC06LooseProtonsSeq.MeasureTime = true;
-StdDC06LooseVTTProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseVTTProtons" };
+StdDC06LooseVTTProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseVTTProtons" };
 StdDC06LooseVTTProtonsSeq.MeasureTime = true;
-StdDC06LooseDownstreamProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseDownstreamProtons" };
+StdDC06LooseDownstreamProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseDownstreamProtons" };
 StdDC06LooseDownstreamProtonsSeq.MeasureTime = true;
-StdDC06TightProtonsSeq.Members += { "PreLoadParticles/StdDC06TightProtons" };
+StdDC06TightProtonsSeq.Members += { "CombinedParticleMaker/StdDC06TightProtons" };
 StdDC06TightProtonsSeq.MeasureTime = true;
 
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================
 StdDC06NoPIDsProtons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-StdDC06NoPIDsProtons.PhysDesktop.NoPIDsParticleMaker.Particle =  "proton" ;
+StdDC06NoPIDsProtons.Particle =  "proton" ;
 StdDC06NoPIDsProtons.DecayDescriptor = "Proton" ;
 // ============================================================================
 // LOOSE long (except VTT protons)
 // ============================================================================
-StdDC06LooseProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
-StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06LooseProtons.Particles = {"proton"} ;
+StdDC06LooseProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseProtons.TrackSelector.TrackTypes = {"Long"};
 StdDC06LooseProtons.DecayDescriptor = "Proton" ;
 
-StdDC06LooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
-StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"} ;
+StdDC06LooseDownstreamProtons.Particles = {"proton"} ;
+StdDC06LooseDownstreamProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseDownstreamProtons.TrackSelector.TrackTypes = {"Downstream"} ;
 StdDC06LooseDownstreamProtons.DecayDescriptor = "Proton" ;
 
-StdDC06LooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
-StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
+StdDC06LooseVTTProtons.Particles = {"proton"} ;
+StdDC06LooseVTTProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseVTTProtons.TrackSelector.TrackTypes={"Upstream"} ;
 StdDC06LooseVTTProtons.DecayDescriptor = "Proton" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
 
-StdDC06TightProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
-StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" } ;
-StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06TightProtons.Particles = {"proton"} ;
+StdDC06TightProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" } ;
+StdDC06TightProtons.TrackSelector.TrackTypes = {"Long"};
 StdDC06TightProtons.DecayDescriptor = "Proton" ;
 
 // ============================================================================
