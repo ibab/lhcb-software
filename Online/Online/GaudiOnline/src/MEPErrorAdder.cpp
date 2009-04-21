@@ -5,7 +5,7 @@
 //
 //  Package   : GaudiOnline
 //
-//  Author    : David Svantesson i
+//  Author    : David Svantesson
 //
 //  ===========================================================
 #include <cstdlib>
@@ -22,15 +22,18 @@
 
 #include "GaudiOnline/MEPRxSys.h"
 
+// Publish DIM counters. DNS from environment
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"X", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size()*sizeof(int64_t), desc, this);} while(0);
+#define UNPUBCNT(name) do {m_monSvc->undeclareInfo(#name, this);} while(0);
 
+// Template for resetting counters
 template <typename T> static void resetCounter(T& cnt) { cnt = 0; }
 template <typename T> static void resetCounters(T& cnt,size_t len) {
   cnt.resize(len,0);
   std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
 }
-
+// Resetting 2D arrays
 template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t len2) {
   cnt.resize(len1);
   for (unsigned int i=0; i< len1; i++) {
@@ -53,21 +56,160 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
   declareProperty("sumPartition",	m_sumPartition=false);			 	  	//Is this a sum over nodes in subfarm, or subfarms in partition?
   
   //Options for sum over partition 
-  declareProperty("partitionName",      m_partitionName = "LHCb");	 
-  declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");					// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
+  declareProperty("partitionName",      m_partitionName = "");	 
+  //declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");					// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
 
   //Options for sum over subfarm
   declareProperty("nrSubNodes",         m_nrSubNodes =4);			         	//Number of nodes per subfarm
   
-  declareProperty("nSrc",               m_nSrc=100);						//Numer of TELL1 sources this partition have
-
-  // HOST set by job file
-  if (m_listenerDnsNode=="localhost.localdomain") m_listenerDnsNode= getenv("HOST");
-
+  declareProperty("nSrc",               m_nSrc=1);						//Numer of TELL1 sources this partition have
+  
+  m_allNames = NULL;
+  m_allNamesSize = 0;
+  
 }
 
 MEPErrorAdder::~MEPErrorAdder() {
-  int size = (int) m_badLenPkt.size();
+
+}
+
+/** Initalization of algorithm
+ *
+ *  Configure and setup of counters and subscriptions
+ */
+StatusCode
+MEPErrorAdder::initialize() {
+  StatusCode sc = Service::initialize();
+  if (!sc.isSuccess()) {
+    return StatusCode::FAILURE; 
+  }
+  if (!service("IncidentSvc", m_incidentSvc).isSuccess()) {
+    m_log << MSG::ERROR << "Failed to access incident service." << endmsg;
+    return StatusCode::FAILURE;
+  } 
+  else {
+    m_incidentSvc->addListener(this, "DAQ_CANCEL");
+    m_incidentSvc->addListener(this, "DAQ_ENABLE");
+  }
+
+  char temp[100];
+
+  // HOST set by job file
+  if (m_listenerDnsNode=="localhost.localdomain" && getenv("HOST")!=NULL) m_listenerDnsNode= getenv("HOST");
+  // Partition name set by job file
+  if (m_sumPartition && m_partitionName=="" && getenv("SET_PARTITION")!=NULL) {
+	m_partitionName = getenv("SET_PARTITION");
+  }
+ 
+  // listen to DNS node
+  DimClient::setDnsNode(m_listenerDnsNode.c_str());
+  m_log << MSG::INFO << "Listening to DNS Node: " << m_listenerDnsNode << endmsg; 
+ 
+  if (m_sumPartition) {
+  	// We want to subscribe to when the subfarm setup for this partition changes
+	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
+  	m_subsSubFarms = new DimUpdatedInfo(temp,"",this);
+	
+	m_log << MSG::INFO << "Summing up statistics for partition: " << m_partitionName << endmsg;
+
+	// Get subfarms first time
+	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
+	DimInfo t_subFarms(temp,"");  
+	while (t_subFarms.getSize()<1) { MEPRxSys::microsleep(10000); } // Must wait until data received to avoid segfault
+
+	readRunInfo(&t_subFarms);
+  }
+
+  //Setup all services we want to publish, through the Monitoring Svc
+  m_log << MSG::DEBUG << "Setup Monitoring Svc" << endmsg;
+  if (service("MonitorSvc", m_monSvc).isSuccess()) {
+          if (setupCounters()) {
+                  m_log << MSG::ERROR << "Failed to setup counters";
+                  return StatusCode::FAILURE;
+          }
+  }
+  else {
+    m_log << MSG::ERROR << "Failed to access monitor service.";
+    return StatusCode::FAILURE;
+  }
+
+  // Setup all subscriptions
+  setupSubs();
+
+ 
+  m_log << MSG::DEBUG << "Initialization done" << endmsg;
+  m_svcState = READY;
+  
+  return StatusCode::SUCCESS;
+}
+
+/** read from RunInfo a list of all subfarms
+ */
+int
+MEPErrorAdder::readRunInfo(DimInfo* dim) {
+
+	m_log << MSG::DEBUG << "Acquiring RunInfo information about subfarms etc. in partition" << endmsg;  
+ 	//if (m_runInfoDnsNode.size()>0) DimClient::setDnsNode(m_runInfoDnsNode.c_str());
+	//else DimClient::setDnsNode(m_listenerDnsNode.c_str());
+
+	// Get the list of subfarms
+	const char* subFarmsChar = dim->getString(); 
+	int subFarmsSize = dim->getSize();	
+
+  	m_subFarms.clear();
+	if (subFarmsChar[0] == 0) {
+		// No subfarms
+		m_log << MSG::WARNING << "Partition " << m_partitionName << " have no subfarms" << endmsg;
+		m_nrSubFarms = 0;
+		return 1;
+        }
+
+	// Read all subfarms into vector
+	int start = 0;
+	std::string printSubfarms = "";
+	int i=0;
+	while (subFarmsSize>start) {    
+		m_subFarms.push_back(&subFarmsChar[start]);
+    		start += (m_subFarms[i].size() + 1);
+		printSubfarms += m_subFarms[i] + ", ";
+		i++;
+  	}
+	m_log << MSG::INFO << "Subfarms in partition " << m_partitionName << ": " << printSubfarms << endmsg;
+	m_nrSubFarms = m_subFarms.size();
+
+	return 0;
+}
+
+/** Finalize algorithm
+ */
+StatusCode
+MEPErrorAdder::finalize() {
+
+  removeSubs();
+
+  delete m_subsSubFarms;
+
+  if (m_monSvc) {
+    m_monSvc->undeclareAll(this);
+    m_monSvc->release();
+    m_monSvc = 0;
+  }
+ 
+  delete[] m_allNames;
+  
+  m_svcState = NOT_READY;  
+  return Service::finalize();
+} 
+
+/** Remove all DIM subscriptions
+ *
+ *  Used at finalize or
+ *  for partition mode, if subfarms have changed
+ */
+int
+MEPErrorAdder::removeSubs() {
+
+  int size = (int) m_subsBadLenPkt.size();
   for (int i=0; i<size; i++) {
     delete m_subsBadLenPkt[i];
     delete m_subsBadPckFktPkt[i];
@@ -87,11 +229,218 @@ MEPErrorAdder::~MEPErrorAdder() {
     delete m_subsNotReqPkt[i];
     delete m_subsTotWrongPartID[i];
     delete m_subsSrcName[i];
-  }	
+  }	 
+
+  m_subsBadLenPkt.clear();
+  m_subsBadPckFktPkt.clear();
+  m_subsMisPkt.clear();
+  m_subsTruncPkt.clear();
+  m_subsMultipleEvt.clear();
+  m_subsRxOct.clear();
+  m_subsRxPkt.clear();
+  m_subsRxEvt.clear();
+  m_subsTotRxOct.clear();
+  m_subsTotRxPkt.clear();
+  m_subsIncEvt.clear();
+  m_subsTotBadMEP.clear();
+  m_subsTotMEPReq.clear();
+  m_subsTotMEPReqPkt.clear();
+  m_subsNumMEPRecvTimeouts.clear();
+  m_subsNotReqPkt.clear();
+  m_subsTotWrongPartID.clear();
+  m_subsSrcName.clear();
+
+  return 0;
 }
 
+/** Help-function for receiving array counters
+ *
+ *  return false if not the correct service, otherwise get data and return true
+ *
+ *  If the received data size does not correspond to the number of sources, 
+ *  resetPublishedServices is called, which will republish all services with the 
+ *  correct size
+ *
+ */
+bool
+MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  // If new size of data, we have to resize all published counters.
+  int arraySize = curr->getSize()/sizeof(int64_t);
+  if (arraySize != m_nSrc) resetPublishedServices(arraySize);
+
+  int64_t * data = (int64_t*) curr->getData();
+  int64_t diff;
+
+  // Receive all data
+  for (int j=0; j<arraySize; j++) {
+    diff = data[j] - rArray[j];	// Value to add/subt
+    rArray[j] = data[j];	// Save value
+    sArray[j] += diff;  	// Change value
+  }
+
+  return true;
+}
+
+/** Help-function for receiving single counters
+ *
+ *  return false if not the correct service, otherwise get data and return true
+ */
+bool
+MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  int64_t data = *((int64_t*) curr->getData());
+  int64_t diff = data - rValue;	//Value to add/subtract
+  
+  rValue = data;	// saved value
+  sValue += diff;	// Change value
+
+  return true;
+
+}
+
+/** DimInfoHandler function
+ */
+void
+MEPErrorAdder::infoHandler() {
+  DimInfo * curr = getInfo();
+ 
+  m_log << MSG::VERBOSE << "Receiving data from " << curr->getName() << endmsg;
+
+  // If subfarms have changed, update and re-setup subscriptions
+  if (curr==m_subsSubFarms) {
+    changeSubFarms(m_subsSubFarms);
+    return;
+  }
+
+  //To know what service, we must iterate over all subscriptions...
+  for (int i=0;i<m_nrServices; i++) {
+    // These array counters can change size, if the number of TELL1 sources changes
+    if (ReceiveArrayService(curr,m_subsBadLenPkt[i], m_rBadLenPkt[i], m_badLenPkt)) break;
+    if (ReceiveArrayService(curr,m_subsBadPckFktPkt[i], m_rBadPckFktPkt[i], m_badPckFktPkt)) break;
+    if (ReceiveArrayService(curr,m_subsMisPkt[i], m_rMisPkt[i], m_misPkt)) break;
+    if (ReceiveArrayService(curr,m_subsTruncPkt[i], m_rTruncPkt[i], m_truncPkt)) break;
+    if (ReceiveArrayService(curr,m_subsMultipleEvt[i], m_rMultipleEvt[i], m_multipleEvt)) break;
+    if (ReceiveArrayService(curr,m_subsRxOct[i], m_rRxOct[i], m_rxOct)) break;
+    if (ReceiveArrayService(curr,m_subsRxPkt[i], m_rRxPkt[i], m_rxPkt)) break;
+    if (ReceiveArrayService(curr,m_subsRxEvt[i], m_rRxEvt[i], m_rxEvt)) break;
+   
+    // These will not change
+    if (ReceiveSingleService(curr,m_subsTotRxOct[i], m_rTotRxOct[i], m_totRxOct)) break;    
+    if (ReceiveSingleService(curr,m_subsTotRxPkt[i], m_rTotRxPkt[i], m_totRxPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsIncEvt[i], m_rIncEvt[i], m_incEvt)) break;    
+    if (ReceiveSingleService(curr,m_subsTotBadMEP[i], m_rTotBadMEP[i], m_totBadMEP)) break;    
+    if (ReceiveSingleService(curr,m_subsTotMEPReq[i], m_rTotMEPReq[i], m_totMEPReq)) break;    
+    if (ReceiveSingleService(curr,m_subsTotMEPReqPkt[i], m_rTotMEPReqPkt[i], m_totMEPReqPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsNumMEPRecvTimeouts[i], m_rNumMEPRecvTimeouts[i], m_numMEPRecvTimeouts)) break;    
+    if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
+    if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
+  
+    if (curr == m_subsSrcName[i]) {
+	//Receiving source names
+	
+	int size = curr->getSize();
+        // Now only look if size have changed, need to go through whole list?
+        if (size!=m_allNamesSize) {
+		//Source names seem to have changed, remove...
+		if (m_allNamesSize!=0) m_monSvc->undeclareInfo("srcName", this);
+		delete[] m_allNames;
+		m_allNames = NULL;		
+
+		if (size>0) {
+			// Publish new source-names
+			m_allNamesSize=size;
+			if (!(m_allNames = new char[size+1])) {
+				m_log << MSG::ERROR << "Failed to store source names" << endmsg;
+				return;
+			}
+   		
+			::memcpy(m_allNames, (const char *) curr->getData(), size);
+		
+			m_monSvc->declareInfo("srcName", "C", m_allNames, size, "Source IP names", this);
+		}
+	}
+    }
+
+  }
+
+}
+
+StatusCode MEPErrorAdder::run() {
+
+  while (m_svcState != RUNNING) {
+    switch(m_svcState) {
+    case STOPPED:
+    case NOT_READY:
+      m_log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
+      //continue;
+      return StatusCode::SUCCESS;
+    case READY:
+      MEPRxSys::microsleep(100000); // 100 ms
+      break;
+    default: continue;
+    }
+  }
+
+  for (;;) {
+    if (m_svcState != RUNNING) {
+      //Do something here?
+      
+      return StatusCode::SUCCESS;
+    }
+    MEPRxSys::microsleep(100000); // 100 ms
+  }
+
+  return 1;
+}
+
+// IInterface implementation: Query interface
+StatusCode
+MEPErrorAdder::queryInterface(const InterfaceID& riid, void** ppvInterface) {
+  if ( riid == IRunable::interfaceID() )   {
+    *ppvInterface = (IRunable*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  // Interface is not directly availible: try a base class
+  return Service::queryInterface(riid, ppvInterface);
+}
+
+void  MEPErrorAdder::handle(const Incident& inc)    {
+  m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+  if (inc.type() == "DAQ_CANCEL")  {
+    m_svcState = STOPPED;
+  }
+  else if (inc.type() == "DAQ_ENABLE")  {
+    m_svcState = RUNNING;
+  }
+}
+
+/** Setup published counters
+ *
+ *  reset array counters and publish array and single counters
+ */
 int
-MEPErrorAdder::setupCounters() {
+MEPErrorAdder::setupCounters() {  
+  resetAllCounters();
+  publishArrayCounters();
+  publishSingleCounters();
+
+  return 0;
+}
+
+/**Reset size and values to zero for all array counters
+ *
+ * Single counters set to zero when published...
+ */
+int
+MEPErrorAdder::resetAllCounters() {
   resetCounters(m_rxOct, m_nSrc);
   resetCounters(m_rxPkt, m_nSrc);
   resetCounters(m_rxEvt, m_nSrc);
@@ -101,30 +450,46 @@ MEPErrorAdder::setupCounters() {
   resetCounters(m_truncPkt, m_nSrc);
   resetCounters(m_multipleEvt, m_nSrc); 
 
-  m_totMEPReq          = 0;
-  m_totMEPReqPkt       = 0;
-  m_numMEPRecvTimeouts = 0;
-  m_notReqPkt          = 0;
-  m_totRxOct           = 0;
-  m_totRxPkt           = 0;
-  m_incEvt             = 0; 
-  m_totMEPReqPkt       = 0;
-  m_numMEPRecvTimeouts = 0;
-  m_totMEPReq          = 0;
-  m_totBadMEP          = 0;
-  m_totWrongPartID     = 0;
+  return 0;
+}
 
-  m_allNamesSize       = 0;
+/** Reset all 2D arrays, they keep track of received values
+ */
+int
+MEPErrorAdder::resetRem2DCounters() {
+  reset2DCounters(m_rBadLenPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rBadPckFktPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rMisPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rTruncPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rMultipleEvt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxOct,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxPkt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxEvt,m_nrServices,m_nSrc);
 
-  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
-  PUBARRAYCNT(misPkt,        "Missing MEPs");
-  PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
-  PUBARRAYCNT(truncPkt,      "Truncated (empty) MEPs");
-  PUBARRAYCNT(multipleEvt,   "Duplicate Events");
-  PUBARRAYCNT(rxOct,         "Received bytes");
-  PUBARRAYCNT(rxPkt,         "Received packets");
-  PUBARRAYCNT(rxEvt,         "Received events");
+  return 0;
+}
 
+/** Reset all arrays for remembering received single counters
+ */
+int
+MEPErrorAdder::resetRemSingleCounters() {
+  m_rTotRxOct.resize(m_nrServices,0);
+  m_rTotRxPkt.resize(m_nrServices,0);
+  m_rIncEvt.resize(m_nrServices,0);
+  m_rTotBadMEP.resize(m_nrServices,0);
+  m_rTotMEPReq.resize(m_nrServices,0);
+  m_rTotMEPReqPkt.resize(m_nrServices,0);
+  m_rNumMEPRecvTimeouts.resize(m_nrServices,0);
+  m_rNotReqPkt.resize(m_nrServices,0);
+  m_rTotWrongPartID.resize(m_nrServices,0);
+
+  return 0;
+}
+
+/** Publishes all single counters
+ */
+int
+MEPErrorAdder::publishSingleCounters() {
   PUBCNT(totRxOct,           "Total received bytes");
   PUBCNT(totRxPkt,           "Total received packets");
   PUBCNT(incEvt,             "Incomplete events"); 
@@ -138,69 +503,51 @@ MEPErrorAdder::setupCounters() {
   return 0;
 }
 
+/** Publishes all array counters
+ */
+int
+MEPErrorAdder::publishArrayCounters() {
+  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
+  PUBARRAYCNT(misPkt,        "Missing MEPs");
+  PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
+  PUBARRAYCNT(truncPkt,      "Truncated (empty) MEPs");
+  PUBARRAYCNT(multipleEvt,   "Duplicate Events");
+  PUBARRAYCNT(rxOct,         "Received bytes");
+  PUBARRAYCNT(rxPkt,         "Received packets");
+  PUBARRAYCNT(rxEvt,         "Received events");
+ 
+  return 0;
+}
 
-StatusCode
-MEPErrorAdder::initialize() {
-  StatusCode sc = Service::initialize();
-  if (!sc.isSuccess()) {
-    return StatusCode::FAILURE; 
-  }
-  if (!service("IncidentSvc", m_incidentSvc).isSuccess()) {
-    m_log << MSG::ERROR << "Failed to access incident service." << endmsg;
-    return StatusCode::FAILURE;
-  } 
-  else {
-    m_incidentSvc->addListener(this, "DAQ_CANCEL");
-    m_incidentSvc->addListener(this, "DAQ_ENABLE");
-  }
- 
- 
+/** Unpublishes all array counters
+ */
+int
+MEPErrorAdder::unpublishArrayCounters() {
+  UNPUBCNT(badLenPkt);
+  UNPUBCNT(misPkt);
+  UNPUBCNT(badPckFktPkt);
+  UNPUBCNT(truncPkt);
+  UNPUBCNT(multipleEvt);
+  UNPUBCNT(rxOct);
+  UNPUBCNT(rxPkt);
+  UNPUBCNT(rxEvt);
+
+  return 0;
+}
+
+/** This setup all subscriptions
+ */
+int
+MEPErrorAdder::setupSubs() {
+
   char temp[100];
-
-  if (m_sumPartition) {    
-  	m_log << MSG::DEBUG << "Acquiring RunInfo information about subfarms etc. in partition" << endmsg;  
- 	if (m_runInfoDnsNode.size()>0) DimClient::setDnsNode(m_runInfoDnsNode.c_str());
-	else DimClient::setDnsNode(m_listenerDnsNode.c_str());
-
-  	//First get RunInfo (list of subfarms).
-	sprintf(temp,"RunInfo/%s/HLTnSubFarms",m_partitionName.c_str());
-  	
-	DimCurrentInfo nSubFarms(temp,-1);  //must use CurrentInfo to not get segfault (wait for data)
-  	m_nrSubFarms = nSubFarms.getInt();
-  	m_log << MSG::INFO << "Number of subfarms in partition: " << m_nrSubFarms << endmsg;
-  
-  	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
-  	DimCurrentInfo SubFarms(temp,(char*)"NA");
-  	const char* subFarmsChar = SubFarms.getString(); 
- 
-  	m_subFarms.resize(m_nrSubFarms);
-  	int start = 0;
-  	for (int i=0;i<m_nrSubFarms;i++) {
-    		m_subFarms[i].insert(0,&subFarmsChar[start]);
-    		m_log << MSG::DEBUG << "Subfarm: " << m_subFarms[i] << endmsg;
-    		start += (m_subFarms[i].size() + 1);
-  	}  
-  }
-  
-  DimClient::setDnsNode(m_listenerDnsNode.c_str());
-
-
-  //All services we want to publish, through the Monitoring Svc
-  m_log << MSG::DEBUG << "Setup Monitoring Svc" << endmsg;
-  if (service("MonitorSvc", m_monSvc).isSuccess()) {
-          if (setupCounters()) {
-                  m_log << MSG::ERROR << "Failed to setup counters";
-                  return StatusCode::FAILURE;
-          }
-  }
-  else {
-    m_log << MSG::ERROR << "Failed to access monitor service.";
-    return StatusCode::FAILURE;
-  }
 
   // add all services we want to listen to..
   if (m_sumPartition) m_nrServices = m_nrSubFarms;
   else m_nrServices = m_nrSubNodes;     
+  
+  m_log << MSG::DEBUG << "Listening to " << m_nrServices << " services" << endmsg;
+
   // need to resize
   m_subsBadLenPkt.resize(m_nrServices,NULL);
   m_subsBadPckFktPkt.resize(m_nrServices,NULL);
@@ -223,29 +570,15 @@ MEPErrorAdder::initialize() {
 
   m_subsSrcName.resize(m_nrServices,NULL);
 
-  reset2DCounters(m_rBadLenPkt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rBadPckFktPkt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rMisPkt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rTruncPkt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rMultipleEvt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rRxOct,m_nrServices,m_nSrc);
-  reset2DCounters(m_rRxPkt,m_nrServices,m_nSrc);
-  reset2DCounters(m_rRxEvt,m_nrServices,m_nSrc);
-
-  m_rTotRxOct.resize(m_nrServices,0);
-  m_rTotRxPkt.resize(m_nrServices,0);
-  m_rIncEvt.resize(m_nrServices,0);
-  m_rTotBadMEP.resize(m_nrServices,0);
-  m_rTotMEPReq.resize(m_nrServices,0);
-  m_rTotMEPReqPkt.resize(m_nrServices,0);
-  m_rNumMEPRecvTimeouts.resize(m_nrServices,0);
-  m_rNotReqPkt.resize(m_nrServices,0);
-  m_rTotWrongPartID.resize(m_nrServices,0);
+  // Reset arrays for remembering received values
+  resetRem2DCounters();
+  resetRemSingleCounters();
 
   longlong zero = 0;
 
   if (m_sumPartition) { 
     //Partition sum
+
     for (int i=0;i<m_nrSubFarms;i++) {
   	//all subfarms
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/badLenPkt",m_subFarms[i].c_str());
@@ -332,191 +665,61 @@ MEPErrorAdder::initialize() {
  
     }
   }
- 
-  m_log << MSG::DEBUG << "Initialization done" << endmsg;
-  m_svcState = READY;
-  
-  return StatusCode::SUCCESS;
+
+  return 0;
 }
 
-StatusCode
-MEPErrorAdder::finalize() {
-  if (m_monSvc) {
-    m_monSvc->undeclareAll(this);
-    m_monSvc->release();
-    m_monSvc = 0;
-  }
- 
-  m_subsBadLenPkt.clear();
-  m_subsBadPckFktPkt.clear();
-  m_subsMisPkt.clear();
-  m_subsTruncPkt.clear();
-  m_subsMultipleEvt.clear();
-  m_subsRxOct.clear();
-  m_subsRxPkt.clear();
-  m_subsRxEvt.clear();
-  m_subsTotRxOct.clear();
-  m_subsTotRxPkt.clear();
-  m_subsIncEvt.clear();
-  m_subsTotBadMEP.clear();
-  m_subsTotMEPReq.clear();
-  m_subsTotMEPReqPkt.clear();
-  m_subsNumMEPRecvTimeouts.clear();
-  m_subsNotReqPkt.clear();
-  m_subsTotWrongPartID.clear();
-  m_subsSrcName.clear();
 
-  m_svcState = NOT_READY;  
-  return Service::finalize();
-} 
-
-/** Help-function for receiving array counters
- *
+/** When received arrays change size...
+ * 
+ * 1. Unpublish counters
+ * 2. Reset all counters that are published or rememberd 2D counters
+ * 3. Publish them again
  */
-bool
-MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray) {
-
-  // Return false if not the correct service
-  if (curr != subs) return false;
-
-  int arraySize = curr->getSize()/sizeof(int64_t);
-  if (arraySize<m_nSrc) {
-    m_log << MSG::INFO << "Received less data than number of sources from service " << curr->getName() << ". (received " << arraySize << " 64bit ints)" << endmsg;
-  }
-  else if (arraySize>m_nSrc) {
-    //This is an error, we can't receive more data than the number of sources.
-    m_log << MSG::WARNING << "Received too much data from service " << curr->getName() << " (compared to number of sources), ignoring... (received " << arraySize << " 64bit ints)" << endmsg;	
-    arraySize = m_nSrc;
-  }
-
-  int64_t * data = (int64_t*) curr->getData();
-  int64_t diff;
-
-  for (int j=0; j<arraySize; j++) {
-    diff = data[j] - rArray[j];
-    sArray[j] += diff;
-  }
-
-  return true;
-}
-
-/** Help-function for receiving single counters
- *
- */
-bool
-MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue) {
-
-  // Return false if not the correct service
-  if (curr != subs) return false;
-
-  int64_t data = *((int64_t*) curr->getData());
-  int64_t diff = data - rValue;
-  
-  rValue = data;
-  sValue += diff;
-  return true;
-
-}
-
-void
-MEPErrorAdder::infoHandler() {
-  DimInfo * curr = getInfo();
- 
-  m_log << MSG::VERBOSE << "Receiving data from " << curr->getName() << endmsg;
-
-  //To know what service, we must iterate over all...
-  for (int i=0;i<m_nrServices; i++) {
-    if (ReceiveArrayService(curr,m_subsBadLenPkt[i], m_rBadLenPkt[i], m_badLenPkt)) break;
-    if (ReceiveArrayService(curr,m_subsBadPckFktPkt[i], m_rBadPckFktPkt[i], m_badPckFktPkt)) break;
-    if (ReceiveArrayService(curr,m_subsMisPkt[i], m_rMisPkt[i], m_misPkt)) break;
-    if (ReceiveArrayService(curr,m_subsTruncPkt[i], m_rTruncPkt[i], m_truncPkt)) break;
-    if (ReceiveArrayService(curr,m_subsMultipleEvt[i], m_rMultipleEvt[i], m_multipleEvt)) break;
-    if (ReceiveArrayService(curr,m_subsRxOct[i], m_rRxOct[i], m_rxOct)) break;
-    if (ReceiveArrayService(curr,m_subsRxPkt[i], m_rRxPkt[i], m_rxPkt)) break;
-    if (ReceiveArrayService(curr,m_subsRxEvt[i], m_rRxEvt[i], m_rxEvt)) break;
+int
+MEPErrorAdder::resetPublishedServices(int nSrc) {
    
-    if (ReceiveSingleService(curr,m_subsTotRxOct[i], m_rTotRxOct[i], m_totRxOct)) break;    
-    if (ReceiveSingleService(curr,m_subsTotRxPkt[i], m_rTotRxPkt[i], m_totRxPkt)) break;    
-    if (ReceiveSingleService(curr,m_subsIncEvt[i], m_rIncEvt[i], m_incEvt)) break;    
-    if (ReceiveSingleService(curr,m_subsTotBadMEP[i], m_rTotBadMEP[i], m_totBadMEP)) break;    
-    if (ReceiveSingleService(curr,m_subsTotMEPReq[i], m_rTotMEPReq[i], m_totMEPReq)) break;    
-    if (ReceiveSingleService(curr,m_subsTotMEPReqPkt[i], m_rTotMEPReqPkt[i], m_totMEPReqPkt)) break;    
-    if (ReceiveSingleService(curr,m_subsNumMEPRecvTimeouts[i], m_rNumMEPRecvTimeouts[i], m_numMEPRecvTimeouts)) break;    
-    if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
-    if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
+  m_log << MSG::INFO << "Services have changed size (nr Src), previous: "<<m_nSrc<< ", new: "<<nSrc<<endmsg;
   
-    if (curr == m_subsSrcName[i]) {
-	//Receiving source names
+  m_nSrc = nSrc;  
+
+  unpublishArrayCounters();
+  
+  resetAllCounters();
+  resetRem2DCounters();
+  
+  publishArrayCounters();
+
+  return 0;
+
+}
+
+/** Called when RunInfo setup changes, i.e. subfarms in partition changes
+ *
+ *  Will remove all subscriptions, update the list of subfarms, and setup 
+ "  the subscriptions for the new subfarm list.
+ *
+ */
+int
+MEPErrorAdder::changeSubFarms(DimInfo* dim) {
+
+  m_log << MSG::INFO << "Partition subFarm setup changed" << endmsg;
+
+  //Remove subscriptions
+  removeSubs();
+ 
+  m_log << MSG::DEBUG << "Subscriptions removed" << endmsg;
+
+  // Read RunInfo again to update subfarm list
+  readRunInfo(dim);
+
+  // Setup subscriptions again from all new subfarms
+  m_log << MSG::DEBUG << "Setting up subscriptions again..." << endmsg;
+  setupSubs();
+
+  m_log << MSG::INFO << "Subscriptions have been re-initialized." << endmsg;  
+
+  return 0;
 	
-	int size = curr->getSize();
-	if (size>1) {
-		if (m_allNamesSize==0) {
-			//Received first time
-			m_allNamesSize=size;
-			if (!(m_allNames = new char[size])) {
-				m_log << MSG::ERROR << "Failed to store source names" << endmsg;
-				return;
-			}
-   			::memcpy(m_allNames, (const char *) curr->getData(), size);
-			 
-			m_monSvc->declareInfo("srcName", "C", m_allNames, size, "Source IP names", this);
-		}
-	}
-    }
-
-  }
-
 }
-
-StatusCode MEPErrorAdder::run() {
-
-  while (m_svcState != RUNNING) {
-    switch(m_svcState) {
-    case STOPPED:
-    case NOT_READY:
-      m_log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
-      //continue;
-      return StatusCode::SUCCESS;
-    case READY:
-      MEPRxSys::microsleep(100000); // 100 ms
-      break;
-    default: continue;
-    }
-  }
-
-  for (;;) {
-    if (m_svcState != RUNNING) {
-      //Do something here?
-      
-      return StatusCode::SUCCESS;
-    }
-    MEPRxSys::microsleep(100000); // 100 ms
-  }
-
-  return 1;
-}
-
-// IInterface implementation: Query interface
-StatusCode
-MEPErrorAdder::queryInterface(const InterfaceID& riid, void** ppvInterface) {
-  if ( riid == IRunable::interfaceID() )   {
-    *ppvInterface = (IRunable*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  // Interface is not directly availible: try a base class
-  return Service::queryInterface(riid, ppvInterface);
-}
-
-void  MEPErrorAdder::handle(const Incident& inc)    {
-  m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL")  {
-    m_svcState = STOPPED;
-  }
-  else if (inc.type() == "DAQ_ENABLE")  {
-    m_svcState = RUNNING;
-  }
-}
-
-
 

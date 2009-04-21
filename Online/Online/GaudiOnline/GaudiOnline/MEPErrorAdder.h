@@ -9,6 +9,7 @@
 //
 //  This service adds up the counters of received and errornous MEPs per TELL1-source. One service runs for each subfarm and one for each partition.
 //  
+//  
 //
 //  ===========================================================
 #ifndef GAUDIONLINE_ERRORADDINGSVC_H
@@ -57,20 +58,21 @@ namespace LHCb  {
     enum ServiceState { NOT_READY, READY, RUNNING, STOPPED };
     ServiceState		m_svcState;
 
-    std::string                 m_listenerDnsNode;
-    std::string			m_runInfoDnsNode;
-    std::string                 m_partitionName;
-    int                         m_updateFrequency;
-    int                         m_nrSubNodes;
-    bool			m_sumPartition;
+    std::string                 m_listenerDnsNode;	// DNS node to listen for services. 
+    int                         m_updateFrequency;	// How often to update
 
-    int				m_nrSubFarms;
-    std::vector<std::string>    m_subFarms;
-    int                         m_nSrc;
+    int                         m_nrSubNodes;		// Number of nodes on a subfarm (subfarm mode)
 
-    int				m_nrServices; 		// == nrSubNodes or nrSubFarms
+    bool			m_sumPartition;		// TRUE: Run in partition sum mode
+    std::string                 m_partitionName;	// Partition to sum for
 
-    char			*m_allNames;
+    int				m_nrSubFarms;		// Number of subfarms in partition
+    std::vector<std::string>    m_subFarms;		// List of all subfarms
+
+    int                         m_nSrc;			// Number of TELL1 sources
+    int				m_nrServices; 		// (internally used) == nrSubNodes or nrSubFarms
+
+    char			*m_allNames;		// TELL1 source names from DIM service
     int				m_allNamesSize;
 
     //Save all received values from all sources
@@ -136,11 +138,25 @@ namespace LHCb  {
 
     std::vector<DimInfo*>	m_subsSrcName;
 
+    DimInfo*			m_subsSubFarms;			//For partiton mode, look if partition setup changes
+
     IIncidentSvc*		m_incidentSvc;
     IMonitorSvc*                m_monSvc;    
  
-    void infoHandler();
+    // Various functions
+    void infoHandler();    
     int setupCounters();
+    int resetAllCounters();
+    int resetRem2DCounters();
+    int resetRemSingleCounters();
+    int publishSingleCounters();
+    int publishArrayCounters();
+    int unpublishArrayCounters();
+    int resetPublishedServices(int nSrc);
+    int changeSubFarms(DimInfo* subsSubFarms);
+    int removeSubs();
+    int readRunInfo(DimInfo*);
+    int setupSubs();
     bool ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray);
     bool ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
 
