@@ -12,6 +12,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2009-04-21 - Patrick Koppenburg
+ - Rename all inputlocations for DecayTreeTuples to be compatible with Hlt2Lines.
+
 ! 2009-04-15 - Patrick Koppenburg
  - No max number of events for statistics
 

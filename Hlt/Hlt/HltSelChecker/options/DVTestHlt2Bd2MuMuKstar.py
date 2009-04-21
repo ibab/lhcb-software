@@ -45,7 +45,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBd2MuMuKstar"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bd2MuMuKstarCombineParticlesCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 # special for head
 DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {

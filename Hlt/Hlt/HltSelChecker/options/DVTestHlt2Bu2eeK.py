@@ -15,8 +15,8 @@ signal = "Bu2eeK"
 importOptions( "$STDOPTS/PreloadUnits.opts")
 importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts")
 from Configurables import PrintHeader, PrintDecayTree
-PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4 
-PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
+PrintHeader("PrintDiLeptonForPreselBu2eeK").OutputLevel = 4 
+PrintHeader("PrintPreselBu2eeK").OutputLevel = 4
 PrintHeader("PrintDC06SelBu2eeK").OutputLevel = 4
 PrintDecayTree("PrintTreeDC06SelBu2eeK").OutputLevel = 4
 presel = GaudiSequencer("SeqDC06SelBu2eeK")
@@ -53,14 +53,14 @@ from Configurables import GaudiSequencer, CheckSelResult
 corrs = GaudiSequencer("Corrs") 
 corrs.Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("eeK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2eeK" ]
-AlgorithmCorrelationsAlg("eeK").Algorithms = [ "DC06SelBu2eeK", "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
+AlgorithmCorrelationsAlg("eeK").Algorithms = [ "DC06SelBu2eeK", "Hlt2SelBu2eeK", "Hlt2SelBu2eeKSignal", "Hlt2SelBu2eeKHighMass", "Hlt2SelBu2eeKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2Decision" ]
 ###
  # Tuple
 ###
 from Configurables import PhysDesktop, DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2LLKSignal"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bu2eeKSignalCombineParticlesCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 #
 # Configuration

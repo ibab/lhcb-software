@@ -52,14 +52,14 @@ from Configurables import GaudiSequencer, CheckSelResult
 corrs = GaudiSequencer("Corrs") 
 corrs.Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("MuMuK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2MuMuK" ]
-AlgorithmCorrelationsAlg("MuMuK").Algorithms = [ "DC06SelBu2MuMuK", "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
+AlgorithmCorrelationsAlg("MuMuK").Algorithms = [ "DC06SelBu2MuMuK", "Hlt2SelBu2MuMuK", "Hlt2SelBu2MuMuKSignal", "Hlt2SelBu2MuMuKHighMass", "Hlt2SelBu2MuMuKJpsi", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
 ###
  # Tuple
 ###
 from Configurables import PhysDesktop, DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2LLKSignal"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bu2MuMuKSignalCombineParticlesCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+]cc"
 #
 # Configuration

@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.12 2009-03-20 10:05:38 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.13 2009-04-21 10:26:15 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -45,7 +45,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2D0K_KsHH"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bu2D0K_KsHHCombineParticlesCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "{[B+ -> (^D0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc, [B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc}"
 #
 # Configuration
