@@ -12,7 +12,7 @@ from Hlt2SharedParticles.GoodParticles import GoodPions
 from Hlt2SharedParticles.Topo2Body import *
 from HltConf.HltLine import bindMembers
 
-__all__ = ( 'Topo3Body2m2Body2pp', 'Topo3Body2p2Body2pm', 'Topo3Body2m2Body2pm', 'Topo3Body2p2Body2mm' )
+__all__ = ( 'Topo3Body' )
 
 Hlt2SharedTopo3Body= CombineParticles("Hlt2SharedTopo3Body")
 
