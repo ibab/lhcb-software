@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.4 2009-04-17 13:16:37 frankb Exp $
+// $Id: FarmMonitor.h,v 1.5 2009-04-21 12:21:27 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.4 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.5 2009-04-21 12:21:27 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -112,6 +112,7 @@ namespace ROMon {
       : AlarmTag(a), when(a.when), description(a.description), tag(a.tag), optional(a.optional) {
     }
     virtual ~Alarm() {}
+    static unsigned int hash32(const char* key);
     std::string toString(const std::string& t) const;
     void fromString(const std::string& s);
     int level() const;
@@ -134,6 +135,12 @@ namespace ROMon {
   typedef std::pair<std::string, Alarms> AlarmInfo;
   typedef std::map<char,int>             StateSummary;
 
+  struct AlarmSum  {
+    std::vector<Alarm*> nodes;
+    AlarmSum() {}
+    virtual ~AlarmSum() {}
+  };
+  typedef std::map<int,AlarmSum> AlarmSummary;
 
   /**@class InternalMonitor ROMon.h GaudiOnline/FarmMonitor.h
    *
@@ -255,11 +262,13 @@ namespace ROMon {
     typedef std::vector<std::string>  Farms;
     typedef std::vector<Alarm*>       TypeAlarms;
     typedef std::map<int,TypeAlarms>  AlarmsByType;
+    typedef std::map<int,Alarm*>      AlarmMap;
 
     std::string                       m_match;
-    std::string                       m_current;
+    std::string*                      m_current;
     int                               m_mode;
     int                               m_serviceID;
+    int                               m_summaryID;
 
     std::auto_ptr<PartitionListener>  m_listener;
     SubMonitors                       m_farmMonitors;
@@ -267,6 +276,7 @@ namespace ROMon {
     AlarmsByType                      m_alarms;
     AlarmsByType                      m_newAlarms;
     AlarmsByType                      m_clrAlarms;
+    AlarmMap                          m_sumAlarms;
     int                               m_runState;
     long                              m_farmEvents;
 
@@ -276,15 +286,19 @@ namespace ROMon {
 public:
     /// Standard constructor
     FarmMonitor(int argc, char** argv);
+
     /// Standard destructor
     virtual ~FarmMonitor();
+
     /// Access partition name
     const std::string& partition() const { return m_name; }
+
     /// Reset for new initialization
     virtual void reset() {}
 
     /// Extract data for monitoring
     virtual void extractData(const Nodeset& ) {}
+
     /// Analyse monitored data
     virtual void analyzeData() {}
 
@@ -292,25 +306,41 @@ public:
     /// Allow clients to check if the system is running
     bool isRunning() const;
 
+    /// Publish alarm summary
+    virtual void publishSummary(const AlarmSummary& summary);
+
     /// Publish alarm
     virtual void publish(const std::string& tag, const Alarm& alm);
 
+    /// Handle new incoming alarm and update summary
+    virtual void handleAlarmSummary(const std::string& alarm);
+
     /// Show subfarm monitor
     int showSubfarm();
+
     /// Get farm monitor from cursor position
     InternalMonitor* currentMonitor();
+
     /// Accessor to sub-monitors of main panel
     SubMonitors& subMonitors() {  return m_farmMonitors; }
+
     /// Interactor overload: Monitor callback handler
     virtual void handle(const Event& ev);
+
     /// Connect to data sources
     void connect(const std::vector<std::string>& farms);
+
     /// DIM command service callback
     virtual void update(const void* data);
+
     /// DIM command service callback
     static void dnsDataHandler(void* tag, void* address, int* size);
+
     /// DIM command service callback
     static void feedData(void* tag, void** address, int* size, int* first);
+
+    /// DIM command service callback
+    static void feedSummary(void* tag, void** address, int* size, int* first);
   };
   // Max. 15 seconds without update allowed
   static int UPDATE_TIME_MAX = 15;

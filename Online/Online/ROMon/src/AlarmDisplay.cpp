@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.3 2009-04-17 13:16:37 frankb Exp $
+// $Id: AlarmDisplay.cpp,v 1.4 2009-04-21 12:21:27 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.3 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.4 2009-04-21 12:21:27 frankb Exp $
 
 #include "ROMon/AlarmDisplay.h"
 #include "ROMon/FarmMonitor.h"
@@ -46,24 +46,6 @@ static void help() {
        << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
        << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
        << endl;
-}
-
-static unsigned int hash32(const char* key) {
-  unsigned int hash;
-  const char* k;
-  for (hash = 0, k = key; *k; k++) {
-    hash += *k; hash += (hash << 10); hash ^= (hash >> 6); 
-  }
-  hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
-  return hash;
-}
-namespace {
-  struct AlarmSum  {
-    std::vector<Alarm*> nodes;
-    AlarmSum() {}
-    virtual ~AlarmSum() {}
-  };
-  typedef std::map<int,AlarmSum> AlarmSummary;
 }
 
 MessageWindow::MessageWindow(AlarmDisplay* parent, const string& title,int height, int width, int level) 
@@ -229,19 +211,19 @@ int AlarmDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
 /// Handle new incoming alarm
 void AlarmDisplay::handleAlarm(const std::string& alarm) {
   const char* text = alarm.c_str();
-  unsigned int val = hash32(text+17);
+  unsigned int val;
   AlarmSummary summary;
   AlarmSummary::iterator k;
-  DisplayAlarms::iterator i=m_alarms.find(val);
+  DisplayAlarms::iterator i;
   bool removeAll = false;
-  if ( i == m_alarms.end() ) {
+  if ( alarm.length()>5 && text[5] == 'A' ) {      // CLEARALL
+    removeAll = true;
+  }
+  else if ( (i=m_alarms.find(val=Alarm::hash32(text+17))) == m_alarms.end() ) {
     if ( text[0] == 'D' ) {         // DECLARE
       Alarm* alm = new Alarm(text);
       m_alarms[val] = alm;
     }
-  }
-  else if ( text[5] == 'A' ) {      // CLEARALL
-    removeAll = true;
   }
   else  if ( text[0] == 'C' ) {     // CLEAR
     delete (*i).second;
@@ -392,7 +374,7 @@ void AlarmPrinter::dataHandler(void* tag, void* address, int* size) {
 /// Handle new incoming alarm
 void AlarmPrinter::handleAlarm(const std::string& alarm) {
   const char* text = alarm.c_str();
-  unsigned int val = hash32(text+17);
+  unsigned int val = Alarm::hash32(text+17);
   DisplayAlarms::iterator i=m_alarms.find(val);
   if ( i == m_alarms.end() ) {
     if ( text[0] == 'D' ) {

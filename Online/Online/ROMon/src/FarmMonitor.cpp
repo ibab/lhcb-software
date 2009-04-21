@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.5 2009-04-17 13:16:37 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.6 2009-04-21 12:21:27 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.5 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.6 2009-04-21 12:21:27 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -271,7 +271,6 @@ void InternalMonitor::check(time_t now) {
   }
 }
 
-
 /// Count the number of tasks
 void InternalMonitor::countTasks(const Nodeset& ns)   {
   m_numTask = 0;
@@ -357,7 +356,8 @@ void InternalMonitor::handle(const Event& ev)    {
 }
 
 /// Standard constructor
-FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(HLT_MODE)
+FarmMonitor::FarmMonitor(int argc, char** argv) 
+: InternalMonitor(0,""), m_current(0), m_mode(HLT_MODE)
 {
   bool all = false;
   char txt[128];
@@ -400,6 +400,8 @@ FarmMonitor::FarmMonitor(int argc, char** argv) : InternalMonitor(0,""), m_mode(
   string svc = "/"+partition()+"/FarmMonitor/Alarms";
   //::dic_set_dns_node((char*)name().c_str());
   m_serviceID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
+  string summary = "/"+partition()+"/FarmMonitor/AlarmSummary";
+  m_summaryID = ::dis_add_service((char*)summary.c_str(),(char*)"C",0,0,feedSummary,(long)this);
   m_runState  = 0;
   m_numEvent = 0;
   svc = "/"+partition()+"/FarmMonitor";
@@ -417,8 +419,17 @@ FarmMonitor::~FarmMonitor()  {
 /// DIM callback on dis_update_service
 void FarmMonitor::feedData(void* tag, void** buf, int* size, int* first) {
   FarmMonitor* m = *(FarmMonitor**)tag;
-  *size = *first ? 0 : m->m_current.length()+1;
-  *buf = (void*)m->m_current.c_str();
+  string* s = m->m_current;
+  *size = *first || 0==s ? 0 : s->length()+1;
+  *buf = (void*)(0==s ? "" : s->c_str());
+}
+
+/// DIM callback on dis_update_service
+void FarmMonitor::feedSummary(void* tag, void** buf, int* size, int* first) {
+  FarmMonitor* m = *(FarmMonitor**)tag;
+  string* s = m->m_current;
+  *size = *first || 0==s ? 0 : s->length()+1;
+  *buf = (void*)(0==s ? "" : s->c_str());
 }
 
 /// DIM command service callback
@@ -429,13 +440,75 @@ void FarmMonitor::dnsDataHandler(void* tag, void* address, int* size) {
   }
 }
 
+/// Publish alarm summary
+void FarmMonitor::publishSummary(const AlarmSummary& summary) {
+  char text[1024];
+  for(AlarmSummary::const_iterator i=summary.begin();i != summary.end(); ++i) {
+    if ( (*i).first == ERR_REMOVEDALL ) {
+      printf(" --------------------------- Summary: No alarms pending! \n");
+      return;
+    }
+  }
+  printf(" --------------------------- Summary \n");
+  for(AlarmSummary::const_iterator j=summary.begin();j != summary.end(); ++j) {
+    const AlarmSum& s = (*j).second;
+    if ( s.nodes.size() == 1 ) {
+      for(size_t k=0; k<s.nodes.size(); ++k) {
+	const Alarm* a = s.nodes[k];
+	::sprintf(text,"%-12s %-12s %s%s",a->node.c_str(),a->time().c_str(),a->message(),a->description.c_str());
+	::printf("SUMMARY  %s\n",text);
+      }
+    }
+    else if ( s.nodes.size() < 10 ) {
+      map<string,vector<Alarm*> > alms;
+      for(size_t k=0; k<s.nodes.size(); ++k)
+	alms[s.nodes[k]->description].push_back(s.nodes[k]);
+      for(map<string,vector<Alarm*> >::const_iterator l=alms.begin(); l!=alms.end();++l) {
+	set<string> opts;
+	const Alarm* a = ((*l).second)[0];
+	::sprintf(text,"%-4d %-7s %-12s %s%s ",int(s.nodes.size()),
+		  "alarms",a->time().c_str(),a->message(),(*l).first.c_str());
+	for(size_t k=0; k<(*l).second.size(); ++k) {
+	  const string& item = (*l).second[k]->node;
+	  if ( opts.find(item) == opts.end() ) {
+	    opts.insert(item);
+	    ::strcat(text,item.c_str());
+	    ::strcat(text," ");
+	    if ( k>5 ) {
+	      ::strcat(text," ..... ");
+	      break;
+	    }
+	  }
+	}
+      }
+      ::printf("SUMMARY  %s\n",text);
+    }
+    else  {
+      const Alarm* a = s.nodes[0];
+      ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",a->time().c_str(),a->message());
+      set<string> opts;
+      for(size_t k=0; k<s.nodes.size(); ++k) {
+	const string& item = s.nodes[k]->node;
+	if ( opts.find(item) == opts.end() ) {
+	  opts.insert(item);
+	  ::strcat(text,item.c_str());
+	  ::strcat(text," ");
+	  if ( k>5 ) {
+	    ::strcat(text," ..... ");
+	    break;
+	  }
+	}
+      }
+      ::printf("SUMMARY:%s\n",text);
+    }
+  }
+}
+
 /// Publish alarm
 void FarmMonitor::publish(const string& tag, const Alarm& alm) {
   PrintAlarm p(tag);
   p(&alm);
-  m_current = alm.toString(tag);
-  ::dis_update_service(m_serviceID);
-  m_current = "";
+  IocSensor::instance().send(this,CMD_SHOW_ALARM,new string(alm.toString(tag)));
 }
 
 /// Update alarms from a subfarm
@@ -482,6 +555,38 @@ void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
   //cout << "Statesummary:";
   //for_each(m_stateSummary.begin(),m_stateSummary.end(),PrintStateSummary());
   //cout << endl;
+}
+
+/// Handle new incoming alarm and update summary
+void FarmMonitor::handleAlarmSummary(const string& alarm) {
+  const char* text = alarm.c_str();
+  unsigned int val;
+  auto_ptr<AlarmSummary> summary(new AlarmSummary);
+  AlarmSummary::iterator k;
+  AlarmMap::iterator i;
+  bool removeAll = false;
+  if ( alarm.length()>5 && text[5] == 'A' ) {      // CLEARALL
+    removeAll = true;
+  }
+  else if ( (i=m_sumAlarms.find(val=Alarm::hash32(text+17))) == m_sumAlarms.end() ) {
+    if ( text[0] == 'D' ) {         // DECLARE
+      Alarm* alm = new Alarm(text);
+      m_sumAlarms[val] = alm;
+    }
+  }
+  else  if ( text[0] == 'C' ) {     // CLEAR
+    delete (*i).second;
+    m_sumAlarms.erase(i);
+  }
+  if ( removeAll ) {
+    (*summary)[ERR_REMOVEDALL].nodes.push_back(new Alarm(ERR_REMOVEDALL,time(0),"",""));
+  }
+  else {
+    for(i=m_sumAlarms.begin(); i != m_sumAlarms.end(); ++i)
+      (*summary)[(*i).second->code].nodes.push_back((*i).second);
+  }
+  publishSummary(*summary.get());
+  //IocSensor::instance().send(this,CMD_SHOW_SUMMARY,summary.release());
 }
 
 /// DIM command service callback
@@ -549,6 +654,20 @@ void FarmMonitor::handle(const Event& ev) {
     return;
   case IocEvent:
     switch(ev.type) {
+      
+    case CMD_SHOW_SUMMARY: {
+      auto_ptr<AlarmSummary> val(ev.iocPtr<AlarmSummary>());
+      publishSummary(*val.get());
+      break;
+    }
+    case CMD_SHOW_ALARM: {
+      auto_ptr<string> val(ev.iocPtr<string>());
+      handleAlarmSummary(*val);
+      m_current = val.get();
+      ::dis_update_service(m_serviceID);
+      m_current = 0;
+      break;
+    }
     case CMD_RUNSTATE: {
       m_runState = ev.iocData<long>();
       /*

@@ -20,6 +20,10 @@ namespace ROMon {
     CMD_HANDLE_KEY,
     CMD_RUNSTATE,
     CMD_PARTITIONID,
+
+    CMD_ADD_ALARM,
+    CMD_SHOW_ALARM,
+    CMD_SHOW_SUMMARY,
     CMD_LAST
   };
 

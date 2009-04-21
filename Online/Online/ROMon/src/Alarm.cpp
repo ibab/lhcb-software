@@ -1,4 +1,4 @@
-// $Id: Alarm.cpp,v 1.1 2009-04-17 13:17:03 frankb Exp $
+// $Id: Alarm.cpp,v 1.2 2009-04-21 12:21:27 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/Alarm.cpp,v 1.1 2009-04-17 13:17:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/Alarm.cpp,v 1.2 2009-04-21 12:21:27 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmMonitor.h"
@@ -29,6 +29,16 @@ using namespace std;
 
 Alarm::Alarm(const string& txt) : AlarmTag(0,"","") {
   this->fromString(txt);
+}
+
+unsigned int Alarm::hash32(const char* key) {
+  unsigned int hash;
+  const char* k;
+  for (hash = 0, k = key; *k; k++) {
+    hash += *k; hash += (hash << 10); hash ^= (hash >> 6); 
+  }
+  hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
+  return hash;
 }
 
 string Alarm::toString(const string& t)  const {
@@ -85,6 +95,7 @@ int Alarm::color() const {
 }
 
 const char* Alarm::message() const {
+  static char gtxt[256];
   switch(code) {
   case ERR_NO_ERROR:              return "No obvious Errors detected... ";
   case ERR_NO_UPDATES:            return "No update information available ";
@@ -114,7 +125,9 @@ const char* Alarm::message() const {
   case ERR_CONNECTION_MISSING:    return "A network connection from this node is missing ";
   case ERR_NO_TASKS:              return "None of the required tasks were found on this node ";
   case ERR_TASK_MISSING:          return "Task is missing ";
-  default:                        return "Unknown Alarm - Never heard of this error code";
+  default:
+    ::sprintf(gtxt,"Unknown Alarm - Never heard of this error code [%08X] ",int(code));
+    return gtxt;
   }
 }
 
