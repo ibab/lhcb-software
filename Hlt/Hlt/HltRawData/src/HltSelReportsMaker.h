@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.5 2009-04-18 18:52:37 graven Exp $
+// $Id: HltSelReportsMaker.h,v 1.6 2009-04-21 21:40:58 snies Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -117,6 +117,14 @@ private:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
   IHltDataSvc* m_hltDataSvc;  
+
+  std::vector<IANNSvc::minor_value_type> m_selectionNameToIntMap;
+
+  // get trigger selection names 
+  std::vector<stringKey> m_selectionIDs;
+
+
+
 
   /// for setting per selection properties
   typedef std::map<std::string,int> SelectionSetting;
