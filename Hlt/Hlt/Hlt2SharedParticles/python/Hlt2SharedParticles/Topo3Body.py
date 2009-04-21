@@ -1,15 +1,15 @@
 ### @file
 #
-#  Some shared topological
+#  3-body combinatorics for the topological trigger
 #
-#  @author 
-#  @date 
+#  @author V. Gligorov,P. Spradlin
+#  @date 2009-04-21
 #
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, PhysDesktop, FilterDesktop
 from Hlt2SharedParticles.GoodParticles import GoodPions
-from Hlt2SharedParticles.Topo2Body import *
+from Hlt2SharedParticles.Topo2Body import Topo2Body
 from HltConf.HltLine import bindMembers
 
 __all__ = ( 'Topo3Body' )

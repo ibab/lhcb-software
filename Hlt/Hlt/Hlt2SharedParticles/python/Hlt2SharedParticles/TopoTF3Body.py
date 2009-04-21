@@ -23,7 +23,7 @@ Hlt2SharedTopoTF3Body.DecayDescriptors = ["D*(2010)+ -> pi+ K*(892)0", "D*(2010)
 
 ## Reminder: Default units of IP, DOCA, and VD are mm.
 Hlt2SharedTopoTF3Body.CombinationCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
-Hlt2SharedTopoTF3Body.MotherCut = "(MAXTREE('pi+'==ABSID,PT)>1.5*GeV) & (VFASPF(VCHI2/VDOF)<1000000) & (BPVVDCHI2>100)"
+Hlt2SharedTopoTF3Body.MotherCut = "(MAXTREE('pi+'==ABSID,PT)>1.5*GeV) & (BPVVDCHI2>100)"
 
 TopoTF3Body = bindMembers( None, [ TopoTFInputParticles, TopoTF2Body, Hlt2SharedTopoTF3Body ] )
 

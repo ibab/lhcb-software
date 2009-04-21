@@ -19,8 +19,8 @@ Hlt2SharedTopoTF2Body.PhysDesktop.InputLocations = [ "Hlt2TopoTFInputParticles" 
 Hlt2SharedTopoTF2Body.DecayDescriptors = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-"] 
 
 Hlt2SharedTopoTF2Body.DaughtersCuts = {"pi+" : "(ALL)"} 
-Hlt2SharedTopoTF2Body.CombinationCut = "(AMAXCHILD(PT)>1.5*GeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
-Hlt2SharedTopoTF2Body.MotherCut = "(VFASPF(VCHI2/VDOF)<1000000) & (BPVVDCHI2>100)"
+Hlt2SharedTopoTF2Body.CombinationCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
+Hlt2SharedTopoTF2Body.MotherCut = "(MAXTREE('pi+'==ABSID,PT)>1.5*GeV) & (BPVVDCHI2>100)"
 
 TopoTF2Body = bindMembers( None, [ TopoTFInputParticles, Hlt2SharedTopoTF2Body ] )
 
