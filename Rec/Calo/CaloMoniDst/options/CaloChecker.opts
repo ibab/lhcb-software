@@ -15,6 +15,7 @@ CaloPIDsChecker.Members += { "CaloPIDsChecker/PIDeEcalChecker",
                              "CaloPIDsChecker/PIDeBremChecker", 
                              "CaloPIDsChecker/PIDmEcalChecker", 
                              "CaloPIDsChecker/PIDmHcalChecker",
+                             "CaloEMuChecker/PIDChecker",
                              "CaloPhotonChecker"};
 
 
