@@ -1,11 +1,11 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.7 2009-04-03 12:38:54 odescham Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.8 2009-04-21 15:26:14 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "CaloUtils/CaloParticle.h" 
 // local
 #include "ResolvedPi0Maker.h"
@@ -82,19 +82,19 @@ StatusCode ResolvedPi0Maker::initialize    ()
   if( sc.isFailure() ) { return Error(" Unable to initialize GaudiTool",sc);}
 
   // ParticleProperty
-  IParticlePropertySvc* ppSvc = 0;
-  sc = service("ParticlePropertySvc", ppSvc);
+  const LHCb::IParticlePropertySvc* ppSvc = 0;
+  sc = service("LHCb::ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
     fatal() << "    Unable to locate Particle Property Service"	  << endreq;
     return sc;
   }
-  ParticleProperty* partProp;
+  const LHCb::ParticleProperty* partProp;
   partProp  = ppSvc->find( m_part );
   if(partProp == NULL){
     Error("Requested particle '" + m_part + "' is unknown").ignore();
     return StatusCode::FAILURE;
   }
-  m_Id      = (*partProp).jetsetID();
+  m_Id      = (*partProp).pdgID().pid();
   m_pi0Mass = (*partProp).mass();
   //
   m_count[0]=0;

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.90 2009-04-08 13:27:48 jpalac Exp $ 
+! $Id: release.notes,v 1.91 2009-04-21 15:26:14 odescham Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+
+! 2008-04-21 - Olivier Deschamps 
+ - Photon/MergedPi0/ResolvedPi0Maker.cpp : move to LHCb::(I)ParticlePropertySvc
+
 
 !======================== ParticleMaker v4r3 2009-04-08 ===================
 

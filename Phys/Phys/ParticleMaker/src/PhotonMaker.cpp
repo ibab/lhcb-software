@@ -3,8 +3,8 @@
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "CaloUtils/CaloParticle.h" 
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloDataFunctor.h"
@@ -93,16 +93,15 @@ PhotonMaker::~PhotonMaker() {};
   if( sc.isFailure() ) { return Error(" Unable to initialize GaudiTool",sc);}
 
   // ParticleProperty
-  IParticlePropertySvc* ppSvc = 0;
-  sc = service("ParticlePropertySvc", ppSvc);
+  LHCb::IParticlePropertySvc* ppSvc = 0;
+  sc = service("LHCb::ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
     fatal() << "    Unable to locate Particle Property Service"	  << endreq;
     return sc;
   }
-  ParticleProperty* partProp;
+  const LHCb::ParticleProperty* partProp;
   partProp = ppSvc->find( "gamma" );
-  m_Id = (*partProp).jetsetID();
-
+  m_Id = (*partProp).pdgID().pid();
   //
   m_count[0]=0;
   m_count[1]=0;
