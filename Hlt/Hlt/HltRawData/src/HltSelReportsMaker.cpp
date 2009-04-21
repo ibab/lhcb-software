@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.10 2009-04-18 18:52:37 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.11 2009-04-21 21:40:38 snies Exp $
 // #define DEBUGCODE
 // Include files 
 
@@ -105,6 +105,17 @@ StatusCode HltSelReportsMaker::initialize() {
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
   m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
 
+  // seup string-to-int selection ID map (vector)
+  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
+  m_selectionNameToIntMap.insert( m_selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
+  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+  m_selectionNameToIntMap.insert( m_selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
+
+  // get trigger selection names 
+  m_selectionIDs = m_hltDataSvc->selectionKeys();
+
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -147,15 +158,6 @@ StatusCode HltSelReportsMaker::execute() {
   }
 
 
-  // get string-to-int selection ID map
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); 
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
-  // get trigger selection names 
-  std::vector<stringKey> selectionIDs = m_hltDataSvc->selectionKeys(); 
 #ifdef DEBUGCODE
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() <<" Selection Names Found =" ;
@@ -174,7 +176,7 @@ StatusCode HltSelReportsMaker::execute() {
   std::vector< RankedSelection > sortedSelections;
  
   // loop over selection summaries in HltSummary
-  for( std::vector<stringKey>::const_iterator is=selectionIDs.begin();is!=selectionIDs.end();++is){
+  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
      const stringKey name(*is);
      const std::string selName(name.str()); 
 
@@ -244,8 +246,8 @@ StatusCode HltSelReportsMaker::execute() {
 
      // int selection id
      int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-          si!=selectionNameToIntMap.end();++si){
+     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=m_selectionNameToIntMap.begin();
+          si!=m_selectionNameToIntMap.end();++si){
        if( si->first == selName ){
          intSelID=si->second;
          break;
@@ -354,8 +356,8 @@ StatusCode HltSelReportsMaker::execute() {
 
      // int selection id
      int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-          si!=selectionNameToIntMap.end();++si){
+     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=m_selectionNameToIntMap.begin();
+          si!=m_selectionNameToIntMap.end();++si){
        if( si->first == selName ){
          intSelID=si->second;
          break;
