@@ -25,5 +25,5 @@ Hlt2SharedTopo3Body.DecayDescriptors = ["D*(2010)+ -> pi+ K*(892)0", "D*(2010)+ 
 Hlt2SharedTopo3Body.CombinationCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
 Hlt2SharedTopo3Body.MotherCut = "(MAXTREE('pi+'==ABSID,PT)>1.5*GeV) & (BPVVD>2) & (BPVVDR > 0.2)"
 
-Topo3Body = bindMembers( None, [ Topo2Body, Hlt2SharedTopo3Body ] )
+Topo3Body = bindMembers( None, [ GoodPions, Topo2Body, Hlt2SharedTopo3Body ] )
 
