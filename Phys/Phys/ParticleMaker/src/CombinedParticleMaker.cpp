@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.31 2008-12-06 17:32:27 ibelyaev Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.32 2009-04-21 19:15:41 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -12,15 +12,9 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/Tokenizer.h"
 #include "CaloUtils/CaloMomentum.h"
 // local
 #include "CombinedParticleMaker.h"
-
-
-#include "Kernel/IParticlePropertySvc.h"
 
 // namespaces
 using namespace LHCb;
@@ -29,22 +23,16 @@ using namespace LHCb;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( CombinedParticleMaker );
+DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
-                                              const std::string& name,
-                                              const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_p2s     ( NULL ),
+CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
+  : ParticleMakerBase (  name , pSvcLocator ),
     m_trSel   ( NULL ),
     m_brem    ( NULL )
 {
-
-  // Declaring implemented interfaces
-  declareInterface<IParticleMaker>(this);
 
   // Job options
   declareProperty( "InputProtoParticles", m_input =  ProtoParticleLocation::Charged);
@@ -81,23 +69,16 @@ CombinedParticleMaker::~CombinedParticleMaker( ) { }
 StatusCode CombinedParticleMaker::initialize()
 {
   // intialize base class
-  const StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to initialize GaudiTool base class" );
+  const StatusCode sc = ParticleMakerBase::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to initialize base class" );
 
   if ( m_particleList.empty() )
   {
     return Error( "A list of particles types must be specified" );
   }
   
-  // Particle properties service
-  LHCb::IParticlePropertySvc * ppSvc = 
-    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
-  
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
-
-  // particle tool
-  m_p2s = tool<IParticle2State>("Particle2State");
 
   // BremStrahlung added
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
@@ -148,7 +129,7 @@ StatusCode CombinedParticleMaker::initialize()
     }
 
     // Get particle properties
-    const LHCb::ParticleProperty * partProp = ppSvc->find( ppName );
+    const LHCb::ParticleProperty * partProp = ppSvc()->find( ppName );
 
     // load tool into map
     if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
@@ -203,13 +184,13 @@ StatusCode CombinedParticleMaker::finalize()
   }
 
   // finalize base class
-  return GaudiTool::finalize();
+  return ParticleMakerBase::finalize();
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
+StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
 {
 
   if (msgLevel(MSG::DEBUG)) debug() << "Will get ProtoParticles from " << m_input << endmsg ;
@@ -379,11 +360,12 @@ StatusCode CombinedParticleMaker::fillParticle
   return sc;
 }
 
-void
-CombinedParticleMaker::setConfLevel
-( const LHCb::ProtoParticle * proto,
-  const LHCb::ParticleProperty    * pprop,
-  LHCb::Particle            * particle ) const
+//=========================================================================
+//  set conf level
+//=========================================================================
+void CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
+                                          const LHCb::ParticleProperty    * pprop,
+                                          LHCb::Particle            * particle ) const
 {
   // Definition of confidence level needs to be re-assessed
   const double ve  = proto->info( ProtoParticle::CombDLLe,  -999.0 );

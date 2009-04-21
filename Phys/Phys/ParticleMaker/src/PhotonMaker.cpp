@@ -22,9 +22,6 @@
  *  @ modified 2006-08-25 for DC06
  *  @ Olivier Deschamps odescham@in2p3.fr
  */
-
-
-
 // ============================================================================
 /** @var PhotonMakerFactory
  *  Declaration of mandatory  Tool Factory
@@ -251,31 +248,35 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     }
     
     //
-    verbose() << "----- Single photon found [" << nSelConverted+nSelUnconverted << "]"<<endreq;
-    verbose() << "Pt : " << momentum.pt() << endreq;
-    verbose() << "CL : " << CL << endreq;
-    verbose() << "Chi2 " << pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << endreq;
-    verbose() << "Converted (SPD digits)? : " << cnv << endreq;      
-    verbose() << "CaloDeposit : " <<pp->info(LHCb::ProtoParticle::CaloDepositID,-999.) <<endreq;
-    verbose() << " "<< endreq;
+    if (msgLevel(MSG::VERBOSE)){
+      verbose() << "----- Single photon found [" << nSelConverted+nSelUnconverted << "]"<<endreq;
+      verbose() << "Pt : " << momentum.pt() << endreq;
+      verbose() << "CL : " << CL << endreq;
+      verbose() << "Chi2 " << pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) << endreq;
+      verbose() << "Converted (SPD digits)? : " << cnv << endreq;      
+      verbose() << "CaloDeposit : " <<pp->info(LHCb::ProtoParticle::CaloDepositID,-999.) <<endreq;
+      verbose() << " "<< endreq;
+    }
     
     // add the particle to the container
     particles.push_back( particle );
   }
   m_count[1] += nSelUnconverted ;
   m_count[2] += nSelConverted ;
+  if (msgLevel(MSG::DEBUG)){
+    debug() << " " << endreq;
+    debug() << "-----------------------" << endreq;
+    debug() << " Filtered and created :" << endreq;
+    debug() << " --> " << nSelConverted + nSelUnconverted << " photons (among " 
+            << nConverted + nUnconverted <<")"<< endreq;
+    debug() << "   -> " << nSelConverted 
+            << " Converted Photons (among " << nConverted <<")"<< endreq;
+    debug() << "   -> " << nSelUnconverted 
+            << " Unconverted Photons (among " << nUnconverted <<")"<< endreq;
+    debug() << " Skipped : " << nSkip << endreq;
+    debug() << "-----------------------" << endreq;
+  }
   
-  debug() << " " << endreq;
-  debug() << "-----------------------" << endreq;
-  debug() << " Filtered and created :" << endreq;
-  debug() << " --> " << nSelConverted + nSelUnconverted << " photons (among " 
-          << nConverted + nUnconverted <<")"<< endreq;
-  debug() << "   -> " << nSelConverted 
-          << " Converted Photons (among " << nConverted <<")"<< endreq;
-  debug() << "   -> " << nSelUnconverted 
-          << " Unconverted Photons (among " << nUnconverted <<")"<< endreq;
-  debug() << " Skipped : " << nSkip << endreq;
-  debug() << "-----------------------" << endreq;
   return StatusCode::SUCCESS ;
 };
 

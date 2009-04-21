@@ -1,10 +1,8 @@
-// $Id
-// $Id: MergedPi0Maker.cpp,v 1.7 2009-04-21 15:26:14 odescham Exp $
+// $Id: MergedPi0Maker.cpp,v 1.8 2009-04-21 19:15:41 pkoppenb Exp $
 // ============================================================================
-// Include files
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
-#include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "CaloUtils/CaloParticle.h" 
 // local
@@ -29,7 +27,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( MergedPi0Maker );
+DECLARE_ALGORITHM_FACTORY( MergedPi0Maker );
 
 // ============================================================================
 /** Standard constructor
@@ -38,11 +36,8 @@ DECLARE_TOOL_FACTORY( MergedPi0Maker );
  *  @param parent tool parent
  */
 // ============================================================================
-MergedPi0Maker::MergedPi0Maker
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent )
-  : GaudiTool           ( type, name , parent ) 
+MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator )
+  : ParticleMakerBase           ( name , pSvcLocator ) 
     , m_input            ()
     , m_point            () 
     , m_pointErr         ()
@@ -81,8 +76,6 @@ MergedPi0Maker::MergedPi0Maker
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
-  // declare new interface
-  declareInterface<ICaloParticleMaker> (this);
 };
 // ============================================================================
 
@@ -96,19 +89,12 @@ MergedPi0Maker::~MergedPi0Maker() {};
 StatusCode MergedPi0Maker::initialize    ()
 {
   // initialize the base class
-  StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) { return Error(" Unable to initialize GaudiTool",sc);}
+  StatusCode sc = ParticleMakerBase::initialize();
+  if( sc.isFailure() ) { return Error(" Unable to initialize ParticleMakerBase",sc);}
 
-  // ParticleProperty
-  LHCb::IParticlePropertySvc* ppSvc = 0;
-  sc = service("LHCb::ParticlePropertySvc", ppSvc);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to locate Particle Property Service"	  << endreq;
-    return sc;
-  }
   const LHCb::ParticleProperty* partProp;
-  partProp  = ppSvc->find( m_part );
-  m_Id      = (*partProp).pdgID().pid();
+  partProp  = ppSvc()->find( m_part );
+  m_Id      = (*partProp).particleID().pid();
   m_pi0Mass = (*partProp).mass();
 
   //
@@ -161,7 +147,7 @@ StatusCode MergedPi0Maker::finalize      ()
   info() << " Created : " << (float) m_count[1]/m_count[0] << " Merged " << m_part << " per event" << endreq;
   info() << " ------------------------------" << endreq;
   // finalize the base class
-  return GaudiTool::finalize ();
+  return ParticleMakerBase::finalize ();
 };
 
 // ============================================================================

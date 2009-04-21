@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file CombinedParticleMaker.h
  *
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.17 2008-12-06 17:32:27 ibelyaev Exp $
+ * $Id: CombinedParticleMaker.h,v 1.18 2009-04-21 19:15:41 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -15,22 +14,17 @@
 #ifndef PARTICLEMAKER_COMBINEDPARTICLEMAKER_H
 #define PARTICLEMAKER_COMBINEDPARTICLEMAKER_H 1
 
+#include "ParticleMakerBase.h"
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/HashMap.h"
 
 // from EventSys
-#include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 
 // Interfaces
 #include "Kernel/IBremAdder.h"
-#include "Kernel/IParticleMaker.h"
 #include "Kernel/IProtoParticleFilter.h"
-#include "Kernel/IParticle2State.h"
 #include "TrackInterfaces/ITrackSelector.h"
-#include "Kernel/ParticleProperty.h"
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
  *
@@ -46,26 +40,22 @@
  *  @todo Re-assess how the confidence level is calculated
  */
 
-class CombinedParticleMaker : public GaudiTool,
-                              virtual public IParticleMaker
-{
+class CombinedParticleMaker : public ParticleMakerBase {
 
 public:
 
   /// Standard constructor
-  CombinedParticleMaker( const std::string& type,
-                         const std::string& name,
-                         const IInterface* parent);
+  CombinedParticleMaker( const std::string& name,ISvcLocator* pSvcLocator );
 
   virtual ~CombinedParticleMaker( ); ///< Destructor
 
   /// Make the particles
-  virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts );
+  virtual StatusCode makeParticles( LHCb::Particle::Vector & parts );
 
-  /// Standard initialization of tool
+  /// Standard initialization of algorithm
   virtual StatusCode initialize();
 
-  /// Standard finalization of tool
+  /// Standard finalization of algorithm
   virtual StatusCode finalize();
 
 private:
@@ -135,9 +125,6 @@ private:
 
   /// Map that takes a particle type to a ProtoParticle filter
   ProtoMap m_protoMap;
-
-  /// Tool to fill State information into a Particle
-  IParticle2State* m_p2s ;
 
   /// Track selector tool
   ITrackSelector * m_trSel;

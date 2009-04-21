@@ -1,14 +1,12 @@
-// $Id: ResolvedPi0Maker.h,v 1.3 2009-04-03 12:38:54 odescham Exp $
+// $Id: ResolvedPi0Maker.h,v 1.4 2009-04-21 19:15:41 pkoppenb Exp $
 #ifndef RESOLVEDPI0MAKER_H 
 #define RESOLVEDPI0MAKER_H 1
 // Include files
-#include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticleMaker.h"
-#include "Kernel/ICaloParticleMaker.h"
+#include "ParticleMakerBase.h"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
-#include "Event/Particle.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "Kernel/ICaloParticleMaker.h"
 
 namespace LHCb{
   class ProtoParticle ;  
@@ -23,15 +21,11 @@ namespace LHCb{
  *  @date   2006-08-25
  */
 
-class ResolvedPi0Maker : public GaudiTool,
-                         virtual public ICaloParticleMaker
-{
+class ResolvedPi0Maker : public ParticleMakerBase{
 public:
   
   
-  ResolvedPi0Maker( const std::string& type   , 
-                       const std::string& name   ,
-                       const IInterface*  parent ) ;
+  ResolvedPi0Maker(const std::string& name,ISvcLocator* pSvcLocator ) ;
    virtual ~ResolvedPi0Maker() ;
   
   // Make the particles 

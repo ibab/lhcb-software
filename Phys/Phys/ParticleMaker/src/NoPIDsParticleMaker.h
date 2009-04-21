@@ -1,35 +1,24 @@
-// $Id: NoPIDsParticleMaker.h,v 1.9 2008-12-06 17:32:27 ibelyaev Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.10 2009-04-21 19:15:41 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticleMaker.h"            // Interface
+#include "ParticleMakerBase.h"            // Interface
 
-namespace LHCb
-{
-  class ParticleProperty;
-  class IParticlePropertySvc;
-}
-class IParticle2State;
 /** @class NoPIDsParticleMaker NoPIDsParticleMaker.h
  *  
  *  The simplest possible particle maker.
- *  It assigned PID hypothesis to charged protoparticle.
+ *  It assigns a PID hypothesis to charged protoparticle.
  *  Thus some imitation of "high-level-trigger-charged-particle"
  *  is performed
  *
  *  @author Patrick KOPPENBURG
  *  @date   2006-01-23
  */
-class NoPIDsParticleMaker : public GaudiTool, virtual public IParticleMaker {
+class NoPIDsParticleMaker : public ParticleMakerBase {
 public: 
   /// Standard constructor
-  NoPIDsParticleMaker
-  ( const std::string& type, 
-    const std::string& name,
-    const IInterface* parent);
+  NoPIDsParticleMaker( const std::string& name,ISvcLocator* pSvcLocator);
   
   virtual ~NoPIDsParticleMaker( ); ///< Destructor
   
@@ -37,10 +26,8 @@ public:
   
   StatusCode finalize() ; ///< Initialize
 
-  
   /// Dispatch the making of particles 
-  StatusCode makeParticles
-  ( LHCb::Particle::ConstVector & parts );
+  StatusCode makeParticles( LHCb::Particle::Vector & parts );
   
 protected:
   
@@ -56,17 +43,11 @@ protected:
     const LHCb::ParticleProperty* property , 
     LHCb::Particle*               particle ) const ;
   
-  /// accessor to Particle properties service 
-  inline LHCb::IParticlePropertySvc* ppSvc  () const { return m_ppSvc  ; }
-  
   /// set particl eproperties for particle and for antiparticle  
   StatusCode setPPs( const std::string& pid ) ;
   
   
 private:
-  
-  // particle property service 
-  LHCb::IParticlePropertySvc* m_ppSvc   ;  
   
   // ID of the particle 
   std::string             m_pid   ;
@@ -108,8 +89,6 @@ private:
   // Job options to keep velo tracks
   bool m_veloTracks;
   
-  /// Particle to state convertion tool
-  IParticle2State* m_p2s ;
 };
 // ============================================================================
 // The END 

@@ -1,13 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.14 2008-12-06 17:32:27 ibelyaev Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.15 2009-04-21 19:15:41 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // PartProp
-#include "Kernel/IParticlePropertySvc.h" 
 #include "Kernel/ParticleProperty.h" 
 
-#include "Kernel/IParticle2State.h"
 // local
 #include "NoPIDsParticleMaker.h"
 using namespace Gaudi::Units;
@@ -19,7 +17,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( NoPIDsParticleMaker );
+DECLARE_ALGORITHM_FACTORY( NoPIDsParticleMaker );
 
 namespace
 {
@@ -34,12 +32,9 @@ namespace
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_ppSvc  ( 0 ) 
-  , m_pid    ( "UNDEFINED" ) 
+NoPIDsParticleMaker::NoPIDsParticleMaker(  const std::string& name,ISvcLocator* pSvcLocator )
+  : ParticleMakerBase ( name , pSvcLocator ), 
+    m_pid    ( "UNDEFINED" ) 
   , m_apid   (   ) 
   , m_pp     ( 0 ) 
   , m_app    ( 0 )
@@ -52,9 +47,7 @@ NoPIDsParticleMaker::NoPIDsParticleMaker( const std::string& type,
   , m_downstreamTracks ( false )  // set to false for HLT
   , m_vttTracks ( false )         // set to false for HLT
   , m_veloTracks ( false )         // 
-  , m_p2s()
 {
-  declareInterface<IParticleMaker>(this);
   declareProperty ( "Particle" , m_pid    ) ;
   declareProperty ( "Inputs"   , m_inputs ) ; 
   declareProperty ( "CL"       , m_CL     ) ; 
@@ -73,10 +66,7 @@ NoPIDsParticleMaker::~NoPIDsParticleMaker() {}
 // Destructor
 //=============================================================================
 StatusCode NoPIDsParticleMaker::initialize() {
-  StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
-  m_ppSvc = svc<LHCb::IParticlePropertySvc>
-    ( "LHCb::ParticlePropertySvc" , true ) ;
+  StatusCode sc = ParticleMakerBase::initialize();
 
   std::sort( m_inputs.begin () , m_inputs.end () ) ;
   m_inputs.erase ( std::unique( m_inputs.begin () , 
@@ -99,8 +89,6 @@ StatusCode NoPIDsParticleMaker::initialize() {
   else if ( "PROTONS"   == Upper ) { m_pid = "p+"     ; }
   else if ( "PROTON"    == Upper ) { m_pid = "p+"     ; }
   else if ( "P"         == Upper ) { m_pid = "p+"     ; }
-  
-  m_p2s = tool<IParticle2State>("Particle2State"); // not private
 
   sc = setPPs( m_pid ) ;
   if ( sc.isFailure() ) 
@@ -165,13 +153,13 @@ StatusCode NoPIDsParticleMaker::finalize()
     << "+-"            << sigma 
     << ")/event"       << endmsg ;
   // finalize the base 
-  return GaudiTool::finalize ();
+  return ParticleMakerBase::finalize ();
 };
 //=============================================================================
 // Dispatch the making of particles 
 //=============================================================================
 StatusCode NoPIDsParticleMaker::makeParticles
-( LHCb::Particle::ConstVector & particles ){
+( LHCb::Particle::Vector & particles ){
   
   // increase the counter 
   ++m_calls ; 

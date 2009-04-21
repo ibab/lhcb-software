@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.8 2009-04-21 15:26:14 odescham Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.9 2009-04-21 19:15:41 pkoppenb Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -13,9 +13,6 @@
 /** @file 
  *  
  *  Implementation file for class : ResolvedPi0Maker
- *  Almost identical to PhotonParticleMaker
- * 
- *  replace ComonParticles/ResolvedPi0Alg
  *
  *  @date 2006-08-25 
  *  @author Olivier Deschamps odescham@in2p3.fr
@@ -28,7 +25,7 @@
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( ResolvedPi0Maker );
+DECLARE_ALGORITHM_FACTORY( ResolvedPi0Maker );
 
 // ============================================================================
 /** Standard constructor
@@ -38,10 +35,8 @@ DECLARE_TOOL_FACTORY( ResolvedPi0Maker );
  */
 // ============================================================================
 ResolvedPi0Maker::ResolvedPi0Maker
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent )
-  : GaudiTool           ( type, name , parent ) 
+( const std::string& name,ISvcLocator* pSvcLocator  )
+  : ParticleMakerBase           ( name, pSvcLocator ) 
     , m_point            () 
     , m_pointErr         ()
     , m_photonMakerType  ()
@@ -62,8 +57,6 @@ ResolvedPi0Maker::ResolvedPi0Maker
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
-  // declare new interface
-  declareInterface<ICaloParticleMaker> (this);
 };
 // ============================================================================
 
@@ -78,23 +71,16 @@ ResolvedPi0Maker::~ResolvedPi0Maker() {};
 StatusCode ResolvedPi0Maker::initialize    ()
 {
   // initialize the base class
-  StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) { return Error(" Unable to initialize GaudiTool",sc);}
+  StatusCode sc = ParticleMakerBase::initialize();
+  if( sc.isFailure() ) { return Error(" Unable to initialize ParticleMakerBase",sc);}
 
-  // ParticleProperty
-  const LHCb::IParticlePropertySvc* ppSvc = 0;
-  sc = service("LHCb::ParticlePropertySvc", ppSvc);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to locate Particle Property Service"	  << endreq;
-    return sc;
-  }
   const LHCb::ParticleProperty* partProp;
-  partProp  = ppSvc->find( m_part );
-  if(partProp == NULL){
+  partProp  = ppSvc()->find( m_part );
+  if( 0 == partProp){
     Error("Requested particle '" + m_part + "' is unknown").ignore();
     return StatusCode::FAILURE;
   }
-  m_Id      = (*partProp).pdgID().pid();
+  m_Id      = (*partProp).particleID().pid();
   m_pi0Mass = (*partProp).mass();
   //
   m_count[0]=0;
@@ -104,11 +90,6 @@ StatusCode ResolvedPi0Maker::initialize    ()
 
   // Retrieve PhotonMaker tool
   m_photonMaker = tool< ICaloParticleMaker>( m_photonMakerType ,  this ) ;
-  if( 0 == m_photonMaker ) {
-    fatal() << "    Unable to locate PhotonMaker tool "	  << endreq;
-    return StatusCode::FAILURE ; 
-  }
-  
 
   return StatusCode::SUCCESS ;
 };
@@ -120,7 +101,7 @@ StatusCode ResolvedPi0Maker::finalize      ()
   info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved " << m_part << "per event" << endreq;
   info() << " --------------------------------" << endreq;
   // finalize the base class
-  return GaudiTool::finalize ();
+  return ParticleMakerBase::finalize ();
 };
 
 // ============================================================================
@@ -168,7 +149,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
         part=ip;
       }
     }
-    LHCb::CaloParticle photonMax( *part ,m_point , m_pointErr);
+    const LHCb::CaloParticle photonMax( *part ,m_point , m_pointErr);
     orderedPhotons.push_back( std::pair< LHCb::CaloParticle , bool > (photonMax,false) );
     photons.erase(part);
   }
@@ -205,21 +186,21 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       (*ip2).second = true ;
 
       // print out
-      LHCb::Particle* g1 = ((*ip1).first).particle();
-      LHCb::Particle* g2 = ((*ip2).first).particle();
-      verbose() << " ---- Resolved " << m_part <<" found [" << nPi0 << "]"<< endreq;
-      verbose() << "Point   : " << pi0->referencePoint() << endreq;
-      verbose() << "Pt("<<m_part<<") : "  << pi0->momentum().Pt() << endreq;
-      verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endreq;
-      verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endreq;
-      verbose() << "CL("<<m_part<<") : "  << pi0->confLevel() << endreq;
-      verbose() << "CL(g1)  : "  << g1->confLevel() << endreq;
-      verbose() << "CL(g2)  : "  << g2->confLevel() << endreq;
-      verbose() << "Mass    : "  << pi0->momentum().M()  << endreq;
+      if ( msgLevel(MSG::VERBOSE)){
+        LHCb::Particle* g1 = ((*ip1).first).particle();
+        LHCb::Particle* g2 = ((*ip2).first).particle();
+        verbose() << " ---- Resolved " << m_part <<" found [" << nPi0 << "]"<< endreq;
+        verbose() << "Point   : " << pi0->referencePoint() << endreq;
+        verbose() << "Pt("<<m_part<<") : "  << pi0->momentum().Pt() << endreq;
+        verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endreq;
+        verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endreq;
+        verbose() << "CL("<<m_part<<") : "  << pi0->confLevel() << endreq;
+        verbose() << "CL(g1)  : "  << g1->confLevel() << endreq;
+        verbose() << "CL(g2)  : "  << g2->confLevel() << endreq;
+        verbose() << "Mass    : "  << pi0->momentum().M()  << endreq;
+      }
     }
   }
-
-
   // Clean the unused photons
   unsigned long nDel = 0;
   std::vector< std::pair< LHCb::CaloParticle ,bool> >::iterator ip ;
@@ -230,17 +211,20 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     }
   }
 
-  debug() << " " << endreq;
-  debug() << "-----------------------" << endreq;
-  debug() << " Filtered and created :" << endreq;
-  debug() << " --> " << nPi0 << " Resolved " << m_part <<"s " << endreq;
-  debug() << " --> " << nGamma-nDel <<" photons have been used among the " << nGamma << " selected " << endreq;
-  debug() << " Skipped " << m_part <<" : " << nSkip << endreq;
-  debug() << "-----------------------" << endreq;
+  if (msgLevel(MSG::DEBUG)){
+    debug() << " " << endreq;
+    debug() << "-----------------------" << endreq;
+    debug() << " Filtered and created :" << endreq;
+    debug() << " --> " << nPi0 << " Resolved " << m_part <<"s " << endreq;
+    debug() << " --> " << nGamma-nDel <<" photons have been used among the " << nGamma << " selected " << endreq;
+    debug() << " Skipped " << m_part <<" : " << nSkip << endreq;
+    debug() << "-----------------------" << endreq;
+  }
   return StatusCode::SUCCESS ;
 };
-
-
+//=========================================================================
+//  make Pi0
+//=========================================================================
 StatusCode ResolvedPi0Maker::makePi0(LHCb::CaloParticle g1,  LHCb::CaloParticle g2,
                                      LHCb::Particle* pi0){
   pi0->setParticleID( LHCb::ParticleID (m_Id) );

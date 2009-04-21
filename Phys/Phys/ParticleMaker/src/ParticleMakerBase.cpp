@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.9 2008-10-28 07:41:00 jpalac Exp $
+// $Id: ParticleMakerBase.cpp,v 1.1 2009-04-21 19:15:41 pkoppenb Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -8,48 +8,58 @@
 #include "Event/Vertex.h"
 
 // local
-#include "PreLoadParticles.h"
+#include "ParticleMakerBase.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PreLoadParticles
+// Implementation file for class : ParticleMakerBase
 //
-// 2002-08-22 : Gloria Corti
+// 2009-04-21 P. Koppenburg
 //-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
-
-DECLARE_ALGORITHM_FACTORY( PreLoadParticles);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PreLoadParticles::PreLoadParticles( const std::string& name,
+ParticleMakerBase::ParticleMakerBase( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator ) 
+  , m_p2s()
 {
   setProperty( "AvoidSelResult", "true").ignore();
   setProperty( "DecayDescriptor", "\"null\"").ignore();
 }
 
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode ParticleMakerBase::initialize ( ) {
+  StatusCode sc = DVAlgorithm::initialize();
+  m_p2s = tool<IParticle2State>("Particle2State"); // not private
+  return sc;
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================
-PreLoadParticles::~PreLoadParticles() {};
+ParticleMakerBase::~ParticleMakerBase() {};
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PreLoadParticles::execute() 
+StatusCode ParticleMakerBase::execute() 
 {
-  // Save desktop
-  const StatusCode scDesktop = desktop()->saveDesktop();
-  if ( scDesktop.isFailure() ) 
-  {
-    return Error( "Not able to save desktop" );
-  }
+  LHCb::Particle::Vector newParts ;
+  
+  StatusCode sc = makeParticles(newParts);
+  if (!sc) return sc;
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
+  LHCb::Particle::ConstVector constParts ; /// @todo this is hack dur to CaloParticle...
+  for (LHCb::Particle::Vector::const_iterator i = newParts.begin() ; i!= newParts.end() ; ++i) constParts.push_back(*i);
+  
+  sc = desktop()->saveTrees(constParts);
+  if ( sc.isFailure() ){ return Error( "Not able to save desktop" );}
+
+  if ( msgLevel(MSG::DEBUG) ){
     // Log number of vertices and particles
     debug() << "Number of particles in desktop = " 
             << desktop()->particles().size() << endmsg;
@@ -59,7 +69,7 @@ StatusCode PreLoadParticles::execute()
             <<desktop()->secondaryVertices().size() << endmsg;
   }
 
-  setFilterPassed(true);
+  setFilterPassed((!newParts.empty()));
 
-  return scDesktop;
+  return sc;
 }
