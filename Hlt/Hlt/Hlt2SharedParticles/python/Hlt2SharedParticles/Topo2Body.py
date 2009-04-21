@@ -11,24 +11,24 @@ from Configurables import CombineParticles, PhysDesktop
 from Hlt2SharedParticles.GoodParticles import GoodPions
 from HltConf.HltLine import bindMembers
 
-__all__ = ( 'Topo2Body2++','Topo2Body2--','Topo2Body2+-' )
+__all__ = ( 'Topo2Body2pp','Topo2Body2mm','Topo2Body2pm' )
 
-Topo2Body2++ = CombineParticles("Topo2Body2++")
-Topo2Body2++.addTool(PhysDesktop)
-Topo2Body2++.PhysDesktop.InputLocations = [ "Hlt2GoodPions" ]
-Topo2Body2++.DecayDescriptor = "K*(892)0 -> pi+ pi+" 
+Hlt2SharedTopo2Body2pp = CombineParticles("Hlt2SharedTopo2Body2pp")
+Hlt2SharedTopo2Body2pp.addTool(PhysDesktop)
+Hlt2SharedTopo2Body2pp.PhysDesktop.InputLocations = [ "Hlt2GoodPions" ]
+Hlt2SharedTopo2Body2pp.DecayDescriptor = "K*(892)0 -> pi+ pi+" 
 
-Topo2Body2++.DaughtersCuts = {"pi+" : "(ALL)"} 
-Topo2Body2++.CombinationCut = "(AMAXCHILD(PT)>1.5*GeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
-Topo2Body2++.MotherCut = "(BPVVD>2) & (BPVVDR > 0.2)"
+Hlt2SharedTopo2Body2pp.DaughtersCuts = {"pi+" : "(ALL)"} 
+Hlt2SharedTopo2Body2pp.CombinationCut = "(AMAXCHILD(PT)>1.5*GeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
+Hlt2SharedTopo2Body2pp.MotherCut = "(BPVVD>2) & (BPVVDR > 0.2)"
 
-Topo2Body2++ = bindMembers( None, [ GoodPions, Topo2Body2++ ] )
+Topo2Body2pp = bindMembers( None, [ GoodPions, Hlt2SharedTopo2Body2pp ] )
 
-Topo2Body2+- = Topo2Body2++.clone("Topo2Body2+-")
-Topo2Body2+-.DecayDescriptor = "K*(892)0 -> pi+ pi-"
-Topo2Body2+- = bindMembers( None, [ GoodPions, Topo2Body2+- ] )
+Hlt2SharedTopo2Body2pm = Hlt2SharedTopo2Body2pp.clone("Hlt2SharedTopo2Body2pm")
+Hlt2SharedTopo2Body2pm.DecayDescriptor = "K*(892)0 -> pi+ pi-"
+Topo2Body2pm = bindMembers( None, [ GoodPions, Hlt2SharedTopo2Body2pm ] )
 
-Topo2Body2-- = Topo2Body2++.clone("Topo2Body2--")
-Topo2Body2--.DecayDescriptor = "K*(892)0 -> pi- pi-" 
-Topo2Body2-- = bindMembers( None, [ GoodPions, Topo2Body2-- ] )
+Hlt2SharedTopo2Body2mm = Topo2Body2pp.clone("Hlt2SharedTopo2Body2mm")
+Hlt2SharedTopo2Body2mm.DecayDescriptor = "K*(892)0 -> pi- pi-" 
+Topo2Body2mm = bindMembers( None, [ GoodPions, Hlt2SharedTopo2Body2mm ] )
 
