@@ -1,8 +1,17 @@
-!$Id: release.notes,v 1.292 2009-03-09 14:20:18 cattanem Exp $
+!$Id: release.notes,v 1.293 2009-04-21 18:36:08 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-04-21 - Patrick Koppenburg
+ - New method setInputLocations for PhysDeskop.
+   DVAlgorithm : set it.
+   This allows the new recommnded syntax:
+  
+   MyAlg.InputLocations =  [ 'MyPreviousAlg' ]
+
+ - Increment to v7r5
 
 !======================== DaVinciKernel v7r4 2009-03-09 =====================
 ! 2009-02-27 - Juan PALACIOS

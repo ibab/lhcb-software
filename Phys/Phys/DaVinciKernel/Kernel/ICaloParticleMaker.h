@@ -1,4 +1,4 @@
-// $Id: ICaloParticleMaker.h,v 1.2 2007-03-02 10:59:57 cattanem Exp $
+// $Id: ICaloParticleMaker.h,v 1.3 2009-04-21 18:36:08 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICALOPARTICLEMAKER_H
 #define DAVINCIKERNEL_ICALOPARTICLEMAKER_H 1
 
@@ -37,7 +37,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloParticleMaker; }
 
   /// Dispatch the making of particles
-  virtual StatusCode makeParticles( LHCb::Particle::Vector & parts ) = 0;
+  virtual StatusCode makeParticles( LHCb::Particle::ConstVector & parts ) = 0;
   virtual void setPoint ( const Gaudi::XYZPoint cov )  = 0;
   virtual void setPoint ( const Gaudi::XYZPoint pos, const Gaudi::SymMatrix3x3 cov )  = 0;
   virtual void setPoint ( const LHCb::Vertex* vert )  = 0;

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.37 2009-02-13 15:38:06 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.38 2009-04-21 18:36:08 pkoppenb Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -44,7 +44,11 @@ class IRelatedPVFinder;
  *  Base Class for DaVinci Selection Algorithms:
  *  Does the retrieval of all necessary DaVinci Tools
  *
- *  The specific configurtaion properties of the base class: 
+ *  The specific configuration properties of the base class: 
+ *
+ *  - <b>InputLocations</b> : from where to take the particles? 
+ *    Forwarded to PhysDesktop.
+ *    @see IPhysDesktop
  *
  *  - <b>VertexFitters</b> : the map for possible vertex fitters.
  *      @see IVertexFit 
@@ -623,6 +627,8 @@ private:
   /// at any event. This option is thus only recommended for use of DVAlgorithm
   /// to do something unrelated to physics analysis.
   bool m_preloadTools;
+  /// InputLocations
+  std::vector<std::string> m_inputLocations ;
 
 };
 // ==========================================================================
