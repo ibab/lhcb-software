@@ -44,7 +44,7 @@ Parent: Started process:Summary_0
  Diskwr_0              103    C   wev                      20000   100    A RESULT
  Monit_0               103    C   wev                      20000   100    A RESULT
  Monit_1               103    C   wev                      20000   100    A RESULT
- PROD_ONE              103    P   *SP      20000   100                                 RESULT
+ PROD_ONE              103    P    ac      20000   100                                 RESULT
 
 +++++ MBM summary finished.
 waitpid() exited: Status=1

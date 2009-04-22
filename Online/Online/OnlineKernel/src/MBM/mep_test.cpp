@@ -55,7 +55,7 @@ extern "C" int mep_test(int /* ac  */, char** /* av */)  {
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("Mep_0",command(),a13,"/dev/null");
   prod->start();
-  ::lib_rtl_sleep(4000);
+  ::lib_rtl_sleep(8000);
   prod->wait(Process::WAIT_BLOCK);
   delete prod;
   cout << "Producer finished work.. " << endl;

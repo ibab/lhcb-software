@@ -1,5 +1,5 @@
-Child: Starting process:SLEEPER_1
 Parent: Started process:SLEEPER_1
+Child: Starting process:SLEEPER_1
 Child: Starting process:SLEEPER_2
 Parent: Started process:SLEEPER_2
 Child: Starting process:SLEEPER_3
