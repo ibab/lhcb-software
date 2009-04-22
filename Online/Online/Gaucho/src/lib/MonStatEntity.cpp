@@ -1,4 +1,3 @@
-
 #include "Gaucho/MonStatEntity.h"
 #include <stdlib.h>
 #include <iostream>
@@ -21,14 +20,30 @@ MonStatEntity::~MonStatEntity(){
 
 }
 
-void MonStatEntity::save(boost::archive::binary_oarchive & ar, const unsigned int version)
-{ 
+void MonStatEntity::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonStatEntity::save2(boost::archive::binary_oarchive  & ar)
+void MonStatEntity::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  save2(ar);
+}
+
+void MonStatEntity::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
+  MonObject::load(ar, version);
+  load2(ar);
+}
+
+void MonStatEntity::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  load2(ar);
+}
+
+template <class output_archive>
+void MonStatEntity::save2(output_archive  & ar){
   ar & m_sumX;
   ar & m_sumY;
   ar & m_entries; 
@@ -37,14 +52,8 @@ void MonStatEntity::save2(boost::archive::binary_oarchive  & ar)
   ar & m_name; 
 }
  
-void MonStatEntity::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar,version);
-  load2(ar);
-}
- 
-void MonStatEntity::load2(boost::archive::binary_iarchive  & ar)
-{ 
+template <class input_archive>
+void MonStatEntity::load2(input_archive  & ar){
   ar & m_sumX;
   ar & m_sumY;
   ar & m_entries; 

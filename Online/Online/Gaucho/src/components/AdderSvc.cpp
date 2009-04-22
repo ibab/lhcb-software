@@ -9,6 +9,7 @@
 #include "Gaucho/BaseServiceMap.h"
 #include "Gaucho/DimTimerProcess.h"
 #include "Gaucho/DimInfoServices.h"
+#include "Gaucho/MonObject.h"
 #include "Gaucho/AdderSvc.h"
 #include "DimCmdServer.h"
 
@@ -31,7 +32,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("publishRates",m_publishRates=0);
-
+  declareProperty("serializationArchiveType", m_serializationArchiveType = s_binaryArchive);
   //declareProperty("savedir", m_saveDir);
   m_enablePostEvents = true;
 }
@@ -119,6 +120,7 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->setObjectVector(m_objectName);
   m_processMgr->setUtgid(m_utgid);
   m_processMgr->setPartitionName(m_partitionName);
+  m_processMgr->setSerializationArchiveType(m_serializationArchiveType);
   if (m_publishRates == 1) m_processMgr->setPublishRates(true);
 
   startUp();
@@ -219,6 +221,7 @@ void AdderSvc::handle(const Event&  ev) {
    // std::set<std::string> serviceSet = data->second;
 
     std::set<std::string> serviceSet = m_processMgr->dimInfoServices()->serviceSet();
+    msg << MSG::DEBUG << " serviceSet size "<<serviceSet.size() << endreq;
     std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->setServiceSet(serviceSet);
     m_processMgr->serviceMap()->updateMap(serverMap);

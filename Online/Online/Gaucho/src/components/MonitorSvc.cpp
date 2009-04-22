@@ -65,6 +65,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
    declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 1000);
+   declareProperty("serializationArchiveType", m_serializationArchiveType = s_binaryArchive);
       
    declareProperty("teste", m_teste);
  
@@ -78,10 +79,10 @@ MonitorSvc::~MonitorSvc() {
 // @param riid       ID of Interface to be retrieved
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IMonitorSvc::interfaceID().versionMatch(riid)) {
+  if(IID_IMonitorSvc == riid) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
-  else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
+  else if (IID_IGauchoMonitorSvc == riid) {
     *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
   }
   else {
@@ -188,7 +189,7 @@ void MonitorSvc::declareInfo(const std::string& name, const bool&  var,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), "C:1", (void*)&var, sizeof(bool));
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -216,7 +217,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
         msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
-        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, m_monRate);
         m_monRateDeclared = true;
       }
       msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
@@ -243,7 +244,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -271,7 +272,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
     //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
     //    m_monRate->print();
     //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
-        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, m_monRate);
         m_monRateDeclared = true;
       }
   //    msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
@@ -297,7 +298,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -326,7 +327,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
     //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
     //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
-        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, m_monRate);
         m_monRateDeclared = true;
       }
      // msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
@@ -351,7 +352,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(double&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -381,7 +382,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& var,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(char*)var.c_str());
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -414,7 +415,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,dou
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
   
-  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void* var,
@@ -438,7 +439,7 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
 
-  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), (char*)format.c_str(), (void *)var, size);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
@@ -487,7 +488,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;
   
-  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_serializationArchiveType, monObject);
 
 }
 

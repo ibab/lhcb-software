@@ -11,6 +11,7 @@
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_monitoringFarm = false;
+  m_serializationArchiveType = s_binaryArchive;
   m_publishRates = false;
   m_fileName = "Waiting for command to save histograms............."; 
 }
@@ -101,7 +102,6 @@ void ProcessMgr::setUtgid(const std::string &utgid)
   m_nodeName = m_utgid.substr(0, first_us);
 }  
 
-
 void ProcessMgr::setPartitionName(const std::string &partitionName)
 {
   m_partitionName = partitionName;
@@ -113,7 +113,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
   msg << MSG::DEBUG << "*************************************************************************"<< endreq;
   msg << MSG::DEBUG << "******Possible changes in ServiceSet. We will update the ServiceSet******"<< endreq;
  
-  msg << MSG::DEBUG << "DimString = " << dimString << endreq;
+ // msg << MSG::DEBUG << "DimString = " << dimString << endreq;
   
   std::vector<std::string> serviceList = Misc::splitString(dimString, "\n");
   std::vector<std::string>::const_iterator serviceListIt;
@@ -281,7 +281,7 @@ void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, b
   msg << MSG::DEBUG << "*************************************************************************"<< endreq;
   msg << MSG::DEBUG << "*******Posible changes in ServerMap. We will update the ServerMap********"<< endreq;
   
-  msg << MSG::DEBUG << "DimString = " << dimString << endreq;
+  //msg << MSG::DEBUG << "DimString = " << dimString << endreq;
   
   std::string value = dimString;
   std::string oper = value.substr(0, 1);
@@ -382,10 +382,10 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
       }
       else if  ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) { //3rd level Adder (Top Level Adder)
-       // if (nodeName.compare("Bridge")!=0) {
-       //   msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
-       //   continue;
-      //  }
+        if (nodeName.compare("Bridge")!=0) {
+          msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
+          continue;
+        }
         // checking the nodename is not necessary because the bridges are already selected.
         // Then we only filter by subfarmName 
         std::string subfarmName = taskName;

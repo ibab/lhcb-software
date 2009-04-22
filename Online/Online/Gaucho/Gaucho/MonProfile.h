@@ -23,12 +23,18 @@ public:
   MonProfile(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonProfile();
 
-  virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
-  void save2(boost::archive::binary_oarchive  & ar);
-  void save3(boost::archive::binary_oarchive  & ar);
+  virtual void saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version);
+  virtual void loadBinary(boost::archive::binary_iarchive & ar, const unsigned int version);
 
-  void load2(boost::archive::binary_iarchive  & ar);
+  virtual void saveText(boost::archive::text_oarchive & ar, const unsigned int version);
+  virtual void loadText(boost::archive::text_iarchive & ar, const unsigned int version);
+
+  template <class output_archive>
+  void save2(output_archive  & ar);
+  template <class output_archive>
+  void save3(output_archive  & ar);
+  template <class input_archive>
+  void load2(input_archive  & ar);
 
   void createObject();
   void createObject(std::string name);
@@ -56,12 +62,6 @@ public:
   double binEntry(int i) {return binEntries[i];}
   double binContent(int i){if((this->typeName()=="MonRate") && ((i==5)||(i==6))) return binSum[i]; else { if(0!=binEntries[i]) return binSum[i]/binEntries[i]; else return 0;} };
   double binError(int i);
-
-
-  
-
-
-
   std::string binLabX(int i) {return binLabelX[i];}
   int numbinx() {return nbinsx;}
 

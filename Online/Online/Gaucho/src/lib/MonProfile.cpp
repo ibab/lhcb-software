@@ -2,6 +2,7 @@
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include <GaudiUtils/HistoTableFormat.h>
+#include "Gaucho/Misc.h"
 
 MonProfile::MonProfile(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
@@ -25,7 +26,7 @@ MonProfile::~MonProfile(){
 //  if (binErr!=0) delete []binErr;
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  if (binEntries !=0) delete []binEntries;
+  if (binEntries!=0) delete []binEntries;
   if (m_fSumw2!=0) delete []m_fSumw2;
 // BUGG...I dont know yet why I can't do it..  
 /*  if (m_profile!=0) {
@@ -42,18 +43,30 @@ void MonProfile::setAidaProfile(AIDA::IProfile1D* iProfile1D){
   setProfile(hRoot);
 }
 
-void MonProfile::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonProfile::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonProfile::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonProfile::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  save2(ar);
+}
+
+void MonProfile::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
 
-void MonProfile::load2(boost::archive::binary_iarchive  & ar){
+void MonProfile::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  load2(ar);
+}
+
+template <class input_archive>
+void MonProfile::load2(input_archive  & ar){
    MsgStream msg = createMsgStream();
 
   ar & nbinsx;
@@ -123,12 +136,14 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
 
 }
 
-void MonProfile::save2(boost::archive::binary_oarchive  & ar){
+template <class output_archive>
+void MonProfile::save2(output_archive  & ar){
   if (m_profile != 0) splitObject();
   save3(ar);
 }
 
-void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
+template <class output_archive>
+void MonProfile::save3(output_archive  & ar){
 
   if (!isLoaded) return;  
 
@@ -212,7 +227,9 @@ void MonProfile::write(){
     createObject();
     loadObject();
   }
-  m_profile->Write();
+  //write the histogram with only its name
+  std::vector<std::string> HistoFullName = Misc::splitString(m_profile->GetName(), "/");
+  m_profile->Write(HistoFullName[HistoFullName.size()-1].c_str());
 }
 void MonProfile::loadObject(){
   MsgStream msg = createMsgStream();
@@ -295,8 +312,16 @@ void MonProfile::splitObject(){
     delete []binSum;
   }
   binSum = new double[(nbinsx+2)];
+  //if (binErr != 0) delete []binErr;
+  //binErr = new double[(nbinsx+2)];
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
+
+  //for (int i = 0; i < (nbinsx+2) ; ++i){
+  //  binErr[i] = ((double) (m_profile->GetBinError(i))); 
+  // msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
+  
+  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
@@ -304,7 +329,9 @@ void MonProfile::splitObject(){
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
-   }
+    //msg << MSG::DEBUG << "splitObject: binSum[i] = " << binSum[i] << " fot->fArray[i] = " << fot->fArray[i] << endreq;
+  }
+
 
   bBinLabelX = false;
   for (int i = 1; i < (nbinsx+1) ; ++i){
@@ -323,6 +350,7 @@ void MonProfile::splitObject(){
   }
 
   m_fDimension = fot->fDimension;
+  //ar & fot->fIntegral = m_fIntegral;
   m_fMaximum = fot->fMaximum;
   m_fMinimum = fot->fMinimum;
   m_fTsumw = fot->fTsumw;
@@ -349,10 +377,10 @@ void MonProfile::combine(MonObject * H){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-  if (H->endOfRun() != this->endOfRun()){
-    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
-    return;
-  }
+//  if (H->endOfRun() != this->endOfRun()){
+ //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+ //   return;
+ // }
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -406,6 +434,14 @@ void MonProfile::combine(MonObject * H){
   m_fTsumwx2 += HH->m_fTsumwx2;
   m_fTsumwy += HH->m_fTsumwy;
   m_fTsumwy2 += HH->m_fTsumwy2;
+
+ if (HH->bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i]=HH->binLabelX[i];
+    } 
+  }
+
+
 
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {

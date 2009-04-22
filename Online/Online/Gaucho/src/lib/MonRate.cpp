@@ -19,8 +19,50 @@ MonRate::MonRate(IMessageSvc* msgSvc, const std::string& source, int version):
 MonRate::~MonRate(){
 }
 
-void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonRate::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar, version);
+  mapToProfile();
+  MonProfile::save2(ar);
+  ar & m_numCounters;
+  if (isServer) {
+    delete m_profile; m_profile = 0;
+  }
+}
+
+void MonRate::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar, version);
+  mapToProfile();
+  MonProfile::save2(ar);
+  ar & m_numCounters;
+  if (isServer) {
+    delete m_profile; m_profile = 0;
+  }
+}
+
+void MonRate::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+{
+  MsgStream msg = createMsgStream();
+  isServer = false;
+  MonObject::load(ar, version);
+  MonProfile::load2(ar);
+  ar & m_numCounters;
+
+/*  m_profile = profile();
+  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
+    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
+  }*/
+  
+}
+
+void MonRate::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+{
+  isServer = false;
+  MonObject::load(ar, version);
+  MonProfile::load2(ar);
+  ar & m_numCounters;
+}
+
+void MonRate::mapToProfile() {
   MsgStream msg = createMsgStream();
 //   msg <<MSG::INFO<<"**********************************************" << endreq;
   
@@ -98,29 +140,6 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 //  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
 //    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", errors: " << m_profile->GetBinError(j) << endreq;
  // }
-  
-  
-  MonProfile::save(ar, version);
-  
-  ar & m_numCounters;
-  if (isServer) {
-    delete m_profile; m_profile = 0;
-  }
-}
-
-void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
-{
-  MsgStream msg = createMsgStream();
-  isServer = false;
-  MonObject::load(ar, version);
-  MonProfile::load(ar, version);
-  ar & m_numCounters;
-  
-/*  m_profile = profile();
-  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
-    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
-  }*/
-  
 }
 
 void MonRate::combine(MonObject * monObject) {
@@ -130,9 +149,7 @@ void MonRate::combine(MonObject * monObject) {
     return;
   }
   if (monObject->endOfRun() != this->endOfRun()){
-    //this is normal; after a fast run change the buffers are still full with 
-    //events from the previous run
-    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   MonProfile::combine(monObject);  

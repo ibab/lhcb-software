@@ -70,6 +70,7 @@ public:
   void setPartitionName(const std::string &partitionName);
   void setNodeName(const std::string &nodeName){m_nodeName=nodeName;}
   void setPublishRates(bool publishRates){m_publishRates = publishRates;}
+  void setSerializationArchiveType(const std::string &serializationArchiveType){m_serializationArchiveType = serializationArchiveType;}
 
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void setSaveDiff(const int &saveDiff){m_saveDiff = saveDiff;}
@@ -87,6 +88,8 @@ public:
   //bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
   
   std::string serviceOwner() {return m_serviceOwner;}
+
+  std::string serializationArchiveType() {return m_serializationArchiveType;}
   
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
@@ -101,6 +104,7 @@ protected:
   std::string m_utgid;
   std::string m_partitionName;
   std::string m_nodeName;
+  std::string m_serializationArchiveType;
   
   //std::string *m_pFile;
   std::string m_fileName;

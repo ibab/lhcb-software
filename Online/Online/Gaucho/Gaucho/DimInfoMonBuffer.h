@@ -1,47 +1,52 @@
-#ifndef DimInfoMonObject_H
-#define DimInfoMonObject_H 1
+#ifndef DimInfoMonBuffer_H
+#define DimInfoMonBuffer_H 1
 
 #include "dic.hxx"
 #include <string>
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
-#include <sstream>
 #include <TStopwatch.h>
+#include <TBufferFile.h>
 
 
-//  Author: jotalo, 22/10/2007
+/** @class ClassName DimInfoMonBuffer.h 
+ *
+ *  DimInfoMonBuffer class
+ *
+ *  @author Juan Otalora
+ *  @date 16/02/2009
+ */
 
-class MonObject;
+class MonBuffer;
 class DimInfo;
 
-class DimInfoMonObject {
+class DimInfoMonBuffer {
 private:
   bool         m_hasData;
   std::string  m_name;
   std::string  m_svcName;
-  std::string  m_archiveType;
   std::string  m_source;
-  std::string  m_noValidMonObject;
-  MonObject*   m_monObject;
+  std::string  m_noValidMonBuffer;
+  MonBuffer*   m_monBuffer;
   IMessageSvc* m_msgSvc;
   int          m_StringSize;
   DimInfo*     m_dimInfo;
-  
+
 public : 
-  DimInfoMonObject(const std::string& svcName, int refreshTime);
-  DimInfoMonObject(const std::string& svcName, int refreshTime,std::string source);
-  virtual ~DimInfoMonObject();
+  DimInfoMonBuffer(const std::string svcName, int refreshTime);
+  DimInfoMonBuffer(const std::string svcName, int refreshTime, std::string source);
+  virtual ~DimInfoMonBuffer();
   void infoHandler();
   void setSourceName(std::string source) {m_source = source;}
   void setMsgSvc(IMessageSvc* msgSvc){m_msgSvc = msgSvc;}
   IMessageSvc* msgSvc(){return m_msgSvc;}
   std::string  name() {return m_name;}  
-  bool createMonObject();
-  bool loadMonObject();
-  MonObject *monObject();
+  bool createMonBuffer();
+  bool loadMonBuffer();
+  MonBuffer *monBuffer();
   DimInfo*  dimInfo(){ return m_dimInfo;};
   int stringSize() const { return m_StringSize;};
   std::string svcName() {return m_svcName;};
-};  
-#endif    // DimInfoMonObject_H
+};
+#endif    // DimInfoMonBuffer_H
 

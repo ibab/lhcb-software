@@ -11,12 +11,23 @@ MonObject(msgSvc, source, version)
 MonString::~MonString(){
 }
 
-void MonString::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonString::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   ar & (*m_string);
 }
 
-void MonString::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonString::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  ar & (*m_string);
+}
+
+void MonString::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  ar & (*m_string);
+}
+
+void MonString::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   ar & (*m_string);

@@ -2,6 +2,7 @@
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include <GaudiUtils/HistoTableFormat.h>
+#include "Gaucho/Misc.h"
 
 MonH1D::MonH1D(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
@@ -42,18 +43,30 @@ void MonH1D::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
   setHist(hRoot);
 }
 
-void MonH1D::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonH1D::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonH1D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonH1D::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  save2(ar);
+}
+
+void MonH1D::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
-  
-void MonH1D::load2(boost::archive::binary_iarchive  & ar){
+
+void MonH1D::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  load2(ar);
+}
+
+template <class input_archive>
+void MonH1D::load2(input_archive  & ar){
   ar & nbinsx;
   ar & Xmin;
   ar & Xmax;
@@ -100,12 +113,14 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
   isLoaded = true;
 }
 
-void MonH1D::save2(boost::archive::binary_oarchive  & ar){
+template <class output_archive>
+void MonH1D::save2(output_archive  & ar){
   if (m_hist != 0) splitObject();
   save3(ar);
 }
 
-void MonH1D::save3(boost::archive::binary_oarchive  & ar){
+template <class output_archive>
+void MonH1D::save3(output_archive  & ar){
   if (!isLoaded) return;  
 
   ar & nbinsx;
@@ -168,7 +183,9 @@ void MonH1D::write(){
     createObject();
     loadObject();
   }
-  m_hist->Write();
+  //write the histogram with only its name
+  std::vector<std::string> HistoFullName = Misc::splitString(m_hist->GetName(), "/");
+  m_hist->Write(HistoFullName[HistoFullName.size()-1].c_str());
 }
 void MonH1D::loadObject(){
   if (!objectCreated) {
@@ -275,11 +292,11 @@ void MonH1D::splitObject(){
 void MonH1D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed. (Different typenames)." << endreq;
     return;
   }
   if (H->endOfRun() != this->endOfRun()){
-    msg <<MSG::DEBUG<<"Trying to combine two objects with different endOfRun flag failed." << endreq;
+    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   
@@ -309,13 +326,21 @@ void MonH1D::combine(MonObject * H){
     binCont[i] += HH->binCont[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   }
-  
+    
   nEntries += HH->nEntries;
 
   m_fTsumw += HH->m_fTsumw;
   m_fTsumw2 += HH->m_fTsumw2;
   m_fTsumwx += HH->m_fTsumwx;
   m_fTsumwx2 += HH->m_fTsumwx2;
+  
+  
+  if (HH->bBinLabel){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabel[i]=HH->binLabel[i];
+    } 
+  }
+  
   
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {
@@ -375,7 +400,7 @@ void MonH1D::copyFrom(MonObject * H){
   m_fTsumwx = HH->m_fTsumwx;
   m_fTsumwx2 = HH->m_fTsumwx2;
   m_fSumSize = HH->m_fSumSize;
-
+  
   if (m_fSumw2 !=0) delete []m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
@@ -407,7 +432,7 @@ void MonH1D::reset(){
   m_fTsumw2  = 0;
   m_fTsumwx  = 0;
   m_fTsumwx2 = 0;
-  //m_fSumSize = 0;
+  m_fSumSize = 0;
 }
 
 void MonH1D::print(){

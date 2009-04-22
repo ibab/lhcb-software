@@ -2,6 +2,7 @@
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include <GaudiUtils/HistoTableFormat.h>
+#include "Gaucho/Misc.h"
 
 MonH2D::MonH2D(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
@@ -46,18 +47,30 @@ void MonH2D::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
   setHist(hRoot);
 }
 
-void MonH2D::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonH2D::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonH2D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonH2D::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  save2(ar);
+}
+
+void MonH2D::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
-  
-void MonH2D::load2(boost::archive::binary_iarchive  & ar){
+
+void MonH2D::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  load2(ar);
+}
+
+template <class input_archive>
+void MonH2D::load2(input_archive  & ar){
   
   ar & nbinsx;
   ar & nbinsy;
@@ -118,12 +131,14 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   isLoaded = true;
 }
 
-void MonH2D::save2(boost::archive::binary_oarchive  & ar){
+template <class output_archive>
+void MonH2D::save2(output_archive  & ar){
   if (m_hist != 0) splitObject();
   save3(ar);
 }
 
-void MonH2D::save3(boost::archive::binary_oarchive  & ar){
+template <class output_archive>
+void MonH2D::save3(output_archive  & ar){
   
   if (!isLoaded) return;  
   
@@ -198,7 +213,10 @@ void MonH2D::write(){
     createObject();
     loadObject();
   }
-  m_hist->Write();
+  //write the histogram with only its name
+  std::vector<std::string> HistoFullName = Misc::splitString(m_hist->GetName(), "/");
+  m_hist->Write(HistoFullName[HistoFullName.size()-1].c_str());
+
 }
 void MonH2D::loadObject(){
   if (!objectCreated) {
@@ -335,7 +353,7 @@ void MonH2D::splitObject(){
 void MonH2D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed. (Different typenames)." << endreq;
     return;
   }
   if (H->endOfRun() != this->endOfRun()){
@@ -386,6 +404,18 @@ void MonH2D::combine(MonObject * H){
   m_fTsumwxy += HH->m_fTsumwxy;
   m_fTsumwy += HH->m_fTsumwy;
   m_fTsumwy2 += HH->m_fTsumwy2;
+  
+  if (HH->bBinLabelX){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      binLabelX[i]=HH->binLabelX[i];
+    } 
+  }
+  if (HH->bBinLabelY){
+    for (int i = 0; i < (nbinsy+2) ; ++i){
+      binLabelY[i]=HH->binLabelY[i];
+    } 
+  }
+  
 
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {
@@ -496,7 +526,8 @@ void MonH2D::reset(){
   m_fTsumwy2 = 0;
   m_fTsumwxy = 0;
 
-//  m_fSumSize = 0;
+  m_fSumSize = 0;
+
 }
 
 void MonH2D::print(){

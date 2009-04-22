@@ -30,8 +30,12 @@ public:
   MonRate(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonRate();
 
-  virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version);
+  virtual void saveText(boost::archive::text_oarchive & ar, const unsigned int version);
+  virtual void loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void loadText(boost::archive::text_iarchive  & ar, const unsigned int version);
+
+  void mapToProfile();
 
   void addCounter(const std::string& countName, const std::string& countDescription, const double& count) {
     

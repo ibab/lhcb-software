@@ -96,3 +96,18 @@ void Misc::printSerializedString(const char * c, int size)
   }
   std::cout << std::endl << "/content" << std::endl;
 }
+
+std::string Misc::charToString(char * c, int size)
+{
+  int i=0;
+  
+ // cout << "content (" << size << " bytes):" << endl;
+  std::string value = "";
+  while(i < size && c != 0)
+  {
+    if( c[i] >= 33 && c[i] <= 126) value = value + c[i];
+    else value = value + ".";
+    i++;
+  }
+  return value;
+}

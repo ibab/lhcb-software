@@ -11,7 +11,7 @@ MonObject(msgSvc, source, version)
 MonVectorI::~MonVectorI(){
 }
 
-void MonVectorI::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonVectorI::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   int size = 0;
   int val = 0;
@@ -23,7 +23,33 @@ void MonVectorI::save(boost::archive::binary_oarchive & ar, const unsigned int v
   }
 }
 
-void MonVectorI::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonVectorI::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  int size = 0;
+  int val = 0;
+  size = m_vect->size();
+  ar & size; 
+  for (it = m_vect->begin(); it != m_vect->end(); ++it){
+    val = (*it);
+    ar & val;
+  }
+}
+
+void MonVectorI::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  int size = 0;
+  int val = 0;
+  ar & size; 
+  m_vect->resize(size, 0);
+  for (int i = 0; i < size; i++)
+  {
+    ar & val;
+    m_vect->at(i) = val;
+  }
+}
+
+void MonVectorI::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   int size = 0;

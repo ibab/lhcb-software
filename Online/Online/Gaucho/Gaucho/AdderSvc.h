@@ -52,6 +52,8 @@ private:
   int m_refreshTime;
   bool m_enablePostEvents;
   int m_publishRates;  
+  std::string   m_serializationArchiveType;
+
   };
 }  //end namespace LHCb  
 

@@ -12,12 +12,23 @@ MonDouble::~MonDouble(){
   //if (m_double) {delete m_double; m_double = NULL;}
 }
 
-void MonDouble::save(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonDouble::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   ar & (*m_double);
 }
 
-void MonDouble::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonDouble::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
+  MonObject::save(ar,version);
+  ar & (*m_double);
+}
+
+void MonDouble::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+{
+  MonObject::load(ar, version);
+  ar & (*m_double);
+}
+
+void MonDouble::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   ar & (*m_double);
