@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 """
-  Script to install a project where you are 
+  Script to install a project where you are
   050426 - remove broadcast cmt config , add build vsnet on Win32
   050428 - extract tarinfo if it does not exist
-  050502 - introduce system/ 
+  050502 - introduce system/
   050509 - replace system/ with $CMTCONFIG/
   050509 - use os.system('tar blabla') instead of tarfile if python version < 234
-  050511 - replace Visualc with VisualC in cmtbin in Win32 
+  050511 - replace Visualc with VisualC in cmtbin in Win32
   050511 - if not given take the CMT version from ExtCMT  in the line 'CMT/v'
   050520 - add Online/GaudiOnline in the application list
   050525 - download script tar file instead of individual scripts
-  050526 - binary, when required, is $CMTCONFIG 
-  050527 - print the script version with the help 
-  050615 - download DIM on contrib as OpenScientist 
-  050616 - add MOORE and EULER applications, remove Online application 
+  050526 - binary, when required, is $CMTCONFIG
+  050527 - print the script version with the help
+  050615 - download DIM on contrib as OpenScientist
+  050616 - add MOORE and EULER applications, remove Online application
   050708 - check CMTCONFIG, ask for confirmation if CMTCONFIG not part of lhcb_binary
             - add -r or --remove argument to remove a project
                   python install_project.py -p DaVinci -v12r4 -r
@@ -24,62 +24,62 @@
               will list all DaVinci/version tar files available on the web
             - write a log file in $MYSITEROOT/log/install.log
 
- 050718 - fix remove for LCGCMT 
- 050826 - run LbInstallArea on Linux to update SoftLinks 
- 050829 - untar GENSER below lcg/external 
- 050912 - print the script version number 
- 050919 - use commands.getstatusoutput instead of os.system to print the output in sequence 
- 050920 - set Lbcom, Rec, Phys, Geant4_release_area in setLHCbEnv 
+ 050718 - fix remove for LCGCMT
+ 050826 - run LbInstallArea on Linux to update SoftLinks
+ 050829 - untar GENSER below lcg/external
+ 050912 - print the script version number
+ 050919 - use commands.getstatusoutput instead of os.system to print the output in sequence
+ 050920 - set Lbcom, Rec, Phys, Geant4_release_area in setLHCbEnv
  050921 - add Examples in application_list for Gaudi, LHCb and Bender
-             get the list of examples with versions to configure and build library links 
+             get the list of examples with versions to configure and build library links
  050922 - if untar is successful remove targz file, replace it with a dummy file
              cmt config packages under DBASE and PARAM
- 050927 - replace string.replace with file.replace in getFile 
- 050930 - add installPackage function ( stuart Patersson) to be called by DIRAC 
- 050930 - restore os.system on win32 because the commands module is Unix only 
- 051004 - fix 2 'if <string>.find' which were not tested 
- 051012 - avoid to extract symlinks on win32 
+ 050927 - replace string.replace with file.replace in getFile
+ 050930 - add installPackage function ( stuart Patersson) to be called by DIRAC
+ 050930 - restore os.system on win32 because the commands module is Unix only
+ 051004 - fix 2 'if <string>.find' which were not tested
+ 051012 - avoid to extract symlinks on win32
  051108 - replace targz files with a dummy one, correction introduced in 050922 and then lost
            - set CMTBIN in getCMT
            - set CMTSITE, SITEROOT, LD_LIBRARY_PATH  in setLHCbEnv to allow compilation to work
 
  060124 - add a retry if a download does not work
-           - set sys.exit('with a message') instead of sys.exit(integer) 
- 060301 - execute a SealPluginRefresh 
- 060306 - remove install_package function which is no longer necessary 
- 060313 - in pool-refresh return if gaudipath is not set 
- 060315 - OpenScientist has nolonger InstallArea 
- 060327 - remove packages in DBASE or PARAM 
- 060502 - remove GENSER as LCGCMT 
- 060517 - add some printout in exec_cmt_library_links 
- 060523 - on Linux platforms download CMT_<version>_Linux.tar.gz 
- 060601 - on Linux use 'uname -p' to set cmtbin in getCMT 
- 060614 - add XmlConditions in data_files 
+           - set sys.exit('with a message') instead of sys.exit(integer)
+ 060301 - execute a SealPluginRefresh
+ 060306 - remove install_package function which is no longer necessary
+ 060313 - in pool-refresh return if gaudipath is not set
+ 060315 - OpenScientist has nolonger InstallArea
+ 060327 - remove packages in DBASE or PARAM
+ 060502 - remove GENSER as LCGCMT
+ 060517 - add some printout in exec_cmt_library_links
+ 060523 - on Linux platforms download CMT_<version>_Linux.tar.gz
+ 060601 - on Linux use 'uname -p' to set cmtbin in getCMT
+ 060614 - add XmlConditions in data_files
  060619 - -b assumes $CMTCONFIG
              --binary=<something> set os.environ['CMTCONFIG']=<something>
              introduce slc3_ia32_gcc323_dbg as possible binary
              run pool_refresh only on Linux for non debug binary
  060621 - if -m do_config is given execute at end of installation on all LHCb projects
              > cmt br cmt config
-             > cmt br cmt build library_links 
+             > cmt br cmt build library_links
  060622 - introduce full_flag to download source, binary, binary_dbg in one go
- 060626 - Bender application is Phys/Bender 
+ 060626 - Bender application is Phys/Bender
  060628 - replace uname -p with uname -m in getCMT to set CMTBIN
- 060629 - add VETRA project 
- 060704 - VETRA has no application yet 
- 060712 - global variable make was not set : replace it with string 'make' 
+ 060629 - add VETRA project
+ 060704 - VETRA has no application yet
+ 060712 - global variable make was not set : replace it with string 'make'
  060814 = fix exec_cmt_library_links : there was an extra space in checking the bradcast variable
- 060829 - do not check existence of InstallArea for DIM as for OpenScientist, LCGCMT and GENSER 
+ 060829 - do not check existence of InstallArea for DIM as for OpenScientist, LCGCMT and GENSER
  060830 - set CMTPATHPROJECT when cmtvers >= 18
              do not configure packEnv if it does not exist
-             do not build library_links if no binary directory in packSys 
- 060911 - do not use tarfile module from python 2.4.3 on linux 
- 060925 - print Python version in the logfile 
- 061013 - add slc4_ia32_gcc34, slc4_ia32_gcc34_dbg 
+             do not build library_links if no binary directory in packSys
+ 060911 - do not use tarfile module from python 2.4.3 on linux
+ 060925 - print Python version in the logfile
+ 061013 - add slc4_ia32_gcc34, slc4_ia32_gcc34_dbg
  061106 - download install_project.py as latest_install_project.py.
-             check the version, exit if old version 
+             check the version, exit if old version
  061115 - protect all print statments with if debug_flag == 1, set default debug_flag = 0
- 061116 - print the python version and the time 
+ 061116 - print the python version and the time
  061127 - fix lhcb_binary (put slc4_ia32_gcc34_dbg before slc4_ia32_gcc34)
  061128 - import LHCb_config - using getFile
              check definition of logfile before using it in getFile because
@@ -88,44 +88,44 @@
  061204 - use cmtvers instead of cmtversion in cmt_config
  061212 - set here when entering a function which makes a chdir and chdir(here) before return
              set make = 'nmake /f nmake' on win32
-             if python_version < 25 : python_version = python_version * 10 
+             if python_version < 25 : python_version = python_version * 10
  061222 - remove the pool_refresh function to solve the problem of local installation of a given package with the SHARED installtion of POOL
  070126 - several fixes for introduction of CMTPROJECTPATH usage
-             use applications_other_executables in exec_cmt_library_links 
+             use applications_other_executables in exec_cmt_library_links
  070205 - remove os.system(LbInstallArea, keep getstatusoutput to avoid /bin/ls  printout
  070307 - prepare for MCGenerators tar file , for SQLDDDB tar file
  070313 - add a binary directory if not yet there in ext_lhcb project to distinguish different platforms
- 070320 - fix getFile in case of ext_lhcb project 
- 070321 - create DBASE and PARAM when lhcb is created 
- 070328 - on Linux call LbInstallArea in compile_project if do_config and InstallArea/$CMTCONFIG exist 
- 070329 - fix mistype in handling of MCGenerators 
- 070403 - delete CMTPROJECTPATH if it exists when PackEnv is used 
+ 070320 - fix getFile in case of ext_lhcb project
+ 070321 - create DBASE and PARAM when lhcb is created
+ 070328 - on Linux call LbInstallArea in compile_project if do_config and InstallArea/$CMTCONFIG exist
+ 070329 - fix mistype in handling of MCGenerators
+ 070403 - delete CMTPROJECTPATH if it exists when PackEnv is used
  070418 - add some sys.exit('blabla') in untarFile
-           - sys.exit if MYSITEROOT is not identical to os.getcwd() 
+           - sys.exit if MYSITEROOT is not identical to os.getcwd()
  070420 - use the binary flag in getScripts to choose the right script tar file
            - do not set make_flag to do_config by default if binary contains 'win32'
- 070511 - raise exception if we can not delete file 
- 070709 - Ugly hack to avoid the building of library links for already present projects 
- 070809 - added the md5 checks of the tar balls and the customization of the retries 
- 070810 - added message in the logfile in case of md5 check failure  
- 071004 - fixed a couple of bugs occuring when the download (or md5sum check) fails 
- 071204 - caught exception and remove tar file if the tar command fails 
- 071211 - added the total removal of the project if its tar ball fails to untar 
- 080108 - fixed the import of the ExtractError class from the tarfile module 
- 080115 - always pass the binary value to the LbInstallArea script 
- 080211 - moved the exception catching for the tar file expansion 
- 080407 - added the automatic download of the Grid software 
- 080424 - excluded the 2.4.4 version from the usable python tarfile module 
- 080429 - fixed stupid typo for the previous change 
- 080429 - added case insensitive checks for MYSITEROOT on windows 
+ 070511 - raise exception if we can not delete file
+ 070709 - Ugly hack to avoid the building of library links for already present projects
+ 070809 - added the md5 checks of the tar balls and the customization of the retries
+ 070810 - added message in the logfile in case of md5 check failure
+ 071004 - fixed a couple of bugs occuring when the download (or md5sum check) fails
+ 071204 - caught exception and remove tar file if the tar command fails
+ 071211 - added the total removal of the project if its tar ball fails to untar
+ 080108 - fixed the import of the ExtractError class from the tarfile module
+ 080115 - always pass the binary value to the LbInstallArea script
+ 080211 - moved the exception catching for the tar file expansion
+ 080407 - added the automatic download of the Grid software
+ 080424 - excluded the 2.4.4 version from the usable python tarfile module
+ 080429 - fixed stupid typo for the previous change
+ 080429 - added case insensitive checks for MYSITEROOT on windows
  080429 - removed the download of the grid tar balls on windows and slc3
- 080429 - fixed configure step for LCGGrid 
- 080430 - fixed logic for the slc3 exclusion of LHCbGrid 
- 080709 - fixed unix permissions after the untar of the file 
- 080813 - implemented the support for multiple mysiteroot 
- 080820 - added the permissions for writing to the group and other according to the umask 
- 080820 - moved to the use of the 'tar' command only. Except for windows 
- 080822 - changed the error message reported by chmod. Now using the full path 
+ 080429 - fixed configure step for LCGGrid
+ 080430 - fixed logic for the slc3 exclusion of LHCbGrid
+ 080709 - fixed unix permissions after the untar of the file
+ 080813 - implemented the support for multiple mysiteroot
+ 080820 - added the permissions for writing to the group and other according to the umask
+ 080820 - moved to the use of the 'tar' command only. Except for windows
+ 080822 - changed the error message reported by chmod. Now using the full path
  080825 - added check to the removall of the path. It should exist.
  080825 - added the read permissions if the mask allows them.
  080826 - refine fixing of the permissions: only for the exact installed tar balls.
@@ -154,23 +154,23 @@
  081009 - fixed issues with project without versioned-directory for the packages
  081009 - fixed careless removal of the CVS directory from the list
  081010 - faked version modification to force the pickup of the latest changes from 081009
- 081013 - Fixed configuration of standalone data packages. 
+ 081013 - Fixed configuration of standalone data packages.
  081015 - Fixed the removal of data packages. Corrected the setup of Boole v12r10
  081016 - Fixed the removal of packages if it is a patched version (vXrYpZ).
  081017 - Fixed the global configure step. A separate installation is now done for LbScripts
  081022 - added full support for multiple mysiteroot. added the --check option.
  081029 - moved to LbScripts v1r8
  081031 - moved to LbScripts v1r9
- 081104 - Creates relative links to LbLogin instead of absolute ones. It fixes problem with the 
+ 081104 - Creates relative links to LbLogin instead of absolute ones. It fixes problem with the
           synchronisation of the CERNVM server.
- 081202 - added the fixing of the windows attributes in the changePermissions function  
- 081203 - fixed the attributes tuning for the files  
- 081205 - moved to LbScripts v1r11  
- 081209 - Changed to default behavior. Now only appends soft. There is a new option --overwrite to 
-          force the overwriting   
- 081216 - computes the CMTDEB variable on the fly   
- 081217 - Fixed trailing '/' at the end of the MYSITEROOT components   
- 090107 - fixed the installation of the LbLogin.bat script on windows   
+ 081202 - added the fixing of the windows attributes in the changePermissions function
+ 081203 - fixed the attributes tuning for the files
+ 081205 - moved to LbScripts v1r11
+ 081209 - Changed to default behavior. Now only appends soft. There is a new option --overwrite to
+          force the overwriting
+ 081216 - computes the CMTDEB variable on the fly
+ 081217 - Fixed trailing '/' at the end of the MYSITEROOT components
+ 090107 - fixed the installation of the LbLogin.bat script on windows
  090119 - fixed the removal of the .html file if the project is not available
  090120 - moved to the version v1r13 for LbScripts
  090120 - always install the LbScripts project locally if it is not present
@@ -192,9 +192,11 @@
  090401 - fixed small hickup in the installation of a local data package.
  090406 - removed the obsolete string module
         - moved to LbScripts v3r1
- 090414 - moved to use the LbScript tarball for bootstrapping. 
+ 090414 - moved to use the LbScript tarball for bootstrapping.
         - Use the LbLegacy.LHCb_config for the old settings.
-        - moved version of LbScripts to be used to be the current one (v3r2).      
+        - moved version of LbScripts to be used to be the current one (v3r2).
+ 090421 - comment the full_flag setting in win32 section.
+        - put the import statement for LHCb_config.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -203,11 +205,12 @@ import stat
 import commands
 import logging
 from shutil import rmtree
+import LbLegacy.LHCb_config
 
-script_version = '090414'
+script_version = '090421'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v3r2"
+lbscripts_version = "v3r3"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
@@ -259,7 +262,7 @@ overwrite_mode = False
 def usage() :
     print 'Usage:'
     print '  python install_project.py -p <project> -v <version> [-b] '
-    print 'version %s - Try "python install_project.py -h" for more information.'% script_version 
+    print 'version %s - Try "python install_project.py -h" for more information.'% script_version
     sys.exit()
 
 def help() :
@@ -397,7 +400,7 @@ def addPermissions(authbits, directory, recursive=True):
             chmodcmd = "chmod -R %s %s" % (",".join(authlist), directory)
         commands.getstatusoutput(chmodcmd)
 
-            
+
 
 
 def getGlobalMask():
@@ -453,23 +456,23 @@ def changePermissions(directory, recursive=True):
 def checkWriteAccess(directory):
     dirok = True
     log = logging.getLogger()
-    
-    canwrite = os.access(directory, os.W_OK) 
+
+    canwrite = os.access(directory, os.W_OK)
     if not canwrite :
         log.warning( "No POSIX write permission in %s" % directory )
     dirok = dirok & canwrite
-    
-    canread = os.access(directory, os.R_OK) 
+
+    canread = os.access(directory, os.R_OK)
     if not canread :
         log.warning("No POSIX read permission in %s - cannot list directory" % directory )
     dirok = dirok & canread
 
-    canexe = os.access(directory, os.X_OK) 
+    canexe = os.access(directory, os.X_OK)
     if not canexe :
         log.warning( "No POSIX execute permission in %s - cannot cd in there" % directory )
     dirok = dirok & canexe
 
-    
+
     return dirok
 
 #----------------------------------------------------------------------------
@@ -489,7 +492,7 @@ def createTmpDirectory():
 def destroyTmpDirectory():
     log = logging.getLogger()
     log.info( '     Removing %s' % getTmpDirectory())
-    removeAll(getTmpDirectory())                    
+    removeAll(getTmpDirectory())
 
 def cleanTmpDirectory():
     log = logging.getLogger()
@@ -511,7 +514,7 @@ def getScriptExt():
     if sys.platform == 'win32':
         ext = 'bat'
     return ext
-        
+
 def getSourceCmd():
     command = '.'
     if sys.platform == 'win32':
@@ -523,7 +526,7 @@ def getSourceCmd():
 #
 def createDir(here , logname):
     log = logging.getLogger()
-    
+
     log.info('create necessary sub-directories' )
 
     this_log_dir = log_dir.split(os.pathsep)[0]
@@ -556,7 +559,7 @@ def createDir(here , logname):
                         if os.path.isdir(os.path.join(b,'DBASE')) :
                             found_dbase = True
                         if os.path.isdir(os.path.join(b,'PARAM')) :
-                            found_param = True                            
+                            found_param = True
                     if not found_dbase :
                         os.mkdir(os.path.join(dir,'DBASE'))
                     if not found_param :
@@ -705,7 +708,7 @@ def getFile(url,file):
                     if exist_flag == True:
                         if overwrite_mode :
                             exist_flag = False
-                            log.info('%s on %s exists - Overwriting' % (file, f))                            
+                            log.info('%s on %s exists - Overwriting' % (file, f))
                         else :
                             log.info('%s on %s exists - do not overwrite' % (file, f))
                         return exist_flag
@@ -846,14 +849,14 @@ def getPackVer(file):
                 if file.find('_'+b) != -1 :
                     ffile = file[:file.find('_'+b)]
                 else :
-                    ffile = file[:file.find('.tar.gz')]                
+                    ffile = file[:file.find('.tar.gz')]
                 break
             else:
                 bin = ''
                 ffile = file[:file.find('.tar.gz')]
     else :
         bin = ''
-        ffile = file[:file.find('.tar.gz')]        
+        ffile = file[:file.find('.tar.gz')]
     packver = ffile.split('_')
     vers = packver[-1]
     name = packver[0]
@@ -984,19 +987,19 @@ def isInstalled(file):
 
 def setInstalled(file):
     this_log_dir = log_dir.split(os.pathsep)[0]
-        
+
     installedfilename = os.path.join(this_log_dir,file.replace(".tar.gz", ".installed"))
 
     f = open(installedfilename, "w")
     f.write("Done\n")
     f.close()
-    
+
 def delInstalled(file):
     this_log_dir = log_dir.split(os.pathsep)[0]
-        
+
     installedfilename = os.path.join(this_log_dir,file.replace(".tar.gz", ".installed"))
     os.remove(installedfilename)
-    
+
 # check installed project
 def checkInstalledProjects(project_list):
     log = logging.getLogger()
@@ -1056,16 +1059,16 @@ def getProjectTar(tar_list, already_present_list=None):
                 exist_flag = getFile(url_dist+tar_list[file]+'/',file)
                 if exist_flag and already_present_list != None:
                     already_present_list.append(tar_list[file])
-    
-    
-    
+
+
+
             untar_flag = getUntarFlag(file, exist_flag)
-    
-    
+
+
             if untar_flag == 'ERROR':
                 log.warning('%s is not accessible: check file name' % file)
                 sys.exit('%s is not accessible: check file name \n' % file )
-    
+
             if untar_flag == 'yes':
                 # untar the file
                 log.debug('untar file %s' % file)
@@ -1074,7 +1077,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 if rc != 0 and pack_ver[0] != 'LCGGrid' :
                     removeAll(pack_ver[3])
                     log.info('Cleaning up %s' % pack_ver[3])
-                    sys.exit("getProjectTar: Exiting ...")                 
+                    sys.exit("getProjectTar: Exiting ...")
                 if pack_ver[0] in LbLegacy.LHCb_config.ext_lhcb:
                     # if it is a ext_lhcb project
                     # create a ext_lhcb project/vers/binary directory
@@ -1089,7 +1092,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     if not os.path.exists(pack_ver[2]):
                         os.mkdir(pack_ver[2])
                         log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
-    
+
                 if os.getcwd() == this_lhcb_dir :
                     # if binary is requested and InstallArea does not exist : set it
                     pack_ver = getPackVer(file)
@@ -1097,7 +1100,7 @@ def getProjectTar(tar_list, already_present_list=None):
                         os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
                         if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
                             log.debug('mkdir InstallArea')
-                            if not os.path.exists('InstallArea'): 
+                            if not os.path.exists('InstallArea'):
                                 os.mkdir ('InstallArea')
                             os.chdir('InstallArea')
                             os.mkdir(pack_ver[2])
@@ -1149,7 +1152,7 @@ def getProjectTar(tar_list, already_present_list=None):
                                     log.debug("linking %s to %s" % (sourcef, targetf) )
             else:
                 log.debug('do not untar %s ' % file)
-            
+
             log.debug(' --------- next file -----------')
             setInstalled(file)
         else :
@@ -1288,14 +1291,14 @@ def readString(filename,string):
 def removeProject(project,pvers):
     log = logging.getLogger()
     log.info('%s %s '% (project, pvers))
-    
+
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_html_dir = html_dir.split(os.pathsep)[0]
     this_targz_dir = targz_dir.split(os.pathsep)[0]
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
     this_log_dir = log_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
-    
+
 
     PROJECT = project.upper()
     if LbLegacy.LHCb_config.lhcb_projects.has_key(PROJECT):
@@ -1360,22 +1363,22 @@ def removeProject(project,pvers):
 
     if multiple_mysiteroot and os.path.isdir(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES')):
         head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
-        if project.find('Field') != -1: 
+        if project.find('Field') != -1:
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
-        if project.find('DDDB') != -1:  
+        if project.find('DDDB') != -1:
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Det')
-        if project.find('Dec') != -1:  
+        if project.find('Dec') != -1:
             head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Gen')
         if os.path.isdir(os.path.join(head,project,pvers)):
             shutil.rmtree(os.path.join(head,project,pvers))
             log.info('remove %s' % os.path.join(head, project, pvers))
 
     head = os.path.join(this_lhcb_dir,'PARAM')
-    if project.find('Field') != -1: 
+    if project.find('Field') != -1:
         head = os.path.join(this_lhcb_dir,'DBASE')
-    if project.find('DDDB') != -1:  
+    if project.find('DDDB') != -1:
         head = os.path.join(this_lhcb_dir,'DBASE','Det')
-    if project.find('Dec') != -1:  
+    if project.find('Dec') != -1:
         head = os.path.join(this_lhcb_dir,'DBASE','Gen')
     if os.path.isdir(os.path.join(head,project,pvers)):
         shutil.rmtree(os.path.join(head,project,pvers))
@@ -1415,7 +1418,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
             os.environ[var] = env[var]
     else :
         log.error("%s doesn't exist" % lbloginscript)
-    
+
     # run SetupProject and create the setup script
     setprojscript = os.path.join(lbscriptspydir, "LbConfiguration", "SetupProject.py")
     log.debug("Using SetuProject from %s" % setprojscript)
@@ -1429,7 +1432,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
         setuprojargs.append(pname)
         setuprojargs.append(pversion)
         SetupProject().main(setuprojargs)
-        cmd = "python %s --silent --shell=%s --output=%s %s %s" % (setprojscript, usedshell,scriptfile, 
+        cmd = "python %s --silent --shell=%s --output=%s %s %s" % (setprojscript, usedshell,scriptfile,
                                                                     pname, pversion)
         log.debug("Running %s" % cmd)
 #        os.system(cmd)
@@ -1444,7 +1447,7 @@ def postProcessSetupScript(scriptfile, shell):
     log = logging.getLogger()
     log.debug("Postprocessing of %s" % scriptfile)
     cleanStripPath(scriptfile, shell)
-    
+
 def cleanStripPath(scriptfile, shell):
     # remove the call to StripPath
     inf = open(scriptfile, "r")
@@ -1471,7 +1474,7 @@ def cleanStripPath(scriptfile, shell):
             outf.write(l)
     outf.close()
     # clean up the variables
-    varlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", 
+    varlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH",
                "JOBOPTSEARCHPATH", "HPATH", "MANPATH"]
     for v in varlist :
         varvalue = StripPath(getVariable(scriptfile, shell, v))
@@ -1516,7 +1519,7 @@ def appendVariable(scriptfile, shell, varname, varcont):
         outf.close()
     else :
         log.warning("Content of %s is empty" % varname)
-        
+
 
 def StripPath(path):
     log = logging.getLogger()
@@ -1525,7 +1528,7 @@ def StripPath(path):
         rp = os.path.realpath(p)
         if os.path.exists(rp) and os.path.isdir(rp):
             if len(os.listdir(rp)) != 0:
-                collected.append(p)     
+                collected.append(p)
     return os.pathsep.join(collected)
 
 # -------------------------------------------------------------------------------------------
@@ -1536,10 +1539,10 @@ def StripPath(path):
 def createBaseDirs():
     global multiple_mysiteroot
     global cmtconfig
-    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir 
+    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir
     global scripts_dir, newscripts_dir, targz_dir, system_dir, tmp_dir
-    
-    
+
+
     # removes the trailing "/" at the end of the path
     if os.environ.has_key("MYSITEROOT") :
         path_list = []
@@ -1548,7 +1551,7 @@ def createBaseDirs():
                 p = p[:-1]
             path_list.append(p)
         os.environ["MYSITEROOT"] = os.pathsep.join(path_list)
-    
+
     if os.environ.has_key('MYSITEROOT') :
         if os.environ['MYSITEROOT'].find(os.pathsep) != -1 :
             multiple_mysiteroot = True
@@ -1561,7 +1564,7 @@ def createBaseDirs():
                 sys.exit('please set MYSITEROOT == $PWD:$MYSITEROOT before running the python script \n')
         else:
             if mypath.split(os.pathsep)[0] != thispwd :
-                sys.exit('please set MYSITEROOT == $PWD:$MYSITEROOT before running the python script \n')                
+                sys.exit('please set MYSITEROOT == $PWD:$MYSITEROOT before running the python script \n')
 
     else:
         #print 'please set $MYSITEROOT before running the python script'
@@ -1597,7 +1600,7 @@ def createBaseDirs():
             tmp_dir.append(os.path.join(p,"tmp", os.environ["USER"]))
         else :
             tmp_dir.append(os.path.join(p,"tmp"))
-            
+
     log_dir= os.pathsep.join(log_dir)
     contrib_dir = os.pathsep.join(contrib_dir)
     lcg_dir = os.pathsep.join(lcg_dir)
@@ -1609,7 +1612,7 @@ def createBaseDirs():
     system_dir = os.pathsep.join(system_dir)
     tmp_dir = os.pathsep.join(tmp_dir)
 
-            
+
     logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
 
 
@@ -1713,11 +1716,11 @@ def runInstall(pname,pversion,binary=''):
         os.environ['CMTCONFIG'] = binary_dbg
         project_list,html_list = getProjectList(pname,pversion,binary_dbg)
         getProjectTar(project_list)
-        
+
     if setup_script :
         os.chdir(os.environ["MYSITEROOT"].split(os.pathsep)[0])
         genSetupScript(pname, pversion, cmtconfig, setup_script)
-        
+
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     log.info( '+++++++++++++++++++++++ %s end install_project.py -version no %s' % (end_time, script_version))
 
@@ -1742,7 +1745,7 @@ def setLHCbEnv(cmtvers):
     else:
         ldlibrarypath = ''
 
-        
+
     mysiteroot = os.environ['MYSITEROOT'].split(os.pathsep)[0]
     cmtsite = 'LOCAL'
 
@@ -1806,7 +1809,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
         log.info("%s has been created" % dstdir)
     for root, dirs, files in os.walk(srcdir, topdown=True) :
         dirstoremove = []
-        for d in dirs :   
+        for d in dirs :
             src = os.path.join(root, d)
             dst = src.replace(srcdir+os.sep,"")
             dst = os.path.join(dstdir, dst)
@@ -1816,7 +1819,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
                     os.makedirs(pdst)
                 shutil.move(src, dst)
                 dirstoremove.append(d)
-        for f in files :   
+        for f in files :
             src = os.path.join(root, f)
             dst = src.replace(srcdir+os.sep,"")
             dst = os.path.join(dstdir, dst)
@@ -1847,10 +1850,10 @@ def unTarFileInTmp(filename, targetlocation, overwrite=False, offset=None):
     if offset :
         walkdir = os.path.join(walkdir, offset)
     addSoft(walkdir, targetlocation, overwrite)
-    os.chdir(here)    
+    os.chdir(here)
     cleanTmpDirectory()
     return rc
-    
+
 def useTarFileModule():
     usetfm = False
     # tarfile is available in Python version >= 234
@@ -1859,10 +1862,10 @@ def useTarFileModule():
         if python_version >= vmin and python_version != (2, 4, 3)  and python_version != (2, 4, 4) :
             usetfm = True
     return usetfm
-    
+
 def untarFile(file):
     log = logging.getLogger()
-    
+
     retcode = 0
 
     log.info('%s on %s ' % (file, os.getcwd()))
@@ -1976,7 +1979,7 @@ def untarFile(file):
                     log.warning( 'untarFile - error in: %s' % str)
                     log.warning( 'untarFile - return code %s' % status )
                     log.warning( 'tar command output:' )
-                    for l in tar_output.split("\n") : 
+                    for l in tar_output.split("\n") :
                         log.warning(l)
                     if os.path.exists(filename):
                         os.remove(filename)
@@ -2011,7 +2014,7 @@ def checkBinaryName(binary):
                     os.environ['CMTDEB'] = binary + "_dbg"
                 # if a win32 binary is installed from a non win32 platform then do not cmt config
                 if sys.platform != 'win32' and binary.find('win32') != 'win32':
-                    full_flag = True
+  #                  full_flag = True
                     make_flag = ' '
                 break
         else:
@@ -2024,7 +2027,7 @@ def checkBinaryName(binary):
             print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbLegacy.LHCb_config.lhcb_binary)
             print 'do you want to continue? [yes|no]'
             next = sys.stdin.readline()
-            if next.lower()[0] != 'y': 
+            if next.lower()[0] != 'y':
                 sys.exit()
 
 #---------------------------------------------------------------------
@@ -2086,7 +2089,7 @@ if __name__ == "__main__":
             check_only = True
         if key == '--overwrite':
             overwrite_mode = True
-            
+
     thelog = logging.getLogger()
     thelog.setLevel(logging.DEBUG)
     console = logging.StreamHandler()
@@ -2096,14 +2099,14 @@ if __name__ == "__main__":
         if debug_flag == 1 :
             console.setFormatter(logging.Formatter("%(levelname)-8s: %(funcName)-25s - %(message)s"))
         else :
-            console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))            
+            console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
     if debug_flag == 1 :
-        console.setLevel(logging.DEBUG) 
+        console.setLevel(logging.DEBUG)
     else :
         console.setLevel(logging.INFO)
     thelog.addHandler(console)
 
-    changePermissions('install_project.py', recursive=False)    
+    changePermissions('install_project.py', recursive=False)
 
 # check pversion
     if pversion == ' ' and pname != 'LHCbGrid':
@@ -2121,4 +2124,4 @@ if __name__ == "__main__":
     thelog.addHandler(filehandler)
 
     runInstall(pname,pversion,binary)
-    
+
