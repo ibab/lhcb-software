@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.72 2009-04-17 16:11:07 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.73 2009-04-22 15:34:12 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -415,12 +415,12 @@ class Brunel(LHCbConfigurableUser):
         ProcessPhase("Moni").DetectorList += moniSeq
         ProcessPhase('Moni').Context = self.getProp("Context")
 
+        # Units needed in several of the monitoring options
+        importOptions('$STDOPTS/PreloadUnits.opts')
+
         # Histograms filled both in real and simulated data cases
         if "CALO" in moniSeq :
             importOptions('$CALOMONIDSTOPTS/CaloMonitor.opts')
-        else :
-            # Hack for units options, normally included by CaloMonitor.opts
-            importOptions('$STDOPTS/PreloadUnits.opts')
 
         if "VELO" in moniSeq :
             importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')

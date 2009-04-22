@@ -3,6 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-22 - Marco Cattaneo
+ - Adapt Configurable for correct inclusion of units.opts following removal of
+   include from CaloMoniDst options
+ - Update references for:
+   . Addition of CaloDigiGetter to RecoCALOSeq
+   . Addition of CaloEFlowAlg sequencer to MoniCALOSeq, with EcalEFlowAlgo
+   . Addition of CaloPIDMon algorithm to CaloPIDsMon sequence
+   . Addition of Long track monitors to RichPIDMoni
+   . Addition of RichStereoFitterTests to RichExpertChecks
+   . Fix to SeedTrack prefit from Brunel v34r4
+   . Additional histograms in TrackVertexMonitor
+   . Fix to untested StatusCode in AlgTool::monitorSvc (Gaudi v21)
+
 ! 2009-04-17 - Chris Jones
  - Only set IODataManager().AgeLimit = 0 if the option has not been previously 
    set. Allows more user control over this setting.
