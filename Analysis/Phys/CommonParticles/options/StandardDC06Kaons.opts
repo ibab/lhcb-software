@@ -33,7 +33,6 @@ StdDC06TightKaonsSeq.MeasureTime  = true;
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================
-StdDC06NoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdDC06NoPIDsKaons.Particle =  "kaon" ;
 StdDC06NoPIDsKaons.DecayDescriptor = "Kaon" ;
 
