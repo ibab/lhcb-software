@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseMuons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StdLooseMuons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseMuons.py
 #  configuration file for 'Standard Loose Muons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Muons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseMuons' ,
@@ -19,27 +19,22 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
+from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleMUONFilter
 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdLooseMuons'          ,
-                                DecayDescriptor = 'Muon' )
-
-# configure desktop&particle maker: 
-maker  = particleMaker ( algorithm )
-maker.ExclusiveSelection = False
-maker.Particles = [ 'muon' ] 
+algorithm =  CombinedParticleMaker ( 'StdLooseMuons'          ,
+                                DecayDescriptor = 'Muon', Particles = [ 'muon' ] )
 
 # configure the track selector
-selector = trackSelector ( maker ) 
+selector = trackSelector ( algorithm ) 
 selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
-fltr = protoFilter ( maker , ProtoParticleMUONFilter, 'Muon' )
+fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
 fltr.Selection = [ "RequiresDet='MUON'"  ]
 
 ## configure Data-On-Demand service 

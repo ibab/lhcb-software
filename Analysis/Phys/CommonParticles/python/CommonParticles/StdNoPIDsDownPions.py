@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsDownPions.py,v 1.1 2009-02-26 16:53:33 pkoppenb Exp $ 
+# $Id: StdNoPIDsDownPions.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsDownPions.py
 #  configuration file for 'Standard NoPIDs Downstream Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Downstream Pions'
 """
 __author__  = "Alessio Sarti <Alessio.Sarti@lnf.infn.it>"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsDownPions' ,
@@ -19,20 +19,16 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration   import *
-from Configurables         import PreLoadParticles 
-from Configurables         import NoPIDsParticleMaker
+from Configurables         import NoPIDsParticleMaker 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdNoPIDsDownPions'          ,
-                                DecayDescriptor = 'Pion' )
-
-# configure particle maker: 
-maker  = particleMaker ( algorithm , NoPIDsParticleMaker ) 
-maker.Particle = 'pion'  
-maker.UseLongTracks = False;
-maker.UseDownstreamTracks = True;
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownPions'          ,
+                                DecayDescriptor = 'Pion' ,
+                                Particle = 'pion'  , 
+                                UseLongTracks = False, 
+                                UseDownstreamTracks = True)
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

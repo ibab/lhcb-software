@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightElectrons.py,v 1.1 2009-01-15 14:22:15 ibelyaev Exp $ 
+# $Id: StdTightElectrons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdTightElectrons.py
 #  configuration file for 'Standard Loose Electrons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Tight Electrons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdTightElectrons' ,
@@ -19,27 +19,22 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
+from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
 from Configurables       import BremAdder
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdTightElectrons'          ,
-                                DecayDescriptor = 'Electron' )
-
-# configure desktop&particle maker: 
-maker  = particleMaker ( algorithm )
-maker.ExclusiveSelection = False
-maker.Particles = [ 'electron' ] 
+algorithm =  CombinedParticleMaker ( 'StdTightElectrons'          ,
+                                DecayDescriptor = 'Electron', Particles = [ 'electron' ] )
 
 # configure the track selector
-selector = trackSelector ( maker ) 
+selector = trackSelector ( algorithm ) 
 selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
-fltr = protoFilter ( maker , ProtoParticleCALOFilter , 'Electron' )
+fltr = protoFilter ( algorithm , ProtoParticleCALOFilter , 'Electron' )
 fltr.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'0.0'" ]
 
 ## configure Data-On-Demand service 
@@ -49,8 +44,8 @@ locations = updateDoD ( algorithm )
 StdTightElectrons = algorithm 
 
 ## temporary:
-maker.addTool ( BremAdder )
-brem = maker.BremAdder 
+algorithm.addTool ( BremAdder )
+brem = algorithm.BremAdder 
 brem.BremCor = 1.06
 
 ## ============================================================================

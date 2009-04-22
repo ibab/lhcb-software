@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKstar.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseKstar.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKstar.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Kstar'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseKstar2KPi' ,
@@ -19,15 +19,14 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseKstar2KPi = CombineParticles ( 'StdLooseKstar2KPi' )
 
-StdLooseKstar2KPi.addTool(PhysDesktop)
-StdLooseKstar2KPi.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
+StdLooseKstar2KPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
 StdLooseKstar2KPi.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)>2.25)",
                                     "K+" : "(MIPCHI2DV(PRIMARY)>2.25)" } 

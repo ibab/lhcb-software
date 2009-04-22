@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKaons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StdLooseKaons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKaons.py
 #  configuration file for 'Standard Loose Kaons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Kaons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseKaons' ,
@@ -19,26 +19,19 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
-from Configurables       import ProtoParticleCALOFilter
+from Configurables       import ProtoParticleCALOFilter, CombinedParticleMaker
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdLooseKaons'          ,
-                                DecayDescriptor = 'Kaon' )
-
-# configure desktop&particle maker:
-maker  = particleMaker ( algorithm )
-maker.ExclusiveSelection = False
-maker.Particles = [ 'kaon' ] 
+algorithm =  CombinedParticleMaker('StdLooseKaons', DecayDescriptor = 'Kaon', Particles = [ 'kaon' ])
 
 # configure the track selector
-selector = trackSelector ( maker ) 
+selector = trackSelector ( algorithm ) 
 selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
-fltr = protoFilter ( maker , ProtoParticleCALOFilter, 'Kaon' )
+fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Kaon' )
 fltr.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
 
 ## configure Data-On-Demand service 

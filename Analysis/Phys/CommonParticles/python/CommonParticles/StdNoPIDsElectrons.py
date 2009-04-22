@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsElectrons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StdNoPIDsElectrons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsElectrons.py
 #  configuration file for 'Standard NoPIDs Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Electrons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsElectrons' ,
@@ -19,18 +19,13 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration   import *
-from Configurables         import PreLoadParticles 
-from Configurables         import NoPIDsParticleMaker
+from Configurables         import NoPIDsParticleMaker 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdNoPIDsElectrons'         ,
-                                DecayDescriptor = 'Electron' )
-
-# configure particle maker: 
-maker  = particleMaker ( algorithm , NoPIDsParticleMaker ) 
-maker.Particle = 'electron'  
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsElectrons'         ,
+                                DecayDescriptor = 'Electron' , Particle = 'electron'  )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

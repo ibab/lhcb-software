@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseDplus.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
+# $Id: StdLooseDplus.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseDplus.py
 #  configuration file for 'Standard Loose Dplus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Dplus'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseDplus2KPiPi' ,
@@ -21,15 +21,14 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseDplus2KPiPi = CombineParticles ( 'StdLooseDplus2KPiPi' )
 
-StdLooseDplus2KPiPi.addTool(PhysDesktop)
-StdLooseDplus2KPiPi.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
+StdLooseDplus2KPiPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
 StdLooseDplus2KPiPi.DaughtersCuts = { "K+"  : "ALL", "pi+" : "ALL" }
 #Note that the cut of 300 MeV around the *D_s* mass is NOT a typo, it is motivated by
@@ -51,7 +50,7 @@ locations = updateDoD ( StdLooseDplus2KPiPi )
 # D+ -> 3 pi is a clone of D+ -> K Pi Pi 
 #
 StdLooseDplus2PiPiPi = StdLooseDplus2KPiPi.clone("StdLooseDplus2PiPiPi")
-StdLooseDplus2PiPiPi.PhysDesktop.InputLocations = [ "StdLoosePions" ]
+StdLooseDplus2PiPiPi.InputLocations = [ "StdLoosePions" ]
 StdLooseDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDplus2KPiPi )

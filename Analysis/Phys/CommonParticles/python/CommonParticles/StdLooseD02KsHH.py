@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02KsHH.py,v 1.2 2009-02-24 14:19:26 pkoppenb Exp $ 
+# $Id: StdLooseD02KsHH.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02KsHH.py
 #  configuration file for 'Standard Loose D0 -> KsHH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> KsHH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KsPiPi' ,
@@ -20,7 +20,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
@@ -30,11 +30,10 @@ from CommonParticles.Utils import *
 #
 StdLooseD02KsPiPi = CombineParticles("StdLooseD02KsPiPi")
 
-StdLooseD02KsPiPi.addTool(PhysDesktop)
-StdLooseD02KsPiPi.PhysDesktop.InputLocations = [ "StdLoosePions", "StdLooseKsLL" ]
+StdLooseD02KsPiPi.InputLocations = [ "StdLoosePions", "StdLooseKsLL" ]
 StdLooseD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc" 
 
-StdLooseD02KsPiPi.DaughtersCuts = { "pi+" : "(PT>400*MeV)", "K+" : "(PT>400*MeV)",
+StdLooseD02KsPiPi.DaughtersCuts = { "pi+" : "(PT>400*MeV)",
                                       "KS0" : "(PT>1*GeV)"} 
 StdLooseD02KsPiPi.CombinationCut = "(ADAMASS('D0')<80*MeV) & (APT>1800*MeV)"
 StdLooseD02KsPiPi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (MIPCHI2DV(PRIMARY)>1)"
@@ -48,8 +47,7 @@ locations = updateDoD ( StdLooseD02KsPiPi )
 #
 StdLooseD02KsKK = StdLooseD02KsPiPi.clone("StdLooseD02KsKK")
 
-StdLooseD02KsKK.addTool(PhysDesktop)
-StdLooseD02KsKK.PhysDesktop.InputLocations = [ "StdLooseKaons", "StdLooseKsLL" ]
+StdLooseD02KsKK.InputLocations = [ "StdLooseKaons", "StdLooseKsLL" ]
 StdLooseD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc" 
 
 StdLooseD02KsKK.DaughtersCuts = { "K+" : "(PT>300*MeV)",

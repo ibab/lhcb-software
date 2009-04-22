@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseMergedPi0.py,v 1.2 2009-04-03 12:40:32 odescham Exp $ 
+# $Id: StdLooseMergedPi0.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseMergedPi0.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose MergedPi0'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseMergedPi0' ,
@@ -19,9 +19,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
-from Configurables       import CaloParticleMaker
-from Configurables       import MergedPi0Maker
+from Configurables       import MergedPi0Maker 
 
 from GaudiKernel.SystemOfUnits import MeV
 
@@ -29,15 +27,9 @@ from CommonParticles.Utils import *
 
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdLooseMergedPi0'         ,
-                                DecayDescriptor = 'Pi0' )
-
-# configure desktop&particle maker: 
-maker  = particleMaker ( algorithm , CaloParticleMaker )
-maker.addTool ( MergedPi0Maker , name = 'MergedPi0Maker' )
-maker.Type = 'MergedPi0Maker'
-pi0 = maker.MergedPi0Maker
-pi0.MassWindow = 60.* MeV
+algorithm =  MergedPi0Maker ( 'StdLooseMergedPi0'         ,
+                              DecayDescriptor = 'Pi0' ,
+                              MassWindow = 60.* MeV)
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

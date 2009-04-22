@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Utils.py,v 1.1 2009-01-15 14:22:15 ibelyaev Exp $ 
+# $Id: Utils.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/Utils.py
 #  helper file for configuration of "standard particles"
@@ -11,15 +11,13 @@
 Helper file for configuration of 'standard particles'
 """
 author  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     # general:
     'updateDoD'     , ## update data-on-demand service  
     'locationsDoD'  , ## print locations, known for data-on-demand service 
     'particles'     , ## locations, known for data-on-demand service
-    # more specific:
-    'particleMaker' , ## get the particle maker
     'trackSelector' , ## get the track selector
     'protoFilter'     ## filter for (charged) protoparticles 
     )
@@ -27,9 +25,7 @@ __all__ = (
 
 from Gaudi.Configuration import *
 from Configurables       import DataOnDemandSvc
-from Configurables       import PhysDesktop
 from Configurables       import TrackSelector
-from Configurables       import CombinedParticleMaker
 
 # local storage of data-on-demand actions 
 _particles = {} 
@@ -59,32 +55,21 @@ def updateDoD ( alg , hat = 'Phys/' ) :
         )
     return _parts 
 
-# get the particle maker 
-def particleMaker ( alg , maker = CombinedParticleMaker ) :
-    """
-    Get the particle maker 
-    """
-    alg.addTool ( PhysDesktop )
-    desktop = alg.PhysDesktop
-    desktop.ParticleMakerType = maker.getType() 
-    desktop.addTool ( maker )
-    return getattr ( desktop , maker.getType() ) 
-
 ## get the track selector 
-def trackSelector ( maker , tracks = TrackSelector ) :
+def trackSelector ( alg , tracks = TrackSelector ) :
     """
     Get the track selector for maker 
     """
-    maker.addTool ( tracks )
-    return getattr ( maker , tracks.getType() ) 
+    alg.addTool ( tracks )
+    return getattr ( alg , tracks.getType() ) 
 
 ## get the protoparticle filter
-def protoFilter ( maker , fltr , name ) :
+def protoFilter ( alg , fltr , name ) :
     """
     Get the protoparticle filter 
     """
-    maker.addTool ( fltr , name )
-    return getattr ( maker , name )
+    alg.addTool ( fltr , name )
+    return getattr ( alg , name )
 
     
 # =============================================================================

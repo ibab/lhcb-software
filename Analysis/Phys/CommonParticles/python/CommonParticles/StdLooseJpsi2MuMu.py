@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseJpsi2MuMu.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseJpsi2MuMu.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseJpsi2MuMu.py
 #  configuration file for 'Standard Loose Jpsi2MuMu' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Jpsi2MuMu'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseJpsi2MuMu' ,
@@ -19,14 +19,13 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseJpsi2MuMu = CombineParticles ( 'StdLooseJpsi2MuMu' )
-StdLooseJpsi2MuMu.addTool(PhysDesktop)
-StdLooseJpsi2MuMu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
+StdLooseJpsi2MuMu.InputLocations = [ "StdLooseMuons" ]
 StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
 
 StdLooseJpsi2MuMu.CombinationCut = "ADAMASS('J/psi(1S)')<100*MeV"

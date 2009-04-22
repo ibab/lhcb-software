@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLoosePions.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StdLoosePions.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoosePions.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Pions'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLoosePions' ,
@@ -19,27 +19,22 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
+from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdLoosePions'          ,
-                                DecayDescriptor = 'Pion' )
-
-# configure desktop&particle maker: 
-maker  = particleMaker ( algorithm )
-maker.ExclusiveSelection = False
-maker.Particles = [ 'pion' ] 
+algorithm =  CombinedParticleMaker ( 'StdLoosePions'          ,
+                                DecayDescriptor = 'Pion' , Particles = [ 'pion' ] )
 
 # configure the track selector
-selector = trackSelector ( maker ) 
+selector = trackSelector ( algorithm ) 
 selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
-fltr = protoFilter ( maker , ProtoParticleCALOFilter, 'Pion' )
+fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Pion' )
 fltr.Selection = [ "" ]
 
 ## configure Data-On-Demand service 

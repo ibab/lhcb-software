@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKs.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseKs.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKs.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Ks'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseKsLL' ,
@@ -19,17 +19,14 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseKsLL = CombineParticles ( 'StdLooseKsLL' )
 
-StdLooseKsLL = CombineParticles("StdLooseKsLL")
-
-StdLooseKsLL.addTool(PhysDesktop)
-StdLooseKsLL.PhysDesktop.InputLocations = [ "StdLoosePions" ]
+StdLooseKsLL.InputLocations = [ "StdLoosePions" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsLL.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF<20)" } 

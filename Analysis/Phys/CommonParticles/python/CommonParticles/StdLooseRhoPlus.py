@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseRhoPlus.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseRhoPlus.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseRhoPlus.py
 #  configuration file for 'Standard Loose RhoPlus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose RhoPlus'
 """
 __author__  = "Yasmine Amhis"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseRhoPlus' ,
@@ -19,7 +19,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
@@ -27,11 +27,10 @@ from CommonParticles.Utils import *
 StdLooseRhoPlus = CombineParticles ( 'StdLooseRhoPlus' )
 
 StdLooseRhoPlus = CombineParticles("StdLooseRhoPlus")
-StdLooseRhoPlus.addTool(PhysDesktop)
-StdLooseRhoPlus.PhysDesktop.InputLocations = [ "StdLooseMergedPi0",
-					       "StdLooseResolvedPi0",
-                                               "StdLoosePions",
-					       "StdLooseKaons"]		 
+StdLooseRhoPlus.InputLocations = [ "StdLooseMergedPi0",
+                                   "StdLooseResolvedPi0",
+                                   "StdLoosePions",
+                                   "StdLooseKaons"]		 
 StdLooseRhoPlus.DecayDescriptor = "[rho(770)- -> pi- pi0]cc"
 StdLooseRhoPlus.DaughtersCuts = {"pi+" : "ALL", "K+" : "ALL",
                                  "pi0" :  "(PT>1000*MeV)  & (P> 1500*MeV)"}

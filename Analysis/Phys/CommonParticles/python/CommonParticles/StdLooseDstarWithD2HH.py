@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseDstarWithD2HH.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseDstarWithD2HH.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseDstarWithD02HH.py
 #  configuration file for 'Standard Loose Dstar WithD02HH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Dstar WithD02HH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseDstarWithD02KPi' ,
@@ -22,17 +22,14 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseDstarWithD02KPi = CombineParticles ( 'StdLooseDstarWithD02KPi' )
-StdLooseDstarWithD02KPi = CombineParticles("StdLooseDstarWithD02KPi")
 
-StdLooseDstarWithD02KPi.addTool(PhysDesktop)
-StdLooseDstarWithD02KPi.PhysDesktop.InputLocations = [ "StdLoosePions",
-                                                       "StdLooseD02KPi" ]
+StdLooseDstarWithD02KPi.InputLocations = [ "StdLoosePions", "StdLooseD02KPi" ]
 StdLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc" 
 
 StdLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
@@ -46,8 +43,7 @@ locations = updateDoD ( StdLooseDstarWithD02KPi )
 #
 StdLooseDstarWithD02KPiDCS = StdLooseDstarWithD02KPi.clone("StdLooseDstarWithD02KPiDCS")
 GaudiSequencer("SeqStdLooseDstarWithD02KPiDCS").Members += [ StdLooseDstarWithD02KPiDCS ] 
-StdLooseDstarWithD02KPiDCS.addTool(PhysDesktop)
-StdLooseDstarWithD02KPiDCS.PhysDesktop.InputLocations = [ "StdLoosePions", "StdLooseD02KPiDCS" ]
+StdLooseDstarWithD02KPiDCS.InputLocations = [ "StdLoosePions", "StdLooseD02KPiDCS" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDstarWithD02KPiDCS )
 
@@ -56,8 +52,7 @@ locations = updateDoD ( StdLooseDstarWithD02KPiDCS )
 #
 StdLooseDstarWithD02KK = StdLooseDstarWithD02KPi.clone("StdLooseDstarWithD02KK")
 StdLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
-StdLooseDstarWithD02KK.addTool(PhysDesktop)
-StdLooseDstarWithD02KK.PhysDesktop.InputLocations = [ "StdLoosePions", "StdLooseD02KK" ]
+StdLooseDstarWithD02KK.InputLocations = [ "StdLoosePions", "StdLooseD02KK" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDstarWithD02KK )
 
@@ -66,8 +61,7 @@ locations = updateDoD ( StdLooseDstarWithD02KK )
 #
 StdLooseDstarWithD02PiPi = StdLooseDstarWithD02KK.clone("StdLooseDstarWithD02PiPi")
 GaudiSequencer("SeqStdLooseDstarWithD02PiPi").Members += [ StdLooseDstarWithD02PiPi ] 
-StdLooseDstarWithD02PiPi.addTool(PhysDesktop)
-StdLooseDstarWithD02PiPi.PhysDesktop.InputLocations = [ "StdLoosePions", "StdLooseD02PiPi" ]
+StdLooseDstarWithD02PiPi.InputLocations = [ "StdLoosePions", "StdLooseD02PiPi" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDstarWithD02PiPi )
 

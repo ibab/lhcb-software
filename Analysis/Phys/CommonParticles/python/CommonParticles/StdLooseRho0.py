@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseRho0.py,v 1.2 2009-02-24 14:19:27 pkoppenb Exp $ 
+# $Id: StdLooseRho0.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseRho0.py
 #  configuration file for 'Standard Loose Rho0' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose '
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseRho0' ,
@@ -19,15 +19,14 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles, PhysDesktop
+from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
 StdLooseRho0 = CombineParticles ( 'StdLooseRho0' )
 
-StdLooseRho0.addTool(PhysDesktop)
-StdLooseRho0.PhysDesktop.InputLocations  = [ "StdLoosePions" ]
+StdLooseRho0.InputLocations  = [ "StdLoosePions" ]
 StdLooseRho0.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc"
 StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }
 StdLooseRho0.CombinationCut = "(ADAMASS('rho(770)0')<100*MeV)"

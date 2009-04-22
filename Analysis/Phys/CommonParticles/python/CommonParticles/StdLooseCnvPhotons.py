@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseCnvPhotons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StdLooseCnvPhotons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseCnvPhotons.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Converted Photons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdLooseCnvPhotons' ,
@@ -19,8 +19,7 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import PreLoadParticles 
-from Configurables       import CaloParticleMaker
+from Configurables       import PhotonMakerAlg
 from Configurables       import PhotonMaker
 
 from GaudiKernel.SystemOfUnits import MeV
@@ -28,14 +27,12 @@ from GaudiKernel.SystemOfUnits import MeV
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdLooseCnvPhotons'         ,
-                                DecayDescriptor = 'Gamma' )
+algorithm =  PhotonMakerAlg ( 'StdLooseCnvPhotons'         ,
+                              DecayDescriptor = 'Gamma' )
 
 # configure desktop&particle maker: 
-maker  = particleMaker ( algorithm , CaloParticleMaker )
-maker.addTool ( PhotonMaker , name = 'PhotonMaker' )
-maker.Type = 'PhotonMaker'
-photon = maker.PhotonMaker
+algorithm.addTool ( PhotonMaker , name = 'PhotonMaker' )
+photon = algorithm.PhotonMaker
 photon.ConvertedPhotons   = True
 photon.UnconvertedPhotons = False 
 photon.PtCut              = 200 * MeV 

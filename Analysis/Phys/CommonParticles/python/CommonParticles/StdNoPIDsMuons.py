@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsMuons.py,v 1.1 2009-01-15 14:22:15 ibelyaev Exp $ 
+# $Id: StdNoPIDsMuons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsMuons.py
 #  configuration file for 'Standard NoPIDs Muons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Muons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsMuons' ,
@@ -19,18 +19,13 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration   import *
-from Configurables         import PreLoadParticles 
-from Configurables         import NoPIDsParticleMaker
+from Configurables         import NoPIDsParticleMaker 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdNoPIDsMuons'          ,
-                                DecayDescriptor = 'Muon' )
-
-# configure particle maker: 
-maker  = particleMaker ( algorithm , NoPIDsParticleMaker ) 
-maker.Particle = 'muon'  
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsMuons'          ,
+                                DecayDescriptor = 'Muon' , Particle = 'muon'  )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

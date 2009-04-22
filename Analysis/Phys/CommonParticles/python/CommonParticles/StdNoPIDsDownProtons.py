@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsDownProtons.py,v 1.1 2009-02-26 16:53:33 pkoppenb Exp $ 
+# $Id: StdNoPIDsDownProtons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsDownProtons.py
 #  configuration file for 'Standard NoPIDs Downstream Protons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Downstream Protons'
 """
 __author__  = "Alessio Sarti <Alessio.Sarti@lnf.infn.it>"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsDownProtons' ,
@@ -19,20 +19,16 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration   import *
-from Configurables         import PreLoadParticles 
-from Configurables         import NoPIDsParticleMaker
+from Configurables         import NoPIDsParticleMaker 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PreLoadParticles ( 'StdNoPIDsDownProtons'         ,
-                                DecayDescriptor = 'Proton' )
-
-# configure particle maker: 
-maker  = particleMaker ( algorithm , NoPIDsParticleMaker ) 
-maker.Particle = 'proton'  
-maker.UseLongTracks = False;
-maker.UseDownstreamTracks = True;
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownProtons'         ,
+                                DecayDescriptor = 'Proton' ,
+                                Particle = 'proton', 
+                                UseLongTracks = False,
+                                 UseDownstreamTracks = True)
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
