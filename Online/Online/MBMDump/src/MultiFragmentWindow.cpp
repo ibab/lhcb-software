@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MultiFragmentWindow.cpp,v 1.6 2009-04-22 11:40:52 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MultiFragmentWindow.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Id: MultiFragmentWindow.cpp,v 1.6 2009-04-22 11:40:52 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -34,7 +34,7 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   ::sprintf(txt,"Multi event fragment with partition ID: %4X",mf->partitionID());
   addComment(C_COM1,txt);
   addComment(C_COM2,"    Size Packing  EidH Start      End");
-  ::sprintf(txt," %7ld %7ld %5d 0x%8p 0x%8p",
+  ::sprintf(txt," %7ld %7ld %5d %10p %10p",
     long(mf->size()),long(mf->packing()),mf->eventID(),mf->start(),mf->end());
   addComment(C_COM2,txt);
   RTL::IPHeader* ip = (RTL::IPHeader*)mf->ipHeader();
@@ -52,7 +52,7 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   addComment(C_COM10,"+-----------------------------------------+");
   int cnt = 0;
   for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f), ++cnt) {
-    ::sprintf(txt,"%3d:%7ld %5d 0x%8p 0x%8p",
+    ::sprintf(txt,"%3d:%7ld %5d %10p %10p",
 	      cnt,long(f->size()),f->eventID(),f->start(),f->end());
     addCommand(C_FRAGS+cnt,txt);
   }
@@ -84,7 +84,7 @@ void MultiFragmentWindow::handleMenu(int cmd_id)    {
         int cnt = C_FRAGS;
         for (f = m_frag->first(); f<m_frag->last(); f=m_frag->next(f), ++cnt) {
           if ( cmd_id == cnt )   {
-            output("Found MEP Fragment:Size:%7d EID:%5d Start:0x%8p End:0x%8p",
+            output("Found MEP Fragment:Size:%7d EID:%5d Start:%10p End:%10p",
               f->size(),f->eventID(),f->start(),f->end());
             replace(m_fragWindow,new FragmentWindow(this,cmd_id,m_fmt,f));
             return;

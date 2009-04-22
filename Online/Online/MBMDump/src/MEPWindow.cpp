@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MEPWindow.cpp,v 1.8 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MEPWindow.cpp,v 1.9 2009-04-22 11:40:52 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MEPWindow.cpp,v 1.8 2008-02-12 17:15:24 frankb Exp $
+// $Id: MEPWindow.cpp,v 1.9 2009-04-22 11:40:52 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -47,7 +47,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
       addComment(C_COM7,"| #    Size Packing  EidH Start      End           |");
       addComment(C_COM8,"+--------------------------------------------------+");
     }
-    sprintf(txt,"%3d:%7ld %7ld %5d 0x%8p 0x%8p",
+    sprintf(txt,"%3d:%7ld %7ld %5d %10p %10p",
       cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
     addCommand(C_MULTIFRAGS+cnt,txt);
   }
