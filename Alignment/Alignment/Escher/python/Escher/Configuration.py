@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2009-04-17 13:04:56 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-04-22 09:42:39 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -11,6 +11,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment )
 
+from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
 
 ## @class Escher
 #  Configurable for Escher application
@@ -24,6 +25,7 @@ class Escher(LHCbConfigurableUser):
     ## Default main sequences for real and simulated data
     DefaultSequence = [   "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
+                        , ConfiguredTrackMonitorSequence()
 			, GaudiSequencer("AlignSequence") ]
 
     
@@ -305,11 +307,10 @@ class Escher(LHCbConfigurableUser):
         self.defineEvents()
         self.defineOptions()
         log.info( self )
+        log.info( LHCbApp() )
         log.info( RecSysConf() )
         log.info( TrackSys() )
         log.info( TAlignment() )
-        log.info( RecSysConf() )
-        log.info( LHCbApp() )
         GaudiKernel.ProcessJobOptions.PrintOff()
 
         from GaudiKernel.Configurable import appendPostConfigAction
