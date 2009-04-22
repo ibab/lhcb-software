@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.34 2009-04-21 18:36:08 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.35 2009-04-22 09:14:11 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -77,7 +77,7 @@ public:
   virtual StatusCode getEventInput() = 0;
 
   /// set InputLocations (fro DVAlgorithm)
-  virtual StatusCode setInputLocations(const std::vector<std::string> & ) = 0 ;
+  virtual StatusCode setInputLocations(const std::vector<std::string> &) = 0 ;
 
   /// Retrieve the local particle container
   virtual const LHCb::Particle::ConstVector& particles() const = 0;

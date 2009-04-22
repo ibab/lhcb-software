@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.47 2009-04-21 18:36:08 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.48 2009-04-22 09:14:11 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -176,6 +176,7 @@ StatusCode DVAlgorithm::initialize ()
   // initialize the base  
   StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }                          // RETURN
+  if (msgLevel(MSG::DEBUG)) debug() << "GaudiTupleAlg is initialized" <<endmsg ;
 
   if ( !registerContext() || 0 == contextSvc() ) 
   {
@@ -212,8 +213,7 @@ StatusCode DVAlgorithm::loadTools()
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading tools" << endmsg;
   
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop" << endmsg;
-  desktop();
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with locations " << m_inputLocations << endmsg;
   desktop()->setInputLocations(m_inputLocations);
   
   // vertex fitter
