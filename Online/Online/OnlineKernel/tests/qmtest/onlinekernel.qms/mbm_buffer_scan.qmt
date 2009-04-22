@@ -2,7 +2,7 @@
 
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>test.exe</text></argument>
-  <argument name="args"><set><text>mbm_simple_test</text></set></argument>
+  <argument name="args"><set><text>mbm_buffer_scan</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/mbm_simple_test.ref</text></argument>
+  <argument name="reference"><text>../refs/mbm_buffer_scan.ref</text></argument>
 </extension>

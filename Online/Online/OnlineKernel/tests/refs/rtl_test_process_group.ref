@@ -1,7 +1,11 @@
-Starting process:SLEEPER_1
-Starting process:SLEEPER_3
+Child: Starting process:SLEEPER_1
+Parent: Started process:SLEEPER_1
+Child: Starting process:SLEEPER_2
+Parent: Started process:SLEEPER_2
+Child: Starting process:SLEEPER_3
+Parent: Started process:SLEEPER_3
 Stop process SLEEPER_2
-Process SLEEPER_2 ended.
-Process SLEEPER_1 ended.
-Process SLEEPER_3 ended.
+Process SLEEPER_2 ended. Status=15
+Process SLEEPER_1 ended. Status=0
+Process SLEEPER_3 ended. Status=0
 All processes ended

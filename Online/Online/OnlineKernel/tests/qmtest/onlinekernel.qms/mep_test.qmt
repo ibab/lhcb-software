@@ -4,4 +4,5 @@
   <argument name="program"><text>test.exe</text></argument>
   <argument name="args"><set><text>mep_test</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="reference"><text>../refs/mep_test.ref</text></argument>
 </extension>

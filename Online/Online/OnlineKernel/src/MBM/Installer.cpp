@@ -58,7 +58,7 @@ int MBM::Installer::optparse (const char* c)  {
       ::lib_rtl_output(LIB_RTL_ERROR,"Error reading buffer size parameter\n");
       throw std::runtime_error("Error reading buffer size parameter");
     }
-    p_size = ((p_size+1)>>1)<<1;
+    p_size = (p_size>>1)<<1;
     break;
   case 'e':            /*      maximum events        */   
     iret = sscanf(c+1,"=%d",&p_emax);
@@ -130,7 +130,7 @@ int MBM::Installer::install()  {
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
   ::memset(m_bm->ctrl,0,sizeof(CONTROL));
   m_bm->ctrl->shift_p_Bit = p_bits;
-  m_bm->ctrl->bytes_p_Bit = (1<<p_bits)-1;
+  m_bm->ctrl->bytes_p_Bit = (1<<p_bits);
   ::lib_rtl_output(LIB_RTL_INFO,"Control: %p  %08X             [%d Bytes]\n",(void*)m_bm->ctrl,
            ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
 
@@ -162,15 +162,16 @@ int MBM::Installer::install()  {
   ::lib_rtl_output(LIB_RTL_INFO,"Event:   %p  %08X  %p   [%d Bytes]\n",(void*)m_bm->event,
            ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
 
-  len = ((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3;
+  len = (((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3);
   status = ::lib_rtl_create_section(bitmap_mod,len,&m_bm->bitm_add);
-  if(!::lib_rtl_is_success(status))   {   
+  if(!::lib_rtl_is_success(status))   {
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::lib_rtl_delete_section(m_bm->user_add);
     ::lib_rtl_delete_section(m_bm->event_add);
     ::lib_rtl_output(LIB_RTL_ERROR,"Cannot create section %s. Exiting....",bitmap_mod);
     return status;
   }
+  len = ((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3;
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
   ::memset(m_bm->bitmap,0,len);
   ::lib_rtl_output(LIB_RTL_INFO,"Bitmap:  %p  %08X             [%d Bytes]\n",(void*)m_bm->bitmap,

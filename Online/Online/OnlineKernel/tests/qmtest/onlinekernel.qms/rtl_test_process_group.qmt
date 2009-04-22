@@ -4,4 +4,5 @@
   <argument name="program"><text>test.exe</text></argument>
   <argument name="args"><set><text>rtl_test_process_group</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="reference"><text>../refs/rtl_test_process_group.ref</text></argument>
 </extension>

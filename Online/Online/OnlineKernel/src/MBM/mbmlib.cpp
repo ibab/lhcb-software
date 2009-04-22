@@ -91,6 +91,8 @@ static int CONTROL_ev_off;
 static RTL_ast_t _mbm_wes_ast_add = 0;
 static int disable_rundown=0;
 
+//#define MBM_PRINT 1
+
 #ifndef MBM_PRINT
 inline int _mbm_printf(const char* , ...)  {  return 1;   }
 #else
@@ -394,7 +396,19 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   reference_count++;
   errno = 0;
   _mbm_unlock_tables(bm.get());
+  CONTROL* c = bm->ctrl;
   _mbm_printf("MBM: %s is now included in %s\n",name, bm_name);
+  _mbm_printf("MBM: %s:%s Control: %p  %08X \n",name,bm_name,(void*)c,(void*)0);
+  _mbm_printf("MBM: %s:%s Event:   %p  %08X \n",name,bm_name,(void*)bm->event,
+	      ((char*)bm->event)-((char*)c));
+  _mbm_printf("MBM: %s:%s User:    %p  %08X \n",name,bm_name,(void*)bm->user,
+	      ((char*)bm->user)-((char*)c));
+  _mbm_printf("MBM: %s:%s Bitmap:  %p  %08X [%d bits]\n",name,bm_name,(void*)bm->bitmap,
+	      ((char*)bm->bitmap)-((char*)c), c->bm_size);
+  _mbm_printf("MBM: %s:%s Buffer:  %p -> %p %08X [%d Bytes]\n",name,bm_name,(void*)bm->buffer_add,
+	      ((char*)bm->buffer_add)+c->buff_size,
+	      ((char*)bm->buffer_add)-((char*)c), c->buff_size);
+
   return bm.release();
 }
 
@@ -848,8 +862,8 @@ int _mbm_check_freqmode (BMID bm)  {
 // try to get space ...
 int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
   CONTROL *ctrl = bm->ctrl;
-  char *bitmap = bm->bitmap;
-  int shift = ctrl->shift_p_Bit;
+  char *bitmap  = bm->bitmap;
+  int shift     = ctrl->shift_p_Bit;
   int bit, nbit = (size + ctrl->bytes_p_Bit) >> shift;  // round size to block
   ctrl->last_alloc = 0;
   //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),nbit,&bit);
@@ -858,17 +872,21 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
     int status = BF_alloc(bitmap,ctrl->bm_size,nbit,&bit);
   //}
   if (lib_rtl_is_success(status))  {
-    _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
+    _mbm_printf("%s Allocated %d bits at position %d -> %d [Max:%d]",bm->bm_name,nbit,bit,bit+nbit,ctrl->bm_size);
     bit += ctrl->last_alloc<<3 ;
     _mbm_printf(" [%d] \n", bit);
     ctrl->last_alloc  = (bit+nbit)>>3;
     ctrl->last_bit = bit;
     ctrl->i_space -= nbit;
-    us->ws_ptr = (bit << ctrl->shift_p_Bit);
     *ptr = (int*)(bm->buffer_add + (bit << shift));
+    us->ws_ptr     = bit  << shift;
     us->space_add  = bit  << shift;    // keep space info
     us->space_size = nbit << shift;
-    _mbm_printf("Got space: %08X %d Bytes\n",us->ws_ptr, size);
+    _mbm_printf("Got space: %08X / %p  %p -> %p end:%p [req:%d got:%d Bytes]\n",us->ws_ptr,bm->buffer_add,
+		((char*)bm->buffer_add)+us->ws_ptr,
+		((char*)bm->buffer_add)+us->space_add+size,
+		((char*)bm->buffer_add)+us->space_add+us->space_size,
+		size,us->space_size);
     return MBM_NORMAL;
   }
   return MBM_NO_ROOM;
@@ -2038,10 +2056,6 @@ int _mbm_map_sections(BMID bm)  {
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  //::lib_rtl_output(LIB_RTL_DEBUG,"Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
-  //::lib_rtl_output(LIB_RTL_DEBUG,"User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
-  //::lib_rtl_output(LIB_RTL_DEBUG,"Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
-  //::lib_rtl_output(LIB_RTL_DEBUG,"Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
   bm->buffer_add  = (char*)bm->buff_add->address;
   bm->bitmap_size = bm->ctrl->bm_size;
   bm->buffer_size = bm->ctrl->buff_size;

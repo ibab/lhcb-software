@@ -4,4 +4,5 @@
   <argument name="program"><text>test.exe</text></argument>
   <argument name="args"><set><text>mbm_full_test</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="reference"><text>../refs/mbm_full_test.ref</text></argument>
 </extension>

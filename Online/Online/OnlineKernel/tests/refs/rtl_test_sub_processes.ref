@@ -25,10 +25,10 @@ SLEEPER_6    arg0:rtl_test_process_sleep
 SLEEPER_6    arg1:7
 SLEEPER_6    Process sleeping for 7 seconds.
 RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
-Process SLEEPER_2 ended.
-Process SLEEPER_4 ended.
-Process SLEEPER_6 ended.
-Process SLEEPER_1 ended. output redirected to:/dev/null
-Process SLEEPER_3 ended. output redirected to:/dev/null
-Process SLEEPER_5 ended. output redirected to:/dev/null
+Process SLEEPER_2 ended. Status=0
+Process SLEEPER_4 ended. Status=0
+Process SLEEPER_6 ended. Status=0
+Process SLEEPER_1 ended. Status=0 output redirected to:/dev/null
+Process SLEEPER_3 ended. Status=0 output redirected to:/dev/null
+Process SLEEPER_5 ended. Status=0 output redirected to:/dev/null
 All processes ended
