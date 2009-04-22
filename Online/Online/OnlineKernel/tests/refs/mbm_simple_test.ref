@@ -6,8 +6,8 @@ Starting producer ......
 Parent: Started process:Prod_0 output redirected to:/dev/null
 waitpid() exited: Status=1
 Producer finished work..
-Child: Starting process:Summary_0
 Parent: Started process:Summary_0
+Child: Starting process:Summary_0
 +++++ MBM buffer section sucessfully mapped.
 
 ======================== MBM Bufer summary for buffer "0" ========================

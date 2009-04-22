@@ -113,6 +113,7 @@ int Process::start()    {
     for(e=environ,cnt=0; *e; ++e) env[++cnt] = *e;
     env[++cnt] = 0;
     if ( Process::debug() ) {
+      ::lib_rtl_sleep(10);
       cout << "Child: Starting process:" << m_name;
       //cout << " PID:" << ::lib_rtl_pid();
       if ( !m_output.empty() ) cout << " output redirected to:" << m_output;

@@ -1,12 +1,12 @@
 Parent: Started process:SLEEPER_1 output redirected to:/dev/null
-Child: Starting process:SLEEPER_2
 Parent: Started process:SLEEPER_2
 Parent: Started process:SLEEPER_3 output redirected to:/dev/null
-Child: Starting process:SLEEPER_4
 Parent: Started process:SLEEPER_4
 Parent: Started process:SLEEPER_5 output redirected to:/dev/null
-Child: Starting process:SLEEPER_6
 Parent: Started process:SLEEPER_6
+Child: Starting process:SLEEPER_2
+Child: Starting process:SLEEPER_4
+Child: Starting process:SLEEPER_6
 Stop process SLEEPER_2
 SLEEPER_2    Process starting...
 SLEEPER_2    arg0:rtl_test_process_sleep
