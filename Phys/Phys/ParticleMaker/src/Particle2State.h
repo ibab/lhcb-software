@@ -1,4 +1,4 @@
-// $Id: Particle2State.h,v 1.3 2008-04-15 16:14:26 jpalac Exp $
+// $Id: Particle2State.h,v 1.1 2009-04-22 08:53:28 pkoppenb Exp $
 #ifndef PARTICLE2STATE_H 
 #define PARTICLE2STATE_H 1
 

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.93 2009-04-21 19:15:40 pkoppenb Exp $ 
+! $Id: release.notes,v 1.94 2009-04-22 08:53:28 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2009-04-22 - Patrick Koppenburg
+ - Move Particle2State from DaVinciTools
 
 ! 2009-04-21 - Patrick Koppenburg
  - Translated all ParticleMaker tools to algorithms
@@ -14,7 +17,6 @@
 !======================== ParticleMaker v4r4 2009-04-21 ===================
 ! 2008-04-21 - Olivier Deschamps 
  - Photon/MergedPi0/ResolvedPi0Maker.cpp : move to LHCb::(I)ParticlePropertySvc
-
 
 !======================== ParticleMaker v4r3 2009-04-08 ===================
 

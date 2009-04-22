@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.419 2009-04-21 18:39:56 pkoppenb Exp $
+! $Id: release.notes,v 1.420 2009-04-22 08:52:06 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-04-22 - Patrick Koppenburg
+ - Move Particle2State to ParticleMaker
 
 ! 2009-04-21 - Patrick Koppenburg
  - PhysDesktop : set InputLocations from DVAlgorithm.
