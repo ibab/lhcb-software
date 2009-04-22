@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.56 2009-04-21 18:39:56 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.57 2009-04-22 09:19:51 pkoppenb Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -88,7 +88,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
     m_OnOffline      (0),
     m_p2VtxTable(),
     m_pvRelator(0),
-    m_pvRelatorName("")
+    m_pvRelatorName(""),
+    m_inputLocationsSet(false)
 {
 
   // Declaring implemented interfaces
@@ -625,6 +626,11 @@ StatusCode PhysDesktop::getEventInput(){
 
   // Retrieve Particles & Vertices from all previous processing
   // as specified in jobOptions
+
+  if (!m_inputLocationsSet){
+    return Error("InputLocations have not been set. Call setInputLocations from parent!");
+  }
+  
   if (!m_inputLocations.empty()) {
     StatusCode sc = getParticles();
     if (!sc) return sc;
@@ -870,10 +876,54 @@ void PhysDesktop::overWriteRelations(Particle2Vertex::Range::const_iterator begi
     }
   }
 }
+//=========================================================================
+//  set InputLocations
+//=========================================================================
+StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_il) {
+  m_inputLocationsSet = true ;
+  
+  if (msgLevel(MSG::DEBUG)){
+    debug() << "InputLocations from PhysDesktop (" << m_inputLocations.size() << ") : " << m_inputLocations << endmsg ;
+    debug() << "InputLocations from DVAlgorithm (" << dv_il.size() << ") : " << dv_il << endmsg ;
+  }
+  
+  if ( !m_inputLocations.empty()){
+    if (!dv_il.empty()){
+      return Error("You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix you options.");
+    } else {
+      IInterface* p = const_cast<IInterface*>( this->parent() ) ;
+      std::string n = "MyAlgorithm" ;
+      if ( 0 != p) n = nameFromInterface ( p ) ;
+      Warning("You have set the InputLocations from the PhysDesktop");
+      warning() << "Change your options to " << endmsg;
+      warning() << n << ".InputLocations =  " << m_inputLocations << endmsg ;
+    }
+  } else { // inputLoactions is empty
+    m_inputLocations = dv_il ;
+  }
+
+  // Check if InputLocation has been set
+  if ( m_inputLocations.empty() ){
+    debug() << "No inputLocations defined. Can only create Particles." << endmsg ;
+  } else {
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Particles and Vertices will be loaded from :- " << m_inputLocations << endreq ;
+    }
+  }
+  // set PV relation locations
+  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+        iloc != m_inputLocations.end(); ++iloc ) {
+    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
+  }
+
+  // set PV relation locations
+  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
+
+  return StatusCode::SUCCESS ;
+}
 //=============================================================================
 void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
-                                    std::vector<std::string>::iterator end)
-{
+                                    std::vector<std::string>::iterator end){
   const std::string& prefix = m_OnOffline->trunkOnTES();
  
   for (std::vector<std::string>::iterator loc = begin; loc!=end; ++loc) {
@@ -884,53 +934,5 @@ void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
       }
     }
   }
-
-}
-
-//=========================================================================
-//  set InputLocations
-//=========================================================================
-StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string> & il) {
-  if ( !m_inputLocations.empty()){
-    if (!il.empty()){
-      return Error("You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix you options.");
-    } else {
-      IInterface* p = const_cast<IInterface*>( this->parent() ) ;
-      std::string n = "MyAlgorithm" ;
-      if ( 0 != p) n = nameFromInterface ( p ) ;
-      Warning("You have set the InputLocations from the PhysDesktop");
-      warning() << "Change your options to " << endmsg;
-      warning() << n << ".InputLocations = [ " ;
-      for (std::vector<std::string>::const_iterator i = m_inputLocations.begin() ; i!= m_inputLocations.end() ; i++) {
-        warning() << *i << ", " ;
-      }
-      warning() << "]" << endmsg ;
-    }
-  } else { // inputLoactions is empty
-    m_inputLocations = il ;
-  }
-
-  // Check if InputLocation has been set
-  if ( m_inputLocations.empty() ){
-    debug() << "No inputLocations defined. Can only create Particles." << endmsg ;
-  } else {
-    if (msgLevel(MSG::DEBUG)) {
-      debug() << "Particles and Vertices will be loaded from :- "  << endreq ;
-      for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-            iloc != m_inputLocations.end(); ++iloc ){
-        debug() << "  -> " << *iloc ;
-      }
-      debug() << endreq ;
-    }
-  }
-
-  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-        iloc != m_inputLocations.end(); ++iloc ) {
-    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
-  }
-
-  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
-
-  return StatusCode::SUCCESS ;
 }
 //=============================================================================
