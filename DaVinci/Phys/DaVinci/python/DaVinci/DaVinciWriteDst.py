@@ -1,7 +1,7 @@
 """
 Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciWriteDst.py,v 1.3 2009-02-27 14:44:00 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.4 2009-04-22 15:51:00 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -54,8 +54,8 @@ class DaVinciWriteDst(ConfigurableUser):
         """
         log.info("DaVinciWriteDst::writeDst "+filename)
         stream = self.streamName(filename)
-        from Configurables import ApplicationMgr, LHCbInputCopyStream    # @todo Restore InputCopyStream when Gaudi v21r0 is out 
-        writer = LHCbInputCopyStream( stream )
+        from Configurables import ApplicationMgr, InputCopyStream  
+        writer = InputCopyStream( stream )
         ApplicationMgr().OutStream += [ writer ]
         writer.RequireAlgs = [ seq.getName() ]  # require the sequencer 
         writer.Output = "DATAFILE='PFN:" + filename + "' TYP='POOL_ROOTTREE' OPT='REC'"
