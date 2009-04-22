@@ -14,7 +14,10 @@ namespace Al
   class ConstraintDerivatives
   {
   public:
-    enum EConstraintDerivatives { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, Sxx, SRz, Trx, Try, Trtx, Trty, Cur, Sz2x, Sz2y, NumConstraints } ;
+    enum EConstraintDerivatives { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, Sxx, SRz, 
+				  Trx, Try, Trtx, Trty, Trcur, 
+				  PVx, PVy, PVz,
+				  Sz2x, Sz2y, NumConstraints } ;
     ConstraintDerivatives(size_t dim, const std::vector<std::string>& activeconstraints, const std::string& name="", int offset=0) ;
     AlMat& derivatives() { return m_derivatives ; }
     const AlMat& derivatives() const { return m_derivatives ; }
@@ -70,7 +73,7 @@ namespace Al
   
   const std::vector<std::string> ConstraintDerivatives::m_names 
   = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("Sxx")("SRz")
-    ("Trx")("Try")("Trtx")("Trty")("Trcur")("Sz2x")("Sz2y");
+    ("Trx")("Try")("Trtx")("Trty")("Trcur")("PVx")("PVy")("PVz")("Sz2x")("Sz2y");
   
 
   class AlignConstraintTool : public GaudiTool,  
@@ -340,10 +343,15 @@ namespace Al
 	      constraints->derivatives()(ConstraintDerivatives::Sxx,jpar) = thisweight * xweight * jacobian(0,j) ;
 	    }
 	    
-	    // Curvature constraint. The constraint is on the average per track.
+	    // Average track parameter constraint
 	    for(size_t trkpar=0; trkpar<5; ++trkpar) 
 	      constraints->derivatives()(ConstraintDerivatives::Trx+trkpar,jpar) 
 		= equations.element(elemindex).dStateDAlpha()(j,trkpar)/equations.numTracks() ;
+	    
+	    // Average PV position constraint
+	    for(size_t vtxpar=0; vtxpar<3; ++vtxpar) 
+	      constraints->derivatives()(ConstraintDerivatives::PVx+vtxpar,jpar) 
+		= equations.element(elemindex).dVertexDAlpha()(j,vtxpar)/equations.numVertices() ;
 	  }
 	} 
       }

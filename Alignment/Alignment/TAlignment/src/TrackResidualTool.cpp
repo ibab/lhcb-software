@@ -337,7 +337,6 @@ namespace Al
       // now create the 'sparce' matrix HCH
       size_t nummeasurements = measurementnodeindices.size() ;
       residuals->m_HCHElements.reserve( nummeasurements*(nummeasurements-1)/2) ;
-      residuals->m_residualStateCov.reserve( nummeasurements ) ;
       for(size_t irow=0; irow<nummeasurements; ++irow) {
 	size_t k = measurementnodeindices[irow] ;
 	assert(&(residuals->m_residuals[irow].node())==nodes[k]);
@@ -368,7 +367,7 @@ namespace Al
 	// now copy it into the trackresidual. need to be very carefull
 	// with signs here. use H = - dres/dstate. in fact, this the
 	// only place we need to know what the sign of the residual is.
-	residuals->m_residualStateCov.push_back( - correlationmatrix ) ;
+	residuals->m_residuals[irow].setResidualStateCov( - correlationmatrix ) ;
       }
       
       // Let's check the result

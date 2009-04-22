@@ -14,6 +14,7 @@ namespace LHCb {
 namespace Al
 {
   class ITrackResidualTool ;
+  struct TrackContribution ;
   
   class VertexResidualTool : public GaudiTool,  
 			     virtual public IVertexResidualTool,
@@ -40,9 +41,8 @@ namespace Al
     const Al::MultiTrackResiduals* compute(const TrackResidualContainer& tracks,
 					   const Gaudi::XYZPoint& vertexestimate) const ;
     // extrapolate the state in trackresiduals to position z
-    StatusCode extrapolate( const Al::TrackResiduals& track,
-			    double z, LHCb::State& state, 
-			    Al::TrackResiduals::ProjectionMatrix& dResidualdState) const ;
+    StatusCode extrapolate( const Al::TrackResiduals& trackin,
+			    double z, TrackContribution& trackout ) const ;
   private:
     ToolHandle<ITrackResidualTool> m_trackresidualtool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
@@ -73,7 +73,7 @@ namespace Al
 {
   
   DECLARE_TOOL_FACTORY( VertexResidualTool );
-  
+
   VertexResidualTool::VertexResidualTool(const std::string& type,
 				       const std::string& name,
 				       const IInterface* parent)
@@ -146,10 +146,6 @@ namespace Al
   const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::RecVertex& vertex,
 							 TrackContainer& tracks) const
   {
-//     std::cout << "compcorr, name of track selector: "
-// 	      << m_computeCorrelations << " "
-// 	      << m_trackselector->name() << " "
-// 	      << std::endl ;
     // loop over the list of vertices, collect tracks in the vertex
     const Al::MultiTrackResiduals* rc(0) ;
     TrackContainer usedtracks ;
@@ -186,18 +182,23 @@ namespace Al
 	tracks = unusedtracks ;
       } 
     } else {
-      warning() << "Did not find enough tracks in vertex"
-		<< vertex.tracks().size() << " " << tracks.size() << endreq ;
+      static int count(0) ;
+      if(++count<20)
+	warning() << "Did not find enough tracks in vertex"
+		  << vertex.tracks().size() << " " << tracks.size() << endreq ;
     }
     
     return rc ;
   }
 
   struct TrackContribution
-  {
+  { 
+    typedef std::vector< Gaudi::TrackProjectionMatrix > ProjectionMatrix ;
     const Al::TrackResiduals* trackresiduals ;
-    LHCb::State               inputstate ;
-    Al::TrackResiduals::ProjectionMatrix dResidualdState ;
+    LHCb::State               inputstate ;  // state at vertex before vertex fit
+    Gaudi::TrackSymMatrix     inputCovInv ; // inverse of cov matrix of that state
+    ProjectionMatrix residualStateCov ; // same as in the residuals, but now extrapolated to vertex state
+    ProjectionMatrix dResidualdState ;  // residualStateCov * C(vertex-state)^{-1}, just cached for speed
     size_t offset ;
   } ;
 
@@ -224,8 +225,8 @@ namespace Al
       TrackContribution tc ;
       tc.offset = numresiduals ;
       tc.trackresiduals = *itrack ;
-      StatusCode sc = extrapolate( **itrack, vertexestimate.z(), tc.inputstate, tc.dResidualdState ) ;
-      if( sc.isSuccess() ) {
+      StatusCode sc = extrapolate( **itrack, vertexestimate.z(), tc ) ;
+      if( sc.isSuccess() ) { 
 	states.push_back( tc ) ;
 	numresiduals += (*itrack)->size() ;
 	numexternalhits += (*itrack)->nExternalHits() ;
@@ -267,6 +268,12 @@ namespace Al
 	  Gaudi::TrackVector    deltaState = vertex.state(i).stateVector() - vertex.inputState(i).stateVector() ;
 	  Gaudi::TrackSymMatrix deltaCov   = vertex.state(i).covariance()  - vertex.inputState(i).covariance() ;
 
+	  // These are only needed to compute correlations with the reference state/vertex that we later use for the constraints.
+	  ROOT::Math::SMatrix<double,5,5> dStateOutDStateIn = states[i].inputCovInv * vertex.state(i).covariance() ;
+	  ROOT::Math::SMatrix<double,5,3> stateVertexCov = vertex.matrixA(i) * vertex.covMatrix() ;
+	  stateVertexCov += vertex.matrixB(i) * vertex.momPosCovMatrix(i) ;
+	  ROOT::Math::SMatrix<double,5,3> dVertexDStateIn = states[i].inputCovInv * stateVertexCov ;
+
 	  size_t ioffset = states[i].offset ;
 	  for(size_t irow = 0; irow<states[i].trackresiduals->size(); ++irow) {
 	    // copy the original residual
@@ -286,8 +293,53 @@ namespace Al
 			<< deltaCov << endreq ;
 	      computationerror = true ;
 	    }
-	  }
+	    // update also the covariance with reference state and
+	    // vertex. the math behind this is actually not entirely
+	    // trivial.
+	    res.setResidualStateCov( states[i].residualStateCov[irow] * dStateOutDStateIn ) ;
+	    res.setResidualVertexCov( states[i].residualStateCov[irow] * dVertexDStateIn ) ;
+	    /*
+	    for( size_t k=0; k<5; ++k) {
+	      double s = std::sqrt( res.V() * vertex.state(i).covariance()(k,k) ) ;
+	      if( std::abs( res.residualStateCov()(0,k) / s) > 1) {
+	      std::cout << "problem computing residual track covariance: "
+			  << k << " "
+			  << res.node().z() << " "
+			  << res.residualStateCov()(0,k) << " " << s << " "
+			  << "track cov: " << vertex.state(i).covariance()(k,k) << std::endl ;
+		//assert(0) ;
+	      }
+	    }
 
+	    bool anerror(false) ;
+	    for( size_t k=0; k<3; ++k)
+	      if( std::abs( res.residualVertexCov()(0,k) / std::sqrt( res.V() * vertex.covMatrix()(k,k) ) ) > 1 ) {
+		std::cout << "problem computing residual vertex covariance: "
+			  << res.node().z() << " "
+			  << k << " "
+			  << res.residualVertexCov()(0,k) << " "
+			  << std::sqrt( res.V() * vertex.covMatrix()(k,k) ) << std::endl ;
+		std::cout << "contributions: " ;
+		for( size_t l=0; l<5; ++l) 
+		  std::cout << states[i].residualStateCov[irow](0,l) * dVertexDStateIn(l,k) << " " ;
+		std::cout << std::endl ;
+
+		//assert(0) ;
+		anerror = true ;
+	      }
+	    // let;s chack the track-vertex correlation matrix actually make sense
+	    if(anerror) {
+	      std::cout << "delta-z: "
+			<< vertex.position().z() - vertexestimate.z() << std::endl ;
+	      ROOT::Math::SMatrix<double,5,3> statevertexcov = vertex.matrixA(i) * vertex.covMatrix() ;
+	      for( size_t k=0; k<5; ++k)
+		for (size_t l=0; l<3; ++l) 
+		  statevertexcov(k,l) /= std::sqrt( vertex.covMatrix()(l,l) * vertex.state(i).covariance()(k,k) ) ;
+	      std::cout << "statevertexcor: " << statevertexcov << std::endl ;
+	    }
+	    */
+	  }
+	  
 	  // loop over all existing entries of the per-track HCH and update
 	  for( Al::Residuals::CovarianceContainer::const_iterator 
 		 ielem = states[i].trackresiduals->m_HCHElements.begin() ;
@@ -344,8 +396,7 @@ namespace Al
   
   StatusCode VertexResidualTool::extrapolate( const Al::TrackResiduals& track,
 					      double z,
-					      LHCb::State& state,
-					      Al::TrackResiduals::ProjectionMatrix& dResidualdState ) const
+					      TrackContribution& tc ) const 
   {
     // Just to remind you, this is the covariance matrix for a state and its extrapolated state
     //
@@ -378,23 +429,26 @@ namespace Al
     
     // propagate the reference state and get the transport matrix
     Gaudi::TrackMatrix F ;
-    state = track.state() ;
-    StatusCode sc = m_extrapolator->propagate(state,z,&F) ;
+    tc.inputstate = track.state() ;
+    StatusCode sc = m_extrapolator->propagate(tc.inputstate,z,&F) ;
     if( sc.isSuccess() ) {
 
       // calculate the correlation
       // stateResidualCorrelation = convertToCLHEP(F) * track.m_stateResCov ;
       
-      // invert the covariance matrix
-      Gaudi::TrackSymMatrix Cinv = state.covariance() ;
-      bool OK = Gaudi::Math::invertPosDefSymMatrix( Cinv ) ;
+      // invert the covariance matrix. cache it for later use
+      tc.inputCovInv = tc.inputstate.covariance() ;
+      bool OK = Gaudi::Math::invertPosDefSymMatrix( tc.inputCovInv ) ;
       if(!OK) {
 	warning() << "Inversion error in VertexResidualTool::extrapolate" << endreq ;
 	sc = StatusCode::FAILURE ;
       } else {
-	dResidualdState.resize(track.size()) ;
-	for(size_t inode=0; inode<track.size(); ++inode)
-	  dResidualdState[inode] = ( track.residualStateCov()[inode] * ROOT::Math::Transpose(F) ) * Cinv ;
+	tc.residualStateCov.resize(track.size()) ;
+	tc.dResidualdState.resize(track.size()) ;
+	for(size_t inode=0; inode<track.size(); ++inode) {
+	  tc.residualStateCov[inode] = track.residuals()[inode].residualStateCov() *  ROOT::Math::Transpose(F) ;
+	  tc.dResidualdState[inode]  = tc.residualStateCov[inode] * tc.inputCovInv ;
+	}
       }
     } 
     return sc ;

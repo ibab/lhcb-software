@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.54 2009-01-21 16:22:49 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.55 2009-04-22 09:35:21 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -245,10 +245,12 @@ StatusCode AlignAlgorithm::execute() {
       }
     }
   }
-  if( selectedtracks.size() != nonoverlappingtracks.size() ) 
-    warning() << "Rejected " << selectedtracks.size() - nonoverlappingtracks.size() << " out of "
-	      << selectedtracks.size() << " tracks because of overlaps." << endreq ;
-
+  if( selectedtracks.size() != nonoverlappingtracks.size() ) {
+    static int count(0) ;
+    if(++count<20)
+      warning() << "Rejected " << selectedtracks.size() - nonoverlappingtracks.size() << " out of "
+		<< selectedtracks.size() << " tracks because of overlaps." << endreq ;
+  }
   selectedtracks = nonoverlappingtracks ;
   
 
@@ -347,16 +349,20 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	ROOT::Math::AssignSym::Evaluate(tmpsym,Transpose(deriv)*deriv ) ;
 	elementdata.m_d2Chi2DAlpha2 += (1/ ires->V() * ires->R() * 1/ ires->V() ) * tmpsym ;
          
-	// compute the derivative of the curvature, used for one of the
+	// compute the derivative of the track parameters, used for one of the
 	// canonical constraints:
 	//   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
 	//             = - 2 * dr/dalpha * V^{-1} * H * C
 	// This stil needs some work because I actually want the
 	// derivative to the first state.
-	const Gaudi::TrackSymMatrix& C = ires->node().state().covariance() ;
-	const Gaudi::TrackProjectionMatrix& H = ires->node().projectionMatrix() ;
-	const ROOT::Math::SMatrix<double,5,1> normalizeddrdstate = C*Transpose(H) / ires->V() ;
-	elementdata.m_dStateDAlpha += ROOT::Math::Transpose(normalizeddrdstate * deriv) ;
+	//
+	// Now we actually want x to be the reference state:
+	//  dxref/dxi = Cref,i * Ci^{-1} -->
+	//  dxref/dalpha = -2 * dr/dalpha * V^{-1} * cov( r_i, x_ref)
+	// The last object on the right is already stored in the residual class
+	elementdata.m_dStateDAlpha  += ROOT::Math::Transpose(deriv) * 1/ires->V() * ires->residualStateCov() ;
+	// Same for the vertex
+	elementdata.m_dVertexDAlpha += ROOT::Math::Transpose(deriv) * 1/ires->V() * ires->residualVertexCov() ;
       }
 
       // add V^{-1} R V^{-1} to the 2nd derivative for the offdiagonal entries

@@ -1,4 +1,4 @@
-// $Id: AlResiduals.h,v 1.5 2009-01-13 15:57:24 wouter Exp $
+// $Id: AlResiduals.h,v 1.6 2009-04-22 09:35:21 wouter Exp $
 #ifndef TRACKTOOLS_TrackResiduals_H 
 #define TRACKTOOLS_TrackResiduals_H 1
 
@@ -7,6 +7,7 @@
 
 // from TrackEvent
 #include "Event/Track.h"
+#include "Event/Node.h"
 #include "Kernel/LHCbID.h"
 #include <vector>
 
@@ -22,6 +23,8 @@ namespace Al
   class Residual1D
   {
   public:
+    typedef Gaudi::TrackProjectionMatrix TrackProjectionMatrix ;
+    typedef ROOT::Math::SMatrix<double,1,3> ResidualVertexMatrix ;
     Residual1D(const LHCb::Node& n, const AlignmentElement& e ) ;
     const LHCb::Node& node() const { return *m_node ; }
     const AlignmentElement& element() const { return *m_element ; }
@@ -32,12 +35,23 @@ namespace Al
     double chi2() const { return m_r*m_r/R() ; }
     void setHCH( double hch ) { m_HCH = hch ; }
     void setR( double r ) { m_r = r ; }
+    const TrackProjectionMatrix& H() const { return node().projectionMatrix() ; }
+    //TrackProjectionMatrix& residualStateCov() { return m_residualStateCov; }
+    const TrackProjectionMatrix& residualStateCov() const { return m_residualStateCov; }
+    void setResidualStateCov(const TrackProjectionMatrix& c) { m_residualStateCov = c ; }
+    
+    //ResidualVertexMatrix& residualVertexCov() { return m_residualVertexCov; }
+    const ResidualVertexMatrix& residualVertexCov() const { return m_residualVertexCov; }    
+    void setResidualVertexCov(const ResidualVertexMatrix& c ) { m_residualVertexCov  = c ; }
+
   private:
     const LHCb::Node* m_node ;
     const AlignmentElement* m_element ;
     double m_r ;
     double m_V ;
     double m_HCH ;
+    TrackProjectionMatrix m_residualStateCov ;  // correlation between residual and reference state
+    ResidualVertexMatrix  m_residualVertexCov ; // correlation between residual and vertex
   } ;
   
   struct CovarianceElement
@@ -87,11 +101,9 @@ namespace Al
     /// Standard constructor
     TrackResiduals(const LHCb::Track& track) : Residuals(track.chi2(), track.nDoF()) {}
     const LHCb::State& state() const { return m_state ; }
-    const ProjectionMatrix& residualStateCov() const { return m_residualStateCov ; }
   private:
     friend class TrackResidualTool ;
     LHCb::State m_state ;                  // most upstream state
-    ProjectionMatrix m_residualStateCov ;
   };
   
   class MultiTrackResiduals : public Residuals
