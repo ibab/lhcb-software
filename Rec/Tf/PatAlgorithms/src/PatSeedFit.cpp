@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.5 2009-04-20 06:46:56 cattanem Exp $
+// $Id: PatSeedFit.cpp,v 1.6 2009-04-22 13:09:00 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -128,7 +128,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
         return Error("No module found for OT hit!");
       }
 
-      LHCb::OTLiteTime otlitetime = m_otdecoder->time( otid );// *module ) ;
+      LHCb::OTLiteTime otlitetime = m_otdecoder->time( otid );
       Tf::OTHit* othit = new  Tf::OTHit( *module, otlitetime ) ;
       othits.push_back( othit) ;
       hits.push_back( new PatFwdHit( *othit ) ) ;
@@ -138,9 +138,13 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   if( hits.size() >= 4 ) {
     std::vector< PatFwdHit* > seedhits(4,static_cast<PatFwdHit*>(0)) ;
     size_t numStereo(0) ;
+
+    double n=0;
+
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
       ihit->setSelected(true) ;
       if( ihit->hit()->isX() ) {
+	n++;
           if( seedhits[0] == 0 ||
               ihit->hit()->zAtYEq0() < seedhits[0]->hit()->zAtYEq0() )
               seedhits[0] = ihit ;
@@ -157,28 +161,39 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
               seedhits[2] = ihit ;
       }
     }
-    //for(int i=0; i<4; ++i) seedhits[i] ;
+
 
     PatSeedTrack * pattrack = 
       new PatSeedTrack(seedhits[0],seedhits[1],seedhits[2],seedhits[3], m_zReference, m_dRatio, m_initialArrow ) ;
     
+    // save initial track parameters in case, internal fit fails later
+    double z0,bx,ax,cx,dx,ay,by;
+    pattrack->getParameters( z0, bx,ax, cx,dx,ay, by);
+
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
       if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) {
-	 updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
+	updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
 	pattrack->addCoord( ihit ) ;
       }
     }
+          
+    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false); 
+     
+    if(sc.isFailure()) {
+      Warning("First call to fitTrack failed", sc, 0).ignore();
+      pattrack->setParameters(z0, bx,ax, cx,dx,ay, by);
+    } else {
     
-    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
-    if(sc.isFailure()) Warning("First call to fitTrack failed", sc, 0).ignore();
-
-    BOOST_FOREACH( PatFwdHit* ihit, hits ) {
-    if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
-    updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
+      BOOST_FOREACH( PatFwdHit* ihit, hits ) {
+	if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
+	  updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
+      }
+      sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
+      if(sc.isFailure()) {
+	Warning("Second call to fitTrack failed", sc, 0).ignore();
+	pattrack->setParameters(z0, bx,ax, cx,dx,ay, by);      
+      }
     }
-
-    sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
-    if(sc.isFailure()) Warning("Second call to fitTrack failed", sc, 0).ignore();
     
     LHCb::State temp(Gaudi::TrackVector(pattrack->xAtZ(m_zReference), 
 					pattrack->yAtZ(m_zReference),
@@ -188,21 +203,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 
     double qOverP, sigmaQOverP;
     sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
-    /*
-    if(states.size()>0 && states.begin().location()<=LHCb::State::EndVelo) {
-      //success = m_momentumTool->calculate(&(track.firstState()), &temp, qOverP, sigmaQOverP, true) ;
-      //qOverP = -qOverP;
-      for(  std::vector<LHCb::State>::iterator istate = states.begin();
-	    istate != states.end(); ++istate) {
-	if(istate->location() <= LHCb::State::EndVelo) {
-	  istate->setQOverP( qOverP ) ;
-	  istate->setErrQOverP2(sigmaQOverP*sigmaQOverP) ;
-        }
-      }
-    }
-    */
-    //else success = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
-
+    
     if(sc.isFailure()) {
       // if our momentum tool doesn't succeed, we have to try ourselves
       qOverP = pattrack->curvature() ;
@@ -232,12 +233,11 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
     info() << "Not enough SEED hits! "<<hits.size()  << endmsg ;
   }
   
-  // deletthe hits
-  
+  // delete the hits
   BOOST_FOREACH( PatFwdHit* ihit, hits ) delete ihit ;
   BOOST_FOREACH( Tf::STHit* ihit, sthits ) delete ihit ;
   BOOST_FOREACH( Tf::OTHit* ihit, othits ) delete ihit ;
-  //std::cout<<states->size()<<std::endl;
+
   return StatusCode::SUCCESS ;
 }
 

@@ -1,4 +1,4 @@
-// $Id: PatSeedTrack.h,v 1.4 2008-08-26 09:57:02 mschille Exp $
+// $Id: PatSeedTrack.h,v 1.5 2009-04-22 13:09:00 smenzeme Exp $
 #ifndef PATSEEDTRACK_H
 #define PATSEEDTRACK_H 1
 
@@ -43,6 +43,28 @@ class PatSeedTrack {
     PatSeedTrack( const PatSeedTrack& other) { *this = other; }
 
     virtual ~PatSeedTrack( ); ///< Destructor
+
+    void getParameters( double& z0, double& bx, double &ax, double &cx, double& dx,
+			double& ay, double& by){
+      z0 = m_z0;
+      bx = m_bx;
+      ax = m_ax;
+      cx = m_cx;
+      dx = m_dx;
+      ay = m_ay;
+      by = m_by;
+    }
+
+    void setParameters (double z0, double bx, double ax, double cx, double dx,
+			double ay, double by){
+      m_z0 = z0;
+      m_bx = bx;
+      m_ax = ax;
+      m_cx = cx;
+      m_dx = dx;
+      m_ay = ay;
+      m_by = by;
+    }
 
     double z0() const { return m_z0; } ///< return reference z
     double xAtZEqZ0() const { return m_ax; } ///< return x at reference z
@@ -229,6 +251,7 @@ class PatSeedTrack {
     }
 
   protected:
+
 
   private:
     bool   m_valid;

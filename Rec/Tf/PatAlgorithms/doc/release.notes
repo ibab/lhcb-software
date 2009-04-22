@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-04-22 - Stephanie Hansmann-Menzemer
+  - make PatSeedFit save against unreasonable track input
 
 !========================== PatAlgorithms v3r17 2009-04-20 ===================
 ! 2009-04-20 - Marco Cattaneo

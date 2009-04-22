@@ -1,9 +1,10 @@
-// $Id: PatSeedFit.h,v 1.1 2009-03-04 15:13:22 smenzeme Exp $
+// $Id: PatSeedFit.h,v 1.2 2009-04-22 13:09:21 smenzeme Exp $
 #ifndef INCLUDE_PATSEEDFIT_H
 #define INCLUDE_PATSEEDFIT_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/IPatSeedFit.h"
+
 
 static const InterfaceID IID_PatSeedFit("PatSeedFit", 1, 0);
 
