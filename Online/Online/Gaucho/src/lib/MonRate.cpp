@@ -130,7 +130,9 @@ void MonRate::combine(MonObject * monObject) {
     return;
   }
   if (monObject->endOfRun() != this->endOfRun()){
-    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    //this is normal; after a fast run change the buffers are still full with 
+    //events from the previous run
+    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   MonProfile::combine(monObject);  

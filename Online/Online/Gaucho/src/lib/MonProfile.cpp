@@ -295,16 +295,8 @@ void MonProfile::splitObject(){
     delete []binSum;
   }
   binSum = new double[(nbinsx+2)];
-  //if (binErr != 0) delete []binErr;
-  //binErr = new double[(nbinsx+2)];
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
-
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  binErr[i] = ((double) (m_profile->GetBinError(i))); 
-  // msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
-  
-  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
@@ -312,9 +304,7 @@ void MonProfile::splitObject(){
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
-    //msg << MSG::DEBUG << "splitObject: binSum[i] = " << binSum[i] << " fot->fArray[i] = " << fot->fArray[i] << endreq;
-  }
-
+   }
 
   bBinLabelX = false;
   for (int i = 1; i < (nbinsx+1) ; ++i){
@@ -333,7 +323,6 @@ void MonProfile::splitObject(){
   }
 
   m_fDimension = fot->fDimension;
-  //ar & fot->fIntegral = m_fIntegral;
   m_fMaximum = fot->fMaximum;
   m_fMinimum = fot->fMinimum;
   m_fTsumw = fot->fTsumw;
@@ -360,10 +349,10 @@ void MonProfile::combine(MonObject * H){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-//  if (H->endOfRun() != this->endOfRun()){
- //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
- //   return;
- // }
+  if (H->endOfRun() != this->endOfRun()){
+    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    return;
+  }
   if (!isLoaded){
     copyFrom(H);
     return;

@@ -279,7 +279,7 @@ void MonH1D::combine(MonObject * H){
     return;
   }
   if (H->endOfRun() != this->endOfRun()){
-    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    msg <<MSG::DEBUG<<"Trying to combine two objects with different endOfRun flag failed." << endreq;
     return;
   }
   

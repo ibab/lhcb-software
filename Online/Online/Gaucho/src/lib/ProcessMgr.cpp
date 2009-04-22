@@ -101,6 +101,7 @@ void ProcessMgr::setUtgid(const std::string &utgid)
   m_nodeName = m_utgid.substr(0, first_us);
 }  
 
+
 void ProcessMgr::setPartitionName(const std::string &partitionName)
 {
   m_partitionName = partitionName;
@@ -381,10 +382,10 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
       }
       else if  ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) { //3rd level Adder (Top Level Adder)
-        if (nodeName.compare("Bridge")!=0) {
-          msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
-          continue;
-        }
+       // if (nodeName.compare("Bridge")!=0) {
+       //   msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
+       //   continue;
+      //  }
         // checking the nodename is not necessary because the bridges are already selected.
         // Then we only filter by subfarmName 
         std::string subfarmName = taskName;

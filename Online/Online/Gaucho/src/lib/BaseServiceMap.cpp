@@ -162,8 +162,8 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   }
   
   msg << MSG::DEBUG << "creating DimInfoMonObject " << termSvcName << endreq;
-  //msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
-  //msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
+  msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
+  msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
   
   m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
   //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
@@ -386,9 +386,9 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
     return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
   }
   else{
-   // return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
+   return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
    // for saver the partition is in the utgid position
-    return serviceName;
+   // return serviceName;
   }
 
 }    

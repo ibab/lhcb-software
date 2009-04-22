@@ -107,13 +107,15 @@ StatusCode UpdateAndReset::initialize() {
   
   taskName = "unknownTask";
   partName = "unknownPartition";
+  instancenumber = "1";
   
   if (3 == serviceParts.size()) {
     partName = serviceParts[0];
     taskName = serviceParts[1];
+    instancenumber = serviceParts[2];
     if (partName=="CALD0701") {
        partName="LHCb";
-       taskName = "Calib"+taskName;
+       taskName = "Calib"+taskName+"_"+instancenumber;
     }   
   }
   else if (4 == serviceParts.size()) {

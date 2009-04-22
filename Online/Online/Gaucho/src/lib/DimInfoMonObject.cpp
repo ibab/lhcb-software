@@ -69,7 +69,7 @@ bool DimInfoMonObject::createMonObject() {
     c = const_cast<char *>((const char*) m_dimInfo->getData());
     if ( 0 == m_noValidMonObject.compare(c)) {
       //msg << MSG::WARNING << "timeout trying to create  service "<< m_svcName << endreq;
-      msg << MSG::WARNING << m_noValidMonObject << ", for service "<< m_svcName << endreq;
+      msg << MSG::DEBUG << m_noValidMonObject << ", for service "<< m_svcName << endreq;
       return false;
     }
     //msg << MSG::DEBUG << "creating MonObject base" << endreq;
@@ -129,7 +129,7 @@ bool DimInfoMonObject::loadMonObject(){
     c = const_cast<char *>((const char*) m_dimInfo->getData());
     if ( 0 == m_noValidMonObject.compare(c)) {
       //msg << MSG::WARNING << "timeout trying to load  service "<< m_svcName << endreq;
-      msg << MSG::WARNING << m_noValidMonObject << ", for service "<< m_svcName << endreq;
+      msg << MSG::DEBUG << m_noValidMonObject << ", for service "<< m_svcName << endreq;
       return false;
     }
   
