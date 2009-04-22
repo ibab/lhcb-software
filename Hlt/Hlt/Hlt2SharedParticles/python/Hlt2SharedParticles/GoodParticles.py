@@ -9,20 +9,19 @@
 from Gaudi.Configuration import *
 from HltConf.HltLine import bindMembers
 from Configurables import FilterDesktop, PhysDesktop
+from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
 ##########################################################################
 # Prepare the Kaons -- pt cuts
 #
 Hlt2GoodKaons = FilterDesktop("Hlt2GoodKaons")
 Hlt2GoodKaons.addTool(PhysDesktop)
-Hlt2GoodKaons.PhysDesktop.InputLocations = [ "Hlt2Kaons" ]
+Hlt2GoodKaons.PhysDesktop.InputLocations = [ "Hlt2NoCutsKaons" ]
 Hlt2GoodKaons.Code = "(PT > 300.*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.05*mm)"
 ##########################################################################
 # Prepare the Pions -- pt cuts
 #
 Hlt2GoodPions = Hlt2GoodKaons.clone("Hlt2GoodPions")
-Hlt2GoodPions.PhysDesktop.InputLocations = [ "Hlt2Pions" ]
-
-
+Hlt2GoodPions.PhysDesktop.InputLocations = [ "Hlt2NoCutsPions" ]
 #
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
@@ -32,6 +31,6 @@ Hlt2GoodPions.PhysDesktop.InputLocations = [ "Hlt2Pions" ]
 
 __all__ = ( 'GoodKaons','GoodPions' )
 
-GoodKaons = bindMembers( None, [ Hlt2GoodKaons ] )
-GoodPions = bindMembers( None, [ Hlt2GoodPions ] )
+GoodKaons = bindMembers( None, [ NoCutsKaons, Hlt2GoodKaons ] )
+GoodPions = bindMembers( None, [ NoCutsPions, Hlt2GoodPions ] )
 

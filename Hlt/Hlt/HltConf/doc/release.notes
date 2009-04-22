@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.213 2009-04-17 13:54:41 graven Exp $ 
+! $Id: release.notes,v 1.214 2009-04-22 17:31:55 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-22 - Patrick Koppenburg
+ - Moved Basic Particles to Hlt2SharedParticles
+ - Use new ParticleMakers (requires today's version)
 
 ! 2009-04-16 - Gerhard Raven
  - add a VeloAlign Hlt1Line

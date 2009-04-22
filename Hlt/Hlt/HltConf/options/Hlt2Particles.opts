@@ -133,121 +133,7 @@ Hlt2ChargedProtoPAlg.UseMuonPID = true ;
 Hlt2ChargedProtoPAlg.UseVeloPID = false ;
 
 //---------------------------------------------------------------------
-// Charged Particles - Here make all to Pi and K
-//---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Pions",
-                              "PreLoadParticles/Hlt2Kaons" }; 
-
-Hlt2Pions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
-Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
-Hlt2Pions.DecayDescriptor = "Pion" ;
-
-Hlt2Kaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-Hlt2Kaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
-Hlt2Kaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
-Hlt2Kaons.DecayDescriptor = "Kaon" ;
-
-/* To get the RICH kaons
-Hlt2Kaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-Hlt2Kaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-Hlt2Kaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
-Hlt2Kaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
-Hlt2Kaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-Hlt2Kaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
-Hlt2Kaons.DecayDescriptor = "Kaon" ;
-*/
-
-//---------------------------------------------------------------------
-// Kaons using RICH HLT reco results
-//---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
-
-HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
-HltRichPIDsKaons.DecayDescriptor = "Kaon" ;
-
-//---------------------------------------------------------------------
-// Muons sequence
-//---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2Muons" } ;
-SeqHlt2Muons.IgnoreFilterPassed = true ;
-//---------------------------------------------------------------------
-// Muons from Long tracks
-//---------------------------------------------------------------------
-SeqHlt2Muons.Members += { "PreLoadParticles/Hlt2Muons" }; 
-Hlt2Muons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-Hlt2Muons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-Hlt2Muons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
-Hlt2Muons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON'" } ;
-Hlt2Muons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-Hlt2Muons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
-Hlt2Muons.DecayDescriptor = "Muon" ;
-
-/** not run anymore
-*
-* //---------------------------------------------------------------------
-* // Special case for muons from L0
-* //---------------------------------------------------------------------
-* #include "$HLTSYSROOT/options/Hlt2ObsoleteMuonsFromL0.opts"
-* //---------------------------------------------------------------------
-* /// Now merge muons    @todo : kill clones
-* //---------------------------------------------------------------------
-* SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
-* HltMuons.PhysDesktop.InputLocations = { "HltAlleyMuons", "HltForwardMuons" };
-*/
-
-//---------------------------------------------------------------------
-// Special case for electrons 
-//---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Electrons"};
-Hlt2Electrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-Hlt2Electrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-Hlt2Electrons.PhysDesktop.CombinedParticleMaker.Particles =  {"electron"} ;
-Hlt2Electrons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
-Hlt2Electrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
-Hlt2Electrons.DecayDescriptor = "Electron" ;
-
-
-//---------------------------------------------------------------------
-// Special case for neutrals (photons & pi0s)
-//---------------------------------------------------------------------
-SeqHlt2Neutrals.IgnoreFilterPassed = true;
-SeqHlt2Particles.Members += {"GaudiSequencer/SeqHlt2Neutrals"};
-SeqHlt2Neutrals.Members += { 
- "PreLoadParticles/Hlt2Photons",
- "PreLoadParticles/Hlt2MergedPi0s",
- "PreLoadParticles/Hlt2ResolvedPi0s"
-};
-//Make the photons
-Hlt2Photons.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-Hlt2Photons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker" ;
-Hlt2Photons.DecayDescriptor = "Gamma" ;
-Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"; 
-Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
-Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
-Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
-//Make the resolved Pi0s
-Hlt2ResolvedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker" ;
-Hlt2ResolvedPi0s.DecayDescriptor = "Pi0" ;
-Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.Input = "Hlt/ProtoP/Neutrals";
-Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.MassWindow = 30.* MeV;
-Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
-//Make the merged Pi0s
-Hlt2MergedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker" ;
-Hlt2MergedPi0s.DecayDescriptor = "Pi0" ;
-Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Input= "Hlt/ProtoP/Neutrals"; 
-Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.MassWindow = 60.* MeV;
-
-
-//---------------------------------------------------------------------
-// Special case for Vzero particles
+// Special case for Vzero particles  @todo TO BE REVISED
 //---------------------------------------------------------------------
 SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
 SeqHlt2VzeroLL.MeasureTime = true ;
@@ -274,7 +160,6 @@ Hlt2LambdaLLParticles.MakeKs = false ;
 Hlt2LambdaLLParticles.MakeLambda = true ;
 Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Hlt2Pions",
                                                     "Hlt2Protons"};
-
 
 Hlt2KsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
 Hlt2LambdaLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixe

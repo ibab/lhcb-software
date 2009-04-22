@@ -9,6 +9,7 @@
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, PhysDesktop
 from Hlt2SharedParticles.GoodParticles import GoodKaons
+from Hlt2SharedParticles.BasicParticles import NoCutsKaons
 from HltConf.HltLine import bindMembers
 
 __all__ = ( 'Phi2KK', 'UnbiasedPhi2KK' )
@@ -34,10 +35,10 @@ Phi2KK = bindMembers( None, [ GoodKaons, Hlt2SharedPhi2KK ] )
 ##
 Hlt2SharedUnbiasedPhi2KK = CombineParticles("Hlt2SharedUnbiasedPhi2KK")
 Hlt2SharedUnbiasedPhi2KK.addTool(PhysDesktop)
-Hlt2SharedUnbiasedPhi2KK.PhysDesktop.InputLocations = [ "Hlt2Kaons" ]
+Hlt2SharedUnbiasedPhi2KK.PhysDesktop.InputLocations = [ "Hlt2NoCutsKaons" ]
 Hlt2SharedUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 Hlt2SharedUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 
 Hlt2SharedUnbiasedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<20*MeV)"
 Hlt2SharedUnbiasedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 
-UnbiasedPhi2KK = bindMembers( None, [ GoodKaons, Hlt2SharedUnbiasedPhi2KK ] )
+UnbiasedPhi2KK = bindMembers( None, [ NoCutsKaons, Hlt2SharedUnbiasedPhi2KK ] )

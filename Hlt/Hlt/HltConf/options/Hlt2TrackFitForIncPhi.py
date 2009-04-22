@@ -66,20 +66,14 @@ Hlt2IncPhiTFChargedProtoPAlg.UseVeloPID = 0
 ######################################################################
 # Kalman fitted Charged Particles
 ######################################################################
-from Configurables import PreLoadParticles, NoPIDsParticleMaker
+from Configurables import NoPIDsParticleMaker
 from Configurables import CombinedParticleMaker, TrackSelector
 from Configurables import ProtoParticleCALOFilter
-Hlt2IncPhiTFKaons = PreLoadParticles('Hlt2IncPhiTFKaons')
+Hlt2IncPhiTFKaons = NoPIDsParticleMaker('Hlt2IncPhiTFKaons')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFKaons ]
 
-Hlt2IncPhiTFKaons.addTool(PhysDesktop)
-Hlt2IncPhiTFKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker"
-Hlt2IncPhiTFKaons.PhysDesktop.addTool(NoPIDsParticleMaker)
-Hlt2IncPhiTFKaons.PhysDesktop.NoPIDsParticleMaker.Inputs = [ "Hlt/ProtoP/TFChargedForIncPhi" ]
-Hlt2IncPhiTFKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "kaon"
-Hlt2IncPhiTFKaons.DecayDescriptor = "Kaon"
-
-
+Hlt2IncPhiTFKaons.Inputs = [ "Hlt/ProtoP/TFChargedForIncPhi" ]
+Hlt2IncPhiTFKaons.Particle = "kaon"
 
 ######################################################################
 # Kaons using RICH HLT reco results
@@ -129,19 +123,14 @@ Hlt2IncPhiRichChargedProtoPAlg.UseVeloPID = 0
 ######################################################################
 # Rich Charged Particles
 ######################################################################
-HltIncPhiRichPIDsKaons = PreLoadParticles('HltIncPhiRichPIDsKaons')
+HltIncPhiRichPIDsKaons = CombinedParticleMaker('HltIncPhiRichPIDsKaons')
 Hlt2IncPhiRichParticlesSeq.Members += [ HltIncPhiRichPIDsKaons ]
 
-HltIncPhiRichPIDsKaons.addTool(PhysDesktop)
-HltIncPhiRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker"
-HltIncPhiRichPIDsKaons.PhysDesktop.addTool(CombinedParticleMaker)
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = 0
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/RichChargedForIncPhi"
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = ["kaon"]
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(TrackSelector())
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = ["Long"]
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.addTool(ProtoParticleCALOFilter('Kaon'))
-HltIncPhiRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-1.0'"]
-HltIncPhiRichPIDsKaons.DecayDescriptor = "Kaon"
+HltIncPhiRichPIDsKaons.InputProtoParticles = "Hlt/ProtoP/RichChargedForIncPhi"
+HltIncPhiRichPIDsKaons.Particles = ["kaon"]
+HltIncPhiRichPIDsKaons.addTool(TrackSelector())
+HltIncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
+HltIncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
+HltIncPhiRichPIDsKaons.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-1.0'"]
 
 

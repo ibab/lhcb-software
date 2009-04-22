@@ -1,15 +1,18 @@
-$Id: release.notes,v 1.8 2009-04-21 21:27:31 spradlin Exp $
+$Id: release.notes,v 1.9 2009-04-22 17:30:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
-! Responsible : P. Koppenburg / G. Raven
+! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-04-22 - Patrick Koppenburg
+ - Added BasicParticles moved from HltConf options.
+ - Requires latest version of Phys/ParticleMaker
 
 ! 2009-Apr-21 - V. Gligorov and P. Spradlin
   - python/Hlt2SharedParticles/Topo*.py
     New development for the topological trigger.  Added shared particles for
     the topological channels.
-
 
 !========================== Hlt2SharedParticles v1r0 2009-04-13 ===================
 ! 2009-04-12 - V. Gligorov

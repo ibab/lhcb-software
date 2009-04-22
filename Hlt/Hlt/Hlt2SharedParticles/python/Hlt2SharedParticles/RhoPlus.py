@@ -11,6 +11,7 @@ from Gaudi.Configuration import *
 from Configurables import CombineParticles, PhysDesktop
 from HltConf.HltLine import bindMembers
 from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
+from Hlt2SharedParticles.BasicParticles import MergedPi0s, ResolvedPi0s
 
 __all__ = ( 'RhoPlus2PiPi0','RhoPlus2KPi0')
 
@@ -43,7 +44,7 @@ Hlt2SharedRhoPlus2KPi0.PhysDesktop.InputLocations = [ "Hlt2GoodKaons"
 Hlt2SharedRhoPlus2KPi0.DaughtersCuts.update(  { "K+" : "ALL" } )
 Hlt2SharedRhoPlus2KPi0.DaughtersCuts.pop( 'pi+' )
 
-
-RhoPlus2KPi0 = bindMembers( None, [ GoodKaons, GaudiSequencer('SeqHlt2Neutrals'), Hlt2SharedRhoPlus2KPi0 ])
-
+# @todo How do I best get Merged and Resolved in here ?
+# RhoPlus2KPi0 = bindMembers( None, [ GoodKaons, GaudiSequencer('SeqHlt2Neutrals'), Hlt2SharedRhoPlus2KPi0 ])
+RhoPlus2KPi0 = bindMembers( None, [ GoodKaons, MergedPi0s, ResolvedPi0s, Hlt2SharedRhoPlus2KPi0 ]) # NOT GOOD
 

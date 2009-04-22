@@ -8,6 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, GaudiSequencer, PhysDesktop
+from Hlt2SharedParticles.BasicParticles import Electrons
 from HltConf.HltLine import bindMembers
 
 __all__ = ( 'DiElectron'  )
@@ -22,4 +23,4 @@ Hlt2SharedDiElectron.DaughtersCuts = {"e+" : "(PT>800*MeV)"}
 Hlt2SharedDiElectron.CombinationCut = "(AM<6*GeV)"
 Hlt2SharedDiElectron.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 
-DiElectron           = bindMembers( None, [ Hlt2SharedDiElectron ] )
+DiElectron           = bindMembers( None, [ Electrons, Hlt2SharedDiElectron ] )
