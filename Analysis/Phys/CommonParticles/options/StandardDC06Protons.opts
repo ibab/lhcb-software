@@ -44,7 +44,6 @@ StdDC06TightProtonsSeq.MeasureTime = true;
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================
-StdDC06NoPIDsProtons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdDC06NoPIDsProtons.Particle =  "proton" ;
 StdDC06NoPIDsProtons.DecayDescriptor = "Proton" ;
 // ============================================================================

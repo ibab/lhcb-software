@@ -34,7 +34,6 @@ StdDC06TightMuonsSeq.MeasureTime = true;
 // NO PID, all tracks
 // ============================================================================
 // @to-do Check what NoPIDs does about track selection!!!
-StdDC06NoPIDsMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdDC06NoPIDsMuons.Particle =  "muon" ;
 StdDC06NoPIDsMuons.DecayDescriptor = "Muon" ;
 

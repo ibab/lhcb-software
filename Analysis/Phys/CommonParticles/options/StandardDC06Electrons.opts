@@ -34,7 +34,6 @@ StdDC06TightElectronsSeq.MeasureTime = true;
 // NO PID, all tracks
 // ============================================================================
 // @to-do Check what NoPIDs does about track selection!!!
-StdDC06NoPIDsElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdDC06NoPIDsElectrons.Particle =  "electron" ;
 StdDC06NoPIDsElectrons.DecayDescriptor = "Electron" ;
 
