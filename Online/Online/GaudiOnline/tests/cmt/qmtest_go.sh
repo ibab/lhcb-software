@@ -15,6 +15,6 @@ fi;
 rm -rf /dev/shm/* 2&>/dev/null
 . setup.sh 2&> /dev/null
 . preamble.sh 2&> /dev/null
-#  echo "Executing:   $args "
-eval ${args}
+  echo "Executing:   $args "
+#eval ${args}
 
