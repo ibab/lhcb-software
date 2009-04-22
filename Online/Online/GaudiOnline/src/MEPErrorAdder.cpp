@@ -270,7 +270,10 @@ MEPErrorAdder::ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<
 
   // If new size of data, we have to resize all published counters.
   int arraySize = curr->getSize()/sizeof(int64_t);
-  if (arraySize != m_nSrc) resetPublishedServices(arraySize);
+  if (arraySize != m_nSrc) { 
+	resetPublishedServices(arraySize);
+	m_log << MSG::INFO << " Received from " << subs->getName() << endmsg;
+  }
 
   int64_t * data = (int64_t*) curr->getData();
   int64_t diff;
@@ -615,7 +618,7 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/notReqPkt",m_subFarms[i].c_str());
 	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totWrongPartID",m_subFarms[i].c_str());
-	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
