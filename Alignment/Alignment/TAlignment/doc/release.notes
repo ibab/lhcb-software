@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-04-22 Wouter Hulsbergen
+ - added functionality to put contraint on movement of primary vertex
+
 ! 2009-04-17 Johan Blouw
  - small change to Configuration.py so that Velo M'pede style alignment does not use GAlign/TAConfig.
 
