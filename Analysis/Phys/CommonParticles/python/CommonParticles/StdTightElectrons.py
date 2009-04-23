@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightElectrons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdTightElectrons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdTightElectrons.py
 #  configuration file for 'Standard Loose Electrons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Tight Electrons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdTightElectrons' ,
@@ -26,8 +26,8 @@ from Configurables       import BremAdder
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdTightElectrons'          ,
-                                DecayDescriptor = 'Electron', Particles = [ 'electron' ] )
+algorithm =  CombinedParticleMaker ( 'StdTightElectrons',
+                                     Particle =  'electron'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

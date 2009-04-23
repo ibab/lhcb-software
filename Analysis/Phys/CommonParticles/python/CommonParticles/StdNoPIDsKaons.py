@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsKaons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdNoPIDsKaons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsKaons.py
 #  configuration file for 'Standard NoPIDs Kaons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Kaons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsKaons' ,
@@ -24,8 +24,7 @@ from Configurables         import NoPIDsParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsKaons'          ,
-                                   DecayDescriptor = 'Kaon',
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsKaons' ,
                                    Particle = 'kaon' )
 
 ## configure Data-On-Demand service 

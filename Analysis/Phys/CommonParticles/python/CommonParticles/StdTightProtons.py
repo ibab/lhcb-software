@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightProtons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdTightProtons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdTightProtons.py
 #  configuration file for 'Standard Tight Protons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Tight Protons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdTightProtons' ,
@@ -26,8 +26,7 @@ from Configurables       import ProtoParticleCALOFilter
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdTightProtons'          ,
-                                DecayDescriptor = 'Proton' , Particles = [ 'proton' ] )
+algorithm =  CombinedParticleMaker ( 'StdTightProtons', Particle =  'proton'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

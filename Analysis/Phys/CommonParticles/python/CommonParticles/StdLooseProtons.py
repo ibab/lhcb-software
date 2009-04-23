@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseProtons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdLooseProtons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseProtons.py
 #  configuration file for 'Standard Loose Protons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Protons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLooseProtons' ,
@@ -26,8 +26,8 @@ from Configurables       import ProtoParticleCALOFilter
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdLooseProtons'          ,
-                                DecayDescriptor = 'Proton' , Particles = [ 'proton' ] )
+algorithm =  CombinedParticleMaker ( 'StdLooseProtons',
+                                     Particle =  'proton'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsMuons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdNoPIDsMuons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsMuons.py
 #  configuration file for 'Standard NoPIDs Muons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Muons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsMuons' ,
@@ -24,8 +24,8 @@ from Configurables         import NoPIDsParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsMuons'          ,
-                                DecayDescriptor = 'Muon' , Particle = 'muon'  )
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsMuons'  ,
+                                   Particle = 'muon'  )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

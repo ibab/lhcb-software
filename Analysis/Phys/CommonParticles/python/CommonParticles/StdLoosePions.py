@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLoosePions.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdLoosePions.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoosePions.py
 #  configuration file for 'Standard Loose Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Pions'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdLoosePions' ,
@@ -26,8 +26,8 @@ from Configurables       import ProtoParticleCALOFilter
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdLoosePions'          ,
-                                DecayDescriptor = 'Pion' , Particles = [ 'pion' ] )
+algorithm =  CombinedParticleMaker ( 'StdLoosePions'  ,
+                                     Particle =  'pion'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 
