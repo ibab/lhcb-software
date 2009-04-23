@@ -39,6 +39,7 @@ if "__main__" == __name__ :
     # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h:
     classes += [ Rels.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
     classes += [ Rels.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
+    classes += [ Rels.Rel1D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
     
     classes += [ Rels.RelW2D ('LHCb::L0CaloCandidate' , 'LHCb::MCParticle'  , 'double' ) ]
     

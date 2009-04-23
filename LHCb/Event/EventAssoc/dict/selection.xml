@@ -1,14 +1,14 @@
-<!-- * $Id: selection.xml,v 1.14 2008-11-02 16:48:38 ibelyaev Exp $ 
+<!-- * $Id: selection.xml,v 1.15 2009-04-23 16:02:57 jpalac Exp $ 
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.14 $ 
+     * $CVS tag:$, version $Revision: 1.15 $ 
      * ========================================================================
 -->
 
 <!-- * @file
      *
      * The basic selection file to build the Reflex dictionaries
-     * @author ibelyaev 
-     * @date  2008-11-02 17:30:54.193984 
+     * @author jpalac 
+     * @date  2009-04-23 12:20:53.574717 
      * ========================================================================
 --> 
 
@@ -18,6 +18,9 @@
 
     <class name="LHCb::Relation1D<LHCb::MCVertex,LHCb::GenCollision>" 
            id="E8093ED0-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>" 
+           id="7B880798-0000-0000-0000-000000000000" />
 
     <class name="LHCb::Relation1D<LHCb::Track,float>" 
            id="C4411838-0000-0000-0000-000000000000" />
