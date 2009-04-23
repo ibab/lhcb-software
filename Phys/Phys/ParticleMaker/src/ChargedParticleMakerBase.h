@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMakerBase.h,v 1.1 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: ChargedParticleMakerBase.h,v 1.2 2009-04-23 14:49:25 pkoppenb Exp $
 #ifndef CHARGEDPARTICLEMAKERBASE_H 
 #define CHARGEDPARTICLEMAKERBASE_H 1
 
@@ -36,6 +36,8 @@ protected:
   const IParticle2State* p2s()const{return m_p2s;}
   ///  Track selector tool
   const ITrackSelector * trSel()const{return m_trSel;}
+  /// set particl eproperties for particle and for antiparticle  
+  StatusCode setPPs( const std::string& pid ) ;
   
 
 private:

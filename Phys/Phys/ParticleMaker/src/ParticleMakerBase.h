@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.h,v 1.2 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: ParticleMakerBase.h,v 1.3 2009-04-23 14:49:25 pkoppenb Exp $
 #ifndef PARTICLEMAKERBASE_H 
 #define PARTICLEMAKERBASE_H 1
 
@@ -43,8 +43,6 @@ public:
 protected:
   /// The method that each implementation should implement
   virtual StatusCode makeParticles(LHCb::Particle::Vector& ) = 0 ;
-  /// set particl eproperties for particle and for antiparticle  
-  StatusCode setPPs( const std::string& pid ) ;
 
   /// protoparticles
   const LHCb::ProtoParticles* protos(){
