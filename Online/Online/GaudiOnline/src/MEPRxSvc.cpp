@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.78 2009-03-30 09:10:17 dsvantes Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.79 2009-04-23 12:04:40 dsvantes Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -1058,7 +1058,8 @@ int MEPRxSvc::setupCounters() {
 
   // create cstring for source names
   std::string all_names = "";
-  for (unsigned i = 0; i < m_srcName.size(); ++i)  all_names = all_names + '\0' + m_srcName[i];
+  if (m_srcName.size()>0) all_names = m_srcName[0];
+  for (unsigned i = 1; i < m_srcName.size(); ++i)  all_names = all_names + '\0' + m_srcName[i];
   if (!(m_allNames = new char[all_names.size()+1]))
     return 1;
    ::memcpy(m_allNames, (const char *) all_names.data(), all_names.size() +1);
