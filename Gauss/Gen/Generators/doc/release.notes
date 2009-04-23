@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.147 2009-04-07 16:11:21 gcorti Exp $
+! $Id: release.notes,v 1.148 2009-04-23 16:45:11 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-04-23 - Patrick Robbe
+ - Add possibility to obtain Upsilon from higher mass states, in 
+   UpsilonDaughtersInLHCb 
 
 !====================== Generators v10r0 2009-04-07 ==========================
 ! 2009-04-07 - Gloria CORTI
