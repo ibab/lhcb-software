@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.38 2009-04-21 18:36:08 pkoppenb Exp $ 
+// $Id: DVAlgorithm.h,v 1.39 2009-04-23 12:47:57 pkoppenb Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -69,9 +69,6 @@ class IRelatedPVFinder;
  *  - <b>ParticleFilters</b> : the map for possible particle filters 
  *     @see IParticleFilter 
  *
- *  - <b>FilterCriteria</b>  : the map for possible particle filter criteria
- *     @see IFilterCriterion
- *
  *  - <b>ParticleCombiners</b> : the map for possible particle combiners
  *     @see IParticleCombiner
  *  
@@ -125,8 +122,11 @@ public:
   // Overridden from Gaudi Algorithm
   virtual StatusCode finalize ();  
 
-  // Overridden from Gaudi Algorithm
+  // Get decay descriptor
   std::string getDecayDescriptor(){return m_decayDescriptor;};  
+
+  // Set decay descriptor
+  void setDecayDescriptor(std::string dd){m_decayDescriptor = dd;};  
 
   /// Imposes an output location for desktop different from algo name
   /// Should be avoided!
@@ -242,16 +242,6 @@ public:
       ( name          , 
         m_filterNames , 
         m_filters     , this ) ;
-  }
-
-  /// Accessor for Filter Criterion Tool
-  inline IFilterCriterion* 
-  filterCriterion ( const std::string& name = "" ) const
-  {
-    return getTool<IFilterCriterion>
-      ( name             , 
-        m_criteriaNames  , 
-        m_criteria       , this ) ;
   }
 
   /// Accessor for ParticleCombiner tool
@@ -526,11 +516,6 @@ protected:
   ToolMap                                                       m_filterNames ;
   /// The actual map of "nickname -> tool" for Particle Filters 
   mutable GaudiUtils::VectorMap<std::string,IParticleFilter*>       m_filters ;
-  
-  /// Mapping of "nickname ->type/name" for Filter Criteria 
-  ToolMap                                                     m_criteriaNames ;
-  /// The actual map of "nickname -> tool" for Particle Filters 
-  mutable GaudiUtils::VectorMap<std::string,IFilterCriterion*>     m_criteria ;
   
   /// Mapping of "nickname ->type/name" for Particle Combiners
   ToolMap                                             m_particleCombinerNames ;

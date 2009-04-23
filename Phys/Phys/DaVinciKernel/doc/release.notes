@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.295 2009-04-22 09:14:11 pkoppenb Exp $
+!$Id: release.notes,v 1.296 2009-04-23 12:47:57 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-04-23 - Patrick Koppenburg
+ - More comments in DVAlgorithms
+ - Removed FilterCriteria
+ - added setDecayDescriptor(std::string)
 
 ! 2009-04-22 - Patrick Koppenburg
  - More debug printout in DVAlgorithm

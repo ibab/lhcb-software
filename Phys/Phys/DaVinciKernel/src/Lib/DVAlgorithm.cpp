@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.48 2009-04-22 09:14:11 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.49 2009-04-23 12:47:57 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -35,9 +35,6 @@ DVAlgorithm::DVAlgorithm
   //
   , m_filterNames           () 
   , m_filters               () 
-  //
-  , m_criteriaNames         () 
-  , m_criteria              () 
   //
   , m_particleCombinerNames ()
   , m_particleCombiners     ()
@@ -83,22 +80,20 @@ DVAlgorithm::DVAlgorithm
   m_vertexFitNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
   m_vertexFitNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
-  declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
+  declareProperty ( "VertexFitters"     , m_vertexFitNames, "Names of vertex fitters" ) ;
   //
   m_geomToolNames  [ "" ] = "GeomDispCalculator" ;
   m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
-  declareProperty ( "GeomTools"         , m_geomToolNames     ) ;
+  declareProperty ( "GeomTools"         , m_geomToolNames, "Names of geomery tools" ) ;
   //
-  declareProperty ( "CheckOverlapTool"  , m_checkOverlapName  ) ;
+  declareProperty ( "CheckOverlapTool"  , m_checkOverlapName, "Name of Overlap Tool"  ) ;
   //
-  declareProperty ( "WriteSelResultTool"  , m_writeSelResultName  ) ;
+  declareProperty ( "WriteSelResultTool"  , m_writeSelResultName, "Name of SelResult Writer Tool" ) ;
   //
   m_filterNames    [ "" ]        = "ParticleFilter" ;
-  declareProperty ( "ParticleFilters"   , m_filterNames       ) ;
+  declareProperty ( "ParticleFilters"   , m_filterNames, "Names of ParticleFilters"   ) ;
   // 
-  declareProperty ( "FilterCriteria"    , m_criteriaNames     ) ; // empty! 
-  // 
-  declareProperty ( "ReFitPVs"    , m_refitPVs     ) ; 
+  declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ; 
   m_particleCombinerNames [ ""              ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
@@ -106,7 +101,7 @@ DVAlgorithm::DVAlgorithm
   m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"   ;
   m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
   m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"       ;
-  declareProperty ( "ParticleCombiners"  , m_particleCombinerNames ) ;
+  declareProperty ( "ParticleCombiners"  , m_particleCombinerNames, "Names of particle combiners" ) ;
   //
   m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"   ;
   m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"   ;
@@ -116,13 +111,13 @@ DVAlgorithm::DVAlgorithm
   m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"      ;
   m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter" ;
   m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"         ;
-  declareProperty  ( "ParticleReFitters" , m_particleReFitterNames ) ;
+  declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
   //
   m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
   m_pvReFitterNames [ "PVReFitter" ] = "PVReFitter"         ;
   m_pvReFitterNames [ "Adaptive"   ] = "AdaptivePVReFitter" ;
   m_pvReFitterNames [ "Cheated"    ] = "CheatedPVReFitter"  ;
-  declareProperty  ( "PVReFitters" , m_pvReFitterNames ) ;
+  declareProperty  ( "PVReFitters" , m_pvReFitterNames, "Names of PV refitters" ) ;
   //
   m_massFitterNames [ ""     ] = "LoKi::MassFitter" ;
   m_massFitterNames [ "LoKi" ] = "LoKi::MassFitter" ;
@@ -152,11 +147,11 @@ DVAlgorithm::DVAlgorithm
     ( "DistanceCalculators" , m_distanceCalculatorNames , 
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
   //
-  declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "not specified" ) ;
-  declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false           ) ;
-  declareProperty ( "PrintSelResult"    , m_printSelResult    = false           ) ;
-  declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false           ) ;
-  declareProperty ( "PreloadTools"      , m_preloadTools      = true            ) ;
+  declareProperty ( "DecayDescriptor"   , m_decayDescriptor   = "", "Describes the decay" ) ;
+  declareProperty ( "AvoidSelResult"    , m_avoidSelResult    = false, "If true so Selresult is written" ) ;
+  declareProperty ( "PrintSelResult"    , m_printSelResult    = false , "If true SelResult is printed" ) ;
+  declareProperty ( "AvoidForcedOutput" , m_avoidEmptyOutput  = false , "If true TES location is written" ) ;
+  declareProperty ( "PreloadTools"      , m_preloadTools      = true, "If true all tools are pre-loaded in initialize" ) ;
   //
   // enforce the registration for algorithm context service
   setProperty ( "RegisterForContextService" , true ).ignore() ;
@@ -192,7 +187,7 @@ StatusCode DVAlgorithm::initialize ()
   if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
   
   if (msgLevel(MSG::DEBUG)){
-    if ( m_decayDescriptor == "not specified" )
+    if ( m_decayDescriptor == "" )
     { debug() << "Decay Descriptor string not specified"   << endmsg; } 
     else
     { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
@@ -409,7 +404,7 @@ StatusCode DVAlgorithm::fillSelResult () {
   myResult.setLocation( ("/Event/Phys/"+name()));
   if (msgLevel(MSG::VERBOSE)) verbose() << "SelResult location set to " << "/Event/Phys/"+name() 
                                         << endmsg;
-  myResult.setDecay(m_decayDescriptor);
+  myResult.setDecay(getDecayDescriptor());
 
   StatusCode sc = writeSelResult()->write(myResult);
     
