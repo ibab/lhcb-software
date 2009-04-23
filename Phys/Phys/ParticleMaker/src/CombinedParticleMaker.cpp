@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.33 2009-04-23 10:39:31 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.34 2009-04-23 14:51:46 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -67,7 +67,7 @@ StatusCode CombinedParticleMaker::initialize()
   if      ( m_pid == "pi+" ){ 
     toolType = m_piProtoFilter ;
     name = "Pion" ;
-  } else if ( m_pid == "mu-" ){  
+  } else if ( m_pid == "mu+" ){  
     toolType = m_muProtoFilter ;
      name = "Muon" ;
   }  else if ( m_pid == "K+" ){  
@@ -76,7 +76,7 @@ StatusCode CombinedParticleMaker::initialize()
   } else if ( m_pid == "p+" ){ 
     toolType = m_prProtoFilter ;
       name = "Proton" ;
-  } else if ( m_pid == "e-" ){ 
+  } else if ( m_pid == "e+" ){ 
     toolType = m_elProtoFilter ;
     name = "Electron" ;
   } else{
