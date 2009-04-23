@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichIFBAnalysis
+! Responsible : Chris Jones
+! Purpose     : Ross Young
+!-----------------------------------------------------------------------------
+
+! 2009-04-23 - Chris Jones
+ - First version. Split off from RichOnlineMonitors into its own package.
