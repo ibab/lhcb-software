@@ -24,33 +24,27 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightKaons/Vertices'      TYPE='GaudiSequencer/StdDC06TightKaonsSeq'"
 };
 StdDC06NoPIDsKaonsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsKaons" };
-StdDC06NoPIDsKaonsSeq.MeasureTime = true;
 StdDC06LooseKaonsSeq.Members  += { "CombinedParticleMaker/StdDC06LooseKaons" };
-StdDC06LooseKaonsSeq.MeasureTime  = true;
 StdDC06TightKaonsSeq.Members  += { "CombinedParticleMaker/StdDC06TightKaons" };
-StdDC06TightKaonsSeq.MeasureTime  = true;
 
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================
 StdDC06NoPIDsKaons.Particle =  "kaon" ;
-StdDC06NoPIDsKaons.DecayDescriptor = "Kaon" ;
 
 // ============================================================================
 // LOOSE long
 // ============================================================================
-StdDC06LooseKaons.Particles = {"kaon"} ;
+StdDC06LooseKaons.Particle = "kaon" ;
 StdDC06LooseKaons.TrackSelector.TrackTypes = {"Long"};
 StdDC06LooseKaons.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
-StdDC06LooseKaons.DecayDescriptor = "Kaon" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
-StdDC06TightKaons.Particles = {"kaon"} ;
+StdDC06TightKaons.Particle = "kaon" ;
 StdDC06TightKaons.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" };
 StdDC06TightKaons.TrackSelector.TrackTypes = {"Long"};
-StdDC06TightKaons.DecayDescriptor = "Kaon" ;
 
 // ============================================================================
 // The END 

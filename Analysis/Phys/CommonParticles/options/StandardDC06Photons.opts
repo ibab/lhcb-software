@@ -17,25 +17,18 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06LooseAllPhotons/Vertices'  TYPE='GaudiSequencer/StdDC06LooseAllPhotonsSeq'"
 };
 StdDC06LoosePhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LoosePhotons" };
-StdDC06LoosePhotonsSeq.MeasureTime = true;
 StdDC06LooseCnvPhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LooseCnvPhotons" };
-StdDC06LooseCnvPhotonsSeq.MeasureTime = true;
 StdDC06LooseAllPhotonsSeq.Members += { "PhotonMakerAlg/StdDC06LooseAllPhotons" };
-StdDC06LooseAllPhotonsSeq.MeasureTime = true;
 
 StdDC06LoosePhotons.PhotonMaker.ConvertedPhotons = false  ;
 StdDC06LoosePhotons.PhotonMaker.UnConvertedPhotons = true  ;
 StdDC06LoosePhotons.PhotonMaker.PtCut = 200.* MeV;
-StdDC06LoosePhotons.DecayDescriptor = "Gamma" ;
 
 StdDC06LooseCnvPhotons.PhotonMaker.ConvertedPhotons = true  ;
 StdDC06LooseCnvPhotons.PhotonMaker.UnConvertedPhotons = false  ;
 StdDC06LooseCnvPhotons.PhotonMaker.PtCut = 200.* MeV;
-StdDC06LooseCnvPhotons.DecayDescriptor = "Gamma" ;
 
 StdDC06LooseAllPhotons.PhotonMaker.ConvertedPhotons = true  ;
 StdDC06LooseAllPhotons.PhotonMaker.UnConvertedPhotons = true  ;
 StdDC06LooseAllPhotons.PhotonMaker.PtCut = 200.* MeV;
-StdDC06LooseAllPhotons.DecayDescriptor = "Gamma" ;
-
 

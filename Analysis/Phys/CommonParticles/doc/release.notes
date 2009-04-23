@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.121 2009-04-22 14:18:01 pkoppenb Exp $
+!$Id: release.notes,v 1.122 2009-04-23 10:58:35 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-04-23 - Patrick Koppenburg
+ - Fix DC06 particles for further changes in ParticleMaker
 
 ! 2009-04-22 - Patrick Koppenburg
  - Second step : updated the new particles in python

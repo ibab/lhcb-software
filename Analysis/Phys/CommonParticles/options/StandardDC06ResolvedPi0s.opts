@@ -10,10 +10,8 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06LooseResolvedPi0s/Particles'     TYPE='GaudiSequencer/StdDC06LooseResolvedPi0sSeq'"
 };
 StdDC06LooseResolvedPi0sSeq.Members += { "ResolvedPi0Maker/StdDC06LooseResolvedPi0s" };
-StdDC06LooseResolvedPi0sSeq.MeasureTime = true;
 
 StdDC06LooseResolvedPi0s.MassWindow = 30.* MeV;
 StdDC06LooseResolvedPi0s.PhotonMaker.PtCut = 200.*MeV;
-StdDC06LooseResolvedPi0s.DecayDescriptor = "Pi0" ;
 
 

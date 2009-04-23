@@ -24,34 +24,28 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightMuons/Vertices'      TYPE='GaudiSequencer/StdDC06TightMuonsSeq'"
 };
 StdDC06NoPIDsMuonsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsMuons" };
-StdDC06NoPIDsMuonsSeq.MeasureTime = true;
 StdDC06LooseMuonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseMuons" };
-StdDC06LooseMuonsSeq.MeasureTime = true;
 StdDC06TightMuonsSeq.Members += { "CombinedParticleMaker/StdDC06TightMuons" };
-StdDC06TightMuonsSeq.MeasureTime = true;
 
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================
 // @to-do Check what NoPIDs does about track selection!!!
 StdDC06NoPIDsMuons.Particle =  "muon" ;
-StdDC06NoPIDsMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================
 // LOOSE long
 // ============================================================================
-StdDC06LooseMuons.Particles = {"muon"} ;
+StdDC06LooseMuons.Particle = "muon" ;
 StdDC06LooseMuons.Muon.Selection = {"RequiresDet='MUON'" } ;
 StdDC06LooseMuons.TrackSelector.TrackTypes = {"Long"};
-StdDC06LooseMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
-StdDC06TightMuons.Particles = {"muon"} ;
+StdDC06TightMuons.Particle = "muon" ;
 StdDC06TightMuons.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" } ;
 StdDC06TightMuons.TrackSelector.TrackTypes = {"Long"};
-StdDC06TightMuons.DecayDescriptor = "Muon" ;
 
 // ============================================================================
 // The END 

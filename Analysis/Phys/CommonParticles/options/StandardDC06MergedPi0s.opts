@@ -12,6 +12,5 @@ DataOnDemandSvc.Algorithms += {
 
 
 StdDC06LooseMergedPi0s.MassWindow = 60.* MeV;
-StdDC06LooseMergedPi0s.DecayDescriptor = "Pi0" ;
 
 
