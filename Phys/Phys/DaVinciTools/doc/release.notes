@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.422 2009-04-23 12:44:24 pkoppenb Exp $
+! $Id: release.notes,v 1.423 2009-04-23 14:48:32 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -6,6 +6,7 @@
 
 ! 2009-04-23 - Patrick Koppenburg
  - Move MakeResonances to DaVinciFilter
+ - Shorter message in PhysDesktop
 
 ! 2009-04-22 - Patrick Koppenburg
  - Move Particle2State to ParticleMaker

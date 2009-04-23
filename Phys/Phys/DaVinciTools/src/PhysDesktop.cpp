@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.57 2009-04-22 09:19:51 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.58 2009-04-23 14:48:32 pkoppenb Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -895,8 +895,7 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
       std::string n = "MyAlgorithm" ;
       if ( 0 != p) n = nameFromInterface ( p ) ;
       Warning("You have set the InputLocations from the PhysDesktop");
-      warning() << "Change your options to " << endmsg;
-      warning() << n << ".InputLocations =  " << m_inputLocations << endmsg ;
+      warning() << "Change your options to `` " << n << ".InputLocations =  " << m_inputLocations << " ''" << endmsg ;
     }
   } else { // inputLoactions is empty
     m_inputLocations = dv_il ;
