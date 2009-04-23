@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-23 - Marco Cattaneo
+ - Update references for Brunel v34r5 fix
+
 ! 2009-04-22 - Marco Cattaneo
  - Adapt Configurable for correct inclusion of units.opts following removal of
    include from CaloMoniDst options
@@ -16,10 +19,6 @@ Purpose: LHCb reconstruction program
    . Additional histograms in TrackVertexMonitor
    . Fix to untested StatusCode in AlgTool::monitorSvc (Gaudi v21)
 
-! 2009-04-17 - Chris Jones
- - Only set IODataManager().AgeLimit = 0 if the option has not been previously 
-   set. Allows more user control over this setting.
-
 ! 2009-04-17 - Marco Cattaneo
  - Update references for 
    . fix in Rich StatusCode check in case of exceptions
@@ -31,9 +30,24 @@ Purpose: LHCb reconstruction program
  - Update references for above change, and for changes in tuning of PatVelo
    tracking, printout of OdinTypesFilter, extra histograms in TrackMonitor
 
-! 2009-04-14 - Marco Cattaneo
- - Fix valgrind.job for new lbLogin environment
- - Change version to v34r4
+</PRE><H1><A NAME=v34r5>2009-04-22 Brunel v34r5</A></H1><PRE>
+Version built on v34b branch
+
+ - Changes to references to reflect changes in Brunel v34r5 output:
+   . Make PatSeedFit safe against unreasonable track input
+
+</PRE><H1><A NAME=v34r4>2009-04-20 Brunel v34r4</A></H1><PRE>
+Version built on v34b branch
+
+ - Changes to Configurable:
+   . Only set IODataManager().AgeLimit = 0 if the option has not been previously
+     set. Allows more user control over this setting.
+
+ - Changes to Tests:
+   . Fix valgrind.job for new lbLogin environment
+
+ - Changes to references to reflect changes in Brunel v34r4 output:
+   . Bug fix to track fit initialisation, to take into account OT tilt
 
 </PRE><H1><A NAME=v34r3>2009-04-09 Brunel v34r3</A></H1><PRE>
  - Changes to requirements:
