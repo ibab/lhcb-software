@@ -797,7 +797,7 @@ namespace Rich
     {
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonForwardMatch2To100", "Long Tracks"+titletag, "long_2to100GeV", imageType );
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonLong2To100", "Long Tracks"+titletag, "long_2to100GeV", imageType );
 
     }
 

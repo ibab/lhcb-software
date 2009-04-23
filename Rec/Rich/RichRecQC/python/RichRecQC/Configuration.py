@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.20 2009-04-17 11:16:49 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2009-04-23 15:05:33 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -33,7 +33,8 @@ class RichRecQCConf(RichConfigurableUser):
        ,"PixelMonitoring"           : True
        ,"PhotonMonitoring"          : True
        ,"TracklessRingMonitoring"   : False
-       ,"AlignmentMonitoring" : True
+       ,"AlignmentMonitoring"       : True
+       ,"HPDIFBMonitoring"          : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
        ,"PidTrackTypes":  [ ["All"], ["Forward","Match"] ]
        ,"RecoTrackTypes": [ ["All"],
@@ -88,8 +89,9 @@ class RichRecQCConf(RichConfigurableUser):
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
+        if not self.isPropertySet("MoniSequencer") :
+            raise RuntimeError("ERROR : Monitor Sequencer not set")
         sequence = self.getProp("MoniSequencer")
-        if sequence == None : raise RuntimeError("ERROR : Monitor Sequencer not set")
 
         # Set context
         sequence.Context = self.getProp("Context")
@@ -134,6 +136,12 @@ class RichRecQCConf(RichConfigurableUser):
         if self.getProp("AlignmentMonitoring"):
             self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce","WithMC"])
             RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
+
+        # HPD IFB
+        if self.getProp("AlignmentMonitoring") :
+            hpdIFBseq = self.newSeq(sequence,"RichHPDIonFeedback")
+            from Configurables import Rich__Mon__HPDIonFeedbackMoni
+            hpdIFBseq.Members += [ self.createMonitor(Rich__Mon__HPDIonFeedbackMoni,"RichHPDIFBMoni") ]
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :

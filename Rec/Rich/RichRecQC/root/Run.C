@@ -11,10 +11,20 @@
 
   // make the plots
 
-  Rich::performance( "/usera/jonesc/NFS/RootFiles/New-2008MC-Fixed/New-2008MC-10000ev-expert-histos.root", "2008MCVeloFix", " | 2008 MC + Velo Fix" );
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/NominalGasP/Brunel-histos.root", "NominalGas", " | DC09 - Nominal Gas" );
 
-  //Rich::performance( "/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/2008MC/2008MC-10000ev-expert-histos.root", "2008MC", " | 2008 MC" );
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP+10mbar/Brunel-histos.root", "p10mbarGasP", " | DC09 - +10mbar Expected Gas Pressure" );
 
-  //Rich::performance( "/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/DC06/NewHPDQE_25pc-dst-10000ev-expert-histos.root", "DC06", " | DC06" );
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP+20mbar/Brunel-histos.root", "p20mbarGasP", " | DC09 - +20mbar Expected Gas Pressure" );
+
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP-10mbar/Brunel-histos.root", "m10mbarGasP", " | DC09 - -10mbar Expected Gas Pressure" );
+
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP-20mbar/Brunel-histos.root", "m20mbarGasP", " | DC09 - -20mbar Expected Gas Pressure" );
+
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP+1mbar/Brunel-histos.root", "p1mbarGasP", " | DC09 - +1mbar Expected Gas Pressure" );
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP-1mbar/Brunel-histos.root", "m1mbarGasP", " | DC09 - -1mbar Expected Gas Pressure" );
+
+  //Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP+2mbar/Brunel-histos.root", "p2mbarGasP", " | DC09 - +2mbar Expected Gas Pressure" );
+  Rich::performance( "/usera/jonesc/NFS/RootFiles/DC09/GasP-2mbar/Brunel-histos.root", "m2mbarGasP", " | DC09 - -2mbar Expected Gas Pressure" );
 
 }

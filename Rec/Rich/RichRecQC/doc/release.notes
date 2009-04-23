@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-04-23 - Chris Jones
+ - Add new IFB monitoring (imported from Panoptes)
+ - Use isPropertySet instead of checking against None to see if the sequences
+   have been properly configured
+
 ! 2009-04-17 - Chris Jones
  - Various small monitoring changes
   + Make PID performance plots for Long tracks as well as All tracks
