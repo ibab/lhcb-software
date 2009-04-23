@@ -1,4 +1,4 @@
-// $Id: UpsilonDaughtersInLHCb.cpp,v 1.1 2009-02-26 14:54:22 robbep Exp $
+// $Id: UpsilonDaughtersInLHCb.cpp,v 1.2 2009-04-23 16:44:17 robbep Exp $
 // Include files 
 
 // local
@@ -96,10 +96,28 @@ bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 				       const LHCb::GenCollision */* theHardInfo */ )
   const {
   
+  // First decay all particles heavier than the Upsilon
+  m_decayTool -> disableFlip() ;
+  HepMCUtils::ParticleSet particleSet ;  
+  HepMC::GenEvent::particle_const_iterator it ;
+  for ( it = theEvent -> particles_begin() ; 
+        it != theEvent -> particles_end() ; ++it )
+    if ( LHCb::ParticleID( (*it) -> pdg_id() ).hasQuark( LHCb::ParticleID::bottom ) ) 
+      particleSet.insert( *it ) ;
+  
+  for ( HepMCUtils::ParticleSet::iterator itHeavy = particleSet.begin() ; 
+        itHeavy != particleSet.end() ; ++itHeavy ) 
+    
+    if ( ( LHCb::HepMCEvent::StableInProdGen == (*itHeavy) -> status() ) && 
+         ( m_sigUpsilonPID != abs( (*itHeavy) -> pdg_id() ) ) ) {
+      
+      if ( m_decayTool -> isKnownToDecayTool( (*itHeavy) -> pdg_id() ) ) 
+        m_decayTool -> generateDecayWithLimit( *itHeavy , m_sigUpsilonPID ) ;
+    }
+  
   // To see whether the Upsilon is in the Event or not
   //--------------------------------------------------------------------
   theParticleVector.clear( ) ;
-  HepMC::GenEvent::particle_const_iterator it ;
   for ( it = theEvent -> particles_begin() ; 
         it != theEvent -> particles_end() ; ++it )
     if ( abs( (*it) -> pdg_id() ) == m_sigUpsilonPID ) 
