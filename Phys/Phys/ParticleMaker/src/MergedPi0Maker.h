@@ -1,11 +1,8 @@
-// $Id: MergedPi0Maker.h,v 1.4 2009-04-21 19:15:41 pkoppenb Exp $
+// $Id: MergedPi0Maker.h,v 1.5 2009-04-23 10:39:31 pkoppenb Exp $
 #ifndef MERGEDPI0PARTICLEPARTICLEMAKER_H 
 #define MERGEDPI0PARTICLEPARTICLEMAKER_H 1
 // Include files
-#include "ParticleMakerBase.h"
-#include "GaudiKernel/GenericVectorTypes.h"
-#include "GaudiKernel/SymmetricMatrixTypes.h"
-#include "CaloDet/DeCalorimeter.h"
+#include "Pi0MakerBase.h"
 
 namespace LHCb{
   class ProtoParticle ;  
@@ -20,7 +17,7 @@ namespace LHCb{
  *  @date   2006-08-25
  */
 
-class MergedPi0Maker : public ParticleMakerBase{
+class MergedPi0Maker : public Pi0MakerBase{
 public:
   
   MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator  ) ;
@@ -31,16 +28,6 @@ public:
 private:
   // Make the particles 
   virtual StatusCode makeParticles (LHCb::Particle::Vector & particles ) ;
-  virtual void setPoint ( const Gaudi::XYZPoint pos ){ m_point = pos; }
-  virtual void setPoint ( const Gaudi::XYZPoint pos, const Gaudi::SymMatrix3x3 cov ){
-    m_point = pos; 
-    m_pointErr = cov;
-  }
-  virtual void setPoint    ( const LHCb::Vertex* vert ){
-    m_point  = vert->position(); 
-    m_pointErr = vert->covMatrix();
-  }
-
 
 protected:
   
@@ -52,28 +39,16 @@ protected:
   double confLevel        ( const LHCb::ProtoParticle* pp ) const ;
   
 private:
-  long m_Id;
-  double m_pi0Mass;
-  DeCalorimeter* m_calo;
-  
-  // Input PP container
-  std::string                        m_input            ;
-  // nominal production vertex
-  Gaudi::XYZPoint                    m_point            ;
-  Gaudi::SymMatrix3x3                m_pointErr         ;
-  // techniques for CL evaluation
+  DeCalorimeter* m_calo;  
+  /// techniques for CL evaluation
   bool                               m_useCaloTrMatch   ;
   bool                               m_useCaloDepositID ;
   bool                               m_useShowerShape   ;
   bool                               m_useClusterMass   ;
-  // Filters
+  /// Filters
   double   m_clCut      ;
-  double   m_pi0MassWin ;
   double   m_gPtCut     ;
-  double   m_pi0PtCut   ;
   double   m_ggDistCut  ;
   std::vector<double> m_parMas;
-  unsigned long  m_count[3];
-  std::string m_part;
 };
 #endif // MERGEDPI0PARTICLEPARTICLEMAKER_H

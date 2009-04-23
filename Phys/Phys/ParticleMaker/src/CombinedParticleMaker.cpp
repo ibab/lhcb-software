@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.32 2009-04-21 19:15:41 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.33 2009-04-23 10:39:31 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -29,21 +29,9 @@ DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker );
 // Standard constructor, initializes variables
 //=============================================================================
 CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
-  : ParticleMakerBase (  name , pSvcLocator ),
-    m_trSel   ( NULL ),
+  : ChargedParticleMakerBase (  name , pSvcLocator ),
     m_brem    ( NULL )
 {
-
-  // Job options
-  declareProperty( "InputProtoParticles", m_input =  ProtoParticleLocation::Charged);
-
-  // Particle types to create
-  m_particleList.push_back("muon");
-  m_particleList.push_back("electron");
-  m_particleList.push_back("kaon");
-  m_particleList.push_back("proton");
-  m_particleList.push_back("pion");
-  declareProperty( "Particles", m_particleList );
 
   // ProtoParticle filters to use for each type
   declareProperty( "ElectronFilter", m_elProtoFilter = "ProtoParticleCALOFilter" );
@@ -52,8 +40,6 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocat
   declareProperty( "KaonFilter",     m_kaProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
-  declareProperty( "ExclusiveSelection", m_exclusive = false, 
-    "Make only on Particle per ProtoParticle. This is very dangerous. Do not use except for testing." );
   declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
 
   // Test PID info consistency
@@ -69,87 +55,46 @@ CombinedParticleMaker::~CombinedParticleMaker( ) { }
 StatusCode CombinedParticleMaker::initialize()
 {
   // intialize base class
-  const StatusCode sc = ParticleMakerBase::initialize();
+  const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize base class" );
-
-  if ( m_particleList.empty() )
-  {
-    return Error( "A list of particles types must be specified" );
-  }
   
-  // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
-
   // BremStrahlung added
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Will produce : " << m_particleList << endmsg;
-  if ( m_exclusive ) {
-    warning() << "Using exclusive selection policy. This is very dangerous. Avoid if you are unsure of wht you are doing." 
-              << endmsg;
+  // get tooltype
+  std::string toolType = "";
+  std::string name = "";
+  if      ( m_pid == "pi+" ){ 
+    toolType = m_piProtoFilter ;
+    name = "Pion" ;
+  } else if ( m_pid == "mu-" ){  
+    toolType = m_muProtoFilter ;
+     name = "Muon" ;
+  }  else if ( m_pid == "K+" ){  
+    toolType = m_kaProtoFilter ;
+      name = "Kaon" ;
+  } else if ( m_pid == "p+" ){ 
+    toolType = m_prProtoFilter ;
+      name = "Proton" ;
+  } else if ( m_pid == "e-" ){ 
+    toolType = m_elProtoFilter ;
+    name = "Electron" ;
+  } else{
+    return Error( "Unknown particle selection '" + m_pid + "'" );
   }
-  
-  // loop over selection and load ProtoParticle selectors
-  m_protoMap.clear();
-  for ( std::vector<std::string>::const_iterator iPart = m_particleList.begin();
-        iPart != m_particleList.end(); ++iPart )
-  {
-    // Get particle tyoe name
-    const std::string name = convertName( *iPart );
-    // get pp name and tooltype
-    std::string ppName, toolType;
-    if      ( "Muon"     == name )
-    {
-      ppName   = "mu+";
-      toolType = m_muProtoFilter;
-    }
-    else if ( "Electron" == name )
-    {
-      ppName   = "e+";
-      toolType = m_elProtoFilter;
-    }
-    else if ( "Kaon"     == name )
-    {
-      ppName   = "K+";
-      toolType = m_kaProtoFilter;
-    }
-    else if ( "Proton"   == name )
-    {
-      ppName   = "p+";
-      toolType = m_prProtoFilter;
-    }
-    else if ( "Pion"     == name )
-    {
-      ppName   = "pi+";
-      toolType = m_piProtoFilter;
-    }
-    else
-    {
-      return Error( "Unknown particle selection '" + *iPart + "'" );
-    }
 
-    // Get particle properties
-    const LHCb::ParticleProperty * partProp = ppSvc()->find( ppName );
+  // Get particle properties
+  m_partProp = ppSvc()->find( m_pid );
+  if (0==m_partProp) return Error("Unknown Particle Property for "+m_pid);
 
-    // load tool into map
-    if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
-           << toolType << "'" << endmsg;
-    const IProtoParticleFilter * t = tool<IProtoParticleFilter>( toolType, name, this );
-    m_protoMap.push_back( ProtoPair(partProp,t) );
-
-  }
+  // load tool into map
+  if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
+                                    << toolType << "'" << endmsg;
+  m_protoTool = tool<IProtoParticleFilter>( toolType, name, this );
 
   return sc;
 }
 
-std::string CombinedParticleMaker::convertName( const std::string & in ) const
-{
-  std::string first  = in.substr(0,1);
-  std::transform( first.begin(),  first.end(),  first.begin (),  ::toupper ) ;
-  std::string second = in.substr(1);
-  std::transform( second.begin(), second.end(), second.begin (), ::tolower ) ;
-  return first+second;
-}
 
 //===========================================================================
 // Finalize
@@ -184,38 +129,23 @@ StatusCode CombinedParticleMaker::finalize()
   }
 
   // finalize base class
-  return ParticleMakerBase::finalize();
+  return ChargedParticleMakerBase::finalize();
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
-{
+StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Will get ProtoParticles from " << m_input << endmsg ;
-
-  if (!exist<ProtoParticles>(m_input)){
-    Warning("No ProtoParticles at "+m_input);
-    return StatusCode::SUCCESS ;
-  }
   
   // Load the ProtoParticles
-  ProtoParticles * protos = get<ProtoParticles>( m_input );
-  if ( protos->empty() )
-  {
-    return Warning( "Charged ProtoParticles container is empty at " + m_input,
-                    StatusCode::SUCCESS );
-  }
-  else if ( msgLevel(MSG::DEBUG) )
-  {
-    if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << protos->size() << " ProtoParticles at "
-            << m_input << endmsg;
-  }
-
+  const ProtoParticles * pps = protos() ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps->size() 
+                                    << " ProtoParticles at "<< m_input << endmsg;
+  
   // loop over ProtoParticles
-  for ( ProtoParticles::const_iterator iProto = protos->begin();
-        protos->end() != iProto; ++iProto )
+  for ( ProtoParticles::const_iterator iProto = pps->begin();
+        pps->end() != iProto; ++iProto )
   {
     // get point to track (should always exist for charged tracks)
     const Track * track = (*iProto)->track();
@@ -226,7 +156,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
 
     // Select tracks
     if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << track->key() << endmsg;
-    if ( !m_trSel->accept(*track) ) continue;
+    if ( !trSel()->accept(*track) ) continue;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << " -> Track selected " << track->key()  
                 << " " << track->firstState().momentum() << endmsg;
@@ -236,20 +166,16 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
     // Do PID checks ?
     if ( m_testPIDinfo ) checkPIDInfo(*iProto);
 
-    // loop over particle types to make
-    for ( ProtoMap::const_iterator iP = m_protoMap.begin();
-          iP != m_protoMap.end(); ++iP )
-    {
-      const bool selected = (*iP).second->isSatisfied( *iProto );
-      if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << (*iP).first->particle()
-                << " selected=" << selected << endmsg;
+      const bool selected = m_protoTool->isSatisfied( *iProto );
+      if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << m_partProp->particle()
+                                            << " selected=" << selected << endmsg;
       bool madeP(false);
       if ( selected )
       {
         // make a new Particle
         Particle * part = new Particle();
         // fill Parameters
-        const StatusCode sc = fillParticle( *iProto, (*iP).first, part );
+        const StatusCode sc = fillParticle( *iProto, m_partProp, part );
         if ( sc.isFailure() )
         {
           Warning( "Failed to fill Particle -> rejected" );
@@ -260,15 +186,10 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
           // add to container
           parts.push_back(part);
           // increment tally
-          tally.addToType( (*iP).first->particle() );
+          tally.addToType( m_partProp->particle() );
           madeP = true;
         }
       } // ProtoParticle selected
-
-      // Exclusive selection ?
-      if ( m_exclusive && madeP ) break;
-
-    } // loop over particle types to make
 
   } // end loop on ProtoParticles
 
@@ -348,7 +269,7 @@ StatusCode CombinedParticleMaker::fillParticle
   // finally, set Particle infor from State using tool
   if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
                                         << usedState->momentum() << endmsg ;
-  StatusCode sc = m_p2s->state2Particle( *usedState, *particle );
+  StatusCode sc = p2s()->state2Particle( *usedState, *particle );
   if (msgLevel(MSG::VERBOSE)) verbose() 
     << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
   

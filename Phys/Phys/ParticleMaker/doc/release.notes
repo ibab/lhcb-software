@@ -1,8 +1,32 @@
-! $Id: release.notes,v 1.94 2009-04-22 08:53:28 pkoppenb Exp $ 
+! $Id: release.notes,v 1.95 2009-04-23 10:39:31 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+! 2009-04-23 - Patrick Koppenburg
+ - Remove ParticleMakerSeq. Use GaudiSequencer instead.
+ - Move common functionality of charged particle makers to 
+   ChargedParticleMakerBase
+ - Move common functionality of pi0 particle makers to Pi0MakerBase
+ - Unify configuration. Now all ParticleMaker have property
+
+   Maker.Input = "protos location" ;
+   Maker.Particle = "pi+" 
+
+   for charged one has also
+
+   Maker.addTool(TrackSelector)
+   Maker.TrackSelector.TrackTypes = [ "Long" ]
+
+   This implies that old properties, Inputs, InputProtoParticles, UseLong... are gone.
+   It also means that CombinedParticleMaker can no longer make several types 
+   of Particles. Use 
+
+   MakeKaons = MakePions.clone("MakeKaons") 
+
+   Finally, this measn the ominous ExclusiveSelection property is no 
+   longer needed!
+     
 ! 2009-04-22 - Patrick Koppenburg
  - Move Particle2State from DaVinciTools
 

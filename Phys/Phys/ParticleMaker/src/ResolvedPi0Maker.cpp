@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.9 2009-04-21 19:15:41 pkoppenb Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.10 2009-04-23 10:39:31 pkoppenb Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -36,31 +36,17 @@ DECLARE_ALGORITHM_FACTORY( ResolvedPi0Maker );
 // ============================================================================
 ResolvedPi0Maker::ResolvedPi0Maker
 ( const std::string& name,ISvcLocator* pSvcLocator  )
-  : ParticleMakerBase           ( name, pSvcLocator ) 
-    , m_point            () 
-    , m_pointErr         ()
+  : Pi0MakerBase           ( name, pSvcLocator ) 
     , m_photonMakerType  ()
     , m_photonMaker      ()
     , m_singlePhotonUse  ()
     , m_independantPhotons()
-  // cut
-    , m_pi0MassWin ()
-    , m_pi0PtCut   ()
 {
   declareProperty( "SinglePhotonUse"   , m_singlePhotonUse  = false);
   declareProperty( "IndependantPhotons", m_independantPhotons= false);
   declareProperty ( "PhotonMakerType"  , m_photonMakerType = "PhotonMaker") ;
-  // Filter 
-  declareProperty( "MassWindow"     , m_pi0MassWin = 30. * Gaudi::Units::MeV);
-  declareProperty( "PtCut"          , m_pi0PtCut = 0. * Gaudi::Units::MeV);
-  declareProperty( "Particle"       , m_part = "pi0");
-  //
-  m_point = Gaudi::XYZPoint();
-  m_pointErr = Gaudi::SymMatrix3x3();
 };
 // ============================================================================
-
-
 
 // ============================================================================
 /// destructor
@@ -71,22 +57,8 @@ ResolvedPi0Maker::~ResolvedPi0Maker() {};
 StatusCode ResolvedPi0Maker::initialize    ()
 {
   // initialize the base class
-  StatusCode sc = ParticleMakerBase::initialize();
-  if( sc.isFailure() ) { return Error(" Unable to initialize ParticleMakerBase",sc);}
-
-  const LHCb::ParticleProperty* partProp;
-  partProp  = ppSvc()->find( m_part );
-  if( 0 == partProp){
-    Error("Requested particle '" + m_part + "' is unknown").ignore();
-    return StatusCode::FAILURE;
-  }
-  m_Id      = (*partProp).particleID().pid();
-  m_pi0Mass = (*partProp).mass();
-  //
-  m_count[0]=0;
-  m_count[1]=0;
-  m_count[2]=0;
-  
+  StatusCode sc = Pi0MakerBase::initialize();
+  if( sc.isFailure() ) { return Error(" Unable to initialize Pi0MakerBase",sc);}
 
   // Retrieve PhotonMaker tool
   m_photonMaker = tool< ICaloParticleMaker>( m_photonMakerType ,  this ) ;
@@ -97,11 +69,7 @@ StatusCode ResolvedPi0Maker::initialize    ()
 
 StatusCode ResolvedPi0Maker::finalize      ()
 {
-  info() << " - ResolvedPi0Maker Summary -----" << endreq;
-  info() << " Created : " << (float) m_count[1]/m_count[0] << " Resolved " << m_part << "per event" << endreq;
-  info() << " --------------------------------" << endreq;
-  // finalize the base class
-  return ParticleMakerBase::finalize ();
+  return Pi0MakerBase::finalize ();
 };
 
 // ============================================================================
@@ -125,7 +93,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   StatusCode sc = m_photonMaker->makeParticles(photons);
   if (!sc) return sc;
   if( 0 == photons.size() ) { 
-    Warning("PhotonMaker return empty container - No resolved "+ m_part + " to be created").ignore();
+    Warning("PhotonMaker return empty container - No resolved "+ m_pid + " to be created").ignore();
     return StatusCode::SUCCESS; 
   }
 
@@ -174,7 +142,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       if(StatusCode::SUCCESS != sc ){
         delete pi0;
         nSkip++;
-        warning() << "Unable to fill Resolved " << m_part << " parameters, skip particle [" << nSkip << "]"<< endreq;
+        warning() << "Unable to fill Resolved " << m_pid << " parameters, skip particle [" << nSkip << "]"<< endreq;
         continue;
       }
       // fill container
@@ -189,12 +157,12 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       if ( msgLevel(MSG::VERBOSE)){
         LHCb::Particle* g1 = ((*ip1).first).particle();
         LHCb::Particle* g2 = ((*ip2).first).particle();
-        verbose() << " ---- Resolved " << m_part <<" found [" << nPi0 << "]"<< endreq;
+        verbose() << " ---- Resolved " << m_pid <<" found [" << nPi0 << "]"<< endreq;
         verbose() << "Point   : " << pi0->referencePoint() << endreq;
-        verbose() << "Pt("<<m_part<<") : "  << pi0->momentum().Pt() << endreq;
+        verbose() << "Pt("<<m_pid<<") : "  << pi0->momentum().Pt() << endreq;
         verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endreq;
         verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endreq;
-        verbose() << "CL("<<m_part<<") : "  << pi0->confLevel() << endreq;
+        verbose() << "CL("<<m_pid<<") : "  << pi0->confLevel() << endreq;
         verbose() << "CL(g1)  : "  << g1->confLevel() << endreq;
         verbose() << "CL(g2)  : "  << g2->confLevel() << endreq;
         verbose() << "Mass    : "  << pi0->momentum().M()  << endreq;
@@ -215,9 +183,9 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     debug() << " " << endreq;
     debug() << "-----------------------" << endreq;
     debug() << " Filtered and created :" << endreq;
-    debug() << " --> " << nPi0 << " Resolved " << m_part <<"s " << endreq;
+    debug() << " --> " << nPi0 << " Resolved " << m_pid <<"s " << endreq;
     debug() << " --> " << nGamma-nDel <<" photons have been used among the " << nGamma << " selected " << endreq;
-    debug() << " Skipped " << m_part <<" : " << nSkip << endreq;
+    debug() << " Skipped " << m_pid <<" : " << nSkip << endreq;
     debug() << "-----------------------" << endreq;
   }
   return StatusCode::SUCCESS ;
@@ -265,7 +233,7 @@ bool ResolvedPi0Maker::selPi0(LHCb::CaloParticle g1, LHCb::CaloParticle g2){
   LHCb::CaloParticle pi0(g1.particle() ,m_point ,m_pointErr);
   pi0.addCaloPosition(g2.particle() );
 
-  if (fabs(pi0.mass()-m_pi0Mass) < m_pi0MassWin && pi0.pt() > m_pi0PtCut ) isGood=true;
+  if (fabs(pi0.mass()-m_Mass) < m_MassWin && pi0.pt() > m_PtCut ) isGood=true;
   return isGood;
 
 };

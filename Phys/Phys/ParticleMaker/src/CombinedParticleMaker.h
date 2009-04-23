@@ -4,7 +4,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.18 2009-04-21 19:15:41 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.h,v 1.19 2009-04-23 10:39:31 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -14,7 +14,7 @@
 #ifndef PARTICLEMAKER_COMBINEDPARTICLEMAKER_H
 #define PARTICLEMAKER_COMBINEDPARTICLEMAKER_H 1
 
-#include "ParticleMakerBase.h"
+#include "ChargedParticleMakerBase.h"
 // from Gaudi
 #include "GaudiKernel/HashMap.h"
 
@@ -24,7 +24,6 @@
 // Interfaces
 #include "Kernel/IBremAdder.h"
 #include "Kernel/IProtoParticleFilter.h"
-#include "TrackInterfaces/ITrackSelector.h"
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
  *
@@ -40,7 +39,7 @@
  *  @todo Re-assess how the confidence level is calculated
  */
 
-class CombinedParticleMaker : public ParticleMakerBase {
+class CombinedParticleMaker : public ChargedParticleMakerBase {
 
 public:
 
@@ -71,9 +70,6 @@ private:
     const LHCb::ParticleProperty * pprop,
     LHCb::Particle               * particle ) const;
   
-  /// Converts a string to a constant format
-  std::string convertName( const std::string & in ) const;
-
   /// Set the Particle confidence level
   void setConfLevel
   ( const LHCb::ProtoParticle*    proto,
@@ -85,52 +81,22 @@ private:
 
 private:
 
-  /// Job option wtih TES input for ProtoParticles
-  std::string m_input;
-
-  /** @brief Job Option List of particles type to make.
-   * Possible values are muons, electrons, kaons, protons, pions
-   */
-  std::vector<std::string> m_particleList;
-
   std::string m_elProtoFilter; ///< The tool type to use for electron selection
   std::string m_muProtoFilter; ///< The tool type to use for muon selection
   std::string m_piProtoFilter; ///< The tool type to use for pion selection
   std::string m_kaProtoFilter; ///< The tool type to use for kaon selection
   std::string m_prProtoFilter; ///< The tool type to use for proton selection
   // Activate the BremStrahlung correction for electrons
-  bool m_addBremPhoton;  
-  /// Job option for exclusive selection of particle types
- /// PIDs are checked in some order and all tracks that
- /// are compatible with being a muon are made a muon, then an electron,
- /// proton, kaon and pion. What you get will depends on
- /// this order, which is already a good enough reason not to want that.
- /// If you do B->pipi and one pi decays to a muon, it will never be a pi
- /// candidate. Even worse, if you or someone relaxes the mu ID cuts  
- /// between two jobs or two DaVinci versions, then suddenly what used to be a nice
- /// pion in one version of DV might now becomes a muon candidate. Your
- /// efficiency decreases although nothing affecting pion or kaon ID  
- /// changed.
- /// That makes it very hard to estimate signal efficiencies as all
- /// efficiencies depend on everything.
- /// If you want to cut hard on PID, use PID cuts. If you don't want to use
- /// the same track several times (which is a valid point for tagging),  
- /// then use the Overlap Tool and re-weight the track accordingly if needed.
-  bool m_exclusive;
+  bool m_addBremPhoton;
 
-  /// Map type that takes a particle type to a ProtoParticle filter
-  typedef std::pair< const LHCb::ParticleProperty *, 
-                     const IProtoParticleFilter* > ProtoPair;
-  typedef std::vector < ProtoPair > ProtoMap;
-
-  /// Map that takes a particle type to a ProtoParticle filter
-  ProtoMap m_protoMap;
-
-  /// Track selector tool
-  ITrackSelector * m_trSel;
+  /// The protoFilter to be used
+  IProtoParticleFilter* m_protoTool;
 
   /// Track selector tool
   IBremAdder* m_brem;
+  
+  /// Particle property
+  const LHCb::ParticleProperty* m_partProp ;
 
   // tallies
 

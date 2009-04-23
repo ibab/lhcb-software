@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.h,v 1.1 2009-04-21 19:15:41 pkoppenb Exp $
+// $Id: ParticleMakerBase.h,v 1.2 2009-04-23 10:39:31 pkoppenb Exp $
 #ifndef PARTICLEMAKERBASE_H 
 #define PARTICLEMAKERBASE_H 1
 
@@ -7,9 +7,9 @@
 #include <string>
 
 // from DaVinci
-#include "Kernel/IPhysDesktop.h"
 #include "Kernel/DVAlgorithm.h"
-#include "Kernel/IParticle2State.h"
+// PartProp
+#include "Kernel/ParticleProperty.h" 
 
 /** @class ParticleMakerBase ParticleMakerBase.h
  *
@@ -18,6 +18,15 @@
  *  @author P. Koppenburg
  *  @date   2009-04-21
  */
+namespace
+{
+  std::string to_upper( const std::string& in )
+  {
+    std::string  out( in );
+    std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
+    return out ;
+  };
+};
 
 class ParticleMakerBase : public DVAlgorithm {
 public:
@@ -34,10 +43,34 @@ public:
 protected:
   /// The method that each implementation should implement
   virtual StatusCode makeParticles(LHCb::Particle::Vector& ) = 0 ;
-  
+  /// set particl eproperties for particle and for antiparticle  
+  StatusCode setPPs( const std::string& pid ) ;
+
+  /// protoparticles
+  const LHCb::ProtoParticles* protos(){
+    const LHCb::ProtoParticles* pp = 0 ;
+    if ( exist<LHCb::ProtoParticles>( m_input )){
+      pp = get< LHCb::ProtoParticles > (m_input);
+    } else {
+      Warning("No ProtoParticles at "+m_input,StatusCode::FAILURE,1);
+    }
+    return pp ;
+  }
+
 protected:
-  /// Particle to state convertion tool
-  IParticle2State* m_p2s ;
+
+  /// ID of the particle 
+  std::string             m_pid   ;
+  /// ID of the anti-particle 
+  std::string             m_apid  ;
+  /// properties of particle
+  const LHCb::ParticleProperty* m_pp    ;
+  
+  /// properties of anti-particle
+  const LHCb::ParticleProperty* m_app   ;
+
+  /// Input Location of protoparticles
+  std::string m_input ;
 
 private:
 

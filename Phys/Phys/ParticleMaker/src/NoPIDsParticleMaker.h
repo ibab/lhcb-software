@@ -1,9 +1,9 @@
-// $Id: NoPIDsParticleMaker.h,v 1.10 2009-04-21 19:15:41 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.11 2009-04-23 10:39:31 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
 // Include files
-#include "ParticleMakerBase.h"            // Interface
+#include "ChargedParticleMakerBase.h"            // Interface
 
 /** @class NoPIDsParticleMaker NoPIDsParticleMaker.h
  *  
@@ -15,7 +15,7 @@
  *  @author Patrick KOPPENBURG
  *  @date   2006-01-23
  */
-class NoPIDsParticleMaker : public ParticleMakerBase {
+class NoPIDsParticleMaker : public ChargedParticleMakerBase {
 public: 
   /// Standard constructor
   NoPIDsParticleMaker( const std::string& name,ISvcLocator* pSvcLocator);
@@ -42,31 +42,11 @@ protected:
   ( const LHCb::ProtoParticle*    proto    , 
     const LHCb::ParticleProperty* property , 
     LHCb::Particle*               particle ) const ;
-  
-  /// set particl eproperties for particle and for antiparticle  
-  StatusCode setPPs( const std::string& pid ) ;
-  
-  
+
 private:
-  
-  // ID of the particle 
-  std::string             m_pid   ;
-  // ID of the anti-particle 
-  std::string             m_apid  ;
-  
-  // properties of particle
-  const LHCb::ParticleProperty* m_pp    ;
-  
-  // properties of anti-particle
-  const LHCb::ParticleProperty* m_app   ;
-  
-  typedef std::vector<std::string> Addresses ;
-  Addresses               m_inputs ;
-  
+
   // CL to be used 
   double                  m_CL     ;
-  
-  // statistics: 
   
   // number of calls 
   size_t                  m_calls  ;
