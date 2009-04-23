@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.cpp,v 1.1.1.1 2009-04-23 14:47:21 jonrob Exp $
+// $Id: HPDIonFeedbackMoni.cpp,v 1.2 2009-04-23 16:17:18 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -104,7 +104,7 @@ StatusCode HPDIonFeedbackMoni::execute()
         const bool aliceMode     = (*iAllSmartIDs).second.header().aliceMode();
         const int ionFeedbackCut = ( aliceMode ? m_ionFeedbackCutALICE : m_ionFeedbackCut );
 
-        std::vector<LHCb::RichSmartID> hitMap(smartIDHits); // need local copy of hits to prevent altering the originals
+        LHCb::RichSmartID::Vector hitMap(smartIDHits); // need local copy of hits to prevent altering the originals
         const Rich::HPDPixelClusters * clusters = m_clusterTool->findClusters(hitMap);
         // note we own this object, so must delete clusters when finished with it !!
 
