@@ -102,6 +102,11 @@ int SendThread::processSends(void)
   cmd_header *cmd_to_send = NULL;
   BIF *bif = NULL;
 
+
+  struct timespec iSleep;
+  iSleep.tv_sec = 0;
+  iSleep.tv_nsec = 0;
+
   /*While either you don't need to stop, or you need to stop after purging entries.*/
   do {
 
@@ -122,6 +127,10 @@ int SendThread::processSends(void)
       // *m_log << MSG::INFO << "send was successful" << endmsg;
       delete bif;
       bif = NULL;
+      if(iSleep.tv_nsec > 0) {
+          iSleep.tv_sec = 0;
+          iSleep.tv_nsec = 0;
+      }
     } else if(ret == BIF::DISCONNECTED) {
       *m_log << MSG::INFO << "send returned: DISCONNECTED " << endmsg;
       if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
@@ -134,11 +143,21 @@ int SendThread::processSends(void)
       }
     } else if(ret == BIF::AGAIN) {
           // *m_log << MSG::INFO << "send returned AGAIN "  << endmsg;
+          nanosleep(&iSleep, NULL);
+          if(iSleep.tv_sec < 1) {
+              if(iSleep.tv_nsec >= 900000000) { 
+                  iSleep.tv_sec=1;
+                  iSleep.tv_nsec = 1; 
+              }
+              else 
+                  iSleep.tv_nsec += 1000; 
+          }   
           continue; // try to send again
       }
       else {
           // *m_log << MSG::INFO << "send:  " << ret  << endmsg;
           // Unknown Error
+          //*m_log << MSG::INFO << "send returned:  " << ret << endmsg;
       }
   } while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
       (m_stopAfterFinish == true && cmd_to_send != NULL));
