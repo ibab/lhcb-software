@@ -1,3 +1,9 @@
+2008-02-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: isStarted files to keep information
+	which platforms are started but not finished - needed for the summary page;
+	clean up of comments
+
 2009-04-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r8
@@ -5,7 +11,7 @@
 2009-04-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/lhcb-proxy-info: added test on DIRACSYSROOT
-	* scripts/lhcb-proxy-init: modified test on DIRACSYSROOT (it was DIRACROOT) 
+	* scripts/lhcb-proxy-init: modified test on DIRACSYSROOT (it was DIRACROOT)
 	for the call to "SetupProject Dirac"
 
 2009-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -18,7 +24,7 @@
 
 2009-03-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/BrunelBench.csh: 
+	* scripts/BrunelBench.csh:
 	* scripts/GaussBench.csh: removed obsolete "-m" option of install_project
 
 2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -41,7 +47,7 @@
 2009-03-11  Joel Closier  <joel.closier@cern.ch>
 
 	* scripts/lhcb-proxy-in(it/fo) : add the option --dev to let the user test the DEV area for DIRAC
-	
+
 2009-02-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/startNightlies.bat: fixed the argument list of the wrapper as well

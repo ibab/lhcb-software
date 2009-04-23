@@ -434,10 +434,9 @@ def install(slotName, projectName):
         isDoneFrom = os.path.join(slot.buildDir(), 'isDone-'+os.environ['CMTCONFIG'])
         isDoneTo = os.path.join(slot.releaseDir(), 'isDone-'+os.environ['CMTCONFIG'])
         if os.path.exists(isDoneFrom): shutil.copy2(isDoneFrom, isDoneTo)
-        #(end)
-        #configuration.system('mkdir -p ' + os.path.join(releasePath, projectName.upper()))
-        #configuration.system('mkdir -p ' + os.path.join(releasePath, projectName.upper(), project.getTag()))
-        #configuration.system('cd ' + os.path.join(slot.buildDir(), projectName.upper(), project.getTag()) +' && tar cf - * | ( cd ' + os.path.join(releasePath, projectName.upper(), project.getTag(), '.') + ' ; tar xf - )')
+        isStartedTo = os.path.join(slot.releaseDir(), 'isStarted-'+os.environ['CMTCONFIG'])
+        if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
+        if os.path.exists(isDoneTo) and os.path.exists(isStartedTo): os.remove(isStartedTo)
         copyLocal(os.path.join(slot.buildDir(), projectName.upper(), project.getTag()), os.path.join(releasePath, projectName.upper(), project.getTag()))
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 
@@ -453,21 +452,17 @@ def make(slotName, projectName, minusj):
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
-###
-#    hosts = '@dlxplus/10'
-#    threads = 10
-#    distcc = '/afs/cern.ch/user/k/kkruzele/lhcb-nightlies/distcc/bin/distcc'
-#    os.environ['DISTCC_HOSTS']=hosts
-###
     configuration.system('echo "' + '*'*80 + '"')
-    configuration.system('date')
-    configuration.system('echo "CMTPROJECTPATH:   $CMTPROJECTPATH"')
-    configuration.system('echo "CMTCONFIG:        $CMTCONFIG"')
-    configuration.system('echo "CMTROOT:          $CMTROOT"')
-    configuration.system('echo "CMTPATH:          $CMTPATH"')
-    configuration.system('echo "CMTEXTRATAGS:     $CMTEXTRATAGS"')
-    configuration.system('echo "LD_LIBRARY_PATH:  $LD_LIBRARY_PATH"')
-    configuration.system('echo "PATH:             $PATH"')
+    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'"')
+    configuration.system('echo "CMTPROJECTPATH:   '+os.environ.get('CMTPROJECTPATH','')+'"')
+    configuration.system('echo "CMTCONFIG:        '+os.environ.get('CMTCONFIG','')+'"')
+    configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
+    configuration.system('echo "CMTPATH:          '+os.environ.get('CMTPATH','')+'"')
+    configuration.system('echo "CMTEXTRATAGS:     '+os.environ.get('CMTEXTRATAGS','')+'"')
+    configuration.system('echo "LD_LIBRARY_PATH:  '+os.environ.get('LD_LIBRARY_PATH','')+'"')
+    configuration.system('echo "LIB:              '+os.environ.get('LIB','')+'"')
+    configuration.system('echo "INCLUDE:          '+os.environ.get('INCLUDE','')+'"')
+    configuration.system('echo "PATH:             '+os.environ.get('PATH','')+'"')
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show macro LCG_releases')
     configuration.system('echo "' + '*'*80 + '"')
@@ -498,43 +493,13 @@ def test(slotName, projectName):
     setCmtProjectPath(slot)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
 
-    #configuration.system('cmt br - cmt TestPackage 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    #configuration.system('cmt qmtest_summarize 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    #filterTestLog('../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    #configuration.system('date >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-
-#    configuration.system('echo "' + '*'*80 + '" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('date | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "CMTPROJECTPATH:   $CMTPROJECTPATH" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "CMTCONFIG:        $CMTCONFIG" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "CMTROOT:          $CMTROOT" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "CMTPATH:          $CMTPATH" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "CMTEXTRATAGS:     $CMTEXTRATAGS" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "' + '*'*80 + '" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('cmt show macro LCG_releases | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "' + '*'*80 + '" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('cmt show uses | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    configuration.system('echo "' + '*'*80 + '" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-
-    configuration.system('date | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
+    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
     configuration.system('printenv | sort')
     configuration.system('cmt br - cmt TestPackage')
     configuration.system('cmt qmtest_summarize 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
- #   configuration.system('cmt show set PYTHONPATH 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    #configuration.system('echo "PYTHON sys.path: ' + sys.path + '" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    configuration.system('date | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-
-#    configuration.system('cmt br - cmt TestPackage')
-#    configuration.system('cmt qmtest_summarize 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    td = file('../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log', 'r').readlines()
-#    if len(td)==2 and td[1].find('Warning: no result file found! (Did you run the tests?)') != -1:
-#        os.remove('../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#    else:
-#        configuration.system('date >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-#        configuration.system('echo "lines: ' + len(td) + ' ---> ' + td[1] + '" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
+    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
 
     #log files copying:
-    # why it's not in lhcb_install? is lhcb_install executed before lhcb_test?
     #os.chdir(os.path.join(slot.buildDir(), 'www'))
     testSummaryFrom = os.path.join(generatePath(slot, project, 'SYSPACKAGECMT', projectName), '..', '..', 'logs', os.environ['CMTCONFIG'] + '-qmtest.log')
     testSummaryTo = os.path.join(slot.wwwDir(), slotName + '.' + configuration.TODAY + '_' + project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest.log')
