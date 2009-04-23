@@ -10,6 +10,7 @@ def usage():
     print "  -f, -p, --catalog <catalog-name>: XML file catalog name (default=./pool_xml_catalog.xml)"
     print "  -n, --newoptions <config-file>: generate a new config file (no catalog is created)"
     print "  -o, --options <config-file>: python config file to be parsed (for backward compatibility)"
+    print "  -i, --ignore: ignore missing files"
     print "  <config-files>: list of python config files"
     print "  -v: verbose output"
 
@@ -21,11 +22,11 @@ except:
     # Setup DIRAC and call back the same script...
     command = ' '.join(sys.argv)
     #print command
-    sys.exit( os.system(". $LHCBSCRIPTS/SetupProject.sh Dirac &>/dev/null; "+ command))
+    sys.exit( os.system(". SetupProject.sh Dirac &>/dev/null; "+ command))
     
 opts, args = getopt.getopt( sys.argv[1:], \
-                            "ho:n:s:f:p:d:v", \
-                            ["help", "options=", "site=", "catalog=", "depth=", "newoptions="])
+                            "ho:n:s:f:p:d:vig", \
+                            ["help", "options=", "site=", "catalog=", "depth=", "newoptions=","ignore"])
 
 catalog = 'pool_xml_catalog.xml'
 tier1s = {"CERN":"LCG.CERN.ch", "RAL":"LCG.RAL.uk", "IN2P3":"LCG.IN2P3.fr", "GRIDKA":"LCG.GRIDKA.de", "NIKHEF":"LCG.NIKHEF.nl", "CNAF":"LCG.CNAF.it", "PIC":"LCG.PIC.es"}
@@ -34,6 +35,8 @@ depth = 1
 optFiles = []
 verbose = False
 newOptFile = ''
+ignore = False
+gaudiVerbose = False
 
 for o, a in opts:
     if o in ("-h", "--help"):
@@ -62,6 +65,10 @@ for o, a in opts:
         ext = os.path.splitext(newOptFile)
         if len(ext[1]) == 0:
             newOptFile += os.path.extsep + "py"
+    if o in ("-i", "--ignore"):
+        ignore = True
+    if o in ("-g"):
+        gaudiVerbose = True
 
 for a in args:
     optFiles.append(a)
@@ -98,12 +105,12 @@ for opt in optFiles:
         sys.exit(1)
     runOpts += opt + " "
 
-gaudiRun = "gaudirun.py -n -o %s %s &>/dev/null" % (tmpFile, runOpts)
-if verbose:
-    print "Extract list of input files from", optFiles
+gaudiRun = "gaudirun.py -n -o %s %s" % (tmpFile, runOpts)
+if not gaudiVerbose: gaudiRun += " &>/dev/null"
+if verbose: print "Extract list of input files from", optFiles
     
 if  os.system("which gaudirun.py &>/dev/null") != 0:
-    rc = os.system(". $LHCBSCRIPTS/SetupProject.sh Gaudi &>/dev/null;" + gaudiRun)
+    rc = os.system(". SetupProject.sh Gaudi &>/dev/null;" + gaudiRun)
 else:
     rc = os.system(gaudiRun)
 if rc:
@@ -164,7 +171,7 @@ try:
         print "List of LFNs:", lfnList
         print "Site:",site
         print "Catalog file:",catalog
-    result = Dirac().getInputDataCatalog(lfnList,site,catalog)
+    result = Dirac().getInputDataCatalog(lfnList,site,catalog,ignoreMissing=ignore)
     if result["OK"]:
         if newOptFile:
             lfnToPfn = result["Successful"]
