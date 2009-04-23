@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
+#$Id: DVTestB2DiMuon.py,v 1.4 2009-04-23 07:56:14 pkoppenb Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -7,7 +7,7 @@
 #
 ##############################################################################
 from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer,PhysDesktop, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations, FilterDesktop
+from Configurables import GaudiSequencer, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations, FilterDesktop
 
 decayDescriptor = "J/psi(1S) -> mu- mu+"
 mcDecayDescriptor = "J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}"
@@ -27,24 +27,24 @@ MCTruthFilter.MCDecayFinder.Decay = mcDecayDescriptor
 
 selectTrueNoPIDsDecay = OldFilterDesktop(trueNoPIDsName)
 selectTrueNoPIDsDecay.addTool( PhysDesktop )
-selectTrueNoPIDsDecay.PhysDesktop.InputLocations = ["StdDC06NoPIDs"+particles]
+selectTrueNoPIDsDecay.InputLocations = ["StdDC06NoPIDs"+particles]
 selectTrueNoPIDsDecay.addTool( MCTruthFilter, name="FilterCriterion" )
 
 allTrueNoPIDsDecay = MakeResonances("AllTrueNoPIDsDecay")
 allTrueNoPIDsDecay.addTool( PhysDesktop )
-allTrueNoPIDsDecay.PhysDesktop.InputLocations = [trueNoPIDsName]
+allTrueNoPIDsDecay.InputLocations = [trueNoPIDsName]
 allTrueNoPIDsDecay.DecayDescriptor = decayDescriptor
 findTrueDecay.Members += [ allTrueNoPIDsDecay ]
 
 selectTrueLooseDecay = OldFilterDesktop(trueLooseName)
 selectTrueLooseDecay.addTool( PhysDesktop )
-selectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06Loose"+particles ]
+selectTrueLooseDecay.InputLocations = [ "StdDC06Loose"+particles ]
 selectTrueLooseDecay.addTool( MCTruthFilter, name = "FilterCriterion" )
 findTrueDecay.Members += [ selectTrueLooseDecay ]
 
 allTrueLooseDecay = MakeResonances("AllTrueLooseDecay")
 allTrueLooseDecay.addTool( PhysDesktop )
-allTrueLooseDecay.PhysDesktop.InputLocations = [trueLooseName]
+allTrueLooseDecay.InputLocations = [trueLooseName]
 allTrueLooseDecay.DecayDescriptor = decayDescriptor
 findTrueDecay.Members += [ allTrueLooseDecay ]
 
