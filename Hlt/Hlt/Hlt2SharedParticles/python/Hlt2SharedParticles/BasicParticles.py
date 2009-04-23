@@ -16,19 +16,19 @@ from GaudiKernel.SystemOfUnits import MeV
 # Make the pions
 #
 Hlt2NoCutsPions = NoPIDsParticleMaker("Hlt2NoCutsPions")
-Hlt2NoCutsPions.Inputs =  ["Hlt/ProtoP/Charged"]
-Hlt2NoCutsPions.Particle =  "pion" ;
+Hlt2NoCutsPions.Input =  "Hlt/ProtoP/Charged"
+Hlt2NoCutsPions.Particle =  "pion" 
 ##########################################################################
 # Make the kaons
 #
 Hlt2NoCutsKaons = Hlt2NoCutsPions.clone("Hlt2NoCutsKaons")
-Hlt2NoCutsKaons.Particle =  "kaon" ;
+Hlt2NoCutsKaons.Particle =  "kaon" 
 ##########################################################################
 # Make the RICH kaons
 #
 Hlt2RichPIDsKaons = CombinedParticleMaker("HltRichPIDsKaons")
-Hlt2RichPIDsKaons.InputProtoParticles = "Hlt/ProtoP/Charged" 
-Hlt2RichPIDsKaons.Particles =  [ "kaon" ]
+Hlt2RichPIDsKaons.Input = "Hlt/ProtoP/Charged" 
+Hlt2RichPIDsKaons.Particle =  [ "kaon" ]
 Hlt2RichPIDsKaons.addTool(TrackSelector)
 Hlt2RichPIDsKaons.TrackSelector.TrackTypes =  [ "Long" ]
 Hlt2RichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
@@ -38,18 +38,18 @@ Hlt2RichPIDsKaons.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
 #
 Hlt2Muons = CombinedParticleMaker("Hlt2Muon")
 Hlt2Muons.ExclusiveSelection = False 
-Hlt2Muons.Particles = ["muon" ]
+Hlt2Muons.Particle = "muon" 
 Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2Muons.Muon.Selection = ["RequiresDet='MUON'" ]
 Hlt2Muons.addTool(TrackSelector)
 Hlt2Muons.TrackSelector.TrackTypes = ["Long"] 
-Hlt2Muons.InputProtoParticles =  "Hlt/ProtoP/Charged"
+Hlt2Muons.Input =  "Hlt/ProtoP/Charged"
 ##########################################################################
 # Make the electrons
 #
 Hlt2Electrons = CombinedParticleMaker("Hlt2Electrons")
-Hlt2Electrons.Particles =  [ "electron" ]
-Hlt2Electrons.InputProtoParticles =  "Hlt/ProtoP/Charged" ;
+Hlt2Electrons.Particle =   "electron" 
+Hlt2Electrons.Input =  "Hlt/ProtoP/Charged" 
 Hlt2Electrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
 ##########################################################################
@@ -76,8 +76,7 @@ Hlt2ResolvedPi0s.PhotonMaker.PtCut = 200.*MeV
 Hlt2MergedPi0s = MergedPi0Maker("Hlt2MergedPi0s")
 Hlt2MergedPi0s.DecayDescriptor = "Pi0" 
 Hlt2MergedPi0s.Input= "Hlt/ProtoP/Neutrals"
-Hlt2MergedPi0s.MassWindow = 60.* MeV;
-
+Hlt2MergedPi0s.MassWindow = 60.* MeV
 #
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:

@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.9 2009-04-22 17:30:52 pkoppenb Exp $
+$Id: release.notes,v 1.10 2009-04-23 15:18:59 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-04-23 - Patrick Koppenburg
+ - Adapt to latest changes in ParticleMaker
 
 ! 2009-04-22 - Patrick Koppenburg
  - Added BasicParticles moved from HltConf options.
