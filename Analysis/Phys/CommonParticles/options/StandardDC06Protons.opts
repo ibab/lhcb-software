@@ -31,15 +31,10 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdDC06TightProtons/Vertices'    TYPE='GaudiSequencer/StdDC06TightProtonsSeq'"
 };
 StdDC06NoPIDsProtonsSeq.Members += { "NoPIDsParticleMaker/StdDC06NoPIDsProtons" };
-StdDC06NoPIDsProtonsSeq.MeasureTime = true;
 StdDC06LooseProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseProtons" };
-StdDC06LooseProtonsSeq.MeasureTime = true;
 StdDC06LooseVTTProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseVTTProtons" };
-StdDC06LooseVTTProtonsSeq.MeasureTime = true;
 StdDC06LooseDownstreamProtonsSeq.Members += { "CombinedParticleMaker/StdDC06LooseDownstreamProtons" };
-StdDC06LooseDownstreamProtonsSeq.MeasureTime = true;
 StdDC06TightProtonsSeq.Members += { "CombinedParticleMaker/StdDC06TightProtons" };
-StdDC06TightProtonsSeq.MeasureTime = true;
 
 // ============================================================================
 // NO PID, all tracks
@@ -49,26 +44,23 @@ StdDC06NoPIDsProtons.DecayDescriptor = "Proton" ;
 // ============================================================================
 // LOOSE long (except VTT protons)
 // ============================================================================
-StdDC06LooseProtons.Particles = {"proton"} ;
+StdDC06LooseProtons.Particle = "proton" ;
 StdDC06LooseProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdDC06LooseProtons.TrackSelector.TrackTypes = {"Long"};
-StdDC06LooseProtons.DecayDescriptor = "Proton" ;
 
-StdDC06LooseDownstreamProtons.Particles = {"proton"} ;
+StdDC06LooseDownstreamProtons.Particle = "proton" ;
 StdDC06LooseDownstreamProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdDC06LooseDownstreamProtons.TrackSelector.TrackTypes = {"Downstream"} ;
-StdDC06LooseDownstreamProtons.DecayDescriptor = "Proton" ;
 
-StdDC06LooseVTTProtons.Particles = {"proton"} ;
+StdDC06LooseVTTProtons.Particle = "proton" ;
 StdDC06LooseVTTProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
 StdDC06LooseVTTProtons.TrackSelector.TrackTypes={"Upstream"} ;
-StdDC06LooseVTTProtons.DecayDescriptor = "Proton" ;
 
 // ============================================================================
 // TIGHT
 // ============================================================================
 
-StdDC06TightProtons.Particles = {"proton"} ;
+StdDC06TightProtons.Particle = "proton" ;
 StdDC06TightProtons.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" } ;
 StdDC06TightProtons.TrackSelector.TrackTypes = {"Long"};
 StdDC06TightProtons.DecayDescriptor = "Proton" ;
