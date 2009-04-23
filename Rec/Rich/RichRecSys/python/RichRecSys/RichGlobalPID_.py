@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID_.py,v 1.3 2009-02-21 14:34:46 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID_.py,v 1.4 2009-04-23 14:38:50 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -68,9 +68,10 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     def applyConf(self):
 
         # Are we properly configured
+        if not self.isPropertySet("PidSequencer") :
+            raise RuntimeError("ERROR : PID Sequence not set")
         sequence = self.getProp("PidSequencer")
-        if sequence == None : raise RuntimeError("ERROR : Reconstruction Sequence not set")
-        
+                
         # Setup the tools and algs
         if self.getProp("InitAlgorithms") : self.applyConfAlgs(sequence)
         if self.getProp("InitTools")      : self.applyConfTools()

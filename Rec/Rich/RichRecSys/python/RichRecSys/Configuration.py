@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2009-03-10 16:17:47 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-04-23 14:38:50 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -104,9 +104,10 @@ class RichRecSysConf(RichConfigurableUser):
     def applyConf(self) :
 
         # Are we properly configured
+        if not self.isPropertySet("RecoSequencer") :
+            raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
-        if recoSequencer == None : raise RuntimeError("ERROR : Reconstruction Sequence not set")
-        
+                
         # Check configuration is sane
         self.checkConfiguration()
 
