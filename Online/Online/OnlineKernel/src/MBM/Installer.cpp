@@ -119,7 +119,7 @@ int MBM::Installer::optparse (const char* c)  {
 }
 
 int MBM::Installer::install()  {
-  int len, icode = deinstall();
+  int len, bytes_per_bit, icode = deinstall();
   if(icode != MBM_NORMAL) return icode;
   ::lib_rtl_output(LIB_RTL_INFO,"++bm_init++ Commencing BM installation \n");
   int status = ::lib_rtl_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
@@ -130,7 +130,8 @@ int MBM::Installer::install()  {
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
   ::memset(m_bm->ctrl,0,sizeof(CONTROL));
   m_bm->ctrl->shift_p_Bit = p_bits;
-  m_bm->ctrl->bytes_p_Bit = (1<<p_bits);
+  m_bm->ctrl->bytes_p_Bit = (1<<p_bits)-1;
+  bytes_per_bit = m_bm->ctrl->bytes_p_Bit + 1;
   ::lib_rtl_output(LIB_RTL_INFO,"Control: %p  %08X             [%d Bytes]\n",(void*)m_bm->ctrl,
            ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
 
@@ -162,7 +163,7 @@ int MBM::Installer::install()  {
   ::lib_rtl_output(LIB_RTL_INFO,"Event:   %p  %08X  %p   [%d Bytes]\n",(void*)m_bm->event,
            ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
 
-  len = (((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3);
+  len = (((p_size<<10)/bytes_per_bit)<<3);
   status = ::lib_rtl_create_section(bitmap_mod,len,&m_bm->bitm_add);
   if(!::lib_rtl_is_success(status))   {
     ::lib_rtl_delete_section(m_bm->ctrl_add);
@@ -171,7 +172,7 @@ int MBM::Installer::install()  {
     ::lib_rtl_output(LIB_RTL_ERROR,"Cannot create section %s. Exiting....",bitmap_mod);
     return status;
   }
-  len = ((p_size<<10)/m_bm->ctrl->bytes_p_Bit)<<3;
+  len = ((p_size<<10)/bytes_per_bit)<<3;
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
   ::memset(m_bm->bitmap,0,len);
   ::lib_rtl_output(LIB_RTL_INFO,"Bitmap:  %p  %08X             [%d Bytes]\n",(void*)m_bm->bitmap,
@@ -202,10 +203,10 @@ int MBM::Installer::install()  {
   ctrl->tot_actual   = 0;
   ctrl->tot_seen     = 0;
   ctrl->i_events     = 0;
-  ctrl->i_space      = (p_size<<10)/ctrl->bytes_p_Bit; /*in Bits*/
+  ctrl->i_space      = (p_size<<10)/bytes_per_bit; /*in Bits*/
   ctrl->last_bit     = 0;
   ctrl->last_alloc   = 0;
-  ctrl->bm_size      = (p_size<<10)/ctrl->bytes_p_Bit; /*in bits*/
+  ctrl->bm_size      = (p_size<<10)/bytes_per_bit; /*in bits*/
   ctrl->spare1       = 0;
   for (int i=0;i<p_umax;i++)  {
     user[i].block_id = BID_USER;

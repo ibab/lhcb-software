@@ -40,6 +40,7 @@ struct MEP_SINGLE_EVT  {
 };
 
 struct MEPEVENT   {
+  //long buffer[16];
   long begin;
   int  evID;
   int  packing;

@@ -115,6 +115,8 @@ int Process::start()    {
     if ( Process::debug() ) {
       ::lib_rtl_sleep(10);
       cout << "Child: Starting process:" << m_name;
+      //for(size_t i=0; i<m_args.size();++i)
+      //  cout << " " << arg[i+1];
       //cout << " PID:" << ::lib_rtl_pid();
       if ( !m_output.empty() ) cout << " output redirected to:" << m_output;
       cout << endl;

@@ -1918,7 +1918,7 @@ int _mbm_send_space (BMID bm)  {
     USER* u = bm->user + bm->owner;
     if ( u->space_size )  {
       _mbm_printf("_mbm_send_space> %s Free event space @ %08X of size:%d\n",
-        bm->bm_name, u->space_add, u->space_size);
+		  bm->bm_name, u->space_add, u->space_size);
       _mbm_sfree (bm, u->space_add, u->space_size);  /* free space */
     }
     u->space_add = 0;

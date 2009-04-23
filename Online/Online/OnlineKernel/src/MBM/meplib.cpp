@@ -212,22 +212,23 @@ int mep_scan(MEPID dsc, int loop_delay)  {
   static int EVENT_next_off;
   byte_offset(EVENT,next,EVENT_next_off);
   int uid = bm->owner;
-  
   UserMask msk;
   msk.clear();
   msk.set(uid);
   int mask_value = msk.mask_summ();
 
   while (1)  {{  // Do not remove the double parenthesis!
-    RTL::Lock lock(bm->lockid);
-    if ( lock )  {
+    RTL::Lock lock_bm(bm->lockid);
+    RTL::Lock lock_mep(id->lockid);
+    if ( lock_bm && lock_mep )  {
       RTL::DoubleLinkedQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
       for(EVENT* e=que.get(); e; e = que.get() )  {
         e->isValid();
         if ( e->umask0.mask_or(e->umask2,e->held_mask) == mask_value )  {
           int* evadd  = (int*)(bm->buffer_add+e->ev_add);
-          MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)evadd;
-          MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
+          //MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)evadd;
+          //MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
+          MEPEVENT* m = (MEPEVENT*)evadd;
           if ( m->refCount <= 1 )    {
             if ( m->refCount != 1 )    {
               ::lib_rtl_output(LIB_RTL_ERROR,"MEP release [%d] Event@ %08X MEP@ %08X [%d] Pattern:%08X\n",
@@ -388,20 +389,21 @@ MEPID mep_include (const char* name, int partid, int selection) {
   std::auto_ptr<MEPDESC> bm(new MEPDESC(name,partid));
   ::memset(bm.get(),0,sizeof(MEPDESC));
   ::strcpy(bm->mutexName,"MEP_Management");
-  int status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
+  int status = ::lib_rtl_create_lock(bm->mutexName, &bm->lockid);
   if (!lib_rtl_is_success(status))    {
-    lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock %s.",bm->mutexName);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock %s.",bm->mutexName);
     return MEP_INV_DESC;
   }
-  bm->owner = lib_rtl_pid();
+  bm->owner = ::lib_rtl_pid();
   bm->selection = selection;
+  bm->partitionID = partid;
   // Map MEP buffer
   bm->mepBuffer = ( bm->selection&USE_MEP_BUFFER ) 
     ? ::mbm_include(mep_buff_name.c_str(), name, partid)
     : s_map_unused ? ::mbm_map_memory(mep_buff_name.c_str())
     : MBM_INV_DESC;
   if ( (bm->selection&USE_MEP_BUFFER || s_map_unused) && bm->mepBuffer == MBM_INV_DESC )  {
-    lib_rtl_delete_lock(bm->lockid);
+    ::lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
   else if ( bm->mepBuffer != MBM_INV_DESC ) {
@@ -414,7 +416,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
     : MBM_INV_DESC;
   if ( (bm->selection&USE_EVT_BUFFER || s_map_unused) && bm->evtBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
-    lib_rtl_delete_lock(bm->lockid);
+    ::lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
   else if ( bm->evtBuffer != MBM_INV_DESC )  {
@@ -430,7 +432,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   if ( (bm->selection&USE_RES_BUFFER || s_map_unused) && bm->resBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->evtBuffer, bm->selection&USE_EVT_BUFFER);
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
-    lib_rtl_delete_lock(bm->lockid);
+    ::lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
   else if ( bm->resBuffer != MBM_INV_DESC )  {
@@ -438,7 +440,6 @@ MEPID mep_include (const char* name, int partid, int selection) {
     ::mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
     ::mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
   }
-  bm->partitionID = partid;
   return bm.release();
 }
 

@@ -27,4 +27,4 @@ $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_0" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_1" &
 $MINITERM "$EXEC mep_holder_a -i=MEP    -n=MepHold_0" &
 sleep 2
-$MINITERM "$EXEC mep_prod_a -n=Mep_0 -count=1000" &
+$MINITERM "$EXEC mep_prod_a -n=Mep_0 -count=10000" &

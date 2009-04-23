@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2009-04-19 Markus Frank
+ - Fix bug in buffer manager and prevent writing to not mapped memory area.
+
 ! 2009-01-19 Markus Frank
  - Implement mechanism to allow saving MEPs by the Hlder task if Moore tasks crash
 

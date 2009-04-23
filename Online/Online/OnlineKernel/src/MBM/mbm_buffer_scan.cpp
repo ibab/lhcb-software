@@ -20,10 +20,10 @@ extern "C" int mbm_buffer_scan(int argc , char ** argv) {
   CLI cli(argc, argv, help);
   cli.getopt("buffer",1,buffer="Events");
   cli.getopt("size",1,tot=200);
-  cli.getopt("last",1,last=1023);
+  cli.getopt("last",1,last=1024);
   int diff = KByte;
   int stot = tot*KByte;
-  int s1   = (tot-35)*KByte;
+  int s1   = (tot-32)*KByte;
   ::sprintf(txt, "-s=%d",stot/KByte);
   ::sprintf(buff,"-i=%s",buffer.c_str());
   args[1] = txt;
@@ -39,8 +39,8 @@ extern "C" int mbm_buffer_scan(int argc , char ** argv) {
     ::memset(e1.data,0xCD,s1);
     while( (s2+=diff) + s1 <= stot )   {
       bool end = false;
-      if ( s1 + s2 + 2*diff > stot )   {
-	s2 = stot-s1-2*diff;
+      if ( s1 + s2 + diff > stot )   {
+	s2 = stot-s1-diff;
 	end = true;
       }
       else {
@@ -49,11 +49,15 @@ extern "C" int mbm_buffer_scan(int argc , char ** argv) {
       for(int scan = 0; scan<last; ++scan) {
 	s2 = s2 + 1;
 	if ( ((++cnt)%1000) == 0 || end ) {
-	  int t1 = ((s1+KByte)/KByte)*KByte;
-	  int t2 = ((s2+KByte)/KByte)*KByte;
+	  int t1 = ((s1+KByte-1)/KByte)*KByte;
+	  int t2 = ((s2+KByte-1)/KByte)*KByte;
 	  const char* flag = end ? "LAST" : "NORMAL";
 	  ::lib_rtl_output(LIB_RTL_ALWAYS,"%-6s %6d Buffer sizes: %8d/%8d [%4d] and %8d/%8d [%4d] bytes: %8d/%8d [%4d] bytes total\n", 
 			   flag, cnt, s1, t1, int(t1/KByte), s2, t2, int(t2/KByte), s1+s2, t1+t2, int((t1+t2)/KByte));
+	}
+	if ( scan == 1022 ) {
+	  ++s1;
+	  --s1;
 	}
 	if ( MBM_NORMAL == p2.getSpace(s2) ) {
 	  MBM::EventDesc& e2 = p2.event();
