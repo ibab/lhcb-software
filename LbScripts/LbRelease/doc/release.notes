@@ -1,4 +1,4 @@
-2008-02-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+2008-04-23  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: isStarted files to keep information
 	which platforms are started but not finished - needed for the summary page;
