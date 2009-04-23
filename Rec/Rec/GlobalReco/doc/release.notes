@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-04-23 - Chris Jones
+ - Improve how uninitialised sequences are check for during Configuration
+
 !========================== GlobalReco v6r20 2009-03-10 ======================
 ! 2009-03-10 - Chris Jones
  - Improvements to the ROOT scripts for monitoring the PID performance

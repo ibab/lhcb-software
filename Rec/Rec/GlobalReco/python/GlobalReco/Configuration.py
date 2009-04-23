@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2008-12-17 18:02:47 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-04-23 15:20:25 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -26,9 +26,10 @@ class GlobalRecoConf(LHCbConfigurableUser):
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
+        if not self.isPropertySet("RecoSequencer") :
+            raise RuntimeError("ERROR : PROTO Sequencer not set")
         seq = self.getProp("RecoSequencer")
-        if seq == None : raise RuntimeError("ERROR : PROTO Sequencer not set")
-
+        
         seq.Context = self.getProp("Context")
         
         # Charged Proto particles
