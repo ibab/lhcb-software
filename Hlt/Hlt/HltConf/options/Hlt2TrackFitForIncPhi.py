@@ -72,7 +72,7 @@ from Configurables import ProtoParticleCALOFilter
 Hlt2IncPhiTFKaons = NoPIDsParticleMaker('Hlt2IncPhiTFKaons')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFKaons ]
 
-Hlt2IncPhiTFKaons.Inputs = [ "Hlt/ProtoP/TFChargedForIncPhi" ]
+Hlt2IncPhiTFKaons.Input =  "Hlt/ProtoP/TFChargedForIncPhi" 
 Hlt2IncPhiTFKaons.Particle = "kaon"
 
 ######################################################################
@@ -85,7 +85,6 @@ Hlt2IncPhiTFKaons.Particle = "kaon"
 
 
 Hlt2IncPhiRichParticlesSeq = GaudiSequencer('Hlt2IncPhiRichParticlesSeq')
-Hlt2IncPhiRichParticlesSeq.MeasureTime = 1
 
 ######################################################################
 # Set up Rich ChargedProtoPAlg
@@ -126,8 +125,8 @@ Hlt2IncPhiRichChargedProtoPAlg.UseVeloPID = 0
 HltIncPhiRichPIDsKaons = CombinedParticleMaker('HltIncPhiRichPIDsKaons')
 Hlt2IncPhiRichParticlesSeq.Members += [ HltIncPhiRichPIDsKaons ]
 
-HltIncPhiRichPIDsKaons.InputProtoParticles = "Hlt/ProtoP/RichChargedForIncPhi"
-HltIncPhiRichPIDsKaons.Particles = ["kaon"]
+HltIncPhiRichPIDsKaons.Input = "Hlt/ProtoP/RichChargedForIncPhi"
+HltIncPhiRichPIDsKaons.Particle = "kaon"
 HltIncPhiRichPIDsKaons.addTool(TrackSelector())
 HltIncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
 HltIncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))

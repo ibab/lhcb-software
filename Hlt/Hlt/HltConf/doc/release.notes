@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.214 2009-04-22 17:31:55 pkoppenb Exp $ 
+! $Id: release.notes,v 1.215 2009-04-23 15:41:56 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-23 - Patrick Koppenburg
+ - Adapt to new Particlemaker
 
 ! 2009-04-22 - Patrick Koppenburg
  - Moved Basic Particles to Hlt2SharedParticles

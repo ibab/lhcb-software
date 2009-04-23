@@ -17,12 +17,10 @@ from Configurables import CombineParticles, PhysDesktop
 SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 #GaudiSequencer('Hlt2').Members += [ SeqHlt2TFParticlesForTopo ]
 
-SeqHlt2TFParticlesForTopo.MeasureTime = 1
 SeqHlt2TFParticlesForTopo.IgnoreFilterPassed = 1  # do all
 
 SeqHlt2TFChargedForTopo = GaudiSequencer('SeqHlt2TFChargedForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFChargedForTopo ]
-SeqHlt2TFChargedForTopo.MeasureTime = 1
 
 #---------------------------------------------------------------------
 # @todo TEMPORARY kill huge events
@@ -141,10 +139,10 @@ Hlt2TFPionsForTopo = NoPIDsParticleMaker('Hlt2TFPionsForTopo')
 Hlt2TFKaonsForTopo = NoPIDsParticleMaker('Hlt2TFKaonsForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFPionsForTopo, Hlt2TFKaonsForTopo ]
 
-Hlt2TFPionsForTopo.Inputs = [ "Hlt/ProtoP/TFChargedForTopo" ]
+Hlt2TFPionsForTopo.Input =  "Hlt/ProtoP/TFChargedForTopo" 
 Hlt2TFPionsForTopo.Particle = "pion"
 
-Hlt2TFKaonsForTopo.Inputs = [ "Hlt/ProtoP/TFChargedForTopo" ]
+Hlt2TFKaonsForTopo.Input =  "Hlt/ProtoP/TFChargedForTopo" 
 Hlt2TFKaonsForTopo.Particle = "kaon"
 
 #* To get the RICH kaons
@@ -164,9 +162,8 @@ Hlt2TFKaonsForTopo.Particle = "kaon"
 HltRichPIDsTFKaonsForTopo = CombinedParticleMaker('HltRichPIDsTFKaonsForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ HltRichPIDsTFKaonsForTopo ]
 
-HltRichPIDsTFKaonsForTopo.ExclusiveSelection = 0
-HltRichPIDsTFKaonsForTopo.InputProtoParticles = "Hlt/ProtoP/TFChargedForTopo"
-HltRichPIDsTFKaonsForTopo.Particles = ["kaon"]
+HltRichPIDsTFKaonsForTopo.Input = "Hlt/ProtoP/TFChargedForTopo"
+HltRichPIDsTFKaonsForTopo.Particle = "kaon"
 HltRichPIDsTFKaonsForTopo.addTool(TrackSelector())
 HltRichPIDsTFKaonsForTopo.TrackSelector.TrackTypes = ["Long"]
 HltRichPIDsTFKaonsForTopo.addTool(ProtoParticleCALOFilter('Kaon'))
@@ -185,8 +182,8 @@ SeqHlt2TFMuonsForTopo.IgnoreFilterPassed = 1
 Hlt2TFMuonsForTopo = CombinedParticleMaker('Hlt2TFMuonsForTopo')
 SeqHlt2TFMuonsForTopo.Members += [ Hlt2TFMuonsForTopo ]
 
-Hlt2TFMuonsForTopo.InputProtoParticles =  "/Event/Hlt/ProtoP/TFChargedForTopo"
-Hlt2TFMuonsForTopo.Particles = ["muon"]
+Hlt2TFMuonsForTopo.Input =  "/Event/Hlt/ProtoP/TFChargedForTopo"
+Hlt2TFMuonsForTopo.Particle = "muon"
 Hlt2TFMuonsForTopo.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TFMuonsForTopo.Muon.Selection = ["RequiresDet='MUON'"]
 Hlt2TFMuonsForTopo.addTool(TrackSelector())
@@ -199,8 +196,8 @@ Hlt2TFMuonsForTopo.DecayDescriptor = "Muon"
 Hlt2TFElectronsForTopo = CombinedParticleMaker('Hlt2TFElectronsForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFElectronsForTopo ]
 
-Hlt2TFElectronsForTopo.Particles =  ["electron"]
-Hlt2TFElectronsForTopo.InputProtoParticles =  "/Event/Hlt/ProtoP/TFChargedForTopo"
+Hlt2TFElectronsForTopo.Particle =  "electron"
+Hlt2TFElectronsForTopo.Input =  "/Event/Hlt/ProtoP/TFChargedForTopo"
 Hlt2TFElectronsForTopo.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2TFElectronsForTopo.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 
