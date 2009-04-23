@@ -4,6 +4,13 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2009-04-23 - Juan PALACIOS
+ - dict/selection.py
+  . Add the necessary stuff to create a dictionary for LHCb::Relation1D<LHCb::Particle, LHCb::MCParticle>
+ - dict/selection.h
+   dict/selection.xml
+  . Regenerate with above changes.
+
 !======================= EventAssoc v4r5 2008-11-17 ==========================
 ! 2008-11-02 - Vanya BELYAEV
  - dict/selection.h
