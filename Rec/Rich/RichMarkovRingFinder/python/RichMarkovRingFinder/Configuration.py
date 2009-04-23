@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-01-07 13:31:19 ukerzel Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-04-23 15:16:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -25,7 +25,7 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
        ,"Panels"              : ["Rich1Top","Rich1Bottom","Rich2Left","Rich2Right"]
        ,"MaxHitsInPanel"      : 300
        ,"AssociateToSegments" : True
-       ,"Sequencer"           : GaudiSequencer("RichMarkovDefaultSequencer")     # The sequencer to add the RICH MCMC algorithms to
+       ,"Sequencer"           : None # The sequencer to add the RICH MCMC algorithms to
         }
 
     ## Access the finder for RICH1 top panel
@@ -55,11 +55,11 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
     ## @brief Apply the configuration to the given GaudiSequencer
     def applyConf(self):
 
-        sequence = self.getProp("Sequencer")
-        if sequence.name() == "RichMarkovDefaultSequencer" :
+        if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Rich Markov Ring Finder Sequence not set")
         else :
-            panels = self.getProp("Panels")
+            sequence = self.getProp("Sequencer")
+            panels   = self.getProp("Panels")
             if len(panels) == 0 :
                 raise RuntimeError("ERROR : No panels set to find Markov Rings")
             else:
