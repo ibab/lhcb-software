@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.58 2009-04-23 14:48:32 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.59 2009-04-24 12:10:13 pkoppenb Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -628,7 +628,8 @@ StatusCode PhysDesktop::getEventInput(){
   // as specified in jobOptions
 
   if (!m_inputLocationsSet){
-    return Error("InputLocations have not been set. Call setInputLocations from parent!");
+    return Error("InputLocations have not been set."+
+                 " Call setInputLocations from parent! (or have you forgotten DVAlgorithm::Initialize() ?)");
   }
   
   if (!m_inputLocations.empty()) {
