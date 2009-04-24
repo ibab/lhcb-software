@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-04-24 - Jeroen van Tilburg
+ - STOfflinePosition: Improved tune of error estimates using long tracks.
+
 ! 2009-04-16 - Jeroen van Tilburg
  - STOfflinePosition: New charge sharing functions. Cubic plus linear term for
    2-strip clusters, cubic term for 3-strip clusters, linear term for 4-strip

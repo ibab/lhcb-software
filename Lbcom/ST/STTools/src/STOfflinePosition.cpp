@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.16 2009-04-16 12:28:38 jvantilb Exp $
+// $Id: STOfflinePosition.cpp,v 1.17 2009-04-24 16:17:35 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -33,8 +33,7 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
                                      const IInterface* parent) :
   ST::ToolBase( type, name, parent )
 {
-  // m_errorVec += 0.24, 0.13, 0.26, 0.23;
-  m_errorVec += 0.18, 0.13, 0.17, 0.04;
+  m_errorVec += 0.196, 0.147, 0.177, 0.037;
   declareProperty("ErrorVec",m_errorVec);
   declareProperty("SharingCorr",m_sharingCorr = -112.); 
   declareProperty("CubicSharingCorr2",m_cubicSharingCorr2 = 5.4); 
