@@ -11,6 +11,7 @@
 #include "Gaucho/DimInfoServices.h"
 #include "Gaucho/AdderSvc.h"
 #include "DimCmdServer.h"
+#include "dic.hxx"
 
 #include <ctime>
 
@@ -112,6 +113,7 @@ StatusCode AdderSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
+  DimClient::setDnsNode(m_dimClientDns.c_str());
   m_processMgr = new ProcessMgr (s_Adder, msgSvc(), this, m_refreshTime);
   m_processMgr->setSubFarmVector(m_subfarmName);
   m_processMgr->setTaskName(m_taskName);
