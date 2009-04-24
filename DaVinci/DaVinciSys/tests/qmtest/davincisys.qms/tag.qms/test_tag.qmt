@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestTagging.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+BTaggingChecker                            INFO =======================================================
+BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE 
+BTaggingChecker                            INFO Summary : 
+BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w       
+BTaggingChecker                            INFO   1         -6.7+-4.6      6.7+-4.6    1e+02+-0       0       2
+BTaggingChecker                            INFO   2          3.3+-3.3      3.3+-3.3        0+-0       1       0
+BTaggingChecker                            INFO   3            0+-0       13+-6.2    5e+01+-2e+01       2       2
+BTaggingChecker                            INFO   4          3.3+-6       13+-6.2    2e+01+-2e+01       3       1
+BTaggingChecker                            INFO   5         -3.3+-3.3      3.3+-3.3    1e+02+-0       0       1
+BTaggingChecker                            INFO ---------------------------------------------------------
+BTaggingChecker                            INFO Total nr of events =     30
+BTaggingChecker                            INFO Tagging efficiency =     40 +/- 8.9 %
+BTaggingChecker                            INFO Wrong Tag fraction =     64 +/- 14 %
+BTaggingChecker                            INFO EFFECTIVE COMB. TE =   -3.3 +/- 8.8 %
+BTaggingChecker                            INFO ==========END OF EXCLUSIVE TAGGING PERFORMANCE =======
+BTaggingChecker                            INFO =========================================================
+""", stdout, result, causes, signature_offset = 1)
+</text></argument>
+</extension>
