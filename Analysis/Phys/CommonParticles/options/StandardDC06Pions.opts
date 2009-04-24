@@ -67,7 +67,7 @@ StdDC06LooseDownstreamPions.TrackSelector.TrackTypes = {"Downstream"};
 // ============================================================================
 // TIGHT
 // ============================================================================
-StdDC06TightPions.Particles = "pion" ;
+StdDC06TightPions.Particle = "pion" ;
 StdDC06TightPions.Pion.Selection = {"RequiresDet='RICH' CombDLL(pi-k)>'-5.0'" }  ;
 StdDC06TightPions.TrackSelector.TrackTypes = {"Long"};
 // ============================================================================
