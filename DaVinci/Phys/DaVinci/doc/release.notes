@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.332 2009-04-24 11:43:07 jpalac Exp $
+! $Id: release.notes,v 1.333 2009-04-24 14:03:53 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-04-24 - Juan PALACIOS
  - python/DaVinci/PhysMicroDST.py
+  . Fixes to allow for selection algorithms passed by configurable or by name.
   . Fix typo
 
 ! 2009-04-22 - Patrick Koppenburg
