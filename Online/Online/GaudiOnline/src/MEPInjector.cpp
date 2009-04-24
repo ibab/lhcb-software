@@ -719,7 +719,7 @@ StatusCode MEPInjector::getEvent(int nbEv) {
                         bmid = m_EventBuffers[LUMI];
                         break;
                 case 3 : //RAND
-                        msgLog << MSG::DEBUG << "Trigger Type 2: RAND event selected" << emdmsg; 
+                        msgLog << MSG::DEBUG << "Trigger Type 2: RAND event selected" << endmsg; 
                         bmid = m_EventBuffers[RAND];
                         break;  
                 case 5 : //PERB
@@ -1516,12 +1516,12 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
     case RawBank::L0PU:
         ipNet |= (15<<16);
         switch(src) {
-i       case 0 : return (ipNet | (1<<24));   // Not sure about only this one, if an unknown src appear, it should be it ;) /* Dear Martin mentionned 2 but it seems it is 0*/
+        case 0 : return (ipNet | (1<<24));   // Not sure about only this one, if an unknown src appear, it should be it ;) /* Dear Martin mentionned 2 but it seems it is 0*/
         default : 
             //msgLog << MSG::WARNING << "Unknown source "<< src << " for L0PU bank type"<<endmsg;   
             return 0;
         }  
-	return (/*inet_addr("192.169.15.0")*/ ipNet |(15<<16) + ((src + 1) << 24));	//TPU
+	return (/*inet_addr("192.169.15.0")*/ ipNet | (15<<16) | ((src + 1) << 24));	//TPU
     case RawBank::DAQ:
 	return ipNet; //XXX Not used
     case RawBank::ODIN:  //XXX Not used in TFC mode
