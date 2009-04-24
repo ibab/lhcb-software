@@ -28,7 +28,7 @@ Hlt2NoCutsKaons.Particle =  "kaon"
 #
 Hlt2RichPIDsKaons = CombinedParticleMaker("HltRichPIDsKaons")
 Hlt2RichPIDsKaons.Input = "Hlt/ProtoP/Charged" 
-Hlt2RichPIDsKaons.Particle =  [ "kaon" ]
+Hlt2RichPIDsKaons.Particle =   "kaon" 
 Hlt2RichPIDsKaons.addTool(TrackSelector)
 Hlt2RichPIDsKaons.TrackSelector.TrackTypes =  [ "Long" ]
 Hlt2RichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
@@ -37,7 +37,6 @@ Hlt2RichPIDsKaons.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
 # Make the Muons
 #
 Hlt2Muons = CombinedParticleMaker("Hlt2Muon")
-Hlt2Muons.ExclusiveSelection = False 
 Hlt2Muons.Particle = "muon" 
 Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2Muons.Muon.Selection = ["RequiresDet='MUON'" ]
