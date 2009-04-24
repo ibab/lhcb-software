@@ -1,4 +1,4 @@
-// $Id: MCTrackInfo.h,v 1.3 2007-04-30 08:24:53 mneedham Exp $
+// $Id: MCTrackInfo.h,v 1.4 2009-04-24 14:27:15 mschille Exp $
 #ifndef MCEVENT_MCTRACKINFO_H 
 #define MCEVENT_MCTRACKINFO_H 1
 
@@ -37,9 +37,13 @@ public:
     maskT3X        = 0x00000100,
     maskT3S        = 0x00000200,
 
-    maskHasVelo    = 0x00000003,   // R + Phi
-    maskHasTT      = 0x0000000C,   // TT1 and TT2
-    maskHasT       = 0x000003F0,   // all T stations
+    maskHasVelo    = maskVeloR | maskVeloPhi,   // R + Phi
+    maskHasTT      = maskTT1 | maskTT2,   // TT1 and TT2
+    maskHasT1      = maskT1X | maskT1S,
+    maskHasT2      = maskT2X | maskT2S,
+    maskHasT3      = maskT3X | maskT3S,
+    maskHasT       = maskHasT1 | maskHasT2 | maskHasT3,   // all T stations
+    maskHasVeloAndT = maskHasVelo | maskHasT,
 
     maskAccVeloR   = 0x00000400,
     maskAccVeloPhi = 0x00000800,
@@ -52,25 +56,19 @@ public:
     maskAccT3X     = 0x00040000,
     maskAccT3S     = 0x00080000,
 
-    maskAccVelo    = 0x00000C00,  // R and Phi hits
-    maskAccTT      = 0x00003000,  // TT1 and TT2
-    maskAccT       = 0x000FC000,  // T stations
+    maskAccVelo    = maskAccVeloR | maskAccVeloPhi,  // R and Phi hits
+    maskAccTT      = maskAccTT1 | maskAccTT2,  // TT1 and TT2
+    maskAccT1      = maskAccT1X | maskAccT1S,
+    maskAccT2      = maskAccT2X | maskAccT2S,
+    maskAccT3      = maskAccT3X | maskAccT3S,
+    maskAccT       = maskAccT1 | maskAccT2 | maskAccT3,  // T stations
+    maskAccVeloAndT = maskAccVelo | maskAccT,
 
     multVeloR      = 20,
     multVeloPhi    = 25,
 
     maskMultVeloR  = 0x01F00000,  // Velo R CLuster multiplicity
-    maskMultVeloPhi= 0x3E000000,   // VeloPhi cluster multipliity
-
-    maskHasT1 = maskT1X + maskT1S,
-    maskHasT2 = maskT2X + maskT2S,
-    maskHasT3 = maskT3X + maskT3S,
-    maskAccT1 = maskAccT1X + maskAccT1S,
-    maskAccT2 = maskAccT2X + maskAccT2S,
-    maskAccT3 = maskAccT3X + maskAccT3S,
-    maskHasVeloAndT = maskHasVelo + maskHasT,
-    maskAccVeloAndT = maskAccVelo + maskHasT
-
+    maskMultVeloPhi= 0x3E000000   // VeloPhi cluster multipliity
   };
 
   /// Standard constructor
