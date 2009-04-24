@@ -19,20 +19,9 @@ MonObject(msgSvc, source, version)
 }
 
 MonProfile::~MonProfile(){
-//   MsgStream msgStream = createMsgStream();
-//   msgStream <<MSG::DEBUG<<"deleting binSum" << endreq;
   if (binSum!=0) delete []binSum;
-////   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-//  if (binErr!=0) delete []binErr;
-//   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-//   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  if (binEntries!=0) delete []binEntries;
+  if (binEntries !=0) delete []binEntries;
   if (m_fSumw2!=0) delete []m_fSumw2;
-// BUGG...I dont know yet why I can't do it..  
-/*  if (m_profile!=0) {
-    msgStream <<MSG::DEBUG<<"deleting m_profile" << endreq;
-    delete m_profile; m_profile = 0;
-  }*/
 }
 
 void MonProfile::setAidaProfile(AIDA::IProfile1D* iProfile1D){
@@ -43,30 +32,18 @@ void MonProfile::setAidaProfile(AIDA::IProfile1D* iProfile1D){
   setProfile(hRoot);
 }
 
-void MonProfile::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonProfile::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonProfile::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  MonObject::save(ar,version);
-  save2(ar);
-}
-
-void MonProfile::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonProfile::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
 
-void MonProfile::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  load2(ar);
-}
-
-template <class input_archive>
-void MonProfile::load2(input_archive  & ar){
+void MonProfile::load2(boost::archive::binary_iarchive  & ar){
    MsgStream msg = createMsgStream();
 
   ar & nbinsx;
@@ -87,11 +64,6 @@ void MonProfile::load2(input_archive  & ar){
     ar & binSum[i];
   }
 
-  //if (binErr==0) binErr = new double[(nbinsx+2)];
-
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  ar & binErr[i];
-  //}
 
   if (binEntries==0) binEntries = new double[(nbinsx+2)];
 
@@ -99,17 +71,11 @@ void MonProfile::load2(input_archive  & ar){
     ar & binEntries[i];
   }
 
-  //msg <<MSG::DEBUG<<"before binLabelX" << endreq;
   if (bBinLabelX){
-    //if (binLabelX==0) binLabelX = new std::string[(nbinsx+1)];
-    //msg <<MSG::DEBUG<<"binLabelX clear" << endreq;
     binLabelX.clear();
-
     for (int i = 1; i < (nbinsx+1) ; ++i){
-      //ar & binLabelX[i];
       std::string labelX;
       ar & labelX;
-      //msg <<MSG::DEBUG<<"binLabelX[" << i << "]" << labelX << endreq;
       binLabelX.push_back(labelX);
     }
   }
@@ -136,14 +102,12 @@ void MonProfile::load2(input_archive  & ar){
 
 }
 
-template <class output_archive>
-void MonProfile::save2(output_archive  & ar){
+void MonProfile::save2(boost::archive::binary_oarchive  & ar){
   if (m_profile != 0) splitObject();
   save3(ar);
 }
 
-template <class output_archive>
-void MonProfile::save3(output_archive  & ar){
+void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
 
   if (!isLoaded) return;  
 
@@ -160,9 +124,7 @@ void MonProfile::save3(output_archive  & ar){
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binSum[i];
   }
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  ar & binErr[i];
-  //}
+
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binEntries[i];
   }
@@ -215,7 +177,6 @@ void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
   msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
-  //if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
   if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
@@ -230,6 +191,7 @@ void MonProfile::write(){
   //write the histogram with only its name
   std::vector<std::string> HistoFullName = Misc::splitString(m_profile->GetName(), "/");
   m_profile->Write(HistoFullName[HistoFullName.size()-1].c_str());
+
 }
 void MonProfile::loadObject(){
   MsgStream msg = createMsgStream();
@@ -242,9 +204,6 @@ void MonProfile::loadObject(){
   m_profile->Reset();
   FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
 
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  m_profile->SetBinError(i, binErr[i]);
-  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     m_profile->SetBinEntries(i, binEntries[i]);
@@ -279,13 +238,9 @@ void MonProfile::loadObject(){
 
   fot->fSumw2.Set(m_fSumSize);
 
-  //msg <<MSG::DEBUG << "MonProfile::loadObject: m_fSumSize = " << m_fSumSize   << endreq;
-
+ 
   for (int i=0 ; i < m_fSumSize; ++i) {
     fot->fSumw2[i] = m_fSumw2[i];
- //  msg <<MSG::DEBUG << "MonProfile::loadObject: i=" << i << " binSum=" << binSum[i] << " m_fSumw2=" << m_fSumw2[i]
- //      << " content[i] = " << binContent(i) << " error[i] = " << binError(i) << endreq;
-
   }
 }
 
@@ -312,16 +267,8 @@ void MonProfile::splitObject(){
     delete []binSum;
   }
   binSum = new double[(nbinsx+2)];
-  //if (binErr != 0) delete []binErr;
-  //binErr = new double[(nbinsx+2)];
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
-
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  binErr[i] = ((double) (m_profile->GetBinError(i))); 
-  // msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
-  
-  //}
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
@@ -329,9 +276,7 @@ void MonProfile::splitObject(){
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
-    //msg << MSG::DEBUG << "splitObject: binSum[i] = " << binSum[i] << " fot->fArray[i] = " << fot->fArray[i] << endreq;
-  }
-
+   }
 
   bBinLabelX = false;
   for (int i = 1; i < (nbinsx+1) ; ++i){
@@ -350,7 +295,6 @@ void MonProfile::splitObject(){
   }
 
   m_fDimension = fot->fDimension;
-  //ar & fot->fIntegral = m_fIntegral;
   m_fMaximum = fot->fMaximum;
   m_fMinimum = fot->fMinimum;
   m_fTsumw = fot->fTsumw;
@@ -372,15 +316,14 @@ void MonProfile::splitObject(){
 
 void MonProfile::combine(MonObject * H){
   MsgStream msg = createMsgStream();
-  //msg <<MSG::DEBUG << "==+> Entering combine" << endreq;
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-//  if (H->endOfRun() != this->endOfRun()){
- //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
- //   return;
- // }
+  //if (H->endOfRun() != this->endOfRun()){
+  //  msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+  //  return;
+  //}
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -408,8 +351,6 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
- //   binSum[i] += HH->binSum[i];
- //   if (i==5) msg << MSG::INFO<<"  Adding binSum["<<i<<"] "<<binSum[i] << " binEntries["<<i<<"] "<< binEntries[i] << " to HH->binSum["<<i<<"] "<<HH->binSum[i]<< " HH->binEntries["<<i<<"] " << HH->binEntries[i] << endreq;
     if ((this->typeName()=="MonRate") && ((i==5)||(i==6))) {
        //do not add the runnumber or cyclenumber; we assume they are all the same.
        //this code needs to be corrected when we ensure consistency at end of run
@@ -419,13 +360,6 @@ void MonProfile::combine(MonObject * H){
        binSum[i] += HH->binSum[i];
     }   
     binEntries[i] += HH->binEntries[i];
-  //  if (i==5) msg << MSG::INFO<<"  Result binSum["<<i<<"] "<<binSum[i] << " binEntries["<<i<<"] "<< binEntries[i] << endreq;
-  //  binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
-  //  binErr[i] += HH->binErr[i];
-
-  //msg << MSG::DEBUG << "combine: After  sum: i = " << i << "Combined: binEntries[i] = " << binEntries[i] << " Adding: HH->binEntries[i] = " 
-  //    << HH->binEntries[i] << " Combined: binSum[i] = " << binSum[i] << " Adding: HH->binSum[i] = " << HH->binSum[i] << endreq;
-
   }
 
   m_fTsumw += HH->m_fTsumw;
@@ -435,13 +369,16 @@ void MonProfile::combine(MonObject * H){
   m_fTsumwy += HH->m_fTsumwy;
   m_fTsumwy2 += HH->m_fTsumwy2;
 
- if (HH->bBinLabelX){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabelX[i]=HH->binLabelX[i];
-    } 
+  bBinLabelX = HH->bBinLabelX;
+  
+  if (bBinLabelX){
+    binLabelX.clear();
+    std::vector<std::string>::iterator it;
+    for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
+      std::string labelX = *it;
+      binLabelX.push_back(labelX);
+    }
   }
-
-
 
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {
@@ -488,13 +425,6 @@ void MonProfile::copyFrom(MonObject * H){
     binSum[i] = HH->binSum[i];
   }
 
-  //if (binErr != 0) delete []binErr;
-  //binErr = new double[(nbinsx+2)];
-
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  binErr[i] = HH->binErr[i];
- // }
-
   if (binEntries != 0) delete []binEntries;
   binEntries = new double[(nbinsx+2)];
 
@@ -505,9 +435,6 @@ void MonProfile::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
   
   if (bBinLabelX){
-    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
-      msg <<MSG::DEBUG<< *it << endreq;
-    }
     binLabelX.clear();
     for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
       std::string labelX = *it;
@@ -555,7 +482,6 @@ void MonProfile::synchronizeLabelNames(MonObject * H){
     }
   }
 }
-
 
 
 void MonProfile::reset(){
@@ -610,10 +536,6 @@ void MonProfile::print(){
   }
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
-  //msg <<MSG::INFO<<"BinErrors:"<<endreq;
-  //for (int i = 0; i < (nbinsx+2) ; ++i){
-  //  msg << binErr[i]<<" ";
-  //}
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinEntries:"<<endreq;

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-DimInfoMonObject::DimInfoMonObject(const std::string& svcName, int refreshTime):
+DimInfoMonObject::DimInfoMonObject(std::string svcName, int refreshTime):
   m_hasData(false),
   m_name("DimInfoMonObject"),
   m_svcName(svcName),
@@ -23,7 +23,7 @@ DimInfoMonObject::DimInfoMonObject(const std::string& svcName, int refreshTime):
   m_dimInfo = new DimInfo((m_svcName).c_str(), refreshTime, (char*)m_noValidMonObject.c_str());
 }
 
-DimInfoMonObject::DimInfoMonObject(const std::string& svcName, int refreshTime, std::string source):
+DimInfoMonObject::DimInfoMonObject(std::string svcName, int refreshTime, std::string source):
   m_hasData(false),
   m_name("DimInfoMonObject"),
   m_svcName(svcName),
@@ -69,7 +69,7 @@ bool DimInfoMonObject::createMonObject() {
     c = const_cast<char *>((const char*) m_dimInfo->getData());
     if ( 0 == m_noValidMonObject.compare(c)) {
       //msg << MSG::WARNING << "timeout trying to create  service "<< m_svcName << endreq;
-      msg << MSG::DEBUG<< m_noValidMonObject << ", for service "<< m_svcName << endreq;
+      msg << MSG::DEBUG << m_noValidMonObject << ", for service "<< m_svcName << endreq;
       return false;
     }
     //msg << MSG::DEBUG << "creating MonObject base" << endreq;

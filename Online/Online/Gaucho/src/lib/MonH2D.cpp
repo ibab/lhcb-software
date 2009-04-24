@@ -14,29 +14,15 @@ MonObject(msgSvc, source, version)
   m_hist = 0;
   binCont = 0;
   binErr = 0;
-  binLabelX = 0;
-  binLabelY = 0;
   m_fSumw2 = 0;  
 }
   
 MonH2D::~MonH2D(){
-//   MsgStream msgStream = createMsgStream();
-//   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
   if  (binCont!=0) delete []binCont;
-//   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   if (binErr !=0) delete []binErr;
-//   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  if (bBinLabelX) {if (binLabelX!=0) delete []binLabelX;}
-//   msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  if (bBinLabelY) { if (binLabelY!=0) delete []binLabelY;}
-//   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  if (m_fSumw2!=0) delete []m_fSumw2;
-// BUGG...I dont know yet why I can't do it..
-//   if (m_hist!=0) {
-//     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
-//     delete m_hist; m_hist = 0;
-//   }
-  
+ // if (bBinLabelX) {if (binLabelX!=0) delete []binLabelX;}
+ // if (bBinLabelY) { if (binLabelY!=0) delete []binLabelY;}
+  if (m_fSumw2!=0) delete []m_fSumw2;  
 }
 
 void MonH2D::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
@@ -47,30 +33,18 @@ void MonH2D::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
   setHist(hRoot);
 }
 
-void MonH2D::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonH2D::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonH2D::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  MonObject::save(ar,version);
-  save2(ar);
-}
-
-void MonH2D::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonH2D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
-
-void MonH2D::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  load2(ar);
-}
-
-template <class input_archive>
-void MonH2D::load2(input_archive  & ar){
+  
+void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   
   ar & nbinsx;
   ar & nbinsy;
@@ -97,16 +71,19 @@ void MonH2D::load2(input_archive  & ar){
   }
 
   if (bBinLabelX){
-    if (binLabelX == 0) binLabelX = new std::string[(nbinsx+2)];
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      ar & binLabelX[i];
+    binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      std::string labelX;
+      ar & labelX;
+      binLabelX.push_back(labelX);
     }
   }
-
   if (bBinLabelY){
-    if (binLabelY == 0) binLabelY = new std::string[(nbinsy+2)];
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      ar & binLabelY[i];
+    binLabelY.clear();
+    for (int i = 1; i < (nbinsy+1) ; ++i){
+      std::string labelY;
+      ar & labelY;
+      binLabelY.push_back(labelY);
     }
   }
 
@@ -131,14 +108,12 @@ void MonH2D::load2(input_archive  & ar){
   isLoaded = true;
 }
 
-template <class output_archive>
-void MonH2D::save2(output_archive  & ar){
+void MonH2D::save2(boost::archive::binary_oarchive  & ar){
   if (m_hist != 0) splitObject();
   save3(ar);
 }
 
-template <class output_archive>
-void MonH2D::save3(output_archive  & ar){
+void MonH2D::save3(boost::archive::binary_oarchive  & ar){
   
   if (!isLoaded) return;  
   
@@ -161,13 +136,19 @@ void MonH2D::save3(output_archive  & ar){
     ar & binErr[i];
   }
   if (bBinLabelX){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      ar & binLabelX[i];
+    binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      std::string labelX;
+      ar & labelX;
+      binLabelX.push_back(labelX);
     }
   }
-  if (bBinLabelY){
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      ar & binLabelY[i];
+  if (bBinLabelX){
+    binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      std::string labelX;
+      ar & labelX;
+      binLabelX.push_back(labelX);
     }
   }
   ar & m_fDimension;
@@ -239,13 +220,19 @@ void MonH2D::loadObject(){
   }
 
   if (bBinLabelX){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      m_hist->GetXaxis()->SetBinLabel(i, binLabelX[i].c_str());
-    } 
+    std::vector<std::string>::iterator it;
+    int i = 1;
+    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
+      m_hist->GetXaxis()->SetBinLabel(i, (*it).c_str());
+      i++;
+    }
   }
-  if (bBinLabelY){
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      m_hist->GetYaxis()->SetBinLabel(i, binLabelY[i].c_str());
+  if (bBinLabelX){
+    std::vector<std::string>::iterator it;
+    int i = 1;
+    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
+      m_hist->GetXaxis()->SetBinLabel(i, (*it).c_str());
+      i++;
     }
   }
 
@@ -287,8 +274,6 @@ void MonH2D::splitObject(){
 
   if (binCont==0) binCont = new double[(nbinsx+2)*(nbinsy+2)];
   if (binErr==0) binErr = new double[(nbinsx+2)*(nbinsy+2)];
-  if (binLabelX==0) binLabelX = new std::string[(nbinsx+2)];
-  if (binLabelY==0) binLabelY = new std::string[(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = ((double) (m_hist->GetBinContent(i))); 
@@ -299,32 +284,34 @@ void MonH2D::splitObject(){
   }
 
   bBinLabelX = false;
-  for (int i = 0; i < (nbinsx+2) ; ++i){
+  for (int i = 1; i < (nbinsx+1) ; ++i){
     std::string binLab = m_hist->GetXaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
       bBinLabelX = true;
       break;
     }
   }
+  
   if (bBinLabelX){
-    if (binLabelX==0) binLabelX = new std::string[(nbinsx+2)];
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabelX[i] = m_hist->GetXaxis()->GetBinLabel(i);
+      binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      binLabelX.push_back(m_hist->GetXaxis()->GetBinLabel(i));
     }
   }
-
+  
   bBinLabelY = false;
-  for (int i = 0; i < (nbinsy+2) ; ++i){
+  for (int i = 1; i < (nbinsx+1) ; ++i){
     std::string binLab = m_hist->GetYaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
       bBinLabelY = true;
       break;
     }
   }
+  
   if (bBinLabelY){
-    if (binLabelY==0) binLabelY = new std::string[(nbinsy+2)];
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      binLabelY[i] = m_hist->GetYaxis()->GetBinLabel(i);
+      binLabelY.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      binLabelY.push_back(m_hist->GetYaxis()->GetBinLabel(i));
     }
   }
 
@@ -353,13 +340,13 @@ void MonH2D::splitObject(){
 void MonH2D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed. (Different typenames)." << endreq;
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-  if (H->endOfRun() != this->endOfRun()){
-    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
-    return;
-  }
+ // if (H->endOfRun() != this->endOfRun()){
+ //   msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+ //   return;
+ // }
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -405,21 +392,23 @@ void MonH2D::combine(MonObject * H){
   m_fTsumwy += HH->m_fTsumwy;
   m_fTsumwy2 += HH->m_fTsumwy2;
   
-  if (HH->bBinLabelX){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabelX[i]=HH->binLabelX[i];
-    } 
-  }
-  if (HH->bBinLabelY){
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      binLabelY[i]=HH->binLabelY[i];
-    } 
+  bBinLabelX = HH->bBinLabelX;
+  if (bBinLabelX){
+    binLabelX.clear();
+    std::vector<std::string>::iterator it;
+    for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
+      std::string labelX = *it;
+      binLabelX.push_back(labelX);
+    }
   }
   
-
-  if (m_fSumSize == HH->m_fSumSize){
-    for (int i=0 ; i < m_fSumSize; ++i) {
-      m_fSumw2[i] += HH->m_fSumw2[i];
+  bBinLabelY = HH->bBinLabelY;
+  if (bBinLabelY){
+    binLabelY.clear();
+    std::vector<std::string>::iterator it;
+    for ( it=HH->binLabelY.begin() ; it < HH->binLabelY.end(); it++ ) {
+      std::string labelY = *it;
+      binLabelY.push_back(labelY);
     }
   }
 }
@@ -430,7 +419,7 @@ void MonH2D::copyFrom(MonObject * H){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-
+  std::vector<std::string>::iterator it;
   MonH2D *HH = (MonH2D*)H;
   m_endOfRun = HH->endOfRun();
   m_comments=HH->comments();
@@ -462,20 +451,20 @@ void MonH2D::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
 
   if (bBinLabelX){
-   if (binLabelX != 0) delete []binLabelX;
-    binLabelX = new std::string[(nbinsx+2)];
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabelX[i] = HH->binLabelX[i];
+    binLabelX.clear();
+    for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
+      std::string labelX = *it;
+      binLabelX.push_back(labelX);
     }
   }
 
   bBinLabelY = HH->bBinLabelY;
 
   if (bBinLabelY){
-   if (binLabelY != 0) delete []binLabelY;
-   binLabelY = new std::string[(nbinsy+2)];
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      binLabelY[i] = HH->binLabelY[i];
+    binLabelY.clear();
+    for ( it=HH->binLabelY.begin() ; it < HH->binLabelY.end(); it++ ) {
+      std::string labelY = *it;
+      binLabelY.push_back(labelY);
     }
   }
 
@@ -526,8 +515,7 @@ void MonH2D::reset(){
   m_fTsumwy2 = 0;
   m_fTsumwxy = 0;
 
-  m_fSumSize = 0;
-
+//  m_fSumSize = 0;
 }
 
 void MonH2D::print(){
@@ -560,16 +548,20 @@ void MonH2D::print(){
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
   if (bBinLabelX){
     msgStream <<MSG::INFO<<"BinLabelsX:"<<endreq;
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      msgStream <<binLabelX[i]<<" ";
+    std::vector<std::string>::iterator it;
+    msgStream <<MSG::INFO << "size:" << binLabelX.size() << endreq;
+    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
+      msgStream <<MSG::INFO<< *it << " " ;
     }
     msgStream << endreq;
     msgStream <<MSG::INFO<<"*************************************"<<endreq;
   }
   if (bBinLabelY){
     msgStream <<MSG::INFO<<"BinLabelsY:"<<endreq;
-    for (int i = 0; i < (nbinsy+2) ; ++i){
-      msgStream <<binLabelY[i]<<" ";
+    std::vector<std::string>::iterator it;
+    msgStream <<MSG::INFO << "size:" << binLabelY.size() << endreq;
+    for ( it=binLabelY.begin() ; it < binLabelY.end(); it++ ) {
+      msgStream <<MSG::INFO<< *it << " " ;
     }
     msgStream << endreq;
     msgStream <<MSG::INFO<<"*************************************"<<endreq;

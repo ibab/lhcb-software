@@ -14,11 +14,8 @@ public:
   MonBool(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonBool();
 
-  virtual void saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void loadBinary(boost::archive::binary_iarchive & ar, const unsigned int version);
-
-  virtual void saveText(boost::archive::text_oarchive & ar, const unsigned int version);
-  virtual void loadText(boost::archive::text_iarchive & ar, const unsigned int version);
+  virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
 
   void setValue(const bool& b){m_bool = const_cast<bool *>(&b);}
   bool value(){return (*m_bool);}

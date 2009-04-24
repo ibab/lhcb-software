@@ -8,7 +8,6 @@
 #include "Gaucho/MonH2D.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonRate.h"
-#include "Gaucho/MonStatEntity.h"
 #include "Gaucho/DimInfoServers.h"
 #include "Gaucho/ProcessMgr.h"
 #include "Gaucho/BaseServiceMap.h"
@@ -97,7 +96,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   MsgStream msg(msgSvc(), name());
 
   std::set<std::string>::iterator svcSetIt;  
-  msg << MSG::DEBUG << "includeServerInMaps m_dimInfo.size() = " << m_dimInfo.size()<< endreq;    
+  msg << MSG::DEBUG << "m_dimInfo.size() = " << m_dimInfo.size()<< endreq;    
 
   bool insertDimSvc = false;
 
@@ -106,12 +105,12 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   }
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
-    msg << MSG::DEBUG << "Inserting Service " << *svcSetIt << endreq;    
+    msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     insertDimInfo(*svcSetIt, serverName);
   }
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
-    msg << MSG::DEBUG << "Loading Service " << *svcSetIt << endreq;    
+    msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     loadDimInfo(*svcSetIt, serverName);
     if (insertDimSvc) {
       msg << MSG::DEBUG << "creating the Adder Service " << endreq;    
@@ -150,7 +149,7 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   MsgStream msg(msgSvc(), name());
 
   std::string termSvcName = createTermServiceName (serviceName, serverName);
-  msg << MSG::DEBUG << "insertDimInfo termSvcName "<< termSvcName << " serverName " << serverName << endreq;
+
   std::string groupName = "";
   std::string elementName = "";
   
@@ -327,7 +326,7 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
 
   //monObjectAdder->print();
   msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
-  DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, m_processMgr->serializationArchiveType(), monObjectAdder);
+  DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
 
   m_dimSrv[groupName] = std::pair<DimServiceMonObject*, MonObject*> (dimServiceMonObjectAdder, monObjectAdder);
   m_dimSrvStatus[groupName] = std::pair<bool, std::string> (isCopied, elementName);
@@ -388,7 +387,6 @@ std::string BaseServiceMap::createTermServiceName (const std::string &serviceNam
     return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
   }
   else{
-   msg << MSG::WARNING << "create term servicename = " << serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash)<<endreq; 
    return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
    // for saver the partition is in the utgid position
    // return serviceName;
@@ -422,7 +420,8 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   }
   else adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";
   
-  if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||(s_pfixMonRate==svctype)||(s_pfixMonStatEntity==svctype))
+  if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||
+      (s_pfixMonRate==svctype))
     adderName = adderName + algo + "/" + object;
   else
     adderName = adderName + object;

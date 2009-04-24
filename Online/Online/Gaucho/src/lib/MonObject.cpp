@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.15 2009-04-22 10:18:14 niko Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.16 2009-04-24 13:55:26 niko Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -19,24 +19,7 @@ MonObject::~MonObject(){
 
 }
 
-void MonObject::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
-  save(ar, version);
-}
-
-void MonObject::loadBinary(boost::archive::binary_iarchive & ar, const unsigned int version){
-  load(ar, version);
-}
-
-void MonObject::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  save(ar, version);
-}
-
-void MonObject::loadText(boost::archive::text_iarchive & ar, const unsigned int version){
-  load(ar, version);
-}
-
-template <class output_archive>
-void MonObject::save(output_archive & ar, const unsigned int version){
+void MonObject::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   if (version != m_version) m_version = version;
 
   ar & m_typeName;
@@ -45,8 +28,7 @@ void MonObject::save(output_archive & ar, const unsigned int version){
   ar & m_endOfRun;
 }
 
-template <class input_archive>
-void MonObject::load(input_archive & ar, const unsigned int version){
+void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int version){
   if (version != m_version) m_version = version;
   ar & m_typeName;
   ar & m_version;

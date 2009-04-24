@@ -37,31 +37,12 @@ MonStatEntity(msgSvc, source, 0)
 MonHitMap2D::~MonHitMap2D(){
 }
 
-void MonHitMap2D::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonHitMap2D::save(boost::archive::binary_oarchive & ar, const unsigned int version){ 
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonHitMap2D::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  MonObject::save(ar,version);
-  save2(ar);
-}
-
-void MonHitMap2D::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  load2(ar);
-}
-
-void MonHitMap2D::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  load2(ar);
-}
-
-
-template <class output_archive>
-void MonHitMap2D::save2(output_archive  & ar){
+void MonHitMap2D::save2(boost::archive::binary_oarchive & ar){ 
   MonStatEntity::save2(ar);
   ar & m_fromX; 
   ar & m_toX; 
@@ -70,8 +51,14 @@ void MonHitMap2D::save2(output_archive  & ar){
   for (unsigned int i=0;i<m_chan;++i) ar & m_data[i]; 
 }
 
-template <class input_archive>
-void MonHitMap2D::load2(input_archive  & ar){
+void MonHitMap2D::load(boost::archive::binary_iarchive & ar, const unsigned int version)
+{
+  MonObject::load(ar,version);
+  load2(ar);
+}
+
+void MonHitMap2D::load2(boost::archive::binary_iarchive  & ar)
+{ 
   if (version() >=0){
 
     MonStatEntity::load2(ar);

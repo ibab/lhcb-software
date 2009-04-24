@@ -24,18 +24,11 @@ public:
   MonH2D(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonH2D();
 
-  virtual void saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void loadBinary(boost::archive::binary_iarchive & ar, const unsigned int version);
-
-  virtual void saveText(boost::archive::text_oarchive & ar, const unsigned int version);
-  virtual void loadText(boost::archive::text_iarchive & ar, const unsigned int version);
-
-  template <class output_archive>
-  void save2(output_archive  & ar);
-  template <class output_archive>
-  void save3(output_archive  & ar);
-  template <class input_archive>
-  void load2(input_archive  & ar);
+  virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  void save2(boost::archive::binary_oarchive  & ar);
+  void save3(boost::archive::binary_oarchive  & ar);
+  void load2(boost::archive::binary_iarchive  & ar);
 
   void createObject();
   void createObject(std::string name);
@@ -76,8 +69,8 @@ public:
 
   double *binCont;
   double *binErr;
-  std::string *binLabelX;
-  std::string *binLabelY;
+
+
 
   int m_fDimension;
   //float m_fIntegral;
@@ -98,7 +91,9 @@ public:
   bool isLoaded;
   bool objectCreated;
   /**********/
-
+private:
+  std::vector<std::string> binLabelX;
+  std::vector<std::string> binLabelY;
 };
 
 #endif //GAUCHO_MONH2D_H

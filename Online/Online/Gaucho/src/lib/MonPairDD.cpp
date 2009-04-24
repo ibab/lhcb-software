@@ -11,26 +11,13 @@ MonObject(msgSvc, source, version)
 MonPairDD::~MonPairDD(){
 }
 
-void MonPairDD::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonPairDD::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   ar & (*m_pair).first;
   ar & (*m_pair).second;
 }
 
-void MonPairDD::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  MonObject::save(ar,version);
-  ar & (*m_pair).first;
-  ar & (*m_pair).second;
-}
-
-void MonPairDD::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  ar & (*m_pair).first;
-  ar & (*m_pair).second;
-}
-
-void MonPairDD::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
+void MonPairDD::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   ar & (*m_pair).first;

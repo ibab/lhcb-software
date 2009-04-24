@@ -14,25 +14,14 @@ MonObject(msgSvc, source, version)
   m_hist = 0;
   binCont = 0;
   binErr = 0;
-  binLabel = 0;
   m_fSumw2 = 0;  
 }
 
 MonH1D::~MonH1D(){
-//   MsgStream msgStream = createMsgStream();
-//   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
   if (binCont!=0) delete []binCont;
-//   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   if (binErr!=0) delete []binErr;
-//   msgStream <<MSG::DEBUG<<"deleting binLabel" << endreq;
-  if (bBinLabel) {if (binLabel!=0) delete []binLabel;}
-//   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+ // if (bBinLabelX) {if (binLabelX!=0) delete []binLabelX;}
   if (m_fSumw2!=0) delete []m_fSumw2;
-// BUGG...I dont know yet why I can't do it..  
-//   if (m_hist!=0) {
-//     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
-//     delete m_hist; m_hist = 0;
-//   }
 }
 
 void MonH1D::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
@@ -43,37 +32,25 @@ void MonH1D::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
   setHist(hRoot);
 }
 
-void MonH1D::saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version){
+void MonH1D::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonH1D::saveText(boost::archive::text_oarchive & ar, const unsigned int version){
-  MonObject::save(ar,version);
-  save2(ar);
-}
-
-void MonH1D::loadBinary(boost::archive::binary_iarchive  & ar, const unsigned int version)
+void MonH1D::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
   load2(ar);
 }
-
-void MonH1D::loadText(boost::archive::text_iarchive  & ar, const unsigned int version)
-{
-  MonObject::load(ar, version);
-  load2(ar);
-}
-
-template <class input_archive>
-void MonH1D::load2(input_archive  & ar){
+  
+void MonH1D::load2(boost::archive::binary_iarchive  & ar){
   ar & nbinsx;
   ar & Xmin;
   ar & Xmax;
   ar & nEntries;
   ar & sName;
   ar & sTitle;
-  ar & bBinLabel;
+  ar & bBinLabelX;
   
   if (binCont == 0 ) binCont = new double[(nbinsx+2)];
     
@@ -87,11 +64,12 @@ void MonH1D::load2(input_archive  & ar){
     ar & binErr[i];
   }
 
-  if (bBinLabel){
-    if (binLabel == 0 ) binLabel = new std::string[(nbinsx+2)];
-
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      ar & binLabel[i];
+  if (bBinLabelX){
+    binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      std::string labelX;
+      ar & labelX;
+      binLabelX.push_back(labelX);
     }
   }
 
@@ -113,14 +91,12 @@ void MonH1D::load2(input_archive  & ar){
   isLoaded = true;
 }
 
-template <class output_archive>
-void MonH1D::save2(output_archive  & ar){
+void MonH1D::save2(boost::archive::binary_oarchive  & ar){
   if (m_hist != 0) splitObject();
   save3(ar);
 }
 
-template <class output_archive>
-void MonH1D::save3(output_archive  & ar){
+void MonH1D::save3(boost::archive::binary_oarchive  & ar){
   if (!isLoaded) return;  
 
   ar & nbinsx;
@@ -129,7 +105,7 @@ void MonH1D::save3(output_archive  & ar){
   ar & nEntries;
   ar & sName;
   ar & sTitle;
-  ar & bBinLabel;
+  ar & bBinLabelX;
   
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
@@ -137,9 +113,10 @@ void MonH1D::save3(output_archive  & ar){
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
   }
-  if (bBinLabel){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      ar & binLabel[i];
+  if (bBinLabelX){
+    for (int i = 0; i < (int)binLabelX.size() ; ++i){
+      std::string labelX = binLabelX[i];
+      ar & labelX;
     }
   }
 
@@ -190,8 +167,7 @@ void MonH1D::write(){
 void MonH1D::loadObject(){
   if (!objectCreated) {
     MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
-    
+    msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;    
     return;  
   }
   m_hist->Reset();
@@ -207,10 +183,13 @@ void MonH1D::loadObject(){
     m_hist->SetBinError(i, binErr[i]);
   }
 
-  if (bBinLabel){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      m_hist->GetXaxis()->SetBinLabel(i, binLabel[i].c_str());
-    } 
+  if (bBinLabelX){
+    std::vector<std::string>::iterator it;
+    int i = 1;
+    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
+      m_hist->GetXaxis()->SetBinLabel(i, (*it).c_str());
+      i++;
+    }
   }
 
   fot->fDimension = m_fDimension;
@@ -255,19 +234,19 @@ void MonH1D::splitObject(){
     binErr[i] = ((double) (m_hist->GetBinError(i))); 
   }
 
-  bBinLabel = false;
-  for (int i = 0; i < (nbinsx+2) ; ++i){
+  bBinLabelX = false;
+  for (int i = 1; i < (nbinsx+1) ; ++i){
     std::string binLab = m_hist->GetXaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
-      bBinLabel = true;
+      bBinLabelX = true;
       break;
     }
   }
-
-  if (bBinLabel){
-    if (binLabel==0) binLabel = new std::string[(nbinsx+2)];
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabel[i] = m_hist->GetXaxis()->GetBinLabel(i);
+  
+  if (bBinLabelX){
+      binLabelX.clear();
+    for (int i = 1; i < (nbinsx+1) ; ++i){
+      binLabelX.push_back(m_hist->GetXaxis()->GetBinLabel(i));
     }
   }
 
@@ -292,13 +271,13 @@ void MonH1D::splitObject(){
 void MonH1D::combine(MonObject * H){
   MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed. (Different typenames)." << endreq;
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-  if (H->endOfRun() != this->endOfRun()){
-    msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
-    return;
-  }
+ // if (H->endOfRun() != this->endOfRun()){
+ //   msg <<MSG::DEBUG<<"Trying to combine two objects with different endOfRun flag failed." << endreq;
+ //   return;
+ // }
   
   if (!isLoaded){
     copyFrom(H);
@@ -326,7 +305,7 @@ void MonH1D::combine(MonObject * H){
     binCont[i] += HH->binCont[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   }
-    
+  
   nEntries += HH->nEntries;
 
   m_fTsumw += HH->m_fTsumw;
@@ -334,13 +313,15 @@ void MonH1D::combine(MonObject * H){
   m_fTsumwx += HH->m_fTsumwx;
   m_fTsumwx2 += HH->m_fTsumwx2;
   
-  
-  if (HH->bBinLabel){
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabel[i]=HH->binLabel[i];
-    } 
+  bBinLabelX = HH->bBinLabelX;
+  if (bBinLabelX){
+    binLabelX.clear();
+    std::vector<std::string>::iterator it;
+    for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
+      std::string labelX = *it;
+      binLabelX.push_back(labelX);
+    }
   }
-  
   
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {
@@ -351,7 +332,7 @@ void MonH1D::combine(MonObject * H){
 
 void MonH1D::copyFrom(MonObject * H){
   MsgStream msg = createMsgStream();
-  
+  std::vector<std::string>::iterator it;
   if (H->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
@@ -382,13 +363,13 @@ void MonH1D::copyFrom(MonObject * H){
     binErr[i] = HH->binErr[i];
   }
 
-  bBinLabel = HH->bBinLabel;
-
-  if (bBinLabel){
-   if (binLabel != 0) delete []binLabel;
-    binLabel = new std::string[(nbinsx+2)];
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      binLabel[i] = HH->binLabel[i];
+ bBinLabelX = HH->bBinLabelX;
+  
+  if (bBinLabelX){
+    binLabelX.clear();
+    for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
+      std::string labelX = *it;
+      binLabelX.push_back(labelX);
     }
   }
 
@@ -400,7 +381,7 @@ void MonH1D::copyFrom(MonObject * H){
   m_fTsumwx = HH->m_fTsumwx;
   m_fTsumwx2 = HH->m_fTsumwx2;
   m_fSumSize = HH->m_fSumSize;
-  
+
   if (m_fSumw2 !=0) delete []m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
@@ -432,7 +413,7 @@ void MonH1D::reset(){
   m_fTsumw2  = 0;
   m_fTsumwx  = 0;
   m_fTsumwx2 = 0;
-  m_fSumSize = 0;
+  //m_fSumSize = 0;
 }
 
 void MonH1D::print(){
@@ -460,10 +441,12 @@ void MonH1D::print(){
   }
   msgStream <<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  if (bBinLabel){
-    msgStream <<MSG::INFO<<"BinLabels:"<<endreq;
-    for (int i = 0; i < (nbinsx+2) ; ++i){
-      msgStream <<binLabel[i]<<" ";
+  if (bBinLabelX){
+    msgStream <<MSG::INFO<<"BinLabelsX:"<<endreq;
+    std::vector<std::string>::iterator it;
+    msgStream <<MSG::INFO << "size:" << binLabelX.size() << endreq;
+    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
+      msgStream <<MSG::INFO<< *it << " " ;
     }
     msgStream << endreq;
     msgStream <<MSG::INFO<<"*************************************"<<endreq;

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.15 2009-04-22 10:18:14 niko Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.16 2009-04-24 13:55:25 niko Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -77,9 +77,6 @@
   static const std::string s_pfixMonVectorD("MonVD");
   static const std::string s_pfixMonRate("MonR");
 
-  static const std::string s_binaryArchive("BinaryArchive");
-  static const std::string s_textArchive("TextArchive");
-
 class MonObject{
 
 protected:
@@ -100,20 +97,8 @@ public:
     ar & m_typeName; 
     ar & m_version;
   }  
-
-  // OBS: We can not do a virtual and template 
-
-  virtual void saveBinary(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void loadBinary(boost::archive::binary_iarchive & ar, const unsigned int version);
-
-  virtual void saveText(boost::archive::text_oarchive & ar, const unsigned int version);
-  virtual void loadText(boost::archive::text_iarchive & ar, const unsigned int version);
-
-  template <class output_archive>
-  void save(output_archive & ar, const unsigned int version);
-
-  template <class input_archive>
-  void load(input_archive & ar, const unsigned int version);
+  virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive & ar, const unsigned int version);
 
   std::string comments(){return m_comments;}
   void setComments(std::string comm){m_comments = comm;}

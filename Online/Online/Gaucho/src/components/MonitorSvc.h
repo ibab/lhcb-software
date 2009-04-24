@@ -106,7 +106,6 @@ private:
   DimPropServer* m_dimpropsvr;
   DimCmdServer* m_dimcmdsvr;
   DimRpcGaucho* m_dimRpcGaucho;
-  std::string m_serializationArchiveType;
   
   // Map associating to each algorithm name a set with the info 
   // names from this algorithm
