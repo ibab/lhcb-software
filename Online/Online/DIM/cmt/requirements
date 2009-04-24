@@ -39,6 +39,7 @@ apply_pattern dim_exe name=did files=did/make_did.c
 # The link below is ugly, but the linking is not proper on lxplus
 macro_append  didlinkopts " /usr/X11R6/lib/libMrm.so.3 "\
  slc4-amd64               " -L/usr/X11R6/lib64 -lMrm " \
+ x86_64                   " -L/usr/X11R6/lib64 -lMrm " \
  WIN32                    " "
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
@@ -70,3 +71,4 @@ macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
 macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
 macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"
+macro_remoce cflags "-Wno-deprecated"              WIN32 ""
