@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.13 2008-08-08 09:23:14 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.14 2009-04-24 14:57:25 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -98,12 +98,13 @@ RichG4Cerenkov::RichG4Cerenkov(const G4String& processName, G4ProcessType type)
     fRichVerboseInfoTag(false),
     fMaxPhotonPerRadiatorFlag(false)
 {
-        G4cout << "RichG4Cerenkov::RichG4Cerenkov constructor" << G4endl;
-        G4cout << "NOTE: this is now a G4VDiscreteProcess!" << G4endl;
-        G4cout << "Required change in UserPhysicsList: " << G4endl;
-        G4cout << "change: pmanager->AddContinuousProcess(theCerenkovProcess);" << G4endl;
-        G4cout << "to:     pmanager->AddProcess(theCerenkovProcess);" << G4endl;
-        G4cout << "        pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);" << G4endl;
+
+  //        G4cout << "RichG4Cerenkov::RichG4Cerenkov constructor" << G4endl;
+  //      G4cout << "NOTE: this is now a G4VDiscreteProcess!" << G4endl;
+  //      G4cout << "Required change in UserPhysicsList: " << G4endl;
+  //       G4cout << "change: pmanager->AddContinuousProcess(theCerenkovProcess);" << G4endl;
+  //      G4cout << "to:     pmanager->AddProcess(theCerenkovProcess);" << G4endl;
+  //      G4cout << "        pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);" << G4endl;
 
 	fTrackSecondariesFirst = false;
 	fMaxPhotons = 0;
