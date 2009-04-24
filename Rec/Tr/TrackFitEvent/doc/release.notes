@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-04-16 Wouter Hulsbergen
- - added accessor to matrix A in TrackStateVertex
+ - added accessor to matrix A and B in TrackStateVertex
 
 ! 2009-04-06 Jose A. Hernando
  - in src/MuonMeasurement.cpp x,y 
