@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.5 2009-04-07 08:05:40 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.6 2009-04-24 11:42:56 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -195,7 +195,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
             mdstSeq.Members = [LoKi__VoidFilter("MicroDSTSel",
                                                 Code = "ALG_PASSED('"+selAlg+"')&ALG_EXECUTED('"+selAlg+"')")]
         else :
-            mdstSeq.Members = [selAgl]
+            mdstSeq.Members = [selAlg]
         self.copyDefaultStuff()
         if self.getProp("CopyParticles") : self.copyParticleTrees()
         if self.getProp("CopyPVs") : self.copyPVs()
