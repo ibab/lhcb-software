@@ -1,6 +1,7 @@
 #include "Event/TrackStateVertex.h"
 #include "Event/TrackFunctor.h"
 #include "Event/TwoProngVertex.h"
+#include "LHCbMath/MatrixInversion.h"
 
 namespace LHCb 
 {
@@ -113,7 +114,7 @@ namespace LHCb
 
       // compute the weight matrix (inverse of V)
       m_G = state.covariance() ;
-      m_G.Invert() ;
+      Gaudi::Math::invertPosDefSymMatrix( m_G ) ;
       m_q(0) = state.tx() ;
       m_q(1) = state.ty() ;
       m_q(2) = state.qOverP() ;
@@ -160,8 +161,8 @@ namespace LHCb
       
       // Matrix W (Fruhwirth)
       m_W = ROOT::Math::Similarity( Transpose(m_B), m_G ) ;
-      m_W.Invert() ;
-      
+      Gaudi::Math::invertPosDefSymMatrix( m_W ) ;
+
       // momentum gain matrix
       m_WBG  = m_W * Transpose(m_B) * m_G ;
       
@@ -221,7 +222,7 @@ namespace LHCb
     
     // calculate the covariance and the change in the position
     m_poscov = halfD2ChisqDX2 ;
-    m_poscov.Invert() ;
+    Gaudi::Math::invertPosDefSymMatrix(m_poscov) ;
     ROOT::Math::SVector<double,3> dpos = - m_poscov * halfDChisqDX ;
     // update the position
     m_pos += dpos ;
@@ -319,6 +320,16 @@ namespace LHCb
   const ROOT::Math::SMatrix<double,5,3>& TrackStateVertex::matrixA(size_t i) const
   {
     return m_tracks[i]->A() ;
+  }
+
+  const ROOT::Math::SMatrix<double,5,3>& TrackStateVertex::matrixB(size_t i) const
+  {
+    return m_tracks[i]->B() ;
+  }
+  
+  const ROOT::Math::SMatrix<double,3,3>& TrackStateVertex::momPosCovMatrix(size_t i) const
+  {
+    return m_tracks[i]->momposcov() ;
   }
 
   LHCb::TwoProngVertex* TrackStateVertex::createTwoProngVertex(bool computemomcov) const 
