@@ -24,7 +24,7 @@ Child: Starting process:Summary_0
  cons_s_1              103    C   wev                      10000   100    A      0
  cons_u_0              103    C   wev                      10000   100    A      0
  cons_u_1              103    C   wev                      10000   100    A      0
- CONS_ONE              103    C   wev                      10000   100   1       0
+ CONS_ONE              103    C                            10000   100   1       0
 
 +++++ MBM summary finished.
 waitpid() exited: Status=1

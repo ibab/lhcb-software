@@ -115,7 +115,7 @@ int Summary::show(BMDESCRIPT* dsc)   {
       if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
       if ( m_oneTasks.find(us->name) != m_oneTasks.end() ) {
 	prod_one.ev_produced += us->ev_produced;
-	prod_one.p_state  = us->p_state;
+	prod_one.p_state  = 0;
 	prod_one.partid   = us->partid;
 	::strcpy(prod_one.name,"PROD_ONE");
 	continue;
@@ -128,7 +128,7 @@ int Summary::show(BMDESCRIPT* dsc)   {
       if ( spy_val[1]=='1' )   {
 	m_oneTasks[us->name] = 0;
 	cons_one.ev_seen += us->ev_seen;
-	cons_one.c_state  = us->c_state;
+	cons_one.c_state  = 0;
 	cons_one.partid   = us->partid;
 	::strcpy(cons_one.name,"CONS_ONE");
 	continue;
@@ -147,14 +147,14 @@ int Summary::show(BMDESCRIPT* dsc)   {
     us = &prod_one;
     float perc = 0;
     if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
-    ::printf(fmt_prod,us->name,us->partid,"P",sstat[us->p_state+1],us->ev_produced,
+    ::printf(fmt_prod,us->name,us->partid,"P","",us->ev_produced,
 	     perc+0.1, "", dsc->bm_name);
   }
   if ( cons_one.name[0] ) {
     us = &cons_one;
     float perc = 0;
     if ( ctr->tot_produced>0 ) perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
-    ::printf(fmt_cons,us->name,us->partid,"C",sstat[us->c_state+1],us->ev_seen,perc+0.1," 1 ",dsc->bm_name);
+    ::printf(fmt_cons,us->name,us->partid,"C","",us->ev_seen,perc+0.1," 1 ",dsc->bm_name);
   }
   return 1;
 }

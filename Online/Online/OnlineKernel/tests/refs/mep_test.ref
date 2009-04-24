@@ -25,7 +25,7 @@ Child: Starting process:Summary_0
                             Space(kB):[Tot:4092 Free:4092] Users:[Tot:5 Max:10]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
- CONS_ONE              103    C   wev                      20000   100   1   EVENT
+ CONS_ONE              103    C                            20000   100   1   EVENT
 
 ======================== MBM Bufer summary for buffer "MEP" ========================
 
@@ -44,7 +44,7 @@ Child: Starting process:Summary_0
  Diskwr_0              103    C   wev                      20000   100    A RESULT
  Monit_0               103    C   wev                      20000   100    A RESULT
  Monit_1               103    C   wev                      20000   100    A RESULT
- PROD_ONE              103    P    ac      20000   100                                 RESULT
+ PROD_ONE              103    P            20000   100                                 RESULT
 
 +++++ MBM summary finished.
 waitpid() exited: Status=1
