@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.7 2009-04-03 21:12:18 graven Exp $
+# $Id: HltVeloLines.py,v 1.8 2009-04-24 10:33:00 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 #
@@ -60,7 +60,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             st = PatVeloSpaceTracking( side + 'SpaceTracking'
                                          , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
                                          , OutputTracksName = 'Hlt/Track/'+side+'Velo'
-                                         , SpaceToolName = side + "SpaceTool")
+                                         , SpaceToolName = 'Tf__PatVeloSpaceTool/' + side + "SpaceTool")
             PatVeloSpaceTool( side + 'SpaceTool'
                                 , RHitManagerName= side+"RHitManager"
                                 , PhiHitManagerName= side + "PhiHitManager"
