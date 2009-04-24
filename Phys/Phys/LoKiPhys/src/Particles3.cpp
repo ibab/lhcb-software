@@ -1,4 +1,4 @@
-// $Id: Particles3.cpp,v 1.10 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: Particles3.cpp,v 1.11 2009-04-24 12:49:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,30 +91,8 @@ LoKi::Particles::ClosestApproach::fillStream
 ( std::ostream& stream ) const
 { return stream << "CLAPP" ; }
 // ============================================================================
-
-// ============================================================================
-//  constructor from the particle and the tool  
-// ============================================================================
-LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
-( const LHCb::Particle*                  particle , 
-  const LoKi::Vertices::ImpactParamTool& tool     )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-  , LoKi::Vertices::ImpactParamTool ( tool ) 
-  , m_particle ( particle ) 
-{}
-// ============================================================================
-//  constructor from the particle and the tool  
-// ============================================================================
-LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
-( const LoKi::Vertices::ImpactParamTool& tool     ,
-  const LHCb::Particle*                  particle )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-  , LoKi::Vertices::ImpactParamTool ( tool ) 
-  , m_particle ( particle ) 
-{}
-// ============================================================================
-LoKi::Particles::ClosestApproachChi2::result_type 
-LoKi::Particles::ClosestApproachChi2::chi2
+LoKi::Particles::ClosestApproach::result_type 
+LoKi::Particles::ClosestApproach::chi2
 ( const LHCb::Particle* p1 , 
   const LHCb::Particle* p2 ) const 
 {
@@ -138,6 +116,22 @@ LoKi::Particles::ClosestApproachChi2::chi2
   //
   return chi2 ;
 } 
+// ============================================================================
+//  constructor from the particle and the tool  
+// ============================================================================
+LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
+( const LHCb::Particle*                  particle , 
+  const LoKi::Vertices::ImpactParamTool& tool     )
+  : LoKi::Particles::ClosestApproach ( particle , tool ) 
+{}
+// ============================================================================
+//  constructor from the particle and the tool  
+// ============================================================================
+LoKi::Particles::ClosestApproachChi2::ClosestApproachChi2
+( const LoKi::Vertices::ImpactParamTool& tool     ,
+  const LHCb::Particle*                  particle )
+  : LoKi::Particles::ClosestApproach ( tool , particle ) 
+{}
 // ============================================================================
 std::ostream& 
 LoKi::Particles::ClosestApproachChi2::fillStream

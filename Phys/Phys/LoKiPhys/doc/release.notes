@@ -1,11 +1,28 @@
-! $Id: release.notes,v 1.90 2009-03-23 15:43:35 pkoppenb Exp $ 
+! $Id: release.notes,v 1.91 2009-04-24 12:49:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhys v8r3 2009-03-23 ===================
+! 2009-04-24 - Vanya BELYAEV
+
+  LoKi/Particles26.h, src/Particles26.cpp
+   new files with new symbols (requested by Rob Lambert)
+
+    DOCA 
+    DOCACHI2 
+    DOCAMAX 
+    DOCAMAXCHI2
+    DOCAMAX_ 
+    DOCAMAXCHI2_
+    
+  LoKi/ParticleCuts.h
+
+    remove all *DOCA* duplicates , only *CLAPP* are here from now..
+
+
+! ========================== LoKiPhys v8r3 2009-03-23 ===================
 ! 2009-03-11 - Vanya BELYAEV
 
  - dict/LoKiPhys.xml 

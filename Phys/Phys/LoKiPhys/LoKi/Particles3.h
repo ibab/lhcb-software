@@ -1,4 +1,4 @@
-// $Id: Particles3.h,v 1.11 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles3.h,v 1.12 2009-04-24 12:49:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -85,19 +85,29 @@ namespace LoKi
       ( const LHCb::Particle* p1 ,
         const LHCb::Particle* p2 ) const ;
       // ======================================================================
+      /// the actual evaluation of chi2 
+      result_type chi2 
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const ;
+      // ======================================================================
+      /// the actual evaluation
+      result_type chi2 ( argument p ) const { return chi2 ( p , particle() ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// accessor to the particle 
       const LHCb::Particle* particle() const 
       { return m_particle ; }
       /// set new particle 
       void setParticle( const LHCb::Particle* value ) const 
       { m_particle = value ; }
+      // ======================================================================
     private:
       // ======================================================================
       // default constructor is private 
       ClosestApproach();
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// the particle 
       mutable const LHCb::Particle* m_particle ;
@@ -119,9 +129,7 @@ namespace LoKi
      *  @date 2003-03-17
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
-    class ClosestApproachChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
-      , public LoKi::Vertices::ImpactParamTool 
+    class ClosestApproachChi2 : public ClosestApproach 
     {
     public:
       // ======================================================================
@@ -144,33 +152,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// the actual evaluation
-      result_type chi2 
-      ( const LHCb::Particle* p1 ,
-        const LHCb::Particle* p2 ) const ;
-      // ======================================================================
-      /// the actual evaluation
-      result_type chi2 ( argument p ) const { return chi2 ( p , particle() ) ; }
-      // ======================================================================
-    public:
-      /// accessor to the particle 
-      // ======================================================================
-      const LHCb::Particle* particle() const { return m_particle ; }
-      /// set new particle 
-      void setParticle ( const LHCb::Particle* value ) const 
-      { m_particle = value ; }
-      // ======================================================================
     private:
       // ======================================================================
       // default constructor is private 
       ClosestApproachChi2();
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the particle 
-      mutable const LHCb::Particle* m_particle ; // the particle 
       // ======================================================================
     } ;
     // ========================================================================
@@ -288,11 +273,16 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluation
       result_type distance( argument p ) const ;
+      // ======================================================================
     private:
-      // default constructor is private 
-      MinClosestApproach();
+      // ======================================================================
+      /// default constructor is private 
+      MinClosestApproach(); /// default constructor is private 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::ClosestApproach m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinClosestApproachChi2
@@ -316,6 +306,7 @@ namespace LoKi
       , public LoKi::UniqueKeeper<LHCb::Particle>
     {
     public:
+      // ======================================================================
       /// constructor from the particle(s) and the tool  
       MinClosestApproachChi2 
       ( const LHCb::Particle::Vector&          particles ,
@@ -409,15 +400,21 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluation
       result_type chi2 ( argument p ) const ;
+      // ======================================================================
     private:
-      // default constructor is private 
-      MinClosestApproachChi2();
+      // ======================================================================
+      /// default constructor is private 
+      MinClosestApproachChi2();               // default constructor is private 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::ClosestApproachChi2 m_fun       ;
+      // ======================================================================
     } ;    
     // ========================================================================
-  }  // end of namespace LoKi::Particles
-}  // end of namespace LoKi
+  } // end of namespace LoKi::Particles
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

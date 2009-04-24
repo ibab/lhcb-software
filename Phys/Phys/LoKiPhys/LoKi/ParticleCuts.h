@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.35 2009-03-10 22:49:57 spradlin Exp $
+// $Id: ParticleCuts.h,v 1.36 2009-04-24 12:49:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -416,44 +416,12 @@ namespace LoKi
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
      *  @see LoKi::Cuts::CLAPPCHI2
-     *  @see LoKi::Cuts::CHI2DOCA
-     *  @see LoKi::Cuts::DOCACHI2
      *  @see IGeomDispCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::ClosestApproachChi2                    CHI2CLAPP ;
-    // ========================================================================
-    /** @typedef CHI2DOCA 
-     *  Evaluator of the closest approach chi2 
-     *  distance between 2 particles 
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  const LHCb:Particle* K2 = ... ;
-     * 
-     *  Cun fun = CHI2DOCA ( K1 , geo() ) ;
-     *  
-     *  const double value = clapp( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::ClosestApproachChi2 
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::CLAPPCHI2
-     *  @see LoKi::Cuts::CHI2CLAPP
-     *  @see LoKi::Cuts::DOCACHI2
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::ClosestApproachChi2                     CHI2DOCA ;
     // ========================================================================
     /** @typedef CHI2IP 
      *  Evaluator of chi2 for the impact parameter of 
@@ -945,8 +913,6 @@ namespace LoKi
      *
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
-     *  @see LoKi::Cuts::DOCACHI2
-     *  @see LoKi::Cuts::CHI2DOCA
      *  @see IGeomDispCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -1006,8 +972,6 @@ namespace LoKi
      *
      *  @see LoKi::Particles::ClosestApproachChi2 
      *  @see LHCb::Particle
-     *  @see LoKi::Cuts::DOCACHI2
-     *  @see LoKi::Cuts::CHI2DOCA
      *  @see IGeomDispCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -1666,93 +1630,6 @@ namespace LoKi
      *  @date 2006-02-10
      */        
     typedef LoKi::Particles::DeltaMeasuredMass                         DMMASS ;
-    // ========================================================================
-    /** @typedef DOCA
-     *  Evaluator of the closest approach 
-     *  distance between 2 particles 
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  const LHCb:Particle* K2 = ... ;
-     * 
-     *  Cun clapp = DOCA ( K1 , geo() ) ;
-     *  
-     *  const double closestApproach = clapp( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::ClosestApproach
-     *  @see LHCb::Particle
-     *  @see LHCb::Cuts::CLAPP
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::ClosestApproach                             DOCA ;
-    // ========================================================================
-    /** @typedef DOCACHI2 
-     *  Evaluator of the closest approach chi2 
-     *  distance between 2 particles 
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  const LHCb:Particle* K2 = ... ;
-     * 
-     *  Cun clapp = DOCACHI2( K1 , geo() ) ;
-     *  
-     *  const double chi2 = clapp( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::ClosestApproachChi2 
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::CLAPPCHI2
-     *  @see LoKi::Cuts::CHI2DOCA
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::ClosestApproachChi2                     DOCACHI2 ;
-    // ========================================================================
-    /** @typedef DOCAMIN
-     *  Evaluator of the minimal closest approach 
-     *  distance between the particle and sequence of other particles  
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  
-     *  SEQUENCE parts = ... ;
-     * 
-     *  Cun clappr = DOCAMIN ( parts , geo() ) ;
-     *  
-     *  const double minclApp  = clappr( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::MinClosestApproach
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::MINCLAPP
-     *  @see LoKi::Cuts::MINDOCA
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::MinClosestApproach                       DOCAMIN ;
     // ========================================================================
     /** @var DPDGM 
      *  Simple (but not very efficient)  function to evaluate the difference 
@@ -3603,8 +3480,6 @@ namespace LoKi
      *
      *  @see LoKi::Particles::MinClosestApproach
      *  @see LHCb::Particle
-     *  @see LoKi::Cuts::MINDOCA
-     *  @see LoKi::Cuts::DOCAMIN
      *  @see IGeomDispCalculator
      * 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -3640,65 +3515,6 @@ namespace LoKi
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::MinClosestApproachChi2              MINCLAPPCHI2 ;
-    // ========================================================================
-    /** @typedef MINDOCA
-     *  Evaluator of the minimal closest approach 
-     *  distance between the particle and sequence of other particles  
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  
-     *  SEQUENCE parts = ... ;
-     * 
-     *  Cun clappr = MINDOCA ( parts , geo() ) ;
-     *  
-     *  const double minclApp  = clappr( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::MinClosestApproach
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::MINCLAPP
-     *  @see LoKi::Cuts::DOCAMIN
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::MinClosestApproach                       MINDOCA ;
-    // ========================================================================
-    /** @typedef MINDOCACHI2 
-     *  Evaluator of the minimal closest approach chi2  
-     *  distance between the particle and sequence of other particles  
-     *  
-     *  The tool IGeomDispCalculator is used 
-     *  for evaluation
-     *
-     *  @code 
-     *
-     *  const LHCb:Particle* K1 = ... ;
-     *  
-     *  SEQUENCE parts = ... ;
-     * 
-     *  Cun clappr = MINDOCACHI2( parts , geo() ) ;
-     *  
-     *  const double chi2 = clappr( K2 ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Particles::MinClosestApproachChi2
-     *  @see LHCb::Particle
-     *  @see LoKi::Cuts::MINCLAPPCHI2
-     *  @see IGeomDispCalculator
-     * 
-     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-     *  @date   2002-07-15
-     */
-    typedef LoKi::Particles::MinClosestApproachChi2               MINDOCACHI2 ;
     // ========================================================================
     /** @typedef MINIP 
      *  Evaluation of minimal value of the impact parameter of 

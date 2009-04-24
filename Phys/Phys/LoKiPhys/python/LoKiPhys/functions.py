@@ -612,9 +612,18 @@ MAXDIRASOURCE         = LoKi.Particles.MaxCosineDirectionAngleWithSource
 MAXDIRADV             = LoKi.Particles.MaxCosineDirectionAngleDV 
 ## @see LoKi::Cuts::MAXDIRATES
 MAXDIRATES            = LoKi.Particles.MaxCosineDirectionAngleTES
-
-
-
+## @see LoKi::Cuts::DOCA 
+DOCA                  = LoKi.Particles.DOCA
+## @see LoKi::Cuts::DOCACHI2  
+DOCACHI2              = LoKi.Particles.DOCACHI2 
+## @see LoKi::Cuts::DOCAMAX_
+DOCAMAX_              = LoKi.Particles.DOCAMax
+## @see LoKi::Cuts::DOCACHI2MAX_
+DOCACHI2MAX_          = LoKi.Particles.DOCAChi2Max 
+## @see LoKi::Cuts::DOCAMAX
+DOCAMAX               = LoKi.Particles.DOCAMax     () 
+## @see LoKi::Cuts::DOCACHI2MAX
+DOCACHI2MAX           = LoKi.Particles.DOCAChi2Max ()
 
 
 # the functors, required by Sean BRISBANE :
