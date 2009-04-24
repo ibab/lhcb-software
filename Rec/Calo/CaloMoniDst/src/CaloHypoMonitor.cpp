@@ -1,6 +1,4 @@
-// $Id: CaloHypoMonitor.cpp,v 1.10 2009-03-05 15:52:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// $Id: CaloHypoMonitor.cpp,v 1.11 2009-04-24 13:44:08 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -129,14 +127,14 @@ StatusCode CaloHypoMonitor::execute(){
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   // get input data
   if( !exist<Hypos> ( inputData() ) ){
-    debug() << "no hypo container found at " << inputData() << endreq;
+    debug() << "no hypo container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS ;
   };
 
   Hypos *hypos = get<Hypos> ( inputData() );
   // check data
   if ( hypos -> empty() ){
-   debug() << "No hypo found in " << inputData() << endreq;
+   debug() << "No hypo found in " << inputData() << endmsg;
    return StatusCode::SUCCESS;
   }  
   // get functor

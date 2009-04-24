@@ -1,4 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.6 2009-03-05 15:52:51 odescham Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.7 2009-04-24 13:44:08 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -110,7 +110,7 @@ public:
     StatusCode sc = divide( h1["21"], h1["11"], h1["31"] );
     if(sc.isSuccess())sc=divide( h1["22"], h1["12"], h1["32"] );
     if(sc.isSuccess())sc= divide( h1["23"], h1["13"], h1["33"] );
-    if(!sc.isSuccess())error()<<"Failed dividing histograms " << endreq;
+    if(!sc.isSuccess())error()<<"Failed dividing histograms " << endmsg;
 
     if( NULL != m_track2MCLink ) delete m_track2MCLink;
     m_track2MCLink = NULL;
@@ -304,7 +304,7 @@ StatusCode CaloPIDsChecker::divide( AIDA::IHistogram1D *hh1
   const IAxis &axis2 = hh2->axis();
   const IAxis &axis3 = hh3->axis();
   const int nBins = axis3.bins();
-  debug() << "DIVIDE nbins " << nBins << endreq;
+  debug() << "DIVIDE nbins " << nBins << endmsg;
   
   if (( axis1.bins() != nBins ) || ( axis2.bins() != nBins ))
   { return Error( "Different histogram specifications" );

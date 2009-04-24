@@ -20,12 +20,6 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/CellParam.h"
 
-// from DetectorDataSvc
-// #include "DetectorDataSvc/DetDataSvc"
-
-// Chrono Auditor
-// #include "Gaudi/ChronoStatSvc/Chrono.h"
-
 // local
 #include "CaloMoniAlg.h"
 
@@ -148,7 +142,7 @@ StatusCode SpdMonitor::initialize()
   n_cells = m_detSpd->numberOfCells();
 
   // Histograms
-  if ( m_produceHistogram )	info() << "Histograms will be produced" << endreq; 
+  if ( m_produceHistogram )	info() << "Histograms will be produced" << endmsg; 
   
   // Initialize neighbor matrix
   for(unsigned int cellIt = 0; cellIt!=m_detSpd->numberOfCells(); cellIt++){
@@ -168,11 +162,11 @@ StatusCode SpdMonitor::initialize()
 // ============================================================================
 StatusCode SpdMonitor::finalize()
 {
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
-  info() << "**************** SPD Monitoring *****************"<<endreq;
-  info() << "Number of Events Analyzed : " << m_nEvents << endreq;
-  info() << "*************************************************"<<endreq;
+  info() << "**************** SPD Monitoring *****************"<<endmsg;
+  info() << "Number of Events Analyzed : " << m_nEvents << endmsg;
+  info() << "*************************************************"<<endmsg;
 
   return CaloMoniAlg::finalize() ;
 };
@@ -190,9 +184,9 @@ StatusCode SpdMonitor::execute()
 {   
 	
 
-  debug() << "==> Execute " << endreq;
+  debug() << "==> Execute " << endmsg;
   m_nEvents++;  
-  debug() << "...processing Event " << m_nEvents << endreq;
+  debug() << "...processing Event " << m_nEvents << endmsg;
 
 
   int mult[3]={0};	
@@ -203,7 +197,7 @@ StatusCode SpdMonitor::execute()
 // -------------------------------SPD Standalone Histograms---------------------------------------  
 
   if( !exist<CaloDigits>( CaloDigitLocation::Spd ) ){
-    debug() << "No Table container found at " << CaloDigitLocation::Spd << endreq;
+    debug() << "No Table container found at " << CaloDigitLocation::Spd << endmsg;
     return StatusCode::SUCCESS;
   }
   CaloDigits* digitsSpd = get<CaloDigits>(CaloDigitLocation::Spd);  
@@ -265,9 +259,9 @@ StatusCode SpdMonitor::execute()
   }
   
     
-  debug() <<"-------------------SPD---------------------"<<endreq;
-  debug() <<"Number of hits in the event:" << mult[0]+mult[1]+mult[2]<<endreq;
-  debug() <<"-------------------------------------------"<<endreq; 
+  debug() <<"-------------------SPD---------------------"<<endmsg;
+  debug() <<"Number of hits in the event:" << mult[0]+mult[1]+mult[2]<<endmsg;
+  debug() <<"-------------------------------------------"<<endmsg; 
   
   
   
@@ -277,11 +271,11 @@ StatusCode SpdMonitor::execute()
   CaloClusters* ecalClus = get<CaloClusters> ( CaloClusterLocation::Ecal ) ;
   
   if (ecalClus != 0){
-	  debug() <<"ECAL clusters present"<<endreq;
+	  debug() <<"ECAL clusters present"<<endmsg;
     for (CaloClusters::const_iterator iClus = ecalClus->begin(); iClus != ecalClus->end(); ++iClus){
       CaloCellID seedCell = (*iClus)->seed();
       double seedE=(*iClus)->e();
-      debug() <<"Seed cell: "<<seedCell<<" with energy "<<seedE/GeV<<" GeV"<<endreq;
+      debug() <<"Seed cell: "<<seedCell<<" with energy "<<seedE/GeV<<" GeV"<<endmsg;
 /*		Histograms for plotting the cluster energy and choosig the threshold
 			
 		plot(seedE/GeV,"clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
@@ -313,7 +307,7 @@ StatusCode SpdMonitor::execute()
         }
         else if( 1 == seedCell.area()){
 					hFill2("m_occcupancyEcal",seedCell.row(), seedCell.col()); 
-				debug()<<"1: "<<nclus[1]<<endreq;
+				debug()<<"1: "<<nclus[1]<<endmsg;
 				nclus[1]++;
 					if (m_cellHit[seedCell]){
 						multEcal[1]++;
@@ -377,11 +371,11 @@ StatusCode SpdMonitor::execute()
     }
   }
   
-  debug() <<"-------------------ECAL--------------------"<<endreq;
-  debug() <<"Number of clusters in the event:" << multEcal[0]+multEcal[1]+multEcal[2]<<endreq;
-  debug() <<"-------------------------------------------"<<endreq; 
+  debug() <<"-------------------ECAL--------------------"<<endmsg;
+  debug() <<"Number of clusters in the event:" << multEcal[0]+multEcal[1]+multEcal[2]<<endmsg;
+  debug() <<"-------------------------------------------"<<endmsg; 
     
-  debug() <<"Event "<<m_nEvents<<" correctly processed"<<endreq;
+  debug() <<"Event "<<m_nEvents<<" correctly processed"<<endmsg;
   
   return StatusCode::SUCCESS;
 };

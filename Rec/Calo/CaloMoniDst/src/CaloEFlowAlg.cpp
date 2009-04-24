@@ -1,4 +1,4 @@
-// $Id: CaloEFlowAlg.cpp,v 1.1 2009-04-20 15:43:44 odescham Exp $
+// $Id: CaloEFlowAlg.cpp,v 1.2 2009-04-24 13:44:08 cattanem Exp $
 // Include files 
 
 // from GaudiKernel
@@ -72,20 +72,20 @@ StatusCode CaloEFlowAlg::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   typedef const LHCb::CaloDigit::Container Digits;
-  if ( msgLevel(MSG::DEBUG) )debug() << name() << " execute " << endreq;
+  if ( msgLevel(MSG::DEBUG) )debug() << name() << " execute " << endmsg;
   
   // produce histos ?
-  if ( msgLevel(MSG::DEBUG) )debug() << " Producing histo " << produceHistos() << endreq;
+  if ( msgLevel(MSG::DEBUG) )debug() << " Producing histo " << produceHistos() << endmsg;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Digits>( inputData() )){
-    debug() << "no digit container found at " << inputData() << endreq;
+    debug() << "no digit container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
-    if ( msgLevel(MSG::DEBUG) )debug() << "No digit found in " << inputData() << endreq;
+    if ( msgLevel(MSG::DEBUG) )debug() << "No digit found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -98,14 +98,14 @@ StatusCode CaloEFlowAlg::execute() {
     const double            et     = e * m_calo->cellSine( id );
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " before thresholds :  cellID " << id.index() << " e " << e << " et " << et << endreq;
+      verbose() << " before thresholds :  cellID " << id.index() << " e " << e << " et " << et << endmsg;
     
     if( e  < m_eFilterMin )  continue;
     if( e  > m_eFilterMax )  continue;
     if( et < m_etFilterMin ) continue;
     if( et > m_etFilterMax ) continue;
 
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " cellID " << id.index() << " e " << e << " et " << et << endreq;
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " cellID " << id.index() << " e " << e << " et " << et << endmsg;
     
     
     if(doHisto("1")) fillCalo2D("1", id , 1. , detData() + " digits position 2D view");

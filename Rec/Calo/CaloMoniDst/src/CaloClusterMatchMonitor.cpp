@@ -1,26 +1,4 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.9 2009-03-05 15:52:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2009/02/20 18:03:24  odescham
-// prepare for DQ
-//
-// Revision 1.7  2008/09/09 15:37:23  odescham
-// review
-//
-// Revision 1.6  2007/07/25 19:49:12  odescham
-// major release : see doc
-//
-// Revision 1.5  2005/11/07 12:16:38  odescham
-// v2r0 - adapt to the new Track Event Model
-//
-// Revision 1.4  2005/05/13 12:58:35  cattanem
-// fixes for windows
-//
-// Revision 1.3  2005/05/08 09:58:25  ibelyaev
-//  remove associators, update options
-//
+// $Id: CaloClusterMatchMonitor.cpp,v 1.10 2009-04-24 13:44:08 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -130,7 +108,7 @@ StatusCode CaloClusterMatchMonitor::execute()
 // check relations
   if ( inputs().empty() ) return Error( "No input data are specified" );
   if( !exist<Table>( inputData() ) ){
-    debug() << "No Table container found at " << inputData() << endreq;
+    debug() << "No Table container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   Table *table = get<Table>( inputData() );

@@ -172,7 +172,7 @@ StatusCode CaloPhotonChecker::initialize()
   Gaudi::Plane3D spdFront = m_spd->plane( CaloPlane::Front );
   Gaudi::XYZVector normal = spdFront.Normal();
   m_zConv = - spdFront.HesseDistance() /normal.Z(); 
-  debug() <<  "z conversion is set to SPD front : " << m_zConv << endreq;
+  debug() <<  "z conversion is set to SPD front : " << m_zConv << endmsg;
   
 //----- Tool recovery
 
@@ -282,19 +282,19 @@ StatusCode CaloPhotonChecker::initialize()
 // ============================================================================
 StatusCode CaloPhotonChecker::finalize()
 {
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
 
-  info() << "************* Photon Monitoring *****************"<<endreq;
-  info() << "Number of Events Analyzed : " << m_nEvents << endreq;
+  info() << "************* Photon Monitoring *****************"<<endmsg;
+  info() << "Number of Events Analyzed : " << m_nEvents << endmsg;
   info()
     //<< "MCPhotons (Signal def.) in sample: "<<m_nMCPhotons<<" - "
     <<m_nPhotons<<" Photons (Signal def.) out of "<<m_nCandidats<<" hypos processed."
-    <<" - "<<m_nWrongs<<" hypos rejected."<<endreq;
+    <<" - "<<m_nWrongs<<" hypos rejected."<<endmsg;
   char line[70];
-  info() << endreq;
-  info() << "     Et(GeV)        | Efficiency |   Purity   "<<endreq;
-  info() << "----------------------------------------------"<<endreq;
+  info() << endmsg;
+  info() << "     Et(GeV)        | Efficiency |   Purity   "<<endmsg;
+  info() << "----------------------------------------------"<<endmsg;
   for (int i=0; i<m_nbinpt ; ++i){
     float pt=m_ptmin+float(i)*(m_ptmax-m_ptmin)/float(m_nbinpt);
     float eff=(m_mc_g[i]>0) ? float(m_rec_sig[i])/float(m_mc_g[i]) : (0.F);
@@ -303,15 +303,15 @@ StatusCode CaloPhotonChecker::finalize()
     sprintf(line," [ %5.2f - %5.2f ]  |    %4.2f    |    %4.2f    ",
       pt/1000.,(pt+(m_ptmax-m_ptmin)/float(m_nbinpt))/1000.,eff,pur);
 
-    info() << line <<endreq;
+    info() << line <<endmsg;
 
     hFill1("10",pt,eff);
     hFill1("11",pt,pur);
   }
-  info() << endreq;
-  info() << "  L>= |   Total   |   No Conv |    Conv   "<<endreq;
-  info() << "      | Eff   Pur | Eff   Pur | Eff   Pur "<<endreq;
-  info() << " -----------------------------------------"<<endreq;
+  info() << endmsg;
+  info() << "  L>= |   Total   |   No Conv |    Conv   "<<endmsg;
+  info() << "      | Eff   Pur | Eff   Pur | Eff   Pur "<<endmsg;
+  info() << " -----------------------------------------"<<endmsg;
   for (int i=0; i<m_nbinlh ; ++i){
     float eff=(m_lh_mcg>0) ? float(m_lh_recsig[i])/float(m_lh_mcg) : (0.F);
     float effnoconv=(m_lh_mcg_noconv>0) ?
@@ -333,10 +333,10 @@ StatusCode CaloPhotonChecker::finalize()
     sprintf(line," %3.2f | %3.2f %3.2f | %3.2f %3.2f | %3.2f %3.2f",
             float(i)/float(m_nbinlh),eff,pur,effnoconv,purnoconv,effconv,purconv);
 
-    info() << line <<endreq;
+    info() << line <<endmsg;
 
   }
-  info() << "*************************************************"<<endreq;
+  info() << "*************************************************"<<endmsg;
 
 
   return CaloMoniAlg::finalize() ;
@@ -361,7 +361,7 @@ StatusCode CaloPhotonChecker::execute()
   typedef const LHCb::MCParticle::Container MCParticles;
 
   
-  debug() <<"  == > Execute "<<endreq;
+  debug() <<"  == > Execute "<<endmsg;
 
   m_nEvents++;
   
@@ -388,7 +388,7 @@ StatusCode CaloPhotonChecker::execute()
     Gaudi::Math::intersection<Line,Gaudi::Plane3D,Gaudi::XYZPoint>(line, m_ecalPlane ,cross,mu);
     const Gaudi::XYZPoint hit = cross;
     debug() << "MC part momentum " << part->momentum() 
-            << " crosses Ecal Plane at point "<< cross << " -> cellID : " << m_ecal->Cell( hit ) << endreq;
+            << " crosses Ecal Plane at point "<< cross << " -> cellID : " << m_ecal->Cell( hit ) << endmsg;
     if( !m_ecal->valid( m_ecal->Cell( hit ) ) )continue; // Ecal acceptance.
 
 
@@ -398,7 +398,7 @@ StatusCode CaloPhotonChecker::execute()
     for(SmartRefVector<LHCb::MCVertex>::const_iterator iver=decays.begin(); decays.end()!=iver;++iver){
       if( (*iver)->position().z() < decay.Z() )decay = (*iver)->position();
     }
-    debug() << "MC gamma endVertex.z() " << decay.Z() << endreq;
+    debug() << "MC gamma endVertex.z() " << decay.Z() << endmsg;
     
 
     
@@ -428,14 +428,14 @@ StatusCode CaloPhotonChecker::execute()
           if (distance<param) {
             isMerged=true;
             debug() <<"Pi0->Merged Photon :  distance="<<distance
-                 <<"  < Criteria="<<param<<" mm"<<endreq;
+                 <<"  < Criteria="<<param<<" mm"<<endmsg;
           }
         }
       }
     }
 
     if (isMerged) {
-      debug() <<"Merged Pi0 photons removed from Signal sample"<<endreq;
+      debug() <<"Merged Pi0 photons removed from Signal sample"<<endmsg;
       continue;
     }
     m_nMCPhotons++;
@@ -448,15 +448,15 @@ StatusCode CaloPhotonChecker::execute()
       m_lh_mcg++;
       if ( decay.Z() > m_zConv) {
         m_lh_mcg_noconv++;
-        debug() << " Not converted " << m_zConv << endreq;
+        debug() << " Not converted " << m_zConv << endmsg;
       }
       else {
         m_lh_mcg_conv++;
-        debug() << " converted " << m_zConv << endreq;
+        debug() << " converted " << m_zConv << endmsg;
       }
     }
   }
-  debug() << " MC part all/no-conv/conv" << m_lh_mcg << "/"<<m_lh_mcg_noconv<<"/"<<m_lh_mcg_conv<< endreq;
+  debug() << " MC part all/no-conv/conv" << m_lh_mcg << "/"<<m_lh_mcg_noconv<<"/"<<m_lh_mcg_conv<< endmsg;
   
 
 
@@ -465,7 +465,7 @@ StatusCode CaloPhotonChecker::execute()
 
   const Hypos *hypos = get<Hypos>( inputData() );
   if( 0 == hypos ) {
-    debug() <<"No input Data: "<<inputData()<<endreq;
+    debug() <<"No input Data: "<<inputData()<<endmsg;
     return StatusCode::FAILURE ;
   }
 
@@ -477,7 +477,7 @@ StatusCode CaloPhotonChecker::execute()
   for(Hypos::const_iterator iter=hypos->begin(); hypos->end()!=iter;++iter){
     // skip nulls
      if( 0 == *iter ) {
-       debug() <<"empty CaloHypo : skipping"<<endreq;
+       debug() <<"empty CaloHypo : skipping"<<endmsg;
       continue ;
      }
      
@@ -492,7 +492,7 @@ StatusCode CaloPhotonChecker::execute()
      if ( momentum.momentum().pt() < m_etmin ) continue;
 
      if (hypo->clusters().size()!=1){
-       warning() <<"Photon Hypothesis : number of clusters!=1 ..."<<endreq;
+       warning() <<"Photon Hypothesis : number of clusters!=1 ..."<<endmsg;
        continue;
      }
      
@@ -530,10 +530,10 @@ StatusCode CaloPhotonChecker::execute()
      else {
        chi2 = range.front().weight();
      }
-     debug() << " - Chi2        ="<<chi2<<endreq;
+     debug() << " - Chi2        ="<<chi2<<endmsg;
      // Shower Shape
      double shape=hypo->position()->spread()(1,1)+hypo->position()->spread()(2,2);
-     debug()<<" - Shower Shape="<<shape<<endreq;
+     debug()<<" - Shower Shape="<<shape<<endmsg;
      //Spd hit and Prs deposit
 
 
@@ -559,7 +559,7 @@ StatusCode CaloPhotonChecker::execute()
 	   			eSpd=(*digit)->e();
         }
        }
-       debug() <<" - SPD "<<cellSpd<<" Energy  ="<<eSpd<<endreq;
+       debug() <<" - SPD "<<cellSpd<<" Energy  ="<<eSpd<<endmsg;
      }
 
      if( !(LHCb::CaloCellID() == cellPrs) ){
@@ -570,12 +570,12 @@ StatusCode CaloPhotonChecker::execute()
           ePrs=(*digit)->e();
         }
        }
-       debug()<<" - PRS "<<cellPrs<<" Energy  ="<<ePrs<<endreq;
+       debug()<<" - PRS "<<cellPrs<<" Energy  ="<<ePrs<<endmsg;
      }
 
      // ***
      double likelihood=(*m_hypotool)(hypo);
-     debug()<< "Likelihood = "<<likelihood<<endreq;
+     debug()<< "Likelihood = "<<likelihood<<endmsg;
      
      if(likelihood<0.){m_nWrongs++;}
      
@@ -593,19 +593,19 @@ StatusCode CaloPhotonChecker::execute()
 
      for( MCTable::iterator mc = grange.begin() ; grange.end() != mc ; ++mc ) {
      	 if( 0 == mc->to() )  continue ; 
-	     debug()<<"mctruth : --> pid="<<mc->to()->particleID().pid() <<" weight="<<mc->weight()<<endreq;
+	     debug()<<"mctruth : --> pid="<<mc->to()->particleID().pid() <<" weight="<<mc->weight()<<endmsg;
        if( !(m_gammaID == mc->to()->particleID())  )continue;
 	     if( mc->weight()<wmax ) continue;
        wmax=mc->weight();
        SmartRef<LHCb::MCParticle> mcpart=mc->to();
 
-       debug()<< "A MC-gamma matches the hypo "  << endreq;       
-       debug()<< " Energy :  "  <<mcpart->momentum().e() << endreq;       
+       debug()<< "A MC-gamma matches the hypo "  << endmsg;       
+       debug()<< " Energy :  "  <<mcpart->momentum().e() << endmsg;       
 
        isPhoton=true;
        SmartRef<LHCb::MCVertex> vertex=mcpart->originVertex();
        if ( 0==vertex ) {
-         warning() <<"MC-gamma has no origin vertex !"<<endreq;
+         warning() <<"MC-gamma has no origin vertex !"<<endmsg;
          continue;
        }
            
@@ -613,7 +613,7 @@ StatusCode CaloPhotonChecker::execute()
        dr=vertex->position().Rho();
        dz=vertex->position().z();
        de=fabs(energy - mcpart->momentum().e())/energy;
-       debug() <<"Gamma parameters : dr="<<dr<<" - dz="<<dz<<" - de="<<de<<endreq;
+       debug() <<"Gamma parameters : dr="<<dr<<" - dz="<<dz<<" - de="<<de<<endmsg;
 
        SmartRefVector<LHCb::MCVertex> decays=mcpart->endVertices();
        for(SmartRefVector<LHCb::MCVertex>::const_iterator viter=decays.begin();decays.end()!=viter;++viter){
@@ -647,7 +647,7 @@ StatusCode CaloPhotonChecker::execute()
              if (distance<param) {
                isMerged=true;
                debug() <<"Pi0->Merged Photon :  distance="<<distance
-                       <<"  < Criteria="<<param<<" mm"<<endreq;
+                       <<"  < Criteria="<<param<<" mm"<<endmsg;
              }
            }
          }
@@ -658,9 +658,9 @@ StatusCode CaloPhotonChecker::execute()
      if ( de < m_de && dr < m_dr && dz < m_dz && isPhoton && !isMerged){
        m_nPhotons++;
        isSignal=true;
-       debug() <<"Candidate is Signal according to MC"<<endreq;
+       debug() <<"Candidate is Signal according to MC"<<endmsg;
      }else{
-       debug() <<"Candidate is Background according to MC (photon, merged)"<< isPhoton << " " << isMerged << endreq;
+       debug() <<"Candidate is Background according to MC (photon, merged)"<< isPhoton << " " << isMerged << endmsg;
      }
      
 
@@ -749,7 +749,7 @@ StatusCode CaloPhotonChecker::execute()
     debug() << "Rec Signal no-conv/conv" << l << " : " 
             << m_lh_recsig_noconv[l] << "  / "<< m_lh_recsig_conv[l] <<" / "
             << m_lh_recsig_nospd[l] << " / "<< m_lh_recsig_spd[l] << " / "
-            << m_lh_recbkg_nospd[l] << " / "<< m_lh_recbkg_spd[l] << endreq;
+            << m_lh_recbkg_nospd[l] << " / "<< m_lh_recbkg_spd[l] << endmsg;
   }
   
 
@@ -776,15 +776,15 @@ std::vector<AIDA::IHistogram1D*> CaloPhotonChecker::defHisto1d(
     hid << nhisto+i ;
     hBook1( dir + hid.str() , histoname ,  int(xmin), int(xmax),bin );
     histo = h1[ dir + hid.str() ];
-		debug() <<"booking Histo ..."<<histoname<<endreq; 
+		debug() <<"booking Histo ..."<<histoname<<endmsg; 
 
     if( 0 == histo  ) {
-			info()<<"Histogram "<<histoname<<" not booked "<<endreq;
-      info()<<"Directory : "<<dir<<endreq;
-      info()<<"id        : "<<nhisto+i<<endreq;
-      info()<<"Title     : "<<histoname<<endreq;
+			info()<<"Histogram "<<histoname<<" not booked "<<endmsg;
+      info()<<"Directory : "<<dir<<endmsg;
+      info()<<"id        : "<<nhisto+i<<endmsg;
+      info()<<"Title     : "<<histoname<<endmsg;
       info()<<"bin-low/up: "<<bin<<"-"
-            <<xmin<<"/"<<xmax<<endreq;
+            <<xmin<<"/"<<xmax<<endmsg;
     }
 		histoList.push_back(histo);
    }

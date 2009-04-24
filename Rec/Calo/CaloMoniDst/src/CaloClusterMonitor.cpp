@@ -1,6 +1,4 @@
-// $Id: CaloClusterMonitor.cpp,v 1.10 2009-03-05 15:52:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// $Id: CaloClusterMonitor.cpp,v 1.11 2009-04-24 13:44:08 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -98,19 +96,19 @@ StatusCode CaloClusterMonitor::execute(){
   typedef const LHCb::CaloCluster::Container Clusters;
 
 
-  debug() << " Producing histo " << produceHistos() << endreq;
+  debug() << " Producing histo " << produceHistos() << endmsg;
   // produce histos ?
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Clusters>(inputData() )){
-    debug() << "No cluster container found at " << inputData() << endreq;
+    debug() << "No cluster container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   
   Clusters* clusters = get<Clusters> ( inputData() );
   if ( clusters->empty() ){
-    debug() << "No cluster found in " << inputData() << endreq;
+    debug() << "No cluster found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   

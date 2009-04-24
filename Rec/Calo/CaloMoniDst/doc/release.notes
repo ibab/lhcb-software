@@ -1,18 +1,20 @@
-! $Id: release.notes,v 1.35 2009-04-21 14:19:32 odescham Exp $ 
+! $Id: release.notes,v 1.36 2009-04-24 13:44:08 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2009-04-24 - Marco Cattaneo
+ - Fix compilation warning for gcc43
+ - Replace endreq by endmsg (obsolescent in Gaudi v21)
 
 ! 2009-04-21 - Olivier Deschamps for Dmitry Goloubkov
  - CaloEMuMonitor/Checker.{cpp,h} : produce histogram (+analysis) of CaloPID 
 
 ! 2009-04-20 - Olivier Deschamps for Aurelien Martens
- - CaloEFlowAlg.{cpp,h,opts} : produce histogram for 'Energy-Flow' calibration method (Aurelien Martens)
-
-
+ - CaloEFlowAlg.{cpp,h,opts} : produce histogram for 'Energy-Flow' calibration
+   method (Aurelien Martens)
 
 !========================== CaloMoniDst v3r5 2009-03-10 =======================
 ! 2009-03-06 - Olivier Deschamps 

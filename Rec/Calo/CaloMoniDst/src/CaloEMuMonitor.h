@@ -1,7 +1,7 @@
 #ifndef CALOMONIDST_CALOEMUMONITOR_H
 #define CALOMONIDST_CALOEMUMONITOR_H 1
 // ============================================================================
-// $Id: CaloEMuMonitor.h,v 1.2 2009-04-23 07:57:10 odescham Exp $
+// $Id: CaloEMuMonitor.h,v 1.3 2009-04-24 13:44:08 cattanem Exp $
 // Include files
 // ============================================================================
 
@@ -53,7 +53,9 @@
  *  @author Dmitry Golubkov
  *  @date   2009-03-24  */
 // =====================================================================
-class LHCb::IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 
 /** @class CaloEMuMonitor
  * 

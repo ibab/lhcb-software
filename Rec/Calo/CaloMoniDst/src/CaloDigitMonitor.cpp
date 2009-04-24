@@ -99,7 +99,7 @@ StatusCode CaloDigitMonitor::initialize(){
   hBook2(  "6", "Digit position x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
   hBook2(  "7", "Energy-weighted digit position x vs y " + inputData(),m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
 
-  info() << detData() << " digits from " << inputData() << endreq;
+  info() << detData() << " digits from " << inputData() << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -108,20 +108,20 @@ StatusCode CaloDigitMonitor::initialize(){
 // ============================================================================
 StatusCode CaloDigitMonitor::execute(){
   typedef const LHCb::CaloDigit::Container Digits;
-  debug() << name() << " execute " << endreq;
+  debug() << name() << " execute " << endmsg;
   
   // produce histos ?
-  debug() << " Producing histo " << produceHistos() << endreq;
+  debug() << " Producing histo " << produceHistos() << endmsg;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Digits>(inputData())){
-    debug() << "no digit container found at " << inputData() << endreq;
+    debug() << "no digit container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
-    debug() << "No hypo found in " << inputData() << endreq;
+    debug() << "No hypo found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   

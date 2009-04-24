@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.1 2009-04-21 14:19:32 odescham Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.2 2009-04-24 13:44:08 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -310,7 +310,7 @@ void CaloEMuMonitor::declareBasicProperties()
  *  error messages if the difference exceeds NSigmaThreshold's  */
 StatusCode CaloEMuMonitor::finalize()
 {
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
   if (counter("nEvents").nEntries() >= m_nEventMin)
     this->check();
@@ -325,17 +325,17 @@ StatusCode CaloEMuMonitor::finalize()
  *  error messages if the difference exceeds NSigmaThreshold's  */
 void CaloEMuMonitor::check()
 {
-  info ()<<"-- Calo Electron/Muon PID Monitor << '" << this->name() << "' --" <<  endreq;
-  debug()<<"------------------------------------------------------------------" <<  endreq;
-  debug()<<" Calo PID        These Events       : Reference values for" <<  endreq;
-  debug()<<"                                    : " << m_RefSample      <<  endreq;
-  debug()<<"------------------------------------------------------------------" <<  endreq;
+  info ()<<"-- Calo Electron/Muon PID Monitor << '" << this->name() << "' --" <<  endmsg;
+  debug()<<"------------------------------------------------------------------" <<  endmsg;
+  debug()<<" Calo PID        These Events       : Reference values for" <<  endmsg;
+  debug()<<"                                    : " << m_RefSample      <<  endmsg;
+  debug()<<"------------------------------------------------------------------" <<  endmsg;
 
   int rcm =-2;
   for (std::map<std::string,RefPar>::iterator it = m_refPar.begin(); it != m_refPar.end(); ++it){
     int rc = (*it).second.check();
     msgStream( rc <= 0 ? MSG::INFO : ( rc == 1 ? MSG::WARNING : MSG::ERROR))
-      << format( "%-32s", (*it).second.histo->title().c_str() ) << (*it).second.msg << endreq;
+      << format( "%-32s", (*it).second.histo->title().c_str() ) << (*it).second.msg << endmsg;
     if ( rc > rcm ) rcm = rc;
   }
 
@@ -353,8 +353,8 @@ void CaloEMuMonitor::check()
     warning() << "Warning unexpected result of the Calo PID quality! rc = " << rcm << endmsg;
   }
 
-  info()<<"------------------------------------------------------------------" <<  endreq;
-  if ( rcm > 1 ) warning() << " *** \033[1;1mCalo PIDs might require re-tuning\033[0m !!! ***" << endreq;
+  info()<<"------------------------------------------------------------------" <<  endmsg;
+  if ( rcm > 1 ) warning() << " *** \033[1;1mCalo PIDs might require re-tuning\033[0m !!! ***" << endmsg;
 }
 /** apply track-quality cuts to select/reject candidate ProtoParticle's for histogramming
  *
@@ -543,7 +543,7 @@ int CaloEMuMonitor::RefPar::check()
   }
 
   caloMoniAlgPtr->debug() << hname << " Parameter comparison chi2-like sum  = " << chi2
-     << " NDOF =" << ndof << " Prob = " << prob << endreq;
+     << " NDOF =" << ndof << " Prob = " << prob << endmsg;
 
   return status;
 }
