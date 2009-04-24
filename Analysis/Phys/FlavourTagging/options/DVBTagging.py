@@ -34,16 +34,14 @@ importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.py" )
 from Configurables import BTagging, PhysDesktop, BTaggingChecker
 
 tag = BTagging("BTagging")
-tag.addTool( PhysDesktop() )
-tag.PhysDesktop.InputLocations = [ "Phys/DC06SelBs2DsPi" ]
+tag.InputLocations = [ "Phys/DC06SelBs2DsPi" ]
 tag.OutputLevel = 3
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.addTool( PhysDesktop() )
-tagcheck.PhysDesktop.InputLocations = [ "Phys/BTagging" ]
+tagcheck.InputLocations = [ "Phys/BTagging" ]
 
-
+MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
 ########################################################################
 #
 # Standard configuration
@@ -67,4 +65,3 @@ DaVinci().HltType = ''  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 # example data file
 #
 EventSelector().Input   = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002034/DST/0000/00002034_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"    ]
-

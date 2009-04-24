@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.130 2009-04-21 19:20:22 pkoppenb Exp $
+! $Id: release.notes,v 1.131 2009-04-24 09:45:13 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-04-24 - Patrick Koppenburg
+ - Some bug fixes to adapt to new DVAlgorithm
+ - Make all particles in 3 CombinedParticlemaker instances followed 
+   by one FilterDesktop. @todo : apply more cuts.
 
 ! 2009-04-21 - Patrick Koppenburg
  - Adapt to new Particlemaker : remove Physdesktop from BTagging tool

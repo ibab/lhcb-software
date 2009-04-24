@@ -39,7 +39,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnablePionTagger",    m_EnablePionSS  = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
-  declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggerParticles" );
+  declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggingParticles" );
   m_util = 0;
   m_descend =0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;

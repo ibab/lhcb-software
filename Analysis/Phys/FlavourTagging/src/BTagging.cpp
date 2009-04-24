@@ -27,7 +27,7 @@ BTagging::BTagging(const std::string& name,
 }
 
 //=======================================================================
-StatusCode BTagging::initialize() { return StatusCode::SUCCESS; }
+StatusCode BTagging::initialize() { return DVAlgorithm::initialize() ; }
 
 BTagging::~BTagging() {}
 
@@ -118,6 +118,6 @@ StatusCode BTagging::execute() {
 }
 
 //=========================================================================
-StatusCode BTagging::finalize() { return StatusCode::SUCCESS; }
+StatusCode BTagging::finalize() { return DVAlgorithm::finalize(); }
 
 //==========================================================================
