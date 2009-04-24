@@ -84,7 +84,7 @@ QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdksz
 
 void QCDFactorisation::init(){
 	
-	report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
+	//report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
 
 	//find the WCs at mu = mb
 	qcd::WCPtr  C_mw = model.getLeftWilsonCoefficientsMW();
@@ -102,7 +102,7 @@ void QCDFactorisation::init(){
 	
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb()->getOperatorBasis());
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
-	
+#if 0	
 	std::cout << "Using physics model: " << model.getModelName() << std::endl;
 	std::cout << "Meson: " << parameters->flavourString() << std::endl;
 	std::cout << "Left-handed Wilson coefficients are: " << std::endl;
@@ -114,7 +114,7 @@ void QCDFactorisation::init(){
 	std::cout << "\t(m_W): " << *(parameters->getCR_mw()) <<std::endl;
 	std::cout << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
 	std::cout << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
-
+#endif
 	EvtBToVllConstraints constrain(*this);
 	if(calcAFBZero){
 		double brBsToMuMu = constrain.getBrBsToMuMu();
@@ -127,7 +127,7 @@ void QCDFactorisation::init(){
 		std::cout << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
 	}
 	
-#if 1
+#if 0
 	std::cout << "C(mb)" << std::endl;
 	for(unsigned int i = 1; i <= parameters->getC_mb()->getOperatorBasis(); i++){
 		const double re = real((*(parameters->getC_mb()))(i));
