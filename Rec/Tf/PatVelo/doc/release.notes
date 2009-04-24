@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-04-24 - David Hutchcroft
+ - Added an option to PatVeloTrackTool to not correct for box offsets to allow
+   PR in a closing detector more simply. Default is to old behaviour. 
+
 ! 2009-04-15 - Marco Gersabeck
  - In PatVeloAlignTrackFilter: Implement tuned options and minor changes to the algorithm
 

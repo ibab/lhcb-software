@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.10 2009-04-01 09:54:20 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.11 2009-04-24 10:08:55 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -36,8 +36,12 @@ namespace Tf {
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );
       declareProperty( "ChargeThreshold" , m_chargeThreshold  = 15        );
       declareProperty( "highChargeFract" , m_highChargeFract  = 0.7        );
-      declareProperty( "RHitManagerName", m_rHitManagerName = "PatVeloRHitManager");
-      declareProperty( "PhiHitManagerName", m_phiHitManagerName = "PatVeloPhiHitManager");
+      declareProperty( "RHitManagerName", 
+		       m_rHitManagerName = "PatVeloRHitManager");
+      declareProperty( "PhiHitManagerName", 
+		       m_phiHitManagerName = "PatVeloPhiHitManager");
+      declareProperty( "TracksInHalfBoxFrame", 
+		       m_tracksInHalfBoxFrame = false );
     }
   //=============================================================================
   // Destructor
@@ -227,12 +231,20 @@ namespace Tf {
       newTrack->addInfo(LHCb::Track::nPRVelo3DExpect,patTrack->nVeloExpected());
     }
 
-    // set box offset here
-    Gaudi::XYZPoint localZero(0.,0.,0.);
-    Gaudi::XYZPoint global = (*(patTrack->rCoords()->begin()))->sensor()->veloHalfBoxToGlobal(localZero);
-    Gaudi::XYZVector boxOffset = global-localZero;
-    if ( msgLevel( MSG::VERBOSE ) ){
-      verbose() << "Offset track by " << boxOffset << endreq;
+    Gaudi::XYZVector boxOffset(0.,0.,0.);
+    
+    if( !m_tracksInHalfBoxFrame ) { // default to tracks in global frame
+      // set box offset here
+      Gaudi::XYZPoint localZero(0.,0.,0.);
+      Gaudi::XYZPoint global = (*(patTrack->rCoords()->begin()))->sensor()->veloHalfBoxToGlobal(localZero);
+      boxOffset = global-localZero;
+      if ( msgLevel( MSG::VERBOSE ) ){
+	verbose() << "Offset track by " << boxOffset << endreq;
+      }
+    }else{
+      if ( msgLevel( MSG::VERBOSE ) ) {
+	verbose() << "Ignore box offset: set to " << boxOffset << endreq;
+      }
     }
 
     newTrack->firstState().setState( patTrack->point().x() + boxOffset.x(),
