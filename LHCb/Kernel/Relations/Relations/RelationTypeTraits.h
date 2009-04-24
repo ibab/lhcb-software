@@ -1,13 +1,8 @@
-// $Id: RelationTypeTraits.h,v 1.6 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.7 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/06/12 15:27:28  ibelyaev
-//  add Bases.h file to preserve the file independence
-//
-// Revision 1.4  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
@@ -27,9 +22,9 @@
 #include "Relations/Range.h"
 #include "Relations/Bases.h"
 // ============================================================================
-
 namespace Relations
 {  
+  // ==========================================================================
   /** @struct RelationTypeTraits RelationTypeTraits.h
    *
    *  Type traits structure for definition of 
@@ -41,6 +36,10 @@ namespace Relations
   template < class FROM, class TO>
   struct RelationTypeTraits
   {
+    // ========================================================================
+    /// the actual enum to distinguish the relation type 
+    enum Type { weighted = false } ;
+    // ========================================================================
     /// the actual type of the entry 
     typedef typename Relations::Entry_<FROM,TO>           Entry      ;
     /// type traits for "FROM" object 

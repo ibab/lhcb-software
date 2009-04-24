@@ -1,8 +1,9 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.5 2006-06-12 15:27:28 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.6 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWEIGTEDTYPETRAITS_H
 #define RELATIONS_RELATIONWEIGTEDTYPETRAITS_H 1
@@ -20,9 +21,9 @@
 #include "Relations/Range.h"
 #include "Relations/Bases.h"
 // ============================================================================
-
 namespace Relations
 {
+  // ==========================================================================
   /** @struct RelationWeightedTypeTraits RelationWeightedTypeTraits.h
    *
    *  Type traits for relations with the weight ("link attributes") 
@@ -33,6 +34,10 @@ namespace Relations
   template < class FROM, class TO, class WEIGHT>
   struct RelationWeightedTypeTraits
   {
+    // ========================================================================
+    /// the actual enum to distinguish the relation type 
+    enum Type { weighted = true } ;
+    // ========================================================================  
     /// the actual type of the entry 
     typedef typename Relations::WEntry_<FROM,TO,WEIGHT> Entry ;
     /// type traits for "FROM" object 

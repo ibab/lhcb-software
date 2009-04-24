@@ -1,19 +1,8 @@
-// $Id: RelationBase.h,v 1.12 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.13 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2008/11/01 15:53:08  ibelyaev
-//  add the method 'merge' and its shortcut '+=' for each concrete class
-//
-// Revision 1.10  2008/10/31 19:34:59  ibelyaev
-//  fixes for gcc4.3
-//
-// Revision 1.9  2007/08/27 23:18:20  odescham
-// fix untested StatusCode
-//
-// Revision 1.8  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
@@ -111,14 +100,21 @@ namespace Relations
     {
       static const Less _less_ = Less() ;
       // look for existing relations 
-      const Entry ent ( object1 , object2 ) ;
+      const Entry entry ( object1 , object2 ) ;
+      return i_add ( entry ) ;
+    }
+    /// add the entry 
+    inline  StatusCode i_add ( const Entry& entry ) 
+    {
+      static const Less _less_ = Less() ;
+      // look for existing relations 
       iterator it = std::lower_bound
-        ( m_entries.begin () , m_entries.end   () , ent , _less_ ) ;
+        ( m_entries.begin () , m_entries.end   () , entry , _less_ ) ;
       // the relation does exist ! 
-      if( m_entries.end () != it && !_less_( ent , *it ) ) 
+      if( m_entries.end () != it && !_less_( entry , *it ) ) 
       { return StatusCode::FAILURE; }
       // insert new relation !
-      m_entries.insert( it , ent ) ;
+      m_entries.insert( it , entry ) ;
       return StatusCode::SUCCESS ;
     }
     /// remove the concrete relation between objects

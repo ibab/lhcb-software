@@ -1,4 +1,4 @@
-// $Id: IRelation.h,v 1.6 2008-02-19 15:26:09 ibelyaev Exp $
+// $Id: IRelation.h,v 1.7 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_IRELATION_H
 #define RELATIONS_IRELATION_H 1
@@ -21,6 +21,7 @@ template<class FROM, class TO>
 class IRelation : public IRelationBase
 {
 public:
+  // ==========================================================================
   /// the type traits structure
   typedef Relations::RelationTypeTraits<FROM,TO> TypeTraits  ;
   /// "FROM" traits
@@ -39,7 +40,11 @@ public:
   typedef IRelation<FROM,TO>                     DirectType  ;
   /// shortcut to "inverse" type
   typedef IRelation<TO,FROM>                     InverseType ;
+  /// get the entry:
+  typedef typename TypeTraits::Entry             Entry       ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** retrive all relations from the given object object
    *  - relations are returned in the form of @p Range object 
    *  @code 
@@ -98,6 +103,8 @@ public:
    *  @return status  code
    */
   virtual StatusCode relate ( From_ object1 , To_ object2 ) = 0 ;  
+  /// add the relation entry 
+  virtual StatusCode add    ( const Entry& entry          ) = 0 ;
   /** remove the concrete relation between objects
    *   - if there are no relations between the given object
    *     the error code will be returned
@@ -136,7 +143,9 @@ public:
    *  @return status code
    */
   virtual StatusCode   removeTo ( To_ object )  = 0 ;  
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** interface identification (static)
    *  The unique interface identifier is constructed "on-fly"
    *  using hash-technique from the generic interface name and 
@@ -149,10 +158,13 @@ public:
     static const InterfaceID s_iid  =
       Relations::interfaceID( System::typeinfoName( typeid(OwnType) ) ) ;
     return s_iid ;
-  };
+  }
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// destructor (virtual and protected)
-  virtual ~IRelation() {};
+  virtual ~IRelation() {}
+  // ==========================================================================
 } ;
 // ============================================================================
 // The End

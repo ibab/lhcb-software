@@ -1,22 +1,8 @@
-// $Id: RelationWeightedBase.h,v 1.14 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.15 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.13  2008/11/01 15:53:09  ibelyaev
-//  add the method 'merge' and its shortcut '+=' for each concrete class
-//
-// Revision 1.12  2008/10/31 19:34:59  ibelyaev
-//  fixes for gcc4.3
-//
-// Revision 1.11  2007/08/27 23:18:20  odescham
-// fix untested StatusCode
-//
-// Revision 1.10  2006/06/12 16:02:08  ibelyaev
-//  add Reserve.h file into include
-//
-// Revision 1.9  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
@@ -181,16 +167,21 @@ namespace Relations
     /// make the relation between 2 objects
     inline StatusCode i_relate ( From_ object1 , To_ object2 , Weight_ weight  )
     {
-      // get all existing relations from object1
-      IP ip = i_relations( object1 ) ;
-      // does the given relation between object1 and object1 exist ?
       const Entry entry ( object1 , object2 , weight );
-      iterator it = std::find_if ( ip.first , ip.second ,
-                                   std::bind2nd( Equal() , entry ) );
+      return i_add ( entry ) ;
+    }
+    /// add the entry 
+    inline StatusCode i_add ( const Entry& entry )
+    {
+      // get all existing relations from object1
+      IP ip = i_relations( entry.from() ) ;
+      // does the given relation between object1 and object2 exist ?
+      iterator it = std::find_if 
+        ( ip.first , ip.second , std::bind2nd( Equal() , entry ) );
       if ( ip.second != it   ) { return StatusCode::FAILURE ; }     // RETURN !!!
       // find the place where to insert the relation and insert it!
       it = std::lower_bound( ip.first , ip.second , entry , Less2() ) ;
-      m_entries.insert( it , Entry( object1 , object2 , weight ) ) ;
+      m_entries.insert( it , entry ) ;
       return StatusCode::SUCCESS ;
     }
     /// remove the concrete relation between objects

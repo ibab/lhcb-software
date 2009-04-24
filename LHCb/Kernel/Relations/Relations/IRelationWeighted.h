@@ -1,6 +1,6 @@
-// $Id: IRelationWeighted.h,v 1.6 2007-03-23 16:40:17 cattanem Exp $
+// $Id: IRelationWeighted.h,v 1.7 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -27,6 +27,7 @@ template< class FROM , class TO , class WEIGHT>
 class IRelationWeighted : public IRelationWeightedBase
 {
 public:
+  // ==========================================================================
   /// the type traits structure
   typedef Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT> TypeTraits ;
   /// actual "FROM" type
@@ -43,12 +44,16 @@ public:
   /// iterator range
   typedef typename TypeTraits::Range                  Range            ;
   /// shortcut to own type
-  typedef IRelationWeighted<FROM,TO,WEIGHT>  OwnType          ;
+  typedef IRelationWeighted<FROM,TO,WEIGHT>           OwnType          ;
   /// shortcut to "direct" type
-  typedef IRelationWeighted<FROM,TO,WEIGHT>  DirectType       ;
+  typedef IRelationWeighted<FROM,TO,WEIGHT>           DirectType       ;
   /// shortcut to "inverse" type
-  typedef IRelationWeighted<TO,FROM,WEIGHT>  InverseType      ;
+  typedef IRelationWeighted<TO,FROM,WEIGHT>           InverseType      ;
+  /// get the entry:
+  typedef typename TypeTraits::Entry                  Entry            ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** retrive all relations from the object
    *  - relations are returned in the form of iterator pair:
    *  @code 
@@ -176,6 +181,8 @@ public:
    */
   virtual StatusCode relate
   ( From_ object1 , To_ object2 , Weight_ weight ) = 0 ;
+  /// add the relation entry 
+  virtual StatusCode add    ( const Entry& entry ) = 0 ;
   /** remove the concrete relation between objects
    *   - if there are no relations between the given object
    *     the error code will be returned
@@ -265,7 +272,9 @@ public:
    *  @return status code
    */
   virtual StatusCode filter ( Weight_ threshold , const bool flag )  = 0 ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** interface identification (static)
    *
    *  The unique interface identifier is
@@ -280,10 +289,13 @@ public:
     static const InterfaceID s_iid =
       Relations::interfaceID( System::typeinfoName(typeid(OwnType))) ;
     return s_iid ;
-  };
+  }
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// destructor (virtual and protected)
-  virtual ~IRelationWeighted(){};
+  virtual ~IRelationWeighted(){}
+  // ==========================================================================
 };
 // ============================================================================
 // The End

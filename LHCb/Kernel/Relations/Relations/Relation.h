@@ -1,4 +1,4 @@
-// $Id: Relation.h,v 1.15 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: Relation.h,v 1.16 2009-04-24 15:26:46 ibelyaev Exp $
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -71,13 +71,15 @@ namespace Relations
     /// shortcut for inverse base type 
     typedef typename IDirect::InverseType             IInverse       ;
     /// basic types from Interface 
-    typedef typename IBase::Range Range ;
+    typedef typename IBase::Range                     Range          ;
     /// basic types from Interface 
-    typedef typename IBase::From_ From_ ;
-    typedef typename IBase::From  From  ;
+    typedef typename IBase::From_                     From_          ;
+    typedef typename IBase::From                      From           ;
     /// basic types from Interface 
-    typedef typename IBase::To_   To_   ;
-    typedef typename IBase::To    To    ;
+    typedef typename IBase::To_                       To_            ;
+    typedef typename IBase::To                        To             ;
+    /// the actual type of the entry
+    typedef typename IBase::Entry                     Entry          ;
     // ========================================================================
   public:    
     // ========================================================================
@@ -143,10 +145,17 @@ namespace Relations
     /// make the relation between 2 objects (fast,100% inline method) 
     inline   StatusCode i_relate ( From_ object1 , To_ object2 )
     {
-      StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
+      const Entry entry ( object1 , object2 ) ;
+      return i_add ( entry ) ;
+    }
+    /// add the entry 
+    inline   StatusCode i_add ( const Entry& entry )
+    {
+      StatusCode sc = m_direct. i_add (  entry ) ;
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
-      return m_inverse_aux  -> i_relate( object2 , object1 ); 
-    } 
+      const typename Inverse::Entry ientry ( entry.to() , entry.from() ) ;
+      return m_inverse_aux  ->  i_add ( ientry ); 
+    }
     /// remove the concrete relation between objects (fast,100% inline method)
     inline   StatusCode i_remove ( From_ object1 , To_ object2 )
     { 
@@ -258,6 +267,9 @@ namespace Relations
     /// make the relation between 2 objects
     virtual  StatusCode relate
     ( From_ object1 , To_ object2 ) { return i_relate( object1 , object2 ) ; }
+    /// add teh relation
+    virtual  StatusCode add ( const Entry& entry ) 
+    { return i_add ( entry ) ; }
     /// remove the concrete relation between objects
     virtual  StatusCode remove 
     ( From_ object1 , To_ object2 ) { return i_remove ( object1 , object2 ) ; }

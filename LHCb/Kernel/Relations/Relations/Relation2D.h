@@ -1,19 +1,8 @@
-// $Id: Relation2D.h,v 1.12 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.13 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2008/11/01 15:53:08  ibelyaev
-//  add the method 'merge' and its shortcut '+=' for each concrete class
-//
-// Revision 1.10  2008/10/31 19:34:59  ibelyaev
-//  fixes for gcc4.3
-//
-// Revision 1.9  2006/11/25 18:50:40  ibelyaev
-//  fix a problem with Rlation2D.h
-//
-// Revision 1.8  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
@@ -55,35 +44,37 @@ namespace LHCb
   public: 
     // ========================================================================
     /// shortcut for own type 
-    typedef Relation2D<FROM,TO>              OwnType    ;
+    typedef Relation2D<FROM,TO>              OwnType     ;
     /// shortcut for inverse type 
-    typedef Relation2D<TO,FROM>              InvType    ;
+    typedef Relation2D<TO,FROM>              InvType     ;
     /// shortcut for "direct"(="main") interface
-    typedef IRelation2D<FROM,TO>             IBase      ;
+    typedef IRelation2D<FROM,TO>             IBase       ;
     /// shortcut for "direct"(="main") interface
-    typedef IRelation<FROM,TO>               IBase1     ;
+    typedef IRelation<FROM,TO>               IBase1      ;
     /// shortcut for "inverse interface  interface
-    typedef IRelation<TO,FROM>               IBase2     ;
+    typedef IRelation<TO,FROM>               IBase2      ;
     /// shortcut for direct subinterface 
-    typedef typename IBase::DirectType       DirectType     ;
+    typedef typename IBase::DirectType       DirectType  ;
     /// shortcut for inverse subinterface 
-    typedef typename IBase::InverseType      InverseType    ;
+    typedef typename IBase::InverseType      InverseType ;
     /// import "Range" type from the base 
-    typedef typename IBase::Range            Range      ;
+    typedef typename IBase::Range            Range       ;
     /// import "From"  type from the base 
-    typedef typename IBase::From             From       ;
+    typedef typename IBase::From             From        ;
     /// import "From"  type from the base 
-    typedef typename IBase::From_            From_      ;
+    typedef typename IBase::From_            From_       ;
     /// import "To"    type from the base 
-    typedef typename IBase::To_              To_        ;
+    typedef typename IBase::To_              To_         ;
     /// import "To"    type from the base 
-    typedef typename IBase::To               To         ;
+    typedef typename IBase::To               To          ;
     /// shortcut for actual implementation  
-    typedef Relations::Relation2<FROM,TO>    Base       ;  
+    typedef Relations::Relation2<FROM,TO>    Base        ;  
     // shortcut for "direct" interface 
-    typedef typename IBase::DirectType       IDirect        ;
+    typedef typename IBase::DirectType       IDirect     ;
     // shortcut for "inverse" interface 
-    typedef typename IBase::InverseType      IInverse       ;
+    typedef typename IBase::InverseType      IInverse    ;
+    /// the actual type of the entry
+    typedef typename IBase::Entry            Entry       ;
     // ========================================================================
   public:
     // ========================================================================
@@ -172,7 +163,13 @@ namespace LHCb
     inline Range i_relations () const { return m_base.i_relations () ; }
     /// make the relation between 2 objects (fast,100% inline method) 
     inline StatusCode i_relate ( From_ object1 , To_ object2 )
-    { return m_base.i_relate   ( object1 , object2 ) ; }
+    {
+      const Entry entry ( object1 , object2 ) ;
+      return i_add ( entry ) ;
+    }
+    /// add the entry 
+    inline StatusCode i_add ( const Entry& entry ) 
+    { return m_base.i_add ( entry ) ; }
     /// remove the concrete relation between objects (fast,100% inline method)
     inline StatusCode i_remove ( From_ object1 , To_ object2 )
     { return m_base.i_remove ( object1 , object2 ) ; }
@@ -230,6 +227,9 @@ namespace LHCb
     /// make the relation between 2 objects
     virtual StatusCode relate ( From_ object1 , To_ object2 ) 
     { return i_relate( object1 , object2 ) ; }
+    /// add the entry 
+    virtual StatusCode add ( const Entry& entry ) 
+    { return i_add ( entry ) ; }
     /// remove the concrete relation between objects
     virtual StatusCode   remove ( From_ object1 , To_ object2 ) 
     { return i_remove( object1 , object2 ) ; }

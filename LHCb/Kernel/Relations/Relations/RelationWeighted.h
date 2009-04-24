@@ -1,19 +1,8 @@
-// $Id: RelationWeighted.h,v 1.15 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.16 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2008/11/01 15:53:08  ibelyaev
-//  add the method 'merge' and its shortcut '+=' for each concrete class
-//
-// Revision 1.13  2008/10/31 19:34:59  ibelyaev
-//  fixes for gcc4.3
-//
-// Revision 1.12  2006/06/11 19:37:02  ibelyaev
-//  remove some extra classes + fix all virtual bases
-//
-// Revision 1.11  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted_H 
@@ -78,6 +67,8 @@ namespace Relations
     /// import basic types from Interface 
     typedef typename IBase::Weight                          Weight  ;
     typedef typename IBase::Weight_                         Weight_ ;
+    /// the actual type of the entry
+    typedef typename IBase::Entry                           Entry   ;
     // ========================================================================
   public:
     // ========================================================================
@@ -156,9 +147,17 @@ namespace Relations
     inline   StatusCode i_relate 
     ( From_ object1 , To_ object2 , Weight_ weight ) 
     {
-      StatusCode sc = m_direct.  i_relate ( object1 , object2 , weight );
+      const Entry entry ( object1 , object2 , weight ) ;
+      return i_add ( entry ) ;
+    }
+    /// add the entry  
+    inline   StatusCode i_add ( const Entry& entry ) 
+    {
+      StatusCode sc = m_direct.i_add ( entry ) ;
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
-      return m_inverse_aux -> i_relate ( object2 , object1 , weight ); 
+      const typename Inverse::Entry 
+        ientry ( entry.to() , entry.from() , entry.weight() ) ;
+      return m_inverse_aux -> i_add ( ientry );
     }
     /// remove the concrete relation between objects (fast,100% inline)
     inline   StatusCode i_remove ( From_ object1 , To_ object2 ) 
@@ -306,6 +305,9 @@ namespace Relations
     /// make the relation between 2 objects 
     virtual  StatusCode relate ( From_ object1 , To_ object2 , Weight_ weight  ) 
     { return i_relate( object1 , object2 , weight ) ; }
+    /// add the entry 
+    virtual  StatusCode add  ( const Entry& entry ) 
+    { return i_add ( entry ) ; }
     /// remove the concrete relation between objects
     virtual  StatusCode remove ( From_ object1 , To_ object2 ) 
     { return i_remove ( object1 , object2 ) ; }

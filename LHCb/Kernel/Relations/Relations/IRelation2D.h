@@ -1,10 +1,8 @@
-// $Id: IRelation2D.h,v 1.4 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: IRelation2D.h,v 1.5 2009-04-24 15:26:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // ============================================================================
 #ifndef RELATIONS_IRELATION2D_H 
@@ -34,6 +32,7 @@ template< class FROM, class TO>
 class IRelation2D : public IRelation<FROM,TO>
 {
 public: 
+  // ==========================================================================
   /// shortcut to own type
   typedef IRelation2D<FROM,TO>                   OwnType        ;
   /// shortcut to inverse type
@@ -42,7 +41,9 @@ public:
   typedef IRelation<FROM,TO>                     DirectType     ;
   /// shortcut to "inverse" type
   typedef IRelation<TO,FROM>                     InverseType    ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** get the "direct" interface 
    *  @return pointer to the 'direct' interface 
    */
@@ -59,7 +60,9 @@ public:
    *  @return pointer to the 'inverse' interface 
    */
   virtual const InverseType* inverse () const = 0 ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** interface identification (static)
    *  @attention the unique interface identifier is constructed "on-fly"
    *  using hash-technique from the generic interface name and 
@@ -72,10 +75,13 @@ public:
     static const InterfaceID s_iid  =
       Relations::interfaceID( System::typeinfoName(typeid(OwnType)) );
     return s_iid ;
-  };
+  }
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// destructor (virtual and protected)
-  virtual ~IRelation2D(){};
+  virtual ~IRelation2D(){}
+  // ==========================================================================
 };
 // ============================================================================
 // The End 

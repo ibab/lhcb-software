@@ -1,19 +1,8 @@
-// $Id: Relation2.h,v 1.13 2008-11-02 16:44:38 ibelyaev Exp $
+// $Id: Relation2.h,v 1.14 2009-04-24 15:26:46 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2008/11/01 15:53:08  ibelyaev
-//  add the method 'merge' and its shortcut '+=' for each concrete class
-//
-// Revision 1.11  2008/10/31 19:34:59  ibelyaev
-//  fixes for gcc4.3
-//
-// Revision 1.10  2006/06/11 19:37:02  ibelyaev
-//  remove some extra classes + fix all virtual bases
-//
-// Revision 1.9  2006/06/11 15:23:46  ibelyaev
-//  The major  upgrade: see doc/release.notes
 //
 // =============================================================================
 #ifndef RELATIONS_Relation2_H 
@@ -37,9 +26,9 @@
 #include "Relations/IRelation2D.h"
 #include "Relations/Relation.h"
 // =============================================================================
-
 namespace Relations
 {
+  // ===========================================================================
   /** @class Relation2 Relation2.h Relations/Relation2.h
    *  
    *  @brief Implementation of ordinary bidirectional relations 
@@ -99,6 +88,8 @@ namespace Relations
     typedef typename IBase::To               To             ;
     /// import "To"    type from interface 
     typedef typename IBase::To_              To_            ;    
+    /// the actual type of the entry
+    typedef typename IBase::Entry            Entry          ;
     // ========================================================================
   public:
     // ========================================================================
@@ -170,7 +161,10 @@ namespace Relations
     { return m_direct.i_relations () ; }
     /// make the relation between 2 objects (fast,100% inline method) 
     inline   StatusCode i_relate ( From_ object1 , To_ object2 )
-    { return m_direct.i_relate   ( object1 , object2 ) ; }
+    { return i_add   ( Entry ( object1 , object2 ) ) ; }
+    /// add the entry 
+    inline   StatusCode i_add    ( const Entry& entry ) 
+    { return m_direct.i_add ( entry ) ; }
     /// remove the concrete relation between objects (fast,100% inline method)
     inline   StatusCode i_remove ( From_ object1 , To_ object2 )
     { return m_direct.i_remove ( object1 , object2 ) ; }
@@ -228,6 +222,9 @@ namespace Relations
     /// make the relation between 2 objects
     virtual  StatusCode relate ( From_ object1 , To_ object2 )
     { return i_relate ( object1 , object2 ) ; }
+    /// add the entry
+    virtual  StatusCode add ( const Entry& entry ) 
+    { return i_add ( entry ) ; }
     /// remove the concrete relation between objects
     virtual  StatusCode remove ( From_ object1 , To_ object2 )
     { return i_remove ( object1 , object2 ) ; }
