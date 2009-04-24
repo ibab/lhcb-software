@@ -52,9 +52,9 @@ Hlt2HidValley::~Hlt2HidValley() {};
 // Initialisation
 //=============================================================================
 StatusCode Hlt2HidValley::initialize() {
-
+  StatusCode sc = DVAlgorithm::initialize();
+  if (!sc) return sc;
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-
   return StatusCode::SUCCESS;
 };
 
@@ -138,5 +138,5 @@ StatusCode Hlt2HidValley::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  return DVAlgorithm::finalize();
 }
