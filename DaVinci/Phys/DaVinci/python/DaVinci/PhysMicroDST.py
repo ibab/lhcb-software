@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.6 2009-04-24 11:42:56 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.7 2009-04-24 14:03:23 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -42,8 +42,18 @@ class PhysMicroDST(LHCbConfigurableUser) :
 
     def getMicroDSTSelAlg(self) :        
         seqName = self.getProp("MicroDSTSelectionAlg")
-        log.info("Getting MicroDSTSelectionAlg "+ seqName)
+        if type(seqName) == str :
+            log.info("Getting MicroDSTSelectionAlg "+ seqName)
+        else :
+            log.info("Getting MicroDSTSelectionAlg "+ seqName.name())
         return seqName
+
+    def getMicroDSTSelAlgName(self) :        
+        seq = self.getMicroDSTSelAlg()
+        if type(seq) == str :
+            return seq
+        else :
+            return seq.name()
 
     def initMicroDSTStream(self) :
         from Configurables import OutputStream
@@ -57,7 +67,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         return stream
 
     def mainLocation(self) :
-        algoName = self.getProp("MicroDSTSelectionAlg")
+        algoName = self.getMicroDSTSelAlgName()
         return 'Phys/' + algoName
 
     def outputPrefix(self) :
@@ -190,7 +200,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         log.info( self )
         mdstSeq = self.seqMicroDST()
         ApplicationMgr().OutStream += [mdstSeq]
-        selAlg = self.getMicroDSTSelAlg()
+        selAlg = self.getMicroDSTSelAlgName()
         if type(selAlg) == str :
             mdstSeq.Members = [LoKi__VoidFilter("MicroDSTSel",
                                                 Code = "ALG_PASSED('"+selAlg+"')&ALG_EXECUTED('"+selAlg+"')")]
