@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.cpp,v 1.3 2009-04-24 16:10:19 jonrob Exp $
+// $Id: HPDIonFeedbackMoni.cpp,v 1.4 2009-04-24 16:18:55 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -55,8 +55,8 @@ StatusCode HPDIonFeedbackMoni::initialize()
 
   //Tools to get the data and to analyse it for clusters
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
-  acquireTool( "RichSmartIDTool", m_idTool,     0, true );
-  acquireTool( "RichHPDPixelClusterFinder", m_clusterTool );
+  acquireTool( "RichSmartIDTool", m_idTool,            0, true );
+  acquireTool( "RichHPDPixelClusterFinder", m_clusterTool, this );
 
   return sc;
 }
