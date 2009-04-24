@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.50 2009-03-01 18:54:32 jpalac Exp $
+! $Id: release.notes,v 1.51 2009-04-24 09:46:55 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-04-24 - Patrick Koppenburg
+ - Initialize DVAlgorithm
+ - v3r5
 
 !=====================FlavourTaggingChecker v3r4 2009-03-01 ================
 

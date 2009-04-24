@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.14 2009-02-25 09:45:18 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.15 2009-04-24 09:46:55 pkoppenb Exp $
 
 // local
 #include "BTaggingChecker.h"
@@ -34,6 +34,8 @@ BTaggingChecker::~BTaggingChecker() {};
 //==========================================================================
 StatusCode BTaggingChecker::initialize() {
 
+  StatusCode sc = DVAlgorithm::initialize() ;
+
   m_debug = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
@@ -41,7 +43,7 @@ StatusCode BTaggingChecker::initialize() {
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 
-  return StatusCode::SUCCESS;
+  return sc ;
 };
 
 //==========================================================================
@@ -126,8 +128,7 @@ StatusCode BTaggingChecker::execute() {
 };
 
 //==========================================================================
-StatusCode BTaggingChecker::finalize(){ 
-
+StatusCode BTaggingChecker::finalize(){
   MsgStream req( msgSvc(), name() );
 
   // calculate effective efficiency in categories with errors
@@ -206,7 +207,7 @@ StatusCode BTaggingChecker::finalize(){
   info()<<"==========END OF EXCLUSIVE TAGGING PERFORMANCE ======="<<endmsg;
   info()<<"========================================================="<<endreq;
 
-  return StatusCode::SUCCESS; 
+  return DVAlgorithm::finalize() ; 
 }
 
 //========================================================================
