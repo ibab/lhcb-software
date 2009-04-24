@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.12 2009-03-10 22:56:26 spradlin Exp $
+// $Id: AParticles.h,v 1.13 2009-04-24 13:08:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -27,6 +27,7 @@
 #include "LoKi/AKinematics.h"
 #include "LoKi/AuxDesktopBase.h"
 #include "LoKi/Particles3.h"
+#include "LoKi/Particles26.h"
 // ============================================================================
 namespace LHCb 
 {
@@ -36,6 +37,7 @@ namespace LHCb
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::AParticles
    *  helper namespace with functions which accept the array of
    *  particles as argument
@@ -731,50 +733,72 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// evaluate the doca 
-      inline double doca 
-      ( const LHCb::Particle* p1 , 
-        const LHCb::Particle* p2 ) const 
-      { return m_eval.distance ( p1 , p2 ) ; }
+      /// evaluate the doca
+      inline double doca
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const
+      { return m_eval.doca  ( p1 , p2 ) ; }
+      // ======================================================================
+      /// evaluate the chi2 
+      inline double chi2
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const
+      { return m_eval.chi2 ( p1 , p2 ) ; }
       // ======================================================================
     public:
       // ======================================================================
-      /// get the tool 
-      const LoKi::Interface<IDistanceCalculator>& tool () const 
-      { return m_eval ; }      
-      /// cast to the tool 
-      operator const LoKi::Interface<IDistanceCalculator>& () const 
-      { return tool() ; }      
+      template <class PARTICLE>
+      double docamax ( PARTICLE first , 
+                       PARTICLE last  ) const
+      { return m_eval.docamax ( first , last ) ; }
       // ======================================================================
-      const std::string& nickname() const { return m_nick ; }
-      // ======================================================================
-      void setFirst  ( const size_t i1 ) const { m_first  = i1 ; }
-      // ======================================================================
-      void setSecond ( const size_t i2 ) const { m_second = i2 ; }      
+      template <class PARTICLE>
+      double docachi2max ( PARTICLE first , 
+                       PARTICLE last  ) const
+      { return m_eval.docachi2max ( first , last ) ; }
       // ======================================================================
     public:
       // ======================================================================
-      /// set the tool 
-      void setTool ( const IDistanceCalculator* t ) const 
-      { m_eval.setTool ( t ) ; }
-      /// set the tool 
-      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
-      { m_eval.setTool ( t ) ; }      
+      /// evaluate the max doca
+      inline double docamax
+      ( const LHCb::Particle::ConstVector&    v ) const 
+      { return m_eval.docamax( v ) ; }
+      /// evaluate the max doca
+      inline double docamax 
+      ( const SmartRefVector<LHCb::Particle>& v ) const 
+      { return m_eval.docamax( v ) ; }
       // ======================================================================
+      /// evaluate the max chi2 doca
+      inline double docachi2max
+      ( const LHCb::Particle::ConstVector&    v ) const 
+      { return m_eval.docachi2max( v ) ; }
+      /// evaluate the max chi2 doca
+      inline double docachi2max 
+      ( const SmartRefVector<LHCb::Particle>& v ) const 
+      { return m_eval.docachi2max( v ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the tool
+      const LoKi::Interface<IDistanceCalculator>& tool () const
+      { return m_eval.tool() ; }
+      // ======================================================================
+      /// load the tool 
+      StatusCode loadTool  () const { return m_eval.loadTool() ; }
+      /// get the tool name 
+      std::string toolName () const { return m_eval.toolName() ; }
+      // ======================================================================
+      size_t firstIndex  () const { return m_eval.firstIndex  () ; }
+      size_t secondIndex () const { return m_eval.secondIndex () ; }
+      // ======================================================================      
     private:
       // ======================================================================
       /// the default constructor is disabled 
       DOCA() ; //                                        no default constructor
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
-      LoKi::Particles::ClosestApproach m_eval ;
-      /// the first  index 
-      mutable size_t m_first  ; // the first  index 
-      /// the second index 
-      mutable size_t m_second ; // the second index
-      /// the tool nick
-      std::string  m_nick   ; // the tool nick
+      LoKi::Particles::DOCA m_eval ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -784,8 +808,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-28
      */
-    class DOCAChi2 
-      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    class DOCAChi2 : public LoKi::AParticles::DOCA 
     {
     public:
       // ======================================================================
@@ -810,51 +833,10 @@ namespace LoKi
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// evaluate the doca 
-      inline double chi2 
-      ( const LHCb::Particle* p1 , 
-        const LHCb::Particle* p2 ) const { return m_eval.chi2 ( p1 , p2 ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the tool 
-      const LoKi::Interface<IDistanceCalculator>& tool () const 
-      { return m_eval ; }      
-      /// cast to the tool 
-      operator const LoKi::Interface<IDistanceCalculator>& () const 
-      { return tool() ; }      
-      // ======================================================================
-      const std::string& nickname() const { return m_nick ; }
-      // ======================================================================
-      void setFirst  ( const size_t i1 ) const { m_first  = i1 ; }
-      // ======================================================================
-      void setSecond ( const size_t i2 ) const { m_second = i2 ; }      
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// set the tool 
-      void setTool ( const IDistanceCalculator* t ) const 
-      { m_eval.setTool ( t ) ; }
-      /// set the tool 
-      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
-      { m_eval.setTool ( t ) ; }      
-      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
       DOCAChi2() ; //                                    no default constructor
-      // ======================================================================
-    private:
-      // ======================================================================
-      LoKi::Particles::ClosestApproachChi2 m_eval ;
-      /// the first  index 
-      mutable size_t m_first  ; // the first  index 
-      /// the second index 
-      mutable size_t m_second ; // the second index
-      /// the tool nick
-      std::string  m_nick   ; // the tool nick
       // ======================================================================
     } ;
     // ========================================================================    
@@ -867,7 +849,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-09
      */
-    class MaxDOCA : public DOCA 
+    class MaxDOCA : public LoKi::AParticles::DOCA 
     {
     public:
       // ======================================================================
@@ -902,7 +884,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2 : public DOCAChi2 
+    class MaxDOCAChi2 : public LoKi::AParticles::DOCAChi2 
     {
     public:
       // ======================================================================
@@ -971,19 +953,22 @@ namespace LoKi
       // ======================================================================
       /// get the tool 
       const LoKi::Interface<IDistanceCalculator>& tool     () const 
-      { return m_doca.getTool() ; }
+      { return m_doca.tool() ; }
       /// cast to the tool:
       operator const LoKi::Interface<IDistanceCalculator>& () const 
       { return m_doca ; }
+      /// load tool 
+      StatusCode loadTool() const { return m_doca.loadTool() ; }
       // ======================================================================
-    private:
+      /// tool name 
+      std::string toolName () const { return m_doca.toolName() ; }
+      // ======================================================================
+    protected:
       // ======================================================================
       /// the actual tool used for evaluation 
-      LoKi::Particles::ClosestApproach m_doca ; // the tool used for evaluation 
+      LoKi::Particles::DOCA  m_doca      ; // the tool used for evaluation 
       /// the threshold 
       double                 m_threshold ; // the threshold 
-      /// the nickname of Distance Calculator 
-      std::string            m_nick      ; //  Distance Calculator 
       // ======================================================================
     } ;
     // ========================================================================    
@@ -998,8 +983,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2Cut
-      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
+    class MaxDOCAChi2Cut : public LoKi::AParticles::MaxDOCACut
     {
     public:
       // ======================================================================
@@ -1025,24 +1009,6 @@ namespace LoKi
       // ======================================================================
       // the default constructor is disabled
       MaxDOCAChi2Cut() ; /// the default constructor is disabled
-      // ======================================================================
-    public:
-      // ======================================================================
-      // get the tool 
-      const LoKi::Interface<IDistanceCalculator>& tool     () const 
-      { return m_doca  ; }
-      // cast to the tool:
-      operator const LoKi::Interface<IDistanceCalculator>& () const 
-      { return tool()  ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual tool used for evaluation 
-      LoKi::Particles::ClosestApproachChi2 m_doca ; // the tool used for evaluation 
-      /// the threshold 
-      double                 m_threshold ; // the threshold 
-      /// the nickname of Distance Calculator 
-      std::string            m_nick      ; //  Distance Calculator 
       // ======================================================================
     } ;
     // ========================================================================

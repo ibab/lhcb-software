@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.9 2009-03-10 22:56:26 spradlin Exp $
+// $Id: AParticles.cpp,v 1.10 2009-04-24 13:08:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -17,11 +17,6 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticlePropertySvc.h"
 // ===========================================================================
-// DaVinciKernel
-// ===========================================================================
-#include "Kernel/GetDVAlgorithm.h"
-#include "Kernel/DVAlgorithm.h"
-// ===========================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Objects.h"
@@ -35,64 +30,6 @@
 #include "LoKi/AParticles.h"
 #include "LoKi/AChild.h"
 #include "LoKi/AKinematics.h"
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /// the invalid particle:
-  const LHCb::Particle*      const s_PARTICLE = 0 ;
-  // ========================================================================== 
-  /// the invalid tool 
-  const IDistanceCalculator* const s_TOOL     = 0 ;
-  // ==========================================================================
-  inline const IDistanceCalculator* getDC 
-  ( const std::string&      nick , 
-    const LoKi::AuxFunBase& base )
-  {
-    // get LoKi service 
-    const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
-    base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
-    // get DVAlgorithm 
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm 
-      ( SmartIF<IAlgContextSvc>( svc ) ) ;
-    base.Assert ( 0 != alg , "DVAlgorithm is not available" ) ;
-    const IDistanceCalculator* dc = alg->distanceCalculator( nick ) ;
-    if ( 0 == dc ) 
-    { base.Error("IDistanceCalculator('"+nick+"') is not available") ; }
-    return dc ;
-  }
-  // ==========================================================================
-  /// the the valid tool name 
-  inline std::string toolName 
-  ( const IAlgTool*    tool , 
-    const std::string& nick ) 
-  {
-    if ( 0 == tool || !nick.empty() ) { return nick ; }
-    //
-    const std::string& name = tool -> name() ;
-    const bool pub = ( 0 == name.find ("ToolSvc.") ) ;
-    const std::string::size_type ldot = name.rfind ('.') ;
-    //
-    if ( std::string::npos != ldot ) 
-    {
-      return !pub ? 
-        tool -> type () + "/" + std::string ( name , ldot ) : 
-        tool -> type () + "/" + std::string ( name , ldot ) + ":PUBLIC" ;
-    }
-    //
-    return tool->type() ;
-  }
-  // ==========================================================================
-  /// the the valid tool name 
-  inline std::string toolName 
-  ( const LoKi::Interface<IDistanceCalculator>& dc   , 
-    const std::string&                          nick )
-  {
-    const IAlgTool* tool = dc.getObject() ;
-    return toolName ( tool , nick ) ;
-  }
-  // ==========================================================================
-}
 // ============================================================================
 // Contructor from the critearia:
 // ============================================================================
@@ -655,21 +592,21 @@ LoKi::AParticles::VertexChi2::fillStream ( std::ostream& s ) const
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA ( const IDistanceCalculator*  doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+ : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
 ( const LoKi::Interface<IDistanceCalculator>& doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+ : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
 ( const std::string& doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+  : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -679,29 +616,19 @@ LoKi::AParticles::MaxDOCA::operator()
   ( LoKi::AParticles::MaxDOCA::argument a ) const 
 {
   //
-  if ( !tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( nickname() , *this ) ;
-    setTool ( dc ) ;
-  }
+  if ( !tool() ) { loadTool() ; }
   //
-  double result = -1 * std::numeric_limits<double>::max() ;
-  typedef LoKi::ATypes::Combination A ;
-  for ( A::const_iterator i = a.begin() ; a.end() != i ; ++i )
+  if ( a.empty() ) 
   {
-    for ( A::const_iterator j = i + 1 ; a.end() != j ; ++j )
-    {
-      const double dist = doca ( *j, *i ) ;
-      /// get the maximum
-      result = std::max ( result , dist ) ;              // get the maximum
-    } 
+    Error("Empty constainer, return Invalid Distance!") ;
+    return LoKi::Constants::InvalidDistance ;
   }
-  return result ;
+  return docamax ( a.begin() , a.end() ) ;
 }
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCA::fillStream ( std::ostream& s ) const 
-{ return s << "AMAXDOCA('" << nickname() << "')" ; }
+{ return s << "AMAXDOCA('" << toolName() << "')" ; }
 
 
 // ============================================================================
@@ -711,9 +638,8 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double          threshold ,
   const IDistanceCalculator*  doca      ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( doca , s_PARTICLE ) 
+  , m_doca      ( 1 , 1 , doca ) 
   , m_threshold ( threshold )
-  , m_nick () 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
@@ -722,9 +648,8 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double                           threshold ,
   const LoKi::Interface<IDistanceCalculator>& doca )
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( doca , s_PARTICLE ) 
+  , m_doca      ( 1 , 1 , doca ) 
   , m_threshold ( threshold )
-  , m_nick () 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
@@ -733,9 +658,8 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double       threshold ,
   const std::string& doca      )
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( s_TOOL , s_PARTICLE ) 
+  , m_doca      ( 1 , 1 , doca ) 
   , m_threshold ( threshold )
-  , m_nick ( doca ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -745,18 +669,14 @@ LoKi::AParticles::MaxDOCACut::operator()
   ( LoKi::AParticles::MaxDOCACut::argument a ) const 
 {
   // 
-  if ( !m_doca.tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( m_nick , m_doca ) ;
-    m_doca.setTool ( dc ) ;   
-  }
+  if ( !tool() ) { loadTool() ; }
   //
   typedef LoKi::ATypes::Combination A ;
   for ( A::const_iterator i = a.begin() ; a.end() != i ; ++i )
   {
     for ( A::const_iterator j = i + 1 ; a.end() != j ; ++j )
     {
-      const double dist = m_doca.distance ( *j , *i ) ;
+      const double dist = m_doca.doca ( *j , *i ) ;
       if ( dist > m_threshold ) { return false ; }                // RETURN      
     } 
   }
@@ -765,7 +685,9 @@ LoKi::AParticles::MaxDOCACut::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCACut::fillStream ( std::ostream& s ) const 
-{ return s << "ACUTDOCA(" << m_threshold << ",'" << m_nick << "')" ; }
+{ return s << "ACUTDOCA(" 
+           << m_threshold << ",'" 
+           << toolName() << "')" ; }
 
 // ============================================================================
 // constructor from the tool:
@@ -795,30 +717,20 @@ LoKi::AParticles::MaxDOCAChi2::result_type
 LoKi::AParticles::MaxDOCAChi2::operator()
   ( LoKi::AParticles::MaxDOCAChi2::argument a ) const 
 {
-  if ( !tool() ) 
-  { 
-    const IDistanceCalculator* dc = getDC ( nickname() , *this ) ;
-    setTool ( dc ) ;
-  }
+  if ( !tool() ) { loadTool() ; }
+  
   //
-  double result = -1 * std::numeric_limits<double>::max() ;
-  //
-  typedef LoKi::ATypes::Combination A ;
-  for ( A::const_iterator i = a.begin() ; a.end() != i ; ++i )
+  if ( a.empty() ) 
   {
-    for ( A::const_iterator j = i + 1 ; a.end() != j ; ++j )
-    {
-      const double res = chi2 ( *j , *i ) ;
-      /// get the maximum 
-      result = std::max ( result , res ) ;         // get the maximum
-    } 
+    Error("Empty constainer, return Invalid Distance!") ;
+    return LoKi::Constants::InvalidDistance ;
   }
-  return result ;
+  return docachi2max ( a.begin() , a.end() ) ;
 }
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const 
-{ return s << "AMAXDOCACHI2('" << toolName ( tool() , nickname() ) << "')" ; }
+{ return s << "AMAXDOCACHI2('" << toolName () << "')" ; }
 
 
 // ============================================================================
@@ -827,10 +739,7 @@ LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut 
 ( const double          threshold ,
   const IDistanceCalculator*  doca      ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( doca , s_PARTICLE ) 
-  , m_threshold ( threshold )
-  , m_nick      ()
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
@@ -838,10 +747,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const double                           threshold ,
   const LoKi::Interface<IDistanceCalculator>& doca )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( doca , s_PARTICLE ) 
-  , m_threshold ( threshold )
-  , m_nick      ()
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
@@ -849,10 +755,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
 ( const double                           threshold ,
   const std::string& doca )
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( s_TOOL, s_PARTICLE ) 
-  , m_threshold ( threshold )
-  , m_nick      ( doca )
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -861,11 +764,8 @@ LoKi::AParticles::MaxDOCAChi2Cut::result_type
 LoKi::AParticles::MaxDOCAChi2Cut::operator()
   ( LoKi::AParticles::MaxDOCAChi2Cut::argument a ) const 
 {
-  if ( !m_doca.tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( m_nick , m_doca ) ;
-    m_doca.setTool ( dc ) ;   
-  }
+  
+  if ( !tool() ) { loadTool() ; }
   
   typedef LoKi::ATypes::Combination A ;
   for ( A::const_iterator i = a.begin() ; a.end() != i ; ++i )
@@ -882,7 +782,7 @@ LoKi::AParticles::MaxDOCAChi2Cut::operator()
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const 
 { return s << "ACUTDOCACHI2(" << m_threshold << ",'" 
-           << toolName ( m_doca.tool() , m_nick )  << "')" ; }
+           << toolName ()  << "')" ; }
 // ============================================================================
 /*  constructor with daughter index (starts from 1).
  *  E.g. for 2-body decays it could be 1 or 2 
@@ -1230,10 +1130,7 @@ LoKi::AParticles::DOCA::DOCA
   const size_t               i2 , 
   const IDistanceCalculator* dc ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval ( s_PARTICLE , dc )
-  , m_first  ( i1 ) 
-  , m_second ( i2 ) 
-  , m_nick   ("") 
+  , m_eval ( i1 , i2 , dc ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool 
@@ -1243,10 +1140,7 @@ LoKi::AParticles::DOCA::DOCA
   const size_t                                i2 , 
   const LoKi::Interface<IDistanceCalculator>& dc ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval   ( s_PARTICLE , dc )
-  , m_first  ( i1 ) 
-  , m_second ( i2 ) 
-  , m_nick   ( "" ) 
+  , m_eval ( i1 , i2 , dc ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
@@ -1256,12 +1150,8 @@ LoKi::AParticles::DOCA::DOCA
   const size_t       i2 , 
   const std::string& nick ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval   ( s_PARTICLE , s_TOOL )
-  , m_first  ( i1   ) 
-  , m_second ( i2   ) 
-  , m_nick   ( nick ) 
+  , m_eval ( i1 , i2 , nick ) 
 {}
-
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
@@ -1270,31 +1160,28 @@ LoKi::AParticles::DOCA::operator()
   ( LoKi::AParticles::DOCA::argument a ) const 
 {
   const size_t s = a.size() ;
-  if ( s < m_first || s < m_second ) 
+  
+  if ( s < m_eval.firstIndex() || s < m_eval.secondIndex() ) 
   {
     Error("Invalid size, index out of range, return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance ;
   }
   // tool is valid? 
-  if ( !tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( m_nick , *this ) ;
-    /// finally set the tool
-    setTool ( dc ) ;
-  }
+  if ( !tool() ) { loadTool() ; }
+  
   // evaluate the result 
-  return doca ( a[m_first-1] , a[m_second-1] ) ;
+  return doca ( a[ m_eval.firstIndex()-1] , 
+                a[ m_eval.secondIndex() -1] ) ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
 std::ostream& LoKi::AParticles::DOCA::fillStream ( std::ostream& s ) const 
-{ return s << "ADOCA(" << m_first << "," << m_second << ",'" 
-           << toolName ( m_eval , m_nick ) << "')" ; }
+{ return s << "ADOCA(" 
+           << m_eval.firstIndex  () << "," 
+           << m_eval.secondIndex () << ",'" 
+           <<        toolName    () << "')" ; }
 // ============================================================================
-
-
-
 
 
 // ============================================================================
@@ -1304,11 +1191,7 @@ LoKi::AParticles::DOCAChi2::DOCAChi2
 ( const size_t               i1 , 
   const size_t               i2 , 
   const IDistanceCalculator* dc ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval ( s_PARTICLE , dc )
-  , m_first  ( i1 ) 
-  , m_second ( i2 ) 
-  , m_nick   ("") 
+  : LoKi::AParticles::DOCA ( i1 , i2 , dc ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool 
@@ -1317,11 +1200,7 @@ LoKi::AParticles::DOCAChi2::DOCAChi2
 ( const size_t                                i1 , 
   const size_t                                i2 , 
   const LoKi::Interface<IDistanceCalculator>& dc ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval   ( s_PARTICLE , dc )
-  , m_first  ( i1 ) 
-  , m_second ( i2 ) 
-  , m_nick   ( "" ) 
+  : LoKi::AParticles::DOCA ( i1 , i2 , dc ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
@@ -1330,13 +1209,8 @@ LoKi::AParticles::DOCAChi2::DOCAChi2
 ( const size_t       i1 , 
   const size_t       i2 , 
   const std::string& nick ) 
-  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval   ( s_PARTICLE , s_TOOL )
-  , m_first  ( i1   ) 
-  , m_second ( i2   ) 
-  , m_nick   ( nick ) 
+  : LoKi::AParticles::DOCA ( i1 , i2 , nick ) 
 {}
-
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
@@ -1345,27 +1219,26 @@ LoKi::AParticles::DOCAChi2::operator()
   ( LoKi::AParticles::DOCAChi2::argument a ) const 
 {
   const size_t s = a.size() ;
-  if ( s < m_first || s < m_second ) 
+  if ( s < firstIndex() || s < secondIndex()  ) 
   {
     Error("Invalid size, index out of range, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2 ;
   }
   // tool is valid? 
-  if ( !tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( m_nick , *this ) ;
-    /// finally set the tool
-    setTool ( dc ) ;
-  }
+  if ( !tool() ) { loadTool() ; }
+  
   // evaluate the result 
-  return chi2 ( a[m_first-1] , a[m_second-1] ) ;
+  return chi2 ( a [ m_eval.firstIndex  () - 1 ] , 
+                a [ m_eval.secondIndex () - 1 ] ) ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
 std::ostream& LoKi::AParticles::DOCAChi2::fillStream ( std::ostream& s ) const 
-{ return s << "ADOCACHI2(" << m_first << "," << m_second 
-           << ",'" << toolName ( m_eval , m_nick )  << "')" ; }
+{ return s << "ADOCACHI2(" 
+           << m_eval.firstIndex  () << "," 
+           << m_eval.secondIndex () << ",'" 
+           <<        toolName    () << "')" ; }
 // ============================================================================
 
 
@@ -1397,11 +1270,8 @@ LoKi::AParticles::MinDOCA::operator()
   ( LoKi::AParticles::MinDOCA::argument a ) const 
 {
   //
-  if ( !tool() ) 
-  {
-    const IDistanceCalculator* dc = getDC ( nickname() , *this ) ;
-    setTool ( dc ) ;
-  }
+  if ( !tool() ) { loadTool() ; }
+  
   //
   double result = std::numeric_limits<double>::max() ;
   typedef LoKi::ATypes::Combination A ;
@@ -1419,7 +1289,7 @@ LoKi::AParticles::MinDOCA::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MinDOCA::fillStream ( std::ostream& s ) const 
-{ return s << "AMINDOCA('" << nickname() << "')" ; }
+{ return s << "AMINDOCA('" << toolName() << "')" ; }
 
 
 // ============================================================================
