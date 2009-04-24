@@ -155,18 +155,22 @@ StatusCode OTTrackMonitor::execute()
 	  plot(radius,nameprefix + "driftradius","driftradius",0,5) ;
 	  plot(trkdist,nameprefix + "trkdist","unbiased distance",-5,5) ;
 	  plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidual","drifttime residual (rms unbiased)",-20,20) ;
-	  plot(residual*resscalefactor,nameprefix + "residual","drifttime residual (rms unbiased)",-2,2) ;
+	  plot(residual*resscalefactor,nameprefix + "residual","residual (rms unbiased)",-2,2) ;
 	  plot(respull,nameprefix + "residualpull","residual pull",-5,5) ;
 	  
 	  // same but for 'good' tracks
 	  double unbiasedchi2 = ((*itr)->chi2() - respull * respull)/((*itr)->nDoF()-1) ;
 	  bool goodtrack = unbiasedchi2 < m_maxUnbiasedChisqPerDofGoodTracks ;
+	  const double cellradius = 2.5 ;
 	  if( goodtrack ) {
 	    plot(drifttime,nameprefix + "drifttimegood","drifttime (good tracks)",-25,75) ;
 	    plot(trkdist,nameprefix + "trkdistgood","unbiased distance (good tracks)",-5,5) ;
-	    plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidualgood","drifttime residual (rms unbiased, good tracks)",-20,20) ;
-	    plot(residual*resscalefactor,nameprefix + "residualgood","drifttime residual (rms unbiased, good tracks)",-2,2) ;
-	    plot(respull,nameprefix + "residualpullgood","residual pull (good tracks)",-5,5) ;
+	    // remove hits outside cell radius
+	    if ( std::abs(trkdist) < cellradius ) {
+	      plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidualgood","drifttime residual (rms unbiased, good tracks)",-20,20) ;
+	      plot(residual*resscalefactor,nameprefix + "residualgood","residual (rms unbiased, good tracks)",-2,2) ;
+	      plot(respull,nameprefix + "residualpullgood","residual pull (good tracks)",-5,5) ;
+	    }
 	  }
 	  
 	  // 2D occupancy plot, quite a beast. should be forbidden in monitoring!
