@@ -9,9 +9,6 @@
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 
-# If you want to import .opts options, do this first
-importOptions("$DAVINCIROOT/options/PreloadUnits.opts")
-
 ########################################################################
 #
 importOptions( "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.py" )
