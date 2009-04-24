@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.331 2009-04-22 15:51:00 pkoppenb Exp $
+! $Id: release.notes,v 1.332 2009-04-24 11:43:07 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-04-24 - Juan PALACIOS
+ - python/DaVinci/PhysMicroDST.py
+  . Fix typo
 
 ! 2009-04-22 - Patrick Koppenburg
  - Replace LHCbInputCopyStream by InputCopyStream for gaudi v21r0.
