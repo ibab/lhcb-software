@@ -1,9 +1,10 @@
-// $Id: LoKi_Hybrid.cpp,v 1.6 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_Hybrid.cpp,v 1.7 2009-04-24 08:07:29 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 #include "LoKi/Algo.h"
 #include "LoKi/ParticleCuts.h"
+#include "Kernel/IFilterCriterion.h"
 // ============================================================================
 /** @file 
  *  Simple illustrationof usage of filters and especially hydrid (C++/Python) 
@@ -33,13 +34,13 @@ LOKI_ALGORITHM(TestHybrid)
   Range all = select ( "all" , ALL ) ;
   
   
-  IFilterCriterion* iFirst  = filterCriterion ( "First"   ) ;
+  IFilterCriterion* iFirst  = tool<IFilterCriterion> ( "First"   ) ;
   Range first  = select ( "first"  , all , FILTER ( iFirst  ) ) ;
   
-  IFilterCriterion* iSecond = filterCriterion ( "Second" ) ;
+  IFilterCriterion* iSecond = tool<IFilterCriterion> ( "Second" ) ;
   Range second = select ( "second" , all , FILTER ( iSecond ) ) ;
   
-  IFilterCriterion* iThird  = filterCriterion ( "Third"  ) ;
+  IFilterCriterion* iThird  = tool<IFilterCriterion> ( "Third"  ) ;
   Range third  = select ( "third"  , all , FILTER ( iThird ) ) ;
 
   counter ( "#all"    ) += all    .size () ;
