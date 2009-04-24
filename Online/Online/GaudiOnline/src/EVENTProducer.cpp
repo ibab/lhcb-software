@@ -69,7 +69,7 @@ namespace  {
           offset = long(long(f)-m_mepID->mepStart);
           h->setOffset(j, offset);
           ev->events[j].begin  = offset;
-          ev->events[j].status = 0;          
+          ev->events[j].status = EVENT_TYPE_OK;
           ev->events[j].evID   = j;
         }
         e.mask[0] = partitionID();

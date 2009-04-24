@@ -89,8 +89,9 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()");
   //const char *a2[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtProd()");
   const char *a2[] =CLASS1("MEPConverter.opts");
-  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()");
+  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder(errBuffer=None)");
   const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)");
+  const char *a5[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)");
   const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=5000",0};
 
   Process::setDebug(true);  
@@ -104,6 +105,8 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   pg.add(p[5] =new Process("Moore_2",   command(),a4,out.c_str()));
   pg.add(p[6] =new Process("Moore_3",   command(),a4,out.c_str()));
   pg.add(p[7] =new Process("Moore_4",   command(),a4,out.c_str()));
+  pg.add(p[8] =new Process("Cons_0",    command(),a5,out.c_str()));
+
   cout << "Starting processes ..... " << endl;
   pg.start();
   ::lib_rtl_sleep(5500);

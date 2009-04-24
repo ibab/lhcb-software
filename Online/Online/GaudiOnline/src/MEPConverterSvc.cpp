@@ -243,6 +243,7 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       const EventDesc& e = m_consumer->event();
       MEPEVENT* ev = (MEPEVENT*)e.data;
       LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
+      //mep_increment(id, ev, 99);
       decodeMEP2EventFragments(me, pid, events);
       if ( ev->magic != mep_magic_pattern() )  {
         error("Bad MEP magic pattern!!!!");
@@ -258,8 +259,10 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       }
       mep_decrement(id, ev, 1);
       if ( m_consumer->eventAction() != MBM_NORMAL ) {
+	//mep_decrement(id, ev, 100);
         return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
+      //mep_decrement(id, ev, 100);
       if ( 0 == ((m_evtCount+1)%prtCount) )  {
         MsgStream log(msgSvc(),name());
         log << MSG::INFO << "Decoded " << m_mepCount 

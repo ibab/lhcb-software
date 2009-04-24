@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.23 2009-03-03 12:04:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.24 2009-04-24 08:06:22 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -146,9 +146,15 @@ StatusCode MEPManager::connectBuffers()  {
       if ( m_handleSignals ) {
 	::mep_set_signal_handler(m_mepID,true);
       }
-      log << MSG::DEBUG << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
-      log << MSG::DEBUG << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
-      log << MSG::DEBUG << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
+      if ( flags&USE_MEP_BUFFER ) {
+	log << MSG::DEBUG << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
+      }
+      if ( flags&USE_EVT_BUFFER ) {
+	log << MSG::DEBUG << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
+      }
+      if ( flags&USE_RES_BUFFER ) {
+	log << MSG::DEBUG << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
+      }
     }
   }
   return StatusCode::SUCCESS;

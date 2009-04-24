@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.15 2009-04-02 14:21:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.16 2009-04-24 08:06:22 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -52,8 +52,9 @@ namespace {
 	::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
 	::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
       }
+      ::printf("Initial refcount value is %d\n",m_refCount);
     }
-    ~MEPProducer()  {
+    virtual ~MEPProducer()  {
     }
     int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
       static int nrewind = 0;
@@ -97,6 +98,12 @@ namespace {
       e->packing     = -1;
       e->valid       = 1;
       e->magic       = mep_magic_pattern();
+      for(size_t j=0; j<MEP_MAX_PACKING; ++j) {
+	e->events[j].begin = 0;
+	e->events[j].evID = 0;
+	e->events[j].status = EVENT_TYPE_OK;
+	e->events[j].signal = 0;
+      }
       ::memset(e->events,0,sizeof(e->events));
       //::printf("MEP Buffer: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
       //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
@@ -108,6 +115,7 @@ namespace {
         m_event.mask[2] = 0;
         m_event.mask[3] = 0;
         m_event.type    = EVENT_TYPE_MEP;
+
         declareEvent();
         status = sendSpace();
       }
@@ -135,7 +143,7 @@ extern "C" int mep_producer(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   int space = 64*1024;             // default 64 kB
   int partID = 0x103;              // default is LHCb partition id
-  int refCount = 1;
+  int refCount = 2;
   int evtCount = -1;
   string name = "producer";
   string fname = "../cmt/mepData_0.dat";

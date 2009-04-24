@@ -265,9 +265,10 @@ def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decod
   evtSel               = mbmSelector(buffer,type=request,decode=decode)
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
-  sender               = evtSender(target)
   algs                 = algs
-  algs.append(sender)
+  if target is not None:
+    sender             = evtSender(target)
+    algs.append(sender)
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
@@ -318,6 +319,7 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   evtPers              = rawPersistencySvc()
   seq                  = CFG.Sequencer('SendSequence')
   seq.Members          = [prescaler(percent=percent),Configs.LHCb__DecisionSetterAlg('DecisionSetter')]
+  ###seq.Members          = [prescaler(percent=percent)]
   algs                 = [storeExplorer(load=1,freq=print_freq),seq]
   #delay                = Configs.LHCb__DelaySleepAlg('Delay')
   #delay.DelayTime      = 999999;
