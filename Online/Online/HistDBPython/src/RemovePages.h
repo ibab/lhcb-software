@@ -1,4 +1,4 @@
-// $Id: RemovePages.h,v 1.1 2009-04-06 12:58:54 nchiapol Exp $
+// $Id: RemovePages.h,v 1.2 2009-04-24 12:37:31 nchiapol Exp $
 
 #ifndef HISTDBPYTHON_RemovePages_H
 #define HISTDBPYTHON_RemovePages_H 1
@@ -35,7 +35,7 @@ public:
   
 
 private:
-  StatusCode RemovePages::parseTree(OnlineHistDB *HistDB, std::string startPoint, int level);
+  StatusCode parseTree(OnlineHistDB *HistDB, std::string startPoint, int level);
   
   StatusCode m_statusCode;
  
