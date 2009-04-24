@@ -62,7 +62,7 @@ namespace LHCb {
 #define PERA "PERA"
 #define PERB "PERB"
 #define AUXI "AUXI"
-#define SEQU "SEQU"
+#define RAND "RAND"
 #define TIMI "TIMI"
 #define CALX "CALX"
 #define UNKN "UNKN"
@@ -81,24 +81,24 @@ namespace LHCb {
     typedef std::vector<std::string>        Requirements;
 
   protected:
+    MEPReq m_InjReq; 
+
     bool m_NeedOTConv;
 
     /// Protected Attributes
     Requirements m_Req; /* Vector of strings which tells the options to access to buffer managers,             */
-                        /* Most are useless and should be like this :                                          */
+                        /* Most are useless and the vector should be like this :                               */
                         /* "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0; */
-                        /*  MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"                               */
+                        /* MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"                                */
                         /* But I wanted it to be parameterisable                                               */
 
     std::string m_ProcName; /* The RTL process name */
 
-    unsigned int m_TFCMask, m_TapeMask;
+    unsigned int m_TFCMask, m_TapeMask; /* Masks to get Odin information from tape and from online */
 
-    std::vector<std::string> m_BufferNames;
-    std::vector<std::string> m_BufferOptions;
-    //std::string m_EventBufferFlags;             /* The option flags to make the buffer managers */
-//    std::map<std::string, BMID> m_EventBuffers; /* map of buffer manager identifiers, the index is their name, read from the flags */
-    std::map<std::string, BMID> m_EventBuffers;
+    std::vector<std::string> m_BufferNames;    /* Buffer Manager names   */
+    std::vector<std::string> m_BufferOptions;  /* Buffer Manager options */
+    std::map<std::string, BMID> m_EventBuffers;/* Buffer Manager map     */
 
     char m_CurEvent[TWOMB]; /* Buffer to store one event */
     int  m_CurEventSize;    /* Size of the event         */ 
@@ -226,8 +226,7 @@ namespace LHCb {
     // Make the buffer managers
     StatusCode initBuffers();
 
-    // Consume one event from the buffer managers, 
-    // according to the trigger type of the online TFC
+    // Consume one event from the buffer managers, according to the trigger type of the online TFC
     StatusCode getEvent(int nbEv);
 
     /// Log MEP requests received, forwaded and credits consumed
@@ -256,9 +255,6 @@ namespace LHCb {
 
     /// Identify the Tell1 ID from the type and the source of the bank
     in_addr_t getTell1IP(int type, int src);   
-
-    /// Get Information from the Odin MEP stored
-    StatusCode getInfoFromOdinMEP();
 
     /// Copy the OdinMEP to the main thread memory space
     StatusCode getOdinInfo(); 

@@ -53,7 +53,8 @@ using MBM::Requirement;
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, SLICEReaderSvc)
 using namespace LHCb;
 
-
+/** Standard constructor.
+ */
 SLICEReaderSvc::SLICEReaderSvc(const std::string &name, ISvcLocator *pSvcLocator):Service(name, pSvcLocator), m_IncidentSvc(0), m_MonSvc(0)
 {   
     m_ProcName = RTL::processName();
@@ -71,7 +72,8 @@ SLICEReaderSvc::SLICEReaderSvc(const std::string &name, ISvcLocator *pSvcLocator
 
 
 
-// IInterface implementation : queryInterface
+/** IInterface implementation: queryInterface.
+ */
 StatusCode SLICEReaderSvc::queryInterface(const InterfaceID& riid, void** ppIf)   {
   if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
@@ -81,18 +83,25 @@ StatusCode SLICEReaderSvc::queryInterface(const InterfaceID& riid, void** ppIf) 
   return Service::queryInterface(riid, ppIf);
 }
 
+
+/** Clear monitoring values.
+ */
 void SLICEReaderSvc::clearCounters()
 {
     m_TotEvtsRead = 0;
     m_TotFilesRead = 0;
 }
 
+/** Publish monitoring values.
+ */
 void SLICEReaderSvc::publishCounters()
 {
     PUBCNT(TotEvtsRead,     "Total of event reads");
     PUBCNT(TotFilesRead,    "Total of files read");
 }
 
+/** 
+ */
 int SLICEReaderSvc::setupCounters() 
 {
     MsgStream msgLog(msgSvc(),name());
@@ -102,6 +111,8 @@ int SLICEReaderSvc::setupCounters()
     return 0;
 }
 
+/** Get an access to the buffer created by the MEPInjector service.
+ */
 BMID SLICEReaderSvc::getBuffer()
 {
 /*
@@ -113,6 +124,8 @@ BMID SLICEReaderSvc::getBuffer()
    return mbm_include(m_BufferName.c_str(), m_ProcName.c_str(), m_PartitionID);  
 }
 
+/** Display error message and exit on failure 
+*/
 StatusCode SLICEReaderSvc::error(const std::string & msg)
 {     
     static MsgStream msgLog(msgSvc(), name());
@@ -120,6 +133,8 @@ StatusCode SLICEReaderSvc::error(const std::string & msg)
     return StatusCode::FAILURE;
 }   
 
+/** Extended service initialization.
+*/
 StatusCode SLICEReaderSvc::initialize()
 {
     StatusCode sc = Service::initialize();
@@ -130,6 +145,7 @@ StatusCode SLICEReaderSvc::initialize()
         return sc;
     }
 
+    /// Starts incident and monitor services.
     if(!service("IncidentSvc", m_IncidentSvc).isSuccess())
     {
         msgLog << MSG::ERROR << "Failed to access incident service." << endmsg;
@@ -148,6 +164,8 @@ StatusCode SLICEReaderSvc::initialize()
       }
     }
 
+
+    /// Attach to the buffer in which to push events.
     m_BMID = getBuffer();
 
     if(m_BMID == MBM_INV_DESC) 
@@ -185,7 +203,10 @@ void displayBuf(char *buf, int size)
     printf("\n");
 }
 
-
+/** Find an event in the file and push it in the buffer.
+ *  @param slice: The pointer on the beginning of the current slice.
+ *  @param size: Logic size of the slice.
+ */
 StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size) 
 {
     m_SliceLen = size;
@@ -195,6 +216,8 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
  
     msgLog << MSG::DEBUG << "Size of chunk read : " << size << endmsg;
 
+    /// Special case: The event was on two slices, as we start to read a new slice we have to check if we have to find the remaining part of an event.
+    /// If so, build back the event with the part previously read on the previous slice, and push it in the buffer.
     if(m_CurEvtIte >0 && m_CurEvtIte < m_CurEvtLen)
     { 
         msgLog << MSG::DEBUG << "(m_CurEvtIte = " << m_CurEvtIte << " < m_CurEvtLen = " << m_CurEvtLen << ")" << endmsg;
@@ -226,6 +249,7 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
     m_OffsetEvt = m_CurSliceIte;
     msgLog << MSG::DEBUG << "cursliceite " << m_CurSliceIte << ", offsetevt " << m_OffsetEvt << endmsg;
 
+    /// While the slice was not completely parsed 
     while (m_OffsetEvt < size) {
         int *pword = (int *) (slice+m_OffsetEvt);
         m_CurEvtLen=*pword; //If a MDF Header is on 2 different chunks, this pointer is correct anyway
@@ -236,9 +260,20 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
         }
   
         m_CurEvtIte = 0;
+ 
+        /// Check if the event is completely on this slice
         if(m_OffsetEvt + m_CurEvtLen > size)
         {
-            /// Event on 2 slices
+            /// Check if the slice logical size is correct, 
+            /// else it is the end of the file and the event is corrupted, 
+            /// because an event is not splitted 
+            if(size < TWOMB) //end of file
+            {
+                msgLog << MSG::ERROR << "Input file " << m_InputFiles[m_CurFile] << "corrupted, going to next file" << endmsg;
+                return StatusCode::SUCCESS;
+            } 
+  
+            // Event on 2 slices
             memcpy(m_CurEvent, (slice+m_OffsetEvt), size-m_OffsetEvt);         
             m_CurEvtIte=size-m_OffsetEvt;
             m_OffsetEvt += m_CurEvtLen;
@@ -265,22 +300,16 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
     return StatusCode::SUCCESS;
 }
 
-
+/** Read 2MBytes slices from a file, and find Events in it.
+ */
 StatusCode SLICEReaderSvc::readFile() 
 {
     static MsgStream msgLog(msgSvc(), name());
 
-    /// XXX do class attribute stats instead
-    struct timeval tvbef, tvaf;
-    bzero(&tvaf, sizeof(tvaf));
-    bzero(&tvbef, sizeof(tvbef));
-
-    gettimeofday(&tvbef, NULL);
-    ///XXX
-
     int fd = 0;
     int nbSlices=1;
     int ret =0;
+
 
     fd = open(m_InputFiles[m_CurFile].c_str(), O_RDONLY);
     if(fd <0) {
@@ -288,7 +317,11 @@ StatusCode SLICEReaderSvc::readFile()
         return StatusCode::FAILURE;    
     }
 
-    /// First slice, we assume size of event is the first byte
+    ++m_TotFilesRead; 
+    
+    msgLog << MSG::INFO << "Reading file " << m_InputFiles[m_CurFile] << endmsg;
+    
+    // First slice, we assume size of event is the first byte
     ret = read(fd, m_Buffer, TWOMB); 
     if(ret <= 0) // Then empty file
     {
@@ -317,20 +350,14 @@ StatusCode SLICEReaderSvc::readFile()
  
     close(fd);
     
-    /// XXX
-    gettimeofday(&tvaf, NULL);
-    
-    int sec = (tvaf.tv_sec - tvbef.tv_sec);
-    int usec = (tvaf.tv_usec - tvbef.tv_usec);
 
-    //printf("File %s, containing %d times 2 MBytes, were read from in %d s %d us\n, ", m_InputFiles[m_CurFile].c_str(), nbSlices, sec , usec);
-    ///XXX
-
-
-    msgLog << MSG::INFO << "End of readfile procedure" << endmsg;
+    msgLog << MSG::INFO << "End of readfile procedure: "<< m_TotFilesRead << " files have been read." << endmsg;
     return StatusCode::SUCCESS;
 }
     
+/** Extended service main routine. 
+ * Performs the task of reading files to find events to push in buffers.
+ */
 StatusCode SLICEReaderSvc::run()
 {
 //    m_ReaderState = RUNNING;
@@ -364,18 +391,19 @@ StatusCode SLICEReaderSvc::run()
     if(sc.isFailure()) {
         if(sc.isRecoverable())
         {
-            msgLog << MSG::INFO << "End of run : exiting run" << endmsg;
+            msgLog << MSG::INFO << "End of run : exiting run, files read: "<< m_TotFilesRead << endmsg;
             return StatusCode::SUCCESS;
         }
         else msgLog << MSG::ERROR << "File reading procedure failed" << endmsg;
         return sc;
     }   
  
-    msgLog << MSG::INFO << "End of run" << endmsg; 
+    msgLog << MSG::ALWAYS << "Reader: End of run" << endmsg; 
     return StatusCode::SUCCESS;
 }
 
-    
+/** Extended service finalization.
+ */    
 StatusCode SLICEReaderSvc::finalize()
 {
     MsgStream msgLog(msgSvc(),name());
@@ -403,7 +431,8 @@ StatusCode SLICEReaderSvc::finalize()
     return StatusCode::SUCCESS;
 }
 
-
+/** Extended incident handler, to be able to perform actions on DIM commnands.  
+ */
 void SLICEReaderSvc::handle(const Incident& incident){
   MsgStream msgLog(msgSvc(),name());
   msgLog << MSG::ALWAYS << "Got incident:" << incident.source() << " of type " << incident.type() << endmsg;
@@ -425,6 +454,8 @@ void SLICEReaderSvc::handle(const Incident& incident){
   }
 }
 
+/** Push the event in the buffer. 
+ */
 StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
 {
 
@@ -437,6 +468,7 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
     else return StatusCode::FAILURE;
 
     char *buf;
+ 
     if(mbm_get_space_a(m_BMID, size, (int **)&buf, NULL, this) != MBM_NORMAL)
     {
         if(m_ReaderState != RUNNING) {
