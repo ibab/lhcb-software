@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.1 2009-01-07 19:53:32 hmdegaud Exp $
+# $Id: GetPack.py,v 1.2 2009-04-24 13:27:16 kkruzele Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -99,7 +99,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.1 2009-01-07 19:53:32 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.2 2009-04-24 13:27:16 kkruzele Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -154,6 +154,8 @@ class GetPack(Script):
                                help = "create a project top level directory")
         self.parser.add_option("-b", "--batch", action = "store_true",
                                help = "never ask the user if in doubt, but skip the package")
+        self.parser.add_option("--no-config", action = "store_true",
+                               help = "prevents executing cmt config for each package")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False)
         if "GETPACK_USER" in os.environ:
@@ -287,7 +289,8 @@ class GetPack(Script):
             pkgdir =  os.path.join(package, version, "cmt")
         else:
             pkgdir =  os.path.join(package, "cmt")
-        self._doCMTConfig(cwd = pkgdir)
+        if not self.options.no_config:
+            self._doCMTConfig(cwd = pkgdir)
         # return the path to the cmt directory of the package to be able to call
         # a "cmt show uses" and get the packages needed with the recursion
         return (package, version, pkgdir)

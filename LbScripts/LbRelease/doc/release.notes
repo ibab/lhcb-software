@@ -1,4 +1,9 @@
-2008-04-23  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+2009-04-24  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/GetPack.py: added -no-config option to GetPack to prevent
+	executing 'cmt config' for each package after checkout
+
+2009-04-23  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: isStarted files to keep information
 	which platforms are started but not finished - needed for the summary page;
