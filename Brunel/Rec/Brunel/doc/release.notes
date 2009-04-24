@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-04-24 - Marco Cattaneo
+ - Update references for addition of RichHPDIonFeedback Check sequence
+
 ! 2009-04-23 - Marco Cattaneo
  - Update references for Brunel v34r5 fix
 
