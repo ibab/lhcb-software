@@ -1,6 +1,6 @@
-## $Id: DVTestBs2PhiGamma.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
+## $Id: DVTestBs2PhiGamma.py,v 1.4 2009-04-24 12:54:26 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ## ============================================================================
 """
 @file DVTestBs2PhiGamma.py
@@ -97,7 +97,7 @@ DaVinci().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001538/DST/0000/00001538_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]
 
-DaVinci().EvtMax = 200 
+DaVinci().EvtMax = 100 
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
 

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.2 2009-03-24 10:43:22 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.3 2009-04-24 12:54:26 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -58,7 +58,7 @@ seq =  DaVinciWriteDst().dstSequence()
 DaVinci().UserAlgorithms = [ jpsi, seq ]
 #
 ##############################################################################
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 20
 DaVinci().PrintFreq = 1 
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "2008" # Default is "DC06"

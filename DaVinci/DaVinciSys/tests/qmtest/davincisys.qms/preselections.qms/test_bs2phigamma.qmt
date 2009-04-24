@@ -12,9 +12,9 @@ findReferenceBlock("""
 ============================================================
     Algorithm             Eff.      1      2      3  
 ------------------------------------------------------------
-  1 AllTrueLooseDecay    20.0% |  #####  33.3%  34.0%
-  2 PreselXb2GammaX       4.5% |   7.5%  #####   9.6%
-  3 StdDC06LoosePhi2KK   47.0% |  80.0% 100.0%  #####
+  1 AllTrueLooseDecay    22.0% |  #####  33.3%  36.0%
+  2 PreselXb2GammaX       3.0% |   4.5%  #####   6.0%
+  3 StdDC06LoosePhi2KK   50.0% |  81.8% 100.0%  #####
 ============================================================
 """, stdout, result, causes, signature_offset = 1)
 </text></argument>

@@ -1,5 +1,6 @@
+
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.5 2009-04-23 15:03:46 pkoppenb Exp $
+#$Id: DVTestB2DiMuon.py,v 1.6 2009-04-24 12:54:26 pkoppenb Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -56,11 +57,11 @@ testCorrelations.Algorithms = [ trueNoPIDsName,
 
 ##############################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-EventSelector().PrintFreq = 100
+EventSelector().PrintFreq = 10
 ##############################################################################
 from DaVinci.Configuration import DaVinci
 ##############################################################################
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 100
 # DaVinci().SkipEvents = 0
 # DaVinci().DataType = "DC06"
 DaVinci().MainOptions  = "$B2DILEPTONROOT/options/DoPreselB2DiMuon.opts"

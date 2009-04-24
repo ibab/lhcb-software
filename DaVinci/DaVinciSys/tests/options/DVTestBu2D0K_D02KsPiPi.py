@@ -1,6 +1,6 @@
-## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.4 2009-03-24 10:43:21 pkoppenb Exp $
+## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.5 2009-04-24 12:54:26 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 """
 @file DVTestBu2D0K_D02KsPiPi.py
@@ -116,7 +116,7 @@ DaVinci().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 
-DaVinci().EvtMax = 200
+DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 50
 
