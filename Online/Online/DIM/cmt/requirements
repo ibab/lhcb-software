@@ -63,12 +63,17 @@ apply_pattern dim_exe name=dim_send_command  files=util/dim_send_command.c
 
 private
 
-# local compile options
-macro_append DIM_cppflags      " -DPROTOCOL=1 -DMIPSEL "
-macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
-
 # temporary fixes
 macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
-macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"
-macro_remoce cflags "-Wno-deprecated"              WIN32 ""
+#macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"
+macro_append DIM_cflags " -Df2cFortran -fPIC -shared -D_GNU_SOURCE"  WIN32 " $(cppflags) /TC"
+macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -Wextra"  WIN32 ""
+macro_append DIM_cflags " -pthread  -Wno-unused "                    WIN32 ""
+
+
+# local compile options
+macro_append DIM_cppflags      " -DPROTOCOL=1 -DMIPSEL "
+macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
+macro_remove DIM_cflags        "-Wno-deprecated"
+macro_remove DIM_cppflags      "-Wno-deprecated"
