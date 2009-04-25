@@ -26,7 +26,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm execution
 
 private:
   void monitorODIN(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
@@ -70,7 +69,6 @@ private:
   AIDA::IHistogram1D* m_L0Hlt1Accept;
   AIDA::IHistogram1D* m_L0Hlt2Accept;
   std::vector<double> m_allAcc,m_allCall;
-  //  AIDA::IHistogram1D* m_hltAcc;
   AIDA::IHistogram1D* m_hlt1alley;
   AIDA::IHistogram1D* m_hltNAcc;
   AIDA::IHistogram1D* m_hltInclusive;

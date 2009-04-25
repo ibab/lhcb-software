@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.34 2009-04-20 16:00:53 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.35 2009-04-25 13:59:20 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -125,14 +125,6 @@ StatusCode HltGlobalMonitor::initialize() {
       labels.push_back(s);  
   }
 
-
-
-//   m_hltAcc          = book1D("Hlt1 lines Accept", "Hlt1 Lines Accept",
-//                              -0.5, m_Hlt1Lines.size()+0.5,m_Hlt1Lines.size()+1);
-//    if (!setBinLabels(m_hltAcc, labels)) {
-//     error() << "failed to set binlables on accept hist" << endmsg;
-//   }
-
   m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
                              m_Hlt1Lines.size()+1);
   m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5,
@@ -160,16 +152,14 @@ StatusCode HltGlobalMonitor::initialize() {
   m_hltEventsTime  = book1D("time per event", -m_timeSize*m_timeInterval, 0, m_timeSize );
   setAxisLabels( m_hltEventsTime, "time", "time/event[min]");
 
-  m_hltTime  = book1D("time per event dist", -1000.0, 1000.0, 2000.0 );
+  m_hltTime  = book1D("time per event dist", -1000.0, 1000.0, 2000 );
   setAxisLabels( m_hltTime, "time/event", "events");
-
-
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
-     declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
+     declareInfo("COUNTER_TO_RATE["+*i+" Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
      m_allCall.push_back(0);
-     declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
+     declareInfo("COUNTER_TO_RATE["+*i+" Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
   }
 
   declareInfo("COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory");
@@ -185,13 +175,6 @@ StatusCode HltGlobalMonitor::initialize() {
 
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode HltGlobalMonitor::finalize() {
-  return HltBaseAlg::finalize();
-}; 
 
 //=============================================================================
 // Main execution
