@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.27 2009-02-18 13:06:14 jpalac Exp $
+// $Id: CombineParticles.cpp,v 1.28 2009-04-25 01:03:18 spradlin Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -669,11 +669,16 @@ StatusCode CombineParticles::execute    ()  // standard execution
         desktop()->Particle2VertexRelations().i_removeFrom(&mother);
         continue ; 
       }                    // CONTINUE
-      
+
       // keep the good candidate:
-      
       const LHCb::Particle* particle = desktop()->keep ( &mother ) ;
+
+      /// Hack: remove whatever relations from this candidate have been
+      /// indirectly stored to the P->PV relations table.
+      /// @todo remove once fixes in direct clients of IPhysDesktop::relatedVertex 
+      desktop()->Particle2VertexRelations().i_removeFrom(&mother);
       
+
       if ( 0 != m_motherPlots ) 
       {
         StatusCode sc = m_motherPlots->fillPlots ( particle ) ;

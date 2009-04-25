@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.423 2009-04-23 14:48:32 pkoppenb Exp $
+! $Id: release.notes,v 1.424 2009-04-25 01:03:18 spradlin Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-04-25 - Patrick Spradlin
+ - src/CombineParticles.cpp
+   . Fix for residual BPV bug.  Repeated the hack so that it also cleans up
+     the relations for the automatic mother if the combination passed.
+     Previous fix only cleaned up relations if the combination failed.
 
 ! 2009-04-23 - Patrick Koppenburg
  - Move MakeResonances to DaVinciFilter
