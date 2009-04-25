@@ -317,8 +317,6 @@ double HltUtils::impactParameterError(double pt0)
 
 double HltUtils::closestDistanceMod(const LHCb::Track& track1,
                                     const LHCb::Track& track2) {
-  XYZVector dis = closestDistance(track1,track2);
-  assert( fabs(dis.Dot(dis) - dis.R()) / dis.R() < 0.00001 );  // used this to replace comparism with == 
   return closestDistance(track1,track2).R();
 } 
 
