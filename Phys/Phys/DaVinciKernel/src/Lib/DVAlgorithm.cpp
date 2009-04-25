@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.49 2009-04-23 12:47:57 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.50 2009-04-25 03:41:21 spradlin Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -338,7 +338,8 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
                                           << " re-fitted PVs" 
                                           << endmsg;
 
-    Particle2Vertex::Range range = finder->relatedPVs(p, reFittedPVs).relations(p);
+    const Particle2Vertex::LightTable table = finder->relatedPVs(p, reFittedPVs);
+    const Particle2Vertex::Range range = table.relations(p);
     if (msgLevel(MSG::VERBOSE)) verbose() << "have " << range.size()
                                           << " related, re-fitted PVs" 
                                           << endmsg;    
@@ -356,7 +357,8 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     }
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    const Particle2Vertex::Range range = finder->relatedPVs(p, *PVs).relations(p);
+    const Particle2Vertex::LightTable table = finder->relatedPVs(p, *PVs);
+    const Particle2Vertex::Range range = table.relations(p);
     const LHCb::VertexBase* pv = DaVinci::bestVertexBase(range);
     if (0!=pv) {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" << pv << endmsg;
