@@ -1,4 +1,4 @@
-// $Id: FileIdInfo.cpp,v 1.2 2008-12-05 19:26:30 frankb Exp $
+// $Id: FileIdInfo.cpp,v 1.3 2009-04-27 08:40:42 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FileIdInfo
@@ -6,6 +6,8 @@
 // 2008-11-20 : Markus Frank
 //-----------------------------------------------------------------------------
 #include "GaudiOnline/FileIdInfo.h"
+#include <cstring>
+
 using namespace LHCb;
 
 void FileIdInfo::reset() {
