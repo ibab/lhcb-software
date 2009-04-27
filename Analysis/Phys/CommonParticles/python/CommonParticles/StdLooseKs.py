@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKs.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdLooseKs.py,v 1.4 2009-04-27 14:54:16 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKs.py
 #  configuration file for 'Standard Loose ' 
@@ -11,10 +11,11 @@
 Configuration file for 'Standard Loose Ks'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdLooseKsLL' ,
+    'StdLooseKsDD' ,
     'locations'
     )
 # =============================================================================
@@ -35,6 +36,23 @@ StdLooseKsLL.MotherCut = "(ADMASS('KS0')<35*MeV) & (VFASPF(VCHI2/VDOF)<30)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseKsLL )
+
+## ============================================================================
+#  configuration file for 'Standard Loose Downstream ' 
+#  @author Greig Cowan
+#  @date 2009-04-27
+# ============================================================================= 
+StdLooseKsDD = CombineParticles ( 'StdLooseKsDD' )
+
+StdLooseKsDD.InputLocations = [ "StdLoosePions" ]
+StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
+
+StdLooseKsDD.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<20)" } 
+StdLooseKsDD.CombinationCut = "(ADAMASS('KS0')<80*MeV)"
+StdLooseKsDD.MotherCut = "(ADMASS('KS0')<64*MeV) & (VFASPF(VCHI2/VDOF)<30)"
+
+## configure Data-On-Demand service 
+locations = updateDoD ( StdLooseKsDD )
 
 ## ============================================================================
 if '__main__' == __name__ :
