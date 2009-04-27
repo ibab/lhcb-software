@@ -2,6 +2,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2009-04-27 - Jan Amoraal
+ - Bug fix. Correctly sort deposits according to time and geometry. 
+   Correctly apply analog dead timne window.
+
 !====================== OTSimulation v4r1 2009-02-24 ======================
 ! 2009-02-13 - Jan Amoraal
  - Create double pulse deposits for particles only.

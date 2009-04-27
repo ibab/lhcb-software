@@ -1,4 +1,7 @@
-// $Id: MCOTTimeCreator.cpp,v 1.14 2008-05-28 20:08:17 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.15 2009-04-27 16:54:14 janos Exp $
+
+// STD
+#include <algorithm>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,6 +24,16 @@
  *  @author J. Nardulli and J. van Tilburg 
  *  @date   10/6/2004
  */
+
+namespace MCOTTimeHelpers {
+  struct CompareDeposits {
+    bool operator()( LHCb::MCOTDeposit* lhs, LHCb::MCOTDeposit* rhs ) {
+      if ( ( lhs->channel() ).sameGeometry( rhs->channel() ) ) return lhs->time() < rhs->time();
+      return lhs->channel().geometry() < rhs->channel().geometry();
+    };
+  };  
+};
+
 
 using namespace LHCb;
 
@@ -90,10 +103,30 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 
   /// This only works because the deposits are sorted less by time and channel
   /// in MCOTDepositCreator.
+
+  /// Set tdc time of MCOTDeposit
+  for ( MCOTDeposits::const_iterator dep = depositCont->begin(), depEnd = depositCont->end(); 
+	dep != depEnd; ++dep ) {
+    OTChannelID& channel = (*dep)->channel();
+    const int tdcTime = calculateTDCTime( (*dep) );
+    channel.setTdcTime( tdcTime );
+  }
+
+  /// OK, now sort the deposits according to time (not tdc time!!!) and channel
+  std::sort( depositCont->begin(), depositCont->end(), MCOTTimeHelpers::CompareDeposits() );
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Sorted channels are" << endmsg;
+    for ( MCOTDeposits::const_iterator dep = depositCont->begin(), depEnd = depositCont->end(); 
+	  dep != depEnd; ++dep ) {
+      debug() << "time = " << (*dep)->time() << " channel = " << (*dep)->channel() << endmsg;
+    }
+  }
+
   MCOTDeposits::const_iterator iterDep     = depositCont->begin();
   MCOTDeposits::const_iterator jterDep     = iterDep;
   MCOTDeposits::const_iterator depositsEnd = depositCont->end();
-  
+
   // apply dead time - Analog deadtime
   while (iterDep != depositsEnd){
     SmartRefVector<MCOTDeposit> depositVector;
@@ -104,29 +137,48 @@ StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
     do {
       depositVector.push_back((*jterDep));
       ++jterDep;
-    } while (jterDep != depositsEnd && AnalogDeadTime((*iterDep), (*jterDep)));
+    } while (jterDep != depositsEnd && insideAnalogDeadTime((*iterDep), (*jterDep)));
     
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Applied analog deadtime" << endmsg;
+      debug() << "Pulse from " << (*iterDep)->channel() << "\n";
+      debug() << "Number of deposits inside dead time: " << depositVector.size() <<"\n";
+      debug() << "Channels are " << endmsg;
+      for ( SmartRefVector<MCOTDeposit>::const_iterator dep = depositVector.begin(), depEnd = depositVector.end(); 
+	    dep != depEnd; ++dep ) {
+	debug() << "time = " << dep->target()->time() << " channel = " << dep->target()->channel() << endmsg;
+      }
+    }
+
     // Calculate TDC-time
-    int tdcTime = calculateTDCTime((*iterDep));
-    
+    /// Need to check whether it falls inside the readout window of 2^3*3 = 192 == 75ns
+    /// So we calculate it again
+    const int tdcTime = calculateTDCTime( (*iterDep) );
     // Apply read out window
-    if (insideReadoutWindow(tdcTime)) {    
+    if ( insideReadoutWindow( tdcTime ) ) {    
       /// apply digital dead time. If consecutive deposits are inside the digital
       /// dead time window add them to the temp deposit vector (in singlehit mode).
       if (m_singleHitMode) {
-        while (jterDep != depositsEnd && DigitalDeadTime((*iterDep), (*jterDep))) {
+        while (jterDep != depositsEnd && insideDigitalDeadTime((*iterDep), (*jterDep))) {
           depositVector.push_back((*jterDep));
           ++jterDep;
         }
       }
+     
+      if (msgLevel(MSG::DEBUG)) {
+	debug() << "Applied digital deadtime" << endmsg;
+	debug() << "Pulse from " << (*iterDep)->channel() << "\n";
+	debug() << "Number of deposits inside dead time: " << depositVector.size() <<"\n";
+	debug() << "Channels are " << endmsg;
+	for ( SmartRefVector<MCOTDeposit>::const_iterator dep = depositVector.begin(), depEnd = depositVector.end(); 
+	      dep != depEnd; ++dep ) {
+	  debug() << "time = " << dep->target()->time() << " channel = " << dep->target()->channel() << endmsg;
+	}
+      }
       
       // Get OTChannelID  
-      OTChannelID channel = (*iterDep)->channel();
-          
-      // Add time to OTChannelID  
-      channel.setTdcTime(tdcTime);
-      
-      // make a new MCOTTime and add it to the vector !!!!
+      const OTChannelID& channel = (*iterDep)->channel();
+      // make a new MCOTTime and add it to the vector
       MCOTTime* newTime = new MCOTTime(channel, depositVector);
       times->insert(newTime);
     }

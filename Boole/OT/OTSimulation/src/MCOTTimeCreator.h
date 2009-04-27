@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.h,v 1.10 2008-05-29 09:19:47 cattanem Exp $
+// $Id: MCOTTimeCreator.h,v 1.11 2009-04-27 16:54:14 janos Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
@@ -47,12 +47,12 @@ private:
   bool insideReadoutWindow(int tdcTime) const;
 
   /// function to check if two deposits have the same channel ID
-  bool AnalogDeadTime(const LHCb::MCOTDeposit* firstDep,
-                      const LHCb::MCOTDeposit* secondDep) const;
+  bool insideAnalogDeadTime(const LHCb::MCOTDeposit* firstDep,
+			    const LHCb::MCOTDeposit* secondDep) const;
 
   /// function to kill deposits due to the digital dead time
-  bool DigitalDeadTime(const LHCb::MCOTDeposit* firstDep,
-                       const LHCb::MCOTDeposit* secondDep) const;
+  bool insideDigitalDeadTime(const LHCb::MCOTDeposit* firstDep,
+			     const LHCb::MCOTDeposit* secondDep) const;
 
   /// apply dead time
   StatusCode createTimes(LHCb::MCOTTimes* times);
@@ -65,7 +65,7 @@ private:
   double              m_timePerBX;         ///< time Per BX
   bool                m_singleHitMode;     ///< Single Hit Mode
   double              m_nsToTDCcounts;     ///< Conversion from ns to tdc counts;
-  double              m_readoutWindow;     ///< Readout window = m_countsPerBX * m_numberOfBX = 192 ns 
+  double              m_readoutWindow;     ///< Readout window = m_countsPerBX * m_numberOfBX = 192 
 };
 
 inline int MCOTTimeCreator::calculateTDCTime(const LHCb::MCOTDeposit* firstDep) const {
@@ -79,21 +79,24 @@ inline int MCOTTimeCreator::calculateTDCTime(const LHCb::MCOTDeposit* firstDep) 
 }
 
 inline bool MCOTTimeCreator::insideReadoutWindow(int tdcTime) const {
-  return (tdcTime < m_readoutWindow && tdcTime >= 0 ) ;
+  return (tdcTime < int(m_readoutWindow) && tdcTime >= 0 ) ;
 }
 
-inline bool MCOTTimeCreator::AnalogDeadTime(const LHCb::MCOTDeposit* firstDep,
-                                            const LHCb::MCOTDeposit* secondDep) const { 
-  // check whether to continue adding deposits
-  return (firstDep->channel() == secondDep->channel() && 
-          calculateTDCTime(secondDep) - calculateTDCTime(firstDep) < m_deadTime);
+inline bool MCOTTimeCreator::insideAnalogDeadTime(const LHCb::MCOTDeposit* firstDep,
+						  const LHCb::MCOTDeposit* secondDep) const { 
+  // check whether consecutive fall inside analog deatime of first deposit of same channel
+  // same channel
+  const bool sameChannel = ( firstDep->channel() ).sameGeometry( secondDep->channel() );
+  // Time difference. Sorted according to increasing time
+  const double deltaT = std::abs( secondDep->time() - firstDep->time() );
+  return ( sameChannel && deltaT < m_deadTime );
 }
 
-inline bool MCOTTimeCreator::DigitalDeadTime(const LHCb::MCOTDeposit* firstDep,
-                                             const LHCb::MCOTDeposit* secondDep) const { 
+inline bool MCOTTimeCreator::insideDigitalDeadTime(const LHCb::MCOTDeposit* firstDep,
+						   const LHCb::MCOTDeposit* secondDep) const { 
   // check whether to continue killing deposits
-  return (firstDep->channel() == secondDep->channel()  && 
-          calculateTDCTime(secondDep) < m_readoutWindow);
+  const bool sameChannel = ( firstDep->channel() ).sameGeometry( secondDep->channel() );
+  return ( sameChannel  && insideReadoutWindow( calculateTDCTime(secondDep) ) );
 }
 
 #endif // OTSIMULATION_MCOTTIMECREATOR_H
