@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.19 2009-03-22 17:55:24 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.20 2009-04-27 09:16:45 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -554,6 +554,10 @@ public:
     // a bit more fun with the reporter 
     else if ( LoKi::IReporter::interfaceID      () == iid && 0 != reporter    () ) 
     { return reporter    ()     -> queryInterface ( iid , ppI ) ; }
+    // message service ? 
+    else if ( IMessageSvc::interfaceID          () == iid && 0 != msgSvc      () ) 
+    { return msgSvc      ()     -> queryInterface ( iid , ppI ) ; }
+    // message service ?
     else 
     { return    Service::queryInterface ( iid , ppI ) ; }
     //
