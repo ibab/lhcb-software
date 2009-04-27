@@ -131,8 +131,8 @@ def make_tar(pname, pversion, binary=''):
     compLinux = 'slc'
     compWIN32 = 'win32_vc71'
     compMac = 'osx10'
-    compMiscLinuxAmd64 = 'x86_64-slc4'
-    compMiscLinuxIa32 = 'i686-slc4'
+    compMiscLinuxAmd64 = 'x86_64-slc'
+    compMiscLinuxIa32 = 'i686-slc'
 
     # exclude following files and directories from source tar file
     exclude_source = ['install.history','core.*', 'html', 'Visual', 'test*',
