@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.11 2008-08-29 14:33:18 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.12 2009-04-27 14:56:32 graven Exp $
 // Include files 
 
 // from Gaudi
