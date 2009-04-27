@@ -36,7 +36,7 @@ public:
   std::pair<std::pair<int, ulonglong>, bool> currentRunNumber();
   std::pair<int, bool> currentCycleNumber(ulonglong currentTime);
   
-  ulonglong UpdateAndReset::gpsTime();
+  ulonglong gpsTime();
   
   void updateData(bool isRunNumberChanged, bool isFromTimerHandler);
   
