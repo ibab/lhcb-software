@@ -4,7 +4,7 @@ version v6r7
 branches Gaucho src cmt doc
 
 # add "use" statements
-use GaudiKernel v*  
+#use GaudiKernel v*  
 use AIDA v* LCG_Interfaces
 use DIM v* Online
 use GaudiAlg v*  

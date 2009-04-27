@@ -18,7 +18,7 @@ public:
   static std::string stringToUpper(std::string strToConvert);
   static int min(int a, int b) {if (a < b) return a; return b;}
   static void printSerializedString(const char * c, int size);
-  static std::string Misc::charToString(char * c, int size);
+  static std::string charToString(char * c, int size);
 
 };
 
