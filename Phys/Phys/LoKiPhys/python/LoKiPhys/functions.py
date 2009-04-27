@@ -615,7 +615,7 @@ MAXDIRATES            = LoKi.Particles.MaxCosineDirectionAngleTES
 ## @see LoKi::Cuts::DOCA 
 DOCA                  = LoKi.Particles.DOCA
 ## @see LoKi::Cuts::DOCACHI2  
-DOCACHI2              = LoKi.Particles.DOCACHI2 
+DOCACHI2              = LoKi.Particles.DOCAChi2 
 ## @see LoKi::Cuts::DOCAMAX_
 DOCAMAX_              = LoKi.Particles.DOCAMax
 ## @see LoKi::Cuts::DOCACHI2MAX_
