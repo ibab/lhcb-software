@@ -30,20 +30,22 @@
 #define vsnprintf _vsnprintf
 #endif
 
+using namespace MBM;
 namespace {
   static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
   static int cont = 1;
+}
 
-  struct ManagerImp : public MBM::Manager {
+namespace MBM  {
+  struct ManagerImp : public Manager {
     virtual int  optparse (const char*) {
       return 1;
     }
     ManagerImp() {}
     virtual ~ManagerImp() {}
   };
-}
-namespace MBM {
+
   struct DisplayDescriptor   {
     ManagerImp      m_mgr;
     BUFFERS::BUFF*  m_buff;
@@ -52,7 +54,7 @@ namespace MBM {
   };
 }
 
-MBM::Monitor::Monitor(int argc , char** argv, MonitorDisplay* disp) 
+Monitor::Monitor(int argc , char** argv, MonitorDisplay* disp) 
   : m_bms(0), m_bmid(0), m_bm_all(0), m_buffers(0), m_display(disp)
 {
   m_display->setClient(this);
@@ -60,11 +62,11 @@ MBM::Monitor::Monitor(int argc , char** argv, MonitorDisplay* disp)
   getOptions(argc, argv);
 }
 
-MBM::Monitor::~Monitor() {
+Monitor::~Monitor() {
   if ( m_display ) delete m_display;
 }
 
-size_t MBM::Monitor::print(void* ctxt, int, const char* format, va_list args) {
+size_t Monitor::print(void* ctxt, int, const char* format, va_list args) {
   char buffer[1024];
   Monitor* m = (Monitor*)ctxt;
   size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);
@@ -72,7 +74,7 @@ size_t MBM::Monitor::print(void* ctxt, int, const char* format, va_list args) {
   return res;
 }
 
-void MBM::Monitor::getOptions(int argc, char** argv)    {
+void Monitor::getOptions(int argc, char** argv)    {
   while (--argc > 0) {                                  /* process options  */
     const char* cptr = *++argv;
     if ( *cptr == '-' || *cptr == '/' )
@@ -80,7 +82,7 @@ void MBM::Monitor::getOptions(int argc, char** argv)    {
   }
 }
 
-int MBM::Monitor::monitor() {
+int Monitor::monitor() {
   int status = initMonitor();
   if ( !lib_rtl_is_success(status) ) {
     exit(status);
@@ -98,7 +100,7 @@ int MBM::Monitor::monitor() {
   return 1;
 }
 
-void MBM::Monitor::handle(const Event& ev) {
+void Monitor::handle(const Event& ev) {
   switch(ev.eventtype) {
   case TimeEvent:
     updateDisplay();
@@ -110,7 +112,7 @@ void MBM::Monitor::handle(const Event& ev) {
   }
 }
 
-int MBM::Monitor::initMonitor() {
+int Monitor::initMonitor() {
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
   int status = ::mbm_map_global_buffer_info(&m_bm_all);
@@ -123,7 +125,7 @@ int MBM::Monitor::initMonitor() {
   return 1;
 }
 
-int MBM::Monitor::updateDisplay() {
+int Monitor::updateDisplay() {
   try {
     display()->begin_update();
     get_bm_list();    
@@ -137,7 +139,7 @@ int MBM::Monitor::updateDisplay() {
   return 1;
 }
 
-size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
+size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   char txt[256];
   sprintf(txt," Buffer \"%s\"",name);
   display()->draw_line_normal("%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
@@ -153,7 +155,7 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   return 1;
 }
 
-int MBM::Monitor::show_information()   {
+int Monitor::show_information()   {
   int i, j, k;
 #if defined(SHOW_TIMES)
   static const char* fmt_def  = " %-15s%5x%7d%5s          %40s%5s%7s";
@@ -240,7 +242,7 @@ int MBM::Monitor::show_information()   {
   return 1;
 }
 
-int MBM::Monitor::optparse (const char* c)  {
+int Monitor::optparse (const char* c)  {
   int iret;
   switch (*c | 0x20)  {
   case 's':        /*      Single Update*/  
@@ -266,7 +268,7 @@ int MBM::Monitor::optparse (const char* c)  {
   return 1;
 }
 
-int MBM::Monitor::get_bm_list()   {
+int Monitor::get_bm_list()   {
   m_numBM = 0;
   int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
@@ -299,7 +301,7 @@ int MBM::Monitor::get_bm_list()   {
   return 1;
 }
 
-int MBM::Monitor::drop_bm_list()   {
+int Monitor::drop_bm_list()   {
   if ( m_numBM > 0 ) {
     for (int i = 0; i < m_buffers->p_bmax; ++i)  {
       //if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
