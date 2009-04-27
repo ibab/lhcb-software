@@ -1,4 +1,4 @@
-// $Id: OTMCDepositLinker.cpp,v 1.2 2008-03-31 16:31:20 janos Exp $
+// $Id: OTMCDepositLinker.cpp,v 1.3 2009-04-27 16:51:31 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,10 @@
 
 // local
 #include "OTMCDepositLinker.h"
+
+// OTDAQ
+#include "OTDAQ/IOTReadOutWindow.h"
+#include "OTDAQ/IOTRawBankDecoder.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTMCDepositLinker
@@ -36,7 +40,7 @@ OTMCDepositLinker::OTMCDepositLinker( const std::string& name,
     m_acceptTime(0.0)
 {
   declareProperty("OutputLocation", m_outputLocation = LHCb::OTTimeLocation::Default + "2MCDeposits");
-  declareProperty("AcceptTime"    , m_acceptTime     = 7.8*Gaudi::Units::ns                         );
+  declareProperty("AcceptTime"    , m_acceptTime     = 3.2*Gaudi::Units::ns                         );
 }
 
 //=============================================================================
@@ -70,11 +74,11 @@ StatusCode OTMCDepositLinker::execute() {
     const LHCb::MCOTTime* mcTime = (*iMCTime);
     const unsigned int key = unsigned(mcTime->channel());
     OTMCDepositLinker::Deposits deposits;
-    StatusCode sc = depositsToLink(mcTime, deposits);
+    StatusCode sc = depositsToLink( (*mcTime),  deposits );
     if (sc.isFailure()) return Error("Failed to find deposits to link!", StatusCode::FAILURE);
     /// loop over deposits and link 'em
     for (OTMCDepositLinker::Deposits::const_iterator iDeposit = deposits.begin(), iDepositEnd = deposits.end(); 
-         iDeposit != iDepositEnd; ++iDeposit) channelToDeposit.link(key, (*iDeposit));
+         iDeposit != iDepositEnd; ++iDeposit) channelToDeposit.link(key, iDeposit->first, iDeposit->second);
   }
   
   return StatusCode::SUCCESS;
@@ -83,13 +87,13 @@ StatusCode OTMCDepositLinker::execute() {
 //=============================================================================
 //  depositsToLink
 //=============================================================================
-StatusCode OTMCDepositLinker::depositsToLink(const LHCb::MCOTTime* aTime, OTMCDepositLinker::Deposits& deposits) const {
-  
-  /// Get tdc time
-  const unsigned int tdcTime = aTime->tdcTime();
-  
+StatusCode OTMCDepositLinker::depositsToLink(const LHCb::MCOTTime& aTime, 
+					     OTMCDepositLinker::Deposits& deposits) const {
+
   /// Get all deposits
-  SmartRefVector<LHCb::MCOTDeposit> allDeposits = aTime->deposits();
+  SmartRefVector<LHCb::MCOTDeposit> allDeposits = aTime.deposits();
+  /// Get the time of the first deposit that caused the signal
+  const double time = allDeposits.front()->time();
   /// Check if container is empty
   if (allDeposits.empty()) {
     return Error("There are no OT MCDeposits to link to!", StatusCode::FAILURE);
@@ -97,8 +101,9 @@ StatusCode OTMCDepositLinker::depositsToLink(const LHCb::MCOTTime* aTime, OTMCDe
     for (SmartRefVector<LHCb::MCOTDeposit>::iterator iDeposit = allDeposits.begin(), iDepositEnd = allDeposits.end(); 
          iDeposit != iDepositEnd; ++iDeposit ) {
       const LHCb::MCOTDeposit* deposit = (*iDeposit);
-      if ((deposit->tdcTime()) < (tdcTime + m_acceptTime)) { //accept
-        deposits.push_back(deposit);
+      const double dtime = time - deposit->time();  
+      if (std::abs(dtime) < m_acceptTime) { //accept
+        deposits.push_back(std::make_pair(deposit, dtime));
       }
     }
   }

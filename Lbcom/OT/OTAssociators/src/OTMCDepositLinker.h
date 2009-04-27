@@ -1,4 +1,4 @@
-// $Id: OTMCDepositLinker.h,v 1.2 2008-03-31 16:30:52 janos Exp $
+// $Id: OTMCDepositLinker.h,v 1.3 2009-04-27 16:51:31 janos Exp $
 #ifndef OTASSOCIATORS_OTMCDEPOSITLINKER_H 
 #define OTASSOCIATORS_OTMCDEPOSITLINKER_H 1
 
@@ -6,6 +6,7 @@
 // from STD
 #include <string>
 #include <vector>
+#include <utility>
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -96,7 +97,9 @@ protected:
 private:
 
   /// Handy typedef
-  typedef std::vector<const LHCb::MCOTDeposit*> Deposits;
+  typedef std::pair<const LHCb::MCOTDeposit*, double> Deposit;
+  typedef std::vector<Deposit> Deposits;
+
 
   /** Deposits to link for a given channelID/MCOTTime
    * Note there is a 1-to-1 correspondence between OTTime and MCOTTime, i.e. between the channelIDs. The
@@ -106,7 +109,7 @@ private:
    * @param deposits Reference to deposit vector, i.e. Deposits to link to.
    * @return StatusCode
    */   
-  StatusCode depositsToLink(const LHCb::MCOTTime* aTime, Deposits& deposits) const;
+  StatusCode depositsToLink(const LHCb::MCOTTime& aTime, Deposits& deposits) const;
   
   /** Output location, i.e. where to put the linker table
    * @return string
@@ -115,6 +118,11 @@ private:
   
   std::string m_outputLocation; ///< Ouptut location of linker table
   double m_acceptTime;          ///< Delta time window within to accept deposits 
+
+  double m_conversionToTDC;
+  std::vector<double> m_startReadOutGate;
+
+
 };
 
 inline const std::string OTMCDepositLinker::outputLocation() const {

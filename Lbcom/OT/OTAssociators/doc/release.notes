@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.45 2008-04-11 15:30:16 cattanem Exp $
+! $Id: release.notes,v 1.46 2009-04-27 16:51:31 janos Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2009-04-27 - Jan Amoraal
+ - Bug fix from Matt. Correctly apply window in OTMCDepositLiner. Add dtime
+   as weight. 
 
 !===================== OTAssociators v4r2 2008-04-04 =====================
 ! 2008-04-04 - Marco Cattaneo
