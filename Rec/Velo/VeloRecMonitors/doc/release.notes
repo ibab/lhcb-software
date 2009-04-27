@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-04-27 - Kurt Rinnert
+ - shortened and simplified histogram name in sampling monitor in order to
+   avoid potential problems with HistDB and presenter.
+
 ! 2009-04-14 - Eduardo Rodrigues
  - VeloMonitorBase updated to be able to deal with the printing of options
  - algos run in Brunel set not to print their options

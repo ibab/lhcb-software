@@ -14,7 +14,6 @@ MoniVELOSeq.Members += {   "Velo::VeloClusterMonitor/VCMPrev7"
                          , "Velo::VeloClusterMonitor/VCMNext6"
                          , "Velo::VeloClusterMonitor/VCMNext7"
                          , "Velo::VeloSamplingMonitor/VSM"
-                         , "Velo::VeloLumiRegionMonitor/VLRM"  
 };
 
 VCMPrev7.VeloClusterLocation = "Raw/Velo/Prev7/Clusters";

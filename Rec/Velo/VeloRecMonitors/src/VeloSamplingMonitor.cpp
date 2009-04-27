@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.3 2008-09-15 10:52:28 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.4 2009-04-27 13:50:32 krinnert Exp $
 // Include files
 // -------------
 
@@ -160,7 +160,7 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
 {
   
   unsigned int nxbins = m_samplingLocations.size();
-  std::string histIDBase("Cluster ADC values vs sampling ");
+  std::string histIDBase("ClusADCSamp");
   std::string histTitleBase("Cluster ADC values versus sampling index ");
   
   // Loop over the VeloClusters
@@ -199,10 +199,10 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
     // C is right, A is left
     bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
     if ( isCSide ) {
-      histID = histID + ", C-Side";
+      histID = histID + "C";
       histTitle = histTitle + ", C-Side";
     } else { // A side
-      histID = histID + ", A-Side";
+      histID = histID + "A";
       histTitle = histTitle + ", A-Side";
     }
     
@@ -242,7 +242,7 @@ void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
         if ( m_samplingLocations[i] == samplingLocation )
           samplingIndex = i;
 
-      plot2D( samplingIndex, adc, "Channel ADC values vs sampling",
+      plot2D( samplingIndex, adc, "ChanADCSamp",
               "Channel ADC values versus sampling index",
               -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
     }
