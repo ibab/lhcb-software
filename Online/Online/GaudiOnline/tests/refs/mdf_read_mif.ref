@@ -34,7 +34,7 @@ MIFSelector       SUCCESS Connected to:58AD91C1-1FEA-DC11-A5AA-000423D950B0 file
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1f05690@EventDataSvc]:
+Explorer             INFO ========= /Event[0xb895950@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -44,11 +44,11 @@ EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
 EventSelector     SUCCESS Reading Event record 3001. Record number within stream 1: 3001
 IODataManager       ERROR Referring to existing dataset root:file:mdfData_2.dat by its physical name.
-IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
+IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 MIFSelector       SUCCESS Connected to:root:file:mdfData_2.dat root:file:mdfData_2.dat
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
-Explorer             INFO ========= /Event[0x1f057b0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xb897620@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -61,7 +61,7 @@ MIFSelector       SUCCESS Connected to:0494F4E9-BC1E-DE11-A8FC-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:0
 EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
-Explorer             INFO ========= /Event[0x1f149a0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xb898540@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -71,18 +71,18 @@ EventSelector     SUCCESS Reading Event record 10001. Record number within strea
 EventSelector     SUCCESS Reading Event record 11001. Record number within stream 1: 11001
 IODataManager        INFO Disconnect from dataset file://mdfData_1.dat [58AD91C1-1FEA-DC11-A5AA-000423D950B0]
 IODataManager       ERROR Referring to existing dataset root:file:./mdfData_6.dat by its physical name.
-IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
+IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 MIFSelector       SUCCESS Connected to:root:file:./mdfData_6.dat root:file:./mdfData_6.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 12001. Record number within stream 1: 12001
 EventSelector     SUCCESS Reading Event record 13001. Record number within stream 1: 13001
 IODataManager        INFO Disconnect from dataset root:file://mdfData_0.dat [70BBF7E9-BC1E-DE11-A8FC-000423D9A21A]
 IODataManager       ERROR Referring to existing dataset root:./mdfData_7.dat by its physical name.
-IODataManager       ERROR You may not be able to nagivate back to the input file -- processing continues
+IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 MIFSelector       SUCCESS Connected to:root:./mdfData_7.dat root:./mdfData_7.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 1: 14001
-Explorer             INFO ========= /Event[0x1f12c10@EventDataSvc]:
+Explorer             INFO ========= /Event[0xb8b4c60@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -97,7 +97,7 @@ MIFSelector       SUCCESS Connected to:361FF6E9-BC1E-DE11-A8FC-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0x1f13900@EventDataSvc]:
+Explorer             INFO ========= /Event[0xb8b4c30@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent

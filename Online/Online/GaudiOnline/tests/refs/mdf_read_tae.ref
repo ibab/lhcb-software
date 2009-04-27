@@ -6,7 +6,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
                                'PoolDbCnvSvc/PoolRootEvtCnvSvc',
                                'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc',
                                'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc',
-                               'PoolDbCnvSvc/RunRecordCnvSvc'],
+                               'PoolDbCnvSvc/FileRecordCnvSvc'],
                     'HistogramPersistency': 'NONE',
                     'OutStream': ['OutputStream/TAEMini'],
                     'TopAlg': ['LHCb::RawEventTestDump/Dump',
@@ -29,6 +29,11 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
+ 'FileRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': True},
+ 'FileRecordDataSvc': {'EnableFaultHandler': True,
+                       'ForceLeaves': True,
+                       'RootCLID': 1},
+ 'FileRecordPersistencySvc': {'CnvServices': ['FileRecordCnvSvc']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'PoolDbCacheSvc': {'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'],
                     'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong'],
@@ -36,11 +41,6 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'PoolRootEvtCnvSvc': {'DbType': 'POOL_ROOT', 'EnableIncident': 1},
  'PoolRootKeyEvtCnvSvc': {'DbType': 'POOL_ROOTKEY', 'EnableIncident': 1},
  'PoolRootTreeEvtCnvSvc': {'DbType': 'POOL_ROOTTREE', 'EnableIncident': 1},
- 'RunRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': True},
- 'RunRecordDataSvc': {'EnableFaultHandler': True,
-                      'ForceLeaves': True,
-                      'RootCLID': 1},
- 'RunRecordPersistencySvc': {'CnvServices': ['RunRecordCnvSvc']},
  'TAEMini': {'ItemList': ['/Event#1',
                           '/Event/DAQ#1',
                           '/Event/Prev1/DAQ',
@@ -48,10 +48,12 @@ ApplicationMgr       INFO Application Manager Configured successfully
                           '/Event/Next1/DAQ/RawEvent'],
              'Output': "DATAFILE='PFN:taePOOL.dat' TYP='POOL_ROOTTREE' OPT='RECREATE'"}}
 +-------------------> Start processing events
+PoolDbCacheSvc      DEBUG Service base class initialized successfully
 PoolDbCacheSvc       INFO POOL output threshold: 'OutputLevel':1
 DbSession            INFO     Open     DbSession
 PoolDbCacheSvc      DEBUG Installed IOHandler for class SmartRefBase
 PoolDbCacheSvc      DEBUG Installed IOHandler for class ContainedObject
+Note: (file "(tmpfile)", line 2) File "set" already loaded
 Domain[ROOT_All]     INFO >   Access   DbDomain     UPDATE    [ROOT_All]
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' , 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
@@ -67,7 +69,7 @@ EventSelector.D...   INFO Compression:1 Checksum:1
 R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x25971c0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x1e7ad8b0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -103,7 +105,7 @@ Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  Data
 Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
 Domain[ROOT_All]     INFO                           taePOOL.dat
-taePOOL.dat       SUCCESS Root file version:51800
+RootDBase.open    SUCCESS taePOOL.dat File version:52200
 EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
 EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
 EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
@@ -126,6 +128,7 @@ TAEMini              INFO Events output: 3000
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 taePOOL.dat          INFO Database being retired...
+RootDBase.close     ERROR Failed to modify file: taePOOL.dat Errno=2 No such file or directory
 Domain[ROOT_All]     INFO ->  Deaccess DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
 taePOOL.dat          INFO Database being retired...
 PoolRootTreeEvt...   INFO Disconnected data IO:26FE952B-F81E-DE11-B1D8-000423D6B700[taePOOL.dat]
