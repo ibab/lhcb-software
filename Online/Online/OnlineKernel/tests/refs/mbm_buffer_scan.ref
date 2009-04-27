@@ -1,16 +1,16 @@
-++bm_init++ Commencing BM deinstallation 
+++bm_init++ Commencing BM deinstallation
 problem deleting section bm_ctrl_Events status 0
 problem deleting section bm_user_Events status 0
 problem deleting section bm_buffer_Events status 0
 problem deleting section bm_event_Events status 0
 problem deleting section bm_bitmap_Events status 0
 ++bm_init++ Old BM [Events] de-installed successfully
-++bm_init++ Commencing BM installation 
-Control: 0x2a957bf000  00000000             [80 Bytes]
-User:    0x2a957c0040  00001040  0x2a957c0000   [4576 Bytes]
-Event:   0x2a957c2018  00003018  0x2a957c2000   [2328 Bytes]
-Bitmap:  0x2a957c3000  00004000             [1600 Bytes]
-Buffer:  0x2a95940000  00181000             [204800 Bytes]
+++bm_init++ Commencing BM installation
+Control: 0x2b5190f8f000  0x00000000             [80 Bytes]
+User:    0x2b5190f90040  00001040  0x2b5190f90000 [4576 Bytes]
+Event:   0x2b5190f92018  0x00003018  0x2b5190f92000 [2328 Bytes]
+Bitmap:  0x2b5190f93000  0x00004000             [1600 Bytes]
+Buffer:  0x2b5190f94000  0x00005000             [204800 Bytes]
 ++bm_init++ BM registration successful:1 buffers now
 ++bm_init++ BM installation [Events] finished successfully.
 All done.
