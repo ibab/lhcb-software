@@ -29,7 +29,7 @@
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, commands
 import re
-from install_project import calculateMD5
+from LbLegacy.install_project import calculateMD5
 version = '000107'
 #---------------------------------------------------------------------------
 def usage() :
