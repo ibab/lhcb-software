@@ -95,6 +95,9 @@ void QCDFactorisation::init(){
 	std::auto_ptr<qcd::WilsonPair> _mb(evolveMb(qcd::MU_MB));
 	std::auto_ptr<qcd::WilsonPair> _mb3(evolveMb(qcd::MU_H));
 
+	if(parameters){//init can be called publically to reset the module. avoid memory leak
+		delete parameters;
+	}
 	parameters = new EvtBToVllParameters(model.hasRightHandedCurrents(),
 			qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
 			qcd::WCPtr(_mb->second),qcd::WCPtr(_mb3->second),
