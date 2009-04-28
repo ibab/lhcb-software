@@ -1,6 +1,6 @@
-## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.5 2009-04-24 12:54:26 pkoppenb Exp $
+## $Id: DVTestBu2D0K_D02KsPiPi.py,v 1.6 2009-04-28 17:10:18 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ## ============================================================================
 """
 @file DVTestBu2D0K_D02KsPiPi.py
@@ -93,29 +93,8 @@ TestCorrelations.Algorithms = [ "AllTrueNoPIDsDecay",
 from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ seqPresel, trueSeq ]
 
-##-- GAUDI data cards generated on 11/19/07 4:03 PM
-##-- For Event Type = 12165102 / Data type = DST 1
-##--     Configuration = DC06 - phys-v2-lumi2
-##--     DST 1 datasets produced by Brunel - v30r14
-##--     From DIGI 1 datasets produced by Boole - v12r10
-##--     From SIM 1 datasets produced by Gauss - v25r8
-##--     Database version = v30r14
-##--     Cards content = physical-physical
-##--
-
-DaVinci().Input   = [
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001660/DST/0000/00001660_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-
+DaVinci().Input = [
+      "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2KD-KSPiPi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 50

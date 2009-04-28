@@ -1,4 +1,4 @@
-## $Id: DVTestBu2LLK-2008.py,v 1.2 2009-03-24 10:43:21 pkoppenb Exp $
+## $Id: DVTestBu2LLK-2008.py,v 1.3 2009-04-28 17:10:18 pkoppenb Exp $
 ## ============================================================================
 ## CVS tag $Name: not supported by cvs2svn $
 ## ============================================================================
@@ -51,7 +51,7 @@ DaVinci().Input   = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001659/DST/0000/00001659_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 
-DaVinci().EvtMax = 500 
+DaVinci().EvtMax = 100 
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
 

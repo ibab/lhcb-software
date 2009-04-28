@@ -8,9 +8,12 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-TightD02KK_PiPiForB2D0K                                     SUCCESS Number of counters : 1
+PreselJpsi2ee                                               SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |          7 |(  7.00000 +- 2.55147  )%|   -------   |   -------   |
+ |*"#accept"                                       |       100 |          2 |(  2.00000 +- 1.40000  )%|   -------   |   -------   |
+ | "#input"                                        |       100 |          5 |   0.050000 |    0.40927 |      0.0000 |      4.0000 |
+ | "#passed"                                       |       100 |          5 |   0.050000 |    0.40927 |      0.0000 |      4.0000 |
+ |*"efficiency"                                    |         5 |          5 |(  100.000 +- 20.0000  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
