@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop, FilterDesktop
+from Configurables import CombineParticles, FilterDesktop
 from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
 from Hlt2SharedParticles.TopoTF2Body import TopoTF2Body
 from HltConf.HltLine import bindMembers
@@ -16,8 +16,7 @@ __all__ = ( 'TopoTF3Body' )
 
 Hlt2SharedTopoTF3Body= CombineParticles("Hlt2SharedTopoTF3Body")
 
-Hlt2SharedTopoTF3Body.addTool(PhysDesktop)
-Hlt2SharedTopoTF3Body.PhysDesktop.InputLocations  = ["Hlt2TopoTFInputParticles", "Hlt2SharedTopoTF2Body"]
+Hlt2SharedTopoTF3Body.InputLocations  = ["Hlt2TopoTFInputParticles", "Hlt2SharedTopoTF2Body"]
 ## Note doubly charged combinations allowed by Gabriel's original code.
 Hlt2SharedTopoTF3Body.DecayDescriptors = ["D*(2010)+ -> pi+ K*(892)0", "D*(2010)+ -> pi- K*(892)0"]
 

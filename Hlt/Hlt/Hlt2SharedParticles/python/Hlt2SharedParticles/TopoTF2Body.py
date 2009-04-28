@@ -7,15 +7,14 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
+from Configurables import CombineParticles
 from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
 from HltConf.HltLine import bindMembers
 
 __all__ = ( 'TopoTF2Body' )
 
 Hlt2SharedTopoTF2Body = CombineParticles("Hlt2SharedTopoTF2Body")
-Hlt2SharedTopoTF2Body.addTool(PhysDesktop)
-Hlt2SharedTopoTF2Body.PhysDesktop.InputLocations = [ "Hlt2TopoTFInputParticles" ]
+Hlt2SharedTopoTF2Body.InputLocations = [ "Hlt2TopoTFInputParticles" ]
 Hlt2SharedTopoTF2Body.DecayDescriptors = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-"] 
 
 Hlt2SharedTopoTF2Body.DaughtersCuts = {"pi+" : "(ALL)"} 

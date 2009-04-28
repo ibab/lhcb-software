@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, GaudiSequencer, PhysDesktop
+from Configurables import CombineParticles, GaudiSequencer
 from Hlt2SharedParticles.BasicParticles import Electrons
 from HltConf.HltLine import bindMembers
 
@@ -15,8 +15,7 @@ __all__ = ( 'DiElectron'  )
 
 Hlt2SharedDiElectron = CombineParticles("Hlt2SharedDiElectron")
 
-Hlt2SharedDiElectron.addTool(PhysDesktop)
-Hlt2SharedDiElectron.PhysDesktop.InputLocations = [ "Hlt2Electrons" ]
+Hlt2SharedDiElectron.InputLocations = [ "Hlt2Electrons" ]
 Hlt2SharedDiElectron.DecayDescriptor = "J/psi(1S) -> e+ e-" 
 
 Hlt2SharedDiElectron.DaughtersCuts = {"e+" : "(PT>800*MeV)"}

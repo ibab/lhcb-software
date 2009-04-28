@@ -7,15 +7,14 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
+from Configurables import CombineParticles
 from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
 from HltConf.HltLine import bindMembers
 
 __all__ = ( 'Kstar2KPi' )
 
 Hlt2SharedKstar2KPi = CombineParticles("Hlt2SharedKstar2KPi")
-Hlt2SharedKstar2KPi.addTool(PhysDesktop)
-Hlt2SharedKstar2KPi.PhysDesktop.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]
+Hlt2SharedKstar2KPi.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]
 Hlt2SharedKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
 
 Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "ALL", "K+" : "ALL" } 

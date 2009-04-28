@@ -8,7 +8,7 @@
 # rho(770) -> pi pi0
 #--------------------------------------------------------------------
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
+from Configurables import CombineParticles
 from HltConf.HltLine import bindMembers
 from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
 from Hlt2SharedParticles.BasicParticles import MergedPi0s, ResolvedPi0s
@@ -18,8 +18,7 @@ __all__ = ( 'RhoPlus2PiPi0','RhoPlus2KPi0')
 Hlt2SharedRhoPlus2PiPi0 = CombineParticles("Hlt2SharedRhoPlus2PiPi0")
 # Special vertex fitter
 Hlt2SharedRhoPlus2PiPi0.VertexFitters.update( { "" : "ParticleAdder"} ) 
-Hlt2SharedRhoPlus2PiPi0.addTool(PhysDesktop)
-Hlt2SharedRhoPlus2PiPi0.PhysDesktop.InputLocations = [ "Hlt2GoodPions"
+Hlt2SharedRhoPlus2PiPi0.InputLocations = [ "Hlt2GoodPions"
                                                      , "Hlt2MergedPi0s"
                                                      , "Hlt2ResolvedPi0s"
                                                      ]
@@ -37,7 +36,7 @@ RhoPlus2PiPi0 = bindMembers( None, [ GoodPions, GaudiSequencer('SeqHlt2Neutrals'
 #rho(770) -> K pi0 is a clone of rho(770) -> pi pi0
 Hlt2SharedRhoPlus2KPi0 = Hlt2SharedRhoPlus2PiPi0.clone("Hlt2SharedRhoPlus2KPi0")
 Hlt2SharedRhoPlus2KPi0.DecayDescriptor = "[rho(770)- -> K- pi0]cc"
-Hlt2SharedRhoPlus2KPi0.PhysDesktop.InputLocations = [ "Hlt2GoodKaons"
+Hlt2SharedRhoPlus2KPi0.InputLocations = [ "Hlt2GoodKaons"
                                                     , "Hlt2MergedPi0s"
                                                     , "Hlt2ResolvedPi0s"
                                                     ]

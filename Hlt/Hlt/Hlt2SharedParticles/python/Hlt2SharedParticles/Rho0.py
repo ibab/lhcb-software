@@ -4,15 +4,14 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
+from Configurables import CombineParticles
 from HltConf.HltLine import bindMembers
 from Hlt2SharedParticles.GoodParticles import GoodPions
 
 __all__ = ('Rho0')
 
 Hlt2SharedRho0 = CombineParticles("Hlt2SharedRho0")
-Hlt2SharedRho0.addTool(PhysDesktop)
-Hlt2SharedRho0.PhysDesktop.InputLocations  = [ "Hlt2GoodPions" ]
+Hlt2SharedRho0.InputLocations  = [ "Hlt2GoodPions" ]
 Hlt2SharedRho0.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc"
 Hlt2SharedRho0.DaughtersCuts =  { "pi+" : "TRUE" ,
                                   "pi-" : "TRUE" }

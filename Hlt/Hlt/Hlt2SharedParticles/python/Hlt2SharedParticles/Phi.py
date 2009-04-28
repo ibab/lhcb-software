@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
+from Configurables import CombineParticles
 from Hlt2SharedParticles.GoodParticles import GoodKaons
 from Hlt2SharedParticles.BasicParticles import NoCutsKaons
 from HltConf.HltLine import bindMembers
@@ -15,8 +15,7 @@ from HltConf.HltLine import bindMembers
 __all__ = ( 'Phi2KK', 'UnbiasedPhi2KK' )
 
 Hlt2SharedPhi2KK = CombineParticles("Hlt2SharedPhi2KK")
-Hlt2SharedPhi2KK.addTool(PhysDesktop)
-Hlt2SharedPhi2KK.PhysDesktop.InputLocations = [ "Hlt2GoodKaons" ]
+Hlt2SharedPhi2KK.InputLocations = [ "Hlt2GoodKaons" ]
 Hlt2SharedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 
 Hlt2SharedPhi2KK.DaughtersCuts = { "K+" : "ALL"} 
@@ -34,8 +33,7 @@ Phi2KK = bindMembers( None, [ GoodKaons, Hlt2SharedPhi2KK ] )
 #
 ##
 Hlt2SharedUnbiasedPhi2KK = CombineParticles("Hlt2SharedUnbiasedPhi2KK")
-Hlt2SharedUnbiasedPhi2KK.addTool(PhysDesktop)
-Hlt2SharedUnbiasedPhi2KK.PhysDesktop.InputLocations = [ "Hlt2NoCutsKaons" ]
+Hlt2SharedUnbiasedPhi2KK.InputLocations = [ "Hlt2NoCutsKaons" ]
 Hlt2SharedUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 Hlt2SharedUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 
 Hlt2SharedUnbiasedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<20*MeV)"
