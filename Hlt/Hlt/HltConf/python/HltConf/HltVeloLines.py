@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.8 2009-04-24 10:33:00 pkoppenb Exp $
+# $Id: HltVeloLines.py,v 1.9 2009-04-28 19:55:01 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 #
@@ -40,7 +40,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
         from Configurables import PatPV3D, PVOfflineTool
         ### find primary vertices seperately in each side
         for side in [ 'ASide', 'CSide' ] :
-            cf = VeloClusterFilter( side + 'ClusterFilter'
+            cf = VeloClusterFilter('Hlt1Velo' +  side + 'ClusterFilter'
                                   , MinimumNumberOfRClusters = self.getProp('MinimumNumberOfRClusters')
                                   , MinimumNumberOfPhiClusters = self.getProp('MinimumNumberOfPhiClusters')
                                   , MaximumNumberOfClusters = self.getProp('MaxNumberOfClusters') 
@@ -48,7 +48,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                   , OutputClusterLocation = "/Event/Raw/Velo/" + side + "Clusters"
                                   , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
                                   )
-            rt = PatVeloRTracking( side + 'RTracking'
+            rt = PatVeloRTracking( 'Hlt1Velo' + side + 'RTracking'
                                      , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
                                      , HitManagerName = side + 'DefaultVeloRHitManager')
             DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
@@ -57,7 +57,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
                                         , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                                         , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
-            st = PatVeloSpaceTracking( side + 'SpaceTracking'
+            st = PatVeloSpaceTracking('Hlt1Velo' +  side + 'SpaceTracking'
                                          , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
                                          , OutputTracksName = 'Hlt/Track/'+side+'Velo'
                                          , SpaceToolName = 'Tf__PatVeloSpaceTool/' + side + "SpaceTool")
@@ -65,7 +65,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                 , RHitManagerName= side+"RHitManager"
                                 , PhiHitManagerName= side + "PhiHitManager"
                                 , TrackToolName= side + "TrackTool" )
-            gt = PatVeloGeneralTracking( side + 'GeneralTracking'
+            gt = PatVeloGeneralTracking( 'Hlt1Velo' + side + 'GeneralTracking'
                                            , RHitManagerName = side + 'RHitManager'
                                            , PhiHitManagerName= side + 'PhiHitManager'
                                            , TrackToolName= side + 'TrackTool'
@@ -76,7 +76,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
             PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
 
-            pv3D = PatPV3D( side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
+            pv3D = PatPV3D( 'Hlt1Velo' + side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
             pv3D.addTool( PVOfflineTool, name = 'PVOfflineTool')
             pv3D.PVOfflineTool.InputTracks = ['Hlt/Track/' + side + 'Velo']
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"

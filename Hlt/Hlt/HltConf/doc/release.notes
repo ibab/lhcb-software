@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.219 2009-04-28 19:54:24 graven Exp $ 
+! $Id: release.notes,v 1.220 2009-04-28 19:55:01 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -9,6 +9,7 @@
  - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
  - add support for cloning Hlt2Members
  - remove typename from generated instance name in Hlt2Members
+ - add Hlt1VeloXXX in front of code in velolines...
 
 ! 2009-04-24 - Patrick Koppenburg
  - Velo line : define tool implementation
