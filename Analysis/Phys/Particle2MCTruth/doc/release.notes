@@ -5,6 +5,16 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-04-28 - Juan PALACIOS
+ - MCMatchObjP2MCRelator
+  . Input relations tables are now a property, "RelTableLocations". The 
+    tool accepts ProtoParticle->MCP and Particle->MCP (LoKi::Types::TablePP2MC
+    and LoKi::Types::TableP2MC respectively). By default, tool loads 
+    "Relations/" + LHCb::ProtoParticleLocation::Charged,
+    "Relations/" + LHCb::ProtoParticleLocation::Upstream and
+    "Relations/" + LHCb::ProtoParticleLocation::Neutrals using the DataOnDemand
+    service, as before.
+
 ! 2009-04-16 - Juan PALACIOS
  - src/P2MCRelatorAlg.cpp
  - src/P2MCRelatorAlg.h
