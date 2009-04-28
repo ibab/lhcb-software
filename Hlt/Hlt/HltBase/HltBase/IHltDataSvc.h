@@ -7,7 +7,7 @@
 // ============================================================================
 #include <vector>
 // ============================================================================
-// GaudiKrrnel
+// GaudiKernel
 // ============================================================================
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/StatusCode.h"
@@ -36,14 +36,13 @@ public:
                                     const IAlgorithm* parent          , 
                                     const bool        fromTES = false ) = 0 ;
   virtual bool hasSelection ( const stringKey& id ) const = 0;
-  //@TODO: make typesafe, i.e. allow getting of derived classes 
-  //@TODO: return pointer instead of reference -- 0 being don't know id...
   //@TODO: should only have const access to requested input...
   virtual /* const*/  Hlt::Selection* selection ( const stringKey&  id     , 
                                             const IAlgorithm* parent ) =0 ;
+  //@TODO: make typesafe, i.e. allow getting of derived classes 
   //template <typename T>
   //Hlt::TSelection<T>& selection( const stringKey& id, const IAlgorithm* parent) {
-      //Hlt::Selection* sel = &selection(id,parent);
+      //Hlt::Selection* sel = selection(id,parent);
       //return sel->template down_cast<T>();
   //}
   // 
@@ -65,5 +64,3 @@ protected:
 // The END  
 // ============================================================================
 #endif
-// ============================================================================
-

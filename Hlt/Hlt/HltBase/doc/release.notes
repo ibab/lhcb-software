@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-04-28 - Gerhard Raven
+ - replace assert by throwing of exception
+
 ! 2009-04-15 - Gerhard Raven
  - fix cut+paste typo in IHltReferenceClockSvc
 

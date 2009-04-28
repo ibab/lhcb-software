@@ -1,4 +1,4 @@
-// $Id: ITrackConfirmTool.h,v 1.3 2008-07-21 12:59:44 albrecht Exp $
+// $Id: ITrackConfirmTool.h,v 1.4 2009-04-28 07:03:37 graven Exp $
 #ifndef ITRACKCONFIRMTOOL_H 
 #define ITRACKCONFIRMTOOL_H 1
 
@@ -10,8 +10,10 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "HltBase/ParabolaHypothesis.h"
 
-class LHCb::State;
-class LHCb::Track;
+namespace LHCb {
+    class State;
+    class Track;
+};
 
 static const InterfaceID IID_ITrackConfirmTool ( "ITrackConfirmTool", 1, 0 );
 
@@ -30,11 +32,6 @@ public:
   virtual StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks ) =0;
   
   virtual ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID>& ids)=0;
-  
-
-protected:
-
-private:
 
 };
 #endif // ITRACKCONFIRMTOOL_H

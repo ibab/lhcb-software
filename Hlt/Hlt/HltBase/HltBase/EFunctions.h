@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.15 2008-07-30 13:33:16 graven Exp $
+// $Id: EFunctions.h,v 1.16 2009-04-28 07:03:37 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -140,8 +140,10 @@ namespace zen
       if (container->empty()) return 0.; //@TODO: is this really what we want??
       iterator it = container->begin(); 
       double d0 = (*bifunction)(t,**it); ++it;
-      for (; it != container->end(); ++it)
-      {double d = (*bifunction)(t,**it); if ((*comparator)(d,d0)) d0 = d;}
+      for (; it != container->end(); ++it) {
+           double d = (*bifunction)(t,**it); 
+           if ((*comparator)(d,d0)) d0 = d;
+      }
       return d0;
     }
     Pair pair(const T1& t) const {
@@ -309,10 +311,11 @@ namespace zen
   class equal_to : public zen::filter<T> {
   public:
     typedef typename zen::filter<T>::Self Filter;
-    explicit equal_to(const T& t){ t0 = t;}    
-    bool operator() (const T& t) const {return (t == t0);}
-    equal_to* clone() const { return new equal_to(t0) ;}
-    T t0;
+    explicit equal_to(const T& t) : m_t(t) { }    
+    bool operator() (const T& t) const {return (t == m_t);}
+    equal_to* clone() const { return new equal_to(m_t) ;}
+  private:
+    T m_t;
   };
 
   
@@ -321,10 +324,11 @@ namespace zen
   {
   public:
     typedef typename zen::filter<T>::Self Filter;
-    explicit less(const T& t){ t0 = t;}    
-    bool operator() (const T& t) const {return t < t0;}
-    less* clone() const { return new less(t0) ;}
-    T t0;
+    explicit less(const T& t) : m_t(t) {}
+    bool operator() (const T& t) const {return t < m_t;}
+    less* clone() const { return new less(m_t) ;}
+  private:
+    T m_t;
   };
 
 
@@ -333,10 +337,11 @@ namespace zen
   {
   public:
     typedef typename zen::filter<T>::Self Filter;
-    explicit greater(const T& t){ t0 = t;}    
-    bool operator() (const T& t) const {return t > t0;}
-    greater* clone() const { return new greater(t0) ;}
-    T t0;
+    explicit greater(const T& t) : m_t(t) { }
+    bool operator() (const T& t) const {return t > m_t;}
+    greater* clone() const { return new greater(m_t) ;}
+  private:
+    T m_t;
   };
 
 
@@ -346,11 +351,12 @@ namespace zen
   {
   public:
     typedef typename zen::filter<T>::Self Filter;
-    explicit in_range(const T& x0, const T& x1 ) {t0=x0; t1=x1;}    
-    bool operator() (const T& t) const {return ((t>t0) && (t<t1));}
-    in_range* clone() const { return new in_range(t0,t1) ;}
-    T t0;
-    T t1;
+    explicit in_range(const T& x0, const T& x1 ) : m_t0(x0),m_t1(x1) {}    
+    bool operator() (const T& t) const {return ((t>m_t0) && (t<m_t1));}
+    in_range* clone() const { return new in_range(m_t0,m_t1) ;}
+  private:
+    T m_t0;
+    T m_t1;
   };
 
   template <class T>
@@ -580,13 +586,11 @@ zen::filter_from_filters<T> operator|| (const zen::filter<T>& f1,
 //---------------
 
 template <class T1, class T2>
-zen::bifilter_from_bifunction<T1,T2> operator< 
-  ( const zen::bifunction<T1,T2>& funct, double value) 
+zen::bifilter_from_bifunction<T1,T2> operator< ( const zen::bifunction<T1,T2>& funct, double value) 
 { return zen::bifilter_from_bifunction<T1,T2>(funct, zen::less<double>( value ) ) ; }
 
 template <class T1, class T2>
-zen::bifilter_from_bifunction<T1,T2> operator>
-  ( const zen::bifunction<T1,T2>& funct, double value) 
+zen::bifilter_from_bifunction<T1,T2> operator> ( const zen::bifunction<T1,T2>& funct, double value) 
 { return zen::bifilter_from_bifunction<T1,T2>(funct, zen::greater<double>( value ) ) ; }
 
 
@@ -599,13 +603,11 @@ zen::bifilter_from_bifilter<T1,T2> operator! (const zen::bifilter<T1,T2>& f)
 { return zen::bifilter_from_bifilter<T1,T2>(f, zen::logical_not<bool>() ) ; }
 
 template <class T1, class T2>
-zen::bifilter_from_bifilters<T1,T2> operator&& 
-(const zen::bifilter<T1,T2>& f1, const zen::bifilter<T1,T2>& f2)
+zen::bifilter_from_bifilters<T1,T2> operator&& (const zen::bifilter<T1,T2>& f1, const zen::bifilter<T1,T2>& f2)
 { return zen::bifilter_from_bifilters<T1,T2>(f1,f2,zen::logical_and<bool,bool>()) ; }
 
 template <class T1, class T2>
-zen::bifilter_from_bifilters<T1,T2> operator|| 
-(const zen::bifilter<T1,T2>& f1, const zen::bifilter<T1,T2>& f2)
+zen::bifilter_from_bifilters<T1,T2> operator|| (const zen::bifilter<T1,T2>& f1, const zen::bifilter<T1,T2>& f2)
 { return zen::bifilter_from_bifilters<T1,T2>(f1,f2,zen::logical_or<bool,bool>()) ; }
 
 

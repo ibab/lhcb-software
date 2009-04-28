@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.51 2009-02-06 20:20:54 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.52 2009-04-28 07:03:37 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -95,14 +95,12 @@ StatusCode HltAlgorithm::beginExecute() {
       error() << " no output selection !!" << endmsg;
       return StatusCode::FAILURE;
   }
-  Assert( m_outputSelection != 0," beginExecute() no output selection !");
 
   setFilterPassed(false);
 
   // we always process callbacks first...
   BOOST_FOREACH( CallBack* i, m_callbacks ) i->process();
   
-  // m_outputSelection->clean(); // already done in HltDataSvc
   // assert if not done properly...
   Assert(m_outputSelection->decision()==false 
       && m_outputSelection->processed()==false
