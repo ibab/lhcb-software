@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.8 2009-04-06 20:19:18 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.9 2009-04-28 11:55:09 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -31,12 +31,14 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
   m_treeSorter(),
   m_reporter(0),
   m_matcher(0),
-  m_PP2MC()
+  m_tables()
 {
 
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
+  m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
+  m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
+  m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
+
+  declareProperty("RelTableLocations",  m_tables );
 
 }
 //=============================================================================
@@ -45,6 +47,13 @@ StatusCode MCMatchObjP2MCRelator::initialize()
   StatusCode sc =  P2MCPBase::initialize();
   if (sc.isFailure()) return sc;
   m_reporter = tool<LoKi::IReporter>( "LoKi::Reporter", this ) ;
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "RelTableLocations: " << endmsg;
+    for (Addresses::const_iterator iAddr = m_tables.begin(); iAddr!= m_tables.end(); ++iAddr) {
+      verbose() << "\t" << *iAddr << endmsg;
+    }
+  }
   return (0!=m_reporter) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 //=============================================================================
@@ -57,14 +66,19 @@ bool MCMatchObjP2MCRelator::isMatched(const LHCb::Particle* particle,
                                       const LHCb::MCParticle* mcParticle) const
 {
   const bool match = matcher()->match(particle, mcParticle);
-  if (match) {
-    verbose() << "match Particle PID " << particle->particleID().pid() 
-              << " to MCParticle PID " << mcParticle->particleID().pid() 
-              << endmsg;
-  } else {
-    verbose() << "No match for Particle PID " << particle->particleID().pid() 
-              << endmsg;
+
+  if (msgLevel(MSG::VERBOSE)) {
+    if (match) {
+      verbose() << "match Particle PID " << particle->particleID().pid() 
+                << " to MCParticle PID " << mcParticle->particleID().pid() 
+                << endmsg;
+    } else {
+      verbose() << "No match for Particle PID " 
+                << particle->particleID().pid() 
+                << endmsg;
+    }
   }
+  
   return match;
 }
 //=============================================================================
@@ -93,19 +107,22 @@ MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) co
 P2MCP::Types::FlatTrees
 MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container& mcParticles) const 
 {
-  ///@todo use m_treeSorter once LHCb v27r0 comes out.
-  return sort(LHCb::MCParticle::ConstVector(mcParticles.begin(), 
-                                            mcParticles.end()));
-  //  return m_treeSorter(mcParticles);
+  return m_treeSorter(mcParticles);
 }
 //=============================================================================
 void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const 
 {
-  for (Addresses::const_iterator item = m_PP2MC.begin(); item!=m_PP2MC.end(); ++item) {
+  for (Addresses::const_iterator item = m_tables.begin(); item!=m_tables.end(); ++item) {
     const std::string& address = *item;
     if (exist<LoKi::Types::TablePP2MC>(address) ) {
-      verbose() << "Adding table " << address << endmsg;;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Adding table " 
+                                            << address << endmsg;
       LoKi::Types::TablePP2MC* table = get<LoKi::Types::TablePP2MC>(address);
+      matcher->addMatchInfo(table);
+    } else if (exist<LoKi::Types::TableP2MC>(address) ) {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Adding table " 
+                                            << address << endmsg;
+      LoKi::Types::TableP2MC* table = get<LoKi::Types::TableP2MC>(address);
       matcher->addMatchInfo(table);
     } else {
       Error ( " There is no valid data at '" + address + "'" ).ignore() ; 
