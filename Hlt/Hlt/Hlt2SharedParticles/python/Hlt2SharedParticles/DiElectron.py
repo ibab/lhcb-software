@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, GaudiSequencer
+from Configurables import CombineParticles
 from Hlt2SharedParticles.BasicParticles import Electrons
 from HltConf.HltLine import bindMembers
 

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.12 2009-04-28 13:18:25 pkoppenb Exp $
+$Id: release.notes,v 1.13 2009-04-28 16:40:54 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,7 @@ $Id: release.notes,v 1.12 2009-04-28 13:18:25 pkoppenb Exp $
 ! 2009-04-28 - Patrick Koppenburg
  - Remove all PhysDesktop from all particles
  - Requires the latets version of DaVinciTools and DaVinciMCKernel
+ - New Pi0 sequencer. Use AllPi0s to get all Pi0s.
 
 ! 2009-04-24 - Patrick Koppenburg
  - One more patch
