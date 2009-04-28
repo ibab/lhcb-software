@@ -1,4 +1,4 @@
-// $Id: Particles26.h,v 1.1 2009-04-24 12:49:05 ibelyaev Exp $
+// $Id: Particles26.h,v 1.2 2009-04-28 16:05:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES26_H 
 #define LOKI_PARTICLES26_H 1
@@ -81,7 +81,7 @@ namespace LoKi
         double result = LoKi::Constants::NegativeInfinity ;
         for ( PARTICLE i1 = first ; last != i1 ; ++i1 ) 
         {
-          for ( PARTICLE i2 = i1 + 1 ; last != i1 ; ++i2 )  
+          for ( PARTICLE i2 = i1 + 1 ; last != i2 ; ++i2 )  
           { result = std::max ( result , doca ( *i1 , *i2 ) ) ; }
         }
         return result ;
@@ -94,7 +94,7 @@ namespace LoKi
         double result = LoKi::Constants::NegativeInfinity ;
         for ( PARTICLE i1 = first ; last != i1 ; ++i1 ) 
         {
-          for ( PARTICLE i2 = i1 + 1 ; last != i1 ; ++i2 )  
+          for ( PARTICLE i2 = i1 + 1 ; last != i2 ; ++i2 )  
           { result = std::max ( result , chi2 ( *i1 , *i2 ) ) ; }
         }
         return result ;

@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.91 2009-04-24 12:49:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.92 2009-04-28 16:05:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-28 - Vanya BELYAEV
+
+ - LoKi/Particles26.h: 
+
+    bug fix in DOCA::docamax & DOCA::docamaxchi2 
 
 ! 2009-04-24 - Vanya BELYAEV
 
