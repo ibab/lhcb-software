@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.13 2009-04-28 16:40:54 pkoppenb Exp $
+$Id: release.notes,v 1.14 2009-04-28 19:59:05 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-04-28 - Gerhard Raven
+ - remove hardwired names
 
 ! 2009-04-28 - Patrick Koppenburg
  - Remove all PhysDesktop from all particles

@@ -16,7 +16,8 @@ __all__ = ( 'TopoTF3Body' )
 
 Hlt2SharedTopoTF3Body= CombineParticles("Hlt2SharedTopoTF3Body")
 
-Hlt2SharedTopoTF3Body.InputLocations  = ["Hlt2TopoTFInputParticles", "Hlt2SharedTopoTF2Body"]
+Hlt2SharedTopoTF3Body.InputLocations  = [ TopoTFInputParticles.outputSelection()
+                                        , TopoTF2Body.outputSelection() ]
 ## Note doubly charged combinations allowed by Gabriel's original code.
 Hlt2SharedTopoTF3Body.DecayDescriptors = ["D*(2010)+ -> pi+ K*(892)0", "D*(2010)+ -> pi- K*(892)0"]
 

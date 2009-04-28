@@ -14,7 +14,7 @@ from HltConf.HltLine import bindMembers
 __all__ = ( 'Kstar2KPi' )
 
 Hlt2SharedKstar2KPi = CombineParticles("Hlt2SharedKstar2KPi")
-Hlt2SharedKstar2KPi.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]
+Hlt2SharedKstar2KPi.InputLocations = [ GoodKaons.outputSelection(), GoodPions.outputSelection() ]
 Hlt2SharedKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
 
 Hlt2SharedKstar2KPi.DaughtersCuts = { "pi+" : "ALL", "K+" : "ALL" } 

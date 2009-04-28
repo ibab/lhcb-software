@@ -26,7 +26,7 @@ Hlt2SharedDplus2KPiPi.DaughtersCuts = { "K+"  : "ALL",
 Hlt2SharedDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<300*MeV) & (APT>1.5*GeV)" 
 Hlt2SharedDplus2KPiPi.MotherCut = "(VFASPF(VCHI2/VDOF) < 10 ) & (BPVDIRA > 0) " 
 
-Hlt2SharedDplus2KPiPi.InputLocations = [ "Hlt2GoodKaons", "Hlt2GoodPions" ]
+Hlt2SharedDplus2KPiPi.InputLocations = [ GoodKaons.outputSelection(), GoodPions.outputSelection() ]
 Dplus2KPiPi = bindMembers( None, [ GoodKaons, GoodPions, Hlt2SharedDplus2KPiPi ] )
 ##########################################################################################
 # D+ -> K K Pi is a clone of D+ -> K Pi Pi 
@@ -46,7 +46,7 @@ Dplus2KPiPiCS = bindMembers( None, [ GoodKaons, GoodPions, Hlt2SharedDplus2KPiPi
 # D+ -> 3 pi is a clone of D+ -> K Pi Pi 
 #
 Hlt2SharedDplus2PiPiPi = Hlt2SharedDplus2KPiPi.clone("Hlt2SharedDplus2PiPiPi")
-Hlt2SharedDplus2PiPiPi.InputLocations = [ "Hlt2GoodPions" ]
+Hlt2SharedDplus2PiPiPi.InputLocations = [ GoodPions.outputSelection() ]
 Hlt2SharedDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
 
 Dplus2PiPiPi = bindMembers( None, [ GoodPions, Hlt2SharedDplus2PiPiPi ] )

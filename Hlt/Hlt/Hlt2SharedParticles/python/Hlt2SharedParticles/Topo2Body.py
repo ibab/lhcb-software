@@ -14,7 +14,7 @@ from HltConf.HltLine import bindMembers
 __all__ = ( 'Topo2Body' )
 
 Hlt2SharedTopo2Body = CombineParticles("Hlt2SharedTopo2Body")
-Hlt2SharedTopo2Body.InputLocations = [ "Hlt2GoodPions" ]
+Hlt2SharedTopo2Body.InputLocations = [ GoodPions.outputSelection() ]
 Hlt2SharedTopo2Body.DecayDescriptors = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-"] 
 
 Hlt2SharedTopo2Body.DaughtersCuts = {"pi+" : "(ALL)"} 
