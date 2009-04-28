@@ -1,8 +1,26 @@
-! $Id: release.notes,v 1.259 2009-04-15 12:31:39 gligorov Exp $
+! $Id: release.notes,v 1.260 2009-04-28 13:57:56 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-28 - Juan PALACIOS
+ - Add GaudiAlgorithm FilterEventByMCDecay
+  .  Algorithm to select or reject an event based on whether an event is 
+     "signal". It uses a private instance of an IMCDecayFinder to determine 
+     whether the MC event is consistent with being signal. In practice this
+     means that an MCDecayFinder (the only existing implementation of 
+     interfaceoid IMCDecayFinder) is used, and its decay descriptor used to
+     determine whether the event is signal or not.
+     Example:
+     # remove events that are signal
+     signalKiller = FilterEventByMCDecay()
+     signalKiller.Select = False
+     signalKiller.addTool(MCDecayFinder)
+     signalKiller.MCDecayFinder.Decay = '[B_s0 -> (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) (phi(1020) -> K+ K-)]cc'
+     # Assume TheSelSeq is a sequence that is carrying out a selection
+     TheSelSeq.Members += [signalKiller] # you might want to add to fron of sequence 
+
 
 ! 2009-04-15 - V. Gligorov
  - Update DaVinciSmartAssociator.{h,cpp} to include more debug printouts.
