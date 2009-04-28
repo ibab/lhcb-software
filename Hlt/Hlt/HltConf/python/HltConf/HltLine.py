@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.55 2009-04-28 12:52:34 graven Exp $ 
+# $Id: HltLine.py,v 1.56 2009-04-28 19:54:24 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.55 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.56 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1055,7 +1055,7 @@ class Hlt2Member ( object ) :
         return memberName ( self , line, level = 'Hlt2' ) 
     def id     ( self )        :
         " Return the ID of the member "        
-        return self.subtype() + self.Name
+        return self.Name
     def subname( self )        :
         " Return the specific part of the name "        
         return self.id()
@@ -1071,8 +1071,10 @@ class Hlt2Member ( object ) :
             # adapt input...  and put back...  
             for loc in args.pop('InputLocations') :
                 if type(loc) is bindMembers : loc = loc.outputSelection() 
-                import re
-                loc = re.sub('^%', 'Hlt2' + line, loc )
+                from Configurables import FilterDesktop, CombineParticles
+                if type(loc) is CombineParticles or type(loc) is FilterDesktop : loc = loc.getName() 
+                from re import sub
+                loc = sub('^%', 'Hlt2' + line, loc )
                 inputLocations += [ loc ]
             args['InputLocations'] = inputLocations
         _name = self.name( line )
