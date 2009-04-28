@@ -3,7 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
-
+! 2009-04-28 - Alessia Satta
+ - Add MuonTAE Rec algo for reconstruction in TAE events. 
+   Also strips belonging to different BX are matched.
 !========================== MuonDAQ v4r5p1 2009-01-08 ========================
 ! 2008-11-28 - Alessia Satta
  - Fix unitialized variable
