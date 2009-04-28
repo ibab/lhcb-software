@@ -146,7 +146,7 @@ int MBM::Installer::install()  {
   m_bm->user   = m_bm->usDesc->users;
   ::memset(m_bm->usDesc,0,len);
   ::memset(m_bm->user,0,sizeof(USER)*p_umax);
-  ::lib_rtl_output(LIB_RTL_INFO,"User:    %p  %08X  %p [%d Bytes]\n",(void*)m_bm->user,
+  ::lib_rtl_output(LIB_RTL_INFO,"User:    %p  0x%08X  %p [%d Bytes]\n",(void*)m_bm->user,
            ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc, len);
 
   len = sizeof(EVENTDesc)+sizeof(EVENT)*(p_emax-1);

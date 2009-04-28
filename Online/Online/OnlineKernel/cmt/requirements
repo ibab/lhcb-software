@@ -48,4 +48,5 @@ apply_pattern QMTest
 apply_pattern QMTestSummarize
 
 private
-macro_append  cppflags " -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro_append  use_includes ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
+macro_append  cppflags     " -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
