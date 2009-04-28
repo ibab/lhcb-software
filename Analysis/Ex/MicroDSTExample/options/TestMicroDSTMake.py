@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.13 2009-04-28 12:10:44 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.14 2009-04-28 12:11:51 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -36,12 +36,12 @@ keepTrueDecays = False
 # Copy related MCParticles and decay tree for selected candidates?
 storeMCInfo = True
 # B tagging?
-BTaggingInfo = True
+BTaggingInfo = False
 # re-fit PV?
 PVRefit = True
 #==============================================================================
-importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataLFN.py")
-#importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py")
+#importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataLFN.py")
+importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py")
 importOptions("$STDOPTS/LHCbApplication.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
 mainLocation = "Phys/DC06selBs2JpsiPhi_unbiased"
