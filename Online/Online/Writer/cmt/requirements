@@ -27,5 +27,5 @@ macro_append lib_Writer_cppflags " -DBUILD_WRITER=1"\
  WIN32                           "" \
  slc3-ia32&gcc323                ""
 
-macro_append Writer_shlibflags " -lrt " WIN32 ""
-macro_append monitorreaderd_shlibflags " -lrt " WIN32 ""
+macro_append Writer_shlibflags      " -lrt " WIN32 ""
+macro_append monitorreaderdlinkopts " -lrt " WIN32 ""
