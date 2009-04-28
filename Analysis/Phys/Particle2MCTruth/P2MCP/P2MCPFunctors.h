@@ -1,4 +1,4 @@
-// $Id: P2MCPFunctors.h,v 1.1 2009-03-13 18:06:30 jpalac Exp $
+// $Id: P2MCPFunctors.h,v 1.2 2009-04-28 11:42:51 jpalac Exp $
 #ifndef P2MCP_P2MCPFUNCTORS_H 
 #define P2MCP_P2MCPFUNCTORS_H 1
 
@@ -46,34 +46,33 @@ namespace P2MCP{
     };
 
     template <class Selector, class Sorter>
-     struct SortIntoTrees
-     {
+    struct SortIntoTrees
+    {
 
-       template <class InputContainer>
-       P2MCP::Types::FlatTrees operator() (const InputContainer& mcps) const
-       {
-        
-         LHCb::MCParticle::ConstVector heads = LoKi::MCTrees::buildTrees(mcps);
+      template <class InputContainer>
+      P2MCP::Types::FlatTrees operator() (const InputContainer& mcps) const
+      {
+        LHCb::MCParticle::ConstVector heads = LoKi::MCTrees::buildTrees(mcps);
 
-         P2MCP::Types::FlatTrees output;
+        P2MCP::Types::FlatTrees output;
 
-         LHCb::MCParticle::ConstVector::iterator itHead = heads.begin();
+        LHCb::MCParticle::ConstVector::iterator itHead = heads.begin();
 
-         for ( ; itHead != heads.end() ; ++itHead) {
-           Selector selector(*itHead);
-           P2MCP::Types::FlatTree tree;
-           LoKi::select(mcps.begin(), 
-                        mcps.end(), 
-                        std::back_inserter(tree), 
-                        selector);
-           std::stable_sort( tree.begin() , 
-                             tree.end() , 
-                             Sorter() ) ;
-           output.push_back(tree);
-         }
-         return output;
-       }
-     };
+        for ( ; itHead != heads.end() ; ++itHead) {
+          Selector selector(*itHead);
+          P2MCP::Types::FlatTree tree;
+          LoKi::select(mcps.begin(), 
+                       mcps.end(), 
+                       std::back_inserter(tree), 
+                       selector);
+          std::stable_sort( tree.begin() , 
+                            tree.end() , 
+                            Sorter() ) ;
+          output.push_back(tree);
+        }
+        return output;
+      }
+    };
 
   }
   
