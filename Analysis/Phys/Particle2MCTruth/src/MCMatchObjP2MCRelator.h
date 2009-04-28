@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.8 2009-04-06 20:20:59 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.9 2009-04-28 11:43:48 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -68,7 +68,7 @@ private:
   LoKi::IReporter* m_reporter;
   mutable LoKi::MCMatchObj* m_matcher;
   typedef std::vector<std::string> Addresses ;
-  Addresses m_PP2MC;
+  Addresses m_tables;
 
 };
 
