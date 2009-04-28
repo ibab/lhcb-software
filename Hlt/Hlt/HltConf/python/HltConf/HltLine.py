@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.54 2009-04-16 21:26:15 graven Exp $ 
+# $Id: HltLine.py,v 1.55 2009-04-28 12:52:34 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.54 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.55 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -479,14 +479,13 @@ class bindMembers (object) :
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
         self._members  += alg.members()
-        # sometimes, we want to ignore this... 
-        # add a flag to allow to skip this (when set to None?)
+        # do NOT update the current outputselection if
+        # the new member doesn't have one...
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
-        # self._outputsel = alg.outputSelection()
 
     # if Hlt2Member, ask it to creats a configurable instance for this line..
     # then it's bussines as usual..
-    #@TODO: perform substitution 
+    #@TODO: handle expansion/substitution
     def _handle_Hlt2Member( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
@@ -1012,13 +1011,12 @@ class Hlt2Member ( object ) :
     @date   2008-08-06
     
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools', 'InputLocations' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
     
     ### The standard constructor to create the  Hlt1Member instance:
     def __init__ ( self       ,    ## ...
                    Type       ,    ## type of members
                    name  = '' ,    ## the specific part of the algorithm name 
-                   InputLocations = None,  ## inputLocations to be parsed & fwd-ed to PhysDesktop
                    tools = [] ,    ## list of tool options for this algorithm
                    **Args     ) :  ## arguments 
         """
@@ -1040,12 +1038,14 @@ class Hlt2Member ( object ) :
         self.Name  = deepcopy ( name  )
         self.Args  = deepcopy ( Args  )
         self.Tools = deepcopy ( tools )
-        if InputLocations :
-            _adaptor = lambda x : x.outputSelection() if type(x) is bindMembers else x
-            self.InputLocations = deepcopy( [ _adaptor(i) for i in  InputLocations ] )
-        else :
-            self.InputLocations = None
-        
+
+    def clone( self, name, **mods ) :
+        args = deepcopy( self.Args )
+        args.update( mods )
+        return Hlt2Member( self.Type
+                         , name = name
+                         , tools = self.Tools
+                         , **args )
 
     def subtype( self )        :
         " Return the 'subtype' of the member "
@@ -1059,13 +1059,6 @@ class Hlt2Member ( object ) :
     def subname( self )        :
         " Return the specific part of the name "        
         return self.id()
-    def _InputLocations( self, line ) :
-        _input = []
-        for i in  self.InputLocations :
-            if type(i) is bindMembers : i = i.outputSelection() 
-            if i[0] == '%' : i = 'Hlt2' + line + i[1:]
-            _input += [ i ]
-        return _input
     def createConfigurable( self, line, **args ) :
         """
         Create the configurable, and, if needed, deal with tool configuration
@@ -1073,20 +1066,23 @@ class Hlt2Member ( object ) :
         ## clone the arguments
         line = deepcopy ( line )
         args = deepcopy ( args ) 
+        if 'InputLocations' in args : 
+            inputLocations = []
+            # adapt input...  and put back...  
+            for loc in args.pop('InputLocations') :
+                if type(loc) is bindMembers : loc = loc.outputSelection() 
+                import re
+                loc = re.sub('^%', 'Hlt2' + line, loc )
+                inputLocations += [ loc ]
+            args['InputLocations'] = inputLocations
         _name = self.name( line )
         # see if alg has any special Tool requests...
         instance =  self.Type( _name, **args)
         for tool in self.Tools : tool.createConfigurable( instance )
-        #TODO: must check no PhysDesktop explicitly specified... if so, update it!...
-        if hasattr(instance,'PhysDesktop') and self.InputLocations: 
-            raise AttributeError, "'%s' already has a PhysDesktop, and a request to forward InputLocations" % ( _name ) 
-        if self.InputLocations:
-            from Configurables import PhysDesktop
-            Hlt1Tool( PhysDesktop, InputLocations = self._InputLocations(line) ).createConfigurable(instance) 
         return instance
 
 # ============================================================================
-## @class Hl2Line
+## @class Hlt2Line
 #  The major class which represent the Hlt2 Line, the sequence.
 #
 #  The structure of each line is fixed to be
@@ -1314,8 +1310,6 @@ class Hlt2Line(object):
         for alg in [ i for i in __algos if type(i) is Hlt2Member ] :
             id = alg.id()
             if id in _other :
-                 if 'InputLocations' in _other[id] :
-                    alg.InputLocations = _other[id].pop('InputLocations')
                  alg.Args.update( _other [id] ) 
                  del _other [id]
 
