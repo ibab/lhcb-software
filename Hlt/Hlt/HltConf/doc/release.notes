@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.216 2009-04-24 10:33:00 pkoppenb Exp $ 
+! $Id: release.notes,v 1.217 2009-04-28 12:52:34 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-28 - Gerhard Raven
+ - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
 
 ! 2009-04-24 - Patrick Koppenburg
  - Velo line : define tool implementation
