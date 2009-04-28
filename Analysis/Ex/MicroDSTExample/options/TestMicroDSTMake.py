@@ -1,30 +1,34 @@
-#$Id: TestMicroDSTMake.py,v 1.12 2009-04-14 13:22:15 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.13 2009-04-28 12:10:44 jpalac Exp $
 from Gaudi.Configuration import *
-from DaVinci.Configuration import DaVinci
+from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
 from Configurables import FilterMCParticleArrayByDecay
 from Configurables import MCDecayFinder
 from Configurables import MCParticleCloner
 from Configurables import MCVertexCloner
 from Configurables import VertexCloner
+from Configurables import ParticleCloner
 from Configurables import ProtoParticleCloner
 from Configurables import PrintHeader
 from Configurables import OutputStream
 from Configurables import BTagging, BTaggingTool
 from Configurables import PhysDesktop
 from Configurables import PVReFitterAlg
+from Configurables import CopyODIN
 from Configurables import CopyRecHeader
 from Configurables import CopyMCParticles
 from Configurables import CopyParticles
 from Configurables import CopyPrimaryVertices
 from Configurables import CopyParticle2PVLink
-from Configurables import CopyRelatedMCParticles
 from Configurables import CopyFlavourTag
+from Configurables import CopyParticle2PVRelations
+from Configurables import CopyParticle2MCRelations
+from Configurables import P2MCRelatorAlg
 #==============================================================================
 # Some steering options
 #
 # number of events to process
-nEvents = 5000
+nEvents = 1000
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
@@ -56,7 +60,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='testBs2JpsiPhi_"+DSTMC+"_"+ evtString +"_Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='testBs2JpsiPhi_"+DSTMC+"_"+ evtString +"_Kevt_TestMCRel.dst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
@@ -75,6 +79,9 @@ MicroDSTStream.AcceptAlgs.append( MySelection.name() )
 #==============================================================================
 # Copy RecHeader
 MySelection.Members += [CopyRecHeader()]
+#==============================================================================
+# Copy RecHeader
+MySelection.Members += [CopyODIN()]
 #==============================================================================
 # Copy MC decays matching signal decay descriptor
 if (keepTrueDecays) :
@@ -100,38 +107,49 @@ if (keepTrueDecays) :
 # Copy selected particles, daughters, and decay vertices
 copyParticles = CopyParticles('CopyParticles')
 copyParticles.InputLocation = mainLocation+"/Particles"
-copyParticles.addTool(VertexCloner(), name='VertexCloner')
-copyParticles.addTool(ProtoParticleCloner(), name='ProtoParticleCloner')
+#copyParticles.addTool(ParticleCloner, name='ClonerType')
+#copyParticles.ParticleCloner.addTool(VertexCloner, name='IClonerVertex')
+#copyParticles.ParticleCloner.addTool(ProtoParticleCloner, name='ICloneProtoParticle')
 copyParticles.OutputLevel=4
 MySelection.Members += [copyParticles]
 #==============================================================================
-# Copy primary vertex
+# Copy all primary vertices
 copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
 copyPV.OutputLevel = 4
 MySelection.Members += [copyPV]
 #==============================================================================
 # copy PV->Particle link
-copyP2PVLink = CopyParticle2PVLink()
-copyP2PVLink.InputLocation = mainLocation+"/Particle2VertexRelations"
-copyP2PVLink.OutputLevel=4;
-MySelection.Members += [copyP2PVLink]
+# This will only copy related PVs, and only if they haven't been copied before
+copyP2PVRel = CopyParticle2PVRelations()
+copyP2PVRel.InputLocation = mainLocation+"/Particle2VertexRelations"
+copyP2PVRel.OutputLevel=4
+MySelection.Members += [copyP2PVRel]
 #==============================================================================
 # copy related MC particles of candidates plus daughters
 if (storeMCInfo) :
-    copyMC = CopyRelatedMCParticles()
-    copyMC.InputLocation = mainLocation+'/Particles'
-    copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
-    copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex')
-    copyMC.OutputLevel=4;
-    MySelection.Members += [copyMC]
+    # first, get matches MCParticles for selected candidates.
+    # This will make a relations table in mainLocation+"/P2MCPRelations"
+    p2mcRelator = P2MCRelatorAlg()
+    p2mcRelator.ParticleLocation = mainLocation+'/Particles'
+    p2mcRelator.OutputLevel=4
+    MySelection.Members += [p2mcRelator]
+    # Now copy relations table + matched MCParticles to MicroDST
+    copyP2MCRel = CopyParticle2MCRelations()
+    copyP2MCRel.addTool(MCParticleCloner)
+    copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner,
+                                         name = 'ICloneMCVertex')
+    copyP2MCRel.MCParticleCloner.OutputLevel=1
+    copyP2MCRel.InputLocation = mainLocation+"/P2MCPRelations"
+    copyP2MCRel.OutputLevel=4
+    MySelection.Members += [copyP2MCRel]
 #==============================================================================
 # B tagging
 if (BTaggingInfo) :
     importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
     BTagAlgo = BTagging('BTagging')
-    BTagAlgo.addTool(PhysDesktop())
+    BTagAlgo.addTool(PhysDesktop)
     BTaggingTool("BTaggingTool").OutputLevel=4
-    BTagAlgo.PhysDesktop.InputLocations=[mainLocation]
+    BTagAlgo.InputLocations=[mainLocation]
     BTagLocation = mainLocation+"/Tagging"
     BTagAlgo.TagOutputLocation = BTagLocation
     MySelection.Members += [BTagAlgo]
@@ -162,5 +180,6 @@ if (PVRefit) :
 # make a DaVinci application configurable and add the crucial sequence to it.
 dv = DaVinci()
 dv.EvtMax = nEvents
+#dv.SkipEvents = 2*nEvents
 dv.UserAlgorithms = [MySelection]
 #==============================================================================
