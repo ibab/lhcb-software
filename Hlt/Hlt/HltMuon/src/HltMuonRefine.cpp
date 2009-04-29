@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.9 2008-07-30 13:40:37 graven Exp $
+// $Id: HltMuonRefine.cpp,v 1.10 2009-04-29 14:18:11 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode HltMuonRefine::initialize() {
 
   //  m_l0MuonProvider = tool<TrgL0MuonProvider>( "TrgL0MuonProvider" );
   //m_inputL0Muons   = m_l0MuonProvider->container( TrgL0MuonLocation::Default );  
-  m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
   if(m_L0X.size()!=4) {

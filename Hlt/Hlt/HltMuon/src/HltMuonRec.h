@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.6 2008-05-28 10:04:20 asatta Exp $
+// $Id: HltMuonRec.h,v 1.7 2009-04-29 14:18:11 asatta Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonRegion.h"
 #include "MuonDet/DeMuonDetector.h"
@@ -54,7 +54,7 @@ public:
   StatusCode initializeLogChanDecoding();
 private:
   DeMuonDetector* m_muonDetector;
-  IMuonPosTool      *m_iPosTool;
+  IMuonFastPosTool      *m_iPosTool;
   
   unsigned int m_nStation;
   unsigned int m_nRegion;

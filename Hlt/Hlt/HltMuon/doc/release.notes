@@ -3,7 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
-
+2009-04-29 - Alessia Satta
+  - move the implementation of MuonPosTool to Muon/MuonTools packahge an rename it 
+    in MuonFastPosTool 
 !========================== HltMuon v3r4p1 2009-01-15 ===================
 !========================== HltMuon v3r4 2008-08-06 ===================
 2008-07-30 - Gerhard Raven

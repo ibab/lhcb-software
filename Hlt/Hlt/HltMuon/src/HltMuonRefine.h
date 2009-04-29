@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.h,v 1.6 2008-07-30 13:40:37 graven Exp $
+// $Id: HltMuonRefine.h,v 1.7 2009-04-29 14:18:11 asatta Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
@@ -8,7 +8,7 @@
 
 // Include files
 #include "Event/L0MuonCandidate.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
 /** @class HltMuonRefine HltMuonRefine.h HltMuon/HltMuonRefine.h
  *  
@@ -44,7 +44,7 @@ private:
   LHCb::Tracks* m_TESInputTracks;
   std::string m_TESInputTracksName;
   
-  IMuonPosTool      *m_iPosTool;
+  IMuonFastPosTool      *m_iPosTool;
   LHCb::L0MuonCandidates* m_inputL0Muon;
   
   //  std::string m_inputLongTracksName;

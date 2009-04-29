@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.15 2008-05-28 10:04:20 asatta Exp $
+// $Id: HltMuonRec.cpp,v 1.16 2009-04-29 14:18:11 asatta Exp $
 // Include files 
 
 #include <algorithm>
@@ -81,7 +81,7 @@ StatusCode HltMuonRec::initialize() {
 
   //retrieve the pointer to the tool to convert tileID to x,y,z in a fast way (using a LUT)
 
-  m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
