@@ -21,7 +21,6 @@ branches src cmt doc
 use MuonDet     v*    Det
 use MCEvent	v*    Event
 use GaudiAlg    v*
-
 #============================================================================
 # Component library building rule
 #============================================================================

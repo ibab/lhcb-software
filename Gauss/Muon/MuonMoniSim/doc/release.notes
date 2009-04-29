@@ -3,8 +3,11 @@
 ! Responsible   : A Sarti
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
+!======================== MuonMoniSim v2r4 2009-04-29 ========================
+! 2009-04-27  - Stefania Vecchi
+ - added Algorithm MuonMultipleScatteringChecher: provide histograms to check 
+   the MS simulation in CALORIMETERS and MuonFilters
 
-!======================== MuonMoniSim v2r4 2009-04-06 ========================
 ! 2009-03-26 - Patrick Robbe
  - MuonHitChecker: add possibility to change location of MuonHits by option
    to generate spill over inside Gauss
