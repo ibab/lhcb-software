@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.3 2009-03-24 10:43:21 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.4 2009-04-29 13:27:53 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -22,12 +22,11 @@ trueSeq.IgnoreFilterPassed = True
 ##
 ## Truth filter No PID
 ##
-from Configurables import OldFilterDesktop, PhysDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
+from Configurables import OldFilterDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
 SelectTrueNoPIDsDecay = OldFilterDesktop("SelectTrueNoPIDsDecay")
 trueSeq.Members += [ SelectTrueNoPIDsDecay ]
 SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion"
-SelectTrueNoPIDsDecay.addTool(PhysDesktop)
-SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = [ "StdDC06NoPIDsMuons",
+SelectTrueNoPIDsDecay.InputLocations = [ "StdDC06NoPIDsMuons",
                                                      "StdDC06NoPIDsKaons",
                                                      "StdDC06NoPIDsPions"]
 SelectTrueNoPIDsDecay.addTool(ByPIDFilterCriterion("Filter"))
@@ -47,8 +46,7 @@ from Configurables import CombineParticles
 AllTrueNoPIDsDecay = CombineParticles("AllTrueNoPIDsDecay")
 trueSeq.Members += [ AllTrueNoPIDsDecay ]
 AllTrueNoPIDsDecay.MotherCut = "ALL"
-AllTrueNoPIDsDecay.addTool(PhysDesktop)
-AllTrueNoPIDsDecay.PhysDesktop.InputLocations = [ "SelectTrueNoPIDsDecay" ]
+AllTrueNoPIDsDecay.InputLocations = [ "SelectTrueNoPIDsDecay" ]
 AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> mu- mu+ K+ pi-]cc"  ## all particles need to be there
 ##----------------------------------------------------------------------------------------------------
 ##
@@ -56,16 +54,14 @@ AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> mu- mu+ K+ pi-]cc"  ## all particle
 ##
 SelectTrueLooseDecay = SelectTrueNoPIDsDecay.clone("SelectTrueLooseDecay")
 trueSeq.Members += [ SelectTrueLooseDecay ]
-SelectTrueLooseDecay.addTool(PhysDesktop)
-SelectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06LooseMuons",
+SelectTrueLooseDecay.InputLocations = [ "StdDC06LooseMuons",
                                                     "StdDC06LooseKaons",
                                                     "StdDC06LoosePions"]
 ##
 ## Dummy MakeResonances to check that all tracks are there
 ##
 AllTrueLooseDecay = AllTrueNoPIDsDecay.clone("AllTrueLooseDecay")
-AllTrueLooseDecay.addTool(PhysDesktop)
-AllTrueLooseDecay.PhysDesktop.InputLocations = [ "SelectTrueLooseDecay" ]
+AllTrueLooseDecay.InputLocations = [ "SelectTrueLooseDecay" ]
 trueSeq.Members += [ AllTrueLooseDecay  ]
 ##
 ## Correlations

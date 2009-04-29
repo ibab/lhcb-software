@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestDecayTreeTuple.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+Tuple                                                       SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
+Tuple                                                       SUCCESS List of booked N-Tuples in directory "FILE1/Tuple"
+Tuple                                                       SUCCESS  ID=DecayTree     Title="DecayTree"                               #items=240{Bminus_MINIP,Bminus_MINIPCHI2,Bminu
+s_IP,Bminus_IPCHI2,Bminus_ENDVERTEX_X,Bminus_E}
+Tuple                                                       SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |       100 |         26 |(  26.0000 +- 4.38634  )%|   -------   |   -------   |
+ | "Event"                                         |        26 |         26 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+EventTuple                                                  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
+EventTuple                                                  SUCCESS List of booked N-Tuples in directory "FILE1/EventTuple"
+EventTuple                                                  SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=147{L0Decision,Hlt1Global,Hlt1BeamGasCr
+ossingDecision,Hlt1BeamGasDecision,Hlt1BeamGas}
+MCTuple                                                     SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
+MCTuple                                                     SUCCESS List of booked N-Tuples in directory "FILE1/MCTuple"
+MCTuple                                                     SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=78 {Bminus_TRUEID,Bminus_TRUEP_E,Bminus
+_TRUEP_X,Bminus_TRUEP_Y,Bminus_TRUEP_Z,Bminus_}
+MCTuple                                                     SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |       100 |        100 |(  100.000 +- 1.00000  )%|   -------   |   -------   |
+ | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>

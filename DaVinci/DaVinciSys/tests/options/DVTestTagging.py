@@ -31,7 +31,7 @@ preselSeq = GaudiSequencer("SeqDC06SelBs2DsPi")
 #
 importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.py" )
 
-from Configurables import BTagging, PhysDesktop, BTaggingChecker
+from Configurables import BTagging, BTaggingChecker
 
 tag = BTagging("BTagging")
 tag.InputLocations = [ "Phys/DC06SelBs2DsPi" ]

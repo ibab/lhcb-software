@@ -4,7 +4,7 @@
  #  @warning Will not work without decay and input data
  #  @code
  #  #importOptions( $HLTSELCHECKERROOT/options/HltDecayTreeTuple.py)
- #  HltDecayTreeTuple.PhysDesktop.InputLocations = ["HltSelBd2MuMuKstar"]
+ #  HltDecayTreeTuple.InputLocations = ["HltSelBd2MuMuKstar"]
  #  HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
  #  // optional additional tools fro head or other branches
  #  HltDecayTreeTuple.Branches = {
@@ -38,7 +38,7 @@ PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
 #
 # The Decay Tuple
 #
-from Configurables import DecayTreeTuple, PhysDesktop 
+from Configurables import DecayTreeTuple
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
       "TupleToolTrigger"
@@ -52,8 +52,7 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.addTool( PhysDesktop())
-tuple.PhysDesktop.InputLocations = ["DC06SelBu2eeK"]
+tuple.InputLocations = ["DC06SelBu2eeK"]
 tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
@@ -62,10 +61,11 @@ tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 #
 from Configurables import EventTuple, TupleToolTrigger
 evtTuple = EventTuple()
-evtTuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
+evtTuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" ] #, "TupleToolGeneration" ]
 evtTuple.addTool(TupleToolTrigger())
 evtTuple.TupleToolTrigger.VerboseHlt1 = True 
-evtTuple.TupleToolTrigger.VerboseHlt2 = True 
+evtTuple.TupleToolTrigger.VerboseHlt2 = True
+# evtTuple.OutputLevel = 1 
 ########################################################################
 #
 # The MC truth Tuple

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.3 2009-04-24 12:54:26 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.4 2009-04-29 13:27:53 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -14,13 +14,12 @@
 from Gaudi.Configuration import *
 from Configurables import DaVinci, DaVinciWriteDst
 ##############################################################################
-from Configurables import GaudiSequencer, FilterDesktop, PhysDesktop, DeterministicPrescaler, PrintDecayTree
+from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
 #
 # Get a J/psi
 #
 jpsi = FilterDesktop('MyJpsi')
-jpsi.addTool(PhysDesktop)
-jpsi.PhysDesktop.InputLocations = [ 'StdLooseJpsi2MuMu' ]
+jpsi.InputLocations = [ 'StdLooseJpsi2MuMu' ]
 jpsi.Code = "ALL"
 #
 # @todo This does not work properly
@@ -42,8 +41,7 @@ for i in MassRanges :
     j = jpsi.clone("Jpsi_"+name)
     j.Code = "(MM>"+ln+") & (MM<"+hn+")"
     p = PrintDecayTree("Print_"+name)
-    p.addTool(PhysDesktop)
-    p.PhysDesktop.InputLocations = [ "Jpsi_"+name ]
+    p.InputLocations = [ "Jpsi_"+name ]
     seq.Members += [ d, j, p ]
     #
     # This the bit that declares the sequence to the Dst writer

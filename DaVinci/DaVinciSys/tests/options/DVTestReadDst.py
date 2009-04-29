@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestReadDst.py,v 1.2 2009-03-24 10:43:22 pkoppenb Exp $
+# $Id: DVTestReadDst.py,v 1.3 2009-04-29 13:27:53 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -14,10 +14,9 @@ from Configurables import DaVinci
 #
 # Print the J/psi
 #
-from Configurables import PrintDecayTree, PhysDesktop, PrintHeader
+from Configurables import PrintDecayTree, PrintHeader
 pJpsi = PrintDecayTree('PrintJpsi')
-pJpsi.addTool(PhysDesktop)
-pJpsi.PhysDesktop.InputLocations = [ "Jpsi_3050_3150", "Jpsi_2600_3200", "Jpsi_3000_3500"  ]
+pJpsi.InputLocations = [ "Jpsi_3050_3150", "Jpsi_2600_3200", "Jpsi_3000_3500"  ]
 # pJpsi.OutputLevel = 1
 #
 ph = PrintHeader()

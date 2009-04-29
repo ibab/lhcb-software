@@ -1,6 +1,6 @@
-## $Id: DVTestBs2PhiGamma.py,v 1.4 2009-04-24 12:54:26 pkoppenb Exp $
+## $Id: DVTestBs2PhiGamma.py,v 1.5 2009-04-29 13:27:53 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 """
 @file DVTestBs2PhiGamma.py
@@ -22,12 +22,11 @@ trueSeq.IgnoreFilterPassed = True
 ##
 ## Truth filter 
 ##
-from Configurables import OldFilterDesktop, PhysDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
+from Configurables import OldFilterDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
 SelectTrueLooseDecay = OldFilterDesktop("SelectTrueLooseDecay")
 trueSeq.Members += [ SelectTrueLooseDecay ]
 SelectTrueLooseDecay.FilterCriterion = "ByPIDFilterCriterion"
-SelectTrueLooseDecay.addTool(PhysDesktop)
-SelectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06LooseAllPhotons",
+SelectTrueLooseDecay.InputLocations = [ "StdDC06LooseAllPhotons",
                                                     "StdDC06LooseKaons" ]
 SelectTrueLooseDecay.addTool(ByPIDFilterCriterion("Filter"))
 SelectTrueLooseDecay.Filter.Selections =  [ "K+ : TrueMCFilterCriterion/DecayK",
@@ -49,8 +48,7 @@ from Configurables import CombineParticles
 AllTrueLooseDecay = CombineParticles("AllTrueLooseDecay")
 trueSeq.Members += [ AllTrueLooseDecay ]
 AllTrueLooseDecay.MotherCut = "ALL"
-AllTrueLooseDecay.addTool(PhysDesktop)
-AllTrueLooseDecay.PhysDesktop.InputLocations = [ "SelectTrueLooseDecay" ]
+AllTrueLooseDecay.InputLocations = [ "SelectTrueLooseDecay" ]
 AllTrueLooseDecay.DecayDescriptor = "[B_s0 -> K+ K- gamma]cc"  ## all particles need to be there
 ##
 ## Correlations
