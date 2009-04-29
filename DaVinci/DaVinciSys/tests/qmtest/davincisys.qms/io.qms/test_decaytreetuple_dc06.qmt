@@ -3,7 +3,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestDecayTreeTuple.py</text>
+  <text>../options/DVTestDecayTreeTuple-DC06.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

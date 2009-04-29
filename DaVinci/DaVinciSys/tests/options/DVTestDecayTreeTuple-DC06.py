@@ -23,6 +23,19 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import *
 ########################################################################
 #
+# If you want to import .opts options, do this first
+#
+importOptions("$STDOPTS/PreloadUnits.opts")
+#######################################################################
+#
+# Selection
+#
+importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts" )
+sel = GaudiSequencer("SeqPreselBu2LLK")
+from Configurables import PrintHeader
+PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
+########################################################################
+#
 # The Decay Tuple
 #
 from Configurables import DecayTreeTuple
@@ -39,8 +52,8 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["StdLooseJpsi2MuMu"]
-tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
+tuple.InputLocations = ["DC06SelBu2eeK"]
+tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -61,7 +74,7 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}"
+mcTuple.Decay = "[B+ -> ^e+ ^e- ^K+ {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc"
 mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 #mcTuple.OutputLevel = 1
 ########################################################################
@@ -71,11 +84,12 @@ mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolRec
 from Configurables import DaVinci
 DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "2009" # Default is "DC06"
+DaVinci().DataType = "DC06" # Default is "DC06"
 DaVinci().Simulation   = True
-DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
+DaVinci().TupleFile = "DecayTreeTuple_DC06.root"  # Ntuple
+DaVinci().UserAlgorithms = [ sel ]
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"
 DaVinci().Input = [
-    "DATAFILE='PFN:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/30000000-100ev-20090407-MC09.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+    "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

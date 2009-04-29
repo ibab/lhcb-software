@@ -29,41 +29,15 @@ from Configurables import DecayTreeTuple
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
       "TupleToolTrigger"
-    , "TupleToolMCTruth"
-    , "TupleToolMCBackgroundInfo"
     , "TupleToolGeometry"
     , "TupleToolKinematic"
-    , "TupleToolPropertime"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
-    , "TupleToolTrackInfo"
-#    , "TupleToolTISTOS"
+    , "TupleToolTISTOS"
      ]
 tuple.InputLocations = ["StdLooseJpsi2MuMu"]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #tuple.OutputLevel = 1 ;
-########################################################################
-#
-# The Event Tuple
-#
-from Configurables import EventTuple, TupleToolTrigger
-evtTuple = EventTuple()
-evtTuple.ToolList = [ "TupleToolTrigger",
-                      "TupleToolEventInfo",
-                      "TupleToolGeneration" ]
-evtTuple.addTool(TupleToolTrigger())
-evtTuple.TupleToolTrigger.VerboseHlt1 = True 
-evtTuple.TupleToolTrigger.VerboseHlt2 = True
-# evtTuple.OutputLevel = 1 
-########################################################################
-#
-# The MC truth Tuple
-#
-from Configurables import MCDecayTreeTuple
-mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}"
-mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
-#mcTuple.OutputLevel = 1
 ########################################################################
 #
 # DaVinci
@@ -73,8 +47,8 @@ DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "2009" # Default is "DC06"
 DaVinci().Simulation   = True
-DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
-DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
+DaVinci().TupleFile = "DecayTreeTuple_TisTos.root"  # Ntuple
+DaVinci().MoniSequence = [ tuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"
 DaVinci().Input = [
