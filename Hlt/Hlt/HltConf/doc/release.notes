@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.221 2009-04-29 13:26:25 graven Exp $ 
+! $Id: release.notes,v 1.222 2009-04-29 18:39:27 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -11,6 +11,9 @@
  - remove typename from generated instance name in Hlt2Members
  - add Hlt1VeloXXX in front of code in velolines...
  - remove V0 making from Hlt2Particles.opts -- now in Hlt2SharedParticles' V0.py
+ - add possibility to explicitly overrule outputSelection of a bindMembers 
+   instance
+ - make it possible for bindMembers to have an outputSelection which is a list
 
 ! 2009-04-24 - Patrick Koppenburg
  - Velo line : define tool implementation

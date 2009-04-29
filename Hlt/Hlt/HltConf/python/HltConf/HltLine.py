@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.56 2009-04-28 19:54:24 graven Exp $ 
+# $Id: HltLine.py,v 1.57 2009-04-29 18:39:27 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.56 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.57 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -459,8 +459,11 @@ class bindMembers (object) :
         return members
 
     def ignoreOutputSelection( self ) :
+        return self.setOutputSelection(None)
+
+    def setOutputSelection( self, outputSelection ) :
         x = deepcopy(self)
-        x._outputsel = None
+        x._outputsel = outputSelection
         return x
 
     def _default_handler_( self, line, alg ) :
@@ -1067,19 +1070,28 @@ class Hlt2Member ( object ) :
         line = deepcopy ( line )
         args = deepcopy ( args ) 
         if 'InputLocations' in args : 
-            inputLocations = []
             # adapt input...  and put back...  
-            for loc in args.pop('InputLocations') :
-                if type(loc) is bindMembers : loc = loc.outputSelection() 
-                from Configurables import FilterDesktop, CombineParticles
-                if type(loc) is CombineParticles or type(loc) is FilterDesktop : loc = loc.getName() 
-                from re import sub
-                loc = sub('^%', 'Hlt2' + line, loc )
-                inputLocations += [ loc ]
+            inputLocations = args.pop('InputLocations')
+            # adapt bindMembers...
+            inputLocations = [ i.outputSelection() if type(i) is bindMembers else i 
+                               for i in inputLocations ]
+            # deal with nested lists (one level only), keep order invariant
+            _x = []
+            for i in inputLocations :
+                _x += i if type(i) is list else [ i ]
+            inputLocations = _x
+            # deal with concrete instances
+            from Configurables import FilterDesktop, CombineParticles
+            inputLocations = [ i.getName() if type(i) in [ CombineParticles, FilterDesktop ] else i
+                               for i in inputLocations ]
+            # and perform pattern substitution
+            from re import sub
+            inputLocations = [ sub('^%', 'Hlt2' + line, i ) 
+                               for i in inputLocations ]
             args['InputLocations'] = inputLocations
         _name = self.name( line )
-        # see if alg has any special Tool requests...
         instance =  self.Type( _name, **args)
+        # see if alg has any special Tool requests...
         for tool in self.Tools : tool.createConfigurable( instance )
         return instance
 
