@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-04-29 - Rob Lambert
+ - Added TupleToolMCInteractions
+		Allows simple scaling of one set of interactions to another.
+
 ! 2009-04-15 - V. Gligorov
  - TupleToolMCTruth.{h,cpp} minor fix to remove compilation warning.
 
