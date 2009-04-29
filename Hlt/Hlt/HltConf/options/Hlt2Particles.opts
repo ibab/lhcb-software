@@ -131,35 +131,3 @@ Hlt2ChargedProtoPAlg.UseCaloBremPID = true ;
 Hlt2ChargedProtoPAlg.UseRichPID = true ;    // Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
 Hlt2ChargedProtoPAlg.UseMuonPID = true ;
 Hlt2ChargedProtoPAlg.UseVeloPID = false ;
-
-//---------------------------------------------------------------------
-// Special case for Vzero particles  @todo TO BE REVISED
-//---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
-SeqHlt2VzeroLL.MeasureTime = true ;
-SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
-// Kzero from two long tracks
-SeqHlt2VzeroLL.Members += {
- "CreateHltVzero/Hlt2V0LL",
- "GaudiSequencer/SeqMakeHlt2KsLL",
- "GaudiSequencer/SeqMakeHlt2LambdaLL"
-};
-#include "$HLTKSHORTROOT/options/HltV0LL.opts"
-Hlt2V0LL.InputTrackContainer = "Hlt/Track/Forward";
-SeqMakeHlt2KsLL.Members += { "HltV0ParticleMakerAlg/Hlt2KsLLParticles" };
-SeqMakeHlt2KsLL.IgnoreFilterPassed = true ;
-Hlt2KsLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
-Hlt2KsLLParticles.MakeKs = true ;
-Hlt2KsLLParticles.MakeLambda = false ;
-Hlt2KsLLParticles.PhysDesktop.InputLocations = { "Hlt2Pions" };
-
-SeqMakeHlt2LambdaLL.Members += { "HltV0ParticleMakerAlg/Hlt2LambdaLLParticles" };
-SeqMakeHlt2LambdaLL.IgnoreFilterPassed = true ;
-Hlt2LambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
-Hlt2LambdaLLParticles.MakeKs = false ;
-Hlt2LambdaLLParticles.MakeLambda = true ;
-Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Hlt2Pions",
-                                                    "Hlt2Protons"};
-
-Hlt2KsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
-Hlt2LambdaLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixe

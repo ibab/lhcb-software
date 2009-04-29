@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.220 2009-04-28 19:55:01 graven Exp $ 
+! $Id: release.notes,v 1.221 2009-04-29 13:26:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
  - add support for cloning Hlt2Members
  - remove typename from generated instance name in Hlt2Members
  - add Hlt1VeloXXX in front of code in velolines...
+ - remove V0 making from Hlt2Particles.opts -- now in Hlt2SharedParticles' V0.py
 
 ! 2009-04-24 - Patrick Koppenburg
  - Velo line : define tool implementation
