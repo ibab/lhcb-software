@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.9 2009-02-13 14:13:34 cattanem Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.10 2009-04-29 20:57:18 smenzeme Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -535,6 +535,60 @@ bool TrackMatchVeloSeed::goodSeed(const LHCb::Track* aTrack) const{
 
   // remove tracks with bad chi
   if (aTrack->chi2PerDoF() > m_chi2SeedCut ) return false;
+  
+  // check if after outlier removal there are at least two x and two 
+  // stereo hits int two diff. layer
+  if (m_omitSeedFitOutliers){
+    
+    bool first_x = true;
+    bool first_stereo = true;
+    bool second_x = false;
+    bool second_stereo = false;
+    int layer_x = -999;
+    int layer_stereo = -999;
+    int station_x = -999;
+    int station_stereo = -999;
+    
+    for( LHCb::Track::NodeContainer::const_iterator
+	   inode = aTrack->nodes().begin() ;
+	 inode != aTrack->nodes().end(); ++inode)
+      if( (*inode)->hasMeasurement() && (*inode)->type() != LHCb::Node::Outlier ){
+	
+	LHCb::LHCbID ihit = (*inode)->measurement().lhcbID() ;
+	
+	int layer = -1;
+	int station = -1;
+	
+	if ( ihit.detectorType()==LHCb::LHCbID::IT ) {
+	  layer = ihit.stID().layer();
+	  station = ihit.stID().station();
+	} else if (ihit.detectorType()==LHCb::LHCbID::OT){
+	  layer = ihit.otID().layer()+1;
+	  station = ihit.otID().station(); 
+	} else
+	  return false;
+
+	if (layer == 1 || layer == 4) {
+	  if (first_x){
+	    layer_x = layer;
+	    station_x = station;
+	    first_x = false;
+	  } else 
+	    if (layer_x != layer || station_x != station)
+	      second_x = true;
+	} else {
+	  if (first_stereo){
+	    layer_stereo = layer;
+	    station_stereo = station;
+	    first_stereo = false;
+	  } else 
+	    if (layer_stereo != layer || station_stereo != station)
+	      second_stereo = true;
+	}
+      }
+    if (!second_x || !second_stereo)
+      return false;
+  }
 
   // remove seeds with bad likelihood
   if (aTrack->info(Track::TsaLikelihood, -9999.) < m_likCut ) return false;

@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+ - Check for at least 2 x and 2 stereo hits in diff. planes NOT removed
+   by the fit for all seed tracks entering the matching
 
 !======================= TrackMatching v2r21p1 2009-02-20 ====================
 ! 2009-02-13 - Marco Cattaneo
