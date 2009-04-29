@@ -2,7 +2,7 @@
 #cases: 1. 2 arguments: adder adds processes in a subfarm. options created by this script. $1: parent, $2 UTGID 
 #       2. 2 arguments: calibration farm. Options to be edited by hand in options/AdderCalibrationfarm.opts
 #       3. 3 arguments: adder adds adders in a partition. $1: parent, $2: UTGID. $3:. partition name
-#       
+#       4. 4 argumnets: online version
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
@@ -22,11 +22,15 @@ if test -n "$3" ; then
 fi
 
 if test -n "$4" ; then 
-   export TOP=$4
+   export ONLINEVERSION=$4
+fi
+
+if test -n "$5" ; then 
+   export TOP=$5
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
+cd ${ONLINEVERSION}
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts

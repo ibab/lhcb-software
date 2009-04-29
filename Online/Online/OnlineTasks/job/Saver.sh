@@ -12,11 +12,15 @@ if test -n "$3" ; then
    export PARTNAME=$3
 fi
 if test -n "$4" ; then 
-   export TOP=$4
+   export ONLINEVERSION=$4
+fi
+
+if test -n "$5" ; then 
+   export TOP=$5
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
+cd ${ONLINEVERSION}
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
