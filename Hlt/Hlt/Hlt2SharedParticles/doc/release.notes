@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.16 2009-04-29 11:33:35 graven Exp $
+$Id: release.notes,v 1.17 2009-04-29 12:49:17 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -7,6 +7,8 @@ $Id: release.notes,v 1.16 2009-04-29 11:33:35 graven Exp $
 
 ! 2009-04-29 - Gerhard Raven
  - oops: fix double Hlt2 prefixes
+ - add V0.py, as replacement for the V0 bit of Hlt2Particles.opts
+ - use V0.py in D0.py, instead of Hlt2Particles.opts
 
 ! 2009-04-29 - Patrick Koppenburg
  - Bug fix in Pi0
