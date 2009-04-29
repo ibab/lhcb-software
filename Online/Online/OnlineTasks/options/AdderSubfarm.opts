@@ -9,12 +9,13 @@ ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
-
-AdderSvc.OutputLevel = 3;
-MessageSvc.OutputLevel = 3;
-
-AdderSvc.taskname={"GauchoJob"}; // Could be empty.
-AdderSvc.refreshTime=10;
-//AdderSvc.dimclientdns={"HLTC06"};
+HistogramPersistencySvc.Warnings     = 0;
+AdderSvc.OutputLevel                 = 3;
+MessageSvc.OutputLevel               = 4;
+MessageSvc.LoggerOnly                = 1;
+MessageSvc.fifoPath                  = "/tmp/logGaudi.fifo"                  
+AdderSvc.taskname                    = {"GauchoJob"}; // Could be empty.
+AdderSvc.refreshTime                 = 10;
+AdderSvc.dimclientdns                = "$DIM_DNS_CLIENT_NODE";
 
 

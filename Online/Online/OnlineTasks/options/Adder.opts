@@ -15,7 +15,7 @@ MessageSvc.OutputLevel = 3;
 
 AdderSvc.taskname={"GauchoJob"}; // Could be empty.
 AdderSvc.refreshTime=10;
-AdderSvc.dimclientdns={"HLT01"};
+AdderSvc.dimclientdns="HLT01";
 AdderSvc.subfarmname=@OnlineEnv.SubFarms;
 AdderSvc.partitionname=@OnlineEnv.PartitionName;
 
