@@ -447,6 +447,8 @@ LTCHI2     = LoKi.Particles.LifeTimeChi2
 LTSIGNCHI2 = LoKi.Particles.LifeTimeSignedChi2
 ## @see LoKi::Cuts::LIFETIMEFITCHI2
 LTFITCHI2  = LoKi.Particles.LifeTimeFitChi2
+## @see LoKi::Cuts::LTIMEERR
+LTIMEERR      = LoKi.Particles.LifeTimeError
 
 
 
@@ -583,6 +585,7 @@ BPVLT                 = LoKi.Particles.LifeTimeDV
 BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
+BPVLTERR              = LoKi.Particles.LifeTimeErrorDV           
 
 # vertex separation (for particles) with respect to *all* vertices
 

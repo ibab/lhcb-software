@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.92 2009-04-28 16:05:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.93 2009-04-29 15:00:26 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-29 - Vanya BELYAEV
+ - New symbols:
+
+    LTIMEERR 
+    BPTLTERR 
+
 
 ! 2009-04-28 - Vanya BELYAEV
 

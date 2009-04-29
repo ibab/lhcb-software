@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.10 2009-03-11 17:24:12 ibelyaev Exp $
+// $Id: Particles20.h,v 1.11 2009-04-29 15:00:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -844,6 +844,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
+    public:
+      // ======================================================================
+      const std::string& fitter () const { return m_fit ; }
+      // ======================================================================
     private:
       /// the tool type/name 
       std::string               m_fit ;  // the tool type/name 
@@ -868,9 +872,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeChi2DV 
-      : public LoKi::Particles::LifeTimeChi2
-      , public virtual LoKi::AuxDesktopBase
+    class LifeTimeChi2DV : public LoKi::Particles::LifeTimeDV 
     {
     public:
       // ======================================================================
@@ -886,10 +888,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      /// the tool type/name 
-      std::string                   m_fit ;  // the tool type/name 
       // ======================================================================
     } ;
     // ========================================================================
@@ -911,9 +909,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeSignedChi2DV 
-      : public LoKi::Particles::LifeTimeSignedChi2 
-      , public virtual LoKi::AuxDesktopBase
+    class LifeTimeSignedChi2DV : public LoKi::Particles::LifeTimeChi2DV 
     {
     public:
       // ======================================================================
@@ -929,10 +925,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      /// the tool type/name 
-      std::string                         m_fit ; // the tool type/name 
       // ======================================================================
     } ;
     // ========================================================================
@@ -954,9 +946,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeFitChi2DV 
-      : public LoKi::Particles::LifeTimeFitChi2 
-      , public virtual LoKi::AuxDesktopBase
+    class LifeTimeFitChi2DV : public LoKi::Particles::LifeTimeDV 
     {
     public:
       // ======================================================================
@@ -973,10 +963,41 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
-    private:
+    } ;
+    // ========================================================================
+    /** @class LifeTimeErrorDV
+     *  The special version of LoKi::Particles::LifeTimeFitChi2 functor
+     *  which gets "the best primary vertex" from IPhysDesktop
+     *  and ILifetimeFitter from DVAlgorithm 
+     *
+     *  @see LoKi::Cuts::BPVLTERR
+     *  @see IPhysDesktop 
+     *  @see LoKi::getPhysDesktop
+     *
+     *  @attention There are no direct needs to use this "Context" 
+     *             functor inside the native LoKi-based C++ code, 
+     *             there are more efficient, transparent, 
+     *             clear and safe analogues...
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    class LifeTimeErrorDV : public LoKi::Particles::LifeTimeDV 
+    {
+    public:
       // ======================================================================
-      /// the tool type/name 
-      std::string                      m_fit ; // the tool type/name 
+      /// the "default" constructor
+      LifeTimeErrorDV () ;
+      /// the constructor form tool type/name 
+      LifeTimeErrorDV ( const std::string& fit ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~LifeTimeErrorDV() {} 
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  LifeTimeErrorDV* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     } ;
     // ========================================================================

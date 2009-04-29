@@ -1,4 +1,4 @@
-// $Id: Particles19.h,v 1.3 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles19.h,v 1.4 2009-04-29 15:00:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES19_H 
 #define LOKI_PARTICLES19_H 1
@@ -97,7 +97,15 @@ namespace LoKi
     public:
       // ======================================================================
       /// evaluate the lifetime 
-      result_type lifeTime ( argument p ) const ;
+      result_type lifeTime           ( argument p ) const ;
+      // evaluate the lifetime chi2 
+      result_type lifeTimeChi2       ( argument p ) const ;
+      // evaluate the lifetime signed chi2 
+      result_type lifeTimeSignedChi2 ( argument p ) const ;
+      // evaluate the lifetime fit chi2 
+      result_type lifeTimeFitChi2    ( argument p ) const ;
+      // evaluate the lifetime error 
+      result_type lifeTimeError      ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -154,11 +162,6 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "LTCHI2" ; }
       // ======================================================================
-   public:
-      // ======================================================================
-      // evaluate the lifetime 
-      result_type lifeTimeChi2 ( argument p ) const ;
-      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
@@ -213,11 +216,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const
       { return s << "LTSIGNCHI2" ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      // evaluate the lifetime 
-      result_type lifeTimeSignedChi2 ( argument p ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -275,15 +273,63 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "LTFITCHI2" ; }
       // ======================================================================
-    public:
-      // ======================================================================
-      // evaluate the lifetime 
-      result_type lifeTimeFitChi2 ( argument p ) const ;
-      // ======================================================================
     private:
       // ======================================================================
       // the default constructor is disabled 
       LifeTimeFitChi2 () ; ///< the default constructor is disabled
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class LifeTimeErorr
+     *  The simple function which evaluates the lifetime uncertanty
+     *  using ILifetimeFitter tool
+     *
+     *  @see LoKi::Cuts::LTIMEERR
+     *  @see ILifetimeFitter
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2008-01-17
+     */
+    class LifeTimeError : public LoKi::Particles::LifeTime 
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      LifeTimeError
+      ( const LHCb::VertexBase* vertex , 
+        const ILifetimeFitter*  tool   ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
+      /// constructor 
+      LifeTimeError
+      ( const ILifetimeFitter*  tool   , 
+        const LHCb::VertexBase* vertex ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
+      /// constructor 
+      LifeTimeError
+      ( const LHCb::VertexBase*                  vertex , 
+        const LoKi::Interface<ILifetimeFitter>&  tool   ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
+      /// constructor 
+      LifeTimeError
+      ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
+        const LHCb::VertexBase*                  vertex ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
+      /// MANDATORY: virtual destructor 
+      virtual ~LifeTimeError () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  LifeTimeError* clone() const 
+      { return  new LoKi::Particles::LifeTimeError ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const 
+      { return lifeTimeError ( p ) ; }
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "LTIMEERR" ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      // the default constructor is disabled 
+      LifeTimeError () ; ///< the default constructor is disabled
       // ======================================================================
     };
    // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.8 2009-03-10 22:49:57 spradlin Exp $
+// $Id: Particles20.cpp,v 1.9 2009-04-29 15:00:26 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -940,23 +940,19 @@ LoKi::Particles::LifeTimeDV::operator()
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeDV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTIME('" << m_fit << "')" ; }
+( std::ostream& s ) const { return s << "BPVLTIME('" << fitter() << "')" ; }
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTimeChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( s_LIFETIME         ) 
+  : LoKi::Particles::LifeTimeDV () 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV
 ( const std::string& fit ) 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTimeChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( fit  ) 
+  : LoKi::Particles::LifeTimeDV ( fit ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -977,7 +973,7 @@ LoKi::Particles::LifeTimeChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
@@ -993,23 +989,21 @@ LoKi::Particles::LifeTimeChi2DV::operator()
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTCHI2('" << m_fit << "')" ; }
+( std::ostream& s ) const { return s << "BPVLTCHI2('" << fitter() << "')" ; }
+// ============================================================================
+
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV() 
-  : LoKi::AuxDesktopBase () 
-  , LoKi::Particles::LifeTimeSignedChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( s_LIFETIME          ) 
+  : LoKi::Particles::LifeTimeChi2DV () 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 ( const std::string& fit ) 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTimeSignedChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( fit  ) 
+  : LoKi::Particles::LifeTimeChi2DV ( fit ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1030,7 +1024,7 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
@@ -1046,25 +1040,21 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeSignedChi2DV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTSIGNCHI2('" << m_fit << "')" ; }
+( std::ostream& s ) const { return s << "BPVLTSIGNCHI2('" << fitter() << "')" ; }
 // ============================================================================
 
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV() 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTimeFitChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( s_LIFETIME ) 
+  : LoKi::Particles::LifeTimeDV() 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV
 ( const std::string& fit ) 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::Particles::LifeTimeFitChi2 ( s_LTIME , s_VERTEX ) 
-  , m_fit ( fit  ) 
+  : LoKi::Particles::LifeTimeDV( fit ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -1085,7 +1075,7 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
@@ -1101,8 +1091,62 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::LifeTimeFitChi2DV::fillStream 
-( std::ostream& s ) const { return s << "BPVLTFITCHI2('" << m_fit << "')" ; }
+( std::ostream& s ) const { return s << "BPVLTFITCHI2('" << fitter ()  << "')" ; }
 // ============================================================================
+
+
+
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Particles::LifeTimeErrorDV::LifeTimeErrorDV() 
+  : LoKi::Particles::LifeTimeDV() 
+{}
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Particles::LifeTimeErrorDV::LifeTimeErrorDV
+( const std::string& fit ) 
+  : LoKi::Particles::LifeTimeDV( fit ) 
+{}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::LifeTimeErrorDV*
+LoKi::Particles::LifeTimeErrorDV::clone() const 
+{ return  new LoKi::Particles::LifeTimeErrorDV ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::LifeTimeErrorDV::result_type
+LoKi::Particles::LifeTimeErrorDV::operator() 
+  ( LoKi::Particles::LifeTimeErrorDV::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* points to NULL, return InvalidTime") ;
+    return LoKi::Constants::InvalidTime ;
+  }    
+  // check the tool 
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
+  // check the fitter 
+  Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
+  // load the desktop if needed 
+  if ( !validDesktop() ) { loadDesktop() ; }
+  // check it!
+  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+  // get the vertex from desktop 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  // use the functor 
+  return lifeTimeError ( p ) ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Particles::LifeTimeErrorDV::fillStream 
+( std::ostream& s ) const { return s << "BPVLTERR('" << fitter ()  << "')" ; }
+// ============================================================================
+
 
 
 // ============================================================================
