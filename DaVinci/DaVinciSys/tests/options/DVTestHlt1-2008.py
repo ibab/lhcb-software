@@ -1,8 +1,8 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-2008.py,v 1.2 2009-04-29 09:49:41 pkoppenb Exp $
+# $Id: DVTestHlt1-2008.py,v 1.1 2009-04-29 09:49:41 pkoppenb Exp $
 #
-# Test for Hlt1&2. This should be identical to Hlt12 except for the HltType.
+# Options for Hlt1 tests. Identical to Hlt1&2, except for type.
 #
 # @author Patrick Koppenburg
 # @date 2008-08-06
@@ -25,8 +25,7 @@ DaVinci().Simulation   = True
 #
 # HLT
 #
-DaVinci().Hlt2Requires = 'L0'
-DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().HltType = 'Hlt1'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 EventSelector().Input   = [
     "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
