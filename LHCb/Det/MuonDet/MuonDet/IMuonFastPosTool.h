@@ -1,6 +1,6 @@
-// $Id: IMuonPosTool.h,v 1.1 2006-09-27 12:42:30 cattanem Exp $
-#ifndef MUONDET_IMUONPOSTOOL_H 
-#define MUONDET_IMUONPOSTOOL_H 1
+// $Id: IMuonFastPosTool.h,v 1.1 2009-04-29 14:11:20 asatta Exp $
+#ifndef MUONDET_IMUONFASTPOSTOOL_H 
+#define MUONDET_IMUONFASTPOSTOOL_H 1
 
 // Include files
 #include "Kernel/MuonTileID.h"
@@ -15,16 +15,17 @@
  *  @author David Hutchcroft
  *  @date   11/03/2002
  */
-static const InterfaceID IID_IMuonPosTool( "IMuonPosTool" , 4 , 0 );
+static const InterfaceID IID_IMuonFastPosTool( "IMuonFastPosTool" , 4 , 0 
+);
 
-class IMuonPosTool : public virtual IAlgTool {
+class IMuonFastPosTool : public virtual IAlgTool {
 public:
 
   /** static interface identification
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() { 
-    return  IID_IMuonPosTool; 
+    return  IID_IMuonFastPosTool; 
   }
   
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
@@ -40,4 +41,4 @@ protected:
 private:
 
 };
-#endif // MUONDET_IMUONPOSTOOL_H
+#endif // MUONDET_IMUONFASTPOSTOOL_H
