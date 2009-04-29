@@ -1,5 +1,5 @@
 package MuonTrackMonitor
-version v0r0
+version v1r0
 
 branches src cmt doc options
 include_path none
@@ -10,6 +10,7 @@ use TrackEvent         v* Event
 use MCEvent            v* Event
 use LinkerEvent        v* Event
 use MuonDet            v* Det
+use AIDA               v* LCG_Interfaces
 
 # build a component library
 library MuonTrackMonitor ../src/*.cpp

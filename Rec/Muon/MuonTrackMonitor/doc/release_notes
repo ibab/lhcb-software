@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-04-28 Antonio Petrella and Stefania Vecchi
+ - first release of MuonAlignmentMonitor
+
 ! 2009-02-25 - Giacomo GRAZIANI
  - package skeleton for starting development
 
