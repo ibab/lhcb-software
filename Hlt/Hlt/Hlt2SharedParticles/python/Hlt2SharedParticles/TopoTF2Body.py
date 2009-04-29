@@ -15,9 +15,10 @@ __all__ = ( 'TopoTF2Body' )
 
 Hlt2SharedTopoTF2Body = CombineParticles("Hlt2SharedTopoTF2Body")
 Hlt2SharedTopoTF2Body.InputLocations = [ TopoTFInputParticles.outputSelection() ]
-Hlt2SharedTopoTF2Body.DecayDescriptors = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-"] 
+Hlt2SharedTopoTF2Body.DecayDescriptors = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-","K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
 
-Hlt2SharedTopoTF2Body.DaughtersCuts = {"pi+" : "(ALL)"} 
+Hlt2SharedTopoTF2Body.DaughtersCuts = {"pi+" : "(ALL)", "K+" : "(ALL)"}
+
 Hlt2SharedTopoTF2Body.CombinationCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
 Hlt2SharedTopoTF2Body.MotherCut = "(MAXTREE('pi+'==ABSID,PT)>1.5*GeV) & (BPVVDCHI2>100)"
 
