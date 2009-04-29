@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-2008.py,v 1.5 2009-04-24 16:57:54 pkoppenb Exp $
+# $Id: DVTestHlt12-2008.py,v 1.1 2009-04-29 09:25:03 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -17,7 +17,7 @@ from Configurables import GaudiSequencer
 from Configurables import DaVinci
 DaVinci().EvtMax = -1                          # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().PrintFreq  = 10                      # Print frequency
+DaVinci().PrintFreq  = 100                     # Print frequency
 DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True
 ########################################################################
