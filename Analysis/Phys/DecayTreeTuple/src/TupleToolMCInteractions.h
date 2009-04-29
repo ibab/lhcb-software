@@ -1,4 +1,4 @@
-// $Id: TupleToolMCInteractions.h,v 1.1 2009-04-29 17:09:48 rlambert Exp $
+// $Id: TupleToolMCInteractions.h,v 1.2 2009-04-29 17:32:18 rlambert Exp $
 #ifndef TUPLETOOLGENERATION_H
 #define TUPLETOOLGENERATION_H 1
 
@@ -30,7 +30,7 @@ class ITupleTool;
  * Options:
  *  Mean        double  overwrite the mean value of interactions for this event
  *  AdjustMean  double  calculate a scaling factor to approximate this number of interactions per event
- *  NormaliseAt int     perform a different weight normalisation, weight such that the value at 
+ *  NormaliseAt int     perform a different weight normalisation, such that the weight at NormaliseAt is 1
  *  Prefix        string  prefix to give to the variables, in case you want to use two copies of this tool
  *
  * \sa DecayTreeTuple

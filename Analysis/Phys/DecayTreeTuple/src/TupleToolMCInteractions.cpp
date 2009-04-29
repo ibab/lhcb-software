@@ -1,4 +1,4 @@
-// $Id: TupleToolMCInteractions.cpp,v 1.1 2009-04-29 17:09:48 rlambert Exp $
+// $Id: TupleToolMCInteractions.cpp,v 1.2 2009-04-29 17:32:17 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -49,7 +49,7 @@ TupleToolMCInteractions::TupleToolMCInteractions( const std::string& type,
   declareProperty( "AdjustMean", m_adjustmean=0. );
   
   // calculate a scaling factor to approximate this number of interactions per event
-  declareProperty( "NormaliseAt", m_normalise=0. );
+  declareProperty( "NormaliseAt", m_normaliseAt=0 );
   
   // calculate a scaling factor to approximate this number of interactions per event
   declareProperty( "Prefix", m_prefix="EVT_Int" );
@@ -100,8 +100,8 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
   verbose() << "Filling tuples" << endmsg;
   bool test = true;
   test &= tuple->column( m_prefix + "_I" , n );
-  test &= tuple->column( "_Mean" , mean );
-  test &= tuple->column( "_Prob" , poisson(mean,n) );
+  test &= tuple->column( m_prefix + "_Mean" , mean );
+  test &= tuple->column( m_prefix + "_Prob" , poisson(mean,n) );
   
   if(m_adjustmean!=0.)
     {
@@ -110,7 +110,7 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
       if(m_normaliseAt) normalise=weight(mean,m_adjustmean,m_normaliseAt);
       test &= tuple->column( m_prefix + "_AdjustMean" , m_adjustmean );
       test &= tuple->column( m_prefix + "_AdjustProb" , poisson(m_adjustmean,n) );
-      test &= tuple->column( m_prefix + "_AdjustWeight" , weight(mean,m_adjustmean,n) );
+      test &= tuple->column( m_prefix + "_AdjustWeight" , weight(mean,m_adjustmean,n)/normalise );
     }
 
   return StatusCode(test);
