@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.50 2009-03-09 07:50:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.51 2009-04-29 14:31:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -47,11 +47,11 @@ class Moore(LHCbConfigurableUser):
         , "useTCK"     :       False # use TCK instead of options...
         , "replaceL0BanksWithEmulated" : False
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
-        , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
+        , "prefetchConfigDir" :''  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
-        , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]    # which services to configure (automatically including their dependencies!)...
+        , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc','HistogramDataSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$TCKDATAROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
@@ -150,9 +150,9 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().AuditAlgorithms = 1
         AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
         for i in self.getProp('enableAuditor') : self.addAuditor( i )
-        # TODO: check for mutually exclusive options...
         if self.getProp('useTCK') :
             if (self.getProp('L0TCK')) : raise RunTimeError( 'useTCK and L0TCK are mutually exclusive')
+            # TODO: update to latest HltConfigSvc setup!!!
             tcks = [ _tck(i) for i in self.getProp('prefetchTCK') ]
             cfg = HltConfigSvc( prefetchTCK = tcks
                               , initialTCK = tcks[0]
