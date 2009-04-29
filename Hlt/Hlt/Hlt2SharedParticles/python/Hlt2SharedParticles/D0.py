@@ -26,7 +26,7 @@ Hlt2SharedD02KPi = Hlt2Member( CombineParticles
                              , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
                              , InputLocations = [ GoodKaons, GoodPions ]
                              )
-D02KPi = bindMembers( 'Hlt2Shared', [ GoodKaons, GoodPions, Hlt2SharedD02KPi ] )
+D02KPi = bindMembers( 'Shared', [ GoodKaons, GoodPions, Hlt2SharedD02KPi ] )
 ##########################################################################################
 # D0 -> Pi Pi is a clone of K Pi
 #
@@ -34,7 +34,7 @@ Hlt2SharedD02PiPi = Hlt2SharedD02KPi.clone("D02PiPi"
                                           , DecayDescriptor = "[D0 -> pi- pi+]cc"
                                           , InputLocations = [ GoodPions ]
                                           )
-D02PiPi = bindMembers( 'Hlt2Shared', [ GoodPions, Hlt2SharedD02PiPi ] )
+D02PiPi = bindMembers( 'Shared', [ GoodPions, Hlt2SharedD02PiPi ] )
 ##########################################################################################
 # D0 -> K K
 #
@@ -42,7 +42,7 @@ Hlt2SharedD02KK = Hlt2SharedD02KPi.clone("D02KK"
                                         , DecayDescriptor = "[D0 -> K- K+]cc" 
                                         , InputLocations = [ GoodKaons ]
                                         )
-D02KK = bindMembers( 'Hlt2Shared', [ GoodKaons, Hlt2SharedD02KK ] )
+D02KK = bindMembers( 'Shared', [ GoodKaons, Hlt2SharedD02KK ] )
 ##########################################################################################
 # D0 -> Ks Pi Pi
 #
@@ -64,7 +64,7 @@ _KsLL =  GaudiSequencer('SeqMakeHltSharedKs_', ModeOR=True, ShortCircuit=False, 
 ####@TODO:@FIXME: maybe we need seperate D0 -> Ks_1 Pi Pi, D0 -> Ks_2 Pi Pi instead of the this OR...
 
 
-D02KsPiPi = bindMembers( "Hlt2Shared", [ GoodPions, _KsLL , Hlt2SharedD02KsPiPi ] )
+D02KsPiPi = bindMembers( "Shared", [ GoodPions, _KsLL , Hlt2SharedD02KsPiPi ] )
 ##########################################################################################
 # D0 -> Ks K K is a clone of Ks Pi Pi
 #
@@ -77,4 +77,4 @@ Hlt2SharedD02KsKK = Hlt2SharedD02KsPiPi.clone("Hlt2SharedD02KsKK"
                                              , InputLocations = [ GoodKaons, "Hlt2KsLLParticles", "Hlt2SharedKsLL" ]
                                              )
 
-D02KsKK = bindMembers( "Hlt2Shared", [ GoodKaons, _KsLL , Hlt2SharedD02KsKK ] )
+D02KsKK = bindMembers( "Shared", [ GoodKaons, _KsLL , Hlt2SharedD02KsKK ] )

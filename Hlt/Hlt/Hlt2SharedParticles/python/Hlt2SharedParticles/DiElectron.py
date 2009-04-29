@@ -22,4 +22,4 @@ Hlt2SharedDiElectron = Hlt2Member( CombineParticles
                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
                                  )
 
-DiElectron = bindMembers( "Hlt2Shared", [ Electrons, Hlt2SharedDiElectron ] )
+DiElectron = bindMembers( "Shared", [ Electrons, Hlt2SharedDiElectron ] )

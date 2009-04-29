@@ -21,4 +21,4 @@ Hlt2SharedKsLL = Hlt2Member( CombineParticles, "KsLL"
                            , InputLocations = [ GoodPions ]
                            )
 
-KsLL = bindMembers( 'Hlt2Shared', [ GoodPions, Hlt2SharedKsLL ] )
+KsLL = bindMembers( 'Shared', [ GoodPions, Hlt2SharedKsLL ] )

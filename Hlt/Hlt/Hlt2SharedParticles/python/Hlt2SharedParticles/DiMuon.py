@@ -22,7 +22,7 @@ Hlt2SharedDiMuon = Hlt2Member( CombineParticles
                              , InputLocations = [ Muons ]
                              )
 
-DiMuon = bindMembers( "Hlt2Shared", [ Muons, Hlt2SharedDiMuon ] )
+DiMuon = bindMembers( "Shared", [ Muons, Hlt2SharedDiMuon ] )
 ###
 #
 #  Standard J/psi -> mumu
@@ -37,7 +37,7 @@ Hlt2SharedJpsi2MuMu = Hlt2Member( FilterDesktop
                                 , InputLocations  = [ DiMuon ]
                                 )
 
-Jpsi2MuMu = bindMembers( "Hlt2Shared", [ DiMuon, Hlt2SharedJpsi2MuMu ] )
+Jpsi2MuMu = bindMembers( "Shared", [ DiMuon, Hlt2SharedJpsi2MuMu ] )
 
 ###
 #
@@ -53,4 +53,4 @@ Hlt2SharedHighPtJpsi2MuMu = Hlt2Member( FilterDesktop
                                       , InputLocations  = [ Jpsi2MuMu ]
                                       )
 
-HighPtJpsi2MuMu  = bindMembers( 'Hlt2Shared', [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )
+HighPtJpsi2MuMu  = bindMembers( 'Shared', [ Jpsi2MuMu, Hlt2SharedHighPtJpsi2MuMu ] )

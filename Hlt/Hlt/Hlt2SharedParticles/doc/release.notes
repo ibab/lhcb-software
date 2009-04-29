@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.15 2009-04-29 08:59:39 pkoppenb Exp $
+$Id: release.notes,v 1.16 2009-04-29 11:33:35 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-04-29 - Gerhard Raven
+ - oops: fix double Hlt2 prefixes
 
 ! 2009-04-29 - Patrick Koppenburg
  - Bug fix in Pi0
