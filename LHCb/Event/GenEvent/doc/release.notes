@@ -2,6 +2,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2009-04-29 - Gloria CORTI
+ - Make method GenHeader::numOfCollisions() const
+
 !======================= GenEvent v5r5 2009-04-03 =============================
 ! 2009-04-03 - Gloria CORTI
  - Add two new data members to GenHeader, the total inelastic cross section

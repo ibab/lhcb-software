@@ -1,5 +1,5 @@
 package GenEvent
-version v5r5
+version v5r6
 
 branches cmt doc src xml Event
 

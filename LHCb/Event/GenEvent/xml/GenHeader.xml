@@ -53,6 +53,7 @@
         init="0.0"
        />
        <method
+        const="TRUE"
         desc="Number of collisions in bunch crossing"
         name="numOfCollisions"
         type="unsigned int"
