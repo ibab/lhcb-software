@@ -78,4 +78,4 @@ DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"
 DaVinci().Input = [
-    "DATAFILE='PFN:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/30000000-100ev-20090407-MC09.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+    "DATAFILE='PFN:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
