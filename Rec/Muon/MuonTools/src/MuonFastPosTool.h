@@ -1,6 +1,6 @@
-// $Id: MuonPosTool.h,v 1.3 2006-09-25 15:53:26 asatta Exp $
-#ifndef MUONTILEIDXYZ_H 
-#define MUONTILEIDXYZ_H 1
+// $Id: MuonFastPosTool.h,v 1.1 2009-04-29 14:15:55 asatta Exp $
+#ifndef MUONFASTPOSTOOL_H 
+#define MUONFASTPOSTOOL_H 1
 
 // Include files
 // from STL
@@ -8,13 +8,14 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // local
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonDet/MuonBasicGeometry.h"
-#include "MuonTools/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
-/** @class MuonPosTool MuonPosTool.h
+/** @class MuonFastPosTool MuonFastPosTool.h
  *  
  *  Convert an MuonTileID into an xyz position in the detector (with size)
  *  No abstract interface as I do not want to make more than one of these...
@@ -22,15 +23,15 @@
  *  @author David Hutchcroft
  *  @date   07/03/2002
  */
-class MuonPosTool : public GaudiTool, 
-                    virtual public IMuonPosTool {
+class MuonFastPosTool : public GaudiTool, 
+                    virtual public IMuonFastPosTool {
 public:
   /// Standard constructor
-  MuonPosTool( const std::string& type, 
+  MuonFastPosTool( const std::string& type, 
                  const std::string& name,
                  const IInterface* parent);
   
-  virtual ~MuonPosTool( ){} ; ///< Destructor
+  virtual ~MuonFastPosTool( ){} ; ///< Destructor
 
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
@@ -41,7 +42,6 @@ public:
                                  double& z, double& deltaz);
   
   StatusCode initialize();
-  StatusCode finalize();
   
 private:
 
@@ -57,11 +57,9 @@ private:
   std::vector<unsigned int> m_padGridY;
   std::vector<float> m_padSizeX;
   std::vector<float> m_padSizeY;
-  IDataProviderSvc* m_DDS;
-  std::vector<float> m_xpos[5];
-  std::vector<float> m_ypos[5];
-  std::vector<float> m_zpos[5];
+//  IDataProviderSvc* m_DDS;
+  std::vector<Gaudi::XYZPoint> m_pos[5];
   DeMuonDetector* m_muonDetector;  
   bool m_debug;
 };
-#endif // MUONTILEIDXYZ_H
+#endif // MUONFAASTPOSTOOL_H

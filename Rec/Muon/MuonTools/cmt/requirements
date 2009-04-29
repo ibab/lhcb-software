@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.19 2006-09-25 15:53:25 asatta Exp $
+# $Id: requirements,v 1.20 2009-04-29 14:15:55 asatta Exp $
 # ==========================================================================
 package            MuonTools
-version            v4r0
+version            v5r0
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
