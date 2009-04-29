@@ -42,4 +42,4 @@ __all__ = ( 'MergedPi0s', 'ResolvedPi0s', 'AllPi0s' )
 
 MergedPi0s    = bindMembers( None, [ Hlt2MergedPi0s ] )
 ResolvedPi0s  = bindMembers( None, [ Hlt2ResolvedPi0s ] )
-AllPi0s       = bindMembers( None, [ SeqHlt2Pi0 ] )
+AllPi0s       = bindMembers( None, [ SeqHlt2Pi0 ] ).setOutputSelection( [ Hlt2MergedPi0s, Hlt2ResolvedPi0s ] )
