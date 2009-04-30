@@ -51,9 +51,9 @@ void VeloTrack::GetTrackSlope()
   {
 
     z_cor = ((m_Coords[k]).first).z();
-    wghtx = ((m_Coords[k]).second).x();
+    wghtx = pow(1/((m_Coords[k]).second).x(),2);
     rmeasx = ((m_Coords[k]).first).x();
-    wghty = ((m_Coords[k]).second).y();
+    wghty = pow(1/((m_Coords[k]).second).y(),2);
     rmeasy = ((m_Coords[k]).first).y();
 
     local_vecx[0] += wghtx*rmeasx;
