@@ -1,4 +1,4 @@
-// $Id: FilterEventByMCDecay.cpp,v 1.1 2009-04-28 13:57:46 jpalac Exp $
+// $Id: FilterEventByMCDecay.cpp,v 1.2 2009-04-30 12:52:11 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,6 @@ FilterEventByMCDecay::FilterEventByMCDecay( const std::string& name,
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
   m_select(true),
-  m_decayFinderName("MCDecayFinder"),
   m_decayFinder(0),
   m_inputLocation(LHCb::MCParticleLocation::Default)
 {

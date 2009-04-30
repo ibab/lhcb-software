@@ -1,4 +1,4 @@
-// $Id: FilterEventByMCDecay.h,v 1.1 2009-04-28 13:57:46 jpalac Exp $
+// $Id: FilterEventByMCDecay.h,v 1.2 2009-04-30 12:52:11 jpalac Exp $
 #ifndef FILTEREVENTBYMCDECAY_H 
 #define FILTEREVENTBYMCDECAY_H 1
 
@@ -50,7 +50,6 @@ public:
 
 private:
   bool m_select;
-  std::string m_decayFinderName;
   IMCDecayFinder* m_decayFinder;
   std::string m_inputLocation;
   
