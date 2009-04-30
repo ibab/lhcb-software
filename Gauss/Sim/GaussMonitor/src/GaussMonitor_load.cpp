@@ -1,4 +1,4 @@
-// $Id: GaussMonitor_load.cpp,v 1.6 2007-05-16 17:33:29 gcorti Exp $
+// $Id: GaussMonitor_load.cpp,v 1.7 2009-04-30 13:57:40 svecchi Exp $
 // Include files 
 
 
@@ -23,5 +23,6 @@ DECLARE_FACTORY_ENTRIES(GaussMonitor) {
   DECLARE_ALGORITHM( GeneratorAnalysis );
   DECLARE_ALGORITHM( ProductionAnalysis );
   DECLARE_ALGORITHM( ProductionAsymmetry );
+  DECLARE_TOOL( MonitorStepAction );
    
 }
