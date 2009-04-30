@@ -451,6 +451,11 @@ LTFITCHI2  = LoKi.Particles.LifeTimeFitChi2
 LTIMEERR      = LoKi.Particles.LifeTimeError
 
 
+## @see LoKi::Cuts::REFIT_
+REFIT_        = LoKi.Particles.ReFit
+## @see LoKi::Cuts::MFIT_
+MFIT_         = LoKi.Particles.MassFit 
+
 
 ## @see LoKi::Cuts::VTRUE
 VTRUE     = LoKi.Constant( _RCV , bool )(True)
@@ -586,6 +591,19 @@ BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
 BPVLTERR              = LoKi.Particles.LifeTimeErrorDV           
+
+
+## @see LoKi::Cuts::REFIT
+REFIT         = LoKi.Particles.ReFitter 
+## @see LoKi::Cuts::REFITTER
+REFITTER      = LoKi.Particles.ReFitter 
+## @see LoKi::Cuts::MFIT
+MFIT          = LoKi.Particles.MassFitter () 
+## @see LoKi::Cuts::MFITTER
+MFITTER       = LoKi.Particles.MassFitter
+## @see LoKi::Cuts::MASSFIT
+MASSFIT       = LoKi.Particles.MassFitter
+
 
 # vertex separation (for particles) with respect to *all* vertices
 

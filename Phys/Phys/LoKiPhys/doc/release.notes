@@ -1,9 +1,26 @@
-! $Id: release.notes,v 1.93 2009-04-29 15:00:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.94 2009-04-30 12:58:29 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-30 - Vanya BELYAEV
+
+ - New symbols for Olivier Leroy
+
+      REFIT_ 
+      MFIT_ 
+    
+      REFIT 
+      REFITTER
+      MFIT
+      MFITTER 
+      MASSFIT
+
+   Using these symbodl one is able to performe various 
+   vertex/mass/lifetime/direction (re)fits  
+
 
 ! 2009-04-29 - Vanya BELYAEV
  - New symbols:
