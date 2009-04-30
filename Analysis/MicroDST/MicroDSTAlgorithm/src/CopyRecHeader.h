@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.h,v 1.7 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyRecHeader.h,v 1.8 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYRECHEADER_H 
 #define COPYRECHEADER_H 1
 
@@ -32,12 +32,6 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-15
  */
-//=============================================================================
-template <> struct BindType2Cloner<LHCb::RecHeader> 
-{
-  typedef LHCb::RecHeader type;
-  typedef MicroDST::BasicCopy<LHCb::RecHeader> cloner;
-};
 //=============================================================================
 template <> struct Location<LHCb::RecHeader> 
 {

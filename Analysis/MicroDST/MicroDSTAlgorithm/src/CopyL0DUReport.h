@@ -1,4 +1,4 @@
-// $Id: CopyL0DUReport.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.6 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
@@ -29,12 +29,6 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
-//=============================================================================
-template <> struct BindType2Cloner<LHCb::L0DUReport> 
-{
-  typedef LHCb::L0DUReport type;
-  typedef MicroDST::BasicCopy<LHCb::L0DUReport> cloner;
-};
 //=============================================================================
 template <> struct Location<LHCb::L0DUReport> 
 {

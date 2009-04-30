@@ -1,4 +1,4 @@
-// $Id: CopyFlavourTag.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.6 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
@@ -38,6 +38,7 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
+//=============================================================================
 template <> struct BindType2Cloner<LHCb::FlavourTag> 
 {
   typedef LHCb::FlavourTag type;

@@ -1,4 +1,4 @@
-// $Id: CopyODIN.h,v 1.7 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyODIN.h,v 1.8 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYODIN_H 
 #define COPYODIN_H 1
 
@@ -32,14 +32,6 @@
  *  @author Juan PALACIOS
  *  @date   2007-10-15
  */
-//=============================================================================
-// template <> struct BindType2Cloner<LHCb::ODIN> 
-// {
-//   typedef LHCb::ODIN type;
-//   typedef MicroDST::BasicCopy<LHCb::ODIN> cloner;
-// };
-//template <> struct BindType2Cloner<LHCb::ODIN>;
-typedef BindType2Cloner<LHCb::ODIN> __cloner;
 //=============================================================================
 template <> struct Location<LHCb::ODIN> {
   const static std::string Default;

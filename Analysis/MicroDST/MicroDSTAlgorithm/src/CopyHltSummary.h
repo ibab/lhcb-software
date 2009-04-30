@@ -1,4 +1,4 @@
-// $Id: CopyHltSummary.h,v 1.5 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyHltSummary.h,v 1.6 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYHLTSUMMARY_H 
 #define COPYHLTSUMMARY_H 1
 
@@ -29,11 +29,6 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
-template <> struct BindType2Cloner<LHCb::HltSummary> 
-{
-  typedef LHCb::HltSummary type;
-  typedef MicroDST::BasicCopy<LHCb::HltSummary> cloner;
-};
 //=============================================================================
 template <> struct Location<LHCb::HltSummary> 
 {

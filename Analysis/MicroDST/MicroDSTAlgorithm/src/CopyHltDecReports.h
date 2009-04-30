@@ -1,4 +1,4 @@
-// $Id: CopyHltDecReports.h,v 1.1 2009-04-03 10:36:46 jpalac Exp $
+// $Id: CopyHltDecReports.h,v 1.2 2009-04-30 15:06:09 jpalac Exp $
 #ifndef COPYHLTDECREPORTS_H 
 #define COPYHLTDECREPORTS_H 1
 
@@ -32,8 +32,6 @@
  *  @author Juan PALACIOS
  *  @date   2009-04-03
  */
-//=============================================================================
-typedef BindType2Cloner<LHCb::HltDecReports> __cloner;
 //=============================================================================
 template <> struct Location<LHCb::HltDecReports> {
   const static std::string Default;
