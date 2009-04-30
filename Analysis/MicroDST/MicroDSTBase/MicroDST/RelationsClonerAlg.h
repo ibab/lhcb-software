@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.7 2009-04-17 21:45:42 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.8 2009-04-30 12:58:55 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -11,7 +11,7 @@
 #include "MicroDST/MicroDSTAlgorithm.h"
 #include "MicroDST/BindType2ClonerDef.h"
 #include "MicroDST/Defaults.h"
-#include "MicroDST/TableExtraTraits.h"
+#include "MicroDST/RelTableFunctors.h"
 // from Boost
 #include <boost/type_traits/remove_pointer.hpp>
 /** @class RelationsClonerAlg RelationsClonerAlg.h MicroDST/RelationsClonerAlg.h
@@ -34,7 +34,7 @@ namespace MicroDST
     typedef Defaults<TABLE> DEFAULTS;
     typedef Location<TABLE> LOCATION;
     typedef typename BindType2Cloner<TABLE>::toCloner CLONER;
-    typedef Relations::TableCloner<TABLE> TableCloner;
+    typedef MicroDST::TableCloner<TABLE> TableCloner;
 
   public:
     //===========================================================================
