@@ -1,11 +1,10 @@
-// $Id: HltDeltaPTool.h,v 1.2 2008-10-24 13:32:21 leandrop Exp $
+// $Id: HltDeltaPTool.h,v 1.3 2009-04-30 09:25:42 asatta Exp $
 #ifndef HLTDELTAPTOOL_H 
 #define HLTDELTAPTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonDet/IMuonPosTool.h"
 #include "Event/Track.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 #include "TrackInterfaces/IFunctionTool.h"            // Interface

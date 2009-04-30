@@ -1,4 +1,4 @@
-// $Id: HltMuonIDDistanceTool.cpp,v 1.2 2008-02-13 15:20:12 graven Exp $
+// $Id: HltMuonIDDistanceTool.cpp,v 1.3 2009-04-30 09:25:42 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,7 @@ StatusCode HltMuonIDDistanceTool::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-  m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
   return StatusCode::SUCCESS;

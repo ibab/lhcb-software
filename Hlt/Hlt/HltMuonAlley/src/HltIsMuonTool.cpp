@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.10 2009-02-15 14:07:44 depaula Exp $
+// $Id: HltIsMuonTool.cpp,v 1.11 2009-04-30 09:25:42 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode HltIsMuonTool::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if (msgLevel (MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-  m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
   if(!m_iPosTool)if (msgLevel (MSG::DEBUG)) debug()<<"error retrieving the pos tool "<<endreq;
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endreq;

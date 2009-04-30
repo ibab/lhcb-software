@@ -1,11 +1,11 @@
-// $Id: HltIsMuonTool.h,v 1.7 2008-10-01 09:32:53 leandrop Exp $
+// $Id: HltIsMuonTool.h,v 1.8 2009-04-30 09:25:42 asatta Exp $
 #ifndef HLTISMUONTOOL_H 
 #define HLTISMUONTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 #include "Event/Track.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 #include "TrackInterfaces/IFunctionTool.h"            // Interface
@@ -34,7 +34,7 @@ public:
 private:
   bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
 
-  IMuonPosTool*      m_iPosTool;
+  IMuonFastPosTool*      m_iPosTool;
   IMuonRawBuffer*    m_muonBuffer;
 
 private:

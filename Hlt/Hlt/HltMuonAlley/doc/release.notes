@@ -3,6 +3,8 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2009-04-30 - Alessia Satta
+ - Update for renamed MuonPosTool in MuonFastPosTool
 
 !========================== HltMuonAlley v2r8 2009-02-23 ===================
 ! 2009-02-15 - Leandro de Paula
