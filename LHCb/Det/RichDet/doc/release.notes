@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-04-30 - Chris Jones
+ - Sort inactive HPD lists
+
 ! 2009-03-30 - Chris Jones
  - Include P and T values in message printed when a refractive index 
    update occurs.

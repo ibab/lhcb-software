@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.20 2008-10-28 14:51:39 cattanem Exp $
+ * $Id: DeRichSystem.cpp,v 1.21 2009-04-30 14:04:12 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -283,6 +283,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     msg << MSG::INFO
         << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endreq;
   }
+  std::sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
+  std::sort( m_inactiveSmartIDs.begin(), m_inactiveSmartIDs.end() );
 
   // L1 mapping
   if ( numbers->exists("Level1LogicalToHardwareIDMap") )
