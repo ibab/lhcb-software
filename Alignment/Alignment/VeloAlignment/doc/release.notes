@@ -1,6 +1,15 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+!=============================================================================
+! 30/04/2009 - Silvia Borghi  ** v4r5 **
+  - Rename Align in VAlign
+  - VAlign.cpp, VAlign.h: improve the PV method
+  - MilleConfig.cpp: fix a bug in the rotation matrix for PV method
+  - TrackStore.cpp, TrackStore.h: Track parameters now in the Global Frame
+  - VeloTrack.cpp: Define properly the point weights
+
+!=============================================================================
 ! 17/04/2009 Johan Blouw
   - added python/VeloAlignment/Configuration.py
   - modified cmt/requirements so that it will process configurabals
