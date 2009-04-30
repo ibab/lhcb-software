@@ -586,7 +586,6 @@ StatusCode MilleConfig::PutPVTrack(VeloTracks& aPV, IMillepede* my_millepede, in
 
   // If VELO is open, one box is fixed and we fit vertex in the 2 boxes
   // thus we need at sufficient number of tracks per box
-
   if (VELO_open)
   {
     int n_left  = 0;
@@ -601,7 +600,6 @@ StatusCode MilleConfig::PutPVTrack(VeloTracks& aPV, IMillepede* my_millepede, in
     }
 
     iteration = 0;
-
     if (n_right < n_min || n_left < n_min) return StatusCode::SUCCESS;
   }
 
@@ -624,118 +622,118 @@ StatusCode MilleConfig::PutPVTrack(VeloTracks& aPV, IMillepede* my_millepede, in
 
       if (aPV[iteration].nType() == 0) zmoy = zmoyl;
       if (aPV[iteration].nType() == 1) zmoy = zmoyr;
-
       if (VELO_open) zmoy = (zmoyl+zmoyr)/2;
       
       my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
-
+      
       if (VELO_open)
       {
-	// LOCAL 1st derivatives for v_x 
-	
-	derLC[4] = 1.;
-	derLC[5] = 0.;
-	derLC[6] = -slx;
-	
-	// GLOBAL 1st derivatives
-	if (aPV[iteration].nType() == 1) 
-	{
-	  if (m_DOF[0]) derGB[2]   =  -1.0;          // dX	    
-	  if (m_DOF[1]) derGB[5]   =  0.0;           // dY
-	  if (m_DOF[2]) derGB[8]   = slx;            // dZ
-	  if (m_DOF[3]) derGB[11]  = zclos-zmoy;     // dtX    
-	  if (m_DOF[4]) derGB[14]  = 0.0;            // dtY    
-	  if (m_DOF[5]) derGB[17]  = 0.0;            // dtZ   
-	}
-      }else{
-
-	// LOCAL 1st derivatives for v_x 
-	
-	derLC[4] = 0.;
-	derLC[5] = 0.;
-	derLC[6] = -slx;
-	
-	// GLOBAL 1st derivatives
-	
-	if (m_DOF[0]) derGB[aPV[iteration].nType()]     =  -1.0;             // dX	    
-	if (m_DOF[1]) derGB[3+aPV[iteration].nType()]   =  0.0;            // dY
-	if (m_DOF[2]) derGB[6+aPV[iteration].nType()]   = slx;            // dZ
-	//	if (m_DOF[3]) derGB[12+aPV[iteration].nType()]  = zclos-zmoy;            // dtX    
-	if (m_DOF[3]) derGB[9+aPV[iteration].nType()]   = -zmoy;            // dtX    
-	if (m_DOF[4]) derGB[12+aPV[iteration].nType()]  = 0.0;            // dtY    
-	if (m_DOF[5]) derGB[15+aPV[iteration].nType()]  = 0.0;            // dtZ 
-
-	if (m_DOF[0]) derNonLin[aPV[iteration].nType()]    =  0.0;      // dX	    
-	if (m_DOF[1]) derNonLin[3+aPV[iteration].nType()]  =  0.0;      // dY
-	if (m_DOF[2]) derNonLin[6+aPV[iteration].nType()]  =  0.0;       // dZ
-	if (m_DOF[3]) derNonLin[9+aPV[iteration].nType()]  =  1.0;    // d_alpha
-	if (m_DOF[4]) derNonLin[12+aPV[iteration].nType()] =  0.0;    // d_beta
-	if (m_DOF[5]) derNonLin[15+aPV[iteration].nType()] =  0.0;      // d_gamma
-	
-	if (m_DOF[0]) derNonLin_i[aPV[iteration].nType()]    =  0.0;    // dX	    
-	if (m_DOF[1]) derNonLin_i[3+aPV[iteration].nType()]  =  0.0;    // dY
-	if (m_DOF[2]) derNonLin_i[6+aPV[iteration].nType()]  =  0.0;    // dZ
-	if (m_DOF[3]) derNonLin_i[9+aPV[iteration].nType()]  =  6.0;    // d_alpha
-	if (m_DOF[4]) derNonLin_i[12+aPV[iteration].nType()] =  0.0;    // d_beta
-	if (m_DOF[5]) derNonLin_i[15+aPV[iteration].nType()] =  0.0;    // d_gamma
+        // LOCAL 1st derivatives for v_x 
+        
+        derLC[4] = 1.;
+        derLC[5] = 0.;
+        derLC[6] = -slx;
+        
+        // GLOBAL 1st derivatives
+        if (aPV[iteration].nType() == 1) 
+        {
+          if (m_DOF[0]) derGB[2]   =  -1.0;          // dX	    
+          if (m_DOF[1]) derGB[5]   =  0.0;           // dY
+          if (m_DOF[2]) derGB[8]   = slx;            // dZ
+          if (m_DOF[3]) derGB[11]  = zclos-zmoy;     // dtX    
+          if (m_DOF[4]) derGB[14]  = 0.0;            // dtY    
+          if (m_DOF[5]) derGB[17]  = 0.0;            // dtZ   
+        }
+      }
+      else{
+        
+        // LOCAL 1st derivatives for v_x 
+        
+        derLC[4] = 1.;
+        derLC[5] = 0.;
+        derLC[6] = -slx;
+        
+        // GLOBAL 1st derivatives
+        
+        if (m_DOF[0]) derGB[aPV[iteration].nType()]     =  -1.0;             // dX	    
+        if (m_DOF[1]) derGB[3+aPV[iteration].nType()]   =  0.0;            // dY
+        if (m_DOF[2]) derGB[6+aPV[iteration].nType()]   = slx;            // dZ
+        //if (m_DOF[3]) derGB[12+aPV[iteration].nType()]  = zclos-zmoy;            // dtX    
+        if (m_DOF[3]) derGB[9+aPV[iteration].nType()]   = -zmoy;            // dtX    
+        if (m_DOF[4]) derGB[12+aPV[iteration].nType()]  = 0.0;            // dtY    
+        if (m_DOF[5]) derGB[15+aPV[iteration].nType()]  = 0.0;            // dtZ 
+        
+        if (m_DOF[0]) derNonLin[aPV[iteration].nType()]    =  0.0;      // dX	    
+        if (m_DOF[1]) derNonLin[3+aPV[iteration].nType()]  =  0.0;      // dY
+        if (m_DOF[2]) derNonLin[6+aPV[iteration].nType()]  =  0.0;       // dZ
+        if (m_DOF[3]) derNonLin[9+aPV[iteration].nType()]  =  0.0;    // d_alpha
+        if (m_DOF[4]) derNonLin[12+aPV[iteration].nType()] =  1.0;    // d_beta
+        if (m_DOF[5]) derNonLin[15+aPV[iteration].nType()] =  0.0;      // d_gamma
+        
+        if (m_DOF[0]) derNonLin_i[aPV[iteration].nType()]    =  0.0;    // dX	    
+        if (m_DOF[1]) derNonLin_i[3+aPV[iteration].nType()]  =  0.0;    // dY
+        if (m_DOF[2]) derNonLin_i[6+aPV[iteration].nType()]  =  0.0;    // dZ
+        if (m_DOF[3]) derNonLin_i[9+aPV[iteration].nType()]  =  0.0;    // d_alpha
+        if (m_DOF[4]) derNonLin_i[12+aPV[iteration].nType()] =  6.0;    // d_beta
+        if (m_DOF[5]) derNonLin_i[15+aPV[iteration].nType()] =  0.0;    // d_gamma
       }
 
       sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0],&derNonLin_i[0], 
-				x0, errx); // Store hits parameters
+                                x0, errx); // Store hits parameters
       if (! sc) {break;}
       
       my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
-
+      
       if (VELO_open)
       {
-	// LOCAL 1st derivatives for v_y 
-	
-	derLC[4] = 0.;
-	derLC[5] = 1.;
-	derLC[6] = -sly;
-	
-	// GLOBAL 1st derivatives
-	if (aPV[iteration].nType() == 1) 
-	{
-	  if (m_DOF[0]) derGB[2]   =  0.0;          // dX	    
-	  if (m_DOF[1]) derGB[5]   = -1.0;           // dY
-	  if (m_DOF[2]) derGB[8]   = sly;            // dZ
-	  if (m_DOF[3]) derGB[11]  = 0.0;     // dtX    
-	  if (m_DOF[4]) derGB[14]  = zclos-zmoy;            // dtY    
-	  if (m_DOF[5]) derGB[17]  = 0.0;            // dtZ   
-	}
-      }else{ 
-     
-	// LOCAL 1st derivatives for v_y
-	
-	derLC[4] = 0.;
-	derLC[5] = 0.;
-	derLC[6] = -sly;	    
-	
-	// GLOBAL 1st derivatives
-	
-	if (m_DOF[0]) derGB[aPV[iteration].nType()]     =  0.0;             // dX	    
-	if (m_DOF[1]) derGB[3+aPV[iteration].nType()]   =  -1.0;            // dY
-	if (m_DOF[2]) derGB[6+aPV[iteration].nType()]   = sly;            // dZ
-	if (m_DOF[3]) derGB[9+aPV[iteration].nType()]   = 0.0;            // dtX    
-	//	if (m_DOF[4]) derGB[16+aPV[iteration].nType()]  = zclos-zmoy;            // dtY   
-	if (m_DOF[4]) derGB[12+aPV[iteration].nType()]  = -zmoy;            // dtY   
-	if (m_DOF[5]) derGB[15+aPV[iteration].nType()]  = 0.0;            // dtZ   
-
-	if (m_DOF[0]) derNonLin[aPV[iteration].nType()]    =  0.0;      // dX	    
-	if (m_DOF[1]) derNonLin[3+aPV[iteration].nType()]  =  0.0;      // dY
-	if (m_DOF[2]) derNonLin[6+aPV[iteration].nType()]  =  0.0;       // dZ
-	if (m_DOF[3]) derNonLin[9+aPV[iteration].nType()]  =  0.0;    // d_alpha
-	if (m_DOF[4]) derNonLin[12+aPV[iteration].nType()] =  1.0;    // d_beta
-	if (m_DOF[5]) derNonLin[15+aPV[iteration].nType()] =  0.0;      // d_gamma
-	
-	if (m_DOF[0]) derNonLin_i[aPV[iteration].nType()]    =  0.0;    // dX	    
-	if (m_DOF[1]) derNonLin_i[3+aPV[iteration].nType()]  =  0.0;    // dY
-	if (m_DOF[2]) derNonLin_i[6+aPV[iteration].nType()]  =  0.0;    // dZ
-	if (m_DOF[3]) derNonLin_i[9+aPV[iteration].nType()]  =  0.0;    // d_alpha
-	if (m_DOF[4]) derNonLin_i[12+aPV[iteration].nType()] =  6.0;    // d_beta
-	if (m_DOF[5]) derNonLin_i[15+aPV[iteration].nType()] =  0.0;    // d_gamma
-
+        // LOCAL 1st derivatives for v_y 
+        
+        derLC[4] = 0.;
+        derLC[5] = 1.;
+        derLC[6] = -sly;
+        
+        // GLOBAL 1st derivatives
+        if (aPV[iteration].nType() == 1) 
+        {
+          if (m_DOF[0]) derGB[2]   =  0.0;          // dX	    
+          if (m_DOF[1]) derGB[5]   = -1.0;           // dY
+          if (m_DOF[2]) derGB[8]   = sly;            // dZ
+          if (m_DOF[3]) derGB[11]  = 0.0;     // dtX    
+          if (m_DOF[4]) derGB[14]  = zclos-zmoy;            // dtY    
+          if (m_DOF[5]) derGB[17]  = 0.0;            // dtZ   
+        }
+      }
+      else{ 
+        
+        // LOCAL 1st derivatives for v_y
+        
+        derLC[4] = 0.;
+        derLC[5] = 1.;
+        derLC[6] = -sly;	    
+        
+        // GLOBAL 1st derivatives
+        
+        if (m_DOF[0]) derGB[aPV[iteration].nType()]     =  0.0;             // dX	    
+        if (m_DOF[1]) derGB[3+aPV[iteration].nType()]   =  -1.0;            // dY
+        if (m_DOF[2]) derGB[6+aPV[iteration].nType()]   = sly;            // dZ
+        if (m_DOF[3]) derGB[9+aPV[iteration].nType()]   = 0.0;            // dtX    
+        //if (m_DOF[4]) derGB[16+aPV[iteration].nType()]  = zclos-zmoy;            // dtY   
+        if (m_DOF[4]) derGB[12+aPV[iteration].nType()]  = -zmoy;            // dtY   
+        if (m_DOF[5]) derGB[15+aPV[iteration].nType()]  = 0.0;            // dtZ   
+        
+        if (m_DOF[0]) derNonLin[aPV[iteration].nType()]    =  0.0;      // dX	    
+        if (m_DOF[1]) derNonLin[3+aPV[iteration].nType()]  =  0.0;      // dY
+        if (m_DOF[2]) derNonLin[6+aPV[iteration].nType()]  =  0.0;       // dZ
+        if (m_DOF[3]) derNonLin[9+aPV[iteration].nType()]  =  1.0;    // d_alpha
+        if (m_DOF[4]) derNonLin[12+aPV[iteration].nType()] =  0.0;    // d_beta
+        if (m_DOF[5]) derNonLin[15+aPV[iteration].nType()] =  0.0;      // d_gamma
+        
+        if (m_DOF[0]) derNonLin_i[aPV[iteration].nType()]    =  0.0;    // dX	    
+        if (m_DOF[1]) derNonLin_i[3+aPV[iteration].nType()]  =  0.0;    // dY
+        if (m_DOF[2]) derNonLin_i[6+aPV[iteration].nType()]  =  0.0;    // dZ
+        if (m_DOF[3]) derNonLin_i[9+aPV[iteration].nType()]  =  6.0;    // d_alpha
+        if (m_DOF[4]) derNonLin_i[12+aPV[iteration].nType()] =  0.0;    // d_beta
+        if (m_DOF[5]) derNonLin_i[15+aPV[iteration].nType()] =  0.0;    // d_gamma
       }
 
       sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0],&derNonLin_i[0],
@@ -846,7 +844,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
 
       x_cor = x_o + left_constants[iStation]
 	          - y_o*left_constants[iStation+5*n_left];
-      
+
       // Correct the Y coordinate
 
       y_cor = y_o + left_constants[iStation+n_left]
@@ -858,6 +856,7 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
 
       x_cor = x_o + right_constants[iStation]
 	          - y_o*right_constants[iStation+5*n_right];
+
       
       // Correct the Y coordinate
 
@@ -881,7 +880,9 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
       error_p = (35.5+(78.3-35.5)*(r-8.19)/(17.2-8.19))/3464.;
     if (r > 17.2)  
       error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
-    
+    //Silvia
+    //double error_x =((mistrack.Coords()[k]).second).x();
+    //double error_y =((mistrack.Coords()[k]).second).y();
     double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
     double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
 
@@ -954,7 +955,6 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
       x_cor = x_o - slopex*(right_constants[iStation+2*n_right] 
 			    + y_o*right_constants[iStation+3*n_right]
 			    + x_o*right_constants[iStation+4*n_right]);
-      
       // Correct the Y coordinate
 
       y_cor = y_o - slopey*(right_constants[iStation+2*n_right] 
@@ -979,6 +979,9 @@ StatusCode MilleConfig::correcTrack(VeloTrack& mistrack,
     if (r > 17.2)  
       error_p = (39.3+(96.6-39.3)*(r-17.2)/(41.95-17.2))/3464.;
     
+    //Silvia
+    //double error_x =((mistrack.Coords()[k]).second).x();
+    //double error_y =((mistrack.Coords()[k]).second).y();
     double error_x = sqrt(pow(x_cor*error_r,2)+pow(y_cor*error_p,2))/r;
     double error_y = sqrt(pow(y_cor*error_r,2)+pow(x_cor*error_p,2))/r;
 
