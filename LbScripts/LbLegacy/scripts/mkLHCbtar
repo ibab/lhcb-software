@@ -25,6 +25,7 @@
  - 081113 - fix the cleaning of GaudiExamples without version directory
  - 081215 - Removed LCGCMT from the direct dependencies of Dirac
  - 081217 - added LCGGrid to the Dirac dependencies
+ - 090430 - added support for slc5
 """
 
 #-----------------------------------------------------------------------------
@@ -33,7 +34,7 @@ import sys, os, getopt, time, commands, fnmatch
 import re
 from LbLegacy.install_project import calculateMD5
 
-script_version = '081217'
+script_version = '090430'
 
 from LbLegacy.LHCb_config import data_files
 
@@ -150,7 +151,7 @@ def make_tar(pname, pversion, binary=''):
                           compMiscLinuxAmd64+'*',
                           compMiscLinuxIa32+'*']
     # exclude following files from binary tar file
-    exclude_binary = ['.glimpse_*','core.*', 'html', '*.o', 'lib*.a','*.obj',compMiscLinuxAmd64+'*',compMiscLinuxIa32+'*']
+    exclude_binary = ['.glimpse_*','core.*', 'html', '*.o', 'lib*.a','*.obj']
 
     if binary == '':
     # source tar file
