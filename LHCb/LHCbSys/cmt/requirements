@@ -105,7 +105,7 @@ use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
 use TfKernel              v2r10  Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v4r2   Tr      # Matt Needham
 use TsaKernel             v3r5   Tf      # Matt Needham
-
+use MuonTools             v5r0   Muon    # Alessia Satta
 # LHCb  Examples
 use DetCondExample        v11r7  Ex      # Marco Clemencic
 use DetDescChecks        v4r10p1 Det     # Ivan Belyaev
