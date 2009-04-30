@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.cpp,v 1.5 2008-09-09 06:47:15 graven Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.6 2009-04-30 13:35:14 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +48,7 @@ StatusCode TTrackAndDistCut::initialize() {
   m_selections.retrieveSelections();
   m_selections.registerSelection();
 
-  m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
   return StatusCode::SUCCESS;

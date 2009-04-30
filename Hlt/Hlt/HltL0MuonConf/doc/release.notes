@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.36 2009-01-15 11:14:59 pkoppenb Exp $
+!$Id: release.notes,v 1.37 2009-04-30 13:35:14 asatta Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2009-04-30 - Alessia Satta
+ - update for changes in MuonPosTool
 
 !========================== HltL0MuonConf v3r5 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven

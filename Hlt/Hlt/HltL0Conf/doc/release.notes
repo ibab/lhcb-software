@@ -3,6 +3,8 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2009-04-30 - Alessia Satta
+ - MuonSeedTool : update for changes in MuonPosTool
 
 !========================== HltL0Conf v2r8 2009-01-15 ===================
 ! 2009-01-13 - Johannes Albrecht

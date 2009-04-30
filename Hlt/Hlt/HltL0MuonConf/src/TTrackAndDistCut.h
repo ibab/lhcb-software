@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.h,v 1.3 2008-07-30 13:42:04 graven Exp $
+// $Id: TTrackAndDistCut.h,v 1.4 2009-04-30 13:35:14 asatta Exp $
 #ifndef TTRACKANDDISTCUT_H 
 #define TTRACKANDDISTCUT_H 1
 
@@ -7,7 +7,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "Event/L0MuonCandidate.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
 /** @class TTrackAndDistCut TTrackAndDistCut.h
  *  
@@ -28,7 +28,7 @@ public:
 
 private:
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
-  IMuonPosTool*      m_iPosTool;
+  IMuonFastPosTool*      m_iPosTool;
   double m_maxdist;
   double  calcDLL(LHCb::Track* track, LHCb::MuonTileID & tileM4, LHCb::MuonTileID & tileM5);
 

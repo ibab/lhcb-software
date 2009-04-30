@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.11 2008-10-02 10:33:49 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.12 2009-04-30 13:34:09 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Event/Track.h"
 
 #include "Event/L0MuonCandidate.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
 // local
 #include "MuonSeedTool.h"
@@ -72,7 +72,7 @@ StatusCode MuonSeedTool::initialize()
     return sc;
   }
   
-  m_iPosTool=tool<IMuonPosTool>( "MuonPosTool" );
+  m_iPosTool=tool<IMuonFastPosTool>( "MuonFastPosTool" );
   m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
 
   //tool for debug information

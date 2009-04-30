@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.h,v 1.5 2008-08-29 14:30:04 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.6 2009-04-30 13:34:09 asatta Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
@@ -56,7 +56,7 @@ private:
   std::vector<double> m_sigmaTx2NoM1;
   std::vector<double> m_sigmaTy2NoM1;
   
-  IMuonPosTool      *m_iPosTool;
+  IMuonFastPosTool      *m_iPosTool;
   ILHCbMagnetSvc*  m_magFieldSvc;
   
   ITrackMomentumEstimate* m_momentumTool;
