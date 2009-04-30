@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.7 2009-04-24 14:03:23 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.8 2009-04-30 13:05:12 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -98,12 +98,12 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.seqMicroDST().Members += [copyParticles]  
 
     def copyP2PVLink(self, name, location) :
-        from Configurables import CopyParticle2PVLink
-        copyP2RefitPVLink = CopyParticle2PVLink(name)
-        copyP2RefitPVLink.InputLocation = location
-        copyP2RefitPVLink.OutputLevel=4
-        self.setOutputPrefix(copyP2RefitPVLink)
-        self.seqMicroDST().Members += [copyP2RefitPVLink]
+        from Configurables import CopyParticle2PVRelations
+        copyP2PVRel = CopyParticle2PVRelations(name)
+        copyP2PVRel.InputLocation = location
+        copyP2PVRel.OutputLevel=4
+        self.setOutputPrefix(copyP2PVRel)
+        self.seqMicroDST().Members += [copyP2PVRel]
 
 
     def copyPVs(self) :
@@ -120,15 +120,22 @@ class PhysMicroDST(LHCbConfigurableUser) :
         """
         Copy related MC particles of candidates plus daughters
         """
-        from Configurables import CopyRelatedMCParticles
+        from Configurables import P2MCRelatorAlg, CopyParticle2MCRelations
         from Configurables import MCParticleCloner, MCVertexCloner
-        copyMC = CopyRelatedMCParticles()
-        copyMC.InputLocation = self.mainLocation()+'/Particles'
-        copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
-        copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex')
-        copyMC.OutputLevel=4;
-        self.setOutputPrefix(copyMC)
-        self.seqMicroDST().Members += [copyMC]
+        # first, get matches MCParticles for selected candidates.
+        # This will make a relations table in mainLocation+"/P2MCPRelations"
+        p2mcRelator = P2MCRelatorAlg()
+        p2mcRelator.ParticleLocation = self.mainLocation()+'/Particles'
+        p2mcRelator.OutputLevel=4
+        self.seqMicroDST().Members += [p2mcRelator]
+        # Now copy relations table + matched MCParticles to MicroDST
+        copyP2MCRel = CopyParticle2MCRelations()
+        copyP2MCRel.addTool(MCParticleCloner)
+        copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner,
+                                             name = 'ICloneMCVertex')
+        copyP2MCRel.InputLocation = self.mainLocation()+"/P2MCPRelations"
+        self.setOutputPrefix(copyP2MCRel)
+        self.seqMicroDST().Members += [copyP2MCRel]
 
     def copyBTaggingInfo(self) :
         from Configurables import BTagging, BTaggingTool
