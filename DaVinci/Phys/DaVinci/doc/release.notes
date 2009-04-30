@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.334 2009-04-29 15:47:41 pkoppenb Exp $
+! $Id: release.notes,v 1.335 2009-04-30 13:09:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,10 @@
 
 ! 2009-04-29 - Patrick Koppenburg
  - Allow datatype = 2009
+
+! 2009-04-28 - Juan PALACIOS
+ - python/DaVinci/PhysMicroDST.py
+  . Use new relations table copying stuff
 
 ! 2009-04-24 - Juan PALACIOS
  - python/DaVinci/PhysMicroDST.py
