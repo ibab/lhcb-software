@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.260 2009-04-28 13:57:56 jpalac Exp $
+! $Id: release.notes,v 1.261 2009-04-30 13:35:19 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-04-30 - Juan PALACIOS
+ - Remove FilterGoodDecay
+  . Replaced by FilterEventByMCDecay
 
 ! 2009-04-28 - Juan PALACIOS
  - Add GaudiAlgorithm FilterEventByMCDecay
