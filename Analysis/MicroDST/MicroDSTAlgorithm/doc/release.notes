@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.81 2009-04-15 20:32:24 jpalac Exp $
+! $Id: release.notes,v 1.82 2009-04-30 13:31:06 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2009-04-30 - Juan PALACIOS
+ - Remove CopyRelatedMCParticles and CopyParticle2PVLink
+  . Replaced by CopyParticle2MCRelations and CopyParticle2PVRelations, two 
+    specialisations of MicroDST::RelationsClonerAlg
 
 ! 2009-04-15 - Juan PALACIOS
  - Add CopyParticle2PVRelations, a MicroDSTAlgorithm to copy a 
