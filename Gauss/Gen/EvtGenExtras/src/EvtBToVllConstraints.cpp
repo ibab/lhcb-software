@@ -73,8 +73,8 @@ double EvtBToVllConstraints::getBrBToXsGamma() const{
 	
 	/*
 	 * Taken from Matias + Lunghi, hep-ph/0612166, 
-	 * and rescaled to 3.15e-4 (cf. Hurth et al. 0807.5039)
-	 * (3.15 +/- 0.23 )e-4  from Theoretical SM
+	 * and rescaled to 3.28e-4 (cf. Hurth et al. 0807.5039)
+	 * (3.28 +/- 0.25 )e-4  from Theoretical SM
 	 * (3.55 +/- 0.24) e-4 from Experiment
 	 */
 	
@@ -92,8 +92,8 @@ double EvtBToVllConstraints::getBrBToXsGamma() const{
 	const EvtComplex a8(-2.225,-0.557);
 	const double a88(0.789);
 	const EvtComplex a78(2.454,-0.884);
-	
-	EvtComplex result = (3.15e-4/a)*(a + a77*(Power(Abs(dC70),2) + Power(Abs(dC7P0),2)) + 
+	//See arXiv:0805.0271 for updated normalisation
+	EvtComplex result = (3.28e-4/a)*(a + a77*(Power(Abs(dC70),2) + Power(Abs(dC7P0),2)) + 
 		       	a88*(Power(Abs(dC80),2) + Power(Abs(dC8P0),2)) + 
 		       	Re(a7*dC70 + a8*dC80 + a78*(dC70*Conjugate(dC80) + dC7P0*Conjugate(dC8P0))));
 	
