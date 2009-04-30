@@ -1,4 +1,4 @@
-// $Id: AlignMuonRec.h,v 1.4 2008-07-17 12:50:32 smenzeme Exp $
+// $Id: AlignMuonRec.h,v 1.5 2009-04-30 09:07:39 asatta Exp $
 #ifndef ALIGNMUONREC_H 
 #define ALIGNMUONREC_H 1
 
@@ -9,7 +9,6 @@
 #include "GaudiAlg/ISequencerTimerTool.h"
 //#include "GaudiAlg/GaudiTupleAlg.h" //add sim 09.02.07
 
-#include "MuonDet/IMuonPosTool.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonRegion.h"
 #include "MuonDet/DeMuonDetector.h"
