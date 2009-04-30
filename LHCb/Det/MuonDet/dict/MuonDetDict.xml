@@ -8,6 +8,6 @@
   <class name="MuonL1Board"        />
   <class name="MuonODEBoard"       />
   <class name="MuonStationCabling" />
-  <class name="IMuonPosTool"       />
+  <class name="IMuonFastPosTool"       />
   <variable pattern="DeMuonLocation::*" />
 </lcgdict>

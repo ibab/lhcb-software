@@ -1,4 +1,4 @@
-// $Id: MuonDetDict.h,v 1.2 2007-06-11 09:24:02 cattanem Exp $
+// $Id: MuonDetDict.h,v 1.3 2009-04-30 08:41:46 asatta Exp $
 // ============================================================================
 #ifndef DICT_MUONDETDICT_H 
 #define DICT_MUONDETDICT_H 1
@@ -14,7 +14,7 @@
 #include "MuonDet/MuonNamespace.h"
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonStationCabling.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
 // ============================================================================
 #endif // DICT_MUONDETDICT_H

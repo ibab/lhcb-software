@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.127 2009-04-29 14:10:41 asatta Exp $
+! $Id: release.notes,v 1.128 2009-04-30 08:41:46 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2009-04-30 - Alessia Satta
+ - Update dict/MuonDet.xml (.h) for new name IMuonFastPosTool
 ! 2009-04-29 - Alessia Satta
  - Rename interface IMuonPosTool in IMuonFastPosTool
 ! 2009-04-09 - Alessia Satta
