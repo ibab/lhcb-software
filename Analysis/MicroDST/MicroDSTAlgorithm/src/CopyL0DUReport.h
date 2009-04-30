@@ -1,4 +1,4 @@
-// $Id: CopyL0DUReport.h,v 1.6 2009-04-30 15:06:09 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.7 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
@@ -19,11 +19,11 @@
  *  <b>Example</b>: Clone the LHCb::L0DUReport from default location ("Trig/L0/L0DUReport") 
  *  to "/Event/MyLocation/Trig/L0/L0DUReport"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<LHCb::L0DUReport>/CopyL0DUReport"};
- *  CopyL0DUReport.InputLocation = "Trig/L0/L0DUReport";
- *  CopyL0DUReport.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyL0DU = CopyL0DUReport()
+ *  copyL0DU.InputLocation = "Trig/L0/L0DUReport"
+ *  copyL0DU.OutputPrefix = "MyLocation"
+ *  mySeq.Members += [copyL0DU]
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

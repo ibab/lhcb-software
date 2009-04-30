@@ -1,4 +1,4 @@
-// $Id: CopyODIN.h,v 1.8 2009-04-30 15:06:09 jpalac Exp $
+// $Id: CopyODIN.h,v 1.9 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYODIN_H 
 #define COPYODIN_H 1
 
@@ -22,10 +22,10 @@
  *  <b>Example</b>: Clone the LHCb::ODIN from default location ("DAQ/ODIN") 
  *  to "/Event/MyLocation/DAQ/ODIN"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<LHCb::ODIN>/CopyODIN"};
- *  CopyODIN.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyODIN = CopyODIN()
+ *  copyODIN.OutputPrefix = "MyLocation"
+ *  mySeq.Members += [copyODIN]
  *  @endcode
  *
  *

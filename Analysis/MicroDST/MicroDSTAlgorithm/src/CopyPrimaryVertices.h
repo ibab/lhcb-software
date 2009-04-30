@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.10 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.11 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -30,12 +30,10 @@
  * "/Event/MyLocation/Rec/Vertex/V0" using a RecVertexCloner
  *  @code
  *
- *  // Add a CopyPrimaryVertices instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyPrimaryVertices"};
- *  CopyPrimaryVertices.OutputPrefix = "MyLocation"; // Default.
- *  CopyParticles.InputLocation = "/Event/Rec/Vertex/V0";
- *  CopyParticles.ClonerType = "RecVertexCloner"
-
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyPV=CopyPrimaryVertices('CopyPrimaryVertices')
+ *  copyPV.OutputLevel = 4
+ *  mySeq.Members += [copyPV]
  *  @endcode
  * 
  *

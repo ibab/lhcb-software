@@ -1,4 +1,4 @@
-// $Id: CopyFlavourTag.h,v 1.6 2009-04-30 15:06:09 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.7 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
@@ -29,10 +29,11 @@
  *  <b>Example</b>: Clone the LHCb::FlavourTags from default location ("Phys/Tagging") 
  *  to "/Event/MyLocation/Phys/Tagging"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTag"};
- *  CopyFlavourTag.OutputPrefix = "MyLocation";
+ *  # grab a sequencer
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyFT = CopyFlavourTag()
+ *  mySeq.Members += [copyFT]
+ *  copyFT.OutputPrefix = "MyLocation"
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

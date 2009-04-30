@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.15 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyParticles.h,v 1.16 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -27,12 +27,14 @@
  * <b>Example</b>: Clone particles from "/Event/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to 
  * "/Event/MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" using a ParticleCloner
  *  @code
- *
- *  // Add a CopyParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles"};
- *  CopyParticles.OutputPrefix = "MyLocation";
- *  CopyParticles.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
- *  CopyParticles.ClonerType = "ParticleCloner"
+ *  MySelection = GaudiSequencer("SomeSelectionSequence")
+ *  copyParticles = CopyParticles()
+ *  copyParticles.OutputPrefix = "MyLocation"
+ *  copyParticles.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
+ *  #copyParticles.addTool(ParticleCloner, name='ClonerType')
+ *  #copyParticles.ParticleCloner.addTool(VertexCloner, name='IClonerVertex')
+ *  #copyParticles.ParticleCloner.addTool(ProtoParticleCloner, name='ICloneProtoParticle')
+ *  MySelection.Members += [copyParticles]
  *  @endcode
  * 
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

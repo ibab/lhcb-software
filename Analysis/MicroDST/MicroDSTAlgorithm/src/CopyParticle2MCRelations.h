@@ -1,4 +1,4 @@
-// $Id: CopyParticle2MCRelations.h,v 1.4 2009-04-17 20:53:23 jpalac Exp $
+// $Id: CopyParticle2MCRelations.h,v 1.5 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYPARTICLE2MCRELATIONS_H 
 #define COPYPARTICLE2MCRELATIONS_H 1
 
@@ -43,6 +43,8 @@
  *  mySeq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
  *  copyP2MCP = CopyParticle2MCRelations()
  *  mySeq.Members += [copyP2MCP]
+ *  copyP2MCP.addTool(MCParticleCloner)
+ *  copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner)
  *  copyP2MCP.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations";
  *  copyP2MCP.OutputPrefix = "MyLocation";
  *  @endcode

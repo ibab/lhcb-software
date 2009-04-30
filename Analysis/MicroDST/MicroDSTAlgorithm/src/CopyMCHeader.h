@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.8 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.9 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -25,10 +25,10 @@
  *  <b>Example</b>: Clone the LHCb::Header from default location ("MC/Header") 
  *  to "/Event/MyLocation/MC/Header"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyMCHeader"};
- *  CopyMCHeader.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyMCHeader = CopyMCHeader()
+ *  copyMCHeader.OutputPrefix = "MyLocation"
+ *  mySeq.Members += [copyMCHeader]
  *  @endcode
  *
  * 

@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.h,v 1.8 2009-04-30 15:06:09 jpalac Exp $
+// $Id: CopyRecHeader.h,v 1.9 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYRECHEADER_H 
 #define COPYRECHEADER_H 1
 
@@ -23,10 +23,10 @@
  *  <b>Example</b>: Clone the LHCb::RecHeader from default location ("Rec/Header") 
  *  to "/Event/MyLocation/Rec/Header"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {""MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
- *  CopyRecHeader.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyRecHeader = CopyRecHeader()
+ *  copyRecHeader.OutputPrefix = "MyLocation"
+ *  mySeq.Members += [copyRecHeader]
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

@@ -1,4 +1,4 @@
-// $Id: CopyMCParticles.h,v 1.6 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.7 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
@@ -29,10 +29,11 @@
  *  @code
  *
  *  // Add a CopyMCParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle>/CopyMCParticles"};
- *  CopyMCParticles.OutputPrefix = "MyLocation";
- *  CopyMCParticles.InputLocation = "MC/Particles";
- *  CopyMCParticles.ICloneMCParticle = "MCParticleCloner"
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyMCP = CopyMCParticles()
+ *  mySeq.Members += [copyMCP]
+ *  copyMCP.OutputPrefix = "MyLocation"
+ *  copyMCParticles.InputLocation = "MC/Particles"
  *  @endcode
  * 
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

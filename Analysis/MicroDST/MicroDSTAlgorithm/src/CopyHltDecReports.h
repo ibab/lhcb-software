@@ -1,4 +1,4 @@
-// $Id: CopyHltDecReports.h,v 1.2 2009-04-30 15:06:09 jpalac Exp $
+// $Id: CopyHltDecReports.h,v 1.3 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYHLTDECREPORTS_H 
 #define COPYHLTDECREPORTS_H 1
 
@@ -22,10 +22,10 @@
  *  <b>Example</b>: Clone the LHCb::HltDecReports from default location ("DAQ/HltDecReports") 
  *  to "/Event/MyLocation/Hlt/HltDecReports"
  *  @code
- *  // Add a sequencer
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<LHCb::HltDecReports>/CopyHltDecReports"};
- *  CopyHltDecReports.OutputPrefix = "MyLocation";
+ *  mySeq = GaudiSequencer("SomeSequence")
+ *  copyHLT = CopyHLTDecReports()
+ *  mySeq.Members += [copyHLT]
+ *  copyHLT.OutputPrefix = "MyLocation"
  *  @endcode
  *
  *

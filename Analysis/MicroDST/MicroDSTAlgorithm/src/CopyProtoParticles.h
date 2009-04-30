@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.11 2009-01-13 16:32:42 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.12 2009-04-30 15:43:48 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -33,10 +33,13 @@
  *  @code
  *
  *  // Add a CopyProtoParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::ProtoParticle>/CopyProtoParticles"};
- *  CopyProtoParticles.OutputPrefix = "MyLocation";
- *  CopyProtoParticles.InputLocation = "Rec/ProtoP/Charged";
- *  CopyProtoParticles.ICloneProtoParticle = "ProtoParticleCloner"
+ *  mySeq = GaudiSequencer("SeqDC06selBd2Jpsi2MuMu_Kst2KPi")
+ *  copyPP = CopyProtoParticles()
+ *  mySeq.Members += [copyPP]
+ *  copyPP.OutputPrefix = "MyLocation"
+ *  copyPP.InputLocation = "Rec/ProtoP/Charged"
+ *  copyPP.addTool(ProtoParticleCloner)
+ *
  *  @endcode
  * 
  *
