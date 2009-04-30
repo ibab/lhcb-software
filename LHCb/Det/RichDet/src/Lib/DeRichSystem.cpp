@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.21 2009-04-30 14:04:12 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.22 2009-04-30 16:56:20 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -274,14 +274,23 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   } // end loop over conditions data
 
   // build inative lists
-  for( CondData::const_iterator iInAct = inacts.begin(); iInAct != inacts.end(); ++iInAct )
+  for ( CondData::const_iterator iInAct = inacts.begin(); iInAct != inacts.end(); ++iInAct )
   {
     const Rich::DAQ::HPDHardwareID hardID ( *iInAct );
     const LHCb::RichSmartID        hpdID  ( richSmartID(hardID) );
-    m_inactiveHardIDs.push_back  ( hardID );
-    m_inactiveSmartIDs.push_back ( hpdID  );
-    msg << MSG::INFO
-        << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endreq;
+    if ( !hpdIsActive(hardID) )
+    {
+      msg << MSG::ERROR
+          << "HPD " << hpdID << " hardID " << hardID 
+          << " listed twice in INACTIVE HPD list !" << endmsg;
+    }
+    else
+    {
+      m_inactiveHardIDs.push_back  ( hardID );
+      m_inactiveSmartIDs.push_back ( hpdID  );
+      msg << MSG::INFO
+          << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endreq;
+    }
   }
   std::sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
   std::sort( m_inactiveSmartIDs.begin(), m_inactiveSmartIDs.end() );
