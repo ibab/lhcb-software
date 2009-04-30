@@ -16,7 +16,9 @@
 
 //from DetDesc
 #include "VeloDet/DeVelo.h"
+#include "VeloDet/DeVeloSensor.h"
 
+#include "TrackInterfaces/IVeloClusterPosition.h"
 
 /** @class TrackStore TrackStore.h VeloAlignment/TrackStore.h
  * 
@@ -62,6 +64,8 @@ private:
 
   const DeVeloRType* rDet;
   const DeVeloPhiType* phiDet;
-  
+  IVeloClusterPosition *m_clusterTool;
+
+
 };
 #endif // VELOALIGNMENT_TRACKSTORE_H
