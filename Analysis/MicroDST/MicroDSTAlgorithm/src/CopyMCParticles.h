@@ -1,4 +1,4 @@
-// $Id: CopyMCParticles.h,v 1.7 2009-04-30 15:43:48 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.8 2009-04-30 16:04:06 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
@@ -33,7 +33,10 @@
  *  copyMCP = CopyMCParticles()
  *  mySeq.Members += [copyMCP]
  *  copyMCP.OutputPrefix = "MyLocation"
- *  copyMCParticles.InputLocation = "MC/Particles"
+ *  copyMC.InputLocation = "MC/Particles"
+ *  # copy the MCVertices, not only the SmartRefs
+ *  copyMC.addTool(MCParticleCloner)
+ *  copyMC.MCParticleCloner.addTool(MCVertexCloner, name = 'ICloneMCVertex')
  *  @endcode
  * 
  *  @author Juan PALACIOS juan.palacios@nikhef.nl

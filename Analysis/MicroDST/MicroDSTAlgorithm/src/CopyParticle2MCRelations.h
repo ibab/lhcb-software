@@ -1,4 +1,4 @@
-// $Id: CopyParticle2MCRelations.h,v 1.5 2009-04-30 15:43:48 jpalac Exp $
+// $Id: CopyParticle2MCRelations.h,v 1.6 2009-04-30 16:04:06 jpalac Exp $
 #ifndef COPYPARTICLE2MCRELATIONS_H 
 #define COPYPARTICLE2MCRELATIONS_H 1
 
@@ -44,7 +44,7 @@
  *  copyP2MCP = CopyParticle2MCRelations()
  *  mySeq.Members += [copyP2MCP]
  *  copyP2MCP.addTool(MCParticleCloner)
- *  copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner)
+ *  copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner, name = 'ICloneMCVertex')
  *  copyP2MCP.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2MCPRelations";
  *  copyP2MCP.OutputPrefix = "MyLocation";
  *  @endcode
