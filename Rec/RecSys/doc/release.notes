@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-04-30 - Alessia Satta
+ - Resurrect package Muon/MuonTools
+
 ! 2009-04-23 - Chris Jones
  - Add new package Rich/RichIFBAnalysis
 

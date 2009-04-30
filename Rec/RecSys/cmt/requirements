@@ -50,6 +50,7 @@ use PatPV                v3r8    Tr   # Mariusz Witek
 #use MuonUtils	         v1r0    Muon # N.N.
 use MuonID               v6r2    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v3r1    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonTools            v5r0    Muon # Alessia Satta
 use MuonTrackAlign       v1r7p1  Muon # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
