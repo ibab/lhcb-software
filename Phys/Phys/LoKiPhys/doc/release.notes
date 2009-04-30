@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.94 2009-04-30 12:58:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.95 2009-04-30 15:19:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-04-30 - Vanya BELYAEV
+
+ - new symbol for Jaap Panman:
+
+      BPVDVDOCA
 
 ! 2009-04-30 - Vanya BELYAEV
 

@@ -584,15 +584,23 @@ BESTPVVERTSEPSIGN     = LoKi.Particles.VertexSignedDistanceDV ()          ## by 
 BPVVDDOT              = LoKi.Particles.VertexDotDistanceDV  ()
 BESTPVVERTSEPALONGMOM = LoKi.Particles.VertexDotDistanceDV  ()            ## by Vava GLIGOROV 
 
+
 BPVVDCHI2             = LoKi.Particles.VertexChi2DistanceDV ()
 BPVLTIME              = LoKi.Particles.LifeTimeDV           
 BPVLT                 = LoKi.Particles.LifeTimeDV           
 BPVLTCHI2             = LoKi.Particles.LifeTimeChi2DV
 BPVLTSIGNCHI2         = LoKi.Particles.LifeTimeSignedChi2DV
 BPVLTFITCHI2          = LoKi.Particles.LifeTimeFitChi2DV
+
+# =============================================================================
+# Functions for Lisa Dwyer 
+# =============================================================================
 BPVLTERR              = LoKi.Particles.LifeTimeErrorDV           
 
 
+# =============================================================================
+# Functions for Olivier Leroy
+# =============================================================================
 ## @see LoKi::Cuts::REFIT
 REFIT         = LoKi.Particles.ReFitter 
 ## @see LoKi::Cuts::REFITTER
@@ -604,6 +612,12 @@ MFITTER       = LoKi.Particles.MassFitter
 ## @see LoKi::Cuts::MASSFIT
 MASSFIT       = LoKi.Particles.MassFitter
 
+# =============================================================================
+# Functions for Jaap Panman 
+# =============================================================================
+## @see LoKi::Cuts::BPVDVDOCA
+BPVDVDOCA     = LoKi.Particles.DHCoplanarity
+ 
 
 # vertex separation (for particles) with respect to *all* vertices
 
