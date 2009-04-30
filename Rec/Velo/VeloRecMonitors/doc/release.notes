@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-04-30 - Kurt Rinnert
+ - added occupancy histograms to clusster monitor
+
 ! 2009-04-27 - Kurt Rinnert
  - shortened and simplified histogram name in sampling monitor in order to
    avoid potential problems with HistDB and presenter.

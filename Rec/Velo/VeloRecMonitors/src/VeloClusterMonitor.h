@@ -1,14 +1,14 @@
-// $Id: VeloClusterMonitor.h,v 1.7 2008-09-17 17:14:05 krinnert Exp $
+// $Id: VeloClusterMonitor.h,v 1.8 2009-04-30 15:25:37 krinnert Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
 // Include files
 // -------------
+#include "TH1D.h"
+#include "AIDA/IHistogram1D.h"
 
-// from DigiEvent
 #include "Event/VeloCluster.h"
 
-// local
 #include "VeloMonitorBase.h"
 
 /** @class VeloClusterMonitor VeloClusterMonitor.h
@@ -62,12 +62,20 @@ namespace Velo
     LHCb::VeloClusters* m_clusters;
     std::vector<unsigned int> m_nClustersPerSensor;
 
+    TH1D* m_histOccSpectAll;
+    TH1D* m_histOccSpectLow;
+    TH1D* m_histAvrgSensor;
+    std::map< unsigned int,  TH1D* > m_occupancyHistPerSensor;
+    unsigned int m_occupancyDenom;
+    
+    
     // Job options
     std::string m_clusterCont;
     std::vector<unsigned int> m_rSensorNumbers;
     std::vector<unsigned int> m_phiSensorNumbers;
     bool m_perSensorPlots;
-	
+    bool m_occupancyPlots;
+    unsigned int m_occupancyResetFreq;	
   };
 }
 

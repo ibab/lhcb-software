@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.11 2009-02-10 15:35:17 gersabec Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.12 2009-04-30 15:25:37 krinnert Exp $
 // Include files 
 // -------------
 
@@ -6,6 +6,7 @@
 
 /// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 // from VeloDet
 #include "VeloDet/DeVeloSensor.h"
@@ -42,6 +43,7 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
 					      ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
   , m_nClustersPerSensor(256,0)
+  , m_occupancyDenom(0)
 {
   m_rSensorNumbers = boost::assign::list_of(1)(3)(5)(7)(9)(20)(24)(26)(28)(30);
   m_phiSensorNumbers = boost::assign::list_of(65)(67)(69)(71)(73)(84)(88)(90)(92)(94);
@@ -51,6 +53,8 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
   declareProperty( "RSensorNumbersForPlots",   m_rSensorNumbers );
   declareProperty( "PhiSensorNumbersForPlots", m_phiSensorNumbers );
   declareProperty( "PerSensorPlots", m_perSensorPlots=false );
+  declareProperty( "OccupancyPlots", m_occupancyPlots=false );
+  declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
 }
 
 //=============================================================================
@@ -66,6 +70,12 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
+  if ( m_occupancyPlots ) {
+    m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
+    m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
+    m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -77,6 +87,28 @@ StatusCode Velo::VeloClusterMonitor::execute() {
   // Count the number of events monitored
   // ------------------------------------
   counter( "# events" ) += 1;
+
+  // Increment the occpancy denominator, reset at configurable
+  // frequency
+  if ( m_occupancyPlots ) {
+    if ( 0 == m_occupancyDenom % m_occupancyResetFreq ) {
+      m_occupancyDenom = 1;
+      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_occupancyHistPerSensor.begin();
+          hIt != m_occupancyHistPerSensor.end(); 
+          ++hIt ) {
+        hIt->second->Reset();
+      }
+      m_histOccSpectAll->Reset();
+      m_histOccSpectLow->Reset();
+    } else {
+      ++m_occupancyDenom;
+      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_occupancyHistPerSensor.begin();
+          hIt != m_occupancyHistPerSensor.end(); 
+          ++hIt ) {
+        hIt->second->Scale((m_occupancyDenom-1.0)/m_occupancyDenom);
+      }
+    }
+  }
 
   monitorClusters();
 
@@ -189,6 +221,29 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 	    "Active chip links versus sensor",
 	    -0.5, 131.5, -0.5, 95.5, 132, 96 );
     
+    // Produce occupancy plots
+    // -----------------------
+    if ( m_occupancyPlots ) {
+      TH1D* occHist = 0;
+      if ( m_occupancyHistPerSensor.end() == m_occupancyHistPerSensor.find(sensorNumber) ) {
+        boost::format fmtName ( "OccPerStripSens%d" ) ;
+        fmtName % sensorNumber;
+        boost::format fmtTitle ( "Occupancy, Sensor %d" ) ;
+        fmtTitle % sensorNumber;
+
+        occHist = m_occupancyHistPerSensor[sensorNumber] 
+          = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str(), -0.5, 2047.5, 2048)); 
+      } else {
+        occHist = m_occupancyHistPerSensor[sensorNumber];
+      }
+      double occ = occHist->GetBinContent(stripNumber+1)+(1.0/m_occupancyDenom);
+      occHist->SetBinContent(stripNumber+1,occ);
+      m_histOccSpectAll->Fill(occ*100);
+      if ( occ <= 0.2 ) {
+        m_histOccSpectLow->Fill(occ*100);
+      }
+    }    
+
     // Produce the R correlation plots
     // -------------------------------
     if ( m_rSensorNumbers.end()
@@ -213,6 +268,14 @@ void Velo::VeloClusterMonitor::monitorClusters() {
       const std::string hName = fmtEvt.str() ;
       plot1D( m_nClustersPerSensor[s], hName, hName, -0.5, 200.5, 201 );
 
+    }
+  }
+      
+  if ( m_occupancyPlots ) {
+    for ( std::map< unsigned int,  TH1D* >::iterator hIt = m_occupancyHistPerSensor.begin();
+        hIt != m_occupancyHistPerSensor.end(); 
+        ++hIt ) {
+      m_histAvrgSensor->SetBinContent(hIt->first + 1, hIt->second->Integral()/hIt->second->GetNbinsX());
     }
   }
   
