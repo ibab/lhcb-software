@@ -1,10 +1,20 @@
-!$Id: release.notes,v 1.26 2009-04-16 12:11:25 jpalac Exp $
+!$Id: release.notes,v 1.27 2009-04-30 12:59:36 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-04-30 - Juan PALACIOS
+ - MicroDST/TableExtraTraits.h
+  . Remove all "Traits" and explicit dependencies on LHCb types. All is now 
+    completely generic, thanks to recent additions to the Relations SW.
+  . Change name to MicroDST/RelTableFunctors.h
+
+! 2009-04-30 - Juan PALACIOS
+ - MicroDST/TableExtraTraits.h
+  . Remove typedef for Entry type. This is now available through the relations classes.
 
 ! 2009-04-16 - Juan PALACIOS
  - MicroDSTCommon::getStoredClone<T> now takes KeyedObject<int> as argument,
