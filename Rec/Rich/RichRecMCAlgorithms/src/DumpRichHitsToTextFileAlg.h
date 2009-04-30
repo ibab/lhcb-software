@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.h,v 1.1 2009-02-16 16:43:44 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.h,v 1.2 2009-04-30 13:14:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -57,14 +57,21 @@ namespace Rich
 
         // dump the given RICH panel to text file
         StatusCode dumpToTextfile( const Rich::DetectorType rich,
-                                   const Rich::Side         panel ) const;
+                                   const Rich::Side         panel,
+                                   const Rich::RadiatorType rad ) const;
 
       private:
 
         const Rich::MC::IMCTruthTool * m_truth;       ///< MC truth tool
 
+        /// Flag to use 'radiator corrected' local positions
+        bool m_useCorrPos;
+
         /// Event number
         unsigned int m_nEvt;
+
+        /// Detectors to write files for
+        std::vector<bool> m_detectors;
 
       };
 

@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2009-04-30 - Chris Jones
+ - Improvements to the hit dumping algorithm
+
 !===================== RichRecMCAlgorithms v1r2 2009-02-20 ===================
 ! 2009-02-16 - Chris Jones
  - Add a new algorithm that dumps RICH events to a simple text file.

@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.1 2009-02-16 16:43:44 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.2 2009-04-30 13:14:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -31,7 +31,11 @@ DumpRichHitsToTextFileAlg::DumpRichHitsToTextFileAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : Rich::Rec::AlgBase ( name , pSvcLocator ),
     m_truth            ( NULL ),
-    m_nEvt             ( 0    ) { }
+    m_nEvt             ( 0    ),
+    m_detectors        ( Rich::NRiches, true )
+{
+  declareProperty( "UseRedCorrPositions", m_useCorrPos = true );
+}
 
 //=============================================================================
 // Destructor
@@ -58,19 +62,29 @@ StatusCode DumpRichHitsToTextFileAlg::initialize()
 StatusCode DumpRichHitsToTextFileAlg::execute()
 {
   ++m_nEvt;
-  return ( dumpToTextfile(Rich::Rich1,Rich::top)    &&
-           dumpToTextfile(Rich::Rich1,Rich::bottom) &&
-           dumpToTextfile(Rich::Rich2,Rich::left)   &&
-           dumpToTextfile(Rich::Rich2,Rich::right)  );
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( m_detectors[Rich::Rich1] )
+  {
+    sc = sc && dumpToTextfile(Rich::Rich1,Rich::top,Rich::Rich1Gas);
+    sc = sc && dumpToTextfile(Rich::Rich1,Rich::bottom,Rich::Rich1Gas);
+  }
+  if ( m_detectors[Rich::Rich2] )
+  {
+    sc = sc && dumpToTextfile(Rich::Rich2,Rich::left,Rich::Rich2Gas);
+    sc = sc && dumpToTextfile(Rich::Rich2,Rich::right,Rich::Rich2Gas);
+  }
+  return sc;
 }
 
 StatusCode
 DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
-                                           const Rich::Side         panel ) const
+                                           const Rich::Side         panel,
+                                           const Rich::RadiatorType rad ) const
 {
   // file name
   std::ostringstream filename;
-  filename << Rich::text(rich) << "-" << Rich::text(rich,panel) << "_" << m_nEvt << ".txt";
+  filename << Rich::text(rich) << "-" << Rich::text(rich,panel) << "-" << Rich::text(rad)
+           << "_" << m_nEvt << ".txt";
 
   // open file
   info() << "Creating data text file : " << filename.str() << endreq;
@@ -81,10 +95,14 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
   for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
   {
     // get X and Y
-    //const double X ( (*iPix)->radCorrLocalPositions().position(rad()).x() );
-    //const double Y ( (*iPix)->radCorrLocalPositions().position(rad()).y() );
-    const double X ( (*iPix)->localPosition().x() );
-    const double Y ( (*iPix)->localPosition().y() );
+    const double X ( m_useCorrPos ?
+                     (*iPix)->radCorrLocalPositions().position(rad).x() :
+                     (*iPix)->localPosition().x()
+                     );
+    const double Y ( m_useCorrPos ?
+                     (*iPix)->radCorrLocalPositions().position(rad).y() :
+                     (*iPix)->localPosition().y()
+                     );
     file << X << " " << Y << " ";
 
     // MC history
@@ -100,12 +118,15 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
         if ( i>0 ) file << ",";
         file << (*iH)->mcParticle()->key();
         ++i;
-      } 
+      }
     }
 
     // end this line
     file << std::endl;
   }
+
+  // close the file
+  file.close();
 
   return StatusCode::SUCCESS;
 }
