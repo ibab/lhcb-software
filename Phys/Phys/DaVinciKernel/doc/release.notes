@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.297 2009-04-25 03:41:21 spradlin Exp $
+!$Id: release.notes,v 1.298 2009-04-30 13:21:31 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-04-30 - Vanya BELYAEV
+
+ - src/Lib/DVAlgorithm.cpp
+   add few mode default nicknames for various tools 
 
 ! 2009-04-25 - Patrick Spradlin
  - src/Lib/DVAlgorithm.cpp

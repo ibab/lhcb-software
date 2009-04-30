@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.50 2009-04-25 03:41:21 spradlin Exp $
+// $Id: DVAlgorithm.cpp,v 1.51 2009-04-30 13:21:31 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -101,16 +101,22 @@ DVAlgorithm::DVAlgorithm
   m_particleCombinerNames [ "Blind"         ] = "BlindVertexFitter"   ;
   m_particleCombinerNames [ "LoKi"          ] = "LoKi::VertexFitter"  ;
   m_particleCombinerNames [ "ParticleAdder" ] = "ParticleAdder"       ;
+  m_particleCombinerNames [ "Adder"         ] = "ParticleAdder"       ;
+  m_particleCombinerNames [ "Combiner"      ] = "MomentumCombiner"    ;
+  m_particleCombinerNames [ "Momenta"       ] = "MomentumCombiner"    ;
+  m_particleCombinerNames [ "Jet"           ] = "MomentumCombiner"    ;
   declareProperty ( "ParticleCombiners"  , m_particleCombinerNames, "Names of particle combiners" ) ;
   //
   m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"   ;
   m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"   ;
+  m_particleReFitterNames [ "Vertex"        ] = "OfflineVertexFitter"   ;
   m_particleReFitterNames [ "Blind"         ] = "BlindVertexFitter"     ;
   m_particleReFitterNames [ "Kalman"        ] = "LoKi::VertexFitter"    ;
   m_particleReFitterNames [ "LoKi"          ] = "LoKi::VertexFitter"    ;
   m_particleReFitterNames [ "Mass"          ] = "LoKi::MassFitter"      ;
   m_particleReFitterNames [ "Direction"     ] = "LoKi::DirectionFitter" ;
   m_particleReFitterNames [ "ParticleAdder" ] = "ParticleAdder"         ;
+  m_particleReFitterNames [ "Adder"         ] = "ParticleAdder"         ;
   declareProperty  ( "ParticleReFitters" , m_particleReFitterNames, "Names of particle refitters" ) ;
   //
   m_pvReFitterNames [ ""           ] = "AdaptivePVReFitter" ;
@@ -141,8 +147,11 @@ DVAlgorithm::DVAlgorithm
     ( "DirectionFitters"    , m_directionFitterNames , 
       "The mapping of nick/name/type for IDirectionFit tools"   ) ;
   //
-  m_distanceCalculatorNames [ ""     ] = "LoKi::DistanceCalculator" ;
-  m_distanceCalculatorNames [ "LoKi" ] = "LoKi::DistanceCalculator" ;
+  m_distanceCalculatorNames [ ""        ] = "LoKi::DistanceCalculator"    ;
+  m_distanceCalculatorNames [ "LoKi"    ] = "LoKi::DistanceCalculator"    ;
+  m_distanceCalculatorNames [ "Trg"     ] = "LoKi::TrgDistanceCalculator" ;
+  m_distanceCalculatorNames [ "Hlt"     ] = "LoKi::TrgDistanceCalculator" ;
+  m_distanceCalculatorNames [ "Trigger" ] = "LoKi::TrgDistanceCalculator" ;
   declareProperty 
     ( "DistanceCalculators" , m_distanceCalculatorNames , 
       "The mapping of nick/name/type for IDistanceCalculator tools"   ) ;
