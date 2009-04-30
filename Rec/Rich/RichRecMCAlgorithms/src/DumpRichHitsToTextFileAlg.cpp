@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.2 2009-04-30 13:14:13 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.3 2009-04-30 14:20:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -35,6 +35,7 @@ DumpRichHitsToTextFileAlg::DumpRichHitsToTextFileAlg( const std::string& name,
     m_detectors        ( Rich::NRiches, true )
 {
   declareProperty( "UseRedCorrPositions", m_useCorrPos = true );
+  declareProperty( "OneOneMCAssoc",   m_onlyOneMCassoc = true );
 }
 
 //=============================================================================
@@ -118,6 +119,7 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
         if ( i>0 ) file << ",";
         file << (*iH)->mcParticle()->key();
         ++i;
+        if ( m_onlyOneMCassoc ) break;
       }
     }
 

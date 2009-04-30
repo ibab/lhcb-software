@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.h,v 1.2 2009-04-30 13:14:13 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.h,v 1.3 2009-04-30 14:20:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -72,6 +72,9 @@ namespace Rich
 
         /// Detectors to write files for
         std::vector<bool> m_detectors;
+
+        /// Allow only one MC association per hit
+        bool m_onlyOneMCassoc;
 
       };
 
