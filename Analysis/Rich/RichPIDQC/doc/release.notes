@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.3 2009-02-20 14:22:57 jpalac Exp $
+!$Id: release.notes,v 1.4 2009-05-01 16:27:45 ukerzel Exp $
 !-----------------------------------------------------------------------------
 ! Package     : /Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+! 2009-05-01 - Ulrich Kerzel
+- add J/Psi -> mu mu from Nicola
 
 !========================== RichPIDQC v1r0 2009-02-20 ========================
 
