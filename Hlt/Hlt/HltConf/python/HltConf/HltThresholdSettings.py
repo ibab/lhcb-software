@@ -1,8 +1,8 @@
 
-__all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType' )
+__all__ = ( 'Miriam_20090430', 'FEST', 'SettingForDataType' )
 
 
-def SettingsForDataType( x ) :
+def SettingForDataType( x ) :
     _dataType2Setting = { '2009' : 'Miriam_20090430' }
     return _dataType2Setting[x] if x in _dataType2Setting else None
 
