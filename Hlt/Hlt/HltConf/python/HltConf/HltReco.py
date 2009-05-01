@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.3 2009-04-10 21:07:11 graven Exp $
+# $Id: HltReco.py,v 1.4 2009-05-01 19:04:14 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -36,6 +36,7 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
+          , 'HltSeedSequence' # run seeding...
           )
 #
 #
@@ -175,6 +176,46 @@ GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') 
 
 #/// @todo This cannot work, as tracking must have been done to process the rest.
 #//recoSeq.IgnoreFilterPassed = True; // process both track and calo independently
+
+##------------------------------
+## Opts to run the online seeding
+##-----------------------------
+from Configurables import PatSeeding
+PatSeeding = PatSeeding()
+PatSeeding.OutputTracksName="Hlt/Track/Seed"
+
+from Configurables import PatDownstream
+PatDownstream = PatDownstream()
+PatDownstream.InputLocation="Hlt/Track/Seed"
+PatDownstream.OutputLocation="Hlt/Track/SeedTT"
+
+
+##-----------------------------
+## blanking
+##-----------------------------
+## changed: PatSeeding.UseForward = true;
+##/ToolSvc.PatSeedingTool.UseForward = true;
+##/**
+## * 
+##// the following is without hit blanking
+##ToolSvc.PatSeedingTool.UseForward = false;
+##// for TT: 
+##PatDownstream.UseForward = false;
+##PatDownstream.SeedFilter = false;
+##*/
+
+## with hit blanking
+from Configurables import PatSeedingTool
+PatSeedingTool().UseForward = True
+## for TT: 
+PatDownstream.UseForward = True
+PatDownstream.SeedFilter = True
+
+
+
+HltSeedSequence = GaudiSequencer("HltSeedSequence")
+HltSeedSequence.Members = [ PatSeeding, PatDownstream ]
+HltSeedSequence.MeasureTime=True
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )

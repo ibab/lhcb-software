@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.227 2009-05-01 18:02:12 graven Exp $ 
+! $Id: release.notes,v 1.228 2009-05-01 19:04:14 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -14,6 +14,7 @@
    ThresholdSettings if it is not explicitly specified
  - pythonize Hlt2Particles.opts
  - change hltType into HltType
+ - move seed reco into HltReco.py
 
 ! 2009-04-28 - Gerhard Raven
  - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
