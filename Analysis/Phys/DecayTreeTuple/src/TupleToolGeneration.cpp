@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.cpp,v 1.3 2008-07-01 15:49:31 pkoppenb Exp $
+// $Id: TupleToolGeneration.cpp,v 1.4 2009-05-01 08:08:35 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -50,17 +50,19 @@ StatusCode TupleToolGeneration::initialize() {
 
 StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
 
-  const LHCb::GenHeader* mch = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
- 
-  unsigned int nc = mch->collisions().size() ;
-  
-  if( msgLevel( MSG::DEBUG ) ) debug() <<  nc << " Collisions " << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "TupleToolGeneration" << endmsg  ;
+
+  if (!exist<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default)) 
+    return Warning("NoGenHeader. You probably don't need this tool.",1,StatusCode::SUCCESS);
+  LHCb::GenHeader* mch = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
+
+  if (msgLevel(MSG::DEBUG)) debug() << mch->numOfCollisions() << " collisions" << endmsg  ;
 
   std::vector<unsigned int> heaviestQuark ;
   std::vector<int> processType ;
   unsigned int hqEvent = 0 ;
   
-  // quarks                                                                             
+  // quarks
   for ( SmartRefVector< LHCb::GenCollision >::const_iterator ic = mch->collisions().begin() ;
         ic != mch->collisions().end() ; ++ic){
     if (0==*ic) Exception("Null collision pointer");
