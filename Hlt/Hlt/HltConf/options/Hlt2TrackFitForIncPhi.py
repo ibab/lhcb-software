@@ -17,7 +17,6 @@ Hlt2IncPhiTFParticlesSeq.MeasureTime = 1
 # Do kalman fitting
 ######################################################################
 from Configurables import TrackEventFitter, TrackMasterFitter
-from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
 Hlt2IncPhiTFTrackFitSeq = GaudiSequencer( "Hlt2IncPhiTFTrackFitSeq" )
 Hlt2IncPhiTFParticlesSeq.Members += [ Hlt2IncPhiTFTrackFitSeq ]
 
@@ -131,5 +130,3 @@ HltIncPhiRichPIDsKaons.addTool(TrackSelector())
 HltIncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
 HltIncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
 HltIncPhiRichPIDsKaons.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-1.0'"]
-
-
