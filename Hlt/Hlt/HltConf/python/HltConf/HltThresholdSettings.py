@@ -1,5 +1,12 @@
 
-__all__ = ( 'Miriam_20090430', 'FEST' )
+__all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType' )
+
+
+def SettingsForDataType( x ) :
+    _dataType2Setting = { '2009' : 'Miriam_20090430' }
+    return _dataType2Setting[x] if x in _dataType2Setting else None
+
+
 
 Miriam_20090430 = { 'HA' : { 'SingleHadron_PTCut' : 4450
                            , 'HadMain_IPCut' : 0.09
