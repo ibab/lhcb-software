@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.68 2009-04-19 14:40:32 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.69 2009-05-01 07:41:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -49,8 +49,9 @@ class HltConf(LHCbConfigurableUser):
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
                 , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
+                , "ThresholdSetting"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
                 }   
-                
+
     def defineL0Channels(self, L0TCK = None) :
             if L0TCK :
                 importOptions('$L0TCK/L0DUConfig.opts')
@@ -91,6 +92,12 @@ class HltConf(LHCbConfigurableUser):
                         , 'HA' : HltHadronLinesConf
                         , 'PH' : HltPhotonLinesConf
                         , 'EL' : HltElectronLinesConf }
+
+            ThresholdSetting = None
+            if self.getProp('ThresholdSetting'): 
+                print "# using '%s' as threshold settings " % self.getProp('ThresholdSetting')
+                exec "from HltThresholdSettings import %s as ThresholdSetting" % self.getProp('ThresholdSetting')
+
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
                 if i == 'Hlt2' : continue # we deal with this later...
@@ -103,7 +110,10 @@ class HltConf(LHCbConfigurableUser):
                 #        regardless of whether we do it over here...
                 #        So anyone configuring some part explictly will _always_ get
                 #        that part of the Hlt run, even if it does not appear in HltType...
-                type2conf[i]()
+                conf = type2conf[i]()
+                if ThresholdSetting and i in ThresholdSetting : 
+                    for (k,v) in ThresholdSetting[i].iteritems() :
+                        setattr(conf,k,v)
             Hlt1Conf()
             if hlttype.find('Hlt2') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt2.py')

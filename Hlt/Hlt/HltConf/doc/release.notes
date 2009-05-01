@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.222 2009-04-29 18:39:27 graven Exp $ 
+! $Id: release.notes,v 1.223 2009-05-01 07:37:16 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-01 - Gerhard Raven
+ - add a module HltThresholds which contains predefined sets of settings 
+   which are selected with HltConf().ThresholdSetting = "Name"
+   Available settings are sofar Miriam_20090430, FEST
 
 ! 2009-04-28 - Gerhard Raven
  - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
