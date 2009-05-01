@@ -3,6 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2009-05-01 - Gerhard Raven
+ - Make PatConfirmTool use a _private_ PatSeedingTool to avoid
+   clashes between Hlt1 and Hlt2 use of PatSeedingTool...
+
 ! 2009-04-30 - Alessia Satta
  - MuonSeedTool : update for changes in MuonPosTool
 
