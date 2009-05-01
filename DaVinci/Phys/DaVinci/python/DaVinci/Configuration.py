@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.59 2009-05-01 17:55:28 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.60 2009-05-01 18:03:17 graven Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -129,7 +129,7 @@ class DaVinci(LHCbConfigurableUser) :
         if (self.getProp("HltType")!=''):
             HltConf().DataType = self.getProp("DataType")                                      
             HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
-            HltConf().hltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+            HltConf().HltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
             HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")                                      
             from Configurables import (GaudiSequencer, LbAppInit)
             hltSeq = GaudiSequencer("Hlt")
