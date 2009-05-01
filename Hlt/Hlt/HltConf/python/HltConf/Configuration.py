@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.72 2009-05-01 10:41:10 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.73 2009-05-01 11:00:15 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -96,11 +96,11 @@ class HltConf(LHCbConfigurableUser):
 
             ThresholdSetting = None
             if self.getProp('ThresholdSetting'): 
-                print "# using '%s' as threshold settings " % self.getProp('ThresholdSetting')
                 exec "from HltThresholdSettings import %s as ThresholdSetting" % self.getProp('ThresholdSetting')
             else :
                 from HltThresholdSettings import SettingForDataType
                 ThresholdSetting = SettingForDataType( self.getProp('DataType') )
+            # print ThresholdSetting
 
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
@@ -108,7 +108,6 @@ class HltConf(LHCbConfigurableUser):
                 if i not in type2conf : raise AttributeError, "unknown hlttype fragment '%s'"%i
                 if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
                 print '# requested ' + i + ', importing ' + str(type2conf[i]) 
-                # TODO: propagate relevant attributes to lines
                 # FIXME: warning: the next is 'brittle': if someone outside 
                 #        does eg. HltMuonLinesConf(), it will get activated
                 #        regardless of whether we do it over here...
