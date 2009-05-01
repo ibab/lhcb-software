@@ -3,22 +3,22 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestHlt12-2008.py</text>
+  <text>../options/DVTestHlt12-MDF.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       999 |        465 |(  46.5465 +- 1.57815  )%|   -------   |   -------   |
- | "#errors"                                       |       999 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |     10000 |       3991 |(  39.9100 +- 0.489713 )%|   -------   |   -------   |
+ | "#errors"                                       |     10000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       763 |        470 |(  61.5990 +- 1.76074  )%|   -------   |   -------   |
- | "#errors"                                       |       763 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |        96 |          4 |(  4.16667 +- 2.03947  )%|   -------   |   -------   |
+ | "#errors"                                       |        96 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
