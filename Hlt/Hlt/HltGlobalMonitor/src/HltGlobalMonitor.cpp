@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.36 2009-05-01 12:15:40 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.37 2009-05-01 13:13:10 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -89,7 +89,6 @@ HltGlobalMonitor::~HltGlobalMonitor() {};
 StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  //  m_time_ref    = time(NULL);  //time or mtime or mtimeref... zie constructor
   
   m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
   m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
@@ -109,7 +108,7 @@ StatusCode HltGlobalMonitor::initialize() {
   // create a histogram with one bin per Alley
   // the order and the names for the bins are
   // configured in HLTConf/Configuration.py  
-  m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, 11.5 , 12 );
+  m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, m_GroupLabels.size()-0.5 , m_GroupLabels.size() );
   if (!setBinLabels( m_hlt1alley, m_GroupLabels )) {
     error() << "failed to set binlables on Alley hist" << endmsg;
   }
@@ -234,7 +233,7 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
     fill( m_L0Input  , i->second->id(), acc );
   }
   
-  //TODO: only do this _once_...
+  //TODO: only do this _once_... if the L0TCK changes...
   if ( 0 != m_L0Input ) {
         std::vector< std::pair<unsigned, std::string> > labels;
         for ( unsigned ibin = 0; ibin < repsL.size() ; ++ibin ) {
@@ -314,7 +313,6 @@ void HltGlobalMonitor::monitorMemory() {
   storeTrend(m_hltVirtinTime,m_virtmem);
 
   fill(m_hltVirtMem, m_virtmem, 1);
-
 
   if(counter("#events").nEntries() >0){
     fill(m_hltTime, (double)m_time/(double)(counter("#events").nEntries()), 1);    
