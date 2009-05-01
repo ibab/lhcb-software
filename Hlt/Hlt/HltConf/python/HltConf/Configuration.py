@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.74 2009-05-01 13:38:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.75 2009-05-01 18:02:12 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -42,7 +42,7 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt1Conf
                              , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
-                , "hltType"                    : 'Hlt1+Hlt2'
+                , "HltType"                    : 'Hlt1+Hlt2'
                 , "DataType"                   : '2009'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
@@ -105,7 +105,7 @@ class HltConf(LHCbConfigurableUser):
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
                 if i == 'Hlt2' : continue # we deal with this later...
-                if i not in type2conf : raise AttributeError, "unknown hlttype fragment '%s'"%i
+                if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
                 if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
                 print '# requested ' + i + ', importing ' + str(type2conf[i]) 
                 # FIXME: warning: the next is 'brittle': if someone outside 
@@ -286,5 +286,5 @@ class HltConf(LHCbConfigurableUser):
         importOptions('$HLTCONFROOT/options/HltInit.py')
         log.info("Loaded HltInit")
         self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
-        self.confType(self.getProp('hltType'))
+        self.confType(self.getProp('HltType'))
         appendPostConfigAction( self.postConfigAction )

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.226 2009-05-01 13:38:15 graven Exp $ 
+! $Id: release.notes,v 1.227 2009-05-01 18:02:12 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -12,6 +12,8 @@
  - add DataType -> settings map to HltThresholds python module
  - add DataType property to HltConf() -- use it to set the default
    ThresholdSettings if it is not explicitly specified
+ - pythonize Hlt2Particles.opts
+ - change hltType into HltType
 
 ! 2009-04-28 - Gerhard Raven
  - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
