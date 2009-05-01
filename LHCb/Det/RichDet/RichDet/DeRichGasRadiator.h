@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.h,v 1.4 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichGasRadiator.h,v 1.5 2009-05-01 14:22:19 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -79,5 +79,8 @@ private:
   /// Condition holding the current pressure of radiator
   SmartRef<Condition> m_pressureCond;
 
+  /// Condition holding the scale factor for the refractivity
+  /// This conditions scales n-1 NOT n
+  SmartRef<Condition> m_scaleFactorCond;
 };
 #endif // RICHDET_DERICHGASRADIATOR_H
