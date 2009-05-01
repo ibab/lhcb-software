@@ -17,10 +17,10 @@ __all__ = ( 'DstarWithD02KPi', 'DstarWithD02KK', 'DstarWithD02PiPi' )
 ################################################################################
 # Slow pion
 Hlt2SlowPions = FilterDesktop("Hlt2SlowPions")
-Hlt2SlowPions.InputLocations  = [ "Hlt2NoCutsPions", "Hlt2VTTPions" ]
+Hlt2SlowPions.InputLocations  = [ NoCutsPions.outputSelection(), "Hlt2VTTPions" ]
 Hlt2SlowPions.Code = "(MIPCHI2DV(PRIMARY)>1)"
 
-###@TODO:@FIXME add explicit Hlt2Pions, Hlt2VTTPions dependency...
+###@TODO:@FIXME add explicit Hlt2VTTPions dependency...
 SlowPions = bindMembers( None, [ NoCutsPions, Hlt2SlowPions ] )
 ################################################################################
 # D* with D0->Kpi

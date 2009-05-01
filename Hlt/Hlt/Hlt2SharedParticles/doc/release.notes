@@ -1,11 +1,14 @@
-$Id: release.notes,v 1.19 2009-04-29 20:54:40 gligorov Exp $
+$Id: release.notes,v 1.20 2009-05-01 18:52:01 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
-! 2009-Apr-29 - V. Gligorov 
+! 2009-05-01 - Gerhard Raven
+ - add KsDD to Ks.py
+
+! 2009-04-29 - V. Gligorov 
  - Change python/Hlt2SharedParticles/Topo{2,TF2}Body.py to make all KK, pipi, and
    Kpi combinations, in order to enable the topological trigger to select
    prompt charm. 
