@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.1 2009-05-01 17:45:25 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.2 2009-05-01 17:54:59 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -14,8 +14,8 @@ from Configurables import GaudiSequencer
 #
 # Standard configuration
 #
-from Configurables import DaVinci, HltConf
-HltConf().ThresholdSettings = 'Miriam_20090430'
+from Configurables import DaVinci
+DaVinci().HltThresholdSettings = 'Miriam_20090430'
 DaVinci().EvtMax = 10000                       # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency

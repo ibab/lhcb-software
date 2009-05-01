@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.58 2009-04-29 15:47:41 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.59 2009-05-01 17:55:28 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -40,6 +40,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
+       , "HltThresholdSettings" : ''          # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
        }
 
     _propertyDocDct = {  
@@ -66,6 +67,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1'.
                                     'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
                                     """
+       , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
          }
 
     __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp ]
@@ -125,12 +127,15 @@ class DaVinci(LHCbConfigurableUser) :
         Define HLT. Make sure it runs first.
         """
         if (self.getProp("HltType")!=''):
+            HltConf().DataType = self.getProp("DataType")                                      
             HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
             HltConf().hltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+            HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")                                      
             from Configurables import (GaudiSequencer, LbAppInit)
             hltSeq = GaudiSequencer("Hlt")
             ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
             log.info("Will run Hlt")
+            log.info( HltConf() ) 
         
         
 ################################################################################
