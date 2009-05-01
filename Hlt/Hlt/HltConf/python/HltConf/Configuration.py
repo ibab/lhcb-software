@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.70 2009-05-01 07:41:54 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.71 2009-05-01 07:44:04 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -49,7 +49,7 @@ class HltConf(LHCbConfigurableUser):
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
                 , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
-                , "ThresholdSettings"          : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
+                , "ThresholdSetting"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
                 }   
 
     def defineL0Channels(self, L0TCK = None) :

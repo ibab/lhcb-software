@@ -44,5 +44,6 @@ FEST = { 'VE' : { 'Prescale' : { '.*' : 1 } }
        , 'PA' : { 'Prescale' : { 'Hlt1Physics'  : 1 
                                , 'Hlt1Random'   : 1 # @OnlineEnv.AcceptRate
                                }
+                }
        }
 
