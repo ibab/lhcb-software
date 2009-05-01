@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.35 2009-04-25 13:59:20 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.36 2009-05-01 12:15:40 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -271,12 +271,8 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     if (report && report->decision()) ++nAcc;
   }
   
+  counter("#accept") += ( nAcc > 0 );
   fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
-  
-  if (!nAcc){
-    counter("#accept") += 1;
-  }
-   
  
   for (size_t i = 0; i<reps.size();++i) {
 
@@ -321,8 +317,8 @@ void HltGlobalMonitor::monitorMemory() {
 
 
   if(counter("#events").nEntries() >0){
-    fill(m_hltTime, (double)m_time/(double)(counter("#accept").nEntries()), 1);    
-    storeTrend(m_hltEventsTime, (double)m_time/(double)(counter("#accept").nEntries()));
+    fill(m_hltTime, (double)m_time/(double)(counter("#events").nEntries()), 1);    
+    storeTrend(m_hltEventsTime, (double)m_time/(double)(counter("#events").nEntries()));
 
   }
  
@@ -331,18 +327,12 @@ void HltGlobalMonitor::monitorMemory() {
 //=============================================================================
 void HltGlobalMonitor::storeTrend(AIDA::IHistogram1D* theHist, double Value) 
 {
-  // store trends for
   const AIDA::IAxis & axis = theHist->axis();
   long bins = axis.bins();
   for ( long i = 0; i < bins; ++i ) {
     double binValue = theHist->binHeight(i);
-    double nextValue;
-    if ( i < bins - 1 ) {
-      nextValue = theHist->binHeight(i+1);
-    }
-    else {
-      nextValue = Value;
-    }
+    double nextValue = ( i < bins - 1 ) ? theHist->binHeight(i+1)
+                                        : Value;
     double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
     theHist->fill(x, nextValue - binValue);
   }

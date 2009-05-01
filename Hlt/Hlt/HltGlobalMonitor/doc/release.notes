@@ -1,7 +1,11 @@
-!$Id: release.notes,v 1.36 2009-04-25 13:59:20 graven Exp $
+!$Id: release.notes,v 1.37 2009-05-01 12:15:40 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+2009-05-01 - Gerhard Raven
+ - fix warning messages about filling histogram with Infinity, caused by a 
+   divide by zero
 
 2009-04-25 - Gerhard Raven
  - fix compiler warning in nightly
