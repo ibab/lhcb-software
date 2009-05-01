@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.12 2009-03-17 13:31:23 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-05-01 10:38:08 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -49,17 +49,17 @@ class AnalysisConf(LHCbConfigurableUser) :
                 redo = True
                 self.setProp("RedoMCLinks",True) 
                 
-        if ( redo ):
-            from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
-            mcLinkSeq = GaudiSequencer("RedoMCLinks")
-            tescheck = TESCheck("DaVinciEvtCheck")
-            tescheck.Inputs = ["Link/Rec/Track/Best"]
-            tescheck.Stop = False
-            tescheck.OutputLevel = 5
-            evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller")
-            evtnodekiller.Nodes = ["Link/Rec"]
-            mcLinkSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]
-            init.Members += [ mcLinkSeq ]
+            if ( redo ):
+                from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
+                mcLinkSeq = GaudiSequencer("RedoMCLinks")
+                tescheck = TESCheck("DaVinciEvtCheck")
+                tescheck.Inputs = ["Link/Rec/Track/Best"]
+                tescheck.Stop = False
+                tescheck.OutputLevel = 5
+                evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller")
+                evtnodekiller.Nodes = ["Link/Rec"]
+                mcLinkSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]
+                init.Members += [ mcLinkSeq ]
 #
 # Set MC
 #
