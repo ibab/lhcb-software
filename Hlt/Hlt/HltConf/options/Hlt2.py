@@ -26,12 +26,12 @@ Hlt2.Members += [ HltRecoSequence ]
 # ---------------------------------------------------------------------
 #  ProtoParticles and Particles
 # ---------------------------------------------------------------------
-importOptions( "$HLTCONFROOT/options/Hlt2Particles.opts" )
+importOptions( "$HLTCONFROOT/options/Hlt2Particles.py" )
 # ---------------------------------------------------------------------
 #  Empty Sequencer for MC truth filtering --- filled in HltSelChecker
 # ---------------------------------------------------------------------
 Hlt2.Members += [ GaudiSequencer("SeqHlt2TruthFilter") ] 
-importOptions( "$HLTCONFROOT/options/HltTrackAssociator.opts" )
+importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
 # ---------------------------------------------------------------------
 # Initialise Hlt2Shared particles
 # ---------------------------------------------------------------------
