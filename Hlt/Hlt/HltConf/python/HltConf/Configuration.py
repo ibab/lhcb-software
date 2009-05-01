@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.73 2009-05-01 11:00:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.74 2009-05-01 13:38:15 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -50,7 +50,7 @@ class HltConf(LHCbConfigurableUser):
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
                 , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
-                , "ThresholdSetting"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
+                , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
                 }   
 
     def defineL0Channels(self, L0TCK = None) :
@@ -94,13 +94,13 @@ class HltConf(LHCbConfigurableUser):
                         , 'PH' : HltPhotonLinesConf
                         , 'EL' : HltElectronLinesConf }
 
-            ThresholdSetting = None
-            if self.getProp('ThresholdSetting'): 
-                exec "from HltThresholdSettings import %s as ThresholdSetting" % self.getProp('ThresholdSetting')
+            ThresholdSettings = None
+            if self.getProp('ThresholdSettings'): 
+                exec "from HltThresholdSettings import %s as ThresholdSettings" % self.getProp('ThresholdSettings')
             else :
-                from HltThresholdSettings import SettingForDataType
-                ThresholdSetting = SettingForDataType( self.getProp('DataType') )
-            # print ThresholdSetting
+                from HltThresholdSettings import SettingsForDataType
+                ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
+            # print ThresholdSettings
 
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
@@ -114,8 +114,8 @@ class HltConf(LHCbConfigurableUser):
                 #        So anyone configuring some part explictly will _always_ get
                 #        that part of the Hlt run, even if it does not appear in HltType...
                 conf = type2conf[i]()
-                if ThresholdSetting and i in ThresholdSetting : 
-                    for (k,v) in ThresholdSetting[i].iteritems() :
+                if ThresholdSettings and i in ThresholdSettings : 
+                    for (k,v) in ThresholdSettings[i].iteritems() :
                         setattr(conf,k,v)
             Hlt1Conf()
             if hlttype.find('Hlt2') != -1 :   

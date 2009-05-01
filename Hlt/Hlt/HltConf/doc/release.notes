@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.225 2009-05-01 10:41:10 graven Exp $ 
+! $Id: release.notes,v 1.226 2009-05-01 13:38:15 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,11 +7,11 @@
 
 ! 2009-05-01 - Gerhard Raven
  - add a module HltThresholds which contains predefined sets of settings 
-   which are selected with HltConf().ThresholdSetting = "Name"
+   which are selected with HltConf().ThresholdSettings = "Name"
    Available settings are sofar Miriam_20090430, FEST
  - add DataType -> settings map to HltThresholds python module
  - add DataType property to HltConf() -- use it to set the default
-   ThresholdSetting if it is not explicitly specified
+   ThresholdSettings if it is not explicitly specified
 
 ! 2009-04-28 - Gerhard Raven
  - specify InputLocations as property of DVAlgorithm instead of PhysDesktop
