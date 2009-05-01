@@ -4,6 +4,7 @@
 #include <string>
 
 namespace LHCb { class ODIN; };
+class StatEntity;
 
 class DeterministicPrescaler : public GaudiAlgorithm 
 {
@@ -21,6 +22,7 @@ private:
   double                  m_accFrac;      // fraction of input events to accept...
   std::string             m_prescaleSpec; // pre-scale specification
   boost::dynamic_bitset<> m_prescale;     // bitmap determined from the above during 'initialize'
+  StatEntity*             m_counter;
 
   bool accept(const LHCb::ODIN& odin) const ;
   bool accept(const ulonglong& evtNr) const;

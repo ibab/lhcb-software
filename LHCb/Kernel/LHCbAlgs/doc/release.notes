@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-05-01 - Gerhard Raven
+ - speed up DeterministicPrescaler
+
 ! 2009-04-15 - Patrick Koppenburg
  - AlgorithmCorrelations : check for duplicate entries
 
