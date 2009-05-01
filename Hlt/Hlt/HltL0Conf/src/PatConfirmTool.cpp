@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.12 2009-04-27 14:56:32 graven Exp $
+// $Id: PatConfirmTool.cpp,v 1.13 2009-05-01 11:15:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,18 +59,16 @@ PatConfirmTool::~PatConfirmTool() {}
 StatusCode PatConfirmTool::initialize(){
 
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()){
-    return sc;
-  }
-  if( msgLevel(MSG::DEBUG) ) 
+  if (sc.isFailure()) return sc;
+  if( msgLevel(MSG::DEBUG) )  {
     debug() << " Initialize L0 confirmation tool using PatSeeding" << endmsg;
+  }
    
   m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
 
-  m_patSeedingTool  = tool<IPatSeedingTool>("PatSeedingTool");
+  m_patSeedingTool  = tool<IPatSeedingTool>("PatSeedingTool",this);
 
-  if(m_debugMode){
-    //tool for debug information
+  if(m_debugMode){ //tool for debug information
     m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
   }
 
@@ -113,10 +111,8 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   unsigned minHits = m_minHitsInOT;
   // work out if we're likely to hit the IT - if so, we're satisfied with
   // half the number of hits
-  double x = seedState.x() + seedState.tx() *
-	  (StateParameters::ZBegT - seedState.z());
-  double y = seedState.y() + seedState.ty() *
-	  (StateParameters::ZBegT - seedState.z());
+  double x = seedState.x() + seedState.tx() * (StateParameters::ZBegT - seedState.z());
+  double y = seedState.y() + seedState.ty() * (StateParameters::ZBegT - seedState.z());
   if (std::abs(x) < 700. && std::abs(y) < 250.) minHits /= 2;
   else {
     x += seedState.tx() * (StateParameters::ZMidT - StateParameters::ZBegT);
