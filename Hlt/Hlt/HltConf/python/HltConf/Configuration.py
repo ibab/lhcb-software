@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.71 2009-05-01 07:44:04 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.72 2009-05-01 10:41:10 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -43,6 +43,7 @@ class HltConf(LHCbConfigurableUser):
                              , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
                 , "hltType"                    : 'Hlt1+Hlt2'
+                , "DataType"                   : '2009'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
@@ -97,6 +98,9 @@ class HltConf(LHCbConfigurableUser):
             if self.getProp('ThresholdSetting'): 
                 print "# using '%s' as threshold settings " % self.getProp('ThresholdSetting')
                 exec "from HltThresholdSettings import %s as ThresholdSetting" % self.getProp('ThresholdSetting')
+            else :
+                from HltThresholdSettings import SettingForDataType
+                ThresholdSetting = SettingForDataType( self.getProp('DataType') )
 
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
