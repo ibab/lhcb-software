@@ -13,7 +13,7 @@ from Moore.Configuration import *
 #Moore().generateConfig = True
 #Moore().configLabel = 'NO prescale'
 
-Moore().hltType = 'Hlt1' # +Hlt2'
+Moore().HltType = 'Hlt1' # +Hlt2'
 Moore().Verbose = True
 
 #Moore().Simulation = False

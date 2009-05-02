@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.51 2009-04-29 14:31:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.52 2009-05-02 08:26:57 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -43,7 +43,7 @@ class Moore(LHCbConfigurableUser):
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
-        , "hltType" :          'Hlt1'
+        , "HltType" :          'Hlt1'
         , "useTCK"     :       False # use TCK instead of options...
         , "replaceL0BanksWithEmulated" : False
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
@@ -112,7 +112,7 @@ class Moore(LHCbConfigurableUser):
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
                           , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                           , ConfigAccessSvc = self.getConfigAccessSvc().getName()
-                          , hltType = self.getProp('hltType')
+                          , hltType = self.getProp('HltType')
                           , mooreRelease = self.getRelease()
                           , label = self.getProp('configLabel'))
         # make sure gen is the very first Top algorithm...
@@ -160,7 +160,7 @@ class Moore(LHCbConfigurableUser):
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
             hltConf = HltConf()
-            self.setOtherProps( hltConf,  [ 'hltType','Verbose','L0TCK'])
+            self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK'])
             print hltConf
             log.info( hltConf )
             

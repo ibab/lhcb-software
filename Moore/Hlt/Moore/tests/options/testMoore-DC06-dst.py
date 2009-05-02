@@ -2,7 +2,7 @@
 from Gaudi.Configuration import *
 from Moore.Configuration import *
 
-Moore().hltType = 'Hlt1' # +Hlt2'
+Moore().HltType = 'Hlt1' # +Hlt2'
 Moore().EvtMax = 2000
 Moore().DataType = 'DC06'
 Moore().Simulation = True

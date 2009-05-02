@@ -16,7 +16,7 @@ from Configurables       import HltSelReportsMaker
 #Moore().generateConfig = True
 #Moore().configLabel = 'PA accept=1'
 
-Moore().hltType = 'PA+Hlt1' # +Hlt2'
+Moore().HltType = 'PA+Hlt1' # +Hlt2'
 Moore().Verbose = True
 
 # FEST specific options...
@@ -28,7 +28,7 @@ veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
        ]
 HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
 HltConf().LumiBankKillerAcceptFraction = 0.9999
-if 'Hlt1' in Moore().hltType or 'VE' in Moore().hltType :
+if 'Hlt1' in Moore().HltType or 'VE' in Moore().HltType :
     HltVeloLinesConf().Prescale = { '.*' : 1 }
 
 

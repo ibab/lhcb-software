@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2009-05-01 - Gerhard Raven
  - fix ParamFiles version
+ - hltType -> HltType
 
 ! 2009-04-29 - Gerhard Raven
  - add HistogramDataSvc to services included in TCK -- needed for CaloPIDs, eg. Hlt2
