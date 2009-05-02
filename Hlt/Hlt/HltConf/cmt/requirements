@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2009-03-31 11:49:36 leandrop Exp $ 
+# $Id: requirements,v 1.30 2009-05-02 18:55:52 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -25,7 +25,7 @@ branches cmt doc options python tests
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro HltConfConfUserModules "HltConf.HltLinesConfigurableUser HltConf.LumiCounterDefinition HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltHadronLines HltConf.HltL0Lines HltConf.HltLumiLines HltConf.HltMuonLines HltConf.HltPhotonLines HltConf.HltVeloLines HltConf.Configuration"
+macro HltConfConfUserModules "HltConf.HltLinesConfigurableUser HltConf.HltBeamGasLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltL0Lines HltConf.LumiCounterDefinition HltConf.HltLumiLines HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltHadronLines HltConf.HltMuonLines HltConf.HltVeloLines HltConf.HltPhotonLines HltConf.Configuration"
 apply_pattern install_python_modules
 # =============================================================================
 
