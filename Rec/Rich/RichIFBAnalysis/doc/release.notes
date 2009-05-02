@@ -4,5 +4,8 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2009-05-02 - Ross Young
+ - Bug fix; Number of events, date of measurement (relative to reference) and "Tot clus"/"IFB clus" ID information added to histograms
+
 ! 2009-04-23 - Chris Jones
  - First version. Split off from RichOnlineMonitors into its own package.

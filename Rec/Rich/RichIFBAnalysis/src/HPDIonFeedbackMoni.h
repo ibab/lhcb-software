@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.h,v 1.1.1.1 2009-04-23 14:47:20 jonrob Exp $
+// $Id: HPDIonFeedbackMoni.h,v 1.2 2009-05-02 12:19:01 ryoung Exp $
 #ifndef RICHIFBANALYSIS_HPDIonFeedbackMoni_H
 #define RICHIFBANALYSIS_HPDIonFeedbackMoni_H 1
 
@@ -36,7 +36,8 @@ namespace Rich
 
       virtual StatusCode initialize();    ///< Algorithm initialization
       virtual StatusCode execute   ();    ///< Algorithm execution
-
+      virtual StatusCode finalize  ();    ///< Algorithm finalisation 
+      
     private:
 
       //std::vector<IFBrate> m_IFBvect;
@@ -46,7 +47,14 @@ namespace Rich
 
       int m_ionFeedbackCut;      // Define what IFB means: cluster of size this or larger = IFB
       int m_ionFeedbackCutALICE; // Define what IFB means: cluster of size this or larger = IFB (ALICE MODE)
-
+      int m_MonitorRate;       // Defines how often events are monitored (every Xth events)
+      int m_dayref;              // Reference day with which dates of savesets are defined (Def. 14365 for 01/05/2009)
+      int m_nEvts;               // Total number of events 
+      int m_nMonitoredEvents;    // Monitored number of events
+      
+      bool m_rich1flag;         // RICH1 flag for histo filling in "finalise" method 
+      bool m_rich2flag;         // RICH2 flag for histo filling in "finalise" method 
+       
     };
   }
 }
