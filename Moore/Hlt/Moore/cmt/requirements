@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.48 2009-04-12 13:20:08 graven Exp $
+# $Id: requirements,v 1.49 2009-05-02 08:24:34 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -25,7 +25,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v8r0                 -no_auto_imports
+use ParamFiles         v8r*                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 use TCKData            v*    Hlt            -no_auto_imports
 
