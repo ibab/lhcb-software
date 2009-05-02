@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.6 2009-04-21 21:40:58 snies Exp $
+// $Id: HltSelReportsMaker.h,v 1.7 2009-05-02 15:51:36 tskwarni Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -7,6 +7,8 @@
 #include "Event/HltObjectSummary.h"
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/VectorMap.h"
+
 
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IHltDataSvc.h"
@@ -36,11 +38,9 @@ public:
   };
   
   enum GlobalSelectionIDs { kHlt1GlobalID=1,
-                            kHlt2GlobalID=2,
-                            kL0GlobalID=3 
+                            kHlt2GlobalID=2
   };
 
-  
 
   /// Standard constructor
   HltSelReportsMaker( const std::string& name, ISvcLocator* pSvcLocator );
@@ -69,7 +69,8 @@ private:
   
 
   /// for ranking selections
-  typedef std::pair<int,std::string> RankedSelection;
+  typedef std::pair<std::string, int> stringint;
+  typedef std::pair<int, stringint > RankedSelection;
 
   /// rank Track for selection rank
   int rankTrack(const LHCb::Track* object) const;
@@ -118,13 +119,15 @@ private:
   IANNSvc* m_hltANNSvc;  
   IHltDataSvc* m_hltDataSvc;  
 
-  std::vector<IANNSvc::minor_value_type> m_selectionNameToIntMap;
+  // from info id to its name
+  GaudiUtils::VectorMap< int, std::string > m_infoIntToName;
+
 
   // get trigger selection names 
   std::vector<stringKey> m_selectionIDs;
-
-
-
+  std::vector< int > m_selectionIntIDs;
+  std::vector< int > m_maxCand;
+  std::vector< int > m_maxCandDebug;
 
   /// for setting per selection properties
   typedef std::map<std::string,int> SelectionSetting;

@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.34 2009-04-18 18:52:37 graven Exp $
+!$Id: release.notes,v 1.35 2009-05-02 15:51:36 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-05-02 - Tomasz Skwarnicki
+ - fix maxCandidates, speed up the code
+
 ! 2009-04-18 - Gerhard Raven
  - minimize Hlt dependencies, remove obsolete HltDecReportsMaker
 

@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.11 2009-04-21 21:40:38 snies Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.12 2009-05-02 15:51:36 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
 
@@ -53,11 +53,11 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 
   declareProperty("DebugEventPeriod",m_debugPeriod = 0 );
 
-  declareProperty("MaxCandidatesDecision", m_maxCandidatesDecision = 100);
-  declareProperty("MaxCandidatesDecisionDebug", m_maxCandidatesDecisionDebug = 500);
+  declareProperty("MaxCandidatesDecision", m_maxCandidatesDecision = 1000);
+  declareProperty("MaxCandidatesDecisionDebug", m_maxCandidatesDecisionDebug = 5000);
   
   declareProperty("MaxCandidatesNonDecision", m_maxCandidatesNonDecision = 0);
-  declareProperty("MaxCandidatesNonDecisionDebug", m_maxCandidatesNonDecisionDebug = 500);
+  declareProperty("MaxCandidatesNonDecisionDebug", m_maxCandidatesNonDecisionDebug = 5000);
   
   declareProperty("SelectionMaxCandidates", m_maxCandidates );
   declareProperty("SelectionMaxCandidatesDebug", m_maxCandidatesDebug );
@@ -107,15 +107,50 @@ StatusCode HltSelReportsMaker::initialize() {
 
   // seup string-to-int selection ID map (vector)
   std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
-  m_selectionNameToIntMap.insert( m_selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
   std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  m_selectionNameToIntMap.insert( m_selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
+ 
   // get trigger selection names 
   m_selectionIDs = m_hltDataSvc->selectionKeys();
 
+  // initialize maps
+  m_selectionIntIDs.clear();
+  m_maxCand.clear();
+  m_maxCandDebug.clear();
 
+  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
+     const stringKey name(*is);
+     const std::string selName(name.str()); 
+     int intSelID(0);
+     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
+          si!=hlt1.end();++si){
+       if( si->first == selName ){
+         intSelID=si->second;
+         break;
+       }
+     }
+     if( !intSelID ){
+       for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt2.begin();
+	    si!=hlt2.end();++si){
+	 if( si->first == selName ){
+	   intSelID=si->second;
+	   break;
+	 }
+       }
+     }
+     m_selectionIntIDs.push_back(intSelID);
+     m_debugMode = 0; m_maxCand.push_back( maximumNumberOfCandidatesToStore( selName ) );
+     m_debugMode = 1;  m_maxCandDebug.push_back( maximumNumberOfCandidatesToStore( selName ) );
 
+  }
+
+  m_infoIntToName.clear();
+  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
+  for( std::vector<IANNSvc::minor_value_type>::const_iterator i= hltinfos.begin();i!=hltinfos.end();++i){
+    if( ( 0<= i->second ) && ( i->second<=65535 ) ){
+      m_infoIntToName.insert( i->second, i->first );
+    }
+  }
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -176,12 +211,15 @@ StatusCode HltSelReportsMaker::execute() {
   std::vector< RankedSelection > sortedSelections;
  
   // loop over selection summaries in HltSummary
-  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
+  int i(0);
+  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is,++i){
      const stringKey name(*is);
      const std::string selName(name.str()); 
 
      // see if marked for persistency
-     int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
+     //     int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
+     int maxCandidates = m_debugMode ? m_maxCandDebug[i] :  m_maxCand[i];
+
      if( !maxCandidates )continue;
 
      // find first candidate for ranking
@@ -245,14 +283,7 @@ StatusCode HltSelReportsMaker::execute() {
     // save selection ---------------------------
 
      // int selection id
-     int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=m_selectionNameToIntMap.begin();
-          si!=m_selectionNameToIntMap.end();++si){
-       if( si->first == selName ){
-         intSelID=si->second;
-         break;
-       }
-     }
+     int intSelID = m_selectionIntIDs[i];
      if( !intSelID ){
        Warning( " selectionName="+selName+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 10 );
        continue;
@@ -286,7 +317,8 @@ StatusCode HltSelReportsMaker::execute() {
          }
        }
      }
-     sortedSelections.push_back( RankedSelection(rank,selName) );     
+     stringint selNameInt(selName,i);
+     sortedSelections.push_back( RankedSelection(rank,selNameInt) );     
   }
   
   if( 0==sortedSelections.size() )return StatusCode::SUCCESS;
@@ -297,8 +329,9 @@ StatusCode HltSelReportsMaker::execute() {
   for( std::vector<RankedSelection>::const_iterator is=sortedSelections.begin(); is!=sortedSelections.end(); ++is ){
     //    info() << " Selection " << is->second << " rank " << is->first << endmsg;
     
-     const std::string selName(is->second);     
+     const std::string selName(is->second.first);     
      const stringKey name(selName);
+     const int i=is->second.second;
 
      std::vector<ContainedObject*> candidates;
      
@@ -343,7 +376,8 @@ StatusCode HltSelReportsMaker::execute() {
 
      // trim number of candidates if too large
      int noc = candidates.size();
-     int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
+     // int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
+     int maxCandidates = m_debugMode ? m_maxCandDebug[i] :  m_maxCand[i];
      noc = (noc>maxCandidates)?maxCandidates:noc;
 
      // don't bother if duplicate selection 
@@ -355,14 +389,7 @@ StatusCode HltSelReportsMaker::execute() {
      // save selection ---------------------------
 
      // int selection id
-     int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=m_selectionNameToIntMap.begin();
-          si!=m_selectionNameToIntMap.end();++si){
-       if( si->first == selName ){
-         intSelID=si->second;
-         break;
-       }
-     }
+     int intSelID = m_selectionIntIDs[i];
 
      HltObjectSummary selSumOut;    
      selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
@@ -373,8 +400,13 @@ StatusCode HltSelReportsMaker::execute() {
      setPresentInfoLevel( selName );
   
      // must also save candidates 
+     int nocc(0);
      for (std::vector<ContainedObject*>::const_iterator ic = candidates.begin();
           ic != candidates.end(); ++ic) {
+
+       ++nocc;
+       if( nocc>noc )break;
+
        const HltObjectSummary* hos(0);
        // go through all cases of supported candidates
        Track* candi = dynamic_cast<Track*>(*ic);
@@ -904,7 +936,6 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
 
   if( !hos )return infoPersistent;  
   if( !(hos->summarizedObject()) )return infoPersistent;  
-  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
   switch( hos->summarizedObjectCLID() )
   {
   case LHCb::CLID_Track:
@@ -912,12 +943,15 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
       const Track* candi = dynamic_cast<const Track*>(hos->summarizedObject());
       if( !candi )return infoPersistent; 
       if( kExtraInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){ 
-        for( std::vector<IANNSvc::minor_value_type>::const_iterator i= hltinfos.begin();i!=hltinfos.end();++i){
-          if( ( 0<= i->second ) && ( i->second<=65535 ) )
-          if( candi->hasInfo( i->second ) ){
-            infoPersistent.insert( i->first, float( candi->info(i->second,-987.0) ) );
-          }
-        }
+	const Track::ExtraInfo & eInfo = candi->extraInfo();
+	for( Track::ExtraInfo::const_iterator ei=eInfo.begin();ei!=eInfo.end();++ei){
+          if( ( 0<= ei->first ) && ( ei->first<=65535 ) ){
+	    GaudiUtils::VectorMap< int, std::string >::const_iterator i=m_infoIntToName.find(ei->first);
+	    if( i!=m_infoIntToName.end() ){
+	      infoPersistent.insert( i->second, float( ei->second ) );
+	    }
+	  }
+	}
       }
       if( kStandardInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){ 
         if( candi->nStates() ){
@@ -937,13 +971,16 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
       const RecVertex* candi = dynamic_cast<const RecVertex*>(hos->summarizedObject());
       if( !candi )return infoPersistent; 
       if( kExtraInfoLevel &  m_presentInfoLevelRecVertex & m_presentInfoLevel ){
-        for( std::vector<IANNSvc::minor_value_type>::const_iterator i= hltinfos.begin();i!=hltinfos.end();++i){
-          if( ( 0<= i->second ) && ( i->second<=65535 ) )
-            if( candi->hasInfo( i->second ) ){
-              infoPersistent.insert( i->first, float( candi->info(i->second,-987.0) ) );
-            }  
-        }
-      } 
+	const RecVertex::ExtraInfo & eInfo = candi->extraInfo();
+	for( RecVertex::ExtraInfo::const_iterator ei=eInfo.begin();ei!=eInfo.end();++ei){
+          if( ( 0<= ei->first ) && ( ei->first<=65535 ) ){
+	    GaudiUtils::VectorMap< int, std::string >::const_iterator i=m_infoIntToName.find(ei->first);
+	    if( i!=m_infoIntToName.end() ){
+	      infoPersistent.insert( i->second, float( ei->second ) );
+	    }
+	  }
+	}
+      }
       if( kStandardInfoLevel &  m_presentInfoLevelRecVertex & m_presentInfoLevel ){ 
         infoPersistent.insert( "0#RecVertex.position.x", float( candi->position().x() ) );
         infoPersistent.insert( "1#RecVertex.position.y", float( candi->position().y() ) );
@@ -956,12 +993,15 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
       const Particle* candi = dynamic_cast<const Particle*>(hos->summarizedObject());
       if( !candi )return infoPersistent; 
       if( kExtraInfoLevel &  m_presentInfoLevelParticle & m_presentInfoLevel ){
-        for( std::vector<IANNSvc::minor_value_type>::const_iterator i= hltinfos.begin();i!=hltinfos.end();++i){
-          if( ( 0<= i->second ) && ( i->second<=65535 ) )
-            if( candi->hasInfo( i->second ) ){
-              infoPersistent.insert( i->first, float( candi->info(i->second,-987.0) ) );
-            }
-        }
+	const Particle::ExtraInfo & eInfo = candi->extraInfo();
+	for( Particle::ExtraInfo::const_iterator ei=eInfo.begin();ei!=eInfo.end();++ei){
+          if( ( 0<= ei->first ) && ( ei->first<=65535 ) ){
+	    GaudiUtils::VectorMap< int, std::string >::const_iterator i=m_infoIntToName.find(ei->first);
+	    if( i!=m_infoIntToName.end() ){
+	      infoPersistent.insert( i->second, float( ei->second ) );
+	    }
+	  }
+	}
       }
       if( kStandardInfoLevel &  m_presentInfoLevelParticle & m_presentInfoLevel ){ 
         infoPersistent.insert( "0#Particle.particleID.pid", float( candi->particleID().pid() ) );
@@ -1177,37 +1217,14 @@ bool HltSelReportsMaker::rankSelLess::operator()( const HltSelReportsMaker::Rank
     if( elem1.first < elem2.first )return true;
     if( elem1.first > elem2.first )return false;
     // equal ranks; now use selection name; decisions come last
-    if( elem1.second.find("Decision")!=std::string::npos ){
-      if( elem2.second.find("Decision")!=std::string::npos ){
-        return (elem1.second.length()<elem2.second.length());
+    if( elem1.second.first.find("Decision")!=std::string::npos ){
+      if( elem2.second.first.find("Decision")!=std::string::npos ){
+        return (elem1.second.first.length()<elem2.second.first.length());
       }
       return false;
     } 
-    if( elem2.second.find("Decision")!=std::string::npos ){
+    if( elem2.second.first.find("Decision")!=std::string::npos ){
       return true;
     } 
-    return (elem1.second.length()<elem2.second.length());
+    return (elem1.second.first.length()<elem2.second.first.length());
 }
-
-
-
-  
- /***
-inline bool HltSelReportsMaker::rankSelLess( const HltSelReportsMaker::RankedSelection & elem1, 
-                                             const HltSelReportsMaker::RankedSelection & elem2) 
-{ 
-    if( elem1.first < elem2.first )return true;
-    if( elem1.first > elem2.first )return false;
-    // equal ranks; now use selection name; decisions come last
-    if( elem1.second.find("Decision")!=std::string::npos ){
-      if( elem2.second.find("Decision")!=std::string::npos ){
-        return (elem1.second.length()<elem2.second.length());
-      }
-      return false;
-    } 
-    if( elem2.second.find("Decision")!=std::string::npos ){
-      return true;
-    } 
-    return (elem1.second.length()<elem2.second.length());
-}
- ***/
