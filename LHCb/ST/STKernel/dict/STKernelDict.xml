@@ -10,7 +10,7 @@
   <class name = "STDAQ::BeetleRepresentation" />
   <class name = "STDAQ::PPRepresentation" />
   <class name = "STDAQ::StripRepresentation" />
-
+  <class name = "std::pair<STTell1ID, unsigned int>" />
 
   <enum pattern = "STDAQ::version" />
   <enum pattern="STBitsPolicy::bits" />

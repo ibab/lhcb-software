@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.11 2009-02-17 10:08:17 mneedham Exp $
+// $Id: STKernelDict.h,v 1.12 2009-05-03 07:41:24 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -23,6 +23,7 @@ struct _Instantiations{
   STDAQ::PPRepresentation m_ppRep;
   STDAQ::StripRepresentation m_stripRep;
 
+  STDAQ::chanPair m_chanPair;
 
 }; 
 
