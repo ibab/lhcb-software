@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.5 2009-05-03 18:23:56 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.6 2009-05-03 19:04:10 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -42,8 +42,8 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu- "
         JPsiMuMu.addTool( PhysDesktop )
         JPsiMuMu.PhysDesktop.InputLocations = ["Phys/StdLooseMuons"]
-        JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 100*MeV)"
-        JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 10*MeV) & (VFASPF(VCHI2/VDOF)<6)"
+        JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
+        JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF)<6)"
         JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6)",
                                                "mu-"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6) "}
         seq.Members += [JPsiMuMu]
