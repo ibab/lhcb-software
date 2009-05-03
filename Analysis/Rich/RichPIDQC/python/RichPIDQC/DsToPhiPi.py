@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.4 2009-02-16 14:23:29 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.5 2009-05-03 14:49:49 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -41,10 +41,10 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
         Phi2KK.addTool( PhysDesktop() )
         Phi2KK.PhysDesktop.InputLocations = ["Phys/StdNoPIDsKaons"]
-        Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<100*MeV)"
-        Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (PT>1200*MeV) & (P>7000*MeV) & (VFASPF(VCHI2)<10) & (MIPDV(PRIMARY)>0.05)"
-        Phi2KK.DaughtersCuts = {"K+"     :    "(PT>1200*MeV) & (P>9000*MeV) & (TRCHI2DOF<3.5) & (MIPDV(PRIMARY)>0.05)",
-                                "K-"     :    "(PT>1200*MeV) & (P>9000*MeV) & (TRCHI2DOF<3.5) & (MIPDV(PRIMARY)>0.05)"}
+        Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<75*MeV)"
+        Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
+        Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
+                                "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
         
         ## Bs -> J/psi phi
         Ds2piPhiName = "Ds2PiPhi"
@@ -55,9 +55,9 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
         Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
         Ds2piPhi.PhysDesktop.InputLocations = ["Phys/"+Phi2KKName,"Phys/StdNoPIDsPions"]
-        Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<100*MeV)"
-        Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) &  (PT>4200*MeV) & (BPVDIRA>0.999) & (VFASPF(VCHI2)<10)"
-        Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>450*MeV) & (TRCHI2DOF<2) & (MIPDV(PRIMARY)>0.1)"}
+        Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
+        Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
+        Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
 
         # Add selection algs to the sequence
         seq.Members += [Phi2KK,Ds2piPhi]

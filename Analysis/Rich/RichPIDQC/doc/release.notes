@@ -1,12 +1,16 @@
-!$Id: release.notes,v 1.4 2009-05-01 16:27:45 ukerzel Exp $
+!$Id: release.notes,v 1.5 2009-05-03 14:49:49 jonrob Exp $
 !-----------------------------------------------------------------------------
-! Package     : /Rich/RichPIDQC
+! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2009-05-03 - C. Jones
+ - Add Kshort and Lambda selections from Andrew Powell
+ - Update Bs -> phi phi selections from Conor
+
 ! 2009-05-01 - Ulrich Kerzel
-- add J/Psi -> mu mu from Nicola
+ - add J/Psi -> mu mu from Nicola
 
 !========================== RichPIDQC v1r0 2009-02-20 ========================
 

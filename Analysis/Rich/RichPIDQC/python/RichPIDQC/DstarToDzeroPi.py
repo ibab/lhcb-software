@@ -4,18 +4,19 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DstarToD0Pi.py,v 1.1 2009-02-16 14:23:29 jonrob Exp $"
+__version__ = "$Id: DstarToDzeroPi.py,v 1.1 2009-05-03 14:49:49 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-from Configurables import RichDstarToD0PiSelConf
+#from Configurables import RichDstarToD0PiSelConf
+from DstCalibSel.Configuration import RichDstarToD0PiSelConf
                 
-## @class DstarToD0PiConf
+## @class DstarToDzeroPiConf
 #  Configurable for RICH D* -> D0(Kpi) pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Andrew Powell
 #  @date   15/08/2008
-class DstarToD0PiConf(LHCbConfigurableUser) :
+class DstarToDzeroPiConf(LHCbConfigurableUser) :
 
     ## Possible used Configurables
     __used_configurables__ = [ RichDstarToD0PiSelConf ]
@@ -30,9 +31,10 @@ class DstarToD0PiConf(LHCbConfigurableUser) :
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
 
+        if not self.isPropertySet("Sequencer") :
+            raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
-        if seq == None : raise RuntimeError("ERROR : Sequence not set")
-
+  
         # The selection algs
         from Configurables import GaudiSequencer
         name = RichDstarToD0PiSelConf().selName()

@@ -4,12 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.2 2009-05-02 08:34:52 ukerzel Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.3 2009-05-03 14:49:49 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
                 
-## @class JPsiMuMu
+## @class JPsiMuMuConf
 #  Configurable for RICH J/psi -> mu mu PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Nicola Mangiafave
@@ -30,11 +30,12 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
     def __apply_configuration__(self) :
 
         from Configurables import ( GaudiSequencer, PhysDesktop,
-                                    CombineParticles, OfflineVertexFitter )
+                                    CombineParticles )
         
+        if not self.isPropertySet("Sequencer") :
+            raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
-        if seq == None : raise RuntimeError("ERROR : Sequence not set")
-
+   
         ## J/psi -> mu mu
         JPsiMuMuName                        = "JPsiMuMu"
         JPsiMuMu                            = CombineParticles(JPsiMuMuName)
@@ -48,9 +49,9 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                                   
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor )
-        plotter =  ParticleMonitor(name+"Plots")
+        plotter =  ParticleMonitor(JPsiMuMuName+"Plots")
         plotter.addTool(PhysDesktop())
-        plotter.PhysDesktop.InputLocations = [ "Phys/"+name ]
+        plotter.PhysDesktop.InputLocations = [ "Phys/"+JPsiMuMuName ]
         plotter.PeakCut     = "(ADMASS('J/psi(1S)')<30*MeV)" # CRJ : Guess
         plotter.SideBandCut = "(ADMASS('J/psi(1S)')>30*MeV)" # CRJ : Guess
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
@@ -62,9 +63,9 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         if self.getProp("MCChecks") :
 
             from Configurables import ParticleEffPurMoni
-            mcPerf = ParticleEffPurMoni(name+"MCPerf")
+            mcPerf = ParticleEffPurMoni(JPsiMuMuName+"MCPerf")
             mcPerf.addTool( PhysDesktop() )
-            mcPerf.PhysDesktop.InputLocations = ["Phys/"+name]
+            mcPerf.PhysDesktop.InputLocations = ["Phys/"+JPsiMuMuName]
             seq.Members += [mcPerf]
     
         # Ntuple ?

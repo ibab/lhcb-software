@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichPIDQC
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure
@@ -13,9 +13,9 @@ branches          cmt doc src python
 #============================================================================
 # Used packages
 #============================================================================
-use DaVinciKernel v* Phys
-use RichRecBase   v* Rich
-use RichKernel    v* Rich
+use DaVinciKernel v*  Phys
+use RichRecBase   v*  Rich
+use DstCalibSel   v*  Rich
 
 include_path      none
 
@@ -28,5 +28,5 @@ apply_pattern    component_library   library=RichPIDQC
 #============================================================================
 # Setup Python Configurables
 #============================================================================
-macro RichPIDQCConfUserModules "RichPIDQC.DsToPhiPi RichPIDQC.DstarToD0Pi RichPIDQC.Configuration"
+macro RichPIDQCConfUserModules "RichPIDQC.Configuration RichPIDQC.KshortPiPi RichPIDQC.LambdaToProtonPion RichPIDQC.JPsiMuMu RichPIDQC.DsToPhiPi RichPIDQC.DstarToDzeroPi"
 apply_pattern install_python_modules
