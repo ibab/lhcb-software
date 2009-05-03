@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-03 - Ulrich Kerzel
+- correct typo in in Configurable: IFB monitoring was running if AlignmentMonitoring
+  was set to true
+
 ! 2009-04-23 - Chris Jones
  - Add new IFB monitoring (imported from Panoptes)
  - Use isPropertySet instead of checking against None to see if the sequences

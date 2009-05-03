@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.21 2009-04-23 15:05:33 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2009-05-03 10:10:08 ukerzel Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -138,7 +138,7 @@ class RichRecQCConf(RichConfigurableUser):
             RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # HPD IFB
-        if self.getProp("AlignmentMonitoring") :
+        if self.getProp("HPDIFBMonitoring") :
             hpdIFBseq = self.newSeq(sequence,"RichHPDIonFeedback")
             from Configurables import Rich__Mon__HPDIonFeedbackMoni
             hpdIFBseq.Members += [ self.createMonitor(Rich__Mon__HPDIonFeedbackMoni,"RichHPDIFBMoni") ]
