@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DstarToDzeroPi.py,v 1.1 2009-05-03 14:49:49 jonrob Exp $"
+__version__ = "$Id: DstarToDzeroPi.py,v 1.2 2009-05-03 18:23:56 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -46,7 +46,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor, PhysDesktop )
         plotter =  ParticleMonitor(name+"Plots")
-        plotter.addTool(PhysDesktop())
+        plotter.addTool(PhysDesktop)
         plotter.PhysDesktop.InputLocations = [ "Phys/"+name ]
         plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)" # CRJ : Guess
         plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)" # CRJ : Guess
@@ -60,7 +60,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(name+"MCPerf")
-            mcPerf.addTool( PhysDesktop() )
+            mcPerf.addTool( PhysDesktop )
             mcPerf.PhysDesktop.InputLocations = ["Phys/"+name]
             seq.Members += [mcPerf]
     

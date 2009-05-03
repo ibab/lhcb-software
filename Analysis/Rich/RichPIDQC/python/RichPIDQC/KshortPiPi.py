@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: KshortPiPi.py,v 1.1 2009-05-03 14:49:49 jonrob Exp $"
+__version__ = "$Id: KshortPiPi.py,v 1.2 2009-05-03 18:23:56 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -39,15 +39,16 @@ class KshortPiPiConf(LHCbConfigurableUser) :
         # Filter Pi Tracks
         pionFilterName = "RichKsSelPiFilter"
         pionfilter = FilterDesktop(pionFilterName)
-        pionfilter.addTool( PhysDesktop() )
-        pionfilter.PhysDesktop.InputLocations = [ "StdNoPIDsPions" ]
+        pionfilter.addTool( PhysDesktop )
+        pionfilter.PhysDesktop.InputLocations = [ "Phys/StdNoPIDsPions" ]
         pionfilter.Code = "(P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30) & (TRCHI2DOF < 5) & (ISLONG)"
+        #pionfilter.OutputLevel = DEBUG
 
         # Make the KS0
         ks02pipiName = "RichKsToPiPiSel"
         ks02pipi = CombineParticles(ks02pipiName)
-        ks02pipi.addTool(PhysDesktop())
-        ks02pipi.PhysDesktop.InputLocations = [ pionFilterName ]
+        ks02pipi.addTool(PhysDesktop)
+        ks02pipi.PhysDesktop.InputLocations = [ "Phys/" + pionFilterName ]
         ks02pipi.DecayDescriptor = "KS0 -> pi+ pi-"
         ks02pipi.CombinationCut = "(ADAMASS('KS0') < 100*MeV) & (AMAXDOCA('') < 0.6*mm)"
         ks02pipi.MotherCut = "(ADMASS('KS0') < 7*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
@@ -58,7 +59,7 @@ class KshortPiPiConf(LHCbConfigurableUser) :
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
         plotter = ParticleMonitor(ks02pipiName+"Plots")
-        plotter.addTool(PhysDesktop())
+        plotter.addTool(PhysDesktop)
         plotter.PhysDesktop.InputLocations = [ "Phys/"+ks02pipiName ]
         plotter.PeakCut     = "(ADMASS('KS0')<100*MeV)"
         plotter.SideBandCut = "(ADMASS('KS0')>100*MeV)"
@@ -66,15 +67,26 @@ class KshortPiPiConf(LHCbConfigurableUser) :
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
         seq.Members += [ plotter ]
-        
+
         # MC Performance checking ?
         if self.getProp("MCChecks") :
 
             from Configurables import ParticleEffPurMoni
-            mcPerf = ParticleEffPurMoni(ks02pipiName+"MCPerf")
-            mcPerf.addTool( PhysDesktop() )
-            mcPerf.PhysDesktop.InputLocations = ["Phys/"+ks02pipiName]
-            seq.Members += [mcPerf]
+
+            mcPerfPi = ParticleEffPurMoni("StdNoPIDsPionsMCPerf")
+            mcPerfPi.addTool( PhysDesktop )
+            mcPerfPi.PhysDesktop.InputLocations = ["Phys/StdNoPIDsPions"]
+            #mcPerfPi.OutputLevel = DEBUG
+
+            mcPerfPiFilt = ParticleEffPurMoni(pionFilterName+"MCPerf")
+            mcPerfPiFilt.addTool( PhysDesktop )
+            mcPerfPiFilt.PhysDesktop.InputLocations = ["Phys/"+pionFilterName]
+            
+            mcPerfD = ParticleEffPurMoni(ks02pipiName+"MCPerf")
+            mcPerfD.addTool( PhysDesktop )
+            mcPerfD.PhysDesktop.InputLocations = ["Phys/"+ks02pipiName]
+            
+            seq.Members += [mcPerfPi,mcPerfPiFilt,mcPerfD]
                     
         # Ntuple ?
         if self.getProp("MakeNTuple") : pass
