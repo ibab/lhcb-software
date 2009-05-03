@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.41 2008-12-06 16:40:23 ibelyaev Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.42 2009-05-03 18:25:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -98,6 +98,11 @@ StatusCode ParticleEffPurMoni::execute()
   for ( LHCb::Particle::ConstVector::const_iterator iP = particles.begin();
         iP != particles.end(); ++iP )
   {
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      const std::string loc = objectLocation(*iP);
+      debug() << "Found input Particle at : " << loc << endmsg;
+    }
     addParticle( *iP, *iP );
   }
 
@@ -109,7 +114,7 @@ StatusCode ParticleEffPurMoni::execute()
 
   // Protos associated to each MCParticle
   typedef std::set<const LHCb::Particle *> PartSet;
-  typedef std::map<const LHCb::Particle *, PartSet> PartMap;
+  typedef std::map<const LHCb::Particle *, PartSet>  PartMap;
   typedef std::map<const LHCb::MCParticle*, PartMap> MCP2PartMap;
   MCP2PartMap mcp2Parts;
 
@@ -929,11 +934,11 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
 {
   AIDA::IProfile1D * h(NULL);
   // Loop over bins
-  debug() << "Filling histo " << title << endreq;
+  verbose() << "Filling histo " << title << endreq;
   for ( unsigned int bin = 0; bin < top.nBins(); ++bin )
   {
-    debug() << " -> bin " << bin << " : "
-            << top.data()[bin] << " / " << bot.data()[bin] << endreq;
+    verbose() << " -> bin " << bin << " : "
+              << top.data()[bin] << " / " << bot.data()[bin] << endreq;
     const unsigned int total = bot.data()[bin];
     if ( total>0 )
     {
@@ -961,7 +966,7 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
 {
   AIDA::IProfile2D * h(NULL);
   // Loop over bins
-  debug() << "Filling histo " << title << endreq;
+  verbose() << "Filling histo " << title << endreq;
   for ( unsigned int binx = 0; binx < top.nBinsX(); ++binx )
   {
     for ( unsigned int biny = 0; biny < top.nBinsY(); ++biny )
