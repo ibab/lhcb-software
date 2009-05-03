@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: KshortPiPi.py,v 1.3 2009-05-03 18:36:23 jonrob Exp $"
+__version__ = "$Id: KshortPiPi.py,v 1.4 2009-05-03 19:22:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -76,16 +76,17 @@ class KshortPiPiConf(LHCbConfigurableUser) :
             #mcPerfPi.addTool( PhysDesktop )
             #mcPerfPi.PhysDesktop.InputLocations = ["Phys/StdNoPIDsPions"]
             #mcPerfPi.OutputLevel = DEBUG
-
+            #seq.Members += [mcPerfPi]
+ 
             #mcPerfPiFilt = ParticleEffPurMoni(pionFilterName+"MCPerf")
             #mcPerfPiFilt.addTool( PhysDesktop )
             #mcPerfPiFilt.PhysDesktop.InputLocations = ["Phys/"+pionFilterName]
-            
+            #seq.Members += [mcPerfPiFilt]
+             
             mcPerfD = ParticleEffPurMoni(ks02pipiName+"MCPerf")
             mcPerfD.addTool( PhysDesktop )
             mcPerfD.PhysDesktop.InputLocations = ["Phys/"+ks02pipiName]
-            
-            seq.Members += [mcPerfPi,mcPerfPiFilt,mcPerfD]
+            seq.Members += [mcPerfD]
                     
         # Ntuple ?
         if self.getProp("MakeNTuple") : pass

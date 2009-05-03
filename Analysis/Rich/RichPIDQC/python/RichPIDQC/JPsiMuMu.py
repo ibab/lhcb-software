@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.6 2009-05-03 19:04:10 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.7 2009-05-03 19:22:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -47,7 +47,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6)",
                                                "mu-"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6) "}
         seq.Members += [JPsiMuMu]
-                                  
+
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor )
         plotter =  ParticleMonitor(JPsiMuMuName+"Plots")
