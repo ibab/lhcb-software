@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.3 2009-05-03 14:49:49 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.4 2009-05-03 15:06:03 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -46,6 +46,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 10*MeV) & (VFASPF(VCHI2/VDOF)<6)"
         JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6)",
                                                "mu-"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6) "}
+        seq.Members += [JPsiMuMu]
                                   
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor )
@@ -57,7 +58,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
-        seq.Members += [ plotter ]
+        seq.Members += [plotter]
         
         # MC Performance checking ?
         if self.getProp("MCChecks") :
