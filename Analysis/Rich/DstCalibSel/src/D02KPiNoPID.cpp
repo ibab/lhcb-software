@@ -1,4 +1,4 @@
-// $Id: D02KPiNoPID.cpp,v 1.2 2009-02-16 14:20:52 jonrob Exp $
+// $Id: D02KPiNoPID.cpp,v 1.3 2009-05-03 14:49:33 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -81,20 +81,23 @@ StatusCode D02KPiNoPID::execute() {
 //=========================================================================
 //
 //=========================================================================
-StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters ) {
-
-  // Event Number Now Processing
-  info()<< "Processing event number "
-        << counter("Events").nEntries()
-        << endmsg;
-
+StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters ) 
+{
   // Obtain Primary Vertices:
   const LHCb::RecVertex::Container* vPrimaryVertices =
     desktop()->primaryVertices();
-  debug()<< "Particle vector size = "
-         << daughters.size() << endmsg;
-  debug()<< "PV vector size = "
-         << vPrimaryVertices->size() << endmsg;
+
+  // Event Number Now Processing
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug()<< "Processing event number "
+           << counter("Events").nEntries()
+           << endmsg;
+    debug()<< "Particle vector size = "
+           << daughters.size() << endmsg;
+    debug()<< "PV vector size = "
+           << vPrimaryVertices->size() << endmsg;
+  }
 
   // Veto Event if Insufficient Tracks Present
   if( daughters.size() <3 ) {
@@ -118,9 +121,10 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
   debug()<< "Number of Kaons found = "
          << vKaons.size() << endmsg;
 
-  if (vPrimaryVertices->size() == 0 ) {
-    info() << "No primary vertex: skip event"
-           << endmsg;
+  if (vPrimaryVertices->size() == 0 ) 
+  {
+    debug() << "No primary vertex: skip event"
+            << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -198,8 +202,8 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
             m_D0PID=m_D0ID;
             verbose()<<"D0 -> K^+ Pi^-"<<endmsg;
           }
-          info()<<"PID of D Meson Before Creating Particle"
-                << m_D0PID<<endmsg;
+          debug() << "PID of D Meson Before Creating Particle"
+                  << m_D0PID<<endmsg;
 
           // Perform Unconstrained Vertex Fit:
           LHCb::Vertex  PionKaonVertex_NoPid;
@@ -220,12 +224,12 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
                && (PionKaonVertex_NoPid.chi2() < m_VertexChiD0)
                )
           {
-            info()<< "Chi2 of Unconstrained K/Pi Vertex Fit = "
-                  << PionKaonVertex_NoPid.chi2()
-                  << " : Passed "
-                  << m_VertexChiD0
-                  <<" cut" << endmsg;
-
+            debug() << "Chi2 of Unconstrained K/Pi Vertex Fit = "
+                    << PionKaonVertex_NoPid.chi2()
+                    << " : Passed "
+                    << m_VertexChiD0
+                    <<" cut" << endmsg;
+            
             debug()<<"PID of D After Creating Particle "
                    << (&candD0)->particleID().pid() <<endmsg;
 
@@ -305,9 +309,9 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
 
                 // D Candidate Passed All Cuts! - Save to Desktop
                 desktop()->keep(&candD0);
-                info()<<"Saved a D Candidate to the Physics Desktop "
-                      <<counter("DCandsInEvent").nEntries()
-                      <<endmsg;
+                debug()<<"Saved a D Candidate to the Physics Desktop "
+                       <<counter("DCandsInEvent").nEntries()
+                       <<endmsg;
 
                 /*plot((&candD0)->momentum().M(),
                   "D Mass",
@@ -334,16 +338,6 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
 
   return desktop()->saveDesktop();
 
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode D02KPiNoPID::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize();
 }
 
 //=============================================================================

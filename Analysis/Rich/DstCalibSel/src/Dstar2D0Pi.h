@@ -1,4 +1,4 @@
-// $Id: Dstar2D0Pi.h,v 1.1.1.1 2009-02-16 14:11:47 jonrob Exp $
+// $Id: Dstar2D0Pi.h,v 1.2 2009-05-03 14:49:33 jonrob Exp $
 #ifndef DSTAR2D0PI_H 
 #define DSTAR2D0PI_H 1
 
@@ -22,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

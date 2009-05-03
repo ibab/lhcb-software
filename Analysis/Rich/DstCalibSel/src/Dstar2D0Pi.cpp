@@ -1,4 +1,4 @@
-// $Id: Dstar2D0Pi.cpp,v 1.3 2009-03-02 17:09:16 jpalac Exp $
+// $Id: Dstar2D0Pi.cpp,v 1.4 2009-05-03 14:49:33 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -190,11 +190,11 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
           if ( SCD0PionVertex_NoPid
                && (D0PionVertex_NoPid.chi2() < m_VertexChi2Dstar) )
           {
-            info()<< "Chi2 of Unconstrained D0/Pi Vertex Fit = "
-                  << D0PionVertex_NoPid.chi2()
-                  << " : Passed "
-                  << m_VertexChi2Dstar
-                  <<" cut" << endmsg;
+            debug()<< "Chi2 of Unconstrained D0/Pi Vertex Fit = "
+                   << D0PionVertex_NoPid.chi2()
+                   << " : Passed "
+                   << m_VertexChi2Dstar
+                   <<" cut" << endmsg;
 
             // Apply D* Pt and Mass Window Cuts
             if( ( (((&candDstar)->pt()) > m_DstarPtCut) &&
@@ -213,7 +213,7 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
 
                 // D* Candidate Passed All Cuts! - Save to Desktop
                 desktop()->keep(&candDstar);
-                info()<<"Saved a D* Candidate to the Physics Desktop "
+                debug()<<"Saved a D* Candidate to the Physics Desktop "
                       <<counter("DstarCandsInEvent").nEntries()
                       <<endmsg;
 
@@ -263,21 +263,11 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
   }
 
   // Log number of combinations found:
-  info() << "Number of D0/Pi Combinations: "
-         << counter("DstarCountPerEvent").nEntries() << endmsg;
+  debug() << "Number of D0/Pi Combinations: "
+          << counter("DstarCountPerEvent").nEntries() << endmsg;
 
   // Save desktop entries to TES:
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Dstar2D0Pi::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DVAlgorithm::finalize();
 }
 
 //=============================================================================

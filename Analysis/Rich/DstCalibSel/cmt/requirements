@@ -3,7 +3,7 @@
 # Maintainer : A. Powell
 # ============================================================================
 package           DstCalibSel
-version           v1r0
+version           v1r1
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -19,8 +19,8 @@ use DaVinciMCKernel     v* Phys
 # ============================================================================
 # Use MC
 # ============================================================================
-macro_append     cppflags " -DMCCheck " \
-                 VisualC  " /DMCCheck "
+#macro_append     cppflags " -DMCCheck " \
+#                 VisualC  " /DMCCheck "
 
 # ============================================================================
 # Component library building rule
