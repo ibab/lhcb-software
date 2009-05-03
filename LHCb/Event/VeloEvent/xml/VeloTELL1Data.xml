@@ -29,6 +29,7 @@
    &KeyedContainer;
 
    <location name="ADCs" place="Raw/Velo/DecodedADC"/>
+   <location name="Tell1ADCs" place="Raw/Velo/RealAndDummy"/>
    <location name="Pedestals" place="Raw/Velo/DecodedPed"/>
    <location name="Headers" place="Raw/Velo/DecodedHeaders"/>
    <location name="SimADCs" place="Raw/Velo/SimulatedADC"/>

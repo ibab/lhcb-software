@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.63 2009-01-08 13:24:09 cattanem Exp $
+! $Id: release.notes,v 1.64 2009-05-03 11:29:03 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
+
+!====================== VeloEvent v16r7 2009-05-01 ====================
+! 2009-05-01 - Tomasz Szumlak
+ - Add new TES location for Tell1ADCs - after the decoding it is necessary
+   to add dummy strips in order to perform the processing correctly 
 
 !====================== VeloEvent v16r6p1 2009-01-08 ====================
 ! 2008-12-09 - Marco Cattaneo
