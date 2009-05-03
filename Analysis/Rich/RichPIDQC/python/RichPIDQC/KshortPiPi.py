@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: KshortPiPi.py,v 1.2 2009-05-03 18:23:56 jonrob Exp $"
+__version__ = "$Id: KshortPiPi.py,v 1.3 2009-05-03 18:36:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -42,7 +42,6 @@ class KshortPiPiConf(LHCbConfigurableUser) :
         pionfilter.addTool( PhysDesktop )
         pionfilter.PhysDesktop.InputLocations = [ "Phys/StdNoPIDsPions" ]
         pionfilter.Code = "(P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 30) & (TRCHI2DOF < 5) & (ISLONG)"
-        #pionfilter.OutputLevel = DEBUG
 
         # Make the KS0
         ks02pipiName = "RichKsToPiPiSel"
@@ -73,14 +72,14 @@ class KshortPiPiConf(LHCbConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
 
-            mcPerfPi = ParticleEffPurMoni("StdNoPIDsPionsMCPerf")
-            mcPerfPi.addTool( PhysDesktop )
-            mcPerfPi.PhysDesktop.InputLocations = ["Phys/StdNoPIDsPions"]
+            #mcPerfPi = ParticleEffPurMoni("StdNoPIDsPionsMCPerf")
+            #mcPerfPi.addTool( PhysDesktop )
+            #mcPerfPi.PhysDesktop.InputLocations = ["Phys/StdNoPIDsPions"]
             #mcPerfPi.OutputLevel = DEBUG
 
-            mcPerfPiFilt = ParticleEffPurMoni(pionFilterName+"MCPerf")
-            mcPerfPiFilt.addTool( PhysDesktop )
-            mcPerfPiFilt.PhysDesktop.InputLocations = ["Phys/"+pionFilterName]
+            #mcPerfPiFilt = ParticleEffPurMoni(pionFilterName+"MCPerf")
+            #mcPerfPiFilt.addTool( PhysDesktop )
+            #mcPerfPiFilt.PhysDesktop.InputLocations = ["Phys/"+pionFilterName]
             
             mcPerfD = ParticleEffPurMoni(ks02pipiName+"MCPerf")
             mcPerfD.addTool( PhysDesktop )
