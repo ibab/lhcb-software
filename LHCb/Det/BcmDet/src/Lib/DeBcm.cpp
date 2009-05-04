@@ -1,11 +1,13 @@
 #include "BcmDet/DeBcm.h"
 
 DeBcm::DeBcm() :
+  DetectorElement(),
   m_StationNumber(0)
 {
 }
 
 DeBcm::DeBcm(int nStation) :
+  DetectorElement(),
   m_StationNumber(nStation)
 {
 }

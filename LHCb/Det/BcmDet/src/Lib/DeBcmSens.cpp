@@ -1,11 +1,13 @@
 #include "BcmDet/DeBcmSens.h"
 
 DeBcmSens::DeBcmSens() :
+  DetectorElement(),
   m_SensorNumber(0)
 {
 }
 
 DeBcmSens::DeBcmSens(int nSensor) :
+  DetectorElement(),
   m_SensorNumber(nSensor)
 {
 }
