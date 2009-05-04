@@ -29,7 +29,7 @@ Miriam_20090430 = { 'HA' : { 'SingleHadron_PTCut' : 4450
                            , 'MuonIP_PtCut'       : 1800
                            , 'Muon_IPMinCut'      : 0.07
                            , 'DiMuon_DOCACut'     : 1.6
-                           , 'DiMuon_MassCut'     : 2300
+                           , 'DiMuon_MassCut'     : 2500
                            , 'DiMuonIP_MassCut'   : 300
                            , 'DiMuon_IPCut'       : 0.08
                            , 'Prescale' : { 'Hlt1MuTrack4JPsi' : 0. }
