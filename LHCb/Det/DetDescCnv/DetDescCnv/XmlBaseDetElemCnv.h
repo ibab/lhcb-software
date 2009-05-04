@@ -1,4 +1,4 @@
-///  $Id: XmlBaseDetElemCnv.h,v 1.5 2005-05-04 11:37:31 marcocle Exp $
+///  $Id: XmlBaseDetElemCnv.h,v 1.6 2009-05-04 14:57:08 ocallot Exp $
 
 #ifndef DETDESCCNV_XMLDETELEMCNV_H
 #define DETDESCCNV_XMLDETELEMCNV_H
@@ -137,7 +137,6 @@ private:
   const XMLCh* rpathString;
   const XMLCh* npathString;
   const XMLCh* conditionString;
-  
 };
 
 #endif // DETDESCCNV_XMLDETELEMCNV_H

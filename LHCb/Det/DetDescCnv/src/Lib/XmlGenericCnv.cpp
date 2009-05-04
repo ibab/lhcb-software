@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.23 2009-04-17 12:25:18 cattanem Exp $
+// $Id: XmlGenericCnv.cpp,v 1.24 2009-05-04 14:57:09 ocallot Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -28,7 +28,8 @@
 // ------------------------------------------------------------------------
 XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
-  m_xmlSvc(),
+  m_xmlSvc (),
+  m_msg(0),
   m_have_CONDDB_StorageType(false)
 {
   DDDBString = xercesc::XMLString::transcode("DDDB");
@@ -42,6 +43,7 @@ XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   detelemString = xercesc::XMLString::transcode("detelem");
   conditionString = xercesc::XMLString::transcode("condition");
   classIDString = xercesc::XMLString::transcode("classID");
+  serialNumberString = xercesc::XMLString::transcode("SerialNumber");
 }
 
 
@@ -60,6 +62,7 @@ XmlGenericCnv::~XmlGenericCnv() {
   xercesc::XMLString::release((XMLCh**)&detelemString);
   xercesc::XMLString::release((XMLCh**)&conditionString);
   xercesc::XMLString::release((XMLCh**)&classIDString);
+  xercesc::XMLString::release((XMLCh**)&serialNumberString);
 }
 
 
@@ -70,12 +73,7 @@ StatusCode XmlGenericCnv::initialize() {
   // Initializes the grand father
   StatusCode status = Converter::initialize();
 
-  /*
-  // Locate the Xml Conversion Service
-  serviceLocator()->getService ("XmlCnvSvc",
-  IID_IXmlSvc,
-  (IInterface*&)m_xmlSvc);
-  */
+  if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "XmlGenericCnv" );
 
   // I need to check if I can create conddb addresses.
   // (sorry, I did not find a better way)
@@ -101,9 +99,8 @@ StatusCode XmlGenericCnv::initialize() {
 // Finalize the converter
 // -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::finalize() {
-  // release XmlCnvSvc
-  //  m_xmlSvc->release();
-  // RIP dear grand father!
+  if ( 0 != m_msg ) delete m_msg;
+  m_msg = 0;
   return Converter::finalize();
 }
 
@@ -114,7 +111,7 @@ StatusCode XmlGenericCnv::finalize() {
 StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
                                      DataObject*&    refpObject)  {
   // creates a msg stream for debug purposes
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  //MsgStream log( msgSvc(), "XmlGenericCnv" );
   StatusCode sc = StatusCode::FAILURE;
    
   // maked sure the address is not null
@@ -128,25 +125,37 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 
   // displays the address for debug purposes 
   if ( isAString ) {
-    log << MSG::DEBUG << "Address for string: orig. path = " << addr->par()[2]
-        << ", ObjectName = " << addr->par()[1] << ", string = ";
+    debug() << "Address for string: orig. path = " << addr->par()[2]
+            << ", ObjectName = " << addr->par()[1] << ", string = ";
     if ( addr->par()[0].size() > 25 ) {
-      log << addr->par()[0].substr(0,22) << "...";
+      debug() << addr->par()[0].substr(0,22) << "...";
     } else {
-      log << addr->par()[0];
+      debug() << addr->par()[0];
     }
-    log << endmsg;
+    debug() << endmsg;
   } else {
-    log << MSG::DEBUG << "Address: filename = " << addr->par()[0]
-        << ", ObjectName = " << addr->par()[1] << endmsg;
+    debug() << "Address: filename = " << addr->par()[0]
+            << ", ObjectName = " << addr->par()[1] << endmsg;
   }
 
+  std::string fileName = addr->par()[0];
+  std::string numeral = "";
+  bool mustSubstitute = false;
   if ( 0 == addr->ipar()[0] ) {
-    document = xmlSvc()->parse(addr->par()[0].c_str()); // this also lock the cache entry (must be released)
+    if ( fileName.at(fileName.size()-1) == ']' ) {
+      std::string::size_type indx =  fileName.find( ".xml[" );
+      if ( std::string::npos != indx ) {
+        numeral = fileName.substr( indx+5);
+        numeral = numeral.substr( 0, numeral.length()-1 );   //remove trailink ']'
+        fileName = fileName.substr( 0, indx+4 );
+        mustSubstitute = true;
+      }
+    }
+    document = xmlSvc()->parse( fileName.c_str() ); // this also lock the cache entry (must be released)
   } else if ( isAString ) {
     document = xmlSvc()->parseString(addr->par()[0].c_str()); // this has to be released too
   } else {
-    log << MSG::FATAL << "XmlParser failed, invalid flag isString=" << addr->ipar()[0] << "!" << endmsg;
+    error() << "XmlParser failed, invalid flag isString=" << addr->ipar()[0] << "!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -162,8 +171,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
       if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
         xercesc::DOMNode* childNode = list->item(index);
         xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
-        log << MSG::VERBOSE << "found element " << dom2Std (childElement->getNodeName())
-            << " at top level of xml file." << endmsg;
+        verbose() << "found element " << dom2Std (childElement->getNodeName())
+                  << " at top level of xml file." << endmsg;
         if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),DDDBString) ||
             0 == xercesc::XMLString::compareString(childElement->getNodeName(),materialsString)) {
           mainNode = childElement;
@@ -186,7 +195,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         defaultMajorVersion = "v5";
         defaultMinorVersion = "0";
       }
-      log << MSG::DEBUG << "Detector Description Markup Language Version " << versionAttribute << endmsg;
+      debug() << "Detector Description Markup Language Version " << versionAttribute << endmsg;
       std::string::size_type dotPos = versionAttribute.find ('.');
       std::string majorVersion;
       std::string minorVersion = "0";
@@ -200,12 +209,12 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
       // I need `defaultMajorVersion'.`defaultMinorVersion'
       if (majorVersion == defaultMajorVersion) { // fine
         if (minorVersion != defaultMinorVersion) { // not perfect, just warn
-          log << MSG::WARNING << "DDDB DTD Version " << defaultMajorVersion
-              << "." << defaultMinorVersion << " recommanded. "
-              << "You are currently using Version " << versionAttribute
-              << ". Everything should work fine but you may get some "
-              << "error messages about unknown tags."
-              << endmsg;
+          warning() << "DDDB DTD Version " << defaultMajorVersion
+                    << "." << defaultMinorVersion << " recommanded. "
+                    << "You are currently using Version " << versionAttribute
+                    << ". Everything should work fine but you may get some "
+                    << "error messages about unknown tags."
+                    << endmsg;
         }
         // deals with macro definitions
         // get the parameters
@@ -217,7 +226,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (macro->getAttribute (nameString));
           std::string value = dom2Std (macro->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          log << MSG::DEBUG << "Added DDDB Macro " << name << " = " << value << endmsg;
+          debug() << "Added DDDB Macro " << name << " = " << value << endmsg;
         }
         // deals with old parameter definitions
         // get the parameters
@@ -229,9 +238,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (parameter->getAttribute (nameString));
           std::string value = dom2Std (parameter->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          log << MSG::DEBUG << "Added DDDB Parameter " << name << " = " << value << endmsg;
+          debug() << "Added DDDB Parameter " << name << " = " << value << endmsg;
         }
-   
         // retrieve the name of the object we want to create. Removes the leading
         // '/' if needed
         std::string objectName = addr->par()[1];
@@ -240,11 +248,23 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           objectName= objectName.substr(slashPosition + 1);
         }
   
+        if ( mustSubstitute ) {  //== Only in the last part of the string... A bit dangerous
+          std::string::size_type indx = objectName.find( numeral );
+          if ( indx == objectName.size() - numeral.size() ) {
+            objectName = objectName.substr(0,indx) + "-KEY-";
+          }
+        }        
+
+        debug() << "getElementByID for " << objectName << endmsg;
+
         // finds the corresponding node in the DOM tree
         XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
         xercesc::DOMElement* element = document->getDOM()->getElementById (nameString);
         xercesc::XMLString::release(&nameString);
         if (element != NULL) {
+          if ( mustSubstitute ) {
+            element->setAttribute( serialNumberString, xercesc::XMLString::transcode( numeral.c_str() ) );
+          }
           try {
             // deal with the node found itself
             sc = internalCreateObj (element, refpObject, addr);
@@ -255,31 +275,30 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
               }
             }
           } catch (GaudiException e) {
-            log << MSG::FATAL << "An exception went out of the conversion process : ";
-            e.printOut (log);
-            log << endmsg;
+            fatal() << "An exception went out of the conversion process : ";
+            e.printOut ( *m_msg );
+            fatal() << endmsg;
             sc =  e.code();
           }
         } else { // (element == NULL)
-          log << MSG::FATAL << objectName << " : " << "No such object in file " << addr->par()[0] << endmsg;
+          fatal() << objectName << " : " << "No such object in file " << addr->par()[0] << endmsg;
         }
       } else { // (majorVersion != defaultMajorVersion)
         // this is a problem
-        log << MSG::ERROR << "DDDB DTD Version " << defaultMajorVersion
-            << "." << defaultMinorVersion << " required. "
-            << "You are currently using Version " << versionAttribute
-            << ". Please update your DTD and XML data files. "
-            << "If you are using the XmlDDDB package, please "
-            << "get a new version of it."
-            << endmsg;
+        error() << "DDDB DTD Version " << defaultMajorVersion
+                << "." << defaultMinorVersion << " required. "
+                << "You are currently using Version " << versionAttribute
+                << ". Please update your DTD and XML data files. "
+                << "If you are using the XmlDDDB package, please get a new version of it."
+                << endmsg;
       }
     } else { // (mainNode == NULL)
-      log << MSG::FATAL << addr->par()[1] << " has no DDDB element at the beginning of the file." << endmsg;
+      fatal() << addr->par()[1] << " has no DDDB element at the beginning of the file." << endmsg;
     }
     // ---- release the document
     xmlSvc()->releaseDoc(document);
   } else { // (document == NULL)
-    log << MSG::FATAL << "XmlParser failed, can't convert " << addr->par()[1] << "!" << endmsg;
+    fatal() << "XmlParser failed, can't convert " << addr->par()[1] << "!" << endmsg;
   }
   return sc;
 } // end createObj
@@ -292,7 +311,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
                                              DataObject*& refpObject,
                                              IOpaqueAddress* address) {
   // creates a msg stream for debug purposes
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  //MsgStream log( msgSvc(), "XmlGenericCnv" );
 
   // In case we are dealing with xml elements that can be extended (detelem
   // or condition to be short), the clid of the element needs to be checked
@@ -307,23 +326,22 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
       IConverter* conv = this->conversionSvc()->converter(clsID);
       if (0 == conv) {
         if (this->xmlSvc()->allowGenericCnv()) {
-          log << MSG::DEBUG;
+          debug();
         } else {
-          log << MSG::ERROR;
+          error();
         }
-        log << "No proper converter found for classID " << clsID
-            << ", the default converter for " << dom2Std(tagName)
-            << " will be used. This message may be ignored in case you are "
-            << "fine with the default converter (ie you don't use the "
-            << "content of the specific part)." << endmsg;
+        *m_msg << "No proper converter found for classID " << clsID
+               << ", the default converter for " << dom2Std(tagName)
+               << " will be used. This message may be ignored in case you are "
+               << "fine with the default converter (ie you don't use the "
+               << "content of the specific part)." << endmsg;
       } else {
         converter = dynamic_cast <XmlGenericCnv*> (conv);
         if (0 == converter) {
-          log << MSG::ERROR
-              << "The converter found for classID " << clsID
-              << " was not a descendant of XmlGenericCnv as it should be "
-              << "( was of type " << typeid (*converter).name() << "). "
-              << "The default converter will be used" << endmsg;
+          error() << "The converter found for classID " << clsID
+                  << " was not a descendant of XmlGenericCnv as it should be "
+                  << "( was of type " << typeid (*converter).name() << "). "
+                  << "The default converter will be used" << endmsg;
           converter = this;
         }
         GenericAddress *gaddr = dynamic_cast<GenericAddress *>(address);
@@ -351,11 +369,11 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(childElement, refpObject, address);
       if (sc2.isFailure()) {
-        log << MSG::ERROR << "unable to fill "
-            << dom2Std (element->getNodeName())
-            << " with its child "
-            << dom2Std (childElement->getNodeName())
-            << endmsg;
+        error() << "unable to fill "
+                << dom2Std (element->getNodeName())
+                << " with its child "
+                << dom2Std (childElement->getNodeName())
+                << endmsg;
       }
     } else if (childList->item(i)->getNodeType() ==
                xercesc::DOMNode::TEXT_NODE) {
@@ -365,7 +383,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(textNode, refpObject, address);
       if (sc2.isFailure()) {
-        log << MSG::ERROR << "unable to fill "
+        error() << "unable to fill "
             << dom2Std(element->getNodeName())
             << " with text node containing : \""
             << dom2Std (textNode->getData())
@@ -388,8 +406,7 @@ StatusCode XmlGenericCnv::updateObj (IOpaqueAddress* pAddress,
 
   StatusCode sc = createObj(pAddress,pNewObject);
   if (sc.isFailure()){
-    MsgStream log( msgSvc(), "XmlGenericCnv" );
-    log << MSG::ERROR << "Cannot create the new object to update the existing one" << endmsg;
+    error() << "Cannot create the new object to update the existing one" << endmsg;
     return sc;
   }
 
@@ -397,11 +414,9 @@ StatusCode XmlGenericCnv::updateObj (IOpaqueAddress* pAddress,
   ValidDataObject* pVDO = dynamic_cast<ValidDataObject*>(pObject);
   ValidDataObject* pNewVDO = dynamic_cast<ValidDataObject*>(pNewObject);
   if ( 0 == pVDO || 0 == pNewVDO ) {
-    MsgStream log( msgSvc(), "XmlGenericCnv" );
-    log << MSG::ERROR
-        << "Cannot update objects other than ValidDataObject: " 
-        << "update() must be defined!"
-        << endmsg;
+    error() << "Cannot update objects other than ValidDataObject: " 
+            << "update() must be defined!"
+            << endmsg;
     return StatusCode::FAILURE;
   }
   // Deep copy the new Condition into the old DataObject
@@ -477,18 +492,16 @@ IOpaqueAddress*
 XmlGenericCnv::createAddressForHref (std::string href,
                                      CLID clid,
                                      IOpaqueAddress* parent) const {
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
   
   // expand environment variables in href
   std::string oldPath=href;
   if (AddressTools::hasEnvironmentVariable(href) ) {
-    log << MSG::VERBOSE << "Found environment variable in path "
-        << href << endmsg;
+    verbose() << "Found environment variable in path " << href << endmsg;
     if (!AddressTools::expandAddress(href)) {
       throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
                             StatusCode::FAILURE);
     }
-    log << MSG::VERBOSE << "path expanded to " << href << std::endl;    
+    verbose() << "path expanded to " << href << endmsg;    
   }
   
   // The URL can be of the format
@@ -499,8 +512,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
   // Is it a CondDB address ?
   bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
-    log << MSG::VERBOSE 
-        << "Href points to a conddb URL: " << href << endmsg;
+    verbose() << "Href points to a conddb URL: " << href << endmsg;
 
     // the href should have the format:
     // "conddb:/path/to/folder[:channel_id][#object_name]"
@@ -540,15 +552,13 @@ XmlGenericCnv::createAddressForHref (std::string href,
       entryName = "/" + path.substr(path.find_last_of('/')+1);
     }
 
-    log << MSG::VERBOSE 
-        << "Now build a CondDB address for path=" << path
-        << " channelId=" << channelId
-        << " and entryName=" << entryName << endmsg;
+    verbose() << "Now build a CondDB address for path=" << path
+              << " channelId=" << channelId
+              << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
-    log << MSG::VERBOSE 
-        << "Href points to a regular URL: " << href << endmsg;
+    verbose() << "Href points to a regular URL: " << href << endmsg;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
     std::string::size_type poundPosition = href.find_last_of('#');
@@ -665,9 +675,8 @@ XmlGenericCnv::createAddressForHref (std::string href,
          && location[0] != '/' ) // avoid infinite loops
       return createAddressForHref(location + "#" + entryName.substr(1), clid, parent);
 
-    log << MSG::VERBOSE
-        << "Now build an XML address for location=" << location
-        << " and entryName=" << entryName << endmsg;
+    verbose() << "Now build an XML address for location=" << location
+              << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createXmlAddress (location, entryName, clid);  
   }
@@ -682,7 +691,7 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                                                  std::string entryName,
                                                  CLID clid) const {
 
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  //MsgStream log( msgSvc(), "XmlGenericCnv" );
   
   const std::string par[2] = {location, entryName};
   const unsigned long isString = 0; // address: filename (0) or string (1)?
@@ -701,9 +710,9 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                            sc);
   }
 
-  log << MSG::DEBUG << "New address created : location = "
-      << location << ", entry name = " 
-      << entryName << " isString : " << isString << endmsg;
+  debug() << "New address created : location = "
+          << location << ", entry name = "
+          << entryName << " isString : " << isString << endmsg;
   return result;
 }
 
@@ -725,10 +734,9 @@ IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
     throw XmlCnvException ("XmlGenericCnv : Unable to create Address from href",
                            sc);
   }
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
-  log << MSG::DEBUG << "New address created : path = " << path
-      << ", channel id = " << channelId
-      << ", entry name = " << entryName << endmsg;
+  debug() << "New address created : path = " << path
+          << ", channel id = " << channelId
+          << ", entry name = " << entryName << endmsg;
   return result;
 }
 

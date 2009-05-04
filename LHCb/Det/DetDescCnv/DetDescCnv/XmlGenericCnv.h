@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.10 2009-03-18 09:05:56 marcocle Exp $
+// $Id: XmlGenericCnv.h,v 1.11 2009-05-04 14:57:08 ocallot Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -6,6 +6,7 @@
 // Include files
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartIF.h"
 
 #include "XmlTools/IXmlSvc.h"
@@ -233,6 +234,23 @@ protected:
   /// the IXmlSvc interface of this object
   SmartIF<IXmlSvc> m_xmlSvc;
 
+  /// The message stream
+  MsgStream* m_msg;
+  
+  /// Methods to print as in GaudiAlgorithms
+  MsgStream& verbose() const { return *m_msg << MSG::VERBOSE; }
+  
+  MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
+
+  MsgStream& info()    const { return *m_msg << MSG::INFO; }
+  
+  MsgStream& warning() const { return *m_msg << MSG::WARNING; }
+
+  MsgStream& error()   const { return *m_msg << MSG::ERROR; }  
+ 
+  MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }  
+ 
+
 private:
 
   // Constant strings for element and parameter names
@@ -247,7 +265,8 @@ private:
   const XMLCh* detelemString;
   const XMLCh* conditionString;
   const XMLCh* classIDString;
-
+  const XMLCh* serialNumberString;
+  
   /// Flag that says if the storage type CONDDB_StorageType is accessible.
   bool m_have_CONDDB_StorageType;
 

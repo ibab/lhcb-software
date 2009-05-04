@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.15 2009-04-17 12:25:18 cattanem Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.16 2009-05-04 14:57:09 ocallot Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -96,6 +96,8 @@ XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
   rotXString = xercesc::XMLString::transcode("rotX");
   rotYString = xercesc::XMLString::transcode("rotY");
   rotZString = xercesc::XMLString::transcode("rotZ");
+  serialNumber = xercesc::XMLString::transcode("SerialNumber");
+  m_numeral = "";
 }
 
 
@@ -165,6 +167,7 @@ XmlLVolumeCnv::~XmlLVolumeCnv () {
   xercesc::XMLString::release((XMLCh**)&rotXString);
   xercesc::XMLString::release((XMLCh**)&rotYString);
   xercesc::XMLString::release((XMLCh**)&rotZString);
+  xercesc::XMLString::release((XMLCh**)&serialNumber);
 }
 
 
@@ -331,6 +334,9 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
   std::string sensDetName = dom2Std (element->getAttribute (sensdetString));
   std::string volName = dom2Std (element->getAttribute (nameString));
 
+  m_numeral = dom2Std (element->getAttribute ( serialNumber ) );
+  if ( 0 != m_numeral.size() ) replaceTagInString( volName );
+
   // processes the children. The dtd says we should find
   // ((%solid;, %transformation;?)?, (physvol | paramphysvol | surf)*)
   xercesc::DOMNodeList* childNodes = element->getChildNodes();
@@ -449,6 +455,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
         delete (volume->transformation);
         volume->transformation = 0;
       }
+      
       delete (volume);
       volume = 0;
     } else if (isParamphysvol (tagName)) {
@@ -506,7 +513,6 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
       i += 1;
     }
   }
-  
   return StatusCode::SUCCESS;
 } // end internalCreateObj
 
@@ -577,6 +583,10 @@ XmlLVolumeCnv::dealWithPhysvol (xercesc::DOMElement* element) {
   result->indexed = indexed;
   result->logvolName = logvolAttribute;
   result->transformation = transformation;
+  if ( 0 != m_numeral.size() ) {
+    replaceTagInString( result->logvolName );
+    replaceTagInString( result->physvolName );
+  }
   return result;
 } // end dealWithPhysVol
 
@@ -1964,6 +1974,19 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element
 
 } // end dealWithRotAxis
 
+//=========================================================================
+//  Method to handle the 'tag' string and replace by the numeral.
+//=========================================================================
+void XmlLVolumeCnv::replaceTagInString ( std::string& string ) {
+  std::string::size_type indx = string.find( "-KEY-" );
+  if ( std::string::npos != indx ) {
+    if ( indx < string.size()-5 ) {
+      string = string.substr(0,indx) + m_numeral + string.substr( indx+5 );
+    } else {
+      string = string.substr(0,indx) + m_numeral;
+    }
+  }
+}
 // ============================================================================
 // End 
 // ============================================================================

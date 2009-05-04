@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.h,v 1.9 2007-03-05 12:51:06 cattanem Exp $
+// $Id: XmlLVolumeCnv.h,v 1.10 2009-05-04 14:57:09 ocallot Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -421,6 +421,12 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    */
   Gaudi::Transform3D* dealWithRotAxis (xercesc::DOMElement* element);
 
+
+  /**
+   * Method to replace the tag string by the value, if it exists
+   */
+  void replaceTagInString( std::string& string );
+  
 private:
 
   // Constant strings for element and parameter names
@@ -486,7 +492,8 @@ private:
   const XMLCh* rotXString;
   const XMLCh* rotYString;
   const XMLCh* rotZString;
-
+  const XMLCh* serialNumber;
+  std::string  m_numeral;
 };
 
 #endif // DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H

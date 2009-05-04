@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.13 2009-04-17 12:25:17 cattanem Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.14 2009-05-04 14:57:08 ocallot Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -85,12 +85,11 @@ XmlBaseConditionCnv::~XmlBaseConditionCnv () {
 StatusCode XmlBaseConditionCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
-    MsgStream log (msgSvc(), "XmlBaseConditionCnv");
-    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endmsg;
+    verbose() << "Initializing converter for class ID " << classID() << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
-      log << MSG::DEBUG << "Generic conversion status: "
-          << (unsigned int)m_doGenericCnv << endmsg;
+      debug() << "Generic conversion status: "
+              << (unsigned int)m_doGenericCnv << endreq;
     }
   }
   return sc;
@@ -130,10 +129,8 @@ StatusCode XmlBaseConditionCnv::updateObjRefs (IOpaqueAddress* /*childElement*/,
 // -----------------------------------------------------------------------
 StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
                                              DataObject*& refpObject) {
-  MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
-  
   // creates an object for the node found
-  log << MSG::DEBUG << "Normal generic condition conversion" << endmsg;
+  debug() << "Normal generic condition conversion" << endreq;
   // const XMLCh* elementName = element->getAttribute(nameString);
   // Since the name is never used afterwars, we just don't pass it to
   // the condition object
@@ -149,8 +146,6 @@ StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
 StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
                                            DataObject* refpObject,
                                            IOpaqueAddress* address) {
-  MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
-
   // gets the object
   Condition* dataObj = dynamic_cast<Condition*> (refpObject);
   // gets the element's name
@@ -175,8 +170,8 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
           const XMLCh* childNodeName =
             ((xercesc::DOMElement*) childNode)->getNodeName();
           char* nameString = xercesc::XMLString::transcode(childNodeName);
-          log << MSG::WARNING << "parsing of specific child "
-              << nameString << " raised errors." << endmsg;
+          warning() << "parsing of specific child "
+                    << nameString << " raised errors." << endreq;
           xercesc::XMLString::release(&nameString);
         }
       }
@@ -213,9 +208,9 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
 
     if (0 == xercesc::XMLString::compareString(paramString, tagName)) {
       // adds the new parameter to the detectorElement
-      log << MSG::DEBUG << "Adding user parameter " << name << " with value "
-          << value << ", type " << type << " and comment \"" << comment
-          << "\"" << endmsg;
+      debug() << "Adding user parameter " << name << " with value "
+              << value << ", type " << type << " and comment \"" << comment
+              << "\"" << endreq;
       if (type == "int") {
         dataObj->addParam<int>(name,(int)xmlSvc()->eval(value, false),comment);
       } else if(type == "double") {
@@ -249,16 +244,16 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         }
       }
       // adds the new parameterVector to the detectorElement
-      log << MSG::DEBUG << "Adding user parameter vector " << name
-          << " with values ";
+      debug() << "Adding user parameter vector " << name
+              << " with values ";
       std::vector<std::string>::iterator it2;
       for (it2 = vect.begin();
            vect.end() != it2;
            ++it2) {
-        log << *it2 << " ";
+        debug() << *it2 << " ";
       }
-      log << ", type " << type << " and comment \""
-          << comment << "\"." << endmsg;
+      debug() << ", type " << type << " and comment \""
+              << comment << "\"." << endreq;
       if ("int" == type) {
         dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
@@ -297,13 +292,13 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
       }
     }
     else {
-      log << MSG::WARNING << "Type " << keytype <<  " not supported for map keys";
+      warning() << "Type " << keytype <<  " not supported for map keys";
     }
   } else {
     // Something goes wrong, does it?
     char* tagNameString = xercesc::XMLString::transcode(tagName);
-    log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagNameString << endmsg;
+    warning() << "This tag makes no sense to element : "
+              << tagNameString << endreq;
     xercesc::XMLString::release(&tagNameString);
   }
   // returns

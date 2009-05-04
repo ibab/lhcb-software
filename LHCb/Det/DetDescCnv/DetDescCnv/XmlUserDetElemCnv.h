@@ -100,7 +100,6 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    */
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         DeType* dataObj);
-
 };
 
 
@@ -118,14 +117,13 @@ XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
 // -----------------------------------------------------------------------
 template <class DeType>
 StatusCode
-XmlUserDetElemCnv<DeType>::i_createObj(xercesc::DOMElement* /*element*/,
+XmlUserDetElemCnv<DeType>::i_createObj(xercesc::DOMElement* /* element */,
                                        DataObject*& refpObject) {
-  MsgStream log(msgSvc(), "XmlUserDetElemCnv" );
-  log << MSG::DEBUG << "entering i_createObj" << endmsg;
+  debug() << "entering i_createObj" << endreq;
   
   // creates an object for the node found
   refpObject = new DeType();
-  
+
   // returns
   return StatusCode::SUCCESS;
 } // end i_createObj
