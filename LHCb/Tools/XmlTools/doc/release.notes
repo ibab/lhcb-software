@@ -4,6 +4,11 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2009-05-04 - Olivier Callot
+ - Single instantiation of MsgStream. Methods a la GaudiAlgorutm to print.
+ - Increase preference for Conditions in the cache. This avoids re-parsing the
+   same (usually big) file.
+
 !======================== XmlTools v6r2 2008-11-17 ===========================
 ! 2008-10-30 - Marco Cattaneo
  - Add missing include for gcc 4.3

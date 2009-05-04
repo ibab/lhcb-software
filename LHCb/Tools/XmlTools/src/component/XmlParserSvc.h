@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.11 2008-06-12 18:43:56 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.12 2009-05-04 15:03:48 ocallot Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -9,6 +9,7 @@
 #include <xercesc/sax/SAXParseException.hpp>
 
 #include <GaudiKernel/Service.h> 
+#include "GaudiKernel/MsgStream.h"
 
 #include "XmlTools/IXmlParserSvc.h"
 
@@ -161,6 +162,15 @@ private:
 
   /// Return the pointer to the detector data service (loading it if not yet done).
   IDetDataSvc *detDataSvc();
+
+  /// Utilities to print...
+  MsgStream& info()    { return *m_msg << MSG::INFO; }
+  
+  MsgStream& debug()   { return *m_msg << MSG::DEBUG; }
+  
+  MsgStream& warning() { return *m_msg << MSG::WARNING; }
+
+  MsgStream& error()   { return *m_msg << MSG::ERROR; }  
   
 private:
 
@@ -227,7 +237,15 @@ private:
   
   /// Pointer to the ToolSvc.
   IToolSvc *m_toolSvc;
-  
+
+  /// Pointer to a message stream
+  MsgStream* m_msg;
+
+  /// Flag to decide if we measure time...
+  bool m_measureTime;
+  bool m_printTime;
+  double m_sumCpu;
+  double m_sumClock;
 };
 
 #endif    // DETDESCCNV_XMLPARSERSVC_H
