@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-05-04 - Gerhard Raven
+ - add ThresholdSettings to Moore configurable
+
 ! 2009-05-01 - Gerhard Raven
  - fix ParamFiles version
  - hltType -> HltType
