@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.6 2009-04-16 12:08:58 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.7 2009-05-04 09:03:49 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -94,12 +94,6 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
     
     return 0;
   }
-
-  // ContainerItemCloner can be a pure virtual abstract interface,
-  // so cannot dereference "cloner". Need to explicitly make a unary
-  // function out of its operator()
-  
-  //  std::for_each(data->begin(), data->end(), std::ptr_fun(cloner->operator()));
 
   for (typename T::const_iterator i = data->begin(); i != data->end(); ++i) {
     cloner->operator()(*i);
