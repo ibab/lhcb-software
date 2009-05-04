@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.9 2009-02-15 13:12:03 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.10 2009-05-04 13:54:44 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -26,9 +26,10 @@ PIDPlots::PIDPlots( const std::string& type,
   // interface
   declareInterface<Rich::Rec::IPIDPlots>(this);
   // JOs
-  declareProperty( "HistoBins",   m_bins = 50 );
-  declareProperty( "ExtraHistos", m_extraHistos = false );
-  declareProperty( "DllCut",      m_dllCut = 0.0 );
+  declareProperty( "HistoBins",    m_bins = 50 );
+  declareProperty( "ExtraHistos",  m_extraHistos = false );
+  declareProperty( "DllCut",       m_dllCut = 0.0 );
+  declareProperty( "DllPlotRange", m_dllRange = 100 );
   // turn off histo printing by default
   setProperty("HistoPrint",false);
 }
@@ -42,8 +43,8 @@ StatusCode PIDPlots::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Warn if extra histos are enabled
-  if ( m_extraHistos ) 
-    Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
+  //if ( m_extraHistos ) 
+  //  Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
   return sc;
 }
@@ -62,7 +63,7 @@ void PIDPlots::plots( const LHCb::ProtoParticle * proto,
   // Fill 'track' plots
   plots( proto->track(), hypo, config );
 
-  // Fill additional plots here ;)
+  // Fill additional ProtoParticle specific plots here ;)
 
 }
 
@@ -89,6 +90,9 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
     // hypo as string
     const std::string shypo = Rich::text(hypo);
 
+    // Heavy or light ?
+    const bool heavy = ( (int)hypo > (int)(Rich::Pion) );
+
     // Loop over all combinations of PID pairs
     for ( Rich::Particles::const_reverse_iterator i = Rich::particles().rbegin();
           i != Rich::particles().rend(); ++i )
@@ -96,21 +100,27 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
       Rich::Particles::const_reverse_iterator j = i; ++j;
       for ( ; j != Rich::particles().rend(); ++j )
       {
-        
+       
+        const Rich::ParticleIDType first = ( heavy ? *i : *j );
+        const Rich::ParticleIDType last  = ( heavy ? *j : *i );
+        const std::string DllDiff = Rich::text(first) + "-" + Rich::text(last);
+
         // Dll(X-Y) distributions
-        std::string title = "RichDLL("+Rich::text(*i)+"-"+Rich::text(*j)+") : "+shypo;
-        const double dll = pid->particleDeltaLL(*i) - pid->particleDeltaLL(*j);
+        std::string title = "RichDLL("+DllDiff+") : "+shypo;
+        const double dll = pid->particleDeltaLL(first) - pid->particleDeltaLL(last);
         plot1D( dll,
                 hPath(hypo)+title, title,
-               -100, 100, m_bins );
-        title = "Eff. RichDLL("+Rich::text(*i)+"-"+Rich::text(*j)+")>0 Versus Ptot : "+shypo;
+               -m_dllRange, m_dllRange, m_bins );
+
+        // Efficiency plots
+        title = "Eff. RichDLL("+DllDiff+")>0 Versus Ptot : "+shypo;
         profile1D( pTot, double(dll>m_dllCut),
                    hPath(hypo)+title, title, 
                    config.minP, config.maxP, m_bins );
         
         // # Sigma distributions
-        title = "nSigma("+Rich::text(*i)+"-"+Rich::text(*j)+") : "+shypo;
-        const double nsigma = pid->nSigmaSeparation(*i,*j);
+        title = "# Sigma("+DllDiff+") : "+shypo;
+        const double nsigma = pid->nSigmaSeparation(first,last);
         plot1D( nsigma,
                 hPath(hypo)+title, title,
                 -30, 30, m_bins );

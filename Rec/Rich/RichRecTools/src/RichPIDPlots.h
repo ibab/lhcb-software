@@ -5,7 +5,7 @@
  *  Header file for RICH tool : Rich::PIDPlots
  *
  *  CVS Log :-
- *  $Id: RichPIDPlots.h,v 1.4 2009-02-13 12:33:05 jonrob Exp $
+ *  $Id: RichPIDPlots.h,v 1.5 2009-05-04 13:54:44 jonrob Exp $
  *
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -123,7 +123,8 @@ namespace Rich
       // Job Options
       int m_bins;                 ///< Number of bins
       bool m_extraHistos;         ///< Fill full set of histograms
-      double m_dllCut;            ///< Dll cut value      
+      double m_dllCut;            ///< Dll cut value  
+      double m_dllRange;          ///< Dll range for plots
 
     };
 
