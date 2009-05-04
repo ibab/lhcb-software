@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.37 2009-04-24 13:08:46 ibelyaev Exp $ 
+$Id: release.notes,v 1.38 2009-05-04 17:35:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2009-05-04 - Vanya BELYAEV
+
+ - remove some unnsesessary dictionries 
+ - add "fake" dictionaries to pelase new ROOT/Gaudi in :
+      dict/LoKiArrayFunctiorsDict.h
+      dict/LoKiArrayFunctors.xml  
+
+   TO BE REOMVED 
+
 
 ! 2009-04-24 - Vanya BELYAEV
 

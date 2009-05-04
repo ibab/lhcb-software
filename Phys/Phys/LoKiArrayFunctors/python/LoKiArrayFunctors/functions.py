@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.13 2009-03-10 22:56:26 spradlin Exp $ 
+# $Id: functions.py,v 1.14 2009-05-04 17:35:51 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -208,20 +208,20 @@ AALLSAMEBPV   = LoKi.AParticles.AllSameBestPV ()
 
 
 ## functional part
-_va       = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
-## _va       = std.vector ( _T    )
-_vd       = 'std::vector<double>'                                             ## std.vector ('double')
-#
-AMaps      = LoKi.Functor             ( _va , _vd       )
-AMap       = LoKi.FunctorFromFunctor  ( _va , _vd       )
-APipes     = LoKi.Functor             ( _va , _va       )
-APipe      = LoKi.FunctorFromFunctor  ( _va , _va       )
-AFunVals   = LoKi.Functor             ( _va , 'double'  )
-AFunVal    = LoKi.FunctorFromFunctor  ( _va , 'double'  )
-ACutVals   = LoKi.Functor             ( _va ,  bool     )
-ACutVal    = LoKi.FunctorFromFunctor  ( _va ,  bool     )
-AElements  = LoKi.Functor             ( _va , _T        ) 
-AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
+## _va = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
+## _va = std.vector ( _T    )
+## _vd = 'std::vector<double>'                                             ## std.vector ('double')
+##
+##AMaps      = LoKi.Functor             ( _va , _vd       )
+##AMap       = LoKi.FunctorFromFunctor  ( _va , _vd       )
+##APipes     = LoKi.Functor             ( _va , _va       )
+##APipe      = LoKi.FunctorFromFunctor  ( _va , _va       )
+##AFunVals   = LoKi.Functor             ( _va , 'double'  )
+##AFunVal    = LoKi.FunctorFromFunctor  ( _va , 'double'  )
+##ACutVals   = LoKi.Functor             ( _va ,  bool     )
+##ACutVal    = LoKi.FunctorFromFunctor  ( _va ,  bool     )
+##AElements  = LoKi.Functor             ( _va , _T        ) 
+##AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
 #
 
 def PDGM ( o ) :

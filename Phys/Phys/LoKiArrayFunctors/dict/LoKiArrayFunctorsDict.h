@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.9 2008-11-28 17:08:25 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.10 2009-05-04 17:35:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -71,9 +71,9 @@ namespace LoKi
       __rrshift__ ( const Fun& fun  , const Type::Container&   o  ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
       // __rrshift__ 
-      static std::vector<Fun::result_type> 
-      __rrshift__ ( const Fun& fun  , const std::vector<Type>& o  ) 
-      { return o  >> fun  ; }      
+      //static std::vector<Fun::result_type> 
+      //__rrshift__ ( const Fun& fun  , const std::vector<Type>& o  ) 
+      //{ return o  >> fun  ; }      
       // ======================================================================
     public:
       // ======================================================================
@@ -116,9 +116,9 @@ namespace LoKi
       __rrshift__ ( const Fun& fun  , const Type::Container&    o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
       // __rrshift__ 
-      static std::vector<Type>
-      __rrshift__ ( const Fun& fun  , const  std::vector<Type>& o ) 
-      { return o >> fun  ; }      
+      //static std::vector<Type>
+      //__rrshift__ ( const Fun& fun  , const  std::vector<Type>& o ) 
+      //{ return o >> fun  ; }      
       // ======================================================================
     public:
       // ======================================================================
@@ -128,6 +128,16 @@ namespace LoKi
       { return fun >> o   ; }      
       // ======================================================================
     } ;
+    // ========================================================================
+    /// Wrapper class for operations with functions 
+    template <>
+    class FuncOps<LoKi::ATypes::Combination> 
+      : public FuncOps_<LoKi::ATypes::Combination>
+    {};
+    template <>
+    class CutsOps<LoKi::ATypes::Combination> 
+      : public CutsOps_<LoKi::ATypes::Combination>
+    {};
     // ========================================================================
   } // end of namespace Dicts 
   // ==========================================================================
@@ -148,15 +158,41 @@ namespace
     // operators 
     LoKi::Dicts::FuncOps<LoKi::ATypes::Combination>        m_o1  ;
     LoKi::Dicts::CutsOps<LoKi::ATypes::Combination>        m_o2  ;
-    LoKi::Dicts::MapsOps<LoKi::ATypes::Combination>        m_o3  ;
-    LoKi::Dicts::PipeOps<LoKi::ATypes::Combination>        m_o4  ;
-    LoKi::Dicts::FunValOps<LoKi::ATypes::Combination>      m_o5  ;
-    LoKi::Dicts::CutValOps<LoKi::ATypes::Combination>      m_o51 ;
-    LoKi::Dicts::ElementOps<LoKi::ATypes::Combination>     m_o6  ;
+    
+    //LoKi::Dicts::MapsOps<LoKi::ATypes::Combination>        m_o3  ;
+    //LoKi::Dicts::PipeOps<LoKi::ATypes::Combination>        m_o4  ;
+    //LoKi::Dicts::FunValOps<LoKi::ATypes::Combination>      m_o5  ;
+    //LoKi::Dicts::CutValOps<LoKi::ATypes::Combination>      m_o51 ;
+    //LoKi::Dicts::ElementOps<LoKi::ATypes::Combination>     m_o6  ;
+    
     /// mathematics:
     LoKi::Dicts::FunCalls<LoKi::ATypes::Combination>       m_c1 ;
     LoKi::Dicts::CutCalls<LoKi::ATypes::Combination>       m_c2 ;
     // ========================================================================
+
+    /// @todo to removed as sooas fPOOL is fixed for "const "/"std::" 
+    LoKi::Range_<std::vector<LHCb::Particle*> > m_tmp1 ;
+    std::unary_function<double,double>                 m_tmp2 ;
+    std::unary_function<double,bool>                   m_tmp3 ;
+    std::unary_function<LHCb::Particle*const,double>   m_tmp4 ;
+    std::unary_function<LHCb::Particle*const,bool>     m_tmp5 ;
+    std::unary_function<LHCb::VertexBase*const,double> m_tmp6 ;
+    std::unary_function<LHCb::VertexBase*const,bool>   m_tmp7 ;
+    std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , double> m_tmp8  ;
+    std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , bool>   m_tmp81 ;
+    std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , double> m_tmp9  ;
+    std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , bool>   m_tmp91 ;
+    std::unary_function<std::vector<LHCb::Particle*>   , LHCb::Particle*>   m_tmp10  ;
+    std::unary_function<std::vector<LHCb::VertexBase*> , LHCb::VertexBase*> m_tmp101 ;
+    std::unary_function<std::vector<LHCb::Particle*>  ,
+                        std::vector<LHCb::Particle*> >   m_tmp11 ;
+    std::unary_function<std::vector<LHCb::VertexBase*>,
+                        std::vector<LHCb::VertexBase*> > m_tmp12 ;
+    
+    std::unary_function<std::vector<LHCb::Particle*>   , double >   m_tmp13  ;
+    std::unary_function<std::vector<LHCb::Particle*>   , bool   >   m_tmp131  ;
+    std::unary_function<std::vector<LHCb::VertexBase*> , double >   m_tmp14  ;
+    std::unary_function<std::vector<LHCb::VertexBase*> , bool   >   m_tmp141  ;
   } ;  
   // ==========================================================================
 } // end of anonymous namespace 

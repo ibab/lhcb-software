@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.2 2007-12-02 17:10:45 ibelyaev Exp $ 
+# $Id: tests.py,v 1.3 2009-05-04 17:35:51 ibelyaev Exp $ 
 # =============================================================================
 ## @file  LoKiArrayFunctors/decorators.py
 #  The set of basic decorator for objects from LoKiHlt library
@@ -38,6 +38,9 @@ from LoKiCore.math                import *
 
 # =============================================================================
 def testAll() :
+
+
+    print ( ALV01 < 0 )  & ( AETA > 0 ) | (  AM < 50 ) & AALL 
     pass 
     
 # =============================================================================
