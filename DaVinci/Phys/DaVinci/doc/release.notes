@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.337 2009-05-01 18:03:17 graven Exp $
+! $Id: release.notes,v 1.338 2009-05-05 14:20:01 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-05-05 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . DaVinci() takes care of setting RedoMCLinks correctly for DC06 and/or RDST.
 
 ! 2009-05-01 - Gerhard Raven
  - HltConf() now uses HltType instead of hltType
