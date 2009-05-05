@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.10 2008-11-19 11:09:38 frankb Exp $
+// $Id: FileLogger.cpp,v 1.11 2009-05-05 17:54:12 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.10 2008-11-19 11:09:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.11 2009-05-05 17:54:12 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -105,17 +105,17 @@ FileLogger::~FileLogger()  {
 
 /// Open new output file
 FILE* FileLogger::openOutput() {
-  struct stat st;
+  struct stat64 st;
   char txt[1024], tmbuff[64];
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d.log",now);
   sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
   if ( m_output ) ::fclose(m_output);
-  if ( ::stat(txt,&st) == 0 ) {
+  if ( ::stat64(txt,&st) == 0 ) {
     ::lib_rtl_output(LIB_RTL_INFO,"The output file: %s  exists already. Reconnecting.....",txt);
   }
-  m_output = ::fopen(txt,"a+");
+  m_output = ::fopen64(txt,"a+");
   if ( 0 == m_output ) {
     ::lib_rtl_output(LIB_RTL_INFO,"Cannot open output file: %s [%s]",txt,RTL::errorString());
   }
