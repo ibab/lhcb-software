@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.7 2009-04-20 15:42:36 odescham Exp $
+// $Id: Calo2Dview.h,v 1.8 2009-05-05 17:06:11 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -59,6 +59,10 @@ public:
   void setEnergyWeighted(bool energyWeighted){m_energyWeighted = energyWeighted ;}
   void setGeometricalView(bool geo){m_geo = geo;}
   void setOneDimension(bool dim){m_1d = dim;}
+  void setSplit(bool split){m_split = split;}
+  bool split(){return m_split;}
+  
+    
   
 protected:
   // attributes
