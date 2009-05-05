@@ -4,12 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: LambdaToProtonPion.py,v 1.3 2009-05-05 15:27:17 jonrob Exp $"
+__version__ = "$Id: LambdaToProtonPion.py,v 1.4 2009-05-05 15:28:48 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
         
-## @class RichRecSysConf
+## @class LambdaToProtonPionConf
 #  Configurable for RICH Lambda -> proton pi PID monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @author Andrew Powell
