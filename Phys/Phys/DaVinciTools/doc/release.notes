@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.425 2009-05-05 12:10:53 ibelyaev Exp $
+! $Id: release.notes,v 1.426 2009-05-05 16:34:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-05-05 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . PhysDesktop::keep( const LHCb::Particle* keptP ) method now copies the
+    Particle -> PV relations from the input LHCb::Particle* to the cloned
+    one to the PhysDesktop's local P->PV relations table.
 
 ! 2009-05-05 - Vanya BELYAEV
 
