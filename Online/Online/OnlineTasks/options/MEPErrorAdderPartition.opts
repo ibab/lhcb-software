@@ -21,8 +21,5 @@ Runable.sumPartition	= TRUE;
 //Options for partition sum
 //Runable.partitionName	= "FEST";
 
-//Options for subFarm sum
-//Runable.nrSubNodes	= 10;
-
 MessageSvc.OutputLevel = 3;
 

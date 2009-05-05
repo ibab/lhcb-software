@@ -5,9 +5,6 @@
 ###
 ### author David Svantesson
 
-#cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job/
-cd /home/dsvantes/cmtuser/Online_v4r20/Online/OnlineTasks/job/
-
 # List of partitions to start algorithm for
 if test -n "$1" ; then
    # list given by input argument
@@ -21,7 +18,7 @@ export HOST=$(hostname --short | awk '{ print toupper($1) }')
 
 . ./setupOnline.sh
 
-#ONLINETASKSROOT=/home/dsvantes/cmtuser/Online_v4r20/Online/OnlineTasks
+#ONLINETASKSROOT=/home/online/cmtuser/Online_v4r20/Online/OnlineTasks
 
 #START ONE INSTANCE FOR EACH PARTITION
 for PART in ${PARTLIST[@]}
