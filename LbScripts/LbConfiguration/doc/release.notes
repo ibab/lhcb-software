@@ -1,3 +1,7 @@
+2009-05-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the setting of the AFS variable
+
 2009-05-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added Vetra to the list of projects.

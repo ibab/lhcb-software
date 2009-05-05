@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.25 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.26 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -297,7 +297,8 @@ class LbLoginScript(Script):
                     cernroot = os.path.join(afsroot+os.sep, cernbase)
                 if os.path.isdir(cernroot) :
                     ev["CMTSITE"] = "CERN"
-                    ev["AFSROOT"] = afsroot 
+                    ev["AFSROOT"] = afsroot
+                    ev["AFS"] = afsroot 
                     ev["SITEROOT"] = cernroot
                 else :
                     if self._triedlocalsetup :
