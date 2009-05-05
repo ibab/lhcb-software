@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.h,v 1.1 2009-03-24 10:32:14 jvantilb Exp $
+// $Id: STErrorMonitor.h,v 1.2 2009-05-05 11:59:04 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -31,9 +31,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-
-  /// Tell1 mapping from tell1 name to source ID.
-  const std::map<unsigned int, unsigned int>* m_TELL1Mapping;
 
   // The maximum number of Tell1s (used to determine number of bins)
   unsigned int m_maxTell1s;

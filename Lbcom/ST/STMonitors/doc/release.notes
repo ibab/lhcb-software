@@ -4,6 +4,12 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-05-05 - Mark Tobin
+ - Modified STErrorMonitor and STNZSMonitor classes to get TELL1 number from
+ source ID using the method in the base class.
+ - Changed STZSMonitor to GaudiHistoAlg and fixed bug which meant that instances
+ foe IT and TT couldn't be run together in Brunel.
+
 ! 2009-03-25 - Jeroen Van Tilburg
  - STSummaryMonitor: Moved to new base class plus some cosmetics and clean up.
 

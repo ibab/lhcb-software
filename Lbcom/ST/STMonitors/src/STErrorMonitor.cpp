@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.3 2009-03-24 16:11:20 nchiapol Exp $
+// $Id: STErrorMonitor.cpp,v 1.4 2009-05-05 11:59:04 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -51,11 +51,8 @@ StatusCode STErrorMonitor::initialize()
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
 
-  if (detType() == "TT") m_TELL1Mapping = &TTSourceIDToNumberMap();
-  else m_TELL1Mapping = &ITSourceIDToNumberMap();
-
   // Get the maximum number of Tell1s to determine number of histogram bin
-  m_maxTell1s = m_TELL1Mapping->size();
+  m_maxTell1s = SourceIDToTELLNumberMap().size();
 
   return StatusCode::SUCCESS;
 }
@@ -81,7 +78,7 @@ StatusCode STErrorMonitor::execute()
 
     // Get the number of the tell1
     unsigned int sourceID = (*iterBank)->Tell1ID();
-    unsigned int tellNum = (m_TELL1Mapping->find(sourceID))->second;
+    unsigned int tellNum = (SourceIDToTELLNumberMap().find(sourceID))->second;
     
     // Plot the number of error banks versus sequential tell number
     plot1D(tellNum, "Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);

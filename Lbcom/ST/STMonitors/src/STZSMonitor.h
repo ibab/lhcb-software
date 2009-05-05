@@ -1,4 +1,4 @@
-// $Id: STZSMonitor.h,v 1.1.1.1 2009-03-02 19:13:44 mtobin Exp $
+// $Id: STZSMonitor.h,v 1.2 2009-05-05 11:59:04 mtobin Exp $
 #ifndef PUBLIC_STZSMONITOR_H 
 #define PUBLIC_STZSMONITOR_H 1
 //===========================================
@@ -7,7 +7,7 @@
 //===========================================
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
@@ -27,7 +27,7 @@ class DeSTDetector;
  *  @author Mathias Knecht
  *  @date   2008-May-6
  */
-class STZSMonitor : public GaudiAlgorithm {
+class STZSMonitor : public GaudiHistoAlg {
 public: 
   /// Standard constructor
   STZSMonitor( const std::string& name, ISvcLocator* pSvcLocator );

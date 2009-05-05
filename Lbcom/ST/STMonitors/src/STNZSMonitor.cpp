@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.5 2009-03-25 09:39:15 jvantilb Exp $
+// $Id: STNZSMonitor.cpp,v 1.6 2009-05-05 11:59:04 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -54,13 +54,6 @@ StatusCode STNZSMonitor::initialize()
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
 
-  // Get the tell1 mapping from source ID to tell1 number
-  if (detType() == "TT") {
-    m_TELL1Mapping      = &TTSourceIDToNumberMap();
-  } else {
-    m_TELL1Mapping      = &ITSourceIDToNumberMap();
-  }
-
   m_evtNumber = 0;
 
   return StatusCode::SUCCESS;
@@ -94,7 +87,7 @@ StatusCode STNZSMonitor::execute()
 
     // Create a name for the tell1
     int tellID = m_useSourceID ? sourceID :
-      (m_TELL1Mapping->find(sourceID))->second;
+      (SourceIDToTELLNumberMap().find(sourceID))->second;
 
     // Reset the maps for each tell1
     if ( m_meanMap.find(tellID) == m_meanMap.end() ) {

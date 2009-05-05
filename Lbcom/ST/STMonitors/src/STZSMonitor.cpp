@@ -1,4 +1,4 @@
-// $Id: STZSMonitor.cpp,v 1.2 2009-03-11 07:19:00 cattanem Exp $
+// $Id: STZSMonitor.cpp,v 1.3 2009-05-05 11:59:04 mtobin Exp $
 // Include files 
 
 
@@ -39,7 +39,7 @@ DECLARE_ALGORITHM_FACTORY( STZSMonitor );
 //=============================================================================
 STZSMonitor::STZSMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
 {
      
   declareProperty("InputLocation",m_inputLocation=STClusterLocation::ITClusters );
@@ -93,7 +93,7 @@ StatusCode STZSMonitor::initialize() {
   
   // general histograms for full detector 
   
-  evt_number = m_histosvc->book("evt_number"+m_TAEtag, "evt_number"+m_TAEtag, 2, 0.5, 2.5 );
+  evt_number = m_histosvc->book(m_detType+"/evt_number"+m_TAEtag, "evt_number"+m_TAEtag, 2, 0.5, 2.5 );
   declareInfo( "evt_number"+m_TAEtag, evt_number , "evt_number"+m_TAEtag);
    
   std::ostringstream nameClusterCount; 
