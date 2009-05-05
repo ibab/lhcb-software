@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.5 2009-01-06 13:48:59 mneedham Exp $
+ *  $Id: STCommonBase.h,v 1.6 2009-05-05 11:49:24 mtobin Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 class ISTReadoutTool;
 class DeSTDetector; 
@@ -25,7 +26,7 @@ class DeSTSector;
 namespace LHCb{
   class STChannelID;
 }
- 
+
 namespace ST
 {
 
@@ -78,7 +79,10 @@ namespace ST
 
    /** get the readout tool */
    ISTReadoutTool* readoutTool() const;
-  
+ 
+   /** Add the mapping of source ID to board number for IT and TT */
+   const  std::map<unsigned int, unsigned int>& SourceIDToTELLNumberMap() const; 
+   
    /** force init of base class tool */
    void setForcedInit();
 

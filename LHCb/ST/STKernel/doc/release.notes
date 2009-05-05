@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.60 2009-05-03 07:41:24 mneedham Exp $
+! $Id: release.notes,v 1.61 2009-05-05 11:49:24 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-05-05 Mark Tobin 
+  Added method to STCommonBase class to return SourceID to TELL1 defined in 
+  STBoardMapping.h
 
 ! 2009-05-03 M Needham 
   Add dict for std::pair<STTell1ID, unsigned int>

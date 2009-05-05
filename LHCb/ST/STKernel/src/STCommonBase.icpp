@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file STCommonBase.icpp
  *
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.9 2009-02-05 11:57:10 mneedham Exp $
+ *  $Id: STCommonBase.icpp,v 1.10 2009-05-05 11:49:24 mtobin Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -45,9 +44,8 @@ StatusCode ST::CommonBase<PBASE>::initialize()
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
     this -> debug() << "Initialize" << endreq;
-
   flip(); // flip all that needs to be flipped
-
+  
   if (m_forcedInit == true){
      // force getting of the tools
      getTracker();
@@ -126,6 +124,12 @@ inline ISTReadoutTool* ST::CommonBase<PBASE>::getReadoutTool() const {
   return m_readoutTool;
 }
 
+#include "Kernel/STBoardMapping.h"
+template <class PBASE> 
+inline const STBoardMapping::Map& ST::CommonBase<PBASE>::SourceIDToTELLNumberMap() const{
+  return (detType() == "IT" ? STBoardMapping::ITSourceIDToNumberMap() : STBoardMapping::TTSourceIDToNumberMap());
+}
+
 template <class PBASE>
 void ST::CommonBase<PBASE>::setForcedInit() {
   m_forcedInit = true;
@@ -186,7 +190,6 @@ inline void ST::CommonBase<PBASE>::addToFlipList(std::string* aString) const{
 
 template <class PBASE>
 inline void ST::CommonBase<PBASE>::flip() const {
-
  // turn IT into TT or TT into IT
  for (std::vector<std::string*>::const_iterator iterS = m_toBeFlipped.begin();
       iterS != m_toBeFlipped.end(); ++iterS){
