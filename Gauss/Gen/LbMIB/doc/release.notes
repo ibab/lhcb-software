@@ -5,6 +5,33 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v3r3 2009-05-05 ===========================
+! 2009-05-05 - Magnus Lieng
+ - Added variable 'CombW' to TTree 'Particles' in root file generation 
+   scripts. 'CombW' is equal to 'PartW' multiplied by 'LossW' of the related 
+   event. 'CombW' thus represents the likelyhood of the given particle to be
+   generated P = CombW/Sum(CombW). The variable is present only for user 
+   analysis. It is not used by LbMIB itself.
+   .makeRootFileFromNewFormat.py
+   .makeRootFileFromOldFormat.py
+
+ - Changed script name 'makeRootFile.py' to 'makeRootFileFromNewFormat.py' to
+   to make the separation between it and 'makeRootFileFromOldFormat.py' more 
+   obvious.
+   .makeRootFile.py
+   .makeRootFileFromNewFormat.py
+
+ - Added option file example for the use of the time correlated source.
+   .TimeCorr-Example.opts
+ 
+ - Fixed histogram generation. Dimensions are now plotted in cm.
+   .TimeCorrSource.cpp
+
+ - Fixed random interaction selection. The linear search in the root file did
+   not return the correct value. Result was that the first interaction in the
+   envelope was always selected.
+   .TimeCorrSource.cpp
+
 !=========================== LbMIB v3r2 2009-04-01 ===========================
 ! 2009-04-01 - Magnus Lieng
  - Added new time correlated MIB tool. This tool uses a root file as input.

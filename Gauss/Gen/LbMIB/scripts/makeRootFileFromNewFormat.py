@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #############################################################################
-# makeRootFile.py                                                           #
+# makeRootFileFromNewFormat.py                                              #
 #############################################################################
 # This PyRoot script parses a flat ASCII particle source file into the root #
 # file format which is used in the TimeCorrSource LbMIB generator. The flat #
@@ -25,13 +25,13 @@
 #               relevant primary proton loss is occurs                      #
 #############################################################################
 # Usage:                                                                    #
-# python makeRootFile.py <inputTextFile> <nameOfRootFile>                   #
+# python makeRootFileFromNewFormat.py <inputTextFile> <nameOfRootFile>      #
 #############################################################################
 import os, sys, re
 from ROOT import TTree, TFile, AddressOf, gROOT
 
 def usage():
-  print 'python makeRootFile.py <inputTextFile> <nameOfRootFile>'
+  print 'python makeRootFileFromNewFormat.py <inputTextFile> <nameOfRootFile>'
 
 def main():
   # Start by checking the arguments
@@ -89,6 +89,7 @@ def main():
       Double_t PartEk;\
       Double_t PartDt;\
       Double_t PartW;\
+      Double_t CombW;\
     };")
   from ROOT import PartStruct
   
@@ -113,6 +114,7 @@ def main():
   PartTree.Branch('PartEk',AddressOf(part,'PartEk'),'PartEk/D. Kinetic energy of particle at the interface plane (GeV)')
   PartTree.Branch('PartDt',AddressOf(part,'PartDt'),'PartDt/D. Particle arrival time at the interface plane w.r.t. LHC clock')
   PartTree.Branch('PartW',AddressOf(part,'PartW'),'PartW/D.  Proabaility of particle arriving at interface plane if the relevant primary proton loss is occurs')
+  PartTree.Branch('CombW',AddressOf(part,'CombW'),'CombW/D.  Probability of particle arriving at interface plane. Equal to LossW * PartW')
 
   # Text file dictionary
   keys = ['LossId',\
@@ -182,6 +184,7 @@ def main():
     part.PartEk = partlist['PartEk']
     part.PartDt = partlist['PartDt']
     part.PartW = partlist['PartW']
+    part.CombW = partlist['LossW'] * partlist['PartW']
     partNumber = partNumber + 1
     inEvtPartNumber = inEvtPartNumber + 1
     PartTree.Fill()

@@ -24,7 +24,7 @@ import os, sys, re
 from ROOT import TTree, TFile, AddressOf, gROOT
 
 def usage():
-  print 'python makeRootFile.py <inputTextFile> <nameOfRootFile>'
+  print 'python makeRootFileFromOldFormat.py <inputTextFile> <nameOfRootFile>'
 
 def main():
   # Start by checking the arguments
@@ -82,6 +82,7 @@ def main():
       Double_t PartEk;\
       Double_t PartDt;\
       Double_t PartW;\
+      Double_t CombW;\
     };")
   from ROOT import PartStruct
   
@@ -105,7 +106,8 @@ def main():
   PartTree.Branch('PartDy',AddressOf(part,'PartDy'),'PartDy/D. Cosine of particle angle in the y plane at the interface')
   PartTree.Branch('PartEk',AddressOf(part,'PartEk'),'PartEk/D. Kinetic energy of particle at the interface plane (GeV)')
   PartTree.Branch('PartDt',AddressOf(part,'PartDt'),'PartDt/D. Particle arrival time at the interface plane w.r.t. LHC clock')
-  PartTree.Branch('PartW',AddressOf(part,'PartW'),'PartW/D.  Proabaility of particle arriving at interface plane if the relevant primary proton loss is occurs')
+  PartTree.Branch('PartW',AddressOf(part,'PartW'),'PartW/D.  Probability of particle arriving at interface plane if the relevant primary proton loss is occurs')
+  PartTree.Branch('CombW',AddressOf(part,'CombW'),'CombW/D.  Probability of particle arriving at interface plane. Equal to LossW * PartW')
 
   # Text file dictionary
   keys = ['PartPdgId',\
@@ -155,6 +157,7 @@ def main():
     part.PartEk = partlist['PartEk']
     part.PartDt = 0
     part.PartW = 1
+    part.CombW = partlist['PartW']
     PartTree.Fill()
 
   # Write and close files

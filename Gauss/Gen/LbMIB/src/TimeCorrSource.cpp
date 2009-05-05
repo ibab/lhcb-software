@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.1 2009-04-01 14:03:56 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.2 2009-05-05 17:49:02 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -268,10 +268,10 @@ StatusCode TimeCorrSource::generateParticle( HepMC::GenEvent* evt, int i, int& n
     // Generate plots (x and y are in cm)
     if( m_genHist ){
       double r = sqrt( rawPart->x*rawPart->x + rawPart->y*rawPart->y );
-      m_xyDistGen->fill( rawPart->x*10, rawPart->y*10 );
-      m_pxVSrGen->fill( r, fourMom.px()/Gaudi::Units::GeV );
-      m_pyVSrGen->fill( r, fourMom.py()/Gaudi::Units::GeV );
-      m_pzVSrGen->fill( r, fourMom.pz()/Gaudi::Units::GeV );
+      m_xyDistGen->fill( rawPart->x/Gaudi::Units::cm, rawPart->y/Gaudi::Units::cm );
+      m_pxVSrGen->fill( r/Gaudi::Units::cm, fourMom.px()/Gaudi::Units::GeV );
+      m_pyVSrGen->fill( r/Gaudi::Units::cm, fourMom.py()/Gaudi::Units::GeV );
+      m_pzVSrGen->fill( r/Gaudi::Units::cm, fourMom.pz()/Gaudi::Units::GeV );
       m_absPGen->fill( ( rawPart->dx==0 && rawPart->dy==0 ? fourMom.pz() : 
                        ( rawPart->dx!=0 ? fourMom.px()/rawPart->dx : 
                          fourMom.py()/rawPart->dy ) )/Gaudi::Units::GeV );
@@ -528,23 +528,28 @@ StatusCode TimeCorrSource::getRandInt( int &firstPart, int &nParts ){
   m_evtTree->SetBranchAddress("firstPart", &locFirstPart);
   m_evtTree->SetBranchAddress("nParts", &locNumParts);
   m_evtTree->GetEntry(low);
-  int j = low;
-  firstPart = (int)locFirstPart;
-  nParts = (int)locNumParts;
-  while( randomWeight > sumOfWeights ){
-    verbose() << "Entry: " << j << " Weight: " << (double)sumOfWeights 
-              << endmsg;
-    j++;
-    if( j<=high ){ 
-      m_evtTree->GetEntry(j); 
+  verbose() << "Entry: " << low << " Weight: " << (double)sumOfWeights
+            << endmsg;
+  
+  int j = low+1;
+  bool isFirst = true;
+  while( sumOfWeights <= randomWeight || isFirst){
+    isFirst = false;
+    firstPart = (int)locFirstPart;
+    nParts = (int)locNumParts;
+    if (j <= high){
+      m_evtTree->GetEntry(j);
+      verbose() << "Entry: " << j << " Weight: " << (double)sumOfWeights
+                << endmsg;
+      j++;
     }
-    else {
+    else{
+      j++;
       break;
     }
   }
-  j--;
-
-  verbose() << "Chose interaction entry " << j <<  endmsg;
+  
+  verbose() << "Chose interaction entry " << j-2 <<  endmsg;
 
   return StatusCode::SUCCESS;
 }

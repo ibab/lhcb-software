@@ -1,0 +1,92 @@
+
+/** @file
+ *
+ *  Options to run Time Correlated source 
+ *
+ *  @author M.Lieng, G.Corti
+ *  @date 2007-03-07
+ *
+ */
+
+ApplicationMgr.DLLs += { "LbMIB" };
+
+Generator.Members -= { "GaudiSequencer/GenMonitor" };
+Generator.Members += { "MIBackground" };
+Generator.Members += { "GaudiSequencer/GenMonitor" };
+Generator.Members -= { "Generation" };  // Comment to merge with other events
+
+// Event Information:
+//---------------------------------------------------------------------------
+// EventType = GSDCTNXU, G=6 & C=5 halo on collimators
+// S = particle types generated (similar as for G=5) 
+//     0: all
+//     2: mu
+//     9: other (i.e. hadrons)
+// D = special meaning of source configuration (shield and collimator)
+//     0: staged shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     1: staged shield - Loss on TCTV.4L8.B1
+//     2: staged shield - Loss on TCTH.L8.B1
+//     3: design shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     4: design shield - Loss on TCTV.4L8.B1
+//     5: design shield - Loss on TCTH.L8.B1
+//     6: no shield - Loss on TCTV.4L8.B1 & TCTH.L8.B1
+//     7: no shield - Loss on TCTH.L8.B1
+//     8: no shield - Loss on TCTH.L8.B1
+// T=0: both beams, T=1: beam1, T=2: beam2
+// N=Num. of bunches traveling (beam1), X=Num. of bunches traveling (beam2)
+MIBackground.EventType = 62151000;
+
+// Luminosity to be set in header. It is NOT used by TimeCorrSourceAlg! 
+//MIBackground.Luminosity = 2.e32/cm2/s;
+
+// Use only one source and configure it accordingly
+//--------------------------------------------------------------------------
+MIBackground.MIBSources = { "TimeCorrSource" };
+
+// Input File Options:
+//--------------------------------------------------------------------------
+// Name of source file (Default: "" - MUST be set in options)
+MIBackground.TimeCorrSource.ParticleSourceFile = 
+  "$MIBDATAROOT/data/TCTV.staged_shield.mu.root";
+
+// Mode Modifiers:
+//---------------------------------------------------------------------------
+//  -1 : Choose random particles using weight based envelope method.
+// >=0 : Pick particles sequentually from file starting at this particle number
+// (Default: -1)
+//MIBackground.TimeCorrSource.ReadFileFromOffset = -1;
+//  -1 : Use weight to find number of particles in event.
+// >=0 : Force the generation of this many particles in event.
+// (Default: -1)
+//MIBackground.TimeCorrSource.ForcePartPerEvt = -1;
+// Size of envelopes used for particle selection.
+// Low number: faster, but uses more memory.
+// (Default: 1000)
+MIBackground.TimeCorrSource.EnvelopeSize = 10;
+
+// Source external information:
+//---------------------------------------------------------------------------
+// Z origin used in input file (Default: -1.*m) and
+// Z origin at generation (Default: -1.*m).
+// Difference is used to recalculate particle timing.
+// Particle direction (+/-1, Default: 1) for generated particles
+//MIBackground.TimeCorrSource.ZParticleOrigin = -1.0*m;
+//MIBackground.TimeCorrSource.ZParticleGen = -1.0*m;
+//MIBackground.TimeCorrSource.ZDirection = 1;			     
+
+// Normalization of source:
+//---------------------------------------------------------------------------
+// Scaling (arbitrary and bunch frequency to find particle/bunch since
+//          weights in file are given for 1 sec of running at full current).
+// (Default = 1)
+// The bunch frequency is that of the nominal machine, i.e. 2808 filled bunches
+// with 11.25 kHz bunch revolution frequency. 
+// It correspond to what was used to produce the original input file.
+// The number of protons per bunch to produce the source was 1.15 x 10^11
+// (Default = 31600000)
+//MIBackground.TimeCorrSource.ScalingFactor = 1.0;      
+//MIBackground.TimeCorrSource.BunchFrequency = 31600000;
+
+// Histogramming (Defalt = false)
+//MIBackground.TimeCorrSource.GenerationHist = false;  
+
