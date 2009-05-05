@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.13 2009-05-01 10:38:08 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2009-05-05 14:02:04 jpalac Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -42,13 +42,9 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Redo MC links.
         """
+        
         if ( self.getProp("Simulation") ):
             redo = self.getProp("RedoMCLinks")
-            if (( self.getProp("DataType")=="DC06" ) and ( not redo )):
-                log.warning("Redoing MC links enforced with DC06")
-                redo = True
-                self.setProp("RedoMCLinks",True) 
-                
             if ( redo ):
                 from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
                 mcLinkSeq = GaudiSequencer("RedoMCLinks")
