@@ -1,3 +1,8 @@
+2009-05-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/SourceShellAlias.csh: uses single quotes for the aliases. The
+	"which" command is not expanded any more at the aliases creation.
+
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r4
