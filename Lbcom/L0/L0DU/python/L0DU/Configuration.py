@@ -96,7 +96,7 @@ class L0Conf(LHCbConfigurableUser) :
                     log.info("L0DU.TCK was set independently of L0Conf")
                 else:                         # Use default TCK
                     if self.getProp("DataType").upper() in ["DC06"]:
-                        l0du.TCK = "0xFFFF"
+                        l0du.TCK = "0xFFF8"
                     else:
                         l0du.TCK = "0xDC09"
             log.info("L0DUAlg will use TCK=%s"%l0du.getProp('TCK'))

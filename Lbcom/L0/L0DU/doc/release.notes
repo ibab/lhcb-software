@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.157 2009-04-19 07:56:08 jucogan Exp $
+! $Id: release.notes,v 1.158 2009-05-05 07:56:30 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-05-05 - Olivier Deschamps 
+ - L0Conf : change default TCK for re-simulating L0 bank for DC06 data (0xFFFF -> 0xFFF8)
 
 ! 2009-04-19 - Julien Cogan
  - L0Conf : Implement missing action for DecodeL0DU property
