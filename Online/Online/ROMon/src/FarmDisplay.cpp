@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.39 2009-04-17 13:16:37 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.40 2009-05-05 18:35:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.39 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.40 2009-05-05 18:35:31 frankb Exp $
 
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
@@ -141,12 +141,16 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   : InternalDisplay(0,""), m_subfarmDisplay(0), m_nodeSelector(0), 
     m_posCursor(0), m_subPosCursor(0), m_anchorX(10), m_anchorY(20), m_mode(HLT_MODE)
 {
-  bool all = false;
   char txt[128];
   string anchor;
   RTL::CLI cli(argc,argv,help);
+  bool all = 0 != cli.getopt("all",2);
+  bool xml = 0 != cli.getopt("xml",2);
   cli.getopt("partition",   2, m_name = "ALL");
   cli.getopt("match",       2, m_match = "*");
+  m_dense = 0 != cli.getopt("dense",2);
+  m_mode  = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
+  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   if ( cli.getopt("anchor",2,anchor) != 0 ) {
     int x, y;
     if ( 2 == ::sscanf(anchor.c_str(),"+%d+%d",&x,&y) ) {
@@ -161,10 +165,6 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
-  m_dense = 0 != cli.getopt("dense",2);
-  all = 0 != cli.getopt("all",2);
-  m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
-  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   s_fd = this;
   if ( m_mode == RECO_MODE && all && m_match=="*" )
     ::sprintf(txt," Reconstruction farm display of all known subfarms ");
@@ -200,7 +200,10 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
-  if ( all ) {
+  if ( xml ) {
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,xml));
+  }
+  else if ( all ) {
     m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {

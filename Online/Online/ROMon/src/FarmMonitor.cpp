@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.6 2009-04-21 12:21:27 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.7 2009-05-05 18:35:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.6 2009-04-21 12:21:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.7 2009-05-05 18:35:31 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -36,6 +36,9 @@ extern "C" {
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+
+// Max. 15 seconds without update allowed
+static int UPDATE_TIME_MAX = 15;
 
 using namespace ROMon;
 using namespace SCR;
@@ -219,7 +222,7 @@ InternalMonitor::InternalMonitor(FarmMonitor* parent, const string& title)
   m_numUpdate = 0;
   m_lastUpdate = time(0);
   m_hasProblems = false;
-  m_snapshotDiff = UPDATE_TIME_MAX;
+  m_snapshotDiff = parent ? parent->updateTimeMax() : UPDATE_TIME_MAX;
 }
 
 InternalMonitor::~InternalMonitor() {
@@ -264,10 +267,10 @@ bool InternalMonitor::useSnapshot() const {
 
 /// Check monitor for errors
 void InternalMonitor::check(time_t now) {
-  if ( hasProblems() ) {
-    if ( now - lastUpdate() > 2*m_snapshotDiff ) {
-      setTimeoutError();
-    }
+  if ( now - lastUpdate() > 5*m_snapshotDiff ) {
+    setTimeoutError();
+  }
+  else if ( hasProblems() ) {
   }
 }
 
@@ -302,7 +305,12 @@ void InternalMonitor::updateContent(const Nodeset& ns) {
 
 /// Set timeout error
 void InternalMonitor::setTimeoutError() {
-  log("ERROR") << "No update information available" << endl;
+  auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
+  setAlarm(alarms->second,m_name,ERR_NO_UPDATES,time(0));
+  log("ERROR") << "Update info is " << int(time(0)-m_lastUpdate) << " seconds old." 
+	       << " Maximum is " << int(3*m_snapshotDiff) << " seconds " << endl;
+  m_lastUpdate = time(0);
+  m_parent->updateAlarms(alarms->first, alarms->second);
 }
 
 /// Update monitor content
@@ -329,6 +337,7 @@ void InternalMonitor::dataHandler(void* tag, void* address, int* size) {
     unsigned char* ptr = new unsigned char[*size+sizeof(int)];
     *(int*)ptr = *size;
     ::memcpy(ptr+sizeof(int),address,*size);
+    disp->m_lastUpdate = time(0);
     IocSensor::instance().send(disp,CMD_UPDATE,ptr);
   }
 }
@@ -357,17 +366,20 @@ void InternalMonitor::handle(const Event& ev)    {
 
 /// Standard constructor
 FarmMonitor::FarmMonitor(int argc, char** argv) 
-: InternalMonitor(0,""), m_current(0), m_mode(HLT_MODE)
+  : InternalMonitor(0,""), m_current(0), m_mode(HLT_MODE), m_update_time_max(UPDATE_TIME_MAX)
 {
   bool all = false;
+  bool xml = false;
   char txt[128];
-  string anchor;
+  string service;
   RTL::CLI cli(argc,argv,help);
   cli.getopt("partition", 2, m_name = "ALL");
   cli.getopt("match",     2, m_match = "*");
-  cli.getopt("update",    2, UPDATE_TIME_MAX);
+  cli.getopt("update",    2, m_update_time_max);
+  cli.getopt("service",   2, service);
 
   all = 0 != cli.getopt("all",2);
+  xml = 0 != cli.getopt("xml",2);
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
 
@@ -390,38 +402,82 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
     ::sprintf(txt,"HLT Farm display of all known subfarms with the name '%s'",m_match.c_str());
   else
     ::sprintf(txt,"HLT Farm display of partition %s ",m_name.c_str());
+  m_time = time(0);
   m_title = txt;
   log("INFO") << txt << endl;
-  if ( all )
-    m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
-  else
+  if ( xml )
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,xml));
+  else if ( !all )
     m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
+  else
+    m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
 
-  string svc = "/"+partition()+"/FarmMonitor/Alarms";
+  if ( service.empty() ) service = "/"+partition()+"/FarmMonitor";
+  string svc = service+"/Alarms";
   //::dic_set_dns_node((char*)name().c_str());
   m_serviceID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
-  string summary = "/"+partition()+"/FarmMonitor/AlarmSummary";
-  m_summaryID = ::dis_add_service((char*)summary.c_str(),(char*)"C",0,0,feedSummary,(long)this);
+  string summary = service+"/AlarmSummary";
+  m_summaryID    = ::dis_add_service((char*)summary.c_str(),(char*)"C",0,0,feedSummary,(long)this);
+  string beat    = service+"/HartBeat";
+  m_hartBeatID   = ::dis_add_service((char*)beat.c_str(),(char*)"I",&m_time,sizeof(m_time),0,(long)this);
+  string cmd_svc = service+"/Command";
+  m_commandID    = ::dis_add_cmnd((char*)cmd_svc.c_str(),(char*)"I",commandHandler,(long)this);
   m_runState  = 0;
   m_numEvent = 0;
-  svc = "/"+partition()+"/FarmMonitor";
-  ::dis_start_serving((char*)svc.c_str());
+  ::dis_start_serving((char*)service.c_str());
 }
 
 /// Standard destructor
 FarmMonitor::~FarmMonitor()  {  
   disconnect();
+  if ( m_hartBeatID ) ::dis_remove_service(m_hartBeatID);
+  m_hartBeatID = 0;
+  if ( m_summaryID ) ::dis_remove_service(m_summaryID);
+  m_summaryID = 0;
+  if ( m_serviceID ) ::dis_remove_service(m_serviceID);
+  m_serviceID = 0;
   m_listener = auto_ptr<PartitionListener>(0);
   subMonitors().clear();
   ::printf("Farm display deleted and resources freed......\n");
 }
 
+/// DIM command service callback
+void FarmMonitor::commandHandler(void* tag, void* address, int* size) {
+  printf("Got command request\n");
+  if ( address && tag && *size > 0 ) {
+    FarmMonitor* disp = *(FarmMonitor**)tag;
+    IocSensor::instance().send(disp,CMD_CLEAR,(void*)0);
+  }
+}
+
+#if 0
 /// DIM callback on dis_update_service
 void FarmMonitor::feedData(void* tag, void** buf, int* size, int* first) {
   FarmMonitor* m = *(FarmMonitor**)tag;
+  string data = "";
   string* s = m->m_current;
-  *size = *first || 0==s ? 0 : s->length()+1;
-  *buf = (void*)(0==s ? "" : s->c_str());
+  if ( s ) {
+    data = "FarmMonitor!#!"+(*s);
+  }
+  *size = *first || 0==s ? 0 : data.length()+1;
+  *buf = (void*)(data.c_str());
+}
+#endif
+
+/// DIM callback on dis_update_service
+void FarmMonitor::feedData(void* tag, void** buf, int* size, int* first) {
+  FarmMonitor* m = *(FarmMonitor**)tag;
+  static string data;
+  Alarm* a = m->m_currAlarm;
+  if ( a ) {
+    data = "";
+    data = "FarmMonitor#";
+    data += a->message();
+    data += "#"+a->toString(a->tag);
+    data.c_str();
+  }
+  *size = *first || 0==a ? 0 : data.length()+1;
+  *buf = (void*)(data.c_str());
 }
 
 /// DIM callback on dis_update_service
@@ -508,7 +564,7 @@ void FarmMonitor::publishSummary(const AlarmSummary& summary) {
 void FarmMonitor::publish(const string& tag, const Alarm& alm) {
   PrintAlarm p(tag);
   p(&alm);
-  IocSensor::instance().send(this,CMD_SHOW_ALARM,new string(alm.toString(tag)));
+  IocSensor::instance().send(this,CMD_SHOW_ALARM,new Alarm(alm,tag));
 }
 
 /// Update alarms from a subfarm
@@ -661,11 +717,11 @@ void FarmMonitor::handle(const Event& ev) {
       break;
     }
     case CMD_SHOW_ALARM: {
-      auto_ptr<string> val(ev.iocPtr<string>());
-      handleAlarmSummary(*val);
-      m_current = val.get();
+      auto_ptr<Alarm> val(ev.iocPtr<Alarm>());
+      //handleAlarmSummary(*val);
+      m_currAlarm = val.get();
       ::dis_update_service(m_serviceID);
-      m_current = 0;
+      m_currAlarm = 0;
       break;
     }
     case CMD_RUNSTATE: {
@@ -684,6 +740,15 @@ void FarmMonitor::handle(const Event& ev) {
     case CMD_PARTITIONID:
       log("INFO") << "Partition ID:" << ev.iocData<long>() << endl;
       break;
+    case CMD_CLEAR:
+      log("INFO") << "Received CLEARALL request....." << endl;
+      m_time = ::time(0);
+      m_alarms.clear();
+      m_clrAlarms.clear();
+      m_newAlarms.clear();
+      publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
+      ::dis_update_service(m_hartBeatID);
+      break;
     case CMD_SHOW:
       break;
     case CMD_UPDATE:
@@ -694,6 +759,8 @@ void FarmMonitor::handle(const Event& ev) {
       m_clrAlarms.clear();
       m_newAlarms.clear();
       //log("INFO") << "Farm events:" << m_numEvent << endl;
+      m_time = ::time(0);
+      ::dis_update_service(m_hartBeatID);
       break;
     case CMD_ADD: {
       auto_ptr<string> val(ev.iocPtr<string>());
@@ -713,6 +780,7 @@ void FarmMonitor::handle(const Event& ev) {
       auto_ptr<AlarmInfo> alms(ev.iocPtr<AlarmInfo>());
       m_stateSummary.clear();
       for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
+      log("INFO") << "Checking sub monitors for errors....." << endl;
       updateAlarms(alms->first, alms->second);
       IocSensor::instance().send(this,int(CMD_UPDATE),this);
       break;

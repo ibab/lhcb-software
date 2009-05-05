@@ -356,7 +356,7 @@ void SubfarmMonitor::analyzeData() {
     const NodeMon& h = *m_history[(*i).first];
     time_t      when = m.update;
     txt[0] = 0;
-    if ( now-m.update > UPDATE_TIME_MAX )
+    if ( now-m.update > m_snapshotDiff )
       setAlarm(alarms->second,node,ERR_NO_UPDATES,when);
     else if ( !m.inUse )
       setAlarm(alarms->second,node,ERR_NOT_USED,when);

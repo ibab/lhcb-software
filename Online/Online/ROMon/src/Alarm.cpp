@@ -1,4 +1,4 @@
-// $Id: Alarm.cpp,v 1.3 2009-04-24 14:54:21 frankb Exp $
+// $Id: Alarm.cpp,v 1.4 2009-05-05 18:35:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,10 +11,10 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/Alarm.cpp,v 1.3 2009-04-24 14:54:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/Alarm.cpp,v 1.4 2009-05-05 18:35:31 frankb Exp $
 
 // Framework include files
-#include "ROMon/FarmMonitor.h"
+#include "ROMon/Alarm.h"
 #include "SCR/scr.h"
 
 // C++ include files

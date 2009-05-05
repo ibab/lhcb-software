@@ -33,8 +33,6 @@ namespace ROMon {
     virtual ~CtrlSubfarmMonitor();
     /// Update display content
     virtual void update(const void* data);
-    /// Set timeout error
-    virtual void setTimeoutError();
     /// Command service callback after already parsed data
     void updateContent(XML::TaskSupervisorParser& ts);
   };
@@ -63,7 +61,6 @@ CtrlSubfarmMonitor::~CtrlSubfarmMonitor() {
 void CtrlSubfarmMonitor::update(const void* address) {
   const char* data = (const char*)address;
   try {
-    m_lastUpdate = time(0);
     XML::TaskSupervisorParser ts;
     if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
       updateContent(ts);
@@ -71,13 +68,6 @@ void CtrlSubfarmMonitor::update(const void* address) {
   }
   catch(...) {
   }
-}
-
-/// Set timeout error
-void CtrlSubfarmMonitor::setTimeoutError() {
-  auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
-  setAlarm(alarms->second,m_name,ERR_NO_UPDATES,time(0));
-  IocSensor::instance().send(m_parent,CMD_CHECK_CTRL,alarms.release());
 }
 
 /// DIM command service callback

@@ -352,4 +352,17 @@
   <ConnectionList name="StorageWorker"/>
 </NodeType>
 
+<NodeType name="PublisherNode">
+  <TaskList name="FMC"/>
+  <Task name="TANServ"/>
+  <Task name="FarmMon_0"/>
+  <Task name="RICH_ErrorLog_0"/>
+  <Task name="CALO_ErrorLog_0"/>
+  <Task name="TDET_ErrorLog_0"/>
+  <Task name="FEST_ErrorLog_0"/>
+  <Task name="LHCb_ErrorLog_0"/>
+  <ConnectionList name="Standard"/>
+  <Project name="HLTRATE"/>
+</NodeType>
+
 </TaskInventory>

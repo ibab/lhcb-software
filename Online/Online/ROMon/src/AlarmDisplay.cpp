@@ -1,4 +1,4 @@
-// $Id: AlarmDisplay.cpp,v 1.4 2009-04-21 12:21:27 frankb Exp $
+// $Id: AlarmDisplay.cpp,v 1.5 2009-05-05 18:35:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.4 2009-04-21 12:21:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/AlarmDisplay.cpp,v 1.5 2009-05-05 18:35:31 frankb Exp $
 
 #include "ROMon/AlarmDisplay.h"
 #include "ROMon/FarmMonitor.h"
@@ -39,6 +39,8 @@ using namespace SCR;
 using namespace std;
 
 static AlarmDisplay* s_fd = 0;
+// Max. 15 seconds without update allowed
+static int UPDATE_TIME_MAX = 15;
 
 static void help() {
   cout << "  romon_farm -option [-option]" << endl

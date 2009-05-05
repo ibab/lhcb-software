@@ -24,6 +24,11 @@ namespace ROMon {
     CMD_ADD_ALARM,
     CMD_SHOW_ALARM,
     CMD_SHOW_SUMMARY,
+
+    CMD_CLEAR,
+    CMD_ENABLE,
+    CMD_DISABLE,
+
     CMD_LAST
   };
 

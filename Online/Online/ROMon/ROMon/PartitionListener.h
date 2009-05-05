@@ -1,4 +1,4 @@
-// $Id: PartitionListener.h,v 1.3 2009-02-24 10:38:19 frankb Exp $
+// $Id: PartitionListener.h,v 1.4 2009-05-05 18:35:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/PartitionListener.h,v 1.3 2009-02-24 10:38:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/PartitionListener.h,v 1.4 2009-05-05 18:35:31 frankb Exp $
 #ifndef ROMON_PARTITIONLISTENER_H
 #define ROMON_PARTITIONLISTENER_H 1
 
@@ -44,6 +44,8 @@ namespace ROMon {
   public:
     /// Standard constructor with object setup through parameters
     PartitionListener(Interactor* parent,const std::string& name);
+    /// Standard constructor with object setup through parameters
+    PartitionListener(Interactor* parent,const std::string& name,bool files_only);
     /// Standard destructor
     virtual ~PartitionListener();
     /// DIM command service callback to retrieve HLT subfarms
