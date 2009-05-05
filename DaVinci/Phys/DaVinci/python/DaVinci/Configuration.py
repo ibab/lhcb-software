@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.60 2009-05-01 18:03:17 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.61 2009-05-05 14:19:49 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -115,6 +115,15 @@ class DaVinci(LHCbConfigurableUser) :
             physinit = PhysConf().initSequence()         # PhysConf initSequence
             init.Members += [ physinit ]
             # Analysis
+            if ( self.getProp("Simulation") ):
+                redo = self.getProp("RedoMCLinks")
+                if ( self.getProp("DataType")=="DC06" ) and ( not redo ):
+                    log.warning("Redoing MC links enforced with DC06")
+                    redo = True
+                    self.setProp("RedoMCLinks",True) 
+                if (inputType == "RDST")  and (redo) :
+                    log.warning("Re-doing MC links not possible for RDST")
+                    self.setProp("RedoMCLinks", False )
             AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
             analysisinit = AnalysisConf().initSequence()
             init.Members += [ analysisinit ]
