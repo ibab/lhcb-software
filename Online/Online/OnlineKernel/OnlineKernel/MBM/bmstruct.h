@@ -228,7 +228,12 @@ struct CONTROL  {
   int version;            // Buffer manager version
   int spare1;             // Last element
   int pid_lock;
-  int previous_pid_lock;
+  int previous_pid_lock;  // 20 * 4 Bytes !!!
+#ifdef _WIN32
+  int   mbm_handle[8];    // Same size as sem_t !
+#else
+  sem_t mbm_handle;
+#endif
 } PACKED_DATA;
 
 struct BUFFERS  {

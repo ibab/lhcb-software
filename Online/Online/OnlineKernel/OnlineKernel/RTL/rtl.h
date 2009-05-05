@@ -134,8 +134,8 @@ extern "C" {
   /// Create named lock. if the lock_name is 0 the lock is priovate to the currect process.
   int lib_rtl_create_lock (__CXX_CONST char* lock_name, lib_rtl_lock_t* lock_handle);
 #ifndef _WIN32
-  /// Create named event for local process (name==0: event is unnamed)
-  int lib_rtl_create_lock2 (sem_t* handle, lib_rtl_lock_t* lock_handle);
+  /// Create lock for local process (if handle is in shared memory lock can be shared)
+  int lib_rtl_create_lock2 (sem_t* handle, lib_rtl_lock_t* lock_handle, bool initialize=false);
 #endif
   /// Delete lock
   int lib_rtl_delete_lock (lib_rtl_lock_t lock_handle);

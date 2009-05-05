@@ -98,22 +98,25 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
 
 /// Create named event for inter process communication
 #ifndef _WIN32
-int lib_rtl_create_lock2 (sem_t* handle, lib_rtl_lock_t* lock_handle)    {
+int lib_rtl_create_lock2 (sem_t* handle, lib_rtl_lock_t* lock_handle, bool initialize)    {
   std::auto_ptr<rtl_lock> h(new rtl_lock);
   ::memset(h->name,0,sizeof(h->name));
   h->handle = handle;
-  int sc = h->handle ? ::sem_init(h->handle, 1, 1) : (errno=EBADR); 
-  if ( sc != 0 )  {
-    h->handle = 0;
-  }
-  if ( h->handle == 0 )  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock");
-    *lock_handle = 0;
-    return 0;
+  if ( initialize ) {
+    int sc = h->handle ? ::sem_init(h->handle, 1, 1) : (errno=EBADR); 
+    if ( sc != 0 )  {
+      h->handle = 0;
+    }
+    if ( h->handle == 0 )  {
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock");
+      *lock_handle = 0;
+      return 0;
+    }
   }
   *lock_handle = h.release();
   return 1;
 }
+
 #endif
 
 int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {

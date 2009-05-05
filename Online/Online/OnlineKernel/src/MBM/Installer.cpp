@@ -196,6 +196,16 @@ int MBM::Installer::install()  {
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
   EVENT*   event = m_bm->event;
+  lib_rtl_lock_t lockid = 0;
+  status = ::lib_rtl_create_lock2(&ctrl->mbm_handle, &lockid, true);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::lib_rtl_delete_section(m_bm->user_add);
+    ::lib_rtl_delete_section(m_bm->event_add);
+    ::lib_rtl_delete_section(m_bm->buff_add);
+    ::lib_rtl_output(LIB_RTL_ERROR,"Cannot create section %s. Exiting....",buff_mod);
+    return status;
+  }
   ctrl->p_umax       = p_umax;
   ctrl->p_emax       = p_emax;
   ctrl->buff_size    = p_size<<10; /* in bytes*/

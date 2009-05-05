@@ -314,9 +314,14 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
     return MBM_INV_DESC;
   }
 
+  CONTROL* c = bm->ctrl;
   ::strcpy(bm->mutexName,"BM_");
   ::strcat(bm->mutexName,bm->bm_name);
+#ifdef _MBM_EXPLICIT_SEMAPHORES
   status = ::lib_rtl_create_lock(bm->mutexName, &bm->lockid);
+#else
+  status = ::lib_rtl_create_lock2(&c->mbm_handle, &bm->lockid, false);
+#endif
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock %s of %s for %s.",
 			     bm->mutexName,bm_name,name);
@@ -396,7 +401,6 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   reference_count++;
   errno = 0;
   _mbm_unlock_tables(bm.get());
-  CONTROL* c = bm->ctrl;
   _mbm_printf("MBM: %s is now included in %s\n",name, bm_name);
   _mbm_printf("MBM: %s:%s Control: %p  %08X \n",name,bm_name,(void*)c,(void*)0);
   _mbm_printf("MBM: %s:%s Event:   %p  %08X \n",name,bm_name,(void*)bm->event,
@@ -437,8 +441,8 @@ int mbm_exclude (BMID bm)  {
     lib_rtl_delete_event(bm->WSPA_event_flag);
     lib_rtl_delete_event(bm->WEVA_event_flag);
     _mbm_uclean(bm);
-    _mbm_unmap_sections(bm);
     _mbm_unlock_tables(bm);
+    _mbm_unmap_sections(bm);
   }
   else {
     return sc;
@@ -1981,7 +1985,11 @@ int _mbm_unlock_tables(BMID bm)    {
 
 int _mbm_delete_lock(BMID bm)    {
   if ( bm->lockid )  {
+#ifdef _MBM_EXPLICIT_SEMAPHORES
     int status = ::lib_rtl_delete_lock(bm->lockid);
+#else
+    int status = 1;
+#endif
     if (!lib_rtl_is_success(status))    { 
       ::lib_rtl_signal_message(LIB_RTL_OS,"Error deleting lock %s. Status %d",bm->mutexName,status);
     }

@@ -1,15 +1,15 @@
-#!/bin/csh
+#!/bin/bash
 killall test.exe
 rm /dev/shm/bm_*
 rm /dev/shm/sem.BM*
 rm /dev/shm/sem.bm*
 rm /dev/shm/sem.MEP*
-setenv EXEC '${ONLINEKERNELROOT}/${CMTCONFIG}/test.exe'
-setenv MINITERM 'xterm -ls -132 -e'
-setenv GENOPT
+export EXEC='${ONLINEKERNELROOT}/${CMTCONFIG}/test.exe'
+export MINITERM='xterm -ls -132 -e'
+export GENOPT=
 #   '' | more'
 $MINITERM "$EXEC mbm_install -s=8096 -e=64 -u=64 -i=0" &
-sleep 1
+/bin/sleep 4
 xterm -ls -132 -geometry 132x45 -e "$EXEC mbm_mon" &
 #
 # gvd ${ONLINEKERNELROOT}/${CMTCONFIG}/test.exe &
