@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.20 2009-05-04 15:03:48 ocallot Exp $
+// $Id: XmlParserSvc.cpp,v 1.21 2009-05-05 09:26:45 ocallot Exp $
 
 // Include Files
 #include <limits.h>
@@ -72,6 +72,7 @@ StatusCode XmlParserSvc::initialize( ) {
 
   m_sumCpu = 0.;
   m_sumClock = 0.;
+  if ( m_printTime ) m_measureTime = true;
 
   // initializes the xerces XML subsystem
   try {
@@ -156,9 +157,11 @@ StatusCode XmlParserSvc::finalize() {
     m_detDataSvc = 0;
   }
   
-  info() << "***** Total parsing cpu time   " << m_sumCpu << " ms" << endmsg;
-  info() << "***** Total parsing clock time " << m_sumClock << " ms" << endmsg;
-
+  if ( m_measureTime ) {
+    info() << "***** Total parsing cpu time   " << m_sumCpu << " ms" << endmsg;
+    info() << "***** Total parsing clock time " << m_sumClock << " ms" << endmsg;
+  }
+  
   if ( m_msg ) {
     delete m_msg;
     m_msg = 0;
@@ -232,7 +235,7 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
     m_parser->reset();
     // parses the file
     try {
-      debug() << "parsing file " << fileName << endreq;
+      debug() << "parsing file " << fileName << endmsg;
       longlong start1 = 0;
       longlong start2 = 0;
       if ( m_measureTime ) {
@@ -303,7 +306,7 @@ IOVDOMDocument* XmlParserSvc::parseString (std::string source) {
                                             "");
     // parses the file
     m_parser->parse(inputSource);
-    debug() << "parsing xml string..." << endreq;
+    debug() << "parsing xml string..." << endmsg;
     xercesc::DOMDocument *doc = m_parser->adoptDocument();
     // returns the parsed document if successful
     if (doc != 0) {
@@ -369,7 +372,7 @@ void XmlParserSvc::warning (const xercesc::SAXParseException& exception){
   warning() << "DOM>> File "    << aSysId
             << ", line "        << aLine
             << ", column "      << aColumn
-            << ": "             << aMsg << endreq;
+            << ": "             << aMsg << endmsg;
   xercesc::XMLString::release(&aSysId);
   xercesc::XMLString::release(&aMsg);
 
@@ -388,7 +391,7 @@ void XmlParserSvc::error (const xercesc::SAXParseException& exception){
   error() << "DOM>> File "    << aSysId
           << ", line "        << aLine
           << ", column "      << aColumn
-          << ": "             << aMsg << endreq;
+          << ": "             << aMsg << endmsg;
   xercesc::XMLString::release(&aSysId);
   xercesc::XMLString::release(&aMsg);
 
@@ -408,7 +411,7 @@ void XmlParserSvc::fatalError (const xercesc::SAXParseException& exception){
   error() << "DOM>> File "    << aSysId
           << ", line "        << aLine
           << ", column "      << aColumn
-          << ": "             << aMsg << endreq;
+          << ": "             << aMsg << endmsg;
 
   xercesc::XMLString::release(&aSysId);
   xercesc::XMLString::release(&aMsg);

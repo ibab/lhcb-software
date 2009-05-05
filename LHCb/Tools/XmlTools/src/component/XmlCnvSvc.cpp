@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.13 2007-02-05 18:51:19 marcocle Exp $
+// $Id: XmlCnvSvc.cpp,v 1.14 2009-05-05 09:26:45 ocallot Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -23,7 +23,8 @@ DECLARE_SERVICE_FACTORY(XmlCnvSvc)
 // Standard Constructor
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
-  ConversionSvc(name, svc, XML_StorageType) {
+  ConversionSvc(name, svc, XML_StorageType),
+  m_msg( 0 ) {
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
@@ -54,7 +55,7 @@ StatusCode XmlCnvSvc::initialize() {
   StatusCode status = ConversionSvc::initialize();
 
   // Service MUST be initialized BEFORE!
-  MsgStream log (msgSvc(), name());
+  m_msg = new MsgStream(msgSvc(), name() );
 
   if (!status.isSuccess()) {
     return status;  
@@ -131,10 +132,9 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
                                     IOpaqueAddress*& refpAddress) 
 {
   // First check that requested address is of type XML_StorageType
-  MsgStream log( msgSvc(), name() );
-  log << MSG::VERBOSE << "Create an XML address" << endreq;
+  verbose() << "Create an XML address" << endreq;
   if( XML_StorageType != svc_type ) {
-    log << MSG::ERROR 
+    error() 
 	<< "Cannot create addresses of type " << (int)svc_type 
 	<< " which is different from " << (int)XML_StorageType 
 	<< endreq;
@@ -157,17 +157,17 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
   if( 0 < pos && pos < source.length() ) source.erase( 0, pos );
   if( source.find("<?xml") == 0 ) {
     isString = 1;
-    log << MSG::VERBOSE 
+    verbose() 
 	<< "XML source beginning by \"<?xml\" is interpreted"
 	<< " as an XML string" << endreq;
   } else {
     isString = ipar[0];
     if( isString == 0 ) {
-      log << MSG::VERBOSE << "XML source is an XML file name" << endreq;
+      verbose() << "XML source is an XML file name" << endreq;
     } else if( isString == 1 ) { 
-      log << MSG::VERBOSE << "XML source is an XML string" << endreq;
+      verbose() << "XML source is an XML string" << endreq;
     } else {
-      log << MSG::ERROR 
+      error() 
 	  << "Cannot create address: invalid ipar[0] value = "
 	  << ipar[0] << endreq;
       return StatusCode::FAILURE;
@@ -198,8 +198,7 @@ IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
-  MsgStream log (msgSvc(), name());
-  log << MSG::DEBUG << "null result returned in parse" << endreq;
+  debug() << "null result returned in parse" << endreq;
   return 0;
 }
 
@@ -208,30 +207,29 @@ IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
 IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
-  MsgStream log (msgSvc(), name());
 
   // First prepend the proper DTD path where appropriate
   // Only one "relpath/file.dtd" or 'relpath/file.dtd' is expected in string
   if( m_dtdLocation != "" ) {
     std::string::size_type dtdPos = source.find( ".dtd" );
     if( dtdPos < source.length() ) {
-      log << MSG::VERBOSE 
+      verbose() 
           << "Set correct DTD location in the string to be parsed" << endreq;
       std::string::size_type quotePos;
       if( source[dtdPos+4] == '\'' ) {
         quotePos = source.substr(0,dtdPos).rfind("\'");
         source.insert( quotePos+1, m_dtdLocation+"/" );
-        log << MSG::VERBOSE << "DTD literal is now: " 
+        verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
             << endreq;
       } else if ( source[dtdPos+4] == '\"' ) {
         quotePos = source.substr(0,dtdPos).rfind("\"");
         source.insert( quotePos+1, m_dtdLocation+"/" );
-        log << MSG::VERBOSE << "DTD literal is now: " 
+        verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
             << endreq;
       } else {
-        log << MSG::VERBOSE
+        verbose()
             << "Bad DTD literal in the string to be parsed: do nothing" 
             << endreq;
       }
@@ -242,7 +240,7 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parseString (source);
   }
-  log << MSG::DEBUG << "null result returned in parseString" << endreq;
+  debug() << "null result returned in parseString" << endreq;
   return 0;
 
 }
@@ -281,7 +279,6 @@ double XmlCnvSvc::eval (const std::string& expr, bool check) {
 // Evaluate a numerical expresion
 // -----------------------------------------------------------------------
 double XmlCnvSvc::eval (const char* expr, bool check) {
-  MsgStream log (msgSvc(), name());
 
   // Check if it is needed to be a dimention number
   if (m_checkUnits) {
@@ -289,7 +286,7 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
       std::string e(expr);
       // remove leading blanks
       if (!sumHasUnit(e, e.find_first_not_of(' '), e.length())) {
-        log << MSG::WARNING << "Expression requires correct units ["
+        warning() << "Expression requires correct units ["
             << e << "]" << endreq;
       }
     }
@@ -329,12 +326,11 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
     errtxt = "UNKNOWN_ERROR";
     break;
   }
-  log << MSG::ERROR << "Expresion evaluation error: " << errtxt << endreq;
-  log << MSG::ERROR << "[" << expr << "]" << endreq;
-  log << MSG::ERROR << " ";
-  for (int i = 0; i < m_xp.error_position(); i++) {
-    log << " "; log << "^" << endreq;
-  }
+  error() << "Expresion evaluation error: " << errtxt << endreq;
+  error() << "[" << expr << "]" << endreq;
+  error() << " ";
+  for (int i = 0; i < m_xp.error_position(); i++) error() << " ";
+  error() << "^" << endreq;
   return 0;
 }
 
@@ -445,7 +441,6 @@ std::string::size_type XmlCnvSvc::skipProduct (std::string s,
 std::string::size_type XmlCnvSvc::skipExpr (std::string s,
                                   std::string::size_type start,
                                   std::string::size_type end) {
-  MsgStream log (msgSvc(), "DetDescUnit");
   // deal with the unary plus/minus
   std::string::size_type realStart = s.find_first_not_of(' ', start);
   if (realStart != s.npos) {
@@ -455,7 +450,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
   }
   if (realStart == s.npos) {
     // the expression is empty !
-    log << MSG::ERROR
+    error()
         << "Invalid expression (It's empty !) : \""
         << s.substr (realStart, end - realStart) << "\""
         << endreq;
@@ -473,7 +468,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
     }
     // if no end
     if (endIndex == end) {
-      log << MSG::ERROR
+      error()
           << "Invalid expression (no ')' at end of string) : \""
           << s.substr (realStart, end - realStart) << "\""
           << endreq;
@@ -481,7 +476,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
     }
     // else test the closing parenthesis
     if (s[endIndex] != ')') {
-      log << MSG::ERROR 
+      error() 
           << "Invalid expression (missing ')' at column "
           << endIndex - realStart << ") : \""
           << s.substr (realStart, end - realStart) << "\""
@@ -518,7 +513,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
       }
     } else {
       // in case there is no alphanumeric character
-      log << MSG::ERROR
+      error()
           << "Invalid expression (Alphanumeric character expected) : \""
           << s.substr (realStart, end - realStart) << "\""
           << endreq;
@@ -526,7 +521,7 @@ std::string::size_type XmlCnvSvc::skipExpr (std::string s,
     }
   }
   // We should never reach this point
-  log << MSG::ERROR
+  error()
       << "This should never appear, please report" << endreq;
   return end;
 }

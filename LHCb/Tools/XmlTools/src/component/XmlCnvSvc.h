@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.12 2007-02-05 18:51:19 marcocle Exp $
+// $Id: XmlCnvSvc.h,v 1.13 2009-05-05 09:26:45 ocallot Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -285,6 +285,21 @@ private:
    * tells whether to check parameters for units or not.
    */
   bool m_checkUnits;
+  /// The message stream
+  MsgStream* m_msg;
+  
+  /// Methods to print as in GaudiAlgorithms
+  MsgStream& verbose() const { return *m_msg << MSG::VERBOSE; }
+  
+  MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
+
+  MsgStream& info()    const { return *m_msg << MSG::INFO; }
+  
+  MsgStream& warning() const { return *m_msg << MSG::WARNING; }
+
+  MsgStream& error()   const { return *m_msg << MSG::ERROR; }  
+ 
+  MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
 };
 
 #endif    // DETDESCCNV_XMLCNVSVC_H
