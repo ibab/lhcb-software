@@ -1,3 +1,9 @@
+2009-05-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/tbroadcast.py: New file.
+	* scripts/tbroadcast: added the corrected version of tbroadcast. Also changed
+	the default option to "-local -ignore_cycles -no_keep_going".
+
 2009-04-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/Lbglimpse: removed the LHCBSCRIPTS variable.

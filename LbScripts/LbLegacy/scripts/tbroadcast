@@ -1,20 +1,127 @@
-#!/bin/csh -f
+#!/usr/bin/env python
+#----------------------------------#
+# -- Author: V. Garonne
+# -- Mail: garonne@lal.in2p3.fr
+# -- Date: 08/25/2006 
+# -- Name: tbroadcast
+# -- Description: main program
+#----------------------------------#
 
-set tbroadcast_root = ${CMTROOT}/../tbroadcast/v2.0.4
+import os
+import sys
+import string
 
-if ( $?PYTHONPATH ) then
-  set save = $PYTHONPATH
-  setenv PYTHONPATH ${LHCBPYTHON}:${tbroadcast_root}/python:${PYTHONPATH}
-else
-  unset save
-  setenv PYTHONPATH ${tbroadcast_root}/python
-endif
+_tbroadcast_install_dir = os.path.join(os.path.dirname(os.environ["CMTROOT"]), "tbroadcast", "v2.0.5" )
+sys.path.insert(0,os.path.join(_tbroadcast_install_dir,"python"))
 
-${LHCBPYTHON}/tbroadcast -local -ignore_cycles -no_keep_going  ${*:q}
+from LbLegacy.tbroadcast import Scheduler
 
-if ( $?save ) then
-  setenv PYTHONPATH ${save}
-  unset save
-endif
+def usage():
+    print 'Usage : > tbroadcast [global options] [<command>]'
+    print '# command :'
+    print '#   <command>: command to execute'
+    print '# global options :'
+    print '#   -f=<file>             : Input file'
+    print '#   -help                 : Print help'
+    print '#   -local                : Reach packages only within the current project'
+    print '#   -global               : Reach packages in all CMTPATH/CMTPROJECTPATH items'    
+    print '#   -ignore_cycles        : Suppress automatically the cycles'
+    print '#   -dont_ignore_cycles   : Do not suppress automatically the cycles'
+    print '#   -make=<file>          : Generate a recursive Make, [see: http://www.tip.net.au/~millerp/rmch/recu-make-cons-harm.html]'
+    print '#   -nb=<num_worker>      : Change the total number of threads[default is 20]'
+    print '#   -no_keep_going        : Exit after the first exit code > 1 found and return it in the shell'
+    print '#   -keep_going           : Ignore exit codes'    
+    print '#   -output=<location>    : Output directory to store output files with the form <package>_output.log'
+    print '#   -error=<location>     : Output directory to store error output with the form <package>_error.log'
+    print '#   -perf=<file>          : Store for each package the time for executing the command in the <file> file'
+    print '#   -print                : Print dependencies for each package' 
+    print '#   -version              : version of tbroadcast'        
+    print '#   -silent               : Disable print'     
+    print '#   -test                 : Simulate execution'
 
-unset tbroadcast_root
+if __name__ == '__main__':
+    # Default options
+    num_worker    = 20
+    command       = ''
+    version       = 'v2.0.4'
+    test          = False
+    check         = False
+    print_graph   = False
+    local         = True
+    ignore_cycles = True
+    silent        = False
+    perf          = False     
+    output        = None
+    error         = None
+    file          = None
+    make          = None
+    makefile      = 'Makefile'
+    keep_going    = False
+    
+    if len(sys.argv) == 1:
+        test = True
+    else:
+        command = []
+        for arg in sys.argv[1:len(sys.argv)]:            
+             if arg[0]=='-':
+                 option = string.split(arg,'=')[0]
+                 if option == '-version':
+                     print version
+                     sys.exit(-1)
+                 if option == '-nb':
+                    num_worker = int (string.split(arg,'=')[1]) 
+                 if option == '-f':
+                    file = string.split(arg,'=')[1]
+                 if option == '-perf':
+                    perf = string.split(arg,'=')[1]
+                 if option == '-output':
+                    output = string.split(arg,'=')[1]
+                 if option == '-error':
+                    error = string.split(arg,'=')[1]
+                 if option == '-local':
+                     local= True
+                 if option == '-global':
+                     local= False
+                 if option == '-ignore_cycles':             
+                     ignore_cycles = True
+                 if option == '-dont_ignore_cycles':             
+                     ignore_cycles = False
+                 if option == '-silent':             
+                     silent = True        
+                 if option == '-no_keep_going':             
+                     keep_going = False
+                 if option == '-keep_going':             
+                     keep_going = True
+                              
+                 if option == '-help':    
+                      usage()
+                      sys.exit(-1)      
+                                  
+                 if option == '-test':
+                         test = True   
+                 elif option == '-check':
+                         check = True   
+                 elif option == '-print':
+                         print_graph = True   
+                 elif option == '-make':        
+                     make     = True
+                     makefile = string.split(arg,'=')[1]
+             else:
+                  command.append(arg)
+
+    master = Scheduler (num_workers=num_worker, file=file, ignore_cycles=ignore_cycles, 
+                        local=local, output=output, error=error, silent=silent, perf=perf, 
+                        keep_going=keep_going)
+    command = " ".join(command)
+    if test:
+        master.simulate_execution()
+    elif check:
+        master.check_execution (package=master.get_current_package())    
+    elif print_graph:
+        master.print_dependencies ()
+    elif make:
+        master.generate_make (makefile, command)    
+    else:
+        master.execute_all (command)
+    #sys.exit(-1);
+#--------- EoF --------#
