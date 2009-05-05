@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-05-05 - Antonio Perez-Calero
+ - added algorithm LumiHistoCurrents.h/.cpp producing 2 bunch currents (beam 1 and 2) 
+	 vs BXType histograms
+ 
 !========================== HltLuminosity v2r6 2009-03-23 ===================
 ! 2009-02-25 - Gerhard Raven
  - remove unused references to Event/HltSummary.h
