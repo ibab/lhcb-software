@@ -17,7 +17,7 @@ static std::string command() {
 
 extern "C" int mep_test(int /* ac  */, char** /* av */)  {
   Process* p[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  ProcessGroup pg;
+  ProcessGroup pg1, pg2;
   const char *a1[] ={"mbm_install","-s=8096","-e=5",  "-u=4", "-i=MEP",0};
   const char *a2[] ={"mbm_install","-s=4096","-e=30", "-u=10","-i=EVENT",0};
   const char *a3[] ={"mbm_install","-s=4096","-e=30", "-u=10","-i=RESULT",0};
@@ -34,21 +34,21 @@ extern "C" int mep_test(int /* ac  */, char** /* av */)  {
   const char *a14[]={"mbm_summary",0};
 
   Process::setDebug(true);  
-  pg.add(p[0]=new Process("Install_0", command(),a1, "/dev/null"));
-  pg.add(p[1]=new Process("Install_1", command(),a2, "/dev/null"));
-  pg.add(p[2]=new Process("Install_2", command(),a3, "/dev/null"));
-  pg.start();
-  ::lib_rtl_sleep(1500);
-  pg.add(p[3] =new Process("Moore_0",  command(),a4, "/dev/null"));
-  pg.add(p[4] =new Process("Moore_1",  command(),a5, "/dev/null"));
-  pg.add(p[5] =new Process("Moore_2",  command(),a6, "/dev/null"));
-  pg.add(p[6] =new Process("Moore_3",  command(),a7, "/dev/null"));
-  pg.add(p[7] =new Process("Moore_4",  command(),a8, "/dev/null"));
-  pg.add(p[8] =new Process("DiskWr_0", command(),a9, "/dev/null"));
-  pg.add(p[9] =new Process("Monit_0",  command(),a10,"/dev/null"));
-  pg.add(p[10]=new Process("Monit_1",  command(),a11,"/dev/null"));
-  pg.add(p[11]=new Process("MepHold_0",command(),a12,"/dev/null"));
-  pg.start();
+  pg1.add(p[0]=new Process("Install_0", command(),a1, "/dev/null"));
+  pg1.add(p[1]=new Process("Install_1", command(),a2, "/dev/null"));
+  pg1.add(p[2]=new Process("Install_2", command(),a3, "/dev/null"));
+  pg1.start();
+  ::lib_rtl_sleep(3500);
+  pg2.add(p[3] =new Process("Moore_0",  command(),a4, "/dev/null"));
+  pg2.add(p[4] =new Process("Moore_1",  command(),a5, "/dev/null"));
+  pg2.add(p[5] =new Process("Moore_2",  command(),a6, "/dev/null"));
+  pg2.add(p[6] =new Process("Moore_3",  command(),a7, "/dev/null"));
+  pg2.add(p[7] =new Process("Moore_4",  command(),a8, "/dev/null"));
+  pg2.add(p[8] =new Process("DiskWr_0", command(),a9, "/dev/null"));
+  pg2.add(p[9] =new Process("Monit_0",  command(),a10,"/dev/null"));
+  pg2.add(p[10]=new Process("Monit_1",  command(),a11,"/dev/null"));
+  pg2.add(p[11]=new Process("MepHold_0",command(),a12,"/dev/null"));
+  pg2.start();
 
   cout << "Starting processes ..... " << endl;
   ::lib_rtl_sleep(3000);
@@ -67,7 +67,9 @@ extern "C" int mep_test(int /* ac  */, char** /* av */)  {
   cout << "Summary task finished work.. " << endl;
 
   ::lib_rtl_sleep(3000);
-  for(int i=11; i>=0; --i) p[i]->stop();
+  for(int i=11; i>=3; --i) p[i]->stop();
+  ::lib_rtl_sleep(1000);
+  for(int i=2; i>=0; --i) p[i]->stop();
   ::lib_rtl_sleep(1000);
   for(int i=11; i>=0; --i) p[i]->wait(Process::WAIT_BLOCK);
   cout << "All processes finished work.. " << endl;

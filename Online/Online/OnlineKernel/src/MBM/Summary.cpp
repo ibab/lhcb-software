@@ -80,8 +80,8 @@ int Summary::show(BMDESCRIPT* dsc)   {
 
   ::printf("\n======================== MBM Bufer summary for buffer \"%s\" ========================\n\n",dsc->bm_name);
   ::sprintf(txt," Buffer \"%s\"",dsc->bm_name);
-  ::printf("%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d\n",
-	   txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
+  ::printf("%-26s  Events: Produced:%d Seen:%d Pending:%d Max:%d\n",
+	   txt, ctr->tot_produced, ctr->tot_seen, ctr->i_events, ctr->p_emax);
   ::printf("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]\n\n",
 	   "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
 	   ctr->i_users, ctr->p_umax);

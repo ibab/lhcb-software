@@ -132,7 +132,7 @@ int MBM::Installer::install()  {
   m_bm->ctrl->shift_p_Bit = p_bits;
   m_bm->ctrl->bytes_p_Bit = (1<<p_bits)-1;
   bytes_per_bit = m_bm->ctrl->bytes_p_Bit + 1;
-  ::lib_rtl_output(LIB_RTL_INFO,"Control: %p  0x%08X             [%d Bytes]\n",(void*)m_bm->ctrl,
+  ::lib_rtl_output(LIB_RTL_INFO,"Control: %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->ctrl,
            ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
 
   len = sizeof(USERDesc)+sizeof(USER)*(p_umax-1);
@@ -146,7 +146,7 @@ int MBM::Installer::install()  {
   m_bm->user   = m_bm->usDesc->users;
   ::memset(m_bm->usDesc,0,len);
   ::memset(m_bm->user,0,sizeof(USER)*p_umax);
-  ::lib_rtl_output(LIB_RTL_INFO,"User:    %p  0x%08X  %p [%d Bytes]\n",(void*)m_bm->user,
+  ::lib_rtl_output(LIB_RTL_INFO,"User:    %p  0x%08X  %p [0x%06x Bytes]\n",(void*)m_bm->user,
            ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc, len);
 
   len = sizeof(EVENTDesc)+sizeof(EVENT)*(p_emax-1);
@@ -160,7 +160,7 @@ int MBM::Installer::install()  {
   m_bm->evDesc = (EVENTDesc*)m_bm->event_add->address;
   m_bm->event = m_bm->evDesc->events;
   ::memset(m_bm->evDesc,0,len);
-  ::lib_rtl_output(LIB_RTL_INFO,"Event:   %p  0x%08X  %p [%d Bytes]\n",(void*)m_bm->event,
+  ::lib_rtl_output(LIB_RTL_INFO,"Event:   %p  0x%08X  %p [0x%06x Bytes]\n",(void*)m_bm->event,
            ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
 
   len = (((p_size<<10)/bytes_per_bit)<<3);
@@ -175,7 +175,7 @@ int MBM::Installer::install()  {
   len = ((p_size<<10)/bytes_per_bit)<<3;
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
   ::memset(m_bm->bitmap,0,len);
-  ::lib_rtl_output(LIB_RTL_INFO,"Bitmap:  %p  0x%08X             [%d Bytes]\n",(void*)m_bm->bitmap,
+  ::lib_rtl_output(LIB_RTL_INFO,"Bitmap:  %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->bitmap,
            ((char*)m_bm->bitmap)-((char*)m_bm->ctrl), len);
 
   len = p_size<<10;
@@ -190,7 +190,7 @@ int MBM::Installer::install()  {
   }
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
   ::memset(m_bm->buffer_add,0xDD,len);
-  ::lib_rtl_output(LIB_RTL_INFO,"Buffer:  %p  0x%08X             [%d Bytes]\n",(void*)m_bm->buffer_add,
+  ::lib_rtl_output(LIB_RTL_INFO,"Buffer:  %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->buffer_add,
            ((char*)m_bm->buffer_add)-((char*)m_bm->ctrl), len);
 
   CONTROL* ctrl  = m_bm->ctrl;

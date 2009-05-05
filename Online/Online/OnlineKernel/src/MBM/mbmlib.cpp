@@ -1329,16 +1329,15 @@ int _mbm_shutdown (void* /* param */) {
     _mbm_lock_tables(bm);
     ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Emergency shutdown of buffer:%s\n", bm->bm_name);
     _mbm_uclean (bm);
-    lib_rtl_delete_event(bm->WES_event_flag);
-    lib_rtl_delete_event(bm->WEV_event_flag);
-    lib_rtl_delete_event(bm->WSP_event_flag);
-    lib_rtl_delete_event(bm->WSPA_event_flag);
-    lib_rtl_delete_event(bm->WEVA_event_flag);
-    lib_rtl_unmap_section(bm->buff_add);
-    lib_rtl_unmap_section(bm->bitm_add);
-    lib_rtl_unmap_section(bm->user_add);
-    lib_rtl_unmap_section(bm->event_add);
-    lib_rtl_unmap_section(bm->ctrl_add);
+    ::lib_rtl_delete_event(bm->WES_event_flag);
+    ::lib_rtl_delete_event(bm->WEV_event_flag);
+    ::lib_rtl_delete_event(bm->WSP_event_flag);
+    ::lib_rtl_delete_event(bm->WSPA_event_flag);
+    ::lib_rtl_delete_event(bm->WEVA_event_flag);
+    ::lib_rtl_unmap_section(bm->buff_add);
+    ::lib_rtl_unmap_section(bm->bitm_add);
+    ::lib_rtl_unmap_section(bm->user_add);
+    ::lib_rtl_unmap_section(bm->event_add);
     bm->ctrl = 0;
     bm->user = 0;
     bm->usDesc = 0;
@@ -1352,6 +1351,7 @@ int _mbm_shutdown (void* /* param */) {
     bm->WSPA_event_flag = 0;
     bm->WEVA_event_flag = 0;
     _mbm_unlock_tables(bm);
+    ::lib_rtl_unmap_section(bm->ctrl_add);
     ::lib_rtl_output(LIB_RTL_ERROR,"mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
     bm->lockid = 0;
   }

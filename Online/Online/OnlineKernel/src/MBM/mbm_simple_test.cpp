@@ -46,8 +46,9 @@ extern "C" int mbm_simple_test(int /* ac  */, char** /* av */)  {
   delete p[3];
   cout << "Summary task finished work.. " << endl;
   ::lib_rtl_sleep(2000);
-  for(int i=2; i>=0; --i) p[i]->stop();
+  for(int i=2; i>0; --i) p[i]->stop();
   ::lib_rtl_sleep(1000);
+  p[0]->stop();
   for(int i=2; i>=0; --i) p[i]->wait();
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);
@@ -97,8 +98,9 @@ extern "C" int mbm_full_test(int /* ac  */, char** /* av */)  {
   cout << "Summary task finished work.. " << endl;
 
   ::lib_rtl_sleep(3000);
-  for(int i=6; i>=0; --i) p[i]->stop();
+  for(int i=6; i>0; --i) p[i]->stop();
   ::lib_rtl_sleep(1000);
+  p[0]->stop();
   for(int i=6; i>=0; --i) p[i]->wait();
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);
