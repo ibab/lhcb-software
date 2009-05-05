@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.28 2009-04-25 01:03:18 spradlin Exp $
+// $Id: CombineParticles.cpp,v 1.29 2009-05-05 12:10:53 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,6 +43,7 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   /// make the plots ? 
   inline bool validPlots ( std::string name ) 
   {
@@ -50,7 +51,55 @@ namespace
     boost::to_lower ( name ) ;
     return "none" != name ;
   }
-}
+  // ==========================================================================
+  /** @class PV_Sentry 
+   *  Helper class to guarantee the removal of relations to the 
+   *  temporary object
+   *
+   *  @todo similar "sentry" class to be added into Kernel/Relations package
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-05-05
+   */
+  class PV_Sentry 
+  {
+    // ========================================================================
+    /// the actual type of relation table 
+    typedef Particle2Vertex::LightTable Table ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor 
+     *  @param table   the relation table 
+     *  @param particle the particle 
+     */
+    PV_Sentry 
+    ( Table&                table    , 
+      const LHCb::Particle* particle )
+      : m_table    ( table    ) 
+      , m_particle ( particle ) 
+    {}
+    /// destructor 
+    ~PV_Sentry() 
+    {
+      m_table.i_removeFrom ( m_particle ).ignore() ;
+    }
+    // ========================================================================
+  private:
+    // ========================================================================
+    // the default constructror is disabled 
+    PV_Sentry () ; // the default constructror is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the relation table (REFERENCE!)
+    Table& m_table ;                         // the relation table (REFERENCE!)
+    /// the temporary particle 
+    const LHCb::Particle* m_particle ;                // the temporary particle 
+    // ========================================================================
+  };
+  // ==========================================================================
+} // end of anonymous namespace 
 // ============================================================================
 /** @class CombineParticles 
  *  LoKi-based version of CombineParticles algorithm, developed by 
@@ -590,7 +639,12 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   // the counter of recontructed/selected decays:
   size_t nTotal = 0 ;
+
   
+  // the actual type of relation table 
+  typedef Particle2Vertex::LightTable Table ;
+  Table& p2pv_table = desktop() ->Particle2VertexRelations() ;
+
   // loop over all decays 
   for ( std::vector<Decays::Decay>::const_iterator 
           idecay = m_decays.begin() ; 
@@ -644,6 +698,9 @@ StatusCode CombineParticles::execute    ()  // standard execution
       LHCb::Vertex   vertex   ;
       LHCb::Particle mother ( idecay->mother().pid() ) ;
       
+      // lock the relation table Particle -> Primary Vertex:
+      PV_Sentry lock ( p2pv_table , &mother ) ;
+      
       //      StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
       StatusCode sc = vertexFitter()->fit( combination , mother , vertex ) ;
       if ( sc.isFailure() ) 
@@ -661,24 +718,11 @@ StatusCode CombineParticles::execute    ()  // standard execution
       }
       
       // apply the cut on "mother" particle
+      if ( !m_cut  ( &mother ) )  { continue ; }                    // CONTINUE
       
-      if ( !m_cut  ( &mother ) )  {
-        /// Hack: remove whatever relations from this candidate have been
-        /// indirectly stored to the P->PV relations table.
-        /// @todo remove once fixes in direct clients of IPhysDesktop::relatedVertex 
-        desktop()->Particle2VertexRelations().i_removeFrom(&mother);
-        continue ; 
-      }                    // CONTINUE
-
       // keep the good candidate:
       const LHCb::Particle* particle = desktop()->keep ( &mother ) ;
-
-      /// Hack: remove whatever relations from this candidate have been
-      /// indirectly stored to the P->PV relations table.
-      /// @todo remove once fixes in direct clients of IPhysDesktop::relatedVertex 
-      desktop()->Particle2VertexRelations().i_removeFrom(&mother);
       
-
       if ( 0 != m_motherPlots ) 
       {
         StatusCode sc = m_motherPlots->fillPlots ( particle ) ;

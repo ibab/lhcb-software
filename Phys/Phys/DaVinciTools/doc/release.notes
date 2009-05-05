@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.424 2009-04-25 01:03:18 spradlin Exp $
+! $Id: release.notes,v 1.425 2009-05-05 12:10:53 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-05-05 - Vanya BELYAEV
+
+ - src/CombineParticles.cpp
+
+    hopefully the final fix for the #bug 45964 
 
 ! 2009-04-25 - Patrick Spradlin
  - src/CombineParticles.cpp
