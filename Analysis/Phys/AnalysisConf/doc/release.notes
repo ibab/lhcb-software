@@ -4,6 +4,12 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2009-05-05 - Juan PALACIOS
+ - python/AnalysisConf/Configuration.py
+  . DaVinci() now takes care of setting RedoMCLinks correctly for DC06 
+    and/or RDST.
+
+
 ! 2009-05-01 - Patrick Koppenburg
  - Alignment problem with not Simulation = False 
  - Increment to v1r1p3
