@@ -97,7 +97,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   Process::setDebug(true);  
   pg.add(p[0]=new Process("MEPInit_0",  command(),a1,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(10000);
+  ::lib_rtl_sleep(8000);
   pg.add(p[1] =new Process("EvtProd_0", command(),a2,out.c_str()));
   pg.add(p[2] =new Process("EvtHold_0", command(),a3,out.c_str()));
   pg.add(p[3] =new Process("Moore_0",   command(),a4,out.c_str()));
@@ -109,7 +109,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
 
   cout << "Starting processes ..... " << endl;
   pg.start();
-  ::lib_rtl_sleep(5500);
+  ::lib_rtl_sleep(20000);
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("Prod_0",command(),aprod,out.c_str());
   prod->start();
@@ -136,7 +136,7 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   Process::setDebug(true);  
   pg.add(p[0]=new Process("TAEBuffers_0",command(),a1,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(3500);
+  ::lib_rtl_sleep(5000);
   pg.add(p[1] =new Process("TAE_0",   command(),a2,out.c_str()));
   pg.add(p[2] =new Process("TAE_1",   command(),a2,out.c_str()));
   pg.add(p[3] =new Process("TAE_2",   command(),a2,out.c_str()));
@@ -144,7 +144,7 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   pg.add(p[5] =new Process("TAE_4",   command(),a2,out.c_str()));
   cout << "Starting processes ..... " << endl;
   pg.start();
-  ::lib_rtl_sleep(5500);
+  ::lib_rtl_sleep(10000);
   cout << "Starting producer ...... " << endl;
   Process* prod=new Process("TAEProd_0",command(),aprod,out.c_str());
   prod->start();
@@ -185,10 +185,10 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
   pg.add(p[3]=new Process("Node3_0",  command(),a3,out.c_str()));
   pg.add(p[4]=new Process("Storage_0",command(),a4,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(3500);
+  ::lib_rtl_sleep(5000);
   pg.add(p[5] =new Process("Receiver_0",command(),a5,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(2000);
+  ::lib_rtl_sleep(15000);
   pg.add(p[6]=new Process("Sender1_0",command(),a6,out.c_str()));
   pg.add(p[7]=new Process("Sender2_0",command(),a7,out.c_str()));
   pg.add(p[8]=new Process("Sender3_0",command(),a8,out.c_str()));
