@@ -22,7 +22,7 @@ Child: Starting process:MBMsummary_0
 
 ======================== MBM Bufer summary for buffer "EVENT" ========================
 
- Buffer "EVENT"             Events: Produced:55000 Actual:275000 Seen:55000 Pending:0 Max:500
+ Buffer "EVENT"             Events: Produced:55000 Seen:55000 Pending:0 Max:500
                             Space(kB):[Tot:199 Free:199] Users:[Tot:6 Max:14]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
@@ -31,7 +31,7 @@ Child: Starting process:MBMsummary_0
 
 ======================== MBM Bufer summary for buffer "MEP" ========================
 
- Buffer "MEP"               Events: Produced:5000 Actual:10000 Seen:5000 Pending:0 Max:100
+ Buffer "MEP"               Events: Produced:5000 Seen:5000 Pending:0 Max:100
                             Space(kB):[Tot:6998 Free:6998] Users:[Tot:2 Max:5]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
@@ -40,7 +40,7 @@ Child: Starting process:MBMsummary_0
 
 ======================== MBM Bufer summary for buffer "RESULT" ========================
 
- Buffer "RESULT"            Events: Produced:55000 Actual:55000 Seen:55000 Pending:0 Max:100
+ Buffer "RESULT"            Events: Produced:55000 Seen:55000 Pending:0 Max:100
                             Space(kB):[Tot:199 Free:199] Users:[Tot:6 Max:14]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
