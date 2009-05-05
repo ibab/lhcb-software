@@ -127,7 +127,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
                 
 
         # define histogrammers
-        from Configurables import LumiHistoMaker, LumiHisto2dSPD
+        from Configurables import LumiHistoMaker, LumiHisto2dSPD, LumiHistoCurrents
         HistoMembers=[]
         HistoMembers.append(LumiHistoMaker('Histo'+BXType,
                                            InputVariables = createdCounters,
@@ -138,6 +138,9 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         HistoMembers.append(LumiHisto2dSPD('Histo2D'+BXType,
                                            HistoTitle=str(BXType),
                                            OutputLevel = debugOPL ))
+
+        #HistoMembers.append(LumiHistoCurrents('HistoCur'+BXType)) Testing here for 8 plots...
+                                           
         lumiHistoSequence = Sequence('LumiHisto'+BXType +'Seq'
                                      , Members = HistoMembers
                                      , ModeOR = True
@@ -163,5 +166,20 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         counters = LumiCounterDefinitionConf().defineCounters()
         BXTypes=self.getProp('BXTypes')
         BXMembers = []
-        for bx in BXTypes:
+
+##         from Configurables import LumiHistoCurrents    #This code should be here, to produce 2 plots, not 8!  Commented for a while...
+##         LumiCurrentsMonitor = Line ( 'LumiCurMoni'
+##                                      , prescale = self.prescale
+##                                      , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) '
+##                                      , algos = [
+##             LumiHistoCurrents('LumiCurrentMoni')
+##             ] 
+##                                      , postscale = self.postscale
+##                                      ) 
+        
+##         BXMembers.append(LumiCurrentsMonitor)
+
+        for bx in BXTypes:    # HltANNSvc can't support 5 lumi lines!!
             BXMembers.append(self.__create_lumi_line__(bx, counters))
+
+        

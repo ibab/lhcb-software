@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.228 2009-05-01 19:04:14 graven Exp $ 
+! $Id: release.notes,v 1.229 2009-05-05 20:53:35 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-05 - Antonio Perez-Calero
+ - Added new line with alg for bunch current monitoring to lumi lines. Commented 
+	 for the time being to avoid conflicts, as PassIgnoringLumiLines seems to be able to 
+	 handle only 4 lumi lines.
 
 ! 2009-05-01 - Gerhard Raven
  - add a module HltThresholds which contains predefined sets of settings 
