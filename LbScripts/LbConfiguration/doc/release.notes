@@ -1,3 +1,8 @@
+2009-05-05 Marco Clemencic
+
+	* python/LbConfiguration/SetupProject.py: Fixed a problem with the support
+	for patterns to select a version.
+
 2009-05-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the setting of the AFS variable

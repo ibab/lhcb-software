@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os, sys, tempfile, re, sys, time
 from xml.sax import parse, ContentHandler
@@ -6,11 +7,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.10 2009-04-02 16:18:09 joel Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.11 2009-05-05 13:21:18 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.10 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.11 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -331,17 +332,30 @@ def VersionMatch(version, pattern):
 	return version == pattern or \
 	    ((pattern is not None) and (version is not None) and fnmatch(version, pattern))
 
-def _GetVersionTuple(v, versions):
-    """Extract the version tuple corresponding to version v (it can be a pattern).
+def _GetVersionTuple(pattern, versions):
+    """Extract the version tuple corresponding to version 'pattern'.
     """
     if not versions:
+        # No need to go on if the versions list is empty
         return None
-    # Try exact match
+    # Extract the list of version strings (in the correct order)
+    version_strings = SortVersions([v[1] for v in versions], reverse = True)
+    # Look for a match in the list of versions
+    found = False
+    match = None
+    for v in version_strings:
+        if VersionMatch(v, pattern): # compare the version with the pattern
+            found = True
+            match = v
+            break # exit the loop at the first match
+    if not found and pattern is None: # fall back solution
+        match = version_strings[0] # latest version
+    
+    # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
-        if VersionMatch(vers_tuple[1], v):
+        if match == vers_tuple[1]:
             return vers_tuple
-    if v is None: # take the latest
-        return _GetVersionTuple(LatestVersion(versions), versions)
+    # Nothing found
     return None
 
 class ProjectInfo:
@@ -411,7 +425,7 @@ def makeProjectInfo(project = None, version = None, versions = None, search_path
             search_path = _defaultSearchPath()
             #raise TypeError("makeProjectInfo() requires 'search_path' if 'versions' is not specified")
         versions = FindProjectVersions(project, search_path, user_area)
-    vers_tuple = _GetVersionTuple(version,versions)
+    vers_tuple = _GetVersionTuple(version, versions)
     if not vers_tuple:
         return None
     return apply(ProjectInfo,vers_tuple)
