@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.60 2009-04-24 15:51:10 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.61 2009-05-05 16:34:12 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -286,9 +286,8 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   // Input particle is given check if it already exist in the stack
   if( DaVinci::inTES( keptP ) ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Particle is in desktop" << endmsg ;
-    return keptP;
+     return keptP;
   }
-
   // Create new particle on the heap
   LHCb::Particle* newP = new LHCb::Particle();
 
@@ -301,6 +300,21 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
     const LHCb::Vertex* newV = keep( keptP->endVertex() );
     newP->setEndVertex(newV);
   }
+
+  // copy relations directly from table to avoid triggering any new P->PV 
+  // relations calculation
+  Particle2Vertex::Range range = i_p2PVTable().i_relations(keptP);
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
+  }
+  for ( Particle2Vertex::Range::const_iterator i = range.begin();
+        i != range.end();
+        ++i) {
+    i_p2PVTable().i_push(newP, i->to(), i->weight() );
+  }
+  i_p2PVTable().i_sort();
+  
   // Link to outgoing particles is followed through the keep(LHCb::Vertex)
   // Link to originators will be correct because they are in the heap
   // so their pointer is valid
