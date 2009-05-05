@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-05-03 14:49:49 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-05-05 15:27:17 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -54,34 +54,30 @@ class RichPIDQCConf(LHCbConfigurableUser):
         # Which calibrations to run
         calibs = self.getProp("PIDCalibrations")
 
-        self.calibSeq().IgnoreFilterPassed = True
+        calibSeq = self.calibSeq()
+        calibSeq.IgnoreFilterPassed = True
 
         # Run Conor's Ds -> Phi Pi selection and calibration
         if "DsPhiPi" in calibs :
             self.setOtherProps(DsToPhiPiConf(),["MCChecks","MakeNTuple"])
-            DsToPhiPiConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichDsToPhiPiSeq"))
+            DsToPhiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiSeq"))
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
             self.setOtherProps(DstarToDzeroPiConf(),["MCChecks","MakeNTuple"])
-            DstarToDzeroPiConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichDstarToD0PiSeq"))
+            DstarToDzeroPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiSeq"))
 
         # Andrew's Lambda -> Proton Pion selection
         if "LambdaPrPi" in calibs :
             self.setOtherProps(LambdaToProtonPionConf(),["MCChecks","MakeNTuple"])
-            LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichLambdaToPrPiSeq"))
+            LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( scalibSeq, "RichLambdaToPrPiSeq"))
 
         # Andrew's Kshort -> Pion Pion selection
         if "KshortPiPi" in calibs :
             self.setOtherProps(KshortPiPiConf(),["MCChecks","MakeNTuple"])
-            KshortPiPiConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichKsToPiPiSeq"))
+            KshortPiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiSeq"))
 
         # Nicola's J/Psi -> Mu Mu selection
         if "JPsiMuMu" in calibs :
             self.setOtherProps(JPsiMuMuConf(),["MCChecks","MakeNTuple"])
-            JPsiMuMuConf().setProp("Sequencer",self.newSeq( self.calibSeq() ,"RichJPsiToMuMuSeq"))
-            
-
-
-
-
+            JPsiMuMuConf().setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuSeq"))

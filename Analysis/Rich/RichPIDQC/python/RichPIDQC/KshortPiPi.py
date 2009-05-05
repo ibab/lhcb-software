@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: KshortPiPi.py,v 1.4 2009-05-03 19:22:53 jonrob Exp $"
+__version__ = "$Id: KshortPiPi.py,v 1.5 2009-05-05 15:27:17 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -49,8 +49,8 @@ class KshortPiPiConf(LHCbConfigurableUser) :
         ks02pipi.addTool(PhysDesktop)
         ks02pipi.PhysDesktop.InputLocations = [ "Phys/" + pionFilterName ]
         ks02pipi.DecayDescriptor = "KS0 -> pi+ pi-"
-        ks02pipi.CombinationCut = "(ADAMASS('KS0') < 100*MeV) & (AMAXDOCA('') < 0.6*mm)"
-        ks02pipi.MotherCut = "(ADMASS('KS0') < 7*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
+        ks02pipi.CombinationCut = "(ADAMASS('KS0') < 200*MeV) & (AMAXDOCA('') < 0.6*mm)"
+        ks02pipi.MotherCut = "(ADMASS('KS0') < 100*MeV) & (VFASPF(VCHI2/VDOF) < 10) & (MIPDV(PRIMARY) < 0.75) & (BPVVDCHI2 > 150)  & (MIPCHI2DV(PRIMARY) < 100) & ( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > 8*MeV ) & ( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > 8*MeV )"
 
         # Add selection algs to the sequence
         seq.Members += [pionfilter,ks02pipi]
@@ -60,8 +60,8 @@ class KshortPiPiConf(LHCbConfigurableUser) :
         plotter = ParticleMonitor(ks02pipiName+"Plots")
         plotter.addTool(PhysDesktop)
         plotter.PhysDesktop.InputLocations = [ "Phys/"+ks02pipiName ]
-        plotter.PeakCut     = "(ADMASS('KS0')<100*MeV)"
-        plotter.SideBandCut = "(ADMASS('KS0')>100*MeV)"
+        plotter.PeakCut     = "(ADMASS('KS0')<7*MeV)"
+        plotter.SideBandCut = "(ADMASS('KS0')>7*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
                               "CombinedPidPlotTool",
                               "RichPlotTool","CaloPlotTool","MuonPlotTool" ]
