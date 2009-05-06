@@ -4,15 +4,16 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!================ DetDescCnv v4r9 2009-05-06 ==================================
 ! 2009-05-04 - Olivier Callot
  - Create a MsgStream in XmlGenericCnv in initialize(), add methods to print like
    in GaudiAlgorithm: info(), debug(),.... They are available in all converter as
    they all inherit from XmlGenericCnv.
- - Removal of unneeded ceratuion of MsgStream
+ - Removal of unneeded creation of MsgStream
  - If the file name ends with '.xml[' + something + ']' then the part between
    bracket is removed to get the file, and in the file itself the string '--KEY--'
    is replaced by the string which was between brackets. This '--KEY--' string must be
-   at the end of the names. This works ONLY for geometry, i.e. logical and physcial 
+   at the end of the names. This works ONLY for geometry, i.e. logical and physical 
    volumes. This avoids re-parsing the file and is intended for RICH hpd.
 
 ! 2009-04-17 - Marco Cattaneo
