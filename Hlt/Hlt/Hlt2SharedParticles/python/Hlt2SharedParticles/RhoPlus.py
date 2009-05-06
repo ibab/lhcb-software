@@ -28,7 +28,7 @@ Hlt2SharedRhoPlus2PiPi0.DaughtersCuts = { "pi+" : "ALL"
 Hlt2SharedRhoPlus2PiPi0.CombinationCut = "(ADAMASS('K*(892)+')<550*MeV)"
 Hlt2SharedRhoPlus2PiPi0.MotherCut =  "ALL"
 
-RhoPlus2PiPi0 = bindMembers( None, [ GoodPions, GaudiSequencer('SeqHlt2Neutrals'), Hlt2SharedRhoPlus2PiPi0 ])
+RhoPlus2PiPi0 = bindMembers( None, [ GoodPions, AllPi0s, Hlt2SharedRhoPlus2PiPi0 ])
 #--------------------------------------------------------------------
 #rho(770) -> K pi0 is a clone of rho(770) -> pi pi0
 Hlt2SharedRhoPlus2KPi0 = Hlt2SharedRhoPlus2PiPi0.clone("Hlt2SharedRhoPlus2KPi0")

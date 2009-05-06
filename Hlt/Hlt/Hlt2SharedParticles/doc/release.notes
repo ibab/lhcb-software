@@ -1,11 +1,13 @@
-$Id: release.notes,v 1.21 2009-05-06 09:09:39 jpalac Exp $
+$Id: release.notes,v 1.22 2009-05-06 18:24:13 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+!========================== Hlt2SharedParticles v1r1 2009-05-06 ===================
 
-!========================== Hlt2SharedParticles v1r1 2009-05-06 ===============
+! 2009-05-01 - Gerhard Raven
+ - fix typo in RhoPlus.py
 
 ! 2009-05-01 - Gerhard Raven
  - add KsDD to Ks.py
