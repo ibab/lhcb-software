@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.213 2009-03-31 13:26:12 marcocle Exp $
+! $Id: release.notes,v 1.214 2009-05-06 15:28:55 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r6 2009-05-06 ===========================
 ! 2009-03-31 - Marco Clemencic
  - Updated the reference file of the test velodet.veloaligncond.updates because
    the output changed after the changes by Wouter. 
