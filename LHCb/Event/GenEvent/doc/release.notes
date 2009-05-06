@@ -2,6 +2,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!======================= GenEvent v5r6 2009-05-06 =============================
 ! 2009-04-29 - Gloria CORTI
  - Make method GenHeader::numOfCollisions() const
 
