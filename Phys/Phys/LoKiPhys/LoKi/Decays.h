@@ -1,4 +1,4 @@
-// $Id: Decays.h,v 1.4 2008-12-17 16:53:20 ibelyaev Exp $
+// $Id: Decays.h,v 1.5 2009-05-06 20:32:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYS_H 
 #define LOKI_DECAYS_H 1
@@ -125,6 +125,8 @@ namespace Decays
       ( Decays::iTree_<PARTICLE>::Collection& output ) const ;
       /// MANDATORY: the specific printout 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      /// has marked elements in tree? 
+      virtual bool marked() const ;
       // ====================================================================
     public:
       // ====================================================================
@@ -398,6 +400,8 @@ namespace Decays
       /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
+      /// has marked elements in tree? 
+      virtual bool marked() const ;
       // ====================================================================
     public:
       // ====================================================================

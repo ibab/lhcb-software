@@ -1,4 +1,4 @@
-// $Id: Decays.cpp,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
+// $Id: Decays.cpp,v 1.4 2009-05-06 20:32:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,7 +16,6 @@
  *  @date   2008-05-25
  */
 // ============================================================================
-
 namespace 
 {
   // ==========================================================================
@@ -256,6 +255,16 @@ size_t Decays::Trees::Exclusive::collect
   for ( SubTrees::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) { size += ichild->collect ( output ) ; }  
   return size ;
+}
+// ============================================================================
+// has marked elements in the tree?
+// ============================================================================
+bool Decays::Trees::Exclusive::marked () const 
+{
+  for ( SubTrees::const_iterator ichild = childBegin() ; 
+        childEnd() != ichild ; ++ichild ) 
+  { if  (ichild->marked() ) { return true ; } }
+  return false ;
 }
 // ============================================================================
 // the only one essential method 
@@ -619,6 +628,16 @@ StatusCode Decays::Trees::Optional::validate
   StatusCode sc = Exclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
     Decays::validate ( optBegin() , optEnd() , svc ) ;
+}
+// ============================================================================
+// has marked elements in the tree?
+// ============================================================================
+bool Decays::Trees::Optional::marked () const 
+{
+  for ( SubTrees::const_iterator iopt = optBegin() ; 
+        optEnd() != iopt ; ++iopt ) 
+  { if  ( iopt->marked() ) { return true ; } }
+  return Decays::Trees::Exclusive::marked()  ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 
