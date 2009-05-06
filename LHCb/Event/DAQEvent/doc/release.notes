@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r20 2009-05-06 ===========================
 ! 2009-04-14 - Marco Cattaneo
  - src/components/OdinTypesFilter : put back printout of number of selected evts
  - replace obsolescent endreq by endmsg 
