@@ -12,6 +12,8 @@
 ! end
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v8r1 2009-05-06 ===================
+
 ! 2009-04-21 - Patrick Koppenburg
  - Rename all inputlocations for DecayTreeTuples to be compatible with Hlt2Lines.
 
