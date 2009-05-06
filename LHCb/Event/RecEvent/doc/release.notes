@@ -1,12 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.118 2009-04-03 14:00:58 hernando Exp $
+! $Id: release.notes,v 1.119 2009-05-06 15:42:32 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r20 2009-05-06 =========================
 ! 2009-04-03 J.A. Hernando
- - Adding bit in the muonPID for the IsMuonLoose bool condition
+ - Add bit in the muonPID for the IsMuonLoose bool condition
 
 !========================= RecEvent v2r19 2009-03-09 =========================
 ! 2009-02-26 M Needham
