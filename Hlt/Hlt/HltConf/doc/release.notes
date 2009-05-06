@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.229 2009-05-05 20:53:35 aperezca Exp $ 
+! $Id: release.notes,v 1.230 2009-05-06 06:45:26 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v2r8 2009-05-06 ===================
 
 ! 2009-05-05 - Antonio Perez-Calero
  - Added new line with alg for bunch current monitoring to lumi lines. Commented 
