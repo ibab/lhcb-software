@@ -2,9 +2,11 @@ CaloEFlowAlg.Members += {   "CaloEFlowAlg/EcalEFlowAlgo"};
 
 // define the subset of useful monitoring histos for EF
 EcalEFlowAlgo.histoList   = { "All" };
+
 //define parameters
-EcalEFlowAlgo.SplitAreas = true;
+EcalEFlowAlgo.SplitAreas = false;
 EcalEFlowAlgo.EtFilterMax  = 1.*GeV;
+EcalEFlowAlgo.EnergyFilterMax = 10.*GeV;
 EcalEFlowAlgo.OneDimension = true;
 
 // EcalEFlowAlgo.Profile = true;

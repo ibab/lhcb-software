@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.36 2009-04-24 13:44:08 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2009-05-06 16:15:30 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -8,6 +8,10 @@
 ! 2009-04-24 - Marco Cattaneo
  - Fix compilation warning for gcc43
  - Replace endreq by endmsg (obsolescent in Gaudi v21)
+
+! 2009-05-05 - Olivier Deschamps for Aurelien Martens
+  - CaloEFlowAlg.cpp  : add protection 
+  - CaloEFlowAlg.opts : change default setting 
 
 ! 2009-04-21 - Olivier Deschamps for Dmitry Goloubkov
  - CaloEMuMonitor/Checker.{cpp,h} : produce histogram (+analysis) of CaloPID 

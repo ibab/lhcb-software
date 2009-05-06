@@ -1,4 +1,4 @@
-// $Id: CaloEFlowAlg.cpp,v 1.2 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloEFlowAlg.cpp,v 1.3 2009-05-06 16:15:30 odescham Exp $
 // Include files 
 
 // from GaudiKernel
@@ -93,6 +93,9 @@ StatusCode CaloEFlowAlg::execute() {
     if ( 0 == *digit ) continue;
     
     const LHCb::CaloCellID  id     = (*digit)->cellID();
+    
+    bool isvalid = m_calo->valid(id) && !m_calo->isPinId( id );
+    if( isvalid == false ) continue ;    
     
     const double            e      = (*digit)->e();
     const double            et     = e * m_calo->cellSine( id );
