@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.118 2009-04-18 00:15:53 odescham Exp $
+! $Id: release.notes,v 1.119 2009-05-06 15:37:49 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!======================== L0Event v17r5 2009-05-06 ===========================
 ! 2009-04-16 - Olivier Deschamps
  - xml/L0DUChannel.xml : fix harmless repetition
-
 
 !======================== L0Event v17r4 2009-03-09 ===========================
 ! 2009-03-05 - Olivier Deschamps
