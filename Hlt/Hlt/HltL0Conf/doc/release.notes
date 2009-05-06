@@ -3,6 +3,9 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+
+!========================== HltL0Conf v2r9 2009-05-06 ===================
+
 ! 2009-05-01 - Gerhard Raven
  - Make PatConfirmTool use a _private_ PatSeedingTool to avoid
    clashes between Hlt1 and Hlt2 use of PatSeedingTool...
