@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.h,v 1.8 2008-07-24 18:03:41 cattanem Exp $ 
+// $Id: CaloDigitAlg.h,v 1.9 2009-05-06 15:58:24 odescham Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
@@ -49,27 +49,26 @@ private:
   double      m_incoherentNoise   ; ///< magnitude of incoherent noise
   double      m_gainError         ; ///< error in PMT gain
   double      m_fracPrev          ; ///< fraction of previous BX subtracted
-  double      m_pedShift          ; ///< faction of noise giving pedestal shift
   double      m_pedestalShift     ; ///< pedestal shift due to noise
-  double      m_pePerMeV          ; ///< Number of photo electrons per MeV
   double      m_deadCellFraction  ; ///< Fraction of dead cells
   double      m_triggerEtScale;    ///< Scale for trigger ADC
-  double      m_triggerThreshold;  ///< Zero suppress for trigger
-  int         m_zSupThreshold;     ///< Zero suppression for data, PreShower only
+  double      m_triggerThreshold  ;  ///< Zero suppress for trigger
+  double      m_zSupThreshold;     ///< Zero suppression for data, PreShower only
   bool        m_triggerIsBit;      ///< Trigger data is a bit bank
-  std::vector<double> m_corrArea;  ///< Correction factor for trigger, area dependence
-
+  double      m_mip ; // MIP deposit (Prs/Spd)
+  double      m_sat ; // fraction of full dynamics to consider (taking ped substraction into account)
+  std::vector<double>      m_phe; // number of photoelectron per MIP (for each area)
   int         m_numberOfCells     ; ///< Number of cells of this detector. 
   int         m_saturatedAdc      ; ///< Value to set in case ADC is saturated.
   int         m_maxAdcValue       ; ///< Maximum ADC content, after ped. substr
   double      m_activeToTotal     ; ///< Ratio activeE to total energy in ADC.
-
+  bool        m_zSup;
 
   enum { GAUS_INTEGRAL = 0, GAUS_MEAN = 1, GAUS_SIGMA = 2 };
   bool m_monitorNoise; ///< create noise monitoring histogram for each section
   bool m_useAdvancedNoise; ///< use advanced noise spectra generation
   double m_noiseIntegral[3]; ///< integrals of noise spectra
-  std::map< int, std::vector< std::vector<double> > > m_advancedNoise; ///< parameters of the advanced noise spectra for different sections
+  std::map< int, std::vector< std::vector<double> > > m_advancedNoise; /// advanced noise spectra for different areas
   AIDA::IHistogram1D* m_noiseHist[3]; ///< monitoring histograms from advanced noise
 
   ///protected poisson distribution against FPE

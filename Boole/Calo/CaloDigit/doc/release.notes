@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2009-05-05 - Olivier Deschamps
+ - CaloDigitAlg :  get digitisation parameters from condDB (via DeCalorimeter)
+
 ! 2009-04-06 - Olivier Deschamps
  - CaloPinDigitAlg :  adapt to change in CaloDet
 
