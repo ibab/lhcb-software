@@ -4,6 +4,7 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+!========================= BcmDet v1r3 2009-05-06 ==========================
 ! 2009-05-04 - Olivier Callot
  - Call the base class constructor in DeBcm and DeBcmSens
 
