@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v5r5 2009-05-06 ===================
+
 ! 2009-04-21 - Gerhard Raven
  - adapt HltGenConfig for Gaudi v21
 
