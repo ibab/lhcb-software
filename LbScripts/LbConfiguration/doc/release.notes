@@ -1,5 +1,9 @@
 2009-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r3
+
+2009-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbConfiguration/LbLogin.py: added the setupSystem method in order to 
 	append the $MYSITEROOT/$CMTOPT/lib directory to the LD_LIBRARY_PATH on Linux
 
