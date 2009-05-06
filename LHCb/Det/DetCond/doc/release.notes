@@ -1,10 +1,11 @@
-# $Id: release.notes,v 1.165 2009-04-17 13:32:10 cattanem Exp $
+# $Id: release.notes,v 1.166 2009-05-06 15:05:33 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r5p3 2009-05-06 ========================
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq by endmsg
 
