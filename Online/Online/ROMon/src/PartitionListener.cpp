@@ -4,6 +4,7 @@
 #include "RTL/readdir.h"
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 #include <vector>
 #include <memory>
 extern "C" {
