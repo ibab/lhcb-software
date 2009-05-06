@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.28 2009-04-17 12:47:39 cattanem Exp $ 
+# $Id: requirements,v 1.29 2009-05-06 15:11:20 cattanem Exp $ 
 # ============================================================================
 # Created    : 2005-04-22
 # Maintainer : Matt Needham, Marco Clemencic
 # ============================================================================
 package           DetDescSvc
-version           v2r4
+version           v2r3p1
 
 branches          cmt doc src
 
