@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-05-06 - Stephanie Hansmann-Menzemer
+ - bug fix for PatForward (prevent from overwritting selected hits flags)
 
 !========================== PatAlgorithms v3r18 2009-04-22 ===================
 ! 2009-04-22 - Stephanie Hansmann-Menzemer

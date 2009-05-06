@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.14 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatForwardTool.cpp,v 1.15 2009-05-06 15:35:32 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -445,7 +445,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     //== Add reference to the used clusters/, T stations
     for ( PatFwdHits::iterator itH = (*itL).coordBegin(); (*itL).coordEnd() != itH; itH++ ) {
       PatFwdHit* myHit = (*itH);
-      if ( !myHit->isSelected() ) continue;
       fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
       myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
       myHit->setIsUsed(true);
