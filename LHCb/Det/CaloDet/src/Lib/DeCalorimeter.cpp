@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.57 2009-04-17 13:41:04 cattanem Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.58 2009-05-06 15:59:13 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -36,12 +36,6 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_caloIndex         ( -1         )
   ,  m_initialized       ( false      )
   ,  m_subCalos          () 
-  ,  m_adcMax            ( 4095       )
-  ,  m_maxEtInCenter     (         )
-  ,  m_maxEtSlope        (         )
-  ,  m_pedShift          ( 0.6        )
-  ,  m_pinPedShift       ( 5.9        )
-  ,  m_activeToTotal     ( 6.         )
   ,  m_pinArea           ( -1         ){ 
 };
 // ============================================================================
@@ -1004,25 +998,24 @@ StatusCode DeCalorimeter::getCalibration( )  {
     int ll = size*kk;
     double cell   = data[ll];
     double dg     = data[ll+1];
-    double pmtRef = 1.;
-    double pinRef = 1;
-    if(size>2) pmtRef = data[ll+2];
-    if(size>3) pinRef = data[ll+3];
+    double ledDataRef = (size>2) ? data[ll+2] : 0.;
+    double ledMoniRef = (size>3) ? data[ll+3] : 1.;
 
     LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+    id.setCalo( CaloCellCode::CaloNumFromName( name() ));
     //get cell
     if( m_cells[id].valid() ){
       m_cells[id].setCalibration( dg );
-      m_cells[id].setRefLedData( pmtRef, pinRef );
+      m_cells[id].setLedDataRef( ledDataRef, ledMoniRef );
       msg << MSG::VERBOSE << "Added calibration for channel " << id 
           << " : dG = " << dg 
-          << " Reference PMT/PIN from LED signal " << pmtRef << "/" << pinRef << endmsg;
+          << " Reference (<PMT> , <PMT/PIN>) datafrom LED signal = (" << ledDataRef << "," << ledMoniRef << ")"<<endmsg;
       count++;
     }else{
       msg << MSG::WARNING << "Trying to add calibration on non-valid channel : " << id << endmsg;
     }
   }
-  msg << MSG::DEBUG << "Calibration constant added for " << count << " channel " << endmsg;
+  msg << MSG::DEBUG << "Calibration constant added for " << count << " channel(s) " << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -1046,27 +1039,30 @@ StatusCode DeCalorimeter::getQuality( )  {
   int count = 0;
   for ( unsigned int kk = 0; data.size()/size > kk  ; ++kk ) {
     int ll = size*kk;
-    double cell   = data[ll];
-    double qFlag  = data[ll+1];
-    double pmt    = 1.;
-    double pin    = 1;
-    if(size>2) pmt = data[ll+2];
-    if(size>3) pin = data[ll+3];
-
+    double cell       = data[ll];
+    double qFlag      = data[ll+1];
+    double ledData    = (size>2) ? data[ll+2] : 0.;
+    double ledDataRMS = (size>3) ? data[ll+3] : 0.;
+    double ledMoni    = (size>4) ? data[ll+4] : 1.;
+    double ledMoniRMS = (size>5) ? data[ll+5] : 0.;
     LHCb::CaloCellID id = LHCb::CaloCellID( (int) cell );
+    id.setCalo( CaloCellCode::CaloNumFromName( name() ));
     //get cell
     if( m_cells[id].valid() ){
       m_cells[id].addQualityFlag( (int) qFlag );
-      m_cells[id].setLedData( pmt, pin );
-      msg << MSG::VERBOSE << "Added quality for channel " << id 
-          << " : quality = " << qFlag 
-          << "  current PMT/PIN from LED signal " << pmt << "/" << pin << endmsg;
+      m_cells[id].setLedData( ledData , ledDataRMS );
+      m_cells[id].setLedMoni( ledMoni , ledMoniRMS );
+      msg << MSG::VERBOSE << "Added quality for channel " << id << " : quality = " << qFlag << endmsg;
+      msg << MSG::VERBOSE << "    current <PMT> +- RMS from LED signal : " 
+          << ledData << " +- " << ledDataRMS <<endmsg;
+      msg << MSG::VERBOSE << "    current <PMT/PIN> +- RMS  from LED signal " 
+          << ledMoni << " +- " << ledMoniRMS <<endmsg;
       count++;
     }else{
       msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endmsg;
     }
   }
-  msg << MSG::DEBUG << "Quality constant added for " << count << " channel " << endmsg;
+  msg << MSG::DEBUG << "Quality constant added for " << count << " channel(s) " << endmsg;
   return StatusCode::SUCCESS;  
 }
 
@@ -1273,8 +1269,25 @@ StatusCode DeCalorimeter::updGain(){
   m_pinPedShift   = m_gain->exists( "PinPedShift"  ) ? m_gain->paramAsDouble( "PinPedShift"   ) : 0. ;
   m_l0Et          = m_gain->exists( "L0EtBin"      ) ? m_gain->paramAsDouble( "L0EtBin"       ) : 0. ;
 
-  // Active/Total energy ratio (needed in simulation only)
+  m_cNoise   = m_gain->exists( "CoherentNoise") ? m_gain->paramAsDouble( "CoherentNoise" )    : 0. ;
+  m_iNoise   = m_gain->exists( "IncoherentNoise") ? m_gain->paramAsDouble("IncoherentNoise" ) : 0. ;
+  m_zSupMeth = m_gain->exists( "ZeroSupMethod") ? m_gain->paramAsDouble( "ZeroSupMethod" ) : 1. ; // 1D 0-sup per default
+  m_zSup     = m_gain->exists( "ZeroSup") ? m_gain->paramAsDouble( "ZeroSup" ) : 0.5 ; // zero suppression
+  // Needed in simulation only
+  m_mip      = m_gain->exists( "MipDeposit") ? m_gain->paramAsDouble( "MipDeposit" ) : 0. ;
+  m_dyn      = m_gain->exists( "DynamicsSaturation") ? m_gain->paramAsDouble( "DynamicsSaturation" ) : 1. ;
+  m_prev     = m_gain->exists( "PreviousFraction") ? m_gain->paramAsDouble( "PreviousFraction") : 0. ;
+  m_l0Thresh = m_gain->exists( "L0Threshold"  ) ? m_gain->paramAsDouble( "L0Threshold"   ) : 0.5 ; 
+  if( m_gain->exists( "phePerMip") ) m_phe      =    m_gain->paramAsDoubleVect( "phePerMip" ) ;
+  if( m_gain->exists( "L0Correction") ) m_l0Cor =    m_gain->paramAsDoubleVect( "L0Correction" ) ;
   m_activeToTotal = m_gain->exists( "ActiveToTotal") ? m_gain->paramAsDouble( "ActiveToTotal" ) : 1. ;
+
+  // special setting for Spd : the threshold is driven by Et-slope
+  if( m_caloDet == "SpdDet" && m_mip>0 &&m_maxEtSlope.size() >0  ){
+    m_zSup = m_maxEtSlope[0]/2./m_mip;  
+    m_l0Thresh = m_zSup; // Spd is L0 only
+  }
+  
 
   return StatusCode::SUCCESS;
 }

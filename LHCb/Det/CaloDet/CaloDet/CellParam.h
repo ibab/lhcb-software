@@ -1,5 +1,5 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.10 2009-04-10 14:51:08 odescham Exp $
+// $Id: CellParam.h,v 1.11 2009-05-06 15:59:13 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
@@ -21,12 +21,13 @@ typedef std::vector<LHCb::CaloCellID> CaloNeighbors ;
 
 namespace CaloCellQuality{
   enum Flag {
-    OK       = 0 , 
-    Masked   = 1 ,       
-    Dead     = 2 ,
-    Noisy    = 4 ,
-    MisCalib = 8 ,
-    Unknown  = 16 ,
+    OK            = 0 , 
+    Dead          = 1 ,
+    Noisy         = 2 ,
+    Shifted       = 4 ,
+    DeadLED       = 8,
+    VeryNoisy     = 16,
+    VeryShifted   = 32
   } ;
 }
 
@@ -59,16 +60,16 @@ public:
   double                deltaTime     () const { return m_dtime         ; }
   double                zShower       () const { return m_zShower       ; }
   int                   quality       () const { return m_quality       ; }
-  double                calibration   () const { return m_calibration   ; }
   int                   l0Constant    () const { return m_l0constant    ; }
-  double                pmtRefLedData () const { return m_pmtRef        ; }
-  double                pinRefLedData () const { return m_pinRef        ; }
-  double                pmtLedData    () const { return m_pmt           ; }
-  double                pinLedData    () const { return m_pin           ; }
-  //
-  double                pmtOverPinRef () const { return (m_pinRef > 0 ) ? m_pmtRef/m_pinRef : 1.; }
-  double                pmtOverPin    () const { return (m_pin    > 0 ) ? m_pmt/m_pin       : 1.; }
-  double                gainShift     () const { return (pmtOverPinRef() > 0 ) ? pmtOverPin()/pmtOverPinRef() : 1; }
+  double                calibration   () const { return m_calibration   ; } // absolute calibration from 'Calibration' condition (T0)
+  double                ledDataRef    () const { return m_ledDataRef    ; } // <LED> data from Calibration condition (Ref T0)
+  double                ledMoniRef    () const { return m_ledMoniRef    ; } // <LED/PIN> data from Calibration condition (Ref T0)
+  double                ledData       () const { return m_ledData       ; } // <LED> data from Quality condition (current T)
+  double                ledDataRMS    () const { return m_ledDataRMS    ; } // RMS(LED) from Quality condition  (current T)
+  double                ledMoni       () const { return m_ledMoni       ; } // <LED/PIN> data from Quality condition (current T)
+  double                ledMoniRMS    () const { return m_ledMoniRMS    ; } // RMS(LED/PIN) from Quality condition (current T)
+  double                ledDataShift  () const { return ( ledDataRef() > 0 ) ? ledData()/ledDataRef() : 1; }
+  double                gainShift     () const { return ( ledMoniRef() > 0 ) ? ledMoni()/ledMoniRef() : 1; }
   double                gain          () const { return nominalGain() * calibration() * gainShift() ;}  
     
 
@@ -107,11 +108,21 @@ public:
   void addLed(int id){ m_leds.push_back(id) ;}
 
   // Calibration & quality
-  void addQualityFlag  (int quality)           {m_quality = m_quality | quality; }
-  void setLedData      (double pmt, double pin){m_pmt    = pmt ; m_pin    = pin;  }
+  void addQualityFlag   (int quality)           {m_quality = m_quality | quality; }
+  void setLedData       (double ledData, double ledDataRMS ){
+    m_ledData    = ledData ; 
+    m_ledDataRMS = ledDataRMS;  
+  }
+  void setLedMoni(double ledMoni, double ledMoniRMS){
+    m_ledMoni     = ledMoni ; 
+    m_ledMoniRMS  = ledMoniRMS;  
+  }
+  void setLedDataRef   (double ledDataRef, double ledMoniRef){
+    m_ledDataRef = ledDataRef ; 
+    m_ledMoniRef = ledMoniRef;
+  }
   void setCalibration  (double calib)          { m_calibration = calib;           }
   void setL0Constant   (int    cte)            { m_l0constant  = cte;             }
-  void setRefLedData   (double pmt, double pin){m_pmtRef = pmt ; m_pinRef = pin;  }
 
   
   bool operator==( const CellParam& c2 ) const { 
@@ -139,10 +150,12 @@ private:
   double m_calibration;
   int    m_l0constant;
   double m_shift;
-  double m_pmtRef;
-  double m_pinRef;
-  double m_pmt;
-  double m_pin;
+  double m_ledDataRef;
+  double m_ledMoniRef;
+  double m_ledData;
+  double m_ledMoni;
+  double m_ledDataRMS;
+  double m_ledMoniRMS;
 };
 
 /// ===========================================================================

@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.38 2009-04-17 13:41:03 cattanem Exp $ 
+// $Id: DeCalorimeter.h,v 1.39 2009-05-06 15:59:13 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -100,6 +100,7 @@ public:
   const SubCalos&  subCalos() const { return m_subCalos ; }
   double zSize () const { return m_zSize         ; };
   double        zOffset       () const { return m_zOffset       ; };
+  unsigned int numberOfAreas() const{return m_nArea;};
  // reference plane in the global frame 
   Gaudi::Plane3D plane ( const double           zLocal ) const ;
   inline  Gaudi::Plane3D plane ( const Gaudi::XYZPoint& point  ) const ;
@@ -108,12 +109,22 @@ public:
 
   // accessing the calibration parameters
   //-------------------------------------
-  double maxEtInCenter(unsigned int reg)const{return (reg<m_maxEtInCenter.size()) ? m_maxEtInCenter[reg]:m_maxEtInCenter[0];}; 
-  double maxEtSlope(unsigned int reg)   const{return (reg<m_maxEtSlope.size()) ? m_maxEtSlope[reg] : m_maxEtSlope[0];};
-  double        pedestalShift    ()     const { return m_pedShift     ; };  
-  double        pinPedestalShift ()     const { return m_pinPedShift  ; };  
-  double        L0EtGain         ()     const { return m_l0Et         ; };
+  double maxEtInCenter(unsigned int reg=0)const{return (reg<m_maxEtInCenter.size()) ? m_maxEtInCenter[reg]:m_maxEtInCenter[0];}; 
+  double maxEtSlope(unsigned int reg=0)   const{return (reg<m_maxEtSlope.size()) ? m_maxEtSlope[reg] : m_maxEtSlope[0];};
+  double        pedestalShift    ()     const { return m_pedShift      ; };  
+  double        pinPedestalShift ()     const { return m_pinPedShift   ; };  
+  double        L0EtGain         ()     const { return m_l0Et          ; };
+  double        coherentNoise    ()     const { return m_cNoise        ; };
+  double        incoherentNoise  ()     const { return m_iNoise        ; };
   // for simulation only
+  int           zSupMethod       ()     const { return (int) m_zSupMeth; };
+  double        zSupThreshold    ()     const { return m_zSup          ; };
+  double        l0Threshold      ()     const { return m_l0Thresh        ; };
+  double        mipDeposit       ()     const { return m_mip           ; };
+  double        dynamicsSaturation()    const { return m_dyn           ; };
+  double        fractionFromPrevious()  const { return m_prev          ; };
+  double numberOfPhotoElectrons(unsigned int area=0) const { return (area < m_phe.size() ) ? m_phe[area] : 0.  ; };  
+  double l0EtCorrection(unsigned int area=0) const { return (area < m_l0Cor.size() ) ? m_l0Cor[area] : 1.  ; };  
   double        activeToTotal    ()     const { return m_activeToTotal; };    
 
   // accessing the hardware parameter(s)
@@ -151,7 +162,10 @@ public:
   inline bool hasQuality( const LHCb::CaloCellID& , CaloCellQuality::Flag flag );
   inline bool isDead  ( const LHCb::CaloCellID& );
   inline bool isNoisy ( const LHCb::CaloCellID& );
-  inline bool isMasked( const LHCb::CaloCellID& );
+  inline bool isShifted( const LHCb::CaloCellID& );
+  inline bool hasDeadLED( const LHCb::CaloCellID& );
+  inline bool isVeryNoisy ( const LHCb::CaloCellID& );
+  inline bool isVeryShifted( const LHCb::CaloCellID& );
   // from cellId to  serial number and vice-versa
   inline int cellIndex    ( const LHCb::CaloCellID&  ) const ;
   inline LHCb::CaloCellID cellIdByIndex( const unsigned int ) const ;
@@ -260,6 +274,16 @@ private:
   double   m_pinPedShift;
   double   m_l0Et;
   double   m_activeToTotal;
+  double   m_cNoise;
+  double   m_iNoise;
+  double   m_zSupMeth;
+  double   m_zSup;
+  double   m_mip;
+  double   m_dyn;
+  double   m_prev;
+  double   m_l0Thresh;
+  std::vector<double> m_phe;
+  std::vector<double> m_l0Cor;
 
   // reconstruction
   double   m_zShowerMax;
@@ -355,6 +379,7 @@ inline bool DeCalorimeter::valid    ( const LHCb::CaloCellID& ID ) const
 // ===========================================================================
 inline bool DeCalorimeter::hasQuality( const LHCb::CaloCellID& ID , CaloCellQuality::Flag flag){
   int quality = m_cells[ID].quality();
+  if( flag == CaloCellQuality::OK)return (quality == 0);
   return ( (quality & flag) != 0) ;
 }
 inline bool DeCalorimeter::isDead(const LHCb::CaloCellID& ID){
@@ -363,8 +388,17 @@ inline bool DeCalorimeter::isDead(const LHCb::CaloCellID& ID){
 inline bool DeCalorimeter::isNoisy(const LHCb::CaloCellID& ID){
   return hasQuality(ID, CaloCellQuality::Noisy);
 }
-inline bool DeCalorimeter::isMasked(const LHCb::CaloCellID& ID){
-  return hasQuality(ID, CaloCellQuality::Masked);
+inline bool DeCalorimeter::isShifted(const LHCb::CaloCellID& ID){
+  return hasQuality(ID, CaloCellQuality::Shifted);
+}
+inline bool DeCalorimeter::hasDeadLED(const LHCb::CaloCellID& ID){
+  return hasQuality(ID, CaloCellQuality::DeadLED);
+}
+inline bool DeCalorimeter::isVeryNoisy(const LHCb::CaloCellID& ID){
+  return hasQuality(ID, CaloCellQuality::VeryNoisy);
+}
+inline bool DeCalorimeter::isVeryShifted(const LHCb::CaloCellID& ID){
+  return hasQuality(ID, CaloCellQuality::VeryShifted);
 }
 // ===========================================================================
 //  x-position of center of the cell
