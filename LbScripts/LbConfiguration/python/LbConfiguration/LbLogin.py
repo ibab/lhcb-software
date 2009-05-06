@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.26 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.27 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -780,6 +780,16 @@ class LbLoginScript(Script):
     
             SetupProject().main(setupprojargs)
     
+    def setupSystem(self):
+        log  = logging.getLogger()
+        opts = self.options
+        ev   = self._env
+        if opts.mysiteroot and sys.platform != "win32":
+            libdir = os.path.join(opts.mysiteroot, ev["CMTOPT"], "lib")
+            ldlist = ev["LD_LIBRARY_PATH"].split(os.pathsep)
+            ldlist.append(libdir)
+            ev["LD_LIBRARY_PATH"] = os.pathsep.join(ldlist)
+    
     def setEnv(self, debug=False):
         log = logging.getLogger()
         log.debug("Entering the environment setup")
@@ -846,6 +856,7 @@ class LbLoginScript(Script):
 
 
         self.setupLbScripts()
+        self.setupSystem()
                     
         return 0
 
