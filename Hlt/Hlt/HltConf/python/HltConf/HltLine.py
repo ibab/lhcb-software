@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.58 2009-05-01 11:09:03 graven Exp $ 
+# $Id: HltLine.py,v 1.59 2009-05-06 18:33:49 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.58 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.59 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -466,6 +466,29 @@ class bindMembers (object) :
         x._outputsel = outputSelection
         return x
 
+
+    def _InputOutputLocationMatchMaker(self,alg) :
+        if hasattr(alg,'InputLocations') : # only Hlt2...
+            req_inputs = getattr(alg,'InputLocations')
+            known_inputs = []
+            def _OutputLocationsGetter(alg) :
+                    if hasattr(alg,'Members') : 
+                        _list = []
+                        for i in getattr(alg,'Members') : _list += _OutputLocationsGetter(i) 
+                        return _list
+                    x =  [ getattr(alg,'OutputLocation') ] if hasattr(alg,'OutputLocation') else [ alg.name() ]
+                    return [ getattr(alg,'OutputLocation') ] if hasattr(alg,'OutputLocation') else [ alg.name() ]
+            for i in self._members: 
+                 known_inputs += _OutputLocationsGetter(i)
+            missing = set(req_inputs) - set(known_inputs)
+            if missing :
+                extra = set(known_inputs) - set(req_inputs) - set(  _OutputLocationsGetter(alg) )
+                print '# WARNING: input/output matchmaker for  %s generated warnings' %(alg.name())
+                print '# WARNING:   ---> missing requests: ' + str(missing) 
+                if extra : 
+                    print '# WARNING:   --->   extra requests: ' + str(extra)
+                    print '# WARNING:   this might be OK if eg. the extra requests produce the output of the missing requests... but this can not yet be verified automatically'
+
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
         self._members += [ alg ]
@@ -478,6 +501,7 @@ class bindMembers (object) :
                 self._outputsel = alg.OutputLocation 
         else :
             self._outputsel = alg.name()
+        self._InputOutputLocationMatchMaker(alg)
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
@@ -1215,6 +1239,7 @@ class Hlt2Line(object):
             last = _members[-1]
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
+            ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
             members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
                                                            , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
                                                            , OutputSelection = decisionName(line, 'Hlt2')) ]

@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.230 2009-05-06 06:45:26 jpalac Exp $ 
+! $Id: release.notes,v 1.231 2009-05-06 18:33:49 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2009-05-06 - Gerhard Raven
+ - add input/output matchmaking verification for Hlt2
 
 !========================== HltConf v2r8 2009-05-06 ===================
 
