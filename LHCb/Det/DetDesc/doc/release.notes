@@ -1,17 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.397 2009-04-17 08:54:24 cattanem Exp $ 
+! $Id: release.notes,v 1.398 2009-05-06 15:06:47 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r13 2009-05-06 =============================
 ! 2009-04-17 - Marco Cattaneo
  - Replaced all endreq by endmsg, obsolescent in Gaudi v21
  - Fixed many doxygen warnings
 
 ! 2009-03-17 - Wouter Hulsbergen
  - Added another virtual function hook to AlignmentCondition to allow
- special condition update for VeloAlignCondition
+   special condition update for VeloAlignCondition
 
 !====================== DetDesc v18r12 2009-02-18 =============================
 ! 2009-02-04 - Marco Clemencic
