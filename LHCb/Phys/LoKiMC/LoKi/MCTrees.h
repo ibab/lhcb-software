@@ -1,17 +1,6 @@
-// $Id: MCTrees.h,v 1.4 2007-04-16 16:16:08 pkoppenb Exp $
+// $Id: MCTrees.h,v 1.5 2009-05-06 20:27:54 ibelyaev Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ===========================================================================
 #ifndef LOKI_MCTREES_H 
 #define LOKI_MCTREES_H 1
@@ -24,8 +13,6 @@ namespace LHCb
   class MCVertex   ;
 } 
 // ===========================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -40,17 +27,16 @@ namespace LHCb
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::MCTrees 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-11-25 
    */
   namespace MCTrees 
   {
-    
+    // ========================================================================
     /** simple function with evaluates to true 
      *  if MC particle  originates in the decay 
      *  tree of parent particle 
@@ -61,7 +47,7 @@ namespace LoKi
     bool fromMCTree 
     ( const LHCb::MCParticle* particle  , 
       const LHCb::MCParticle* parent    ) ;
-    
+    // ========================================================================    
     /** simple function with evaluates to true 
      *  if MC particle  originates in the decay 
      *  tree of parent veretx  
@@ -72,13 +58,12 @@ namespace LoKi
     bool fromMCTree 
     ( const LHCb::MCParticle* particle  , 
       const LHCb::MCVertex*   parent    ) ;
-    
+    // ========================================================================    
   } // end of namespace LoKi::MCTrees
-} // end of namespace LoKi 
-
-
-// ===========================================================================
+  // ==========================================================================
+} // end of namespace LoKi
+// ============================================================================
 // The END 
-// ===========================================================================
+// ============================================================================
 #endif // LOKI_MCTREES_H
-// ===========================================================================
+// ============================================================================

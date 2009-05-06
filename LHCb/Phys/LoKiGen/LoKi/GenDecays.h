@@ -1,4 +1,4 @@
-// $Id: GenDecays.h,v 1.4 2008-12-04 14:37:59 ibelyaev Exp $
+// $Id: GenDecays.h,v 1.5 2009-05-06 20:23:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENDECAYS_H 
 #define LOKI_GENDECAYS_H 1
@@ -333,6 +333,8 @@ namespace Decays
       ( Decays::iTree_<PARTICLE>::Collection& output ) const ;
       /// MANDATORY: the specific printout 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      /// has marked elements  in the tree?
+      virtual  bool marked() const ;
       // ====================================================================
     protected:
       // ====================================================================
@@ -865,6 +867,8 @@ namespace Decays
       /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
+      /// has marked elements  in the tree?
+      virtual  bool marked() const ;
       // ====================================================================
     public:
       // ====================================================================

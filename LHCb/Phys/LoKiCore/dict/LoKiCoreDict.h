@@ -1,4 +1,4 @@
-// $Id: LoKiCoreDict.h,v 1.8 2008-12-12 16:35:24 ibelyaev Exp $
+// $Id: LoKiCoreDict.h,v 1.9 2009-05-06 20:20:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -25,6 +25,7 @@
 #include "LoKi/ICoreFactory.h"
 #include "LoKi/ICoreAntiFactory.h"
 #include "LoKi/CoreEngine.h"
+#include "LoKi/iTree.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

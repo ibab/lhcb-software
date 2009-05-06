@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.13 2009-03-22 17:55:23 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.14 2009-05-06 20:20:01 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.13 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.14 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -51,6 +51,16 @@
   <function name = "Gaudi::Histos::book"               />
   <function name = "LoKi::HistoBook::book"             />
   <function name = "LoKi::Monitoring::getCounter"      />
+
+
+  <function name = "Decays::Trees::arrow"      />
+  <function name = "Decays::Trees::decayOnly"  />
+  <function name = "Decays::Trees::photos"     />
+  <function name = "Decays::Trees::algorithm"  />
+  <function name = "Decays::Trees::valid"      />
+  <enum     name = "Decays::Trees::Oscillation" />
+  <enum     name = "Decays::Trees::Alg"   />
+  <enum     name = "Decays::Trees::Arrow" />
 
   <enum name = "LoKi::Monitoring::Flag"  />
 

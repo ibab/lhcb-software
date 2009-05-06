@@ -1,4 +1,4 @@
-// $Id: GenDecays.cpp,v 1.4 2008-12-04 14:37:59 ibelyaev Exp $
+// $Id: GenDecays.cpp,v 1.5 2009-05-06 20:23:22 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -250,6 +250,16 @@ size_t Decays::Trees::GenExclusive::collect
   for ( SubTrees::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) { size += ichild->collect ( output ) ; }  
   return size ;
+}
+// ============================================================================
+// has marked elements in the tree ?
+// ============================================================================
+bool Decays::Trees::GenExclusive::marked () const 
+{
+  for ( SubTrees::const_iterator ichild = childBegin() ; 
+        childEnd() != ichild ; ++ichild ) 
+  { if ( ichild->marked () ) { return true ; } }  
+  return false ;
 }
 // ============================================================================
 // the only one essential method 
@@ -737,6 +747,15 @@ StatusCode Decays::Trees::GenOptional::validate
   StatusCode sc = GenExclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
     Decays::validate ( optBegin() , optEnd() , svc ) ;
+}
+// ============================================================================
+// has marked elements in the tree ?
+// ============================================================================
+bool Decays::Trees::GenOptional::marked () const 
+{
+  for ( SubTrees::const_iterator iopt = optBegin() ; 
+        optEnd() != iopt ; ++iopt ) { if ( iopt->marked () ) { return true ; } }  
+  return Decays::Trees::GenExclusive::marked() ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 

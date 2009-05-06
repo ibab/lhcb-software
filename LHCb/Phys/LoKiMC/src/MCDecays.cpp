@@ -1,4 +1,4 @@
-// $Id: MCDecays.cpp,v 1.3 2008-12-04 16:42:16 ibelyaev Exp $
+// $Id: MCDecays.cpp,v 1.4 2009-05-06 20:27:54 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -281,6 +281,16 @@ size_t Decays::Trees::MCExclusive::collect
   for ( SubTrees::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) { size += ichild->collect ( output ) ; }  
   return size ;
+}
+// ============================================================================
+// has marked decays in tree ?
+// ============================================================================
+bool Decays::Trees::MCExclusive::marked() const 
+{
+  for ( SubTrees::const_iterator ichild = childBegin() ; 
+        childEnd() != ichild ; ++ichild ) 
+  { if ( ichild->marked() ) { return true ; } }
+  return false ;
 }
 // ============================================================================
 // the only one essential method 
@@ -748,6 +758,17 @@ StatusCode Decays::Trees::MCOptional::validate
   StatusCode sc = MCExclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
     Decays::validate ( optBegin() , optEnd() , svc ) ;
+}
+// ============================================================================
+// has marked decays in tree ?
+// ============================================================================
+bool Decays::Trees::MCOptional::marked() const 
+{
+  for ( SubTrees::const_iterator iopt = optBegin() ; 
+        optEnd() != iopt ; ++iopt ) 
+  { if ( iopt->marked() ) { return true ; } }
+  // check the base class:
+  return Decays::Trees::MCExclusive::marked() ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 

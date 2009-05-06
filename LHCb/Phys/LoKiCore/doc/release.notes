@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.136 2009-04-17 14:48:56 cattanem Exp $ 
+! $Id: release.notes,v 1.137 2009-05-06 20:20:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-06 - Vanya BELYAEV
+
+ - few improvements for new decay finder 
+ 
 
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq with endmsg

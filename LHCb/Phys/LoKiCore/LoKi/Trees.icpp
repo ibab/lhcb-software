@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.6 2008-12-17 16:51:05 ibelyaev Exp $
+// $Id: Trees.icpp,v 1.7 2009-05-06 20:20:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1
@@ -181,8 +181,15 @@ inline size_t Decays::Trees::Op_<PARTICLE>::collect
   return size ;
 }
 // ============================================================================
-
-
+// has marked elements in the tree ? 
+// ============================================================================
+template <class PARTICLE>
+inline bool Decays::Trees::Op_<PARTICLE>::marked() const 
+{
+  for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
+        m_trees.end() != it ; ++it ) { if ( it->marked() ) { return true ; } }  
+  return false ;
+}
 // ============================================================================
 // Or_
 // ============================================================================

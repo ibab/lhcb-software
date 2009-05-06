@@ -1,4 +1,4 @@
-// $Id: MCDecays.h,v 1.5 2008-12-18 15:24:34 ibelyaev Exp $
+// $Id: MCDecays.h,v 1.6 2009-05-06 20:27:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCDECAYS_H
 #define LOKI_MCDECAYS_H 1
@@ -118,7 +118,7 @@ namespace Decays
        *  @param oscillated check the oscilaltion flag
        */
       MCExclusive
-      ( const Decays::iNode& mother                 ,
+      ( const Decays::iNode&       mother                 ,
         const SubTrees&            children               ,
         const Alg                  alg        = Daughters ,
         const bool                 decayOnly  = true      ,
@@ -129,7 +129,7 @@ namespace Decays
        *  @param oscillated require the oscillation flag for mother
        */
       MCExclusive
-      ( const Decays::iNode& mother                 ,
+      ( const Decays::iNode&       mother                 ,
         const Alg                  alg        = Daughters ,
         const bool                 decayOnly  = true      ,
         const Oscillation          oscillated = Undefined ) ;
@@ -185,11 +185,11 @@ namespace Decays
        *  @param osc require the oscillation flag for mother
        */
       MCExclusive
-      ( const Decays::Decay&         decay                  ,
+      ( const Decays::Decay&       decay                  ,
         const Alg                  alg        = Daughters ,
         const bool                 decayOnly  = true      ,
         const Oscillation          oscillated = Undefined ) ;
-      /// copy constrcutor 
+      /// copy constructor
       MCExclusive ( const MCExclusive& right ) ;
       /// MANDATORY: virtual destructor
       virtual ~MCExclusive () {}
@@ -211,6 +211,8 @@ namespace Decays
       /// collect the marked elements
       virtual size_t collect
       ( Decays::iTree_<PARTICLE>::Collection& output ) const ;
+      /// has marked decays in tree ?
+      virtual bool marked() const ;
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ====================================================================
@@ -564,7 +566,7 @@ namespace Decays
       // ====================================================================
       /// constructor from the node (mother) and subtrees
       MCOptional
-      ( const Decays::iNode& mother                 ,
+      ( const Decays::iNode& mother                       ,
         const SubTrees&            children               ,
         const SubTrees&            optional               ,
         const Alg                  alg        = Daughters ,
@@ -639,6 +641,8 @@ namespace Decays
       /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
+      /// has marked decays in tree ?
+      virtual bool marked() const ;
       // ====================================================================
     public:
       // ====================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.59 2009-03-13 16:23:12 jpalac Exp $ 
+! $Id: release.notes,v 1.60 2009-05-06 20:27:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2009-05-06 - Vanya BELYAEV
+ - few improvements for new dcay finder 
 
 ! 2009-03-13 - Juan PALACIOS
  - BuildTrees{.h, .cpp}

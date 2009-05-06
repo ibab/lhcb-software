@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.5 2008-12-17 16:51:05 ibelyaev Exp $
+// $Id: Trees.h,v 1.6 2009-05-06 20:20:01 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1
@@ -24,48 +24,6 @@ namespace Decays
   // ========================================================================
   namespace Trees 
   {
-    // ======================================================================
-    /** the type of maching algorithm:
-     *
-     *   - <c>Daughters</c> match within (all) direct daughetrs 
-     *   - <c>Sections</c>  match within all sections of the decay graph 
-     *
-     *  For C++ classes the nmatchiung algorithm is defined through 
-     *  the length of the arrow:
-     *   
-     *   - <c>Daughters</c> are defined through "short" arrow:
-     *   - <c>Sections</c> are defined through "long" arrow:
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-04-30
-     */       
-    enum Alg {
-      Daughters         = 0 , // match only for the direct daughters 
-      Sections              , // match in all graph sections 
-    } ;
-    // ======================================================================
-    /** @enum Oscillation 
-     *  simple e-num to distinguish oscillated and non-oscillated particles 
-     *
-     *   - <c>Undefined</c> : no indication are requred 
-     *   - <c>Oscillated</c>: 
-     *        <c>[ A ]os -> X Y Z </c>, for (MC- and HepMC-decays only)  
-     *   - <c>NotOscillated</c>: 
-     *        <c>[ A ]nos -> X Y Z </c>, for (MC- and HepMC-decays only)  
-     *
-     *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
-     *  @see LHCb:MCParticle
-     *  @see LHCb:MCParticle::hasOscillated 
-     *  @date   2008-05-28
-     */
-    enum Oscillation {
-      /// no need to check the oscillation flag
-      Undefined = 0 , //   non-defined 
-      /// require the positive oscilaltion flag 
-      Oscillated    , //    
-      /// require the negative oscilaltion flag 
-      NotOscillated   // 
-    } ;     
     // ======================================================================
     /** @class Marked_ 
      *  Simple "marked" sub-tree
@@ -116,6 +74,8 @@ namespace Decays
       /// collect the marked elements 
       virtual size_t collect 
       ( typename Decays::iTree_<PARTICLE>::Collection& output ) const ;
+      /// has marked elements in the tree ? 
+      virtual bool marked() const { return true ; }
       // ====================================================================
     private:
       // ====================================================================
@@ -168,6 +128,8 @@ namespace Decays
       virtual void reset () const {}
       /// collect the marked elements 
       virtual size_t collect ( Collection& /* output */ ) const { return 0 ; }
+      /// has marked elements in the tree ? 
+      virtual bool marked() const { return false ; }
       // ====================================================================
     } ;
     // ======================================================================      
@@ -224,6 +186,8 @@ namespace Decays
       /// the specific printout 
       inline std::ostream& fillStream( std::ostream& s ) const 
       { return m_tree.fillStream ( s ) ; }
+      /// has marked elements in the tree ? 
+      inline bool marked() const { return m_tree.marked() ; }
       // ====================================================================
     public:
       // ====================================================================
@@ -330,6 +294,8 @@ namespace Decays
       /// MANDATORY: collect all marked elements 
       virtual size_t collect 
       ( typename Decays::iTree_<PARTICLE>::Collection& ) const ;
+      /// has marked elements in the tree ? 
+      virtual bool marked() const ;
       // ====================================================================
     protected:
       // ====================================================================
@@ -495,6 +461,8 @@ namespace Decays
       ( typename Decays::iTree_<PARTICLE>::Collection& ) const { return 0 ; }
       /// reset the collection cache 
       virtual void reset () const { m_tree.reset() ; }
+      /// has marked elements in the tree ? 
+      virtual bool marked() const { return false ; } 
       // ====================================================================
     private:
       // ====================================================================
@@ -669,8 +637,57 @@ operator,
 { return Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ; }
 // ============================================================================
 
-
-
+// ============================================================================
+namespace Decays 
+{
+  // ==========================================================================
+  namespace Trees 
+  {
+    // ========================================================================
+    /** @struct Types 
+     *  Helper structure to define the proper types 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2000-05-06
+     */
+    template <class PARTICLE>
+    struct Types_
+    {
+      // ======================================================================
+      /// the actual particle type 
+      typedef PARTICLE                                           Type     ;
+      /// the actual particle type 
+      typedef PARTICLE                                           Particle ;
+      /// the actual type of interface 
+      typedef Decays::iTree_<PARTICLE>                           iTree    ;
+      /// the actual type of assignable 
+      typedef Decays::Tree_<PARTICLE>                            Tree     ;
+      /// the actual type of vectior of assignables 
+      typedef typename Decays::Trees::_Tree_<PARTICLE>::SubTrees SubTrees ;
+      // the acutal type of "Any"
+      typedef Decays::Trees::Any_<PARTICLE>                      Any      ;
+      // the acutal type of "Marked"
+      typedef Decays::Trees::Marked_<PARTICLE>                   Marked   ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @enum Errors
+     *  enum with various error codes
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-30
+     */        
+    enum Errors {
+      InvalidArrow      = 200 , // Invalid arrow type 
+      InclusiveOptional       , // Inclusive & Optional in conflict 
+      InclusivePhotos         , // Inclusive & Photos   in conflict 
+      InvalidDecayOnly        , // Invalid 'Decay-Only' flag 
+      InvalidOscillated       , // Invalid 'Oscillated' flag 
+      InvalidPhotos           , // Invalid 'Photos'     flag 
+      InvalidBranch             // Invalid combination of flags 
+    };
+    // ======================================================================
+  } // end of namespace Decays::Trees 
+  // ==========================================================================
+} // end of namespace Decays 
 // ============================================================================
 #include "LoKi/Trees.icpp"
 // ============================================================================
