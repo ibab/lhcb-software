@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.1 2008-12-03 17:35:54 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.2 2009-05-06 15:45:52 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 import PyCintex
@@ -194,6 +194,9 @@ _decorated = _decorate ( ( Decays.iNode          ,
                            Decays.Nodes.Neutral  , 
                            Decays.Nodes.HasQuark , 
                            Decays.Nodes.JSpin    , 
+                           Decays.Nodes.SSpin    , 
+                           Decays.Nodes.LSpin    , 
+                           Decays.Nodes.Nucleus  , 
                            Decays.Nodes._Node    ,
                            #
                            Decays.Nodes.Or       ,
@@ -224,30 +227,44 @@ Negative  = Decays.Nodes.Negative ()  # instance
 Neutral   = Decays.Nodes.Neutral  ()  # instance  
 HasQuark  = Decays.Nodes.HasQuark     # type   
 JSpin     = Decays.Nodes.JSpin        # type   
+SSpin     = Decays.Nodes.SSpin        # type   
+LSpin     = Decays.Nodes.LSpin        # type   
+Nucleus   = Decays.Nodes.Nucleus  ()  # instance  
 Or        = Decays.Nodes.Or           # type   
 And       = Decays.Nodes.And          # type   
 Not       = Decays.Nodes.Not          # type
 _Node     = Decays.Nodes._Node        # type 
 
-Up      = HasQuark ( LHCb.ParticleID.up      )
-Down    = HasQuark ( LHCb.ParticleID.down    )
-Strange = HasQuark ( LHCb.ParticleID.strange )
-Charm   = HasQuark ( LHCb.ParticleID.charm   )
-Beauty  = HasQuark ( LHCb.ParticleID.bottom  )
-Bottom  = HasQuark ( LHCb.ParticleID.bottom  )
-Top     = HasQuark ( LHCb.ParticleID.top     )
+Up        = HasQuark ( LHCb.ParticleID.up      )
+Down      = HasQuark ( LHCb.ParticleID.down    )
+Strange   = HasQuark ( LHCb.ParticleID.strange )
+Charm     = HasQuark ( LHCb.ParticleID.charm   )
+Beauty    = HasQuark ( LHCb.ParticleID.bottom  )
+Bottom    = HasQuark ( LHCb.ParticleID.bottom  )
+Top       = HasQuark ( LHCb.ParticleID.top     )
+
+Xu        = HasQuark ( LHCb.ParticleID.up      )
+Xd        = HasQuark ( LHCb.ParticleID.down    )
+Xs        = HasQuark ( LHCb.ParticleID.strange )
+Xc        = HasQuark ( LHCb.ParticleID.charm   )
+Xb        = HasQuark ( LHCb.ParticleID.bottom  )
+Xb        = HasQuark ( LHCb.ParticleID.bottom  )
+Xt        = HasQuark ( LHCb.ParticleID.top     )
 
 Scalar    = JSpin    ( 1 )
 Spinor    = JSpin    ( 2 )
 Vector    = JSpin    ( 3 )
-ThreeHalf = JSpin    ( 4 ) 
 Tensor    = JSpin    ( 5 )
+
+OneHalf   = JSpin    ( 2 ) 
+ThreeHalf = JSpin    ( 4 ) 
 FiveHalf  = JSpin    ( 6 ) 
 
 SubNodes = std.vector( _Node ) 
 
 if '__main__' == __name__ :
-    print ' decorate dobjects: %s' %_decorated 
+    print ' decorated objects: %s ' % str(_decorated)
+    print _decorated 
     print dir() 
     
 # =============================================================================

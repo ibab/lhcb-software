@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.4 2009-01-12 06:35:38 cattanem Exp $
+// $Id: Nodes.cpp,v 1.5 2009-05-06 15:45:52 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -63,6 +63,19 @@ StatusCode Decays::Nodes::Any::validate
 // ============================================================================
 bool Decays::Nodes::Any::operator() 
   ( const LHCb::ParticleID& /* p */ ) const { return true ; }
+// ============================================================================
+// xSpin: valid only for reasonable spin 
+bool Decays::Nodes::JSpin::valid () const { return 0 < spin() ; }
+// ============================================================================
+// MANDATORY: the proper validation of the node
+// ============================================================================
+StatusCode Decays::Nodes::JSpin::validate 
+( const LHCb::IParticlePropertySvc* /*svc */ )  const 
+{ 
+  return valid() ? 
+    StatusCode ( StatusCode::SUCCESS , true ) : 
+    StatusCode ( InvalidSpin         , true ) ;  
+}
 // ============================================================================
 
 
@@ -198,6 +211,11 @@ Decays::Nodes::Neutral::clone() const { return new Neutral(*this) ; }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
+Decays::Nodes::Nucleus*
+Decays::Nodes::Nucleus::clone() const { return new Nucleus(*this) ; }
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
 Decays::Nodes::HasQuark*
 Decays::Nodes::HasQuark::clone() const { return new HasQuark(*this) ; }
 // ============================================================================
@@ -205,6 +223,16 @@ Decays::Nodes::HasQuark::clone() const { return new HasQuark(*this) ; }
 // ============================================================================
 Decays::Nodes::JSpin*
 Decays::Nodes::JSpin::clone() const { return new JSpin(*this) ; }
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+Decays::Nodes::SSpin*
+Decays::Nodes::SSpin::clone() const { return new SSpin(*this) ; }
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+Decays::Nodes::LSpin*
+Decays::Nodes::LSpin::clone() const { return new LSpin(*this) ; }
 
 // ============================================================================
 // constructor from the quark 
@@ -217,7 +245,16 @@ Decays::Nodes::HasQuark::HasQuark ( LHCb::ParticleID::Quark quark )
 Decays::Nodes::JSpin::JSpin ( const int spin ) 
   : Decays::Nodes::Any () , m_spin ( spin ) {}
 // ============================================================================
-
+// constructor from the 2S+1
+// ============================================================================
+Decays::Nodes::SSpin::SSpin ( const int spin ) 
+  : Decays::Nodes::JSpin ( spin ) {}
+// ============================================================================
+// constructor from the 2L+1
+// ============================================================================
+Decays::Nodes::LSpin::LSpin ( const int spin ) 
+  : Decays::Nodes::SSpin ( spin ) {}
+// ============================================================================
 
 // ============================================================================
 std::ostream& 
@@ -281,6 +318,10 @@ Decays::Nodes::EllMinus::fillStream ( std::ostream& s ) const
 { return s << " l- "  ; }
 // ============================================================================
 std::ostream& 
+Decays::Nodes::Nucleus::fillStream ( std::ostream& s ) const
+{ return s << " Nucleus "  ; }
+// ============================================================================
+std::ostream& 
 Decays::Nodes::HasQuark::fillStream ( std::ostream& s ) const
 {
   switch ( m_quark ) 
@@ -298,9 +339,27 @@ Decays::Nodes::HasQuark::fillStream ( std::ostream& s ) const
 // ============================================================================
 std::ostream& 
 Decays::Nodes::JSpin::fillStream ( std::ostream& s ) const
-{ return s << " JSpin(" << m_spin << ") " ; }
-
-
+{ 
+  switch ( spin() ) 
+  {
+  case 1  : return s << " Scalar "                  ;
+  case 2  : return s << " Spinor "                  ;
+  case 3  : return s << " Vector "                  ;
+  case 4  : return s << " ThreeHalf "               ;
+  case 5  : return s << " Tensor "                  ;
+  case 6  : return s << " FiveHalf "                ;
+  default : ;
+  }
+  return s << " JSpin(" << m_spin << ") " ; 
+}
+// ===========================================================================
+std::ostream& 
+Decays::Nodes::SSpin::fillStream ( std::ostream& s ) const
+{ return s << " SSpin(" << spin() << ") " ; }
+// ===========================================================================
+std::ostream& 
+Decays::Nodes::LSpin::fillStream ( std::ostream& s ) const
+{ return s << " LSpin(" << spin() << ") " ; }
 // ===========================================================================
 // Or
 // ===========================================================================
@@ -393,6 +452,7 @@ StatusCode Decays::Nodes::Or::validate
   return Decays::validate ( m_nodes.begin() , m_nodes.end() , svc ) ;
 }
 // ===========================================================================
+
 
 
 // ===========================================================================

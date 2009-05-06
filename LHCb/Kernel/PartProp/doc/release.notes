@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.14 2009-04-17 13:12:47 cattanem Exp $ 
+! $Id: release.notes,v 1.15 2009-05-06 15:45:52 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-06 - Vanya BELYAEV
+
+ - src/Component/ParticleProperty.cpp
+    add few symbols, protected for cc-operations 
+ - Kernel/Nodes.h , 
+   src/Nodes.cpp  , 
+   python/PartProp/Nodes.py
+    add the nodes for evaluation of SSpin, LSpin & Nucleus 
 
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq by endmsg

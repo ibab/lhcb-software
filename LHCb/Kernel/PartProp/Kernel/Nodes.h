@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.3 2009-01-12 06:35:38 cattanem Exp $
+// $Id: Nodes.h,v 1.4 2009-05-06 15:45:52 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -456,6 +456,25 @@ namespace Decays
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     } ;
     // ======================================================================
+    /** @class Nucleus
+     *  The trivial node : it match the Nucleus
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-12
+     */
+    class Nucleus : public Any
+    {
+    public:
+      /// MANDATORY: virtual destructor
+      virtual ~Nucleus() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Nucleus* clone () const ;
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& pid ) const
+      { return pid.isNucleus() ; }
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    } ;
+    // ======================================================================
     /** @class HasQuark
      *  The trivial node : it match the quark content
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -498,6 +517,10 @@ namespace Decays
     {
     public:
       // ====================================================================
+      enum { InvalidSpin = 101 } ;
+      // ====================================================================
+    public:
+      // ====================================================================
       /// constructor from the 2J+1
       JSpin ( const int spin )  ;
       /// MANDATORY: virtual destructor
@@ -506,9 +529,21 @@ namespace Decays
       virtual  JSpin* clone () const ; 
       /// MANDATORY: the only one essential method
       virtual bool operator() ( const LHCb::ParticleID& pid ) const 
-      { return m_spin == pid.jSpin () ; }
+      { return spin() == pid.jSpin () ; }
       /// MANDATORY: the specific printout
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// valid only for positive spin-values  
+      virtual bool valid() const ;
+      /// MANDATORY: the proper validation of the node
+      virtual StatusCode validate 
+      ( const LHCb::IParticlePropertySvc* /* svc */ ) const ;
+      // ====================================================================
+    public:
+      // ====================================================================
+      int spin() const { return m_spin ; }
       // ====================================================================
     private:
       // ====================================================================
@@ -519,6 +554,62 @@ namespace Decays
       // ====================================================================
       /// the j-spin to be tested 
       int m_spin ; // the spin to be tested
+      // ====================================================================
+    } ;
+    // ======================================================================
+    /** @class SSpin
+     *  The trivial node : it match the 2S+1 spin
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-12
+     */
+    class SSpin : public JSpin
+    {
+    public:
+      // ====================================================================
+      /// constructor from the 2S+1
+      SSpin ( const int spin )  ;
+      /// MANDATORY: virtual destructor
+      virtual ~SSpin() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  SSpin* clone () const ; 
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& pid ) const 
+      { return spin() == pid.sSpin () ; }
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ====================================================================
+    private:
+      // ====================================================================
+      /// the default constructor is disabled 
+      SSpin() ; // the default constructor is disabled 
+      // ====================================================================
+    } ;
+    // ======================================================================
+    /** @class LSpin
+     *  The trivial node : it match the 2L+1 spin
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-12
+     */
+    class LSpin : public SSpin
+    {
+    public:
+      // ====================================================================
+      /// constructor from the 2L+1
+      LSpin ( const int spin )  ;
+      /// MANDATORY: virtual destructor
+      virtual ~LSpin() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  LSpin* clone () const ; 
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& pid ) const 
+      { return spin() == pid.lSpin () ; }
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ====================================================================
+    private:
+      // ====================================================================
+      /// the default constructor is disabled 
+      LSpin() ; // the default constructor is disabled 
       // ====================================================================
     } ;
     // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: ParticlePropertySvc.cpp,v 1.5 2009-04-17 13:12:47 cattanem Exp $
+// $Id: ParticlePropertySvc.cpp,v 1.6 2009-05-06 15:45:52 ibelyaev Exp $
 // ============================================================================
 //Include files
 // ============================================================================
@@ -241,20 +241,46 @@ namespace LHCb
       //
       // CC-related part 
       //
-      m_ccmap_ [ "X+"       ] = "X-"       ; // charged, positive
-      m_ccmap_ [ "X-"       ] = "X+"       ; // charged, negative 
-      m_ccmap_ [ "l+"       ] = "l-"       ; // charged lepton, positive 
-      m_ccmap_ [ "l-"       ] = "l+"       ; // charged lepton, negative
-      // prevent some other symbols from inproper conversions
-      m_ccmap_ [ "Meson"    ] = "Meson"    ; // the generic meson 
-      m_ccmap_ [ "Hadron"   ] = "Hadron"   ; // the generic hadron
-      m_ccmap_ [ "Baryon"   ] = "Baryon"   ; // the generic baryon
-      m_ccmap_ [ "Lepton"   ] = "Lepton"   ; // the generic lepton
-      m_ccmap_ [ "Nu"       ] = "Nu"       ; // the generic neutrino
-      m_ccmap_ [ "HasQuark" ] = "HasQuark" ; // for protection 
-      m_ccmap_ [ "JSpin"    ] = "JSpin"    ; // for protection
-      m_ccmap_ [ "cc"       ] = "cc"       ; // for protection
-      m_ccmap_ [ "os"       ] = "os"       ; // for protection
+      m_ccmap_ [ "X+"         ] = "X-"         ; // charged, positive
+      m_ccmap_ [ "X-"         ] = "X+"         ; // charged, negative 
+      m_ccmap_ [ "l+"         ] = "l-"         ; // charged lepton, positive 
+      m_ccmap_ [ "l-"         ] = "l+"         ; // charged lepton, negative
+      // protect some other symbols from inproper conversions
+      m_ccmap_ [ "Meson"      ] = "Meson"      ; // the generic meson 
+      m_ccmap_ [ "Hadron"     ] = "Hadron"     ; // the generic hadron
+      m_ccmap_ [ "Baryon"     ] = "Baryon"     ; // the generic baryon
+      m_ccmap_ [ "Lepton"     ] = "Lepton"     ; // the generic lepton
+      m_ccmap_ [ "Nu"         ] = "Nu"         ; // the generic neutrino
+      m_ccmap_ [ "Nucleus"    ] = "Nucleus"    ; // the generic nucleus 
+      m_ccmap_ [ "Scalar"     ] = "Scalar"     ; // the generic scalar 
+      m_ccmap_ [ "Vector"     ] = "Vector"     ; // the generic vector
+      m_ccmap_ [ "Tensor"     ] = "Tensor"     ; // the generic tensor 
+      m_ccmap_ [ "OneHalf"    ] = "OneHalf"    ; // the generic spinor 1/2 
+      m_ccmap_ [ "ThreeHalf"  ] = "ThreeHalf"  ; // the generic spinor 3/2 
+      m_ccmap_ [ "FiveHalf"   ] = "FiveHalf"   ; // the generic spinor 5/2 
+      m_ccmap_ [ "Spinor"     ] = "Spinor"     ; // the generic spinor 1/2
+      m_ccmap_ [ "Nucleus"    ] = "Nucleus"    ; // the nucleus 
+      // protection:
+      m_ccmap_ [ "HasQuark"   ] = "HasQuark"   ; // for protection 
+      m_ccmap_ [ "JSpin"      ] = "JSpin"      ; // for protection
+      m_ccmap_ [ "SSpin"      ] = "SSpin"      ; // for protection
+      m_ccmap_ [ "LSpin"      ] = "LSpin"      ; // for protection
+      m_ccmap_ [ "cc"         ] = "cc"         ; // for protection
+      m_ccmap_ [ "CC"         ] = "CC"         ; // for protection
+      m_ccmap_ [ "os"         ] = "os"         ; // for protection
+      m_ccmap_ [ "Xd"         ] = "Xd"         ; // for protection
+      m_ccmap_ [ "Xu"         ] = "Xu"         ; // for protection
+      m_ccmap_ [ "Xs"         ] = "Xs"         ; // for protection
+      m_ccmap_ [ "Xc"         ] = "Xc"         ; // for protection
+      m_ccmap_ [ "Xb"         ] = "Xb"         ; // for protection
+      m_ccmap_ [ "Xt"         ] = "Xt"         ; // for protection
+      m_ccmap_ [ "Up"         ] = "Up"         ; // for protection
+      m_ccmap_ [ "Down"       ] = "Down"       ; // for protection
+      m_ccmap_ [ "Strange"    ] = "Strange"    ; // for protection
+      m_ccmap_ [ "Charm"      ] = "Charm"      ; // for protection
+      m_ccmap_ [ "Bottom"     ] = "Bottom"     ; // for protection
+      m_ccmap_ [ "Beauty"     ] = "Beauty"     ; // for protection
+      m_ccmap_ [ "Top"        ] = "Top"        ; // for protection
       //
       declareProperty 
         ( "ChargeConjugations" , m_ccmap_ , 
