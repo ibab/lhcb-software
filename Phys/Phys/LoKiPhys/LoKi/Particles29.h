@@ -1,4 +1,4 @@
-// $Id: Particles29.h,v 1.1 2009-04-30 15:19:56 ibelyaev Exp $
+// $Id: Particles29.h,v 1.2 2009-05-06 19:31:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES29_H 
 #define LOKI_PARTICLES29_H 1
@@ -62,7 +62,7 @@ namespace LoKi
      *  @date   2009-04-30
      */
     class DHCoplanarity 
-      : public virtual LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
