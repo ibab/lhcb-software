@@ -1,5 +1,5 @@
 #!/bin/csh
-# 
+#
 # script to start the Bookkeeping graphical interface
 # JC : 15 Jan 2009
 #
@@ -7,7 +7,7 @@
 
 source `which SetupProject.csh` Dirac  > /dev/null
 if $status == 0 then
-   lhcb-proxy-info > /dev/null
+   `which dirac-proxy-info` --checkvalid > /dev/null
    if $status != 0 then
       lhcb-proxy-init
       if $status != 0 then
