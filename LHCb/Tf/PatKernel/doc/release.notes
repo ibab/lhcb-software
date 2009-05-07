@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================= PatKernel v2r3 2009-05-07 =====================
 ! 2009-03-31 - Olivier Callot
  - New interface IPatDebugTrackTool to debug track properties inside pattern
    algorithms.
