@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.216 2009-04-24 16:07:35 jonrob Exp $
+! $Id: release.notes,v 1.217 2009-05-07 13:17:13 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r21 2009-05-07 ====================
 ! 2009-04-24 - Chris Jones
  - Add nickname mapping for cluster finding tool
 
