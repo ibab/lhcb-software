@@ -1,7 +1,7 @@
-#ifndef VTK_INTERNALPARTICLE_HH
-#define VTK_INTERNALPARTICLE_HH
+#ifndef INTERNALPARTICLE_H
+#define INTERNALPARTICLE_H
 
-#include "DecayTreeFitter/VtkParticleBase.h"
+#include "ParticleBase.h"
 #include <vector>
 
 namespace vtxtreefit 

@@ -1,9 +1,8 @@
 #include <stdio.h>
 
 #include "Event/Particle.h"
-#include "DecayTreeFitter/VtkRecoParticle.h"
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkHelixUtils.h"
+#include "RecoParticle.h"
+#include "FitParams.h"
 
 namespace vtxtreefit
 {

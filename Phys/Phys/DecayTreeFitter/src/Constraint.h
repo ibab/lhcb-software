@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include "DecayTreeFitter/VtkErrCode.h"
+#include "ErrCode.h"
 
 namespace vtxtreefit
 {

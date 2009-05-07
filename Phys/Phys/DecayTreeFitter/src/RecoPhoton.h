@@ -1,7 +1,7 @@
-#ifndef _VTK_RECOPHOTON_HH__
-#define _VTK_RECOPHOTON_HH__
+#ifndef RECOPHOTON_H
+#define RECOPHOTON_H
 
-#include "DecayTreeFitter/VtkRecoParticle.h"
+#include "RecoParticle.h"
 
 namespace vtxtreefit
 {

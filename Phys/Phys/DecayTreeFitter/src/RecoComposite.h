@@ -1,30 +1,30 @@
 #ifndef _VTK_EXTERNALBTAPARTICLE_HH_
 #define _VTK_EXTERNALBTAPARTICLE_HH_
 
-#include "DecayTreeFitter/VtkParticleBase.h"
+#include "ParticleBase.h"
 #include <CLHEP/Matrix/Vector.h>
 #include <CLHEP/Matrix/SymMatrix.h>
 
 namespace vtxtreefit
 {
 
-  class BtaComposite : public ParticleBase
+  class RecoComposite : public ParticleBase
   {
   public:
-    BtaComposite(const LHCb::Particle& bc, const ParticleBase* mother) ;
-    virtual ~BtaComposite() ;
+    RecoComposite(const LHCb::Particle& bc, const ParticleBase* mother) ;
+    virtual ~RecoComposite() ;
 
     // the number of parameters
     virtual int dim() const { return m_hasEnergy ? 8 : 7 ; }// (x,y,z,t,px,py,pz,(E))
 
     // the number of 'measurements'
     int dimM() const        { return m_hasEnergy ? 7 : 6 ; }
-    ErrCode projectBtaComposite(const FitParams&, Projection&) const ;
+    ErrCode projectRecoComposite(const FitParams&, Projection&) const ;
     virtual ErrCode projectConstraint(Constraint::Type, const FitParams&, Projection&) const ;
  
     virtual ErrCode initPar1(FitParams*) ; 
     virtual ErrCode initPar2(FitParams*) ; 
-    virtual int type() const { return kBtaComposite ; }  
+    virtual int type() const { return kRecoComposite ; }  
     
     virtual int posIndex() const { return index()   ; }
     virtual int tauIndex() const { return index()+3 ; }

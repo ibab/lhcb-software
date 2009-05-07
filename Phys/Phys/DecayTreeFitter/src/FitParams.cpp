@@ -1,17 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkParticleBase.h"
-using std::cout;
-using std::endl;
-using std::setprecision;
-using std::setw;
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
+#include "FitParams.h"
 
 namespace vtxtreefit {
 
@@ -29,9 +18,9 @@ namespace vtxtreefit {
   void FitParams::resetCov(double scale) {
     for(int row=1; row<=m_dim; ++row) {
       for(int col=1; col<row; ++col) 
-	m_cov FAST() (row,col) = 0 ;
-      m_cov FAST() (row,row) *= scale ;
-      if(m_cov FAST() (row,row) < 0 ) m_cov FAST() (row,row)*=-1 ;
+	m_cov.fast(row,col) = 0 ;
+      m_cov.fast(row,row) *= scale ;
+      if(m_cov.fast(row,row) < 0 ) m_cov.fast(row,row)*=-1 ;
     }
     m_chiSquare=0 ;
     m_nConstraints=0 ;
@@ -42,17 +31,17 @@ namespace vtxtreefit {
   bool FitParams::testCov() const {
     bool okay=true ;
     for(int row=1; row<=m_dim && okay; ++row) 
-      okay = m_cov FAST() (row,row)>0 ;
+      okay = m_cov.fast(row,row)>0 ;
     return okay ;
   }
 
   void FitParams::print() const {
-    cout << setw(3) << "index" << setw(15) << "val" << setw(15) << "err" << endl ;
-    cout << setprecision(5) ;
+    std::cout << std::setw(3) << "index" << std::setw(15) << "val" << std::setw(15) << "err" << std::endl ;
+    std::cout << std::setprecision(5) ;
     for(int row=1; row<=m_dim; ++row) 
-      cout << setw(3) << row-1
-	   << setw(15) << m_par(row) 
-	   << setw(15) << sqrt(m_cov(row,row)) << endl ;
+      std::cout << std::setw(3) << row-1
+	   << std::setw(15) << m_par(row) 
+	   << std::setw(15) << sqrt(m_cov(row,row)) << std::endl ;
   } ;
   
   HepSymMatrix FitParams::cov(const std::vector<int>& indexVec) const {
@@ -85,13 +74,13 @@ namespace vtxtreefit {
       
       //      HepVector newpar(newdim,0) ;
       //       HepSymMatrix newcov(newdim,0) ;
-      //       cout << newpar << endl ;
+      //       std::cout << newpar << std::endl ;
       //       for(int row=1; row<=m_dim ; ++row) {
       // 	newpar(row) = m_par(row) ;
       // 	for(int col=1; col<=row; ++col)
       // 	// 	  newcov(row,col) = m_cov(row,col) ;
       //       }
-      //      cout << m_par << " " << newpar << endl ;
+      //      std::cout << m_par << " " << newpar << std::endl ;
 
       m_par = newpar ;
       m_cov = newcov ;
@@ -100,35 +89,26 @@ namespace vtxtreefit {
     }
   }
 
-  void FitParams::copy(const FitParams& rhs, 
-		       const indexmap& anindexmap) 
-  {
-    for(indexmap::const_iterator it = anindexmap.begin() ; 
-	it != anindexmap.end(); ++it) {
-      int idim =     it->first->dim() ;
-      int indexrhs = it->second ;
-      int indexlhs = it->first->index() ;
-      
-#ifdef VTK_BOUNDSCHECKING
-      assert( idim + indexlhs <= dim() ) ;
-      assert( idim + indexrhs <= rhs.dim() ) ;
-#endif
-
-      for(int i=1; i<=idim; ++i)
-	m_par(indexlhs+i) = rhs.m_par(indexrhs+i) ;
-      
-      for(indexmap::const_iterator it2 = it ; 
-	  it2 != anindexmap.end(); ++it2) {
-	int jdim     = it2->first->dim() ;
-	int jndexrhs = it2->second ;
-	int jndexlhs = it2->first->index() ;
-	
-	for(int i=1; i<=idim; ++i)
-	  for(int j=1; j<=jdim ; ++j)
-	    m_cov( indexlhs+i, jndexlhs+j) = rhs.m_cov( indexrhs+i, jndexrhs+j) ;
-      }
-
-    }
-  }
+//   void FitParams::copy(const FitParams& rhs, 
+// 		       const indexmap& anindexmap) 
+//   {
+//     for(indexmap::const_iterator it = anindexmap.begin() ; 
+// 	it != anindexmap.end(); ++it) {
+//       int idim =     it->first->dim() ;
+//       int indexrhs = it->second ;
+//       int indexlhs = it->first->index() ;
+//       for(int i=1; i<=idim; ++i)
+// 	m_par(indexlhs+i) = rhs.m_par(indexrhs+i) ;
+//       for(indexmap::const_iterator it2 = it ; 
+// 	  it2 != anindexmap.end(); ++it2) {
+// 	int jdim     = it2->first->dim() ;
+// 	int jndexrhs = it2->second ;
+// 	int jndexlhs = it2->first->index() ;
+// 	for(int i=1; i<=idim; ++i)
+// 	  for(int j=1; j<=jdim ; ++j)
+// 	    m_cov( indexlhs+i, jndexlhs+j) = rhs.m_cov( indexrhs+i, jndexrhs+j) ;
+//       }
+//     }
+//   }
   
 }

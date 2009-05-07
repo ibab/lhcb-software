@@ -1,10 +1,7 @@
 #include <algorithm>
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkParticleBase.h"
-#include "DecayTreeFitter/VtkDecayChain.h"
-using std::cout;
-using std::endl;
-using std::ostream;
+#include "FitParams.h"
+#include "ParticleBase.h"
+#include "DecayChain.h"
 
 namespace vtxtreefit
 {
@@ -12,9 +9,9 @@ namespace vtxtreefit
   extern int vtxverbose ;
   
   void
-  DecayChain::printConstraints(ostream& os) const
+  DecayChain::printConstraints(std::ostream& os) const
   {
-    os << "Constraints in decay tree: " << endl ;
+    os << "Constraints in decay tree: " << std::endl ;
     for( ParticleBase::constraintlist::const_iterator 
 	   it = m_constraintlist.begin() ;
 	 it != m_constraintlist.end(); ++it) 
@@ -30,7 +27,7 @@ namespace vtxtreefit
     //initConstraintList() ;
     
     if(vtxverbose>=2) {
-      cout << "In DecayChain constructor: m_dim = " << m_dim << endl ;
+      std::cout << "In DecayChain constructor: m_dim = " << m_dim << std::endl ;
       printConstraints() ;
     }
   }
@@ -74,7 +71,7 @@ namespace vtxtreefit
     par.resetCov() ;
     status |= m_mother->initCov(&par) ;
    
-    if(vtxverbose>=2) cout << "status after init: " << status << endl ;
+    if(vtxverbose>=2) std::cout << "status after init: " << status << std::endl ;
  
     return status ;
   }
@@ -90,7 +87,7 @@ namespace vtxtreefit
 
 
     if( vtxverbose>=3 || (vtxverbose>=2&&firstpass) ) {
-      cout << "DecayChain::filter, after initialization: "  << endl ; 
+      std::cout << "DecayChain::filter, after initialization: "  << std::endl ; 
       m_mother->print(&par) ;
     }
     
@@ -102,7 +99,7 @@ namespace vtxtreefit
      	 it != m_constraintlist.end(); ++it) {
       status |= it->filter(par) ;
       if( vtxverbose>=2 && status.failure() ) {
-	cout << "status is failure after parsing constraint: " ;
+	std::cout << "status is failure after parsing constraint: " ;
 	it->print() ;
       }
     }
@@ -111,13 +108,13 @@ namespace vtxtreefit
 	  it != m_mergedconstraintlist.end(); ++it) {
       status |= (*it)->filter(par,reference) ;
       if( vtxverbose>=2 && status.failure() ) {
-	cout << "status is failure after parsing constraint: " ;
+	std::cout << "status is failure after parsing constraint: " ;
 	(*it)->print() ;
       }
     }
 #endif
     
-    if(vtxverbose>=3) cout << "VtkDecayChain::filter: status = " << status << endl ;
+    if(vtxverbose>=3) std::cout << "VtkDecayChain::filter: status = " << status << std::endl ;
       
     return status ;
   }

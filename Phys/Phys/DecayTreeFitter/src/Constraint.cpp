@@ -1,14 +1,8 @@
 #include <iomanip>
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkParticleBase.h"
-#include "DecayTreeFitter/VtkConstraint.h"
-#include "DecayTreeFitter/VtkKalmanCalculator.h"
-
-using std::cout;
-using std::endl;
-using std::ostream;
-using std::setprecision;
-using std::setw;
+#include "FitParams.h"
+#include "ParticleBase.h"
+#include "Constraint.h"
+#include "KalmanCalculator.h"
 
 namespace vtxtreefit
 {
@@ -64,7 +58,7 @@ namespace vtxtreefit
 		<< std::endl ;
       status |= ErrCode::badsetup ;
     } else {
-      if(vtxverbose>=3) { cout << "filtering "  ; print() ;}
+      if(vtxverbose>=3) { std::cout << "filtering "  ; print() ;}
       // save the unfiltered ('predicted') parameters. we need to
       // store them if we want to iterate constraints.
       const HepVector* pred(0) ;
@@ -94,14 +88,14 @@ namespace vtxtreefit
 	    finished  = ++iter >= m_maxNIter || diverging || converged ;
 	    
 	    if(vtxverbose>=3) { 
-	      cout << "chi2,niter: " 
-		   << iter << " "<< setprecision(7)
-		   << setw(12) << chisq << " " 
-		   << setw(12)<< newchisq << " "
-		   << setw(12)<< dchisq << " " 
-		   << diverging << " " 
-		   << converged << " "
-		   << status << endl ; 
+	      std::cout << "chi2,niter: " 
+			<< iter << " "<< std::setprecision(7)
+			<< std::setw(12) << chisq << " " 
+			<< std::setw(12)<< newchisq << " "
+			<< std::setw(12)<< dchisq << " " 
+			<< diverging << " " 
+			<< converged << " "
+			<< status << std::endl ; 
 	    }
 	    chisq = newchisq ;
 	  }
@@ -134,7 +128,7 @@ namespace vtxtreefit
 		<< std::endl ;
       status |= ErrCode::badsetup ;
     } else {
-      if(vtxverbose>=3) { cout << "filtering "  ; print() ;}
+      if(vtxverbose>=3) { std::cout << "filtering "  ; print() ;}
       
       // project using the reference
       Projection p(fitpar.dim(),m_dim) ;
@@ -155,12 +149,12 @@ namespace vtxtreefit
     return status ;
   }
   
-  void Constraint::print(ostream& os) const
+  void Constraint::print(std::ostream& os) const
   {
     os << "node index = " << m_node->index() 
        << " name = " << m_node->name().c_str() 
        << " constraint type = " << m_type 
-       << " depth = " << m_depth << endl ;
+       << " depth = " << m_depth << std::endl ;
   }
 
   std::string Constraint::name() const

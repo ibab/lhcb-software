@@ -3,16 +3,8 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
 
-#include "DecayTreeFitter/VtkRecoPhoton.h"
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkHelixUtils.h"
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
-
+#include "RecoPhoton.h"
+#include "FitParams.h"
 
 namespace vtxtreefit
 {

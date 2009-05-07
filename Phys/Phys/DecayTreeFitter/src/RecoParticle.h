@@ -1,7 +1,7 @@
-#ifndef __VTK_RECOPARTICLE_HH__
-#define __VTK_RECOPARTICLE_HH__
+#ifndef RECOPARTICLE_HH
+#define RECOPARTICLE_HH
 
-#include "DecayTreeFitter/VtkParticleBase.h"
+#include "ParticleBase.h"
 
 namespace vtxtreefit
 {

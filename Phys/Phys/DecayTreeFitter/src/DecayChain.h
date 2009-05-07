@@ -2,8 +2,8 @@
 #define __VTKDECAYCHAIN_HH__
 
 #include <map>
-#include "DecayTreeFitter/VtkParticleBase.h"
-#include "DecayTreeFitter/VtkMergedConstraint.h"
+#include "ParticleBase.h"
+#include "MergedConstraint.h"
 
 class LHCb::Particle ;
 

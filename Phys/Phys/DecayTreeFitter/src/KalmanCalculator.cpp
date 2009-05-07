@@ -1,16 +1,10 @@
 
-#include "DecayTreeFitter/VtkKalmanCalculator.h"
+#include "KalmanCalculator.h"
+#include "ErrCode.h"
 
 #define SLOWBUTSAFE 1
 #undef SLOWBUTSAFE
 #undef SKIPHIGHACCURACYCORRECTION
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
-
 
 namespace vtxtreefit
 {
@@ -54,9 +48,9 @@ namespace vtxtreefit
       for(int k=1; k<=m_nparameters; ++k)
  	if( (tmp=G.HepMatrix::operator()(col,k)) !=0 ) {
 	  for(int row=1; row<k; ++row)
-	    m_matrixCGT.HepMatrix::operator()(row,col) += C FAST() (k,row) * tmp ;
+	    m_matrixCGT.HepMatrix::operator()(row,col) += C.fast(k,row) * tmp ;
 	  for(int row=k; row<=statdim; ++row)
-	    m_matrixCGT.HepMatrix::operator()(row,col) += C FAST() (row,k) * tmp ;
+	    m_matrixCGT.HepMatrix::operator()(row,col) += C.fast(row,k) * tmp ;
 	}
 #endif
 
@@ -75,7 +69,7 @@ namespace vtxtreefit
       for(int k=1; k<=m_nparameters; ++k)
 	if( (tmp=G.HepMatrix::operator()(row,k)) != 0 )
 	  for(int col=1; col<=row; ++col)
-	    m_matrixRinv FAST() (row,col) += tmp*m_matrixCGT.HepMatrix::operator()(k,col) ;
+	    m_matrixRinv.fast(row,col) += tmp*m_matrixCGT.HepMatrix::operator()(k,col) ;
 #endif    
     m_matrixR = m_matrixRinv ;
     m_matrixRinv.invert(m_ierr) ;
@@ -154,14 +148,14 @@ namespace vtxtreefit
 //       for(int k=1; k<=m_nconstraints; ++k) 
 // 	if( (tmp= (KR(row,k) - 2*m_matrixCGT(row,k))) != 0 )
 // 	  for(int col=1; col<=row; ++col) 
-// 	    fitparams.cov() FAST() (row,col) += tmp * m_matrixK(col,k) ;
+// 	    fitparams.cov().fast(row,col) += tmp * m_matrixK(col,k) ;
 
     // deltaCov = - C*GT*KT 
     for(int row=1; row<=m_nparameters; ++row)
       for(int k=1; k<=m_nconstraints; ++k) 
 	if( (tmp = -(m_matrixCGT.HepMatrix::operator()(row,k))) != 0 )  // they have same size, and same 'emptiness'
 	  for(int col=1; col<=row; ++col) 
-	    fitparams.cov() FAST() (row,col) += tmp * m_matrixK.HepMatrix::operator()(col,k) ;
+	    fitparams.cov().fast(row,col) += tmp * m_matrixK.HepMatrix::operator()(col,k) ;
 
 #endif
     fitparams.addChiSquare(chisq>0 ? chisq : m_chisq, m_value->num_row()) ;

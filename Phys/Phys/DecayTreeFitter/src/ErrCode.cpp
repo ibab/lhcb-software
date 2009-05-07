@@ -1,9 +1,9 @@
-#include "DecayTreeFitter/VtkErrCode.h"
-using std::ostream;
+#include "ErrCode.h"
+
 
 namespace vtxtreefit
 {
-  ostream& operator<<(ostream& os, const ErrCode& ec) 
+  std::ostream& operator<<(std::ostream& os, const ErrCode& ec) 
   {
     unsigned int flag = ec.flag() ; 
     os << "flag=" << flag << " " ;

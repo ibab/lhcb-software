@@ -1,9 +1,9 @@
 #ifndef VTXFITSTATUS_H
 #define VTXFITSTATUS_H
 
-namespace Vtx
+namespace LHCb
 {
-  class FitStatus
+  class VtxFitStatus
   {
   public:
     enum EFitStatus { UnFitted, Success, Failed, BadInput, NonConverged } ;

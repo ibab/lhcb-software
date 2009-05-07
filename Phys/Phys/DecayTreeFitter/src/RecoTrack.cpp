@@ -1,18 +1,8 @@
 #include <stdio.h>
 
 #include "Event/Particle.h"
-
-#include "DecayTreeFitter/VtkRecoTrack.h"
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkHelixUtils.h"
-using std::cout;
-using std::endl;
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
+#include "RecoTrack.h"
+#include "FitParams.h"
 
 namespace vtxtreefit
 {

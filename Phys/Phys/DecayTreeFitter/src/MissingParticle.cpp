@@ -1,5 +1,5 @@
-// #include "DecayTreeFitter/VtkFitParams.h"
-// #include "DecayTreeFitter/VtkMissingParticle.h"
+// #include "FitParams.h"
+// #include "MissingParticle.h"
 // #include "Event/Particle.h"
 
 // namespace vtxtreefit

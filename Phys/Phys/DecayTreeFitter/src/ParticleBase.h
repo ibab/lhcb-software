@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector> 
-#include "DecayTreeFitter/VtkConstraint.h"
-#include "DecayTreeFitter/VtkProjection.h"
+#include "Constraint.h"
+#include "Projection.h"
 
 namespace LHCb
 {
@@ -20,13 +20,19 @@ namespace vtxtreefit
   class ParticleBase
   {
   public:
-    enum ParticleType {kUpsilon=1,kInteractionPoint,
-		       kBtaComposite,kBtaResonance,
+    enum ParticleType {kInteractionPoint,
+		       kRecoComposite,kRecoResonance,
 		       kInternalParticle,kRecoTrack,
-		       kResonance,kRecoPhoton,kMissingParticle} ;
+		       kResonance,kRecoPhoton,
+		       kMissingParticle} ;
 
-		 
+    
+    // 'default' constructor
     ParticleBase(const LHCb::Particle& bc, const ParticleBase* mother) ;
+
+    // constructor used for InteractionPoint
+    ParticleBase(const std::string& name) ;
+
     virtual ~ParticleBase() ;
 
     static ParticleBase* createParticle(const LHCb::Particle& bc, 
@@ -93,6 +99,7 @@ namespace vtxtreefit
 
     typedef std::vector< std::pair<const ParticleBase*,int> > indexmap ;
     virtual void retrieveIndexMap(indexmap& anindexmap) const ;
+
     void setMother(const ParticleBase* m) { m_mother = m ; } 
     
     typedef std::vector<vtxtreefit::Constraint> constraintlist ;

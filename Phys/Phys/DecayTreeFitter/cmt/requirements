@@ -1,0 +1,34 @@
+#============================================================================
+# Created    : 2008-05-30
+# Maintainer : Wouter Hulsbergen
+#============================================================================
+package           DecayTreeFitter
+version           v1r1
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src DecayTreeFitter
+include_path      none
+#============================================================================
+# Used packages.
+#============================================================================
+use   CLHEP       	v* 	LCG_Interfaces -no_auto_imports
+use   GaudiAlg        	v*
+use   GaudiUtils        v*
+use   PhysEvent         v*      Event
+use   RecEvent		v*	Event
+use   TrackEvent       	v*	Event
+use   PartProp          v*      Kernel
+use   LoKi              v*      Phys
+
+apply_pattern install_more_includes more=DecayTreeFitter
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DecayTreeFitter    ../src/*.cpp -import=AIDA -import=CLHEP
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern component_library library=DecayTreeFitter
+apply_pattern install_python_modules

@@ -4,33 +4,18 @@
 #include "Event/Particle.h"
 #include "LoKi/ParticleProperties.h"
 
-#include "DecayTreeFitter/VtkParticleBase.h"
-#include "DecayTreeFitter/VtkInternalParticle.h"
-#include "DecayTreeFitter/VtkBtaComposite.h"
-#include "DecayTreeFitter/VtkBtaResonance.h"
-#include "DecayTreeFitter/VtkRecoTrack.h"
-#include "DecayTreeFitter/VtkRecoPhoton.h"
-#include "DecayTreeFitter/VtkResonance.h"
-#include "DecayTreeFitter/VtkFitParams.h"
-
-//#include "DecayTreeFitter/VtkInteractionPoint.h"
-//#include "DecayTreeFitter/VtkMissingParticle.h"
+#include "ParticleBase.h"
+#include "InternalParticle.h"
+#include "RecoComposite.h"
+#include "RecoResonance.h"
+#include "RecoTrack.h"
+#include "RecoPhoton.h"
+#include "Resonance.h"
+#include "FitParams.h"
 
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/Service.h"
-
-using std::cout;
-using std::endl;
-using std::flush;
-using std::setprecision;
-using std::setw;
-
-#ifdef VTK_BOUNDSCHECKING
-#define FAST() 
-#else
-#define FAST() .fast
-#endif
 
 namespace vtxtreefit
 {
@@ -40,23 +25,6 @@ namespace vtxtreefit
 
   int vtxverbose=0 ;
   
-//   const LHCb::ParticleProperty*
-//   particleProperty( const LHCb::ParticleID& id )
-//   {
-//     const LHCb::ParticleProperty* prop(0) ;
-//     static LHCb::IParticlePropertySvc* propsvc(0) ;
-//     if( propsvc==0 ) {
-//       StatusCode sc = StatusCode::FAILURE ; //Service::service( "LHCb::ParticlePropertySvc", propsvc) ;
-//       if (sc.isSuccess() )
-// 	prop = propsvc->find( id ) ;
-//       else 
-// 	std::cout << "ParticleBase: Cannot lcoate propertysvc"<< std::endl ;
-//     } else {
-//       prop = propsvc->find( id ) ;
-//     }
-//     return prop ;
-//   }
-
   ParticleBase::ParticleBase(const LHCb::Particle& particle, const ParticleBase* mother)
     : m_particle(&particle),m_mother(mother),
       m_prop(LoKi::Particles::ppFromPID(particle.particleID())),
@@ -72,6 +40,15 @@ namespace vtxtreefit
     } else {
       m_charge = particle.charge()>0 ? 1 : (particle.charge()<0 ? -1 : 0) ;
     }
+  }
+
+  
+  ParticleBase::ParticleBase(const std::string& name)
+    : m_particle(0),m_mother(0),
+      m_prop(0),
+      m_index(0),m_pdtMass(0),m_pdtCLifeTime(0),m_charge(0),
+      m_name(name)
+  {
   }
   
   ParticleBase::~ParticleBase() {} ;
@@ -94,7 +71,7 @@ namespace vtxtreefit
       LoKi::Particles::ppFromPID(particle.particleID()) ;
     
     if(vtxverbose>=2)
-      cout << "ParticleBase::createParticle: " << forceFitAll << endl ;
+      std::cout << "ParticleBase::createParticle: " << forceFitAll << std::endl ;
     ParticleBase* rc=0 ;
     bool bsconstraint = false ;
     
@@ -130,15 +107,15 @@ namespace vtxtreefit
       else if( hascalo ) 
 	rc = new RecoPhoton(particle,mother) ; // reconstructed photon 
       else if( isresonance )
-	rc = new BtaResonance(particle,mother) ;
+	rc = new RecoResonance(particle,mother) ;
       else
-	rc = new BtaComposite(particle,mother) ;
+	rc = new RecoComposite(particle,mother) ;
     } else { // 'internal' particles
       if( validfit /*|| isconversion*/ ) {  // fitted composites
 	if( isresonance )
-	  rc = new BtaResonance(particle,mother) ;
+	  rc = new RecoResonance(particle,mother) ;
 	else
-	  rc = new BtaComposite(particle,mother) ;
+	  rc = new RecoComposite(particle,mother) ;
       } else {         // unfited composites
 	if( isresonance ) 
 	  rc = new Resonance(particle,mother,forceFitAll) ;
@@ -148,8 +125,8 @@ namespace vtxtreefit
     } 
     
     if(vtxverbose>=2)
-      cout << "ParticleBase::createParticle returns " << rc->type() 
-	   << " " << rc->index() << endl ;
+      std::cout << "ParticleBase::createParticle returns " << rc->type() 
+	   << " " << rc->index() << std::endl ;
     return rc ;
   }
 
@@ -200,7 +177,7 @@ namespace vtxtreefit
       const double sigmom = 10 * Gaudi::Units::GeV ; // GeV
       int maxrow = hasEnergy() ? 4 : 3 ;
       for(int row=momindex+1; row<=momindex+maxrow; ++row)
-	fitparams->cov() FAST() (row,row) = sigmom*sigmom ;
+	fitparams->cov() .fast (row,row) = sigmom*sigmom ;
     }
     
     // lifetime
@@ -213,7 +190,7 @@ namespace vtxtreefit
       double particleP = particle().p();
       if ( particleP > 0.0 )
 	sigtau = std::min( maxdecaylength/particleP, sigtau ) ;
-      fitparams->cov() FAST() (tauindex+1,tauindex+1) = sigtau*sigtau ;
+      fitparams->cov() .fast (tauindex+1,tauindex+1) = sigtau*sigtau ;
     }
 
     return status ;
@@ -239,16 +216,16 @@ namespace vtxtreefit
   void 
   ParticleBase::print(const FitParams* fitpar) const
   {
-    cout << setw(5) << "[" << type() << "]" << setw(15) << flush << name().c_str() 
-	 << " val" << setw(15) << "err" << endl ;
-    cout << setprecision(5) ;
+    std::cout << std::setw(5) << "[" << type() << "]" << std::setw(15) << std::flush << name().c_str() 
+	 << " val" << std::setw(15) << "err" << std::endl ;
+    std::cout << std::setprecision(5) ;
     for(int i=0; i<dim(); ++i) {
       int theindex = index()+i ;
-      cout << setw(2) << theindex << " "
-	   << setw(20) << parname(i).c_str() 
-	   << setw(15) << fitpar->par()(theindex+1)
-	   << setw(15) << sqrt(fitpar->cov()(theindex+1,theindex+1)) 
-	   << setw(15) << fitpar->cov()(theindex+1,theindex+1) <<endl ;
+      std::cout << std::setw(2) << theindex << " "
+	   << std::setw(20) << parname(i).c_str() 
+	   << std::setw(15) << fitpar->par()(theindex+1)
+	   << std::setw(15) << sqrt(fitpar->cov()(theindex+1,theindex+1)) 
+	   << std::setw(15) << fitpar->cov()(theindex+1,theindex+1) <<std::endl ;
     }
     if( hasEnergy() ) {
       int momindex = momIndex() ;
@@ -266,9 +243,9 @@ namespace vtxtreefit
       G(3) = -pz/mass ;
       G(4) =   E/mass ;
       double massvar = cov.similarity(G) ;
-      cout << setw(2) << setw(20) << "mass: "
-	   << setw(15) << mass
-	   << setw(15) << sqrt(massvar) << endl ;
+      std::cout << std::setw(2) << std::setw(20) << "mass: "
+	   << std::setw(15) << mass
+	   << std::setw(15) << sqrt(massvar) << std::endl ;
     }
   }
 
@@ -330,10 +307,10 @@ namespace vtxtreefit
 // 	p.H(2,momindex+2) += -tau + sinlt/lambda ;
 
 // 	if(vtxverbose>=2)
-// 	  cout << "Using helix for position of particle: " << name().c_str() << " "
+// 	  std::cout << "Using helix for position of particle: " << name().c_str() << " "
 // 	       << lambda << " " << lambda*tau  
 // 	       << "  delta-x,y: " << -tau*px0 + (py-py0)/lambda << "  "
-// 	       << -tau*py0 - (px-px0)/lambda << endl ;
+// 	       << -tau*py0 - (px-px0)/lambda << std::endl ;
 //       }
 //  }
     return ErrCode::success ;
@@ -366,7 +343,7 @@ namespace vtxtreefit
   ParticleBase::projectConstraint(Constraint::Type atype, const FitParams&, Projection&) const 
   {
     std::cout << "no method to project this constaint: " 
-	      << name() << " " << type() << " " << atype << std::endl ;
+		   << name() << " " << type() << " " << atype << std::endl ;
     return ErrCode::badsetup ;
   }
 

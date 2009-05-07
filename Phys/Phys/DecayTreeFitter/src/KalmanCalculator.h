@@ -3,8 +3,8 @@
 
 #include <CLHEP/Matrix/Matrix.h>
 #include <CLHEP/Matrix/SymMatrix.h>
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkErrCode.h"
+#include "FitParams.h"
+#include "ErrCode.h"
 
 namespace vtxtreefit
 {

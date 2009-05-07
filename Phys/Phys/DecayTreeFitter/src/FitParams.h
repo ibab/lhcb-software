@@ -1,5 +1,5 @@
-#ifndef __VTK_FITPARAMS_HH__
-#define __VTK_FITPARAMS_HH__
+#ifndef FITPARAMS_H
+#define FITPARAMS_H
 
 #include <vector> 
 #include <CLHEP/Matrix/Vector.h>
@@ -9,8 +9,6 @@
 
 namespace vtxtreefit
 {
-  class ParticleBase ;
-
   class FitParams
   {
   public:
@@ -50,8 +48,6 @@ namespace vtxtreefit
     void addChiSquare(double chisq, int nconstraints) {
       m_chiSquare += chisq ; m_nConstraints += nconstraints ; }
 
-    typedef std::vector< std::pair<const ParticleBase*,int> > indexmap ;
-    void copy(const FitParams& rhs, const indexmap& anindexmap) ;
   protected:
     FitParams() {}
   private:

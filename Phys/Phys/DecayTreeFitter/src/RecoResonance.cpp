@@ -1,20 +1,20 @@
+#include "RecoResonance.h"
 #include "Event/Particle.h"
-#include "DecayTreeFitter/VtkBtaResonance.h"
-#include "DecayTreeFitter/VtkFitParams.h"
+#include "FitParams.h"
 
 namespace vtxtreefit
 {
 
   extern int vtxverbose ;
 
-  BtaResonance::BtaResonance(const LHCb::Particle& bc, const ParticleBase* mother)
-    : BtaComposite(bc,mother) {}
+  RecoResonance::RecoResonance(const LHCb::Particle& bc, const ParticleBase* mother)
+    : RecoComposite(bc,mother) {}
   
 
-  BtaResonance::~BtaResonance() {}
+  RecoResonance::~RecoResonance() {}
 
   ErrCode
-  BtaResonance::initPar1(FitParams* fitparams)
+  RecoResonance::initPar1(FitParams* fitparams)
   {
     int posindex = posIndex() ;
     int momindex = momIndex() ;
@@ -31,21 +31,21 @@ namespace vtxtreefit
   }
 
   ErrCode
-  BtaResonance::initPar2(FitParams* /*fitparams*/)
+  RecoResonance::initPar2(FitParams* /*fitparams*/)
   {
     // nothing to do!
     return ErrCode::success ;
   }
 
   ErrCode 
-  BtaResonance::projectConstraint(Constraint::Type type, 
+  RecoResonance::projectConstraint(Constraint::Type type, 
 				  const FitParams& fitparams, 
 				  Projection& p) const 
   {
     ErrCode status ;
     switch(type) {
     case Constraint::btaresonance:
-      status |= projectBtaComposite(fitparams,p) ;
+      status |= projectRecoComposite(fitparams,p) ;
       break ;
     default:
       status |= ParticleBase::projectConstraint(type,fitparams,p) ;
@@ -53,7 +53,7 @@ namespace vtxtreefit
     return status ;
   }
 
-  std::string BtaResonance::parname(int index) const
+  std::string RecoResonance::parname(int index) const
   {
     return ParticleBase::parname(index+4) ;
   }

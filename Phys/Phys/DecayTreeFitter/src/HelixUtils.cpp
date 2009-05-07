@@ -7,7 +7,7 @@
 
 
 //#include <BField/BField.h>
-#include "DecayTreeFitter/VtkHelixUtils.h"
+#include "HelixUtils.h"
 using std::cout;
 using std::endl;
 

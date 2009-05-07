@@ -2,7 +2,7 @@
 #define VTK_MERGEDCONSTRAINT_HH
 
 #include <vector>
-#include "DecayTreeFitter/VtkConstraint.h"
+#include "Constraint.h"
 
 namespace vtxtreefit
 {

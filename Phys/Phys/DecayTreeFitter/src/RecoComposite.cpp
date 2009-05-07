@@ -1,6 +1,8 @@
+
 #include "Event/Particle.h"
-#include "DecayTreeFitter/VtkBtaComposite.h"
-#include "DecayTreeFitter/VtkFitParams.h"
+#include "RecoComposite.h"
+#include "FitParams.h"
+
 using std::cout;
 using std::endl;
 
@@ -14,10 +16,11 @@ namespace vtxtreefit
 {
 
   extern int vtxverbose ;
-  BtaComposite::BtaComposite(const LHCb::Particle& bc, const ParticleBase* mother)
+
+  RecoComposite::RecoComposite(const LHCb::Particle& bc, const ParticleBase* mother)
     : ParticleBase(bc,mother),m_m(),m_matrixV(),m_hasEnergy(true) 
   { 
-    //bool massconstraint = bc && bc->constraint(BtaConstraint::Mass) ;
+    //bool massconstraint = bc && bc->constraint(RecoConstraint::Mass) ;
     //m_hasEnergy = !massconstraint ;
     updCache() ;
   }
@@ -33,7 +36,7 @@ namespace vtxtreefit
     return rc ;
   }
 
-  void BtaComposite::updCache()
+  void RecoComposite::updCache()
   {
     // cache par7 (x,y,z,px,py,pz,E) cov7
     Gaudi::XYZPoint pos = particle().referencePoint() ;
@@ -54,10 +57,10 @@ namespace vtxtreefit
     }
   }
 
-  BtaComposite::~BtaComposite() {}
+  RecoComposite::~RecoComposite() {}
 
   ErrCode
-  BtaComposite::initPar1(FitParams* fitparams)
+  RecoComposite::initPar1(FitParams* fitparams)
   {
     int posindex = posIndex() ;
     int momindex = momIndex() ;
@@ -74,14 +77,14 @@ namespace vtxtreefit
   }
 
   ErrCode
-  BtaComposite::initPar2(FitParams* fitparams)
+  RecoComposite::initPar2(FitParams* fitparams)
   {
     // call default lifetime initialization
     return initTau(fitparams) ;
   }
 
   ErrCode
-  BtaComposite::projectBtaComposite(const FitParams& fitparams, 
+  RecoComposite::projectRecoComposite(const FitParams& fitparams, 
 				    Projection& p) const
   {
     int posindex = posIndex() ;
@@ -102,14 +105,14 @@ namespace vtxtreefit
   }
   
   ErrCode 
-  BtaComposite::projectConstraint(Constraint::Type type, 
+  RecoComposite::projectConstraint(Constraint::Type type, 
 				  const FitParams& fitparams, 
 				  Projection& p) const 
   {
     ErrCode status ;
     switch(type) {
     case Constraint::btacomposite:
-      status |= projectBtaComposite(fitparams,p) ;
+      status |= projectRecoComposite(fitparams,p) ;
       break ;
     case Constraint::geometric:
       status |= projectGeoConstraint(fitparams,p) ;
@@ -121,10 +124,10 @@ namespace vtxtreefit
   }
 
   double 
-  BtaComposite::chiSquare(const FitParams* fitparams) const
+  RecoComposite::chiSquare(const FitParams* fitparams) const
   {
     Projection p(fitparams->dim(),dimM()) ;
-    projectBtaComposite(*fitparams,p) ;
+    projectRecoComposite(*fitparams,p) ;
     return p.chiSquare() ;
   }
 

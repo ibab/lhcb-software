@@ -1,7 +1,7 @@
 #include <iomanip>
 #include <algorithm>
 
-#include "DecayTreeFitter/VtkResonance.h"
+#include "Resonance.h"
 
 namespace vtxtreefit
 {

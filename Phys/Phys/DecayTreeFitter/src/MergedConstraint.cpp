@@ -1,8 +1,6 @@
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkParticleBase.h"
-#include "DecayTreeFitter/VtkMergedConstraint.h"
-using std::endl;
-using std::ostream;
+#include "FitParams.h"
+#include "ParticleBase.h"
+#include "MergedConstraint.h"
 
 namespace vtxtreefit
 {
@@ -20,16 +18,16 @@ namespace vtxtreefit
  
     return status ;
   }
-
-  void MergedConstraint::print(ostream& os) const
+  
+  void MergedConstraint::print(std::ostream& os) const
   {
-    os << "Merged constraint: " << endl ;
+    os << "Merged constraint: " << std::endl ;
     for(constraintlist::const_iterator it = m_list.begin() ;
 	it != m_list.end() ; ++it) {
       os << "          " ;
       (*it)->print(os) ;
     }
   }
-
+  
 }
 

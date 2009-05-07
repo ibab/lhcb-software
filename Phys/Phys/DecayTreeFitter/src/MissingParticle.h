@@ -1,7 +1,7 @@
 #ifndef VTK_MISSINGPARTICLE_HH
 #define VTK_MISSINGPARTICLE_HH
 
-#include "DecayTreeFitter/VtkParticleBase.h"
+#include "ParticleBase.h"
 
 namespace vtxtreefit
 {

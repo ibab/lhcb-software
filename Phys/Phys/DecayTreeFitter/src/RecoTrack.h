@@ -1,8 +1,8 @@
-#ifndef _VTK_RECOTRACK_HH__
-#define _VTK_RECOTRACK_HH__
+#ifndef RECOTRACK_H
+#define RECOTRACK_H
 
 #include "GaudiKernel/Vector3DTypes.h"
-#include "DecayTreeFitter/VtkRecoParticle.h"
+#include "RecoParticle.h"
 
 namespace vtxtreefit
 {

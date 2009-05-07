@@ -3,16 +3,13 @@
 #include <boost/foreach.hpp>
 
 #include "Event/Particle.h"
-#include "DecayTreeFitter/VtkInternalParticle.h"
-#include "DecayTreeFitter/VtkMissingParticle.h"
-#include "DecayTreeFitter/VtkFitParams.h"
-#include "DecayTreeFitter/VtkRecoTrack.h"
-#include "DecayTreeFitter/VtkHelixUtils.h"
+#include "InternalParticle.h"
+#include "MissingParticle.h"
+#include "FitParams.h"
+#include "RecoTrack.h"
+
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
-
-using std::cout;
-using std::endl;
 
 namespace vtxtreefit
 {
@@ -83,7 +80,7 @@ namespace vtxtreefit
       delete *it ;
       m_daughters.erase(it) ;
     } else {
-      cout << "ERROR: cannot remove particle, because not found ..." << endl ;
+      std::cout << "ERROR: cannot remove particle, because not found ..." << std::endl ;
     }
   }
 
@@ -135,9 +132,9 @@ namespace vtxtreefit
     // vertex.
     
     if(vtxverbose>=3)
-      cout << "InternalParticle::initPar: " 
+      std::cout << "InternalParticle::initPar: " 
 	   << particle().particleID().pid() << " " << m_daughters.size() << " "
-	   << hasPosition() << " " << posIndex() << endl ;
+	   << hasPosition() << " " << posIndex() << std::endl ;
     
     ErrCode status ;
     int posindex = posIndex() ;
@@ -240,7 +237,7 @@ namespace vtxtreefit
 	  linetrajectories.reserve(  vtxdaughters.size() ) ;
 	  for(daucontainer::const_iterator it = vtxdaughters.begin() ;
 	      it != vtxdaughters.end() ; ++it) {
-	    //cout << (*it)->particle().pdtEntry()->name() << endl ;
+	    //std::cout << (*it)->particle().pdtEntry()->name() << std::endl ;
 	    int dauposindex = (*it)->posIndex() ;
 	    int daumomindex = (*it)->momIndex() ;
 	    Gaudi::XYZPoint point(fitparams->par()(dauposindex+1),
@@ -290,7 +287,7 @@ namespace vtxtreefit
 		    << "this decay tree. Perhaps you should add a beam constraint. " 
 		    << std::endl ;
 	  //<< particle().constraint(BtaConstraint::Beam)
-	  //   << endl 
+	  //   << std::endl 
 	  //   << treeprinter.print(*bc()) << endmsg ;
 	  status |= ErrCode::badsetup ;
 	}
@@ -306,11 +303,11 @@ namespace vtxtreefit
     initMom(fitparams) ;
     
     if(vtxverbose>=3)
-      cout << "End of initpar: " 
+      std::cout << "End of initpar: " 
 	   << name() << " ("
 	   << fitparams->par()(posindex+1) << ","
 	   << fitparams->par()(posindex+2) << ","
-	   << fitparams->par()(posindex+3) << ")" << endl ;
+	   << fitparams->par()(posindex+3) << ")" << std::endl ;
     
     return status ;
   }

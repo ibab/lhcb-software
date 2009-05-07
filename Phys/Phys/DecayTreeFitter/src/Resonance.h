@@ -1,7 +1,7 @@
 #ifndef __VTK_INTERNALRESONANCE_HH__
 #define __VTK_INTERNALRESONANCE_HH__
 
-#include "DecayTreeFitter/VtkInternalParticle.h"
+#include "InternalParticle.h"
 
 namespace vtxtreefit 
 {
