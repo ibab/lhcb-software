@@ -1,22 +1,19 @@
-! $Id: release.notes,v 1.96 2009-05-06 20:32:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.97 2009-05-07 13:11:45 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! ========================== LoKiPhys v8r4 2009-05-06 =========================
 ! 2009-05-06 - Vanya BELYAEV
-
  - few improvements for new decay finder 
 
 ! 2009-04-30 - Vanya BELYAEV
-
  - new symbol for Jaap Panman:
-
       BPVDVDOCA
 
 ! 2009-04-30 - Vanya BELYAEV
-
  - New symbols for Olivier Leroy
 
       REFIT_ 
@@ -38,15 +35,12 @@
     LTIMEERR 
     BPTLTERR 
 
-
 ! 2009-04-28 - Vanya BELYAEV
 
  - LoKi/Particles26.h: 
-
     bug fix in DOCA::docamax & DOCA::docamaxchi2 
 
 ! 2009-04-24 - Vanya BELYAEV
-
   LoKi/Particles26.h, src/Particles26.cpp
    new files with new symbols (requested by Rob Lambert)
 
@@ -58,9 +52,7 @@
     DOCAMAXCHI2_
     
   LoKi/ParticleCuts.h
-
     remove all *DOCA* duplicates , only *CLAPP* are here from now..
-
 
 ! ========================== LoKiPhys v8r3 2009-03-23 ===================
 ! 2009-03-11 - Vanya BELYAEV
