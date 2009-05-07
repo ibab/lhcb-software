@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r26 2009-05-07 ==========================
 ! 2009-05-01 - Gerhard Raven
  - speed up DeterministicPrescaler
 
