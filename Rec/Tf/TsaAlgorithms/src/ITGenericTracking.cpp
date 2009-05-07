@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.9 2009-02-10 13:53:39 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.10 2009-05-07 07:02:23 lnicolas Exp $
 
 #include <algorithm>
 
@@ -92,6 +92,7 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("confirm2", m_confirm2 = false);
   declareProperty("selectBestY",m_selectBestY = true);
   declareProperty("fracHigh", m_fracHigh = 0.6);
+  declareProperty("assumedMomentum", m_assumedMomentum = 20000.);
 
   setDetType("IT");
   setForcedInit();
@@ -261,7 +262,8 @@ StatusCode ITGenericTracking::execute()
 	  // make a track ! 
           const double zMidT = StateParameters::ZMidT;
           Gaudi::TrackVector stateVec = Gaudi::TrackVector(xLine.value(zMidT), yLine.value(zMidT),
-                                                           xLine.m(), yLine.m(), 1/20000.);
+                                                           xLine.m(), yLine.m(),
+							   1/m_assumedMomentum);
           Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
           LHCb::State aState = LHCb::State(stateVec,stateCov,zMidT,LHCb::State::AtT);
   

@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.10 2009-02-12 17:54:00 cattanem Exp $
+// $Id: ITGenericTracking.h,v 1.11 2009-05-07 07:02:23 lnicolas Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -135,6 +135,8 @@ private:
   double m_minRefX;
   double m_maxRefY;
   double m_fracHigh;
+
+  double m_assumedMomentum;
 
   unsigned int m_minYHits;
   unsigned int m_minXHits;
