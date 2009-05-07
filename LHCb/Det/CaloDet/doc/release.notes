@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.105 2009-05-06 15:59:13 odescham Exp $ 
+! $Id: release.notes,v 1.106 2009-05-07 08:58:36 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v10r2 2009-05-07 ============================
+! 2009-05-05 Olivier Deschamps
+    - DeCalorimeter/CellParam : adapt to change in condDB format/content
+                                ( getQuality() and getCalibration() )
+    - new getter methods corresponding to digitization parameters now in condDB
+
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq by endmsg
-
-! 2009-05-05 Olivier Deschamps
-    - DeCalorimeter/CellParam : adapt to change in condDB format/content ( getQuality() and getCalibration() )
-    - new getter methods corresponding to digitization parameters now in condDB
 
 ! 2009-04-09 Olivier Deschamps
     - fix bug in CellParam (addQualityFlag() method)
