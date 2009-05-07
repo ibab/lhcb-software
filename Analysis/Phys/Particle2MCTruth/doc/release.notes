@@ -5,6 +5,10 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2009-05-07 - Juan PALACIOS
+ - P2MCP/P2MCPBase.h, src/Lib/P2MCPBase.cpp
+  . Add implementation for IParticle2MCAssociator::operator()(const LHCb::Particle*)
+
 ! 2009-04-28 - Juan PALACIOS
  - MCMatchObjP2MCRelator
   . Input relations tables are now a property, "RelTableLocations". The 
