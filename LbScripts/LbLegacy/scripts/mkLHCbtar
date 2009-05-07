@@ -136,20 +136,12 @@ def make_tar(pname, pversion, binary=''):
     compMiscLinuxIa32 = 'i686-slc'
 
     # exclude following files and directories from source tar file
-    exclude_source = ['install.history','core.*', 'html', 'Visual', 'test*',
+    exclude_source = ['install.history','core.*', 'html', 'Visual', '*.pyc', '*.pyo',
                       compLinux+'*',
                       compWIN32+'*',
                       compMac+'*',
                       compMiscLinuxAmd64+'*',
                       compMiscLinuxIa32+'*']
-    # BUT keep 'test*' files and directories in case of Online project
-    if pname == 'Online' or pname == 'Panoptes' :
-        exclude_source = ['install.history','core.*', 'html', 'Visual',
-                          compLinux+'*',
-                          compWIN32+'*',
-                          compMac+'*',
-                          compMiscLinuxAmd64+'*',
-                          compMiscLinuxIa32+'*']
     # exclude following files from binary tar file
     exclude_binary = ['.glimpse_*','core.*', 'html', '*.o', 'lib*.a','*.obj']
 
