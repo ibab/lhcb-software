@@ -4,8 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r11 2009-05-07 ======================
 ! 2009-03-13 - Olivier Callot
- - Modify the VeloRHit and VeloPhiHit constuctors to define the width as
+ - Modify the VeloRHit and VeloPhiHit constructors to define the width as
    sqrt(12) * pitch, not taking into account the cluster size.
 
 !============================ TfKernel v2r10 2009-02-18 ======================
