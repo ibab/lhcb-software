@@ -75,6 +75,8 @@ lhcb_binary = ['slc4_ia32_gcc34_dbg','slc4_ia32_gcc34',
                'slc4_ia32_gcc345_dbg','slc4_ia32_gcc345',
                'slc4_amd64_gcc34_dbg','slc4_amd64_gcc34',
                'slc3_ia32_gcc323_dbg','slc3_ia32_gcc323',
+               'x86_64-slc5-gcc34-opt','x86_64-slc5-gcc34-dbg',
+               'x86_64-slc5-gcc43-opt','x86_64-slc5-gcc43-dbg',
                'win32_vc71_dbg','win32_vc71',
                'osx104_ia32_gcc401_dbg','osx104_ia32_gcc401']
 
