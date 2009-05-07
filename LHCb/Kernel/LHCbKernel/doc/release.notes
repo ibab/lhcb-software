@@ -4,17 +4,18 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-! 2009-03-17 M Needham
- - Add remainder and risetime functions to ISiAmplifierResponse
-
+!===================== LHCbKernel v11r3 2009-05-07 ========================
 ! 2009-04-06 - Olivier Deschamps 
  - CaloCellID.xml : new method : isPin() return true if cellID is a pin ID
+
+! 2009-03-17 M Needham
+ - Add remainder and risetime functions to ISiAmplifierResponse
 
 ! 2009-02-25 - Olivier Deschamps 
  - CaloCellID.xml : make setCalo() method public
                     change fillstream output
- - CaloCellCode.h : new static method : CaloAreaFromNum( calo, num) return the area for a given calo as string 
-
+ - CaloCellCode.h : new static method : CaloAreaFromNum( calo, num) return the
+                                        area for a given calo as string 
 
 !===================== LHCbKernel v11r2 2009-03-09 ========================
 ! 2009-03-05 - Marco Cattaneo
