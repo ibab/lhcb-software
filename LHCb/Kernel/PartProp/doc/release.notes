@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.16 2009-05-07 12:11:28 cattanem Exp $ 
+! $Id: release.notes,v 1.17 2009-05-07 14:45:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-07 - Vanya BELYAEV
+ - Kernel/Symbols.h
+   src/Symbols.cpp
+    new class Decays::Symbols, which contains the information about the 
+    allowed symbols for decay descriptors.
+ - dict/PartProp.xml
+    add dictionry for class Decays::Symbols 
+ - cmt/requirements 
+    version incremen to v1r2 
+  
 
 !======================== PartProp v1r1 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
