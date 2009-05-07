@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.27 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.28 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -592,7 +592,7 @@ class LbLoginScript(Script):
         if ev.has_key("OSTYPE") :
             if ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
                 islinux = True
-        if islinux :
+        if islinux and self.hasCommand("gcc"):
             for l in os.popen("gcc --version") :
                 if l.find("gcc") != -1 :
                     gcclist = l[:-1].split()[2]

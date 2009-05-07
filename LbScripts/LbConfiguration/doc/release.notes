@@ -1,3 +1,8 @@
+2009-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added security around the gcc version
+	detection.
+
 2009-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r3
