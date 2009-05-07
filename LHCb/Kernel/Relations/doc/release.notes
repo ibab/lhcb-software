@@ -1,22 +1,20 @@
-! $Id: release.notes,v 1.63 2009-04-24 15:26:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.64 2009-05-07 12:13:18 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r7 2009-05-07 ============================
 ! 2009-04-24 - Vanya BELYAEV
-
- - introduce the new methods for each relatio objkect:
+ - introduce the new methods for each relation object:
      i_add ( Entry )  - inlined 
        add ( Entry )  - virtual
 
       TABLE::i_add
       TABLE::add 
 
-
  - reimplement i_relate in term of i_add 
-
  - add public type "Entry" fo reach relation object
 
          TABLE::Entry 
@@ -30,7 +28,7 @@
 
 
 ! 2009-04-15 - Marco Cattaneo
- - Fix dependecies or RelationsTest, for make -j
+ - Fix dependecies of RelationsTest, for make -j
 
 ! 2009-04-09 - Vanya BELYAEV 
  - src/Relations.cpp
