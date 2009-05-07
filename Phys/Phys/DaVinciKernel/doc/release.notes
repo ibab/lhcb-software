@@ -1,11 +1,11 @@
-!$Id: release.notes,v 1.298 2009-04-30 13:21:31 ibelyaev Exp $
+!$Id: release.notes,v 1.299 2009-05-07 12:58:50 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r5 2009-05-07 =====================
 ! 2009-04-30 - Vanya BELYAEV
-
  - src/Lib/DVAlgorithm.cpp
    add few mode default nicknames for various tools 
 
