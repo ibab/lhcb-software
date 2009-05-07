@@ -1,6 +1,6 @@
-// $Id: Symbols.cpp,v 1.1 2009-05-07 14:45:51 ibelyaev Exp $
+// $Id: Symbols.cpp,v 1.2 2009-05-07 15:03:30 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,25 +27,9 @@
 // ============================================================================
 /** @file 
  *  Implementation file for functions form the file Kernel/Symbols.h
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
- */
-// ============================================================================
-/*  get a list of particle names, known for Particle Properties Service 
- * 
- *  @code
- *  
- *   Decays::Names names ;
- *   const LHCb::IParticlePropertySvc* svc = ... ;
- *  
- *   StatusCode sc = Decays::particles ( svc  , names ) ;
- *   
- *  @endcode 
  *
- *  @see LHCb::IParticlePropertySvc 
- *  @param svc   (INPUT) pointer to particle property Service 
- *  @param name  (OUTPUT) list of particle names 
- *  @return status code
+ *  Many thanks to Antonio PELLEGRINO for the kind help with regex expressions 
+ *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-05-07
  */
@@ -122,9 +106,9 @@ namespace
  *  - " HasQuark( j )"
  *
  *  Where: 
- *   - <code>i</endcode> is integer positive number, 
- *   - <code>j</endcode> is a digit between 1 and 6, @see LHCb::ParticleID
- *   - <code>quark</endcode> is a quark name: <code>up</endcode>,
+ *   - <code>i</code> is integer positive number, 
+ *   - <code>j</code> is a digit between 1 and 6, @see LHCb::ParticleID
+ *   - <code>quark</code> is a quark name: <code>up</code>,
  *                   <code>down</code>, <code>strange</code>,
  *                   <code>charm</code>, <code>beauty</code>,
  *                   <code>bottom</code>, <code>top</code>

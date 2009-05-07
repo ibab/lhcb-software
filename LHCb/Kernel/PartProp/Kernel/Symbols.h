@@ -1,6 +1,6 @@
-// $Id: Symbols.h,v 1.1 2009-05-07 14:45:51 ibelyaev Exp $
+// $Id: Symbols.h,v 1.2 2009-05-07 15:03:30 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
 #ifndef KERNEL_SYMBOLS_H 
 #define KERNEL_SYMBOLS_H 1
@@ -21,6 +21,7 @@ namespace LHCb { class IParticlePropertySvc ; }
  *  @see LHCb::IParticlePropertySvc
  *  @see LHCb::ParticleProperty
  *  @see LHCb::ParticleID
+ *  Many thanks to Antonio PELLEGRINO for the kind help with regex expressions 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-05-07
  */
@@ -44,6 +45,8 @@ namespace Decays
    *  >>> print s.symbol ( 'Meson ' ) 
    *
    *  @endcode 
+   *
+   *  Many thanks to Antonio PELLEGRINO for the kind help with regex expressions 
    *
    *  @see Decays::iNode 
    *  @see Decays::Nodes 
@@ -118,9 +121,9 @@ namespace Decays
      *  - " HasQuark( j )"
      *
      *  Where: 
-     *   - <code>i</endcode> is integer positive number, 
-     *   - <code>j</endcode> is a digit between 1 and 6, @see LHCb::ParticleID
-     *   - <code>quark</endcode> is a quark name: <code>up</endcode>,
+     *   - <code>i</code> is integer positive number, 
+     *   - <code>j</code> is a digit between 1 and 6, @see LHCb::ParticleID
+     *   - <code>quark</code> is a quark name: <code>up</code>,
      *                   <code>down</code>, <code>strange</code>,
      *                   <code>charm</code>, <code>beauty</code>,
      *                   <code>bottom</code>, <code>top</code>
@@ -157,9 +160,9 @@ namespace Decays
      *  - " HasQuark( j )"
      *
      *  Where: 
-     *   - <code>i</endcode> is integer positive number, 
-     *   - <code>j</endcode> is a digit between 1 and 6, @see LHCb::ParticleID
-     *   - <code>quark</endcode> is a quark name: <code>up</endcode>,
+     *   - <code>i</code> is integer positive number, 
+     *   - <code>j</code> is a digit between 1 and 6, @see LHCb::ParticleID
+     *   - <code>quark</code> is a quark name: <code>up</code>,
      *                   <code>down</code>, <code>strange</code>,
      *                   <code>charm</code>, <code>beauty</code>,
      *                   <code>bottom</code>, <code>top</code>
