@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.15 2009-05-06 15:45:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2009-05-07 12:11:28 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!======================== PartProp v1r1 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
-
  - src/Component/ParticleProperty.cpp
     add few symbols, protected for cc-operations 
  - Kernel/Nodes.h , 
@@ -19,15 +19,14 @@
  - Fix some (but not all...) doxygen warnings
 
 ! 2009-03-09 - Vanya BELYAEV
-
- - add few very simple methods to LHCb::ParticlProperty class
+ - add few very simple methods to LHCb::ParticleProperty class
 
     - selfcc
     - threeCharge 
 
  - src/Component/PartPropAlg.cpp
 
-    -  modifty a little bit the test/demo algorithm LHCb::Example::PartPropAlg
+    -  modity a little bit the test/demo algorithm LHCb::Example::PartPropAlg
 
  - python/PartProp/decorators.py
 
