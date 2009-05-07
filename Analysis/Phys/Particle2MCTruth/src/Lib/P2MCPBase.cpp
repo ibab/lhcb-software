@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.5 2009-04-06 20:18:21 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.6 2009-05-07 10:29:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,15 @@ P2MCPBase::P2MCPBase( const std::string& type,
 //=============================================================================
 const LHCb::MCParticle* 
 P2MCPBase::relatedMCP(const LHCb::Particle* particle) const 
+{
+  const LHCb::MCParticle::Container* mcParticles = i_MCParticles(m_defMCLoc);
+  return (0==mcParticles) ? 0 : i_bestMCP(particle, 
+                                          mcParticles->begin(), 
+                                          mcParticles->end() );
+}
+//=============================================================================
+const LHCb::MCParticle* 
+P2MCPBase::operator()(const LHCb::Particle* particle) const 
 {
   const LHCb::MCParticle::Container* mcParticles = i_MCParticles(m_defMCLoc);
   return (0==mcParticles) ? 0 : i_bestMCP(particle, 

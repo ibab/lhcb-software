@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.5 2009-04-06 20:17:21 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.6 2009-05-07 10:29:31 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -45,6 +45,11 @@ public:
   virtual 
   const LHCb::MCParticle* 
   relatedMCP(const LHCb::Particle* particle) const ;
+
+  virtual 
+  const LHCb::MCParticle* 
+  operator() (const LHCb::Particle* particle) const ;
+
 
   virtual const LHCb::MCParticle*
   relatedMCP(const LHCb::Particle*,
