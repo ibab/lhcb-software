@@ -6,11 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r7 2009-05-07 ==========================
 ! 2009-04-08 - Vanya BELYAEV
-
  - LHCbMath/Digit.h
    fix compilation warning for Win32 platform
-
 
 !========================= LHCbMath v3r6 2009-02-18 ==========================
 ! 2009-02-18 - Marco Cattaneo
