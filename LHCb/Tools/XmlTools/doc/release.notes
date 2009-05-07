@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!======================== XmlTools v6r3 2009-05-07 ===========================
 ! 2009-05-04 - Olivier Callot
  - Single instantiation of MsgStream. Methods a la GaudiAlgorutm to print.
  - Increase preference for Conditions in the cache. This avoids re-parsing the
