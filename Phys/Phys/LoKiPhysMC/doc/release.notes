@@ -1,19 +1,17 @@
-! $Id: release.notes,v 1.56 2009-03-12 12:54:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.57 2009-05-07 13:13:02 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v8r2 2009-05-07 ========================
 ! 2009-03-12 - Vanya BELYAEV
-
  - src/MCMatchObj.cpp
-
    fix to speed-up drastically the Monte Carlo Truth Matching 
    (thank to Jibo HE for inspiring "bug"-example) 
 
  - cmt/requirements 
-   
    version increment to v8r2 
 
 !========================== LoKiPhysMC v8r1 2009-01-12 ========================
