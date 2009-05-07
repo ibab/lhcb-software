@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.11 2009-03-31 16:47:13 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.12 2009-05-07 10:26:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,13 @@ Particle2MCAssociatorBase::Particle2MCAssociatorBase( const std::string& type,
 //=============================================================================
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle) const
+{
+  return i_bestMCPWithCheck(i_relatedMCPs(particle,
+                                        m_defMCLoc) );
+}
+//=============================================================================
+const LHCb::MCParticle*
+Particle2MCAssociatorBase::operator()(const LHCb::Particle* particle) const
 {
   return i_bestMCPWithCheck(i_relatedMCPs(particle,
                                         m_defMCLoc) );

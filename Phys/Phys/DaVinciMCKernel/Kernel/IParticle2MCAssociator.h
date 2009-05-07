@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.9 2009-03-31 15:11:30 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.10 2009-05-07 10:26:05 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -50,6 +50,21 @@ public:
    **/
   virtual const LHCb::MCParticle* 
   relatedMCP(const LHCb::Particle*) const = 0;
+
+
+  /**
+   * Calculate and return the LHCb::MCParticle associated to an
+   * LHCb::Particle. The associated LHCb::Particle is selected from a
+   * container of LHCb::MCParticles from a TES location.
+   * @param particle LHCb::Particle* to be associated
+   * @return const LHCb::MCParticle* to associated LHCb::MCParticle
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date   2009-05-07
+   *
+   **/
+  virtual const LHCb::MCParticle* 
+  operator() (const LHCb::Particle*) const = 0;
 
   /**
    * Calculate and return the LHCb::MCParticle associated to an
