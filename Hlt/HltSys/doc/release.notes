@@ -5,8 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v6r1>2009-05-06 HltSys v6r1</A></H1><PRE>
- -
+</PRE><H1><A NAME=v6r1>2009-05-07 HltSys v6r1</A></H1><PRE>
+ - Improved Hlt2: more shared particles, updated topological trigger, inclusive phi, inclusive muon.
+ - Various speedups in Hlt1
 
 </PRE><H1><A NAME=v6r0>2009-04-08 HltSys v6r0</A></H1><PRE>
  - Hlt2 selections rewritten to use Hlt2 lines (Vava & Gerhard)
