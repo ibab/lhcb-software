@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.61 2009-05-05 11:49:24 mtobin Exp $
+! $Id: release.notes,v 1.62 2009-05-07 13:22:21 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r13 2009-05-07 ===========================
 ! 2009-05-05 Mark Tobin 
   Added method to STCommonBase class to return SourceID to TELL1 defined in 
   STBoardMapping.h
