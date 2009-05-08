@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-05-05 15:27:17 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-05-08 14:19:50 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -70,7 +70,7 @@ class RichPIDQCConf(LHCbConfigurableUser):
         # Andrew's Lambda -> Proton Pion selection
         if "LambdaPrPi" in calibs :
             self.setOtherProps(LambdaToProtonPionConf(),["MCChecks","MakeNTuple"])
-            LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( scalibSeq, "RichLambdaToPrPiSeq"))
+            LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiSeq"))
 
         # Andrew's Kshort -> Pion Pion selection
         if "KshortPiPi" in calibs :
