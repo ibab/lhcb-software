@@ -2,6 +2,7 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r7 2009-05-08 =========================
 ! 2009-03-23 M Needham
  - Simplify calculation of the max in SiZuriFunction  
 
