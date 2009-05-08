@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh -f
 set narg = $#argv
 set nar = 1
 set version = ""
@@ -6,7 +6,7 @@ set list_arg = ""
 set dirac_dev = ""
 
 #if ($narg != 0) then
-while ($nar <= $narg) 
+while ($nar <= $narg)
   if ( "$argv[${nar}]" == "-d" ) then
      @ nar = ${nar} + 1
      set version = $argv[${nar}]
