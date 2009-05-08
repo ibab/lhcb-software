@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.19 2009-04-30 09:07:39 asatta Exp $
+! $Id: release.notes,v 1.20 2009-05-08 14:37:55 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+!=================== MuonTrackAlign v1r7p2 2009-05-08 ================
 ! 2009-04-30 - Alessia Satta
  - Remove unused IMuonPosTool.h
 
