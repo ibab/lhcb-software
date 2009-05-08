@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.7 2009-05-03 19:22:53 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.8 2009-05-08 19:17:04 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,7 +37,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         seq = self.getProp("Sequencer")
    
         ## J/psi -> mu mu
-        JPsiMuMuName                        = "JPsiMuMu"
+        JPsiMuMuName                        = "RichJPsiMuMu"
         JPsiMuMu                            = CombineParticles(JPsiMuMuName)
         JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu- "
         JPsiMuMu.addTool( PhysDesktop )

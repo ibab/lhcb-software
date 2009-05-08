@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.4 2009-05-03 14:49:32 jonrob Exp $
+!$Id: release.notes,v 1.5 2009-05-08 19:15:33 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/DstCalibSel
 ! Responsible : Andrew Powell
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
+
+! 2009-05-08 - C. Jones
+ - Add Rich to algorithm names
 
 ! 2009-05-03 - C Jones
  - Downgrade info() messages to debug()

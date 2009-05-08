@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.3 2009-05-03 18:24:09 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2009-05-08 19:15:33 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -24,7 +24,7 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         }
 
     ## Selection name
-    def selName(self) : return "DstarToD0Pi"
+    def selName(self) : return "RichDstarToD0Pi"
     
     ## Configure the selection
     def __apply_configuration__(self) :

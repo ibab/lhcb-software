@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.6 2009-05-03 18:23:56 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.7 2009-05-08 19:17:04 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -36,7 +36,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         if seq == None : raise RuntimeError("ERROR : Sequence not set")
           
         ## phi -> K+ K-
-        Phi2KKName = "Phi2KK"
+        Phi2KKName = "RichPhi2KK"
         Phi2KK = CombineParticles(Phi2KKName)
         Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
         Phi2KK.addTool( PhysDesktop )
@@ -47,7 +47,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
                                 "K-"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)"}
         
         ## Bs -> J/psi phi
-        Ds2piPhiName = "Ds2PiPhi"
+        Ds2piPhiName = "RichDs2PiPhi"
         Ds2piPhi = CombineParticles(Ds2piPhiName)
         Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
         Ds2piPhi.addTool( PhysDesktop )
