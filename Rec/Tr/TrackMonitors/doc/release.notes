@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-05-06 Wouter Hulsbergen
- - Add more histos and fixed histogram labels in OTTrackMonitor
+ - Added more histos and fixed histogram labels in OTTrackMonitor
+ - Added columns for hit patterns in TrackMonitorNT
 
 ! 2009-03-30 M Needham
  - Add residuals per layer histos to ITTrackMonitor 
