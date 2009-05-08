@@ -33,18 +33,22 @@ DDDB.DefaultTAG     = "head-20090112";
 LHCBCOND.DefaultTAG = "head-20090112";
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+MessageSvc.setWarning += {"RelationalDatabase" };
+//## TODO: adapt from
+//### @OnlineEnv.MooreVersion: Moore_v6r2
 HltConfigSvc.prefetchDir =  "MOORE_v6r2";
 HltConfigSvc.initialTCK =   "0x80410000" ;
 HltConfigSvc.checkOdin = false;
 ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
-ApplicationMgr.HistogramPersistency = "NONE";
+//ApplicationMgr.HistogramPersistency = "ROOT";
+//HistogramPersistencySvc.OutputFile = "";
+ApplicationMgr.HistogramPersistency  = "NONE";
 /////////////////////////////////////
 
 ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MessageSvc.LoggerOnly                = true;
-ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 
