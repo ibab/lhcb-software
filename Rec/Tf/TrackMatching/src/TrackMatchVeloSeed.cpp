@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.10 2009-04-29 20:57:18 smenzeme Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.11 2009-05-08 12:15:14 smenzeme Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -91,7 +91,7 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty("nUseT", m_nUseT = 0u);
   declareProperty("nUseVelo", m_nUseVelo = 0u);
   
-  declareProperty("OmitSeedFitOutliers", m_omitSeedFitOutliers = true) ;
+  declareProperty("OmitSeedFitOutliers", m_omitSeedFitOutliers = false) ;
   /*switch on or off NN var. writing*/
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }

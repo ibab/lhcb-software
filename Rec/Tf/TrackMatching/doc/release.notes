@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2009-05-08 - Stephanie Hansmann-Menzemer
+
+ - change default for OmitSeedFitOutliers switch to false
+
  - Check for at least 2 x and 2 stereo hits in diff. planes NOT removed
    by the fit for all seed tracks entering the matching
 
