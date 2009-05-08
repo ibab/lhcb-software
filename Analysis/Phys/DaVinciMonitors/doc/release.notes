@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-08
+ - Prepend "Muon" to Muon detector monitoring algorithms, to help distinguish
+   from similar Rich monitors.
+
 ! 2009-04-16 - Patrick Koppenburg
  - options/DVMonitorDst.py : split functiunality out, to make the 
    copy of it in AppConfig smaller.

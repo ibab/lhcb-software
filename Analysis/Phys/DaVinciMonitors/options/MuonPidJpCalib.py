@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: MuonPidJpCalib.py,v 1.1 2009-02-26 17:11:09 pkoppenb Exp $
+# $Id: MuonPidJpCalib.py,v 1.2 2009-05-08 19:04:35 jonrob Exp $
 #
 # Author Alessio Sarti <Alessio.Sarti@lnf.infn.it>
 #
@@ -8,7 +8,8 @@ from Gaudi.Configuration import *
 from Configurables import CombineParticles, PhysDesktop, ParticleMonitor, DaVinci
 muonPIDJpSeq = GaudiSequencer("MuonPIDJpsiSequence")
 
-JpsiCalib = CombineParticles("JpsiCalib")
+JpsiCalibName = "MuonJpsiCalib"
+JpsiCalib = CombineParticles(JpsiCalibName)
 JpsiCalib.addTool(PhysDesktop())
 JpsiCalib.PhysDesktop.InputLocations  = [ "StdNoPIDsMuons" ]
 JpsiCalib.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
@@ -25,9 +26,9 @@ JpsiCalib.MotherCut = "(VFASPF(VCHI2/VDOF)<3) & " + childcuts
 
 muonPIDJpSeq.Members += [ JpsiCalib ]
 
-plotJPsiPr = ParticleMonitor("JpsiPromptMoni")
+plotJPsiPr = ParticleMonitor("MuonJpsiPromptMoni")
 plotJPsiPr.addTool(PhysDesktop())
-plotJPsiPr.PhysDesktop.InputLocations = [ "JpsiCalib" ]
+plotJPsiPr.PhysDesktop.InputLocations = [ JpsiCalibName ]
 plotJPsiPr.PeakCut = "(ADMASS('J/psi(1S)')<50*MeV)"
 plotJPsiPr.SideBandCut = "(ADMASS('J/psi(1S)')>100*MeV)"
 plotJPsiPr.PlotTools = [ "MassPlotTool"]
