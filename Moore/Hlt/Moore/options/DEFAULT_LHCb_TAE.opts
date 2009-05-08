@@ -1,4 +1,6 @@
 #include "$MOOREOPTS/DEFAULT_TAE.opts"
+//## TODO: adapt from
+// ### @OnlineEnv.MooreVersion: Moore_v6r2
 
 HltConfigSvc.prefetchDir = "MOORE_v6r2";
 HltConfigSvc.initialTCK  = @OnlineEnv.InitialTCK;
