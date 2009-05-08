@@ -324,16 +324,15 @@ namespace vtxtreefit
 	double px = m_fitparams->par()(momindex+row+1) ;
 	energy2 += px*px ;
       }
-      double energy = sqrt(energy2) ;
+      double energy = std::sqrt(energy2) ;
       
       ROOT::Math::SMatrix<double,7,6> jacobian ;
       for(int col=0; col<6; ++col)
 	jacobian(col,col) = 1;
       for(int col=3; col<6; ++col)
-	jacobian(7,col) = m_fitparams->par()(momindex+col+1)/energy ;
-      
+	jacobian(6,col) = m_fitparams->par()(parmap[col]+1)/energy ;
+
       p.SetE(energy) ;
-      //cov7 = ROOT::Math::Similarity(cov6,jacobian) ;
       cov7 = ROOT::Math::Similarity(jacobian,cov6) ;
     }
     VtxFitParams vtxfitparams(pb.charge(),pos,p,cov7) ;
@@ -352,6 +351,13 @@ namespace vtxtreefit
       return VtxFitParams() ;
     }
     return fitParams(*pb) ;
+  }
+
+  std::string
+  Fitter::name(const LHCb::Particle& cand) const 
+  {
+    const ParticleBase* pb = m_decaychain->locate(cand) ;
+    return pb ? pb->name() : "Not found" ;
   }
 
   LHCb::Particle
