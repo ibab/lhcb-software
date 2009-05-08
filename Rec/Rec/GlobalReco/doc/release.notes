@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r21 2009-05-08 ======================
 ! 2009-04-23 - Chris Jones
  - Improve how uninitialised sequences are check for during Configuration
 
