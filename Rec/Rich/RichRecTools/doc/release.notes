@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r8 2009-05-08 ===========================
 ! 2009-05-04 - Chris Jones
  - Small improvements to the PID plots.
 
