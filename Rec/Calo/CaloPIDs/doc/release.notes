@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.66 2009-04-16 14:25:36 odescham Exp $ 
+! $Id: release.notes,v 1.67 2009-05-08 14:25:26 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
-! 2009-06-16 - Olivier Deschamps
+!========================== CaloPIDs v4r16 2009-05-08 =========================
+! 2009-04-16 - Olivier Deschamps
  - fix unchecked StatusCode
 
-
-!========================== CaloPIDs v4r15 2009-03-11 =======================
+!========================== CaloPIDs v4r15 2009-03-11 =========================
 ! 2009-03-11 - Victor Egorychev
  - AddNeigbours in EcalEnergyForTrack and HcalEnrgyForTrack changed to FALSE
 
