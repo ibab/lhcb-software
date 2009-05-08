@@ -403,7 +403,7 @@ namespace vtxtreefit
 	  double px = fitparams.par()(daumomindex+jmom) ;
 	  p.H(4,daumomindex+jmom) = -px/energy ;
 	}
-      } else if(dautauindex>=0 && (*it)->charge()!=0) {
+      } else if(false && dautauindex>=0 && (*it)->charge()!=0) {
 
 	double tau =  fitparams.par()(dautauindex+1) ;
 	double lambda = bFieldOverC() * (*it)->charge() ; 
@@ -487,6 +487,11 @@ namespace vtxtreefit
     switch(type) {
     case Constraint::mass:
     case Constraint::massEnergy:
+      //       if( m_daughters.size()==2 && 
+      // 	  !m_daughters.front()->hasEnergy() && 
+      // 	  !m_daughters.back()->hasEnergy() )
+      // 	status |= projectMassConstraintTwoBody(fitparams,p) ;
+      ///      else
       status |= projectMassConstraint(fitparams,p) ;
       //chisq = filterMassConstraintOnDaughters(fitpar) ;
       break ;
@@ -507,6 +512,55 @@ namespace vtxtreefit
     }
     return status ;
   } 
+
+  ErrCode InternalParticle::projectMassConstraintTwoBody(const FitParams& fitparams,
+							 Projection& p) const
+  {
+    // we can also apply the constraint to the daughters. that may
+    // work better if the opening angle is small.
+
+    // m^2 = ma^1 + mb^2 + 2 * (Ea*Eb - pxa*pxb - pya*pyb - pza*pzb )
+
+    ParticleBase* d1 = daughters()[0] ;
+    ParticleBase* d2 = daughters()[1] ;
+    
+    assert(d1->hasEnergy()==false && d2->hasEnergy()==false ) ;
+
+    double mass = pdtMass() ;
+    double m1   = d1->pdtMass() ;
+    double m2   = d2->pdtMass() ;
+    
+    int momindex1 = d1->momIndex() ;
+    int momindex2 = d2->momIndex() ;
+
+    // initialize the value
+    double px1 = fitparams.par()(momindex1+1) ;
+    double py1 = fitparams.par()(momindex1+2) ;
+    double pz1 = fitparams.par()(momindex1+3) ;
+
+    double px2 = fitparams.par()(momindex2+1) ;
+    double py2 = fitparams.par()(momindex2+2) ;
+    double pz2 = fitparams.par()(momindex2+3) ;
+
+    double E1  = std::sqrt( m1*m1 + px1*px1 + py1*py1 + pz1*pz1 ) ;
+    double E2  = std::sqrt( m2*m2 + px2*px2 + py2*py2 + pz2*pz2 ) ;
+
+    p.r(1) = m1*m1 + m2*m2 + 2 * (E1*E2 - px1*px2 - py1*py2 - pz1*pz2 ) - mass* mass ;
+      
+    // calculate the projection matrix
+    p.H(1,momindex1+1) = 2 * (E2 * px1/E1 - px2 ) ;
+    p.H(1,momindex1+2) = 2 * (E2 * py1/E1 - py2 ) ;
+    p.H(1,momindex1+3) = 2 * (E2 * pz1/E1 - pz2 ) ;
+    p.H(1,momindex2+1) = 2 * (E1 * px2/E2 - px1 ) ;
+    p.H(1,momindex2+2) = 2 * (E1 * py2/E2 - py1 ) ;
+    p.H(1,momindex2+3) = 2 * (E1 * pz2/E2 - pz1 ) ;
+
+    // set the variance in the residual
+    double width = pdtWidth() ;
+    p.Vfast(1,1) = 4*mass*mass*width*width ;
+
+    return ErrCode::success ;
+  }
 
   void InternalParticle::addToConstraintList(constraintlist& alist, 
 					     int depth) const

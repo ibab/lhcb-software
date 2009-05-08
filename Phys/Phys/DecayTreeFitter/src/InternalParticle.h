@@ -40,6 +40,7 @@ namespace vtxtreefit
     ErrCode projectKineConstraint(const FitParams&, Projection&) const ;
     ErrCode projectLifeTimeConstraint(const FitParams&, Projection&) const ;
     ErrCode projectConversionConstraint(const FitParams&,Projection& p) const ;
+    ErrCode projectMassConstraintTwoBody(const FitParams& fitparams,Projection& p) const ;
     virtual ErrCode projectConstraint(const Constraint::Type type,
 				      const FitParams& fitparams,Projection& p) const ;
     virtual void forceP4Sum(FitParams&) const ; 
