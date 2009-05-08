@@ -4,10 +4,14 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r23 2009-05-08 =======================
 ! 2009-04-01 - Olivier Callot
  - New tool PatDebugTracktool to return the MC keys associated to a track.
- - New algorithm DebugTrackingLosses to display missed track with some information
-   on the MC particle.
+ - New algorithm DebugTrackingLosses to display missed track with some
+   information on the MC particle.
+
+! 2009-03-23 - M Needham
+ - Add warning in case linker is not found in CleanPatTrackSelector
 
 !======================= TrackMCTools v2r22 2009-03-10 =======================
 ! 2009-02-20 M Needham
