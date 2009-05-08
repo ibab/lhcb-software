@@ -3,7 +3,28 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v8r2>2009-04-08 Phys v8r3 </A></H1><PRE>
+</PRE><H1><A NAME=v8r3>2009-05-08 Phys v8r3 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r3                                  #
+###############################################################################
+
+ - Based on LHCb v27r0 and Gaudi v21r0
+
+  Highlights:
+  * Particle making re-written: 
+    . ParticleMakers re-written as algorithms with base classes for common functionality
+    . Unified configuration for all ParticleMaker types:
+          Maker.Input = "protos location" ;
+          Maker.Particle = "pi+"
+    . Extra config for charged particle makers:
+          Maker.addTool(TrackSelector)
+          Maker.TrackSelector.TrackTypes = [ "Long" ]
+  * DVAlgorithm now takes InputLocations directly. Not necessary to set this property through the PhysDesktop.
+  * Fix to CombineParticles Particle->best PV bug.
+  * Change online Particle->PV relator logic to use IP instead of IP chi2.
+
+</PRE><H1><A NAME=v8r2>2009-04-08 Phys v8r2 </A></H1><PRE>
 
 ###############################################################################
 #                                  PHYS v8r2                                  #
