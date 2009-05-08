@@ -77,6 +77,7 @@ namespace vtxtreefit
     LHCb::Particle* fittedCand(const LHCb::Particle& cand, LHCb::Particle* headoftree) const ;
 
     VtxFitParams fitParams(const LHCb::Particle& cand) const ;
+    std::string name(const LHCb::Particle& cand) const ;
 
     void updateCand(LHCb::Particle& cand) const ;
     void updateTree(LHCb::Particle& cand) const ;
