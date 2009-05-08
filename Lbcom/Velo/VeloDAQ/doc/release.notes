@@ -2,7 +2,9 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
-! 2009-01-19 - Tomasz Szumlak
+
+!=========================  VeloDAQ v4r6 2009-05-08 =======================
+! 2009-03-12 - Tomasz Szumlak
  - Change the default values for SectorCorrection and CableOrder variables
    no need to put additional lines into options file
  - Add flexibility to the SmartDecoder algorithm it no longer assumes
