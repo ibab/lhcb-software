@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.158 2009-05-05 07:56:30 odescham Exp $
+! $Id: release.notes,v 1.159 2009-05-08 06:56:51 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r16 2009-05-08 =========================
 ! 2009-05-05 - Olivier Deschamps 
  - L0Conf : change default TCK for re-simulating L0 bank for DC06 data (0xFFFF -> 0xFFF8)
 
