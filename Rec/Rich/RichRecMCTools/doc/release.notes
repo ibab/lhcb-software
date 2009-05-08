@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r21 2009-05-08 =======================
 ! 2009-03-30 - Chris Jones
  - Update RichPixelCreatorFromRichDigitsWithBg to check the status of both the 
    HPD and pixel smart IDs.
