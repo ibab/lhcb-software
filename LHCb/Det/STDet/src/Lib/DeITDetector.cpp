@@ -42,7 +42,7 @@ StatusCode DeITDetector::initialize() {
   StatusCode sc = DeSTDetector::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     flatten();

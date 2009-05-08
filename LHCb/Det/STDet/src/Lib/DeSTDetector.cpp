@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.18 2009-02-02 15:36:48 mneedham Exp $
+// $Id: DeSTDetector.cpp,v 1.19 2009-05-08 16:57:06 jvantilb Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -47,7 +47,7 @@ StatusCode DeSTDetector::initialize() {
 
   StatusCode sc = DetectorElement::initialize();
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     // get the children
@@ -64,7 +64,7 @@ StatusCode DeSTDetector::initialize() {
     }
     else {
       // no stations - this is an error
-      msg <<   MSG::ERROR << "No child elements !" << endreq;
+      msg <<   MSG::ERROR << "No child elements !" << endmsg;
       sc = StatusCode::FAILURE; 
     } // empty
   }

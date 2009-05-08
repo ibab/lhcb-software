@@ -34,7 +34,7 @@ StatusCode DeITSensor::initialize() {
   StatusCode sc = DeSTSensor::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
   }
   else {
     // get the parent
@@ -45,7 +45,7 @@ StatusCode DeITSensor::initialize() {
     sc = initGeometryInfo();  
     if (sc.isFailure()){
       MsgStream msg(msgSvc(), name() );
-      msg<< MSG::ERROR << "failed to cache geometry" << endreq;
+      msg<< MSG::ERROR << "failed to cache geometry" << endmsg;
       return sc;
     }
   }

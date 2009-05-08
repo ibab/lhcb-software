@@ -32,7 +32,7 @@ StatusCode DeSTLayer::initialize() {
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
 
@@ -45,7 +45,7 @@ StatusCode DeSTLayer::initialize() {
     sc = registerCondition(this,this->geometry(),&DeSTLayer::cachePlane);
     if (sc.isFailure() ){
       MsgStream msg(msgSvc(), name() );
-      msg << MSG::ERROR << "Failed to register conditions" << endreq;
+      msg << MSG::ERROR << "Failed to register conditions" << endmsg;
       return StatusCode::FAILURE; 
     }
   }
@@ -67,10 +67,10 @@ std::ostream& DeSTLayer::printOut( std::ostream& os ) const{
 MsgStream& DeSTLayer::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Station : "  << m_id << endreq;
+  os << " Station : "  << m_id << endmsg;
   os << "stereo angle " << m_angle
      << " Nickname: " << m_nickname 
-     << endreq;
+     << endmsg;
 
   return os;
 }

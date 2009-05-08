@@ -46,7 +46,7 @@ StatusCode DeITLayer::initialize() {
   MsgStream msg(msgSvc(), name() );
   StatusCode sc = DeSTLayer::initialize();
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     m_parent = getParent<DeITLayer>();

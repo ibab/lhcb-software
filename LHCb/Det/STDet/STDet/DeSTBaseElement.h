@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.16 2009-03-14 09:18:07 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.17 2009-05-08 16:57:02 jvantilb Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -173,7 +173,7 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
       else {
         MsgStream msg(msgSvc(), name() );
         msg << MSG::WARNING 
-            << "tried to make duplicate detector element !" << aChild->name()  << endreq;
+            << "tried to make duplicate detector element !" << aChild->name()  << endmsg;
       } // if
     } // if 
   } // iStation

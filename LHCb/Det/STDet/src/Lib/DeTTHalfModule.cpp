@@ -53,7 +53,7 @@ StatusCode DeTTHalfModule::initialize() {
   
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     m_detRegion = param<int>("detRegion");
@@ -81,7 +81,7 @@ StatusCode DeTTHalfModule::initialize() {
     if (sc.isFailure() )
     {
       MsgStream msg(msgSvc(), name() );
-      msg << MSG::ERROR << "Failed to register prodID conditions" << endreq;
+      msg << MSG::ERROR << "Failed to register prodID conditions" << endmsg;
       return StatusCode::FAILURE; 
     }
   }

@@ -1,7 +1,12 @@
-!$Id: release.notes,v 1.168 2009-05-06 15:22:53 cattanem Exp $
+!$Id: release.notes,v 1.169 2009-05-08 16:57:06 jvantilb Exp $
 !Package         : STDet
 !Package manager : M. Needham
 i!-------------------------------------------------------------------------
+
+! 2009-05-08 - Jeroen van Tilburg
+ - DeSTSector: Status conditions are now updated using the setXxxStatus methods.
+ - StatusMap: removed set-protection for Open, Short and Pinhole channels.
+ - Replaced all endreq with endmsg.
 
 !======================== STDet v4r9 2009-05-06 ===========================
 ! 2009-04-03 J Luisier

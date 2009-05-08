@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.55 2009-04-06 07:39:08 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.56 2009-05-08 16:57:06 jvantilb Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -93,7 +93,7 @@ StatusCode DeSTSector::initialize() {
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
     return sc;
   }
   else {
@@ -119,7 +119,7 @@ StatusCode DeSTSector::initialize() {
                                         &DeSTSector::updateStatusCondition,true);
       if (sc.isFailure() ){
         MsgStream msg(msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register status conditions" << endreq;
+        msg << MSG::ERROR << "Failed to register status conditions" << endmsg;
         return StatusCode::FAILURE;
       }
 
@@ -134,7 +134,7 @@ StatusCode DeSTSector::initialize() {
         if (sc.isFailure())
         {
           MsgStream msg(msgSvc(), name() );
-          msg << MSG::ERROR << "Failed to register noise conditions" << endreq;
+          msg << MSG::ERROR << "Failed to register noise conditions" << endmsg;
           return StatusCode::FAILURE;
         }
       }
@@ -467,19 +467,19 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
   MsgStream msg(msgSvc(), name() );
 
   if (sensors().empty()){
-    msg << MSG::ERROR << "Sterile detector element ! No conditions registered" << endreq;
+    msg << MSG::ERROR << "Sterile detector element ! No conditions registered" << endmsg;
     return StatusCode::FAILURE;
   }
 
   StatusCode sc = registerCondition(this,sensors().front(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
+    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endmsg;
     return StatusCode::FAILURE; 
   }
 
   sc = registerCondition(this,sensors().back(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endreq;
+    msg << MSG::ERROR << "Failed to register geometry condition for first child" << endmsg;
     return StatusCode::FAILURE; 
   }
 
@@ -586,6 +586,20 @@ double DeSTSector::fractionActive() const {
   return nActive/double(nStrip());
 }
 
+void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus)
+{
+  m_status = newStatus;
+  
+  // Set the condition
+  Condition* aCon = condition(m_statusString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  } else {
+    aCon->param<int>("SectorStatus") = int(newStatus);
+  }
+}
+
 void DeSTSector::setBeetleStatus(const unsigned int beetle, 
                                  const DeSTSector::Status& newStatus){
 
@@ -600,12 +614,15 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
     if (newStatus == DeSTSector::OK){
       // Lazarus walks...if we have an entry in the map delete it
       m_beetleStatus.erase(beetle);
+      setStatusCondition("BeetleStatus", beetle, newStatus);
     }  
     else {
       // death comes to this beetle, update the map
-		if (std::find(::Status::validBeetleStates().begin(),
-			::Status::validBeetleStates().end(), newStatus) != ::Status::validBeetleStates().end() ){
+      if (std::find(::Status::validBeetleStates().begin(),
+                    ::Status::validBeetleStates().end(), 
+                    newStatus) != ::Status::validBeetleStates().end() ){
         m_beetleStatus[beetle] = newStatus;
+        setStatusCondition("BeetleStatus", beetle, newStatus);
       } // check is valid state
       else {
         msg << "Not a valid Beetle state: set request ignored " << endmsg;
@@ -614,27 +631,31 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
   }
 }
 
-void DeSTSector::setStripStatus(const unsigned int strip, 
-                                const DeSTSector::Status& newStatus){
-
+void DeSTSector::setStripStatus( const unsigned int strip, 
+                                 const DeSTSector::Status& newStatus ) 
+{
   // update the strip status properly...
   MsgStream msg(msgSvc(), name());
 
-  if (sectorStatus() != DeSTSector::OK || beetleStatus(strip) != DeSTSector::OK){
+  if(sectorStatus() != DeSTSector::OK || beetleStatus(strip) != DeSTSector::OK){
     // if the sector is not ok nothing to be done
-    msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " << endmsg;
+    msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " 
+        << endmsg;
   }
   else {
     if (newStatus == DeSTSector::OK){
       // Lazarus walks...if we have an entry in the map delete it
       m_stripStatus.erase(strip);
+      setStatusCondition("StripStatus", strip, newStatus);
     }  
     else {
-      // death comes to this beetle, update the map
+      // death comes to this strip, update the map
       Status oldStatus = m_stripStatus.find(strip)->second;
-	  if (std::find(::Status::protectedStates().begin(),
-		  ::Status::protectedStates().end(), oldStatus) != ::Status::protectedStates().end() ){
+      if (std::find(::Status::protectedStates().begin(),
+                    ::Status::protectedStates().end(), 
+                    oldStatus) == ::Status::protectedStates().end() ){
         m_stripStatus[strip] = newStatus;
+        setStatusCondition("StripStatus", strip, newStatus);
       } 
       else {
         msg << "Strip in protected state: set request ignored " << endmsg;
@@ -643,4 +664,18 @@ void DeSTSector::setStripStatus(const unsigned int strip,
   }
 }
 
-
+void DeSTSector::setStatusCondition( const std::string& type, 
+                                     const unsigned int entry, 
+                                     const DeSTSector::Status& newStatus )
+{
+  // Set the condition
+  Condition* aCon = condition(m_statusString);
+  if (aCon == 0){
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  } else {
+    std::map<int,int>& condMap = 
+      aCon->param<std::map<int,int> >(type);
+    condMap[entry] = int(newStatus);
+  }
+}

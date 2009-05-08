@@ -42,7 +42,7 @@ StatusCode DeITSector::initialize() {
 
   StatusCode sc = DeSTSector::initialize();
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
     return sc;
   }
   else {
@@ -69,7 +69,7 @@ StatusCode DeITSector::initialize() {
       sc = registerCondition(this, m_prodIDString,
                              &DeITSector::updateProdIDCondition, true);
       if (sc.isFailure() ){
-        msg << MSG::ERROR << "Failed to register prodID conditions" << endreq;
+        msg << MSG::ERROR << "Failed to register prodID conditions" << endmsg;
         return StatusCode::FAILURE; 
       }
     }

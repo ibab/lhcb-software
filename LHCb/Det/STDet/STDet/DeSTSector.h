@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.39 2009-04-03 06:33:00 jluisier Exp $
+// $Id: DeSTSector.h,v 1.40 2009-05-08 16:57:05 jvantilb Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -373,7 +373,8 @@ private:
   StatusCode updateNoiseCondition();
   void toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output);
   std::auto_ptr<LHCb::Trajectory> createTraj(const unsigned int strip, const double offset ) const; 
-
+  void setStatusCondition( const std::string& type, const unsigned int entry, 
+                           const DeSTSector::Status& newStatus );
 
   unsigned int m_firstStrip;
   unsigned int m_firstBeetle;
@@ -500,10 +501,6 @@ inline unsigned int DeSTSector::nBeetle() const{
 
 inline DeSTSector::Status DeSTSector::sectorStatus() const{
   return m_status;
-}
-
-inline void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus) {
-  m_status = newStatus;
 }
 
 inline DeSTSector::Status DeSTSector::beetleStatus(const LHCb::STChannelID& chan) const{

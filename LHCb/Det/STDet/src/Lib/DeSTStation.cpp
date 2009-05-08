@@ -29,7 +29,7 @@ StatusCode DeSTStation::initialize() {
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     m_id = (unsigned int)param<int>("stationID");
@@ -51,8 +51,8 @@ std::ostream& DeSTStation::printOut( std::ostream& os ) const{
 MsgStream& DeSTStation::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Station : "  << m_id << endreq;
-  os   << " Nickname: " << m_nickname << endreq;
+  os << " Station : "  << m_id << endmsg;
+  os   << " Nickname: " << m_nickname << endmsg;
 
   return os;
 }

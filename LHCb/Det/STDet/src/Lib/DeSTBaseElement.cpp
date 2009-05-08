@@ -31,7 +31,7 @@ StatusCode DeSTBaseElement::initialize() {
   StatusCode sc = DetectorElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
     return StatusCode::FAILURE; 
   }
  
@@ -39,7 +39,7 @@ StatusCode DeSTBaseElement::initialize() {
   sc = registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint,true);
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to register conditions" << endreq;
+    msg << MSG::ERROR << "Failed to register conditions" << endmsg;
     return StatusCode::FAILURE; 
   }
 

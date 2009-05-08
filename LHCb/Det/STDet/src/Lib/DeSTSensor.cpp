@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.5 2009-03-14 09:18:07 mneedham Exp $
+// $Id: DeSTSensor.cpp,v 1.6 2009-05-08 16:57:06 jvantilb Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -91,7 +91,7 @@ StatusCode DeSTSensor::initialize() {
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
   }
   else {
     // nothing
@@ -243,7 +243,7 @@ StatusCode DeSTSensor::registerConditionsCallbacks(){
   StatusCode sc = registerCondition(this,this->geometry(),&DeSTSensor::cacheInfo, true);
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to register geometry conditions" << endreq;
+    msg << MSG::ERROR << "Failed to register geometry conditions" << endmsg;
     return StatusCode::FAILURE; 
   }
 

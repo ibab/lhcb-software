@@ -43,7 +43,7 @@ StatusCode DeTTSector::initialize() {
 
   StatusCode sc = DeSTSector::initialize();
   if (sc.isFailure() ){
-    msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
     return sc;
   }
   else {

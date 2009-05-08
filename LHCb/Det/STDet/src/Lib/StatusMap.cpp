@@ -29,8 +29,7 @@ const Status::StatusVector& Status::validBeetleStates() {
 
 const Status::StatusVector& Status::protectedStates() {
   static StatusVector s_vec;
-  s_vec = boost::assign::list_of(DeSTSector::Open)(DeSTSector::Short)
-                                (DeSTSector::Pinhole)(DeSTSector::NotBonded);
+  s_vec = boost::assign::list_of(DeSTSector::NotBonded);
   return s_vec;
 }
 
