@@ -3,12 +3,13 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
-! 2009-04-07 - Georg Krocker
+
+!========================== TrackUtils v1r26 2009-05-08 ======================
+! 2009-05-08 - Georg Krocker
 - added possibility to just set the flag LHCb::Track::Clone for found 
   clonetracks and not copy the tracks to an output container in 
   TrackEventCloneKiller
 
-!========================== TrackUtils v1r26 2009-05-08 ======================
 ! 2009-04-07 - Manuel Tobias Schiller
  - added possibility to deep-copy tracks into keyed containers in
    CreateFastTrackCollection to make the migration easier - users can select
