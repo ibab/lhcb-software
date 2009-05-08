@@ -4,9 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r28 2009-05-08 ==========================
 ! 2009-05-03 - Ulrich Kerzel
-- correct typo in in Configurable: IFB monitoring was running if AlignmentMonitoring
-  was set to true
+- correct typo in in Configurable: IFB monitoring was running if 
+  AlignmentMonitoring was set to true
 
 ! 2009-04-23 - Chris Jones
  - Add new IFB monitoring (imported from Panoptes)
