@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.44 2009-04-29 14:15:55 asatta Exp $
+! $Id: release.notes,v 1.45 2009-05-08 14:31:52 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+!======================== MuonTools v5r0 2009-05-08 ========================
 ! 2009-04-29 - A. Satta
  -resume the package to contain the MuonFastPosTool which was contentained in 
   Hlt/HltMuon package. 
