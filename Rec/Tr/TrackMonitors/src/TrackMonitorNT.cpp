@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.4 2009-02-17 09:59:10 pkoppenb Exp $
+// $Id: TrackMonitorNT.cpp,v 1.5 2009-05-08 15:20:39 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Event/FitNode.h"
+#include "Kernel/HitPattern.h"
 
 // Det
 //#include "OTDet/DeOTDetector.h"
@@ -144,7 +145,7 @@ StatusCode TrackMonitorNT::execute()
   LHCb::Tracks::const_iterator iterT = tracks->begin();
   
   for (; iterT != tracks->end(); ++iterT){
-    if (selector((*iterT)->type())->accept(**iterT) == true){
+    if ( /*selector((*iterT)->type())->accept(**iterT) ==*/ true){
 
       m_splitByAlgorithm == true ? 
         type = Gaudi::Utils::toString((*iterT)->history()) : type= m_allString ; 
@@ -293,8 +294,31 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
   theTuple->farray( "IT_sector"    , IT_sector    , "nIT"   , maxIT );
   
   theTuple->column("p"           , aTrack->p()/Gaudi::Units::GeV );
-  theTuple->column("chi2PerDoF"  , aTrack->chi2PerDoF()          );
-  theTuple->column("probChi2"    , aTrack->probChi2()            );
+  theTuple->column("probChi2"    , aTrack->probChi2() );
+  theTuple->column("chi2",aTrack->chi2() );
+  theTuple->column("ndof",aTrack->nDoF() );
+  theTuple->column("type",aTrack->type() ) ;
+  theTuple->column("z", aTrack->firstState().z() ) ;
+  theTuple->column("x", aTrack->firstState().x() ) ;
+  theTuple->column("y", aTrack->firstState().y() ) ;
+  theTuple->column("tx", aTrack->firstState().tx() ) ;
+  theTuple->column("ty", aTrack->firstState().ty() ) ;
+  theTuple->column("qop", aTrack->firstState().qOverP() ) ;
+  theTuple->column("veloChi2", aTrack->info(LHCb::Track::FitVeloChi2,0)) ;
+  theTuple->column("veloNdof", aTrack->info(LHCb::Track::FitVeloNDoF,0)) ;
+  theTuple->column("TChi2", aTrack->info(LHCb::Track::FitTChi2,0)) ;
+  theTuple->column("TNdof", aTrack->info(LHCb::Track::FitTNDoF,0)) ;
+  
+  LHCb::HitPattern hitpattern(aTrack->lhcbIDs()) ;
+  theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
+  theTuple->column("numVeloStationsOverlap",hitpattern.numVeloStationsOverlap()) ;
+  theTuple->column("numITStationsOverlap",hitpattern.numITStationsOverlap()) ;
+  theTuple->column("numITOTStationsOverlap",hitpattern.numITOTStationsOverlap()) ;
+  theTuple->column("numVeloHoles",hitpattern.numVeloHoles()) ;
+  theTuple->column("numTHoles",hitpattern.numTHoles()) ;
+  theTuple->column("numTLayers",hitpattern.numTLayers()) ;
+  theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
+  theTuple->column("numVeloClusters",hitpattern.numVeloClusters()) ;
   
   theTuple->write();
 }

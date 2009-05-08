@@ -4,8 +4,8 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2009-04-24 Wouter Hulsbergen
- - Fixed histogram label in OTTrackMonitor
+! 2009-05-06 Wouter Hulsbergen
+ - Add more histos and fixed histogram labels in OTTrackMonitor
 
 ! 2009-03-30 M Needham
  - Add residuals per layer histos to ITTrackMonitor 
