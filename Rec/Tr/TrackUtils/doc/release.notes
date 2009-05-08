@@ -4,6 +4,7 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r26 2009-05-08 ======================
 ! 2009-04-07 - Manuel Tobias Schiller
  - added possibility to deep-copy tracks into keyed containers in
    CreateFastTrackCollection to make the migration easier - users can select
