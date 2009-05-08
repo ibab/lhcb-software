@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-05-08 - Silvia Miglioranzi
+ - New QMTest (gauss-gen-MC09.qmt) was added to the suite of Gauss tests; it is
+   running in generator stand-alone mode over 1K of "11144103" events. A set of
+   .ref files for this test were added.   
+
 ! 2009-04-16 - Silvia Miglioranzi
  - One QMTest was renamed (from gauss-MC09.qmt to gauss-mc09.qmt). 
 
