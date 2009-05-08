@@ -4,6 +4,7 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+!=================== Rich/RichMarkovRingFinder v2r6 2009-05-08 ===============
 ! 2009-04-23 - Chris Jones
  - Improve how uninitialised sequences are checked for in the python 
    configuration.
