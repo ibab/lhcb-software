@@ -9,7 +9,7 @@
 #============================================================================
 
 package STMonitors
-version v1r0
+version v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -27,8 +27,8 @@ use RecEvent      v*  Event
 use GaudiAlg      v* 
 use AIDA          v*  LCG_Interfaces -no_auto_imports
 
-use GaudiConf         *      -no_auto_imports
-use DDDB              * Det  -no_auto_imports
+use GaudiConf     v*       -no_auto_imports
+use DDDB          v*  Det  -no_auto_imports
 
 #-----------------------------------------------------------------
 # library building rule

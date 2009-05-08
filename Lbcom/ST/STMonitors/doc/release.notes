@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v1r1 2009-05-08 ==========================
 ! 2009-05-05 - Mark Tobin
  - Modified STErrorMonitor and STNZSMonitor classes to get TELL1 number from
  source ID using the method in the base class.
