@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackMatching
-version           v2r21p1
+version           v2r22
 
 #============================================================================
 # Structure, i.e. directories to process. 
