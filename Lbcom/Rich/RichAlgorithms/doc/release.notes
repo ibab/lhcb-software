@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= RichAlgorithms v1r1 2009-05-08 ====================
 ! 2009-03-28 - Chris Jones
  - Add new algorithm which artifically varies the gas and temperature
    Conditions, to allow simulation of real data variations in MC data.
