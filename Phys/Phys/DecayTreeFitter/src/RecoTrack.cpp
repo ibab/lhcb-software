@@ -16,6 +16,10 @@ namespace vtxtreefit
       m_flt(0)
   {
     m_state = m_track->firstState() ;
+    if( m_state.location() != LHCb::State::ClosestToBeam ) {
+      std::cout << "DecayTreeFitter/RecoTrack: weird state: "
+		<< name() << " " << m_state << std::endl ;
+    }
   }
   
   RecoTrack::~RecoTrack() {}
@@ -37,8 +41,8 @@ namespace vtxtreefit
     // we only need a rough estimate of the covariance 
     Gaudi::SymMatrix3x3 covP = m_state.errMomentum() ;
     int momindex = momIndex() ;
-    for(int row=1; row<=3; ++row)
-      fitparams->cov()(momindex+row,momindex+row) = 100000*covP(row-1,row-1) ;
+    for(int row=1; row<=3; ++row) 
+      fitparams->cov()(momindex+row,momindex+row) = 1000*covP(row-1,row-1) ;
     return ErrCode() ;
   }
   
