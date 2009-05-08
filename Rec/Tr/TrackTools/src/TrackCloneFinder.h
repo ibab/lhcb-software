@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.8 2008-05-22 09:55:17 cattanem Exp $
+// $Id: TrackCloneFinder.h,v 1.9 2009-05-08 15:43:18 gkrocker Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -88,6 +88,10 @@ private:
 		      const LHCb::Track& track2,
 		      unsigned int& nCommonHits) const;
 
+  bool areTracksClose(const LHCb::Track& track1,
+                                   const LHCb::Track& track2) const;
+ 
+
   bool areSettingsConsistent( const LHCb::Track& track1,
                               const LHCb::Track& track2 ) const;
 
@@ -106,6 +110,11 @@ private:
    * (the difference comes from the possible outliers removed by
    * the track fit!) */
   bool m_compareAtLHCbIDsLevel;
+  bool m_restrictedSearch;
+  double m_xseparationV;
+  double m_yseparationV;
+  double m_txseparationV;
+  double m_tyseparationV;
 
 };
 #endif // TRACKCLONEFINDER_H
