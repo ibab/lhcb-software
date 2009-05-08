@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.95 2009-04-23 10:39:31 pkoppenb Exp $ 
+! $Id: release.notes,v 1.96 2009-05-08 07:49:44 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+!======================== ParticleMaker v5r0 2009-05-08 ===================
 
 ! 2009-04-23 - Patrick Koppenburg
  - Remove ParticleMakerSeq. Use GaudiSequencer instead.
