@@ -1,5 +1,5 @@
-#ifndef _VTK_PROJECTION_HH_
-#define _VTK_PROJECTION_HH_
+#ifndef PROJECTION_H
+#define PROJECTION_H
 
 #include <CLHEP/Matrix/Vector.h>
 #include <CLHEP/Matrix/SymMatrix.h>
@@ -12,64 +12,64 @@ namespace vtxtreefit
   {
   public:
     // constructor 
-    Projection(int dimP, int dimC) : _matrixH(dimC,dimP,0),_r(dimC,0),_matrixV(dimC,0),_offset(0) {}
+    Projection(int dimP, int dimC) : m_matrixH(dimC,dimP,0),m_r(dimC,0),m_matrixV(dimC,0),m_offset(0) {}
     
     // accessors to the projection matrix
-    const HepMatrix& H() const { return _matrixH ; } 
-    //HepMatrix& H() { return _matrixH ; } 
+    const HepMatrix& H() const { return m_matrixH ; } 
+    //HepMatrix& H() { return m_matrixH ; } 
     double& H(int row, int col) {
 #ifdef VTK_BOUNDSCHECKING
-      assert( _offset+row >0 && col>0 && _offset+row <= _matrixH.num_row() && col <= _matrixH.num_col() ) ;
+      assert( m_offset+row >0 && col>0 && m_offset+row <= m_matrixH.num_row() && col <= m_matrixH.num_col() ) ;
 #endif
-      return _matrixH(_offset+row,col) ; }
+      return m_matrixH(m_offset+row,col) ; }
 
     // accessors to the residual (or the 'value' of the constraint)
-    const HepVector& r() const { return _r ; }
-    HepVector& r() { return _r ; }
-    //HepVector& r() { return _r ; }
+    const HepVector& r() const { return m_r ; }
+    HepVector& r() { return m_r ; }
+    //HepVector& r() { return m_r ; }
     double& r(int row) { 
 #ifdef VTK_BOUNDSCHECKING
-      assert( _offset+row >0  && _offset+row <= _r.num_row() ) ;
+      assert( m_offset+row >0  && m_offset+row <= m_r.num_row() ) ;
 #endif
-      return _r(_offset+row) ; }
+      return m_r(m_offset+row) ; }
     
     // accessors to the covariance matrix
-    const HepSymMatrix& V() const { return _matrixV ; } 
-    //HepSymMatrix& V() { return _matrixV ; } 
-    double& V(int row, int col) { return _matrixV(_offset+row,_offset+col) ; }
+    const HepSymMatrix& V() const { return m_matrixV ; } 
+    //HepSymMatrix& V() { return m_matrixV ; } 
+    double& V(int row, int col) { return m_matrixV(m_offset+row,m_offset+col) ; }
     double& Vfast(int row, int col) { 
 #ifdef VTK_BOUNDSCHECKING
-      assert( _offset+row >0 && _offset+col>0 && _offset+row <= _matrixV.num_row() && _offset+col <= _matrixV.num_col() && row>=col ) ;
+      assert( m_offset+row >0 && m_offset+col>0 && m_offset+row <= m_matrixV.num_row() && m_offset+col <= m_matrixV.num_col() && row>=col ) ;
 #endif
-      return _matrixV.fast(_offset+row,_offset+col) ; }
+      return m_matrixV.fast(m_offset+row,m_offset+col) ; }
     
     // reset
     void reset() {
       // fill everything with '0'.  this implementation is kind of
       // tricky, but it is fast.
-      int dimC = _matrixH.num_row() ;
-      int dimP = _matrixH.num_col() ;
-      memset(&(_matrixH(1,1)),0,dimP*dimC*sizeof(double));
-      memset(&(_r(1))  ,0,dimC*sizeof(double));
-      memset(&(_matrixV(1,1)),0,dimC*(dimC+1)/2*sizeof(double));
-      _offset = 0 ;
+      int dimC = m_matrixH.num_row() ;
+      int dimP = m_matrixH.num_col() ;
+      memset(&(m_matrixH(1,1)),0,dimP*dimC*sizeof(double));
+      memset(&(m_r(1))  ,0,dimC*sizeof(double));
+      memset(&(m_matrixV(1,1)),0,dimC*(dimC+1)/2*sizeof(double));
+      m_offset = 0 ;
     }
 
     // globalChisq
     double chiSquare() const {
-      HepSymMatrix W=_matrixV ;
+      HepSymMatrix W=m_matrixV ;
       int ierr;  W.inverse(ierr) ;
-      return W.similarity(_r) ;
+      return W.similarity(m_r) ;
     }
     
-    void incrementOffset(unsigned int i) { _offset+=i ; }
-    unsigned int offset() const { return _offset ; }
+    void incrementOffset(unsigned int i) { m_offset+=i ; }
+    unsigned int offset() const { return m_offset ; }
     
   private:
-    HepMatrix _matrixH ;    // projection matrix
-    HepVector _r ;    // constraint residual 
-    HepSymMatrix _matrixV ; // constraint variance (zero for lagrange constraints)
-    unsigned int _offset ; // offset for constraint index. only non-zero for merged constraints.
+    HepMatrix m_matrixH ;    // projection matrix
+    HepVector m_r ;    // constraint residual 
+    HepSymMatrix m_matrixV ; // constraint variance (zero for lagrange constraints)
+    unsigned int m_offset ; // offset for constraint index. only non-zero for merged constraints.
   } ;
 }
 #endif
