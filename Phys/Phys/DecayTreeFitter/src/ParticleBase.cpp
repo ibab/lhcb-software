@@ -28,11 +28,12 @@ namespace vtxtreefit
   ParticleBase::ParticleBase(const LHCb::Particle& particle, const ParticleBase* mother)
     : m_particle(&particle),m_mother(mother),
       m_prop(LoKi::Particles::ppFromPID(particle.particleID())),
-      m_index(0),m_pdtMass(0),m_pdtCLifeTime(0),m_charge(0),
+      m_index(0),m_pdtMass(0),m_pdtWidth(0),m_pdtCLifeTime(0),m_charge(0),
       m_name("Unknown")
   {
     if( m_prop ) {
-      m_pdtMass     = m_prop->mass() ;
+      m_pdtMass      = m_prop->mass() ;
+      m_pdtWidth     = m_prop->width() ;
       m_pdtCLifeTime = m_prop->ctau() ;
       double fltcharge = m_prop->charge() ;
       m_charge = fltcharge < 0 ? int(fltcharge-0.5) : int(fltcharge+0.5) ;
@@ -319,7 +320,7 @@ namespace vtxtreefit
   ErrCode ParticleBase::projectMassConstraint(const FitParams& fitparams,
 					      Projection& p) const
   {
-    double mass = pdtMass() ;
+    double mass  = pdtMass() ;
     double mass2 = mass*mass ;
     int momindex = momIndex() ;
 
@@ -329,13 +330,17 @@ namespace vtxtreefit
     double pz = fitparams.par()(momindex+3) ;
     double E  = fitparams.par()(momindex+4) ;
     p.r(1) = E*E-px*px-py*py-pz*pz-mass2 ;
-      
+    
     // calculate the projection matrix
     p.H(1,momindex+1) = -2.0*px ;
     p.H(1,momindex+2) = -2.0*py ;
     p.H(1,momindex+3) = -2.0*pz ;
     p.H(1,momindex+4) =  2.0*E ;
     
+    // set the variance in the residual
+    double width = pdtWidth() ;
+    p.Vfast(1,1) = 4*mass*mass*width*width ;
+
     return ErrCode::success ;
   }
 

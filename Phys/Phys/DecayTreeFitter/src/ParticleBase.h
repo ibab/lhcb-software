@@ -81,6 +81,7 @@ namespace vtxtreefit
     
     // access to particle PDT parameters
     double pdtMass() const { return m_pdtMass ; }
+    double pdtWidth() const { return m_pdtWidth ; }
     double pdtCLifeTime() const { return m_pdtCLifeTime ; }
     double pdtTau() const { return m_pdtMass >0 ? m_pdtCLifeTime/m_pdtMass : 0 ; } 
     int charge() const { return m_charge ; }
@@ -123,7 +124,8 @@ namespace vtxtreefit
     const ParticleBase* m_mother ;
     const LHCb::ParticleProperty* m_prop ;
     int m_index ;
-    double m_pdtMass ;     // cached mass
+    double m_pdtMass ;      // cached mass
+    double m_pdtWidth ;     // particle width (for mass constraints)
     double m_pdtCLifeTime ; // cached lifetime
     int m_charge ;      // charge
     std::string m_name ;
