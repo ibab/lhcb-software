@@ -1,4 +1,4 @@
-// $Id: WriteSTStatusConditions.h,v 1.1 2009-04-06 07:50:48 mneedham Exp $
+// $Id: WriteSTStatusConditions.h,v 1.2 2009-05-08 17:04:24 jvantilb Exp $
 #ifndef WriteSTStatusConditions_H
 #define WriteSTStatusConditions_H 1
 
@@ -13,7 +13,6 @@
  */
 
 #include <fstream>
-#include <iomanip>
 
 class WriteSTStatusConditions : public ST::AlgBase {
 
@@ -21,9 +20,6 @@ public:
  
   /// constructer
   WriteSTStatusConditions(const std::string& name, ISvcLocator *svcloc );
-
-  /// destructer
-  virtual ~WriteSTStatusConditions();
 
   /// initialize
   virtual StatusCode initialize();
@@ -42,7 +38,6 @@ private:
   std::string footer() const;
   std::string header(const std::string& conString) const;
   std::string strip(const std::string& conString) const;
-  void replaceChars(std::string& conString) const;
   void replace(std::string& conString,std::string in, std::string out ) const;
 
   std::string m_outputFileName;

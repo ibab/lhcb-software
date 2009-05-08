@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-05-08 - Jeroen Van Tilburg
+ - WriteSTStatusConditions: removed obsolete replaceChars function, added
+   catalog tag to header and footer, fixed little bug in DTD tag.
+
 !======================= STAlgorithms v3r6 2009-05-08 ========================
 ! 2009-04-06 M Needham
  - Add WriteSTStatusConditions algorithm
