@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           VeloRecMonitors
-version           mjohn_20090414
+version           v1r6
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -11,10 +11,8 @@ version           mjohn_20090414
 branches          cmt doc src
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
-# use   Package      v1r*    Hat
 use  AIDA         v*   LCG_Interfaces 
 
 use  GaudiAlg     v*
