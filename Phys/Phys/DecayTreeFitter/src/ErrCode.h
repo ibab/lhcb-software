@@ -1,5 +1,5 @@
-#ifndef __VTK_ERRORCODE_HH__
-#define __VTK_ERRORCODE_HH__
+#ifndef DECAYTREEFITTER_ERRORCODE_H
+#define DECAYTREEFITTER_ERRORCODE_H
 
 #include <iostream>
 
