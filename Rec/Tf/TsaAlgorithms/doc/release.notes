@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r10 2009-05-08 =====================
 ! 2009-05-07 - Louis Nicolas
  - Add "assumedMomentum" property to ITGenericTracking
 
