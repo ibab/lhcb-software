@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r13 2009-05-08 =========================
 ! 2009-04-24 - David Hutchcroft
  - Added an option to PatVeloTrackTool to not correct for box offsets to allow
    PR in a closing detector more simply. Default is to old behaviour. 
