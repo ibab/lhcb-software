@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r17 2009-05-08 ======================
 ! 2009-03-17 - Jeroen Van Tilburg
  - STFullDecoding: Add TELL1 ID to error messages + remove hard-coded hex
    numbers.
