@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-// 	$Id: VtxFitParams.h,v 1.2 2009-05-07 14:14:55 wouter Exp $
+// 	$Id: VtxFitParams.h,v 1.3 2009-05-08 15:08:12 wouter Exp $
 //
 // Description:
 //	Class VtxFitParams
@@ -28,6 +28,8 @@
 #include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "DecayTreeFitter/VtxDoubleErr.h"
+#include "DecayTreeFitter/LorentzVectorErr.h"
+
 
 namespace LHCb
 {
@@ -45,11 +47,24 @@ namespace LHCb
       : m_q(charge),m_pos(pos),m_p4(p4),m_cov7(cov7) {}
     
     double mass() const { return m_p4.M() ; }
+    double mom() const { return m_p4.P() ; }
+    double massErr() const { return p4Err().MErr() ; }
+    double momErr() const { return p4Err().PErr() ; }
+    
+    LorentzVectorErr p4Err() const { return LorentzVectorErr(m_p4,momCovMatrix()) ; }
     
     const Gaudi::LorentzVector& p4() const { return m_p4 ; }
     VtxDoubleErr decayLength() const { return m_decayLength ; }
     void setDecayLength(const VtxDoubleErr& len) { m_decayLength = len ; }
 
+    Gaudi::SymMatrix4x4 momCovMatrix() const { 
+      Gaudi::SymMatrix4x4 rc ;
+      for(size_t row=0; row<4; ++row)
+	for(size_t col=0; col<=row; ++col)
+	  rc(row,col) = m_cov7(row+3,col+3) ;
+      return rc ;
+    }
+    
   private:    
     double m_q;
     Gaudi::XYZPoint      m_pos;
@@ -63,7 +78,7 @@ namespace LHCb
     
     // the 7X7 covariance
     Gaudi::SymMatrix7x7 m_cov7 ;
-  };
+  };  
 } ;
 #endif
 
