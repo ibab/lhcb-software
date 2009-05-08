@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.12 2008-10-23 14:40:19 janos Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.13 2009-05-08 15:48:40 gkrocker Exp $
 // Include files 
 // -------------
 // from STD
@@ -57,6 +57,13 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                    m_compareInSameContainerForwardUpstream = false);
   declareProperty( "CloneFinderTool",
                    m_cloneFinderName = "TrackCloneFinder" );
+// In some cases we just want to flag the tracks but not copy them to an output 
+// container. The following algorithms can supress clones by checking 
+// LHCb::Track::Clone
+// default is old setting
+  declareProperty( "CopyTracks",
+	    	   m_copyTracks = true );
+  
 }
 
 //=============================================================================
@@ -97,6 +104,10 @@ StatusCode TrackEventCloneKiller::initialize()
   
 
   return StatusCode::SUCCESS;
+
+  // Reserve memory for track vector
+  // -------------------------------
+  allTracks.reserve(200);
 };
 
 //=============================================================================
@@ -108,7 +119,7 @@ StatusCode TrackEventCloneKiller::execute() {
 
   // Put all the input tracks into a temporary vector of pointers
   // ------------------------------------------------------------
-  std::vector<LHCb::Track*> allTracks;
+  allTracks.clear(); //clear tracks from last event
   getInputTracks( allTracks);
   
   // Find the clones and flag them
@@ -143,48 +154,51 @@ StatusCode TrackEventCloneKiller::execute() {
     } // loop i2 over tracks
   } // loop i1 over tracks
 
-  // Make the output container
-  // -------------------------
-  LHCb::Tracks* tracksOutCont = new LHCb::Tracks();
-  tracksOutCont->reserve( allTracks.size());
+  // copy non clone tracks to an output container, if wished
+  if(m_copyTracks){ 
+	  // Make the output container
+	  // -------------------------
+	  LHCb::Tracks* tracksOutCont = new LHCb::Tracks();
+	  tracksOutCont->reserve( allTracks.size());
 
-  // Fill the output container
-  // -------------------------
-  for( unsigned int i = 0; i < allTracks.size(); ++i){
-    bool toStore = true;
-    for( unsigned int k = 0 ; k < m_ignoredTrackTypes.size(); ++k){
-      if( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
-    }
-    if( toStore &&
-	( m_storeCloneTracks ||
-	  !allTracks[i]->checkFlag( LHCb::Track::Clone))){
-      tracksOutCont->add( allTracks[i]->clone());
-    }
-  }
-  // Store the tracks in the TES
-  // ---------------------------
-  put( tracksOutCont, m_tracksOutContainer);
+	  // Fill the output container
+	  // -------------------------
+	  for( unsigned int i = 0; i < allTracks.size(); ++i){
+		  bool toStore = true;
+		  for( unsigned int k = 0 ; k < m_ignoredTrackTypes.size(); ++k){
+			  if( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
+		  }
+		  if( toStore &&
+				  ( m_storeCloneTracks ||
+				    !allTracks[i]->checkFlag( LHCb::Track::Clone))){
+			  tracksOutCont->add( allTracks[i]->clone());
+		  }
+	  }
+	  // Store the tracks in the TES
+	  // ---------------------------
+	  put( tracksOutCont, m_tracksOutContainer);
 
-  if( m_debugLevel){
-    unsigned int nUnique   = 0;
-    unsigned int nFiltered = 0;
-    for( unsigned int i = 0; i < allTracks.size(); ++i){
-      if( !allTracks[i]->checkFlag( LHCb::Track::Clone)) ++nUnique;
-      bool toStore = true;
-      for ( unsigned int k = 0 ; m_ignoredTrackTypes.size() > k ; ++k ) {
-	if ( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
-      }
-      if(!( toStore &&
-	    ( m_storeCloneTracks ||
-	      !allTracks[i] -> checkFlag( LHCb::Track::Clone)))){
-	++nFiltered;
-      }
-    }
-    debug() << "Stored " << tracksOutCont -> size() 
-            << " tracks, identified "
-            << ( allTracks.size()  - nUnique ) << " clones of which " 
-            << nFiltered << " were not stored."
-            << endreq;
+	  if( m_debugLevel){
+		  unsigned int nUnique   = 0;
+		  unsigned int nFiltered = 0;
+		  for( unsigned int i = 0; i < allTracks.size(); ++i){
+			  if( !allTracks[i]->checkFlag( LHCb::Track::Clone)) ++nUnique;
+			  bool toStore = true;
+			  for ( unsigned int k = 0 ; m_ignoredTrackTypes.size() > k ; ++k ) {
+				  if ( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
+			  }
+			  if(!( toStore &&
+						  ( m_storeCloneTracks ||
+						    !allTracks[i] -> checkFlag( LHCb::Track::Clone)))){
+				  ++nFiltered;
+			  }
+		  }
+		  debug() << "Stored " << tracksOutCont -> size() 
+			  << " tracks, identified "
+			  << ( allTracks.size()  - nUnique ) << " clones of which " 
+			  << nFiltered << " were not stored."
+			  << endreq;
+	  }
   }
 
   return StatusCode::SUCCESS;

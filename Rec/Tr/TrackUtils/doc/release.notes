@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2009-04-07 - Georg Krocker
+- added possibility to just set the flag LHCb::Track::Clone for found 
+  clonetracks and not copy the tracks to an output container in 
+  TrackEventCloneKiller
 
 !========================== TrackUtils v1r26 2009-05-08 ======================
 ! 2009-04-07 - Manuel Tobias Schiller
