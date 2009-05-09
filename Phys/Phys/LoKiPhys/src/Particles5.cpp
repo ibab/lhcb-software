@@ -1,4 +1,4 @@
-// $Id: Particles5.cpp,v 1.8 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: Particles5.cpp,v 1.9 2009-05-09 19:24:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -336,14 +336,14 @@ LoKi::Particles::InGeneration::operator()
   {
     const SmartRefVector<LHCb::Particle>& daugs = p->daughters() ;
     return daugs.end() != LoKi::Algs::find_if  
-      ( daugs.begin() , daugs.end() , m_cut.fun() ) ;           // RETURN 
+      ( daugs.begin() , daugs.end() , m_cut.func() ) ;           // RETURN 
   }
   // get all daughters at the given level:
   LHCb::Particle::ConstVector daughters ;
   if ( 0 == LoKi::Child::children ( p , m_level , daughters ) ) { return false ; }
   //
   return daughters.end() != LoKi::Algs::find_if  
-    ( daughters.begin() , daughters.end() , m_cut.fun() ) ;
+    ( daughters.begin() , daughters.end() , m_cut.func() ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout 
@@ -392,14 +392,14 @@ LoKi::Particles::NinGeneration::operator()
   {
     const SmartRefVector<LHCb::Particle>& daugs = p->daughters() ;
     return LoKi::Algs::count_if  
-      ( daugs.begin() , daugs.end() , m_cut.fun() ) ;                // RETURN 
+      ( daugs.begin() , daugs.end() , m_cut.func() ) ;                // RETURN 
   }
   // get all daughters at the given level:
   LHCb::Particle::ConstVector daughters ;
   if ( 0 == LoKi::Child::children ( p , m_level , daughters ) ) { return 0 ; }
   //
   return LoKi::Algs::count_if  
-    ( daughters.begin() , daughters.end() , m_cut.fun() ) ;          // RETURN 
+    ( daughters.begin() , daughters.end() , m_cut.func() ) ;          // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the specific printout 

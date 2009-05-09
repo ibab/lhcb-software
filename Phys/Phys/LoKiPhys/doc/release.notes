@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.97 2009-05-07 13:11:45 cattanem Exp $ 
+! $Id: release.notes,v 1.98 2009-05-09 19:24:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+
+! 2009-05-09 - Vanya BELYAEV
+
+ - remove unnesessary std::unary/binary_function bases 
+
+ - cmt/requirements
+
+   version increment to v8r5
+
+
 
 ! ========================== LoKiPhys v8r4 2009-05-06 =========================
 ! 2009-05-06 - Vanya BELYAEV

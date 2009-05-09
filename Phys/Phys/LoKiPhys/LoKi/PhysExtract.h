@@ -1,4 +1,4 @@
-// $Id: PhysExtract.h,v 1.7 2008-10-29 13:55:58 ibelyaev Exp $
+// $Id: PhysExtract.h,v 1.8 2009-05-09 19:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSEXTRACT_H 
 #define LOKI_PHYSEXTRACT_H 1
@@ -665,7 +665,6 @@ namespace LoKi
      *  @date 2006-02-10
      */
     struct Particle2ProtoParticle
-      : public std::unary_function<const LHCb::Particle*,LHCb::ProtoParticle*>
     {
       inline LHCb::ProtoParticle* operator() 
         ( const LHCb::Particle* p ) const 
@@ -680,7 +679,6 @@ namespace LoKi
      *  @date 2006-02-10
      */
     struct Particle2Track
-      : public std::unary_function<const LHCb::Particle*,LHCb::Track*>
     {
       inline LHCb::Track* operator() ( const LHCb::Particle* p ) const 
       {

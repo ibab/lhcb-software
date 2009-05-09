@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.4 2008-10-28 10:46:46 jpalac Exp $
+// $Id: PhysSources.cpp,v 1.5 2009-05-09 19:24:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -189,7 +189,7 @@ std::size_t LoKi::Particles::SourceTES::get
   LoKi::select 
     ( particles -> begin () , 
       particles -> end   () , 
-      std::back_inserter ( output ) , m_cut.fun() ) ;
+      std::back_inserter ( output ) , m_cut.func() ) ;
   //
   return output.size() - n ;
 }
@@ -297,7 +297,7 @@ LoKi::Particles::SourceDesktop::operator() () const
     ( input.begin () , 
       input.end   () , 
       std::back_inserter ( output ) , 
-      m_cut.fun() ) ;
+      m_cut.func  () ) ;
   //
   return output ;
 }
@@ -472,7 +472,7 @@ std::size_t LoKi::Vertices::SourceTES::get
       LoKi::select 
         ( v -> begin () , 
           v -> end   () , 
-          std::back_inserter ( output ) , m_cut.fun() ) ;
+          std::back_inserter ( output ) , m_cut.func () ) ;
       //
       return output.size() - n ;                                     // RETURN 
       //    
@@ -489,7 +489,7 @@ std::size_t LoKi::Vertices::SourceTES::get
       LoKi::select 
         ( v -> begin () , 
           v -> end   () , 
-          std::back_inserter ( output ) , m_cut.fun() ) ;
+          std::back_inserter ( output ) , m_cut.func () ) ;
       //
       return output.size() - n ;                                     // RETURN
       //    
@@ -506,7 +506,7 @@ std::size_t LoKi::Vertices::SourceTES::get
       LoKi::select 
         ( v -> begin () , 
           v -> end   () , 
-          std::back_inserter ( output ) , m_cut.fun() ) ;
+          std::back_inserter ( output ) , m_cut.func () ) ;
       //
       return output.size() - n ;                                    // RETURN 
       //    
@@ -630,11 +630,11 @@ LoKi::Vertices::SourceDesktop::operator() () const
   LoKi::select ( input1.begin () , 
                  input1.end   () , 
                  std::back_inserter ( output ) , 
-                 m_cut.fun() ) ;
+                 m_cut.func () ) ;
   LoKi::select ( input2->begin () , 
                  input2->end   () , 
                  std::back_inserter ( output ) , 
-                 m_cut.fun() ) ;
+                 m_cut.func () ) ;
   //
   if ( output.empty() ) 
   { Warning ("No vertices are selected by '" + m_cut.printOut() + "'" ) ; }

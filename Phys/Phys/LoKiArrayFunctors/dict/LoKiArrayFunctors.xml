@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.12 2009-05-04 17:35:51 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.13 2009-05-09 19:29:41 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -19,9 +19,6 @@
 
 <lcgdict>
   
-  <class pattern   = "std::unary_function<*Range_*LHCb::Particle*>"          />
-  <class pattern   = "std::binary_function<*Range_*LHCb::Particle*>"          />
- 
   <class pattern   = "std::vector<*Range_*LHCb::Particle*>"             />
  
   <class pattern   = "LoKi::Functor<*Range_*LHCb::Particle*>"           />
@@ -56,8 +53,13 @@
   <class pattern   = "LoKi::Hybrid::*"   />
 
 
+  <!--
+  
+  <class pattern   = "std::unary_function<*Range_*LHCb::Particle*>"          />
+  <class pattern   = "std::binary_function<*Range_*LHCb::Particle*>"          />
+  
   <class pattern = "LoKi::Range_<std::vector<LHCb::Particle*> >" />
-
+  
   <class name = "std::unary_function<LHCb::Particle * const,double>" />
   <class name = "std::unary_function<LHCb::Particle * const,bool>"   />
   
@@ -65,20 +67,21 @@
   <class name = "std::unary_function<LHCb::VertexBase * const,bool>"   />
   
   <class pattern = "std::unary_function<LoKi::Range*>" />
+  <class pattern = "std::unary_function<const LoKi::Range*>" />
   <class pattern = "std::unary_function<std::vector<*>,LHCb::Particle*>" />
-  <class pattern = "std::unary_function<std::vector<*>,LHCb::VeretxBase*>" />
+  <class pattern = "std::unary_function<std::vector<*>,LHCb::VertexBase*>" />
   <class pattern = "std::unary_function<std::vector<*>,*>" />
   <class pattern = "std::unary_function<std::vector<*>,*>" />
   
-  <class pattern = "std::unary_function<double,double>" />
-  <class pattern = "std::unary_function<double,bool>"   />
+  <class name = "std::unary_function<double,double>" />
+  <class name = "std::unary_function<double,bool>"   />
+  
+  <class name = "std::unary_function<const double,double>" />
+  <class name = "std::unary_function<const double,bool>"   />
+  
+  -->
 
-  
   <exclusion>
-    <class name = "std::unary_function<char,bool>"        />
-    <class name = "std::unary_function<const char*,bool>" /> 
-    <class name = "std::unary_function<const LHCb::Particle * const,bool>" /> 
-    <class name = "std::unary_function<const LHCb::Particle * const,double>" /> 
     <class name = "LoKi::AParticles::FourMomentum::Indices" />
     
     
@@ -128,12 +131,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::unary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
     </class>
 

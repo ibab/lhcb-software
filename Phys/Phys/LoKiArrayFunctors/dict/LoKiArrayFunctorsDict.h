@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.10 2009-05-04 17:35:51 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.11 2009-05-09 19:29:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -170,29 +170,35 @@ namespace
     LoKi::Dicts::CutCalls<LoKi::ATypes::Combination>       m_c2 ;
     // ========================================================================
 
-    /// @todo to removed as sooas fPOOL is fixed for "const "/"std::" 
-    LoKi::Range_<std::vector<LHCb::Particle*> > m_tmp1 ;
-    std::unary_function<double,double>                 m_tmp2 ;
-    std::unary_function<double,bool>                   m_tmp3 ;
-    std::unary_function<LHCb::Particle*const,double>   m_tmp4 ;
-    std::unary_function<LHCb::Particle*const,bool>     m_tmp5 ;
-    std::unary_function<LHCb::VertexBase*const,double> m_tmp6 ;
-    std::unary_function<LHCb::VertexBase*const,bool>   m_tmp7 ;
-    std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , double> m_tmp8  ;
-    std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , bool>   m_tmp81 ;
-    std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , double> m_tmp9  ;
-    std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , bool>   m_tmp91 ;
-    std::unary_function<std::vector<LHCb::Particle*>   , LHCb::Particle*>   m_tmp10  ;
-    std::unary_function<std::vector<LHCb::VertexBase*> , LHCb::VertexBase*> m_tmp101 ;
-    std::unary_function<std::vector<LHCb::Particle*>  ,
-                        std::vector<LHCb::Particle*> >   m_tmp11 ;
-    std::unary_function<std::vector<LHCb::VertexBase*>,
-                        std::vector<LHCb::VertexBase*> > m_tmp12 ;
+//     /// @todo to removed as sooas fPOOL is fixed for "const "/"std::" 
+//     LoKi::Range_<std::vector<LHCb::Particle*> > m_tmp1 ;
+//     std::unary_function<double,double>                 m_tmp2 ;
+//     std::unary_function<double,bool>                   m_tmp3 ;
+//     std::unary_function<LHCb::Particle*const,double>   m_tmp4 ;
+//     std::unary_function<LHCb::Particle*const,bool>     m_tmp5 ;
+//     std::unary_function<LHCb::VertexBase*const,double> m_tmp6 ;
+//     std::unary_function<LHCb::VertexBase*const,bool>   m_tmp7 ;
+//     std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , double> m_tmp8  ;
+//     std::unary_function<LoKi::Range_<std::vector<LHCb::Particle*>   > , bool>   m_tmp81 ;
+//     std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , double> m_tmp9  ;
+//     std::unary_function<LoKi::Range_<std::vector<LHCb::VertexBase*> > , bool>   m_tmp91 ;
+//     std::unary_function<std::vector<LHCb::Particle*>   , LHCb::Particle*>   m_tmp10  ;
+//     std::unary_function<std::vector<LHCb::VertexBase*> , LHCb::VertexBase*> m_tmp101 ;
+//     std::unary_function<std::vector<LHCb::Particle*>  ,
+//                         std::vector<LHCb::Particle*> >   m_tmp11 ;
+//     std::unary_function<std::vector<LHCb::VertexBase*>,
+//                         std::vector<LHCb::VertexBase*> > m_tmp12 ;
     
-    std::unary_function<std::vector<LHCb::Particle*>   , double >   m_tmp13  ;
-    std::unary_function<std::vector<LHCb::Particle*>   , bool   >   m_tmp131  ;
-    std::unary_function<std::vector<LHCb::VertexBase*> , double >   m_tmp14  ;
-    std::unary_function<std::vector<LHCb::VertexBase*> , bool   >   m_tmp141  ;
+//     std::unary_function<std::vector<LHCb::Particle*>   , double >   m_tmp13  ;
+//     std::unary_function<std::vector<LHCb::Particle*>   , bool   >   m_tmp131  ;
+//     std::unary_function<std::vector<LHCb::VertexBase*> , double >   m_tmp14  ;
+//     std::unary_function<std::vector<LHCb::VertexBase*> , bool   >   m_tmp141  ;
+//     // dictionries, asked by Marco & Gerhard ..
+//     std::unary_function<const double,bool>                                               m_aux_1 ;
+//     std::unary_function<const double,double>                                             m_aux_2 ;
+//     std::unary_function<const LoKi::Range_<std::vector<const LHCb::Particle*> >,bool>    m_aux_3 ;
+//     std::unary_function<const LoKi::Range_<std::vector<const LHCb::Particle*> >,double>  m_aux_4 ;
+    //
   } ;  
   // ==========================================================================
 } // end of anonymous namespace 

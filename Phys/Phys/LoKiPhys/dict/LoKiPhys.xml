@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.23 2009-03-11 10:31:16 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.24 2009-05-09 19:24:13 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -34,16 +34,6 @@
   
   <class pattern   = "LoKi::Keeper<LHCb::*Vertex*>"        />
   <class pattern   = "LoKi::UniqueKeeper<LHCb::*Vertex*>"  />
-  
-  <class pattern   = "std::unary_function<*LHCb::Pa*,*LHCb::Pa*>"  />
-  <class pattern   = "std::unary_function<*LHCb::Pa*,std::vector*>"  />
-  <class pattern   = "std::unary_function<*LHCb::Pa*,double>"  />
-  <class pattern   = "std::unary_function<*LHCb::Pa*,bool>"    />
-  <class pattern   = "std::unary_function<*LHCb::Ve*,*LHCb::Ve*>"  />
-  <class pattern   = "std::unary_function<*LHCb::Ve*,std::vector*>"  />
-  <class pattern   = "std::unary_function<*LHCb::Ve*,double>"  />
-  <class pattern   = "std::unary_function<*LHCb::Ve*,bool>"    />
-  <class pattern   = "std::binary_function<*LHCb::*,*LHCb::*,bool>"  />
   
   <class pattern   = "LoKi::Functor<*LHCb::Pa*>" />
   <class pattern   = "LoKi::Functor<*LHCb::Ve*>" />
@@ -114,9 +104,6 @@
   
   <exclusion>
     
-    <class name="std::unary_function<char,bool>"          />
-    <class name="std::unary_function<const char*,bool>"   /> 
-    <class name="std::unary_function<const void*,bool>"   /> 
     <class name="LoKi::Particles::InvariantMass::Indices" /> 
     <class name="LoKi::Interface<IDataProviderSvc>" /> 
     <class name="LoKi::Interface<LoKi::ILoKiSvc>"   /> 
@@ -173,12 +160,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::unary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
     </class>
 

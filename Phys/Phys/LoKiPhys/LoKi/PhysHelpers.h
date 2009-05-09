@@ -1,4 +1,4 @@
-// $Id: PhysHelpers.h,v 1.6 2009-03-11 17:24:12 ibelyaev Exp $
+// $Id: PhysHelpers.h,v 1.7 2009-05-09 19:24:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSHELPERS_H 
 #define LOKI_PHYSHELPERS_H 1
@@ -220,8 +220,7 @@ namespace LoKi
     };
     // ========================================================================
     template <class FUNCTOR>
-    struct PMFA : public std::unary_function
-    <typename FUNCTOR::argument,typename FUNCTOR::result_type>
+    struct PMFA 
     {
       typedef typename FUNCTOR::argument     argument        ;
       typedef typename FUNCTOR::result_type  result_type     ;

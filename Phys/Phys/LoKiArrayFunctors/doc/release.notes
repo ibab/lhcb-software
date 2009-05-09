@@ -1,9 +1,20 @@
-$Id: release.notes,v 1.39 2009-05-07 06:42:45 cattanem Exp $ 
+$Id: release.notes,v 1.40 2009-05-09 19:29:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+
+! 2009-05-09 - Vanya BELYAEV
+
+ - remove unnesessary std::unary/binary_function bases 
+
+ - cmt/requirements
+
+   version increment to v8r4 
+
+
 
 !========================== LoKiArrayFunctors v8r3 2009-05-06 ===================
 ! 2009-05-04 - Vanya BELYAEV
