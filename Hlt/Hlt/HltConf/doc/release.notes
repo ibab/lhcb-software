@@ -1,13 +1,12 @@
-! $Id: release.notes,v 1.231 2009-05-06 18:33:49 graven Exp $ 
+! $Id: release.notes,v 1.232 2009-05-09 20:30:12 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v2r8 2009-05-09 ===================
 ! 2009-05-06 - Gerhard Raven
  - add input/output matchmaking verification for Hlt2
-
-!========================== HltConf v2r8 2009-05-06 ===================
 
 ! 2009-05-05 - Antonio Perez-Calero
  - Added new line with alg for bunch current monitoring to lumi lines. Commented 
