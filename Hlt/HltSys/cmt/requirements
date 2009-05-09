@@ -9,7 +9,7 @@ branches cmt doc options
 
 use HltConf             v2r8    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltBase             v6r4    Hlt   # Gerhard Raven
-use HltCommon           v5r4    Hlt   # Gerhard Raven
+use HltCommon           v5r5    Hlt   # Gerhard Raven
 
 use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
