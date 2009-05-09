@@ -1,4 +1,4 @@
-// $Id: HltL0.h,v 1.1 2009-03-24 17:33:26 ibelyaev Exp $
+// $Id: HltL0.h,v 1.2 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_HLTL0_H 
 #define LOKITRIGGER_HLTL0_H 1
@@ -8,7 +8,6 @@
 // STD & STL 
 // ============================================================================
 #include <iosfwd>
-#include <functional>
 #include <map>
 // ============================================================================
 // GaudiKernel
@@ -61,7 +60,6 @@ namespace Hlt
      *  @date   2009-03-23
      */
     class L0CaloCut
-      : public std::unary_function<const LHCb::L0CaloCandidate*,bool>
     {
     public:
       // ======================================================================
@@ -119,7 +117,6 @@ namespace Hlt
      *  @date   2009-03-23
      */
     class L0MuonCut 
-      : public std::unary_function<const LHCb::L0MuonCandidate*,bool>
     {
     public:
       // ======================================================================

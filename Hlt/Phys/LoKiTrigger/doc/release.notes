@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.33 2009-05-06 09:17:05 jpalac Exp $
+! $Id: release.notes,v 1.34 2009-05-09 19:33:47 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-05-09 - Vanya BELYAEV
+
+ - remove unnesessary std::unary/binary_function bases 
+
+ - cmt/requirements
+
+   version increment to v9r2 
 
 !========================== LoKiTrigger v9r1p1 2009-05-06 =================
 ! 2009-04-09 - Vanya BELYAEV 

@@ -1,4 +1,4 @@
-// $Id: Hlt1Binders.h,v 1.3 2009-04-01 12:49:18 ibelyaev Exp $
+// $Id: Hlt1Binders.h,v 1.4 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_HLT1BINDERS_H 
 #define LOKITRIGGER_HLT1BINDERS_H 1
@@ -222,6 +222,7 @@ namespace LoKi
         this->setContainer ( &value ) ;
         /// use the binder:        
         typename Binder::Pair r = this->extremum ( a , m_binop ) ;
+        // typename Binder::Pair r = Binder::extremum ( a , m_binop ) ;
         Assert ( this->vct()-> end() != r.first ,"No valid elements are found" ) ;
         //
         LoKi::Apply<TYPE2,TYPE3> applicator ( &m_fun2.func() ) ;

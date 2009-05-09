@@ -1,4 +1,4 @@
-// $Id: HltBinders.h,v 1.8 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: HltBinders.h,v 1.9 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERS_H 
 #define LOKI_HLTBINDERS_H 1
@@ -15,6 +15,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace HltBinders
   {    
     // ========================================================================
@@ -29,32 +30,33 @@ namespace LoKi
      *  @date 2007-08-17
      */
     template <class TYPE1,class TYPE2, class TYPE3=double>
-    class LightBinder1st 
-      : public std::unary_function
-    <
-      typename LoKi::Functor<TYPE2,TYPE3>::argument_type ,
-      typename LoKi::Functor<TYPE2,TYPE3>::result_type   > 
+    class LightBinder1st
     {
     private:
       // ======================================================================
       /// the actual type for data-holder 
-      typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
+      typedef typename LoKi::Holder<TYPE1,TYPE2>                      Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>    Fun_ ;
       // ======================================================================
+    public: // needed for adapters 
+      // ======================================================================
+      typedef typename LoKi::Functor<TYPE2,TYPE3>::argument_type argument_type ;
+      typedef typename LoKi::Functor<TYPE2,TYPE3>::result_type   result_type   ;
+      // ======================================================================      
     public:
       // ======================================================================
       /// contructor from the function and argument
       LightBinder1st 
-      ( typename Fun_::first_argument_type value , 
-        const    Fun_&                     fun   ) 
+      ( typename Fun_::first_argument value , 
+        const    Fun_&                fun   ) 
         : m_first ( value ) 
         , m_fun   ( &fun   ) 
       {}
       /// contructor from the function and argument
       LightBinder1st 
-      ( const    Fun_&                     fun   ,
-        typename Fun_::first_argument_type value )
+      ( const    Fun_&                fun   ,
+        typename Fun_::first_argument value )
         : m_first (  value ) 
         , m_fun   ( &fun   )  
       {}
@@ -98,34 +100,35 @@ namespace LoKi
      *  @date 2007-08-17
      */
     template <class TYPE1,class TYPE2,class TYPE3=double>
-    class LightBinder2nd 
-      : public std::unary_function
-    <
-      typename LoKi::Functor<TYPE1,TYPE3>::argument_type ,
-      typename LoKi::Functor<TYPE1,TYPE3>::result_type   > 
+    class LightBinder2nd
     {
     private:
       // ======================================================================
       /// the actual type for data-holder 
-      typedef typename LoKi::Holder<TYPE1,TYPE2>   Holder_ ;
+      typedef typename LoKi::Holder<TYPE1,TYPE2>                      Holder_ ;
       /// the actual type of
-      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>  Fun_ ;
+      typedef typename LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>    Fun_ ;
+      // ======================================================================
+    public: // needed for adapters 
+      // ======================================================================
+      typedef typename LoKi::Functor<TYPE1,TYPE3>::argument_type argument_type ;
+      typedef typename LoKi::Functor<TYPE1,TYPE3>::result_type   result_type   ;
       // ======================================================================
     public:
       // ======================================================================
       /// contructor from the function and argument
       LightBinder2nd 
-      ( typename Fun_::second_argument_type value , 
-        const    Fun_&                      fun   ) 
+      ( typename Fun_::second_argument value , 
+        const    Fun_&                 fun   ) 
         : m_second (  value ) 
         , m_fun    ( &fun   ) 
       {}
       /// contructor from the function and argument
       LightBinder2nd 
-      ( const    Fun_&                      fun   ,
-        typename Fun_::second_argument_type value )
+      ( const    Fun_&                 fun   ,
+        typename Fun_::second_argument value )
         : m_second (  value ) 
-        , m_fun    ( &fun   )  
+          , m_fun    ( &fun   )  
       {}
       /// evaluate the  function
       inline typename LoKi::Functor<TYPE1,TYPE3>::result_type operator() 
@@ -170,10 +173,10 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      typedef typename LoKi::Holder<TYPE,TYPE2>     Holder_    ;
-      typedef typename LoKi::Functor<Holder_,TYPE3> Function_  ;
-      typedef std::vector<TYPE2*>                   Container  ;
-      typedef std::pair<typename Container::const_iterator,double> Pair ;
+      typedef typename LoKi::Holder<TYPE,TYPE2>                    Holder_    ;
+      typedef typename LoKi::Functor<Holder_,TYPE3>                Function_  ;
+      typedef std::vector<TYPE2*>                                  Container  ;
+      typedef std::pair<typename Container::const_iterator,double> Pair       ;
       // ======================================================================
     public :
       // ======================================================================
@@ -273,10 +276,10 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      typedef typename LoKi::Holder<TYPE,TYPE2>     Holder_    ;
-      typedef typename LoKi::Functor<Holder_,TYPE3> Function_  ;
-      typedef std::vector<TYPE*>                    Container  ;
-      typedef std::pair<typename Container::const_iterator,double> Pair ;
+      typedef typename LoKi::Holder<TYPE,TYPE2>                    Holder_    ;
+      typedef typename LoKi::Functor<Holder_,TYPE3>                Function_  ;
+      typedef std::vector<TYPE*>                                   Container  ;
+      typedef std::pair<typename Container::const_iterator,double> Pair       ;
       // ======================================================================
     public :
       // ======================================================================
