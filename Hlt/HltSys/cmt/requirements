@@ -23,7 +23,7 @@ use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato
 
 use HltRecChecker	v1r9	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v2r4p1	Hlt   # Bruno de Paula
-use HltLuminosity       v2r6    Hlt   # Jaap Panman
+use HltLuminosity       v2r7    Hlt   # Jaap Panman
 
 use HltRawData          v1r10    Hlt   # Tomasz Skwarnicki
 
