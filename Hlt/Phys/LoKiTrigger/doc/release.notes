@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.34 2009-05-09 19:33:47 ibelyaev Exp $
+! $Id: release.notes,v 1.35 2009-05-09 19:34:18 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
@@ -11,7 +11,7 @@
 
  - cmt/requirements
 
-   version increment to v9r2 
+   version increment to v10r0 
 
 !========================== LoKiTrigger v9r1p1 2009-05-06 =================
 ! 2009-04-09 - Vanya BELYAEV 

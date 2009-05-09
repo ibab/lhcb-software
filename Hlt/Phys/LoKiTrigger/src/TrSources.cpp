@@ -1,4 +1,4 @@
-// $Id: TrSources.cpp,v 1.1 2007-12-09 19:04:44 ibelyaev Exp $
+// $Id: TrSources.cpp,v 1.2 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -179,7 +179,7 @@ std::size_t LoKi::Tracks::SourceTES::get
   LoKi::apply_filter  
     ( tracks -> begin () , 
       tracks -> end   () , 
-      m_cut.fun ()       , 
+      m_cut.func ()      , 
       std::back_inserter ( output ) ) ;
   //
   return output.size() - n ;
@@ -399,7 +399,7 @@ std::size_t LoKi::RecVertices::SourceTES::get
   LoKi::apply_filter  
     ( tracks -> begin () , 
       tracks -> end   () , 
-      m_cut.fun ()       , 
+      m_cut.func ()      , 
       std::back_inserter ( output ) ) ;
   //
   return output.size() - n ;

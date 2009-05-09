@@ -1,4 +1,4 @@
-// $Id: Tracks.cpp,v 1.5 2007-11-28 14:56:24 ibelyaev Exp $
+// $Id: Tracks.cpp,v 1.6 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -172,7 +172,7 @@ LoKi::Tracks::SmartInfo::SmartInfo
 // ============================================================================
 std::ostream& LoKi::Tracks::SmartInfo::fillStream( std::ostream& s ) const 
 { 
-  s << "TrSINFO(" << fun() << "," << index() << "," ;
+  s << "TrSINFO(" << func () << "," << index() << "," ;
   if ( update() ) { s << "True"  ; }
   else            { s << "False" ; }
   return s << ")" ;  

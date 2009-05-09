@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.5 2008-01-22 14:26:38 hernando Exp $
+// $Id: RecVertices.cpp,v 1.6 2009-05-09 19:33:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -144,7 +144,7 @@ LoKi::RecVertices::SmartInfo::SmartInfo
 std::ostream& 
 LoKi::RecVertices::SmartInfo::fillStream( std::ostream& s ) const 
 { 
-  s << "RVSINFO(" << fun() << "," << index() << "," ;
+  s << "RVSINFO(" << func () << "," << index() << "," ;
   if ( update() ) { s << "True"  ; }
   else            { s << "False" ; }
   return s << ")" ;  
