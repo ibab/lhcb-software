@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.15 2008-11-02 18:47:07 ibelyaev Exp $
+// $Id: Primitives.h,v 1.16 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1704,8 +1704,8 @@ namespace LoKi
     /// the only one essential method ("function")      
     virtual  result_type operator() ( argument a ) const 
     { 
-      const LoKi::Apply<TYPE,TYPE1>  f1 ( &m_fun1.fun() ) ;
-      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.fun() ) ;
+      const LoKi::Apply<TYPE,TYPE1>  f1 ( &m_fun1.func() ) ;
+      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.func() ) ;
       return f2.eval ( f1.eval ( a ) ) ;
     }
     /// the basic printout method 
@@ -1891,8 +1891,8 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    const TYPE2&                     val () const { return m_val       ; }
+    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.func() ; }
+    const TYPE2&                     val () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2047,8 +2047,8 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    int                              val () const { return m_val       ; }
+    const LoKi::Functor<TYPE,TYPE2>& func () const { return m_fun.func() ; }
+    int                              val  () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2122,7 +2122,7 @@ namespace LoKi
     { return !m_fun.equal_to ( a ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << "(" << m_fun.val() << "!=" << m_fun.fun() << ")" ; }
+    { return s << "(" << m_fun.val() << "!=" << m_fun.func() << ")" ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2210,8 +2210,8 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    unsigned int                     val () const { return m_val       ; }
+    const LoKi::Functor<TYPE,TYPE2>& func () const { return m_fun.func() ; }
+    unsigned int                     val  () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2285,12 +2285,12 @@ namespace LoKi
     { return !m_fun.equal_to ( a ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
-    { return s << "(" << m_fun.val() << "!=" << m_fun.fun() << ")" ; }
+    { return s << "(" << m_fun.val() << "!=" << m_fun.func() << ")" ; }
     // ========================================================================
   public:
     // ========================================================================
-    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    unsigned int                     val () const { return m_val       ; }
+    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.func() ; }
+    unsigned int                     val () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2313,14 +2313,17 @@ namespace LoKi
    *  @date   2002-07-24
    */ 
   template<class TYPE , class CMP=std::less<double> , class TYPE2=double>
-  class Compare : public std::binary_function<const TYPE,const TYPE,bool>
+  class Compare
   {
   public:
+    // ========================================================================
     /// typedef for actual function 
     typedef LoKi::Functor<TYPE,TYPE2>   function ;
     // typedef for comparison criteria 
     typedef const CMP            compare  ;
+    // ========================================================================
   public:
+    // ========================================================================
     /** constructor 
      *  @param fun1 the first functor 
      *  @param fun2 the second functor 
@@ -2344,12 +2347,17 @@ namespace LoKi
       ( typename LoKi::Functor<TYPE,TYPE2>::argument a1 , 
         typename LoKi::Functor<TYPE,TYPE2>::argument a2 ) const
     { return m_cmp ( m_two.fun1 ( a1 ) , m_two.fun2 ( a2 ) ) ; }
+    // ========================================================================
   private:
+    // ========================================================================
     // no default constructor 
     Compare(){}
+    // ========================================================================
   private:
+    // ========================================================================
     LoKi::TwoFunctors<TYPE,TYPE2> m_two ;
     compare   m_cmp  ;
+    // ========================================================================
   };
   // ==========================================================================
   /** @class Identity

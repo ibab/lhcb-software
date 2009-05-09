@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.6 2009-05-06 20:20:01 ibelyaev Exp $
+// $Id: Trees.h,v 1.7 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1
@@ -140,7 +140,7 @@ namespace Decays
      *  @date 2008-05-08
      */
     template <class PARTICLE> 
-    struct _Tree_ : public std::unary_function<PARTICLE,bool> 
+    struct _Tree_ 
     {
     public:
       // ====================================================================

@@ -1,4 +1,4 @@
-// $Id: AddRef.h,v 1.4 2007-07-23 17:07:35 ibelyaev Exp $
+// $Id: AddRef.h,v 1.5 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ADDREF_H 
 #define LOKI_ADDREF_H 1
@@ -40,7 +40,7 @@ namespace LoKi
    *  @date   2006-03-11
    */
   template <class TYPE,bool>
-  struct AddRef : public std::unary_function<TYPE*,bool>
+  struct AddRef
   {
     bool operator() ( TYPE*       o ) 
     { 
@@ -50,7 +50,7 @@ namespace LoKi
   } ;
   // ==========================================================================
   template <class TYPE>
-  struct AddRef<TYPE,true> : public std::unary_function<IInterface*,bool>
+  struct AddRef<TYPE,true>
   {
     bool operator() ( IInterface* o ) 
     { 

@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.14 2009-01-08 17:15:45 cattanem Exp $ 
+! $Id: release.notes,v 1.15 2009-05-09 19:27:31 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-09 - Vanya BELYAEV
+
+ - remove unnesessary std::unary/binary_function bases 
+
+ - cmt/requirements
+
+   version increment to v2r2
+
+
 
 !========================== LoKiHlt v2r1 2009-01-08 ==========================
 ! 2009-01-08 - Marco Cattaneo

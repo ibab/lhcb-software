@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.4 2008-11-02 21:10:45 ibelyaev Exp $ 
+     * $Id: LoKiHlt.xml,v 1.5 2009-05-09 19:27:31 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -31,10 +31,6 @@
   
   <class pattern   = "LoKi::Odin::*"   />
 
-  <class name = "std::unary_function<const LHCb::ODIN*,double>" />
-  <class name = "std::unary_function<const LHCb::ODIN*,bool>"   />
-
-  
   <class name = "LoKi::Functor<const LHCb::L0DUReport*,double>" />
   <class name = "LoKi::Functor<const LHCb::L0DUReport*,bool>"   />
   
@@ -49,9 +45,6 @@
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::L0DUReport*>"   />
 
   <class pattern   = "LoKi::L0::*"   />
-  <class name = "std::unary_function<const LHCb::L0DUReport*,double>" />
-  <class name = "std::unary_function<const LHCb::L0DUReport*,bool>"   />
-
 
   <class name = "LoKi::Functor<const LHCb::HltDecReports*,double>" />
   <class name = "LoKi::Functor<const LHCb::HltDecReports*,bool>"   />
@@ -69,12 +62,8 @@
   <class pattern   = "LoKi::HLT::*"        />
   <class pattern   = "LoKi::Algorithms::*" />
 
-  <class name = "std::unary_function<const LHCb::HltDecReports*,double>" />
-  <class name = "std::unary_function<const LHCb::HltDecReports*,bool>"   />
-
   <class name=            "LoKi::Interface<IAlgorithm>"   />
   <class name="std::vector<LoKi::Interface<IAlgorithm> >" />
-
   
   <exclusion>
     
@@ -140,13 +129,6 @@
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="std::unary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::binary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-
 
  </exclusion>
   

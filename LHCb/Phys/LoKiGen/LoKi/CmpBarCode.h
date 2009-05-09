@@ -1,4 +1,4 @@
-// $Id: CmpBarCode.h,v 1.2 2008-06-26 12:09:06 ibelyaev Exp $
+// $Id: CmpBarCode.h,v 1.3 2009-05-09 19:21:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CMPBARCODE_H 
 #define LOKI_CMPBARCODE_H 1
@@ -7,7 +7,6 @@
 // ============================================================================
 // STD & STL 
 // ============================================================================
-#include <functional>
 #include <set>
 // ============================================================================
 // HepMC 
@@ -26,8 +25,6 @@ namespace LoKi
      *  @date   2008-06-24
      */
     struct CmpBarCode 
-      : public std::binary_function<const HepMC::GenParticle*,
-                                    const HepMC::GenParticle*,bool>
     {
       // ======================================================================
       /// the only one essential method: compare two particles 

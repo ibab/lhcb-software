@@ -1,13 +1,9 @@
-// $Id: shifts.h,v 1.2 2008-07-09 16:01:00 ibelyaev Exp $
+// $Id: shifts.h,v 1.3 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SHIFTS_H 
 #define LOKI_SHIFTS_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// STD & STL 
-// ============================================================================
-#include <functional>
 // ============================================================================
 // Boost
 // ============================================================================
@@ -15,6 +11,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Shifts 
    *  Collectoin of utilities and function for "shifting" operations
    *  Many thanks to Kurt RINNER for the code fragment!
@@ -39,7 +36,6 @@ namespace LoKi
      */
     template <class TYPE>
     struct CyclicShiftLeft<TYPE,true> 
-      : public std::binary_function<TYPE,unsigned int,TYPE>
     {
       enum { bSize 
              = boost::integer_traits<TYPE>::digits 
@@ -60,7 +56,6 @@ namespace LoKi
      */
     template <class TYPE>
     struct CyclicShiftRight<TYPE,true> 
-      : public std::binary_function<TYPE,unsigned int,TYPE>
     {
       enum { bSize 
              = boost::integer_traits<TYPE>::digits 
@@ -155,6 +150,7 @@ namespace LoKi
     }  
     // ========================================================================
   } // end of the namespace LoKi::Shifts
+  // ==========================================================================
 } // end of the namespace LoKi
 // ============================================================================
 // The END

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.18 2008-12-18 14:49:00 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.19 2009-05-09 19:21:38 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -28,12 +28,6 @@
   <class pattern   = "LoKi::Keeper<HepMC::*>"        />
   <class pattern   = "LoKi::UniqueKeeper<HepMC::*>"  />
   <class pattern   = "LoKi::Interface<*>"            />
-  
-  <class pattern   = "std::unary_function<*HepMC::*,double>"          />
-  <class pattern   = "std::unary_function<*HepMC::*,bool>"            />
-  <class pattern   = "std::unary_function<*HepMC::*,std::vector<double*>"/>
-  <class pattern   = "std::unary_function<*HepMC::*,*HepMC*>"/>
-  <class pattern   = "std::binary_function<*HepMC::*,*HepMC::*,bool>" />
   
   <class pattern   = "LoKi::BasicFunctors<*HepMC::*>"      />
   <class pattern   = "LoKi::Functor<*HepMC::*>"            />
@@ -78,8 +72,7 @@
   <class pattern = "LoKi::Hybrid::*"    />
   
   <class name = "std::vector<const HepMC::GenParticle*>"  />
-  <class name = "std::vector<const HepMC::GenVertex*>"    />
-  
+  <class name = "std::vector<const HepMC::GenVertex*>"    />  
   
   <class name = "Decays::Trees::Any_<const HepMC::GenParticle*>"   />
   <class name      = "Decays::Trees::GenExclusive" />
@@ -93,9 +86,6 @@
 
   
   <exclusion>
-    <class    name    = "std::unary_function<char,bool>"        />
-    <class    name    = "std::unary_function<const char*,bool>" /> 
-    <class    name    = "std::unary_function<const void*,bool>" /> 
     <class name ="LoKi::GenParticles::FromHepMCTree::VERTICES" />
     <class name ="LoKi::Interface<LoKi::ILoKiSvc>"   />
     <class name ="LoKi::Interface<IDataProviderSvc>" />
@@ -149,12 +139,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::unary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
     </class>
 

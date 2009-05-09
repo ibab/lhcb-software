@@ -1,4 +1,4 @@
-// $Id: GenSources.cpp,v 1.1 2007-12-09 18:08:02 ibelyaev Exp $
+// $Id: GenSources.cpp,v 1.2 2009-05-09 19:21:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -101,7 +101,7 @@ LoKi::GenParticles::SourceTES::operator() () const
   particles.reserve ( 2000 ) ;
   //
   LoKi::Extract::getGenParticles 
-    ( evts , std::back_inserter ( particles ) , m_cut.fun() ) ;    
+    ( evts , std::back_inserter ( particles ) , m_cut.func () ) ;    
   // 
   return particles ;
 } 

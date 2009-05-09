@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.7 2008-11-27 10:30:05 ibelyaev Exp $
+// $Id: Filters.h,v 1.8 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -71,9 +71,12 @@ namespace LoKi
     class Select : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > 
     {
     protected:
+      // ======================================================================
       /// the base class 
       typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > uBase    ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor form the basic predicate:
       Select ( const LoKi::Functor<TYPE2,bool>& fun ) 
         : uBase       (     ) 
@@ -87,6 +90,9 @@ namespace LoKi
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Select() {}
+      // ======================================================================
+    public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Select* clone() const { return new Select ( *this ) ; }    
       /// MANDATORY: the only one essential method 
@@ -96,18 +102,26 @@ namespace LoKi
         typename uBase::result_type out ;
         out.reserve ( a.size() ) ;
         LoKi::apply_filter 
-          ( a.begin() , a.end() , m_predicate.fun() , std::back_inserter ( out ) ) ;
+          ( a.begin () , 
+            a.end   () , 
+            m_predicate.func() , 
+            std::back_inserter ( out ) ) ;
         return out ;
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return  s << "select(" << m_predicate << ")" ; }
+      // ======================================================================
     private:
-      // the default construct is private:
-      Select () ; ///< no default contructor
+      // ======================================================================
+      /// the default construct is private:
+      Select () ;                                      // no default contructor
+      // ======================================================================
     private:
-      // the basic functor itself 
+      // ======================================================================
+      /// the basic functor itself 
       LoKi::FunctorFromFunctor<TYPE2,bool> m_predicate ; // the functor itself 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Yields
@@ -136,9 +150,12 @@ namespace LoKi
     class Yields : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE1> >
     {
     public:
+      // ======================================================================
       /// the underlying basic functor 
-      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE1> > uBase    ;
+      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE1> >      uBase ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// contructor from the basic functor 
       Yields ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
         : uBase       (     ) 
@@ -152,6 +169,9 @@ namespace LoKi
       {}
       /// MANDATORY: virtual destructor 
       virtual ~Yields () {}
+      // ======================================================================
+    public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Yields* clone() const { return new Yields ( *this ) ; }    
       /// MANDATORY: the only one essential method 
@@ -161,18 +181,26 @@ namespace LoKi
         typename uBase::result_type out ;
         out.reserve ( a.size () ) ;
         LoKi::apply 
-          ( a.begin() , a.end() , m_functor.fun() , std::back_inserter ( out ) ) ;
+          ( a.begin () , 
+            a.end   () , 
+            m_functor.func() , 
+            std::back_inserter ( out ) ) ;
         return out ;
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return  s << "yields(" << m_functor << ")"; };
+      // ======================================================================
     private:
-      // the default construct is private:
-      Yields() ; ///< no default contructor
+      // ======================================================================
+      /// the default construct is private:
+      Yields() ;                                       // no default contructor
+      // ======================================================================
     private:
-      // the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; // the functor itself 
+      // ======================================================================
+      /// the basic functor itself 
+      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;   // the functor itself 
+      // ======================================================================
     } ;    
     // ========================================================================
     /** @class Process
@@ -202,9 +230,12 @@ namespace LoKi
     class Process: public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >
     {
     protected:
+      // ======================================================================
       /// the underlying basic functor 
-      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > uBase    ;
+      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >       uBase ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor form the basic predicate:
       Process ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
         : uBase     (     ) 
@@ -224,18 +255,23 @@ namespace LoKi
       virtual typename uBase::result_type operator() 
         ( typename uBase::argument a ) const
       {
-        LoKi::apply ( a.begin() , a.end() , m_functor.fun() ) ;
+        LoKi::apply ( a.begin() , a.end() , m_functor.func () ) ;
         return a ;        
       }
       /// OPTIONAL: the basic printout method 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return  s << "process(" << m_functor << ")"; };
+      // ======================================================================
     private:
-      // the default construct is private:
-      Process() ; ///< no default contructor
+      // ======================================================================
+      /// the default constructor is disabled 
+      Process() ;                                      // no default contructor
+      // ======================================================================
     private:
-      // the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; // the functor itself 
+      // ======================================================================
+      /// the basic functor itself 
+      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ;   // the functor itself 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Tee
@@ -294,7 +330,7 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typename uBase::result_type out = a ;
-        LoKi::apply ( m_functor.fun() , a ) ;
+        LoKi::apply ( m_functor.func () , a ) ;
         return out ;
       }
       /// OPTIONAL: the basic printout method 
@@ -353,9 +389,12 @@ namespace LoKi
         if ( a.empty() ) { return m_value ; } // RETURN 
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
-          LoKi::Algs::extremum ( a.begin() , a.end() , app , std::greater<TYPE1>() ) ;
+          LoKi::Algs::extremum ( a.begin () , 
+                                 a.end   () , 
+                                 app        , 
+                                 std::greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
       }
@@ -421,9 +460,11 @@ namespace LoKi
         if ( a.empty() ) { return m_value ; }
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
-          LoKi::Algs::extremum ( a.begin() , a.end() , app , 
+          LoKi::Algs::extremum ( a.begin () , 
+                                 a.end   () , 
+                                 app        , 
                                  LHCb::Math::abs_greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
@@ -489,9 +530,12 @@ namespace LoKi
         if ( a.empty() ) { return m_value ; }
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
-          LoKi::Algs::extremum ( a.begin() , a.end() , app , std::less<TYPE1>() ) ;
+          LoKi::Algs::extremum ( a.begin () , 
+                                 a.end   () , 
+                                 app        , 
+                                 std::less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
       }
@@ -559,10 +603,13 @@ namespace LoKi
         if  ( a.empty() ) { return m_value ; }
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LHCb::Math::abs_less<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            LHCb::Math::abs_less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return res.second ;
       }
@@ -621,10 +668,13 @@ namespace LoKi
         ( typename uBase::argument a ) const 
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , std::greater<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            std::greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -674,10 +724,13 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; } // return 0 
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , std::greater<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            std::greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -727,9 +780,12 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
-          LoKi::Algs::extremum ( a.begin() , a.end() , app , std::less<TYPE1>() ) ;
+          LoKi::Algs::extremum ( a.begin () , 
+                                 a.end   () , 
+                                 app        , 
+                                 std::less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -778,9 +834,12 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; } // RETURN 
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
-          LoKi::Algs::extremum ( a.begin() , a.end() , app , std::less<TYPE1>() ) ;
+          LoKi::Algs::extremum ( a.begin () , 
+                                 a.end   () , 
+                                 app        ,
+                                 std::less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -838,10 +897,13 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LHCb::Math::abs_greater<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            LHCb::Math::abs_greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -898,10 +960,13 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; }                            // RETURN 
         // 
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func () ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LHCb::Math::abs_greater<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            LHCb::Math::abs_greater<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -953,10 +1018,13 @@ namespace LoKi
         ( typename uBase::argument a ) const
       {
         typedef typename std::vector<TYPE>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LHCb::Math::abs_less<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            LHCb::Math::abs_less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -1007,10 +1075,13 @@ namespace LoKi
         if ( a.empty() ) { return 0 ; }
         //
         typedef typename std::vector<TYPE*>::const_iterator     _I ;
-        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.fun() ) ;
+        const LoKi::Apply<TYPE2,TYPE1> app ( &m_functor.func() ) ;
         std::pair<_I,typename uFunctor::result_type> res = 
           LoKi::Algs::extremum 
-          ( a.begin() , a.end() , app , LHCb::Math::abs_less<TYPE1>() ) ;
+          ( a.begin () , 
+            a.end   () , 
+            app        , 
+            LHCb::Math::abs_less<TYPE1>() ) ;
         Assert ( a.end() != res.first , "Empty input container!" ) ;
         return *(res.first);
       }
@@ -1053,7 +1124,7 @@ namespace LoKi
       virtual typename uBase::result_type operator() 
         ( typename uBase::argument a ) const
       {
-        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.fun() ) ;
+        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.func() ) ;
         //
         size_t count = 0 ;
         typedef typename std::vector<TYPE>::const_iterator     _I ;
@@ -1101,7 +1172,7 @@ namespace LoKi
       virtual typename uBase::result_type operator() 
         ( typename uBase::argument a ) const
       {
-        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.fun() ) ;
+        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.func() ) ;
         //
         typedef typename std::vector<TYPE>::const_iterator     _I ;
         for ( _I it = a.begin() ; a.end() != it ; ++it ) 

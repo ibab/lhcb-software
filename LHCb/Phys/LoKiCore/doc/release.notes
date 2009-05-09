@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.138 2009-05-07 13:04:26 cattanem Exp $ 
+! $Id: release.notes,v 1.139 2009-05-09 19:15:53 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-09 - Vanya BELYAEV
+
+ - remove unnesesary std:unary/binary function 
+
+ - decrease the dictionary 
+
+ - cmt/requirements
+
+     version increment to v9r1 
+
 
 ! =========================== LoKiCore v9r0 2009-05-07 ========================
 ! 2009-05-06 - Vanya BELYAEV

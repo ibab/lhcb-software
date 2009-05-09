@@ -1,4 +1,4 @@
-// $Id: VoidPrimitives.h,v 1.4 2008-11-02 21:00:21 ibelyaev Exp $
+// $Id: VoidPrimitives.h,v 1.5 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VOIDPRIMITIVES_H 
 #define LOKI_VOIDPRIMITIVES_H 1
@@ -1733,7 +1733,7 @@ namespace LoKi
     /// the only one essential method ("function")      
     virtual  result_type operator() ( /* argument */ ) const 
     { 
-      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.fun() ) ;
+      const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.func() ) ;
       return f2.eval ( m_fun1.fun() ) ;
     }
     /// the basic printout method 
@@ -1743,9 +1743,9 @@ namespace LoKi
   public:
     // ========================================================================
     /// the first functor 
-    LoKi::FunctorFromFunctor<void,TYPE1>  m_fun1  ; // the first functor 
+    LoKi::FunctorFromFunctor<void,TYPE1>  m_fun1 ;         // the first functor 
     /// the second functor 
-    LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ; // the second functor 
+    LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ;        // the second functor 
     // ========================================================================
   } ;
   // ==========================================================================

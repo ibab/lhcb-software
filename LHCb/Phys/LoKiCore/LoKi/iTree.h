@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.7 2009-05-06 20:20:01 ibelyaev Exp $
+// $Id: iTree.h,v 1.8 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -32,7 +32,7 @@ namespace Decays
    *  @date   2008-04-12
    */
   template <class PARTICLE>
-  class iTree_ : public std::unary_function<PARTICLE,bool>
+  class iTree_ 
   {
   public:
     // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: Release.h,v 1.6 2008-11-29 13:24:59 ibelyaev Exp $
+// $Id: Release.h,v 1.7 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RELEASE_H 
 #define LOKI_RELEASE_H 1
@@ -6,10 +6,6 @@
 // Include files
 // ============================================================================
 // Include files 
-// ============================================================================
-// STD & STL 
-// ============================================================================
-#include <functional>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -46,7 +42,7 @@ namespace LoKi
    *  @date   2006-03-11
    */
   template <class TYPE,bool>
-  struct Release : public std::unary_function<TYPE*,bool>
+  struct Release 
   {
     // ========================================================================
     bool operator() ( TYPE*       o )
@@ -58,7 +54,7 @@ namespace LoKi
   } ;
   // ==========================================================================
   template <class TYPE>
-  struct Release<TYPE,true> : public std::unary_function<IInterface*,bool>
+  struct Release<TYPE,true> 
   {
     // ========================================================================
     bool operator() ( IInterface* o ) 

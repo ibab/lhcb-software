@@ -1,13 +1,9 @@
-// $Id: Tensors.h,v 1.5 2008-08-02 13:34:27 ibelyaev Exp $
+// $Id: Tensors.h,v 1.6 2009-05-09 19:15:53 ibelyaev Exp $
 // ===============================================================
 #ifndef LOKI_TENSORS_H 
 #define LOKI_TENSORS_H 1
 // ============================================================================
 // Include files 
-// ============================================================================
-// STD & STL 
-// ============================================================================
-#include <functional>
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -84,7 +80,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-0725
      */
-    struct Delta : public std::binary_function<size_t,size_t,int>
+    struct Delta
     {
       // ======================================================================
       /// Kroneker delta
@@ -157,7 +153,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-0725
      */
-    struct G : public std::binary_function<size_t,size_t,int> 
+    struct G 
     {
       // ======================================================================
       /// the only one important function: get the metric 

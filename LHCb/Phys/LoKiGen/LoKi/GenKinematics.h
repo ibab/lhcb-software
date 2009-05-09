@@ -1,4 +1,4 @@
-// $Id: GenKinematics.h,v 1.9 2008-05-05 09:53:35 cattanem Exp $
+// $Id: GenKinematics.h,v 1.10 2009-05-09 19:21:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -55,7 +55,6 @@ namespace LoKi
      *  @date 2006-02-08
      */
     struct Gen4Momentum 
-      : public std::unary_function<const HepMC::GenParticle*,LoKi::LorentzVector>
     {
       LoKi::LorentzVector operator() 
         ( const HepMC::GenParticle* p ) const { return momentum ( p ) ; }  
@@ -114,11 +113,15 @@ namespace LoKi
       const HepMC::GenParticle* p4 ) ;
     // ========================================================================
   } // end of namespace LoKi::GenKinematics
+  // ==========================================================================
   namespace Kinematics
   {
+    // ========================================================================
     // export the namespace into more general scope 
     using namespace LoKi::GenKinematics ;
+    // ========================================================================
   } // end of namespace LoKi::Kinematics 
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // The END 

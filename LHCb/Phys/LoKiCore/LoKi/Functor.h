@@ -1,4 +1,4 @@
-// $Id: Functor.h,v 1.5 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Functor.h,v 1.6 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTOR_H 
 #define LOKI_FUNCTOR_H 1
@@ -23,6 +23,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class Functor Functor.h LoKi/Functor.h
    *  The most generic LoKi-functor, needed for implementation
    *  of numerious brilliant ideas by Gerhard "The Great".
@@ -39,28 +40,39 @@ namespace LoKi
    *  @date   2007-10-31
    */
   template <class TYPE,class TYPE2>
-  class Functor 
-    : public std::unary_function<const TYPE,TYPE2> 
-    , public virtual LoKi::AuxFunBase 
+  class Functor : public virtual LoKi::AuxFunBase 
   {
   public:
-    // parameters: argument
-    typedef TYPE  Type1 ; ///< parameters: argument
-    // parameters: return value 
-    typedef TYPE2 Type2 ; ///< parameters: return value
+    /// =======================================================================
+    /// parameters: argument
+    typedef TYPE  Type1 ;                               // parameters: argument
+    /// parameters: return value 
+    typedef TYPE2 Type2 ;                           // parameters: return value
+    /// =======================================================================
+  private : // fake STL bases 
+    // ========================================================================
+    /// STD signature (fake base) 
+    typedef typename std::unary_function<TYPE,TYPE2>                   Base_1 ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the type of the argument
-    typedef TYPE        Type ;
-    /// the actual type of base 
-    typedef typename std::unary_function<const TYPE,TYPE2>  Base_F ;
-    typedef typename std::unary_function<const TYPE,TYPE2>  Base_1 ;
-    /// the result value 
-    typedef typename Base_F::result_type   result_type   ;
-    /// the basic argument type 
-    typedef typename Base_F::argument_type argument_type ;
+    typedef TYPE                                                Type          ;
+    // ========================================================================
+  public:  // STD (fake) signature 
+    // ========================================================================
+    /// STL: the result value 
+    typedef typename Base_1::result_type                        result_type   ;
+    /// STL: the basic argument type 
+    typedef typename Base_1::argument_type                      argument_type ;
+    // ========================================================================
+  public:  // the actual signature 
+    // ========================================================================
     /// type for the argument 
-    typedef typename boost::call_traits<const TYPE>::param_type argument;
+    typedef typename boost::call_traits<const TYPE>::param_type argument      ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the only one essential method ("function")
     virtual result_type operator () ( argument    ) const = 0 ;
     /// the only one essential method ("function")
@@ -73,16 +85,19 @@ namespace LoKi
     virtual  Functor* clone    ()                   const = 0 ;
     /// virtual destructor 
     virtual ~Functor(){}
+    // ========================================================================
   protected:
-    // protected default constructor 
-    Functor()                              ///< protected default constructor 
-      : AuxFunBase (     ) {}
-    // protected copy constructor
-    Functor ( const Functor& fun )         ///< protected copy constructor
-      : AuxFunBase ( fun ) {}
+    // ========================================================================
+    /// protected default constructor 
+    Functor() : AuxFunBase (     ) {}
+    /// protected copy constructor
+    Functor ( const Functor& fun ) : AuxFunBase ( fun ) {}
+    // ========================================================================
   private:
-    // assignement         is private
-    Functor& operator=( const Functor& ); ///< assignement is private
+    // ========================================================================
+    /// the assignement operator is disabled 
+    Functor& operator=( const Functor& );        // the assignement is disabled 
+    // ========================================================================
   };
   // ==========================================================================
   /** @class FunctorFromFunctor 
@@ -95,12 +110,17 @@ namespace LoKi
   class FunctorFromFunctor : public LoKi::Functor<TYPE,TYPE2>
   {
   public:
-    // the underlying type of functor 
-    typedef LoKi::Functor<TYPE,TYPE2>   functor ; ///< the underlying type of functor 
+    // ========================================================================
+    /// the underlying type of functor 
+    typedef LoKi::Functor<TYPE,TYPE2>   functor ;               // functor type 
+    // ========================================================================
   protected:
-    // own type 
-    typedef FunctorFromFunctor<TYPE,TYPE2> Self ; ///< the own type 
+    // ========================================================================
+    /// own type 
+    typedef FunctorFromFunctor<TYPE,TYPE2> Self ;               // the own type 
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor 
     FunctorFromFunctor ( const Functor<TYPE,TYPE2>& right ) 
       : LoKi::Functor<TYPE,TYPE2> () 
@@ -117,6 +137,9 @@ namespace LoKi
     }
     /// MANDATORY: virtual destructor 
     virtual ~FunctorFromFunctor() { delete m_fun ; }
+    // ========================================================================
+  public:
+    // ========================================================================
     /// MANDATORY: clone method ("virtual constructor") 
     virtual  FunctorFromFunctor* clone() const 
     { return new FunctorFromFunctor ( *this ) ; }
@@ -131,49 +154,56 @@ namespace LoKi
     virtual std::size_t   id () const { return m_fun->id() ; }
     /// OPTIONAL: delegate the object type
     virtual std::string   objType () const { return m_fun -> objType() ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// the assignement operator is enabled 
     FunctorFromFunctor& operator= ( const FunctorFromFunctor& right )
     {
-      if ( this == &right ) { return *this ; }                   // RETURN 
+      if ( this == &right ) { return *this ; }                        // RETURN 
       // set new pointer 
       LoKi::Functor<TYPE,TYPE2>* newf = 0 ;
       if ( typeid ( Self ) != typeid ( right ) ) 
-      { newf = right.         clone() ; }
+      { newf = right.         clone() ; }                              // CLONE! 
       else
-      { newf = right.m_fun -> clone() ; }
+      { newf = right.m_fun -> clone() ; }                              // CLONE! 
       // delete own pointer 
       delete m_fun ; 
       // assign the new pointer 
       m_fun = newf ;
-      return *this ;                                             // RETURN 
+      return *this ;                                                  // RETURN 
     }
     /// the assignement operator is enabled 
     FunctorFromFunctor& operator= ( const Functor<TYPE,TYPE2>& right )
     {
-      if ( this == &right ) { return *this ; }                   // RETURN  
+      if ( this == &right ) { return *this ; }                        // RETURN  
       // set new pointer 
       LoKi::Functor<TYPE,TYPE2>* newf = right.clone() ;
       // delete own pointer 
       delete m_fun ;
       // assign the new pointer 
       m_fun = newf ;
-      return *this ;                                             // RETURN 
-    }  
+      return *this ;                                                  // RETURN 
+    }
+    // ========================================================================
   public:   
+    // ========================================================================
     /// evaluate the function
     inline typename functor::result_type fun 
     ( typename functor::argument a ) const { return (*m_fun) ( a ) ; }
-    /// accessor to the function 
-    inline const functor& fun  () const { return *m_fun ; }
     // accessor to the function 
     inline const functor& func () const { return *m_fun ; }
+    // ========================================================================
   private:
-    // default constructor is private 
-    FunctorFromFunctor(); ///< the default constructor is private 
+    // ========================================================================
+    /// the default constructor is disabled  
+    FunctorFromFunctor();                // the default constructor is disabled 
+    // ========================================================================
   private:
-    // the underlaying function 
-    const functor* m_fun ; ///< the underlaying functor
+    // ========================================================================
+    /// the actual underlaying function 
+    const functor* m_fun ;                           // the underlaying functor
+    // ========================================================================
   } ;
   // ==========================================================================
   /** @class Constant 
@@ -187,9 +217,12 @@ namespace LoKi
   class Constant : public LoKi::Functor<TYPE,TYPE2>
   {
   public:
+    // ========================================================================
     /// argument type 
-    typedef typename boost::call_traits<const TYPE2>::param_type T2 ;
+    typedef typename boost::call_traits<TYPE2>::param_type T2 ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor 
     Constant ( T2 value )
       : LoKi::Functor<TYPE,TYPE2>() 
@@ -203,6 +236,9 @@ namespace LoKi
     {} 
     /// destructor 
     virtual ~Constant(){}
+    // ========================================================================
+  public:
+    // ========================================================================
     /// assignement  
     Constant& operator=( const Constant& right ) 
     { m_value = right.m_value ; return *this ; }
@@ -216,40 +252,45 @@ namespace LoKi
       ( typename LoKi::Functor<TYPE,TYPE2>::argument ) const { return m_value ; }
     /// the basic printout method  
     virtual std::ostream& fillStream( std::ostream& s ) const ;
+    // ========================================================================
   private:
+    // ========================================================================
     /// no default constructor 
-    Constant() ; ///< no default constructor 
+    Constant() ;                                      // no default constructor 
+    // ========================================================================
   private:
-    // the constant itself 
-    TYPE2 m_value ; ///< the constant itself 
+    // ========================================================================
+    /// the constant itself 
+    TYPE2 m_value ;                                      // the constant itself 
+    // ========================================================================
   } ;
   // ==========================================================================
+  /// specialiation for void-argument 
   template <class TYPE2>
-  class Functor<void,TYPE2> 
-    : public std::unary_function<void,TYPE2> 
-    , public virtual LoKi::AuxFunBase 
+  class Functor<void,TYPE2> : public virtual LoKi::AuxFunBase 
   {
   public:
-    // ========================================================================
+    /// =======================================================================    
     /// parameters: argument
-    typedef void  Type1 ; // parameters: argument
+    typedef void  Type1 ;                               // parameters: argument
     /// parameters: return value 
-    typedef TYPE2 Type2 ; // parameters: return value
+    typedef TYPE2 Type2 ;                           // parameters: return value
+    /// =======================================================================
+  private:
+    // ========================================================================
+    /// STD signature (fake base) 
+    typedef typename std::unary_function<void,TYPE2>                   Base_1 ;
     // ========================================================================
   public:
     // ========================================================================
     /// the type of the argument
-    typedef void        TYPE;
-    typedef TYPE        Type ;
-    /// the actual type of base 
-    typedef typename std::unary_function<TYPE,TYPE2>  Base_F ;
-    typedef typename std::unary_function<TYPE,TYPE2>  Base_1 ;
+    typedef void                                                Type          ;
     /// the result value 
-    typedef typename Base_F::result_type   result_type    ;
+    typedef typename Base_1::result_type                        result_type   ;
     /// the basic argument type 
-    typedef          void                   argument_type ;
+    typedef void                                                argument_type ;
     /// type for the argument 
-    typedef          void                   argument      ;
+    typedef void                                                argument      ;
     // ========================================================================
   public:
     // ========================================================================
@@ -267,43 +308,44 @@ namespace LoKi
     virtual ~Functor(){}
     // ========================================================================
   protected:
-    // protected default constructor 
-    Functor()                              ///< protected default constructor 
-      : AuxFunBase (     ) {}
-    // protected copy constructor
-    Functor ( const Functor& fun )         ///< protected copy constructor
-      : AuxFunBase ( fun ) {}
+    // ========================================================================
+    /// protected default constructor 
+    Functor() : AuxFunBase (     ) {}          // protected default constructor 
+    /// protected copy constructor
+    Functor ( const Functor& fun ) : AuxFunBase ( fun ) {}    // protected copy
+    // ========================================================================
   private:
-    // assignement         is private
-    Functor& operator=( const Functor& ); ///< assignement is private
+    // ========================================================================
+    // the assignement operator is disabled 
+    Functor& operator=( const Functor& );             // assignement is private
+    // ========================================================================
   };
   // ==========================================================================
+  /// the specialization for "void"-argument 
   template <class TYPE2>
   class FunctorFromFunctor<void,TYPE2>: public LoKi::Functor<void,TYPE2>
   {
   public:
     // ========================================================================
-    /// the fixed type 
-    typedef void TYPE ;
     /// the underlying type of functor 
-    typedef LoKi::Functor<TYPE,TYPE2>   functor ; // the underlying type of functor 
+    typedef LoKi::Functor<void,TYPE2>   functor ;     // the underlying functor 
     // ========================================================================
   protected:
     // ========================================================================
     /// own type 
-    typedef FunctorFromFunctor<TYPE,TYPE2> Self ; // the own type 
+    typedef FunctorFromFunctor<void,TYPE2> Self ;               // the own type 
     // ========================================================================
   public:
     // ========================================================================
     /// constructor 
-    FunctorFromFunctor ( const Functor<TYPE,TYPE2>& right ) 
-      : LoKi::Functor<TYPE,TYPE2> () 
-      , m_fun ( right.clone() ) 
+    FunctorFromFunctor ( const Functor<void,TYPE2>& right ) 
+      : LoKi::Functor<void,TYPE2> () 
+        , m_fun ( right.clone() ) 
     {}
     /// copy constructor (deep copy)
     FunctorFromFunctor ( const FunctorFromFunctor& right ) 
       : LoKi::AuxFunBase          ( right ) 
-      , LoKi::Functor<TYPE,TYPE2> ( right ) 
+      , LoKi::Functor<void,TYPE2> ( right ) 
       , m_fun ( 0 ) 
     {
       m_fun = typeid ( Self ) == typeid ( right ) ? 
@@ -311,6 +353,9 @@ namespace LoKi
     }
     /// MANDATORY: virtual destructor 
     virtual ~FunctorFromFunctor() { delete m_fun ; }
+    // ========================================================================
+  public:
+    // ========================================================================
     /// MANDATORY: clone method ("virtual constructor") 
     virtual  FunctorFromFunctor* clone() const 
     { return new FunctorFromFunctor ( *this ) ; }
@@ -330,30 +375,30 @@ namespace LoKi
     /// the assignement operator is enabled 
     FunctorFromFunctor& operator= ( const FunctorFromFunctor& right )
     {
-      if ( this == &right ) { return *this ; }                   // RETURN 
+      if ( this == &right ) { return *this ; }                        // RETURN 
       // set new pointer 
-      LoKi::Functor<TYPE,TYPE2>* newf = 0 ;
+      LoKi::Functor<void,TYPE2>* newf = 0 ;
       if ( typeid ( Self ) != typeid ( right ) ) 
-      { newf = right.         clone() ; }
+      { newf = right.         clone() ; }                             // CLONE!
       else
-      { newf = right.m_fun -> clone() ; }
+      { newf = right.m_fun -> clone() ; }                             // CLONE! 
       // delete own pointer 
       delete m_fun ; 
       // assign the new pointer 
       m_fun = newf ;
-      return *this ;                                             // RETURN 
+      return *this ;                                                  // RETURN 
     }
     /// the assignement operator is enabled 
-    FunctorFromFunctor& operator= ( const Functor<TYPE,TYPE2>& right )
+    FunctorFromFunctor& operator= ( const Functor<void,TYPE2>& right )
     {
-      if ( this == &right ) { return *this ; }                   // RETURN  
+      if ( this == &right ) { return *this ; }                        // RETURN  
       // set new pointer 
-      LoKi::Functor<TYPE,TYPE2>* newf = right.clone() ;
+      LoKi::Functor<void,TYPE2>* newf = right.clone() ;               // CLONE! 
       // delete own pointer 
-      delete m_fun ;
+      delete m_fun ; 
       // assign the new pointer 
       m_fun = newf ;
-      return *this ;                                             // RETURN 
+      return *this ;                                                  // RETURN 
     }  
     // ========================================================================
   public:   
@@ -367,40 +412,42 @@ namespace LoKi
   private:
     // ========================================================================
     /// default constructor is private 
-    FunctorFromFunctor(); // the default constructor is private 
+    FunctorFromFunctor();                 // the default constructor is private 
     // ========================================================================
   private:
     // ========================================================================
     /// the underlaying function 
-    const functor* m_fun ; // the underlaying functor
+    const functor* m_fun ;                           // the underlaying functor
     // ========================================================================
   } ;
   // ==========================================================================
+  /// specialization for "void" 
   template <class TYPE2>
   class Constant<void,TYPE2> : public LoKi::Functor<void,TYPE2>
   {
   public:
     // ========================================================================
-    /// the fixed type 
-    typedef void TYPE ;
     /// argument type 
-    typedef typename boost::call_traits<const TYPE2>::param_type T2 ;
+    typedef typename boost::call_traits<TYPE2>::param_type T2 ;
     // ========================================================================
   public:
     // ========================================================================
     /// constructor 
     Constant ( T2 value )
-      : LoKi::Functor<TYPE,TYPE2>() 
+      : LoKi::Functor<void,TYPE2>() 
       , m_value ( value ) 
     {} 
     /// copy constructor  
     Constant ( const Constant& right )
       : LoKi::AuxFunBase          ( right ) 
-      , LoKi::Functor<TYPE,TYPE2> ( right ) 
+      , LoKi::Functor<void,TYPE2> ( right ) 
       , m_value                   ( right.m_value ) 
     {} 
     /// destructor 
     virtual ~Constant(){}
+    // ========================================================================
+  public:
+    // ========================================================================
     /// assignement  
     Constant& operator=( const Constant& right ) 
     { m_value = right.m_value ; return *this ; }
@@ -410,8 +457,8 @@ namespace LoKi
     /// clone method (mandatory) 
     virtual Constant* clone   () const { return new Constant( *this ) ; }
     /// the only one essential method ("function")      
-    virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
-      ( /* typename LoKi::Functor<TYPE,TYPE2>::argument a */ ) const 
+    virtual typename LoKi::Functor<void,TYPE2>::result_type operator() 
+      ( /* typename LoKi::Functor<void,TYPE2>::argument a */ ) const 
     { return m_value ; }
     /// the basic printout method  
     virtual std::ostream& fillStream( std::ostream& s ) const ;

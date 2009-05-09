@@ -1,4 +1,4 @@
-// $Id: Objects.h,v 1.8 2007-07-23 17:07:39 ibelyaev Exp $
+// $Id: Objects.h,v 1.9 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_OBJECTS_H 
 #define LOKI_OBJECTS_H 1
@@ -8,7 +8,6 @@
 // STD & STL 
 // ============================================================================
 #include <utility>
-#include <functional>
 // ============================================================================
 // LoKi 
 // ============================================================================
@@ -50,7 +49,7 @@ namespace LoKi
      *  @date   2006-02-08
      */
     template <class TYPE>
-    struct _ALL  : public  std::unary_function<TYPE,bool>
+    struct _ALL 
     {
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
@@ -63,7 +62,7 @@ namespace LoKi
      *  @date   2006-02-08
      */
     template <class TYPE>
-    struct _NONE : public  std::unary_function<TYPE,bool>
+    struct _NONE 
     {
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
@@ -76,7 +75,7 @@ namespace LoKi
      *  @date   2006-02-08
      */
     template <class TYPE>
-    struct _ONE  : public  std::unary_function<TYPE,int>
+    struct _ONE 
     {
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
@@ -89,7 +88,7 @@ namespace LoKi
      *  @date   2006-02-08
      */
     template <class TYPE> 
-    struct _VALID : public std::unary_function<TYPE,bool>
+    struct _VALID 
     {
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  

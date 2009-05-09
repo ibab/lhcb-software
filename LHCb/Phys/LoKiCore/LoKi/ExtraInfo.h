@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.8 2008-10-31 18:12:25 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.9 2009-05-09 19:15:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -217,7 +217,7 @@ namespace LoKi
       /// get the index 
       int                         index  () const { return m_index  ; }
       /// get the function 
-      const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
+      const LoKi::Functor<TYPE,TYPE2>& func () const { return m_fun.func () ; }
       /// get the flag 
       bool                        update () const { return m_update ; }
       // ======================================================================
