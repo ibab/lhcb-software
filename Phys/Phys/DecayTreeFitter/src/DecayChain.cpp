@@ -42,20 +42,22 @@ namespace vtxtreefit
   {
     m_constraintlist.clear() ;
     m_mother->addToConstraintList(m_constraintlist,0) ;
+
     // the order of the constraints is a rather delicate thing
-    std::sort(m_constraintlist.begin(),m_constraintlist.end()) ;
+    // std::sort(m_constraintlist.begin(),m_constraintlist.end()) ;
 
     // merge all non-lineair constraints
     m_mergedconstraintlist.clear() ;
-    mergedconstraint = MergedConstraint() ;
-    for( ParticleBase::constraintlist::iterator it =  m_constraintlist.begin() ;
-	 it != m_constraintlist.end(); ++it) {
-      if( it->isLineair() ) m_mergedconstraintlist.push_back(&(*it)) ;
-      else  mergedconstraint.push_back(&(*it)) ;
+    if(false) {
+      mergedconstraint = MergedConstraint() ;
+      for( ParticleBase::constraintlist::iterator it =  m_constraintlist.begin() ;
+	   it != m_constraintlist.end(); ++it) {
+	if( it->isLineair() ) m_mergedconstraintlist.push_back(&(*it)) ;
+	else  mergedconstraint.push_back(&(*it)) ;
+      }
+      if( mergedconstraint.dim()>0 )
+	m_mergedconstraintlist.push_back(&mergedconstraint) ;
     }
-    
-    if( mergedconstraint.dim()>0 )
-      m_mergedconstraintlist.push_back(&mergedconstraint) ;
   }
 
   ErrCode
@@ -85,7 +87,6 @@ namespace vtxtreefit
     par.resetCov(1000) ;
     if(firstpass || !par.testCov()) status |= m_mother->initCov(&par) ;
 
-
     if( vtxverbose>=3 || (vtxverbose>=2&&firstpass) ) {
       std::cout << "DecayChain::filter, after initialization: "  << std::endl ; 
       m_mother->print(&par) ;
@@ -93,26 +94,25 @@ namespace vtxtreefit
     
     FitParams reference = par ;
 
-
-#ifdef THEOLDWAY
-    for( ParticleBase::constraintlist::const_iterator it = m_constraintlist.begin() ;
-     	 it != m_constraintlist.end(); ++it) {
-      status |= it->filter(par) ;
-      if( vtxverbose>=2 && status.failure() ) {
-	std::cout << "status is failure after parsing constraint: " ;
-	it->print() ;
+    if(m_mergedconstraintlist.empty() ) {
+      for( ParticleBase::constraintlist::const_iterator it = m_constraintlist.begin() ;
+	   it != m_constraintlist.end(); ++it) {
+	status |= it->filter(par,reference) ;
+	if( vtxverbose>=2 && status.failure() ) {
+	  std::cout << "status is failure after parsing constraint: " ;
+	  it->print() ;
+	}
+      }
+    } else {
+      for( std::vector<Constraint*>::const_iterator it = m_mergedconstraintlist.begin() ;
+	   it != m_mergedconstraintlist.end(); ++it) {
+	status |= (*it)->filter(par,reference) ;
+	if( vtxverbose>=2 && status.failure() ) {
+	  std::cout << "status is failure after parsing constraint: " ;
+	  (*it)->print() ;
+	}
       }
     }
-#else
-    for( std::vector<Constraint*>::const_iterator it = m_mergedconstraintlist.begin() ;
-	  it != m_mergedconstraintlist.end(); ++it) {
-      status |= (*it)->filter(par,reference) ;
-      if( vtxverbose>=2 && status.failure() ) {
-	std::cout << "status is failure after parsing constraint: " ;
-	(*it)->print() ;
-      }
-    }
-#endif
     
     if(vtxverbose>=3) std::cout << "VtkDecayChain::filter: status = " << status << std::endl ;
       
