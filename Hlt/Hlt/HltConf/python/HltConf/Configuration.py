@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.76 2009-05-10 12:51:16 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.77 2009-05-10 13:30:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -270,8 +270,9 @@ class HltConf(LHCbConfigurableUser):
         activeLines = self.getProp('ActiveHlt2Lines') 
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
         Hlt2Global = Hlt2Line( "Global", HLT= "HLT_PASS( strings(" + str([ i.name()+'Decision' for i in lines2 ]) + "))")
-        Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2+[ Hlt2Global] ] 
-        print Sequence('Hlt2Lines').Members
+        lines2 += [ Hlt2Global ]
+        Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
+        print '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )
 
 
         self.configureHltMonitoring(lines1)
