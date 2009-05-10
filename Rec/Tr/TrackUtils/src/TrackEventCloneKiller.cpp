@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.13 2009-05-08 15:48:40 gkrocker Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.14 2009-05-10 21:12:04 gkrocker Exp $
 // Include files 
 // -------------
 // from STD
@@ -88,6 +88,11 @@ StatusCode TrackEventCloneKiller::initialize()
   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
                                            "CloneFinderTool", this );
   
+  // Reserve memory for track vector
+  // -------------------------------
+  allTracks.reserve(200);
+
+  
   // Print out the user-defined settings
   // -----------------------------------
   info() << endmsg
@@ -105,9 +110,6 @@ StatusCode TrackEventCloneKiller::initialize()
 
   return StatusCode::SUCCESS;
 
-  // Reserve memory for track vector
-  // -------------------------------
-  allTracks.reserve(200);
 };
 
 //=============================================================================

@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2009-05-10 - Georg Krocker
+- small bug in TrackEventCloneKiller fixed
 
 !========================== TrackUtils v1r26 2009-05-08 ======================
 ! 2009-05-08 - Georg Krocker
