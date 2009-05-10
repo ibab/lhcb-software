@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.4 2009-05-01 19:04:14 graven Exp $
+# $Id: HltReco.py,v 1.5 2009-05-10 12:52:06 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -129,10 +129,10 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
                                   ,  recoVelo
-                                  ,  prepareVelo
+                                  # ,  prepareVelo # nobody uses this...
                                   ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
                                   ,  recoForward
-                                  ,  prepareForward
+                                  ,  prepareForward # should be replaced by a dedicated monitoring line...
                                   ] )
 ####TODO
 ###           HltTrackRecoSequence                  GaudiSequencer           

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.233 2009-05-10 12:51:16 graven Exp $ 
+! $Id: release.notes,v 1.234 2009-05-10 12:52:06 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 ! 2009-05-10 - Gerhard Raven
  - provide warning if a threshold is both explicitly set, and part of the requested
    preset. Keep the explicitly set value
+ - remove unused prepareVelo
 
 !========================== HltConf v2r8 2009-05-09 ===================
 ! 2009-05-06 - Gerhard Raven
