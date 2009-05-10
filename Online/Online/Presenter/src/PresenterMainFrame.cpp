@@ -168,7 +168,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   Move(x, y);
   gPresenter = this;
 
-  m_knownDimServices.reserve(s_estimatedDimServiceCount);
+  m_knownHistogramServices.reserve(s_estimatedDimServiceCount);
   m_candidateDimServices.reserve(s_estimatedDimServiceCount);
   m_histogramTypes.reserve(s_estimatedDimServiceCount);
   dbHistosOnPage.reserve(s_estimatedHistosOnPage);
@@ -969,7 +969,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 //                                         | kLHintsExpandX); // kFixedWidth
 
     m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 2, 2);
-    m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, true);
+    m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, false);
 
     m_dimBrowserDock = new TGDockableFrame(m_rightMiscFrame);
     m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
@@ -1191,7 +1191,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   MapWindow();
   m_rightMiscFrame->UnmapWindow();
   m_rightVerticalSplitter->UnmapWindow();
-  m_databaseAlarmsDock->UndockContainer();
+//  m_databaseAlarmsDock->UndockContainer();
   Resize();
   DoRedraw();
 }
@@ -1295,7 +1295,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
       dockAllFrames();
       break;
     case M_AddHistoToDB_COMMAND:
-      addDimSvcToHistoDB();
+      addHistoToHistoDB();
       break;
     case M_AddHistoToPage_COMMAND:
       addDimHistosToPage();
@@ -1384,6 +1384,9 @@ void PresenterMainFrame::handleCommand(Command cmd)
         new TGFileDialog(gClient->GetRoot(),this,kFDOpen,&fileInfo);
 //        if(!fileInfo.fFilename) {        
           m_savesetFileName = std::string(fileInfo.fFilename);
+          if (EditorOffline == m_presenterMode) {
+            refreshHistogramSvcList(s_withTree);
+          }
           m_previousIntervalButton->SetState(kButtonDisabled);
           m_nextIntervalButton->SetState(kButtonDisabled);
 // std::cout << "selected m_savesetFileName: " << m_savesetFileName << std::endl;
@@ -1766,20 +1769,20 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
         
     try {
       m_histogramDB->getMessages(m_alarmMessageIDs);
-      for (std::vector<int>::iterator im= m_alarmMessageIDs.begin() ; im !=  m_alarmMessageIDs.end() ; im++) {
-        
-        OMAMessage* message = new OMAMessage(*im, *m_histogramDB);
-        
-      TGListTreeItem* treeNode = listView->AddItem(treeRoot, (message->ananame()).c_str());
-      setTreeNodeIcon(treeNode, message->levelString());
-      
-      listView->SetCheckBox(treeNode, false);
-//      listView->CheckItem(treeNode, false);
-      treeNode->SetUserData((void*)&(*im));
-
-//        message->dump(&(std::cout));
-//        message->dump(&currentMessage);
-        delete message;      
+      std::vector<int>::const_iterator m_alarmMessageIDsIt;
+      for (m_alarmMessageIDsIt = m_alarmMessageIDs.begin();
+           m_alarmMessageIDsIt != m_alarmMessageIDs.end();
+           ++m_alarmMessageIDsIt) {
+        OMAMessage* message = new OMAMessage(*m_alarmMessageIDsIt, *m_histogramDB);
+        std::string nodeName (message->humanTime());
+        nodeName.erase(nodeName.length()-1); // remove \n
+        nodeName = nodeName + ": ";
+        nodeName = nodeName + message->ananame();
+        TGListTreeItem* treeNode = listView->AddItem(treeRoot, nodeName.c_str());
+        setTreeNodeIcon(treeNode, message->levelString());        
+        listView->SetCheckBox(treeNode, false);
+        treeNode->SetUserData((void*)&(*m_alarmMessageIDsIt));
+        delete message;
       }
     } catch (std::string sqlException) {
         // TODO: add error logging backend
@@ -2023,6 +2026,9 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
             m_histogramNode = listView->FindChildByName(m_histogramNode,
                                               m_histogramIdItem->GetName());
         } else {
+          
+          
+          
           m_histogramNode = listView->AddItem(m_histogramNode,
                                               m_histogramIdItem->GetName());
         }
@@ -2072,37 +2078,78 @@ void PresenterMainFrame::printBenchmark(const std::string &timer)
 void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
                                                 std::vector<std::string> & histogramList,
                                                 std::vector<std::string> & histogramTypes,
-                                                std::string& taskName) {
+                                                std::string& taskName,
+                                                pres::SavesetType savesetType) {
   
+  string::size_type fileNameLength = 0;
+  std::string task = taskName;
+   if (pres::OfflineFile == savesetType) { 
+    fileNameLength = std::string((rootFile->GetFile())->GetName()).size();
+   }
+
    TDirectory* tmpdir = gDirectory;
    TIter next(rootFile->GetListOfKeys());
    TKey* key;
+   std::string type("");
+   std::string hid("");
    
    std::stringstream histogramIDStream;
 
    while ((key = (TKey*)next())) {
+
       if (key->IsFolder()) {
          rootFile->cd(key->GetName());
          TDirectory *subdirectory = gDirectory;
+//         std::string pathName = taskName + s_slash + key->GetName();
          std::string pathName = taskName + s_slash + key->GetName();
          listRootHistogramsFrom(subdirectory, histogramList, histogramTypes,
-                                pathName);
+                                pathName, savesetType);
          tmpdir->cd();
          continue;
-      }
+      }    
       if (std::string(key->GetClassName()) == "TH1D") {
-        histogramTypes.push_back(s_pfixMonH1D);
-        histogramIDStream << s_pfixMonH1D;
+        type = s_pfixMonH1D;
+        if (pres::OfflineFile == savesetType) {
+          histogramIDStream << ((TH1D*)key->ReadObj())->GetName();
+        } else {
+          histogramIDStream << s_pfixMonH1D << s_slash << taskName << s_slash << key->GetName();
+        }        
       } else if (std::string(key->GetClassName()) == "TH2D") {
-        histogramTypes.push_back(s_pfixMonH2D);
-        histogramIDStream << s_pfixMonH2D;
+        type = s_pfixMonH2D;
+        if (pres::OfflineFile == savesetType) {        
+          histogramIDStream << ((TH2D*)key->ReadObj())->GetName();
+        } else {
+          histogramIDStream << s_pfixMonH1D << s_slash << taskName << s_slash << key->GetName();
+        }
       } else if (std::string(key->GetClassName()) == "TProfile") {
-        histogramTypes.push_back(s_pfixMonProfile);
-        histogramIDStream << s_pfixMonProfile;
+        type = s_pfixMonProfile;
+        if (pres::OfflineFile == savesetType) {        
+          histogramIDStream << ((TProfile*)key->ReadObj())->GetName();
+        } else {
+          histogramIDStream << s_pfixMonH1D << s_slash << taskName << s_slash << key->GetName();
+        }        
+        
       }
-      histogramIDStream << s_slash << taskName << s_slash << key->GetName();
-      histogramList.push_back(histogramIDStream.str());
-      histogramIDStream.str("");
+      std::string histogramID = histogramIDStream.str();
+      if (pres::OfflineFile == savesetType) {
+        if (histogramID.size() > fileNameLength) {
+          histogramID = histogramID.erase(0, fileNameLength+1);
+        }
+      }
+      if (std::string(key->GetClassName()) == "TH1D" ||
+          std::string(key->GetClassName()) == "TH2D" ||
+          std::string(key->GetClassName()) == "TProfile") {
+      if (pres::OfflineFile == savesetType) {        
+          histogramID = type + s_slash + taskName + s_slash + histogramID;
+      }
+      histogramTypes.push_back(type);
+      histogramList.push_back(histogramID);
+      if (m_verbosity >= Verbose) {
+        std::cout << "Found: " << histogramID << std::endl;
+      }
+    
+   }
+   histogramIDStream.str("");
    }
 }
 
@@ -2630,7 +2677,7 @@ void PresenterMainFrame::refreshPagesDBListTree() {
 void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
-  m_knownDimServices.clear();
+  m_knownHistogramServices.clear();
   m_histogramTypes.clear();
 
   if (Online == m_presenterMode || EditorOnline == m_presenterMode) {
@@ -2645,44 +2692,51 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     char *dimFormat;
     int dimType;
   
-  
+  // két lekérdezés: Mon* és /gauchocomment, majd szűrni és isPlaus
   //TODO: put known Mon prefixes into a list and cycle through...
-    std::string serviceType = s_pfixMonH1D;
-    (serviceType.append(s_slash)).append("*");
+
+    std::string serviceType = s_Mon;
+    serviceType.append("*");
     m_dimBrowser->getServices(serviceType.c_str());
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {            
-      m_candidateDimServices.push_back(std::string(dimService));
-    }
-    // s_pfixMonH2D
-    serviceType = s_pfixMonH2D;
-    (serviceType.append(s_slash)).append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {            
-      m_candidateDimServices.push_back(std::string(dimService));
-    }
-    // s_pfixMonProfile
-    serviceType = s_pfixMonProfile;
-    (serviceType.append(s_slash)).append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {            
-      m_candidateDimServices.push_back(std::string(dimService));
-    }
-    // "H1D", "H2D", "P1D", "P2D", "CNT", "SAM" -- is this uncle SAM?
-    for (int it = 0; it < OnlineHistDBEnv_constants::NHTYPES; ++it) {
-      std::string serviceType(OnlineHistDBEnv_constants::HistTypeName[it]);
-      (serviceType.append(s_slash)).append("*");
-      m_dimBrowser->getServices(serviceType.c_str());
-      while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {            
+    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
+      TString dimMon(dimService);        
+      if (dimMon.BeginsWith(s_pfixMonH1D.c_str()) ||
+          dimMon.BeginsWith(s_pfixMonH2D.c_str()) ||
+          dimMon.BeginsWith(s_pfixMonProfile.c_str())) {
         m_candidateDimServices.push_back(std::string(dimService));
-      }        
+      }
     }
-    // HPD
-    serviceType = s_HPD;
-    (serviceType.append(s_slash)).append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {            
-      m_candidateDimServices.push_back(std::string(dimService));
+
+    m_dimBrowser->getServices("*/gauchocomment");
+    TObjArray* dimCNTMatchGroup = 0;
+    DimBrowser* dimBrowser = new DimBrowser();
+    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) { 
+      TString dimCNT(dimService);
+      dimCNT.Remove(dimCNT.Length() - s_gauchocomment.length(),s_gauchocomment.length());
+
+      if (false == dimCNT.BeginsWith(s_H1D.c_str()) &&
+          false == dimCNT.BeginsWith(s_H2D.c_str()) &&
+          false == dimCNT.BeginsWith(s_P1D.c_str()) &&
+          false == dimCNT.BeginsWith(s_HPD.c_str()) &&
+          false == dimCNT.BeginsWith(s_P2D.c_str()) ) {
+
+    dimBrowser->getServices(dimCNT.Data());
+    if ((dimType = dimBrowser->getNextService(dimService, dimFormat))) {    
+      dimCNTMatchGroup = s_DimCNTRegexp.MatchS(dimFormat);
+      if (false == dimCNTMatchGroup->IsEmpty()) {
+        dimCNT.Prepend(s_slash.c_str());
+        dimCNT.Prepend(s_CNT.c_str());
+        m_candidateDimServices.push_back(std::string(dimCNT.Data()));
+      }
+    }       
+      }
+      if (dimCNTMatchGroup) {
+        dimCNTMatchGroup->Delete();
+        delete dimCNTMatchGroup;
+        dimCNTMatchGroup = 0;
+      }      
     }
+    if (dimBrowser) {delete dimBrowser; dimBrowser = NULL;}
         
     if (0 != m_histoSvcListTree && 0 != m_dimBrowser) {
       const int nDimServers = m_dimBrowser->getServers();
@@ -2720,12 +2774,16 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         m_candidateDimServicesIt = m_candidateDimServices.begin();
         while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
           TString dimServiceTS = TString(*m_candidateDimServicesIt);
-          if (!dimServiceTS.EndsWith(s_gauchocomment.c_str())) { // Beg&End not sym.
               HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
-              if (histogramService.isDimFormat()) {
-                if (s_withTree == tree) {
-                  m_knownDimServices.push_back(*m_candidateDimServicesIt);
-                  m_histogramTypes.push_back(histogramService.histogramType());                
+              if (histogramService.isPlausible()) {
+                std::string candidateDimService(*m_candidateDimServicesIt);
+                if (s_withTree == tree) {          
+                  if (s_CNT == histogramService.histogramType()) {
+                    candidateDimService = candidateDimService.erase(0, s_CNT.length()).erase(0, s_slash.length());
+                  }
+                  
+                  m_knownHistogramServices.push_back(candidateDimService);
+                  m_histogramTypes.push_back(histogramService.histogramType());
                 }
                 if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
                   TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
@@ -2736,7 +2794,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                   }
                 }
               if (m_verbosity >= Verbose) {
-                std::cout << "\t\t\t|_ " << *m_candidateDimServicesIt << std::endl;
+                std::cout << "\t\t\t|_ " << candidateDimService << std::endl;
               }
             } else {
               new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
@@ -2747,7 +2805,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                   "partition_node_taskname_instance", dimService),
                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
             }
-          }
           ++m_candidateDimServicesIt;
         }
 //        refreshPartitionSelectorPopupMenu();       
@@ -2785,7 +2842,51 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                      kMBOk, &m_msgBoxReturnCode);
       } else {        
         std::string taskName(m_archive->taskNameFromFile(std::string(rootFile.GetName())));
-        listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile), m_knownDimServices, m_histogramTypes, taskName);
+        pres::SavesetType savesetType = pres::OfflineFile;                
+        TObjArray* fileNameMatchGroup = 0;
+        
+        fileNameMatchGroup = s_fileDateRegexp.MatchS(rootFile.GetName());
+        if (false == fileNameMatchGroup->IsEmpty()) {
+          savesetType = pres::OnlineFile;
+          if (fileNameMatchGroup) {
+            fileNameMatchGroup->Delete();
+            delete fileNameMatchGroup;
+            fileNameMatchGroup = 0;
+          } 
+        } else {
+          if (fileNameMatchGroup) {
+            fileNameMatchGroup->Delete();
+            delete fileNameMatchGroup;
+            fileNameMatchGroup = 0;
+          }
+          fileNameMatchGroup = s_offlineJobRegexp.MatchS(rootFile.GetName());        
+          if (false == fileNameMatchGroup->IsEmpty()) {
+            savesetType = pres::OfflineFile;
+            if (fileNameMatchGroup) {
+              fileNameMatchGroup->Delete();
+              delete fileNameMatchGroup;
+              fileNameMatchGroup = 0;
+            }
+          } else {
+            if (fileNameMatchGroup) {
+              fileNameMatchGroup->Delete();
+              delete fileNameMatchGroup;
+              fileNameMatchGroup = 0;
+            }
+            fileNameMatchGroup = s_fileRunRegexp.MatchS(rootFile.GetName());        
+            if (false == fileNameMatchGroup->IsEmpty()) {
+              savesetType = pres::OnlineFile;
+            }
+            if (fileNameMatchGroup) {
+              fileNameMatchGroup->Delete();
+              delete fileNameMatchGroup;
+              fileNameMatchGroup = 0;
+            }
+          }
+        }
+        listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
+                               m_knownHistogramServices, m_histogramTypes,
+                               taskName, savesetType);        
       }
       rootFile.Close();       
     }
@@ -2793,7 +2894,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
   if (s_withTree == tree) {
     fillTreeNodeWithHistograms(m_histoSvcListTree,
                                m_histoSvcListTree->GetFirstItem(),
-                               &m_knownDimServices,
+                               &m_knownHistogramServices,
                                &m_histogramTypes);        
     sortTreeChildrenItems(m_histoSvcListTree, m_histoSvcListTree->GetFirstItem());
     fClient->NeedRedraw(m_histoSvcListTree);   
@@ -2913,7 +3014,7 @@ void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
     loadSelectedAlarmFromDB(selectedAlarmFromDbTree());
   }
 }
-void PresenterMainFrame::addDimSvcToHistoDB()
+void PresenterMainFrame::addHistoToHistoDB()
 {
   disableAutoCanvasLayoutBtn();
   disableHistogramClearing();
@@ -2925,9 +3026,15 @@ void PresenterMainFrame::addDimSvcToHistoDB()
   currentNode = list->GetFirstItem();
   while (0 != currentNode) {
     try {
-      if (0 != m_histogramDB) {
-        m_histogramDB->declareHistByServiceName(
-          std::string(*static_cast<TString*>(currentNode->GetUserData())));
+      if (0 != m_histogramDB) {        
+        TString histoName = *static_cast<TString*>(currentNode->GetUserData());
+        
+        HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
+        if (s_CNT == histogramService.histogramType()) {
+          histoName.Prepend(s_slash.c_str());
+          histoName.Prepend(s_CNT.c_str());
+        }
+        m_histogramDB->declareHistByServiceName(std::string(histoName));
       }
     } catch (std::string sqlException) {
       // TODO: add error logging backend
