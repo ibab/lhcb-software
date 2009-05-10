@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.261 2009-04-30 13:35:19 jpalac Exp $
+! $Id: release.notes,v 1.262 2009-05-10 20:37:29 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-05-10 - V. Gligorov
+ - Add two new categories to BackgroundCategory.{h,cpp} to deal
+   with clones and background where a particle is combined with 
+   its own parent 
 
 ! 2009-04-30 - Juan PALACIOS
  - Remove FilterGoodDecay

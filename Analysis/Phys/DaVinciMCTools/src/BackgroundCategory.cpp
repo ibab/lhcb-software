@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.51 2009-04-09 19:13:36 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.52 2009-05-10 20:35:53 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,8 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   IBackgroundCategory::m_cat[40]   = "PartRecoPhysBkg";
   IBackgroundCategory::m_cat[50]   = "LowMassBkg";
   IBackgroundCategory::m_cat[60]   = "Ghost";
+  IBackgroundCategory::m_cat[63]   = "Clone";
+  IBackgroundCategory::m_cat[66]   = "Hierarchy";
   IBackgroundCategory::m_cat[70]   = "FromPV";
   IBackgroundCategory::m_cat[80]   = "AllFromSamePV";
   IBackgroundCategory::m_cat[100]  = "FromDifferentPV";
@@ -102,7 +104,34 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
   }
 
   //Now we have to associate each one of them to an MCParticle if possible
-  MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay,reconstructed_mother);
+  MCParticleVector mc_particles_linked_to_decay = 
+         associate_particles_in_decay(particles_in_decay,reconstructed_mother);
+
+  //First of all check for ghosts
+  if ( areAnyFinalStateParticlesGhosts(mc_particles_linked_to_decay, 
+                                                 particles_in_decay) 
+     ) {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "It is a ghost background" << endmsg;
+      //This is a ghost
+      return Ghost;
+  }
+
+  //Next check if two Particles are associated to the same particle,
+  //if so this is a clone type background 
+  if (foundClones(mc_particles_linked_to_decay)) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This is a clone background" << endmsg;
+    return Clone;
+  }
+
+  //Now we have to check if any of the associated MCParticles
+  //are also the mothers of another associated MCParticle.
+  //In this case we have combined something with its own mother to
+  //create a new particle which is clearly unphysical. We'll
+  //call this 'hierarchy' background until someone complains.
+  if (hierarchyProblem(mc_particles_linked_to_decay)) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This is a hierarchy background" << endmsg;
+    return Hierarchy;
+  }
 
   //Now to create a vector with the final mothers of all these mc particles.
   MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay);
@@ -170,38 +199,31 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
     if (msgLevel(MSG::VERBOSE)) verbose() << "This is combinatorics" << endmsg;
     //Since condition A has failed, we are in the territory of combinatorics, pileup,
     //ghost-based and other assortead junk background.
-    if ( areAnyFinalStateParticlesGhosts(mc_particles_linked_to_decay,
-                                         particles_in_decay) ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "It is a ghost background" << endmsg;
-      //This is a ghost
-      return Ghost;
+    if (!isThisAPileup(mc_particles_linked_to_decay,
+                       particles_in_decay) ){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "It is a pileup" << endmsg;
+      //A pileup
+      return FromDifferentPV;
     } else {
-      if (!isThisAPileup(mc_particles_linked_to_decay,
-                         particles_in_decay) ){
-        if (msgLevel(MSG::VERBOSE)) verbose() << "It is a pileup" << endmsg;
-        //A pileup
-        return FromDifferentPV;
+      int numFromPV = areAnyFinalStateParticlesFromAPrimaryVertex(mc_particles_linked_to_decay);
+      if ( numFromPV > 0) {
+        if (msgLevel(MSG::VERBOSE)) verbose() << "This is primary vertex background" << endmsg;
+        if (numFromPV == 1) return FromPV;
+        else return AllFromSamePV;
       } else {
-        int numFromPV = areAnyFinalStateParticlesFromAPrimaryVertex(mc_particles_linked_to_decay);
-        if ( numFromPV > 0) {
-          if (msgLevel(MSG::VERBOSE)) verbose() << "This is primary vertex background" << endmsg;
-          if (numFromPV == 1) return FromPV;
-          else return AllFromSamePV;
+        if (isThisBBarBackground(mc_mothers_final) ){
+          if (msgLevel(MSG::VERBOSE)) verbose() << "This is bbar background" << endmsg;
+          //This is a bbar event
+          return bbar;
         } else {
-          if (isThisBBarBackground(mc_mothers_final) ){
-            if (msgLevel(MSG::VERBOSE)) verbose() << "This is bbar background" << endmsg;
-            //This is a bbar event
-            return bbar;
+          if (isThisCCbarBackground(mc_mothers_final) ){
+            if (msgLevel(MSG::VERBOSE)) verbose() << "This is ccbar background" << endmsg;
+            //This is a ccbar event
+            return ccbar;
           } else {
-            if (isThisCCbarBackground(mc_mothers_final) ){
-              if (msgLevel(MSG::VERBOSE)) verbose() << "This is ccbar background" << endmsg;
-              //This is a ccbar event
-              return ccbar;
-            } else {
-              if (msgLevel(MSG::VERBOSE)) verbose() << "This is uds background" << endmsg;
-              //This is a light flavour event
-              return uds;
-            }
+            if (msgLevel(MSG::VERBOSE)) verbose() << "This is uds background" << endmsg;
+            //This is a light flavour event
+            return uds;
           }
         }
       }
@@ -229,6 +251,7 @@ const DaughterAndPartnerVector BackgroundCategory::getDaughtersAndPartners( cons
     if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID" 
                                           << ((*iP).first)->particleID().pid() 
                                           << endmsg;
+
     if ((0!=(*iP).second) && (msgLevel(MSG::VERBOSE))) verbose() << "Associated particle has PID" 
                                                                  << ((*iP).second)->particleID().pid() 
                                                                  << endmsg;
@@ -1374,6 +1397,69 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
   }
 
   return associated_mcparts;
+}
+//=============================================================================
+bool BackgroundCategory::foundClones(MCParticleVector mc_particles_linked_to_decay) {
+//Checks if two particles were linked to the same MCParticle in which case this is a
+//clone background. Shouldn't happen for charged particles but could happen for neutrals
+
+  //Do this as a simple double for loop, I realize it is not the most efficient
+  //way but I can't be bothered    
+  for (MCParticleVector::const_iterator iPP1 = mc_particles_linked_to_decay.begin();
+       iPP1 != (mc_particles_linked_to_decay.end()-1); ++iPP1) {
+    if (!(*iPP1)) continue; //We already checked for ghosts any null associations
+                            //here are intermediates and we don't care about them 
+    for (MCParticleVector::const_iterator iPP2 = (iPP1+1);
+       iPP2 != mc_particles_linked_to_decay.end(); ++iPP2) {
+      if (!(*iPP2)) continue; //As above
+      if ((*iPP1) == (*iPP2)) return true;
+    }
+  }
+  return false;
+
+}
+//=============================================================================
+bool BackgroundCategory::hierarchyProblem(MCParticleVector mc_particles_linked_to_decay) {
+//Check that there is no overlap between the associated MCParticles. We have
+//already checked that none of the final state particles are ghosts or clones,
+//but now we need to check that we didn't combine a particle with its own parent.
+
+  //We need to take each particle, save its mothers, then check that they
+  //don't match any of the other MCParticles  
+  MCParticleVector tempmothers;  
+  tempmothers.clear();
+  const LHCb::MCParticle* tempmother = 0;
+ 
+  for (MCParticleVector::const_iterator iPP1 = mc_particles_linked_to_decay.begin();
+       iPP1 != (mc_particles_linked_to_decay.end()); ++iPP1) {
+
+    if (!(*iPP1)) continue;
+    //First make the array of mothers
+    tempmother = (*iPP1)->mother();
+    if (tempmother) 
+      do {
+        tempmothers.push_back(tempmother);
+        tempmother = tempmother->mother();
+      } while (tempmother);
+ 
+    //Now check against all the other particles
+    for (MCParticleVector::const_iterator iPP2 = mc_particles_linked_to_decay.begin();
+       iPP2 != (mc_particles_linked_to_decay.end()); ++iPP2) {
+     
+      if (!(*iPP2) || (iPP1 == iPP2)) continue; 
+      //Check all the mothers
+      for (MCParticleVector::const_iterator iPPM = tempmothers.begin();
+       iPPM != (tempmothers.end()); ++iPPM) {
+        if (!(*iPPM)) break; //Shoudln't happen...
+        if ((*iPPM) == (*iPP2)) return true;
+      }
+
+    }
+    tempmothers.clear();
+ 
+  } 
+  return false;
+
 }
 //=============================================================================
 StatusCode BackgroundCategory::finalize(){

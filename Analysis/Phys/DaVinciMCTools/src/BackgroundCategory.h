@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.27 2009-04-09 19:13:36 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.28 2009-05-10 20:35:53 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -87,6 +87,8 @@ private:
 
   bool isStable(int);
 
+  bool hierarchyProblem(MCParticleVector);
+  bool foundClones(MCParticleVector);
   bool doAllFinalStateParticlesHaveACommonMother(MCParticleVector, MCParticleVector, ParticleVector);
   bool isTheDecayFullyReconstructed(MCParticleVector);
   bool areAllFinalStateParticlesCorrectlyIdentified(ParticleVector, MCParticleVector);
