@@ -1,16 +1,13 @@
-// $Id: MCDecayVertex.h,v 1.3 2008-07-10 12:01:48 ibelyaev Exp $
+// $Id: MCDecayVertex.h,v 1.4 2009-05-10 10:11:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCDECAYVERTEX_H 
 #define LOKI_MCDECAYVERTEX_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// STD& STL 
-// ============================================================================
-#include <functional>
-// ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace MCVertices
   {
     // ========================================================================
@@ -20,7 +17,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */
-    struct MCDecayVertex : public std::unary_function<const LHCb::MCVertex*,bool>
+    struct MCDecayVertex
     {
       inline bool operator() ( const LHCb::MCVertex* vertex ) const 
       { return 0 != vertex && vertex->isDecay () ; }

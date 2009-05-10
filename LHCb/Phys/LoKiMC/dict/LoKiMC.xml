@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.22 2008-12-18 15:24:34 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.23 2009-05-10 10:11:43 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -30,13 +30,6 @@
   <class pattern   = "LoKi::UniqueKeeper<LHCb::MC*>"  />
   <class pattern   = "LoKi::Interface<*>"             />
   
-  <class pattern   = "std::unary_function<*LHCb::MC*,double>"          />
-  <class pattern   = "std::unary_function<*LHCb::MC*,bool>"            />
-  <class pattern   = "std::unary_function<*LHCb::MC*,std::vector<double*>"/>
-  <class pattern   = "std::unary_function<*LHCb::MC*,*MC*>"/>
-  <class pattern   = "std::binary_function<*LHCb::MC*,*LHCb::MC::*,bool>" />
-  
-
   <class pattern   = "LoKi::Functor<*LHCb::MC*>"            />
   <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::MC*>" />
   <class pattern   = "LoKi::BasicFunctors<*LHCb::MC*>"      />
@@ -94,9 +87,6 @@
 
   
   <exclusion>
-    <class name = "std::unary_function<char,bool>"                />
-    <class name = "std::unary_function<const char*,bool>"         /> 
-    <class name = "std::unary_function<const void*,bool>"         /> 
     <class name = "std::vector<const ContainedObject*>"           /> 
     <class name = "std::vector<const LHCb::MCParticle*>"          /> 
     <class name = "LoKi::MCParticles::IsParticle::Objects"        />  
@@ -108,7 +98,6 @@
     <class name = "LoKi::Interface<GaudiAlgorithm>"   /> 
     <class name = "LoKi::Interface<LoKi::ILoKiSvc>"   /> 
     <class name = "LoKi::Interface<IDataProviderSvc>" /> 
-    
     
     <class name="LoKi::MCFinder">
       <method name="=" />
@@ -168,18 +157,11 @@
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="std::unary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="std::binary_function&lt;*&gt;">
-      <method name="=" />
-    </class>
 
     <class pattern="LoKi::Functors::*">
       <method name="=" />
     </class>
     
-
     <class pattern="Decays::*">
       <method name="=" />
     </class>
