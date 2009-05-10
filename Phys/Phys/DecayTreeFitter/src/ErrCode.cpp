@@ -1,7 +1,7 @@
 #include "ErrCode.h"
 
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   std::ostream& operator<<(std::ostream& os, const ErrCode& ec) 
   {

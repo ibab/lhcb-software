@@ -9,7 +9,7 @@
 
 typedef Gaudi::XYZVector BField ;
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   class VtkHelixUtils

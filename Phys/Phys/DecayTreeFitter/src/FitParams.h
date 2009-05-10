@@ -7,7 +7,7 @@
 #include <CLHEP/Matrix/DiagMatrix.h>
 #include "CLHEP/config/CLHEP.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   class FitParams
   {

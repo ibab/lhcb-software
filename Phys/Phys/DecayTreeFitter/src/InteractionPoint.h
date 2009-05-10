@@ -10,7 +10,7 @@ namespace LHCb
   class Vertex ;
 }
 
-namespace vtxtreefit 
+namespace decaytreefit 
 {
 
   class InteractionPoint : public ParticleBase

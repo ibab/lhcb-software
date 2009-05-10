@@ -13,7 +13,7 @@
 #include "DecayChain.h"
 #include "ParticleBase.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   extern int vtxverbose ;
@@ -128,7 +128,7 @@ namespace vtxtreefit
       //m_decaychain->mother()->forceP4Sum(*m_fitparams) ;
 
       if( !(m_fitparams->testCov() ) ) {
-	std::cout << "vtxtreefitter::Fitter: Error matrix not positive definite. "
+	std::cout << "decaytreefitter::Fitter: Error matrix not positive definite. "
 		  << "Changing status to failed." << std::endl ;
 	m_status = FitStatus::Failed ;
 	//print() ;

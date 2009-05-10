@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ErrCode.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   class ParticleBase ;
   class Projection ;

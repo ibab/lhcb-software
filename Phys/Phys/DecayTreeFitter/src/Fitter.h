@@ -19,7 +19,7 @@ namespace LHCb
   class VtxFitParams ;
 }
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   class DecayChain ;

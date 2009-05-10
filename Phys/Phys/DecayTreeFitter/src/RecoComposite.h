@@ -5,7 +5,7 @@
 #include <CLHEP/Matrix/Vector.h>
 #include <CLHEP/Matrix/SymMatrix.h>
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   class RecoComposite : public ParticleBase

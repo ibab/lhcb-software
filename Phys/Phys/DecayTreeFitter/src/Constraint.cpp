@@ -4,7 +4,7 @@
 #include "Constraint.h"
 #include "KalmanCalculator.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   extern int vtxverbose ;

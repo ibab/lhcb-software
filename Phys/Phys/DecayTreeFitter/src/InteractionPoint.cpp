@@ -3,7 +3,7 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   extern int vtxverbose ;
 

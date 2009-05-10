@@ -11,7 +11,7 @@
 using std::cout;
 using std::endl;
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   extern int vtxverbose ;

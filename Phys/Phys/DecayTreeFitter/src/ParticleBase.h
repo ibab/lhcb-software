@@ -13,7 +13,7 @@ namespace LHCb
   class Trajectory ;
 }
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   class FitParams ;
 
@@ -103,7 +103,7 @@ namespace vtxtreefit
 
     void setMother(const ParticleBase* m) { m_mother = m ; } 
     
-    typedef std::vector<vtxtreefit::Constraint> constraintlist ;
+    typedef std::vector<decaytreefit::Constraint> constraintlist ;
     virtual void addToConstraintList(constraintlist& alist, int depth) const = 0 ;
     virtual void addToDaughterList(daucontainer& /*list*/) {} 
     virtual int nFinalChargedCandidates() const { return 0 ; }

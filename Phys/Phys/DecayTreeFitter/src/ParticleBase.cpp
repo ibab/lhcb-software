@@ -17,7 +17,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/Service.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   //template<class T>

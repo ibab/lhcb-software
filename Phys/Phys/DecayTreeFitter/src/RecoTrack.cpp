@@ -4,7 +4,7 @@
 #include "RecoTrack.h"
 #include "FitParams.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   extern int vtxverbose ;

@@ -3,7 +3,7 @@
 
 #include "ParticleBase.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   class RecoParticle : public ParticleBase

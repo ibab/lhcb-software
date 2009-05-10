@@ -6,7 +6,7 @@
 #undef SLOWBUTSAFE
 #undef SKIPHIGHACCURACYCORRECTION
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   inline double fastsymmatrixaccess(double* m, int row, int col)

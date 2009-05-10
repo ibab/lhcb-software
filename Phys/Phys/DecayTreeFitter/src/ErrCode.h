@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   class ErrCode

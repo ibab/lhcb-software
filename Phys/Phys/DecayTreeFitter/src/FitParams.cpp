@@ -2,7 +2,7 @@
 #include <iomanip>
 #include "FitParams.h"
 
-namespace vtxtreefit {
+namespace decaytreefit {
 
   FitParams::FitParams(int dim) 
     : m_dim(dim),m_par(dim,0),m_cov(dim,0),m_scale(dim,1),

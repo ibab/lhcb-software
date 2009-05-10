@@ -6,7 +6,7 @@
 #include "FitParams.h"
 #include "ErrCode.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   class KalmanCalculator

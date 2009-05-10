@@ -11,7 +11,7 @@
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
 
   extern int vtxverbose ;

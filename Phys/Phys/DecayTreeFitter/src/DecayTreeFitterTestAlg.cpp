@@ -1,4 +1,4 @@
-// $Id: DecayTreeFitterTestAlg.cpp,v 1.2 2009-05-07 14:14:55 wouter Exp $
+// $Id: DecayTreeFitterTestAlg.cpp,v 1.3 2009-05-10 20:33:07 wouter Exp $
 
 
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -101,7 +101,7 @@ StatusCode DecayTreeFitterTestAlg::execute()
     first = false ;
   }
 
-  //vtxtreefit::vtxverbose = 2 ;
+  //decaytreefit::vtxverbose = 2 ;
 
   LHCb::Particles* particles= get<LHCb::Particles>(m_inputLocation);
   //LHCb::Particles* particles = desktop()->particles();
@@ -109,7 +109,7 @@ StatusCode DecayTreeFitterTestAlg::execute()
   for( LHCb::Particles::iterator ip = particles->begin() ;
        ip != particles->end(); ++ip ) {
     LHCb::Particle* p = *ip ;
-    vtxtreefit::Fitter fitter(*p)  ;
+    decaytreefit::Fitter fitter(*p)  ;
     //fitter.print() ;
     fitter.fit() ;
     //fitter.print() ;

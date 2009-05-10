@@ -5,7 +5,7 @@
 #include <CLHEP/Matrix/SymMatrix.h>
 #include <CLHEP/Matrix/Matrix.h>
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   class Projection

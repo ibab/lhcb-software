@@ -3,7 +3,7 @@
 #include "ParticleBase.h"
 #include "DecayChain.h"
 
-namespace vtxtreefit
+namespace decaytreefit
 {
   
   extern int vtxverbose ;

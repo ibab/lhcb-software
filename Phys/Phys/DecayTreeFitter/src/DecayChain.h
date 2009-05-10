@@ -7,7 +7,7 @@
 
 class LHCb::Particle ;
 
-namespace vtxtreefit {
+namespace decaytreefit {
 
   class FitParams ;
   class ParticleBase ;

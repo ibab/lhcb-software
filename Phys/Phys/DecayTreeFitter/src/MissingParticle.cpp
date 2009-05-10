@@ -2,7 +2,7 @@
 // #include "MissingParticle.h"
 // #include "Event/Particle.h"
 
-// namespace vtxtreefit
+// namespace decaytreefit
 // {
 
 //   extern int vtxverbose ;

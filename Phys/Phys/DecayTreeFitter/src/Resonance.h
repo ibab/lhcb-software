@@ -3,7 +3,7 @@
 
 #include "InternalParticle.h"
 
-namespace vtxtreefit 
+namespace decaytreefit 
 {
   class FitParams ;
 
