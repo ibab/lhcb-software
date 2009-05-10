@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.13 2009-04-16 12:56:08 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.14 2009-05-10 15:20:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,6 +8,7 @@
 // ============================================================================
 #include <algorithm>
 #include <functional>
+#include <memory>
 // ============================================================================
 // from Gaudi
 // ============================================================================
@@ -38,8 +39,6 @@
 // ============================================================================
 #include "boost/lexical_cast.hpp"
 // ============================================================================
-
-// ============================================================================
 /** @file
  * 
  *  Implementation file for class : CaloSinglePhotonAlg
@@ -51,11 +50,9 @@
  *  @date 31/03/2002 
  */
 // ============================================================================
-
 DECLARE_ALGORITHM_FACTORY( CaloSinglePhotonAlg );
-
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name algorithm name 
  *  @param pSvc service locator 
  */
@@ -92,24 +89,18 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   declareProperty ( "InputData"         , m_inputData     ) ;  
   declareProperty ( "OutputData"        , m_outputData     ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
-
+  
   if("HLT"==context()){
     m_inputData = LHCb::CaloClusterLocation::EcalHlt;
     m_outputData= LHCb::CaloHypoLocation::PhotonsHlt;
+  } 
 }
-  
-};
 // ============================================================================
-
+// destructor (protected and virtual)
 // ============================================================================
-/// destructor (protected and virtual)
+CaloSinglePhotonAlg::~CaloSinglePhotonAlg() {}
 // ============================================================================
-CaloSinglePhotonAlg::~CaloSinglePhotonAlg() {}; 
-// ============================================================================
-
-
-// ============================================================================
-/**  standard Algorithm initialization
+/*   standard Algorithm initialization
  *   @return status code 
  */
 // ============================================================================
@@ -170,11 +161,9 @@ CaloSinglePhotonAlg::initialize()
   }
   ///
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/**  standard Algorithm finalization
+/*   standard Algorithm finalization
  *   @return status code 
  */
 // ============================================================================
@@ -194,16 +183,15 @@ CaloSinglePhotonAlg::finalize()
   m_hypotoolsTypeNames2   .clear () ;
   // finalize the base class 
   return GaudiAlgorithm::finalize() ; 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/**  standard Algorithm execution
+/*   standard Algorithm execution
  *   @return status code 
  */
 // ============================================================================
 StatusCode 
-CaloSinglePhotonAlg::execute(){
+CaloSinglePhotonAlg::execute()
+{
   using namespace  LHCb::CaloDataFunctor;
   // avoid long names 
   typedef LHCb::CaloClusters             Clusters ;
@@ -216,81 +204,82 @@ CaloSinglePhotonAlg::execute(){
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
   put( hypos , m_outputData );
-
+  
   const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData ) ; 
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( det ) ;
-
+  
   // loop over clusters 
-  for( iterator cluster = clusters->begin() ;clusters->end() != cluster ; ++cluster ){
+  for( iterator cluster = clusters->begin() ;clusters->end() != cluster ; ++cluster )
+  {
     if ( m_eTcut > 0 && eT( *cluster ) < m_eTcut ) { continue ; }
-
+    
     bool select = true ;
     // loop over all selectors 
-    for( Selectors::const_iterator selector = m_selectors.begin() ; select && m_selectors.end() != selector ; ++selector ){ 
+    for( Selectors::const_iterator selector = m_selectors.begin() ; 
+         select && m_selectors.end() != selector ; ++selector )
+    { 
       select = (**selector)( *cluster ); 
     }
     // cluster to be selected? 
-    if( !select ) { continue ; }
+    if ( !select ) { continue ; }
     
     // create "Hypo"/"Photon" object
-    LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
-    // set parameters of newly created hypo 
-    hypo->setHypothesis( LHCb::CaloHypo::Photon );      
-    hypo->addToClusters( *cluster );
-    hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
+    std::auto_ptr<LHCb::CaloHypo> hypo ( new LHCb::CaloHypo() ) ;
     
-
+    // set parameters of newly created hypo 
+    hypo -> setHypothesis ( LHCb::CaloHypo::Photon );      
+    hypo -> addToClusters ( *cluster );
+    // NEW OD 13/06/06
+    hypo -> setPosition   ( new LHCb::CaloPosition((*cluster)->position()) ); 
+    
     StatusCode sc( StatusCode::SUCCESS );
     
     // loop over all corrections and apply corrections  
-    for( Corrections::const_iterator correction = m_corrections.begin() ;
-         sc.isSuccess() && m_corrections.end() != correction ; ++correction ){ 
-      sc = (**correction) ( hypo ); 
-    }
+    for ( Corrections::const_iterator correction = m_corrections.begin() ;
+          sc.isSuccess() && m_corrections.end() != correction ; ++correction )
+    { sc = (**correction) ( hypo.get() ); }
     
-    if( sc.isFailure() ){
-      delete hypo ; hypo = 0 ;                        // ATTENTION !
+    if( sc.isFailure() )
+    {
       Error("Error from Correction Tool, skip the cluster  " , sc ); 
       continue ;                                      // CONTINUE  !  
     }
     
     // loop over other hypo tools (e.g. add extra digits)
     for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
-         sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool ){ 
-      sc = (**hypotool) ( hypo ); 
-    }
+         sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
+    { sc = (**hypotool) ( hypo.get() ); }
     
-    if( sc.isFailure() ){
-      delete hypo ; hypo = 0 ;                       // ATTENTION !
+    if ( sc.isFailure() )
+    {
       Error("Error from Other Hypo Tool, skip the cluster  " , sc );
       continue  ;                                    // ATTENTION ! 
     }
-
+    
     // loop over all corrections and apply corrections  
     for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
-         sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 ){ 
-      sc = (**cor2) ( hypo ); 
-    }
+         sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
+    { sc = (**cor2) ( hypo.get() ); }
     
-    if( sc.isFailure() ){
-      delete hypo ; hypo = 0 ;                      // ATTENTION !
-      Error("Error from Correction Tool 2 skip the cluster" , sc );  
+    if ( sc.isFailure() )
+    {
+      Error ( "Error from Correction Tool 2 skip the cluster" , sc );  
       continue ;                                    // CONTINUE  ! 
     }
-
+    
     // loop over other hypo tools (e.g. add extra digits)
     for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
-         sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 ){ 
-      sc = (**hypotool2) ( hypo ); }
+         sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
+    { sc = (**hypotool2) ( hypo.get() ); }
     
-    if( sc.isFailure() ){
-      delete hypo ; hypo = 0 ;                      // ATTENTION !
-      Error("Error from Other Hypo Tool 2, skip the cluster" , sc ); 
+    if ( sc.isFailure() )
+    {
+      Error ( "Error from Other Hypo Tool 2, skip the cluster" , sc ); 
       continue ;                                    // CONTINUE !
     }
     
     /// add the hypo into container of hypos 
-    if( 0 != hypo ) { hypos->insert( hypo ); }
+    hypos->insert ( hypo.release() ) ; 
     
     
   } // end of the loop over all clusters
@@ -298,9 +287,13 @@ CaloSinglePhotonAlg::execute(){
   debug() << " # of created Photon  Hypos is  " 
           << hypos->size()  << "/" << clusters->size()
           << endreq ;
-
+  
+  counter ( "#PhotonHypos" ) += hypos->size() ;
+  
   return StatusCode::SUCCESS;
-};
+}
+// ============================================================================
+// The END 
 // ============================================================================
 
 

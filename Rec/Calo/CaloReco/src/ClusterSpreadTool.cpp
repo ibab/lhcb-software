@@ -1,15 +1,20 @@
-// $Id: ClusterSpreadTool.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: ClusterSpreadTool.cpp,v 1.7 2009-05-10 15:20:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
+// ============================================================================
 // CaloDet 
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "ClusterSpreadTool.h"
-
 // ============================================================================
 /** @file ClusterSpreadTool.cpp
  *
@@ -19,11 +24,9 @@
  *  @date 23/11/2001
  */
 // ============================================================================
-
 DECLARE_TOOL_FACTORY( ClusterSpreadTool );
-
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param type tool type (useless)
  *  @param name tool name
  *  @param parent pointer to parent object (service, algorithm or tool)  
@@ -40,18 +43,13 @@ ClusterSpreadTool::ClusterSpreadTool
   declareProperty( "Detector"        , m_detData  );
   /// declare available interafces 
   declareInterface<ICaloClusterTool>(this);
-};
-
+}
 // ============================================================================
-/** destructor, virtual and protected 
- */
+// destructor, virtual and protected 
 // ============================================================================
-ClusterSpreadTool::~ClusterSpreadTool()
-{ };
-
- 
+ClusterSpreadTool::~ClusterSpreadTool() {} 
 // ============================================================================
-/** standard initialization method 
+/*  standard initialization method 
  *  @return status code 
  */
 // ============================================================================
@@ -67,31 +65,36 @@ StatusCode ClusterSpreadTool::initialize ()
   m_estimator.setDetector( m_det ) ;
   ///
   return StatusCode::SUCCESS;
-};
-
+}
 // ============================================================================
-/** standard finalization method 
+/*  standard finalization method 
  *  @return status code 
  */
 // ============================================================================
 StatusCode ClusterSpreadTool::finalize   ()
 {  
-  /// finalize the  the base class
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    debug () << " Corrected Clusters, Ratio : " 
+             << m_estimator.invalidRatio  () << endmsg ;
+    debug () << " Corrected Clusters, Et    : " 
+             << m_estimator.invalidEnergy () << endmsg ;
+    debug () << " Corrected Clusters, Cells : " 
+             << m_estimator.invalidCells  () << endmsg ;
+  }
+  /// finalize the base class
   return GaudiTool::finalize ();
-};
-
+}
 // ============================================================================
-/** The main processing method 
+/*  The main processing method 
  *  @param cluster pointer to CaloCluster object to be processed
  *  @return status code 
  */  
 // ============================================================================
 StatusCode ClusterSpreadTool::process    
-( LHCb::CaloCluster* cluster ) const 
-{ return (*this)( cluster ); };
-
+( LHCb::CaloCluster* cluster ) const { return (*this)( cluster ); }
 // ============================================================================
-/** The main processing method (functor interface) 
+/*  The main processing method (functor interface) 
  *  @param cluster pointer to CaloCluster object to be processed
  *  @return status code 
  */  
@@ -106,5 +109,9 @@ StatusCode ClusterSpreadTool::operator()
     { return Error( "DeCalorimeter* points to NULL!") ; }
   /// apply the estimator 
   return m_estimator( cluster );
-};
+}
+// ============================================================================
+// The END 
+// ============================================================================
+
   

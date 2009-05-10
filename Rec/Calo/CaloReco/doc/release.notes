@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.138 2009-05-08 14:29:48 cattanem Exp $
+! $Id: release.notes,v 1.139 2009-05-10 15:20:36 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-10 - Vanya Belyaev 
+
+ - ClusterSpreadTool.cpp
+   add (debug) printout of counters for spread-corrected clusters 
+
+ - cmt/requirements 
+   version increment to v4r19p1 
 
 !========================== CaloReco v4r19 2009-05-08 =========================
 ! 2008-04-17 - Olivier Deschamps

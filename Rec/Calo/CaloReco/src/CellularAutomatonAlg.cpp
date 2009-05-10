@@ -1,35 +1,47 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.3 2009-01-09 14:50:30 odescham Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.4 2009-05-10 15:20:36 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
-// from Gaudi
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
-
+// ============================================================================
+// DetDesc
+// ============================================================================
 #include "DetDesc/IGeometryInfo.h"
+// ============================================================================
+// Event 
 // ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
 #include "Event/CellID.h"
+// ============================================================================
+// CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloUtil.h"
 // ============================================================================
+// CaloUtils 
+// ============================================================================
 #include "CaloUtils/ClusterFunctors.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "CellularAutomatonAlg.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : CellularAutomatonAlg
-//
-// 2008-04-03 : Victor Egorychev
-//-----------------------------------------------------------------------------
-
+// ============================================================================
+/** @file 
+ *  Implementation file for class : CellularAutomatonAlg
+ * 
+ *  @date 2008-04-03 
+ *  @author Victor Egorychev
+ */
+// ============================================================================
 // Declaration of the Algorithm Factory
+// ============================================================================
 DECLARE_ALGORITHM_FACTORY( CellularAutomatonAlg );
-
-
-//=============================================================================
+// ============================================================================
 // Standard constructor, initializes variables
-//=============================================================================
+// ============================================================================
 CellularAutomatonAlg::CellularAutomatonAlg( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
@@ -49,65 +61,64 @@ CellularAutomatonAlg::CellularAutomatonAlg( const std::string& name,
   // set default data as a function of detector
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
   std::string det = name.substr( index, 4 );
-  if(det == "Ecal"){
+  if(det == "Ecal")
+  {
     m_inputData=   LHCb::CaloDigitLocation::Ecal;
     m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
       LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
     m_detData= DeCalorimeterLocation::Ecal;
   }
-  else if( det == "Hcal"){
+  else if( det == "Hcal")
+  {
     m_inputData=   LHCb::CaloDigitLocation::Hcal;
     m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
       LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
     m_detData= DeCalorimeterLocation::Hcal;
   }
-
-
 }
-//=============================================================================
+// ============================================================================
 // Destructor
-//=============================================================================
-CellularAutomatonAlg::~CellularAutomatonAlg() {} 
-
-//=============================================================================
+// ============================================================================
+CellularAutomatonAlg::~CellularAutomatonAlg() {}
+// ============================================================================
 // Initialization
-//=============================================================================
-StatusCode CellularAutomatonAlg::initialize() {
+// ============================================================================
+StatusCode CellularAutomatonAlg::initialize() 
+{
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
   if (m_inputData.empty() || m_detData.empty() || m_outputData.empty() ) 
-    {
-      return Error("Path hits, path geom, path clusters must"
-                   + std::string(" be defined in job options file!") );
-    }
-
+  {
+    return Error("Path hits, path geom, path clusters must"
+                 + std::string(" be defined in job options file!") );
+  }
+  
   /// Retrieve geometry of detector
   m_detector = getDet<DeCalorimeter>( m_detData );
   if( 0 == m_detector ) { return StatusCode::FAILURE; }
-
-
+  
   // Tool Interface
   m_tool = tool<ICaloClusterization>(m_toolName, this);
-
+  
   // init counters
   m_pass = 0.;
   m_clus = 0.;
   m_event= 0.;
   m_passMin= 999999;
   m_passMax = 0;
-
+  
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+// ============================================================================
 // Main execution
-//=============================================================================
-StatusCode CellularAutomatonAlg::execute() {
-
+// ============================================================================
+StatusCode CellularAutomatonAlg::execute() 
+{
+  
   // get input data (sequential and simultaneously direct access!)  
   LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_inputData );
-
+  
   /** Create the container of clusters and  
    *  register it into the event data store
    */ 
@@ -115,49 +126,50 @@ StatusCode CellularAutomatonAlg::execute() {
   // update the version number (needed for serialization)
   output -> setVersion( 2 ) ;
   put ( output , m_outputData  ) ;
-
+  
   // create vector of pointers for CaloCluster    
   std::vector<LHCb::CaloCluster*> clusters;
-
+  
   // clusterization tool which return the vector of pointers for CaloClusters
 
   StatusCode sc;
-  if( m_neig_level> 0){
+  if( m_neig_level> 0)
+  {
     std::vector<LHCb::CaloCellID> seeds;
     seeds.clear();
     sc= m_tool->clusterize(clusters, digits, m_detector, seeds, m_neig_level) ;
   }
-  else{
+  else
+  {
     sc = m_tool->clusterize(clusters, digits, m_detector) ;
   }
   
   // TODO : use level with list of seeds
-
-  if ( sc.isFailure() ){
-    return Error(" Failure from the tool, no clusterization!");
-  }
-
-
+  
+  if ( sc.isFailure() )
+  { return Error(" Failure from the tool, no clusterization!" , sc ); }
+  
   // put to the container of clusters
   for ( std::vector<LHCb::CaloCluster*>::const_iterator icluster = clusters.begin();
-        clusters.end() != icluster; ++icluster){
-    output -> insert ( *icluster ) ;
-  }
-
+        clusters.end() != icluster; ++icluster)
+  { output -> insert ( *icluster ) ; }
   
   /** sort the sequence to simplify the comparison 
    *  with other clusterisation techniques 
    */
-  
-  if ( m_sort )  { 
-    if ( !m_sortByET ) {
+  if ( m_sort )  
+  { 
+    if ( !m_sortByET ) 
+    {
       // sorting criteria: Energy
       LHCb::CaloDataFunctor::Less_by_Energy<const LHCb::CaloCluster*> Cmp;
       // perform the sorting 
       std::stable_sort    ( clusters.begin()            ,
                             clusters.end  ()            ,
                             LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
-    }else{
+    }
+    else
+    {
       // sorting criteria : Transverse Energy
       LHCb::CaloDataFunctor::Less_by_TransverseEnergy<const LHCb::CaloCluster*,
         const DeCalorimeter*> Cmp ( m_detector ) ;
@@ -167,7 +179,7 @@ StatusCode CellularAutomatonAlg::execute() {
                            LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
     }
   }
-
+  
   // statistics
   m_pass += (double) m_tool->iterations();
   m_clus += (double) output->size();
@@ -175,8 +187,10 @@ StatusCode CellularAutomatonAlg::execute() {
   if(m_tool->iterations() < m_passMin)m_passMin = m_tool->iterations();
   if(m_tool->iterations() > m_passMax)m_passMax = m_tool->iterations();
   
-
-  if ( msgLevel( MSG::DEBUG) ){
+  counter( "#Clusters") += output->size() ;
+  
+  if ( msgLevel( MSG::DEBUG) )
+  {
     debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
             << m_tool->iterations() << " iterations" <<endreq;
     debug() << " ----------------------- Cluster List : " << endreq;
@@ -187,26 +201,28 @@ StatusCode CellularAutomatonAlg::execute() {
               << endreq;
     }    
   }
-
+  
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+// ============================================================================
 //  Finalize
-//=============================================================================
-StatusCode CellularAutomatonAlg::finalize() {
-
-
+// ============================================================================
+StatusCode CellularAutomatonAlg::finalize() 
+{
+  
   double avePass = 0.;
   double aveClus = 0.;
-  if(m_event>0){
+  if(m_event>0)
+  {
     avePass = m_pass/m_event;
     aveClus = m_clus/m_event;
   }
-  info() << "Built " << aveClus <<" cellular automaton clusters/event  with " 
-         << avePass << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endreq;
-
+  info() << "Built " << aveClus 
+         <<" cellular automaton clusters/event  with " 
+         << avePass  << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endreq;
+  
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
-//=============================================================================
+// =============================================================================
+// the END 
+// =============================================================================
