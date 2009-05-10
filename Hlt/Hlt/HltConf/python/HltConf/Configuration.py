@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.75 2009-05-01 18:02:12 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.76 2009-05-10 12:51:16 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -100,7 +100,7 @@ class HltConf(LHCbConfigurableUser):
             else :
                 from HltThresholdSettings import SettingsForDataType
                 ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
-            # print ThresholdSettings
+            print ThresholdSettings
 
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
@@ -116,7 +116,10 @@ class HltConf(LHCbConfigurableUser):
                 conf = type2conf[i]()
                 if ThresholdSettings and i in ThresholdSettings : 
                     for (k,v) in ThresholdSettings[i].iteritems() :
-                        setattr(conf,k,v)
+                        if hasattr(conf,k) :
+                            print '# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k))
+                        else :
+                            setattr(conf,k,v)
             Hlt1Conf()
             if hlttype.find('Hlt2') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
@@ -165,6 +168,9 @@ class HltConf(LHCbConfigurableUser):
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
 
     def configureANNSelections(self) :
+        ### TODO: use the computed indices available from the lines...
+        ### TODO: what about shared selections??? (which appear with multiple indices!)
+        ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
