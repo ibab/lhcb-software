@@ -1,4 +1,4 @@
-// $Id: CaloGetterTool.cpp,v 1.1 2009-04-17 11:43:51 odescham Exp $
+// $Id: CaloGetterTool.cpp,v 1.2 2009-05-10 15:22:11 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -83,37 +83,61 @@ StatusCode CaloGetterTool::initialize(){
 }
 
 
-void CaloGetterTool::update(){
+void CaloGetterTool::update()
+{
   // digits
-  if( m_digiUpd ){
-    for(std::vector<std::string>::iterator iloc = m_digiLoc.begin();m_digiLoc.end() != iloc; ++iloc){
-      std::string loc = *iloc;
-      if(exist<LHCb::CaloDigits>(loc))m_digits[ loc ] = get<LHCb::CaloDigits>( loc );  
+  if ( m_digiUpd )
+  {
+    for(std::vector<std::string>::iterator iloc = m_digiLoc.begin();m_digiLoc.end() != iloc; ++iloc)
+    {
+      if ( exist<LHCb::CaloDigits>(*iloc) ) 
+      { 
+        LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( *iloc );
+        m_digits[ *iloc ] =  digits ;
+        counter ("#Digits @ " + (*iloc) ) += digits->size() ;
+      }
     }
   }
   // clusters
-  if( m_clusUpd ){
-    for(std::vector<std::string>::iterator iloc = m_clusLoc.begin();m_clusLoc.end() != iloc; ++iloc){
-      std::string loc = *iloc;
-      if(exist<LHCb::CaloClusters>(loc))m_clusters[ loc ] = get<LHCb::CaloClusters>( loc );  
+  if( m_clusUpd )
+  {
+    for(std::vector<std::string>::iterator iloc = m_clusLoc.begin();m_clusLoc.end() != iloc; ++iloc)
+    {
+      if ( exist<LHCb::CaloClusters>(*iloc)) 
+      {
+        LHCb::CaloClusters* clusters = get<LHCb::CaloClusters>( *iloc );  
+        m_clusters[ *iloc ] = clusters ;
+        counter ("#Clusters @ " + (*iloc) ) += clusters->size() ;        
+      }
     }
   }
   // hypos
-  if( m_hypoUpd ){
-    for(std::vector<std::string>::iterator iloc = m_hypoLoc.begin();m_hypoLoc.end() != iloc; ++iloc){
-      std::string loc = *iloc;
-      if(exist<LHCb::CaloHypos>(loc))m_hypos[ loc ] = get<LHCb::CaloHypos>( loc );  
+  if( m_hypoUpd )
+  {
+    for(std::vector<std::string>::iterator iloc = m_hypoLoc.begin();m_hypoLoc.end() != iloc; ++iloc)
+    {
+      if ( exist<LHCb::CaloHypos>(*iloc) ) 
+      {
+        LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *iloc );  
+        m_hypos[ *iloc ] = hypos ;
+        counter ("#Hypos @ " + (*iloc) ) += hypos->size() ;        
+      }      
     }
   }  
   // provider
-  if( m_provUpd){
-    for(std::map<std::string,ICaloDataProvider*>::iterator ip = m_provider.begin();m_provider.end()!=ip;++ip){
-      std::string det = (*ip).first;
-      ICaloDataProvider* provider = (*ip).second;
+  if( m_provUpd)
+  {
+    for(std::map<std::string,ICaloDataProvider*>::iterator ip = m_provider.begin();m_provider.end()!=ip;++ip)
+    {
+      const std::string& det = ip->first;
+      ICaloDataProvider* provider = ip->second;
       m_prov[det] = provider->getBanks();
     }    
   }
 }
+// ============================================================================
+// The END 
+// ============================================================================
 
 
  

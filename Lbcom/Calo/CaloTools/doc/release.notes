@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.61 2009-05-08 06:49:34 cattanem Exp $
+! $Id: release.notes,v 1.62 2009-05-10 15:22:11 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-05-10 - Vanya Belyaev
+ - a bit more statistical prinout  
+ - cmt/requirements
+
+     verison increment to v5r9
 
 !========================== CaloTools v5r8 2009-05-08 =========================
 ! 2008-04-17 - Olivier Deschamps
