@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.87 2009-05-07 13:00:43 cattanem Exp $
+! $Id: release.notes,v 1.88 2009-05-10 20:35:35 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-05-10 - V. Gligorov
+ - Added two new categories to IBackgroundCategory.h and updated
+   the documentation
 
 !====================== DaVinciMCKernel v3r2 2009-05-07 ======================
 ! 2009-05-07 - Juan PALACIOS

@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.4 2008-02-07 12:48:40 cattanem Exp $
+// $Id: IBackgroundCategory.h,v 1.5 2009-05-10 20:34:03 gligorov Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -138,7 +138,7 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *  matched to the true final state particles of a true 
  *  Bs -> (Bs ->KKpi) pi+pi0 decay is classified as a low-mass background. 
  * 
- * Please note that there are now two additional categories:
+ * Please note that there are now three additional categories:
  * 
  * FromPV : The candidate particle has at least one final state daughter which
  *          comes directly from the primary vertex or a short lived resonance,
@@ -146,9 +146,15 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *
  * AllFromSamePV : The candidate particle's final state daughters all come from
  *                 the same PV, or from short lived resonances from the same PV.
+ *
+ * Clone : two final-state Particles are associated to the same MC Particle.
+ *
+ * Hierarchy : a final state particle has an associated MCParticle which is also
+ *             the original mother of the MCParticle associated to one of the other
+ *             final state particles.  
  * 
  *  @author Vladimir Gligorov
- *  @date   2005-11-03
+ *  @date   2009-05-11
  */
 class IBackgroundCategory : virtual public IAlgTool {
 public: 
@@ -166,6 +172,8 @@ public:
                     PartRecoPhysBkg = 40,
                     LowMassBkg = 50,
                     Ghost = 60,
+                    Clone = 63,
+                    Hierarchy = 66,
                     FromPV = 70,
                     AllFromSamePV = 80,
                     FromDifferentPV = 100,
