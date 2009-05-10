@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-05-10 - Gerhard Raven
+ - remove stage histo from HltLine -- it's a subset of the step histo
+
 !========================== HltCommon v5r5 2009-05-06 ===================
 
 ! 2009-04-21 - Gerhard Raven

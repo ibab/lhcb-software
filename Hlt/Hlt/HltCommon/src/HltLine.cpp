@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.21 2009-04-18 12:10:09 graven Exp $
+// $Id: HltLine.cpp,v 1.22 2009-05-10 13:53:05 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -89,9 +89,7 @@ HltLine::HltStage::execute(ISequencerTimerTool* timertool) {
     try {
         result = algorithm()->sysExecute();
         algorithm()->setExecuted( true );
-    } catch (...) {
-        result = StatusCode::FAILURE;
-    }
+    } catch (...) { }
     if ( timertool ) timertool->stop( timer() );
     return result;
 }
@@ -154,7 +152,6 @@ HltLine::HltLine( const std::string& name,
   , m_timerTool( 0 )
   , m_jos(0)
   , m_algMgr(0)
-  , m_stageHisto(0)
   , m_errorHisto(0)
   , m_hltANNSvc(0)
   , m_hltDataSvc(0)
@@ -230,7 +227,6 @@ StatusCode HltLine::initialize() {
 
   //== Create the monitoring histogram
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
-  m_stageHisto = book1D(m_decision,     m_decision,     -0.5,7.5,8);
   m_timeHisto  = book1D(name()+" walltime",name()+" log(wall time/ms)",-3,6);
   m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
@@ -285,8 +281,6 @@ StatusCode HltLine::execute() {
   } else {
     error() << " Could not find Hlt1/Hlt2 in decision " << m_decision << " ???? " << endmsg;
   }
-
-
   boost::optional<IANNSvc::minor_value_type> key = annSvc().value(*major,m_decision);
 
   if (!key) {
@@ -330,7 +324,6 @@ StatusCode HltLine::execute() {
   if (accept) ++m_acceptRate;
   counter("#errors") += ( report.errorBits()!=0);
 
-  fill( m_stageHisto, report.executionStage(),1.0);
   fill( m_errorHisto, report.errorBits(),1.0);
   // make stair plot
   SubAlgos::const_iterator i = m_subAlgo.begin();

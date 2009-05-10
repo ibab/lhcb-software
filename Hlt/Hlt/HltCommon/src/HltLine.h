@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.11 2009-04-18 11:51:19 graven Exp $
+// $Id: HltLine.h,v 1.12 2009-05-10 13:53:05 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -127,7 +127,6 @@ private:
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
-  AIDA::IHistogram1D* m_stageHisto;
   AIDA::IHistogram1D* m_errorHisto;
   AIDA::IHistogram1D *m_timeHisto;
   AIDA::IHistogram1D *m_stepHisto;
