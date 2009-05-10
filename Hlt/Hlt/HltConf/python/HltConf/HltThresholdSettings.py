@@ -45,8 +45,9 @@ Miriam_20090430 = { 'HA' : { 'SingleHadron_PTCut' : 4450
                            }
                   }
 
-from copy import deepcopy
-FEST = deepcopy(Miriam_20090430)
+#from copy import deepcopy
+# FEST = deepcopy(Miriam_20090430)
+FEST = {}
 FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
               , 'XP' : { 'Prescale' : { 'Hlt1VeloAlign' : 1 } }
               , 'PA' : { 'Prescale' : { 'Hlt1Physics'   : 1 
