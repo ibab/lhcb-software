@@ -1,7 +1,34 @@
-! $Id: release.notes,v 1.119 2009-05-06 14:58:13 cattanem Exp $
+! $Id: release.notes,v 1.120 2009-05-10 15:17:00 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-05-08 - Vanya BELYAEV
+
+ - CaloUtils/SpreadEstimator.h 
+   src/SpreadEstimator.cpp 
+
+   put more protection for evalaution of 
+   cluster covariance("spread") matrix.
+
+    The algorithm is:
+
+    1) evaluate the eigenvalues 
+    2) for "suspicion" clusters:
+         - "small" eigenvalues
+         - "small" diagonal ements  
+         - four or less cells with positive energy 
+         replace the eigenvalues with max("cellsize*cellsize/12", eigenvalue)
+
+    3) recalculate the covariance/spread matrix using the updated eigenvalues
+       *and* old eigenvectors ("cluster orientation") 
+
+    To decrease the influence of numerical uncertanties  
+    the temporary coordinate bias is intorduced..
+     
+  - cmt/requirements 
+
+    version increment to v8r5 
 
 !========================== CaloUtils v8r4 2009-05-06 =========================
 ! 2009-04-20 - Olivier Deschamps
