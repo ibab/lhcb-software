@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.6 2009-05-11 09:40:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.6 2009-05-11 09:40:23 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -26,7 +26,7 @@
 namespace {
   struct FSMMonitoring {
     unsigned long lastCmd, doneCmd;
-    int pid;
+    int pid, partitionID;
     char targetState, state, metaState, pad;
   };
 }
@@ -61,7 +61,8 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
           FSMTask* t   = itm->data<FSMTask>();
           ::strncpy(t->name,svc.substr(0,svc.find("/")).c_str(),sizeof(t->name));
           t->name[sizeof(t->name)-1] = 0;
-          t->processID = -1;
+          t->processID   = -1;
+	  t->partitionID = -1;
           m_clients[nam] = itm;
           itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
           if ( m_verbose ) {
@@ -101,6 +102,7 @@ void RODimFSMListener::infoHandler(void* tag, void* address, int* size) {
       Item* itm      = *(Item**)tag;
       FSMTask* t     = itm->data<FSMTask>();
       t->processID   = mon->pid;
+      t->partitionID = mon->partitionID;
       t->state       = mon->state;
       t->targetState = mon->targetState;
       t->metaState   = mon->metaState;

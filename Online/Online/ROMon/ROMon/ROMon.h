@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.10 2009-02-24 10:38:19 frankb Exp $
+// $Id: ROMon.h,v 1.11 2009-05-11 09:40:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.10 2009-02-24 10:38:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.11 2009-05-11 09:40:23 frankb Exp $
 #ifndef ROMON_ROMON_H
 #define ROMON_ROMON_H 1
 
@@ -91,6 +91,8 @@ namespace ROMon {
     char name[BM_USER_NAME_LEN];
     /// Process identifier on node
     int  processID;
+    /// Partition identifier
+    int  partitionID;
     /// Current FSM state
     char state;
     /// Target state of the transition
