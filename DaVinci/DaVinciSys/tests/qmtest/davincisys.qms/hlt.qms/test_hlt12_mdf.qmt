@@ -9,16 +9,14 @@
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |     10000 |       3991 |(  39.9100 +- 0.489713 )%|   -------   |   -------   |
+ |*"#accept"                                       |     10000 |       3993 |(  39.9300 +- 0.489755 )%|   -------   |   -------   |
  | "#errors"                                       |     10000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-""", stdout, result, causes, signature_offset = 0)
-</text></argument>
-<argument name="validator"><text>
+""", signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        96 |          4 |(  4.16667 +- 2.03947  )%|   -------   |   -------   |
- | "#errors"                                       |        96 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-""", stdout, result, causes, signature_offset = 0)
+ |*"#accept"                                       |        98 |          4 |(  4.08163 +- 1.99873  )%|   -------   |   -------   |
+ | "#errors"                                       |        98 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+""",  signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>

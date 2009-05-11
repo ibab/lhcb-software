@@ -7,10 +7,16 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
+Hlt1Global                                                  SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |       500 |         17 |(  3.40000 +- 0.810481 )%|   -------   |   -------   |
+ | "#errors"                                       |       500 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+""", stdout, result, causes, signature_offset = 0, id = "Hlt1")
+findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       497 |          3 |( 0.603622 +- 0.347448 )%|   -------   |   -------   |
- | "#errors"                                       |       497 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-""", stdout, result, causes, signature_offset = 0)
+ |*"#accept"                                       |       391 |          4 |(  1.02302 +- 0.508886 )%|   -------   |   -------   |
+ | "#errors"                                       |       391 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+""", stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>

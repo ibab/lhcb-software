@@ -11,14 +11,12 @@ Hlt1Global                                                  SUCCESS Number of co
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |       999 |        501 |(  50.1502 +- 1.58192  )%|   -------   |   -------   |
  | "#errors"                                       |       999 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-""", stdout, result, causes, signature_offset = 0)
-</text></argument>
-<argument name="validator"><text>
+""", stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       763 |        470 |(  61.5990 +- 1.76074  )%|   -------   |   -------   |
+ |*"#accept"                                       |       763 |        485 |(  63.5649 +- 1.74223  )%|   -------   |   -------   |
  | "#errors"                                       |       763 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-""", stdout, result, causes, signature_offset = 0)
+""", stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
