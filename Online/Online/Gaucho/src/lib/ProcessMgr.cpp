@@ -168,7 +168,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
 	msg << MSG::DEBUG << "checking for partitionname in servicename " << endreq;
 	msg << MSG::DEBUG << "m_partName.size " <<    m_partName.size() << " partname "<< m_partName[0] << endreq;	
 	if (serviceName.find("/" + m_partName[0]) == std::string::npos) {	
-          msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+          msg << MSG::DEBUG << "REFUSED because partition name not found in servicename" << endreq;
           continue;
         }
       }
@@ -376,7 +376,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         // checking the nodeName
         msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
         if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
-          msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+          msg << MSG::DEBUG << "REFUSED because nodeName not OK" << endreq;
           continue;
         }
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
