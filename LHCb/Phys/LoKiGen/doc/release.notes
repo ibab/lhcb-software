@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.68 2009-05-09 19:21:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.69 2009-05-11 15:51:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,10 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2009-05-11 - Vanya Belyaev
+
+ - fix for changes in Kernel/PartProp  
 
 ! 2009-05-09 - Vanya BELYAEV
 
