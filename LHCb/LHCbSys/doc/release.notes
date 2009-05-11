@@ -5,6 +5,309 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v27r0>2009-05-11 LHCbSys v27r0</A></H1><PRE>
+This version uses Gaudi v21r0 and LCG_56
+It is released together with TCK/L0TCK v1r2 and Det/SQLDDDB v5r4
+First release supporting slc5 and gcc43.
+Not built on windows due to problems in LCG_56
+
+- Packages removed:  GaudiPatches (all patches applied to Gaudi v21)
+- Packages modified: LHCbKernel v11r3, LHCbMath v3r7, Relations v5r7,
+    RichKernel v7r21, BcmDet v1r3, CaloDet v10r2, DetCond v12r5p3, 
+    DetDesc v18r13, DetDescCnv v4r9, DetDescSvc v2r3p1, MuonDet v8r5,
+    RichDet v11r5, STDet v4r9, VeloDet v13r6, XmlTools v6r3, DAQEvent v7r20,
+    EventAssoc v4r6, GenEvent v5r6, LumiEvent v2r0, L0Event v17r5, MCEvent v2r14,
+    RecEvent v2r20, TrackEvent v4r20, VeloEvent v16r7, PartProp v1r1, 
+    MuonDAQ v4r6, CaloDAQ v4r11, CaloInterfaces v7r10, CaloUtils v8r4,
+    CondDBUI v2r17, DaVinciKernel v7r5, DaVinciMCKernel v3r2, LHCbAlgs v2r26,
+    LoKiArrayFunctors v8r3, LoKiCore v9r0, LoKiGen v8r2, LoKiMC v8r2,
+    LoKiPhys v8r4, LoKiPhysMC v8r2,  L0Interfaces v1r4, MDF v3r17p1,
+    PatKernel v2r3, RichRecBase v3r21, STKernel v1r13, TfKernel v2r11,
+    TrackInterfaces v4r3, IOExample v2r9
+
+- In LHCbKernel v11r3
+  . CaloCellID.xml: + new method isPin() return true if cellID is a pin ID
+                    + make setCalo() method public
+                    + change fillstream output
+  . CaloCellCode.h: + new static method CaloAreaFromNum(calo, num) return the
+                      area for a given calo as string 
+  . Add remainder and risetime functions to ISiAmplifierResponse
+
+- In LHCbMath v3r7
+  . LHCbMath/Digit.h: Fix compilation warning for Win32 platform
+
+- In Relations v5r7
+  . Introduce new methods for each relation object:
+     i_add ( Entry )  - inlined  (TABLE::i_add)
+       add ( Entry )  - virtual  (TABLE::add)
+  . Reimplement i_relate in term of i_add 
+  . Add public type "Entry" for each relation object (TABLE::Entry)
+  . Specify boolean enum for compile-time recoginition of weighted/unweighted
+    relations (TABLE::TypeTraits::weighted ). Set to "true" for weighted and
+    "false" for ordinary relations)
+  . src/Relations.cpp: remove local instances of relation tables, was causing 
+                       problem with compilation of PHYS with SUSE
+  . tests/RelationsTests.cpp
+    add the auxillary test for queich checks of compilation problems.
+  . Fix dependencies of RelationsTest, for make -j
+
+- In RichKernel v7r21
+  . Add nickname mapping for cluster finding tool
+  . Add a new photon predictor type to RichTools() python configuration, 
+    that use MC information to selet photons.
+
+- In BcmDet v1r3
+  . Call the base class constructor in DeBcm and DeBcmSens
+
+- In CaloDet v10r2
+  . CellParam : + adapt to change in condDB format/content
+                  ( getQuality() and getCalibration() )
+                + Fix bug in addQualityFlag() method
+  . New getter methods corresponding to digitization parameters now in condDB
+  . Improve DeCalib.cpp algorithm    
+  . references -> const in *.h
+  . DeCaloCalib.cpp : allow to re-update (mis)calibration at each event
+
+- In DetDesc v18r13
+  . Added another virtual function hook to AlignmentCondition to allow
+    special condition update for VeloAlignCondition
+
+- In DetDescCnv v4r9
+  . Create a MsgStream in XmlGenericCnv in initialize(), add methods to print
+    like in GaudiAlgorithm: info(), debug(),.... They are available in all 
+    converters as they all inherit from XmlGenericCnv.
+  . If the file name ends with '.xml[' + something + ']' then the part between
+    bracket is removed to get the file, and in the file itself the string
+    '--KEY--' is replaced by the string which was between brackets.
+    This '--KEY--' string must be at the end of the names. This works ONLY for
+    geometry, i.e. logical and physical volumes. This avoids re-parsing the file.
+  . Use SmartIF to for the cached pointer to IXmlSvc in XmlGenericCnv to solve
+    a compatibility problem with the HEAD version of Gaudi.
+  . Removed a dynamic_cast that should have not been there.
+
+- In MuonDet v8r5
+  . Renamed interface IMuonPosTool to IMuonFastPosTool
+  . Cleaned up printout
+
+- In RichDet v11r5
+  . Introduce condition to scale refractivity (n-1) of the gas radiators
+  . Sort inactive HPD lists
+  . Include P and T values in message printed when a refractive index 
+    update occurs.
+
+- In STDet v4r9
+  . In DeSTSector:
+    o Add access to Noise and status conditions
+    o Add methods to read the noise per sector / beetle / beetle port and strip
+    o Add toElectron, toADC, prodID methods DeSTSector 
+    o Clean up printout in case try to make invalid traj
+  . Add access to ProdID condition in DeITSector and DeTTHalfModule
+  . Add halfModuleType to DeTTSector class
+  . Move contains function to DeSTBaseElement class + make virtual
+
+- In VeloDet v13r6
+  . Added VeloAlignCond::updateParams, overloads AlignmentCondition::updateParams
+    and corrects for the motion system position when updating the condition.
+  . Added VeloAlignCond::motionSystemTransform which actually defines the
+    transform.
+  . Updated the reference file of the test velodet.veloaligncond.updates because
+    the output changed after the above changes 
+  . Added free functions to convert chip channel to TELL1 channel.  The
+    conversion is simply inverting the order of the four blocks of 512 channels.
+
+- In XmlTools v6r3
+  . Single instantiation of MsgStream. Methods a la GaudiAlgorithm to print.
+  . Increase preference for Conditions in the cache. This avoids re-parsing the
+    same (usually big) file.
+
+- In DAQEvent v7r20
+  . src/components/OdinTypesFilter : improve finalize printout 
+
+- In EventAssoc v4r6
+  . Add a dictionary for LHCb::Relation1D<LHCb::Particle, LHCb::MCParticle>
+
+- In GenEvent v5r6
+  . Make method GenHeader::numOfCollisions() const
+
+- In LumiEvent v2r0
+  . Change default location of LumiFSR to be under /FileRecords instead of
+    /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+
+- In L0Event v17r5
+  . xml/L0DUChannel.xml : fix harmless repetition
+
+- In MCEvent v2r14
+  . Make method MCHeader::numOfPrimaryVertices() const
+  . Fix a typo in MCTrackInfo
+
+- In RecEvent v2r20
+  . Add bit in the muonPID for the IsMuonLoose bool condition
+
+- In TrackEvent v4r20
+  . Added Track AdditionalInfo enums: nPRVeloRZExpected and nPRVelo3DExpected
+
+- In VeloEvent v16r7
+  . Add new TES location for Tell1ADCs - after the decoding it is necessary
+    to add dummy strips in order to perform the processing correctly 
+
+- In PartProp v1r1
+  . ParticleProperty:
+    o Add a few symbols, protected for cc-operations 
+    o Add selfcc and threeCharge methods
+  . Add the nodes for evaluation of SSpin, LSpin & Nucleus 
+  . Modify a little bit the test/demo algorithm LHCb::Example::PartPropAlg
+  . python/PartProp/decorators.py: Instrument LHCb.ParticleProperty.__getattr__
+    to delegate the search for attributes to underlying LHCb.ParticleID object. 
+
+- In MuonDAQ v4r6
+  . Add MuonTAE Rec algo for reconstruction in TAE events. 
+    Also strips belonging to different BX are matched.
+
+- In CaloDAQ v4r11
+  . Adapt to change in CaloDet
+  . CaloReadoutTool : reduce verbosity 
+
+- In CaloInterfaces v7r10
+  . New interface : ICaloGetterTool
+  . ICalo2Calo/ICaloHypo2Calo : virtual methods set to const
+
+- In CaloUtils v8r4
+  . Calo2Dview:
+    o Add protection + 1D profile allowed
+    o Fix bug in 'electronics' 2D view for Spd
+    o Add new 2D views (crate-feb vs channels)
+    o Add possibility to split the view per area
+  . CaloUtils/CaloTrackMatch.h: change Error to Warning
+
+- In CondDBUI v2r17
+  . Allow multi-line release notes comments in CondDBAdmin_Commit.py.
+
+- In DaVinciKernel v7r5
+  . src/Lib/DVAlgorithm.cpp:
+    o Add few more default nicknames for various tools 
+    o Fix bug obtaining dangling references into a temporary instance of
+      Particle2Vertex::LightTable.
+    o More debug printout
+  . Removed FilterCriteria
+  . Added setDecayDescriptor(std::string)
+  . New method setInputLocations for PhysDeskop, set by DVAlgorithm
+    This allows the new recommnded syntax:
+    MyAlg.InputLocations =  [ 'MyPreviousAlg' ]
+  . ICaloParticlemaker : use ConstVector of Particles
+
+- In DaVinciMCKernel v3r2
+  . IParticle2MCAssociator.h now only has simple one-to-one association methods.
+  . IParticle2MCAssociator, Particle2MCAssociatorBase:
+    o Add virtual const LHCb::MCParticle* operator()(const LHCb::Particle*) const
+    o Add associationWeight method
+  . Particle2MCAssociatorBase:
+    o Inherits from IParticle2MCWeightedAssociator, which inherits from 
+      IParticle2MCAssociator
+    o Protect when TES MCParticle container location returns null pointer
+    o Declare both abstract interfaces in constructor
+    o Add relatedMCPsImpl, method to be implemented by derived classes. Default
+      implementation uses associationWeight and isAssociated methods
+    o associationWeight now private
+    o Add method to normalise weights in Particle2MCParticle::ToVector
+    o Add private virtual method to allow for some filtering:
+      bool isAssociated(const LHCb::Particle*, const LHCb::MCParticle* ) const
+    o Add checking for empty association ranges when returning "best" MCParticle
+    o  Remove obsolete relations table related methods
+  . Particle2MCParticle:
+    o Add typedef for weighted Particle -> MCParticle relations table.
+    o Avoid associations filtering when reference MCParticle container is empty.
+    o Add static method to filter out MCAssociations that don't have MCParticles
+      coming from an MCParticle container
+    o FilterMCAssociations method not static
+    o Add functor to filter out MCAssociations whose MCParticle* are not 
+      inside a given MCParticle* container.
+    o Add functors for summing and sorting MCAssociation by weight
+  . Add IParticle2MCWeightedAssociator.h, inherits from IParticle2MCAssociator.h
+  . Particle2MCWeightedAssociator.h
+    o Do not inherit from IAlgTool since IParticle2MCAssociator already does.
+  . Add dictionaries for:
+    o Particle2MCParticle::ToVector (std::vector<MCAssociation>
+    o All classes and structs in Particle2MCParticle namespace
+    o Classes MCAssociation, IParticle2MCWeightedAssociator
+  . MCAssociation.h
+    o Add non-const reference access to weight
+
+- In LHCbAlgs v2r26
+  . speed up DeterministicPrescaler
+  . AlgorithmCorrelations : check for duplicate entries
+  . OdinTimeDecoder : make the tool ODINDecodeTool private
+  . Fix TESCheck.cpp for Gaudi v21 (backward compatible)
+
+- In LoKiArrayFunctors v8r3
+  . Remove some unnecessary dictionaries 
+  . Simplify a bit all *DOCA*-related stuff & eliminate duplicates
+  . Add "fake" dictionaries to please new ROOT/Gaudi, to be removed with next
+    Gaudi/LCG release 
+
+- In LoKiCore v9r0
+  . Fix misprint for the default CoreFactory 
+  . More flexible&robust monitoring 
+  . LoKi/HistoBook.h: Add more methods for histogram booking
+                      (needed for monitoring functors)
+
+- In LoKiMC v8r2
+  . BuildTrees{.h, .cpp}: Add LHCb::MCParticle::ConstVector 
+    LoKi::MCTrees::buildTrees( const LHCb::MCParticle::Container& input ) ;
+
+- In LoKiPhys v8r4
+  . New symbols for vertex/mass/lifetime/direction (re)fits:
+    REFIT_ , MFIT_, REFIT, REFITTER, MFIT, MFITTER, MASSFIT
+  . New symbols: BPVDVDOCA, LTIMEERR, BPTLTERR, DOCA, DOCACHI2, DOCAMAX,
+    DOCAMAXCHI2, DOCAMAX_, DOCAMAXCHI2_
+  . LoKi/Particles26.h: bug fix in DOCA::docamax & DOCA::docamaxchi2 
+
+- In LoKiPhysMC v8r2
+  . MCMatchObj.cpp: fix to speed-up drastically the Monte Carlo Truth Matching 
+
+- In LoKiCore v9r0, LoKiGen v8r2, LoKiMC v8r2, LoKiPhys v8r4
+  . Few improvements for new decay finder 
+
+- In L0Interfaces v1r4
+  . IL0DUFromRawTool : new virtual method
+
+- In PatKernel v2r3
+  . New interface IPatDebugTrackTool to debug track properties inside pattern
+    algorithms.
+
+- In RichRecBase v3r21
+  . Add support for PatSeeding T Station tracks (cosmics).
+  . Minor improvement to pixel maker base class. Check HPD status once per HPD
+    instead of once per pixel.
+  . Enable HPD status checks by default.
+
+- In STKernel v1r13
+  . Added method to STCommonBase class to return SourceID to TELL1 defined in 
+    STBoardMapping.h
+   . Add dict for std::pair<STTell1ID, unsigned int>
+
+- In TfKernel v2r11
+  . Modify the VeloRHit and VeloPhiHit constructors to define the width as
+    sqrt(12) * pitch, not taking into account the cluster size.
+
+- In TrackInterfaces v4r3
+  . Add ISTClusterCollector interface
+  . TrackInterfaces/IFunctionTool.h
+    Add unique interface IDs (and destructors) to I*FunctionTool classes
+
+- In IOExample v2r9
+  . Update QMTest references for Gaudi v21 RunRecords -> FileRecords name change
+
+- In BcmDet v1r3, DetDescCnv v4r9
+  . Removal of unneeded creation of MsgStream
+
+- In BcmDet v1r3, CaloDet v10r2, DetCond v12r5p3, DetDescCnv v4r9,
+     DetDescSvc v2r3p1, DAQEvent v7r20, LumiEvent v2r0, PartProp v1r1, 
+     LHCbAlgs v2r26, LoKiCore v9r0, MDF v3r17p1
+  . Replaced all endreq by endmsg, obsolescent in Gaudi v21
+
+- In DetDesc v18r13, DetDescSvc v2r3p1, PartProp v1r1
+  . Fixed many doxygen warnings
+
 </PRE><H1><A NAME=v26r3>2009-04-07 LHCbSys v26r3</A></H1><PRE>
 This version uses Gaudi v20r4 and LCG_55c
 It is released together with TCK/L0TCK v1r1 and Det/SQLDDDB v5r3
