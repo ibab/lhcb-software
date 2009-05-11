@@ -1,6 +1,6 @@
-// $Id: Symbols.cpp,v 1.2 2009-05-07 15:03:30 ibelyaev Exp $
+// $Id: Symbols.cpp,v 1.3 2009-05-11 15:49:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +19,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/Symbols.h"
 #include "Kernel/CC.h"
+#include "Kernel/NodesPIDs.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -37,210 +38,225 @@
 namespace 
 {
   // ==========================================================================
-  /// empty string 
-  const std::string s_EMPTY ;
+  /** @var s_EMPTY
+   *  invalid empty string 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-05-07
+   */
+  const std::string s_EMPTY = "" ;
   // ==========================================================================
-  /// check the JSpin hypothesis 
-  std::string jspin ( const std::string& symbol ) 
-  {
-    static const boost::regex s_jspin 
-      ( "[ ]*JSpin[ ]*\\([ ]*([1-9][0-9]*)[ ]*\\)[ ]*" ) ;
-    boost::smatch what ;
-    if ( boost::regex_match(  symbol , what , s_jspin ) && 1 < what.size() ) 
-    { return what[1] ; }
-    return  "" ;
-  }
-  /// check the LSpin hypothesis 
-  std::string lspin ( const std::string& symbol ) 
-  {
-    static const boost::regex s_lspin 
-      ( "[ ]*LSpin[ ]*\\([ ]*([1-9][0-9]*)[ ]*\\)[ ]*" ) ;
-    boost::smatch what ;
-    if ( boost::regex_match(  symbol , what , s_lspin ) && 1 < what.size() ) 
-    { return what[1] ; }
-    return  "" ;
-  }
-  /// check the SSpin hypothesis 
-  std::string sspin ( const std::string& symbol ) 
-  {
-    static const boost::regex s_sspin 
-      ( "[ ]*SSpin[ ]*\\([ ]*([1-9][0-9]*)[ ]*\\)[ ]*" ) ;
-    boost::smatch what ;
-    if ( boost::regex_match(  symbol , what , s_sspin ) && 1 < what.size() ) 
-    { return what[1] ; }
-    return  "" ;
-  }
-  /// check HasQuark hypothesis 
-  std::string hasQ ( const std::string& symbol ) 
-  {
-    static const boost::regex s_hasQ 
-      ( "[ ]*HasQuark[ ]*\\([ ]*(up|down|strange|charm|bottom|beauty|top|[1-6])[ ]*\\)[ ]*" ) ;
-    boost::smatch what ;
-    if ( boost::regex_match(  symbol , what , s_hasQ ) && 1 < what.size() ) 
-    { return what[1] ; }
-    return  "" ;
-  }
-  // check for []cc
-  std::string cc ( const std::string& symbol ) 
-  {
-    static const boost::regex s_cc
-      ( "[ ]*\\[[ ]*([[:word:]])[ ]*\\](cc|CC)[ ]*" ) ;
-    boost::smatch what ;
-    if ( boost::regex_match(  symbol , what , s_cc ) && 1 < what.size() ) 
-    { return what[1] ; }
-    return  "" ;
-  }
-  // ===========================================================================
 }
 // ============================================================================
-/*  get the short description for the embedded symbol 
- *
- *  This is probably the most important method, 
- *  Please note the implementation - it costains the full
- *  list of "valid" symbols. The remaining symbols have a form of 
- *
- *  - " JSpin( i )"
- *  - " LSpin( i )"
- *  - " SSpin( i )"
- *  - " HasQuark( quark )"
- *  - " HasQuark( j )"
- *
- *  Where: 
- *   - <code>i</code> is integer positive number, 
- *   - <code>j</code> is a digit between 1 and 6, @see LHCb::ParticleID
- *   - <code>quark</code> is a quark name: <code>up</code>,
- *                   <code>down</code>, <code>strange</code>,
- *                   <code>charm</code>, <code>beauty</code>,
- *                   <code>bottom</code>, <code>top</code>
- *  @see LHCb::ParticleID 
- *
- *  @param sym the symbol 
- *  @return the description (empty string if unknown)
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
+Decays::Symbols& Decays::Symbols::instance() 
+{
+  static Decays::Symbols s_symbols ;
+  return s_symbols ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Decays::Symbols::~Symbols() {}
+// ============================================================================
+// constructor 
+// ============================================================================ 
+Decays::Symbols::Symbols () 
+  : m_nodes () 
+  , m_help  () 
+  , m_cc    ()
+{
+  addSymbol ( "X"          , Decays::Nodes::Any      () , "Any particle"         ) ;
+  //
+  addSymbol ( "Hadron"     , Decays::Nodes::Hadron   () , "Any hadron"           ) ;
+  addSymbol ( "Meson"      , Decays::Nodes::Meson    () , "Any meson"            ) ;
+  addSymbol ( "Baryon"     , Decays::Nodes::Baryon   () , "Any baryon"           ) ;
+  addSymbol ( "Nucleus"    , Decays::Nodes::Nucleus  () , "Any nucleus"          ) ;
+  addSymbol ( "Lepton"     , Decays::Nodes::Lepton   () , "Any lepton"           ) ;
+  addSymbol ( "l"          , Decays::Nodes::Ell      () , "Any charged lepton"   ) ;
+  addSymbol ( "l+"         , Decays::Nodes::EllPlus  () , "Any positive lepton"  , "l-" ) ;
+  addSymbol ( "l-"         , Decays::Nodes::EllMinus () , "Any negative lepton"  , "l+" ) ;
+  addSymbol ( "Nu"         , Decays::Nodes::Nu       () , "Any neutral lepton"   ) ;
+  addSymbol ( "Neutrino"   , Decays::Nodes::Nu       () , "Any neutral lepton"   ) ;
+  //
+  addSymbol ( "X0"         , Decays::Nodes::Neutral  () , "Any neutral particle" ) ;
+  addSymbol ( "Xq"         , Decays::Nodes::Charged  () , "Any charged particle" ) ;
+  addSymbol ( "X+"         , Decays::Nodes::Positive () , "Any positive particle" , "X-" ) ;
+  addSymbol ( "X-"         , Decays::Nodes::Negative () , "Any negative particle" , "X+" ) ;
+  // 
+  addSymbol ( "Xd"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::down    )  , "Any particle with d-quark" ) ;
+  addSymbol ( "Xu"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::up      )  , "Any particle with u-quark" ) ;
+  addSymbol ( "Xs"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::strange )  , "Any particle with s-quark" ) ;
+  addSymbol ( "Xc"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::charm   )  , "Any particle with c-quark" ) ;
+  addSymbol ( "Xb"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom  )  , "Any particle with b-quark" ) ;
+  addSymbol ( "Xt"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::top     )  , "Any particle with t-quark" ) ;
+  //
+  addSymbol ( "Down"       , Decays::Nodes::HasQuark ( LHCb::ParticleID::down    )  , "Any particle with d-quark" ) ;
+  addSymbol ( "Up"         , Decays::Nodes::HasQuark ( LHCb::ParticleID::up      )  , "Any particle with u-quark" ) ;
+  addSymbol ( "Strange"    , Decays::Nodes::HasQuark ( LHCb::ParticleID::strange )  , "Any particle with s-quark" ) ;
+  addSymbol ( "Charm"      , Decays::Nodes::HasQuark ( LHCb::ParticleID::charm   )  , "Any particle with c-quark" ) ;
+  addSymbol ( "Bottom"     , Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom  )  , "Any particle with b-quark" ) ;
+  addSymbol ( "Beauty"     , Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom  )  , "Any particle with b-quark" ) ;
+  addSymbol ( "Top"        , Decays::Nodes::HasQuark ( LHCb::ParticleID::top     )  , "Any particle with t-quark" ) ;
+  // 
+  addSymbol ( "Scalar"     , Decays::Nodes::JSpin ( 1 ) , "Any scalar particle j=0"      ) ;
+  addSymbol ( "Spinor"     , Decays::Nodes::JSpin ( 2 ) , "Any spinor particle j=1/2"    ) ;
+  addSymbol ( "OneHalf"    , Decays::Nodes::JSpin ( 2 ) , "Any spinor particle j=1/2"    ) ;
+  addSymbol ( "Vector"     , Decays::Nodes::JSpin ( 3 ) , "Any vector particle j=1"      ) ;
+  addSymbol ( "ThreeHalf"  , Decays::Nodes::JSpin ( 4 ) , "Any particle with spin j=3/2" ) ;
+  addSymbol ( "Tensor"     , Decays::Nodes::JSpin ( 5 ) , "Any tensor particle j=2"      ) ;
+  addSymbol ( "FiveHalf"   , Decays::Nodes::JSpin ( 6 ) , "Any particle with spin j=5/2" ) ;
+  //
+  addSymbol ( "ShortLived" , Decays::Nodes::ShortLived_ () , "Any short-ilved particle" ) ;
+  addSymbol ( "LongLived"  , Decays::Nodes::LongLived_  () , "Any long-lived particle"  ) ;
+  addSymbol ( "Stable"     , Decays::Nodes::Stable      () , "Any 'stable' particle"    ) ;
+  // ==========================================================================
+  // special CC-symbols, protect them...
+  // ==========================================================================
+  addCC ( "cc"          ) ;
+  addCC ( "CC"          ) ;
+  addCC ( "os"          ) ;
+  addCC ( "nos"         ) ;
+  addCC ( "HasQuark"    ) ;
+  addCC ( "JSpin"       ) ;
+  addCC ( "LSpin"       ) ;
+  addCC ( "SSpin"       ) ;
+  addCC ( "ShortLived"  ) ;
+  addCC ( "LongLived"   ) ;
+  addCC ( "ShortLived_" ) ;
+  addCC ( "LongLived_"  ) ;
+  addCC ( "Stable"      ) ;
+  addCC ( "CTau"        ) ;
+  addCC ( "Mass"        ) ;
+  // ==========================================================================
+}
+
+// ============================================================================
+// get CC-map 
+// ============================================================================
+const Decays::Symbols::CCMap& Decays::Symbols::cc () const { return m_cc ; }
+// ============================================================================
+/*  add new symbol to the internal structure
+ *  @param symbol the symbol definition
+ *  @param node   the actual node 
+ *  @param help   the help string 
+ *  @param ccsym  the symbol for charge coonjugation
+ *  @return true if the symbol is added into the storage 
  */
 // ============================================================================
-const std::string&  Decays::Symbols::symbol ( const std::string& _sym ) 
+bool Decays::Symbols::addSymbol 
+( std::string          sym    , 
+  const Decays::iNode& node   , 
+  const std::string&   help   , 
+  std::string          ccsym  ) 
 {
   // ==========================================================================
-  const std::string sym = boost::trim_copy ( _sym ) ;
-  // ==========================================================================
-  typedef std::map<std::string,std::string> _Map ;
-  static _Map s_map ;
-  if ( s_map.empty() ) 
-  {
-    // ==========================================================================
-    //       symbol           description                    class/instance 
-    // ==========================================================================
-    s_map [ "X"         ] = "Any particle"              ; // Any 
-    s_map [ "Meson"     ] = "Any meson"                 ; // Meson
-    s_map [ "Hadron"    ] = "Any hadron"                ; // Hadron
-    s_map [ "Baryon"    ] = "Any baryon"                ; // Baryon
-    s_map [ "Nucleus"   ] = "Any nucleus"               ; // Nucleus 
-    s_map [ "Lepton"    ] = "Any lepton"                ; // Lepton 
-    s_map [ "Nu"        ] = "Any neutral lepton"        ; // Neutrino
-    s_map [ "nu"        ] = "Any neutral lepton"        ; // Neutrino
-    s_map [ "l"         ] = "Any charged lepton"        ; // Ell 
-    s_map [ "l+"        ] = "Any positive lepton"       ; // EllPlus 
-    s_map [ "l-"        ] = "Any negative lepton"       ; // EllMinus 
-    s_map [ "X0"        ] = "Any neutral  particle"     ; // Neutral 
-    s_map [ "Xq"        ] = "Any charged  particle"     ; // Charged 
-    s_map [ "X+"        ] = "Any positive particle"     ; // Positive 
-    s_map [ "X-"        ] = "Any negative particle"     ; // Negative 
-    s_map [ "Xd"        ] = "Any particle with d-quark" ; // HasQuark ( down    ) 
-    s_map [ "Xu"        ] = "Any particle with u-quark" ; // HasQuark ( up      )
-    s_map [ "Xs"        ] = "Any particle with s-quark" ; // HasQuark ( strange ) 
-    s_map [ "Xc"        ] = "Any particle with c-quark" ; // HasQuark ( charm   )
-    s_map [ "Xb"        ] = "Any particle with b-quark" ; // HasQuark ( botttom ) 
-    s_map [ "Xt"        ] = "Any particle with t-quark" ; // HasQuark ( top     ) 
-    s_map [ "Scalar"    ] = "Any scalar particle"       ; // JSpin ( 1 ) 
-    s_map [ "Spinor"    ] = "Any spinor(1/2) particle"  ; // JSpin ( 2 ) 
-    s_map [ "OneHalf"   ] = "Any spinor(1/2) particle"  ; // JSpin ( 2 ) 
-    s_map [ "Vector"    ] = "Any vector particle"       ; // JSpin ( 3 ) 
-    s_map [ "ThreeHalf" ] = "Any spinor(3/2) particle"  ; // JSpin ( 4 )
-    s_map [ "Tensor"    ] = "Any tensor particle"       ; // JSpin ( 5 ) 
-    s_map [ "FiveHalf"  ] = "Any spinor(5/2) particle"  ; // JSpin ( 6 ) 
-    // ========================================================================
-  }
-  _Map::const_iterator ifind = s_map.find ( sym ) ;
-  if ( s_map.end() != ifind ) { return ifind->second ; }
-  // check for JSpin
-  const std::string j = jspin ( sym ) ;
-  if ( !j.empty() )                                        // JSpin( ... ) 
-  {
-    std::string result = "Any Particle with 2J+1= " + j ;
-    s_map [ "JSpin(" + j + ")"] =  result ;
-    s_map [ sym ] =  result ;
-    return s_map[sym] ;
-  }
-  // check for LSpin
-  const std::string l = lspin ( sym ) ;                    // LSpin ( ... )
-  if ( !l.empty() ) 
-  {
-    std::string result = "Any Particle with 2L+1= " + l ;
-    s_map [ "LSpin(" + l + ")"] =  result ;
-    s_map [ sym ] =  result ;
-    return s_map[sym] ;  
-  }
-  // check for SSpin
-  const std::string s = sspin ( sym ) ;                     // SSPin ( ... ) 
-  if ( !s.empty() ) 
-  {
-    std::string result = "Any Particle with 2S+1= " + s ;
-    s_map [ "SSpin(" + s + ")"] =  result ;
-    s_map [ sym ] =  result ;       
-    return s_map[sym] ;  
-  }
-  // check for HasQuark 
-  const std::string q = hasQ ( sym ) ;                      // HasQuark ( ... ) 
-  if ( !q.empty() ) 
-  {
-    std::string result = "Any Particle with quark= " + q ;
-    s_map [ "HasQuark" + q + ")"] =  result ;
-    s_map [ sym                 ] =  result ;
-    return s_map[sym] ;  
-  }
-  // finally
-  return s_EMPTY ;
+  // trim the arguments 
+  boost::trim ( sym   ) ;
+  // ==========================================================================  
+  NodeMap::const_iterator ifind = m_nodes.find ( sym ) ;
+  if ( m_nodes.end () != ifind ) { return false ; }                   // RETURN 
+  // add the node into the map 
+  bool inserted = m_nodes.insert ( sym , node  ).second ;
+  if ( !inserted               ) { return false ; }                  // RETURN
+  // add the help-string 
+  m_help[ sym ] =  help  ;
+  // add cc-symbols 
+  addCC ( sym , ccsym ) ;
+  return true ;
 }
-// ==========================================================================
-/*  Check if the symbol/token is valid embedded symbol 
- *  @param sym the symbol to be checked 
- *  @param service the pointer to Particle property service 
- *  @return short description 
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
+// ============================================================================
+/*  add cc-pair to the internal map 
+ *  @param sym the symbol 
+ *  @param ccsym the symbol for charge conjugation 
  */
 // ============================================================================
-bool Decays::Symbols::validSymbol ( const std::string& sym ) 
-{ return ! symbol( sym ).empty() ; }
-// ==========================================================================
-/*  get a list of particle names, known for Particle Properties Service 
- * 
- *  @code
- *  
- *   Decays::Names names ;
- *   const LHCb::IParticlePropertySvc* svc = ... ;
- *  
- *   StatusCode sc = Decays::particles ( svc  , names ) ;
- *   
- *  @endcode 
- *
- *  @see LHCb::IParticlePropertySvc 
- *  @param svc   (INPUT) pointer to particle property Service 
- *  @param name  (OUTPUT) list of particle names 
- *  @return status code
+void Decays::Symbols::addCC
+( std::string sym   , 
+  std::string ccsym )
+{
+  // ==========================================================================
+  // trim the arguments 
+  boost::trim ( sym   ) ;
+  boost::trim ( ccsym ) ;
+  if ( ccsym.empty() ) { ccsym = sym ; }
+  // ==========================================================================  
+  m_cc [ sym ] = ccsym ;
+  if ( ccsym != sym ) { m_cc [ ccsym ] =  sym ; }
+  // ==========================================================================  
+}
+// ============================================================================
+// valid symbol? 
+// ============================================================================
+bool Decays::Symbols::valid ( std::string sym ) const 
+{
+  // trim the argument 
+  boost::trim ( sym ) ;
+  return m_nodes.end() != m_nodes.find ( sym ) ;
+}
+// ============================================================================
+// help for the symbol 
+// ============================================================================
+const std::string& Decays::Symbols::symbol ( std::string sym ) const 
+{
+  // trim the argument 
+  boost::trim ( sym ) ;
+  NodeMap::const_iterator ifind = m_nodes.find ( sym ) ;
+  if ( m_nodes.end() == ifind ) { return s_EMPTY ; }                  // RETURN 
+  HelpMap::const_iterator ihelp = m_help.find ( sym ) ;
+  if ( m_help.end()  == ihelp ) { return s_EMPTY ; }                  // RETURN 
+  return ihelp->second ;
+}
+// ============================================================================
+/*  get the node by symbol
+ *  @param (INPUT) sym the symbol name
+ *  @param (OUTPUT) the symbol
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Decays::Symbols::symbol
+( std::string   sym  , 
+  Decays::Node& node ) const 
+{
+  // trim the argument 
+  boost::trim ( sym ) ;
+  NodeMap::const_iterator ifind = m_nodes.find ( sym ) ;
+  if ( m_nodes.end() != ifind ) 
+  {
+    node = ifind->second ;
+    return StatusCode::SUCCESS ;                                      // RETURN
+  }
+  node = Decays::Nodes::_Node::Invalid() ;
+  return StatusCode::FAILURE ;                                        // RETURN 
+}
+// ============================================================================
+// get all known symbols 
+// ============================================================================
+size_t Decays::Symbols::symbols ( Decays::Symbols::Names& names ) const 
+{
+  // clear names ;
+  names.clear() ;
+  for ( NodeMap::const_iterator inode = m_nodes.begin() ; 
+        m_nodes.end () != inode ; ++inode ) 
+  { names.push_back ( inode->first ) ; }
+  // sort it according to CC-criteria                               ATTENTION! 
+  std::stable_sort ( names.begin() , names.end() , Decays::CC::CmpCC() ) ;
+  return names.size() ;
+}
+// ============================================================================
+/*  get all known particle names 
+ *  @param service (INPUT)  particle property service 
+ *  @param parts   (OUTPUT) vector of particle names 
+ *  @return status code 
  */
 // ============================================================================
 StatusCode Decays::Symbols::particles 
-( const LHCb::IParticlePropertySvc* service , 
-  Decays::Symbols::Names&           names   ) 
+( const LHCb::IParticlePropertySvc* service ,  
+  Decays::Symbols::Names&           parts   ) const 
 {
-  /// clear the container 
-  names.clear() ;
-  /// check the service 
-  if ( 0 == service ) { return StatusCode::FAILURE ; }                 // RETURN 
-  //
+  // clear the output 
+  parts.clear() ;
+  // check the service 
+  if ( 0 == service ) { return StatusCode::FAILURE ; }                // RETURN 
+  // 
   typedef LHCb::IParticlePropertySvc::iterator iterator ;
   iterator begin = service -> begin () ;
   iterator end   = service -> end   () ;
@@ -248,88 +264,15 @@ StatusCode Decays::Symbols::particles
   {
     const LHCb::ParticleProperty* pp = *begin ;
     if ( 0 == pp ) { continue ; }
-    names.push_back ( pp -> particle () ) ;
+    parts.push_back ( pp -> particle () ) ;
   }
-  // sort it according to CC-criteria 
-  std::stable_sort ( names.begin() , names.end() , Decays::CC::CmpCC() ) ;
+  // sort it according to CC-criteria                                 ATTENTION!
+  std::stable_sort ( parts.begin() , parts.end() , Decays::CC::CmpCC() ) ;
   //
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/*  get a list of particle names, known for Particle Properties Service 
- * 
- *  @code
- *  
- *   const LHCb::IParticlePropertySvc* svc = ... ;
- *  
- *   Decays::Names names = Decays::particles ( svc  ) ;
- *   
- *  @endcode 
- *
- *  @see LHCb::IParticlePropertySvc 
- *  @param svc   (INPUT) pointer to particle property Service 
- *  @return list of particle names 
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
- */
-// ============================================================================
-Decays::Symbols::Names Decays::Symbols::particles
-( const LHCb::IParticlePropertySvc* service )
-{
-  Decays::Symbols::Names names ;
-  StatusCode sc = particles ( service , names ) ;
-  if ( sc.isFailure() ) { names.clear() ; }
-  return names ;
-}
-// ============================================================================
-/*  get a short description of the symbol (if known) 
- *  @param sym the symbol to be checked 
- *  @param service the pointer to Particle property service 
- *  @return short description 
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
- */
-// ============================================================================
-std::string Decays::Symbols::symbol 
-( const std::string&                sym_    , 
-  const LHCb::IParticlePropertySvc* service ) 
-{
-  // ==========================================================================
-  const std::string sym = boost::trim_copy ( sym_ ) ;
-  // check if the symbol is embedded symbol:
-  const std::string& special = symbol ( sym ) ;
-  if ( !special.empty() ) { return special ; }                        // RETURN
-  // otherwise it should be either particle name or []cc 
-  if ( 0 == service ) { return "" ; }                                 // RETURN 
-  //
-  const LHCb::ParticleProperty* pp = service -> find ( sym  ) ;
-  if ( 0 != pp ) { return pp->particle() ; }                           // RETURN 
-  // check for CC 
-  const std::string cq = cc ( sym ) ;
-  if ( cq.empty() ) { return "" ; }                                   //  RETURN 
-  /// look for the particle:
-  pp = service->find ( cq ) ;
-  if ( 0 == pp    ) { return "" ; }                                    // RETURN
-  //
-  std::string result = pp->particle() ;
-  const LHCb::ParticleProperty* anti = pp->anti() ;
-  if ( 0 != anti ) { result += " or " + anti->particle() ; }
-  return result ;                                                      // RETURN 
-}
-// ============================================================================
-/*  check if the symbol/token is valid symbol 
- *  @param sym the symbol to be checked 
- *  @param service the pointer to Particle property service 
- *  @return true for valid/known symbols
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-05-07
- */
-// ============================================================================
-bool Decays::Symbols::validSymbol 
-( const std::string&                sym     , 
-  const LHCb::IParticlePropertySvc* service ) 
-{ return !symbol ( sym , service ).empty() ; }
-// ============================================================================
+
 
 // ============================================================================
 // The END 

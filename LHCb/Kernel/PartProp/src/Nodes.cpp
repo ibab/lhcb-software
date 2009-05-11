@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.5 2009-05-06 15:45:52 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.6 2009-05-11 15:49:29 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -7,10 +7,10 @@
 // STD & STL
 // ============================================================================
 #include <functional>
-#include <algorithm>
 // ============================================================================
-// LoKi
+// PartProp
 // ============================================================================
+#include "Kernel/ParticleID.h"
 #include "Kernel/Nodes.h"
 // ============================================================================
 /** @file 
@@ -22,7 +22,11 @@
 // ============================================================================
 namespace 
 {
-  // ==========================================================================
+  // =========================================================================
+  /** @struct _Pid
+   *  helper structure to match pids 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   */
   struct _Pid : public std::unary_function<Decays::Nodes::_Node,bool>
   {
   public:
@@ -35,331 +39,69 @@ namespace
     // ========================================================================
   private:
     // ========================================================================
-    /// the defautl constructor is disabled 
+    /// the default constructor is disabled 
     _Pid ();
     // the pid itself 
     LHCb::ParticleID m_pid ; 
     // ========================================================================
   };
-  // =========================================================================
+  // ==========================================================================
 }
+// Invalid 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+Decays::Nodes::_Node::Invalid::~Invalid() {} 
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::Any*
-Decays::Nodes::Any::clone() const { return new Any(*this) ; }
+Decays::Nodes::_Node ::Invalid*
+Decays::Nodes::_Node ::Invalid::clone() const 
+{ return new Invalid ( *this ) ; }
 // ============================================================================
 // MANDATORY: check the validity
 // ============================================================================
-bool Decays::Nodes::Any::valid() const { return true ; }
+bool Decays::Nodes::_Node::Invalid::valid() const { return false ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::Any::validate 
+StatusCode Decays::Nodes::_Node::Invalid::validate 
 ( const LHCb::IParticlePropertySvc* /*svc */ )  const 
-{ return StatusCode ( StatusCode::SUCCESS , true ) ; }
+{ return StatusCode ( StatusCode::FAILURE , true ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::Any::operator() 
-  ( const LHCb::ParticleID& /* p */ ) const { return true ; }
-// ============================================================================
-// xSpin: valid only for reasonable spin 
-bool Decays::Nodes::JSpin::valid () const { return 0 < spin() ; }
-// ============================================================================
-// MANDATORY: the proper validation of the node
-// ============================================================================
-StatusCode Decays::Nodes::JSpin::validate 
-( const LHCb::IParticlePropertySvc* /*svc */ )  const 
-{ 
-  return valid() ? 
-    StatusCode ( StatusCode::SUCCESS , true ) : 
-    StatusCode ( InvalidSpin         , true ) ;  
-}
-// ============================================================================
-
-
-// ============================================================================
-// constructor from the decay item
-// ============================================================================
-Decays::Nodes::Pid::Pid
-( const Decays::Decay::Item&  item ) 
-  : Decays::iNode () , m_item ( item ) {}
-// ============================================================================
-// constructor from Particle Property
-// ============================================================================
-Decays::Nodes::Pid::Pid
-( const LHCb::ParticleProperty*      item ) 
-  : Decays::iNode () , m_item ( item ) {}
-// ============================================================================
-// constructor from ParticleID
-// ============================================================================
-Decays::Nodes::Pid::Pid
-( const LHCb::ParticleID&      item ) 
-  : Decays::iNode () , m_item ( item ) {}
-// ============================================================================
-// constructor from Particle name
-// ============================================================================
-Decays::Nodes::Pid::Pid
-( const std::string&           item ) 
-  : Decays::iNode () , m_item ( item ) {}
-// ============================================================================
-// MANDATORY: check the validity
-// ============================================================================
-bool Decays::Nodes::Pid::valid () const { return 0 !=  m_item.pp () ; }
-// ============================================================================
-// MANDATORY: the proper validation of the node
-// ============================================================================
-StatusCode Decays::Nodes::Pid::validate 
-( const LHCb::IParticlePropertySvc* svc ) 
-  const { return m_item.validate ( svc ) ; }
-// ============================================================================
-
-
-// ============================================================================
-// constructor from the decay item
-// ============================================================================
-Decays::Nodes::CC::CC
-( const Decays::Decay::Item&  item ) 
-  : Decays::Nodes::Pid ( item ) {}
-// ============================================================================
-// constructor from Particle Property
-// ============================================================================
-Decays::Nodes::CC::CC
-( const LHCb::ParticleProperty*      item ) 
-  : Decays::Nodes::Pid ( item ) {}
-// ============================================================================
-// constructor from ParticleID
-// ============================================================================
-Decays::Nodes::CC::CC
-( const LHCb::ParticleID&      item ) 
-  : Decays::Nodes::Pid ( item ) {}
-// ============================================================================
-// constructor from Particle name
-// ============================================================================
-Decays::Nodes::CC::CC
-( const std::string&           item ) 
-  : Decays::Nodes::Pid ( item ) {}
-// ============================================================================
-// constructor from Pid 
-// ============================================================================
-Decays::Nodes::CC::CC
-( const Decays::Nodes::Pid& item ) 
-  : Decays::Nodes::Pid ( item ) {}
-// ============================================================================
-
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Meson*
-Decays::Nodes::Meson::clone() const { return new Meson(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Lepton*
-Decays::Nodes::Lepton::clone() const { return new Lepton(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Nu*
-Decays::Nodes::Nu::clone() const { return new Nu(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Ell*
-Decays::Nodes::Ell::clone() const { return new Ell(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::EllPlus*
-Decays::Nodes::EllPlus::clone() const { return new EllPlus(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::EllMinus*
-Decays::Nodes::EllMinus::clone() const { return new EllMinus(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Baryon*
-Decays::Nodes::Baryon::clone() const { return new Baryon(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Hadron*
-Decays::Nodes::Hadron::clone() const { return new Hadron(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Charged*
-Decays::Nodes::Charged::clone() const { return new Charged(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Positive*
-Decays::Nodes::Positive::clone() const { return new Positive(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Negative*
-Decays::Nodes::Negative::clone() const { return new Negative(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Neutral*
-Decays::Nodes::Neutral::clone() const { return new Neutral(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::Nucleus*
-Decays::Nodes::Nucleus::clone() const { return new Nucleus(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::HasQuark*
-Decays::Nodes::HasQuark::clone() const { return new HasQuark(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::JSpin*
-Decays::Nodes::JSpin::clone() const { return new JSpin(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::SSpin*
-Decays::Nodes::SSpin::clone() const { return new SSpin(*this) ; }
-// ============================================================================
-// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-Decays::Nodes::LSpin*
-Decays::Nodes::LSpin::clone() const { return new LSpin(*this) ; }
-
-// ============================================================================
-// constructor from the quark 
-// ============================================================================
-Decays::Nodes::HasQuark::HasQuark ( LHCb::ParticleID::Quark quark ) 
-  : Decays::Nodes::Any () , m_quark ( quark ) {}
-// ============================================================================
-// constructor from the 2J+1
-// ============================================================================
-Decays::Nodes::JSpin::JSpin ( const int spin ) 
-  : Decays::Nodes::Any () , m_spin ( spin ) {}
-// ============================================================================
-// constructor from the 2S+1
-// ============================================================================
-Decays::Nodes::SSpin::SSpin ( const int spin ) 
-  : Decays::Nodes::JSpin ( spin ) {}
-// ============================================================================
-// constructor from the 2L+1
-// ============================================================================
-Decays::Nodes::LSpin::LSpin ( const int spin ) 
-  : Decays::Nodes::SSpin ( spin ) {}
-// ============================================================================
-
+bool Decays::Nodes::_Node::Invalid::operator() 
+  ( const LHCb::ParticleID& /* p */ ) const { return false; }
 // ============================================================================
 std::ostream& 
-Decays::Nodes::Any::fillStream ( std::ostream& s ) const
-{ return s << " X " ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Pid::fillStream ( std::ostream& s ) const
-{ return s << " " << m_item.name() << " "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::CC::fillStream ( std::ostream& s ) const
-{ return s << " [" << item().name() << "]cc "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Meson::fillStream ( std::ostream& s ) const
-{ return s << " Meson "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Hadron::fillStream ( std::ostream& s ) const
-{ return s << " Hadron "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Baryon::fillStream ( std::ostream& s ) const
-{ return s << " Baryon "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Lepton::fillStream ( std::ostream& s ) const
-{ return s << " Lepton "  ; }
-// ============================================================================
-std::ostream& 
-Decays::Nodes::Neutral::fillStream ( std::ostream& s ) const
+Decays::Nodes::_Node::Invalid::fillStream ( std::ostream& s ) const
 { return s << " X0 "  ; }
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Charged::fillStream ( std::ostream& s ) const
-{ return s << " Xq "  ; }
+
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Positive::fillStream ( std::ostream& s ) const
-{ return s << " X+ "  ; }
+// the default constructor 
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Negative::fillStream ( std::ostream& s ) const
-{ return s << " X- "  ; }
+Decays::Nodes::_Node::_Node ()  : m_node ( Invalid() ) {}
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Nu::fillStream ( std::ostream& s ) const
-{ return s << " Nu "  ; }
+
+
+
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Ell::fillStream ( std::ostream& s ) const
-{ return s << " l "  ; }
+// MANDATORY: virtual destructor
 // ============================================================================
-std::ostream& 
-Decays::Nodes::EllPlus::fillStream ( std::ostream& s ) const
-{ return s << " l+ "  ; }
+Decays::Nodes::Or       :: ~Or       () {}
 // ============================================================================
-std::ostream& 
-Decays::Nodes::EllMinus::fillStream ( std::ostream& s ) const
-{ return s << " l- "  ; }
+// MANDATORY: virtual destructor
 // ============================================================================
-std::ostream& 
-Decays::Nodes::Nucleus::fillStream ( std::ostream& s ) const
-{ return s << " Nucleus "  ; }
+Decays::Nodes::And      :: ~And      () {}
 // ============================================================================
-std::ostream& 
-Decays::Nodes::HasQuark::fillStream ( std::ostream& s ) const
-{
-  switch ( m_quark ) 
-  {
-  case LHCb::ParticleID::down      : return s << " Xd " ;
-  case LHCb::ParticleID::up        : return s << " Xu " ;
-  case LHCb::ParticleID::strange   : return s << " Xs " ;
-  case LHCb::ParticleID::charm     : return s << " Xc " ;
-  case LHCb::ParticleID::bottom    : return s << " Xb " ;
-  case LHCb::ParticleID::top       : return s << " Xt " ;
-  default: ;
-  }
-  return s << " HasQuark("  << (int) m_quark << ") " ; 
-}
+// MANDATORY: virtual destructor
 // ============================================================================
-std::ostream& 
-Decays::Nodes::JSpin::fillStream ( std::ostream& s ) const
-{ 
-  switch ( spin() ) 
-  {
-  case 1  : return s << " Scalar "                  ;
-  case 2  : return s << " Spinor "                  ;
-  case 3  : return s << " Vector "                  ;
-  case 4  : return s << " ThreeHalf "               ;
-  case 5  : return s << " Tensor "                  ;
-  case 6  : return s << " FiveHalf "                ;
-  default : ;
-  }
-  return s << " JSpin(" << m_spin << ") " ; 
-}
-// ===========================================================================
-std::ostream& 
-Decays::Nodes::SSpin::fillStream ( std::ostream& s ) const
-{ return s << " SSpin(" << spin() << ") " ; }
-// ===========================================================================
-std::ostream& 
-Decays::Nodes::LSpin::fillStream ( std::ostream& s ) const
-{ return s << " LSpin(" << spin() << ") " ; }
+Decays::Nodes::Not      :: ~Not      () {}
+// ============================================================================
+
+
 // ===========================================================================
 // Or
 // ===========================================================================
@@ -599,98 +341,5 @@ Decays::Nodes::And::operator+= ( const Decays::iNode& node )
 
 
 // ============================================================================
-/*  Create the "OR" of two nodes
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const std::string&         o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const LHCb::ParticleID&    o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const Decays::Decay::Item&   o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode&          o1 , 
-  const LHCb::ParticleProperty* o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const std::string&         o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const LHCb::ParticleID&    o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::Decay::Item&   o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const LHCb::ParticleProperty* o2 ,
-  const Decays::iNode&          o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-/*  Create the "AND" of two nodes
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const std::string&         o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const LHCb::ParticleID&    o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const Decays::Decay::Item&   o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode&          o1 , 
-  const LHCb::ParticleProperty* o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const std::string&   o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const LHCb::ParticleID&  o2 ,
-  const Decays::iNode&     o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::Decay::Item&   o2 ,
-  const Decays::iNode&       o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const LHCb::ParticleProperty*    o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-
-
-// ===========================================================================
 // The END
-// ===========================================================================
+// ============================================================================

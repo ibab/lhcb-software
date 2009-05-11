@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.17 2009-05-07 14:45:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.18 2009-05-11 15:49:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-11 - Vanya BELYAEV
+ - Kernel/Nodes.h 
+     move unnesessary concrete stymbols into the sepaarte file 
+ - Kernel/Symbols.h
+     make it singleton 
+ - src/Components/ParticlePropertySvc.cpp
+     remove the duplicated list of symbols 
 
 ! 2009-05-07 - Vanya BELYAEV
  - Kernel/Symbols.h
