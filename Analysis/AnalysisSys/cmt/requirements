@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.92 2009-05-11 14:23:12 jpalac Exp $
+# $Id: requirements,v 1.93 2009-05-11 14:30:09 jpalac Exp $
 package AnalysisSys
 version v3r3
 
@@ -43,7 +43,7 @@ use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
 use DSelections                 v1r0    PhysSel # Marco Gersabeck
 
 # temporary packages
-use Bd2PiPiPi0       	   	v4r3p4   PhysSel # Olivier Deschamps
+use Bd2PiPiPi0       	   	v4r3p5   PhysSel # Olivier Deschamps
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
