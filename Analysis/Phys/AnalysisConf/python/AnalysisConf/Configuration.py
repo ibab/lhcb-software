@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.14 2009-05-05 14:02:04 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-05-11 06:37:05 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -103,6 +103,7 @@ class AnalysisConf(LHCbConfigurableUser) :
         Apply configuration for Analysis
         """
         log.info("Applying Analysis configuration")
+        log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         if ( self.getProp("Simulation" )):
             self.configureMC()
