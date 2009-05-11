@@ -15,35 +15,36 @@ branches cmt doc
 #use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
+
 use Camera            v1r3     Online
-use DIM               v18r4p1  Online
+use DIM               v18r4p2  Online
 use ExampleGaucho     v3r1     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r10    Online
-use GaudiOnline       v2r27    Online
+use Gaucho            v6r11    Online
+use GaudiOnline       v2r28    Online
 use GaudiUPI          v1r10    Online
 use GaudiSerialize    v0r4     Online
 #use Hugin             v1r6     Online
 use HPDMonitor        v1r5     Online
 use HistDBPython      v1r1     Online
 use InsertDB          v1r3     Online
-use MBMDump           v1r11    Online
+use MBMDump           v1r12    Online
 use OMAlib            v2r4     Online
 #use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v5r1     Online
-use OnlineKernel      v1r24    Online
+use OnlineKernel      v1r25    Online
 use OnlineTools       v1r1     Online
-use OnlineTasks       v1r21    Online
+use OnlineTasks       v1r22    Online
 use Presenter         v0r18    Online
 use PyDIM             v2r7     Online
 use RawBankSizes      v1r5     Online
-use ROMon             v1r14    Online
-use ROLogger          v0r11    Online
+use ROMon             v1r15    Online
+use ROLogger          v0r12    Online
 use UPI               v1r15    Online
 use UPIR              v1r1     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer            v1r13    Online
+use Writer            v1r14    Online
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
