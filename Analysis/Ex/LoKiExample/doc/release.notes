@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.48 2009-04-24 08:07:29 pkoppenb Exp $ 
+! $Id: release.notes,v 1.49 2009-05-11 14:19:23 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.48 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.49 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+!========================== Ex/LoKiExample v8r3 2009-05-11 ===================
 
 ! 2009-04-24 - Patrick Koppenburg
  - Do not use method filterCriterion(). It is gone.
