@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.6 2009-05-11 09:40:23 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.7 2009-05-11 09:42:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.6 2009-05-11 09:40:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.7 2009-05-11 09:42:00 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -26,8 +26,9 @@
 namespace {
   struct FSMMonitoring {
     unsigned long lastCmd, doneCmd;
-    int pid, partitionID;
+    int pid;
     char targetState, state, metaState, pad;
+    int partitionID;
   };
 }
 using namespace ROMon;
