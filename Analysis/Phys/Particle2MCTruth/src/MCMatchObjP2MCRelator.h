@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.9 2009-04-28 11:43:48 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.10 2009-05-11 13:34:28 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -53,10 +53,10 @@ private:
   
   void printMCPIDs(const LHCb::MCParticle::ConstVector& mcps) const
   {
-    std::cout << "==================================" << std::endl;
+    always() << "==================================" << endmsg;
     for (LHCb::MCParticle::ConstVector::const_iterator mcp = mcps.begin();
          mcp!=mcps.end(); ++mcp) {
-      std::cout << "\tMCP PID " << (*mcp)->particleID().pid() << std::endl;
+      always() << "\tMCP PID " << (*mcp)->particleID().pid() << endmsg;
     }
   }
   
