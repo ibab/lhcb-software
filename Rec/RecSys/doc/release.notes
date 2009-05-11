@@ -5,11 +5,184 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-04-30 - Alessia Satta
- - Resurrect package Muon/MuonTools
+</PRE><H1><A NAME=v7r0>2009-05-11 RecSys v7r0</A></H1><PRE>
+This version uses Gaudi v21r0 and LHCb v27r0.
 
-! 2009-04-23 - Chris Jones
- - Add new package Rich/RichIFBAnalysis
+- Packages added: Muon/MuonTools v5r0:  Package resumed, contains MuonFastPosTool
+                  Rich/RichIFBAnalysis: Ion Feedback Analysis algorithms
+- Packages modified: RecCheckers v1r2, CaloMoniDst v3r6, CaloPIDs v4r16,
+    CaloReco v4r19, TrackFitEvent v3r21, TrackFitter v2r33, TrackMCTools v2r23,
+    TrackMonitors v1r9, TrackTools v3r17, TrackUtils v1r26, PatAlgorithms v3r19,
+    PatVelo v3r13, TrackMatching v2r22, TsaAlgorithms v3r10,
+    MuonTrackAlign v1r7p2, RichMarkovRingFinder v2r6, RichRecMCAlgorithms v1r3,
+    RichRecMCTools v2r21, RichRecQC v2r28, RichRecSys v3r18, RichRecTools v4r8,
+    RichRecTrackTools v1r10, GlobalReco v6r21, VeloRecMonitors v1r6, 
+    LumiAlgs v2r0
+
+- In RecCheckers v1r2
+  . Add dependency on DaVinciMCKernel, needed by MCReconstructed
+
+- In CaloMoniDst v3r6
+  . CaloEFlowAlg.cpp  : add protection 
+  . CaloEFlowAlg.opts : change default setting 
+  . Fix compilation warning for gcc43
+  . Replace endreq by endmsg (obsolescent in Gaudi v21)
+  . CaloEMuMonitor/Checker.{cpp,h} : produce histogram (+analysis) of CaloPID 
+  . CaloEFlowAlg.{cpp,h,opts} : produce histogram for 'Energy-Flow' calibration
+    method (Aurelien Martens)
+
+- In CaloPIDs v4r16
+  . Fix unchecked StatusCode
+
+- In CaloReco v4r19
+  . new alg  CaloGetterInit : create a public instance of CaloGetterTool
+    (from CaloTools) and process the event-update
+  . Brunel.opts/HltCaloSeq.opts : add CaloGetterInit in the reconstruction
+    sequence to have fast access to CaloDigits
+  . fix minor bug in HltClusterSelection.opts + adapt to change in CaloTools
+  . CaloClusterisationTool : reduce verbosity
+
+- In TrackFitEvent v3r21
+  . added accessor to matrix A and B in TrackStateVertex
+  . in src/MuonMeasurement.cpp x,y x-type, measures x, error = x-size/sqrt(12),
+    j-vector trajectory, range +- y-size/2 
+
+- In TrackFitter v2r33
+  . in src/TrackMasterExtrapolator.h(cpp) add UseSeedStateErrors property to fit
+    the measurement using the seed state errors (to fit the muon part of a track
+    using the state from the 'long' track)
+
+- In TrackMCTools v2r23
+  . New tool PatDebugTracktool to return the MC keys associated to a track.
+  . New algorithm DebugTrackingLosses to display missed track with some
+    information on the MC particle.
+  . Add warning in case linker is not found in CleanPatTrackSelector
+
+- In TrackMonitors v1r9
+  . Added more histos and fixed histogram labels in OTTrackMonitor
+  . Added columns for hit patterns in TrackMonitorNT
+  . Add residuals per layer histos to ITTrackMonitor 
+  . Changed constrainmethod in TrackFitMatchMonitor. See cvs log.
+  . Added hit patterns to TrackMonitor
+
+- In TrackTools v3r17
+  . Add the possibility of a restricted search to TrackCloneFinder tool
+- . Fix bug with ancestors in TrackStateInitTool
+  . Add STClusterCollector tool
+
+- In TrackUtils v1r26
+  . Added possibility to just set the flag LHCb::Track::Clone for found 
+    clonetracks and not copy the tracks to an output container in 
+    TrackEventCloneKiller
+  . Added possibility to deep-copy tracks into keyed containers in
+    CreateFastTrackCollection to make the migration easier - users can select
+    if they want the old containers which can be used without changes to user
+    code or the new fast containers (which remain the default)
+
+- In PatAlgorithms v3r19
+  . Bug fix for PatForward (prevent from overwritting selected hits flags)
+
+- In PatVelo v3r13
+  . In PatVeloTrackTool:
+    o Added an option to not correct for box offsets to allow PR in a closing
+      detector more simply. Default is to old behaviour. 
+    o copy RZ info to PatVeloSpaceTrack, then to output track
+  . In PatVeloAlignTrackFilter: Implement tuned options and minor changes to the
+    algorithm
+  . Tweaked the setting of the number of missing clusters to better cope with
+    stations to the beam line missed.
+  . In PatRZTRack:
+    o Added more comments and cleaned an unused variable
+    o Number of missed stations is a int not a bool
+  . Changed enums for storing N expected Velo clusters
+  . In PatVeloSpaceTrack 
+    o protect for the case of two hits in the same sensor
+    o store nVeloExpected from RZ track
+  . In PatVeloSpaceTracking get the tool with freedom of type.
+  . Added nVeloExpected info to RZ track and Space/General tracks
+    For use in the HLT to reject more ghosts.
+  . PatVeloGeneralTracking : set nVeloExpected in track AdditionalInfo
+  . Several changes for performance improvements:
+    PatVeloPhiList: o Compute a quality factor = chi2 - .5 * nbUnused for better
+                      selection of best lists
+                    o Tolerance is scaled by fabs(dz) only between 40 and 60 mm.
+    PatVeloRTracking: o Change MaxMissed from 3 to 1.
+                      o Set nVeloExpected (R+Phi count)
+    PatVeloSpaceTol: o Change default match tolerance
+                     o Allow some tolerance for checking if r is inside.
+                     o Select teh best Phi list by qFact, not chi2.
+                     o Correct the half box offset for phi computation.
+  . New space tracking tools NewVeloSpaceTool with class NewSpaceTrack
+
+- In TrackMatching v2r22
+  . Change default for OmitSeedFitOutliers switch to false
+  . Check for at least 2 x and 2 stereo hits in diff. planes NOT removed
+    by the fit for all seed tracks entering the matching
+
+- In TsaAlgorithms v3r10
+  . Add "assumedMomentum" property to ITGenericTracking
+
+- In MuonTrackAlign v1r7p2
+  . Remove unused IMuonPosTool.h
+
+- In RichMarkovRingFinder v2r6
+  . Improve how uninitialised sequences are checked for in the python 
+    configuration.
+
+- In RichRecMCAlgorithms v1r3
+  . Improvements to the hit dumping algorithm
+
+- In RichRecMCTools v2r21
+  . Update RichPixelCreatorFromRichDigitsWithBg to check the status of both the 
+    HPD and pixel smart IDs.
+  . Add new photon predictor tool that use MC information (available on DSTs) to
+    select signal and/or background photons.
+
+- In RichRecQC v2r28
+  . Add new IFB monitoring (imported from Panoptes)
+  . Use isPropertySet instead of checking against None to see if the sequences
+    have been properly configured
+  . Various small monitoring changes
+    o Make PID performance plots for Long tracks as well as All tracks
+    o A few new CK theta resolution plots
+
+- In RichRecSys v3r18
+  . Test if sequences are set using "isPropertySet" method instead of testing
+    for a None variable.
+  . Fix configuration bug where photon predictor settings where not properly 
+    set when running under non-default settings.
+  . Add option to Track Creator Configurable to allow user to set a custom
+    input track location
+  . Remove 'CaloTracks' option (superceded by above addition).
+
+- In RichRecTools v4r8
+  . Small improvements to the PID plots.
+
+- In RichRecTrackTools v1r10
+  . Propagate StatusCode from GaudiException to Error(...) call.
+  . Fix untested StatusCodes due to missing .ignore() on Warning/Error calls
+
+- In GlobalReco v6r21
+  . Improve how uninitialised sequences are check for during Configuration
+
+- In VeloRecMonitors v1r6
+  . Added occupancy histograms to cluster monitor
+  . Shortened and simplified histogram name in sampling monitor in order to
+    avoid potential problems with HistDB and presenter.
+  . VeloMonitorBase updated to be able to deal with the printing of options
+  . Several additions to VeloLumiRegionMonitor and VeloHltLiteClusterMonitor:
+    o trend plotting for the last 1000 lumi region position measurements
+    o profiling of position and occupancy vs LHC bunchId
+  . Add two gaudirun scripts that add my histos into the histoDB and layout my
+    pages: VeloLumiRegion_addToHistDb.py, VeloLumiRegion_setupPages.py
+  . All monitoring algos in this package now print the full list of job options
+    during initialization, except when running in Brunel
+  . Added VeloExpertClusterMonitor algorithm that makes plots of adc for
+    clusters and tracks with options to split sensors by regions
+
+- In LumiAlgs v2r0
+  . Change input and output FSR locations to be under /FileRecords instead of
+    /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
 
 </PRE><H1><A NAME=v6r5>2009-04-22 RecSys v6r5</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r3.
