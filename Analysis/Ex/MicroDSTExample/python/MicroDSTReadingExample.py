@@ -7,7 +7,8 @@ from GaudiPython import gbl, AppMgr, Helper
 from math import sqrt, fabs
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from LHCbMath import XYZVector, XYZPoint
-from MicroDSTExample import Helpers, Functors
+from Configurables import MCMatchObjP2MCRelator
+from MicroDSTExample import Helpers, Functors, Debug
 GenPlotter = Functors.GenericPlotter
 import PartProp.Service
 #==============================================================================
@@ -49,6 +50,21 @@ for o, a in opts:
     elif o in ("-r", "--root"):
         locationRoot = a
 
+selectionPath = locationRoot +  '/Phys/' + selection
+particlePath = selectionPath + '/Particles'
+particle2mcPath = selectionPath + '/P2MCPRelations'
+stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
+refitVertexPath = selectionPath + '/RefittedVertices'
+refitVertexAssocPath = selectionPath + '/Particle2ReFittedVertexRelations'
+mcParticlePath = locationRoot+'/MC/Particles'
+flavTagPath = selectionPath + "/Tagging"
+pvLocation = locationRoot+"/Rec/Vertex/Primary"
+
+myP2MCP = MCMatchObjP2MCRelator()
+myP2MCP.OutputLevel=4
+#myP2MCP.RootInTES = '/Event/microDST'
+myP2MCP.MCParticleDefaultLocation = 'microDST/MC/Particles'
+myP2MCP.RelTableLocations = [particle2mcPath]
 
 lhcbApp = LHCbApp()
 lhcbApp.DDDBtag = 'default'
@@ -67,6 +83,11 @@ eventLoop = Helpers.EventLoop(appMgr)
 properTimeFitter = eventLoop.tools.create('PropertimeFitter',
                                           interface='ILifetimeFitter')
 
+MCAssocTool = eventLoop.tools.create('MCMatchObjP2MCRelator',
+                                     interface='IP2MCP')
+
+
+
 eventLoop.sel.open(microDSTFile)
 mcMassPlots = Helpers.Plots("MC mass")
 mcPropTimePlots = Helpers.Plots("MC proper time")
@@ -83,21 +104,14 @@ nRecEvents=0
 nParticles = 0
 nPrimaryVertices = 0
 
-selectionPath = locationRoot +  '/Phys/' + selection
-particlePath = selectionPath + '/Particles'
-particle2mcPath = selectionPath + '/P2MCPRelations'
-stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
-refitVertexPath = selectionPath + '/RefittedVertices'
-refitVertexAssocPath = selectionPath + '/Particle2ReFittedVertexRelations'
-mcParticlePath = '/Event/microDST/MC/Particles'
-flavTagPath = selectionPath + "/Tagging"
-pvLocation = locationRoot+"/Rec/Vertex/Primary"
+
 nPVPlot = TH1D( "# of PVs", "# of primary vertices", 5, -0.5, 4.5 )
 
 stdPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
 refitPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
 refitVertexZ =  TH1D("re-fit PVz", "re-fit PVz", 50, -100.,100.)
 vertexZ =  TH1D("PVz", "PVz", 50, -100.,100.)
+bestVertexZ =  TH1D("best PVz", "best PVz", 50, -100.,100.)
 
 pidMassFunc = Functors.PIDMass(eventLoop.partProp)
 pidMassHistoAtts = Helpers.AdaptiveHistoAttributes(100,
@@ -138,11 +152,15 @@ tagOmegaPlotter = GenPlotter(omegaPlots,
                              Helpers.HistoAttributes(100, 0.,1.),
                              "Mis-tag fraction per category")
 
+assocCounter = Debug.AssocTreeDebugger(MCAssocTool, particleNameFunc)
+
 while (eventLoop.nextEvent() ) :
 #    evt.dump()
     nEvents+=1
     nPrimaryVertices += eventLoop.countAndPlotNEntries(pvLocation, nPVPlot)
     mcParts = eventLoop.getEvtStuff(mcParticlePath)
+    PVs = eventLoop.getEvtStuff(pvLocation)
+    for PV in PVs : vertexZ.Fill(PV.position().z())
     
     nMCEvents += EventDataPlots(mcParts, mcMassPlotter)
     EventDataPlots(mcParts, mcPropTimePlotter)
@@ -156,7 +174,8 @@ while (eventLoop.nextEvent() ) :
         stdBestVertexAssoc = eventLoop.getEvtStuff(stdVertexAssocPath)
         refitBestVertexAssoc = eventLoop.getEvtStuff(refitVertexAssocPath)
         p2MCPTable = eventLoop.getEvtStuff(particle2mcPath)
-        MCAssocFun = Functors.AssocMCPFromTable(p2MCPTable)
+#        MCAssocFun = Functors.AssocMCPFromTable(p2MCPTable)
+        MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
         massResFunc = Functors.MassRes(MCAssocFun)
         particleMassResPlotter = GenPlotter(massResPlots,
                                             massResFunc,
@@ -166,7 +185,7 @@ while (eventLoop.nextEvent() ) :
                                             "rec mass - MC mass")
         Helpers.particleTreeLoop(particles, particleMassPlotter)
         Helpers.particleTreeLoop(particles, particleMassResPlotter)
-
+        Helpers.particleTreeLoop(particles, assocCounter)
         stdTauFunc = Functors.PropTime(Functors.BestVertex(stdBestVertexAssoc),
                                        properTimeFitter)
         tauPlotter = GenPlotter(propTimePlots,
@@ -191,7 +210,9 @@ while (eventLoop.nextEvent() ) :
 
         for p in particles:
             stdVertex = Helpers.bestVertex(p, stdBestVertexAssoc)
-            stdPropTime = Helpers.properTime(p, stdVertex, properTimeFitter)
+            if stdVertex!=None : bestVertexZ.Fill(stdVertex.position().z())
+            stdPropTime = stdTauFunc(p)
+#            stdPropTime = Helpers.properTime(p, stdVertex, properTimeFitter)
             refitVertex = Helpers.bestVertex(p, refitBestVertexAssoc)
             pMom = p.momentum()
             refitVertices = eventLoop.getEvtStuff(refitVertexPath)
@@ -199,7 +220,8 @@ while (eventLoop.nextEvent() ) :
                 for rv in refitVertices :
                     if rv!=None : refitVertexZ.Fill(rv.position().z())
             if (refitVertex != None) :
-                refitPropTime = Helpers.properTime(p, refitVertex, properTimeFitter)
+                refitPropTime = reFitPVTauFunc(p)
+#                refitPropTime = Helpers.properTime(p, refitVertex, properTimeFitter)
             else :
                 refitPropTime = -9999.
             assocMCPart = (Helpers.assocMCP(p, p2MCPTable))
