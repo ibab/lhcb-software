@@ -15,6 +15,7 @@ class VtxFitParams ;
 namespace LHCb
 {
   class Particle ;
+  class VertexBase ;
   class VtxDoubleErr ;
   class VtxFitParams ;
 }
@@ -38,6 +39,7 @@ namespace decaytreefit
   public:
     Fitter() : m_decaychain(0), m_fitparams(0) {} 
     Fitter(const LHCb::Particle& bc, double prec=0.01) ;
+    Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, double prec=0.01) ;
     ~Fitter() ;
     void fit() ;
     void print() const ;
@@ -68,7 +70,7 @@ namespace decaytreefit
 
     // interface to beta
     VtxDoubleErr decayLength(const LHCb::Particle& cand) const ;
-    VtxDoubleErr lifeTime(const LHCb::Particle& cand) const ;
+    VtxDoubleErr properDecayTime(const LHCb::Particle& cand) const ;
     VtxDoubleErr decayLengthSum(const LHCb::Particle&, const LHCb::Particle&) const ;
 
     LHCb::Particle getFitted() const ;

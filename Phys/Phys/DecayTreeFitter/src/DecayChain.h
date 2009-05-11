@@ -5,7 +5,10 @@
 #include "ParticleBase.h"
 #include "MergedConstraint.h"
 
-class LHCb::Particle ;
+namespace LHCb {
+  class Particle ;
+  class VertexBase ;
+}
 
 namespace decaytreefit {
 
@@ -18,6 +21,8 @@ namespace decaytreefit {
     DecayChain() : m_mother(0) {}
 
     DecayChain(const LHCb::Particle& bc, bool forceFitAll=false)  ;
+    DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll=false)  ;
+
     ~DecayChain() ;
     
     int dim() const { return m_dim ; }

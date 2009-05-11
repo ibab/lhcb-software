@@ -1,13 +1,13 @@
-#ifndef VTK_BEAMSPOT_HH
-#define VTK_BEAMSPOT_HH
+#ifndef DECAYTREEFITTER_INTERACTIONPOINT_H
+#define DECAYTREEFITTER_INTERACTIONPOINT_H
 
 #include "ParticleBase.h"
-#include <CLHEP/Matrix/Vector.h>
-#include <CLHEP/Matrix/SymMatrix.h>
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 namespace LHCb
 {
-  class Vertex ;
+  class VertexBase ;
 }
 
 namespace decaytreefit 
@@ -16,8 +16,8 @@ namespace decaytreefit
   class InteractionPoint : public ParticleBase
   {
   public:
-    InteractionPoint(const LHCb::Vertex& ipvertex, const LHCb::Particle& daughter, bool forceFitAll) ;
-    virtual ~InteractionPoint() ;
+    InteractionPoint(const LHCb::VertexBase& ipvertex, const LHCb::Particle& daughter, bool forceFitAll) ;
+    ~InteractionPoint() ;
 
     virtual int dim() const { return 3 ; } // (x,y,z)
     virtual ErrCode initPar1(FitParams*) ; 
@@ -39,14 +39,12 @@ namespace decaytreefit
     virtual bool hasEnergy() const { return false ; }
 
   private:
-    bool m_constrainXY ;
-    bool m_constrainXYZ ;
-    HepVector m_ipPos ;       // interaction point position
-    HepSymMatrix m_ipCov ;    // cov matrix
-    HepSymMatrix m_ipCovInv ; // inverse of cov matrix
+    Gaudi::Vector3      m_ipPos ;    // interaction point position
+    Gaudi::SymMatrix3x3 m_ipCov ;    // cov matrix
+    Gaudi::SymMatrix3x3 m_ipCovInv ; // inverse of cov matrix
     ParticleBase* m_daughter ;
   } ;
-
+  
 }
 
 

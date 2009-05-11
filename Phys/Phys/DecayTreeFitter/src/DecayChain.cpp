@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "FitParams.h"
 #include "ParticleBase.h"
+#include "InteractionPoint.h"
 #include "DecayChain.h"
 
 namespace decaytreefit
@@ -24,8 +25,18 @@ namespace decaytreefit
     m_mother = ParticleBase::createParticle(bc,0,forceFitAll) ;
     m_mother->updateIndex(m_dim) ;
     m_cand   = locate(bc) ;
-    //initConstraintList() ;
-    
+    if(vtxverbose>=2) {
+      std::cout << "In DecayChain constructor: m_dim = " << m_dim << std::endl ;
+      printConstraints() ;
+    }
+  }
+
+  DecayChain::DecayChain(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll) 
+    : m_dim(0),m_mother(0),m_isOwner(true)
+  {
+    m_mother = new InteractionPoint(pv,bc,forceFitAll) ;
+    m_mother->updateIndex(m_dim) ;
+    m_cand   = locate(bc) ;
     if(vtxverbose>=2) {
       std::cout << "In DecayChain constructor: m_dim = " << m_dim << std::endl ;
       printConstraints() ;

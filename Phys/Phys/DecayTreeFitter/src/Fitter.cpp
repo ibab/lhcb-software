@@ -24,15 +24,20 @@ namespace decaytreefit
       m_chiSquare(-1),m_niter(-1), m_prec(prec)
   {
     // build the tree
-    if(vtxverbose>=2)
-      std::cout << "VtkFitter::VtkFitter: building the tree" << std::endl ;
     m_decaychain = new DecayChain(bc,false) ;
-    
     // allocate the fit parameters
-    if(vtxverbose>=2)
-      std::cout << "allocating fit parameters" << std::endl ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
+
+  Fitter::Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, double prec) 
+    : m_bc(new LHCb::Particle(bc)),m_decaychain(0),m_fitparams(0),
+      m_status(FitStatus::UnFitted),
+      m_chiSquare(-1),m_niter(-1), m_prec(prec)
+  {
+    m_decaychain = new DecayChain(bc,pv,false) ;
+    m_fitparams  = new FitParams(m_decaychain->dim()) ;
+  }
+  
 
   Fitter::~Fitter()
   {
@@ -467,23 +472,23 @@ namespace decaytreefit
     */
   }
 
-  VtxDoubleErr
-  Fitter::lifeTime(const LHCb::Particle& cand) const
-  {
-    // returns the lifetime in the rest frame of the candidate
-    VtxDoubleErr rc(0,0) ;
-    const ParticleBase* pb = m_decaychain->locate(cand) ;
-    if(pb && pb->tauIndex()>=0 && pb->mother()) {
-      int tauindex = pb->tauIndex() ;
-      double tau    = m_fitparams->par()(tauindex+1) ;
-      double taucov = m_fitparams->cov()(tauindex+1,tauindex+1) ;
-      double mass   = pb->pdtMass() ; 
-      double convfac = mass/Gaudi::Units::c_light ;
-      rc = VtxDoubleErr(convfac*tau,convfac*convfac*taucov) ;
-    }
-    return rc ;
-  }
-
+  //   VtxDoubleErr
+  //   Fitter::properDecayTime(const LHCb::Particle& cand) const
+  //   {
+  //     // returns the lifetime in the rest frame of the candidate
+  //     VtxDoubleErr rc(0,0) ;
+  //     const ParticleBase* pb = m_decaychain->locate(cand) ;
+  //     if(pb && pb->tauIndex()>=0 && pb->mother()) {
+  //       int tauindex = pb->tauIndex() ;
+  //       double tau    = m_fitparams->par()(tauindex+1) ;
+  //       double taucov = m_fitparams->cov()(tauindex+1,tauindex+1) ;
+  //       double mass   = pb->pdtMass() ; 
+  //       double convfac = mass/Gaudi::Units::c_light ;
+  //       rc = VtxDoubleErr(convfac*tau,convfac*convfac*taucov) ;
+  //     }
+  //     return rc ;
+  //   }
+  
   VtxDoubleErr
   Fitter::decayLength(const ParticleBase& pb) const 
   {

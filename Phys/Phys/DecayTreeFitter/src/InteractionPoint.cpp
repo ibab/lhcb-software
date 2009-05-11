@@ -1,45 +1,46 @@
 #include "FitParams.h"
 #include "InteractionPoint.h"
 #include "Event/Particle.h"
-#include "Event/Vertex.h"
+#include "Event/VertexBase.h"
 
 namespace decaytreefit
 {
   extern int vtxverbose ;
 
-  InteractionPoint::InteractionPoint(const LHCb::Vertex& ipvertex,
+  InteractionPoint::InteractionPoint(const LHCb::VertexBase& ipvertex,
 				     const LHCb::Particle& daughter, 
 				     bool forceFitAll)
-    : ParticleBase("IP"),
-      m_ipPos(3,0), m_ipCov(3,1), m_ipCovInv(3,1) 
+    : ParticleBase("IP")
   {
     m_daughter = ParticleBase::createParticle(daughter,this,forceFitAll) ;
-
-    std::cout << "VtkInteractionPoint: still using dummy beamspot"<< std::endl ;
-    m_ipCov(1,1) = 0.1 ;
-    m_ipCov(2,2) = 0.1 ;
-    m_ipCov(3,3) = 50 ;
+    m_ipPos(0) = ipvertex.position().x() ;
+    m_ipPos(1) = ipvertex.position().y() ;
+    m_ipPos(2) = ipvertex.position().z() ;
+    m_ipCov    = ipvertex.covMatrix() ;
     int ierr ;
-    m_ipCovInv = m_ipCov.inverse(ierr) ;
-    
-    if(vtxverbose>=2)
-      std::cout << "VtkInteractionPoint: initial beam spot = (" 
-		<<m_ipPos(1) << "," << m_ipPos(2) << "," << m_ipPos(3) << ")" << std::endl ;
+    m_ipCovInv = m_ipCov.Inverse(ierr) ;
+    if(vtxverbose>=-1) {
+      std::cout << "InteractionPoint: initial beam spot = (" 
+		<<m_ipPos(0) << "," << m_ipPos(1) << "," << m_ipPos(2) << ")" <<std::endl ;
+      std::cout << "daughter: " << m_daughter << " " << std::flush 
+		<< m_daughter->name() << std::endl ;
+    }
   }
 
-  InteractionPoint::~InteractionPoint() {}
-
+  InteractionPoint::~InteractionPoint()
+  {
+    delete m_daughter ;
+  }
+  
   ErrCode 
   InteractionPoint::initPar1(FitParams* fitparams)
   {
     ErrCode status ;
     int posindex = posIndex() ;
     for(int row=1; row<=3; ++row)
-      fitparams->par()(posindex+row) = m_ipPos(row) ;
-    
+      fitparams->par()(posindex+row) = m_ipPos(row-1) ;
     status |= m_daughter->initPar1(fitparams) ;
     status |= m_daughter->initPar2(fitparams) ;
-    
     return status ;
   }
 
@@ -57,8 +58,7 @@ namespace decaytreefit
     ErrCode status ;
     int posindex = posIndex() ;
     for(int row=1; row<=3; ++row)
-      fitpar->cov().fast(posindex+row,posindex+row) 
-	= 1000*m_ipCov.fast(row,row) ;
+      fitpar->cov().fast(posindex+row,posindex+row) = 1000*m_ipCov(row-1,row-1) ;
     status |= m_daughter->initCov(fitpar) ;
 
     return status ;
@@ -71,10 +71,10 @@ namespace decaytreefit
     int posindex = posIndex() ;
     int maxrow = 3 ;
     for(int row=1; row<=maxrow; ++row) {
-      p.r(row) = fitparams.par()(posindex+row) - m_ipPos(row) ;
+      p.r(row) = fitparams.par()(posindex+row) - m_ipPos(row-1) ;
       p.H(row,posindex+row) = 1 ;
       for(int col=1; col<=row; ++col)
-	p.Vfast(row,col) = m_ipCov.fast(row,col) ;
+	p.Vfast(row,col) = m_ipCov(row-1,col-1) ;
     }
     return ErrCode::success ;
   }
@@ -100,9 +100,10 @@ namespace decaytreefit
   {
     // calculate the chi2
     int posindex = posIndex() ;
-    HepVector residual = m_ipPos - fitparams->par().sub(posindex+1,posindex+3) ;
-    double chisq = m_ipCovInv.similarity(residual) ;
-
+    Gaudi::Vector3 residual = m_ipPos ;
+    for(int row=0; row<3; ++row)
+      residual(row) -= fitparams->par()(posindex+row+1) ;
+    double chisq = ROOT::Math::Similarity(residual,m_ipCovInv) ;
     // add the daughters
     chisq += ParticleBase::chiSquare(fitparams) ;
 
