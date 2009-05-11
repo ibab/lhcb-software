@@ -11,9 +11,10 @@ conf.CopyL0DUReport = True
 conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
 conf.CopyReFittedPVs = True
-
+conf.CopyBTags = True
 dv = DaVinci()
-dv.EvtMax = 1000
+dv.EvtMax = 500
+#dv.HistogramFile = "MyTestMDST_MC_newConf.dst"
 dv.UserAlgorithms = [GaudiSequencer("SeqDC06selBs2JpsiPhi")]
 dv.Input =  [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

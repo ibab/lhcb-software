@@ -1,9 +1,30 @@
-!$Id: release.notes,v 1.22 2009-04-14 13:21:52 jpalac Exp $
+!$Id: release.notes,v 1.23 2009-05-11 15:28:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r3 2009-05-11 ==================
+
+! 2009-05-11 - Juan PALACIOS
+ - python/MicroDSTExample/SelectionSummary.py
+  . A new helper class Selection with useful information about selections.
+ - python/MicroDSTExample/Selections.py
+  . A few selection summaries implemented in terms of class Selection
+ - python/MicroDSTExample/Debug.py
+  . New classes to debug Particle -> MCParticle associator tool output.
+ - options/TestMicroDSTMake.py
+  . Use new Selection class for clarity.
+  . Use new PV re-fitting: grab the selection MakeResonances algo and set it's 
+    ReFitPVs property to True. Switch off the old-style post-selection PV re-fitting.
+  . Add event counting algo to DaVinci().Useralgorithms
+ - python/MicroDSTReadingExample.py
+  . tests for new P->MCP matching and PV re-fitting.
+
+! 2009-04-28 - Juan PALACIOS
+ - options/TestMicroDSTMake.py
+  . Use new P->MCP and P->PV relations cloning
 
 !======================= Ex/MicroDSTExample v2r2p1 2009-04-14 ================
 
