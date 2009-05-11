@@ -15,7 +15,7 @@ branches cmt doc
 #use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
-use Camera            v1r2     Online
+use Camera            v1r3     Online
 use DIM               v18r4p1  Online
 use ExampleGaucho     v3r1     Online
 # Does not work on WIN32
