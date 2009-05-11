@@ -4,8 +4,10 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.10 2009-04-16 12:12:50 jpalac Exp $
+! $Id: release.notes,v 1.11 2009-05-11 14:07:42 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+!===================== MicroDSTinterfaces v1r2 2009-05-11 ===================
 
 ! 2009-04-16 - Juan PALACIOS
  - MicroDST/ICloneRecVertex
