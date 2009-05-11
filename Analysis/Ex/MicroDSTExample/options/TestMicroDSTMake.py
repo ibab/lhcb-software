@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.14 2009-04-28 12:11:51 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.15 2009-05-11 15:11:17 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -19,11 +19,12 @@ from Configurables import CopyRecHeader
 from Configurables import CopyMCParticles
 from Configurables import CopyParticles
 from Configurables import CopyPrimaryVertices
-from Configurables import CopyParticle2PVLink
 from Configurables import CopyFlavourTag
 from Configurables import CopyParticle2PVRelations
 from Configurables import CopyParticle2MCRelations
 from Configurables import P2MCRelatorAlg
+from Configurables import MakeResonances
+from MicroDSTExample import Selections
 #==============================================================================
 # Some steering options
 #
@@ -36,18 +37,21 @@ keepTrueDecays = False
 # Copy related MCParticles and decay tree for selected candidates?
 storeMCInfo = True
 # B tagging?
-BTaggingInfo = False
+BTaggingInfo = True
 # re-fit PV?
-PVRefit = True
+PVRefit = False
 #==============================================================================
-#importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataLFN.py")
-importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py")
 importOptions("$STDOPTS/LHCbApplication.opts")
-importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
-mainLocation = "Phys/DC06selBs2JpsiPhi_unbiased"
-# get rid of some spam
-printSel=PrintHeader('PrintDC06selBs2JpsiPhi')
-printSel.OutputLevel=4
+#mySelection = Selections.KstarSel
+#mySelection = Selections.Phi2KKSel
+mySelection = Selections.Bs2JpsiPhiSel
+#mySelection = Selections.BdJpsiKstarSel
+importOptions(mySelection.mainOptions)
+importOptions(mySelection.dataFiles)
+mainLocation = mySelection.mainLocation
+mainSelector = MakeResonances(mySelection.mainSelector)
+mainSelector.ReFitPVs=True
+mainSelector.OutputLevel=4
 #
 if (storeMCInfo) :
     DSTMC = "WithMC"
@@ -60,7 +64,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='testBs2JpsiPhi_"+DSTMC+"_"+ evtString +"_Kevt_TestMCRel.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt_NewReFitPVs.dst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
@@ -73,8 +77,17 @@ if (allEventInfo) :
     MicroDSTStream.AcceptAlgs.append( 'AllEvents' )
     
 # Create selection sequence and add to OutputStream's AcceptAlgs list
-MySelection = GaudiSequencer('SeqDC06selBs2JpsiPhi')
+MySelection = GaudiSequencer(mySelection.mainSequence)
 MicroDSTStream.AcceptAlgs.append( MySelection.name() )
+#==============================================================================
+
+#from Configurables import FilterEventByMCDecay
+#signalKiller = FilterEventByMCDecay()
+#signalKiller.Select = False
+##signalKiller.Select = True
+#signalKiller.addTool(MCDecayFinder)
+#signalKiller.MCDecayFinder.Decay = '[B_s0 -> (J/psi(1S) -> mu+ mu- {,gamma} {,gamma} {,gamma}) (phi(1020) -> K+ K- {,gamma} {,gamma} {,gamma})]cc'
+#MySelection.Members += [signalKiller]
 
 #==============================================================================
 # Copy RecHeader
@@ -93,8 +106,9 @@ if (keepTrueDecays) :
     filterMCDecays.OutputLevel = 4;
 
     CopyMCParticles().InputLocation = "MC/Decays"
-    CopyMCParticles().addTool( MCParticleCloner(), name = 'MCParticleCloner' )
-    CopyMCParticles().MCParticleCloner.addTool( MCVertexCloner(), name = 'ICloneMCVertex' )
+    CopyMCParticles().addTool( MCParticleCloner )
+    CopyMCParticles().MCParticleCloner.addTool( MCVertexCloner(),
+                                                name = 'ICloneMCVertex' )
     CopyMCParticles().OutputLevel=4
 
     if (allEventInfo) :
@@ -138,7 +152,7 @@ if (storeMCInfo) :
     copyP2MCRel.addTool(MCParticleCloner)
     copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner,
                                          name = 'ICloneMCVertex')
-    copyP2MCRel.MCParticleCloner.OutputLevel=1
+    copyP2MCRel.MCParticleCloner.OutputLevel=4
     copyP2MCRel.InputLocation = mainLocation+"/P2MCPRelations"
     copyP2MCRel.OutputLevel=4
     MySelection.Members += [copyP2MCRel]
@@ -172,14 +186,19 @@ if (PVRefit) :
     copyReFittedPVs.InputLocation = refittedPVLocation
     MySelection.Members += [copyReFittedPVs]
     # copy the Particle->PV relations table
-    copyP2RefitPVLink = CopyParticle2PVLink("CopyP2RefitPVLink")
-    copyP2RefitPVLink.InputLocation = p2ReFitPVRelationsLoc
-    copyP2RefitPVLink.OutputLevel=4
-    MySelection.Members += [copyP2RefitPVLink]
+    copyP2RefitPVRel = CopyParticle2PVRelations("CopyP2RefitPVRelations")
+    copyP2RefitPVRel.InputLocation = p2ReFitPVRelationsLoc
+    copyP2RefitPVRel.OutputLevel=4
+    MySelection.Members += [copyP2RefitPVRel]
 #==============================================================================
+# make a histogram counting events processed
+from Configurables import EventCountHisto
+evtCountAlg = EventCountHisto('EvtCountAlg')
+#evtCountAlg.OutputLevel= 1
 # make a DaVinci application configurable and add the crucial sequence to it.
 dv = DaVinci()
 dv.EvtMax = nEvents
+dv.HistogramFile = "EventCount.root"
 #dv.SkipEvents = 2*nEvents
-dv.UserAlgorithms = [MySelection]
+dv.UserAlgorithms = [evtCountAlg, MySelection]
 #==============================================================================
