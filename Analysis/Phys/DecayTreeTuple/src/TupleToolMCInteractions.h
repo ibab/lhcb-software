@@ -1,4 +1,4 @@
-// $Id: TupleToolMCInteractions.h,v 1.3 2009-05-11 12:05:12 rlambert Exp $
+// $Id: TupleToolMCInteractions.h,v 1.4 2009-05-11 14:45:55 rlambert Exp $
 #ifndef TUPLETOOLGENERATION_H
 #define TUPLETOOLGENERATION_H 1
 
@@ -39,11 +39,17 @@ class ITupleTool;
  *
  * Options:
  *  Mean        double  overwrite the mean value of interactions for this event
+ *                       -default is described above
  *  AdjustMean  double  calculate a scaling factor to approximate this number of interactions per event
+ *                       -by default this is zero, and no scaling information is filled
  *  NormaliseAt int     normalise the scaling factor such that it is equal to 1 at this value of I
+ *                       -by default this is set to zero, and no normalisation is performed
  *  Prefix        string  prefix to give to the variables, in case you want to use two copies of this tool
+ *                       -by default this is "EVT_Int"
  *  UseRecPV      bool  use the #of reconstructed PVs, rather than the MC Collisions
+ *                       -by default this is false
  *  FillDetails   bool  fill extra information on MCPV, MC Collisions and Reconstructed PV
+ *                       -by default this is false, fine for most purposes
  *
  * \sa DecayTreeTuple
  *  @author P. Koppenburg
