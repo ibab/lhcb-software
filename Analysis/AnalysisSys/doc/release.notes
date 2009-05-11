@@ -17,6 +17,8 @@ Purpose     : LHCb analysis packages
 	    IP2MCP:
 				MCMatchObjP2MCRelator: Uses LoKi::MCMatch and sorting by descendancy to generate associated trees. IP2MCP implementation, that is, getting one "best" particle out of the trees not optimised yet.
 
+		See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC
+
   * MicroDST:
     New generic classes for cloning objects related to other objects.
     Logic it: take relations table, and clone To's for From's that are already 
