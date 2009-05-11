@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.3 2009-05-11 15:49:29 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.4 2009-05-11 19:24:33 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 
 import PyCintex
@@ -268,12 +268,12 @@ ThreeHalf = JSpin    ( 4 )
 FiveHalf  = JSpin    ( 6 ) 
 
 
-CTau         = Decays.Nodes.Ctau           # type 
-LongLived_   = Decays.Nodes.LongLived_     # type 
-LongLived    = Decays.Nodes.LongLived  ()  # instance
-ShortLived_  = Decays.Nodes.ShortLived_    # type 
-ShortLived   = Decays.Nodes.ShortLived ()  # instance
-Stable       = Decays.Nodes.Stable     ()  # instance
+CTau         = Decays.Nodes.CTau            # type 
+LongLived_   = Decays.Nodes.LongLived_      # type 
+LongLived    = Decays.Nodes.LongLived_  ()  # instance
+ShortLived_  = Decays.Nodes.ShortLived_     # type 
+ShortLived   = Decays.Nodes.ShortLived_ ()  # instance
+Stable       = Decays.Nodes.Stable      ()  # instance
 
 SubNodes     = std.vector( _Node ) 
 

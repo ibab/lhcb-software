@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.18 2009-05-11 15:49:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.19 2009-05-11 19:24:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-11 - Vanya Belyaev
+ - fix typo 
 
 ! 2009-05-11 - Vanya BELYAEV
  - Kernel/Nodes.h 
