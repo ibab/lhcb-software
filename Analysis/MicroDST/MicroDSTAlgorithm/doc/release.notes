@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.82 2009-04-30 13:31:06 jpalac Exp $
+! $Id: release.notes,v 1.83 2009-05-11 14:10:59 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v3r6 2009-05-11 =================
 
 ! 2009-04-30 - Juan PALACIOS
  - Remove CopyRelatedMCParticles and CopyParticle2PVLink
