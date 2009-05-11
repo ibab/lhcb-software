@@ -89,7 +89,7 @@ namespace LHCb  {
     struct FSMMonitoring {
       unsigned long lastCmd, doneCmd;
       int pid;
-      int partID;
+      int partitionID;
       char targetState, state, metaState, pad;
     } m_monitor;
 

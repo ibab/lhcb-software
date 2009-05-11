@@ -99,11 +99,11 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname= m_procName+"/fsm_status";
   m_monitor.targetState = m_monitor.state = ST_NOT_READY;
-  m_monitor.lastCmd = m_monitor.doneCmd = time(0);
-  m_monitor.metaState = SUCCESS_ACTION;
-  m_monitor.pid       = ::lib_rtl_pid();
-  m_monitor.partID    = -1;
-  m_monitor.pad       = 0;
+  m_monitor.lastCmd     = m_monitor.doneCmd = time(0);
+  m_monitor.metaState   = SUCCESS_ACTION;
+  m_monitor.pid         = ::lib_rtl_pid();
+  m_monitor.partitionID = -1;
+  m_monitor.pad         = 0;
   m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:2;C",&m_monitor,sizeof(m_monitor));
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
