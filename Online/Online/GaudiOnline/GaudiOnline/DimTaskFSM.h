@@ -90,6 +90,7 @@ namespace LHCb  {
       unsigned long lastCmd, doneCmd;
       int pid;
       char targetState, state, metaState, pad;
+      int partID;
     } m_monitor;
 
   protected:
