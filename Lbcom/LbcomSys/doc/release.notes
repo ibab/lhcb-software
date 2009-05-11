@@ -6,6 +6,101 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r0>2009-05-11 LbcomSys v7r0</A></H1><PRE>
+This version uses Gaudi v21r0 and LHCb v27r0
+
+- Packages modified: CaloTools v5r8, L0Calo v9r20, L0DU v8r16,
+    OTAssociators v4r3, OTMonitor v2r11, RichAlgorithms v1r1, RichTools v2r26,
+    SiTools v1r7, STAlgorithms v3r6, STCheckers v2r12, STDAQ v3r17,
+    STMonitors v1r1, STTools v3r9, VeloDAQ v4r6
+
+- In CaloTools v5r8
+  . new tool CaloGetterTool : helps to speed-up CaloReco processing
+  . Calo2Calo/CaloHypo2Calo
+    o get digits data via CaloGetterTool
+    o speed-up processing
+    o new property ('IdealGeometry') when perfect alignment is assumed
+
+- In L0Calo v9r20
+  . Adapt to change in CaloDet
+
+- In L0DU v8r16
+  . In L0Conf: 
+    o change default TCK for re-simulating L0 bank for DC06 data (0xFFFF->0xFFF8)
+    o Implement missing action for DecodeL0DU property
+    o Add "TCK" property, used to specify a TCK for the simulation or emulation
+    o  Add a verbose method to enable the print out of the log info.
+  . L0DEmulatorTool/L0DUFromRawTool : speed-up processing 
+  . L0DUConfigProvider : protection against missing config description
+  . L0DURawBankMonitoring : add monitoring histo for PileUp multiplicity
+
+- In OTAssociators v4r3
+  . Bug fix: correctly apply window in OTMCDepositLiner. Add dtime as weight. 
+
+- In OTMonitor v2r11
+  . Added monitoring algorithm for MCOTTimes
+
+- In RichAlgorithms v1r1
+  . Add new algorithm which artifically varies the gas and temperature
+    Conditions, to allow simulation of real data variations in MC data.
+
+- In RichTools v2r26
+  . Downgrade some messages about refractive index changes to debug()
+
+- In SiTools v1r7
+  . Simplify calculation of the max in SiZuriFunction  
+  . Add remainder/ristime functions to SiAmplifierResponse 
+
+- In STAlgorithms v3r6
+  . Add WriteSTStatusConditions algorithm
+  . Add killing by truth example to killing options
+  . Add digit merging classes
+  . Add Clusters to digits algorithm
+  . Follow changes in STTools [STClusterKiller]
+  . Add STLiteClusterKiller
+  . Add examples of cluster killing in options file
+
+- In STCheckers v2r12
+  . Bug fixes in TTOccupancy algorithm
+
+- In STDAQ v3r17
+  . STFullDecoding: Add TELL1 ID to error messages + remove hard-coded hex
+    numbers.
+  . Clean up STClustersToRawBank to follow changes in STClusterCreator
+
+- In STMonitors v1r1
+  . Modified STErrorMonitor and STNZSMonitor classes to get TELL1 number from
+    source ID using the method in the base class.
+  . Changed STZSMonitor to GaudiHistoAlg and fixed bug which meant that instances
+    for IT and TT couldn't be run together in Brunel.
+  . STSummaryMonitor: Moved to new base class plus some cosmetics and clean up.
+  . Removed obsolete STRawBankMap (is now in STKernel).
+  . STNSZMonitor: Moved to new base class, added event counting per PP.
+  . Added STErrorMonitor algorithm to monitor the error banks.
+  . all histograms from STSummary are now available
+  . renamed Analysers to Monitors
+  . added python files for createing and configuring pages
+
+- In STTools v3r9
+  . STOfflinePosition: 
+    o Improved tune of error estimates using long tracks.
+    o New charge sharing functions. Cubic plus linear term for 2-strip clusters,
+      cubic term for 3-strip clusters, linear term for 4-strip clusters, no
+      correction applied for the others. The error estimates are also changed.
+  . Add tool to select spillover clusters using previous sample
+   [STSelectSpilloverCluster]
+  . Add STSelectChannelIDByTruth [select by spillover, particle type etc]
+  . Modifications to cluster selectors
+  . Add STChannelID based selectors 
+  . Remove STCluster based selectors + replace with STSelectClustersByChannel
+  . add cluster selector by charge
+
+- In VeloDAQ v4r6
+  . Change the default values for SectorCorrection and CableOrder variables
+    no need to put additional lines into options file
+  . Add flexibility to the SmartDecoder algorithm it no longer assumes
+    anything about expected number of slots in error bank
+
 </PRE><H1><A NAME=v6r27>2009-04-07 LbcomSys v6r27</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r3
 
