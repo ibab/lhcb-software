@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.262 2009-05-10 20:37:29 gligorov Exp $
+! $Id: release.notes,v 1.263 2009-05-11 11:25:58 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r19 2009-05-11 ==================
+
+! 2009-05-11 - Juan PALACIOS
+ - Remove changes involving Clone and Hierarchy categories for release against 
+   Phys/DaVinciMCKernel v3r2.
 
 ! 2009-05-10 - V. Gligorov
  - Add two new categories to BackgroundCategory.{h,cpp} to deal
