@@ -13,6 +13,8 @@ Hacked up by M.Frank
 #include "RTL/Base64.h"
 
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 /// Translation Table as described in RFC1113
 static const char encodeTable[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
