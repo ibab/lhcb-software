@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.10 2009-04-14 13:19:25 jpalac Exp $
+!$Id: release.notes,v 1.11 2009-05-11 14:15:15 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+!========================== MicroDSTConf v2r2 2009-05-11 ==================
+
+! 2009-05-11 - Juan PALACIOS
+ - python/MicroDST/MicroDSTAlgorithm.py
+  . Add new Particle2MCRelations and Particle2PVRelations algorithms. Remove
+    CopyRelatedMCParticles and CopyP2PVLink.
 
 !========================== MicroDSTConf v2r1p1 2009-04-14 ================
 
