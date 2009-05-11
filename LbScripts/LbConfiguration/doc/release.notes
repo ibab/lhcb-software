@@ -1,3 +1,9 @@
+2009-05-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the compat library setup. The compat 
+	libraries are located in PARAM/Compat/v*/${CMTOPT}/lib. The is also a new option to
+	prevent this compatibility setup ("--no-compat")
+
 2009-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added security around the gcc version

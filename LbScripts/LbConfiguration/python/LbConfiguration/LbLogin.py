@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.29 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.30 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -212,6 +212,11 @@ class LbLoginScript(Script):
                           dest="sharedarea",
                           help="set the shared area", 
                           fallback_env="VO_LHCB_SW_DIR")
+        parser.set_defaults(no_compat=False)
+        parser.add_option("--no-compat",
+                          dest="no_compat",
+                          action="store_true",
+                          help="prevent the usage detection of the compat libraries [default: %default]")
 
 #-----------------------------------------------------------------------------------
 
@@ -662,12 +667,23 @@ class LbLoginScript(Script):
             compdef = getCompiler(opts.cmtconfig)
         return binary, platform, compdef    
         
+    def needsCompat(self):
+        log = logging.getLogger()
+        needs = False
+        native_platform = self.getNativePlatformComponents()[1]
+        if ( native_platform == "slc5" or native_platform == "sl5" ) and self.platform == "slc4" :
+            log.debug("Using slc4 compatibility layer")
+            needs = True
+        return needs
+        
     def setCMTConfig(self, debug=False):
         ev = self._env
         opts = self.options
         
         if opts.cmtconfig :
             self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
+            if not opts.no_compat and self.needsCompat() :
+                opts.no_compat = False
         else :
             self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
             if self.platform == "slc5" :
@@ -774,7 +790,11 @@ class LbLoginScript(Script):
                 if opts.pythonvers :
                     setupprojargs.append("-v")
                     setupprojargs.append(opts.pythonvers)
-    
+            if not opts.no_compat :
+                setupprojargs.append("--runtime-project")            
+                setupprojargs.append("PARAM")
+                setupprojargs.append('--use "Compat v*"')
+                
     
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
     
@@ -864,5 +884,4 @@ class LbLoginScript(Script):
 
 if __name__ == '__main__':
     sys.exit(LbLoginScript(usage="%prog [options]").run())
-
 
