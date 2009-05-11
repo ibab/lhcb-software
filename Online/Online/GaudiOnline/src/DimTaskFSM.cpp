@@ -102,9 +102,9 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   m_monitor.lastCmd = m_monitor.doneCmd = time(0);
   m_monitor.metaState = SUCCESS_ACTION;
   m_monitor.pid       = ::lib_rtl_pid();
-  m_monitor.pad       = 0;
   m_monitor.partID    = -1;
-  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
+  m_monitor.pad       = 0;
+  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:2;C",&m_monitor,sizeof(m_monitor));
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
   ::lib_rtl_install_printer(printout,this);
