@@ -1,4 +1,4 @@
-// 	$Id: VtxDoubleErr.h,v 1.3 2009-05-12 07:26:25 wouter Exp $
+// 	$Id: VtxDoubleErr.h,v 1.4 2009-05-12 12:07:17 wouter Exp $
 //
 //--------------------------------------------------------------------------
 // Author List:
@@ -39,6 +39,9 @@ namespace LHCb
     VtxDoubleErr operator - (const VtxDoubleErr &);
     VtxDoubleErr operator + (const VtxDoubleErr &);
     
+    // scale 
+    VtxDoubleErr operator * (double);
+
     // NOTE: (a * b).covariance() is 
     // b^2 * a.covariance() + a^2 * b.covariance()
     VtxDoubleErr operator * (const VtxDoubleErr &);
@@ -86,6 +89,12 @@ namespace LHCb
     return VtxDoubleErr(m_value * bde.m_value, 
 			m_covariance * bde.m_value * bde.m_value +
 			bde.m_covariance * m_value * m_value);
+  }
+
+  //--------------------------------------------------------------------
+  inline VtxDoubleErr VtxDoubleErr::operator * (double s) {
+    return VtxDoubleErr(m_value * s, 
+			m_covariance * s * s ) ;
   }
   
   //--------------------------------------------------------------------
