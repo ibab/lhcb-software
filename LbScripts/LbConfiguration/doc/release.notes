@@ -1,8 +1,10 @@
 2009-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: set the default compiler on slc5 to gcc 4.3. 
-	then it tries gcc 3.4 if it is not installed. If both of them are not installed, it
+	* python/LbConfiguration/LbLogin.py: 
+	- set the default compiler on slc5 to gcc 4.3. then it tries gcc 3.4 
+	if it is not installed. If both of them are not installed, it
 	falls back on the system one (gcc 4.1).
+	- disabled the cache if the compat libraries are needed.
 
 2009-05-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

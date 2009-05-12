@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.31 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.32 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -684,6 +684,7 @@ class LbLoginScript(Script):
             self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
             if not opts.no_compat and self.needsCompat() :
                 opts.no_compat = False
+                opts.use_cache = False
         else :
             self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
             if self.platform == "slc5" :
