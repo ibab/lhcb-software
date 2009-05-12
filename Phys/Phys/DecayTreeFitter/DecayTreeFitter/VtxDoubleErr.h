@@ -1,4 +1,4 @@
-// 	$Id: VtxDoubleErr.h,v 1.2 2009-05-07 14:14:55 wouter Exp $
+// 	$Id: VtxDoubleErr.h,v 1.3 2009-05-12 07:26:25 wouter Exp $
 //
 //--------------------------------------------------------------------------
 // Author List:
@@ -32,8 +32,8 @@ namespace LHCb
     ~VtxDoubleErr() {}
     
     // Accessors (const)
-    double value()                    const {return m_value;}
-    double covariance()               const {return m_covariance;}
+    double value()      const {return m_value;}
+    double covariance() const {return m_covariance;}
     
     VtxDoubleErr operator-();   // value() -> -value(), covariance() unaffected
     VtxDoubleErr operator - (const VtxDoubleErr &);
@@ -55,6 +55,8 @@ namespace LHCb
     VtxDoubleErr & operator -= (const VtxDoubleErr &);
     VtxDoubleErr & operator *= (const VtxDoubleErr &);
     VtxDoubleErr & operator /= (const VtxDoubleErr &);
+
+    double pull( double truth) const { return (m_value - truth)/std::sqrt(m_covariance) ; }
     
   private:
     // Data members
