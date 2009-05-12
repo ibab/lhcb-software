@@ -36,8 +36,6 @@ script_name = 'mkproject'
 day = time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime())
 
 rel_dir = os.getcwd()
-#script_dir = os.getenv('LHCBSCRIPTS')
-debug_flag = False
 command = '. '
 ext = '.sh'
 if sys.platform == 'win32':
@@ -138,8 +136,6 @@ def release_project(pname,pversion,action=None):
         CMTDEB = CMTCONFIG
         CMTCONFIG = getBinaryOpt(CMTDEB)
     
-    binary = CMTCONFIG
-
 # check space available on $LHCBTAR/PACK
     os.system('ls -ltr '+os.path.join(os.environ['LHCBTAR'],PACK))
     os.system('fs lq '+os.path.join(os.environ['LHCBTAR'],PACK))
@@ -432,8 +428,8 @@ def release_project(pname,pversion,action=None):
 #        str = os.path.join(script_dir,'LbInstallArea ')
         str = 'LbInstallArea '
         if CMTPROJECTPATH == '':
-            os.system(str+binary)
-            os.system(str+binary+'_dbg')
+            os.system(str+CMTCONFIG)
+            os.system(str+CMTDEB)
         os.system(str+'python')
         os.chdir(rel_dir)
 
@@ -445,10 +441,10 @@ def release_project(pname,pversion,action=None):
         str = 'mkLHCbtar -p '+pname+' -v '+pversion
         rc = os.system(str)
         log.info( 'tar source rc = %s' % rc )
-        rc = os.system(str+' -b '+binary)
-        log.info( 'tar %s rc= %s '%(binary,rc))
-        rc = os.system(str+' -b '+binary+'_dbg')
-        log.info( 'tar %s rc= %s '%(binary+'_dbg',rc) )
+        rc = os.system(str+' -b '+CMTCONFIG)
+        log.info( 'tar %s rc= %s '%(CMTCONFIG,rc))
+        rc = os.system(str+' -b '+ CMTDEB)
+        log.info( 'tar %s rc= %s '%(CMTDEB,rc) )
 
 # ======================= action: run glimpse index ==========================================
     if glimpse :
@@ -563,8 +559,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'h:d:p:v:a:',
-            ['help','debug','project=','version=','action='])
+        keys, values = getopt.getopt(arguments,'hp:v:a:',
+            ['help','project=','version=','action='])
 
     except getopt.GetoptError:
         print 'wrong arguments'
@@ -579,8 +575,6 @@ if __name__ == "__main__":
     action = None
 
     for key,value in keys:
-        if key in ('-d', '--debug'):
-            debug_flag = True
         if key in ('-h', '--help'):
             help()
         if key in ( '-v', '--version'):
