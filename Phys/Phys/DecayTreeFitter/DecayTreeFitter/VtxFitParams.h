@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-// 	$Id: VtxFitParams.h,v 1.4 2009-05-12 07:27:34 wouter Exp $
+// 	$Id: VtxFitParams.h,v 1.5 2009-05-12 12:06:58 wouter Exp $
 //
 // Description:
 //	Class VtxFitParams
@@ -30,6 +30,7 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "DecayTreeFitter/VtxDoubleErr.h"
 #include "DecayTreeFitter/LorentzVectorErr.h"
 
@@ -84,11 +85,19 @@ namespace LHCb
     // returns the chisquare of the mass constraint.
     double setMass( double fixedmass ) ;
 
-    // compute the proper decay time with a constrained mass
-    VtxDoubleErr properDecayTime( double fixedmass ) const ;
+    // compute the proper decay time (in units of distance) with a constrained mass
+    VtxDoubleErr ctau( double fixedmass ) const ;
     
-    // compute the properdecaytime without a constrained mass
-    VtxDoubleErr properDecayTime() const ;
+    // compute the properdecaytime (in units of distance) without a constrained mass
+    VtxDoubleErr ctau() const ;
+
+    // compute the proper decay time (in units of time) with a constrained mass
+    VtxDoubleErr properDecayTime( double fixedmass ) const {
+      return  ctau(fixedmass) / Gaudi::Units::c_light ; }
+    
+    // compute the properdecaytime (in units of time) without a constrained mass
+    VtxDoubleErr properDecayTime() const {
+      return  ctau() / Gaudi::Units::c_light ; }
     
   private:    
     double m_q;

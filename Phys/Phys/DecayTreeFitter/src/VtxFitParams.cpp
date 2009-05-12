@@ -216,11 +216,11 @@ namespace LHCb
     return chisq ;
   }
 
-  VtxDoubleErr VtxFitParams::properDecayTime( double fixedmass ) const 
+  VtxDoubleErr VtxFitParams::ctau( double fixedmass ) const 
   {
     VtxFitParams copy = *this ;
     copy.setMass(fixedmass) ;
-    return copy.properDecayTime() ; 
+    return copy.ctau() ; 
   }
 
   template<class T> T correlationMatrix( const T& m )
@@ -232,9 +232,12 @@ namespace LHCb
     return rc ;
   }
 
-  VtxDoubleErr VtxFitParams::properDecayTime() const 
+  VtxDoubleErr VtxFitParams::ctau() const 
   {
     // tau = len * mass / | p3 |
+    //
+    // because we meaure mass and momentum in units of energy, the result is really ctau
+
     double px  = m_p4.Px() ;
     double py  = m_p4.Py() ;
     double pz  = m_p4.Pz() ;
@@ -254,7 +257,9 @@ namespace LHCb
     jacobian(0,4) = m / p ;
 
     Gaudi::SymMatrix5x5 cov5 = fillCov5(m_momCovMatrix, m_lenCovMatrix,m_lenMomCovMatrix) ;
-    return VtxDoubleErr( tau, ROOT::Math::Similarity( jacobian, cov5 )(0,0) ) ;
 
+    // now: we actually measure momentum and mass both in units of
+    // energy. that makes a factor of c difference. in the formula.
+    return VtxDoubleErr( tau, ROOT::Math::Similarity( jacobian, cov5 )(0,0) ) ;
   }
 }
