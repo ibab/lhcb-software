@@ -1,4 +1,4 @@
-// $Id: IAlignSolvTool.h,v 1.4 2008-10-20 10:18:59 wouter Exp $
+// $Id: IAlignSolvTool.h,v 1.5 2009-05-12 18:15:24 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 1
 
@@ -34,7 +34,7 @@ public:
   
   // Solves the system Ax=b for x. Returns A=A^{-1}, b=x and S =
   // eigenvalues of A.
-  virtual bool compute(AlSymMat& A, AlVec& b, AlVec& S) const {
+  virtual bool compute(AlSymMat& A, AlVec& b, AlVec& /*S*/) const {
     return compute(A,b) ;
   }
   
