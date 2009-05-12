@@ -1,6 +1,6 @@
-// $Id: Symbols.cpp,v 1.3 2009-05-11 15:49:29 ibelyaev Exp $
+// $Id: Symbols.cpp,v 1.4 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -105,9 +105,10 @@ Decays::Symbols::Symbols ()
   addSymbol ( "Tensor"     , Decays::Nodes::JSpin ( 5 ) , "Any tensor particle j=2"      ) ;
   addSymbol ( "FiveHalf"   , Decays::Nodes::JSpin ( 6 ) , "Any particle with spin j=5/2" ) ;
   //
-  addSymbol ( "ShortLived" , Decays::Nodes::ShortLived_ () , "Any short-ilved particle" ) ;
-  addSymbol ( "LongLived"  , Decays::Nodes::LongLived_  () , "Any long-lived particle"  ) ;
-  addSymbol ( "Stable"     , Decays::Nodes::Stable      () , "Any 'stable' particle"    ) ;
+  addSymbol ( "ShortLived"    , Decays::Nodes::ShortLived_   () , "Any short-ilved particle" ) ;
+  addSymbol ( "LongLived"     , Decays::Nodes::LongLived_    () , "Any long-lived particle"  ) ;
+  addSymbol ( "Stable"        , Decays::Nodes::Stable        () , "Any 'stable' particle"    ) ;
+  addSymbol ( "StableCharged" , Decays::Nodes::StableCharged () , "Any 'trackable' particle: stable & charged" ) ;
   // ==========================================================================
   // special CC-symbols, protect them...
   // ==========================================================================
@@ -225,7 +226,7 @@ StatusCode Decays::Symbols::symbol
     return StatusCode::SUCCESS ;                                      // RETURN
   }
   node = Decays::Nodes::_Node::Invalid() ;
-  return StatusCode::FAILURE ;                                        // RETURN 
+  return StatusCode ( InvalidSymbol ) ;                               // RETURN 
 }
 // ============================================================================
 // get all known symbols 
@@ -255,7 +256,7 @@ StatusCode Decays::Symbols::particles
   // clear the output 
   parts.clear() ;
   // check the service 
-  if ( 0 == service ) { return StatusCode::FAILURE ; }                // RETURN 
+  if ( 0 == service ) { return StatusCode  ( InvalidService ) ; }     // RETURN 
   // 
   typedef LHCb::IParticlePropertySvc::iterator iterator ;
   iterator begin = service -> begin () ;
@@ -271,9 +272,6 @@ StatusCode Decays::Symbols::particles
   //
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.6 2009-05-11 15:49:29 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.7 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -113,8 +113,8 @@ Decays::Nodes::Or::Or
   : Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
 }
 // ===========================================================================
 // constructor from three nodes 
@@ -126,9 +126,9 @@ Decays::Nodes::Or::Or
   : Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
-  m_nodes.push_back ( n3 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
+  add ( n3 ) ;
 }
 // ===========================================================================
 // constructor from four nodes 
@@ -141,27 +141,55 @@ Decays::Nodes::Or::Or
   : Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
-  m_nodes.push_back ( n3 ) ;  
-  m_nodes.push_back ( n4 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
+  add ( n3 ) ;
+  add ( n4 ) ;
 }
 // ===========================================================================
-// constructor formn list of nodes
+// constructor from list of nodes
 // ===========================================================================
 Decays::Nodes::Or::Or 
 ( const Decays::SubNodes& nodes ) 
   : Decays::iNode () 
-  , m_nodes ( nodes )
-{}
+  , m_nodes ()
+{
+  add ( nodes )  ;  
+}
+// ===========================================================================
+// add the node
+// ===========================================================================
+size_t Decays::Nodes::Or::add ( const Decays::iNode& node ) 
+{
+  const Decays::iNode* right    = &node ;
+  const Or* _or     = dynamic_cast<const Or*>   ( right ) ;
+  if ( 0 != _or ) { return add ( _or->m_nodes ) ; }                  // RETURN 
+  // holder ?
+  const Node* _no   = dynamic_cast<const Node*> ( right ) ;
+  if ( 0 != _no ) { return add ( _no->node () ) ; }                  // RETURN  
+  // just add the node 
+  m_nodes.push_back ( node  ) ; 
+  return m_nodes.size() ;
+}
+// ===========================================================================
+// add the list of nodes 
+// ===========================================================================
+size_t Decays::Nodes::Or::add 
+( const Decays::SubNodes& nodes ) 
+{
+  for ( Decays::SubNodes::const_iterator inode = nodes.begin() ; 
+        nodes.end() != inode  ; ++inode ) 
+  { add ( *inode ) ; }
+  return m_nodes.size () ;
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 Decays::Nodes::Or*
 Decays::Nodes::Or::clone() const { return new Or(*this) ; }
-// ===========================================================================
+// ============================================================================
 // MANDATORY: the only one essential method
-// ===========================================================================
+// ============================================================================
 bool Decays::Nodes::Or::operator() ( const LHCb::ParticleID& pid ) const 
 { return m_nodes.end() != std::find_if  
     ( m_nodes.begin() , m_nodes.end() , _Pid ( pid ) ) ; }
@@ -208,8 +236,8 @@ Decays::Nodes::And::And
   : Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
 }
 // ===========================================================================
 // constructor from three nodes 
@@ -221,9 +249,9 @@ Decays::Nodes::And::And
   :  Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
-  m_nodes.push_back ( n3 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
+  add ( n3 ) ;
 }
 // ===========================================================================
 // constructor from four nodes 
@@ -236,10 +264,10 @@ Decays::Nodes::And::And
   : Decays::iNode () 
   , m_nodes ()
 {
-  m_nodes.push_back ( n1 ) ;
-  m_nodes.push_back ( n2 ) ;  
-  m_nodes.push_back ( n3 ) ;  
-  m_nodes.push_back ( n4 ) ;  
+  add ( n1 ) ;
+  add ( n2 ) ;
+  add ( n3 ) ;
+  add ( n4 ) ;
 }
 // ===========================================================================
 // constructor form list of nodes
@@ -247,8 +275,36 @@ Decays::Nodes::And::And
 Decays::Nodes::And::And
 ( const Decays::SubNodes& nodes ) 
   : Decays::iNode () 
-  , m_nodes ( nodes )
-{}
+  , m_nodes ()
+{
+  add ( nodes ) ;  
+}
+// ===========================================================================
+// add the node
+// ===========================================================================
+size_t Decays::Nodes::And::add ( const Decays::iNode& node ) 
+{
+  const Decays::iNode* right    = &node ;
+  const And* _and   = dynamic_cast<const And*>   ( right ) ;
+  if ( 0 != _and ) { return add ( _and->m_nodes ) ; }                // RETURN 
+  // holder ?
+  const Node* _no   = dynamic_cast<const Node*> ( right ) ;
+  if ( 0 != _no  ) { return add ( _no ->node () )  ; }               // RETURN  
+  // just add the node 
+  m_nodes.push_back ( node  ) ; 
+  return m_nodes.size() ;
+}
+// ===========================================================================
+// add the list of nodes 
+// ===========================================================================
+size_t Decays::Nodes::And::add 
+( const Decays::SubNodes& nodes ) 
+{
+  for ( Decays::SubNodes::const_iterator inode = nodes.begin() ; 
+        nodes.end() != inode  ; ++inode ) 
+  { add ( *inode ) ; }
+  return m_nodes.size () ;
+}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -332,11 +388,19 @@ Decays::Nodes::Not::fillStream ( std::ostream& s ) const
 // ============================================================================
 Decays::Nodes::Or& 
 Decays::Nodes::Or::operator+= ( const Decays::iNode& node )
-{ m_nodes.push_back ( node ) ; return *this ; }
+{ add ( node ) ; return *this ; }
 // ============================================================================
 Decays::Nodes::And& 
 Decays::Nodes::And::operator+= ( const Decays::iNode& node )
-{ m_nodes.push_back ( node ) ; return *this ; }
+{ add ( node ) ; return *this ; }
+// ============================================================================
+Decays::Nodes::Or& 
+Decays::Nodes::Or::operator+= ( const Decays::SubNodes&  nodes )
+{ add ( nodes ) ; return *this ; }
+// ============================================================================
+Decays::Nodes::And& 
+Decays::Nodes::And::operator+= ( const Decays::SubNodes& nodes )
+{ add ( nodes ) ; return *this ; }
 // ============================================================================
 
 

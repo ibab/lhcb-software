@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.5 2009-05-11 15:49:28 ibelyaev Exp $
+// $Id: Nodes.h,v 1.6 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -194,9 +194,15 @@ namespace Decays
       virtual StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
       // ======================================================================
+    protected:
+      // ======================================================================
+      size_t add ( const Decays::iNode&    node  ) ;
+      size_t add ( const Decays::SubNodes& nodes ) ;
+      // ======================================================================
     public:
       // ======================================================================
-      Or& operator+= ( const Decays::iNode& node );
+      Or& operator+= ( const Decays::iNode&    node );
+      Or& operator+= ( const Decays::SubNodes& node );
       // ======================================================================
     private:
       // ======================================================================
@@ -248,9 +254,15 @@ namespace Decays
       virtual StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
       // ======================================================================
+    protected:
+      // ======================================================================
+      size_t add ( const Decays::iNode&    node  ) ;
+      size_t add ( const Decays::SubNodes& nodes ) ;
+      // ======================================================================
     public:
       // ======================================================================
-      And& operator+= ( const Decays::iNode& node );
+      And& operator+= ( const Decays::iNode&    node  );
+      And& operator+= ( const Decays::SubNodes& nodes );
       // ======================================================================
     private:
       // ======================================================================
@@ -300,6 +312,12 @@ namespace Decays
       Decays::Node m_node ; // the node itself
       // ======================================================================
     } ;
+    // ========================================================================
+    /// output operator
+    inline 
+    std::ostream& operator<< 
+      ( std::ostream&               s , 
+        const Decays::Nodes::_Node& n ) { return s << n.node() ; }
     // ========================================================================
   } // end of namespace Decays::Nodes 
   // ==========================================================================
@@ -364,11 +382,6 @@ inline Decays::Nodes::Not operator~
 inline Decays::Nodes::Not operator! 
 ( const Decays::Nodes::Not& o ) 
 { return Decays::Node( o.node() ) ; }
-// ============================================================================
-/// output operator
-inline std::ostream& operator<< 
-  ( std::ostream&                     s , 
-    const Decays::Nodes::_Node& n ) { return s << n.node() ; }
 // ============================================================================
 
 

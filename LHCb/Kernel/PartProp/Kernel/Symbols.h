@@ -1,6 +1,6 @@
-// $Id: Symbols.h,v 1.3 2009-05-11 15:49:28 ibelyaev Exp $
+// $Id: Symbols.h,v 1.4 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 #ifndef KERNEL_SYMBOLS_H 
 #define KERNEL_SYMBOLS_H 1
@@ -51,6 +51,15 @@ namespace Decays
    */
   class Symbols 
   {
+  public:
+    // ========================================================================
+    enum {
+      InvalidService  = 400 ,
+      InvalidSymbol         ,
+      NoParticles           , 
+      NoSymbols
+    } ;
+    // ========================================================================
   public:
     // ========================================================================
     /// the actual type for the list of names 

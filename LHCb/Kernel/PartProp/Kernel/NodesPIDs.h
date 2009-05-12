@@ -1,4 +1,4 @@
-// $Id: NodesPIDs.h,v 1.1 2009-05-11 15:49:28 ibelyaev Exp $
+// $Id: NodesPIDs.h,v 1.2 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
 #ifndef PARTPROP_NODESPID_H 
 #define PARTPROP_NODESPID_H 1
@@ -431,8 +431,8 @@ namespace Decays
       // ======================================================================
     private:
       // ======================================================================
-      /// the default construictor is disabled 
-      HasQuark() ; // the defautl construictro is disabled 
+      /// the default constructor is disabled 
+      HasQuark() ;                       // the default constructro is disabled 
       // ======================================================================
     private:        
       // ======================================================================
@@ -450,7 +450,7 @@ namespace Decays
     {
     public:
       // ======================================================================
-      enum { InvalidSpin = 101 } ;
+      enum { InvalidSpin = 501 } ;
       // ======================================================================
     public:
       // ======================================================================
@@ -679,6 +679,28 @@ namespace Decays
       virtual ~Stable() ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Stable* clone() const ;
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class StableCharged
+     *  represent simple predicate for Stable+Charged particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-05-11
+     */
+    class StableCharged : public Stable
+    {
+    public:
+      // ======================================================================
+      /// constructor service 
+      StableCharged ( const LHCb::IParticlePropertySvc* svc  = 0 ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~StableCharged () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  StableCharged* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& pid ) const ;
       /// MANDATORY: the specific printout
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      

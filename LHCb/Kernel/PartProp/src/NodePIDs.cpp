@@ -1,4 +1,4 @@
-// $Id: NodePIDs.cpp,v 1.1 2009-05-11 15:49:29 ibelyaev Exp $
+// $Id: NodePIDs.cpp,v 1.2 2009-05-12 11:52:27 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -619,7 +619,7 @@ Decays::Nodes::CTau* Decays::Nodes::CTau::clone() const
 // ============================================================================
 // MANDATORY: the specific printout
 std::ostream& Decays::Nodes::CTau::fillStream ( std::ostream& s ) const 
-{ return s << "CTau (" << low() << "," << high() << ")" ; }
+{ return s << " CTau(" << low() << "," << high() << ") " ; }
 // ============================================================================
 // MANDATORY: check the validity
 bool Decays::Nodes::CTau::valid () const { return m_ppSvc.isValid() ; }
@@ -716,7 +716,7 @@ Decays::Nodes::Mass* Decays::Nodes::Mass::clone() const
 // ============================================================================
 // MANDATORY: the specific printout
 std::ostream& Decays::Nodes::Mass::fillStream ( std::ostream& s ) const 
-{ return s << "Mass(" << low() << "," << high() << ")" ; }
+{ return s << " Mass(" << low() << "," << high() << ") " ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
@@ -778,8 +778,8 @@ Decays::Nodes::ShortLived_::clone() const
 std::ostream& Decays::Nodes::ShortLived_::fillStream ( std::ostream& s ) const 
 {
   if ( LHCb::Math::lomont_compare_double
-       ( s_SHORTLIVED , high() , 1000 ) ) { return s << "ShortLived" ; }
-  return s << "ShortLived_( " << high() << ")"  ;  
+       ( s_SHORTLIVED , high() , 1000 ) ) { return s << " ShortLived " ; }
+  return s << " ShortLived_( " << high() << ") "  ;  
 }
 // ===========================================================================
 
@@ -814,8 +814,8 @@ Decays::Nodes::LongLived_::clone() const
 std::ostream& Decays::Nodes::LongLived_::fillStream ( std::ostream& s ) const 
 {
   if ( LHCb::Math::lomont_compare_double
-       ( s_LONGLIVED , low() , 1000 ) ) { return s << "LongLived" ; }
-  return s << "LongLived_( " << low () << ")"  ;  
+       ( s_LONGLIVED , low() , 1000 ) ) { return s << " LongLived " ; }
+  return s << " LongLived_( " << low () << ") "  ;  
 }
 // ===========================================================================
 
@@ -827,7 +827,7 @@ Decays::Nodes::Stable::Stable
   : Decays::Nodes::LongLived_ ( s_STABLE , svc ) 
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destructor 
 // ===========================================================================
 Decays::Nodes::Stable::~Stable() {}
 // ===========================================================================
@@ -840,8 +840,63 @@ Decays::Nodes::Stable::clone() const
 // MANDATORY: the specific printout
 // ===========================================================================
 std::ostream& Decays::Nodes::Stable::fillStream ( std::ostream& s ) const 
-{ return s << "Stable" ; }
+{ return s << " Stable " ; }
 // ===========================================================================
+
+// ===========================================================================
+// constructor with the service 
+// ===========================================================================
+Decays::Nodes::StableCharged::StableCharged 
+( const LHCb::IParticlePropertySvc* svc  ) 
+  : Decays::Nodes::Stable ( svc ) 
+{}
+// ===========================================================================
+// MANDATORY: virtual destrcutor 
+// ===========================================================================
+Decays::Nodes::StableCharged::~StableCharged() {}
+// ===========================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ===========================================================================
+Decays::Nodes::StableCharged*
+Decays::Nodes::StableCharged::clone() const 
+{ return new Decays::Nodes::StableCharged (*this ) ; }
+// ===========================================================================
+// MANDATORY: the specific printout
+// ===========================================================================
+std::ostream& Decays::Nodes::StableCharged::fillStream ( std::ostream& s ) const 
+{ return s << " StableCharged " ; }
+// ===========================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+bool Decays::Nodes::StableCharged::operator() 
+  ( const LHCb::ParticleID& pid ) const 
+{
+  /// check for accepted pids:
+  if ( binary_search ( accepted () , pid ) ) { return true  ; }        // RETURN 
+  /// check for rejected pids:
+  if ( binary_search ( rejected () , pid ) ) { return false ; }        // RETURN 
+  // 
+  // invalid node 
+  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invalid service  
+  // use the service
+  const LHCb::ParticleProperty* pp = ppSvc()->find ( pid ) ;
+  //
+  if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle 
+  
+  // check ctau range 
+  const double ctau = pp->ctau() ;
+  
+  // final decision : 
+  bool result = ( low () <= ctau && 0 != pid.threeCharge () ) ;
+  
+  // update the caches:
+  if ( result ) { addToAccepted ( pid ) ; }
+  else          { addToRejected ( pid ) ; }
+  
+  return result ;
+  
+}
+// ============================================================================
 
 
 
