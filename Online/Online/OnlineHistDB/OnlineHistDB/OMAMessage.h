@@ -1,10 +1,10 @@
-// $Id: OMAMessage.h,v 1.2 2009-02-19 10:45:26 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.3 2009-05-12 07:44:25 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
 #include <string>
 #include <ostream>
-#include "OnlineHistDB/OnlineHistDBEnv.h"
+#include "OnlineHistDB/OnlineHistDB.h"
 
 /** @class OMAMessage OMAMessage.h OMAlib/OMAMessage.h
  *  
@@ -15,6 +15,7 @@
 class OMAMessage : public OnlineHistDBEnv {
 public: 
   typedef enum { INFO=3, WARNING, ALARM} OMAMsgLevel;
+  typedef enum { ALARMCOLOR=2, WARNINGCOLOR=6 } OMAMsgColor;
    // constructor from OMAlib (with HistDB)
   OMAMessage( std::string& HistName,
               std::string& TaskName,
@@ -23,7 +24,7 @@ public:
               std::string& AnalysisName,
               std::string& Text,
               OMAMsgLevel Level,
-              OnlineHistDBEnv &env,
+              OnlineHistDB &env,
               int anaID =0);
   // constructor from OMAlib (no HistDB)
   OMAMessage( std::string& HistName,
@@ -35,7 +36,7 @@ public:
               OMAMsgLevel Level);
   // constructor from DB
   OMAMessage( int ID,
-              OnlineHistDBEnv &env);
+              OnlineHistDB &env);
 
   virtual ~OMAMessage();
 
@@ -82,6 +83,7 @@ public:
   inline bool isAbort() {return m_isAbort;}
 
 private:
+  OnlineHistDB* m_dbsession;
   int m_ID;
   std::string m_histo;
   sb2 m_histo_null;

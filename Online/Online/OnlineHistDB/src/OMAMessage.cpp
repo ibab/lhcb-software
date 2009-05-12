@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.9 2009-03-23 16:44:35 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.10 2009-05-12 07:44:25 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -18,9 +18,9 @@ OMAMessage::OMAMessage( std::string& HistName,
                         std::string& AnalysisName,
                         std::string& Text,
                         OMAMsgLevel Level,
-                        OnlineHistDBEnv &env,
+                        OnlineHistDB &env,
                         int anaID) :
-  OnlineHistDBEnv(env),  m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
+  OnlineHistDBEnv(env),  m_dbsession(&env), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
   m_taskName(TaskName), m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
   m_msgtext(Text), m_msgtext_null(0), m_level(Level),
   m_anaid(anaID), m_ananame(AnalysisName), m_time(0),
@@ -29,6 +29,7 @@ OMAMessage::OMAMessage( std::string& HistName,
   m_histo_null = m_histo.empty() ? 1 : 0;
   m_taskName_null = m_taskName.empty() ? 1 : 0;
   m_ananame_null = m_ananame.empty() ? 1 : 0; 
+  
 }
 
 // constructor from OMAlib (no HistDB)
@@ -39,7 +40,7 @@ OMAMessage::OMAMessage( std::string& HistName,
                         std::string& AnalysisName,
                         std::string& Text,
                         OMAMsgLevel Level) :
-  OnlineHistDBEnv(), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
+  OnlineHistDBEnv(), m_dbsession(NULL), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
   m_taskName(TaskName),  m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
   m_msgtext(Text), m_msgtext_null(0), m_level(Level),
   m_anaid(0), m_ananame(AnalysisName), m_time(0),
@@ -52,8 +53,8 @@ OMAMessage::OMAMessage( std::string& HistName,
 
 // constructor from DB
 OMAMessage::OMAMessage( int ID,
-                        OnlineHistDBEnv &env) : 
-  OnlineHistDBEnv(env), m_ID(ID), m_isAbort(true),
+                        OnlineHistDB &env) : 
+  OnlineHistDBEnv(env), m_dbsession(&env), m_ID(ID), m_isAbort(true),
   m_confirmed(true), m_dbsync(false)
 {
   load();
@@ -149,6 +150,17 @@ void OMAMessage::store() {
     releaseOCIStatement(stmt);
   }
 
+  // flag histograms with alarms using pad color
+  if(!m_histo_null && (m_level > INFO) && m_dbsession) {
+    OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
+    if (histo) {
+      OMAMsgColor color = (m_level == ALARM) ?  ALARMCOLOR : WARNINGCOLOR;
+      int icolor = (int) color;
+      histo->setDisplayOption("PADCOLOR", &icolor);
+      histo->saveHistDisplayOptions();
+    }
+  }
+
 }
 
 void OMAMessage::remove() {
@@ -165,6 +177,13 @@ void OMAMessage::remove() {
     }
     releaseOCIStatement(stmt);
   }
+  if(!m_histo_null && (m_level > INFO) && m_dbsession) {
+    OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
+    if (histo) {
+      histo->unsetDisplayOption("PADCOLOR");
+    }
+  }
+
 }
 
 const char* OMAMessage::levelString() {
