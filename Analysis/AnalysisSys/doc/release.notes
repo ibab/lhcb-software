@@ -6,20 +6,24 @@ Purpose     : LHCb analysis packages
 </PRE><H1><A NAME=v3r3>2009-05-1 Analysis v3r3 </A></H1><PRE>
 
  - Based on LHCb v27r0 and Gaudi v21r0
+
   Highlights:
-  * Particle -> MC truth matching
-	    New interfaces IParticle2MCAssociator to return a single associated 
-  	  MCParticle for a given reconstructed Particle, IParticle2MCWeightedAssociator that returns normalised weighted ranges of associated MCParticles for a given Particle, and IP2MCP (new package Phys/Particle2MCTruth), which returns tree structures with un-weighted MCParticles for a given recostructed Particle. The trees respect a parent to daughter ordering, and represent the MCParticles that contributed to the reconstructed Particle. Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. There are a few existing implementations:
+
+  * Particle -> MC truth matching (Juan, Vava)
+	    New interfaces IParticle2MCAssociator to return a single associated MCParticle for a given reconstructed Particle, IParticle2MCWeightedAssociator that returns normalised weighted ranges of associated MCParticles for a given Particle, and IP2MCP (new package Phys/Particle2MCTruth), which returns tree structures with un-weighted MCParticles for a given recostructed Particle. The trees respect a parent to daughter ordering, and represent the MCParticles that contributed to the reconstructed Particle. Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. There are a few existing implementations:
+
     	IParticle2MCWeightedAssociator:
-	    	P2MCPFromProtoP.h: For stable charged or neutral particles that have a valid ProtoParticle. Simply gets the weights from the linkers.
-  	  	DaVinciSmartAssociator (not fully tested)  : uses the above for charged and neutral particles, and BackGroundCategoryTool for neutrals.
+        Particle2MCAssociatorBase: Self consistent implementation of most methods. Derived classes need only implement one or two methods. (Juan)
+	    	P2MCPFromProtoP.h: For stable charged or neutral particles that have a valid ProtoParticle. Simply gets the weights from the linkers. (Juan)
+  	  	DaVinciSmartAssociator (not fully tested)  : uses the above for charged and neutral particles, and BackGroundCategoryTool for neutrals. (Vava)
 
 	    IP2MCP:
-				MCMatchObjP2MCRelator: Uses LoKi::MCMatch and sorting by descendancy to generate associated trees. IP2MCP implementation, that is, getting one "best" particle out of the trees not optimised yet.
+        P2MCPBase: Self consistent implementation of most methods. Derived classes need only implement one method.
+				MCMatchObjP2MCRelator: Uses LoKi::MCMatch and sorting by descendancy to generate associated trees. IP2MCP implementation, that is, getting one "best" particle out of the trees not optimised yet. (Juan with LoKi stuff from Vanya)
 
 		See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC
 
-  * MicroDST:
+  * MicroDST (Juan)
     New generic classes for cloning objects related to other objects.
     Logic it: take relations table, and clone To's for From's that are already 
     cloned. Replace CopyRelatedMCParticles and CopyParticle2PVLink by typedefs 
