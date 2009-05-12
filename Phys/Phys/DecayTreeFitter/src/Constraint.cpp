@@ -50,11 +50,11 @@ namespace decaytreefit
   {
     ErrCode status ;
     if(m_type<=Constraint::unknown || m_type>=Constraint::ntypes) {
-      std::cout << "VtkConstraint: unknown constraint: " << m_type 
+      std::cout << "Constraint: unknown constraint: " << m_type 
 		<< std::endl ;
       status |= ErrCode::badsetup ;
     } else if (m_type!=merged && !m_node) {
-      std::cout << "VtkConstraint: filter constraint without a node" 
+      std::cout << "Constraint: filter constraint without a node" 
 		<< std::endl ;
       status |= ErrCode::badsetup ;
     } else {
