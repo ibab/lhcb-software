@@ -3,13 +3,14 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           DecayTreeFitter
-version           v1r1
+version           v1r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src DecayTreeFitter
 include_path      none
+
 #============================================================================
 # Used packages.
 #============================================================================
@@ -21,6 +22,8 @@ use   RecEvent		v*	Event
 use   TrackEvent       	v*	Event
 use   PartProp          v*      Kernel
 use   LoKi              v*      Phys
+use   TrackFitEvent     v*      Tr
+
 
 apply_pattern install_more_includes more=DecayTreeFitter
 #============================================================================

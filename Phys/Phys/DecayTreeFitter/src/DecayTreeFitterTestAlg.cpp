@@ -1,4 +1,4 @@
-// $Id: DecayTreeFitterTestAlg.cpp,v 1.3 2009-05-10 20:33:07 wouter Exp $
+// $Id: DecayTreeFitterTestAlg.cpp,v 1.4 2009-05-12 07:32:21 wouter Exp $
 
 
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -26,7 +26,7 @@ private:
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/Particle.h"
-#include "Fitter.h"
+#include "DecayTreeFitter/Fitter.h"
 #include "DecayTreeFitter/VtxFitParams.h"
 #include "DecayTreeFitter/PidPdg.h"
 #include <TMath.h>
@@ -122,22 +122,22 @@ StatusCode DecayTreeFitterTestAlg::execute()
     plot(chisqprob,"chisqprob",0,1) ;
     
     // let's plot some masses
-    plot(fitter.fitParams(*p).mass(),"B mass",5200,5500) ;
+    plot(fitter.fitParams(*p).p4().M(),"B mass",5200,5500) ;
 
     const LHCb::Particle* psi = findParticle( *p, LHCb::PidPdg::J_psi ) ;
     if(psi) {
-      plot(fitter.fitParams(*psi).mass(),"psi mass",3000,3200) ;
+      plot(fitter.fitParams(*psi).p4().M(),"psi mass",3000,3200) ;
       plot(psi->momentum().M(),"psi mass orig",3000,3200) ;
       if( chisqprob > 0.001 ) 
-	plot(fitter.fitParams(*psi).mass(),"psi mass good",3000,3200) ;
+	plot(fitter.fitParams(*psi).p4().M(),"psi mass good",3000,3200) ;
     }
 
     const LHCb::Particle* phi = findParticle( *p, LHCb::PidPdg::phi ) ;
     if(phi) {
-      plot(fitter.fitParams(*phi).mass(),"phi mass",1000,1040) ;
+      plot(fitter.fitParams(*phi).p4().M(),"phi mass",1000,1040) ;
       plot(phi->momentum().M(),"phi mass orig",1000,1040) ;
       if( chisqprob > 0.001 ) 
-	plot(fitter.fitParams(*phi).mass(),"phi mass good",1000,1040) ;
+	plot(fitter.fitParams(*phi).p4().M(),"phi mass good",1000,1040) ;
     }
     
     if(psi) fitter.setMassConstraint(*psi) ;
@@ -146,18 +146,18 @@ StatusCode DecayTreeFitterTestAlg::execute()
 
     plot(fitter.nIter(),"numiter (constraint daughters)",-0.5,10.5,11) ;
     plot(fitter.status(),"status (constraint daughters)",-0.5,10.5,11) ;
-    plot(fitter.fitParams(*p).mass(),"B mass (constraint daughters)",
+    plot(fitter.fitParams(*p).p4().M(),"B mass (constraint daughters)",
 	 5200,5500) ;
     chisqprob = TMath::Prob(fitter.chiSquare(),fitter.nDof()) ;
     plot(chisqprob,"chisqprob (constraint daughters)",0,1) ;
     plot(fitter.nDof(),"ndof (constraint duaghters)",-0.5,20.5,21) ;
     if(psi)
-      plot(fitter.fitParams(*psi).mass(),"psi mass (constraint daughters)",3000,3200) ;
+      plot(fitter.fitParams(*psi).p4().M(),"psi mass (constraint daughters)",3000,3200) ;
     if(phi)
-      plot(fitter.fitParams(*phi).mass(),"phi mass (constraint daughters)",1000,1040) ;
+      plot(fitter.fitParams(*phi).p4().M(),"phi mass (constraint daughters)",1000,1040) ;
     
     if( TMath::Prob(fitter.chiSquare(),fitter.nDof())>0.001 )
-       plot(fitter.fitParams(*p).mass(),"B mass (good)",
+       plot(fitter.fitParams(*p).p4().M(),"B mass (good)",
 	 5200,5500) ;
 
     plot( p->momentum().M(),"B mass orig",5200,5500) ;
