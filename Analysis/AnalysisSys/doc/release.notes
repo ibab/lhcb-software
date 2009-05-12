@@ -25,11 +25,25 @@ Purpose     : LHCb analysis packages
       See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC for details.
 
   * MicroDST (Juan)
-    New generic classes for cloning objects related to other objects.
-    Logic it: take relations table, and clone To's for From's that are already 
-    cloned. Replace CopyRelatedMCParticles and CopyParticle2PVLink by typedefs 
-    using new generic templated class. All MicroDSTalgorithms now use template
-    classes.
+    - New generic classes for cloning objects related to other objects.
+      Logic it: take relations table, and clone To's for From's that are already 
+      cloned. Replace CopyRelatedMCParticles and CopyParticle2PVLink by typedefs 
+      using new generic templated class. All MicroDSTalgorithms now use template
+      classes.
+
+  * Rich monitoring (Chris Jones)
+    - Added selections: Ks, Lambda (A. Powell)
+                        J/Psi -> mu mu (U Kerzel for Nicola)
+    - Updated Bs -> phi phi selection (Conor)
+    - Adder "Rich" to all monitor names (Chris Jones)
+  * DaVinciMonitors
+    - Added "Muon" to muon monitor algo names (Chris Jones)
+    - Add monitoring after Reco sequence (Patrick K)
+    - Tydying up, FEST data (Patrick K)
+
+  * Event by event luminosity scaling (Rob Lambert)
+    - Reweight events to get pileup corresponding to a given luminosity. 
+      Available in DecayTreeTuple.
 
   * Various changes related to new ParticleMakers (Patrick K)
 
