@@ -7,8 +7,8 @@
 
 #include "DecayTreeFitter/VtxDoubleErr.h"
 #include "DecayTreeFitter/VtxFitParams.h"
+#include "DecayTreeFitter/Fitter.h"
 
-#include "Fitter.h"
 #include "FitParams.h"
 #include "DecayChain.h"
 #include "ParticleBase.h"
@@ -18,40 +18,37 @@ namespace decaytreefit
 
   extern int vtxverbose ;
   
-  Fitter::Fitter(const LHCb::Particle& bc, double prec) 
-    : m_bc(new LHCb::Particle(bc)),m_decaychain(0),m_fitparams(0),
+  Fitter::Fitter(const LHCb::Particle& bc, bool forceFitAll) 
+    : m_particle(&bc),m_decaychain(0),m_fitparams(0),
       m_status(FitStatus::UnFitted),
-      m_chiSquare(-1),m_niter(-1), m_prec(prec)
+      m_chiSquare(-1),m_niter(-1)
   {
     // build the tree
-    m_decaychain = new DecayChain(bc,false) ;
+    m_decaychain = new DecayChain(bc,forceFitAll) ;
     // allocate the fit parameters
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
 
-  Fitter::Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, double prec) 
-    : m_bc(new LHCb::Particle(bc)),m_decaychain(0),m_fitparams(0),
+  Fitter::Fitter(const LHCb::Particle& bc, const LHCb::VertexBase& pv, bool forceFitAll) 
+    : m_particle(&bc),m_decaychain(0),m_fitparams(0),
       m_status(FitStatus::UnFitted),
-      m_chiSquare(-1),m_niter(-1), m_prec(prec)
+      m_chiSquare(-1),m_niter(-1)
   {
-    m_decaychain = new DecayChain(bc,pv,false) ;
+    m_decaychain = new DecayChain(bc,pv,forceFitAll) ;
     m_fitparams  = new FitParams(m_decaychain->dim()) ;
   }
   
 
   Fitter::~Fitter()
   {
-    delete m_bc ;
     delete m_decaychain ;
     delete m_fitparams ;
   }
    
   void
-  Fitter::fit()
+  Fitter::fit(int nitermax, double dChisqConv)
   {
-    const int nitermax=10 ;
     const int maxndiverging=3 ;
-    const double dChisqConv = m_prec ; 
     //const double dChisqQuit = nDof() ; // if chi2 increases by more than this --> fit failed
 
     // initialize
@@ -163,44 +160,11 @@ namespace decaytreefit
 	 << nIter() << " " << status() << " " << m_errCode << std::endl ;
   } 
 
-  void
-  Fitter::printConstraints(std::ostream& os) const
-  {
-    m_decaychain->printConstraints(os) ;
-  }
-
-  const HepSymMatrix& Fitter::cov() const { 
-    return m_fitparams->cov() ;
-  }
-
-  const HepVector& Fitter::par() const { 
-    return m_fitparams->par() ;
-  }
-
-  HepSymMatrix Fitter::cov(const std::vector<int>& indexVec) const {
-    return m_fitparams->cov(indexVec) ;
-  }
-
-  HepVector Fitter::par(const std::vector<int>& indexVec) const {
-    return m_fitparams->par(indexVec) ;
-  }
-
   int
   Fitter::nDof() const {
     return m_fitparams->nDof() ;
   }
 
-  int Fitter::posIndex(const LHCb::Particle& bc) const {
-    return m_decaychain->posIndex(bc) ;
-  }
-  
-  int Fitter::momIndex(const LHCb::Particle& bc) const {
-    return m_decaychain->momIndex(bc) ;
-  }
-  
-  int Fitter::tauIndex(const LHCb::Particle& bc) const {
-    return m_decaychain->tauIndex(bc) ;
-  }
 
   double Fitter::add(const LHCb::Particle& cand)
   {
@@ -273,7 +237,7 @@ namespace decaytreefit
   {
     m_decaychain->setMassConstraint(bc,add) ;
   }
-
+  
   void Fitter::updateIndex()
   {
     int offset=0 ;
@@ -293,34 +257,39 @@ namespace decaytreefit
     // hack: for tracks and photons, use the production vertex
     if(posindex<0 && pb.mother()) posindex = pb.mother()->posIndex() ;
     int momindex = pb.momIndex() ;
-
+    int lenindex = pb.lenIndex() ;
     Gaudi::XYZPoint pos(m_fitparams->par()(posindex+1),
 			m_fitparams->par()(posindex+2),
 			m_fitparams->par()(posindex+3)) ;
-    Gaudi::LorentzVector p ;
-    p.SetPx( m_fitparams->par()(momindex+1) ) ;
-    p.SetPy( m_fitparams->par()(momindex+2) ) ;
-    p.SetPz( m_fitparams->par()(momindex+3) ) ;
-    Gaudi::SymMatrix7x7 cov7 ;
+    Gaudi::LorentzVector p4 ;
+    p4.SetPx( m_fitparams->par()(momindex+1) ) ;
+    p4.SetPy( m_fitparams->par()(momindex+2) ) ;
+    p4.SetPz( m_fitparams->par()(momindex+3) ) ;
+    Gaudi::SymMatrix8x8 cov8 ;
+    double decaylength = lenindex>=0 ? m_fitparams->par()(lenindex+1) : 0 ;
+
     if( pb.hasEnergy() ) {
       // if particle has energy, get full p4 from fitparams
-      p.SetE( m_fitparams->par()(momindex+4) ) ;
-      int parmap[7] ;
+      p4.SetE( m_fitparams->par()(momindex+4) ) ;
+      int parmap[8] ;
       for(int i=0; i<3; ++i) parmap[i]   = posindex + i ;
-      for(int i=0; i<4; ++i) parmap[i+3] = momindex + i ;    
-      for(int row=0; row<7; ++row)
+      for(int i=0; i<4; ++i) parmap[i+3] = momindex + i ;
+      parmap[7] = lenindex ;
+      int maxrow = lenindex >=0 ? 8 : 7 ;
+      for(int row=0; row<maxrow; ++row)
 	for(int col=0; col<=row; ++col)
-	  cov7(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
+	  cov8(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
     } else {
       // if not, use the pdttable mass
-
-      Gaudi::SymMatrix6x6 cov6 ;
-      int parmap[6] ;
+      Gaudi::SymMatrix7x7 cov7 ;
+      int parmap[8] ;
       for(int i=0; i<3; ++i) parmap[i]   = posindex + i ;
       for(int i=0; i<3; ++i) parmap[i+3] = momindex + i ;
-      for(int row=0; row<6; ++row)
+      parmap[6] = lenindex ;
+      int maxrow = lenindex >=0 ? 7 : 6 ;
+      for(int row=0; row<maxrow; ++row)
 	for(int col=0; col<=row; ++col)
-	  cov6(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
+	  cov7(row,col) = m_fitparams->cov()(parmap[row]+1,parmap[col]+1) ;
    
       // now fill the jacobian
       double mass = pb.pdtMass() ;
@@ -331,17 +300,16 @@ namespace decaytreefit
       }
       double energy = std::sqrt(energy2) ;
       
-      ROOT::Math::SMatrix<double,7,6> jacobian ;
-      for(int col=0; col<6; ++col)
+      ROOT::Math::SMatrix<double,8,7> jacobian ;
+      for(int col=0; col<7; ++col)
 	jacobian(col,col) = 1;
       for(int col=3; col<6; ++col)
 	jacobian(6,col) = m_fitparams->par()(parmap[col]+1)/energy ;
 
-      p.SetE(energy) ;
-      cov7 = ROOT::Math::Similarity(jacobian,cov6) ;
+      p4.SetE(energy) ;
+      cov8 = ROOT::Math::Similarity(jacobian,cov7) ;
     }
-    VtxFitParams vtxfitparams(pb.charge(),pos,p,cov7) ;
-    vtxfitparams.setDecayLength(decayLength(pb)) ;
+    VtxFitParams vtxfitparams(pb.charge(),pos,p4,decaylength,cov8) ;
     return vtxfitparams ;
   }
   
@@ -351,12 +319,36 @@ namespace decaytreefit
     const ParticleBase* pb = m_decaychain->locate(cand) ;
     if(pb==0) {
       std::cout << "cann't find candidate in tree: " << cand
-		<< " head of tree = " << m_bc
+		<< " head of tree = " << m_particle
 		<< std::endl ;
       return VtxFitParams() ;
     }
     return fitParams(*pb) ;
   }
+
+  VtxDoubleErr
+  Fitter::decayLengthSum(const LHCb::Particle& candA, const LHCb::Particle& candB) const
+  {
+    // returns the decaylengthsum of two particles (use ful for e.g. B->DD)
+    VtxDoubleErr rc(0,0) ;
+    const ParticleBase* pbA = m_decaychain->locate(candA) ;
+    const ParticleBase* pbB = m_decaychain->locate(candB) ;
+    if(pbA && pbB && pbA->mother() && pbB->mother() ) {
+      int lenindexA = pbA->lenIndex() ;
+      int lenindexB = pbB->lenIndex() ;
+      if( lenindexA>=0 && lenindexB>=0) {
+	double lenA    = m_fitparams->par()(lenindexA+1) ;
+	double lenB    = m_fitparams->par()(lenindexB+1) ;
+	double cov = 
+	  m_fitparams->cov().fast(lenindexA+1, lenindexA+1) +
+	  m_fitparams->cov().fast(lenindexB+1, lenindexB+1) +
+	  2*m_fitparams->cov().fast(lenindexA+1, lenindexB+1) ;
+	
+	rc = VtxDoubleErr(lenA+lenB,std::sqrt(cov)) ;
+      }
+    }
+    return rc ;
+  }  
 
   std::string
   Fitter::name(const LHCb::Particle& cand) const 
@@ -368,7 +360,7 @@ namespace decaytreefit
   LHCb::Particle
   Fitter::getFitted() const
   {
-    LHCb::Particle thecand = *bc() ;
+    LHCb::Particle thecand = *particle() ;
     updateCand(thecand) ;
     return thecand ;
   }
@@ -396,7 +388,7 @@ namespace decaytreefit
   LHCb::Particle
   Fitter::getFittedTree() const
   {
-    LHCb::Particle cand = *bc() ;
+    LHCb::Particle cand = *particle() ;
     updateTree( cand ) ;
     return cand ;
   }
@@ -419,44 +411,48 @@ namespace decaytreefit
   */
 
   void
-  Fitter::updateCand(LHCb::Particle& /*cand*/) const
+  Fitter::updateCand(LHCb::Particle& particle) const
   {
-    std::cout << "Fitter::updateCand: not yet implemented" << std::endl ;
-    /*
-
     // assigns fitted parameters to a candidate
-    const ParticleBase* pb = m_decaychain->locate(&cand) ;
+    const ParticleBase* pb = m_decaychain->locate(particle) ;
     if(pb) {
-      assert( pb->bc()->pdtEntry() == cand.pdtEntry() ) ;
-      VtxFitParams vtxpar = vtxFitParams(pb) ;
-      VtxVertex* vtx(0) ;
-      int posindex = pb->posIndex() ;
-      if( posindex>=0 ) {
-	if( pb ==m_decaychain->cand() ) {
-	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
-	  vtx->setType(FitStatus::Geometric) ;
-	} else {
-	  // all updated daughters are reset to unfitted, but leave the chisquare
-	  double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
-	  int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
-	  vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-	  vtx->setStatus(FitStatus::UnFitted) ;
-	}
-      }
-      cand.setTrajectory(vtxpar,vtx) ;
+      // get the parameters
+      VtxFitParams vtxpar = fitParams(*pb) ;
+      
+      // update everything inside the particle. don't update the vertex, for now.
+      particle.setMomentum( vtxpar.p4() ) ;
+      particle.setReferencePoint( vtxpar.position() ) ;
+      particle.setMomCovMatrix( vtxpar.momCovMatrix() ) ;
+      particle.setPosCovMatrix( vtxpar.posCovMatrix() ) ;
+      particle.setPosMomCovMatrix( vtxpar.momPosCovMatrix() ) ;
+      
+      // VtxVertex* vtx(0) ;
+      //       int posindex = pb->posIndex() ;
+      //       if( posindex>=0 ) {
+      // 	if( pb ==m_decaychain->cand() ) {
+      // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+      // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
+      // 	  vtx->setType(FitStatus::Geometric) ;
+      // 	} else {
+      // 	  // all updated daughters are reset to unfitted, but leave the chisquare
+      // 	  double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
+      // 	  int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
+      // 	  vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+      // 	  vtx->setStatus(FitStatus::UnFitted) ;
+      // 	}
+      //       }
+      //      cand.setTrajectory(vtxpar,vtx) ;
     } else {
       // this error message does not make sense, because it is also
       // triggered for daughters that were simply not refitted. we
       // have to do something about that.
-//       VtxPrintTree printer(&myvtxprint) ;
-//       ErrMsg(error) << "cann't find candidate " << std::endl
-// 		    << printer.print(cand)
-// 		    << "in tree " << std::endl
-// 		    << printer.print(*_bc)
-// 		    << endmsg;
+      //       VtxPrintTree printer(&myvtxprint) ;
+      //       ErrMsg(error) << "cann't find candidate " << std::endl
+      // 		    << printer.print(cand)
+      // 		    << "in tree " << std::endl
+      // 		    << printer.print(*_bc)
+      // 		    << endmsg;
     }
-    */
   }
 
   void
@@ -471,139 +467,7 @@ namespace decaytreefit
     while( (daughter=iter()) )  updateTree(*daughter) ;
     */
   }
-
-  //   VtxDoubleErr
-  //   Fitter::properDecayTime(const LHCb::Particle& cand) const
-  //   {
-  //     // returns the lifetime in the rest frame of the candidate
-  //     VtxDoubleErr rc(0,0) ;
-  //     const ParticleBase* pb = m_decaychain->locate(cand) ;
-  //     if(pb && pb->tauIndex()>=0 && pb->mother()) {
-  //       int tauindex = pb->tauIndex() ;
-  //       double tau    = m_fitparams->par()(tauindex+1) ;
-  //       double taucov = m_fitparams->cov()(tauindex+1,tauindex+1) ;
-  //       double mass   = pb->pdtMass() ; 
-  //       double convfac = mass/Gaudi::Units::c_light ;
-  //       rc = VtxDoubleErr(convfac*tau,convfac*convfac*taucov) ;
-  //     }
-  //     return rc ;
-  //   }
   
-  VtxDoubleErr
-  Fitter::decayLength(const ParticleBase& pb) const 
-  {
-    // returns the decaylength in the lab frame
-    return decayLength(pb,*m_fitparams) ;
-  }
-
-  VtxDoubleErr
-  Fitter::decayLength(const ParticleBase& pb,
-		      const FitParams& fitparams)
-  {
-    // returns the decaylength in the lab frame
-    VtxDoubleErr rc(0,0) ;
-    if(pb.tauIndex()>=0 && pb.mother()) {
-      // one can calculate the error in many ways. I managed to make
-      // them all agree, with a few outliers. this one seems to be
-      // most conservative/stable/simple one.
- 
-      // len = tau |mom|
-      int tauindex = pb.tauIndex() ;
-      int momindex = pb.momIndex() ;
-      double tau    = fitparams.par()(tauindex+1) ;
-      double mom2(0) ;
-      for(int row=1; row<=3; ++row) {
-	double px = fitparams.par()(momindex+row) ;
-	mom2 += px*px ;
-      }
-      double mom = sqrt(mom2) ;
-      double len = mom*tau ;
-
-      std::vector<int> indexvec ;
-      indexvec.push_back(tauindex) ;
-      indexvec.push_back(momindex+0) ;
-      indexvec.push_back(momindex+1) ;
-      indexvec.push_back(momindex+2) ;
-      
-      HepVector jacobian(4) ;
-      jacobian(1) = mom ;
-      jacobian(2) = tau*fitparams.par()(momindex+1)/mom ;
-      jacobian(3) = tau*fitparams.par()(momindex+2)/mom ;
-      jacobian(4) = tau*fitparams.par()(momindex+3)/mom ;
-
-      rc = VtxDoubleErr(len,fitparams.cov(indexvec).similarity(jacobian)) ;
-    }
-    return rc ;
-  }
-
-  VtxDoubleErr
-  Fitter::decayLength(const LHCb::Particle& cand) const
-  {
-    VtxDoubleErr rc(0,0) ;
-    const ParticleBase* pb = m_decaychain->locate(cand) ;
-    if(pb && pb->tauIndex()>=0 && pb->mother()) rc = decayLength(*pb) ;
-    return rc ;
-  }  
-
-  VtxDoubleErr
-  Fitter::decayLengthSum(const ParticleBase& pbA, const ParticleBase& pbB) const 
-  {
-    // returns the decaylengthsum in the lab frame
-    VtxDoubleErr rc(0,0) ;
-    if(pbA.tauIndex()>=0 && pbA.mother() &&
-       pbB.tauIndex()>=0 && pbB.mother() ) {
-
-      // len = tau |mom|
-      int tauindexA = pbA.tauIndex() ;
-      int momindexA = pbA.momIndex() ;
-      double tauA    = m_fitparams->par()(tauindexA+1) ;
-      double mom2A(0) ;
-      for(int row=1; row<=3; ++row) {
-	double px = m_fitparams->par()(momindexA+row) ;
-	mom2A += px*px ;
-      }
-      double momA = sqrt(mom2A) ;
-      double lenA = momA*tauA ;
-
-      int tauindexB = pbB.tauIndex() ;
-      int momindexB = pbB.momIndex() ;
-      double tauB    = m_fitparams->par()(tauindexB+1) ;
-      double mom2B(0) ;
-      for(int row=1; row<=3; ++row) {
-	double px = m_fitparams->par()(momindexB+row) ;
-	mom2B += px*px ;
-      }
-      double momB = sqrt(mom2B) ;
-      double lenB = momB*tauB ;
-
-      std::vector<int> indexvec ;
-      indexvec.push_back(tauindexA) ;
-      for(int i=0; i<3; ++i) indexvec.push_back(momindexA+i) ;
-      indexvec.push_back(tauindexB) ;
-      for(int i=0; i<3; ++i) indexvec.push_back(momindexB+i) ;
-      
-      HepVector jacobian(8) ;
-      jacobian(1) = momA ;
-      for(int irow=1; irow<=3; ++irow) 
-	jacobian(irow+1) = tauA*m_fitparams->par()(momindexA+irow)/momA ;
-      jacobian(5) = momB ;
-      for(int irow=1; irow<=3; ++irow) 
-	jacobian(irow+5) = tauB*m_fitparams->par()(momindexB+irow)/momB ;
-      
-      rc = VtxDoubleErr(lenA+lenB,cov(indexvec).similarity(jacobian)) ;
-    }
-    return rc ;
-  }
-  
-  VtxDoubleErr
-  Fitter::decayLengthSum(const LHCb::Particle& candA, const LHCb::Particle& candB) const
-  {
-    VtxDoubleErr rc(0,0) ;
-    const ParticleBase* pbA = m_decaychain->locate(candA) ;
-    const ParticleBase* pbB = m_decaychain->locate(candB) ;
-    if(pbA && pbB)  rc = decayLengthSum(*pbA,*pbB) ;
-    return rc ;
-  }  
 
 }
   
