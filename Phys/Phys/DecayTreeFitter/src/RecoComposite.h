@@ -27,7 +27,7 @@ namespace decaytreefit
     virtual int type() const { return kRecoComposite ; }  
     
     virtual int posIndex() const { return index()   ; }
-    virtual int tauIndex() const { return index()+3 ; }
+    virtual int lenIndex() const { return index()+3 ; }
     virtual int momIndex() const { return index()+4 ; }
 
     virtual bool hasEnergy() const { return m_hasEnergy ; }

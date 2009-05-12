@@ -40,7 +40,7 @@ namespace decaytreefit {
     int index(const LHCb::Particle& bc) const ;
     int posIndex(const LHCb::Particle& bc) const ;
     int momIndex(const LHCb::Particle& bc) const ;
-    int tauIndex(const LHCb::Particle& bc) const ;
+    int lenIndex(const LHCb::Particle& bc) const ;
     void setOwner(bool b) { m_isOwner=b ;}
     int momIndex() const ;
 

@@ -169,25 +169,19 @@ namespace decaytreefit
 
   int 
   DecayChain::posIndex(const LHCb::Particle& bc) const {
-    int rc = -1 ;
     const ParticleBase* base = locate(bc) ;
-    if(base) rc = base->posIndex() ; 
-    return rc ;
+    return base ? base->posIndex() : -1 ;
   }
 
   int 
   DecayChain::momIndex(const LHCb::Particle& bc) const {
-    int rc = -1 ;
     const ParticleBase* base = locate(bc) ;
-    if(base) rc = base->momIndex() ; 
-    return rc ;
+    return base ? base->momIndex() : -1 ;
   }
 
   int 
-  DecayChain::tauIndex(const LHCb::Particle& bc) const {
-    int rc = -1 ;
+  DecayChain::lenIndex(const LHCb::Particle& bc) const {
     const ParticleBase* base = locate(bc) ;
-    if(base) rc = base->tauIndex() ;  
-    return rc ;
+    return base ? base->lenIndex() : 0 ;
   }
 }

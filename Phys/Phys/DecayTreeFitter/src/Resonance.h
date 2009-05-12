@@ -23,7 +23,7 @@ namespace decaytreefit
 
     virtual int posIndex() const { return mother()->posIndex()   ; }
     virtual int momIndex() const { return index() ; }
-    virtual int tauIndex() const { return -1 ; }
+    virtual int lenIndex() const { return -1 ; }
     virtual bool hasPosition() const { return false ; }
 
   private:
