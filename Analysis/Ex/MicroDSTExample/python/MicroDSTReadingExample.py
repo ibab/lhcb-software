@@ -32,11 +32,7 @@ def printHelp():
     
 locationRoot = '/Event/microDST'
 selection = 'DC06selBs2JpsiPhi_unbiased'
-#microDSTFile = '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/data/DV_v20r2/testBs2JpsiPhi_5Kevt_pythonConfig.dst'
-#microDSTFile = '/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_1.dst,/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst'
-microDSTFile = ['/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst',
-                '/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_1.dst']
-#microDSTFile = ['/afs/cern.ch/user/j/jpalac/w0/cmtDaVinci/DaVinci_HEAD/DaVinciSys/Ex/MicroDSTExample/cmt/testBs2JpsiPhi_WithMC_0.2Kevt_2.dst']
+microDSTFile = ['']
 
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
@@ -50,6 +46,7 @@ for o, a in opts:
     elif o in ("-r", "--root"):
         locationRoot = a
 
+# set up some useful paths
 selectionPath = locationRoot +  '/Phys/' + selection
 particlePath = selectionPath + '/Particles'
 particle2mcPath = selectionPath + '/P2MCPRelations'
@@ -60,9 +57,9 @@ mcParticlePath = locationRoot+'/MC/Particles'
 flavTagPath = selectionPath + "/Tagging"
 pvLocation = locationRoot+"/Rec/Vertex/Primary"
 
+# configure the new Particle->MCPatricle associator tool MCMatchObjP2MCRelator
 myP2MCP = MCMatchObjP2MCRelator()
 myP2MCP.OutputLevel=4
-#myP2MCP.RootInTES = '/Event/microDST'
 myP2MCP.MCParticleDefaultLocation = 'microDST/MC/Particles'
 myP2MCP.RelTableLocations = [particle2mcPath]
 
@@ -80,9 +77,11 @@ appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
 
 eventLoop = Helpers.EventLoop(appMgr)
 
+# get an instance of PropertimeFitter
 properTimeFitter = eventLoop.tools.create('PropertimeFitter',
                                           interface='ILifetimeFitter')
 
+# get an instance of MCMatchObjP2MCRelator
 MCAssocTool = eventLoop.tools.create('MCMatchObjP2MCRelator',
                                      interface='IP2MCP')
 
@@ -97,7 +96,6 @@ propTimePlots = Helpers.Plots("Proper time")
 refitPropTimePlots = Helpers.Plots("Re-fitted proper time")
 propTimeResPlots = Helpers.Plots("Proper-time resolution")
 omegaPlots = Helpers.Plots("Mis-tag fratcion")
-flavCatPlots = Helpers.Plots("Tagging category")
 nEvents=0
 nMCEvents=0
 nRecEvents=0
@@ -105,10 +103,10 @@ nParticles = 0
 nPrimaryVertices = 0
 
 
+# make some standard plots
 nPVPlot = TH1D( "# of PVs", "# of primary vertices", 5, -0.5, 4.5 )
-
 stdPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
-refitPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
+refitPropTimeResPlot = TH1D("tau-tau_MC, re-fitted PV", "tau-tau_MC", 100, -0.2,0.5)
 refitVertexZ =  TH1D("re-fit PVz", "re-fit PVz", 50, -100.,100.)
 vertexZ =  TH1D("PVz", "PVz", 50, -100.,100.)
 bestVertexZ =  TH1D("best PVz", "best PVz", 50, -100.,100.)
@@ -172,7 +170,9 @@ while (eventLoop.nextEvent() ) :
         nRecEvents+=1
         nParticles += particles.size()
         stdBestVertexAssoc = eventLoop.getEvtStuff(stdVertexAssocPath)
+        bestVertexFun = Functors.BestVertex(stdBestVertexAssoc)
         refitBestVertexAssoc = eventLoop.getEvtStuff(refitVertexAssocPath)
+        bestRefitVertexFun = Functors.BestVertex(refitBestVertexAssoc)
         p2MCPTable = eventLoop.getEvtStuff(particle2mcPath)
 #        MCAssocFun = Functors.AssocMCPFromTable(p2MCPTable)
         MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
@@ -186,7 +186,7 @@ while (eventLoop.nextEvent() ) :
         Helpers.particleTreeLoop(particles, particleMassPlotter)
         Helpers.particleTreeLoop(particles, particleMassResPlotter)
         Helpers.particleTreeLoop(particles, assocCounter)
-        stdTauFunc = Functors.PropTime(Functors.BestVertex(stdBestVertexAssoc),
+        stdTauFunc = Functors.PropTime(bestVertexFun,
                                        properTimeFitter)
         tauPlotter = GenPlotter(propTimePlots,
                                 stdTauFunc,
@@ -195,7 +195,7 @@ while (eventLoop.nextEvent() ) :
                                 tauHistoAtts,
                                 "proper time")
 
-        reFitPVTauFunc = Functors.PropTime(Functors.BestVertex(refitBestVertexAssoc),
+        reFitPVTauFunc = Functors.PropTime(bestRefitVertexFun,
                                            properTimeFitter)
 
         reFitPVTauPlotter = GenPlotter(refitPropTimePlots,
@@ -209,11 +209,10 @@ while (eventLoop.nextEvent() ) :
         EventDataPlots(particles, tauPlotter)
 
         for p in particles:
-            stdVertex = Helpers.bestVertex(p, stdBestVertexAssoc)
+            stdVertex = bestVertexFun(p)
             if stdVertex!=None : bestVertexZ.Fill(stdVertex.position().z())
             stdPropTime = stdTauFunc(p)
-#            stdPropTime = Helpers.properTime(p, stdVertex, properTimeFitter)
-            refitVertex = Helpers.bestVertex(p, refitBestVertexAssoc)
+            refitVertex = bestRefitVertexFun(p)
             pMom = p.momentum()
             refitVertices = eventLoop.getEvtStuff(refitVertexPath)
             if refitVertices != None :
@@ -221,10 +220,9 @@ while (eventLoop.nextEvent() ) :
                     if rv!=None : refitVertexZ.Fill(rv.position().z())
             if (refitVertex != None) :
                 refitPropTime = reFitPVTauFunc(p)
-#                refitPropTime = Helpers.properTime(p, refitVertex, properTimeFitter)
             else :
                 refitPropTime = -9999.
-            assocMCPart = (Helpers.assocMCP(p, p2MCPTable))
+            assocMCPart = MCAssocFun(p)
             if (assocMCPart != None) :
                 MCPropTime = Helpers.properTimeMC(assocMCPart)
                 stdPropTimeRes = stdPropTime-MCPropTime
@@ -238,5 +236,10 @@ print "Found ", nPrimaryVertices, " PVs in ", nEvents, "events"
 print "Found ", nParticles, " B candidates in ", nEvents, "events"
 
 print "massPlots.plots.keys() = ", massPlots.plots.keys()
-
+print "mcMassPlots.plots.keys() = ", mcMassPlots.plots.keys()
+print "mcPropTimePlots.plots.keys() = ", mcPropTimePlots.plots.keys()
+print "massResPlots.plots.keys() = ", massResPlots.plots.keys()
+print "propTimePlots.plots.keys() = ", propTimePlots.plots.keys()
+print "refitPropTimePlots.plots.keys() = ", refitPropTimePlots.plots.keys()
+print "omegaPlots.plots.keys() = ", omegaPlots.plots.keys()
 
