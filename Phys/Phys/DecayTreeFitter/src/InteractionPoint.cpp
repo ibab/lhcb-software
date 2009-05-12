@@ -12,26 +12,20 @@ namespace decaytreefit
 				     bool forceFitAll)
     : ParticleBase("IP")
   {
-    m_daughter = ParticleBase::createParticle(daughter,this,forceFitAll) ;
+    addDaughter( daughter, forceFitAll ) ;
     m_ipPos(0) = ipvertex.position().x() ;
     m_ipPos(1) = ipvertex.position().y() ;
     m_ipPos(2) = ipvertex.position().z() ;
     m_ipCov    = ipvertex.covMatrix() ;
     int ierr ;
     m_ipCovInv = m_ipCov.Inverse(ierr) ;
-    if(vtxverbose>=-1) {
+    if(vtxverbose>=2) {
       std::cout << "InteractionPoint: initial beam spot = (" 
 		<<m_ipPos(0) << "," << m_ipPos(1) << "," << m_ipPos(2) << ")" <<std::endl ;
-      std::cout << "daughter: " << m_daughter << " " << std::flush 
-		<< m_daughter->name() << std::endl ;
+      std::cout << "daughter: " << daughters().front()->name() << std::endl ;
     }
   }
 
-  InteractionPoint::~InteractionPoint()
-  {
-    delete m_daughter ;
-  }
-  
   ErrCode 
   InteractionPoint::initPar1(FitParams* fitparams)
   {
@@ -39,8 +33,11 @@ namespace decaytreefit
     int posindex = posIndex() ;
     for(int row=1; row<=3; ++row)
       fitparams->par()(posindex+row) = m_ipPos(row-1) ;
-    status |= m_daughter->initPar1(fitparams) ;
-    status |= m_daughter->initPar2(fitparams) ;
+    for(daucontainer::iterator idau = daughters().begin() ;
+	idau != daughters().end(); ++idau ) {
+      status |= (*idau)->initPar1(fitparams) ;
+      status |= (*idau)->initPar2(fitparams) ;
+    }
     return status ;
   }
 
@@ -59,11 +56,13 @@ namespace decaytreefit
     int posindex = posIndex() ;
     for(int row=1; row<=3; ++row)
       fitpar->cov().fast(posindex+row,posindex+row) = 1000*m_ipCov(row-1,row-1) ;
-    status |= m_daughter->initCov(fitpar) ;
 
+    for(daucontainer::const_iterator it = daughters().begin() ;
+	it != daughters().end() ; ++it)
+      status |= (*it)->initCov(fitpar) ;
     return status ;
   }
-
+  
   ErrCode
   InteractionPoint::projectIPConstraint(const FitParams& fitparams, 
 					Projection& p) const
@@ -112,12 +111,14 @@ namespace decaytreefit
 
   void InteractionPoint::addToConstraintList(constraintlist& alist, int depth) const
   {
-    // first the beamspot
+    // first the daughters
+    for(daucontainer::const_iterator it = daughters().begin() ;
+	it != daughters().end() ; ++it)
+      (*it)->addToConstraintList(alist,depth-1) ;
+
+    // then the beamspot
     int dim = 3 ;
     alist.push_back(Constraint(this,Constraint::beamspot,depth,dim)) ;
-    
-    // then the daughter
-    m_daughter->addToConstraintList(alist,depth+1) ;
   }
 
 }

@@ -17,7 +17,6 @@ namespace decaytreefit
   {
   public:
     InteractionPoint(const LHCb::VertexBase& ipvertex, const LHCb::Particle& daughter, bool forceFitAll) ;
-    ~InteractionPoint() ;
 
     virtual int dim() const { return 3 ; } // (x,y,z)
     virtual ErrCode initPar1(FitParams*) ; 
@@ -30,19 +29,15 @@ namespace decaytreefit
     
     ErrCode projectIPConstraint(const FitParams& fitpar, Projection&) const ;
     virtual ErrCode projectConstraint(Constraint::Type, const FitParams&, Projection&) const ;
-
+    
     virtual void addToConstraintList(constraintlist& alist, int depth) const ;
     
     virtual int posIndex() const { return index() ; }
-    virtual int momIndex() const { return -1; }//daughters().front()->momIndex() ; } // terrible hack
-    virtual int tauIndex() const { return -1; }
-    virtual bool hasEnergy() const { return false ; }
-
+    
   private:
     Gaudi::Vector3      m_ipPos ;    // interaction point position
     Gaudi::SymMatrix3x3 m_ipCov ;    // cov matrix
     Gaudi::SymMatrix3x3 m_ipCovInv ; // inverse of cov matrix
-    ParticleBase* m_daughter ;
   } ;
   
 }
