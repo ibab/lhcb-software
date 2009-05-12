@@ -21,7 +21,8 @@ Purpose     : LHCb analysis packages
       MCMatchObjP2MCRelator. The trees respect a parent to daughter ordering, 
       and represent the MCParticles that contributed to the reconstructed 
       Particle.
-    - Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC for details.
+    - Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. 
+      See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC for details.
 
   * MicroDST (Juan)
     New generic classes for cloning objects related to other objects.
