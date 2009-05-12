@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatAddTTCoord.h,v 1.2 2009-05-12 11:02:03 smenzeme Exp $
 #ifndef PATADDTTCOORD_H
 #define PATADDTTCOORD_H 1
 
@@ -10,6 +10,8 @@
 #include "Event/State.h"
 #include "Event/STCluster.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"            // Interface
+#include "Kernel/ILHCbMagnetSvc.h"
+
 
 #include "TfKernel/TTStationHitManager.h"
 #include "PatKernel/PatTTHit.h"
@@ -55,7 +57,8 @@
     double m_ttTolSlope;
     double m_zTTField;
     double m_zTTProj;
-    double m_ttMaxChi2;
+    double m_ttMaxChi2; 
+    ILHCbMagnetSvc*     m_magFieldSvc; 
 
   };
 

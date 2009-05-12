@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.2 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatAddTTCoord.cpp,v 1.3 2009-05-12 11:02:03 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -48,6 +48,8 @@ StatusCode PatAddTTCoord::initialize ( ) {
 
 
   m_ttHitManager = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
+
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   return StatusCode::SUCCESS;
 }
@@ -104,8 +106,10 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
 
     double tyTr = state.ty();
     updateTTHitForTrack( tt, state.y()-state.z()*state.ty(), tyTr );
-    
-    double xPred = state.x() + ( z-state.z() ) * state.tx() + m_ttParam * state.qOverP() * ( z - m_zTTField );
+
+    double magScaleFactor = m_magFieldSvc->scaleFactor() ;
+
+    double xPred = state.x() + ( z-state.z() ) * state.tx() + m_ttParam * magScaleFactor*state.qOverP() * ( z - m_zTTField );
     if ( fabs( xPred - tt->x() ) < tol ) {
       double projDist = ( xPred - tt->x() ) * ( m_zTTProj - m_zTTField ) / ( z - m_zTTField );
       tt->setProjection( projDist );

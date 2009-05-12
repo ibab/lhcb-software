@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-05-12 - Stephanie Hansmann-Menzemer
+  - Use scale factor from magnetic field service in PatAddTTCoord
 
 !========================== PatAlgorithms v3r19 2009-05-06 ===================
 ! 2009-05-06 - Stephanie Hansmann-Menzemer
