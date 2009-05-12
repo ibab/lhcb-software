@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.23 2009-03-20 15:18:32 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.24 2009-05-12 19:55:01 wouter Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -1289,7 +1289,7 @@ bool TAConfig::CalcResidualOT( // unsigned int tr_cnt,
   // const LHCb::Measurement trMeas(track.measurement(id)); // Get measurement    
   if(id.isOT()){
     // double weight = 1./1.44;
-    double stereo_angle= stereo_angle = m_ot->findLayer( id.otID() )->angle();
+    double stereo_angle = m_ot->findLayer( id.otID() )->angle();
     Gaudi::XYZPoint Ppoint = (trMeas->trajectory()).position(0.);
     std::auto_ptr<LHCb::Trajectory> lhcbidTraj = m_ot->findModule( id.otID() )->trajectory(id.otID());   
     Gaudi::XYZPoint idTrajPoint = lhcbidTraj->position(0.);
@@ -1961,33 +1961,16 @@ double TAConfig::Measurement( const LHCb::Measurement *m,
 			      const LHCb::Trajectory *t, 
 			      LHCb::State &s ) {
   double m_resolution = 0.0;
+  s = track.closestState( m->z() );
+  t = &(m->trajectory()) ;
+  m_resolution = m->errMeasure();
   switch ( m->type() ) {
-  case LHCb::Measurement::Muon :
-    const LHCb::MuonMeasurement *muMeas = dynamic_cast<const MuonMeasurement*>(m);
-    s = track.closestState( muMeas->z() );
-    // trajectory describing measurement
-    // e.g. the 'wire' in case of OT
-    t = &muMeas->trajectory();
-    m_resolution = muMeas->errMeasure();
-    break;
   case LHCb::Measurement::OT :
-    const  LHCb::OTMeasurement *otMeas = dynamic_cast<const OTMeasurement*>(m);
-    s = track.closestState( otMeas->z() );
-    t = &otMeas->trajectory();
-    m_resolution = otMeas->errMeasure();
     m_resolution = 1.44;
     break;
+  case LHCb::Measurement::Muon :
   case LHCb::Measurement::IT :
-    const  LHCb::STMeasurement *itMeas = dynamic_cast<const STMeasurement*>(m);
-    s = track.closestState( itMeas->z() );
-    t = &itMeas->trajectory();
-    m_resolution = itMeas->errMeasure();
-    break;
   case LHCb::Measurement::TT :
-    const  LHCb::STMeasurement *ttMeas = dynamic_cast<const STMeasurement*>(m);
-    s = track.closestState( ttMeas->z() );
-    t = &ttMeas->trajectory();
-    m_resolution = ttMeas->errMeasure();
     break;
   default :
     error() << "The measurement can not be used..." << endreq;

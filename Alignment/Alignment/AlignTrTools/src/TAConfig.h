@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.16 2008-07-17 13:54:40 lnicolas Exp $
+ *  $Id: TAConfig.h,v 1.17 2009-05-12 19:55:01 wouter Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -157,8 +157,7 @@ public:
    * MD  getMPTrackPoints                       *
    * get the track information of Millepede     *
    *********************************************/
-  std::vector< std::vector<double> > TAConfig::getMPHits(){
-    
+  std::vector< std::vector<double> > getMPHits(){
     return m_trackpoints;
   };
   /*********************************************
@@ -166,14 +165,14 @@ public:
    * clear the track information of Millepede     *
    * for the next track                         *
    *********************************************/
-  void TAConfig::clearMPHits(){
+  void clearMPHits(){
     m_trackpoints.clear();
   };
   
   /*****************************
    *  MD get detMap            *
    *****************************/
-  std::vector<Gaudi::Transform3D> TAConfig::GetDetMap(){
+  std::vector<Gaudi::Transform3D> GetDetMap(){
     return m_DETmap;
   };
 

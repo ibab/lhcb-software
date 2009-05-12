@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.17 2008-11-11 15:23:15 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.18 2009-05-12 19:55:01 wouter Exp $
 // Include files 
 
 // local
@@ -262,7 +262,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
         return defValue;
     }
   }
-  else if ( c_trackType.compare( "ALL" ) )
+  else if ( c_trackType.compare( "ALL" ) ) {
     if ( !c_trackType.compare( "IT" ) ) {
       if ( (nOTHits != 0) || (nITHits == 0) ) return defValue;
     }
@@ -275,7 +275,8 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
     else if ( !c_trackType.compare( "BOTH" ) ) {
       if ( (nOTHits == 0) || (nITHits == 0) ) return defValue;
     }
-
+  }
+  
   // Initialization of tracks variables
   m_entryTX = aTrack.closestState( 7500. ).tx();
   m_entryTY = aTrack.closestState( 7500. ).ty();

@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.12 2008-11-11 15:23:15 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.13 2009-05-12 19:55:01 wouter Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -50,8 +50,8 @@ public:
 
   virtual ~AlignSelTool( ); ///< Destructor
 
-  StatusCode AlignSelTool::initialize ( );
-  StatusCode AlignSelTool::finalize ( );
+  StatusCode initialize ( );
+  StatusCode finalize ( );
 
   virtual bool accept(const LHCb::Track& aTrack) const;
 
