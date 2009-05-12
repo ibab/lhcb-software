@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.10 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.11 2009-05-12 07:45:45 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -20,7 +20,7 @@ class OnlineHistDB;
 
 namespace OMAconstants {
   static const int AlgListID = 11;
-  static const std::string version = "v2r4";
+  static const std::string version = "v2r5";
   
   static const int AlarmExpTime = 28800; // one shift
   static const double epsilon = 1.e-10;
