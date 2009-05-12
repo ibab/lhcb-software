@@ -1,4 +1,4 @@
-// $Id: CLHEPSolver.cpp,v 1.1 2008-04-10 20:21:22 wouter Exp $
+// $Id: CLHEPSolver.cpp,v 1.2 2009-05-12 18:12:53 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -65,6 +65,10 @@ CLHEPSolver::CLHEPSolver( const std::string& type,
 //=============================================================================
 CLHEPSolver::~CLHEPSolver() {} 
 
+// fix CLHEP bug exposed in gcc 4.3
+namespace CLHEP {
+  double dot(const HepVector &v1,const HepVector &v2) ;
+}
 
 bool CLHEPSolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
   
