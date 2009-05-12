@@ -43,7 +43,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.30 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.31 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -687,7 +687,9 @@ class LbLoginScript(Script):
         else :
             self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
             if self.platform == "slc5" :
-                if self.hasCommand("gcc34") :
+                if self.hasCommand("gcc43") :
+                    self.compdef = "gcc43"
+                elif self.hasCommand("gcc34") :
                     self.compdef = "gcc34"
             if self.platform == "slc3" :
                 self.binary = "ia32"
