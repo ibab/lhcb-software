@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.104 2009-05-07 13:25:59 cattanem Exp $
+! $Id: release.notes,v 1.105 2009-05-12 15:35:54 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-05-12 - Marco Clemencic
+ - Added the function CondDBUI.Admin.ReleaseNotes.addGlobalTag.
 
 !===================== Tools/CondDBUI v2r17 2009-05-07 ========================
 ! 2009-03-30 - Marco Clemencic

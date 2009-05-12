@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.4 2009-01-06 18:21:19 marcocle Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.5 2009-05-12 15:35:55 marcocle Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -34,11 +34,55 @@ def indent(elem, level=0, indentation = "  "):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
+# helper function
+_xel = lambda t: ET.QName("http://lhcb.cern.ch",t)
+
 class ReleaseNotes(object):
     def __init__(self, filename):
         self.filename = filename
         # load XML
         self.tree = ET.parse(self.filename)
+        
+    def _setDescription(self, node, description, patch = None):
+        """
+        Internal function to add the description to a node ("note" or "global_tag").
+        """
+        desc_el = None
+        if description:
+            desc_el = ET.SubElement(node,_xel("description"))
+            for d in description:
+                ET.SubElement(desc_el, _xel("di")).text = d
+            if patch:
+                ET.SubElement(desc_el, _xel("patch")).text = str(patch)
+        return desc_el
+        
+    def _makeEntry(self, type_name, contributor, date = None):
+        """
+        Internal function to prepare a base entry ("note" or "global_tag").
+        """
+        if date is None:
+            date = time.strftime("%Y-%m-%d")
+        
+        entry = ET.Element(_xel(type_name))
+        ET.SubElement(entry,_xel("contributor")).text = contributor
+        ET.SubElement(entry,_xel("date")).text = date
+        
+        return entry
+    
+    def _prependEntry(self, entry):
+        """
+        Internal function to add the entry at the beginning of the release notes
+        (after the list of maintainers.)
+        """
+        # this should be safe enough: the first element is always "maintainer"
+        pos = 0
+        for i in self.tree.getroot().getchildren():
+            if "maintainer" not in str(i.tag):
+                break
+            pos += 1
+
+        self.tree.getroot().insert(pos, entry)
+        
     def addNote(self, contributor, partitions, description, date = None, patch = None):
         """
         And a basic entry to the release notes.
@@ -49,40 +93,50 @@ class ReleaseNotes(object):
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
         patch: numeric id of the patch (on savannah)
         """
-        if date is None:
-            date = time.strftime("%Y-%m-%d")
         
-        # helper function
-        xel = lambda t: ET.QName("http://lhcb.cern.ch",t)
-        
-        note = ET.Element(xel("note"))
-        ET.SubElement(note,xel("contributor")).text = contributor
-        ET.SubElement(note,xel("date")).text = date
+        note = self._makeEntry("note", contributor, date)
         
         for part in partitions:
             tag, files = partitions[part]
-            part_el = ET.SubElement(note,xel("partition"))
-            ET.SubElement(part_el,xel("name")).text = part
-            ET.SubElement(part_el,xel("tag")).text = tag
+            part_el = ET.SubElement(note,_xel("partition"))
+            ET.SubElement(part_el,_xel("name")).text = part
+            ET.SubElement(part_el,_xel("tag")).text = tag
             files = list(files)
             files.sort()
             for f in files:
-                ET.SubElement(part_el,xel("file")).text = f
+                ET.SubElement(part_el,_xel("file")).text = f
         
-        desc_el = ET.SubElement(note,xel("description"))
-        for d in description:
-            ET.SubElement(desc_el, xel("di")).text = d
-        if patch:
-            ET.SubElement(desc_el, xel("patch")).text = str(patch)
+        self._setDescription(note, description, patch)
         
-        # this should be safe enough: the first element is always "maintainer"
-        pos = 0
-        for i in self.tree.getroot().getchildren():
-            if "maintainer" not in i.tag:
-                break
-            pos += 1
-
-        self.tree.getroot().insert(pos,note)
+        self._prependEntry(note)
+        
+    def addGlobalTag(self, contributor, tag, partitions, description = None, date = None, patch = None):
+        """
+        And an entry for a global tag to the release notes.
+        
+        contributor: person providing the changes
+        tag: the name of the global tag
+        partitions: dictionary in the format {"PARTITION":("base_tag",["tag1","tag2"])}
+        description: list of comments, ["comment1","comment2"]
+        date: date in the format "YYYY-MM-DD", the current date is used if omitted
+        patch: numeric id of the patch (on savannah)
+        """
+        
+        global_tag = self._makeEntry("global_tag", contributor, date)
+        ET.SubElement(global_tag,_xel("tag")).text = tag
+        
+        self._setDescription(global_tag, description, patch)
+        
+        for part in partitions:
+            base_tag, tags = partitions[part]
+            part_el = ET.SubElement(global_tag,_xel("partition"))
+            ET.SubElement(part_el,_xel("name")).text = part
+            ET.SubElement(part_el,_xel("base")).text = base_tag
+            tags = list(tags)
+            for t in tags:
+                ET.SubElement(part_el,_xel("tag")).text = t
+        
+        self._prependEntry(global_tag)
         
     def write(self, filename = None , encoding = "utf-8"):
         if filename is None:
