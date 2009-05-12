@@ -2,6 +2,7 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v4r2 2009-05-12 ======================
 ! 2009-04-27 - Jan Amoraal
  - Bug fix. Correctly sort deposits according to time and geometry. 
    Correctly apply analog dead timne window.
