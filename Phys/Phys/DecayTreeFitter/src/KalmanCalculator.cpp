@@ -1,6 +1,5 @@
 
 #include "KalmanCalculator.h"
-#include "ErrCode.h"
 
 #define SLOWBUTSAFE 1
 #undef SLOWBUTSAFE

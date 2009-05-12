@@ -1,9 +1,9 @@
-#ifndef __VTK_CONSTRAINT_HH__
-#define __VTK_CONSTRAINT_HH__
+#ifndef DECAYTREEFITTER_CONSTRAINT_H
+#define DECAYTREEFITTER_CONSTRAINT_H
 
 #include <string>
 #include <iostream>
-#include "ErrCode.h"
+#include "DecayTreeFitter/VtxErrCode.h"
 
 namespace decaytreefit
 {

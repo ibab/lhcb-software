@@ -4,7 +4,7 @@
 #include <CLHEP/Matrix/Matrix.h>
 #include <CLHEP/Matrix/SymMatrix.h>
 #include "FitParams.h"
-#include "ErrCode.h"
+#include "DecayTreeFitter/VtxErrCode.h"
 
 namespace decaytreefit
 {
