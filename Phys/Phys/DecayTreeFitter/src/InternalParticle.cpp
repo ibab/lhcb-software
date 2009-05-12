@@ -41,73 +41,13 @@ namespace decaytreefit
     BOOST_FOREACH( const LHCb::Particle* daughter, bc.daughters() ) 
       addDaughter(*daughter,forceFitAll) ;
     
-    // sort the daughters
-    std::sort(m_daughters.begin(),m_daughters.end(),sortByType) ;
-
     // copy constraints
     m_massconstraint     = false ; //bc && bc->constraint(BtaConstraint::Mass) ;
     m_lifetimeconstraint = false ; //bc && bc->constraint(BtaConstraint::Life) ;
-    m_isconversion = m_massconstraint && m_daughters.size()==2 && 
+    m_isconversion = m_massconstraint && daughters().size()==2 && 
       bc.particleID().pid() == 22 ;
   }
   
-  InternalParticle::~InternalParticle() 
-  {
-   for(daucontainer::iterator it = m_daughters.begin() ;
-       it != m_daughters.end() ; ++it)
-     delete *it ;
-   m_daughters.clear() ;
-  }
-
-  void InternalParticle::updateIndex(int& offset)
-  {
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
-      (*it)->updateIndex(offset) ;
-    ParticleBase::updateIndex(offset) ;
-  }
-
-  ParticleBase* InternalParticle::addDaughter(const LHCb::Particle& cand, bool forceFitAll) 
-  {
-    m_daughters.push_back( ParticleBase::createParticle(cand,this,forceFitAll) ) ;
-    return m_daughters.back() ;
-  }
-
-  void InternalParticle::removeDaughter(const ParticleBase* pb) 
-  {
-    daucontainer::iterator it = std::find(m_daughters.begin(),m_daughters.end(),pb) ;
-    if(it != m_daughters.end() ) {
-      delete *it ;
-      m_daughters.erase(it) ;
-    } else {
-      std::cout << "ERROR: cannot remove particle, because not found ..." << std::endl ;
-    }
-  }
-
-  void InternalParticle::retrieveIndexMap(indexmap& anindexmap) const 
-  {
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
-      (*it)->retrieveIndexMap(anindexmap) ;
-    ParticleBase::retrieveIndexMap(anindexmap)  ;
-  }
-
-  int InternalParticle::nFinalChargedCandidates() const {
-    int rc=0;
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
-      rc +=(*it)->nFinalChargedCandidates() ;
-    return rc ;
-  }
-
-  void InternalParticle::addToDaughterList(daucontainer& list)
-  {
-    int posindex = posIndex() ;
-    for(daucontainer::iterator it = begin(); it!= end(); ++it) {
-      list.push_back(*it) ;
-      if( (*it)->posIndex()==posindex ) (*it)->addToDaughterList(list) ;
-    }
-  }
 
   bool compTrkTransverseMomentum(const RecoTrack* lhs, const RecoTrack* rhs)
   {
@@ -133,8 +73,8 @@ namespace decaytreefit
     
     if(vtxverbose>=3)
       std::cout << "InternalParticle::initPar: " 
-	   << particle().particleID().pid() << " " << m_daughters.size() << " "
-	   << hasPosition() << " " << posIndex() << std::endl ;
+		<< particle().particleID().pid() << " " << daughters().size() << " "
+		<< hasPosition() << " " << posIndex() << std::endl ;
     
     ErrCode status ;
     int posindex = posIndex() ;
@@ -178,10 +118,11 @@ namespace decaytreefit
 	// create a vector with all daughters that constitute a
 	// 'trajectory' (ie tracks, composites and daughters of
 	// resonances.)
-	
 	daucontainer alldaughters ;
-	addToDaughterList( alldaughters ) ;
-
+	collectVertexDaughters( alldaughters, posindex ) ;
+	std::cout << "number of daughters for initializing vertex: "
+		  << name() << " " << alldaughters.size() << std::endl ;
+	
 	// select daughters that are either charged, or have an initialized vertex
 	daucontainer vtxdaughters ;
 	std::vector<RecoTrack*> trkdaughters ;
@@ -295,8 +236,8 @@ namespace decaytreefit
     }
     
     // step 3: do the post initialization step of all daughters
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it) 
+    for(daucontainer::const_iterator it = daughters().begin() ;
+	it != daughters().end() ; ++it) 
       (*it)->initPar2(fitparams) ;
     
     // step 4: initialize the momentum by adding up the daughter 4-vectors
@@ -355,17 +296,6 @@ namespace decaytreefit
   }
   
   ErrCode
-  InternalParticle::initCov(FitParams* fitparams) const
-  { 
-    ErrCode status ;
-    ParticleBase::initCov(fitparams) ;
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
-      status |= (*it)->initCov(fitparams) ;
-    return status ;
-  }
-    
-  ErrCode
   InternalParticle::projectKineConstraint(const FitParams& fitparams,
 					  Projection& p) const
   {
@@ -381,9 +311,9 @@ namespace decaytreefit
     }
     
     // now add the daughters
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it) {
-      int dautauindex = (*it)->tauIndex() ;
+    for(daucontainer::const_iterator it = daughters().begin() ;
+	it != daughters().end() ; ++it) {
+      int daulenindex = (*it)->lenIndex() ;
       int daumomindex = (*it)->momIndex() ;
       double mass = (*it)->pdtMass() ;
       double e2=mass*mass ;
@@ -403,9 +333,9 @@ namespace decaytreefit
 	  double px = fitparams.par()(daumomindex+jmom) ;
 	  p.H(4,daumomindex+jmom) = -px/energy ;
 	}
-      } else if(false && dautauindex>=0 && (*it)->charge()!=0) {
+      } else if(false && daulenindex>=0 && (*it)->charge()!=0) {
 
-	double tau =  fitparams.par()(dautauindex+1) ;
+	double tau =  fitparams.par()(daulenindex+1) ;
 	double lambda = bFieldOverC() * (*it)->charge() ; 
 	double px0 = fitparams.par()(daumomindex+1) ;
 	double py0 = fitparams.par()(daumomindex+2) ;
@@ -420,10 +350,10 @@ namespace decaytreefit
 	  p.r(2) += py0 - py ;
 	  p.H(1,daumomindex+1) +=  1 - coslt ;
 	  p.H(1,daumomindex+2) +=      sinlt ;
-	  p.H(1,dautauindex+1) +=  lambda*py ;
+	  p.H(1,daulenindex+1) +=  lambda*py ;
 	  p.H(2,daumomindex+1) +=     -sinlt ;
 	  p.H(2,daumomindex+2) +=  1 - coslt ;
-	  p.H(2,dautauindex+1) += -lambda*px ;
+	  p.H(2,daulenindex+1) += -lambda*px ;
 	}
       }
     }
@@ -431,15 +361,16 @@ namespace decaytreefit
   }
   
   ErrCode
-  InternalParticle::projectLifeTimeConstraint(const FitParams& fitparams,
-					      Projection& p) const
+  InternalParticle::projectLifeTimeConstraint(const FitParams&,
+					      Projection&) const
   {
-    int tauindex = tauIndex() ;
-    assert(tauindex>=0) ;
-    double tau = pdtTau() ;
-    p.r(1)            = fitparams.par()(tauindex+1) - tau ;
-    p.Vfast(1,1)      = tau*tau ;
-    p.H(1,tauindex+1) = 1 ;
+    std::cout << "Not yet implemented lifetime constraint!" << std::endl ;
+    // int lenindex = lenIndex() ;
+    //     assert(lenindex>=0) ;
+    //     double tau = pdtTau() ;
+    //     p.r(1)            = fitparams.par()(lenindex+1) - tau ;
+    //     p.Vfast(1,1)      = tau*tau ;
+    //     p.H(1,lenindex+1) = 1 ;
     return ErrCode::success ;
   }
 
@@ -450,8 +381,8 @@ namespace decaytreefit
     // only works if there are two daughters. constraint those to be parallel:
     // p1.in(p2) - |p1||p2|=0
     assert(m_isconversion) ;
-    const ParticleBase* dauA = m_daughters[0] ;
-    const ParticleBase* dauB = m_daughters[1] ;
+    const ParticleBase* dauA = daughters()[0] ;
+    const ParticleBase* dauB = daughters()[1] ;
     int daumomindexA = dauA->momIndex() ;
     int daumomindexB = dauB->momIndex() ;
     
@@ -565,22 +496,22 @@ namespace decaytreefit
   void InternalParticle::addToConstraintList(constraintlist& alist, 
 					     int depth) const
   {
-   // first the daughters
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
+    // first the daughters
+    for(daucontainer::const_iterator it = daughters().begin() ;
+	it != daughters().end() ; ++it)
       (*it)->addToConstraintList(alist,depth-1) ;
-
+    
     //double geoprecision  = 1e-5 ; // 1mu
     //double massprecision = 4*pdtMass()*pdtMass()*1e-5 ; // 0.01 MeV
 
     // the lifetime constraint
-    if(tauIndex()>=0 && m_lifetimeconstraint) 
+    if(lenIndex()>=0 && m_lifetimeconstraint) 
       alist.push_back(Constraint(this,Constraint::lifetime,depth,1)) ;
     // the kinematic constraint
     if(momIndex()>=0)
       alist.push_back(Constraint(this,Constraint::kinematic,depth,4)) ;
     // the geometric constraint
-    if(mother() && tauIndex()>=0) 
+    if(mother() && lenIndex()>=0) 
       alist.push_back(Constraint(this,Constraint::geometric,depth,3,0,3)) ;
     // the mass constraint. FIXME: move to ParticleBase
     if(m_massconstraint) {
@@ -607,36 +538,6 @@ namespace decaytreefit
 //     const FitParams* _arg ;
 //   };
   
-  void InternalParticle::print(const FitParams* fitpar) const
-  {
-    ParticleBase::print(fitpar) ;
-    
-//     for_each(m_daughters.begin(),m_daughters.end(),
-// 	     printfunctor(fitpar) ) ;
-    
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end() ; ++it)
-      (*it)->print(fitpar) ;
-  }
-
-  const ParticleBase* 
-  InternalParticle::locate(const LHCb::Particle& abc) const
-  {
-    const ParticleBase* rc = ParticleBase::locate(abc) ;
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	!rc && it != m_daughters.end(); ++it)
-      rc = (*it)->locate(abc) ;
-    return rc ;
-  }
-  
-  double InternalParticle::chiSquare(const FitParams* fitparams) const
-  {
-    double rc = 0;
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end(); ++it)
-      rc += (*it)->chiSquare(fitparams) ;
-    return rc ;
-  }
 
 //   bool InternalParticle::swapMotherDaughter(FitParams* fitparams,
 // 					    const ParticleBase* newmother)
@@ -657,9 +558,9 @@ namespace decaytreefit
 //     missingparticle->updateIndex(dummy) ;
 
 //     // invert tau
-//     if( newmother->tauIndex()>=0 && tauIndex()>=0) {
-//       double tau = fitparams->par()(newmother->tauIndex()+1) ;
-//       fitparams->par()(tauIndex()+1) = -tau ;
+//     if( newmother->lenIndex()>=0 && tauIndex()>=0) {
+//       double tau = fitparams->par()(newmother->lenIndex()+1) ;
+//       fitparams->par()(lenIndex()+1) = -tau ;
 //     }
 
 //     // set the btacandidate
@@ -696,25 +597,4 @@ namespace decaytreefit
 //     return true ;
 //   }
 
-  
-
-  void InternalParticle::forceP4Sum(FitParams& fitparams) const 
-  {
-    // because things are not entirely linear, p4 is not exactly
-    // conserved at the end of fits that include mass
-    // constraints. this routine is called after the tree is fitted to
-    // ensure that p4 'looks' conserved.
-   
-    // first the daughters
-    for(daucontainer::const_iterator it = m_daughters.begin() ;
-	it != m_daughters.end(); ++it) (*it)->forceP4Sum(fitparams) ;
-    
-    // now yourself (this is a bit expensive, but easy)
-    int momindex = momIndex() ;
-    if(momindex>0) {
-      Projection p(fitparams.dim(),4) ;
-      projectKineConstraint(fitparams,p) ;
-      for(int imom=1; imom<=4; ++imom) fitparams.par()(momindex+imom) -= p.r(imom) ;
-    }
-  }
 }

@@ -52,12 +52,38 @@ namespace decaytreefit
   {
   }
   
-  ParticleBase::~ParticleBase() {} ;
-  
+  ParticleBase::~ParticleBase()
+  {
+   for(daucontainer::iterator it = m_daughters.begin() ;
+       it != m_daughters.end() ; ++it)
+     delete *it ;
+   m_daughters.clear() ;
+  }
+
   void ParticleBase::updateIndex(int& offset)
   {
+    // first the daughters
+    for(const_iterator it = begin(); it!= end(); ++it) (*it)->updateIndex(offset) ;
+    // now the real work
     m_index = offset ;
     offset += dim() ;
+  }
+
+  ParticleBase* ParticleBase::addDaughter(const LHCb::Particle& cand, bool forceFitAll) 
+  {
+    m_daughters.push_back( ParticleBase::createParticle(cand,this,forceFitAll) ) ;
+    return m_daughters.back() ;
+  }
+
+  void ParticleBase::removeDaughter(const ParticleBase* pb) 
+  {
+    daucontainer::iterator it = std::find(m_daughters.begin(),m_daughters.end(),pb) ;
+    if(it != m_daughters.end() ) {
+      delete *it ;
+      m_daughters.erase(it) ;
+    } else {
+      std::cout << "ERROR: cannot remove particle, because not found ..." << std::endl ;
+    }
   }
 
   ParticleBase*
@@ -150,6 +176,16 @@ namespace decaytreefit
     }
     return rc ;
   }
+
+  void ParticleBase::collectVertexDaughters( daucontainer& particles, int posindex ) 
+  {
+    // collect all particles emitted from vertex with position posindex
+    if( mother() && mother()->posIndex() == posindex ) 
+      particles.push_back( this ) ;
+    for( daucontainer::const_iterator idau = daughters().begin() ;
+	 idau != daughters().end() ; ++idau )
+      collectVertexDaughters(particles,posindex ) ;
+  }
   
   ErrCode
   ParticleBase::initCov(FitParams* fitparams) const
@@ -182,33 +218,31 @@ namespace decaytreefit
     }
     
     // lifetime
-    int tauindex = tauIndex() ;
-    if(tauindex>=0) {
-      // note: in this vertex fitter tau = c*lifetime/gamma*m*c^2
-      double tau = pdtTau() ;
-      double sigtau = tau>0 ? 20*tau : 999 ;
-      const double maxdecaylength = 5*Gaudi::Units::m ; // [cm] (okay for Ks->pi0pi0)
-      double particleP = particle().p();
-      if ( particleP > 0.0 )
-	sigtau = std::min( maxdecaylength/particleP, sigtau ) ;
-      fitparams->cov() .fast (tauindex+1,tauindex+1) = sigtau*sigtau ;
+    int lenindex = lenIndex() ;
+    if(lenindex>=0) {
+      const double sigz   = 50 * Gaudi::Units::cm ;
+      fitparams->cov().fast (lenindex+1,lenindex+1) = sigz*sigz ;
     }
 
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end() ; ++it)
+      status |= (*it)->initCov(fitparams) ;
     return status ;
   }
   
+
   std::string ParticleBase::parname(int thisindex) const
   {
     std::string rc = name() ;
     switch(thisindex) {
-    case 0: rc += "m_x  " ; break ;
-    case 1: rc += "m_y  " ; break ;
-    case 2: rc += "m_z  " ; break ;
-    case 3: rc += "m_tau" ; break ;
-    case 4: rc += "m_px " ; break ;
-    case 5: rc += "m_py " ; break ;
-    case 6: rc += "m_pz " ; break ;
-    case 7: rc += "m_E  " ; break ;
+    case 0: rc += " x  " ; break ;
+    case 1: rc += " y  " ; break ;
+    case 2: rc += " z  " ; break ;
+    case 3: rc += " len" ; break ;
+    case 4: rc += " px " ; break ;
+    case 5: rc += " py " ; break ;
+    case 6: rc += " pz " ; break ;
+    case 7: rc += " E  " ; break ;
     default: ;
     }
     return rc ;
@@ -248,41 +282,77 @@ namespace decaytreefit
 	   << std::setw(15) << mass
 	   << std::setw(15) << sqrt(massvar) << std::endl ;
     }
+
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end() ; ++it)
+      (*it)->print(fitpar) ;
+
   }
 
   const 
   ParticleBase* ParticleBase::locate(const LHCb::Particle& abc) const
   {
     // does there exist an 'iscloneof' in lhcb?
-    return m_particle == &abc ? this : 0 ;
+    const ParticleBase* rc = m_particle == &abc ? this : 0 ;
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	!rc && it != m_daughters.end(); ++it)
+      rc = (*it)->locate(abc) ;
+    return rc ;
   }
+  
   
   void ParticleBase::retrieveIndexMap(indexmap& anindexmap) const 
   {
+
     anindexmap.push_back(std::pair<const ParticleBase*,int>(this,index())) ;
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end() ; ++it)
+      (*it)->retrieveIndexMap(anindexmap) ;
   }
+
 
   ErrCode ParticleBase::projectGeoConstraint(const FitParams& fitparams,
 					     Projection& p) const
   {
+    // implements the constraint
+    
+    //  vec{x}_decay = vec{x}_production + decaylength * vec{p} / p
     int posindexmother = mother()->posIndex() ;
     int posindex = posIndex();
-    int tauindex = tauIndex() ;
+    int lenindex = lenIndex() ;
     int momindex = momIndex() ;
- 
-    double tau =  fitparams.par()(tauindex+1) ;
+    assert(posindexmother>=0 && posindex>=0 && lenindex>=0 && momindex>=0) ;
 
-    // lineair approximation is fine
+    // decay length
+    double len =  fitparams.par()(lenindex+1) ;
+
+    // size of momentum
+    double px = fitparams.par()(momindex+1) ; 
+    double py = fitparams.par()(momindex+2) ; 
+    double pz = fitparams.par()(momindex+3) ; 
+    double p2 = px*px+py*py+pz*pz ;
+    double mom  = std::sqrt(p2) ;
+
+    // lineair approximation is fine for now
     for(int row=1; row<=3; ++row) {
       double posxmother = fitparams.par()(posindexmother+row) ;
       double posx       = fitparams.par()(posindex+row) ;
       double momx       = fitparams.par()(momindex+row) ;
-      p.r(row) = posxmother - (posx - tau*momx) ;
+      p.r(row) = posxmother - posx + len*momx/mom ;
       p.H(row,posindexmother+row) = 1 ;
       p.H(row,posindex+row)       = -1 ;
-      p.H(row,momindex+row)       = tau ;
-      p.H(row,tauindex+1)         = momx ;
+      p.H(row,lenindex+1)         = momx/mom ;
     }
+    // still need these as well
+    p.H(1,momindex+1)  = len/mom*( 1 - px*px/p2 ) ;
+    p.H(1,momindex+2)  = len/mom*( 0 - px*py/p2 ) ;
+    p.H(1,momindex+3)  = len/mom*( 0 - px*pz/p2 ) ;
+    p.H(2,momindex+1)  = len/mom*( 0 - py*px/p2 ) ;
+    p.H(2,momindex+2)  = len/mom*( 1 - py*py/p2 ) ;
+    p.H(2,momindex+3)  = len/mom*( 0 - py*pz/p2 ) ;
+    p.H(3,momindex+1)  = len/mom*( 0 - pz*px/p2 ) ;
+    p.H(3,momindex+2)  = len/mom*( 0 - pz*py/p2 ) ;
+    p.H(3,momindex+3)  = len/mom*( 1 - pz*pz/p2 ) ;
     
 //     if( false && charge()!=0 ) {
 //       double lambda = bFieldOverC() * charge() ; 
@@ -300,10 +370,10 @@ namespace decaytreefit
 // 	p.r(1) += -tau*px0 + (py-py0)/lambda ;
 // 	p.r(2) += -tau*py0 - (px-px0)/lambda ;
 
-// 	p.H(1,tauindex+1) += -px0 + px ;
+// 	p.H(1,lenindex+1) += -px0 + px ;
 // 	p.H(1,momindex+1) += -tau + sinlt/lambda ;
 // 	p.H(1,momindex+2) +=        (coslt-1)/lambda ;
-// 	p.H(2,tauindex+1) += -py0 + py ;
+// 	p.H(2,lenindex+1) += -py0 + py ;
 // 	p.H(2,momindex+1) +=      - (coslt-1)/lambda ;
 // 	p.H(2,momindex+2) += -tau + sinlt/lambda ;
 
@@ -362,8 +432,8 @@ namespace decaytreefit
   ErrCode
   ParticleBase::initTau(FitParams* fitparams) const
   {
-    int tauindex = tauIndex() ;
-    if(tauindex>=0 && hasPosition() ) {
+    int lenindex = lenIndex() ;
+    if(lenindex>=0 && hasPosition() ) {
       const ParticleBase* amother = mother() ;
       int momposindex = amother ? amother->posIndex() : -1 ;
       int posindex = posIndex() ;
@@ -384,9 +454,26 @@ namespace decaytreefit
       // we don't like 0 and we don't like very negative values
       if( tau==0 ) tau=pdtTau() ;
       //tau = tau==0 ? pdtTau() : std::max(tau,-pdtTau()) ;
-      fitparams->par(tauindex+1) = tau ;
+      fitparams->par(lenindex+1) = tau ;
     }
     return ErrCode::success ;
+  }
+
+  double ParticleBase::chiSquare(const FitParams* fitparams) const
+  {
+    double rc = 0;
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end(); ++it)
+      rc += (*it)->chiSquare(fitparams) ;
+    return rc ;
+  }
+
+  int ParticleBase::nFinalChargedCandidates() const {
+    int rc=0;
+    for(daucontainer::const_iterator it = m_daughters.begin() ;
+	it != m_daughters.end() ; ++it)
+      rc +=(*it)->nFinalChargedCandidates() ;
+    return rc ;
   }
 
 }
