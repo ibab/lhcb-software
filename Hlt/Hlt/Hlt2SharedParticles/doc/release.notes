@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.23 2009-05-09 20:46:53 graven Exp $
+$Id: release.notes,v 1.24 2009-05-12 16:19:27 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-05-12 - V. Gligorov
+ - Fix bugs in the Topo{,TF}{2,3}Body.py files, specifically ask that the PT cut
+   is applied to kaons as well as pions and reverse order of particles in the
+   DecayDescriptor for the 3-body case.
+
 !========================== Hlt2SharedParticles v1r1 2009-05-09 ===================
 
 ! 2009-05-09 - Gerhard Raven
