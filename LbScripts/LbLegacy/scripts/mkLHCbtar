@@ -33,6 +33,7 @@
 import sys, os, getopt, time, commands, fnmatch
 import re
 from LbLegacy.install_project import calculateMD5
+from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
 
 script_version = '090430'
 
@@ -158,9 +159,11 @@ def make_tar(pname, pversion, binary=''):
         title = ' ('+binary+' binary files) '
         # external package binary : only the optimized version is distributed
         tar_opt = tar_bin
-        if tar_bin.find('_dbg') != -1: tar_opt = tar_bin[:tar_bin.find('_dbg')]
+        if isBinaryDbg(binary) :
+            tar_opt = "_" + getBinaryOpt(binary)
         platform = binary.split('_')[0]
-        if platform.find('slc') != -1: platform = 'slc'
+        if platform.find('slc') != -1: 
+            platform = 'slc'
 
 
 # ====================================================================

@@ -1,5 +1,6 @@
 2009-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkLHCbtar:
 	* scripts/mkproject: fixed the handling of CMTOPT/CMTDEB
 
 2009-05-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
