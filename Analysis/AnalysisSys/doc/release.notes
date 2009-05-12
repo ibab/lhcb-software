@@ -10,9 +10,18 @@ Purpose     : LHCb analysis packages
   Highlights:
 
   * Particle -> MC truth matching (Juan, Vava)
-	  - New interface IParticle2MCAssociator to return a single associated MCParticle for a given reconstructed Particle, IParticle2MCWeightedAssociator that returns normalised weighted ranges of associated MCParticles for a given Particle, plus base class IParticle2MCWeightedAssociatorBase and implementations P2MCPFromProtoP and DaVinciSmartAssociator.
-    - New package Phys/Particle2MCTruth. Interface IP2MCP, returning tree structures with un-weighted MCParticles for a given recostructed Particle, base class P2MCPBase implementing most methods, and specialisation MCMatchObjP2MCRelator. The trees respect a parent to daughter ordering, and represent the MCParticles that contributed to the reconstructed Particle.
-   - Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC for details.
+    - New interface IParticle2MCAssociator to return a single associated 
+      MCParticle for a given reconstructed Particle, IParticle2MCWeightedAssociator 
+      that returns normalised weighted ranges of associated MCParticles for a 
+      given Particle, plus base class IParticle2MCWeightedAssociatorBase and 
+      implementations P2MCPFromProtoP and DaVinciSmartAssociator.
+    - New package Phys/Particle2MCTruth. Interface IP2MCP, returning tree 
+      structures with un-weighted MCParticles for a given recostructed Particle,
+      base class P2MCPBase implementing most methods, and specialisation 
+      MCMatchObjP2MCRelator. The trees respect a parent to daughter ordering, 
+      and represent the MCParticles that contributed to the reconstructed 
+      Particle.
+    - Both IParticle2MCWeightedAssociator and IP2MCP inherit from IParticle2MCAssociator. See wiki https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC for details.
 
   * MicroDST (Juan)
     New generic classes for cloning objects related to other objects.
