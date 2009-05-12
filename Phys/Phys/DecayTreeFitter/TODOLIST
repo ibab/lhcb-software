@@ -1,0 +1,56 @@
+
+LHCB
+
+- why is the decay vertex stored separately in the event store. why not owned by the particle.
+
+- protoparticle contains SmartRefs to daughters. that means daughters
+need to be in a list. that means a vertex fit can never update
+daughters.
+
+- why does the Particle contain the vertex information and a reference
+to an end vertex? I guess that this is not vertex info but actually a begin point for tracks
+
+
+- move mass constraint to particle base such that it is also accessible to BtaComposite
+
+- remove merged moved constraints, constraint ordering
+
+- implement sparce matrix for projection matrix (because that's what hurts most)
+
+- re-compute energy when settig mass constraint (for better linearization)
+
+- change order of constraints such that we get useful chisquare for each leave
+
+- match to MC truth to test algo
+
+
+---------------------
+
+
+- revise RecoPhoton such that it can deal with Klongs --> no energy constraint
+
+- think about what happens to bremstrahlung: e+ -> e+ gamma
+
+- implement sparse matrices
+
+- make a head-of-tree class, that derives from InternalParticle and is
+  base for InteractionPoint.
+
+- make charged particles curve (now only done for charged tracks) -->
+not difficult: need only change ParticleBase::filterGeoConstraint.
+
+
+[- move 'getFitted' from VtkVertex into ParticleBase]
+[- move 'p4WErr'    from VtkVertex into ParticleBase (remove 'momIndex' from BeamSpot)]
+[- move projection of kinematic constraint into daughter]
+
+Things that need to be changed in VtxFitter:
+
+- my fit fails if you try to vertex a pi0 without further constraints
+
+- you cannot see if a bta-composite has seen a mass constraint or not;
+this is a problem for the fit
+
+
+How to make link/bin dep files:
+workdir/PARENT/SoftRelTools/make-linkfiles -p VtxTreeFitter
