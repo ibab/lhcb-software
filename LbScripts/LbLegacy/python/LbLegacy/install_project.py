@@ -199,6 +199,7 @@
         - put the import statement for LHCb_config.
 """
 #------------------------------------------------------------------------------
+import LbConfiguration
 import sys, os, getopt, time, shutil, urllib
 import atexit
 import stat
@@ -217,7 +218,7 @@ lbscripts_version = "v3r3"
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-subdir = ['scripts','lcg','lhcb','contrib','html','targz', 'tmp']
+subdir = ['lcg','lhcb','contrib','html','targz', 'tmp']
 
 
 # base directories
@@ -226,8 +227,7 @@ contrib_dir = None
 lcg_dir     = None
 lhcb_dir    = None
 html_dir    = None
-scripts_dir = None
-newscripts_dir = None
+bootscripts_dir = None
 targz_dir   = None
 system_dir  = None
 tmp_dir     = None
@@ -273,13 +273,11 @@ def help() :
 
           $CMTCONFIG  is the binary directory name
       creates log/         to receive log files
-              scripts/     to receive script files
               lcg/         to receive lcg software
               lhcb/        to receive lhcb software
               contrib/     to receive CMT and OpenScientist
               targz/       to receive tar files from the web
               $CMTCONFIG/  to receive runtime libraries
-      download necessary scripts in scripts/
       get the list of projects to download
       download project sources
       if binaries are required: download project binaries
@@ -590,15 +588,17 @@ def getCMT(version=0):
     log.debug('install CMT if not there')
     here = os.getcwd()
 
-    this_scripts_dir = scripts_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
     # get the CMT version number from ExtCMT
     if version == 0:
-        str = readString(os.path.join(this_scripts_dir,'ExtCMT.' + getScriptExt()),'CMT'+os.sep+'v')
-        cmtvers = str.split(os.sep)[2]
-        log.debug('get cmtversion from ExtCMT %s ' % cmtvers)
+        if hasattr(LbConfiguration, "External") :
+            cmtvers = LbConfiguration.External.CMT_version
+            log.debug("Extracting CMT version from LbConfiguration.External: %s" % cmtvers)
+        else :
+            cmtvers = "v1r20p20070208"
+            log.debug("Using CMT version %s" % cmtvers)
     # get the cmt version number from the argument
     else:
         cmtvers = version
@@ -730,9 +730,6 @@ def getFile(url,file):
                     os.remove(dest)
                 except:
                     log.warning('can not remove file %s' % dest)
-        else:
-            this_scripts_dir = scripts_dir.split(os.pathsep)[0]
-            dest = os.path.join(this_scripts_dir,file)
 
 
     exist_flag = False
@@ -957,7 +954,10 @@ def getProjectList(name,version,binary=' '):
                 html_list.remove(file)
                 if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
                     newbin = cmtconfig
-                    if newbin.find('_dbg') != -1: newbin = newbin[:newbin.find('_dbg')]
+                    if newbin.find('_dbg') != -1: 
+                        newbin = newbin[:newbin.find('_dbg')]
+                    elif newbin.endswith('-dbg') :
+                        newbin = newbin[:newbin.find('-dbg')] + '-opt'
                     file = file.replace(pack_ver[2],newbin)
                 project_list[file] = "source"
                 html_list.append(file)
@@ -1010,7 +1010,10 @@ def checkInstalledProjects(project_list):
             if pack_ver[2] != cmtconfig:
                 if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
                     newbin = cmtconfig
-                    if newbin.find('_dbg') != -1: newbin = newbin[:newbin.find('_dbg')]
+                    if newbin.find('_dbg') != -1: 
+                        newbin = newbin[:newbin.find('_dbg')]
+                    elif newbin.endswith('-dbg') :
+                        newbin = newbin[:newbin.find('-dbg')] + '-opt'
                     file = file.replace(pack_ver[2],newbin)
         if isInstalled(file) :
             log.debug("%s is installed" % file)
@@ -1167,82 +1170,44 @@ def getProjectTar(tar_list, already_present_list=None):
 #
 # download necessary scripts ==============================================
 #
-def getScripts(bin):
-    log = logging.getLogger()
-    log.debug("download some scripts from the web site")
-    here = os.getcwd()
-
-    new_install = 'latest_install_project.py'
-    getFile(url_dist,'install_project.py')
-    latest_line = readString(new_install,'script_version')
-    latest_version = latest_line.split("'")[1]
-    log.info('script_version= %s, latest_version= %s' % (script_version, latest_version) )
-    if script_version < latest_version :
-        sys.exit(' You are running and old version of install_project. The latest one has been download in MYSITEROOT/%s. You should rename the latest version and use it - STOP'%(new_install))
-
-
-    if sys.platform == "win32" or bin.find('win32') != -1:
-        tarscript = 'win32_scripts.tar.gz'
-    else:
-        tarscript = 'shell_scripts.tar.gz'
-
-    getFile(url_dist+'scripts/',tarscript)
-
-    this_scripts_dir = scripts_dir.split(os.pathsep)[0]
-    this_targz_dir = targz_dir.split(os.pathsep)[0]
-
-    checkWriteAccess(this_scripts_dir)
-    os.chdir(this_scripts_dir)
-    rc = unTarFileInTmp(os.path.join(this_targz_dir,tarscript), os.getcwd(), overwrite=True)
-    os.chdir(here)
-    if rc != 0 :
-        removeAll(this_scripts_dir)
-        os.mkdir(this_scripts_dir)
-        sys.exit('getScripts: Exiting ...')
-    else :
-        changePermissions(this_scripts_dir, recursive=True)
-
-    if sys.platform != 'win32' :
-        sys.path.append(os.path.join(this_scripts_dir,'python'))
-
-def getNewScripts():
+def getBootScripts():
     log = logging.getLogger()
     here = os.getcwd()
-    cleanNewScripts()
+    cleanBootScripts()
     scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
     if isInstalled(scripttar) :
         log.debug("LbScripts %s is already installed" % lbscripts_version)
         this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
         sys.path.insert(0, os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
         log.debug("sys.path is %s" % os.pathsep.join(sys.path))
-        import LbLegacy
+        import LbLegacy, LbConfiguration
     else :
         log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
         getFile(url_dist+'LBSCRIPTS/',scripttar)
-        this_newscripts_dir = newscripts_dir.split(os.pathsep)[0]
+        this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
         this_targz_dir = targz_dir.split(os.pathsep)[0]
-        if not os.path.isdir(this_newscripts_dir) :
-            os.mkdir(this_newscripts_dir)
-        checkWriteAccess(this_newscripts_dir)
-        os.chdir(this_newscripts_dir)
+        if not os.path.isdir(this_bootscripts_dir) :
+            os.mkdir(this_bootscripts_dir)
+        checkWriteAccess(this_bootscripts_dir)
+        os.chdir(this_bootscripts_dir)
         rc = unTarFileInTmp(os.path.join(this_targz_dir,scripttar), os.getcwd(), overwrite=True)
         os.chdir(here)
         if rc != 0 :
-            removeAll(this_newscripts_dir)
-            sys.exit('getNewScripts: Exiting ...')
+            removeAll(this_bootscripts_dir)
+            sys.exit('getBootScripts: Exiting ...')
         else :
-            changePermissions(this_newscripts_dir, recursive=True)
-            sys.path.insert(0, os.path.join(this_newscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
+            changePermissions(this_bootscripts_dir, recursive=True)
+            sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
             log.debug("sys.path is %s" % os.pathsep.join(sys.path))
             import LbLegacy
-    atexit.register(cleanNewScripts)
+    atexit.register(cleanBootScripts)
 
-def cleanNewScripts():
+def cleanBootScripts():
     log = logging.getLogger()
-    this_newscripts_dir = newscripts_dir.split(os.pathsep)[0]
-    if os.path.isdir(this_newscripts_dir) :
-        log.debug("Removing the %s directory" % this_newscripts_dir)
-        removeAll(this_newscripts_dir)
+    this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
+    if os.path.isdir(this_bootscripts_dir) :
+        log.debug("Removing the %s directory" % this_bootscripts_dir)
+        removeAll(this_bootscripts_dir)
 #
 #  get untar_flag ==========================================================
 #
@@ -1540,7 +1505,7 @@ def createBaseDirs():
     global multiple_mysiteroot
     global cmtconfig
     global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir
-    global scripts_dir, newscripts_dir, targz_dir, system_dir, tmp_dir
+    global bootscripts_dir, targz_dir, system_dir, tmp_dir
 
 
     # removes the trailing "/" at the end of the path
@@ -1581,8 +1546,7 @@ def createBaseDirs():
     lcg_dir = []
     lhcb_dir = []
     html_dir = []
-    scripts_dir = []
-    newscripts_dir = []
+    bootscripts_dir = []
     targz_dir = []
     system_dir = []
     tmp_dir = []
@@ -1592,8 +1556,7 @@ def createBaseDirs():
         lcg_dir.append(os.path.join(p, 'lcg', 'external'))
         lhcb_dir.append(os.path.join(p,'lhcb'))
         html_dir.append(os.path.join(p,'html'))
-        scripts_dir.append(os.path.join(p,'scripts'))
-        newscripts_dir.append(os.path.join(p,'newscripts'))
+        bootscripts_dir.append(os.path.join(p,'bootscripts'))
         targz_dir.append(os.path.join(p,'targz'))
         system_dir.append(os.path.join(p,cmtconfig))
         if sys.platform != "win32" :
@@ -1606,8 +1569,7 @@ def createBaseDirs():
     lcg_dir = os.pathsep.join(lcg_dir)
     lhcb_dir = os.pathsep.join(lhcb_dir)
     html_dir = os.pathsep.join(html_dir)
-    scripts_dir = os.pathsep.join(scripts_dir)
-    newscripts_dir = os.pathsep.join(newscripts_dir)
+    bootscripts_dir = os.pathsep.join(bootscripts_dir)
     targz_dir = os.pathsep.join(targz_dir)
     system_dir = os.pathsep.join(system_dir)
     tmp_dir = os.pathsep.join(tmp_dir)
@@ -1673,8 +1635,7 @@ def runInstall(pname,pversion,binary=''):
         sys.exit()
 
 # start the project installation
-    getScripts(binary)
-    getNewScripts()
+    getBootScripts()
 
 # check binary name
     checkBinaryName(binary)
@@ -1710,9 +1671,13 @@ def runInstall(pname,pversion,binary=''):
 
 
 # if full_flag is set : download binary_dbg tar files and configure the projects
-    if full_flag and binary.find('_dbg') == -1:
+    if full_flag :
         log.info('download debug version and reconfigure it')
-        binary_dbg = binary+'_dbg'
+        binary_dbg = binary
+        if binary.endswith('-opt') :
+            binary_dbg = binary.replace('-opt', '-dbg')
+        elif binary.find('_dbg') == -1 :
+            binary_dbg = binary+'_dbg'
         os.environ['CMTCONFIG'] = binary_dbg
         project_list,html_list = getProjectList(pname,pversion,binary_dbg)
         getProjectTar(project_list)
@@ -2010,6 +1975,8 @@ def checkBinaryName(binary):
                 os.environ['CMTCONFIG'] = binary
                 if binary.endswith("_dbg") :
                     os.environ['CMTDEB'] = binary
+                elif binary.endswith("-opt"):
+                    os.environ['CMTDEB'] = binary.replace('-opt', '-dbg')
                 else :
                     os.environ['CMTDEB'] = binary + "_dbg"
                 # if a win32 binary is installed from a non win32 platform then do not cmt config

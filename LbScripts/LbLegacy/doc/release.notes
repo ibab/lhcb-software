@@ -1,3 +1,8 @@
+2009-05-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: removed the using of the old scripts.tar.gz
+	package. Now the bootstrap scripts are contained in a LbScripts tarball.
+
 2009-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar:
