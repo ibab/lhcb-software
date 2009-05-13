@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -12,7 +12,7 @@
 class DeMuonDetector;
 class IMuonHitDecode;
 class IMuonPadRec;
-class IMuonPosTool;
+class IMuonFastPosTool;
 class ISequencerTimerTool;
 
 /** @class MuonNNetRec MuonNNetRec.h
@@ -73,7 +73,7 @@ public:
 private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
-  IMuonPosTool* m_posTool;
+  IMuonFastPosTool* m_posTool;
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
   bool m_recOK;

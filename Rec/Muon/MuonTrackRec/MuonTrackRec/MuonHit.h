@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.2 2009-05-13 09:53:28 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -15,7 +15,7 @@
 
 class MuonLogHit;
 class MuonLogPad;
-class IMuonPosTool;
+class IMuonFastPosTool;
 
 /** @class MuonHit MuonHit.h
  *  
@@ -36,7 +36,7 @@ public:
            const double x,
            const double y,
            const double z,
-           IMuonPosTool* posTool);
+           IMuonFastPosTool* posTool);
 
   virtual ~MuonHit( ); ///< Destructor
 
@@ -85,7 +85,7 @@ private:
   int m_region;
   float m_time;
   float m_dtime;
-  IMuonPosTool* m_posTool;
+  IMuonFastPosTool* m_posTool;
 };
 
 #endif // COSMICSMUONHIT_H

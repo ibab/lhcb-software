@@ -1,4 +1,4 @@
-// $Id: MuonDetPosTool.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonDetPosTool.cpp,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "MuonDet/DeMuonDetector.h"
@@ -21,7 +21,7 @@ MuonDetPosTool::MuonDetPosTool( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_muonDetector(NULL)
 {
-  declareInterface<IMuonPosTool>(this);
+  declareInterface<IMuonFastPosTool>(this);
 
 }
 

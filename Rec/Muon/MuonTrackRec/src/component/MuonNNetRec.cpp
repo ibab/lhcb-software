@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
 
 #include <list>
 #include <fstream>
@@ -12,7 +12,7 @@
 #include "MuonTrackRec/MuonHit.h"
 #include "MuonTrackRec/IMuonHitDecode.h"
 #include "MuonTrackRec/IMuonPadRec.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
 #include "MuonNNetRec.h"
@@ -129,7 +129,7 @@ StatusCode MuonNNetRec::initialize ()
     return StatusCode::FAILURE;
   }
 
-  m_posTool = tool<IMuonPosTool>(m_posToolName);
+  m_posTool = tool<IMuonFastPosTool>(m_posToolName);
   if(!m_posTool) {
     error()<<"error retrieving the muon position tool "<<endreq;
     return StatusCode::FAILURE;

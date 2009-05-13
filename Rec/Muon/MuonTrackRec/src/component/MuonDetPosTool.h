@@ -1,11 +1,11 @@
-// $Id: MuonDetPosTool.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonDetPosTool.h,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
 #ifndef COMPONENT_MUONDETPOSTOOL_H 
 #define COMPONENT_MUONDETPOSTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonDet/IMuonPosTool.h"            // Interface
+#include "MuonDet/IMuonFastPosTool.h"            // Interface
 class DeMuonDetector;
 
 /** @class MuonDetPosTool MuonDetPosTool.h component/MuonDetPosTool.h
@@ -14,7 +14,7 @@ class DeMuonDetector;
  *  @author Giacomo GRAZIANI
  *  @date   2009-03-17
  */
-class MuonDetPosTool : public GaudiTool, virtual public IMuonPosTool {
+class MuonDetPosTool : public GaudiTool, virtual public IMuonFastPosTool {
 public: 
   /// Standard constructor
   MuonDetPosTool( const std::string& type, 

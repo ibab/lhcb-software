@@ -1,9 +1,9 @@
-// $Id: MuonHit.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
 // Include files
 #include "MuonTrackRec/MuonHit.h"
 #include "MuonTrackRec/MuonLogHit.h"
 #include "MuonTrackRec/MuonLogPad.h"
-#include "MuonDet/IMuonPosTool.h"
+#include "MuonDet/IMuonFastPosTool.h"
 
 MuonHit::MuonHit(  ):
   ROOT::Math::XYZPoint(),
@@ -22,7 +22,7 @@ MuonHit::MuonHit( DeMuonDetector* md,
                   const double x,
                   const double y,
                   const double z,
-                  IMuonPosTool* posTool):
+                  IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(x,y,z),
   m_muonDet(md),
   m_pad(mp),
