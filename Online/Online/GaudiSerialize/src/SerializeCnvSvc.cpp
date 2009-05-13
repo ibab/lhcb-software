@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.6 2009-01-29 10:55:00 cattanem Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.7 2009-05-13 19:57:45 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -130,7 +130,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
 {
   IConverter* pConverter;
   ConverterID cnvid(SERIALIZE_StorageType, wanted);  
-  pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator());
+  pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
   MsgStream log(msgSvc(), name());
 
   if ( 0 == pConverter )  {
@@ -145,7 +145,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     for ( unsigned int i = 0; i < sizeof(gen_clids)/sizeof(gen_clids[0]); i++ ) {
       if ( (wanted>>16) == (gen_clids[i]>>16) )  {
         ConverterID cnvid(SERIALIZE_StorageType, gen_clids[i]);  
-        pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator());
+        pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
         if ( 0 != pConverter ) {
           return pConverter;
         }
@@ -154,7 +154,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     // Check if a converter using object update is needed
     if ( (wanted>>24) != 0 )  {
       ConverterID cnvid(SERIALIZE_StorageType, CLID_Any | 1<<31);  
-      pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator());
+      pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
       if ( 0 != pConverter ) {
         return pConverter;
       }
@@ -163,7 +163,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     // for standard containers, we will use the "ANY" converter 
     // ... and pray for everything will go well.
     ConverterID cnvid(SERIALIZE_StorageType, CLID_Any);  
-    pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator());
+    pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator().get());
     if ( 0 != pConverter ) {
       MsgStream log(msgSvc(), name());
       log << MSG::INFO << "Using \"Any\" converter for objects of type " 
