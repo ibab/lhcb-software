@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.53 2009-05-11 11:25:41 jpalac Exp $
+// $Id: BackgroundCategory.cpp,v 1.54 2009-05-13 12:28:24 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -118,20 +118,20 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 
   //Next check if two Particles are associated to the same particle,
   //if so this is a clone type background 
-//   if (foundClones(mc_particles_linked_to_decay)) {
-//     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a clone background" << endmsg;
-//     return Clone;
-//   }
+  if (foundClones(mc_particles_linked_to_decay)) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This is a clone background" << endmsg;
+    return Clone;
+  }
 
   //Now we have to check if any of the associated MCParticles
   //are also the mothers of another associated MCParticle.
   //In this case we have combined something with its own mother to
   //create a new particle which is clearly unphysical. We'll
   //call this 'hierarchy' background until someone complains.
-//   if (hierarchyProblem(mc_particles_linked_to_decay)) {
-//     if (msgLevel(MSG::VERBOSE)) verbose() << "This is a hierarchy background" << endmsg;
-//     return Hierarchy;
-//   }
+  if (hierarchyProblem(mc_particles_linked_to_decay)) {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "This is a hierarchy background" << endmsg;
+    return Hierarchy;
+  }
 
   //Now to create a vector with the final mothers of all these mc particles.
   MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay);
