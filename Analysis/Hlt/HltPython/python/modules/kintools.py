@@ -6,7 +6,9 @@
 # =============================================================================
 
 
-import math
+from math import *
+import GaudiPython
+
 DEBUG=False
 #---------------------------------------------------
 def momList( a ):
@@ -19,6 +21,25 @@ def momList( a ):
     
     except:
         return [a.x(),a.y(),a.z()]
+    
+
+#---------------------------------------------------
+def dotLists(list1,list2):
+    """ Returns dot product of two python lists
+    @param  list1,list2 Input lists
+    @returns dot Dot product
+    @author Antonio Perez-Calero Izquierdo aperez@ecm.ub.es
+    """
+    if len(list1)!=len(list2):
+        print "Vectors must be of equal dimension"
+        return
+    else:
+        dot=0.
+        for i in range(len(list1)):
+            dot+=list1[i]*list2[i]
+
+        return dot
+
 
 #---------------------------------------------------
 def mag( a ):
@@ -30,7 +51,7 @@ def mag( a ):
         vect = momList(a)
     except:
         vect = a
-    return math.sqrt(vect[0]*vect[0]+vect[1]*vect[1]+vect[2]*vect[2])
+    return sqrt(vect[0]*vect[0]+vect[1]*vect[1]+vect[2]*vect[2])
 
 
 
@@ -41,7 +62,7 @@ def pt( a ):
     @return The transverse momentum
     @author Hugo Ruiz, hugo.ruiz@cern.ch"""
     vect = momList(a)
-    return math.sqrt(vect[0]*vect[0]+vect[1]*vect[1])
+    return sqrt(vect[0]*vect[0]+vect[1]*vect[1])
 
 
 #---------------------------------------------------
@@ -67,7 +88,7 @@ def angle(a,b):
     #DEBUG=1
     if mag(a)*mag(b)!=0:
         if DEBUG: print 'Calculating angle'
-        angleAB=math.acos(dot(a,b)/(mag(a)*mag(b)))
+        angleAB=acos(dot(a,b)/(mag(a)*mag(b)))
         if DEBUG: print 'Calculated angle',angleAB
         return angleAB
     else:
@@ -92,6 +113,25 @@ def invMass (partList):
     for iPart in partList[1:]:
         mom += iPart.momentum()
     return mom.mass()
+
+
+#---------------------------------------------------
+def dimuMass(track1,track2):
+    """ Returns the invariant mass of two tracks, given muon mass hypothesis 
+    @param track1, track2 input tracks
+    @returns invariant mass (MeV) 
+    @author Antonio Perez Calero, aperez@ecm.ub.es
+    """
+    mass=105.65840148924789
+    mom1 = track1.momentum()
+    mom2 = track2.momentum()
+    a={"tx":mom1.x()/mom1.z(),"ty":mom1.y()/mom1.z(),"P":track1.p(),"E":sqrt(mass*mass + track1.p()*track1.p())}
+    b={"tx":mom2.x()/mom2.z(),"ty":mom2.y()/mom2.z(),"P":track2.p(),"E":sqrt(mass*mass + track2.p()*track2.p())}
+    dotdir=a["tx"]*b["tx"] + a["ty"]*b["ty"] + 1
+    moda = sqrt(a["tx"]*a["tx"] + a["ty"]*a["ty"] + 1)
+    modb = sqrt(b["tx"]*b["tx"] + b["ty"]*b["ty"] + 1)
+    InvMass = sqrt(2*mass*mass +2*a["E"]*b["E"] - 2*a["P"]*b["P"]*(dotdir/(moda*modb)))
+    return InvMass
 
 
 #---------------------------------------------------
@@ -141,3 +181,40 @@ def samePart (iDec, jDec):
     return iDec.momentum()==jDec.momentum() and iDec.particleID()==jDec.particleID()
 
 
+#---------------------------------------------------
+def Pointing(part,PV):
+    """ Returns the pointing of a reconstructed particle with respect to a vertex, as used in the trigger.
+    Kind of a normalized transverse momentum with respect to the flight displacement, transformed to lay within the range [0, 1].
+    @param part, initial reconstructed particle
+    @param PV, Primary vertex from which pointing is calculated
+    @returns pointing value
+    @author Antonio Perez Calero, aperez@ecm.ub.es
+    """
+    endV = part.endVertex()
+    endPos = endV.position()
+    pvPos = PV.position()
+    disp = [endPos.x()-pvPos.x() , endPos.y()-pvPos.y() , endPos.z()-pvPos.z()]
+    
+    daugs  = endV.outgoingParticlesVector()
+
+    momTot = GaudiPython.gbl.Gaudi.LorentzVector()
+    for dau in daugs: momTot+=dau.momentum()
+    momB = momList(momTot)
+    cosB = dotLists(momB,disp)/(sqrt(dotLists(momB,momB))*sqrt(dotLists(disp,disp)))
+    sinB = sqrt(1-cosB*cosB)
+    momBsinB = part.p()*sinB
+
+    Sum=0
+    for dau in daugs:
+        mom_dau = momList(dau.momentum())
+        cos = dotLists(mom_dau,disp)/(sqrt(dotLists(mom_dau,mom_dau))*sqrt(dotLists(disp,disp)))
+        sin = sqrt(1-cos*cos)
+        Sum += dau.p()*sin
+
+    try:
+        pointing = momBsinB/(Sum+momBsinB)
+    except:
+        print "Divide by zero"
+        pointing = 1
+
+    return pointing

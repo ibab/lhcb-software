@@ -10,9 +10,8 @@
 
 
 import math
-import gaudimodule
-import kintools
-
+import GaudiPython
+from kintools import *
 DEBUG = False
 
 #---------------------------------------------------
@@ -172,8 +171,8 @@ def produceVertex(track1,track2, returnDoca = False):
     pos1,mom1=getLists(track1)
     pos2,mom2=getLists(track2)
 
-    vertex=gaudimodule.gbl.LHCb.RecVertex()
-    vertex_cord=gaudimodule.gbl.Gaudi.XYZPoint()
+    vertex=GaudiPython.gbl.LHCb.RecVertex()
+    vertex_cord=GaudiPython.gbl.Gaudi.XYZPoint()
     vertex.addToTracks(track1)
     vertex.addToTracks(track2)
 
