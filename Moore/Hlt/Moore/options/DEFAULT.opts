@@ -31,14 +31,15 @@ ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ;
 ///       or it points at the right snapshot...
 /// Note: the value is taken (by hand!) from $DDDBROOT/python/DDDB/Configuration.py, 2009 settings
 DDDB.DefaultTAG     = "head-20090330";
+DDDB.CacheHighLevel = 1700;
 LHCBCOND.DefaultTAG = "head-20090402";
+LHCBCOND.CacheHighLevel = 200;
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 //## TODO: adapt from
 //### @OnlineEnv.MooreVersion: Moore_v7r0
 HltConfigSvc.prefetchDir =  "MOORE_v7r0";
-//  UPDATE ME / TODO / FIXME
-HltConfigSvc.initialTCK =   "0x80410000";
+HltConfigSvc.initialTCK =   "0x80450000";
 HltConfigSvc.checkOdin = false;
 ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };

@@ -2,6 +2,8 @@
 
 //////  For FEST data only... (I hope this is enough!)
 SIMCOND.DefaultTAG = 'sim-20090402-vc-mu100';
+SIMCOND.CacheHighLevel = 200;
+SIMCOND.ConnectionString = 'sqlite_file:$SQLITEDBPATH/SIMCOND.db/SIMCOND';
 CondDBCnvSvc.CondDBReader = 'CondDBDispatcherSvc/SimulationCondDBReader';
 SimulationCondDBReader.Alternatives = {'/Conditions': 'CondDBAccessSvc/SIMCOND'};
 SimulationCondDBReader.MainAccessSvc = 'CondDBAccessSvc/DDDB';
