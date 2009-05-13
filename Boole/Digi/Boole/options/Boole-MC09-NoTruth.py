@@ -5,10 +5,8 @@
 #   gaudirun.py Boole-MC09-NoTruth.py <someDataFiles>.py
 ##############################################################################
 
-from Configurables import Boole
-
-# Switch off MC truth output except for primary vertices information
-Boole().DigiType = 'Minimal'
+from Gaudi.Configuration import *
+importOptions("$APPCONFIGROOT/options/Boole/MC09-NoTruth.py")
 
 ##############################################################################
 # I/O datasets and database tags are defined in a separate file,

@@ -12,8 +12,8 @@ from Configurables import Boole, LHCbApp
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Event input
-LHCbApp().DDDBtag   = "head-20090330"
-LHCbApp().CondDBtag = "sim-20090402-vc-mu100"
+LHCbApp().DDDBtag   = "head-20090508"
+LHCbApp().CondDBtag = "sim-20090508-vc-mu100"
 
 # Signal events from Gauss v37r0
 #datasetName = '11144103-100ev-20090402'

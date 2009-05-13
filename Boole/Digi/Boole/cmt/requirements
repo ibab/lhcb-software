@@ -58,6 +58,7 @@ apply_pattern install_python_modules
 apply_pattern GaudiApp
 
 # Run the tests
+path_append PYTHONPATH "" QMTest $(BOOLEROOT)/tests/qmtest/python
 private
   macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
   use $(CASTOR_use)
