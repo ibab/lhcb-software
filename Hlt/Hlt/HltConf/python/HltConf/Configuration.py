@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.79 2009-05-13 20:36:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.80 2009-05-13 21:29:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -46,7 +46,7 @@ class HltConf(LHCbConfigurableUser):
                 , "DataType"                   : '2009'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
-                , "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down
+                , "LumiBankKillerAcceptFraction" : 0. # fraction of lumi-only events where raw event is stripped down
                 , "ActiveHlt1Lines"            : [] # list of lines to be added
                 , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
@@ -74,8 +74,8 @@ class HltConf(LHCbConfigurableUser):
             # 
             from Configurables import L0DUFromRawAlg
             Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                                , Members = [ L0DUFromRawAlg()
-                                            , Sequence('Hlt1') 
+                                , Members = #[ L0DUFromRawAlg()
+                                            [ Sequence('Hlt1') 
                                             , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
                                             , Sequence('HltEndSequence') 
                                             ] )

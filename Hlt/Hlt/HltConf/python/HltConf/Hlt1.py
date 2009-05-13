@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.11 2009-05-01 19:04:49 graven Exp $
+# $Id: Hlt1.py,v 1.12 2009-05-13 21:29:02 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -38,7 +38,7 @@ from HltConf.HltLine     import Hlt1Line   as Line
 
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __slots__ = { "LumiBankKillerAcceptFraction" : 0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
+   __slots__ = { "LumiBankKillerAcceptFraction" : 0.0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
                }
 
    def __apply_configuration__(self):

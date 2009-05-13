@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.235 2009-05-10 12:54:08 graven Exp $ 
+! $Id: release.notes,v 1.236 2009-05-13 21:29:02 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-13 - Gerhard Raven
+ - make sure type of prescale in slot is not an int but a float
+ - do not run L0DUFromRaw explicitly, but use DOD -- not all
+   partitions _have_ an L0DU
+
 !========================== HltConf v2r8 2009-05-10 ===================
 
 ! 2009-05-10 - Gerhard Raven
