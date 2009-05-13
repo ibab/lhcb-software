@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.50 2009-05-06 19:31:51 graven Exp $
+# $Id: requirements,v 1.51 2009-05-13 20:43:40 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v6r2
+version v7r0
 
 branches doc cmt options python
 
@@ -51,7 +51,7 @@ use RecSys              v*         -no_auto_imports
 use HltSys		v*	     -no_auto_imports
 
 ####
-#use HltConf	    v*        Hlt
+use HltConf	    v2r8p1        Hlt
 
 #-- Phys packages 
 use PhysSys		v*	     -no_auto_imports
