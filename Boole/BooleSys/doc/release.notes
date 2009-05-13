@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-05-13 - Marco Cattaneo
+ - QMTest now takes exclusions for reference comparison from 
+   $BOOLEROOT/tests/qmtest/python/BooleExclusions.py
+ - Update QMTest reference for changes in printout by CaloDigit initialisation
+
 ! 2009-04-14 - Marco Cattaneo
  - Update QMTest reference for change to L0DU intialization output
  - Clean up boolesys.qms following Gaudi v21 changes
