@@ -840,7 +840,7 @@ def getPackVer(file):
 
     # get the binary if any
     if file.find("LBSCRIPTS") == -1 :
-        for b in LbLegacy.LHCb_config.lhcb_binary:
+        for b in LbConfiguration.Platform.binary_list:
             if file.find(b) != -1:
                 bin = b
                 if file.find('_'+b) != -1 :
@@ -952,7 +952,7 @@ def getProjectList(name,version,binary=' '):
             if pack_ver[2] != cmtconfig:
                 del project_list[file]
                 html_list.remove(file)
-                if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
+                if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
                     if newbin.find('_dbg') != -1: 
                         newbin = newbin[:newbin.find('_dbg')]
@@ -1008,7 +1008,7 @@ def checkInstalledProjects(project_list):
         if project_list[file] == "source":
             pack_ver = getPackVer(file)
             if pack_ver[2] != cmtconfig:
-                if cmtconfig in LbLegacy.LHCb_config.lhcb_binary:
+                if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
                     if newbin.find('_dbg') != -1: 
                         newbin = newbin[:newbin.find('_dbg')]
@@ -1199,7 +1199,7 @@ def getBootScripts():
             changePermissions(this_bootscripts_dir, recursive=True)
             sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
             log.debug("sys.path is %s" % os.pathsep.join(sys.path))
-            import LbLegacy
+            import LbLegacy, LbConfiguration
     atexit.register(cleanBootScripts)
 
 def cleanBootScripts():
@@ -1969,8 +1969,9 @@ def untarFile(file):
 def checkBinaryName(binary):
     global full_flag
     global make_flag
+    import LbConfiguration.Platform
     if binary != ' ':
-        for b in LbLegacy.LHCb_config.lhcb_binary:
+        for b in LbConfiguration.Platform.binary_list:
             if b == binary:
                 os.environ['CMTCONFIG'] = binary
                 if binary.endswith("_dbg") :
@@ -1986,12 +1987,12 @@ def checkBinaryName(binary):
                 break
         else:
             print ' this binary %s is not part of LHCb distribution '% binary
-            print ' choose another one from the list %s '% LbLegacy.LHCb_config.lhcb_binary
+            print ' choose another one from the list %s '% LbConfiguration.Platform.binary_list
             print ' or do not require the binary  '
             sys.exit(' %s is not part of LHCb distribution '%(binary)+'\n' )
     else:
-        if not os.getenv('CMTCONFIG') in LbLegacy.LHCb_config.lhcb_binary:
-            print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbLegacy.LHCb_config.lhcb_binary)
+        if not os.getenv('CMTCONFIG') in LbConfiguration.Platform.binary_list:
+            print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbConfiguration.Platform.binary_list)
             print 'do you want to continue? [yes|no]'
             next = sys.stdin.readline()
             if next.lower()[0] != 'y':
