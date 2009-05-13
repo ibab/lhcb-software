@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.340 2009-05-13 12:16:39 pkoppenb Exp $
+! $Id: release.notes,v 1.341 2009-05-13 12:18:41 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,10 +9,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v23r0 2009-05-13 ===================
+
 ! 2009-05-13 - Patrick Koppenburg
  - Overwrite HltConf settings only if set in DaVinci
-
-!========================== DaVinci v23r0 2009-05-13 ===================
 
 ! 2009-05-05 - Juan PALACIOS
  - python/DaVinci/Configuration.py
