@@ -3,44 +3,28 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-05-11 - Marco Cattaneo
- - Update references for :
-   . Fixes to track fit from v34r*
+</PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
+
+ - Changes to Configurable:
+   . Adapt for correct inclusion of units.opts following removal of include from
+     CaloMoniDst options
+   . Use FileRecordSvc instead of RunRecordSvc, for Gaudi v21
+
+ - Changes to references to reflect changes in Brunel v35r0 output:
    . Changes to OT track monitoring
-   . Rich IFB check removed?
-
-! 2009-04-27 - Marco Cattaneo
- - Update reference for changes to STClusterPositionTool
-
-! 2009-04-24 - Marco Cattaneo
- - Update references for addition of RichHPDIonFeedback Check sequence
-
-! 2009-04-23 - Marco Cattaneo
- - Update references for Brunel v34r5 fix
-
-! 2009-04-22 - Marco Cattaneo
- - Adapt Configurable for correct inclusion of units.opts following removal of
-   include from CaloMoniDst options
- - Update references for:
+   . Changes to STClusterPositionTool
+   . Addition of RichHPDIonFeedback Check sequence
    . Addition of CaloDigiGetter to RecoCALOSeq
    . Addition of CaloEFlowAlg sequencer to MoniCALOSeq, with EcalEFlowAlgo
    . Addition of CaloPIDMon algorithm to CaloPIDsMon sequence
    . Addition of Long track monitors to RichPIDMoni
    . Addition of RichStereoFitterTests to RichExpertChecks
-   . Fix to SeedTrack prefit from Brunel v34r4
    . Additional histograms in TrackVertexMonitor
    . Fix to untested StatusCode in AlgTool::monitorSvc (Gaudi v21)
-
-! 2009-04-17 - Marco Cattaneo
- - Update references for 
    . fix in Rich StatusCode check in case of exceptions
-   . changes to STOfflinePosition Tool (minor effect on track fit and outliers)
-
-! 2009-04-15 - Marco Cattaneo
- - Fix Configurable to use FileRecordSvc instead of RunRecordSvc, for Gaudi v21
- - Change version to v35r0
- - Update references for above change, and for changes in tuning of PatVelo
-   tracking, printout of OdinTypesFilter, extra histograms in TrackMonitor
+   . Changes in tuning of PatVelo tracking
+   . Changes in printout of OdinTypesFilter
+   . Extra histograms in TrackMonitor
 
 </PRE><H1><A NAME=v34r5>2009-04-22 Brunel v34r5</A></H1><PRE>
 Version built on v34b branch
