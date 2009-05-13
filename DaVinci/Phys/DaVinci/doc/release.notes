@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.339 2009-05-13 10:00:33 jpalac Exp $
+! $Id: release.notes,v 1.340 2009-05-13 12:16:39 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-05-13 - Patrick Koppenburg
+ - Overwrite HltConf settings only if set in DaVinci
 
 !========================== DaVinci v23r0 2009-05-13 ===================
 
