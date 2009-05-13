@@ -3,6 +3,12 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
+</PRE><H1><A NAME=v23r0>2009-05-13 DaVinci v23r0</A></H1><PRE>
+
+Based on Phys v8r3, Analysis v3r3, Rec v7r0, HLT v6r1, Lbcom v7r0, LHCb v27r0, Gaudi v21r0
+
+ Highlights:
+
 !-----------------------------------------------------------------
 foreach a (`ls -1 tests/options/DVTest*.py | awk -FTest '{print $2}' | awk -F.py '{print $1}'`)
   gaudirun.py  tests/options/DVTest${a}.py >! test-$a &
