@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.99 2009-05-11 15:51:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.100 2009-05-13 16:30:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-13 - Vanya Belyaev
+
+ - patch to fix the conflict between SmartIF & LoKi::Interface  
 
 ! 2009-05-11 - Vanya Belyaev
 

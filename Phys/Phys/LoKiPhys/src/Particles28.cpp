@@ -1,4 +1,4 @@
-// $Id: Particles28.cpp,v 1.1 2009-04-30 12:58:29 ibelyaev Exp $
+// $Id: Particles28.cpp,v 1.2 2009-05-13 16:30:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,7 +34,8 @@ namespace
     const LoKi::AuxFunBase& base )
   {
     // get LoKi service
-    const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+    // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+    LoKi::ILoKiSvc* svc = base.lokiSvc() ;
     base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
     // get DVAlgorithm
     DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm
@@ -51,7 +52,8 @@ namespace
     const LoKi::AuxFunBase& base )
   {
     // get LoKi service
-    const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+    // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+    LoKi::ILoKiSvc* svc = base.lokiSvc() ;
     base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
     // get DVAlgorithm
     DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm
