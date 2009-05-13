@@ -1,19 +1,38 @@
 <PRE>
-Package             : Phys/DaVinci 
+Package             : DaVinciSys
 Package Coordinator : Juan Palacios
-Purpose             : LHCb analysis program 
+Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v23r0>2009-05-13 DaVinci v23r0</A></H1><PRE>
 
-Based on Phys v8r3, Analysis v3r3, Rec v7r0, HLT v6r1, Lbcom v7r0, LHCb v27r0, Gaudi v21r0
+Based on Phys v8r3, Analysis v3r3, Rec v7r0, HLT v6r1, Lbcom v7r0, LHCb v27r0, Gaudi v21r0, LCG 56
 
  Highlights:
 
-!-----------------------------------------------------------------
-foreach a (`ls -1 tests/options/DVTest*.py | awk -FTest '{print $2}' | awk -F.py '{print $1}'`)
-  gaudirun.py  tests/options/DVTest${a}.py >! test-$a &
-end
-!-----------------------------------------------------------------
+ * ParticleMakers revamp: re-written as algorithms. United configuration
+ * DVAlgorithm takes InputLocations directly. Not necessary to set this property through the PhysDesktop.
+ * Fix to CombineParticles Particle->best PV bug
+ * New Rich monitors
+ * Event by event luminosity scaling (for DecayTreeTuple only)
+ * MicroDST: relations cloning revamp: generic algo to clone A->B relations
+   table, clones table and B for already cloned A.
+ * New MicroDST configurable PhysMicroDST() for "standard" physics MicroDST 
+   making.
+ * HLT2: more shared particles, updated topological trigger, inclusive phi, 
+   inclusive muon.
+ * HLT1: various speed ups.
+
+ New experimental stuff:
+
+ * Particle->MC matching: New interfaces and implementations to replace 
+   DaVinciAssociators. See https://twiki.cern.ch/twiki/bin/view/LHCb/Particle2MC
+ * Automatic PV re-fitting during "best vertex" selection. PVs are re-fitted
+   before the "best vertex" criteria are applied. Best re-fitted vertex for 
+   each selected candidate is kept. Relations table linking selected candidates
+   and their corresponding best refitted vertex are stored. To activate, switch
+   "ReFitPVs" property of DVAlgorithm to true.
+
+  For more details consult the release notes of Phys, Hlt and Analysis
 
 </PRE><H1><A NAME=v22r3>2009-04-14 DaVinci v22r3</A></H1><PRE>
 
