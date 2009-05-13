@@ -3,12 +3,15 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.10 2009-04-16 08:51:24 jblouw Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.11 2009-05-13 15:37:21 jblouw Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
+import GaudiKernel
+
+GaudiKernel.ProcessJobOptions._parser._parse_units(os.path.expandvars("$STDOPTS/units.opts"))
 
 debug = 0
 def dummy(*args,**kwd): pass
