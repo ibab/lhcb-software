@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.11 2009-02-20 09:02:40 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.12 2009-05-13 13:59:17 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -34,7 +34,7 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
   declareProperty( "UseLabXSyntax", m_useLabName = false, "Use labX syntax" );
 
   declareProperty( "UseToolNameForBranchName", m_tupleNameAsToolName = true );
-  declareProperty( "RevertToPositiveID", m_revertToPositiveID = false );
+  declareProperty( "RevertToPositiveID", m_revertToPositiveID = true );
   
 }
 //=============================================================================
@@ -50,8 +50,9 @@ StatusCode DecayTreeTupleBase::initialize() {
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-  if ( m_revertToPositiveID && m_useLabName ){
-    err() << "UseLabXSyntax and RevertToPositiveID are exclusive. Please fix you options." << endmsg;
+  if ( m_useLabName && m_revertToPositiveID ){
+    m_revertToPositiveID = false ;
+    warning() << "UseLabXSyntax and RevertToPositiveID are exclusive. Switched off reverting." << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
