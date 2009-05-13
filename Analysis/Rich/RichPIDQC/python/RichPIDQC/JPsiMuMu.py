@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.8 2009-05-08 19:17:04 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.9 2009-05-13 13:50:14 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -44,8 +44,8 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.PhysDesktop.InputLocations = ["Phys/StdLooseMuons"]
         JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
         JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF)<6)"
-        JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6)",
-                                               "mu-"     :    "(PT>1200*MeV) & (TRCHI2DOF<1.6) "}
+        JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1000*MeV) & (TRCHI2DOF<2.0)",
+                                               "mu-"     :    "(PT>1000*MeV) & (TRCHI2DOF<2.0) "}
         seq.Members += [JPsiMuMu]
 
         # Particle Monitoring plots
@@ -68,6 +68,76 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
             mcPerf.addTool( PhysDesktop )
             mcPerf.PhysDesktop.InputLocations = ["Phys/"+JPsiMuMuName]
             seq.Members += [mcPerf]
-    
+
         # Ntuple ?
-        if self.getProp("MakeNTuple") : pass
+            if self.getProp("MakeNTuple") :
+                from Configurables import ( DecayTreeTuple,
+                            TupleToolDecay,
+                            LoKi__Hybrid__FilterCriterion,
+                            LoKi__Hybrid__TupleTool,
+                            TupleToolMCBackgroundInfo,
+                            BackgroundCategory,
+                            TupleToolTrigger,
+                            TupleToolMCTruth,
+                            TupleToolVtxIsoln,
+                            TupleToolP2VV
+                            )
+                
+                JPsiMuMuTree = DecayTreeTuple( JPsiMuMuName + 'Tuple')
+                JPsiMuMuTree.addTool( PhysDesktop )
+                JPsiMuMuTree.PhysDesktop.InputLocations = [ 'Phys/'+JPsiMuMuName]
+                JPsiMuMuTree.Decay = 'J/psi(1S) ->  ^mu+ ^mu- '
+                
+                # set some names for ntuple branchs
+                MyBranch_jpsi  = "jpsi"
+                MyBranch_mup   = "mup"
+                MyBranch_mum   = "mum"
+                
+                # label the branches for the particle tools
+                JPsiMuMuTree.Branches = {
+                    MyBranch_jpsi  : "J/psi(1S) : J/psi(1S) ->  mu+ mu- ",
+                    MyBranch_mup   : "J/psi(1S) ->  ^mu+ mu- ",
+                    MyBranch_mum   : "J/psi(1S) ->  mu+ ^mu- ",
+                    }
+                
+                JPsiMuMuTree.ToolList = [
+                    "TupleToolEventInfo"
+                    , "TupleToolGeneration"
+                    , "TupleToolMCTruth"
+                    , "TupleToolMCBackgroundInfo"
+                    , "TupleToolMCHierarchy"
+                    , "TupleToolPrimaries"
+                    , "TupleToolVtxIsoln"      
+                    , "TupleToolTrackInfo"
+                    , "TupleToolPid"
+                    , "TupleToolGeometry"
+                    , "TupleToolKinematic"
+                    , "TupleToolPropertime"
+                    , "TupleToolPid"
+                    , "TupleToolPrimaries"
+                    , "TupleToolTrigger"
+                    ]
+                
+                JPsiMuMuTree.addTool(BackgroundCategory())
+                JPsiMuMuTree.BackgroundCategory.SoftPhotonCut = 2000
+                JPsiMuMuTree.OutputLevel = INFO
+                JPsiMuMuTree.addTool(TupleToolTrigger())
+                JPsiMuMuTree.TupleToolTrigger.VerboseL0 = True
+                JPsiMuMuTree.addTool(TupleToolMCTruth())
+                JPsiMuMuTree.TupleToolMCTruth.StoreAssociationNumbers = True
+                JPsiMuMuTree.TupleToolMCTruth.StoreKineticInfo = True
+                JPsiMuMuTree.TupleToolMCTruth.StoreVertexInfo = True
+                JPsiMuMuTree.TupleToolMCTruth.FillAngles = True
+                JPsiMuMuTree.addTool(TupleToolVtxIsoln( OutputLevel = 6 ))
+                JPsiMuMuTree.TupleToolVtxIsoln.IP = 2.0
+                JPsiMuMuTree.TupleToolVtxIsoln.InputParticles = [ "Phys/StdLooseMuons"]
+
+                seq.Members += [JPsiMuMuTree]
+
+                JPsiMuMuTree.NTupleLUN = "JPSIMUMU"
+
+                from Configurables import NTupleSvc
+                NTupleSvc().Output = ["JPSIMUMU DATAFILE='JpsiMuMu_Presel.root'  TYP='ROOT'  OPT='NEW'"]
+                
+
+            
