@@ -8,7 +8,6 @@
 #
 from Gaudi.Configuration import *
 from Moore.Configuration import *
-from HltConf.HltVeloLines     import HltVeloLinesConf
 from Configurables       import HltSelReportsMaker
 
 
@@ -16,30 +15,30 @@ from Configurables       import HltSelReportsMaker
 #Moore().generateConfig = True
 #Moore().configLabel = 'PA accept=1'
 
-Moore().HltType = 'PA+Hlt1' # +Hlt2'
+Moore().HltType = 'PA+Hlt1+Hlt2'
 Moore().Verbose = True
 
 # FEST specific options...
-HltSelReportsMaker().DebugEventPeriod = 2000
+Moore().ThresholdSettings = 'FEST'
 veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
        , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D'
-       , 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo','TES:Hlt/Vertex/PV2D' 
+       , 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
+       , 'TES:Hlt/Vertex/PV2D' 
        , 'TES:Hlt/Track/MuonSegmentForL0Single'
+       , 'RZVeloBW'
        ]
 HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
+HltSelReportsMaker().DebugEventPeriod = 2000
 HltConf().LumiBankKillerAcceptFraction = 0.9999
-if 'Hlt1' in Moore().HltType or 'VE' in Moore().HltType :
-    HltVeloLinesConf().Prescale = { '.*' : 1 }
-
 
 Moore().Simulation = True
 Moore().DataType   = '2008'
-Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
-#Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
+#Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
+Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
+#Moore().outputFile = '/tmp/foo.mdf'
 
 EventSelector().PrintFreq = 100
-Moore().EvtMax = 1000
+Moore().EvtMax = 100000
 
-
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+#LHCbApp().DDDBtag   = "default"
+#LHCbApp().CondDBtag = "default"
