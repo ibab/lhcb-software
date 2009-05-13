@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-05-13 - Marco Cattaneo
+ - Change brunelsys.qmt to get from Brunel/QMTest/BrunelExclusions.py the
+   exclusions to be passed to ValidateWithReference()
 
 </PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
 This version uses projects Gaudi v21r0, LHCb v27r0, Lbcom v7r0, Rec v7r0
