@@ -4,6 +4,97 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
+</PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
+This version uses projects Gaudi v21r0, LHCb v27r0, Lbcom v7r0, Rec v7r0
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a development version for changes subsequent to the 2009 MC production. 
+This version introduces support for slc5 with gcc43 compiler.
+Output requires DaVinci v22r1 or greater
+
+ - New packaging
+   . Adapt Brunel() Configurable for correct inclusion of units.opts following
+     removal of include from CaloMoniDst options
+
+ - Functionality changes
+ - Persistency changes
+   . Change input and output FSR locations to be under /FileRecords instead of
+     /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+     (LumiAlgs v2r0, LumiEvent v2r0, Brunel() configurable)
+
+ - New tuning
+   . Add CaloGetterInit to reco sequence to have fast access to CaloDigits
+     (CaloReco v4r19, CaloTools v5r8)
+   . Speed up data access and processing in Calo2Calo/CaloHypo2Calo
+     (CaloTools v5r8)
+   . Several changes for performance improvements in PatVelo, see release.notes
+     (PatVelo v3r13)
+   . Modify the VeloRHit and VeloPhiHit constructors to define the width as
+     sqrt(12) * pitch, not taking into account the cluster size (TfKernel v2r11)
+   . Change default for OmitSeedFitOutliers switch to false (TrackMatching v2r22)
+   . New tuning of STOfflinePosition tool:
+     o Improved tune of error estimates using long tracks.
+     o New charge sharing functions. Cubic plus linear term for 2-strip clusters,
+       cubic term for 3-strip clusters, linear term for 4-strip clusters, no
+       correction applied for the others. The error estimates are also changed.
+     (STTools v3r9) (See <a href="http://indico.cern.ch/materialDisplay.py?contribId=1&materialId=slides&confId=48009">presentation</a> at T-Rec on 2009-05-11)
+   . Changes to speed up geometry initialization (DetDescCnv v4r9, XmlTools v6r3)
+
+ - Bug fixes
+   . Fix untested StatusCodes (CaloPIDs v4r16, RichRecTrackTools v1r10)
+   . Fixed bug with ancestors in TrackStateInitTool (TrackTools v3r17)
+   . Fix for PatForward (prevent from overwritting selected hits flags)
+     (PatAlgorithms v3r19)
+   . Check for at least 2 x and 2 stereo hits in diff. planes NOT removed
+     by the fit for all seed tracks entering the matching (TrackMatching v2r22)
+  .  Fix configuration bug where photon predictor settings where not properly 
+     set when running under non-default settings (RichRecSys v3r18)
+
+ - Monitoring changes
+   . Add histograms for CaloPID analysis and energy flow calibration
+     (CaloMoniDst v3r6)
+   . Added more histos and fixed histogram labels in OTTrackMonitor
+     (TrackMonitors v1r9)
+   . Add residuals per layer histos to ITTrackMonitor (TrackMonitors v1r9)
+   . Changed constrain method in TrackFitMatchMonitor (TrackMonitors v1r9)
+   . Added hit patterns to TrackMonitor (TrackMonitors v1r9)
+   . Add new IFB monitoring (RichRecQC v2r28)
+   . Make PID performance plots for Long tracks as well as All tracks
+     (RichRecQC v2r28)
+   . A few new CK theta resolution plots (RichRecQC v2r28)
+   . Small improvements to the PID plots (RichRecTools v4r8)
+   . Various changes to Velo reconstruction monitors (VeloRecMonitors v1r6)
+   . Various changes to ST monitors (STMonitors v1r1)
+
+</PRE><H1><A NAME=v34r5>2009-04-22 Brunel v34r5</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r5
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production.
+Output requires DaVinci v22r1 or greater
+
+ - Bug fixes
+   . Make PatSeedFit safe against unreasonable track input. Fixes frequent
+     TransportSvc exceptions due to FPE
+
+</PRE><H1><A NAME=v34r4>2009-04-20 Brunel v34r4</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r4
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production.
+Output requires DaVinci v22r1 or greater
+
+ - Bug fixes
+   . Fix to track fit initialisation, to take into account OT tilt. Fix also
+     untested StatusCode (PatAlgorithms v3r17)
+   . Fix valgrind.job for new lbLogin environment
+
+ - Functionality change:
+   . In Brunel(), only set IODataManager().AgeLimit = 0 if the option has not
+     been previously set. Allows more user control over this setting.
+
 </PRE><H1><A NAME=v34r3>2009-04-14 Brunel v34r3</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r3
  and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
