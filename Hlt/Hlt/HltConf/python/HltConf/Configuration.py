@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.78 2009-05-13 12:15:50 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.79 2009-05-13 20:36:15 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -149,7 +149,7 @@ class HltConf(LHCbConfigurableUser):
                       , 33 : "HLT_PASS('Hlt1LumiDecision')"         ## TODO: make it accept wildcards.. then use HLT_PASS('Hlt1.*Lumi.*Decision')
                       , 34 : "HLT_PASS('Hlt1IgnoringLumiDecision')" ## TODO: make it accept wildcards.. then use HLT_PASSIGNORING('Hlt1.*Lumi.*Decision')
                       , 35 : "HLT_PASS('Hlt1VeloClosingDecision')"  ## TODO: make it accept wildcards.. then use HLT_PASS('Hlt1.*Velo.*Decision')
-                      , 36 : "HLT_PASS('Hlt1XPressDecision')"
+                      , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
                       }
 
         ## and record the settings in the ANN service
