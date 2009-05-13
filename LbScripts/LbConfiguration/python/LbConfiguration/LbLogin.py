@@ -34,6 +34,7 @@ _scripts_dir = os.path.join(_base_dir, "scripts")
 
 from LbConfiguration.Platform import getBinaryDbg, getConfig
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
+from LbConfiguration.External import Python_version, CMT_version
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
@@ -43,7 +44,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.32 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.33 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -188,7 +189,7 @@ class LbLoginScript(Script):
                           dest="use_cache",
                           action="store_false",
                           help="prevent the usage of the cached setup of LbScripts")
-        parser.set_defaults(cmtvers="v1r20p20070208")
+        parser.set_defaults(cmtvers=CMT_version)
         parser.add_option("--cmtvers", 
                           action="callback",
                           callback= _setCMTVersion_cb,
@@ -198,7 +199,7 @@ class LbLoginScript(Script):
         parser.add_option("--scripts-version",
                           dest="scriptsvers",
                           help="version of LbScripts to be setup [default: %default")
-        parser.set_defaults(pythonvers="2.5")
+        parser.set_defaults(pythonvers=Python_version)
         parser.add_option("--python-version",
                           dest="pythonvers",
                           help="version of python to be setup [default: %default]")
