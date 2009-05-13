@@ -3,6 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-05-13 - Marco Cattaneo
+ - Add a python module Brunel/QMTest/BrunelExclusions.py containing a QMTest
+   preprocessor that can be given to the QMTest ValidateWithReference function
+   to exclude lines expected to change in the QMTest output. Use it in all the
+   .qmt files
+ - Update references for fixes to Calo precision problems
+ - Increment version to v35r1
+
 </PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
 
  - Changes to Configurable:
