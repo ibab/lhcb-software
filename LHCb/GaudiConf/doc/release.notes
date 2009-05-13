@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-05-13 - Marco Cattaneo
+ - Add a python module GaudiConf/QMTest/LHCbExclusions.py containing a QMTest
+   preprocessor that can be given to the QMTest ValidateWithReference function
+   to exclude lines expected to change in the QMTest output.
+
 !======================== GaudiConf v12r2 2009-04-06 ========================
 ! 2009-04-06 - Marco Cattaneo
  - In DstConf(), replace bool Simulation property with string SimType. Possible
