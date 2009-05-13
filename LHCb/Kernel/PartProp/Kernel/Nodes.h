@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.6 2009-05-12 11:52:27 ibelyaev Exp $
+// $Id: Nodes.h,v 1.7 2009-05-13 16:30:05 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -313,12 +313,6 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
-    /// output operator
-    inline 
-    std::ostream& operator<< 
-      ( std::ostream&               s , 
-        const Decays::Nodes::_Node& n ) { return s << n.node() ; }
-    // ========================================================================
   } // end of namespace Decays::Nodes 
   // ==========================================================================
 } // end of namespace Decays 
@@ -548,6 +542,12 @@ inline StatusCode Decays::validate
     }
     return StatusCode::SUCCESS ;
 }
+// ========================================================================
+/// output operator
+inline 
+std::ostream& operator<< 
+  ( std::ostream&               s , 
+    const Decays::Nodes::_Node& n ) { return s << n.node() ; }
 // ============================================================================
 // The END 
 // ============================================================================
