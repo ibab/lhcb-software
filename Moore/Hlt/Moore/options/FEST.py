@@ -40,5 +40,5 @@ Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 100000
 
-#LHCbApp().DDDBtag   = "default"
-#LHCbApp().CondDBtag = "default"
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
