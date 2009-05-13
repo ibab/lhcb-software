@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.3 2009-05-13 10:59:47 ggiacomo Exp $
 
 #include <list>
 #include <fstream>
@@ -610,7 +610,7 @@ StatusCode MuonNNetRec::trackFit( )
 bool MuonNNetRec::loadTimeRes() {
   char inbuf[100];
   bool out = true;
-  int s=0,r=0,q=0,nx=0,ny=0;
+  int s=0,r=0,q=0,nx=0,ny=0,v=0;
   float res=0.;
   std::ifstream resList;
   resList.open(m_timeResidualFile.c_str());
@@ -618,9 +618,9 @@ bool MuonNNetRec::loadTimeRes() {
     MuonTrackRec::ResMap = new std::map<long int, float>;
     while (! resList.eof()) {
       resList.getline(inbuf,sizeof(inbuf));
-      sscanf(inbuf,"M%dR%dQ%d %d %d %f",&s,&r,&q,&nx,&ny,&res);
-      long int key = MuonTrackRec::logicalPadKey(q-1, s-1, r-1, nx, ny);
-      (*MuonTrackRec::ResMap)[key] = res;
+      sscanf(inbuf,"M%dR%dQ%d %d %d v%d %f",&s,&r,&q,&nx,&ny,&v,&res);
+      long int key = MuonTrackRec::logicalPadKey(q-1, s-1, r-1, nx, ny, v);
+      (*MuonTrackRec::ResMap)[key] = res /25. * 16. ; // convert from ns to TDC units
     }
   }
   else {

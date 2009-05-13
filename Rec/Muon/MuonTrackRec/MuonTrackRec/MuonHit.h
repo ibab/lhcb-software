@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.2 2009-05-13 09:53:28 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.3 2009-05-13 10:59:47 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -41,7 +41,6 @@ public:
   virtual ~MuonHit( ); ///< Destructor
 
   /// public member functions
-
   StatusCode setHitMCTruth(const LHCb::MCParticle* pp);
 
  /// store a progressive hit number for debugging
@@ -50,6 +49,7 @@ public:
   int hitPID();
   int hitMother();
   std::vector<MuonLogHit*> getHits();
+  /// return the MuonTileIDs of the logical channels used for this pad
   const std::vector<LHCb::MuonTileID*> getTiles();
   std::vector<float> getTimes();
   std::vector<double> hitTile_Size(); /// half-size of the tile underlying this hit
@@ -68,7 +68,11 @@ public:
   const LHCb::MuonTileID* tile();
   /// check if this is a true logical and not an uncrossed log. channel
   bool isTruePad();
-
+  
+  /// returns the associated MuonLogPad object
+  inline MuonLogPad* logPad() {
+    return m_pad;
+  }
 private:
 
   DeMuonDetector* m_muonDet;

@@ -1,4 +1,4 @@
-// $Id: MuonLogPad.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonLogPad.h,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
 #ifndef MUONLOGPAD_H 
 #define MUONLOGPAD_H 1
 
@@ -31,7 +31,8 @@ class MuonLogPad {
     m_intime = hit->intime();
   }
   
-  /// constructor fot crossed pad
+  /// constructor fot crossed pad, note that hit1 must be the strip (giving X coordinate) 
+  ///  and hit2 must be the pad  (giving Y coordinate) 
   MuonLogPad( MuonLogHit* hit1,
               MuonLogHit* hit2 ) :
     m_crossed(true), m_padhits(2), m_truepad(true)
@@ -39,8 +40,7 @@ class MuonLogPad {
     m_tile = new LHCb::MuonTileID(hit1->tile()->intercept(*(hit2->tile()) ) );
     m_padhits[0] = hit1;
     m_padhits[1] = hit2;
-    m_time = ( hit1->time() + hit2->time() ) / 2.;
-    m_dtime = ( hit1->time() - hit2->time() ) / 2.;
+    assignTimes(hit1->time(), hit2->time() );
     m_intime = (hit1->intime() && hit2->intime());
   }
   
@@ -49,11 +49,44 @@ class MuonLogPad {
     if(m_crossed) delete m_tile;
   }
   
+
   // public member functions
+  typedef enum { NOX=0, XONEFE=1, XTWOFE=2} LogPadType;
+  /// returns the type of logical pad (uncrossed or crossed with 1 or 2 FE channels)
+  inline LogPadType type() {
+    LogPadType t=XONEFE;
+    if (m_tile->station() == 0 || 
+        (m_tile->station()>2 && m_tile->region()==0) ) {
+      t=NOX; // single log. channel
+    }
+    else {
+      if (m_tile->station()>0 && m_tile->station()<3 && m_tile->region()<2)
+        t=XTWOFE; // double readout for M23R12
+    }
+    return t;
+  }
+  
   inline const LHCb::MuonTileID* tile()
   {
     return m_tile;
   }
+  
+  inline void assignTimes(float t1, float t2) {
+    m_time = ( t1 + t2 ) / 2.;
+    m_dtime = ( t1 - t2 ) / 2.;
+  }
+
+  inline void shiftTimes(float d1, float d2) {
+    if (m_padhits.size() < 2) return;
+    float t1=(m_padhits[0])->time() + d1;
+    float t2=(m_padhits[1])->time() + d2;
+    assignTimes(t1, t2);
+  }
+
+  inline void shiftTime(float delay) {
+    m_time += delay;
+  }
+
   /// return the pad time (averaged for crossed pads), in TDC bits
   inline float time()
   {

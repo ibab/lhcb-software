@@ -1,6 +1,7 @@
-// $Id: MuonTrack.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
+#include "MuonTrackRec/MuonLogPad.h"
 
 #ifdef _WIN32
     #define DLLEXPORT __declspec(dllexport) 
@@ -9,15 +10,15 @@
 #endif
 
 namespace MuonTrackRec {
-  DLLEXPORT double muspeed = 468.75; // speed of light in mm/TDC units
+  DLLEXPORT double muspeed = 468.42; // speed of light in mm/TDC units
   DLLEXPORT double Zref = 17670; // default ref is M4
   DLLEXPORT bool PhysTiming = false;
   DLLEXPORT bool IsCosmic = false;
   DLLEXPORT bool IsPhysics = false;
   DLLEXPORT bool OfflineTimeAlign = false;
   DLLEXPORT std::map<long int, float>* ResMap = NULL;
-  DLLEXPORT long int logicalPadKey(int q, int s, int r, int nx, int ny) {
-    return (nx + ny*96 + (16*96)*r + (16*96*4)*s + (16*96*4*5)*q);
+  DLLEXPORT long int logicalPadKey(int q, int s, int r, int nx, int ny, int view) {
+    return (view + nx*3 + ny*96*3 + r*16*96*3 + s*4*16*96*3 + q*5*4*16*96*3);
   }
 };
 #undef MUONTRACKRECNMSPC
@@ -134,38 +135,59 @@ double MuonTrack::correctTOF(double rawT,
            (1-MuonTrackRec::Zref/Z) );
 }
 
-double MuonTrack::correctMisAlignment(double rawT,
-                                      const LHCb::MuonTileID* tile) {
-  double tout=rawT;
-  long int key = MuonTrackRec::logicalPadKey(tile->quarter(),
-                                            tile->station(),
-                                            tile->region(),
-                                            tile->nX(),
-                                            tile->nY() );
-  if (MuonTrackRec::ResMap->count(key)) {
-    double avres= (*MuonTrackRec::ResMap)[key];
-    tout -= avres;
+void MuonTrack::correctMisAlignment(MuonHit& hit) {
+  long int key=0;
+  MuonLogPad* pad=hit.logPad();
+  if (pad->type() == MuonLogPad::XTWOFE) {
+    float d1=0.,d2=0.;
+    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
+                                      pad->tile()->station(),
+                                      pad->tile()->region(),
+                                      pad->tile()->nX(),
+                                      pad->tile()->nY() ,
+                                      1);
+    if (MuonTrackRec::ResMap->count(key)) {
+      d1 = -((*MuonTrackRec::ResMap)[key]);
+    }
+    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
+                                      pad->tile()->station(),
+                                      pad->tile()->region(),
+                                      pad->tile()->nX(),
+                                      pad->tile()->nY() ,
+                                      2);
+    if (MuonTrackRec::ResMap->count(key)) {
+      d2 = -((*MuonTrackRec::ResMap)[key]);
+    }
+    pad->shiftTimes( d1, d2 );
   }
-  return tout;
+  else {
+    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
+                                      pad->tile()->station(),
+                                      pad->tile()->region(),
+                                      pad->tile()->nX(),
+                                      pad->tile()->nY() ,
+                                      0);
+    if (MuonTrackRec::ResMap->count(key)) {
+      float delay= -((*MuonTrackRec::ResMap)[key]);
+      pad->shiftTime( delay );
+    }
+  }
 }
 
 double MuonTrack::correctTime(double rawT,
                               double X,
                               double Y,
-                              double Z,
-                              const LHCb::MuonTileID* tile) {
+                              double Z) {
   double t = rawT;
   if (MuonTrackRec::PhysTiming) { // correct for TOF applied in delays (from primary vertex)
     t = correctTOF(t, X, Y, Z);
-  }
-  if(MuonTrackRec::OfflineTimeAlign) {
-    t = correctMisAlignment(t, tile );
   }
   return t;
 }
 
 float MuonTrack::correctedTime(MuonHit& hit) {
-  return correctTime( hit.hitTime(), hit.X(), hit.Y(), hit.Z(), hit.tile());
+  correctMisAlignment(hit);
+  return correctTime( hit.hitTime(), hit.X(), hit.Y(), hit.Z());
 }
 
 /// track fitting with linear Chi^2

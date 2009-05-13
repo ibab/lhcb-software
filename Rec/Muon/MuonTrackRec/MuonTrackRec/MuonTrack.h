@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -36,7 +36,7 @@ namespace MuonTrackRec {
   EXTERN bool IsPhysics;
   EXTERN bool OfflineTimeAlign;
   EXTERN std::map<long int, float>* ResMap;
-  EXTERN long int logicalPadKey(int q, int s, int r, int nx, int ny);
+  EXTERN long int logicalPadKey(int q, int s, int r, int nx, int ny, int view);
 };
 #endif  // MUONTRACKRECNMSPC
 #undef EXTERN
@@ -118,13 +118,11 @@ private:
                     double X,
                     double Y,
                     double Z);
-  double correctMisAlignment(double rawT,
-                             const LHCb::MuonTileID* tile);
+  void correctMisAlignment(MuonHit& hit);
   double correctTime(double rawT,
                      double X,
                      double Y,
-                     double Z,
-                     const LHCb::MuonTileID* tile);
+                     double Z);
   typedef std::map< int, MuonHit >::value_type MuonTkVtype;
   typedef std::map< int, MuonHit >::iterator MuonTkIt;
   std::map< int, MuonHit > m_muonTrack;
