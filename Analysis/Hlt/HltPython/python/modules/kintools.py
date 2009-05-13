@@ -86,18 +86,18 @@ def angle(a,b):
     @author Hugo Ruiz, hugo.ruiz@cern.ch
     @author Antonio Perez-Calero, aperez@ecm.ub.es"""
     #DEBUG=1
-    if mag(a)*mag(b)!=0:
+    try:
         if DEBUG: print 'Calculating angle'
         angleAB=acos(dot(a,b)/(mag(a)*mag(b)))
         if DEBUG: print 'Calculated angle',angleAB
         return angleAB
-    else:
+    except:
         print 'Could not compute angle, divide by zero! Angle value set to 1000'
         angleAB=1000
         if DEBUG:
-            #print a
-            #print b
-            #print dot(a,b)
+            print a
+            print b
+            print dot(a,b)
             print mag(a)*mag(b)
         return angleAB
 

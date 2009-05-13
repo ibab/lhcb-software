@@ -6,6 +6,7 @@
 
 ! 2009-05-13- Antonio Perez-Calero
     - added pointing and dimuon mass functions in kintools.py
+    - updated some files in benchmarkchannels.py
 
 !========================== HltPython v1r14 2009-03-23 ===================
 ! 2009-03-23- Jose A. Hernando
