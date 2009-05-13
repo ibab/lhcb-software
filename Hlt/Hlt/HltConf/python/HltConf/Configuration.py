@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.77 2009-05-10 13:30:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.78 2009-05-13 12:15:50 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -100,7 +100,7 @@ class HltConf(LHCbConfigurableUser):
             else :
                 from HltThresholdSettings import SettingsForDataType
                 ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
-            print ThresholdSettings
+            print '# ThresholdSettings', ThresholdSettings
 
             for i in hlttype.split('+') :
                 if i == 'NONE' : continue # no operation...
