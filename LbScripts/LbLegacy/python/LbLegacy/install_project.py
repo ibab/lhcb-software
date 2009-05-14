@@ -212,6 +212,7 @@ script_version = '090513'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v3r3"
+compat_version = "v1r0"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
@@ -918,6 +919,7 @@ def getProjectList(name,version,binary=' '):
     here = os.getcwd()
 
     import LbLegacy.LHCb_config
+    import LbConfiguration.Platform
 
     if LbLegacy.LHCb_config.data_files.has_key(name) == 1:
         tar_file = LbLegacy.LHCb_config.data_files[name]+'_'+version
@@ -964,10 +966,8 @@ def getProjectList(name,version,binary=' '):
                 html_list.remove(file)
                 if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
-                    if newbin.find('_dbg') != -1: 
-                        newbin = newbin[:newbin.find('_dbg')]
-                    elif newbin.endswith('-dbg') :
-                        newbin = newbin[:newbin.find('-dbg')] + '-opt'
+                    if LbConfiguration.Platform.isBinaryDbg(newbin) :
+                        newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
                     file = file.replace(pack_ver[2],newbin)
                 project_list[file] = "source"
                 html_list.append(file)
@@ -1014,16 +1014,15 @@ def delInstalled(file):
 def checkInstalledProjects(project_list):
     log = logging.getLogger()
     log.info('check all project in the list %s' % project_list)
+    import LbConfiguration.Platform
     for file in project_list.keys() :
         if project_list[file] == "source":
             pack_ver = getPackVer(file)
             if pack_ver[2] != cmtconfig:
                 if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
-                    if newbin.find('_dbg') != -1: 
-                        newbin = newbin[:newbin.find('_dbg')]
-                    elif newbin.endswith('-dbg') :
-                        newbin = newbin[:newbin.find('-dbg')] + '-opt'
+                    if LbConfiguration.Platform.isBinaryDbg(newbin) :
+                        newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
                     file = file.replace(pack_ver[2],newbin)
         if isInstalled(file) :
             log.debug("%s is installed" % file)
@@ -1074,15 +1073,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     already_present_list.append(tar_list[file])
 
 
-
-            untar_flag = getUntarFlag(file, exist_flag)
-
-
-            if untar_flag == 'ERROR':
-                log.warning('%s is not accessible: check file name' % file)
-                sys.exit('%s is not accessible: check file name \n' % file )
-
-            if untar_flag == 'yes':
+            if not exist_flag :
                 # untar the file
                 log.debug('untar file %s' % file)
                 rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
@@ -1108,7 +1099,6 @@ def getProjectTar(tar_list, already_present_list=None):
 
                 if os.getcwd() == this_lhcb_dir :
                     # if binary is requested and InstallArea does not exist : set it
-                    pack_ver = getPackVer(file)
                     if pack_ver[2] != '':
                         os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
                         if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
@@ -1672,6 +1662,10 @@ def runInstall(pname,pversion,binary=''):
         project_list.update(grid_project_list)
         html_list += grid_html_list
 
+    if pname != 'Compat' and sys.platform != "win32" :
+        compat_project_list, compat_html_list = getProjectList('Compat', compat_version)
+        project_list.update(compat_project_list)
+        html_list += compat_html_list
 
     if check_only :
         checkInstalledProjects(project_list)
@@ -1679,11 +1673,21 @@ def runInstall(pname,pversion,binary=''):
     getProjectTar(project_list)
 
     if binary != ' ':
-        project_list,html_list = getProjectList(pname,pversion,binary)
+        from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
+        binary_dbg = getBinaryDbg(binary)
+        binary_opt = binary
+        if isBinaryDbg(binary) :
+            binary_dbg = binary
+            binary_opt = getBinaryOpt(binary)
+        project_list, html_list = getProjectList(pname, pversion, binary)
         if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
-            grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, binary)
+            grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, binary_opt)
             project_list.update(grid_project_list)
             html_list += grid_html_list
+        if pname != 'Compat' and sys.platform != "win32" :
+            compat_project_list, compat_html_list = getProjectList('Compat', compat_version, binary_opt)
+            project_list.update(compat_project_list)
+            html_list += compat_html_list
         already_exist = []
         getProjectTar(project_list, already_exist)
 
@@ -1691,13 +1695,14 @@ def runInstall(pname,pversion,binary=''):
 # if full_flag is set : download binary_dbg tar files and configure the projects
     if full_flag :
         log.info('download debug version and reconfigure it')
-        binary_dbg = binary
-        if binary.endswith('-opt') :
-            binary_dbg = binary.replace('-opt', '-dbg')
-        elif binary.find('_dbg') == -1 :
-            binary_dbg = binary+'_dbg'
+        from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
+        binary_dbg = getBinaryDbg(binary)
+        binary_opt = binary
+        if isBinaryDbg(binary) :
+            binary_dbg = binary
+            binary_opt = getBinaryOpt(binary)
         os.environ['CMTCONFIG'] = binary_dbg
-        project_list,html_list = getProjectList(pname,pversion,binary_dbg)
+        project_list, html_list = getProjectList(pname, pversion, binary_dbg)
         getProjectTar(project_list)
 
     if setup_script :
@@ -1992,15 +1997,11 @@ def checkBinaryName(binary):
         for b in LbConfiguration.Platform.binary_list:
             if b == binary:
                 os.environ['CMTCONFIG'] = binary
-                if binary.endswith("_dbg") :
-                    os.environ['CMTDEB'] = binary
-                elif binary.endswith("-opt"):
-                    os.environ['CMTDEB'] = binary.replace('-opt', '-dbg')
-                else :
-                    os.environ['CMTDEB'] = binary + "_dbg"
+                os.environ['CMTDEB'] = binary
+                if LbConfiguration.Platform.isBinaryOpt(binary) :
+                    os.environ['CMTDEB'] = LbConfiguration.Platform.getBinaryDbg(binary)
                 # if a win32 binary is installed from a non win32 platform then do not cmt config
                 if sys.platform != 'win32' and binary.find('win32') != 'win32':
-  #                  full_flag = True
                     make_flag = ' '
                 break
         else:

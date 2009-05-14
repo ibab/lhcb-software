@@ -1,7 +1,10 @@
 2009-05-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed the bootstrap of LbConfiguration
-	and LbLegacy
+	* python/LbLegacy/install_project.py: 
+	- fixed the bootstrap of LbConfiguration and LbLegacy
+	- Download the Compat project
+	- use LbConfiguration.Platform for the binary massaging.
+	
 
 2009-05-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
