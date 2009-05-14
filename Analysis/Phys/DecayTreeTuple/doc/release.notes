@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2009-05-14 - Patrick Koppenburg
+ - MCTupleToolMCTruth : protect against stable particles
+ - MCTupleToolReconstructed : ProtoParticles different for various particles.
+
 ! 2009-05-13 - Patrick Koppenburg
  - (MC)DecayTreeTuple new option RevertToPositiveID : make True default.
 

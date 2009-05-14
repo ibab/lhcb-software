@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.3 2009-01-22 17:52:41 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.4 2009-05-14 12:52:39 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -105,10 +105,10 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
     }
   }
   const unsigned int maxPP = 20 ;
-  test &= tuple->farray(  head+"_PP_PX", PX, "ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PY", PY, "ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PZ", PZ, "ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_Weight", Weights, "ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PX", PX,  head+"ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PY", PY,  head+"ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"ProtoParticles" , maxPP );
   
   return StatusCode(test);
 }

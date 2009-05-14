@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.12 2009-05-13 13:59:17 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.13 2009-05-14 12:52:39 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -247,6 +247,7 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
   for( std::vector< IParticleTupleTool* >::iterator it = op->tools().begin();
        op->tools().end()!=it; ++it ){
     if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() <<  "FillOnePart " << mother << " " << op->headName()  << endmsg ;
     bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
     test &= localTest;
     if( localTest ){}
