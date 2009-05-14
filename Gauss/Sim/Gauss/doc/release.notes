@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-05-14 - Silvia Miglioranzi
+ - Update of QMTest gauss-MC09.qmt (EVTGEN options patch no longer needed) and 
+   update of the corresponding ref files. Update of gauss-2008.qmt 
+   ref files (few Rich messages in the stdoutput are no longer produced).  
+
 ! 2009-05-08 - Silvia Miglioranzi
  - New QMTest (gauss-gen-MC09.qmt) was added to the suite of Gauss tests; it is
    running in generator stand-alone mode over 1K of "11144103" events. A set of
