@@ -4,7 +4,7 @@
   <argument name="program"> 
     <text>../../python/BenderExample/D02hh.py</text>
   </argument>
- <argument name="unsupported_platforms"
+ <argument name="unsupported_platforms">
     <set>
        <text>win.*</text>
     </set>
