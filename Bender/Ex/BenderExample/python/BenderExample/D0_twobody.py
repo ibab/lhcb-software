@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D0_twobody.py,v 1.1 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: D0_twobody.py,v 1.2 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenedrExample/D0_twobody.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -271,10 +271,12 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 , 
         Input = [ 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_2.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
         )
@@ -300,9 +302,8 @@ def configure ( **args ) :
     alg.HistoPrint = True
     alg.NtupleLUN  = 'D02HH'
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'D02hh.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define inputs 
+    alg.InputLocations = [
         '/Event/Phys/StdNoPIDsPions'
     ]
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb_three.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $ 
+# $Id: Xb_three.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Xb_three.py
 #  The simple Bender-based example: find recontructed Xb -> h h h candidates 
@@ -25,10 +25,14 @@
 # =============================================================================
 """
 The simple Bender-based example: find recontructed Xb -> h h h candidates 
+Due to UNKNOWN reason it does not work anymore...
+
+to be understood...
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -266,9 +270,9 @@ class Xb_three(AlgoMC) :
         h1  = self.select ( 'h+'  , hadrons , Q > 0 ) 
         h2  = self.select ( 'h-'  , hadrons , Q < 0 )
         
-        if 50 < h1.size() or 50 < h2.size() :  
+        if 20 < h1.size() or 20 < h2.size() :  
             return self.Warning( ' Skip "busy"-event ' , SUCCESS )
-
+        
 
         tup = self.nTuple ('Xb -> 3h') 
        
@@ -424,9 +428,8 @@ def configure ( **args ) :
     ## print histos 
     alg.HistoPrint = True
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Xb2hhh.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the input 
+    alg.InputLocations = [
         '/Event/Phys/StdNoPIDsPions' 
         ]
 

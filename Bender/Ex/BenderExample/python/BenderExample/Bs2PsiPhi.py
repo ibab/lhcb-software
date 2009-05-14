@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.7 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.8 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -209,7 +209,7 @@ def configure ( **args ) :
     daVinci = DaVinci (
         DataType   = 'DC06'      , # default  
         Simulation = True        ,
-        HltType    = 'Hlt1+Hlt2' ) 
+        HltType    = ''          ) 
     
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
@@ -217,10 +217,11 @@ def configure ( **args ) :
     EventSelector ( 
         PrintFreq = 100 ,
         Input = [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'    TYP='POOL_ROOTTREE' OPT='READ'"
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2PsiPhi.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        #,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
         )
     ## get the actual application manager (create if needed)
@@ -238,13 +239,11 @@ def configure ( **args ) :
     
     ## if runs locally at CERN lxplus 
     gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
-
-    alg=gaudi.algorithm('Bs2PsiPhi')
+    
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Bs2PsiPhi.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the inputs:
+    alg.InputLocations = [
         '/Event/Phys/StdTightKaons' ,
         '/Event/Phys/StdTightMuons' 
         ]

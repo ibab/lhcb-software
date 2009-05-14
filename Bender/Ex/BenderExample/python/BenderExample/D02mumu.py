@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> mumu candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -249,7 +249,8 @@ def configure ( **args ) :
 ##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001833/DST/0000/00001833_00000209_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 ##         ]
         Input = [
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
+        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
         )
@@ -265,13 +266,11 @@ def configure ( **args ) :
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
     ## print histos 
     alg.HistoPrint = True
-   
-    ## configure the desktop
-    desktop = gaudi.tool ( 'D02mumu.PhysDesktop' )
-    desktop.InputLocations = [
+    
+    ## define the inputs:
+    alg.InputLocations = [
         '/Event/Phys/StdLooseMuons' 
         ]
-    desktop.PropertiesPrint = True
         
     return SUCCESS 
     

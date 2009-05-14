@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2DsK.py,v 1.2 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: Bs2DsK.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Bs -> BsK candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Bs -> BsK candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -235,19 +235,19 @@ def configure ( **args ) :
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
+    ## PP -> MC relation tables 
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
+    
     ## print histos 
     alg.HistoPrint = True
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Bs2DsK.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the input locations 
+    alg.InputLocations = [
         '/Event/Phys/StdTightKaons' ,
         '/Event/Phys/StdTightPions' ,
         '/Event/Phys/StdNoPIDsKaons' 
         ]
-    desktop.PropertiesPrint = True
-        
+    
     evtSel = gaudi.evtSel()    
     evtSel.PrintFreq = 50
 

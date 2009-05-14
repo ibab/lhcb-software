@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: GammaForThomas.py,v 1.2 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: GammaForThomas.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/GammaForThomas.py
 #  Simple module to test/verify MC-association for the photons
@@ -12,7 +12,7 @@ Simple module to test/verify MC-association for the photons
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -217,10 +217,9 @@ def configure() :
     
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
-     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Gamma.PhysDesktop' )
-    desktop.InputLocations = [
+    
+    ## define the inputs
+    alg.InputLocations = [
         ## NB: empty !!!
         #'Phys/StdLooseAllPhotons'
         ]    

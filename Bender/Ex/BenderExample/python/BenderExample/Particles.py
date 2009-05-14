@@ -25,7 +25,7 @@ The simple Bender-based example: count the particles
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $   "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $   "
 # =============================================================================
 
 # =============================================================================
@@ -89,7 +89,7 @@ def configure ( **args ) :
     daVinci = DaVinci (
         DataType   = 'DC06'      , # default  
         Simulation = True        ,
-        HltType    = 'Hlt1+Hlt2' ) 
+        HltType    = ''          ) 
 
     ## get (create if needed) the actual application manager
     gaudi = appMgr()
@@ -100,12 +100,12 @@ def configure ( **args ) :
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] ) 
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Particles.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the inputs:
+    alg.InputLocations = [
         '/Event/Phys/StdTightPions' ,
         '/Event/Phys/StdTightKaons' ,
-        '/Event/Phys/StdTightMuons' ]
+        '/Event/Phys/StdTightMuons'
+        ]
     
     ## get input data
     import LoKiExample.Bs2Jpsiphi_mm_data as input 

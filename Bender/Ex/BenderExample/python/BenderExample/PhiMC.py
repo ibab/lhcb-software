@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PhiMC.py,v 1.8 2009-03-04 15:09:12 ibelyaev Exp $ 
+# $Id: PhiMC.py,v 1.9 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak with MC-truth
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak with MC-truth
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -99,7 +99,7 @@ def configure ( **args ) :
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
         Simulation = True   ,
-        HltType    = 'NONE'
+        HltType    = '' 
         ) 
     
     HistogramPersistencySvc ( OutputFile = 'PhiMC_Histos.root' ) 
@@ -116,10 +116,10 @@ def configure ( **args ) :
     ## print histos 
     alg.HistoPrint = True
    
-    ## configure the desktop
-    desktop = gaudi.tool ( 'PhiMC.PhysDesktop' )
-    desktop.InputLocations = [ '/Event/Phys/StdTightKaons' ]
-    desktop.PropertiesPrint = True
+    ## define the inputs:
+    alg.InputLocations = [
+        '/Event/Phys/StdTightKaons'
+        ]
         
     ## get input data 
     import LoKiExample.Bs2Jpsiphi_mm_data as input 

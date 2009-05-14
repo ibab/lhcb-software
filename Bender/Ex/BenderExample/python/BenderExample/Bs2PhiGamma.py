@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.2 2009-03-04 11:53:39 ibelyaev Exp $ 
+# $Id: Bs2PhiGamma.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #  Simple module to test/verify MC-association problem for the photons
@@ -14,7 +14,7 @@ claimed by Victor Yakovenko (LAL)
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -111,7 +111,7 @@ def configure() :
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
         Simulation = True   ,
-        HltType    = 'NONE' 
+        HltType    = '' 
         )
     
     from Configurables import HistogramPersistencySvc, EventSelector, CellularAutomaton 
@@ -162,11 +162,10 @@ def configure() :
     alg.HistoPrint = True
     
     gaudi.addAlgorithm ( alg ) 
-     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Bs2PhiGamma.PhysDesktop' )
-    desktop.InputLocations = [
-        'Phys/StdLooseKaons' ,
+    
+    ## define the inputs:
+    alg.InputLocations = [
+        'Phys/StdLooseKaons'      ,
         'Phys/StdLooseAllPhotons'
         ]    
     

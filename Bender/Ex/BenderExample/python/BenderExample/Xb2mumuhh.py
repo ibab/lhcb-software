@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb2mumuhh.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $
+# $Id: Xb2mumuhh.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Xv -> mu mu h+ h- candidates 
@@ -24,11 +24,16 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # =============================================================================
 """
-The simple Bender-based example: find recontructed Xv -> mu mu h+ h- candidates 
+The simple Bender-based example: find recontructed Xb -> mu mu h+ h- candidates 
+
+Due to UNKNOWN reason it does not work anymore...
+
+to be understood...
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -36,8 +41,16 @@ from   Bender.Awesome            import *
 import LoKiMC.trees              as Trees  
 import PartProp.Nodes            as Nodes
 from   LoKiCore.functions        import *
+from   LoKiPhys.Phys             import *
+
+Trees.MCExclusive.__init__
+Nodes.Decays.iNode
+
 # =============================================================================
 ## Simple class for access MC-truth 
+#
+#  Due to UNKNOWN reason it does not work anymore...
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class Xb2mumuhh(AlgoMC) :
@@ -58,7 +71,7 @@ class Xb2mumuhh(AlgoMC) :
         """
         
         # Xb -> mu+ mu- h+ h- 
-        xb = Trees.MCExclusive  ( Nodes.Beauty )
+
         
         dimu  = Trees.MCExclusive  ( Nodes.Hadron )
         dimu += 'mu+'
@@ -161,9 +174,9 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 ,
         Input = [
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Xb2mumuhh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'   TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
@@ -183,15 +196,13 @@ def configure ( **args ) :
     ## print histos 
     alg.HistoPrint = True
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Xb2mumuhh.PhysDesktop' )
-    desktop.InputLocations = [
+    ## defin the input 
+    alg.InputLocations = [
         '/Event/Phys/StdLooseKaons'   ,
         '/Event/Phys/StdLoosePions'   ,
         '/Event/Phys/StdLooseProtons' ,
         '/Event/Phys/StdLooseMuons' 
         ]
-    desktop.PropertiesPrint = True
         
     return SUCCESS 
     

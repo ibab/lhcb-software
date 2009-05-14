@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: LV02.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $ 
+# $Id: LV02.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/LV02.py
 # The simple Bender-based example:
@@ -30,7 +30,7 @@ show 'Bs -> Ds pi' to 'Bs -> Ds K' reflection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -183,7 +183,7 @@ def configure ( **args ) :
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
         Simulation = True   ,
-        HltType    = 'NONE' ) 
+        HltType    = ''     ) 
     
     HistogramPersistencySvc ( OutputFile = 'LV02_Histos.root' ) 
     
@@ -191,14 +191,16 @@ def configure ( **args ) :
         PrintFreq = 100 , 
         Input = [
         "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_4.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsPi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsPi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsPi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsPi_4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_5.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         ]
         )
     NTupleSvc ( Output = [ "LV02 DATAFILE='LV02_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
@@ -212,9 +214,8 @@ def configure ( **args ) :
     alg.HistoPrint = True
     alg.NTupleLUN = 'LV02'
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'LV02Alg.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the inputs
+    alg.InputLocations = [
         '/Event/Phys/StdTightPions' ,
         '/Event/Phys/StdNoPIDsKaons' 
         ]

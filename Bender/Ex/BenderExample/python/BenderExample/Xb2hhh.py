@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb2hhh.py,v 1.2 2009-03-04 15:09:12 ibelyaev Exp $ 
+# $Id: Xb2hhh.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Xb -> h h h candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Xb -> h h h candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -165,9 +165,8 @@ def configure ( **args ) :
     ## print histos 
     alg.HistoPrint = True
     
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Xb2hhh.PhysDesktop' )
-    desktop.InputLocations = [
+    ## define the input
+    alg.InputLocations = [
         '/Event/Phys/StdLooseKaons'   ,
         '/Event/Phys/StdLoosePions'   ,
         '/Event/Phys/StdLooseProtons' 

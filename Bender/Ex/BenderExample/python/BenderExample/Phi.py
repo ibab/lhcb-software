@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.8 2009-03-04 15:09:12 ibelyaev Exp $
+# $Id: Phi.py,v 1.9 2009-05-14 17:55:00 ibelyaev Exp $
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -84,7 +84,7 @@ def configure () :
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
         Simulation = True   ,
-        HltType    = 'NONE' 
+        HltType    = '' 
         ) 
     
     HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 
@@ -101,9 +101,10 @@ def configure () :
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
      
-    ## configure the desktop
-    desktop = gaudi.tool ( 'Phi.PhysDesktop' )
-    desktop.InputLocations = [ '/Event/Phys/StdTightKaons' ]    
+    ## define the input:
+    alg.InputLocations = [
+        '/Event/Phys/StdTightKaons'
+        ]    
     
     ## get input data 
     import LoKiExample.Bs2Jpsiphi_mm_data as input 
