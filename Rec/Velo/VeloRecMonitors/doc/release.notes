@@ -4,9 +4,12 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-05-14 - Kurt Rinnert
+ - added TAE name (if applicable) to title in per Tell1 occupancy plots
+
 !======================= VeloRecMonitors v1r6 2009-05-08 =====================
 ! 2009-04-30 - Kurt Rinnert
- - added occupancy histograms to clusster monitor
+ - added occupancy histograms to cluster monitor
 
 ! 2009-04-27 - Kurt Rinnert
  - shortened and simplified histogram name in sampling monitor in order to

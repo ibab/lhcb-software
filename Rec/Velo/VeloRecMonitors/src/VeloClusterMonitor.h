@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.8 2009-04-30 15:25:37 krinnert Exp $
+// $Id: VeloClusterMonitor.h,v 1.9 2009-05-14 15:28:36 krinnert Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -59,6 +59,8 @@ namespace Velo
     void rCorrelations( unsigned int sensorNumber1, double localR1 );
 
     // Data members
+    std::string m_tae;
+
     LHCb::VeloClusters* m_clusters;
     std::vector<unsigned int> m_nClustersPerSensor;
 

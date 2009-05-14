@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.12 2009-04-30 15:25:37 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.13 2009-05-14 15:28:36 krinnert Exp $
 // Include files 
 // -------------
 
@@ -70,6 +70,9 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
+  m_tae = name();
+  m_tae.erase(0,3);
+  
   if ( m_occupancyPlots ) {
     m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
     m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
@@ -228,11 +231,11 @@ void Velo::VeloClusterMonitor::monitorClusters() {
       if ( m_occupancyHistPerSensor.end() == m_occupancyHistPerSensor.find(sensorNumber) ) {
         boost::format fmtName ( "OccPerStripSens%d" ) ;
         fmtName % sensorNumber;
-        boost::format fmtTitle ( "Occupancy, Sensor %d" ) ;
+        boost::format fmtTitle ( "Occupancy, Sensor %d, " ) ;
         fmtTitle % sensorNumber;
 
         occHist = m_occupancyHistPerSensor[sensorNumber] 
-          = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str(), -0.5, 2047.5, 2048)); 
+          = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str()+m_tae, -0.5, 2047.5, 2048)); 
       } else {
         occHist = m_occupancyHistPerSensor[sensorNumber];
       }
