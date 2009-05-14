@@ -1,12 +1,12 @@
 package DaVinciSys
-version v22r3
+version v23r0p1
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v22r3   Phys  
+use  DaVinci                 	v23r0   Phys  
 
 alias DaVinciTests "cmt qmtest_run"
 

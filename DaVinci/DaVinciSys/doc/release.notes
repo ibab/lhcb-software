@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v23r0p1>2009-05-14 DaVinci v23r0p1</A></H1><PRE>
+Re-release of DaVinci v23r0 with proper requirements
+
 </PRE><H1><A NAME=v23r0>2009-05-13 DaVinci v23r0</A></H1><PRE>
 
 Based on Phys v8r3, Analysis v3r3, Rec v7r0, HLT v6r1, Lbcom v7r0, LHCb v27r0, Gaudi v21r0, LCG 56
