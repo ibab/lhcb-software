@@ -43,8 +43,7 @@ namespace OTCal {
   void ModuleAccumulator::book() 
   {
     std::string path = name() ;
- 
-    const double tbinsize = 25./16 ;
+    //const double tbinsize = 25./16 ;
     double dmax = m_parent->maxDistance() ;
     double tmin = m_parent->minTime() ;
     double tmax = tmin + 75. ;

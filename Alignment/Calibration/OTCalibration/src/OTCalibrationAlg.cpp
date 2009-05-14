@@ -1,4 +1,4 @@
-// $Id: OTCalibrationAlg.cpp,v 1.1.1.1 2009-04-21 10:57:19 jblouw Exp $
+// $Id: OTCalibrationAlg.cpp,v 1.2 2009-05-14 14:40:07 wouter Exp $
 // Include files
 
 // local
@@ -311,85 +311,64 @@ void OTCalibrationAlg::registerhist(const std::string& path, TNamed* h1)
 //   return par[0] * exp(-0.5*xi*xi) ;
 // }
 
+namespace {
 
-inline double sqr(double x) { return x*x ; }
-
-static TGraph* createRtGraph(const OTDet::RtRelation& rtr)
-{
-  int npoints = 50 ;
-  float tmin = rtr.drifttime(0) ;
-  float tmax = rtr.drifttime(2.5) ;
-  float dt = (tmax-tmin)/npoints;
-  TGraph* gr = new TGraph(npoints) ;
-  gr->SetLineWidth(2) ;
-  for(int i=0; i<npoints; ++i) {
-    float t = tmin + i*dt ;
-    gr->SetPoint(i,rtr.radius(t),t) ;
-  }
-  return gr ;
-}
-
-static TGraph* createRtGraph(const OTDet::RtRelation& rtr,
-			     int mode)
-{
-  int npoints = 50 ;
-  float rmin(0) ;
-  float rmax(2.5) ;
-  float dr = (rmax - rmin)/npoints ;
-
-  float tmin = rtr.drifttime(0) ;
-  float tmax = rtr.drifttime(2.5) ;
-  float dt = (tmax-tmin)/npoints;
-  TGraph* gr = new TGraph(npoints) ;
-  gr->SetLineWidth(2) ;
-  for(int i=0; i<npoints; ++i) {
-    float t = tmin + i*dt ;
-    gr->SetPoint(i,rtr.radius(t),t) ;
-  }
-  return gr ;
-}
-
-
-
-
-static double calc3sigmarms(const TH1& h1pos)
-{
-  // we assume the histogram comes in as a 'positive only'
-  // first calcualte the 'raw rms'
-  double sumw(0),sumx2w(0) ; 
-  for(int ibin=1; ibin<=h1pos.GetNbinsX(); ++ibin) {
-    double x = h1pos.GetBinCenter(ibin) ;
-    double c = h1pos.GetBinContent(ibin) ;
-    sumw   += c ;
-    sumx2w += c*x*x ;
-  }
-  double rawrms = sqrt( sumx2w /  sumw ) ;
-
-  // start from that rms
-  sumw = sumx2w = 0 ;
-  int minbin = h1pos.GetXaxis()->FindBin(rawrms) ;
-  double xtrunc = h1pos.GetXaxis()->GetXmax() ;
-  for(int ibin=1; ibin<=h1pos.GetNbinsX(); ++ibin) {
-    double x = h1pos.GetBinCenter(ibin) ;
-    double c = h1pos.GetBinContent(ibin) ;
-    double up = h1pos.GetXaxis()->GetBinUpEdge(ibin) ;
-    
-    double newsumw   = sumw + c ;
-    double newsumx2w = sumx2w + c*x*x ;
-    if(sumw>0 && ibin>minbin) {
-      double newrms    = sqrt(  newsumx2w / newsumw ) ;
-      if( 3 * newrms < up ) {
-	double drms = newrms - sqrt(  sumx2w / sumw ) ;
-	double frac = (3*drms)/h1pos.GetXaxis()->GetBinWidth(ibin) ;
-	//std::cout << frac << " " << drms << std::endl ;
-	xtrunc = (up - (1-frac)*h1pos.GetXaxis()->GetBinWidth(ibin))/3  ;
-	break ;
-      }
+  inline double sqr(double x) { return x*x ; }
+  
+  TGraph* createRtGraph(const OTDet::RtRelation& rtr)
+  {
+    int npoints = 50 ;
+    float tmin = rtr.drifttime(0) ;
+    float tmax = rtr.drifttime(2.5) ;
+    float dt = (tmax-tmin)/npoints;
+    TGraph* gr = new TGraph(npoints) ;
+    gr->SetLineWidth(2) ;
+    for(int i=0; i<npoints; ++i) {
+      float t = tmin + i*dt ;
+      gr->SetPoint(i,rtr.radius(t),t) ;
     }
-    sumw = newsumw ;
-    sumx2w = newsumx2w ;
+    return gr ;
   }
-  return xtrunc ;
+  
+  double calc3sigmarms(const TH1& h1pos)
+  {
+    // we assume the histogram comes in as a 'positive only'
+    // first calcualte the 'raw rms'
+    double sumw(0),sumx2w(0) ; 
+    for(int ibin=1; ibin<=h1pos.GetNbinsX(); ++ibin) {
+      double x = h1pos.GetBinCenter(ibin) ;
+      double c = h1pos.GetBinContent(ibin) ;
+      sumw   += c ;
+      sumx2w += c*x*x ;
+    }
+    double rawrms = sqrt( sumx2w /  sumw ) ;
+    
+    // start from that rms
+    sumw = sumx2w = 0 ;
+    int minbin = h1pos.GetXaxis()->FindBin(rawrms) ;
+    double xtrunc = h1pos.GetXaxis()->GetXmax() ;
+    for(int ibin=1; ibin<=h1pos.GetNbinsX(); ++ibin) {
+      double x = h1pos.GetBinCenter(ibin) ;
+      double c = h1pos.GetBinContent(ibin) ;
+      double up = h1pos.GetXaxis()->GetBinUpEdge(ibin) ;
+      
+      double newsumw   = sumw + c ;
+      double newsumx2w = sumx2w + c*x*x ;
+      if(sumw>0 && ibin>minbin) {
+	double newrms    = sqrt(  newsumx2w / newsumw ) ;
+	if( 3 * newrms < up ) {
+	  double drms = newrms - sqrt(  sumx2w / sumw ) ;
+	  double frac = (3*drms)/h1pos.GetXaxis()->GetBinWidth(ibin) ;
+	  //std::cout << frac << " " << drms << std::endl ;
+	  xtrunc = (up - (1-frac)*h1pos.GetXaxis()->GetBinWidth(ibin))/3  ;
+	  break ;
+	}
+      }
+      sumw = newsumw ;
+      sumx2w = newsumx2w ;
+    }
+    return xtrunc ;
+  }
 }
 
 void OTCalibrationAlg::updateRtCalib(double& globalDeltaT0, 
