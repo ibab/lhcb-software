@@ -108,6 +108,7 @@ StatusCode Class1Task::terminate()  {
 /// Callback on disable event processing
 StatusCode Class1Task::disable()  {
   m_continue = false;
+  cancel();
   IOCSENSOR.send(this, STOP);
   return StatusCode::SUCCESS;
 }

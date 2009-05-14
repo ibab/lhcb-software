@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.10 2009-01-27 08:30:01 cattanem Exp $
+// $Id: EventRunable.cpp,v 1.11 2009-05-14 16:20:57 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -108,18 +108,27 @@ StatusCode EventRunable::run()   {
         }
         continue;
       }
+      if ( !m_receiveEvts ) {	
+	info("Cancel received: Stop event processing.");
+	break;
+      }
+      else if ( ui->FSMState() != Gaudi::StateMachine::RUNNING ) {
+	info("Cancel received: Stop event processing -- no more in state RUNNING.");
+	break;
+      }
+
       /// Consecutive errors: go into error state
       error("Failed to process event.");
       m_nerr++;
       if ( (m_nerrStop > 0) && (m_nerr > m_nerrStop) )  {
-        Incident incident(name(),"DAQ_FATAL");
+        Incident incident(name(),"DAQ_ERROR");
         m_incidentSvc->fireIncident(incident);
         return StatusCode::FAILURE;
       }
-      else if ( m_nerr > 0 )  {
-        Incident incident(name(),"DAQ_ERROR");
-        m_incidentSvc->fireIncident(incident);
-      }
+      //else if ( m_nerr > 0 )  {
+      //  Incident incident(name(),"DAQ_ERROR");
+      //  m_incidentSvc->fireIncident(incident);
+      //}
     }
     return StatusCode::SUCCESS;
   }
