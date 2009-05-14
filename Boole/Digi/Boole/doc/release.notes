@@ -3,32 +3,33 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-05-13 - Marco Cattaneo
- - Update references for changes related to SQLDDDB v5r4: new calorimeter
-   calibration, new Muon chamber time response
- - Add tests/qmtest/python/BooleExclusions.py, contains shared lines for
-   exclusion from reference comparisons in Boole QMTests, imported by boole*.qmt
- - Add above directory to PYTHONPATH in QMTest case
+</PRE><H1><A NAME=v19r0>2009-05-14 Boole v19r0</A></H1><PRE>
+ - Bug fixes:
+   . Fix valgrind.job to work with new Lblogin environment
 
-! 2009-04-28 - Marco Cattaneo
- - Update references for fix to OT drift time sorting
+ - Changes to requirements
+   . Add tests/qmtest/python directory to PYTHONPATH in QMTest case
 
-! 2009-04-15 - Marco Cattaneo
- - Update references for Gaudi v21 changes
+ - Changes to options:
+   . MC09-Files.py uses new database tags from SQLDDDB v5r4 to pick up new
+     calorimeter calibration and Muon chamber time response
+   . Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py now simply forward to
+     corresponding options in AppConfig
 
-! 2009-04-14 - Marco Cattaneo
- - Update references for:
+ - Changes to QMTests:
+   . Clean up .qms files following move to Gaudi v21
+   . Add tests/qmtest/python/BooleExclusions.py, contains shared lines for
+     exclusion from reference comparisons in QMTests, imported by boole*.qmt
+
+ - Changes to references to reflect changes in Boole v18r0 output:
+   . Changes related to SQLDDDB v5r4: new calorimeter calibration,
+                                      new Muon chamber time response
+   . Change due to fix to OT drift time sorting
    . Change in printout from OdinTypesFilter and L0DU
    . Changes in STEffChecker output following changes to ST cluster selectors
- - Clean up .qms files following move to Gaudi v21
- - Increment version to v19r0
-
-! 2009-04-14 - Marco Cattaneo
- - Fix valgrind.job to work with new Lblogin environment
- - Increment version to v18r1
+   . Changes in printout due to move to Gaudi v21
 
 </PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
-
  - Changes to requirements
    . Increase major version to v18r0
    . Explicitly use CASTOR from LCG_Interfaces for QMTests
