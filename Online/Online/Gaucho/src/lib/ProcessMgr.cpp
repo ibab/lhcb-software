@@ -415,7 +415,8 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       //  }
         // checking the nodename is not necessary because the bridges are already selected.
         // Then we only filter by subfarmName 
-        std::string subfarmName = taskName;
+       // std::string subfarmName = taskName;
+	std::string subfarmName = nodeName;
         bool chooseIt=true;
         if (m_subfarmName.size()) chooseIt=false;
         for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
