@@ -96,9 +96,17 @@ void ProcessMgr::write(){
 void ProcessMgr::setUtgid(const std::string &utgid)
 {
   m_utgid = utgid;
-  
   std::size_t first_us = m_utgid.find("_");
-  m_nodeName = m_utgid.substr(0, first_us);
+  std::size_t second_us = m_utgid.find("_", first_us + 1);
+  std::size_t third_us = m_utgid.find("_", second_us + 1);
+  int tmplen=second_us-first_us-1;
+  if (third_us != std::string::npos) {
+     // three underscores found in UTGID -> we're in the Monitoring Farm
+     m_nodeName = m_utgid.substr(first_us+1,tmplen);
+  }   
+  else {
+     m_nodeName = m_utgid.substr(0, first_us);
+  }
 }  
 
 
@@ -154,12 +162,20 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       }
       else {
         if (!m_monitoringFarm) {
-	 if (serviceName.find("/" + m_nodeName) == std::string::npos) {
-            msg << MSG::DEBUG << "REFUSED because partition name NOT OK" << endreq;
-            continue;
-          }
-        }
-      }
+	 if (m_farm=="EFF") {
+	    if (serviceName.find("/" + m_nodeName) == std::string::npos) {
+               msg << MSG::DEBUG << "REFUSED because partition name NOT OK nodename: " << m_nodeName << " serviceName "<< serviceName << endreq;
+               continue;
+             }
+	 }    
+	 else {
+	    if (serviceName.find("_" + m_nodeName) == std::string::npos) {
+               msg << MSG::DEBUG << "REFUSED because partition name NOT OK nodename: " << m_nodeName << " serviceName "<< serviceName << endreq;
+               continue;
+             }
+	   }     
+         }
+       }
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
       if (!m_monitoringFarm) {
@@ -201,9 +217,10 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     std::string task;
     std::string part;
     int index=2;
-    if (m_monitoringFarm) {
-      part = Misc::splitString(utgid, "_")[0];
+    if (m_farm=="MF") {
       task = Misc::splitString(utgid, "_")[2];
+      if ((task.compare("Saver")==0)||(task.compare("SAVER")==0)) continue; 
+      part = Misc::splitString(utgid, "_")[0];
     }
     else {
       task = Misc::splitString(utgid, "_")[1];
@@ -327,6 +344,11 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     
     std::size_t second_us = (*serverListTotIt).find("_", first_us + 1);
     if (second_us == std::string::npos) continue;
+    
+    std::size_t third_us;
+    if (m_farm=="MF") {
+        third_us = (*serverListTotIt).find("_", second_us + 1);	   
+    }	   
 
     std::string partName;
     std::string nodeName;
@@ -334,10 +356,15 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
 
     if (m_serviceOwner.compare(s_Adder)==0){
       msg << MSG::DEBUG << " We are inside an ADDER " << endreq;
-
-      nodeName = (*serverListTotIt).substr(0, first_us);
-      taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-
+      if (m_farm=="EFF") {
+         nodeName = (*serverListTotIt).substr(0, first_us);
+         taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+      }
+      else { 	 
+         partName = (*serverListTotIt).substr(0, first_us);
+         nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+         taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
+      } 	 
       if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
         msg << MSG::DEBUG << "refused because we don't add SAVERS. "<< endreq;    
         continue; // we don't do nothing with Savers
@@ -357,12 +384,12 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
        // This is a 1st level Adder, then we can check the task name here.
         if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
-          msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+          msg << MSG::DEBUG << "REFUSED because taskName "<< taskName << " NOT OK should be " << m_taskName << endreq;
           continue; 
         }
         else msg << MSG::DEBUG << "taskName OK" << endreq;
       }
-      else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)!="PART")) { //2nd level Adder
+      else if (((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)!="PART"))&&(m_farm=="EFF")) { //2nd level Adder
         if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)){
           msg << MSG::DEBUG << "REFUSED because 2nd level adders add only adders. "<< endreq;
           continue;
@@ -381,7 +408,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
       }
-      else if  ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) { //3rd level Adder (Top Level Adder)
+      else if  ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(partName=="LHCb"))) { //3rd level Adder (Top Level Adder)
        // if (nodeName.compare("Bridge")!=0) {
        //   msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
        //   continue;

@@ -51,12 +51,24 @@ StatusCode AdderSvc::initialize() {
   m_utgid = RTL::processName();
   std::size_t first_us = m_utgid.find("_");
   std::size_t second_us = m_utgid.find("_", first_us + 1);
-  m_nodeName = m_utgid.substr(0, first_us);
-
+  std::size_t third_us = m_utgid.find("_", second_us + 1);
   std::string adderType;
+  std::string taskName;
+  if (third_us != std::string::npos) {
+     // three underscores found in UTGID -> we're in the Monitoring Farm
+     m_nodeName = m_utgid.substr(first_us+1,second_us-first_us-1);
+     m_farm = "MF";
+     taskName = m_utgid.substr(second_us + 1, third_us - second_us - 1);
+  }   
+  else {
+     m_nodeName = m_utgid.substr(0, first_us);
+     m_farm = "EFF";
+     taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
+  }
+  msg << MSG::DEBUG << "m_nodeName " << m_nodeName << " m_farm " << m_farm << endreq;
   if (m_nodeName.size() == 8) adderType = "First Level"; 
-  else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)!="PART")) adderType = "Second Level"; 
-  else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) adderType = "Third Level"; 
+  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) adderType = "Second Level"; 
+  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) adderType = "Third Level"; 
   else {
     msg << MSG::ERROR << "This is not an Adder because the nodeName do not correspond at any case" << endreq;
     msg << MSG::ERROR << "1rst level ==> HLTA0101" << endreq;
@@ -65,7 +77,7 @@ StatusCode AdderSvc::initialize() {
     return StatusCode::FAILURE;
   }
 
-  std::string taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
+
 
   if ((taskName != "Adder")&&(taskName != "ADDER")) {
     msg << MSG::ERROR << "This is not an Adder !" << endreq;
@@ -120,6 +132,7 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->setAlgorithmVector(m_algorithmName);
   m_processMgr->setObjectVector(m_objectName);
   m_processMgr->setUtgid(m_utgid);
+  m_processMgr->setFarm(m_farm);
   m_processMgr->setPartitionName(m_partitionName);
   if (m_publishRates == 1) m_processMgr->setPublishRates(true);
 
