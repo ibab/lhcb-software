@@ -1,4 +1,4 @@
-// $Id: CombinedPidPlotTool.cpp,v 1.2 2009-02-15 22:03:51 jonrob Exp $
+// $Id: CombinedPidPlotTool.cpp,v 1.3 2009-05-14 11:25:57 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -20,11 +20,7 @@ DECLARE_TOOL_FACTORY( CombinedPidPlotTool ) ;
 CombinedPidPlotTool::CombinedPidPlotTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : BasePlotTool ( type, name , parent )
-{
-  // interface
-  declareInterface<IPlotTool>(this);
-}
+  : BasePlotTool ( type, name , parent ) { }
 
 //=============================================================================
 // Standard destructor

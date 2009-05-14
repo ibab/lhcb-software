@@ -1,4 +1,4 @@
-// $Id: MassPlotTool.cpp,v 1.5 2009-04-07 16:25:12 pkoppenb Exp $
+// $Id: MassPlotTool.cpp,v 1.6 2009-05-14 11:25:57 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -22,7 +22,9 @@ MassPlotTool::MassPlotTool( const std::string& type,
                             const IInterface* parent )
   : BasePlotTool ( type, name , parent )
 {
-  declareInterface<IPlotTool>(this);
+  // job options
+  declareProperty( "RecoResolution", m_recoRes = 20.0*Gaudi::Units::MeV );
+  declareProperty( "NSigmaMassRange", m_nSigma = 5 );
 }
 
 //=============================================================================
@@ -44,8 +46,7 @@ StatusCode MassPlotTool::fillImpl( const LHCb::Particle* p,
 
   const double mm = pp->mass() ;
   const double wm = pp->width() ;
-  const double re = 20.0*Gaudi::Units::MeV ; // Typical resolution
-  const double em = 5.0*sqrt(wm*wm+re*re); /// @todo PK : 5 (width + resolution). Arbitary I know. To be improved ...
+  const double em = m_nSigma * std::sqrt( wm*wm + m_recoRes*m_recoRes );  // (width + resolution)
 
   plot( p->measuredMass(),
         histoName("M",pp,trailer),"Mass of "+pp->name()+"_"+trailer, 

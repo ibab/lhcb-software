@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.5 2009-02-16 14:24:37 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.6 2009-05-14 11:25:57 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -24,7 +24,6 @@ RichPlotTool::RichPlotTool( const std::string& type,
   : BasePlotTool ( type, name , parent ),
     m_jos        ( NULL )
 {
-  declareInterface<IPlotTool>(this);
   declareProperty( "ExtraHistos", m_extraHistos = true ); 
 }
 

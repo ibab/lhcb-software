@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-14 - Chris Jones
+ - make Mass range limits in MassPlotTool controllable via job options
+
 !========================== DaVinciMonitors v1r3 2009-05-11 ==================
 
 ! 2009-05-08

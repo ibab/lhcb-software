@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DaVinciMonitoring.py,v 1.1 2009-04-16 07:20:16 pkoppenb Exp $
+# $Id: DaVinciMonitoring.py,v 1.2 2009-05-14 11:25:57 jonrob Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -13,7 +13,7 @@ from Gaudi.Configuration import *
 # Count Events
 #
 from Configurables import EventCountHisto
-DaVinci().MoniSequence += [EventCountHisto("DaVinciMonitor") ] 
+DaVinci().MoniSequence += [ EventCountHisto("DaVinciMonitor") ] 
 ##############################################################################
 #
 # Get right selection @todo does not work yet 
@@ -24,7 +24,7 @@ DaVinci().MoniSequence += [EventCountHisto("DaVinciMonitor") ]
 #
 # Imported stuff
 #
-importOptions( "$DAVINCIMONITORSROOT/options/Jpsi2MuPi.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py") 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py") 
+importOptions( "$DAVINCIMONITORSROOT/options/Jpsi2MuPi.py" ) 
+importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py" ) 
+importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py" ) 
+importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
