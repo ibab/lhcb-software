@@ -889,7 +889,7 @@ StatusCode VAlign::FindAlignment(MilleConfig *my_config)
         (vector_PV_tracksR[npv-1].begin())->nPV_z() << endmsg;
       debug() << "Global " << endmsg;
 
-      double Vz_official=(vector_PV_tracks[npv-1].begin())->nPV_z();
+      //double Vz_official=(vector_PV_tracks[npv-1].begin())->nPV_z();
       
       //my_PV_finder->FitPV(PV_tracks_linfit,0, Vz_official);
       my_PV_finder->FitPV(PV_tracks_linfit,0);
