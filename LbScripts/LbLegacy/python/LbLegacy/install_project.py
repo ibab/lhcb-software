@@ -197,18 +197,18 @@
         - moved version of LbScripts to be used to be the current one (v3r2).
  090421 - comment the full_flag setting in win32 section.
         - put the import statement for LHCb_config.
+ 090421 - Added the support for slc5
+        - removed the usage of the old scripts.tar.gz for the bootstrapping.
 """
 #------------------------------------------------------------------------------
-import LbConfiguration
 import sys, os, getopt, time, shutil, urllib
 import atexit
 import stat
 import commands
 import logging
 from shutil import rmtree
-import LbLegacy.LHCb_config
 
-script_version = '090421'
+script_version = '090513'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v3r3"
@@ -219,6 +219,11 @@ url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
 subdir = ['lcg','lhcb','contrib','html','targz', 'tmp']
+
+# dynamic modules
+
+LbLegacy = None
+LbConfiguration = None
 
 
 # base directories
@@ -593,10 +598,11 @@ def getCMT(version=0):
 
     # get the CMT version number from ExtCMT
     if version == 0:
-        if hasattr(LbConfiguration, "External") :
+        try :
+            import LbConfiguration.External
             cmtvers = LbConfiguration.External.CMT_version
             log.debug("Extracting CMT version from LbConfiguration.External: %s" % cmtvers)
-        else :
+        except ImportError :
             cmtvers = "v1r20p20070208"
             log.debug("Using CMT version %s" % cmtvers)
     # get the cmt version number from the argument
@@ -838,8 +844,10 @@ def getPackVer(file):
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
 
+
     # get the binary if any
     if file.find("LBSCRIPTS") == -1 :
+        import LbConfiguration.Platform
         for b in LbConfiguration.Platform.binary_list:
             if file.find(b) != -1:
                 bin = b
@@ -908,6 +916,8 @@ def getProjectList(name,version,binary=' '):
     log = logging.getLogger()
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
+
+    import LbLegacy.LHCb_config
 
     if LbLegacy.LHCb_config.data_files.has_key(name) == 1:
         tar_file = LbLegacy.LHCb_config.data_files[name]+'_'+version
@@ -1133,10 +1143,14 @@ def getProjectTar(tar_list, already_present_list=None):
                         os.system("python %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                         registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                         prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
-                        if os.path.islink(prodlink) :
-                            os.remove(prodlink)
-                            if sys.platform != "win32" :
-                                os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
+                        if sys.platform != "win32" :
+                            if os.path.exists(prodlink) :
+                                if os.path.islink(prodlink) :
+                                    os.remove(prodlink)
+                                else :
+                                    log.error("%s is not a link. Please remove this file/directory")
+                            os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
+                            log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
                         my_dir = os.path.dirname(this_lhcb_dir)
                         for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
                             if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
@@ -1171,6 +1185,8 @@ def getProjectTar(tar_list, already_present_list=None):
 # download necessary scripts ==============================================
 #
 def getBootScripts():
+    global LbLegacy
+    global LbConfiguration
     log = logging.getLogger()
     here = os.getcwd()
     cleanBootScripts()
@@ -1180,7 +1196,6 @@ def getBootScripts():
         this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
         sys.path.insert(0, os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
         log.debug("sys.path is %s" % os.pathsep.join(sys.path))
-        import LbLegacy, LbConfiguration
     else :
         log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
         getFile(url_dist+'LBSCRIPTS/',scripttar)
@@ -1199,7 +1214,10 @@ def getBootScripts():
             changePermissions(this_bootscripts_dir, recursive=True)
             sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
             log.debug("sys.path is %s" % os.pathsep.join(sys.path))
-            import LbLegacy, LbConfiguration
+    import LbLegacy as lbl
+    LbLegacy = lbl
+    import LbConfiguration as lbconf
+    LbConfiguration = lbconf
     atexit.register(cleanBootScripts)
 
 def cleanBootScripts():
@@ -1362,7 +1380,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
             break
     os.environ["CMTCONFIG"] = cmtconfig
     # setup the scripts python path
-    lbscriptspydir = os.path.join(this_lhcb_dir,"LBSCRIPTS","prod", "InstallArea", "python")
+    lbscriptspydir = os.path.join(this_lhcb_dir,"LBSCRIPTS", "LBSCRIPTS_"+lbscripts_version, "InstallArea", "python")
     if os.path.exists(lbscriptspydir) :
         sys.path.append(lbscriptspydir)
     else :
