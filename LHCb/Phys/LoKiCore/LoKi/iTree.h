@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.8 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id: iTree.h,v 1.9 2009-05-14 16:56:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -170,6 +170,11 @@ namespace Decays
     virtual void reset() const { return m_tree->reset () ; }
     /// has marked elements in the tree? 
     virtual bool marked () const { return m_tree->marked() ; }
+    // ======================================================================
+  public:
+    // ======================================================================
+    Tree_& operator&= ( const Decays::iTree_<PARTICLE>& tree );
+    Tree_& operator|= ( const Decays::iTree_<PARTICLE>& tree );    
     // ======================================================================
   public:
     // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: GenDecays.cpp,v 1.5 2009-05-06 20:23:22 ibelyaev Exp $
+// $Id: GenDecays.cpp,v 1.6 2009-05-14 16:57:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,9 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
+  /// the name of photon for PHOTOS 
+  const std::string s_GAMMA = "gamma" ;
   // ==========================================================================
   /** make the decay sections 
    *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
@@ -126,76 +129,6 @@ Decays::Trees::GenExclusive::GenExclusive
   const Decays::Trees::Oscillation            oscillation )
   : Decays::iTree_<const HepMC::GenParticle*> () 
   , m_mother      ( mother     )
-  , m_children    (            ) 
-  , m_alg         ( alg        )
-  , m_oscillation ( oscillation )
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param children the list of daughter substrees 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-Decays::Trees::GenExclusive::GenExclusive
-( const std::string&                                 mother      , 
-  const Decays::Trees::GenExclusive::SubTrees& children    ,
-  const Decays::Trees::Alg                     alg         ,
-  const Decays::Trees::Oscillation             oscillation )
-  : Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( Decays::Nodes::Pid ( mother ) )
-  , m_children   ( children   ) 
-  , m_alg        ( alg        )
-  , m_oscillation ( oscillation )
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param alg the matching algorithm 
- *  @param osc require the oscillation flag for mother 
- */
-// ============================================================================
-Decays::Trees::GenExclusive::GenExclusive
-( const std::string&                                mother      , 
-  const Decays::Trees::Alg                    alg         ,
-  const Decays::Trees::Oscillation            oscillation )
-  : Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( Decays::Nodes::Pid ( mother ) )
-  , m_children   (            ) 
-  , m_alg        ( alg        )
-  , m_oscillation ( oscillation )
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param children the list of daughter substrees 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-Decays::Trees::GenExclusive::GenExclusive
-( const LHCb::ParticleID&                            mother     , 
-  const Decays::Trees::GenExclusive::SubTrees& children   ,
-  const Decays::Trees::Alg                     alg        ,
-  const Decays::Trees::Oscillation             oscillation )
-  : Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( Decays::Nodes::Pid ( mother ) )
-  , m_children   ( children   ) 
-  , m_alg        ( alg        )
-  , m_oscillation ( oscillation )
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param alg the matching algorithm 
- *  @param osc require the oscillation flag for mother 
- */
-// ============================================================================
-Decays::Trees::GenExclusive::GenExclusive
-( const LHCb::ParticleID&                           mother      , 
-  const Decays::Trees::Alg                    alg         ,
-  const Decays::Trees::Oscillation            oscillation )
-  : Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    (            ) 
   , m_alg         ( alg        )
   , m_oscillation ( oscillation )
@@ -439,7 +372,7 @@ Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
 // ============================================================================
 // GENINCLUSIVE 
 // ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
+/*  full constructor from the node (mother), subtrees & flags 
  *  @param mother the mother node 
  *  @param children the list of daughter substrees 
  *  @param alg the matching algorithm 
@@ -450,7 +383,10 @@ Decays::Trees::GenInclusive::GenInclusive
   const Decays::Trees::GenExclusive::SubTrees& children ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  : Decays::Trees::GenExclusive ( mother   , 
+                                  children , 
+                                  alg      , 
+                                  osc      ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -462,59 +398,23 @@ Decays::Trees::GenInclusive::GenInclusive
 ( const Decays::iNode&                        mother , 
   const Decays::Trees::Alg                    alg    ,
   const Decays::Trees::Oscillation            osc    )
-  : Decays::Trees::GenExclusive( mother , alg , osc ) 
+  : Decays::Trees::GenExclusive ( mother  , 
+                                  alg     , 
+                                  osc     ) 
 {}
 // ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param children the list of daughter substrees 
+/*  constructor from the decay & flags 
+ *  @param decay the decay 
  *  @param alg the matching algorithm 
+ *  @param oscillation check the oscillation flag
  */
-// ============================================================================
 Decays::Trees::GenInclusive::GenInclusive
-( const std::string&                                 mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::Alg                     alg      ,  
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-Decays::Trees::GenInclusive::GenInclusive
-( const std::string&                                mother , 
-  const Decays::Trees::Alg                    alg    , 
-  const Decays::Trees::Oscillation            osc    )
-  : Decays::Trees::GenExclusive( mother , alg , osc ) 
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param children the list of daughter substrees 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-Decays::Trees::GenInclusive::GenInclusive
-( const LHCb::ParticleID&                            mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::Alg                     alg      ,    
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-Decays::Trees::GenInclusive::GenInclusive
-( const LHCb::ParticleID&                           mother , 
+( const Decays::Decay&                        decay  , 
   const Decays::Trees::Alg                    alg    ,
   const Decays::Trees::Oscillation            osc    )
-  : Decays::Trees::GenExclusive( mother , alg , osc ) 
+  : Decays::Trees::GenExclusive ( decay   , 
+                                  alg     , 
+                                  osc     ) 
 {}
 // ============================================================================
 // constructor  from GenExclusive 
@@ -627,94 +527,43 @@ Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // GENOPTIONAL
 // ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const Decays::iNode&                         mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
-  , m_optional ( optional ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const Decays::iNode&                             mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , optional ) 
-{}
+/*  full constructor from the node (mother) and subtrees
+ *  @param mother the mother node 
+ *  @param children the list of children 
+ *  @param optional the list of optional components 
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
 ( const Decays::iNode&                         mother   , 
   const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , GenExclusive ( optional ) ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const std::string&                                 mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
   const Decays::Trees::GenExclusive::SubTrees& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
+  : Decays::Trees::GenExclusive ( mother   , 
+                                  children , 
+                                  alg      ,  
+                                  osc      )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const std::string&                                     mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , optional ) 
-{}
+/*  constructor from decay descriptor, optional and flags 
+ *  @param decay the decay descriptor
+ *  @param optional the list of optional components 
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
-( const std::string&                                 mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , GenExclusive ( optional ) ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const LHCb::ParticleID&                            mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
+( const Decays::Decay&                         decay    ,
   const Decays::Trees::GenExclusive::SubTrees& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
+  : Decays::Trees::GenExclusive ( decay , 
+                                  alg   , 
+                                  osc   ) 
   , m_optional ( optional ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const LHCb::ParticleID&                                mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , optional ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const LHCb::ParticleID&                            mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
-  , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
@@ -722,13 +571,6 @@ Decays::Trees::GenOptional::GenOptional
   const Decays::Trees::GenExclusive::SubTrees&    optional ) 
   : Decays::Trees::GenExclusive ( right ) 
   , m_optional ( optional ) 
-{}
-// ============================================================================
-Decays::Trees::GenOptional::GenOptional
-( const Decays::Trees::GenOptional::GenExclusive& right    , 
-  const Decays::iNode&                            optional ) 
-  : Decays::Trees::GenExclusive ( right ) 
-  , m_optional ( 1 , GenExclusive ( optional ) )  
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
@@ -928,43 +770,45 @@ void Decays::Trees::GenOptional::setOptional
 // ============================================================================
 // GENPHOTOS 
 // ============================================================================
-// constructor from the node (mother) and subtrees 
+/*  full constructor from the node (mother) and subtrees
+ *  @param mother the mother node 
+ *  @param children the list of children
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenPhotos::GenPhotos
 ( const Decays::iNode&                      mother   , 
   const Decays::Trees::GenPhotos::SubTrees& children ,
   const Decays::Trees::Alg                  alg      ,
   const Decays::Trees::Oscillation          osc      )
-  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
-  , m_photon    ( "gamma"   )
+  : Decays::Trees::GenExclusive ( mother   , 
+                                  children , 
+                                  alg      , 
+                                  osc      ) 
+  , m_photon    ( s_GAMMA )
 {}
 // ============================================================================
-// constructor from the node (mother) and subtrees 
+/*  constructor from the decay descriptor and flags 
+ *  @param decay the decay descriptor 
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenPhotos::GenPhotos
-( const std::string&                              mother   , 
-  const Decays::Trees::GenPhotos::SubTrees& children ,
-  const Decays::Trees::Alg                  alg      ,
-  const Decays::Trees::Oscillation          osc      )
-  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
-  , m_photon    ( "gamma"   )
+( const Decays::Decay&              decay    ,  
+  const Decays::Trees::Alg          alg      ,
+  const Decays::Trees::Oscillation  osc      )
+  : Decays::Trees::GenExclusive ( decay , alg , osc ) 
+  , m_photon    ( s_GAMMA )
 {}
 // ============================================================================
-// constructor from the node (mother) and subtrees 
-// ============================================================================
-Decays::Trees::GenPhotos::GenPhotos
-( const LHCb::ParticleID&                         mother   , 
-  const Decays::Trees::GenPhotos::SubTrees& children ,
-  const Decays::Trees::Alg                  alg      ,
-  const Decays::Trees::Oscillation          osc      )
-  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
-    , m_photon    ( "gamma"   )
-{}
+// constructor from the tree 
 // ============================================================================
 Decays::Trees::GenPhotos::GenPhotos
 ( const Decays::Trees::GenPhotos::GenExclusive& right ) 
   : Decays::Trees::GenExclusive ( right ) 
-  , m_photon    ( "gamma"   )
+  , m_photon    ( s_GAMMA )
 {}
 // ============================================================================
 // MANDATORY: the proper validation of the tree
@@ -1052,114 +896,60 @@ bool Decays::Trees::GenPhotos::operator()
 // ============================================================================
 // GENPHOTOSOPTIONAL
 // ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const Decays::iNode&                         mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
+/*  full constructor from the node (mother) and subtrees
+ *  @param mother the mother node 
+ *  @param children the list of children 
+ *  @param optional the list of optional components 
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::iNode&                         mother   , 
   const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
-// ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const Decays::iNode&                             mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
-// ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const std::string&                                 mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
   const Decays::Trees::GenExclusive::SubTrees& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
+  : Decays::Trees::GenOptional ( mother   , 
+                                 children , 
+                                 optional , 
+                                 alg      , 
+                                 osc      )
+  , m_photon ( s_GAMMA )  
 {}
 // ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const std::string&                                 mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
+/*  constructor from decay descriptor, optional and flags 
+ *  @param decay the decay descriptor
+ *  @param optional the list of optional components 
+ *  @param alg the matching algorithm 
+ *  @param oscillation check the oscilaltion flag
+ */
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const std::string&                                     mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
-// ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LHCb::ParticleID&                            mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
+( const Decays::Decay&                         decay    , 
   const Decays::Trees::GenExclusive::SubTrees& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
+  : Decays::Trees::GenOptional ( decay    , 
+                                 optional , 
+                                 alg      , 
+                                 osc      )
+  , m_photon ( s_GAMMA )  
 {}
 // ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LHCb::ParticleID&                            mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::iNode&                         optional ,
-  const Decays::Trees::Alg                     alg      ,
-  const Decays::Trees::Oscillation             osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
-// ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LHCb::ParticleID&                                mother   , 
-  const Decays::Trees::GenExclusive::SubTrees&     children ,
-  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Decays::Trees::Alg                         alg      ,
-  const Decays::Trees::Oscillation                 osc      )
-  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
-  , m_photon ( "gamma")  
-{}
+// constructor from the tree 
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::Trees::GenOptional& right ) 
   : Decays::Trees::GenOptional ( right )
-  , m_photon ( "gamma")  
+  , m_photon ( s_GAMMA )  
 {}
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::Trees::GenExclusive&           right    ,
   const Decays::Trees::GenExclusive::SubTrees& optional )
   : Decays::Trees::GenOptional ( right , optional )
-  , m_photon ( "gamma")  
-{}
-// ============================================================================
-Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const Decays::Trees::GenExclusive& right    ,
-  const Decays::iNode&               optional )
-  : Decays::Trees::GenOptional ( right , optional )
-  , m_photon ( "gamma")  
+  , m_photon ( s_GAMMA )  
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
@@ -1284,73 +1074,6 @@ bool Decays::Trees::GenPhotosOptional::operator()
   return false ; // RETURN 
 }
 // ============================================================================
-/*  operator for easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::And_<const HepMC::GenParticle*>
-operator&& 
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const Decays::iNode&                             n ) 
-{ return t && Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-/*  operator for easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::And_<const HepMC::GenParticle*>
-operator&& 
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const std::string&                                     n ) 
-{ return t && Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-/*  operator for the easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::And_<const HepMC::GenParticle*>
-operator&& 
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const LHCb::ParticleID&                                n ) 
-{ return t && Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-/*  operator for easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::Or_<const HepMC::GenParticle*>
-operator|| 
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const Decays::iNode&                             n ) 
-{ return t || Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-/*  operator for easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::Or_<const HepMC::GenParticle*>
-operator||
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const std::string&                                     n ) 
-{ return t || Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-/*  operator for the easy construction of trees 
- *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-// ============================================================================
-Decays::Trees::Or_<const HepMC::GenParticle*>
-operator||
-( const Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const LHCb::ParticleID&                                n ) 
-{ return t || Decays::Trees::GenExclusive ( n ) ; }
-// ============================================================================
-
 
 // ============================================================================
 // The END 

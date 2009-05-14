@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.7 2009-05-06 20:20:01 ibelyaev Exp $
+// $Id: Trees.icpp,v 1.8 2009-05-14 16:56:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1
@@ -12,6 +12,18 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-05-07
  */
+// ============================================================================
+template <class PARTICLE>
+Decays::Tree_<PARTICLE>& 
+Decays::Tree_<PARTICLE>::operator&= ( const Decays::iTree_<PARTICLE>& right )
+{ return ( *this = ( *m_tree && right ) ) ; }
+// ============================================================================
+template <class PARTICLE>
+Decays::Tree_<PARTICLE>& 
+Decays::Tree_<PARTICLE>::operator|= ( const Decays::iTree_<PARTICLE>& right )
+{ return ( *this = ( *m_tree || right ) ) ; }
+// ============================================================================
+
 // ============================================================================
 // MARKED 
 // ============================================================================
@@ -115,30 +127,37 @@ inline size_t Decays::Trees::_Tree_<PARTICLE>::getID()
 }
 // ============================================================================
 
+
+// ============================================================================
+// operator &=
+// ============================================================================
+template <class PARTICLE>
+Decays::Trees::_Tree_<PARTICLE>& 
+Decays::Trees::_Tree_<PARTICLE>::operator&= 
+( const Decays::iTree_<PARTICLE>& right ) 
+{ this->m_tree = ( this->tree() && right ) ; return *this ; }
+// ============================================================================
+// operator |=
+// ============================================================================
+template <class PARTICLE>
+Decays::Trees::_Tree_<PARTICLE>& 
+Decays::Trees::_Tree_<PARTICLE>::operator|= 
+( const Decays::iTree_<PARTICLE>& right ) 
+{ this->m_tree = ( this->tree() || right ) ; return *this ; }
+
+
+
+
 // ============================================================================
 // Op_
 // ============================================================================
 // constructor from two sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline Decays::Trees::Op_<PARTICLE>::Op_ 
-( const Decays::iTree_<PARTICLE>& n1 , 
-  const Decays::iTree_<PARTICLE>& n2 ) 
+inline Decays::Trees::Op_<PARTICLE>::Op_ () 
   : Decays::iTree_<PARTICLE> () 
   , m_trees ()
-{
-  m_trees.push_back ( Decays::Trees::_Tree_<PARTICLE> ( n1 ) ) ;
-  m_trees.push_back ( Decays::Trees::_Tree_<PARTICLE> ( n2 ) ) ;
-}   
-// ============================================================================
-// constructor from list of sub-trees 
-// ============================================================================
-template <class PARTICLE>
-inline Decays::Trees::Op_<PARTICLE>::Op_ 
-( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : Decays::iTree_<PARTICLE> () 
-  , m_trees ( trees )
-{}
+{}   
 // ============================================================================
 // MANDATORY: check the validness 
 // ============================================================================
@@ -176,7 +195,7 @@ inline size_t Decays::Trees::Op_<PARTICLE>::collect
 ( typename Decays::iTree_<PARTICLE>::Collection& o ) const 
 {
   size_t size = 0 ;
-  for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
+  for ( const_iterator it = m_trees.begin() ; 
         m_trees.end() != it ; ++it ) { size += it->collect ( o ) ; }
   return size ;
 }
@@ -186,10 +205,14 @@ inline size_t Decays::Trees::Op_<PARTICLE>::collect
 template <class PARTICLE>
 inline bool Decays::Trees::Op_<PARTICLE>::marked() const 
 {
-  for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
+  for ( const_iterator it = m_trees.begin() ; 
         m_trees.end() != it ; ++it ) { if ( it->marked() ) { return true ; } }  
   return false ;
 }
+
+
+
+
 // ============================================================================
 // Or_
 // ============================================================================
@@ -199,16 +222,21 @@ template <class PARTICLE>
 inline Decays::Trees::Or_<PARTICLE>::Or_ 
 ( const Decays::iTree_<PARTICLE>& n1 , 
   const Decays::iTree_<PARTICLE>& n2 ) 
-  : Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
-{}
+  : Decays::Trees::Op_<PARTICLE> ()  
+{
+  this->addTree ( n1 ) ;
+  this->addTree ( n2 ) ;
+}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
 template <class PARTICLE>
 inline Decays::Trees::Or_<PARTICLE>::Or_ 
 ( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : Decays::Trees::Op_<PARTICLE> ( trees )  
-{}
+  : Decays::Trees::Op_<PARTICLE> ()  
+{
+  this->addTree ( trees ) ;
+}
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
@@ -217,25 +245,12 @@ inline std::ostream&
 Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const 
 {
   s << " (";
-  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator 
-          tree = this->begin() ; this->end() != tree ; ++tree )
+  for ( const_iterator tree = this->begin() ; this->end() != tree ; ++tree )
   { 
     if ( this->begin() != tree ) { s << "||" ; } 
     s << (*tree) ;
   }
   return s << ") " ;
-}
-// ============================================================================
-// operator  |=
-// ============================================================================
-template <class PARTICLE>
-inline 
-Decays::Trees::Or_<PARTICLE>& 
-Decays::Trees::Or_<PARTICLE>::operator|= 
-( const Decays::Trees::Or_<PARTICLE>& tree ) 
-{
-  this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
-  return  *this ;
 }
 // ============================================================================
 // operator  ()
@@ -250,8 +265,39 @@ Decays::Trees::Or_<PARTICLE>::operator()
   return this->end() != std::find ( this->begin() , this->end() , p ) ;
 }
 // ============================================================================
-
-
+// add the component 
+// ============================================================================
+template <class PARTICLE>
+inline size_t 
+Decays::Trees::Or_<PARTICLE>::addTree ( const Decays::iTree_<PARTICLE>& tree )
+{
+  // local types:
+  typedef     Decays::iTree_<PARTICLE> _Base ;
+  typedef      Decays::Tree_<PARTICLE> _Hold ;
+  typedef Decays::Trees::Or_<PARTICLE> _Self ;
+  //
+  const _Base* right = &tree ;
+  // self type ?
+  const _Self* self  = dynamic_cast<const _Self*> ( right ) ;
+  if ( 0 != self ) { return this->addTree ( self->trees () ) ; }      // RETURN 
+  // holder ?
+  const _Hold* hold  = dynamic_cast<const _Hold*> ( right ) ;
+  if ( 0 != hold ) { return this->addTree ( hold->tree  () ) ; }      // RETURN
+  // just add into the list 
+  return this->push_back ( tree ) ;
+}
+// ============================================================================
+// add the component 
+// ============================================================================
+template <class PARTICLE>
+inline size_t
+Decays::Trees::Or_<PARTICLE>::addTree 
+( const typename Decays::Trees::Or_<PARTICLE>::SubTrees& tree ) 
+{
+  for ( const_iterator it = tree.begin () ;
+        tree.end() != it ; ++it ) { this->addTree ( it->tree() ) ; }
+  return this->trees().size() ;
+}
 // ============================================================================
 // And_
 // ============================================================================
@@ -261,16 +307,19 @@ template <class PARTICLE>
 inline Decays::Trees::And_<PARTICLE>::And_ 
 ( const Decays::iTree_<PARTICLE>& n1 , 
   const Decays::iTree_<PARTICLE>& n2 ) 
-  : Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
-{}
+  : Decays::Trees::Op_<PARTICLE> ()  
+{
+  this->addTree ( n1 ) ;
+  this->addTree ( n2 ) ;  
+}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
 template <class PARTICLE>
 inline Decays::Trees::And_<PARTICLE>::And_ 
 ( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : Decays::Trees::Op_<PARTICLE> ( trees )  
-{}
+  : Decays::Trees::Op_<PARTICLE> ()  
+{ this->addTree ( trees ) ; }
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
@@ -280,25 +329,12 @@ Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const
 {
   s << " (";
   //
-  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator tree 
-          = this->begin() ; this->end() != tree ; ++tree )
+  for ( const_iterator tree = this->begin() ; this->end() != tree ; ++tree )
   { 
     if ( this->begin() != tree ) { s << "&&" ; } 
     s << (*tree) ;
   }
   return s << ") " ;
-}
-// ============================================================================
-// operator  &=
-// ============================================================================
-template <class PARTICLE>
-inline 
-Decays::Trees::And_<PARTICLE>& 
-Decays::Trees::And_<PARTICLE>::operator&= 
-( const Decays::Trees::And_<PARTICLE>& tree ) 
-{
-  this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
-  return  *this ;
 }
 // ============================================================================
 // operator  ()
@@ -309,15 +345,66 @@ Decays::Trees::And_<PARTICLE>::operator()
   ( typename Decays::iTree_<PARTICLE>::argument p ) const 
 {
   /// reset the components 
-  this->i_reset () ;                                   // reset the components 
+  this->i_reset () ;                                    // reset the components 
   // 
-  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator it 
-          = this->begin() ; this->end() != it ; ++it ) 
-  { if ( (*it)!= p ) { return false ; } }                // RETURN 
+  for ( const_iterator it = this->begin() ; this->end() != it ; ++it ) 
+  { if ( (*it)!= p ) { return false ; } }                             // RETURN 
   //                                                      
-  return true ;                                          // RETURN 
+  return true ;                                                       // RETURN 
 }
 // ============================================================================
+
+
+
+// ============================================================================
+// add the component 
+// ============================================================================
+template <class PARTICLE>
+inline size_t
+Decays::Trees::And_<PARTICLE>::addTree ( const Decays::iTree_<PARTICLE>& tree )
+{
+  // local types:
+  typedef      Decays::iTree_<PARTICLE> _Base ;
+  typedef       Decays::Tree_<PARTICLE> _Hold ;
+  typedef Decays::Trees::And_<PARTICLE> _Self ;
+  //
+  const _Base* right = &tree ;
+  // self type ?
+  const _Self* self  = dynamic_cast<const _Self*> ( right ) ;
+  if ( 0 != self ) { return this->addTree ( self->trees () ) ; }      // RETURN 
+  // holder ?
+  const _Hold* hold  = dynamic_cast<const _Hold*> ( right ) ;
+  if ( 0 != hold ) { return this->addTree ( hold->tree  () ) ; }      // RETURN
+  // just add into the list 
+  return this->push_back ( tree ) ;
+}
+// ============================================================================
+// add the component 
+// ============================================================================
+template <class PARTICLE>
+inline size_t 
+Decays::Trees::And_<PARTICLE>::addTree 
+( const typename Decays::Trees::And_<PARTICLE>::SubTrees& tree ) 
+{
+  for ( const_iterator it = tree.begin () ;
+        tree.end() != it ; ++it ) { this->addTree ( it->tree() ) ; }
+  return this->trees().size() ;
+}
+// ============================================================================
+// MANDATORY: the specific printout 
+// ============================================================================
+template <class PARTICLE>
+inline std::ostream& 
+Decays::Trees::List_<PARTICLE>::fillStream( std::ostream& s ) const 
+{
+  s << " (";
+  for ( const_iterator tree = this->begin() ; this->end() != tree ; ++tree )
+  { 
+    if ( this->begin() != tree ) { s << " , " ; } 
+    s << (*tree) ;
+  }
+  return s << ") " ;
+}
 
 
 // ============================================================================
