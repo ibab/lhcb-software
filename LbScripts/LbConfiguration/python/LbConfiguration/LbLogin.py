@@ -44,7 +44,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.33 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -796,8 +796,8 @@ class LbLoginScript(Script):
                     setupprojargs.append(opts.pythonvers)
             if not opts.no_compat :
                 setupprojargs.append("--runtime-project")            
-                setupprojargs.append("PARAM")
-                setupprojargs.append('--use "Compat v*"')
+                setupprojargs.append("COMPAT")
+                setupprojargs.append('--use "CompatSys v*"')
                 
     
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))

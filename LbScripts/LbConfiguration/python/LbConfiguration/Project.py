@@ -9,7 +9,8 @@ import os
 project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes", "Curie", "Vetra"]
+                 "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes", 
+                 "Curie", "Vetra", "Compat"]
 
 # ------------------------------------------------------------------------------------
 

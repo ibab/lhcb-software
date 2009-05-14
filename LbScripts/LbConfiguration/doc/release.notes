@@ -1,3 +1,8 @@
+2009-05-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: use the project Compat instead of the package PARAM/Compat
+	* python/LbConfiguration/Project.py: added the Compat project.
+
 2009-05-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: New file.
