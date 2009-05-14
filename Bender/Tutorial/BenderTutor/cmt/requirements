@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.19 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.20 2009-05-14 18:03:08 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2004-10-11	
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           BenderTutor
-version           v11r0
+version           v12r0
 
 # =============== structure ==================================================
 branches          cmt doc python solution 
@@ -15,6 +15,7 @@ use               BenderExample v*    Ex
 
 # =============== standard patterns ===========================================
 apply_pattern     install_python_modules 
+apply_pattern     QMTest
 
 # ============================================================================
 # The END 

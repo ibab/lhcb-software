@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: RCSelect.py,v 1.14 2009-05-14 18:03:09 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'RCselect.py' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
@@ -126,10 +126,10 @@ def configure() :
     gaudi.setAlgorithms( [alg] ) 
     
     # 3) configure algorithm
-    desktop = gaudi.tool('RCSelect.PhysDesktop')
-    desktop.InputLocations = [
+    alg.InputLocations = [
         'Phys/StdTightKaons' , 
-        'Phys/StdTightMuons' ]
+        'Phys/StdTightMuons'
+        ]
     
     ## redefine input files 
     evtSel = gaudi.evtSel()

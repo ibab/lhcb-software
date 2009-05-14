@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCMCSelect.py,v 1.14 2009-03-04 12:56:49 ibelyaev Exp $
+# $Id: RCMCSelect.py,v 1.15 2009-05-14 18:03:09 ibelyaev Exp $
 # =============================================================================
 """
 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
@@ -12,7 +12,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -33,18 +33,26 @@ class RCMCSelect(AlgoMC):
         ## find all MC trees  
         mcBs  = finder.find(
             '[ B_s0 -> (  J/psi(1S) -> mu+  mu- {,gamma} )  phi(1020)]cc' )
+        if mcBs.empty() : return SUCCESS
+        
         ## get all MC phis from the tree :
         mcPhi = finder.find(
             '[ B_s0 -> (  J/psi(1S) -> mu+  mu- {,gamma} ) ^phi(1020)]cc' )
+        if mcPhi.empty() : return SUCCESS
+
         ## get all MC psis from the tree :
         mcPsi = finder.find(
             '[ B_s0 -> ( ^J/psi(1S) -> mu+  mu- {,gamma} )  phi(1020)]cc' )
+        if mcPsi.empty() : return SUCCESS
+
         ## get helper object for MC-match
-        match = self.mcTruth( 'MCdecayMatch')
+        match = self.mcTruth( 'MCDecayMatch')
         # prepare "Monte-Carlo Cuts"
-        mcCutBs  = MCTRUTH( match , mcBs  )
-        mcCutPhi = MCTRUTH( match , mcPhi )
-        mcCutPsi = MCTRUTH( match , mcPsi )
+                
+        mcCutBs  = MCTRUTH ( match , mcBs  )
+        mcCutPhi = MCTRUTH ( match , mcPhi )
+        mcCutPsi = MCTRUTH ( match , mcPsi )
+        
         ## select muons for J/Psi reconstruction 
         muons = self.select( "mu" , ( "mu+" == ABSID ) &  ( PT > 500 ) )
         if muons.empty() : return SUCCESS
@@ -139,8 +147,7 @@ def configure() :
     gaudi.setAlgorithms( [alg] )
     
     # 3) configure algorithm
-    desktop = gaudi.tool('RCMCSelect.PhysDesktop')
-    desktop.InputLocations = [
+    alg.InputLocations = [
         'Phys/StdTightKaons' , 
         'Phys/StdTightMuons'
         ]

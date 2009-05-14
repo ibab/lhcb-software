@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -125,8 +125,7 @@ def configure() :
     gaudi.setAlgorithms( [alg] )
     
     ## 3) configure algorithm
-    desktop = gaudi.tool('RCKaons.PhysDesktop')
-    desktop.InputLocations = [
+    alg.InputLocations = [
         'Phys/StdTightKaons' ,
         'Phys/StdTightMuons' 
         ]
