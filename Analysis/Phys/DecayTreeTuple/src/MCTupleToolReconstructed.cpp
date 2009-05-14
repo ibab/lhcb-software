@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.4 2009-05-14 12:52:39 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.5 2009-05-14 13:10:46 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -42,6 +42,7 @@ MCTupleToolReconstructed::MCTupleToolReconstructed( const std::string& type,
 {
   declareInterface<IMCParticleTupleTool>(this);
   declareProperty("Associate",m_associate=true,"Fill associated protoparticle");
+  declareProperty("FillPID",m_pid=true,"Fill PID");
 }
 //=============================================================================
 // Destructor
@@ -86,29 +87,43 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
   // fill the tuple:
   test &= tuple->column( head+"_Reconstructible", catible );  
   test &= tuple->column( head+"_Reconstructed", catted );  
-  std::vector<double> PX, PY, PZ, Weights;
+  std::vector<double> PX, PY, PZ, Weights, dlle, dllmu, dllk, dllp, pchi2;
 
   if ( (0!=mcp) && m_associate ){
     std::vector<std::pair<const LHCb::ProtoParticle*,double> > ppv = getProtos(mcp);
     for ( std::vector<std::pair<const LHCb::ProtoParticle*,double> >::const_iterator ppp = ppv.begin() ; 
           ppp != ppv.end() ; ++ppp){
-      const LHCb::ProtoParticle* pp = ppp->first;
+      const LHCb::ProtoParticle* proto = ppp->first;
       double w = ppp->second;
       /// @todo There's plenty more that can be added here. Like PID for instance.
-      if (0!=pp->track()){
-        Gaudi::XYZVector mom = pp->track()->momentum();
+      if (0!=proto->track()){
+        Gaudi::XYZVector mom = proto->track()->momentum();
         PX.push_back(mom.X());
         PY.push_back(mom.Y());
         PZ.push_back(mom.Z());
+        pchi2.push_back(proto->track()->probChi2());
       }
       Weights.push_back(w);
+      if (m_pid){
+        dlle.push_back(proto->info( ProtoParticle::CombDLLe,  -999.0 ));
+        dllmu.push_back(proto->info( ProtoParticle::CombDLLmu,  -999.0 ));
+        dllk.push_back(proto->info( ProtoParticle::CombDLLk,  -999.0 ));
+        dllp.push_back(proto->info( ProtoParticle::CombDLLp,  -999.0 ));
+      }
     }
   }
   const unsigned int maxPP = 20 ;
-  test &= tuple->farray(  head+"_PP_PX", PX,  head+"ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PY", PY,  head+"ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PX", PX,  head+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PY", PY,  head+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"_ProtoParticles" , maxPP );
+  test &= tuple->farray(  head+"_PP_tr_pchi2", pchi2,  head+"_ProtoParticles" , maxPP );
+  if (m_pid){
+    test &= tuple->farray(  head+"_PP_DLLe", dlle,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_DLLk", dllk,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_DLLp", dllp,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_DLLmu", dllmu,  head+"_ProtoParticles" , maxPP );
+  }
   
   return StatusCode(test);
 }

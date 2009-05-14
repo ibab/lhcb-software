@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.h,v 1.2 2009-01-22 17:52:41 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.h,v 1.3 2009-05-14 13:10:46 pkoppenb Exp $
 #ifndef MCTUPLETOOLMCRECONSTRUCTED_H 
 #define MCTUPLETOOLMCRECONSTRUCTED_H 1
 
@@ -54,5 +54,6 @@ private:
   ProtoParticle2MCLinker* m_pCPPAsct ; ///< Charged protoparticle associator
   ProtoParticle2MCLinker* m_pNPPAsct ; ///< Neutral protoparticle associator             
   bool m_associate ; ///< Do association
+  bool m_pid ; ///< Do PID
 };
 #endif // MCTUPLETOOLMCRECONSTRUCTED_H

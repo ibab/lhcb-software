@@ -1,12 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Patrick Koppenburg & the WGs
-! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
+! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
 ! 2009-05-14 - Patrick Koppenburg
  - MCTupleToolMCTruth : protect against stable particles
  - MCTupleToolReconstructed : ProtoParticles different for various particles.
+   . Add DLL info and track chi2
 
 ! 2009-05-13 - Patrick Koppenburg
  - (MC)DecayTreeTuple new option RevertToPositiveID : make True default.
