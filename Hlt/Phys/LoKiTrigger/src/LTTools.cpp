@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.6 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: LTTools.cpp,v 1.7 2009-05-14 08:06:30 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,7 +37,8 @@
 GaudiAlgorithm* LoKi::Hlt1::Utils::getGaudiAlg ( const LoKi::AuxFunBase& base ) 
 {
   // get LoKi service
-  const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+  // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+  LoKi::ILoKiSvc* svc = base.lokiSvc() ;
   base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
   SmartIF<IAlgContextSvc> cntx ( svc ) ;
   base.Assert( !(!cntx) , "IAlgContextSvc* points to NULL!") ;
@@ -49,7 +50,8 @@ GaudiAlgorithm* LoKi::Hlt1::Utils::getGaudiAlg ( const LoKi::AuxFunBase& base )
 IAlgorithm* LoKi::Hlt1::Utils::getAlg ( const LoKi::AuxFunBase& base ) 
 {
   // get LoKi service
-  const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+  // const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
+  LoKi::ILoKiSvc* svc = base.lokiSvc() ;
   base.Assert( !(!svc)   , "LoKi Service is not available!" ) ;
   SmartIF<IAlgContextSvc> cntx ( svc ) ;
   base.Assert( !(!cntx)  , "IAlgContextSvc* points to NULL!") ;
