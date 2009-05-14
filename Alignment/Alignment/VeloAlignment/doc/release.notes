@@ -1,6 +1,9 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+! 14/05/2009 - Wouter Hulsbergen
+  - tiny fix to remove compilor warning
+
 !=============================================================================
 ! 30/04/2009 - Silvia Borghi  ** v4r5 **
   - Rename Align in VAlign
