@@ -96,7 +96,7 @@ if [[ ${CMTCONFIG} == "slc4_amd64_gcc34" ]]
        then . ./pathsetup64_dbg
      fi;
 fi;
-
+export LOGFIFO=/cmt/logGaudi.fifo
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
 export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"
