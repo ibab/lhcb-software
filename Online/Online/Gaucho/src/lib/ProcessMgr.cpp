@@ -102,7 +102,7 @@ void ProcessMgr::setUtgid(const std::string &utgid)
   int tmplen=second_us-first_us-1;
   if (third_us != std::string::npos) {
      // three underscores found in UTGID -> we're in the Monitoring Farm
-     m_nodeName = m_utgid.substr(first_us+1,tmplen);
+     m_nodeName = m_utgid.substr(first_us+1,tmplen-2);
   }   
   else {
      m_nodeName = m_utgid.substr(0, first_us);
@@ -363,6 +363,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       else { 	 
          partName = (*serverListTotIt).substr(0, first_us);
          nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+	 if (nodeName=="MONA0901") continue;
          taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
       } 	 
       if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
@@ -377,13 +378,13 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       if (m_nodeName.size() == 8) { //1st level Adder
         // checking the nodeName
         msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
-        if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+        if ((Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos)&(m_farm !="MF")){
           msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
           continue;
         }
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
        // This is a 1st level Adder, then we can check the task name here.
-        if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
+        if ((Misc::findCaseIns(m_taskName, taskName) == std::string::npos)&(m_farm !="MF")) {
           msg << MSG::DEBUG << "REFUSED because taskName "<< taskName << " NOT OK should be " << m_taskName << endreq;
           continue; 
         }
@@ -402,7 +403,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
         // checking the nodeName
         msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
-        if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+        if ((Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos)||(m_nodeName=="MONA0901")){
           msg << MSG::DEBUG << "REFUSED because nodeName not OK" << endreq;
           continue;
         }
@@ -439,10 +440,11 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         std::size_t third_us = (*serverListTotIt).find("_", second_us + 1);
         if (third_us == std::string::npos) continue;
       
-        partName = (*serverListTotIt).substr(0, first_us);
-        nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-        taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
-        //msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
+    //    partName = (*serverListTotIt).substr(0, first_us);
+    //    nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+    //    taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
+	
+        msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
         
         bool chooseIt=true;
         if (m_partName.size()) chooseIt=false;
@@ -465,9 +467,10 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
       else {
-        nodeName = (*serverListTotIt).substr(0, first_us);
-        taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-
+     //   nodeName = (*serverListTotIt).substr(0, first_us);
+     //   taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+       msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
+ 
         if (nodeName.compare("Bridge")==0) {
           msg << MSG::DEBUG << "refused because we don't save Bridges. "<< endreq;    
           continue; 
