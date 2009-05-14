@@ -10,7 +10,7 @@
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-MC09-WithTruth.ref</text></argument>
   <argument name="validator"><text>
-from BooleExclusions import preprocessor
+from GaudiConf.QMTest.LHCbExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>

@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-05-14 - Marco Cattaneo
+ - In QMTest, import common GaudiConf.QMTest.LHCbExclusions instead of 
+   BooleExclusions
+
 </PRE><H1><A NAME=v19r0>2009-05-14 Boole v19r0</A></H1><PRE>
 This version uses projects Gaudi v21r0, LHCb v27r0, Lbcom v7r0
  and SQLDDDB v5r4, ParamFiles v8r1, FieldMap v5r2, L0TCK v1r2, AppConfig v2r*
