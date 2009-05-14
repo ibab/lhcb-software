@@ -1,4 +1,4 @@
-// $Id: Decay.h,v 1.1 2008-12-03 17:35:54 ibelyaev Exp $
+// $Id: Decay.h,v 1.2 2009-05-14 16:39:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_DECAY_H 
 #define LHCBKERNEL_DECAY_H 1
@@ -63,6 +63,11 @@ namespace Decays
       const LHCb::ParticleProperty* pp   () const { return m_pp   ; }
       // ======================================================================
     public:
+      // ======================================================================      
+      /// the default printout 
+      std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================      
+    public:
       // ======================================================================    
       /// validate the item using the service 
       StatusCode validate ( const LHCb::IParticlePropertySvc* svc  ) const ;
@@ -100,27 +105,27 @@ namespace Decays
      *  @param daughters the daughters 
      */
     Decay 
-    ( const             std::string&              mother    ,   // the mother 
-      const std::vector<std::string>&             daughters ) ; // the daughters 
+    ( const             std::string&   mother    ,             //    the mother 
+      const std::vector<std::string>&  daughters ) ;           // the daughters 
     /** the constructor from mother and daughters 
      *  @param mother the mother 
      *  @param daughters the daughters 
      */
     Decay 
-    ( const             LHCb::ParticleID&         mother    ,   // the mother 
-      const std::vector<LHCb::ParticleID>&        daughters ) ; // the daughters 
+    ( const             LHCb::ParticleID&  mother    ,         //    the mother 
+      const std::vector<LHCb::ParticleID>& daughters ) ;       // the daughters 
     /** the constructor from mother and daughters 
      *  @param mother the mother 
      *  @param daughters the daughters 
      */
     Decay 
-    ( const Item&              mother    ,   // the mother 
-      const std::vector<Item>& daughters ) ; // the daughters 
+    ( const Item&              mother    ,                     //    the mother 
+      const std::vector<Item>& daughters ) ;                   // the daughters 
     // ========================================================================
   public:
     // ========================================================================
-    /// virtual destructor 
-    virtual ~Decay(){} ; // virtual destructor
+    /// destructor 
+    ~Decay () ;                                           // virtual destructor
     // ========================================================================
   public:
     // ========================================================================
@@ -135,15 +140,11 @@ namespace Decays
     /// get the number of daughters
     size_t       nChildren  () const { return m_daughters.size() ; }      
     /** get the component by the number
-     *  @attention index 0 corresponds to th emother particle
+     *  @attention index 0 corresponds to the mother particle
      *  @param index the index (0 corresponds to the mother particle) 
      *  @return the component 
      */
-    const Item&  operator() ( const unsigned int index ) const 
-    { 
-      if ( 0 == index ) { return m_mother ; }
-      return m_daughters [ index - 1 ] ;
-    }
+    const Item&  operator() ( const unsigned int index ) const ;
     /** get the component by the number
      *  @attention index 0 corresponds to th emother particle
      *  @param index the index (0 corresponds to the mother particle) 
@@ -155,21 +156,15 @@ namespace Decays
   public:    
     // ========================================================================    
     /// set the mother 
-    void setMother   
-    ( const Item&  mom ) { m_mother =        mom   ; }
+    void setMother ( const Item&  mom ) ; 
     /// set the mother 
-    void setMother 
-    ( const LHCb::ParticleProperty* mom ) 
-    { m_mother = Item ( mom ) ; }
+    void setMother ( const LHCb::ParticleProperty* mom ) ;
     /// set the mother 
-    void setMother  
-    ( const std::string&      mom ) { m_mother = Item ( mom ) ; }
+    void setMother ( const std::string&            mom ) ;
     /// set the mother 
-    void setMother  
-    ( const LHCb::ParticleID& mom ) { m_mother = Item ( mom ) ; }
+    void setMother ( const LHCb::ParticleID&       mom ) ; 
     /// set the daughters 
-    void setDaughters 
-    ( const Items& daugs )  { m_daughters = daugs ;  }
+    void setDaughters ( const Items& daugs )  ;
     /// set the daughters 
     void setDaughters 
     ( const std::vector<const LHCb::ParticleProperty*>& daugs ) ;
@@ -195,13 +190,24 @@ namespace Decays
     // ========================================================================    
   public:    
     // ========================================================================    
+    /// add the child 
+    Decay& operator+=  ( const std::string&            child ) ;   // add child 
+    /// add the child 
+    Decay& operator+=  ( const LHCb::ParticleID&       child ) ;   // add child 
+    /// add the child 
+    Decay& operator+=  ( const LHCb::ParticleProperty* child ) ;   // add child
+    /// add the child 
+    Decay& operator+=  ( const Item&                   child ) ;   // add child 
+    // ========================================================================    
+  public:    
+    // ========================================================================    
     /// validate the decay using the service 
     StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const ;
     // ========================================================================    
   public:    
     // ========================================================================    
     /// the default printout 
-    virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    std::ostream& fillStream ( std::ostream& s ) const ;
     /// the conversion to the string
     std::string   toString   () const ;
     // ========================================================================    
@@ -218,8 +224,13 @@ namespace Decays
 // ============================================================================
 /// the printout operator to the stream 
 inline std::ostream& operator<<
-  ( std::ostream&      s     , 
-    const Decays::Decay& decay ) { return decay.fillStream ( s ) ; }
+  ( std::ostream&              s     , 
+    const Decays::Decay&       decay ) { return decay.fillStream ( s ) ; }
+// ============================================================================
+/// the printout operator to the stream 
+inline std::ostream& operator<<
+  ( std::ostream&              s     , 
+    const Decays::Decay::Item& item  ) { return item .fillStream ( s ) ; }
 // ============================================================================
 // The END
 // ============================================================================

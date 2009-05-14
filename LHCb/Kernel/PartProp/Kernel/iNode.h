@@ -1,4 +1,4 @@
-// $Id: iNode.h,v 1.4 2009-05-13 16:30:05 ibelyaev Exp $
+// $Id: iNode.h,v 1.5 2009-05-14 16:39:42 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_NODE_H 
 #define DECAYS_NODE_H 1
@@ -96,6 +96,11 @@ namespace Decays
     /// MANDATORY: the proper validation of the node
     virtual StatusCode validate 
     ( const LHCb::IParticlePropertySvc* svc ) const ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    Node& operator&= ( const iNode& right ) ;
+    Node& operator|= ( const iNode& right ) ;    
     // ========================================================================
   public:
     // ========================================================================

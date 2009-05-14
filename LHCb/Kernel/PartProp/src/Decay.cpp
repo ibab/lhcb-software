@@ -1,4 +1,4 @@
-// $Id: Decay.cpp,v 1.1 2008-12-03 17:35:54 ibelyaev Exp $
+// $Id: Decay.cpp,v 1.2 2009-05-14 16:39:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -175,13 +175,31 @@ StatusCode Decays::Decay::validate ( const LHCb::IParticlePropertySvc* svc ) con
 std::ostream& Decays::Decay::fillStream 
 ( std::ostream& s ) const 
 {
-  s << " " << m_mother.name() << " -> " ;
+  s << m_mother ; 
+  if ( m_daughters.empty() ) { return s ; }
   //
+  s << "->" ;   
   // loop over daughters 
   for ( Items::const_iterator idau = m_daughters.begin() ; 
-        m_daughters.end() != idau ;  ++idau ) { s << " " << idau->name() ; }
+        m_daughters.end() != idau ;  ++idau ) { s << (*idau) ; }
   //
-  return s << " " ; 
+  return s ; 
+}
+// ============================================================================
+// the default printout 
+// ============================================================================
+std::ostream& Decays::Decay::Item::fillStream 
+( std::ostream& s ) const 
+{
+  if ( m_name.empty() )
+  {
+    if      ( 0 != m_pp ) { m_name = m_pp->particle() ; }
+    else if ( LHCb::ParticleID() != m_pid ) 
+    { return s << " " << m_pid.pid() << " " ; }                      // RETURN 
+    else   
+    { return s <<        " ? " ; }                                   // RETURN 
+  }
+  return s << " " << m_name << " " ; 
 }
 // ============================================================================
 // the conversion to the string
@@ -200,11 +218,7 @@ void Decays::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<const LHCb::ParticleProperty*>::const_iterator ipp  = 
-          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) { (*this) += (*ipp) ; }
 }
 // ============================================================================
 // set daughters 
@@ -214,11 +228,7 @@ void Decays::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<std::string>::const_iterator ipp  = 
-          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) { (*this) += (*ipp) ; }
 }
 // ============================================================================
 // set daughters 
@@ -228,13 +238,87 @@ void Decays::Decay::setDaughters
 {
   m_daughters.clear() ;
   for ( std::vector<LHCb::ParticleID>::const_iterator ipp  = 
-          daugs.begin() ; daugs.end() != ipp ; ++ipp ) 
-  {
-    Item child ( *ipp ) ;
-    m_daughters.push_back ( child ) ;
-  }
+          daugs.begin() ; daugs.end() != ipp ; ++ipp ) { (*this) += (*ipp) ; }
 }
 // ============================================================================
+// set the daughters 
+// ============================================================================
+void Decays::Decay::setDaughters ( const Decays::Decay::Items& daugs )  
+{ m_daughters = daugs ; }
+// ============================================================================
+
+
+
+// ============================================================================
+// add the child 
+// ============================================================================
+Decays::Decay& 
+Decays::Decay::operator+= ( const std::string& child ) 
+{ return (*this)+= Item ( child ) ; }
+// ============================================================================
+// add the child 
+// ============================================================================
+Decays::Decay& 
+Decays::Decay::operator+= ( const LHCb::ParticleID& child ) 
+{ return (*this)+= Item ( child ) ; }
+// ============================================================================
+// add the child 
+// ============================================================================
+Decays::Decay& 
+Decays::Decay::operator+= ( const LHCb::ParticleProperty* child ) 
+{ return (*this)+= Item( child ) ; }
+// ============================================================================
+// add the child 
+// ============================================================================
+Decays::Decay& 
+Decays::Decay::operator+= ( const Decays::Decay::Item& child ) 
+{ 
+  m_daughters.push_back ( child ) ;
+  return *this ;
+}
+// ============================================================================
+/*  get the component by the number
+ *  @attention index 0 corresponds to the mother particle
+ *  @param index the index (0 corresponds to the mother particle) 
+ *  @return the component 
+ */
+// ============================================================================
+const Decays::Decay::Item&  
+Decays::Decay::operator() ( const unsigned int index ) const 
+{ 
+  if ( 0 == index ) { return m_mother ; }
+  return m_daughters [ index - 1 ] ;
+}
+// ============================================================================
+
+// ============================================================================
+// set the mother 
+// ============================================================================
+void Decays::Decay::setMother ( const Decays::Decay::Item&   mom ) 
+{ m_mother =        mom   ; }
+// ============================================================================
+// set the mother 
+// ============================================================================
+void Decays::Decay::setMother ( const LHCb::ParticleProperty* mom ) 
+{ setMother ( Item ( mom ) ) ; }
+// ============================================================================
+// set the mother 
+// ============================================================================
+void Decays::Decay::setMother ( const LHCb::ParticleID&       mom ) 
+{ setMother ( Item ( mom ) ) ; }
+// ============================================================================
+// set the mother 
+// ============================================================================
+void Decays::Decay::setMother ( const std::string&            mom ) 
+{ setMother ( Item ( mom ) ) ; }
+// ============================================================================
+
+// ============================================================================
+// destructor 
+// ============================================================================
+Decays::Decay::~Decay(){} 
+
+
 
 // ============================================================================
 // The END

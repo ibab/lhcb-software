@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.20 2009-05-13 16:30:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.21 2009-05-14 16:39:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-14 - Vanya BELYAEV
+ - add &= and |= operators 
 
 ! 2009-05-13 - Vanya Belyaev
  - (undo): move the operators 
