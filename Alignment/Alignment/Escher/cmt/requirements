@@ -17,8 +17,6 @@ use GaudiAud 	        v*         -no_auto_imports
 use GaudiGSL		v*         -no_auto_imports
 use GaudiPoolDb	        v*         -no_auto_imports
 use RootHistCnv         v*         -no_auto_imports
-use GaudiExamples 	v*        -no_auto_imports
-use processing          v*	LCG_Interfaces
 
 #-- Database
 # Comment the line with SQLDDDB and uncomment
