@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.h,v 1.4 2009-05-14 12:52:39 pkoppenb Exp $
+// $Id: MCTupleToolMCTruth.h,v 1.5 2009-05-14 13:40:44 pkoppenb Exp $
 #ifndef MCTUPLETOOLMCTRUTH_H 
 #define MCTUPLETOOLMCTRUTH_H 1
 
@@ -52,19 +52,8 @@ private:
   bool m_storeKinetic; //!< Store kinetic information from the associated candidate
   bool m_storePT; //!< Store the propertime information for associated composite particle
   bool m_storeVertexes; //!< Store the end and origin true vertex information
-  bool isStable(const LHCb::MCParticle * mc) const 
-  {
-    if(!mc) return true;
-    if(mc->endVertices().empty()) return true;
-    unsigned int anID=abs(mc->particleID().pid());
-    
-    if(anID == 11 || anID == 13 
-       || anID == 22 || anID == 12 
-     || anID == 111 ||  anID == 211 
-       || anID == 130 ||  anID == 321
-       || anID == 2112 ||  anID == 2212) return true;
-    return false;
-}
+
+#include "isStable.h"
 
 };
 #endif // MCTUPLETOOLMCTRUTH_H

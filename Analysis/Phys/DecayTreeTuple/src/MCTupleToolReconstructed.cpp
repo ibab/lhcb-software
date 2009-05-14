@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.5 2009-05-14 13:10:46 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.6 2009-05-14 13:40:44 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -89,7 +89,7 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
   test &= tuple->column( head+"_Reconstructed", catted );  
   std::vector<double> PX, PY, PZ, Weights, dlle, dllmu, dllk, dllp, pchi2;
 
-  if ( (0!=mcp) && m_associate ){
+  if ( (0!=mcp) && m_associate && isStable(mcp)){
     std::vector<std::pair<const LHCb::ProtoParticle*,double> > ppv = getProtos(mcp);
     for ( std::vector<std::pair<const LHCb::ProtoParticle*,double> >::const_iterator ppp = ppv.begin() ; 
           ppp != ppv.end() ; ++ppp){
@@ -112,17 +112,19 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
       }
     }
   }
-  const unsigned int maxPP = 20 ;
-  test &= tuple->farray(  head+"_PP_PX", PX,  head+"_ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PY", PY,  head+"_ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"_ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"_ProtoParticles" , maxPP );
-  test &= tuple->farray(  head+"_PP_tr_pchi2", pchi2,  head+"_ProtoParticles" , maxPP );
-  if (m_pid){
-    test &= tuple->farray(  head+"_PP_DLLe", dlle,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_DLLk", dllk,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_DLLp", dllp,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_DLLmu", dllmu,  head+"_ProtoParticles" , maxPP );
+  if (isStable(mcp)){
+    const unsigned int maxPP = 20 ;
+    test &= tuple->farray(  head+"_PP_PX", PX,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_PY", PY,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  head+"_PP_tr_pchi2", pchi2,  head+"_ProtoParticles" , maxPP );
+    if (m_pid){
+      test &= tuple->farray(  head+"_PP_DLLe", dlle,  head+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  head+"_PP_DLLk", dllk,  head+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  head+"_PP_DLLp", dllp,  head+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  head+"_PP_DLLmu", dllmu,  head+"_ProtoParticles" , maxPP );
+    }
   }
   
   return StatusCode(test);
