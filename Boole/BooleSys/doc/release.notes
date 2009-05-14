@@ -3,15 +3,48 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-05-13 - Marco Cattaneo
- - QMTest now takes exclusions for reference comparison from 
-   $BOOLEROOT/tests/qmtest/python/BooleExclusions.py
- - Update QMTest reference for changes in printout by CaloDigit initialisation
+</PRE><H1><A NAME=v19r0>2009-05-14 Boole v19r0</A></H1><PRE>
+This version uses projects Gaudi v21r0, LHCb v27r0, Lbcom v7r0
+ and SQLDDDB v5r4, ParamFiles v8r1, FieldMap v5r2, L0TCK v1r2, AppConfig v2r*
 
-! 2009-04-14 - Marco Cattaneo
- - Update QMTest reference for change to L0DU intialization output
- - Clean up boolesys.qms following Gaudi v21 changes
- - Increase version to v19r0
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+ - New packaging
+   . Add Digi/Boole/tests/qmtest/python directory to PYTHONPATH in QMTest case
+   . Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py now simply forward to
+     corresponding options in AppConfig
+
+ - Functionality changes
+   . CaloDigitAlg gets digitization parameters from CondDB 
+     Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+     (CaloDigit v3r0, CaloDet v12r2)
+   . Add L0Conf().TCK property, used to specify a TCK for the simulation
+     (L0DU v8r16)
+
+ - New tuning
+   . New calorimeter calibration (SQLDDDB v5r4, tag calo-20090508)
+   . New muon chamber time response (SQLDDDB v5r4, tag muon-20090506)
+   . Changes to speed up geometry initialization (DetDescCnv v4r9, XmlTools v6r3)
+
+ - Bug fixes
+   . Fix valgrind.job to work with new Lblogin environment
+   . Correctly sort OT deposits according to time and geometry, Correctly apply
+     analog dead time window (OTSimulation v4r2)
+   . Correctly apply window in OTMCDepositLinker. Add dtime as weight 
+     (OTAssociators v4r3)
+   . Do not print errors for missing gap (MuonDet v8r5)
+   . Fix a typo in MCTrackInfo VeloAndT acceptance (MCEvent v2r14)
+
+ - Monitoring changes
+   . New STCluster selectors (STTools v3r9)
+
+ - Changes to tests and example options:
+   . Clean up *.qms files following Gaudi v21 changes
+   . Add tests/qmtest/python/BooleExclusions.py, contains shared lines for
+     exclusion from reference comparisons in QMTests, imported by *.qmt
+   . MC09-Files.py uses new database tags from SQLDDDB v5r4 to pick up new
+     calorimeter calibration and Muon chamber time response
 
 </PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
 This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27
