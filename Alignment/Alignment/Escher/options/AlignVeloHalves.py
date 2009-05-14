@@ -23,19 +23,35 @@ importOptions('$STDOPTS/PreloadUnits.opts')
 Escher().Kalman = True
 Escher().Millepede = False
 Escher().TrackContainer = "Rec/Track/Best" # Velo, VeloR, Long, Upstream, Downstream, Ttrack, Muon or Calo
-Escher().EvtMax = 100
-TrackSys().ExpertTracking += [ "kalmanSmoother" ]
+Escher().EvtMax = 1000
+TrackSys().ExpertTracking += [ "kalmanSmoother","simplifiedGeometry" ]
 TrackSys().TrackExtraInfoAlgorithms = ['']
 RecSysConf().RecoSequence = ["VELO","TT","IT","OT","Tr","Vertex"]
+
+from Configurables import MessageSvc
+MessageSvc().setVerbose += [ "VeloAlignCond" ]
 
 from Configurables import TAlignment
 from TAlignment.Alignables import *
 
 elements = Alignables()
-elements.VeloLeft("TxTyTzRzRxRy")
+#elements.VeloLeft("TxTyTzRzRxRy")
+elements.VeloLeft("TxTyTz")
 constraints = []
-#elements.VeloRight("TxTyTzRz")
+#elements.VeloRight("TxTy")
 #constraints = ["Tz","Tx","Ty","Rz"]
+
+#elements.VeloRight("TxTyTz")
+#constraints = ["PVx","PVy","PVz"]
+
+# compare
+elements = Alignables()
+#elements.VeloLeft("Tx")
+#constraints = []
+#elements.VeloLeftModules("Tx")
+#constraints = ["Szx"]
+elements.VeloModules("Tx")
+constraints = ["Tx","Szx"] ;
 
 print "aligning elements ", elements
 
@@ -44,6 +60,7 @@ TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 TAlignment().VertexLocation       = "Rec/Vertex/Primary"
 TAlignment().Constraints          = constraints
 TAlignment().WriteCondSubDetList  = ['Velo']
+TAlignment().UseLocalFrame = True
 #TAlignment().UpdateInFinalize = False
 
 # still set up a track selection
@@ -54,16 +71,18 @@ alignSelector  = TrackContainerCopy("AlignSelector",
                                     outputLocation = "Rec/Track/AlignTracks")
 alignSelector.addTool( TrackSelector("Selector",
                                      MaxChi2Cut = 10,
-                                     MinNVeloRHits = 3,
-                                     MinNVeloPhiHits = 3) ) 
+                                     MinNVeloRHits = 4,
+                                     MinNVeloPhiHits = 4,
+                                     TrackTypes = ["Long","Velo"] ) ) 
 trackFilterSeq.Members.append( alignSelector )
-trackFilterSeq.Members.append( TrackMonitor("AlignTrackMonitor",
-                                            TracksInContainer = "Rec/Track/AlignTracks") )
+#trackFilterSeq.Members.append( TrackMonitor("AlignTrackMonitor",
+#                                            TracksInContainer = "Rec/Track/AlignTracks") )
 
 # Load the velo alignment slce
+
 #from Configurables import ( CondDB, CondDBAccessSvc )
 #veloCond = CondDBAccessSvc( 'VeloAlignCond' )
-#veloCond.ConnectionString = 'sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceFestNothing.db/LHCBCOND'
+#veloCond.ConnectionString = 'sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceFest.db/LHCBCOND'
 #CondDB().addLayer( veloCond )
 
 ##############################################################################

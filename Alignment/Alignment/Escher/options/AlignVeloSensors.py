@@ -61,7 +61,7 @@ alignSelector  = TrackContainerCopy("AlignSelector",
 alignSelector.addTool( TrackSelector("Selector",
                                      MaxChi2Cut = 10,
                                      MinNVeloRHits = 4,
-                                     MinNVeloPhiHits = 4 )
+                                     MinNVeloPhiHits = 4)
                        ) 
 trackFilterSeq.Members.append( alignSelector )
 

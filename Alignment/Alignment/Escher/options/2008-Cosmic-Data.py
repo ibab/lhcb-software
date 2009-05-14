@@ -13,6 +13,9 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 LHCbApp().DDDBtag   = "default"
 LHCbApp().CondDBtag = "default"
 
+LHCbApp().DDDBtag   = "head-20090330"
+LHCbApp().CondDBtag = "head-20090330"
+
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 Escher().DatasetName = 'Cosmics'
 
@@ -29,8 +32,8 @@ for d in data:
     name = "DATAFILE='" + d + "' TYP='POOL_ROOTTREE' OPT='READ'" 
     EventSelector().Input.append( name )
 
-EventSelector().PrintFreq = 100
-Escher().PrintFreq = 100
+EventSelector().PrintFreq = 1
+Escher().PrintFreq = 1
 
 # do not do the TES check because these data do not have the required lists
 GaudiSequencer("InitReprocSeq").Enable = False

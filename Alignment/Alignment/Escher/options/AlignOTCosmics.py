@@ -20,7 +20,7 @@ Escher().DataType     = "2008"
 Escher().Kalman = True
 Escher().Millepede = False
 Escher().TrackContainer = "Rec/Track/Best" # Velo, VeloR, Long, Upstream, Downstream, Ttrack, Muon or Calo
-Escher().EvtMax = 1000
+Escher().EvtMax = 100
 Escher().SpecialData = [ "fieldOff", "cosmics"]
 TrackSys().ExpertTracking += [ "noDrifttimes","kalmanSmoother" ]
 TrackSys().TrackPatRecAlgorithms = [ "PatSeed" ]
@@ -29,13 +29,13 @@ TrackSys().TrackExtraInfoAlgorithms = ['']
 RecSysConf().RecoSequence = ["TT","IT","OT","Tr"]
 
 # load a special database
-from Configurables import ( CondDB, CondDBAccessSvc )
-otGeom = CondDBAccessSvc( 'OTGeom' )
-otGeom.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/OTDDDBCroissant.db/DDDB'
-CondDB().addLayer( otGeom )
-otCond = CondDBAccessSvc( 'OTCond' )
-otCond.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/LHCBCOND_changes.db/LHCBCOND'
-CondDB().addLayer( otCond )
+#from Configurables import ( CondDB, CondDBAccessSvc )
+#otGeom = CondDBAccessSvc( 'OTGeom' )
+#otGeom.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/OTDDDBCroissant.db/DDDB'
+#CondDB().addLayer( otGeom )
+#otCond = CondDBAccessSvc( 'OTCond' )
+#otCond.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/LHCBCOND_changes.db/LHCBCOND'
+#CondDB().addLayer( otCond )
 
 # configure the alignment
 from Configurables import TAlignment
@@ -43,12 +43,14 @@ from TAlignment.Alignables import *
 elements = Alignables()
 elements.OTCFramesASide("TxTyTzRz")
 elements.OTCFramesCSide("TxTyTzRz")
+#elements.OTModules("Tx")
 constraints = [
     "T1X1C : T1X1UCSide : Tx Ty Tz Rz",
     "T1X1A : T1X1UASide : Tx Ty Tz Rz",
     "T3X2C : T3X1UCSide : Tx Ty Tz Rz",
     "T3X2A : T3X1UASide : Tx Ty Tz Rz"
     ]
+
 TAlignment().ElementsToAlign      = list(elements)
 TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 TAlignment().Constraints          = constraints
@@ -74,6 +76,27 @@ alignSelector.addTool( TrackSelector("Selector", MaxChi2Cut = 5) )
 trackFilterSeq.Members.append( alignSelector )
 trackFilterSeq.Members.append( TrackMonitor("AlignTrackMonitor",
                                             TracksInContainer = "Rec/Track/AlignTracks") )
+
+# create a dst with fsrs
+from Configurables import OutputFSRStream, RunRecordStream, ApplicationMgr
+
+#RootDst  = OutputFSRStream('RootDst',
+#                           FSRItemList = [ "/RunRecords/AlignmentSummaryData"],
+#                           #FSRItemList = [ "/Event/FSR#999" ],
+#Output   = "DATAFILE='PFN:ASR.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'" )
+#FileCatalog.Catalogs =[ 'xmlcatalog_file:POOLIO.xml' ] 
+RootDst  = RunRecordStream('RootDst',
+                           ItemList         = ['/RunRecords#999' ],
+                           EvtDataSvc       = 'RunRecordDataSvc',
+                           EvtConversionSvc = 'RunRecordPersistencySvc',
+                           #                           FSRItemList = [ "/RunRecords/AlignmentSummaryData"],
+                           #                           #FSRItemList = [ "/Event/FSR#999" ],
+                           Output   = "DATAFILE='PFN:ASR.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'" )
+
+#GaudiSequencer("WriteCondSeq").Members.append(RootDst)
+#GaudiSequencer("WriteCondSeq").Members.append(RootDst)
+
+ApplicationMgr().OutStream.append( RootDst )
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-TED_Data.py

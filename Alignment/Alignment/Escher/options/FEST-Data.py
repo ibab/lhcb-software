@@ -26,7 +26,7 @@ data = ['PFN:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/44878/044878
 
 # express stream
 data = ['/castor/cern.ch/grid/lhcb/data/2009/RAW/EXPRESS/FEST/FEST/44878/044878_0000000002.raw']
- 
+
 EventSelector().Input = []
 for d in data:
     name = "DATA='castor:" + d + "' SVC='LHCb::MDFSelector'"
