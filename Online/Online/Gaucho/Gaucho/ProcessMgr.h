@@ -80,6 +80,7 @@ public:
   void write();
   std::string taskName() {return m_taskName;}
   std::string getPartitionName() {return m_partitionName;}
+  std::string getFarm() {return m_farm;}
   
   void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
   //void setFileStaus(std::string& file) {m_pFile = &file;}
