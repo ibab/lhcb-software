@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.10 2008-01-24 17:31:20 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.11 2009-05-15 15:48:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -21,7 +21,7 @@
 #include <iostream>
 
 //  General namespace for RICH specific definitions documented in RichSide.h
-namespace Rich 
+namespace Rich
 {
 
   /// Number of RICH detectors
@@ -57,14 +57,14 @@ namespace Rich
   /// Access a vector of valid detector types
   const Detectors & detectors();
 
-}
+  /// Implement textual ostream << method for Rich::DetectorType enumeration
+  inline std::ostream& operator << ( std::ostream & s,
+                                     const Rich::DetectorType & detector )
+  {
+    s << Rich::text( detector );
+    return s;
+  }
 
-/// Implement textual ostream << method for Rich::DetectorType enumeration
-inline std::ostream& operator << ( std::ostream & s,
-                                   const Rich::DetectorType & detector ) 
-{
-  s << Rich::text( detector );
-  return s;
 }
 
 #endif // LHCBKERNEL_RICHDETECTORTYPE_H

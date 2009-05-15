@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.11 2008-02-07 17:53:06 jonrob Exp $
+ *  $Id: RichSide.h,v 1.12 2009-05-15 15:48:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -21,7 +21,7 @@
 #include <iostream>
 #include "Kernel/RichDetectorType.h"
 
-namespace Rich 
+namespace Rich
 {
 
   /// Total number of HPD panels
@@ -71,13 +71,13 @@ namespace Rich
   /// Access a vector of valid particle ID types
   const Sides & sides();
 
-}
+  /// Implement textual ostream << method for Rich::Side enumeration
+  inline std::ostream& operator << ( std::ostream & s,
+                                     const Rich::Side & side )
+  {
+    return s << Rich::text( side );
+  }
 
-/// Implement textual ostream << method for Rich::Side enumeration
-inline std::ostream& operator << ( std::ostream & s,
-                                   const Rich::Side & side ) 
-{
-  return s << Rich::text( side );
 }
 
 #endif // LHCBKERNEL_RICHSIDE_H

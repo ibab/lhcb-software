@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.2 2007-02-01 16:45:31 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.3 2009-05-15 15:48:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -58,13 +58,13 @@ namespace Rich
   /// Access a vector of valid particle ID types
   const Particles & particles();
 
-}
-
-/// Implement textual ostream << method for Rich::ParticleIDType enumeration
-inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::ParticleIDType& particle ) 
-{
-  return s << Rich::text(particle) ;
+  /// Implement textual ostream << method for Rich::ParticleIDType enumeration
+  inline std::ostream& operator << ( std::ostream& s,
+                                     const Rich::ParticleIDType& particle ) 
+  {
+    return s << Rich::text(particle) ;
+  }
+  
 }
 
 #endif // RICHKERNEL_PARTICLEIDTYPE_H

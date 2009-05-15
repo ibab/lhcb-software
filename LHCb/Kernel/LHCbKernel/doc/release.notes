@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-05-15 - Christopher Rob Jones
+ - Some improvements to the ostream operator overloading for enums
+
 !===================== LHCbKernel v11r3 2009-05-07 ========================
 ! 2009-04-06 - Olivier Deschamps 
  - CaloCellID.xml : new method : isPin() return true if cellID is a pin ID

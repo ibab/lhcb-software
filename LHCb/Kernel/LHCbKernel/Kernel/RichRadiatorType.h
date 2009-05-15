@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.12 2007-02-01 16:45:31 jonrob Exp $
+ *  $Id: RichRadiatorType.h,v 1.13 2009-05-15 15:48:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -21,7 +21,7 @@
 #include <iostream>
 
 //  General namespace for RICH specific definitions documented in RichSide.h
-namespace Rich 
+namespace Rich
 {
 
   /// Number of RICH radiators
@@ -68,14 +68,14 @@ namespace Rich
   /// Access a vector of all radiator types
   const Radiators & radiators();
 
-}
+  /// Implement textual ostream << method for Rich::RadiatorType enumeration
+  inline std::ostream& operator << ( std::ostream& s,
+                                     const Rich::RadiatorType & radiator )
+  {
+    s << Rich::text( radiator );
+    return s;
+  }
 
-/// Implement textual ostream << method for Rich::RadiatorType enumeration
-inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::RadiatorType & radiator ) 
-{
-  s << Rich::text( radiator );
-  return s;
 }
 
 #endif // LHCBKERNEL_RICHRADIATORTYPE_H
