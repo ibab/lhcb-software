@@ -400,6 +400,8 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   std::string svctype = serviceParts[0];
   std::string utgid = serviceParts[1];
   std::string task = Misc::splitString(utgid, "_")[1];
+  std::string farm=m_processMgr->getFarm();
+  if (farm=="MF") task = "RecBrunel" ;
     
   int index = 2;
 
@@ -472,9 +474,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
   {
     
      std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
-  
-     std::string taskName = "Moore";
-  
+     std::string farm=m_processMgr->getFarm();
+     std::string taskName="Moore";
+     if (farm=="MF") {
+       taskName = "RecBrunel";
+     }  
+     
  /*    if (3 == serviceParts.size()) {
        taskName = "Moore";
      }

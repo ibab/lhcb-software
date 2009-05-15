@@ -48,12 +48,13 @@ StatusCode SaverSvc::initialize() {
   
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
 
-  if (utgidParts.size() != 3 ) {
+  if ((utgidParts.size() != 3 )&&(utgidParts[1]!="MONA0901")) {
      msg << MSG::ERROR << "Wrong utgid format for Saver !!" << endreq;
      msg << MSG::ERROR << "If you are in a EFF farm try this format: nodename_Saver_1" << endreq;
      msg << MSG::ERROR << "If you are in a Monitoring farm try: partition_nodename_MonSaver" << endreq;
      return StatusCode::FAILURE;
   }
+  
   
   std::string verifName;
   if (utgidParts[2].compare("1")==0){ // EFF farm 
@@ -69,7 +70,7 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "nodeName = " << m_nodeName << endreq;
   msg << MSG::DEBUG << "verifName = " << verifName << endreq;
   
-  if ((verifName != "Saver")&&(verifName != "SAVER")&&(verifName != "MonSaver")&&(verifName != "MONSAVER")) {
+  if ((verifName != "Saver")&&(verifName != "SAVER")&&(verifName != "RecSaver")&&(verifName != "RECSAVER")) {
      msg << MSG::ERROR << "Wrong utgid format for Saver !!" << endreq;
      msg << MSG::ERROR << "If you are in a EFF farm try this format: nodename_Saver_1" << endreq;
      msg << MSG::ERROR << "If you are in a Monitoring farm try: partition_nodename_MonSaver" << endreq;
@@ -160,7 +161,14 @@ StatusCode SaverSvc::initialize() {
     processMgr->createTimerProcess();
   
     processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
-
+    
+    if (utgidParts[1]=="MONA0901") {
+       processMgr->setFarm("MF");
+    }
+    else {
+       processMgr->setFarm("EFF");
+    }
+   
   //  m_file[i] = "Waiting for command to save histograms............."; 
     // std::vector<std::string>::iterator it2 = m_file.end();
     // m_file.insert(it2,fileName);
@@ -189,6 +197,7 @@ StatusCode SaverSvc::initialize() {
     msg << MSG::DEBUG << "Finishing the initialize ProcessMgr for taskName " << *it << endreq;
    // i++;
   }
+
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }

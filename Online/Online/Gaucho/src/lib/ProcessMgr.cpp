@@ -244,8 +244,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     
     msg << MSG::DEBUG << "object = " << object << endreq;
     
-    msg << MSG::DEBUG << "task match : " << m_taskName << " vs " << task << endreq;
-    if (Misc::findCaseIns(m_taskName, task) == std::string::npos) continue;
+    //comment out: saver task = RecSaver, task to be saved= RecBrunel, never a match
+    //msg << MSG::DEBUG << "task match : " << m_taskName << " vs " << task << endreq;
+   // if (Misc::findCaseIns(m_taskName, task) == std::string::npos) continue;
     
     bool matched = true;
     if (m_algorithmName.size() > 0)  matched = false;
@@ -409,7 +410,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
       }
-      else if  ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(partName=="LHCb"))) { //3rd level Adder (Top Level Adder)
+      else if  ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_nodeName=="MONA0901"))) { //3rd level Adder (Top Level Adder)
        // if (nodeName.compare("Bridge")!=0) {
        //   msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
        //   continue;
@@ -440,9 +441,11 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         std::size_t third_us = (*serverListTotIt).find("_", second_us + 1);
         if (third_us == std::string::npos) continue;
       
-    //    partName = (*serverListTotIt).substr(0, first_us);
-    //    nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-    //    taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
+        partName = (*serverListTotIt).substr(0, first_us);
+        nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+        taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
+	//only accept servers on MONA0901 (the Adder)
+	if (nodeName!="MONA0901") continue;
 	
         msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
         
@@ -461,14 +464,15 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
         else msg << MSG::DEBUG << "partName OK server accepted: " << (*serverListTotIt) <<endreq;
 
-        if (m_taskName.compare(taskName)!= 0) {
-          msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+    //    if (m_taskName.compare(taskName)== 0) {
+          if (taskName != "RecAdder" ) {
+	  msg << MSG::DEBUG << "REFUSED because taskName "<< taskName << " NOT OK "  << endreq;
           continue; 
         }
       }
       else {
-     //   nodeName = (*serverListTotIt).substr(0, first_us);
-     //   taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+        nodeName = (*serverListTotIt).substr(0, first_us);
+        taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
        msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
  
         if (nodeName.compare("Bridge")==0) {

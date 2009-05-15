@@ -79,7 +79,7 @@ StatusCode AdderSvc::initialize() {
 
 
 
-  if ((taskName != "Adder")&&(taskName != "ADDER")) {
+  if (((taskName != "Adder")&&(taskName != "ADDER"))&&((taskName !="RecAdder")&&(taskName !="RECADDER"))) {
     msg << MSG::ERROR << "This is not an Adder !" << endreq;
     msg << MSG::ERROR << "Please try nodeName_Adder_1" << endreq;
     return StatusCode::FAILURE;
