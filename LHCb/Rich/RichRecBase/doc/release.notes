@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-05-15 - Christopher Rob Jones
+ - Improvements to enum ostream operator << overloading
+
 !===================== RichRecBase v3r21 2009-05-07 ==========================
 ! 2009-04-17 - Chris Jones
  - Add support for PatSeeding T Station tracks (cosmics).

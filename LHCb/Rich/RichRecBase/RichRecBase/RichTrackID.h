@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.25 2007-04-23 12:56:12 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.26 2009-05-15 15:51:21 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -286,7 +286,7 @@ namespace Rich
       /// The parent type
       Rich::Rec::TrackParent::Type m_parentType;
 
-      /// Is this track unique
+      /// Is this track unique ?
       bool m_unique;
 
     };
@@ -307,20 +307,24 @@ namespace Rich
      */
     std::string text( const Rich::Rec::Track::Type track );
 
-    /// Implement textual ostream << method for Rich::Rec::Track::Type enumeration
-    inline std::ostream& operator << ( std::ostream& s,
-                                       const Rich::Rec::Track::Type& type )
+    namespace Track
     {
-      s << Rich::Rec::text( type );
-      return s;
+      /// Implement textual ostream << method for Rich::Rec::Track::Type enumeration
+      inline std::ostream& operator << ( std::ostream& s,
+                                         const Rich::Rec::Track::Type& type )
+      {
+        return s << Rich::Rec::text( type );
+      }
     }
 
-    /// Implement textual ostream << method for Rich::Rec::TrackParent::Type enumeration
-    inline std::ostream& operator << ( std::ostream& s,
-                                       const Rich::Rec::TrackParent::Type& track )
+    namespace TrackParent
     {
-      s << Rich::Rec::text( track );
-      return s;
+      /// Implement textual ostream << method for Rich::Rec::TrackParent::Type enumeration
+      inline std::ostream& operator << ( std::ostream& s,
+                                         const Rich::Rec::TrackParent::Type& track )
+      {
+        return s << Rich::Rec::text( track );
+      }
     }
 
   }
