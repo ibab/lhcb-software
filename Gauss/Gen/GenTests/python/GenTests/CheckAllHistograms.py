@@ -1,15 +1,15 @@
 import os
 import datetime
 
-GaussVersion = 'v31r2'
+GaussVersion = 'v37r0'
 
 listofhistos = {
-    '30000000': 'MinBias',
-    '11164011': 'BdD0KstKpiDecProdCut',
-    '13264001': 'BsDspiDecProdCut',
+#    '30000000': 'MinBias',
+#    '11164011': 'BdD0KstKpiDecProdCut',
+#    '13264001': 'BsDspiDecProdCut',
 #    '12463010': 'BuD0hKpicocktail',
-    '10000000': 'InclB',
-    '20000000': 'InclD',
+#    '10000000': 'InclB',
+#    '20000000': 'InclD'#,
     '24142001': 'InclJpsi'
     }
 

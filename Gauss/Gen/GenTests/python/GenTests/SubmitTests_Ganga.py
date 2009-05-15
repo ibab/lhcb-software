@@ -4,17 +4,17 @@ from random import Random
 #--------------------------------
 # Put Gauss version here
 #--------------------------------
-GaussVersion = 'v31r2'
+GaussVersion = 'v37r0'
 #--------------------------------
 
 listoftests = {
-#    '30000000': 'MinBias',
+    '30000000': 'MinBias',
     '11164011': 'BdD0KstKpiDecProdCut',
-#    '13264001': 'BsDspiDecProdCut',
-#    '12463010': 'BuD0hKpicocktail',
-#    '10000000': 'InclB',
-    '20000000': 'InclD' #,
-#    '24142001': 'InclJpsi'
+    '13264001': 'BsDspiDecProdCut',
+    '12463010': 'BuD0hKpicocktail',
+    '10000000': 'InclB',
+    '20000000': 'InclD',
+    '24142001': 'InclJpsi'
     }
 
 #----------------------------------------------
@@ -42,12 +42,13 @@ for eventtype, eventname in listoftests.iteritems():
     test_application = Gauss()
     test_application.version = GaussVersion
 
-    test_application.optsfile = File( GENTestsPath + '/options/GaussMonitoring'+eventname+'.opts' )
+    test_application.optsfile = File( GENTestsPath + '/options/GaussMonitoring'+eventname+'.py' )
     
     test_application.extraopts = """
-    HistogramPersistencySvc.OutputFile="/castor/cern.ch/user/r/robbep/GaussGen_"""+GaussVersion+"""/GaussHistos_"""+GaussVersion+"""_"""+eventtype+""".root";
-    GaussGen.FirstEventNumber="""+str(FirstEvent)+""";
-    GaussGen.RunNumber="""+str(RunNumber)+""";
+HistogramPersistencySvc().OutputFile="/castor/cern.ch/user/r/robbep/GaussGen_"""+GaussVersion+"""/GaussHistos_"""+GaussVersion+"""_"""+eventtype+""".root"
+GaussGen=GenInit("GaussGen")
+GaussGen.FirstEventNumber="""+str(FirstEvent)+"""
+GaussGen.RunNumber="""+str(RunNumber)+"""
     """
     
     j = Job(
