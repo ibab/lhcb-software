@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::VaryGasPressureTemperatureAlg
  *
  * CVS Log :-
- * $Id: RichVaryGasPressureTemperatureAlg.cpp,v 1.1 2009-04-17 11:04:35 jonrob Exp $
+ * $Id: RichVaryGasPressureTemperatureAlg.cpp,v 1.2 2009-05-15 16:04:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2008-10-10
@@ -95,25 +95,25 @@ VaryGasPressureTemperatureAlg::updateRadiator( const Rich::RadiatorType rad )
   else
   {
 
-    // first event
-    if ( m_firstEvent[rad] )
-    {
-      m_firstEvent[rad] = false;
-      // get the nominal temps and pressures
-      m_nomTemperature[rad] = temperatureCond->param<double>("CurrentTemperature");
-      m_nomPressure[rad]    = pressureCond->param<double>("CurrentPressure");
-      info() << rad 
-             << " nominal temperature = " << m_nomTemperature[rad]
-             << " K, pressure = " << m_nomPressure[rad]/Gaudi::Units::Pa << " Pa"
-             << endmsg;
-    }
-    
     const double currentPres = pressureCond->param<double>("CurrentPressure");
     const double currentTemp = temperatureCond->param<double>("CurrentTemperature");
     debug() << rad
             << " current temperature = " << currentTemp
             << " K, pressure = " << currentPres/Gaudi::Units::Pa << " Pa"
             << endmsg;
+
+    // first event
+    if ( m_firstEvent[rad] )
+    {
+      m_firstEvent[rad] = false;
+      // get the nominal temps and pressures
+      m_nomTemperature[rad] = currentTemp;
+      m_nomPressure[rad]    = currentPres;
+      info() << rad 
+             << " nominal temperature = " << m_nomTemperature[rad]
+             << " K, pressure = " << m_nomPressure[rad]/Gaudi::Units::Pa << " Pa"
+             << endmsg;
+    }
 
     // Vary the presssure
     const double newPres = (m_presVaryShift*Gaudi::Units::Pa) + m_nomPressure[rad] + 
