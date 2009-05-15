@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.17 2009-04-23 14:38:50 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-05-15 09:33:29 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -244,7 +244,6 @@ class RichRecSysConf(RichConfigurableUser):
 
             self.setOtherProp(pidConf,"Context")
             pidConf.PidSequencer = pidSeq
-            pidConf.applyConf()
 
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)

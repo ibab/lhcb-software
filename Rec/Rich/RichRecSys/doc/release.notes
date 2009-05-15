@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-05-15 - Chris Jones
+ - Remove remaining manual calls to applyConf
+
 !====================== RichRecSys v3r18 2009-05-08 ==========================
 ! 2009-04-23 - Chris Jones
  - Test if sequences are set using "isPropertySet" method instead of testing

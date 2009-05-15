@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.6 2009-04-07 16:17:17 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.7 2009-05-15 09:33:29 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -18,6 +18,9 @@ from RichRecSys.SegmentCreator import *
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class RichTrackCreatorConfig(RichConfigurableUser):
+
+       ## Possible used Configurables
+    __used_configurables__ = [ RichSegmentCreatorConf ]
 
     # Steering options
     __slots__ = {
@@ -34,8 +37,6 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # segments
         segConf = RichSegmentCreatorConf()
         self.setOtherProps(segConf,["Context"])
-        segConf.applyConf()
-        del segConf
 
         # Configure the tracking tools
         nickname = "RichTrackCreator"
