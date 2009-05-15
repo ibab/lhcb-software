@@ -1,4 +1,4 @@
-// $Id: InBremAcceptance.cpp,v 1.6 2008-05-13 12:25:51 odescham Exp $
+// $Id: InBremAcceptance.cpp,v 1.7 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -81,7 +81,7 @@ bool InBremAcceptance::inAcceptance ( const LHCb::Track* track) const
     // allowed z ?
     if ( state->z() > 4.0 * Gaudi::Units::meter ) 
     {
-      Error ( "No appropriate states are found, see 'debug'") ; 
+      Error ( "No appropriate states are found, see 'debug'").ignore() ; 
       print ( debug() , track ) ;
       return false ; 
     }

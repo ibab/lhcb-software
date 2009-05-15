@@ -1,4 +1,4 @@
-// $Id: CaloSingleGammaTool.cpp,v 1.3 2008-06-26 13:07:04 jpalac Exp $
+// $Id: CaloSingleGammaTool.cpp,v 1.4 2009-05-15 12:53:38 cattanem Exp $
 // ===========================================================================
 // Include files
 // GaudiKernel
@@ -56,24 +56,24 @@ CaloSingleGammaTool::~CaloSingleGammaTool(){}
 // ============================================================================
 StatusCode CaloSingleGammaTool::initialize ()
 {
-  debug() << "==> Initialize" << endreq;
+  debug() << "==> Initialize" << endmsg;
   /// initialize the base class
   StatusCode sc = GaudiTool::initialize ();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // ECAL
   SmartDataPtr<DeCalorimeter> detecal (detSvc(),m_nameOfECAL);
-  if(!detecal)error()<<"Unable to retrieve ECAL detector "  <<m_nameOfECAL<<endreq;
+  if(!detecal)error()<<"Unable to retrieve ECAL detector "  <<m_nameOfECAL<<endmsg;
   if(!detecal){ return StatusCode::FAILURE ;}
 
   // SPD
   SmartDataPtr<DeCalorimeter> detspd (detSvc(),m_nameOfSPD);
-  if(!detspd)error()<<"Unable to retrieve SPD detector "<<m_nameOfSPD<<endreq;
+  if(!detspd)error()<<"Unable to retrieve SPD detector "<<m_nameOfSPD<<endmsg;
   if(!detspd){ return StatusCode::FAILURE ; }
   
   // PRS
   SmartDataPtr<DeCalorimeter> detprs (detSvc(),m_nameOfPRS);
-  if(!detprs)error()<<"Unable to retrieve PRS detector "<<m_nameOfPRS<<endreq;
+  if(!detprs)error()<<"Unable to retrieve PRS detector "<<m_nameOfPRS<<endmsg;
   if(!detprs){ return StatusCode::FAILURE ; }
   
   // Convert Detectors to DeCalorimeter
@@ -141,7 +141,7 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
     // fix by V.B.  Many thanks to G.Corti . 
     if( 0 == pos ) 
     {
-      Warning(" likelihood(): CaloPosition* points to NULL");
+      Warning(" likelihood(): CaloPosition* points to NULL").ignore();
       return lhood ;
     }
     
@@ -161,11 +161,11 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
             
       if(!Gaudi::Math::intersection<LineType,Gaudi::Plane3D,Gaudi::XYZPoint>
          ( line , m_planeSpd , spdPoint , mu) )
-        warning() << " CAN NOT EXTRAPOLATE TO THE SPD PLANE " << endreq;
+        warning() << " CAN NOT EXTRAPOLATE TO THE SPD PLANE " << endmsg;
 
       if(!Gaudi::Math::intersection<LineType,Gaudi::Plane3D,Gaudi::XYZPoint>
          ( line , m_planePrs , prsPoint , mu))
-        warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endreq;
+        warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endmsg;
     }
     else{
       spdPoint = m_planeSpd.ProjectOntoPlane( position );

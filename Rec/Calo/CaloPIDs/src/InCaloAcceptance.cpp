@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptance.cpp,v 1.7 2009-04-16 14:25:36 odescham Exp $
+// $Id: InCaloAcceptance.cpp,v 1.8 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -101,7 +101,7 @@ StatusCode InCaloAcceptance::initialize()
   if ( propsPrint() || msgLevel ( MSG::DEBUG ) ) 
   {
     info() << "State to be used for aceptance check is '" 
-           << m_loc << "'" << endreq ;
+           << m_loc << "'" << endmsg ;
   }
   return StatusCode::SUCCESS ;
 };

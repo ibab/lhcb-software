@@ -1,17 +1,4 @@
-// $Id: CaloBremMatch.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2008/01/24 10:22:42  vegorych
-// _setProperty was removed, AddNeigbours warning was solved
-//
-// Revision 1.3  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.2  2006/06/21 18:43:29  ibelyaev
-//  fix 'Brem' problem & speed-up it a bit
-//
+// $Id: CaloBremMatch.cpp,v 1.6 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -185,10 +172,9 @@ StatusCode CaloBremMatch::match
       // allowed z ?
       if ( state->z() > 4.0 * Gaudi::Units::meter ) 
       {
-        Error ( "No appropriate states are found, see 'debug'") ; 
         print ( debug() , trObj ) ;
         m_tBad = trObj ;
-        return StatusCode::FAILURE ; 
+        return Error ( "No appropriate states are found, see 'debug'") ; 
       }
     }
     // use the linear extrapolator 

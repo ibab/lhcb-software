@@ -1,17 +1,4 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.4 2009-04-16 14:25:36 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2008/06/30 15:37:34  odescham
-// prepare for HLT processing
-//
-// Revision 1.2  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.1  2006/06/18 18:35:29  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
+// $Id: InCaloAcceptanceAlg.cpp,v 1.5 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -70,8 +57,8 @@ StatusCode InCaloAcceptanceAlg::initialize()
   StatusCode sc = CaloTrackAlg::initialize(); 
   if ( sc.isFailure() ) { return sc ; }
   //
-  if ( m_inputs.empty() ) { Warning ( "Empty 'Inputs'-list"  ) ; }
-  if ( m_output.empty() ) { Warning ( "Empty 'Output'-value" ) ; }
+  if ( m_inputs.empty() ) { Warning ( "Empty 'Inputs'-list"  ).ignore() ; }
+  if ( m_output.empty() ) { Warning ( "Empty 'Output'-value" ).ignore() ; }
   // 
   m_tool = tool<IInAcceptance> ( m_toolName , this ) ;
   //
@@ -116,7 +103,7 @@ StatusCode InCaloAcceptanceAlg::execute()
       table -> i_push ( track , result ) ;   // ATTENTION: i-push is used 
     }
   } ;
-  if ( 0 == nTracks ) { Warning("No good tracks have been selected") ; }
+  if ( 0 == nTracks ) { Warning("No good tracks have been selected").ignore() ; }
   // MANDATORY: i_sort after i_push
   table -> i_sort () ;
   

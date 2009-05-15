@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.5 2009-04-16 14:25:36 odescham Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.6 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -142,11 +142,11 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   for ( Inputs::const_iterator i = m_tracks.begin() ; m_tracks.end() != i ; ++i ){
 
     if( !exist<Tracks>(*i) ){
-      debug() << " Container " << *i << " has not been found " << endreq;
+      debug() << " Container " << *i << " has not been found " << endmsg;
       continue;
     }    
     const Tracks* c = get<Tracks> ( *i) ;
-    debug() << " Found " << c->size() << "tracks in " << *i << endreq;
+    debug() << " Found " << c->size() << "tracks in " << *i << endmsg;
     if ( 0 == c ) { continue ; }
     // loop over all tracks in container 
     for ( Tracks::const_iterator it = c->begin() ; c->end() != it ; ++it ){

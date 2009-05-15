@@ -127,7 +127,7 @@ CaloPhotonEstimatorTool::~CaloPhotonEstimatorTool()
 // ============================================================================
 StatusCode CaloPhotonEstimatorTool::initialize ()
 {
-  debug() << "==> Initialize CaloPhotonEstimatorTool" << endreq;
+  debug() << "==> Initialize CaloPhotonEstimatorTool" << endmsg;
 
   /// initialize the base class
   StatusCode sc = GaudiTool::initialize ();
@@ -138,21 +138,21 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
   SmartDataPtr<DeCalorimeter> detecal (detSvc(),m_nameOfECAL);
   if(!detecal)
     error() <<"Unable to retrieve ECAL detector "
-       <<m_nameOfECAL<<endreq;
+       <<m_nameOfECAL<<endmsg;
   if (!detecal){ return StatusCode::FAILURE ;}
 
   // SPD
   SmartDataPtr<DeCalorimeter> detspd (detSvc(),m_nameOfSPD);
   if(!detspd)
     error() <<"Unable to retrieve SPD detector "
-       <<m_nameOfSPD<<endreq;
+       <<m_nameOfSPD<<endmsg;
   if (!detspd){    return StatusCode::FAILURE ; }
 
   // PRS
   SmartDataPtr<DeCalorimeter> detprs (detSvc(),m_nameOfPRS);
   if(!detprs)
     error()<<"Unable to retrieve PRS detector "
-       <<m_nameOfPRS<<endreq;
+       <<m_nameOfPRS<<endmsg;
   if (!detprs){ return StatusCode::FAILURE ; }
 
   // Convert Detectors to DeCalorimeter
@@ -201,7 +201,7 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
     unsigned int nEbin=m_eBin.size()+1;
     m_histoSvc = svc<IHistogramSvc> ( "HistogramDataSvc", true );
 
-    debug()G<<"HistogramDataSvc is loaded properly!!"<<endreq;
+    debug()G<<"HistogramDataSvc is loaded properly!!"<<endmsg;
 
     m_signalEPrs=makeHisto
       (int(m_binningEPrs[ 0 ]),m_binningEPrs[ 1 ],m_binningEPrs[ 2 ],
@@ -276,7 +276,7 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
 */
 
   // General WARNING
-  warning() << "Vertex location HARD-CODED : IP(0.,0.,0.)"<<endreq;
+  warning() << "Vertex location HARD-CODED : IP(0.,0.,0.)"<<endmsg;
 
   return StatusCode::SUCCESS ;
 };
@@ -303,7 +303,7 @@ double CaloPhotonEstimatorTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
 
   if( 1 != hypo->clusters().size() ){
-    debug() <<"Number of clusters != 1"<<endreq;
+    debug() <<"Number of clusters != 1"<<endmsg;
     return -1.;
   }
 
@@ -376,11 +376,11 @@ double CaloPhotonEstimatorTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
     if( !Gaudi::Math::intersection<LineType,Gaudi::Plane3D
         ,Gaudi::XYZPoint>( line , m_planeSpd , spdPoint , mu) )
-        warning() << " CAN NOT EXTRAPOLATE TO THE SPD PLANE " << endreq;
+        warning() << " CAN NOT EXTRAPOLATE TO THE SPD PLANE " << endmsg;
 
     if( !Gaudi::Math::intersection<LineType,Gaudi::Plane3D
         ,Gaudi::XYZPoint>( line , m_planePrs , prsPoint , mu) )
-        warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endreq;
+        warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endmsg;
   }
 
   const LHCb::CaloCellID cellSpd = m_detSpd->Cell( spdPoint );
@@ -454,14 +454,14 @@ double CaloPhotonEstimatorTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
   estimator=(signal+backgr>0.)?signal/(signal+backgr):-1.;
 
-  debug() <<"Photon Candidate :"<<endreq;
-  debug() <<" -E       ="<<energy<<endreq;
-  debug() <<" -Et      ="<<et<<endreq;
-  debug() <<" -Spd hit ="<<eSpd<<endreq;
-  debug() <<" -EPrs    ="<<ePrs<<endreq;
-  debug() <<" -Chi2    ="<<chi2<<endreq;
-  debug() <<" -ShShape ="<<shape<<endreq;
-  debug() <<"      => estimator="<<estimator<<endreq;
+  debug() <<"Photon Candidate :"<<endmsg;
+  debug() <<" -E       ="<<energy<<endmsg;
+  debug() <<" -Et      ="<<et<<endmsg;
+  debug() <<" -Spd hit ="<<eSpd<<endmsg;
+  debug() <<" -EPrs    ="<<ePrs<<endmsg;
+  debug() <<" -Chi2    ="<<chi2<<endmsg;
+  debug() <<" -ShShape ="<<shape<<endmsg;
+  debug() <<"      => estimator="<<estimator<<endmsg;
 
 //  if (m_monitoring) {m_likelihood->fill(estimator, 1.);}
 
@@ -501,7 +501,7 @@ std::vector<IHistogram1D*> CaloPhotonEstimatorTool::makeHisto(
   for (unsigned int i=0; i<n; ++i){
 		IHistogram1D* histo;
     sprintf(histoname,"%s #%i",hname.c_str(),nhisto+i);
-		// debug() <<"Processing Histo ..."<<histoname<<endreq;
+		// debug() <<"Processing Histo ..."<<histoname<<endmsg;
 
     histo  = m_histoSvc->book( dir                      ,
                                nhisto+i                 ,

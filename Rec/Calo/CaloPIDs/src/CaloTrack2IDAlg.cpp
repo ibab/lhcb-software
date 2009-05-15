@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: CaloTrack2IDAlg.cpp,v 1.5 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -73,9 +73,9 @@ StatusCode CaloTrack2IDAlg::initialize ()
   //
   m_tool = tool<ICaloTrackIdEval> ( m_toolName , this ) ;
   //
-  if ( m_inputs.empty() ) { Warning ( "empty 'Inputs'-list"  ) ; }
-  if ( m_output.empty() ) { Warning ( "empty 'Output'-value" ) ; }
-  if ( m_filter.empty() ) { Warning ( "empty 'Filter'-value" ) ; }
+  if ( m_inputs.empty() ) { Warning ( "empty 'Inputs'-list"  ).ignore() ; }
+  if ( m_output.empty() ) { Warning ( "empty 'Output'-value" ).ignore() ; }
+  if ( m_filter.empty() ) { Warning ( "empty 'Filter'-value" ).ignore() ; }
   //
   return StatusCode::SUCCESS ;
 } ;
@@ -129,7 +129,7 @@ StatusCode CaloTrack2IDAlg::execute ()
       StatusCode sc = m_tool->process ( track , value ) ;
       if ( sc.isFailure() ) 
       {
-        Warning ( " Failure from the tool, skip the track!", sc ) ;
+        Warning ( " Failure from the tool, skip the track!", sc ).ignore() ;
         continue ;                                              // CONTINUE 
       }
       // make a relations (fast, efficient, call for i_sort is mandatory!)

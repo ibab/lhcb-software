@@ -1,26 +1,4 @@
-// $Id: BremMatchAlg.cpp,v 1.7 2008-06-30 15:37:34 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2008/05/13 12:25:51  odescham
-// restore _setProperty()
-//
-// Revision 1.5  2008/01/24 10:22:42  vegorych
-// _setProperty was removed, AddNeigbours warning was solved
-//
-// Revision 1.4  2007/08/24 21:25:18  odescham
-// fix uncheck. StatusCodes
-//
-// Revision 1.3  2006/06/21 18:43:29  ibelyaev
-//  fix 'Brem' problem & speed-up it a bit
-//
-// Revision 1.2  2006/06/20 18:17:48  odescham
-// minor update to please ChargedProtoPAlg
-//
-// Revision 1.1  2006/06/18 18:35:27  ibelyaev
-//  the firstcommmit for DC06 branch
-//
+// $Id: BremMatchAlg.cpp,v 1.8 2009-05-15 12:53:38 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -101,7 +79,6 @@ StatusCode BremMatchAlg::execute ()
   //
   Assert ( !m_tracks .empty() , "No Input tracks"   ) ;
   Assert ( !m_calos  .empty() , "No Input Clusters" ) ;
-  //if(sc.isFailure())warning() << "Asserting FAILED " << endreq;
   
   //
   typedef LHCb::RelationWeighted2D<LHCb::Track,LHCb::CaloHypo,float> Table ;
