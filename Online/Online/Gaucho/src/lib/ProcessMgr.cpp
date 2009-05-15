@@ -346,9 +346,11 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     std::size_t second_us = (*serverListTotIt).find("_", first_us + 1);
     if (second_us == std::string::npos) continue;
     
-    std::size_t third_us;
-    if (m_farm=="MF") {
-        third_us = (*serverListTotIt).find("_", second_us + 1);	   
+    std::size_t third_us = (*serverListTotIt).find("_", second_us + 1);
+    if (m_farm=="MF") {       
+	//if there is no third underscore, it's a service we don't want
+	msg << MSG::DEBUG << "This server is rejected "<< *serverListTotIt << endreq;    
+	if (third_us==std::string::npos) continue;   
     }	   
 
     std::string partName;
@@ -364,6 +366,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       else { 	 
          partName = (*serverListTotIt).substr(0, first_us);
          nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+	 // if nodeName="MONA0901" its the adder itself, we don't want it
 	 if (nodeName=="MONA0901") continue;
          taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
       } 	 
