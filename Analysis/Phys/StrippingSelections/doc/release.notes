@@ -1,0 +1,21 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingSelections
+! Responsible : Anton Poluektov
+! Purpose     : Stripping selections
+! -----------------------------------------------------------------------------
+
+!========================== StrippingSelections v1r0 2009-05-15 ===============
+! 2009-05-15  Anton Poluektov
+
+  Initial release. Content of this package: 
+    * tests/StrippingDummy.py --- Dummy stripping selection, 
+                                  example of StrippingMember features
+                            
+    * tests/TestStrippingDummy.py  --- DaVinci test job
+    
+    * python/Stripping*.py   --- here the actial selections should go
+    * tests/TestStripping.py --- run all stripping selections from python/
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
