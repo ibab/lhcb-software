@@ -197,8 +197,9 @@
         - moved version of LbScripts to be used to be the current one (v3r2).
  090421 - comment the full_flag setting in win32 section.
         - put the import statement for LHCb_config.
- 090421 - Added the support for slc5
+ 090513 - Added the support for slc5
         - removed the usage of the old scripts.tar.gz for the bootstrapping.
+ 090515 - Moving to LbScripts v4r0
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -208,10 +209,10 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090513'
+script_version = '090515'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v3r3"
+lbscripts_version = "v4r0"
 compat_version = "v1r0"
 #-----------------------------------------------------------------------------------
 
