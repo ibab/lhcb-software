@@ -1,9 +1,12 @@
-!=! $Id: release.notes,v 1.10 2008-08-25 12:28:20 gcorti Exp $
+!=! $Id: release.notes,v 1.11 2009-05-15 08:47:54 robbep Exp $
 ! Package     : GenTests
 ! Responsible : Patrick ROBBE
 ! Purpose     : Package holding options and scripts to run generator level
 !               tests with Gauss
 !=============================================================================
+
+! 2009-05-15 - Patrick Robbe
+ - Move to python options
 
 !========================= GenTests v1r3 2008-08-25 ==========================
 ! 2008-07-14 - Patrick Robbe
