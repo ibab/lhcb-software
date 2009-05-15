@@ -1,5 +1,5 @@
 package LbRelease
-version v2r9
+version v2r10
 
 use LbUtils v*
 
