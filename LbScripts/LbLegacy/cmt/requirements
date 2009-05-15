@@ -1,5 +1,5 @@
 package LbLegacy
-version v1r4
+version v2r0
 
 use LbScriptsPolicy v*
 
@@ -10,5 +10,6 @@ apply_pattern python_alias script=mkLHCbtar
 apply_pattern python_alias script=mkLCGCMTtar
 apply_pattern python_alias script=copy-Win2afs
 apply_pattern python_alias script=FixProjectLinks
+apply_pattern python_alias script=install_project
 
 apply_pattern source_shell_alias script=ProjectEnv

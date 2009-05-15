@@ -1,5 +1,9 @@
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r0
+
+2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/install_project.bat: New file. 
 	* scripts/install_project: New file. Shell wrappers for the call
 	to install_project.py 
