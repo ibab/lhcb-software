@@ -1,0 +1,16 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingAlg
+! Responsible : Anton Poluektov
+! Purpose     : Stripping framework
+! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v1r0 2009-05-15 =====================
+! 2009-05-15  Anton Poluektov
+
+  Initial release. Content of this package: 
+    * StrippingLine python objects  (converted from HltConf/HltLines v2r7)
+    * StrippingAlg C++ configurable (converted from HltCommon/HltLine v5r5)
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
