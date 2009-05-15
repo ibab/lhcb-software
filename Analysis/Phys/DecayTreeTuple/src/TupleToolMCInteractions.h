@@ -1,4 +1,4 @@
-// $Id: TupleToolMCInteractions.h,v 1.4 2009-05-11 14:45:55 rlambert Exp $
+// $Id: TupleToolMCInteractions.h,v 1.5 2009-05-15 11:43:08 rlambert Exp $
 #ifndef TUPLETOOLGENERATION_H
 #define TUPLETOOLGENERATION_H 1
 
@@ -50,6 +50,8 @@ class ITupleTool;
  *                       -by default this is false
  *  FillDetails   bool  fill extra information on MCPV, MC Collisions and Reconstructed PV
  *                       -by default this is false, fine for most purposes
+ *  RecPVLocation string  change the default PV location
+ *                       -by default this is LHCb::RecVertexLocation::Primary
  *
  * \sa DecayTreeTuple
  *  @author P. Koppenburg
@@ -75,6 +77,7 @@ private :
   std::string m_prefix; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
   bool m_useRecPV; ///<use the #of reconstructed PVs, rather than the MC Collisions. set by the option UseRecPV.
   bool m_fillDetails; ///<fill extra information on MCPV, MC Collisions and Reconstructed PVs. set by the option FillDetails.
+  std::string m_RecPVLocation; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
  
   ///calculate the probability of n interactions given that the mean is mu
   double poisson(const double mu, const unsigned int n);

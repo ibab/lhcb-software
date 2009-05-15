@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2009-05-15 - Rob Lambert
+ - TupleToolMCInteractions : Fixed bug which was causing warnings.
+		bug caused by new genHeader() entries being unsigned ints, and
+		not handled correctly by the tool.
+
 ! 2009-05-14 - Patrick Koppenburg
  - MCTupleToolMCTruth : protect against stable particles
  - MCTupleToolReconstructed : ProtoParticles different for various particles.

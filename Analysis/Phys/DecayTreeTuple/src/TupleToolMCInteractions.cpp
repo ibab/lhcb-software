@@ -1,4 +1,4 @@
-// $Id: TupleToolMCInteractions.cpp,v 1.3 2009-05-11 12:05:11 rlambert Exp $
+// $Id: TupleToolMCInteractions.cpp,v 1.4 2009-05-15 11:43:08 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -62,6 +62,9 @@ TupleToolMCInteractions::TupleToolMCInteractions( const std::string& type,
   
   // fill extra information on MCPV, MC Collisions and Reconstructed PVs
   declareProperty( "FillDetails", m_fillDetails=false );
+  
+  // change the default PV location
+  declareProperty( "RecPVLocation", m_RecPVLocation=LHCb::RecVertexLocation::Primary );
 }
 
 //=============================================================================
@@ -77,9 +80,9 @@ StatusCode TupleToolMCInteractions::initialize() {
 StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
 
   unsigned int n =1;
-  unsigned int MCI =-1;
-  unsigned int MCPV =-1;
-  unsigned int RecPV =-1;
+  int MCI =-1;
+  int MCPV =-1;
+  int RecPV =-1;
   verbose() << "getting gen header" << endmsg;
   const LHCb::GenHeader* gh = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
   verbose() << "gen header OK? " << (gh!=NULL) << endmsg;
@@ -91,7 +94,7 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
       verbose() << "retrieved I from genHeader" << endmsg;
     }
   
-  if(MCI==0 || m_fillDetails==true)
+  if(MCI<=0 || m_fillDetails==true)
     {
       
       verbose() << "getting MCHeader" << endmsg;
@@ -99,23 +102,23 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
       verbose() << "mc header OK? " << (mch!=NULL) << endmsg;
       
       if(mch) 
-	{
-	  verbose() << "retrieved MCPVs from MCHeader" << endmsg;
-	  MCPV = mch->primaryVertices().size() ;
-	}
+      {
+        verbose() << "retrieved MCPVs from MCHeader" << endmsg;
+        MCPV = mch->primaryVertices().size() ;
+      }
     }
   
   if(m_fillDetails==true || m_useRecPV)
     {
       verbose() << "getting PV container" << endmsg;
-      const RecVertex::Container* PV = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
+      const RecVertex::Container* PV = get<LHCb::RecVertex::Container>(m_RecPVLocation);
       verbose() << "PV container OK? " << (PV!=NULL) << endmsg;
       
       if(PV) 
-	{
-	  verbose() << "retrieved PVs from " << LHCb::RecVertexLocation::Primary  << endmsg;
-	  RecPV = PV->size() ;
-	}
+      {
+        verbose() << "retrieved PVs from " << (m_RecPVLocation)  << endmsg;
+        RecPV = PV->size() ;
+      }
     }
   if(m_useRecPV && RecPV>=0) n=RecPV;
   else if(!m_useRecPV && MCI > 0) n=MCI;
@@ -131,17 +134,17 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
       
       //as in the IPileUpTool for FixedLuminosity.{h,cpp}
       if(gh && gh->crossingFreq() && gh->luminosity() && gh->totCrossSection())
-	{
-	  verbose() << "using genheader " << mean << endmsg;
-	  mean=gh->luminosity()*gh->totCrossSection()/gh->crossingFreq();
-	}
+      {
+        verbose() << "using genheader " << mean << endmsg;
+        mean=gh->luminosity()*gh->totCrossSection()/gh->crossingFreq();
+      }
       
       //if it isn't in the GenHeader, then make a default, the DC06 mean
       else 
-	{
-	  verbose() << "using default for DC06 data " << mean << endmsg;
-	  mean=(2.e32 /Gaudi::Units::cm2/Gaudi::Units::s)*(102.4 * Gaudi::Units::millibarn)/(30.0 * Gaudi::Units::megahertz);
-	}
+      {
+        verbose() << "using default for DC06 data " << mean << endmsg;
+        mean=(2.e32 /Gaudi::Units::cm2/Gaudi::Units::s)*(102.4 * Gaudi::Units::millibarn)/(30.0 * Gaudi::Units::megahertz);
+      }
       
       
       verbose() << "calculated mean " << mean << endmsg;
@@ -169,7 +172,6 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
   if(m_fillDetails)
     {
       verbose() << "Filling detailed tuples" << endmsg;
-      double normalise=1;
       test &= tuple->column( m_prefix + "_nMCI" , MCI );
       test &= tuple->column( m_prefix + "_nMCPV" ,MCPV );
       test &= tuple->column( m_prefix + "_nRecPV" , RecPV );
