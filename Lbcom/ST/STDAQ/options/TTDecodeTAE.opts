@@ -1,0 +1,134 @@
+ApplicationMgr.TopAlg += { 
+  "GaudiSequencer/DecodeTTSeq"
+};
+
+//Decode.DetectorList += { "TT" };
+DecodeTTSeq.MeasureTime = true;
+DecodeTTSeq.Members = {
+  "RawBankToSTClusterAlg/CreateTTClustersCentral"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev7"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev6"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev5"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev4"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev3"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev2"
+  ,"RawBankToSTClusterAlg/CreateTTClustersPrev1"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext1"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext2"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext3"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext4"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext5"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext6"
+  ,"RawBankToSTClusterAlg/CreateTTClustersNext7"
+};
+
+
+CreateTTClustersCentral.DetType = "TT";
+CreateTTClustersCentral.rawEventLocation = '/Event/DAQ/RawEvent';
+CreateTTClustersCentral.clusterLocation  = 'Raw/TT/Clusters';
+CreateTTClustersCentral.summaryLocation  = 'Rec/TT/Summary';
+CreateTTClustersCentral.checkValidity    = false;
+CreateTTClustersCentral.recoverMode      = true;
+
+CreateTTClustersPrev7.DetType = "TT";
+CreateTTClustersPrev7.rawEventLocation = '/Event/Prev7/DAQ/RawEvent';
+CreateTTClustersPrev7.clusterLocation  = 'Prev7/Raw/TT/Clusters';
+CreateTTClustersPrev7.summaryLocation  = 'Prev7/Rec/TT/Summary';
+CreateTTClustersPrev7.checkValidity    = false;
+CreateTTClustersPrev7.recoverMode      = true;
+
+CreateTTClustersPrev6.DetType = "TT";
+CreateTTClustersPrev6.rawEventLocation = '/Event/Prev6/DAQ/RawEvent';
+CreateTTClustersPrev6.clusterLocation  = 'Prev6/Raw/TT/Clusters';
+CreateTTClustersPrev6.summaryLocation  = 'Prev6/Rec/TT/Summary';
+CreateTTClustersPrev6.checkValidity    = false;
+CreateTTClustersPrev6.recoverMode      = true;
+
+CreateTTClustersPrev5.DetType = "TT";
+CreateTTClustersPrev5.rawEventLocation = '/Event/Prev5/DAQ/RawEvent';
+CreateTTClustersPrev5.clusterLocation  = 'Prev5/Raw/TT/Clusters';
+CreateTTClustersPrev5.summaryLocation  = 'Prev5/Rec/TT/Summary';
+CreateTTClustersPrev5.checkValidity    = false;
+CreateTTClustersPrev5.recoverMode      = true;
+
+CreateTTClustersPrev4.DetType = "TT";
+CreateTTClustersPrev4.rawEventLocation = '/Event/Prev4/DAQ/RawEvent';
+CreateTTClustersPrev4.clusterLocation  = 'Prev4/Raw/TT/Clusters';
+CreateTTClustersPrev4.summaryLocation  = 'Prev4/Rec/TT/Summary';
+CreateTTClustersPrev4.checkValidity    = false;
+CreateTTClustersPrev4.recoverMode      = true;
+
+CreateTTClustersPrev3.DetType = "TT";
+CreateTTClustersPrev3.rawEventLocation = '/Event/Prev3/DAQ/RawEvent';
+CreateTTClustersPrev3.clusterLocation  = 'Prev3/Raw/TT/Clusters';
+CreateTTClustersPrev3.summaryLocation  = 'Prev3/Rec/TT/Summary';
+CreateTTClustersPrev3.checkValidity    = false;
+CreateTTClustersPrev3.recoverMode      = true;
+
+CreateTTClustersPrev2.DetType = "TT";
+CreateTTClustersPrev2.rawEventLocation = '/Event/Prev2/DAQ/RawEvent';
+CreateTTClustersPrev2.clusterLocation  = 'Prev2/Raw/TT/Clusters';
+CreateTTClustersPrev2.summaryLocation  = 'Prev2/Rec/TT/Summary';
+CreateTTClustersPrev2.checkValidity    = false;
+CreateTTClustersPrev2.recoverMode      = true;
+
+CreateTTClustersPrev1.DetType = "TT";
+CreateTTClustersPrev1.rawEventLocation = '/Event/Prev1/DAQ/RawEvent';
+CreateTTClustersPrev1.clusterLocation  = 'Prev1/Raw/TT/Clusters';
+CreateTTClustersPrev1.summaryLocation  = 'Prev1/Rec/TT/Summary';
+CreateTTClustersPrev1.checkValidity    = false;
+CreateTTClustersPrev1.recoverMode      = true;
+
+CreateTTClusters.DetType = "TT";
+CreateTTClusters.checkValidity    = false;
+CreateTTClusters.recoverMode      = true;
+
+CreateTTClustersNext1.DetType = "TT";
+CreateTTClustersNext1.rawEventLocation = '/Event/Next1/DAQ/RawEvent';
+CreateTTClustersNext1.clusterLocation  = 'Next1/Raw/TT/Clusters';
+CreateTTClustersNext1.summaryLocation  = 'Next1/Rec/TT/Summary';
+CreateTTClustersNext1.checkValidity    = false;
+CreateTTClustersNext1.recoverMode      = true;
+
+CreateTTClustersNext2.DetType = "TT";
+CreateTTClustersNext2.rawEventLocation = '/Event/Next2/DAQ/RawEvent';
+CreateTTClustersNext2.clusterLocation  = 'Next2/Raw/TT/Clusters';
+CreateTTClustersNext2.summaryLocation  = 'Next2/Rec/TT/Summary';
+CreateTTClustersNext2.checkValidity    = false;
+CreateTTClustersNext2.recoverMode      = true;
+
+CreateTTClustersNext3.DetType = "TT";
+CreateTTClustersNext3.rawEventLocation = '/Event/Next3/DAQ/RawEvent';
+CreateTTClustersNext3.clusterLocation  = 'Next3/Raw/TT/Clusters';
+CreateTTClustersNext3.summaryLocation  = 'Next3/Rec/TT/Summary';
+CreateTTClustersNext3.checkValidity    = false;
+CreateTTClustersNext3.recoverMode      = true;
+
+CreateTTClustersNext4.DetType = "TT";
+CreateTTClustersNext4.rawEventLocation = '/Event/Next4/DAQ/RawEvent';
+CreateTTClustersNext4.clusterLocation  = 'Next4/Raw/TT/Clusters';
+CreateTTClustersNext4.summaryLocation  = 'Next4/Rec/TT/Summary';
+CreateTTClustersNext4.checkValidity    = false;
+CreateTTClustersNext4.recoverMode      = true;
+
+CreateTTClustersNext5.DetType = "TT";
+CreateTTClustersNext5.rawEventLocation = '/Event/Next5/DAQ/RawEvent';
+CreateTTClustersNext5.clusterLocation  = 'Next5/Raw/TT/Clusters';
+CreateTTClustersNext5.summaryLocation  = 'Next5/Rec/TT/Summary';
+CreateTTClustersNext5.checkValidity    = false;
+CreateTTClustersNext5.recoverMode      = true;
+
+CreateTTClustersNext6.DetType = "TT";
+CreateTTClustersNext6.rawEventLocation = '/Event/Next6/DAQ/RawEvent';
+CreateTTClustersNext6.clusterLocation  = 'Next6/Raw/TT/Clusters';
+CreateTTClustersNext6.summaryLocation  = 'Next6/Rec/TT/Summary';
+CreateTTClustersNext6.checkValidity    = false;
+CreateTTClustersNext6.recoverMode      = true;
+
+CreateTTClustersNext7.DetType = "TT";
+CreateTTClustersNext7.rawEventLocation = '/Event/Next7/DAQ/RawEvent';
+CreateTTClustersNext7.clusterLocation  = 'Next7/Raw/TT/Clusters';
+CreateTTClustersNext7.summaryLocation  = 'Next7/Rec/TT/Summary';
+CreateTTClustersNext7.checkValidity    = false;
+CreateTTClustersNext7.recoverMode      = true;
+
