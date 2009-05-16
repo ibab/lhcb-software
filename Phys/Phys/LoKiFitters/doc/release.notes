@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.15 2009-02-20 14:20:50 jpalac Exp $ 
+! $Id: release.notes,v 1.16 2009-05-16 12:28:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-16 - Vanya Belyaev
+
+ - DistanceCalculator
+ 
+     fix a bug in evaluation on impact parameter chi2.
+
+     (pre)-fix also Lifetime & Direction fitters. 
+
+ - cmt/requirements 
+
+    version increment to v2r1p1  
 
 !========================== LoKiFitters v2r1 2009-02-20 ===================
 

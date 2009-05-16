@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.h,v 1.3 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: DirectionFitBase.h,v 1.4 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DIRECTIONFITBASE_H 
 #define LOKIFITTERS_DIRECTIONFITBASE_H 1
@@ -197,20 +197,21 @@ namespace LoKi
   class DirectionFitBase : public GaudiTool
   {
   public:
+    // ========================================================================
     /// auxillary enum which define the error codes 
-    enum 
-      {
-        // no valid end-vertex is found for the particle 
-        NoEndVertex            = 500  , ///< no valid end-vertex is found for the particle 4
-        // no IPhysDesktop is available  (for IParticleReFitter interface)
-        NoDesktop              = 501  , ///< no IPhysDesktop is available  
-        // no valid primary vertex is found 
-        NoPrimaryVertex        = 502  , ///< no valid primary vertex is found
-        // matrix inversion failure 
-        MatrixInversionFailure = 504  , ///< matrix inversion failure
-        // no convergency 
-        NoConvergency          = 503     ///< no convergency 
-      } ;
+    enum {
+      /// no valid end-vertex is found for the particle 
+      NoEndVertex            = 500  , // no valid end-vertex is found for the particle 4
+      /// no IPhysDesktop is available  (for IParticleReFitter interface)
+      NoDesktop              = 501  , // no IPhysDesktop is available  
+      /// no valid primary vertex is found 
+      NoPrimaryVertex        = 502  , // no valid primary vertex is found
+      /// matrix inversion failure 
+      MatrixInversionFailure = 504  , // matrix inversion failure
+      /// no convergency 
+      NoConvergency          = 503     // no convergency 
+    } ;
+    // ========================================================================
   public:
     // ========================================================================
     /// the standard initialization of the tool 
@@ -321,14 +322,15 @@ namespace LoKi
       double&                 ctau      , 
       double&                 error     , 
       double&                 chi2      ) const ;
+    // ========================================================================
   private:
     // ========================================================================
-    // the default constructor is disabled
-    DirectionFitBase() ; ///< the default constructor is disabled
-    // the copy constructor is disabled 
-    DirectionFitBase( const DirectionFitBase& ) ; ///< no copy constructor
-    // assigmenent operator is disabled
-    DirectionFitBase& operator= ( const DirectionFitBase& ) ; ///< no assignement
+    /// the default constructor is disabled
+    DirectionFitBase() ;                 // the default constructor is disabled
+    /// the copy constructor is disabled 
+    DirectionFitBase( const DirectionFitBase& ) ;        // no copy constructor
+    /// assigmenent operator is disabled
+    DirectionFitBase& operator= ( const DirectionFitBase& ) ; // no assignement
     // ========================================================================
   private:
     // ========================================================================
@@ -340,7 +342,12 @@ namespace LoKi
       return m_transporter ;
     }
     // ========================================================================
-    /// transport the particle into new position 
+    /** transport the particle into new position 
+     *  @attention it call transport <b>AND</b> project
+     *  @param p1 (INPUT)  particle to be tranported 
+     *  @param x  (INPUT)  z-ccordiate of tranportation 
+     *  @param p2 (OUTPUT) the tarnsported particle
+     */
     inline StatusCode transport
     ( const LHCb::Particle* p1 , 
       const double          z  , 
@@ -348,14 +355,20 @@ namespace LoKi
     {
       if ( 0 == m_transporter ) 
       { m_transporter = tool<IParticleTransporter> ( m_transporterName ) ; }
-      return m_transporter -> transport ( p1 , z , p2 ) ;
+      return m_transporter -> transportAndProject ( p1 , z , p2 ) ;
     }
     // ========================================================================
-    /// transport the particle into new position 
+    /** transport the particle into new position 
+     *  @attention it call transport <b>AND</b> project
+     *  @param p1 (INPUT)  particle to be tranported 
+     *  @param x  (INPUT)  the point of tranportation 
+     *  @param p2 (OUTPUT) the tarnsported particle
+     */
     inline StatusCode transport 
     ( const LHCb::Particle*  p1 , 
       const Gaudi::XYZPoint& z  , 
-      LHCb::Particle&        p2 ) const { return transport ( p1 , z.Z() , p2 ) ; }
+      LHCb::Particle&        p2 ) const 
+    { return transport ( p1 , z.Z() , p2 ) ; }
     // ========================================================================
   private:
     // ========================================================================

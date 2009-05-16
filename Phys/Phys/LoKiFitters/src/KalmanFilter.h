@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.h,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: KalmanFilter.h,v 1.2 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -26,6 +26,7 @@ class IParticleTransporter ;
 // ============================================================================
 namespace LoKi 
 {
+  // ===========================================================================
   /** @namespace LoKi::KalmanFilter KalmanFilter.h
    *
    *  Helper namespace with various utility classes, 

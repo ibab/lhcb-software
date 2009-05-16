@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.4 2008-07-15 10:12:21 ibelyaev Exp $
+// $Id: DistanceCalculatorBase.h,v 1.5 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1
@@ -75,7 +75,7 @@ namespace LoKi
      *  of the particle with respect to some vertex 
      *  @param particle (input) the particle 
      *  @param vertex   (input) the vertex 
-     *  @param impact   (output) the evalauted impact parameter vector 
+     *  @param impact   (output) the evaluated impact parameter vector 
      */  
     inline void i_distance 
     ( const LHCb::Particle&   particle , 
@@ -86,7 +86,7 @@ namespace LoKi
      *  of the particle with respect to some fixed point 
      *  @param particle (input) the particle 
      *  @param point    (input) the fixed point 
-     *  @param impact   (output) the evalauted impact parameter vector 
+     *  @param impact   (output) the evaluated impact parameter vector 
      */  
     inline void i_distance 
     ( const LHCb::Particle&   particle , 

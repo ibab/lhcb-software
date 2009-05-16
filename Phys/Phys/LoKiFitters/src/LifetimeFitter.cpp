@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.4 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: LifetimeFitter.cpp,v 1.5 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -39,8 +39,10 @@ namespace LoKi
     : public virtual ILifetimeFitter
     , public LoKi::DirectionFitBase
   {
+    // ========================================================================
     /// the friend factopry needed for instantiation
     friend class ToolFactory<LoKi::LifetimeFitter> ;
+    // ========================================================================
   public:
     // ========================================================================
     /** Evaluate the particle  lifetime
@@ -106,18 +108,19 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // the default constructor is disabled
-    LifetimeFitter() ; ///< the default constructor is disabled
-    // the copy constructor is disabled 
-    LifetimeFitter ( const LifetimeFitter& ) ; ///< no copy constructor
-    // assigmenent operator is disabled
-    LifetimeFitter& operator= ( const LifetimeFitter& ) ; ///< no assignement
+    /// the default constructor is disabled
+    LifetimeFitter() ;                   // the default constructor is disabled
+    /// the copy constructor is disabled 
+    LifetimeFitter ( const LifetimeFitter& ) ;           // no copy constructor
+    /// assigmenent operator is disabled
+    LifetimeFitter& operator= ( const LifetimeFitter& ) ;     // no assignement
     // ========================================================================
   };
+  // ==========================================================================
 } // end of namespace LoKi
-// ========================================================================
+// ============================================================================
 // Evaluate the particle  lifetime
-// ========================================================================
+// ============================================================================
 StatusCode LoKi::LifetimeFitter::fit 
 ( const LHCb::VertexBase& primary  , 
   const LHCb::Particle&   particle , 

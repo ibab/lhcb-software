@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.3 2008-07-15 10:12:21 ibelyaev Exp $
+// $Id: DistanceCalculator.cpp,v 1.4 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,7 @@
 /// ============================================================================
 namespace LoKi 
 {
+  // ===========================================================================
   /** @class DistanceCalculator DistanceCalculator.h
    *
    *  It is the simplest implementation of the basic math, 
@@ -436,7 +437,7 @@ namespace LoKi
     // ========================================================================
     /** transport the particle to a certain Z position
      *  @param particle (input) the particle to be transported
-     *  @param newZ     (input) new position 
+     *  @param z        (input) new position 
      *  @param transported (output) the transported particle
      *  @return status code 
      */
@@ -445,6 +446,35 @@ namespace LoKi
       const Gaudi::XYZPoint& z           , 
       LHCb::Particle&        transported ) const 
     { return transport ( particle , z.Z() , transported ) ; }
+    // ========================================================================
+    /** transport the particle to a certain Z position
+     *  @param particle (input) the particle to be transported
+     *  @param newZ     (input) new position 
+     *  @param transported (output) the transported particle
+     *  @return status code 
+     */
+    inline StatusCode transportAndProject 
+    ( const LHCb::Particle* particle    , 
+      const double          newZ        , 
+      LHCb::Particle&       transported ) const 
+    {
+      if ( 0 == m_transporter ) 
+      { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
+      return m_transporter -> 
+        transportAndProject ( particle , newZ , transported ) ;
+    }  
+    // ========================================================================
+    /** transport the particle to a certain Z position
+     *  @param particle (input) the particle to be transported
+     *  @param z        (input) new position 
+     *  @param transported (output) the transported particle
+     *  @return status code 
+     */
+    inline StatusCode transportAndProject 
+    ( const LHCb::Particle*  particle    , 
+      const Gaudi::XYZPoint& z           , 
+      LHCb::Particle&        transported ) const 
+    { return transportAndProject ( particle , z.Z() , transported ) ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -646,12 +676,12 @@ StatusCode LoKi::DistanceCalculator::_distance
         deltaZ >= m_deltaZ && iIter < m_nIter_max ; ++iIter ) 
   { 
     // transport the particle into the new impact parameter point.
-    StatusCode sc = transport 
-      ( good             ,   // what to be transported 
+    StatusCode sc = transportAndProject 
+      ( good                         ,   // what to be transported 
         vertex.position() + impact   ,   // new Z 
-        m_particle1      ) ; // the result 
+        m_particle1                  ) ; // the result
     if ( sc.isFailure() ) 
-    { Warning ( "Error from ParticleTransporter, ignore" , sc ) ; }
+    { Warning ( "Error from ParticleTransporter(ip_1), ignore" , sc ) ; }
     else 
     { good = &m_particle1 ; } // the properly transported particle 
     
@@ -672,6 +702,19 @@ StatusCode LoKi::DistanceCalculator::_distance
   if ( 0 != chi2 ) 
   {
     *chi2 = -1.e+10 ;
+    // transport the particle into the new impact parameter point.
+    if ( good != &m_particle1 ) 
+    {
+      // not yet transported? 
+      StatusCode sc = transportAndProject 
+        ( good                         ,   // what to be transported 
+          vertex.position() + impact   ,   // new Z 
+          m_particle1                  ) ; // the result 
+      if ( sc.isFailure() ) 
+      { Warning ( "Error from ParticleTransporter(chi2_1), ignore" , sc ) ; }
+      else 
+      { good = &m_particle1 ; } // the properly transported particle    
+    }
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
@@ -699,8 +742,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   const Gaudi::XYZPoint&  point    , 
   Gaudi::XYZVector&       impact   , 
   double*                 chi2     ) const 
-{
-  
+{ 
   using namespace Gaudi::Math::Operators ;
   
   // make the fast evaluation:
@@ -716,14 +758,16 @@ StatusCode LoKi::DistanceCalculator::_distance
   unsigned int nIter = 0 ;
   for ( unsigned int iIter = 0 ; 
         deltaZ >= m_deltaZ && iIter < m_nIter_max ; ++iIter ) 
-  { 
+  {
     // transport the particle into the new impact parameter point.
-    StatusCode sc = transport 
+    StatusCode sc = transportAndProject 
       ( good             ,   // what to be transported 
         point + impact   ,   // new Z 
         m_particle1      ) ; // the result 
     if ( sc.isFailure() ) 
-    { return Error ( "distance(II): error from transport()" , sc ) ; }
+    { Warning ( "Error from ParticleTransporter(ip_2), ignore" , sc ) ; }
+    else 
+    { good = &m_particle1 ; } // the properly transported particle 
     
     // the transported particle 
     good = &m_particle1 ;
@@ -735,7 +779,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     deltaZ = ::fabs ( Vz + impact.Z() - good->referencePoint().Z() ) ;
     
     ++nIter ;
-  } /// the end of iteration loop 
+  } // the end of iteration loop 
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
@@ -745,6 +789,19 @@ StatusCode LoKi::DistanceCalculator::_distance
   if ( 0 != chi2 ) 
   {
     *chi2 = -1.e+10 ;
+    // transport the particle into the new impact parameter point.
+    if ( good != &m_particle1 ) 
+    {
+      // not yet transported? 
+      StatusCode sc = transportAndProject 
+        ( good                         ,   // what to be transported 
+          point + impact               ,   // new Z 
+          m_particle1                  ) ; // the result 
+      if ( sc.isFailure() ) 
+      { Warning ( "Error from ParticleTransporter(chi2_2), ignore" , sc ) ; }
+      else 
+      { good = &m_particle1 ; } // the properly transported particle 
+    }
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 

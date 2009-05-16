@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.cpp,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: KalmanFilter.cpp,v 1.2 2009-05-16 12:28:12 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,10 +27,10 @@ namespace
 {
   // ==========================================================================
   /** "update" the entry and get the valid "gain" matrix
-   *   @authior Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *   @date 2008-03-06
    */
-  StatusCode _update ( LoKi::KalmanFilter::Entry& entry )
+  StatusCode _update ( LoKi::KalmanFilter::Entry& entry ) 
   {
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     if ( _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
