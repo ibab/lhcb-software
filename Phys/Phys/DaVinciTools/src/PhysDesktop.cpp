@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.61 2009-05-05 16:34:12 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.62 2009-05-16 20:31:39 graven Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -904,7 +904,13 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
   
   if ( !m_inputLocations.empty()){
     if (!dv_il.empty()){
-      return Error("You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix you options.");
+      std::vector<std::string> x( dv_il );
+      fixInputLocations(x.begin(),x.end());
+      if ( m_inputLocations == x ) {
+        info() << "You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix your options." << endmsg;
+      } else {
+        return Error("You have set both PhysDesktop.InputLocations and Algorithm.InputLocations. Fix your options.");
+      }
     } else {
       IInterface* p = const_cast<IInterface*>( this->parent() ) ;
       std::string n = "MyAlgorithm" ;
