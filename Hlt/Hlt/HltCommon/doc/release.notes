@@ -3,11 +3,17 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-05-16 - Gerhard Raven
+ - fix prefetch selection off-by-one which causes too many configurations
+   to be prefetched (eg. when requesting PA+Hlt1, it also fechted all PA+Hlt1+Hlt2
+   as the configs should have been matched to PA+Hlt1/ instead of PA+Hlt1)
+ - avoid duplicating TopAlgs in PropertyConfigSvc
+ - allow multiple identical parents in ConfigTree
+
+!========================== HltCommon v5r5 2009-05-10 ===================
 
 ! 2009-05-10 - Gerhard Raven
  - remove stage histo from HltLine -- it's a subset of the step histo
-
-!========================== HltCommon v5r5 2009-05-06 ===================
 
 ! 2009-04-21 - Gerhard Raven
  - adapt HltGenConfig for Gaudi v21

@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.20 2009-01-19 20:46:37 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.21 2009-05-16 11:36:31 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -518,8 +518,12 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
         //TODO: make sure we don't go backward in i...
         // example: topalgs = [ A, B, C ]
         //          merge = [ X,Y,B,Z,A ] should give error on meeting A
-        if (i != merge.end()) merge.splice(i,request,request.begin(),ireq);
-        ++ireq;
+        if (i != merge.end()) { 
+            merge.splice(i,request,request.begin(),ireq);
+            request.erase( ireq++ );
+        } else {
+            ++ireq;
+        }
     }
     merge.splice(merge.end(),request);
     assert(request.empty());

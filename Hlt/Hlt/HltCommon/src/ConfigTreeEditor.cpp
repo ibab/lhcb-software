@@ -123,10 +123,13 @@ public:
    void addParent(ConfigTree *parent) {
         if (parent!=0) { 
             assert( root()==0 ||  root() == parent->root() ); // must be same tree...
-            assert(find(m_parents.begin(),m_parents.end(),parent)==m_parents.end());
-            m_parents.push_back(parent);
-            assert(m_lookup.get()==0);
-            m_root = parent->root();
+            if (find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
+                std::cout << " configTree("<<m_origDigest<< ")::addParent("<<parent->m_origDigest<<") already present.."  << std::endl;
+            } else {
+                m_parents.push_back(parent);
+                assert(m_lookup.get()==0);
+                m_root = parent->root();
+            }
         } else {
             assert(m_parents.empty());
         }

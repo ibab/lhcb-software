@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.26 2009-03-07 10:36:22 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.27 2009-05-16 11:36:31 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -164,6 +164,7 @@ StatusCode HltConfigSvc::initialize() {
     error() << " could not determine type from " << initTop->alias() << " with prefetchdir = " << m_prefetchDir << endmsg;
     return StatusCode::FAILURE;
   }
+  ++pos;
   // and fetch them, and preload their configurations...
   info() << " prefetching  from " << initTop->alias().str().substr(0,pos) << endmsg;
   std::vector<ConfigTreeNodeAlias> sameTypes = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( initTop->alias().str().substr(0,pos) ));
