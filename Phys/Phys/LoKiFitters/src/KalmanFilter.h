@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.h,v 1.2 2009-05-16 12:28:12 ibelyaev Exp $
+// $Id: KalmanFilter.h,v 1.3 2009-05-16 15:53:19 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -219,9 +219,23 @@ namespace LoKi
      *  @param  particle (input)  the particle to be added 
      *  @param  entry    (output) the resulting entry 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-03-06
+     *  @date 2008-03-06
      */
     StatusCode load 
+    ( const LHCb::Particle&      particle , 
+      LoKi::KalmanFilter::Entry& entry    ) ;
+    // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
+     *  Essentially it includes also the proper tarnsformation of the 
+     *  covariance matrix of the particle 
+     *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    StatusCode loadAsFlying
     ( const LHCb::Particle&      particle , 
       LoKi::KalmanFilter::Entry& entry    ) ;
     // ========================================================================
@@ -231,7 +245,7 @@ namespace LoKi
      *  @param tool  the particle transporter tool
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-03-06
+     *  @date 2008-03-06
      */
     StatusCode transport 
     ( LoKi::KalmanFilter::Entry& entry    , 
@@ -245,7 +259,7 @@ namespace LoKi
      *  @param chi2  (input)        the initial chi2 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-03-06
+     *  @date 2008-03-06
      */
     StatusCode step 
     ( LoKi::KalmanFilter::Entry&  entry , 
@@ -260,7 +274,7 @@ namespace LoKi
      *  @param chi2  (input)        the initial chi2 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-03-06
+     *  @date 2008-03-06
      */
     StatusCode step 
     ( LoKi::KalmanFilter::Entry&  entry , 
@@ -272,7 +286,7 @@ namespace LoKi
      *  @param entries (update) the entries to be smoothed 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-03-06
+     *  @date 2008-03-06
      */
     StatusCode smooth ( LoKi::KalmanFilter::Entries&  entries ) ;
     // ========================================================================

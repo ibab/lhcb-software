@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.cpp,v 1.2 2009-05-16 12:28:12 ibelyaev Exp $
+// $Id: KalmanFilter.cpp,v 1.3 2009-05-16 15:53:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,14 +26,76 @@
 namespace 
 {
   // ==========================================================================
+  /** make Z-projection of the particle 
+   *  see the documentation for namesapce DaVinciTransporter
+   *  projectAndTransport for deltaZ = 0 
+   */
+  void _project_Z_ (  LoKi::KalmanFilter::Entry& entry ) 
+  {
+    
+    const Gaudi::LorentzVector& p = entry.m_p.momentum        () ;
+    const Gaudi::SymMatrix3x3&  c = entry.m_p.posCovMatrix    () ;
+    const Gaudi::Matrix4x3&     d = entry.m_p.posMomCovMatrix () ;
+    
+    const double tx = p.Px () / p.Pz() ;
+    const double ty = p.Py () / p.Pz() ;
+    
+    const double k1 = c ( 0 , 2 ) ;
+    const double k2 = c ( 1 , 2 ) ;  
+    const double cz = c ( 2 , 2 ) ;
+    
+    // dirty trick # 1 !! 
+    Gaudi::SymMatrix3x3& _c = const_cast<Gaudi::SymMatrix3x3&>( c ) ;
+    
+    // x-y 2x2 subblock
+    _c ( 0 , 0 ) +=  tx * tx * cz - ( tx * k1 + tx * k1 ) ;
+    _c ( 0 , 1 ) +=  tx * ty * cz - ( tx * k2 + ty * k1 ) ;
+    _c ( 1 , 1 ) +=  ty * ty * cz - ( ty * k2 + ty * k2 ) ;
+    // z-row/column
+    _c ( 0 , 2 ) = 0  ;
+    _c ( 1 , 2 ) = 0  ;
+    _c ( 2 , 2 ) = 0  ;
+    
+    // dirty trick # 2 !!    
+    Gaudi::Matrix4x3& _d = const_cast<Gaudi::Matrix4x3&> ( d ) ;
+    
+    double _a = _d ( 0 , 2 ) ;
+    _d ( 0 , 0 ) -= _a * tx ;
+    _d ( 0 , 1 ) -= _a * ty ;
+    _d ( 0 , 2 )  = 0 ;
+    
+    _a = _d ( 1 , 2 ) ;
+    _d ( 1 , 0 ) -= _a * tx ;
+    _d ( 1 , 1 ) -= _a * ty ;
+    _d ( 1 , 2 )  = 0 ;
+    
+    _a = _d ( 2 , 2 ) ;
+    _d ( 2 , 0 ) -= _a * tx ;
+    _d ( 2 , 1 ) -= _a * ty ;
+    _d ( 2 , 2 )  = 0 ;
+    
+    _a = _d ( 3 , 2 ) ;
+    _d ( 3 , 0 ) -= _a * tx ;
+    _d ( 3 , 1 ) -= _a * ty ;
+    _d ( 3 , 2 )  = 0 ;
+    
+  }
+  // ==========================================================================
   /** "update" the entry and get the valid "gain" matrix
+   *   @param entry     the entry to be updated 
+   *   @param asFlying  treat the particle as "flying-particle"
    *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *   @date 2008-03-06
    */
-  StatusCode _update ( LoKi::KalmanFilter::Entry& entry ) 
+  StatusCode _update ( LoKi::KalmanFilter::Entry& entry            , 
+                       const bool                 asFlying = false )
   {
+    // make the proper projection (if required) 
+    if ( asFlying ) { _project_Z_ ( entry ) ; }
+    //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
-    if ( _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
+    if ( asFlying || 
+         _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
     {
       Gaudi::SymMatrix2x2 cixy ;
       // basic particle? : use some tricks to 
@@ -82,6 +144,18 @@ StatusCode LoKi::KalmanFilter::load
   entry.m_p  =  particle ;
   //
   return _update ( entry ) ;
+}
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::loadAsFlying
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ 
+  entry.m_p0 = &particle ;
+  entry.m_p  =  particle ;
+  //
+  return _update ( entry , true ) ;
 }
 // ============================================================================
 // transport the particle and update the entry

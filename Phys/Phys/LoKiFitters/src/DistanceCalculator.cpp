@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.4 2009-05-16 12:28:12 ibelyaev Exp $
+// $Id: DistanceCalculator.cpp,v 1.5 2009-05-16 15:53:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -572,6 +572,7 @@ namespace LoKi
       double*                 error    = 0 ) const ;
     // ========================================================================
   private:
+    // ========================================================================
     /// the maximal number of iterations 
     unsigned int m_nIter_max  ; // the maximal number of iterations 
     /// the convergency criterion for impact parameter evaluations 
@@ -594,11 +595,12 @@ namespace LoKi
     mutable LoKi::KalmanFilter::Entries m_entries ; // Kalman filter objects
     /// distance/path fitter
     mutable LoKi::Fitters::Fitter1      m_fitter  ; // distance/path fitter
+    // ========================================================================
   } ;
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param type tool type(?)
  *  @param name tool instance name 
  *  @param parent the pointer to the parent
@@ -649,8 +651,9 @@ LoKi::DistanceCalculator::DistanceCalculator
 // ============================================================================
 LoKi::DistanceCalculator::~DistanceCalculator(){}
 // ============================================================================
-//  The method for the evaluation of the impact parameter ("distance")
-//  vector of the particle with respect to some vertex. 
+/*  The method for the evaluation of the impact parameter ("distance")
+ *  vector of the particle with respect to some vertex. 
+ */
 // ============================================================================
 StatusCode LoKi::DistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
@@ -734,8 +737,9 @@ StatusCode LoKi::DistanceCalculator::_distance
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
 // ============================================================================
-//  The method for the evaluation of the impact parameter ("distance")
-//  vector of the particle with respect to  the fixed point 
+/*  The method for the evaluation of the impact parameter ("distance")
+ *  vector of the particle with respect to  the fixed point 
+ */
 // ============================================================================
 StatusCode LoKi::DistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
@@ -813,9 +817,10 @@ StatusCode LoKi::DistanceCalculator::_distance
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
 // ============================================================================
-// The method for evaluation of the scalar distance between two particles, 
-//  aka "distance of the closest approach" and also its 
-//  chi^2-for separation significance 
+/* The method for evaluation of the scalar distance between two particles, 
+ * aka "distance of the closest approach" and also its 
+ * chi^2-for separation significance 
+ */
 // ============================================================================
 StatusCode LoKi::DistanceCalculator::_distance
 ( const LHCb::Particle& p1   , 
@@ -845,8 +850,8 @@ StatusCode LoKi::DistanceCalculator::_distance
   {
     // transport the first particle into new positions:
     StatusCode sc = transport 
-      ( good1       ,  // what to transport 
-        point1      ,  // where to transport 
+      ( good1       ,    // what to transport 
+        point1      ,    // where to transport 
         m_particle1 )  ; // destination 
     if ( sc.isFailure() ) 
     { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
@@ -854,8 +859,8 @@ StatusCode LoKi::DistanceCalculator::_distance
     
     // transport the second particle into new positions:
     sc = transport 
-      ( good2       ,  // what to transport 
-        point2      ,  // where to transport 
+      ( good2       ,    // what to transport 
+        point2      ,    // where to transport 
         m_particle2 )  ; // destination 
     if ( sc.isFailure() ) 
     { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }

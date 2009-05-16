@@ -1,4 +1,4 @@
-// $Id: TrgDistanceCalculator.cpp,v 1.1 2008-07-15 10:12:21 ibelyaev Exp $
+// $Id: TrgDistanceCalculator.cpp,v 1.2 2009-05-16 15:53:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,8 +36,10 @@ namespace LoKi
     : public virtual IDistanceCalculator 
     , public LoKi::DistanceCalculatorBase  
   {
+    // ========================================================================
     // the friend factory for instantiation 
     friend class ToolFactory<LoKi::TrgDistanceCalculator> ;
+    // ========================================================================
   public:
     // ========================================================================
     /** @defgroup ParticlePoint 
@@ -521,9 +523,10 @@ namespace LoKi
     /// distance/path fitter
     mutable LoKi::Fitters::Fitter1      m_fitter  ; // distance/path fitter
   } ;
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param type tool type(?)
  *  @param name tool instance name 
  *  @param parent the pointer to the parent
@@ -540,8 +543,9 @@ LoKi::TrgDistanceCalculator::TrgDistanceCalculator
   //
 }
 // ============================================================================
-//  The method for the evaluation of the impact parameter ("distance")
-//  vector of the particle with respect to some vertex. 
+/*  The method for the evaluation of the impact parameter ("distance")
+ *  vector of the particle with respect to some vertex. 
+ */
 // ============================================================================
 StatusCode LoKi::TrgDistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
@@ -560,7 +564,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   {
     *chi2 = -1.e+10 ;
     // prepare the Kalman Filter machinery 
-    StatusCode sc = LoKi::KalmanFilter::load ( particle , m_entry ) ;
+    StatusCode sc = LoKi::KalmanFilter::loadAsFlying ( particle , m_entry ) ;
     if ( sc.isFailure() ) 
     { return Error("_distance(I): error from KalmanFilter::load", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
@@ -578,8 +582,9 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
 // ============================================================================
-//  The method for the evaluation of the impact parameter ("distance")
-//  vector of the particle with respect to  the fixed point 
+/*  The method for the evaluation of the impact parameter ("distance")
+ *  vector of the particle with respect to  the fixed point 
+ */
 // ============================================================================
 StatusCode LoKi::TrgDistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
@@ -598,7 +603,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   {
     *chi2 = -1.e+10 ;
     // prepare the Kalman Filter machinery 
-    StatusCode sc = LoKi::KalmanFilter::load ( particle , m_entry ) ;
+    StatusCode sc = LoKi::KalmanFilter::loadAsFlying ( particle , m_entry ) ;
     if ( sc.isFailure() ) 
     { return Error("_distance(II): error from KalmanFilter::load" , sc ) ; }
     // here the evaluations of chi2 is just trivial:
@@ -608,9 +613,10 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
 // ============================================================================
-// The method for evaluation of the scalar distance between two particles, 
-//  aka "distance of the closest approach" and also its 
-//  chi^2-for separation significance 
+/* The method for evaluation of the scalar distance between two particles, 
+ * aka "distance of the closest approach" and also its 
+ *  chi^2-for separation significance 
+ */
 // ============================================================================
 StatusCode LoKi::TrgDistanceCalculator::_distance
 ( const LHCb::Particle& p1   , 
