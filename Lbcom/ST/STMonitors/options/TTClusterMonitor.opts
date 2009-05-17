@@ -1,6 +1,6 @@
-ApplicationMgr.TopAlg += { 
-  "GaudiSequencer/MoniTTSeq"
-};
+// ApplicationMgr.TopAlg += { 
+//   "GaudiSequencer/MoniTTSeq"
+// };
 
 MoniTTSeq.MeasureTime = true;
 MoniTTSeq.Members += {

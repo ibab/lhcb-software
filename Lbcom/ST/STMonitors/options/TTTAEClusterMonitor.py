@@ -3,7 +3,7 @@ from Gaudi.Configuration import *
 
 MoniTTSeq = GaudiSequencer( 'MoniTTSeq' )
 MoniTTSeq.MeasureTime = True
-ApplicationMgr().TopAlg.append( MoniTTSeq )
+#ApplicationMgr().TopAlg.append( MoniTTSeq )
 
 from Configurables import ( ST__STTAEClusterMonitor )
 
