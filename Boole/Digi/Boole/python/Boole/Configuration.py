@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.49 2009-04-08 16:08:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.50 2009-05-17 11:49:04 mtobin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -555,14 +555,14 @@ class Boole(LHCbConfigurableUser):
 
         if "IT" in moniDets or "TT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
-                      STClusterMonitor, STEffChecker, MCParticle2MCHitAlg, MCParticleSelector )
+                      ST__STClusterMonitor, STEffChecker, MCParticle2MCHitAlg, MCParticleSelector )
             from GaudiKernel.SystemOfUnits import GeV
 
         if "IT" in moniDets:
             mcDepMoni   = MCSTDepositMonitor(  "MCITDepositMonitor", DetType="IT" )
             mcDigitMoni = MCSTDigitMonitor(    "MCITDigitMonitor",   DetType="IT" )
             digitMoni   = STDigitMonitor(      "ITDigitMonitor",     DetType="IT" )
-            clusMoni    = STClusterMonitor(    "ITClusterMonitor",   DetType="IT" )
+            clusMoni    = ST__STClusterMonitor(    "ITClusterMonitor",   DetType="IT" )
             mcp2MCHit   = MCParticle2MCHitAlg( "MCP2ITMCHitAlg", MCHitPath = "MC/IT/Hits",
                                                OutputData = "/Event/MC/Particles2MCITHits" )
             effCheck    = STEffChecker(         "ITEffChecker",      DetType="IT" )
@@ -582,7 +582,7 @@ class Boole(LHCbConfigurableUser):
             mcDepMoni   = MCSTDepositMonitor(  "MCTTDepositMonitor" )
             mcDigitMoni = MCSTDigitMonitor(    "MCTTDigitMonitor"   )
             digitMoni   = STDigitMonitor(      "TTDigitMonitor"     )
-            clusMoni    = STClusterMonitor(    "TTClusterMonitor"   )
+            clusMoni    = ST__STClusterMonitor(    "TTClusterMonitor"   )
             mcp2MCHit   = MCParticle2MCHitAlg( "MCP2TTMCHitAlg", MCHitPath = "MC/TT/Hits",
                                                OutputData = "/Event/MC/Particles2MCTTHits" )
             effCheck    = STEffChecker(        "TTEffChecker"       )
