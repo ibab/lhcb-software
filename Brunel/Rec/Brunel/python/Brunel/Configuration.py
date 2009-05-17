@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.73 2009-04-22 15:34:12 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.74 2009-05-17 11:43:00 mtobin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -433,11 +433,11 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.py")
 
         if "ST" in moniSeq :
-            from Configurables import STClusterMonitor, GaudiSequencer
-            GaudiSequencer( "MoniSTSeq" ).Members += [ STClusterMonitor("TTClusterMonitor"),
-                                                       STClusterMonitor("ITClusterMonitor")]
-            STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
-            STClusterMonitor("ITClusterMonitor").DetType = "IT" 
+            from Configurables import ST__STClusterMonitor, GaudiSequencer
+            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
+                                                       ST__STClusterMonitor("ITClusterMonitor")]
+            ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+            ST__STClusterMonitor("ITClusterMonitor").DetType = "IT" 
 
         # Histograms filled only in real data case
         if not withMC:
@@ -449,13 +449,13 @@ class Brunel(LHCbConfigurableUser):
         # Expert histograms
         if expert:
             if "TT" in moniSeq :
-                from Configurables import STClusterMonitor
-                clusMoni = STClusterMonitor("TTClusterMonitor")
+                from Configurables import ST__STClusterMonitor
+                clusMoni = ST__STClusterMonitor("TTClusterMonitor")
                 clusMoni.FullDetail = True
                 GaudiSequencer("MoniTTSeq").Members += [clusMoni]
             if "IT" in moniSeq :
-                from Configurables import STClusterMonitor
-                clusMoni = STClusterMonitor("ITClusterMonitor")
+                from Configurables import ST__STClusterMonitor
+                clusMoni = ST__STClusterMonitor("ITClusterMonitor")
                 clusMoni.FullDetail = True
                 clusMoni.DetType = "IT"
                 GaudiSequencer("MoniITSeq").Members += [clusMoni]
