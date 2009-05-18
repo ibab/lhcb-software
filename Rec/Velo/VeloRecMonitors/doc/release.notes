@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-05-18 - Kurt Rinnert
+ - added ADC MPV difference plots to sampling monitor
+
 ! 2009-05-14 - Kurt Rinnert
  - added TAE name (if applicable) to title in per Tell1 occupancy plots
 

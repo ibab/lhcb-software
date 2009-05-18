@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.h,v 1.2 2008-09-15 10:52:28 krinnert Exp $
+// $Id: VeloSamplingMonitor.h,v 1.3 2009-05-18 15:04:22 krinnert Exp $
 #ifndef VELORECMONITORS_VELOSAMPLINGMONITOR_H 
 #define VELORECMONITORS_VELOSAMPLINGMONITOR_H 1
 
@@ -11,6 +11,10 @@
 
 // from DigiEvent
 #include "Event/VeloCluster.h"
+
+// from ROOT
+#include "TH1D.h"
+#include "TH2D.h"
 
 // local
 #include "VeloMonitorBase.h"
@@ -55,9 +59,17 @@ namespace Velo
     void monitorTell1Data( std::string samplingLocation,
                            LHCb::VeloTELL1Datas* tell1Datas );
 
+    // Monitor difference in MPV of ADC between TAEs
+    void monitorTAEDiff(); 
+
     // Data members
     const DeVelo* m_velo;
 
+    TH2D* m_histClusADCSampAll;
+    TH1D* m_histTaeADCDiffNext;
+    TH1D* m_histTaeADCDiffPrev;
+
+  
     // Job options
     std::vector<std::string> m_samplingLocations;
 

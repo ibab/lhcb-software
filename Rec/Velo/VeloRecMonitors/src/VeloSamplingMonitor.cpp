@@ -1,9 +1,10 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.4 2009-04-27 13:50:32 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.5 2009-05-18 15:04:22 krinnert Exp $
 // Include files
 // -------------
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiUtils/Aida2ROOT.h"
 
 // from Tell1Kernel
 #include "Tell1Kernel/VeloDecodeConf.h" 
@@ -54,7 +55,15 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   if ( sc.isFailure() ) return sc;
   
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );  
-  
+
+  unsigned int nxbins = m_samplingLocations.size();
+  m_histClusADCSampAll = Gaudi::Utils::Aida2ROOT::aida2root(
+      book2D("ClusADCSampAll", "Cluster ADC vs. Sampling Index",-0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51)); 
+  m_histTaeADCDiffNext = Gaudi::Utils::Aida2ROOT::aida2root(
+      book1D("TAEADCDiffNext", "ADC MPV Differences", -0.5, nxbins - 0.5, nxbins)); 
+  m_histTaeADCDiffPrev = Gaudi::Utils::Aida2ROOT::aida2root(
+      book1D("TAEADCDiffPrev", "ADC MPV Differences", -0.5, nxbins - 0.5, nxbins)); 
+
   return StatusCode::SUCCESS;
 }
 
@@ -78,6 +87,8 @@ StatusCode Velo::VeloSamplingMonitor::execute() {
     
     monitorClusters( (*itL), clusters );
   }
+
+  monitorTAEDiff();
   
   for ( itL = m_samplingLocations.begin();
         itL != m_samplingLocations.end(); ++itL ) {
@@ -179,6 +190,8 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
       if ( m_samplingLocations[i] == samplingLocation )
         samplingIndex = i;
 
+    m_histClusADCSampAll->Fill(samplingIndex, adc);
+
     std::string histID;
     std::string histTitle;
     if ( cluster->isRType() ) {
@@ -210,6 +223,45 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
             histTitle,
             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
    
+  }
+  
+}
+
+//=============================================================================
+// Monitor difference in MPV of ADC between TAEs
+//=============================================================================
+void Velo::VeloSamplingMonitor::monitorTAEDiff()
+{
+  unsigned int nxbins = m_histClusADCSampAll->GetNbinsX();
+
+  m_histTaeADCDiffNext->Reset();
+  m_histTaeADCDiffPrev->Reset();
+  for (unsigned int bin=1; bin<=nxbins; ++bin) {
+    TH1D* hpy = m_histClusADCSampAll->ProjectionY("hpy",bin,bin);
+    if ( !(0.0 < hpy->GetEntries()) ) {
+      m_histTaeADCDiffNext->SetBinContent(bin,-999.0);
+      m_histTaeADCDiffPrev->SetBinContent(bin,-999.0);
+      continue;
+    }
+    double mpv = hpy->GetBinCenter(hpy->GetMaximumBin());
+
+    // difference to next TAE
+    hpy = m_histClusADCSampAll->ProjectionY("hpy",bin+1,bin+1);
+    if ( bin == nxbins || !(0.0 < hpy->GetEntries()) ) {
+      m_histTaeADCDiffNext->SetBinContent(bin,-999.0);
+    } else {
+      double mpvNext = hpy->GetBinCenter(hpy->GetMaximumBin());
+      m_histTaeADCDiffNext->SetBinContent(bin,mpv - mpvNext);
+    }
+
+    // difference to previous TAE
+    hpy = m_histClusADCSampAll->ProjectionY("hpy",bin-1,bin-1);
+    if ( 1 == bin || !(0.0 < hpy->GetEntries()) ) {
+      m_histTaeADCDiffPrev->SetBinContent(bin,-999.0);
+    } else {
+      double mpvPrev = hpy->GetBinCenter(hpy->GetMaximumBin());
+      m_histTaeADCDiffPrev->SetBinContent(bin,mpv - mpvPrev);
+    }
   }
   
 }
