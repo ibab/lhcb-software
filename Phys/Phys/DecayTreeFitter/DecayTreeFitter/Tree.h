@@ -17,6 +17,7 @@ namespace DecayTreeFitter
   {
   public:
     //
+    typedef std::map< const LHCb::Particle*, LHCb::Particle*> CloneMap ;
     typedef std::vector<const LHCb::Particle*> ParticleContainer ;
     // constructor
     Tree( const LHCb::Particle& head ) { m_head.reset(cloneTree(head,m_clonemap)) ; }
@@ -41,8 +42,12 @@ namespace DecayTreeFitter
     static void findInTree(const LHCb::Particle& particle,
 			   const LHCb::ParticleID& pid,
 			   ParticleContainer& result) ;
+
+    // get access to the map for finding the clone of a particle 
+    const CloneMap& cloneMap() const { return m_clonemap ; }
+    // get access to the map for finding the clone of a particle 
+    CloneMap& cloneMap() { return m_clonemap ; }
   private:
-    typedef std::map< const LHCb::Particle*, const LHCb::Particle*> CloneMap ;
     static LHCb::Particle* cloneTree ( const LHCb::Particle& original, CloneMap& clonemap );
     static void deleteTree( LHCb::Particle& particle ) ;
     

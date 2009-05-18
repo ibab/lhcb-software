@@ -37,7 +37,7 @@ namespace DecayTreeFitter {
     const ParticleBase* mother() const { return m_mother ; }
     const ParticleBase* locate(const LHCb::Particle& bc) const ;
     void locate( const LHCb::ParticleID& pid, ParticleBase::ParticleContainer& result ) ;
-    
+   
     int index(const LHCb::Particle& bc) const ;
     int posIndex(const LHCb::Particle& bc) const ;
     int momIndex(const LHCb::Particle& bc) const ;

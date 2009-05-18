@@ -396,9 +396,13 @@ namespace DecayTreeFitter
   {
     // clone the decay tree
     Tree tree(*m_particle) ;
-    // update the tree
-    updateTree( *tree.head() ) ;
-    // return
+    // update the tree. the easy version will only work once we have a proper 'isCloneOf'.
+    // updateTree( *tree.head() ) ;
+    for( Tree::CloneMap::iterator it = tree.cloneMap().begin() ;
+	 it != tree.cloneMap().end(); ++it ) {
+      const ParticleBase* pb = m_decaychain->locate(*(it->first)) ;
+      if(pb!=0) updateCand( *pb, *(it->second) ) ;
+    } 
     return tree ;
   }
 
@@ -419,49 +423,54 @@ namespace DecayTreeFitter
   }
   */
 
+  void
+  Fitter::updateCand(const ParticleBase& pb,
+		     LHCb::Particle& particle) const
+  {
+    // assigns fitted parameters to a candidate
+    VtxFitParams vtxpar = fitParams(pb) ;
+    
+    // update everything inside the particle. don't update the vertex, for now.
+    particle.setMomentum( vtxpar.p4() ) ;
+    particle.setReferencePoint( vtxpar.position() ) ;
+    particle.setMomCovMatrix( vtxpar.momCovMatrix() ) ;
+    particle.setPosCovMatrix( vtxpar.posCovMatrix() ) ;
+    particle.setPosMomCovMatrix( vtxpar.momPosCovMatrix() ) ;
+    // VtxVertex* vtx(0) ;
+    //       int posindex = pb->posIndex() ;
+    //       if( posindex>=0 ) {
+    // 	if( pb ==m_decaychain->cand() ) {
+    // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+    // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
+    // 	  vtx->setType(FitStatus::Geometric) ;
+    // 	} else {
+    // 	  // all updated daughters are reset to unfitted, but leave the chisquare
+    // 	  double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
+    // 	  int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
+    // 	  vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
+    // 	  vtx->setStatus(FitStatus::UnFitted) ;
+    // 	}
+    //       }
+    //      cand.setTrajectory(vtxpar,vtx) ;
+  }
+  
+
   bool
   Fitter::updateCand(LHCb::Particle& particle) const
   {
     // assigns fitted parameters to a candidate
     const ParticleBase* pb = m_decaychain->locate(particle) ;
-    if(pb) {
-      // get the parameters
-      VtxFitParams vtxpar = fitParams(*pb) ;
-      
-      // update everything inside the particle. don't update the vertex, for now.
-      particle.setMomentum( vtxpar.p4() ) ;
-      particle.setReferencePoint( vtxpar.position() ) ;
-      particle.setMomCovMatrix( vtxpar.momCovMatrix() ) ;
-      particle.setPosCovMatrix( vtxpar.posCovMatrix() ) ;
-      particle.setPosMomCovMatrix( vtxpar.momPosCovMatrix() ) ;
-      
-      // VtxVertex* vtx(0) ;
-      //       int posindex = pb->posIndex() ;
-      //       if( posindex>=0 ) {
-      // 	if( pb ==m_decaychain->cand() ) {
-      // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-      // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
-      // 	  vtx->setType(FitStatus::Geometric) ;
-      // 	} else {
-      // 	  // all updated daughters are reset to unfitted, but leave the chisquare
-      // 	  double chisq = cand.decayVtx() ? cand.decayVtx()->chiSquared() : 0 ;
-      // 	  int ndof     = cand.decayVtx() ? cand.decayVtx()->nDof() : 0 ;
-      // 	  vtx = new VtxVertex(chisq,ndof,vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
-      // 	  vtx->setStatus(FitStatus::UnFitted) ;
-      // 	}
-      //       }
-      //      cand.setTrajectory(vtxpar,vtx) ;
-    } else {
-      // this error message does not make sense, because it is also
-      // triggered for daughters that were simply not refitted. we
-      // have to do something about that.
-      //       VtxPrintTree printer(&myvtxprint) ;
-      //       ErrMsg(error) << "cann't find candidate " << std::endl
-      // 		    << printer.print(cand)
-      // 		    << "in tree " << std::endl
-      // 		    << printer.print(*_bc)
-      // 		    << endmsg;
-    }
+    if(pb) updateCand(*pb,particle) ;
+    //else {
+    // this error message does not make sense, because it is also
+    // triggered for daughters that were simply not refitted. we
+    // have to do something about that.
+    //       VtxPrintTree printer(&myvtxprint) ;
+    //       ErrMsg(error) << "cann't find candidate " << std::endl
+    // 		    << printer.print(cand)
+    // 		    << "in tree " << std::endl
+    // 		    << printer.print(*_bc)
+    // 		    << endmsg;
     return pb != 0 ;
   }
   

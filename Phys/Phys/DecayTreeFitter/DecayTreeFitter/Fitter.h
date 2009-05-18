@@ -88,6 +88,7 @@ namespace DecayTreeFitter
     // stored anywhere. Use fitParams instead)
     LHCb::Particle getFitted() const ;
     LHCb::Particle getFitted(const LHCb::Particle& cand) const ;
+
     // reurn an updated decay tree. this is not a final solution. will
     // try to move more info to Particle
     Tree getFittedTree() const ;
@@ -117,6 +118,7 @@ namespace DecayTreeFitter
 
     //LHCb::Particle getFittedTree() const ;
     LHCb::Particle* fittedCand(const LHCb::Particle& cand, LHCb::Particle* headoftree) const ;
+    void updateCand(const ParticleBase& pb, LHCb::Particle& cand) const ;
     
   private:
     const LHCb::Particle* m_particle ;
