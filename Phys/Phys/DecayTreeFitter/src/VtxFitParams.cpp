@@ -35,61 +35,63 @@ namespace LHCb
     m_lenMomCovMatrix(cov8.Sub<Gaudi::Matrix1x4>(7,3))
   {
   }
-  
-  Gaudi::SymMatrix8x8
-  fillCov8(const Gaudi::SymMatrix3x3& posCovMatrix,
-	   const Gaudi::SymMatrix4x4& momCovMatrix,
-	   const Gaudi::SymMatrix1x1& lenCovMatrix,
-	   const Gaudi::Matrix4x3&    momPosCovMatrix,
-	   const Gaudi::Matrix1x3&    lenPosCovMatrix,
-	   const Gaudi::Matrix1x4&    lenMomCovMatrix)
-  {
-    Gaudi::SymMatrix8x8 cov ;
-    cov.Place_at(posCovMatrix,0,0);
-    cov.Place_at(momCovMatrix,3,3);
-    cov.Place_at(lenCovMatrix,7,7);
-    for(int imom =0; imom<4; ++imom)
+
+  namespace {
+    Gaudi::SymMatrix8x8
+    fillCov8(const Gaudi::SymMatrix3x3& posCovMatrix,
+	     const Gaudi::SymMatrix4x4& momCovMatrix,
+	     const Gaudi::SymMatrix1x1& lenCovMatrix,
+	     const Gaudi::Matrix4x3&    momPosCovMatrix,
+	     const Gaudi::Matrix1x3&    lenPosCovMatrix,
+	     const Gaudi::Matrix1x4&    lenMomCovMatrix)
+    {
+      Gaudi::SymMatrix8x8 cov ;
+      cov.Place_at(posCovMatrix,0,0);
+      cov.Place_at(momCovMatrix,3,3);
+      cov.Place_at(lenCovMatrix,7,7);
+      for(int imom =0; imom<4; ++imom)
+	for(int ipos=0 ; ipos<3; ++ipos)
+	  cov(imom+3,ipos) = momPosCovMatrix(imom,ipos);
+      for(int imom =0; imom<4; ++imom)
+	for(int ilen =0; ilen<1; ++ilen)
+	  cov(ilen+7,imom+3) = lenMomCovMatrix(ilen,imom);
       for(int ipos=0 ; ipos<3; ++ipos)
-	cov(imom+3,ipos) = momPosCovMatrix(imom,ipos);
-    for(int imom =0; imom<4; ++imom)
-      for(int ilen =0; ilen<1; ++ilen)
-	cov(ilen+7,imom+3) = lenMomCovMatrix(ilen,imom);
-    for(int ipos=0 ; ipos<3; ++ipos)
-      for(int ilen =0; ilen<1; ++ilen)
-	cov(ilen+7,ipos) = lenPosCovMatrix(ilen,ipos);
-    return cov ;
+	for(int ilen =0; ilen<1; ++ilen)
+	  cov(ilen+7,ipos) = lenPosCovMatrix(ilen,ipos);
+      return cov ;
+    }
+    
+    Gaudi::SymMatrix4x4
+    fillCov4(const Gaudi::SymMatrix4x4& momCovMatrix,
+	     const Gaudi::SymMatrix1x1& lenCovMatrix,
+	     const Gaudi::Matrix1x4&    lenMomCovMatrix)
+    {
+      // construct the (p3,len) cov matrix
+      Gaudi::SymMatrix4x4 cov ;
+      cov.Place_at(momCovMatrix.Sub<Gaudi::SymMatrix3x3>(0,0),0,0);
+      cov.Place_at(lenCovMatrix,3,3);
+      for(int imom =0; imom<3; ++imom)
+	for(int ilen =0; ilen<1; ++ilen)
+	  cov(ilen+3,imom) = lenMomCovMatrix(ilen,imom);
+      return cov ;
+    }
+    
+    Gaudi::SymMatrix5x5
+    fillCov5(const Gaudi::SymMatrix4x4& momCovMatrix,
+	     const Gaudi::SymMatrix1x1& lenCovMatrix,
+	     const Gaudi::Matrix1x4&    lenMomCovMatrix)
+    {
+      // construct the (p4,len) cov matrix
+      Gaudi::SymMatrix5x5 cov ;
+      cov.Place_at(momCovMatrix,0,0);
+      cov.Place_at(lenCovMatrix,4,4);
+      for(int imom =0; imom<4; ++imom)
+	for(int ilen =0; ilen<1; ++ilen)
+	  cov(ilen+4,imom) = lenMomCovMatrix(ilen,imom);
+      return cov ;
+    }
   }
 
-  Gaudi::SymMatrix4x4
-  fillCov4(const Gaudi::SymMatrix4x4& momCovMatrix,
-	   const Gaudi::SymMatrix1x1& lenCovMatrix,
-	   const Gaudi::Matrix1x4&    lenMomCovMatrix)
-  {
-    // construct the (p3,len) cov matrix
-    Gaudi::SymMatrix4x4 cov ;
-    cov.Place_at(momCovMatrix.Sub<Gaudi::SymMatrix3x3>(0,0),0,0);
-    cov.Place_at(lenCovMatrix,3,3);
-    for(int imom =0; imom<3; ++imom)
-      for(int ilen =0; ilen<1; ++ilen)
-	cov(ilen+3,imom) = lenMomCovMatrix(ilen,imom);
-    return cov ;
-  }
-  
-  Gaudi::SymMatrix5x5
-  fillCov5(const Gaudi::SymMatrix4x4& momCovMatrix,
-	   const Gaudi::SymMatrix1x1& lenCovMatrix,
-	   const Gaudi::Matrix1x4&    lenMomCovMatrix)
-  {
-    // construct the (p4,len) cov matrix
-    Gaudi::SymMatrix5x5 cov ;
-    cov.Place_at(momCovMatrix,0,0);
-    cov.Place_at(lenCovMatrix,4,4);
-    for(int imom =0; imom<4; ++imom)
-      for(int ilen =0; ilen<1; ++ilen)
-	cov(ilen+4,imom) = lenMomCovMatrix(ilen,imom);
-    return cov ;
-  }
-  
   Gaudi::SymMatrix8x8
   VtxFitParams::cov8() const
   {
