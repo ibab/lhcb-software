@@ -3,6 +3,12 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-05-18 - Marco Cattaneo
+ - Update reference for:
+   . Change in ST Monitors names
+   . Fix to Rih Particle types names
+   . Change in sequencing of Rich PID
+
 ! 2009-05-13 - Marco Cattaneo
  - Change brunelsys.qmt to get from Brunel/QMTest/BrunelExclusions.py the
    exclusions to be passed to ValidateWithReference()
