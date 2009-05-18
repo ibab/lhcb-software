@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.6 2009-05-18 17:43:43 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.6 2009-05-18 17:43:43 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -97,14 +97,16 @@ void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first)
   static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
   if ( !(*first) ) {
-    CPUMonData cpu(h->m_statBuffer);
-    *buf = h->m_statBuffer;
-    *size  = cpu.node->length();
-    if ( h->m_verbose ) {
-      log() << "[NodeStatsCollector] Published " << *size 
-            << " Bytes of Stat data @" << *buf << std::endl;
+    if ( h->m_sys ) {
+      CPUMonData cpu(h->m_statBuffer);
+      *buf = h->m_statBuffer;
+      *size  = cpu.node->length();
+      if ( h->m_verbose ) {
+	log() << "[NodeStatsCollector] Published " << *size 
+	      << " Bytes of Stat data @" << *buf << std::endl;
+      }
+      return;
     }
-    return;
   }
   *size = 0;
   *buf = (void*)empty;
@@ -177,9 +179,11 @@ int NodeStatsCollector::monitor() {
   std::string node = RTL::nodeNameShort();
   CPUMonData buf(m_statBuffer);
   bool exec = true;
+  ::dim_lock();
   SysInfo sys(buf.node,m_statSize,2);
   sys.init();
   m_sys = &sys;
+  ::dim_unlock();
   int stat_delay = m_statDelay;
   while(exec)    {
     stat_delay -= m_mbmDelay;
@@ -198,12 +202,14 @@ int NodeStatsCollector::monitor() {
     catch(...) {
       log() << "Unknown exception while task information:" << endl;
     }
-    ::dim_unlock();
-    if ( 0 != m_mbmSvc ) ::dis_update_service(m_mbmSvc);
+    if ( 0 != m_mbmSvc ) {
+      ::dis_update_service(m_mbmSvc);
+    }
     if ( stat_delay<=0 ) {
       ::dis_update_service(m_statSvc);
       stat_delay = m_statDelay;
     }
+    ::dim_unlock();
     ::lib_rtl_sleep(m_mbmDelay);
   }
   return 1;
