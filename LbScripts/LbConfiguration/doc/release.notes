@@ -1,3 +1,10 @@
+2009-05-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/group_login.csh: 
+	* scripts/group_login.sh: 
+	* scripts/group_shell.csh: 
+	* scripts/group_shell.sh: updated these example files to cope with the "dev" option.
+
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r0
