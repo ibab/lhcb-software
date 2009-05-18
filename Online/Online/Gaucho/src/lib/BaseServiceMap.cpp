@@ -494,7 +494,9 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
     f = new TFile(fileName.c_str(),"create");
-
+    TDirectory *dir=0;
+    std::vector<std::string> HistoDirName;  
+    //HistoDirName keeps track of the directory names, to avoid rewriting them
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
       msg << MSG::DEBUG << "Term : " << it->first << " servername " << serverName << endreq;
@@ -507,38 +509,39 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
-
-      msg << MSG::DEBUG << " Service " << it->first << " is a " << type <<endreq;
-      
-      TDirectory *dir=0;
-      
+           
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
           it->second->loadMonObject();
           it->second->monObject()->loadObject();
-	  msg << MSG::DEBUG << " Looking at " << it->second->dimInfo()->getName()  <<endreq;
 	  for (int i=2;i<(int)HistoFullName.size()-1;i++) {
 	     //recreate the directory structure inside the root file before saving
 	     if (!f->GetDirectory(HistoFullName[i].c_str())) {
-	      if (i>2) {
-	         if (dir) {
-	            if (!dir->GetDirectory(HistoFullName[i].c_str())) { 
-		       msg << MSG::DEBUG<< "directory or histogram: " << HistoFullName[i] << endreq;   
+	      if (i>2) {   
+	       	 if (HistoDirName.size()>1) {
+		    msg << MSG::DEBUG<< " HistoDirName[i-2] = "<< HistoDirName[i-2].c_str() << " HistoFullName[i] = " << HistoFullName[i].c_str() << endreq;   	      
+	            if (HistoFullName[i]!=HistoDirName[i-2]) { 
 	               dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
-		    }
-		 }   
+		       HistoDirName.push_back(HistoFullName[i]);
+		    }   
+		 }
+		 else {
+	            dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
+		    HistoDirName.push_back(HistoFullName[i]);
+		 }		    
               }		 
 	      else {
-	        msg << MSG::DEBUG<< "directory or histogram: " << HistoFullName[i] << endreq;   	    
-	        dir=f->mkdir(HistoFullName[i].c_str(),"top dir");}
-	      }	 
-	     msg << MSG::INFO<< "directory or histogram: " << HistoFullName[i] << endreq;   
-          }   
+	        dir=f->mkdir(HistoFullName[i].c_str(),"top dir");
+		HistoDirName.push_back(HistoFullName[i]);
+		}
+	      }
+         }   
 	  if (dir) { 	  
 	     dir->cd();	 
 	  }	
 	  else {	  
 	     f->cd();
 	  }
+
           it->second->monObject()->write();
       }
       else {
