@@ -36,19 +36,15 @@ namespace decaytreefit
 
   InternalParticle::InternalParticle(const LHCb::Particle& bc, const ParticleBase* mother, 
 				     bool forceFitAll)
-    : ParticleBase(bc,mother),m_massconstraint(false),m_lifetimeconstraint(false)
+    : ParticleBase(bc,mother),m_lifetimeconstraint(false)
   {
     BOOST_FOREACH( const LHCb::Particle* daughter, bc.daughters() ) 
       addDaughter(*daughter,forceFitAll) ;
-    
     // copy constraints
-    m_massconstraint     = false ; //bc && bc->constraint(BtaConstraint::Mass) ;
     m_lifetimeconstraint = false ; //bc && bc->constraint(BtaConstraint::Life) ;
-    m_isconversion = m_massconstraint && daughters().size()==2 && 
-      bc.particleID().pid() == 22 ;
+    m_isconversion = daughters().size()==2 &&  bc.particleID().pid() == 22 ;
   }
   
-
   bool compTrkTransverseMomentum(const RecoTrack* lhs, const RecoTrack* rhs)
   {
     return lhs->particle().pt() > rhs->particle().pt() ;
@@ -514,7 +510,7 @@ namespace decaytreefit
     if(mother() && lenIndex()>=0) 
       alist.push_back(Constraint(this,Constraint::geometric,depth,3,0,3)) ;
     // the mass constraint. FIXME: move to ParticleBase
-    if(m_massconstraint) {
+    if(hasMassConstraint()) {
       if( !m_isconversion ) 
 	alist.push_back(Constraint(this,Constraint::mass,depth,1,0,10)) ;
       else

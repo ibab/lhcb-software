@@ -9,6 +9,7 @@
 namespace LHCb
 {
   class Particle ;
+  class ParticleID ;
   class ParticleProperty ;
   class Trajectory ;
 }
@@ -25,7 +26,7 @@ namespace decaytreefit
 		       kInternalParticle,kRecoTrack,
 		       kResonance,kRecoPhoton,
 		       kMissingParticle} ;
-
+    typedef std::vector<ParticleBase*> ParticleContainer ;
     
     // 'default' constructor
     ParticleBase(const LHCb::Particle& bc, const ParticleBase* mother) ;
@@ -48,6 +49,7 @@ namespace decaytreefit
     virtual void print(const FitParams*) const ;
 
     const ParticleBase* locate(const LHCb::Particle& bc) const ;
+    void locate(const LHCb::ParticleID& pid, ParticleContainer& result ) ;
     const LHCb::Particle& particle() const { return *m_particle ; }
     
     const int index() const { return m_index ; }
@@ -57,8 +59,6 @@ namespace decaytreefit
     virtual ErrCode projectGeoConstraint(const FitParams&, Projection&) const ;
     virtual ErrCode projectMassConstraint(const FitParams&, Projection&) const ;
     virtual ErrCode projectConstraint(Constraint::Type, const FitParams&, Projection&) const ;
-
-    virtual bool setMassConstraint(bool /*add*/) { return false ; }
 
     // indices to fit parameters
     virtual int type() const = 0 ;
@@ -110,8 +110,12 @@ namespace decaytreefit
 
     // collect all particles emitted from vertex with position posindex
     void collectVertexDaughters( daucontainer& particles, int posindex ) ;
+    // set the mass constraint for this particle. return true if value changed
+    bool setMassConstraint(bool add) {
+      std::swap(add,m_hasMassConstraint) ;
+      return add != m_hasMassConstraint ;
+    }
 
-    //bool initFromTruth(const BtaMcAssoc& truthmap, FitParams& fitparams) const ;
   protected:
     static double pdtCLifeTime(const LHCb::Particle& bc)  ;
     static bool isAResonance(const LHCb::ParticleProperty& bc) ;
@@ -119,13 +123,14 @@ namespace decaytreefit
     ErrCode initTau(FitParams* par) const ; 
     void makeName(const LHCb::Particle& bc)  ;
     daucontainer& daughters() { return m_daughters ; }
+    bool hasMassConstraint() const { return m_hasMassConstraint ; }
   protected:
     void setIndex(int i) { m_index = i ; }
     void setName(const std::string& n) { m_name = n ; }
   private:
     const LHCb::Particle* m_particle ;
     const ParticleBase* m_mother ;
-    std::vector<ParticleBase*> m_daughters ;
+    ParticleContainer m_daughters ;
     const LHCb::ParticleProperty* m_prop ;
     int m_index ;
     double m_pdtMass ;      // cached mass
@@ -133,6 +138,7 @@ namespace decaytreefit
     double m_pdtCLifeTime ; // cached lifetime
     int m_charge ;      // charge
     std::string m_name ;
+    bool m_hasMassConstraint ;
  } ;
 
 }

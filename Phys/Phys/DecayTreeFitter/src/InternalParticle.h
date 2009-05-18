@@ -26,10 +26,6 @@ namespace decaytreefit
     virtual bool hasEnergy() const { return true ; }
     virtual bool hasPosition() const { return true ; }
     virtual std::string parname(int index) const ;
-    virtual bool setMassConstraint(bool add) {
-      std::swap(add,m_massconstraint) ;
-      return add != m_massconstraint ;
-    }
 
     // constraints
     ErrCode projectKineConstraint(const FitParams&, Projection&) const ;
@@ -47,7 +43,6 @@ namespace decaytreefit
   protected:
     ErrCode initMom( FitParams* fitparams ) const ;
   private:
-    bool m_massconstraint ;
     bool m_lifetimeconstraint ;
     bool m_isconversion ;
   } ;

@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <stdio.h>
 #include <sstream>
+#include <boost/foreach.hpp>
 
 #include "GaudiKernel/PhysicalConstants.h"
 #include "Event/Particle.h"
@@ -238,6 +239,11 @@ namespace decaytreefit
     m_decaychain->setMassConstraint(bc,add) ;
   }
   
+  void Fitter::setMassConstraint( const LHCb::ParticleID& pid, bool add)
+  {
+    m_decaychain->setMassConstraint(pid,add) ;
+  }
+  
   void Fitter::updateIndex()
   {
     int offset=0 ;
@@ -385,12 +391,15 @@ namespace decaytreefit
     //return acand ;
   }
 
-  LHCb::Particle
+  Tree
   Fitter::getFittedTree() const
   {
-    LHCb::Particle cand = *particle() ;
-    updateTree( cand ) ;
-    return cand ;
+    // clone the decay tree
+    Tree tree(*m_particle) ;
+    // update the tree
+    updateTree( *tree.head() ) ;
+    // return
+    return tree ;
   }
 
   /*
@@ -410,7 +419,7 @@ namespace decaytreefit
   }
   */
 
-  void
+  bool
   Fitter::updateCand(LHCb::Particle& particle) const
   {
     // assigns fitted parameters to a candidate
@@ -453,19 +462,17 @@ namespace decaytreefit
       // 		    << printer.print(*_bc)
       // 		    << endmsg;
     }
+    return pb != 0 ;
   }
-
-  void
-  Fitter::updateTree(LHCb::Particle& /*cand*/) const
+  
+  bool
+  Fitter::updateTree(LHCb::Particle& p) const
   {
-    std::cout << "Fitter::updateTree: not yet implemented." << std::endl ;
-    /*
-    // assigns fitted parameters to all candidates in a decay tree
-    updateCand(cand) ;
-    HepAListIterator<LHCb::Particle> iter=cand.daughterIterator();
-    LHCb::Particle* daughter ;
-    while( (daughter=iter()) )  updateTree(*daughter) ;
-    */
+    bool rc ;
+    if ( (rc = updateCand(p) ) )
+      BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters() ) 
+	updateTree( const_cast<LHCb::Particle&>(*daughter) ) ;
+    return rc ;
   }
   
 

@@ -158,6 +158,17 @@ namespace decaytreefit
     if(part && part->setMassConstraint(add)) 
       m_constraintlist.clear() ;
   }
+
+  void
+  DecayChain::setMassConstraint( const LHCb::ParticleID& pid, bool add) {
+    ParticleBase::ParticleContainer particles ;
+    m_mother->locate( pid, particles ) ;
+    bool changed(false) ;
+    for(ParticleBase::ParticleContainer::iterator it = particles.begin() ;
+	it != particles.end() ; ++it)
+      changed |= (*it)->setMassConstraint(add) ;
+    if(changed) m_constraintlist.clear() ;
+  }
   
   int 
   DecayChain::index(const LHCb::Particle& bc) const {

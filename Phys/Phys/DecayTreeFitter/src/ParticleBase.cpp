@@ -29,7 +29,7 @@ namespace decaytreefit
     : m_particle(&particle),m_mother(mother),
       m_prop(LoKi::Particles::ppFromPID(particle.particleID())),
       m_index(0),m_pdtMass(0),m_pdtWidth(0),m_pdtCLifeTime(0),m_charge(0),
-      m_name("Unknown")
+      m_name("Unknown"), m_hasMassConstraint(false)
   {
     if( m_prop ) {
       m_pdtMass      = m_prop->mass() ;
@@ -48,7 +48,7 @@ namespace decaytreefit
     : m_particle(0),m_mother(0),
       m_prop(0),
       m_index(0),m_pdtMass(0),m_pdtCLifeTime(0),m_charge(0),
-      m_name(name)
+      m_name(name), m_hasMassConstraint(false)
   {
   }
   
@@ -100,7 +100,7 @@ namespace decaytreefit
     if(vtxverbose>=2)
       std::cout << "ParticleBase::createParticle: " << forceFitAll << std::endl ;
     ParticleBase* rc=0 ;
-    bool bsconstraint = false ;
+    //bool bsconstraint = false ;
     
     // We refit invalid fits, kinematic fits and composites with beamspot
     // constraint if not at head of tree.
@@ -300,6 +300,13 @@ namespace decaytreefit
     return rc ;
   }
   
+  void ParticleBase::locate( const LHCb::ParticleID& pid,
+			     ParticleContainer& result )
+  {
+    if( m_particle && m_particle->particleID()==pid ) result.push_back(this) ;
+    for(daucontainer::iterator it = m_daughters.begin() ; it != m_daughters.end(); ++it)
+      locate( pid, result ) ;
+  }
   
   void ParticleBase::retrieveIndexMap(indexmap& anindexmap) const 
   {

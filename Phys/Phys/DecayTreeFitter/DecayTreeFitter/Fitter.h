@@ -6,6 +6,7 @@
 #include <vector>
 #include "DecayTreeFitter/VtxErrCode.h"
 #include "DecayTreeFitter/VtxFitStatus.h"
+#include "DecayTreeFitter/Tree.h"
 
 class VtxDoubleErr ;
 class VtxLorentzVectorErr ;
@@ -44,6 +45,9 @@ namespace decaytreefit
     // Add or remove a mass constraint
     void setMassConstraint( const LHCb::Particle& cand, bool add=true ) ;
     
+    // Add or remove a mass constraintfor a certain ParticleID
+    void setMassConstraint( const LHCb::ParticleID& pid, bool add=true ) ;
+
     // Fit the decay tree
     void fit(int maxNumberOfIterations=10, double deltaChisquareConverged=0.01) ;
     
@@ -82,8 +86,15 @@ namespace decaytreefit
     // methods to retrieve the result in terms of LHCb::Particles
     // (note: mother vertex is not updated, and decay length cannot be
     // stored anywhere. Use fitParams instead)
+    LHCb::Particle getFitted() const ;
     LHCb::Particle getFitted(const LHCb::Particle& cand) const ;
-    void updateCand(LHCb::Particle& cand) const ;
+    // reurn an updated decay tree. this is not a final solution. will
+    // try to move more info to Particle
+    Tree getFittedTree() const ;
+    
+    // update a particlular candidate in the tree
+    bool updateCand(LHCb::Particle& cand) const ;
+    bool updateTree(LHCb::Particle& cand) const ;
     
   protected:
     
@@ -104,10 +115,8 @@ namespace decaytreefit
     double remove(const LHCb::Particle& cand) ;
     void updateIndex() ;
 
-    LHCb::Particle getFitted() const ;
-    LHCb::Particle getFittedTree() const ;
+    //LHCb::Particle getFittedTree() const ;
     LHCb::Particle* fittedCand(const LHCb::Particle& cand, LHCb::Particle* headoftree) const ;
-    void updateTree(LHCb::Particle& cand) const ;
     
   private:
     const LHCb::Particle* m_particle ;

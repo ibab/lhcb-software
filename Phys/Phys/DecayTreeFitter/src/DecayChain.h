@@ -36,7 +36,8 @@ namespace decaytreefit {
     const ParticleBase* cand() { return m_cand ; }
     const ParticleBase* mother() const { return m_mother ; }
     const ParticleBase* locate(const LHCb::Particle& bc) const ;
-
+    void locate( const LHCb::ParticleID& pid, ParticleBase::ParticleContainer& result ) ;
+    
     int index(const LHCb::Particle& bc) const ;
     int posIndex(const LHCb::Particle& bc) const ;
     int momIndex(const LHCb::Particle& bc) const ;
@@ -46,6 +47,7 @@ namespace decaytreefit {
 
     void printConstraints(std::ostream& os=std::cout) const ;
     void setMassConstraint( const LHCb::Particle& bc, bool add=true) ;
+    void setMassConstraint( const LHCb::ParticleID& pid, bool add=true) ;
 
   private:
     int m_dim ;
