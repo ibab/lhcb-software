@@ -494,9 +494,8 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
     f = new TFile(fileName.c_str(),"create");
-    TDirectory *dir=0;
-    std::vector<std::string> HistoDirName;  
-    //HistoDirName keeps track of the directory names, to avoid rewriting them
+
+
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
       msg << MSG::DEBUG << "Term : " << it->first << " servername " << serverName << endreq;
@@ -509,40 +508,44 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
-           
+  
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
+          TDirectory *dir=0; 
           it->second->loadMonObject();
           it->second->monObject()->loadObject();
+	 // std::vector<std::string> HistoDirName;  
 	  for (int i=2;i<(int)HistoFullName.size()-1;i++) {
 	     //recreate the directory structure inside the root file before saving
-	     if (!f->GetDirectory(HistoFullName[i].c_str())) {
-	      if (i>2) {   
-	       	 if (HistoDirName.size()>1) {
-		    msg << MSG::DEBUG<< " HistoDirName[i-2] = "<< HistoDirName[i-2].c_str() << " HistoFullName[i] = " << HistoFullName[i].c_str() << endreq;   	      
-	            if (HistoFullName[i]!=HistoDirName[i-2]) { 
-	               dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
-		       HistoDirName.push_back(HistoFullName[i]);
-		    }   
-		 }
-		 else {
-	            dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
-		    HistoDirName.push_back(HistoFullName[i]);
-		 }		    
-              }		 
-	      else {
-	        dir=f->mkdir(HistoFullName[i].c_str(),"top dir");
-		HistoDirName.push_back(HistoFullName[i]);
+             //HistoDirName keeps track of the directory names, to avoid rewriting them
+	        if (i>2) {   
+		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
+		    msg << MSG::DEBUG << "cding 1 into " << HistoFullName[i].c_str()<< endreq; 
+		    dir->cd(HistoFullName[i].c_str());}                 
+		    else {
+		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i)); 
+		       dir->cd();
+		    }   		    
+                }		 
+	        else {
+		  if (dir) {
+		      dir=f->GetDirectory(HistoFullName[i].c_str());
+		      msg << MSG::DEBUG << "cding 2 into " << HistoFullName[i].c_str()<< endreq; 
+		      dir->cd(HistoFullName[i].c_str());		       
+		  }    
+		  else { 
+		      if (dir=f->GetDirectory(HistoFullName[i].c_str())) {}		         
+		      else dir=f->mkdir(HistoFullName[i].c_str(),"top dir");
+		  }   
 		}
-	      }
          }   
-	  if (dir) { 	  
-	     dir->cd();	 
-	  }	
-	  else {	  
+	 if (dir) { 	  
+	    // dir->cd();	 
+	 }	
+	 else {	  
 	     f->cd();
-	  }
-
+	 }
           it->second->monObject()->write();
+
       }
       else {
         msg << MSG::ERROR << "MonObject of type " << type << " can not be written."<< endreq; 
