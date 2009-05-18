@@ -209,7 +209,8 @@ namespace LHCb  {
     virtual void declareInfo(CSTR nam, const AIDA::IBaseHistogram* var,CSTR dsc,Client own);
     virtual void declareInfo(CSTR /*nam*/,CSTR /*format*/,const void* /*var*/,int /*size*/,CSTR /*desc*/,Client /*own*/) 
     {}
-
+    virtual void declareInfo(CSTR /*nam*/, const StatEntity& /*var*/, CSTR /*desc*/, Client /*own*/)
+    {}
     /** Undeclare monitoring information
       * @param name Monitoring information name knwon to the external system
       * @param owner Owner identifier of the monitoring information

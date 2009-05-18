@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.3 2007-05-18 13:58:54 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.4 2009-05-18 11:17:28 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.h
 //  --------------------------------------------------------------------
@@ -9,6 +9,7 @@
 #ifndef ONLINE_GAUDIONLINE_NETWORKDATASENDER_H
 #define ONLINE_GAUDIONLINE_NETWORKDATASENDER_H
 
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "MDF/MDFWriter.h"
@@ -17,6 +18,9 @@
 
 // Forward declarations
 class MsgStream;
+class Incident;
+class IIncidentSvc;
+
 namespace MBM {  class Producer;  }
 
 /*
@@ -74,7 +78,7 @@ namespace LHCb  {
     *
     *  @author Markus Frank
     */
-  class NetworkDataSender : public MDFWriter  {
+  class NetworkDataSender : public MDFWriter, virtual public IIncidentListener  {
   protected:
 
     /** @class NetworkDataSender::Recipient NetworkDataSender.h GaudiOnline/NetworkDataSender.h
@@ -118,6 +122,10 @@ namespace LHCb  {
     lib_rtl_lock_t      m_lock;
     /// [Network Producer] Queue of targets with pending event requests
     Recipients          m_recipients;
+    /// Flag to indicate if events should further be processed
+    int                 m_sendEvents;
+    /// Reference to incident service
+    IIncidentSvc*       m_incidentSvc;
 
     /// Issue alarm message to error logger
     virtual void sendAlarm(const std::string& msg);
@@ -137,6 +145,9 @@ namespace LHCb  {
     virtual StatusCode finalize();
     /// Initialize the object: allocate all necessary resources
     virtual StatusCode initialize();
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    void handle(const Incident& inc);
+
     /// Callback on task dead notification
     virtual StatusCode taskDead(const std::string& task_name);
     /// Networking layer overload [Net producer]: Subscribe to network requests

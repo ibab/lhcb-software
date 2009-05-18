@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.15 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.16 2009-05-18 11:17:36 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -8,17 +8,21 @@
 //  ====================================================================
 #include "GaudiOnline/NetworkDataSender.h"
 #include "GaudiOnline/ISuspendable.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/Incident.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFHeader.h"
 #include "RTL/Lock.h"
 
 using namespace LHCb;
+using namespace std;
 
-// Standard algorithm constructor
-NetworkDataSender::NetworkDataSender(const std::string& nam, ISvcLocator* pSvc)
+/// Standard algorithm constructor
+NetworkDataSender::NetworkDataSender(const string& nam, ISvcLocator* pSvc)
 :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
-   m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0)
+   m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0),
+   m_sendEvents(false), m_incidentSvc(0)
 {
   declareProperty("DataSink",         m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
@@ -26,12 +30,12 @@ NetworkDataSender::NetworkDataSender(const std::string& nam, ISvcLocator* pSvc)
   lib_rtl_create_lock(0,&m_lock);
 }
 
-// Standard Destructor
+/// Standard Destructor
 NetworkDataSender::~NetworkDataSender()      {
   lib_rtl_delete_lock(m_lock);
 }
 
-// Initialize the object: allocate all necessary resources
+/// Initialize the object: allocate all necessary resources
 StatusCode NetworkDataSender::initialize()   {
   StatusCode sc;
   MsgStream output(msgSvc(),name());
@@ -51,6 +55,13 @@ StatusCode NetworkDataSender::initialize()   {
     output << MSG::INFO << "No data sink specified. "
            << "Clients will have to subscribe themselves." << endmsg;
   }
+  sc = service("IncidentSvc",m_incidentSvc,true);
+  if ( !sc.isSuccess() )  {
+    output << MSG::ERROR << "Failed to access Incident service." << endmsg;
+    return sc;
+  }
+  m_sendEvents = true;
+  m_incidentSvc->addListener(this,"DAQ_CANCEL");
   try  {
     sc = suspendEvents();
     if ( !sc.isSuccess() )  {
@@ -68,7 +79,7 @@ StatusCode NetworkDataSender::initialize()   {
     }
     return sc;
   }
-  catch(const std::exception& e)  {
+  catch(const exception& e)  {
     output << MSG::ERROR << "Exception during initialization:" << e.what() << endmsg;
   }
   catch(...)  {
@@ -77,8 +88,14 @@ StatusCode NetworkDataSender::initialize()   {
   return StatusCode::FAILURE;
 }
 
-// Finalize the object: release all allocated resources
+/// Finalize the object: release all allocated resources
 StatusCode NetworkDataSender::finalize()     {
+  m_sendEvents = false;
+  if ( m_incidentSvc ) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+  }
+  m_incidentSvc = 0;
   m_recipients.clear();
   // Do NOT call base class finalization: we are not writing to file/socket!
   StatusCode sc = unsubscribeNetwork();
@@ -92,7 +109,16 @@ StatusCode NetworkDataSender::finalize()     {
   return sc;
 }
 
-// Producer implementation: Resume event access from MBM
+/// Incident handler implemenentation: Inform that a new incident has occured
+void LHCb::NetworkDataSender::handle(const Incident& inc)    {
+  if ( inc.type() == "DAQ_CANCEL" )  {
+    MsgStream info(msgSvc(), name());
+    m_sendEvents = false;
+    info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
+  }
+}
+
+/// Producer implementation: Resume event access from MBM
 StatusCode NetworkDataSender::resumeEvents()  {
   if ( m_allowSuspend ) {
     if ( !m_evtSelector->resume().isSuccess() )  {
@@ -120,7 +146,7 @@ StatusCode NetworkDataSender::suspendEvents()  {
 }
 
 // Producer implementation: Handle client request to receive event over the network
-StatusCode NetworkDataSender::handleEventRequest(long clientID,const std::string& source,const char* buf)  {
+StatusCode NetworkDataSender::handleEventRequest(long clientID,const string& source,const char* buf)  {
   if ( ::strncasecmp(buf,"EVENT_REQUEST",13)==0 )  {
     return addRequest(Recipient(this,source,clientID));
   }
@@ -137,13 +163,13 @@ StatusCode NetworkDataSender::addRequest(const Recipient& task)  {
 }
 
 // Issue alarm message to error logger
-void NetworkDataSender::sendAlarm(const std::string& msg)  {
+void NetworkDataSender::sendAlarm(const string& msg)  {
   MsgStream output(msgSvc(),name());
   output << MSG::ERROR << msg << endmsg;
 }
 
 // Callback on task dead notification
-StatusCode NetworkDataSender::taskDead(const std::string& task_name)  {
+StatusCode NetworkDataSender::taskDead(const string& task_name)  {
   sendAlarm("Datasink client:"+task_name+" died.");
   return StatusCode::SUCCESS;
 }
@@ -151,20 +177,23 @@ StatusCode NetworkDataSender::taskDead(const std::string& task_name)  {
 // Need to override MDFWriter::execute: implement noop if no clients waiting.
 StatusCode NetworkDataSender::execute()  {
   if ( !m_recipients.empty() )  {
-    StatusCode sc = MDFWriter::execute();
-    if ( !sc.isSuccess() )  {
-      sendAlarm("Failed to transfer event data to:"+m_target);
-    }
-    RTL::Lock lck(m_lock);  // Lock recipient queue to prevent damage
-    Recipient rcp = m_recipients.front();
-    m_recipients.pop_front();
-    // Mode without requests: add entry again at end....
-    if ( !m_useEventRequests ) {
-      m_recipients.push_back(rcp);
-      resumeEvents();
-    }
-    else if ( m_recipients.empty() ) {
-      suspendEvents();
+    StatusCode sc = StatusCode::SUCCESS;
+    if ( m_sendEvents ) {
+      sc = MDFWriter::execute();
+      if ( !sc.isSuccess() )  {
+	sendAlarm("Failed to transfer event data to:"+m_target);
+      }
+      RTL::Lock lck(m_lock);  // Lock recipient queue to prevent damage
+      Recipient rcp = m_recipients.front();
+      m_recipients.pop_front();
+      // Mode without requests: add entry again at end....
+      if ( !m_useEventRequests ) {
+	m_recipients.push_back(rcp);
+	resumeEvents();
+      }
+      else if ( m_recipients.empty() ) {
+	suspendEvents();
+      }
     }
     return sc;
   }
@@ -175,6 +204,11 @@ StatusCode NetworkDataSender::execute()  {
 // Write MDF record from serialization buffer
 StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)  {
   // Now send the data ....
+  if ( !m_sendEvents ) {
+    MsgStream output(msgSvc(),name());
+    output << MSG::ERROR << "Ignore request to send event -- got DAQ_CANCEL earlier." << endmsg;
+    return StatusCode::SUCCESS;
+  }
   if ( m_recipients.empty() )  {
     MsgStream output(msgSvc(),name());
     output << MSG::ERROR << "Failed to send MDF record [No known recipient]." << endmsg;
@@ -193,10 +227,10 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
     MDFHeader* h = (MDFHeader*)b->data();
     MsgStream output(msgSvc(),name());
     output << MSG::ALWAYS << "Handle request for recipient:" << recipient.name  << " Mask:" 
-	   << std::hex << std::setw(10) << std::left << h->subHeader().H1->triggerMask()[0] << " "
-	   << std::hex << std::setw(10) << std::left << h->subHeader().H1->triggerMask()[1] << " "
-	   << std::hex << std::setw(10) << std::left << h->subHeader().H1->triggerMask()[2] << " "
-	   << std::hex << std::setw(10) << std::left << h->subHeader().H1->triggerMask()[3] << " "
+	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[0] << " "
+	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[1] << " "
+	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[2] << " "
+	   << hex << setw(10) << left << h->subHeader().H1->triggerMask()[3] << " "
 	   << endmsg;
 #endif
   }
