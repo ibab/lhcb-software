@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-05-18 - Chris Jones
+ - Fix sequencing bug highlighted by the last commit :(
+
 ! 2009-05-15 - Chris Jones
  - Remove remaining manual calls to applyConf
 

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.18 2009-05-15 09:33:29 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-05-18 15:51:12 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -237,13 +237,20 @@ class RichRecSysConf(RichConfigurableUser):
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
                 pidConf = RichGlobalPIDConfig()
                 if pidMode == "FastGlobal": pidConf.Mode = "Fast"
+                gpidSeq = GaudiSequencer("Rich"+cont+"GPIDSeq")
+                gpidSeq.MeasureTime = True
+                pidSeq.Members += [ gpidSeq ]
+                pidConf.PidSequencer = gpidSeq
             elif pidMode == "FastLocal" :
                 pidConf = RichHLTLocalPIDConfig()
+                lpidSeq = GaudiSequencer("Rich"+cont+"LPIDSeq")
+                lpidSeq.MeasureTime = True
+                pidSeq.Members += [ lpidSeq ]
+                pidConf.PidSequencer = lpidSeq
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
             self.setOtherProp(pidConf,"Context")
-            pidConf.PidSequencer = pidSeq
 
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
