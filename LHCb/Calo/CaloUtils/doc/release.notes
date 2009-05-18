@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.120 2009-05-10 15:17:00 ibelyaev Exp $
+! $Id: release.notes,v 1.121 2009-05-18 16:28:38 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2009-05-16 - Vanya BELYAEV
+
+ - add the dictionary for CaloMomentum/CaloParticle classes 
+    (needed for python) and polish a bit these classes 
+
+ 
 ! 2009-05-08 - Vanya BELYAEV
 
  - CaloUtils/SpreadEstimator.h 

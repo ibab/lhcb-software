@@ -1,91 +1,100 @@
+// $Id: CaloParticle.h,v 1.4 2009-05-18 16:28:38 ibelyaev Exp $ 
+// ============================================================================
 #ifndef RecEvent_CaloParticle_H
 #define RecEvent_CaloParticle_H 1
-
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// ============================================================================
 // Include files
+// ============================================================================
+// CaloUtils 
+// ============================================================================
 #include "CaloUtils/CaloMomentum.h"
-//PhysEvent
+// ============================================================================
+// Event 
+// ============================================================================
 #include "Event/Particle.h"
-
+// ============================================================================
 // Forward declarations
+// ============================================================================
+namespace LHCb { class Vertex  ; }
+// ============================================================================
 namespace LHCb 
 {
-  class Vertex;
-}
-
-namespace LHCb 
-{
-
-  /** @class CaloMomentum CaloMomentum.h
-   *
-   * 
+  // ==========================================================================
+  /** @class CaloMomentum CaloUtils/CaloMomentum.h
+   *  Helepr class to evalauet the parameters of "Calo"-particles 
+   *  @author Olivier Deschamps
    */
-  
   class CaloParticle : public CaloMomentum
   {
+    // ========================================================================
   public:
-    
-
-    /// Constructor
-    CaloParticle(LHCb::Particle* part) : CaloMomentum(),
-                                         m_parts(),
-                                         m_vert(NULL),
-                                         m_isCalo(true),
-                                         m_caloEndTree(){
-      this->addCaloPosition( part );
-    }
-
-
-    CaloParticle(LHCb::Particle* part, 
-                 LHCb::CaloMomentum::Point point);
-    CaloParticle(LHCb::Particle* part, 
-                 LHCb::CaloMomentum::Point point,
-                 LHCb::CaloMomentum::PointCovariance cov);
-    
-    
+    // ========================================================================
+    /// Constructor fom particle 
+    CaloParticle 
+    ( LHCb::Particle*                            part  ) ;
+    /// Constructor fom particle & origin vertex     
+    CaloParticle 
+    ( LHCb::Particle*                            part  , 
+      const LHCb::CaloMomentum::Point&           point ) ;
+    /// Constructor fom particle & origin vertex & covariance      
+    CaloParticle
+    ( LHCb::Particle*                            part  , 
+      const LHCb::CaloMomentum::Point&           point ,
+      const LHCb::CaloMomentum::PointCovariance& cov   ) ;
     /// Default Destructor
-    virtual ~CaloParticle() {}
-    
+    virtual ~CaloParticle() ;
+    // ========================================================================
+  public:
+    // ========================================================================
     // Setters
-    void addCaloPosition(LHCb::Particle*  part );
-    void addToVertex(LHCb::Vertex* vertex);
-
+    // ========================================================================
+    void addCaloPosition( LHCb::Particle*  part   ) ;
+    void addToVertex    ( LHCb::Vertex*    vertex ) ;
+    // ========================================================================
+  public:
+    // ========================================================================    
     // Getters
-    std::vector<LHCb::Particle*>& particles(){return m_parts;}
-    LHCb::Particle* particle(){return *(m_parts.begin()) ;} // return the first particle
-    LHCb::Vertex* originVertex(){return m_vert;};
-    LHCb::Particle::ConstVector& caloEndTree(){return m_caloEndTree;}
-    bool isCalo(){ return m_isCalo; }
-    
+    // ========================================================================    
+    const std::vector<LHCb::Particle*>& particles   () const 
+    { return m_parts      ; }
+    const LHCb::Vertex*                originVertex () const 
+    { return m_vert       ; }
+    const LHCb::Particle::ConstVector& caloEndTree  () const 
+    { return m_caloEndTree; }
+    // get (the firts) particle 
+    LHCb::Particle* particle() const ;
+    // calo?
+    bool isCalo() const { return m_isCalo; }
+    // ========================================================================
+  public:
+    // ========================================================================
     // Update
-    void updateParticle();
-    void updateTree();
-    void CaloParticleTree(const LHCb::Particle*  part );
-    //
-    
-    
-  protected:
-    
+    // ========================================================================
+    void updateParticle   () ;
+    void updateTree       () ;
+    void CaloParticleTree ( const LHCb::Particle*  part ) ;
+    // ========================================================================
   private:
-    std::vector<LHCb::Particle*> m_parts;
-    LHCb::Vertex*   m_vert;
-    bool m_isCalo;
-    LHCb::Particle::ConstVector m_caloEndTree;
+    // ========================================================================
+    /// the default constructor is disabled 
+    CaloParticle() ;                     // the default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    LHCb::Particle::Vector      m_parts       ;
+    LHCb::Vertex*               m_vert        ;
+    bool                        m_isCalo      ;
+    LHCb::Particle::ConstVector m_caloEndTree ;
+    // ========================================================================
   }; // class CaloParticle
-} // namespace LHCb;
-// -----------------------------------------------------------------------------
-// end of class
-// -----------------------------------------------------------------------------
-inline  void LHCb::CaloParticle::addToVertex(LHCb::Vertex* vertex)
-{
-  m_vert= vertex;
-  for(std::vector<LHCb::Particle*>::iterator ipart = m_parts.begin();ipart!=m_parts.end();++ipart){
-    vertex->addToOutgoingParticles( *ipart ); 
-  }  
-  this->referencePoint() = vertex->position(); 
-  this->pointCovMatrix() = vertex->covMatrix();
-  this->addToFlag( LHCb::CaloMomentum::NewReferencePoint);
-  this->addToFlag( LHCb::CaloMomentum::NewPointCovariance);
-} ;
+  // ==========================================================================
+} // end of namespace LHCb
+// ============================================================================
+// The END 
+// ============================================================================
 #endif ///RecEvent_CaloParticle_H
+// ============================================================================
 
 
