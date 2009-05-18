@@ -2,7 +2,7 @@
 #include "Event/Particle.h"
 #include <boost/foreach.hpp>
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   LHCb::Particle* Tree::release ()
   {

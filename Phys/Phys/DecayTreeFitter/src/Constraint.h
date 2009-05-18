@@ -5,7 +5,7 @@
 #include <iostream>
 #include "DecayTreeFitter/VtxErrCode.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   class ParticleBase ;
   class Projection ;

@@ -3,7 +3,7 @@
 
 #include "InternalParticle.h"
 
-namespace decaytreefit 
+namespace DecayTreeFitter 
 {
   class FitParams ;
 

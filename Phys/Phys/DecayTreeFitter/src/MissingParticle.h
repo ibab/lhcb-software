@@ -3,7 +3,7 @@
 
 #include "ParticleBase.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   class MissingParticle : public ParticleBase

@@ -2,7 +2,7 @@
 #include "ParticleBase.h"
 #include "MergedConstraint.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   ErrCode

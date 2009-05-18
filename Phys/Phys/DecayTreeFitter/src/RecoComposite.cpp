@@ -12,7 +12,7 @@ using std::endl;
 #define FAST() .fast
 #endif
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   extern int vtxverbose ;

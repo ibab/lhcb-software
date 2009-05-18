@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   class ErrCode

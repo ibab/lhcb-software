@@ -5,7 +5,7 @@
 #undef SLOWBUTSAFE
 #undef SKIPHIGHACCURACYCORRECTION
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   
   inline double fastsymmatrixaccess(double* m, int row, int col)

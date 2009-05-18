@@ -3,7 +3,7 @@
 
 #include "RecoComposite.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   class RecoResonance : public RecoComposite

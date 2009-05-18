@@ -6,7 +6,7 @@
 #include "RecoPhoton.h"
 #include "FitParams.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   extern int vtxverbose ;
 

@@ -3,7 +3,7 @@
 
 #include "RecoParticle.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   class RecoPhoton : public RecoParticle

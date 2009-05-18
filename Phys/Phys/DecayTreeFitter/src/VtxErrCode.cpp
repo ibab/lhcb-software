@@ -1,7 +1,7 @@
 #include "DecayTreeFitter/VtxErrCode.h"
 
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   std::ostream& operator<<(std::ostream& os, const ErrCode& ec) 
   {

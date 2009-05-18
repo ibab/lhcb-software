@@ -4,7 +4,7 @@
 #include "InteractionPoint.h"
 #include "DecayChain.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   
   extern int vtxverbose ;

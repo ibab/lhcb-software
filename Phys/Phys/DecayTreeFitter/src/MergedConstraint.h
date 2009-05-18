@@ -4,7 +4,7 @@
 #include <vector>
 #include "Constraint.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   class MergedConstraint : public Constraint
   {

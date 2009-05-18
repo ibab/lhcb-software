@@ -4,7 +4,7 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "RecoParticle.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   class RecoTrack : public RecoParticle

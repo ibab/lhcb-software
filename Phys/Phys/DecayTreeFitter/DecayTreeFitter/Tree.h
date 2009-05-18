@@ -10,7 +10,7 @@ namespace LHCb
   class ParticleID ;
 }
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
   class Tree
   {

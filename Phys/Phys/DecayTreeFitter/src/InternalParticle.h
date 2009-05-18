@@ -4,7 +4,7 @@
 #include "ParticleBase.h"
 #include <vector>
 
-namespace decaytreefit 
+namespace DecayTreeFitter 
 {
 
   class InternalParticle : public ParticleBase

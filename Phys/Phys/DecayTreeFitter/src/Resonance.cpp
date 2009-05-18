@@ -3,7 +3,7 @@
 
 #include "Resonance.h"
 
-namespace decaytreefit
+namespace DecayTreeFitter
 {
 
   extern int vtxverbose ;
