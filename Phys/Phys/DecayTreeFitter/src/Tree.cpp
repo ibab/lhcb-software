@@ -4,13 +4,6 @@
 
 namespace DecayTreeFitter
 {
-  LHCb::Particle* Tree::release ()
-  {
-    LHCb::Particle* tmp = m_head ;
-    m_head = 0 ;
-    return tmp ;
-  }
-
   LHCb::Particle* Tree::cloneTree( const LHCb::Particle& original,
 				   CloneMap& clonemap)
   {

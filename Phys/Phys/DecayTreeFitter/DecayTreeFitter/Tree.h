@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <memory>
 
 namespace LHCb
 {
@@ -18,17 +19,17 @@ namespace DecayTreeFitter
     //
     typedef std::vector<const LHCb::Particle*> ParticleContainer ;
     // constructor
-    Tree( const LHCb::Particle& head ) { m_head = cloneTree(head,m_clonemap) ; }
-    // copy constructor is destructive ( do we really want that? )
-    Tree( Tree& rhs ) : m_head(rhs.m_head), m_clonemap(rhs.m_clonemap) { rhs.release() ; }
+    Tree( const LHCb::Particle& head ) { m_head.reset(cloneTree(head,m_clonemap)) ; }
+    // copy constructor
+    Tree( const Tree& rhs ) : m_head(rhs.m_head), m_clonemap(rhs.m_clonemap) {}
     // destructor
-    ~Tree() { if (m_head ) deleteTree(*m_head) ; }
+    ~Tree() { if (m_head.get()) deleteTree(*m_head) ; }
     // return the const head
-    const LHCb::Particle* head() const { return m_head ; }
+    const LHCb::Particle* head() const { return m_head.get() ; }
     // return the non-const head
-    LHCb::Particle* head() { return m_head ; }
+    LHCb::Particle* head() { return m_head.get() ; }
     // take ownership of all particles in decay tree
-    LHCb::Particle* release() ;
+    LHCb::Particle* release() { return m_head.release() ; }
     // find clone of particle in original decay tree
     const LHCb::Particle* findClone( const LHCb::Particle& particle ) const ;
     // find particle based on PID
@@ -46,7 +47,7 @@ namespace DecayTreeFitter
     static void deleteTree( LHCb::Particle& particle ) ;
     
   private:
-    LHCb::Particle* m_head ;
+    mutable std::auto_ptr<LHCb::Particle> m_head ;
     CloneMap m_clonemap ;
   } ;  
 }
