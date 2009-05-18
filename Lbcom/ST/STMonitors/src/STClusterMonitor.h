@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.1 2009-05-16 21:31:12 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.2 2009-05-18 11:35:45 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -34,7 +34,7 @@ namespace ST
 
   private:
     /// This is the algorithm which plots cluster ADCs vs Sampling time
-    StatusCode monitorClusters();
+    void monitorClusters();
 
     /// Fill basic histograms
     void fillHistograms(const LHCb::STCluster* cluster);

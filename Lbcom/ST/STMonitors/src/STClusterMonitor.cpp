@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.1 2009-05-16 21:31:12 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.2 2009-05-18 11:35:45 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode ST::STClusterMonitor::finalize() {
 //=============================================================================
 // Look at the clusters histogram
 //=============================================================================
-StatusCode ST::STClusterMonitor::monitorClusters() {
+void ST::STClusterMonitor::monitorClusters() {
   // Check location exists
   if(exist<LHCb::STClusters>(m_clusterLocation)){
     m_nClustersPerTELL1.resize(m_nTELL1s,0);
@@ -157,8 +157,7 @@ StatusCode ST::STClusterMonitor::monitorClusters() {
         plot2D(TELL1, nClusters,  histoIDClPerTELL1, histoIDClPerTELL1, 0.5, m_nTELL1s+0.5,-5.,505.,m_nTELL1s, 51);
     }
     m_nClustersPerTELL1.clear();
-  } else return Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS, 50);
-  return StatusCode::SUCCESS;
+  } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS, 50).ignore(); // End of cluster exists
 }
 //==============================================================================
 // Fill histograms

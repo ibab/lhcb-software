@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.1 2009-05-16 21:31:12 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.2 2009-05-18 11:35:45 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -196,6 +196,6 @@ void ST::STTAEClusterMonitor::monitorClusters() {
           }
         } // End of cluster condition
       }// End of cluster iterator
-    }// End of location exist
+    } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 50).ignore(); // End of cluster exists
   }// End loop over cluster locations
 }
