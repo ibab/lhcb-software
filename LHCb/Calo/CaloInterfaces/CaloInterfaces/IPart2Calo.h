@@ -1,4 +1,4 @@
-// $Id: IPart2Calo.h,v 1.4 2007-07-20 13:14:22 cattanem Exp $
+// $Id: IPart2Calo.h,v 1.5 2009-05-19 13:49:32 cattanem Exp $
 #ifndef IPART2CALO_H 
 #define IPART2CALO_H 1
 
@@ -6,9 +6,6 @@
 // from STL
 #include <string>
 
-// from LHCb
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
 // from CaloInterfaces
 #include "CaloInterfaces/ITrack2Calo.h"
 

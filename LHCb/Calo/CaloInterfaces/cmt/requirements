@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.41 2009-05-06 14:55:00 cattanem Exp $
+# $Id: requirements,v 1.42 2009-05-19 13:49:32 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v7r10
+version           v7r11
 
 # =============== structure ===================================================
 branches          cmt doc CaloInterfaces
@@ -11,7 +11,6 @@ use GaudiKernel     v*
 use LHCbKernel      v*    Kernel
 use DigiEvent       v*    Event
 use RecEvent        v*    Event
-use PhysEvent       v*    Event
 use CaloDet         v*    Det
 
 # =============== include directories =========================================
