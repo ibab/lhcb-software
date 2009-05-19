@@ -10,7 +10,10 @@
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC09-NoTruth.ref</text></argument>
   <argument name="validator"><text>
-from Brunel.QMTest.BrunelExclusions import preprocessor
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  LineSkipper(["AfterMagnetRegion/T/lvT"]) + \
+  LineSkipper(["BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
