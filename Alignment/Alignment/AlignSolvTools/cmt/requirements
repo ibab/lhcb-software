@@ -12,7 +12,9 @@ use GaudiAlg       v*
 use GaudiGSL       v*
 use SolvKernel     v* Alignment
 use AlignmentInterfaces   v* Alignment
+use ROOT        v* LCG_Interfaces
 
+macro_append ROOT_linkopts " -lMatrix"
 
 #============================================================================
 # include directories
@@ -21,7 +23,7 @@ use AlignmentInterfaces   v* Alignment
 #=============================================================================
 # build component/link library
 library AlignSolvTools *.cpp
-apply_pattern component_library library=AlignSolvTools
+apply_pattern component_library library=AlignSolvTools 
 
 # Needed to force creation of cblas_dnrm2 symbol
 private 

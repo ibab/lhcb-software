@@ -1,4 +1,4 @@
-// $Id: MA27Solver.cpp,v 1.1 2008-04-10 20:21:22 wouter Exp $
+// $Id: SparseSolver.cpp,v 1.1 2009-05-19 13:42:03 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -8,22 +8,22 @@
 // Interface
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 
-/** @class MA27Solver MA27Solver.h
+/** @class SparseSolver SparseSolver.h
  *  
  *
- *  @author Jan Amoraal
+ *  @author Wouter Hulsbergen
  *  @date   2007-07-24
  */
 
-class MA27Solver : public GaudiTool, virtual public IAlignSolvTool {
+class SparseSolver : public GaudiTool, virtual public IAlignSolvTool {
 
 public: 
   /// Standard constructor
-  MA27Solver( const std::string& type, 
+  SparseSolver( const std::string& type, 
                 const std::string& name,
                 const IInterface* parent);
 
-  virtual ~MA27Solver( ); ///< Destructor
+  virtual ~SparseSolver( ); ///< Destructor
 
   /// Solves Ax = b using gsl_linalg_SV_decomp (gsl_matrix * A, gsl_matrix * V, gsl_vector * S, gsl_vector * work)
   bool compute(AlSymMat& symMatrix, AlVec& vector) const;
@@ -32,20 +32,23 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : MA27Solver
+// Implementation file for class : SparseSolver
 //
 // 2007-07-24 : Jan Amoraal
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MA27Solver );
+DECLARE_TOOL_FACTORY( SparseSolver );
 
-#include "SolvKernel/AlSparseSymMat.h"
+#include "TMatrixDSym.h"
+#include "TVectorD.h"
+#include "TMatrixDSparse.h"
+#include "TDecompSparse.h"
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MA27Solver::MA27Solver( const std::string& type,
+SparseSolver::SparseSolver( const std::string& type,
 			const std::string& name,
 			const IInterface* parent )
   : GaudiTool ( type, name , parent )
@@ -55,20 +58,40 @@ MA27Solver::MA27Solver( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MA27Solver::~MA27Solver() {} 
+SparseSolver::~SparseSolver() {} 
 
-bool MA27Solver::compute(AlSymMat& symMatrix, AlVec& vector) const 
+bool SparseSolver::compute(AlSymMat& symMatrix, AlVec& vector) const 
 {
-  // create a sparce matrix
-  AlSparseSymMat m(symMatrix) ;
-  info() << "Created sparse matrix. Number of non-zero elements is "
-	 << m.nele() << " out of " << m.size()*(m.size()+1)/2 << endreq ;
-  
-  int ierr = m.MA27Solve(vector) ;
-  // need to do something with the covariance matrix. Because we don't
-  // have a clue what it is, we simply take the diagonal and invert each element ;
-  info() << "MA27 returns: " << ierr << endreq ;
+  // create a sparce matrix. I think that this is most efficient via
+  // TMatrix, because the structure of the TSparseMatrix isn't
+  // entirely self evident.
 
+  size_t dim = symMatrix.size() ;
+  TMatrixDSym tsymMatrix( dim ) ; 
+  TVectorD tvector( dim ) ;
+  for( size_t irow=0; irow<dim; ++irow ) {
+    tvector(irow) = vector(irow) ;
+    for( size_t icol=0; icol<=irow; ++icol )
+      tsymMatrix(irow,icol) = symMatrix.fast(irow,icol) ;
+  }
+  
+  TMatrixDSparse sparsematrix( tsymMatrix ) ;
+  info() << "Created sparse matrix. Number of non-zero elements is "
+	 << sparsematrix.NonZeros() << " out of "
+	 << dim*dim << endreq ;
+  
+  // solve
+  int verbose(0) ;
+  TDecompSparse decompsparse( sparsematrix, verbose ) ;
+  bool ierr = decompsparse.Solve( tvector ) ;
+
+  info() << "TDecompSparse::Solve returns: " << ierr << endreq ;
+
+  // now copy the result back
+  for( size_t irow=0; irow<dim; ++irow )
+    vector(irow) = tvector(irow) ;
+
+  // fill something arbitrary for the covariance matrix
   AlSymMat tmp(symMatrix.size()) ;
   for(size_t irow = 0; irow <tmp.size(); ++irow) {
     double c = symMatrix.fast(irow,irow) ;
