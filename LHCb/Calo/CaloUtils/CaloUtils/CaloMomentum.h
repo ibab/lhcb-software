@@ -1,4 +1,4 @@
-// $Id: CaloMomentum.h,v 1.5 2009-05-18 16:28:38 ibelyaev Exp $
+// $Id: CaloMomentum.h,v 1.6 2009-05-19 10:20:26 ibelyaev Exp $
 // ============================================================================
 #ifndef CaloUtils_CaloMomentum_H
 #define CaloUtils_CaloMomentum_H 1
@@ -190,18 +190,18 @@ namespace LHCb
     // ========================================================================    
     // Shortcuts
     // ========================================================================    
-    //     double e     () { return momentum().E()  ; }
-    //     double px    () { return momentum().Px() ; }
-    //     double py    () { return momentum().Py() ; }
-    //     double pz    () { return momentum().Pz() ; }
-    //     double pt    () { return momentum().Pt() ; }
-    //     double mass  () { return momentum().M()  ; }
+    double e     () { return momentum().E()  ; }
+    double px    () { return momentum().Px() ; }
+    double py    () { return momentum().Py() ; }
+    double pz    () { return momentum().Pz() ; }
+    double pt    () { return momentum().Pt() ; }
+    double mass  () { return momentum().M()  ; }
     double emass () ;
     // ========================================================================
   public:
     // ========================================================================
     /// Evaluators
-    bool evaluate ( int param);
+    bool evaluate ( int param ) ;
     bool evaluate ( ) { return evaluate ( Momentum & Covariance ) ;  }
     // ========================================================================
   private:
