@@ -67,9 +67,9 @@ def getStats(f,signal,wiki):
         if ( wiki ):
  #           print Track, BestSelEff, BestHlt2Sel
  #           print Hlt2EffAlone, int(Hlt2EffAlone+0.5)
-            print "| <nox>"+signal+"  | <nox>"+BestSel+"  |  ",int(L0Eff+0.5),"% |  ",int(Track+0.5),"% |  ",int(BestSelEff+0.5),"% |   ",int(BestHlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(Hlt1EffL0+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
+            print "| <nox>"+signal+"  | <nox>"+BestSel+"  |  ",int(L0Eff+0.5),"% |  ",int(Hlt1EffL0+0.5),"% |   ",int(Track+0.5),"% |  ",int(BestSelEff+0.5),"% |   ",int(BestHlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
         else :
-            print signal.replace("_","\_"), "&", sel.replace("_","\_"), "&", int(L0Eff+0.5), "\\% &", int(Track+0.5), "\\% &", int(SelEff+0.5), "\\% & ", int(Hlt2Sel+0.5), "\\% & ", int(Hlt2EffAlone+0.5), "\\% & ", int(Hlt2EffOn1+0.5), "\\% & ", int(Hlt1EffL0+0.5), "\\% & ", int(HltEff+0.5), "\\% & ", int(Trigger+0.5), "\\% \\\\"
+            print signal.replace("_","\_"), "&", sel.replace("_","\_"), "&", int(L0Eff+0.5), "\\% &", int(Hlt1EffL0+0.5), "\\% & ", int(Track+0.5), "\\% &", int(SelEff+0.5), "\\% & ", int(Hlt2Sel+0.5), "\\% & ", int(Hlt2EffAlone+0.5), "\\% & ", int(Hlt2EffOn1+0.5), "\\% & ", int(HltEff+0.5), "\\% & ", int(Trigger+0.5), "\\% \\\\"
 
 ###############################################################################
 # Main program
