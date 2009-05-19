@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.94 2009-05-11 15:49:40 jpalac Exp $
+# $Id: requirements,v 1.95 2009-05-19 13:51:31 pkoppenb Exp $
 package AnalysisSys
 version v3r3
 
@@ -29,28 +29,15 @@ use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
 use  DecayTreeTuple             v2r2     Phys   # Jeremie Borel
 ####################################################################
-use  PhysSelSys          	v10r12  PhysSel
-#===================================================================
-use Ccbar	                v1r9p1  PhysSel # Jan Amoraal, Miriam Calvo
-use B2Dilepton			v1r8p3  PhysSel # Rare Decays Working Group
-use B2D0X			v1r14p2	PhysSel # WGs
-use B2DplusX			v1r3p1	PhysSel # WGs
-use B2DsX			v1r6p2	PhysSel # WGs
-use B2DstarX			v1r7p3	PhysSel # WGs
-use B2uds	   		v2r8    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
-# use JetsSel	    	    	v1r4p2  PhysSel # Jets WG
-use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
-use DSelections                 v1r0    PhysSel # Marco Gersabeck
-
-# temporary packages
-use Bd2PiPiPi0       	   	v4r3p5   PhysSel # Olivier Deschamps
+#
+# Stripping
+#
+use StrippingConf               v1r0     Phys   # Anton Poluektov
+use StrippingSelections         v1r0     Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
 # use $(use_LoKiJets)
-
-####################################################################
-use  Stripping          	v6r8p1  Tools   # Patrick Koppenburg
 
 ####################################################################
 use  MicroDSTBase        	v1r4    MicroDST          # Juan Palacios
