@@ -12,9 +12,6 @@ use  TCKData                v1r10   Hlt
 use  HltLuminosityMonitor   v1r3    Hlt
 
 ###
-use  HltConf   v2r8p1  Hlt
-
-###
 use DaVinciTools   v18r4p1 Phys
 use HltConf             v2r8p1        Hlt
 use HltCommon           v5r5p1        Hlt
