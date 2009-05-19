@@ -8,9 +8,11 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
-AdderSvc.OutputLevel = 1;
-AdderSvc.publishRates=1;
-MessageSvc.OutputLevel = 1;
+AdderSvc.publishRates   = 1;
+AdderSvc.OutputLevel    = @OnlineEnv.OutputLevel;
+MessageSvc.OutputLevel  = @OnlineEnv.OutputLevel;
+MessageSvc.LoggerOnly   = 1;
+HistogramPersistencySvc.Warnings = false;
 
 AdderSvc.taskname="RecBrunel"; // Could be empty.
 AdderSvc.refreshTime=10;

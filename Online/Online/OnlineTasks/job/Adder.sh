@@ -1,8 +1,9 @@
 #!/bin/bash
 #cases: 1. 2 arguments: adder adds processes in a subfarm. options created by this script. $1: parent, $2 UTGID 
 #       2. 2 arguments: calibration farm. Options to be edited by hand in options/AdderCalibrationfarm.opts
-#       3. 3 arguments: adder adds adders in a partition. $1: parent, $2: UTGID. $3:. partition name
-#       4. 4 argumnets: online version
+#       3. 3 arguments: adder adds adders in a partition. $1: parent, $2: UTGID. $3:. partition name 
+#       4. 4 arguments: onlineversion
+#       
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
@@ -28,7 +29,16 @@ fi
 if test -n "$5" ; then 
    export TOP=$5
 fi
-echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
+
+export DIM_DNS_CLIENT_NODE=${DIM_DNS_NODE}.lbdaq.cern.ch
+
+# if the parent > 6 chars its run inside a node
+if test -z "${PARENT:6}" ; then
+   export DIM_DNS_NODE=hlt01
+   export DIM_DNS_CLIENT_NODE=${PARENT}.lbdaq.cern.ch
+fi
+
+echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME} ONLINE ${ONLINEVERSION}
 
 cd ${ONLINEVERSION}
 export DEBUGGING=YES
@@ -46,9 +56,13 @@ echo "options "${OPTIONS}
 
 . ./setupOnline.sh
 
+
+echo DIM_DNS_NODE ${DIM_DNS_NODE} DIM_DNS_CLIENT_NODE ${DIM_DNS_CLIENT_NODE}
+
 if test -n "${TOP}" ; then 
   #top level adder for this partition
-  export DIM_DNS_NODE=hlt01
+  export DIM_DNS_NODE=mona08
+  export DIM_DNS_CLIENT_NODE=hlt01.lbdaq.cern.ch
   exec -a ${UTGID} ${gaudi_exe3} -options=../options/Adder.opts &  
 fi
 
@@ -56,7 +70,7 @@ if [[ ${PARENT} == "cald07" ]] ; then
    export DIM_DNS_NODE=cald07.lbdaq.cern.ch
 fi
 
-echo DIM_DNS_NODE ${DIM_DNS_NODE}
+
 
 if test -z "${TOP}" ; then
   #adder for this subfarm
@@ -66,8 +80,8 @@ if test -z "${TOP}" ; then
   if [[ ${PARENT} == "cald07" ]]
     then ${gaudi_exe3} -options=../options/AdderCalibrationfarm.opts  &
     else 
-       if [[ ${PARENT} == "mona08" ]]
-         then ${gaudi_exe3} -options=../options/AdderMonitorfarm.opts  &
+       if [[ ${PARENT} == "mona09" ]]
+         then ${gaudi_exe3} -options=../options/AdderRecBrunel.opts  &
        else exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderSubfarm.opts &
 #        else /usr/bin/valgrind --tool=callgrind ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
        fi

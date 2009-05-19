@@ -10,6 +10,8 @@
 #   export UTGID=$1
 #fi
 
+cd /group/online/latestOnline/Online/OnlineTasks/job
+
 # HOST is read by the algorithm to know which subfarm it sums
 export HOST=$(hostname --short | awk '{ print toupper($1) }')
 UTGID=${HOST}_MEPRxSTAT_1

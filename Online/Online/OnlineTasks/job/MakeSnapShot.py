@@ -17,26 +17,37 @@ class FindTags(ContentHandler):
 	self.i=0
 	self.inpartition=0
 	self.done=0
+	self.foundname=0
+
 	
     def startElement(self, name, attrs):  
     	self.i=self.i+1
 	self.elementnamesvector.append(name)
 	if name=='lhcb:partition':
 	   self.inpartition=1
+
 	
     def characters(self, ch):
-        if self.elementnamesvector[self.i-1]=='lhcb:tag' and self.inpartition==0:
-	   tag=ch
-           if self.done==0 :
-	      print 'Tag '+tag+' found. Making snapshot.'
-	      os.system('./MakeSnapShot.sh '+tag)
+        if self.elementnamesvector[self.i-1]=='lhcb:tag' and self.inpartition==0: 
+           if self.done==0 and self.foundname==1:
+	      tag=ch
+	      print 'Tag '+tag+' and name '+name+' found. Making snapshot.'
+	      os.system('./MakeSnapShot.sh '+tag+' '+name)
 	      self.done=1 
+	if self.elementnamesvector[self.i-1]=='lhcb:name' and self.inpartition==0: 
+           if self.foundname==0:
+	      name=ch
+	      print 'Name '+name+' found.'
+	      self.foundname=1
+	   
     
     def endElement(self, name):
         self.elementnamesvector.pop()
 	self.i=self.i-1	 
 	if name=='lhcb:partition':
-	   self.inpartition=0		    
+	   self.inpartition=0
+	   self.foundname=0
+		    
 
 def main(): 
    if len(sys.argv) < 2:

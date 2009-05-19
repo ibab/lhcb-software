@@ -11,6 +11,7 @@ fi
 if test -n "$3" ; then 
    export PARTNAME=$3
 fi
+
 if test -n "$4" ; then 
    export ONLINEVERSION=$4
 fi
@@ -34,7 +35,7 @@ echo "options "${OPTIONS}
 
 
 if test -n "${TOP}" 
-   then export DIM_DNS_NODE=hlt01;
+   then export DIM_DNS_NODE=mona08;
 fi
 
 
@@ -43,8 +44,8 @@ fi
 if [[ ${PARENT} == "cald07" ]]
   then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts &
   else 
-     if [[ ${PARENT} == "mona08" ]]
-       then ${gaudi_exe4} -options=../options/SaverMonitorfarm.opts &
+     if [[ ${PARENT} == "mona09" ]]
+       then ${gaudi_exe3} -options=../options/SaverRecBrunel.opts &
        else exec -a ${UTGID} ${gaudi_exe3} -options=../options/Saver.opts &
 
      fi 

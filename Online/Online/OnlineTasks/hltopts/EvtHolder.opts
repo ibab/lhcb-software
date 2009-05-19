@@ -12,3 +12,4 @@ Runable.Requirements                = {
 "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=101.0"
 };
 HistogramPersistencySvc.OutputLevel  = 5;
+HistogramPersistencySvc.Warnings = false;

@@ -3,12 +3,12 @@
 # argument 2=output db filename
 
 if test -n "$1" ; then export TAG=$1
-   else export TAG=head-20090112
+   else echo "Script cannot be called without explicit tag. Call MakeSnapshot.py.";exit 1
 fi
 
 . $LHCBSCRIPTS/SetupProject.sh LHCb
 
-for partition in LHCBCOND DDDB; do
+for partition in LHCBCOND DDDB SIMCOND; do
    if test -n "$2"; then export DB=$2
       else export DB=/group/online/hlt/conditions/${partition}_$TAG.db
    fi   

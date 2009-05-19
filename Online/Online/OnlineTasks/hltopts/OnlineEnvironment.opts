@@ -9,3 +9,4 @@ ApplicationMgr.Dlls          += { "Gaucho" };
 //MessageSvc.OutputLevel      = 4;
 MessageSvc.fifoPath           = "/tmp/logGaudi.fifo";
 MessageSvc.LoggerOnly         = 1;
+HistogramPersistencySvc.Warnings = 0;

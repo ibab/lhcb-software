@@ -5,3 +5,4 @@ ApplicationMgr.OutputLevel = 3;
 GaudiExample.OutputLevel   = 3;
 MessageSvc.OutputLevel     = 4;
 MessageSvc.fifoPath        = "/tmp/logGaudi.fifo";
+HistogramPersistencySvc.Warnings = false;
