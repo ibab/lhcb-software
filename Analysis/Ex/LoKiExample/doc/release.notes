@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.49 2009-05-11 14:19:23 jpalac Exp $ 
+! $Id: release.notes,v 1.50 2009-05-19 10:22:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.49 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.50 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-19 - Vanya BELYAEV
+ - update for trees 
+ - cmt/requirements 
+   version increment to v8r4 
 
 !========================== Ex/LoKiExample v8r3 2009-05-11 ===================
 

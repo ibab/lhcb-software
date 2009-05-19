@@ -1,4 +1,4 @@
-// $Id: LoKi_MCDecay.cpp,v 1.3 2008-12-06 16:31:28 ibelyaev Exp $
+// $Id: LoKi_MCDecay.cpp,v 1.4 2009-05-19 10:22:02 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -21,6 +21,9 @@ LOKI_MCALGORITHM( MCDecayDescriptor )
 {
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
+
+  using namespace Decays::Nodes ;
+  using namespace Decays::Trees  ;
   
   
   // get all beauty mesons 
@@ -28,61 +31,61 @@ LOKI_MCALGORITHM( MCDecayDescriptor )
   
   MsgStream& log = info() ;
   
-  Decays::Node bquark = Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
-  Decays::Trees::MCExclusive p1 ( bquark ) ;
+  Decays::Node bquark = HasQuark ( LHCb::ParticleID::bottom ) ;
+  MCExclusive p1 ( bquark ) ;
 
 
-  Decays::Trees::MCExclusive p2 ( "B_s0" ) ;
+  MCExclusive p2 ( Pid("B_s0") ) ;
   p2 += "J/psi(1S)" ;
   p2 += "phi(1020)" ;
   
   
-  Decays::Trees::MCExclusive p3 ( Decays::Nodes::CC("B_s0" ) ) ;
+  MCExclusive p3 ( CC("B_s0" ) ) ;
   p3 += "J/psi(1S)" ;
   p3 += "phi(1020)" ;
+
   
-  Decays::Trees::MCExclusive p4 ( Decays::Nodes::Pid("B_s0" ) || "B_s~0" ) ;
+  MCExclusive p4 ( Pid("B_s0" ) || Pid("B_s~0") ) ;
   p4 += "J/psi(1S)" ;
   p4 += "phi(1020)" ;
   
-  
-  Decays::Trees::MCInclusive p5 ( Decays::Nodes::Pid("B_s0" ) || "B_s~0" ) ;
+  MCInclusive p5 ( Pid("B_s0" ) || Pid("B_s~0") ) ;
   p5 += "J/psi(1S)" ;
   
-  Decays::Trees::MCInclusive p6 ( p5 ) ;
+  MCInclusive p6 ( p5 ) ;
   p6.setOscillation ( Decays::Trees::Oscillated ) ;
 
-  Decays::Trees::MCInclusive p7 ( p5 ) ;
+  MCInclusive p7 ( p5 ) ;
   p7.setOscillation ( Decays::Trees::NotOscillated ) ;
   
-  Decays::Trees::MCInclusive p8 ( p5 ) ;
+  MCInclusive p8 ( p5 ) ;
   p8.setAlg( Decays::Trees::Sections ) ;
+
   
-  
-  Decays::Trees::MCOptional p9 
-    ( p5 , std::vector<std::string>(1,"phi(1020)") ) ;
+  MCOptional p9 ( p5 ) ;
+  p9.addOptional ( "phi(1020)")  ;
   p9.setAlg( Decays::Trees::Sections ) ;
   
   
-  Decays::Trees::Photos p10 ( p3 ) ;
+  Photos p10 ( p3 ) ;
   
-  Decays::Trees::Photos p11 ( p1 ) ;
+  Photos p11 ( p1 ) ;
   p11.setAlg( Decays::Trees::Sections ) ;
   
-  Decays::Trees::Photos _psi ( "J/psi(1S)" , Decays::Trees::MCExclusive::SubTrees() ) ;
+  Photos _psi ( Pid("J/psi(1S)") , MCExclusive::SubTrees() ) ;
   _psi.setAlg( Decays::Trees::Sections ) ;
-  _psi += Decays::Nodes::EllPlus  () ;
-  _psi += Decays::Nodes::EllMinus () ;
+  _psi += EllPlus  () ;
+  _psi += EllMinus () ;
   
-  Decays::Trees::Photos _phi ( "phi(1020)" , Decays::Trees::MCExclusive::SubTrees() ) ;
+  Photos _phi ( Pid("phi(1020)") , MCExclusive::SubTrees() ) ;
   _phi.setAlg( Decays::Trees::Sections ) ;
-  _phi += Decays::Nodes::Positive () ;
-  _phi += Decays::Nodes::Negative () ;
+  _phi += Positive () ;
+  _phi += Negative () ;
   
   p11 += _psi ;
   p11 += _phi ;
   
-  Decays::Trees::PhotosOptional p12 ( p9 ) ;
+  PhotosOptional p12 ( p9 ) ;
 
   Assert ( p1   . validate ( ppSvc () ) . isSuccess () , "p1  is invalid!" ) ;
   Assert ( p2   . validate ( ppSvc () ) . isSuccess () , "p2  is invalid!" ) ;
