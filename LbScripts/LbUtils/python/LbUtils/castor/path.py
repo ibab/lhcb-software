@@ -1,4 +1,4 @@
-from LbUtils.castor import _getfiles, _getdirs
+from common import _getfiles, _getdirs
 import os
 
 def walk(path,visitor,data):

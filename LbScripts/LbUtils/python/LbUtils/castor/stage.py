@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 
-from LbUtils import castor
+from common import isfile, ismigrated, isdir
+import path
 import os
 
-stagepool = os.environ["STAGE_POOL"]
+stagepool = os.environ.get("STAGE_POOL", "")
 
 
 def getstatus(filename):
     status = ""
-    if castor.isfile(filename):
+    if isfile(filename):
         status = "NotPresent"
         stcmd  = "stageqry --noheader"
-        stcmd += " -p %s "%stagepool
-        stcmd += "-M " + castor.path.abspath(filename)
+        stcmd += " -p %s " % stagepool
+        stcmd += "-M " + path.abspath(filename)
         out = os.popen(stcmd).read().split()
         if out : status = out[7]
     return status
@@ -21,29 +22,29 @@ def getstatus(filename):
 def stageinvisitor(data,dirname,fileindir):
     if len(fileindir)>0:
         stcmd  = "stagein -A deferred --nowait --rdonly "
-        stcmd += " -p %s "%stagepool
+        stcmd += " -p %s " % stagepool
         for f in fileindir:
             fulname = dirname + "/" + f
-            if getstatus(fulname) == "NotPresent" and castor.ismigrated(fulname):
-                stcmd += " -M " + castor.path.abspath(fulname)
+            if getstatus(fulname) == "NotPresent" and ismigrated(fulname):
+                stcmd += " -M " + path.abspath(fulname)
         print stcmd
         os.system(stcmd)
 
 def stagedir(pathname):
-    if castor.isdir(pathname):
+    if isdir(pathname):
         data = None
-        castor.path.walk(pathname,stageinvisitor,data)
+        path.walk(pathname,stageinvisitor,data)
     else:
         stcmd  = "stagein -A deferred --nowait --rdonly "
-        stcmd += " -p %s "%stagepool
-        stcmd += " -M " + castor.path.abspath(pathname)
+        stcmd += " -p %s " % stagepool
+        stcmd += " -M " + path.abspath(pathname)
         print stcmd
         os.system(stcmd)
 
 def shorthelp(argv):
     print """
     %s [-p poolname] castor_path
-    """%argv[0]
+    """ % argv[0]
 
 
 

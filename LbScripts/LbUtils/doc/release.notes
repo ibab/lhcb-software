@@ -1,3 +1,11 @@
+2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/castor/common.py: New file.
+	* python/LbUtils/castor/__init__.py: 
+	* python/LbUtils/castor/path.py: 
+	* python/LbUtils/castor/stage.py: 
+	* python/LbUtils/castor/usage.py: clean the way the imports are done
+
 2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r15
