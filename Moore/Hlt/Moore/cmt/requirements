@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.51 2009-05-13 20:43:40 graven Exp $
+# $Id: requirements,v 1.52 2009-05-19 09:13:23 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -48,12 +48,14 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 ##
+use HltCommon           v5r5p1        Hlt
+use HltConf	    v2r8p1        Hlt
 use HltSys		v*	     -no_auto_imports
 
 ####
-use HltConf	    v2r8p1        Hlt
 
 #-- Phys packages 
+use DaVinciTools        v18r4p1     Phys
 use PhysSys		v*	     -no_auto_imports
 
 #-- Online ??
