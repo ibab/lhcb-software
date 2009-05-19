@@ -1273,6 +1273,7 @@ def removeProject(project,pvers):
     this_log_dir = log_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
 
+    import LbLegacy.LHCb_config
 
     PROJECT = project.upper()
     if LbLegacy.LHCb_config.lhcb_projects.has_key(PROJECT):
@@ -2111,5 +2112,5 @@ if __name__ == "__main__":
     filehandler.setLevel(logging.DEBUG)
     thelog.addHandler(filehandler)
 
-    runInstall(pname,pversion,binary)
+    runInstall(pname, pversion, binary)
 

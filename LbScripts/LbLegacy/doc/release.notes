@@ -1,3 +1,8 @@
+2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed import of LHCb_config in the 
+	removeProject function
+
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r0
