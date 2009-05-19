@@ -37,11 +37,15 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2LLKSignal"]
 #DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 # save tuple
+
+#from Configurables import HltMuonLinesConf
+#HltMuonLinesConf().Prescale = { 'Hlt1MuTrack4JPsi' : 0 }
+
 #
 # Configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = -1
+DaVinci().EvtMax = 10000
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
