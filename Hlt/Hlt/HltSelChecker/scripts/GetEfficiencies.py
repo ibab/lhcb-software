@@ -100,7 +100,7 @@ else :
     head = mainhead
 files = sorted(glob.glob(head+'-*'))
 if ( wiki ):
-    print "| *Signal*  | *Best Sel*  | *L0* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt1* | *Hlt* | *Trigger* |"    
+    print "| *Signal*  | *Best Selection*  | *L0* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt1* | *Hlt* | *Trigger* |"    
 else :
     print "\\begin{slide}{Signal efficiencies of HLT 2 after HLT 1}"
     print "\\topleft{\\scalebox{0.5}{\\begin{tabular}{ll|CC|CCC|C|C||| LLLLLL}"
@@ -112,7 +112,7 @@ for f in files :
     getStats(f,s,wiki)
 if ( wiki ):
     print "   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
-    print "   $ *Best Sel* : Most efficient Hlt2 selection."
+    print "   $ *Best Selection* : Most efficient Hlt2 selection. Not necessarily the one you want..."
     print "   $ *L0* : L0 efficiency."
     print "   $ *Tk* : Hlt2 tracking efficiency."
     print "   $ *Sel/Tk* : Efficiency of best Hlt2 selection given tracks are found."
