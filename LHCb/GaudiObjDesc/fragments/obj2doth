@@ -9,7 +9,7 @@ $(dest)${NAME}.h : $(dest)${NAME}.obj2doth
 $(dest)${NAME}.obj2doth : ${FULLNAME}
 	@echo Producing Header files from ${FULLNAME} 
 	@-mkdir -p $(dest)
-	export LD_LIBRARY_PATH=$(Python_home)/lib; cd $(dest); $(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) ${FULLNAME}
+	cd $(dest); $(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) ${FULLNAME}
 	@echo /dev/null > $(dest)${NAME}.obj2doth
 
 

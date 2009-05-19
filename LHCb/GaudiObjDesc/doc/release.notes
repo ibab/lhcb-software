@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+
+! 2009-05-19 - Hubert Degaudenzi 
+ - Removed the override of the LD_LIBRARY_PATH env variable in obj2dot and 
+   obj2dict. They are not needed and cause problems when cross-compiling
+   slc4 on the slc5 architecture.
+
 !======================== GaudiObjDesc v11r6 2008-11-17 ======================
 ! 2008-11-12 - Marco Clemencic
  - Modified the way destination directories are created.
