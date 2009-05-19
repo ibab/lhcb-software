@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.236 2009-05-13 21:29:02 graven Exp $ 
+! $Id: release.notes,v 1.237 2009-05-19 09:22:55 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v2r8p1 2009-05-19 =================
 ! 2009-05-13 - Gerhard Raven
  - make sure type of prescale in slot is not an int but a float
  - do not run L0DUFromRaw explicitly, but use DOD -- not all
