@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.6 2009-04-22 13:09:00 smenzeme Exp $
+// $Id: PatSeedFit.cpp,v 1.7 2009-05-19 18:23:33 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -40,7 +40,7 @@ PatSeedFit::PatSeedFit(const std::string& type,
   declareProperty( "StateErrorTY2",             m_stateErrorTY2         = 1e-4 );
   declareProperty( "PatSeedDRatio",             m_dRatio          = -3.2265e-4 );
   declareProperty( "PatSeedInitialArrow",       m_initialArrow    = 4.25307e-9 );
-  declareProperty( "TrackMaxChi2",              m_maxChi2               = 10.0 );
+  declareProperty( "TrackMaxChi2",              m_maxChi2               = 10000000.0 );
 }
 
 //=============================================================================
