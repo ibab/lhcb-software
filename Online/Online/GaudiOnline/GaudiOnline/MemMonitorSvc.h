@@ -8,6 +8,7 @@
 
 // Forward declarations
 class MsgStream;
+class StatEntity;
 namespace AIDA {
   class IHistogram;
   class IBaseHistogram;

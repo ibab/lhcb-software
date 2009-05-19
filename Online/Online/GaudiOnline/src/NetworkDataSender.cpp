@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.16 2009-05-18 11:17:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.17 2009-05-19 06:54:12 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -99,11 +99,8 @@ StatusCode NetworkDataSender::finalize()     {
   m_recipients.clear();
   // Do NOT call base class finalization: we are not writing to file/socket!
   StatusCode sc = unsubscribeNetwork();
-#if 0
-  undeclareInfo("EventsOut");
-  undeclareInfo("ErrorsOut");
-  undeclareInfo("BytesOut");
-#endif
+  IMonitorSvc* mS = monitorSvc().get();
+  if ( mS ) mS->undeclareAll(this);
   if ( m_evtSelector ) m_evtSelector->release();
   m_evtSelector = 0;
   return sc;
