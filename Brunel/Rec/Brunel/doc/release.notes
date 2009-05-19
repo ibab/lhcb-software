@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
    . Change in ST Monitor names and additional histograms
    . Addition of RichOfflineGPIDSeq as wrapper to existing GPID sequences
    . Fix to Rich particle type names
+   . Fix to CaloPID platform dependence
  - Add QMTest brunel-mc09-withtruth-invfield, same as brunel-mc09-withtruth but
    with inverted magnetic field, to check identical output
 
