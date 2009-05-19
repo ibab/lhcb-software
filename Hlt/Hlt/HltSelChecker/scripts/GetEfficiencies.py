@@ -52,10 +52,11 @@ def getStats(f,signal,wiki):
               selection = (line.split()[1])
               Hlt2Sel = float((line.split()[4]).replace("%",""))
               if ( Hlt2Sel > BestHlt2Sel ):    # should be a dict
+ #                 print selection, Hlt2Sel, "better than", BestSel
                   BestHlt2Sel = Hlt2Sel
                   BestSel = selection.replace("Selection","")
                   if (( line.split()[-1]).find('#')<0) :
-                      SelEff = float((line.split()[-1]).replace("%",""))
+                      BestSelEff = float((line.split()[-1]).replace("%",""))
                   else: SelEff = 0
                   #                print selection, Hlt2Sel, SelEff
           if re.search("FilterTrueTracks",line): 
@@ -64,8 +65,9 @@ def getStats(f,signal,wiki):
  #           print "Tracking", Track
     if foundTable == 1:
         if ( wiki ):
+ #           print Track, BestSelEff, BestHlt2Sel
  #           print Hlt2EffAlone, int(Hlt2EffAlone+0.5)
-            print "| <nox>"+signal+"  | <nox>"+BestSel+"  |  ",int(L0Eff+0.5),"% |  ",int(Track+0.5),"% |  ",int(SelEff+0.5),"% |   ",int(Hlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(Hlt1EffL0+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
+            print "| <nox>"+signal+"  | <nox>"+BestSel+"  |  ",int(L0Eff+0.5),"% |  ",int(Track+0.5),"% |  ",int(BestSelEff+0.5),"% |   ",int(BestHlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(Hlt1EffL0+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
         else :
             print signal.replace("_","\_"), "&", sel.replace("_","\_"), "&", int(L0Eff+0.5), "\\% &", int(Track+0.5), "\\% &", int(SelEff+0.5), "\\% & ", int(Hlt2Sel+0.5), "\\% & ", int(Hlt2EffAlone+0.5), "\\% & ", int(Hlt2EffOn1+0.5), "\\% & ", int(Hlt1EffL0+0.5), "\\% & ", int(HltEff+0.5), "\\% & ", int(Trigger+0.5), "\\% \\\\"
 
@@ -110,11 +112,11 @@ for f in files :
     getStats(f,s,wiki)
 if ( wiki ):
     print "   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
-    print "   $ *Sel* : Selection used as ``signal'' selection. See =Hlt/HltSelections= options. "
+    print "   $ *Best Sel* : Most efficient Hlt2 selection."
     print "   $ *L0* : L0 efficiency."
     print "   $ *Tk* : Hlt2 tracking efficiency."
-    print "   $ *Sel/Tk* : Efficiency of appropriate Hlt2 selection given tracks are found."
-    print "   $ *Sel* : Hlt2 selection efficiency efficiency, product of two above."
+    print "   $ *Sel/Tk* : Efficiency of best Hlt2 selection given tracks are found."
+    print "   $ *Sel* : Hlt2 best selection efficiency, product of two above."
     print "   $ *Hlt2* : Overall Hlt2 efficiency including all selections."
     print "   $ *Hlt1/Hlt1* : Hlt2 efficiency given Hlt1."
     print "   $ *Hlt1* : Hlt1 efficiency."
