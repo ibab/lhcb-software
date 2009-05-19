@@ -9,8 +9,8 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
 AdderSvc.publishRates   = 1;
-AdderSvc.OutputLevel    = @OnlineEnv.OutputLevel;
-MessageSvc.OutputLevel  = @OnlineEnv.OutputLevel;
+AdderSvc.OutputLevel    = 3;
+MessageSvc.OutputLevel  = 3;
 MessageSvc.LoggerOnly   = 1;
 HistogramPersistencySvc.Warnings = false;
 
@@ -18,6 +18,3 @@ AdderSvc.taskname="RecBrunel"; // Could be empty.
 AdderSvc.refreshTime=10;
 AdderSvc.dimclientdns="pclhcb80";
 AdderSvc.partitionname="LHCb";
-
-
-
