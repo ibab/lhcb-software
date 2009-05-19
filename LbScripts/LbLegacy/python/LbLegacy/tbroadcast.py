@@ -9,25 +9,26 @@
 import os
 import sys
 import time
-import string
-import random
-import os.path
-import commands
-import traceback
 import exceptions
 from threading import BoundedSemaphore
+
+from LbConfiguration.External import tbroadcast_version
+_tbroadcast_install_dir = os.path.join(os.path.dirname(os.environ["CMTROOT"]), "tbroadcast", tbroadcast_version )
+sys.path.insert(0,os.path.join(_tbroadcast_install_dir,"python"))
+
 
 from threadpool import WorkRequest
 from threadpool import ThreadPool
 from threadpool import NoResultsPending
 from threadpool import NoWorkersAvailable
-from threadpool import  makeRequests
-from executer   import  exeCommand
-from executer   import  getstatusoutput
+from threadpool import makeRequests
+from executer   import exeCommand
+from executer   import getstatusoutput
 
 class Scheduler:
 
-    def __init__(self, num_workers=20, file=None, ignore_cycles=False, local=False, output=None, error=None, silent = False, perf=False, keep_going=True):
+    def __init__(self, num_workers=20, filename=None, ignore_cycles=False, local=False, 
+                 output=None, error=None, silent = False, perf=False, keep_going=True):
         self.pool            = ThreadPool(num_workers=num_workers)
         self.current_package = self.get_current_package()
         self.current_project = {'name': None, 'path': None, 'version': None}
@@ -53,33 +54,21 @@ class Scheduler:
                 sys.exit(-1)            
                 
         self.get_current_project()
-        self.instanciate_packages (file)
+        self.instanciate_packages (filename)
         if self.local: self.get_local_graph()
         self.check_cycles()
         
-#        status, output = commands.getstatusoutput("cmt broadcast -local 'echo <package>'")
-#        lignes = string.split(output, '\n')
-#        i = 1
-#        for package in lignes:
-#            if package!='' and package[0] != '#':                            
-#                print i , package
-#                i =i +1
-#                if not self.packages.has_key(package):
-#                                    print package        
-#        print len(self.packages)
-#        sys.exit(-1)
 
     def get_current_project(self):
         cmd = 'cmt show projects | grep current'
         status, output = getstatusoutput (cmd)
-#        status, output = commands.getstatusoutput (cmd)
         if status != 0:
             print output
             sys.exit(-1)    
-        lines = string.split(output, '\n')
+        lines = output.split('\n')
         for line in lines:            
             if line!='' and line [0] != '#':                            
-                item  = string.split (line, ' ')
+                item  = line.split(' ')
                 self.current_project ['name']    = item[0]
                 self.current_project ['version'] = item[1]
                 self.current_project ['path']    = item[3][:-1]
@@ -99,17 +88,15 @@ class Scheduler:
         
     def check_cycles (self):
         cmd = 'cmt -private show cycles'
-        cycle_found = False
         status, output = getstatusoutput (cmd)
-#        status, output = commands.getstatusoutput (cmd)
         if status != 0:
             print output
             sys.exit(-1)    
-        lines = string.split(output, '\n')
+        lines = output.split('\n')
         cycles = list ()
         for line in lines:            
             if line!='' and line [0] != '#':                    
-                cycles.append (string.split(line)) 
+                cycles.append (line.split()) 
         cercles =list()        
         for cycle in cycles:
             cycleInProject = True
@@ -136,11 +123,10 @@ class Scheduler:
                     if cycle[0] in self.packages[cycle[len(cycle)-1]]['uses']:
                         print '## In cycle: '+loop + '..., we suppress the dependency '+ cycle[len(cycle)-1]+'->'+cycle[0]
                         self.packages[cycle[len(cycle)-1]]['uses'].remove(cycle[0])
-#                sys.exit(-1)
 
     def format_uses (self, content):
         # format variables
-        lignes  = string.split(content, '\n')
+        lignes  = content.split('\n')
         lines   = list()
         for ligne in lignes:
             if ligne [0] == '#' and ligne[:5] != "#CMT>" and ligne[:10] != "# Required" and ligne not in ['# Selection :','#']:
@@ -150,7 +136,7 @@ class Scheduler:
 
     def format_paths (self, content):
         # format variables
-        lignes  = string.split(content, '\n')
+        lignes  = content.split('\n')
         lines   = list()
         for ligne in lignes:
             if ligne[:4] == "use ":              
@@ -160,49 +146,49 @@ class Scheduler:
     def get_paths (self, content):
         lines = self.format_paths(content)
         for line in lines:
-                result  = string.split (line[4:len(line)], ' ')
-                if  self.packages.has_key(result[0]):
-                    if len(result)==4:
-                        name, version, offset, path = string.split (line[4:len(line)], " ")
-                        #print name, version, offset, path
-                        #print path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
-                        if path == '(no_auto_imports)':
-                            path   = offset
-                            offset = ''
-                        if os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'):
-                            full_path = path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
-                        elif os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/cmt'):    
-                            full_path = path[1:-1] + '/' + offset + '/' +name + '/cmt'
-                        else:
-                            print '# error path not found for', name
-                            sys.exit(-1)   
-                    elif len(result)==5:
-                        name, version, offset, path, importation = string.split (line[4:len(line)], " ")                                        
-                        if os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'):
-                            full_path = path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
-                        elif os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/cmt'):    
-                            full_path = path[1:-1] + '/' + offset + '/' +name + '/cmt'
-                        else:
-                            print '# error path not found for', name
-                            sys.exit(-1)                                                                                                   
-                    elif len(result)==3:
-                        name, version, path = string.split (line[4:len(line)], " ")
-                        if os.path.exists(path[1:-1] + '/' +name + '/' + version + '/cmt'):
-                            full_path = path[1:-1] + '/' +name + '/' + version + '/cmt'
-                        elif os.path.exists(path[1:-1] + '/' +name + + '/cmt'):    
-                            full_path = path[1:-1] + '/' +name + + '/cmt'
-                        else:
-                            print '# error path not found for', name
-                            sys.exit(-1)
+            result  = line[4:len(line)].split(' ')
+            if  self.packages.has_key(result[0]):
+                if len(result)==4:
+                    name, version, offset, path = line[4:len(line)].split(" ")
+                    #print name, version, offset, path
+                    #print path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
+                    if path == '(no_auto_imports)':
+                        path   = offset
+                        offset = ''
+                    if os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'):
+                        full_path = path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
+                    elif os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/cmt'):    
+                        full_path = path[1:-1] + '/' + offset + '/' +name + '/cmt'
                     else:
-                        print "error:",line
-                        print str(result)
-                        sys.exit(-1) 
-                    self.packages[result[0]]['path'] = os.path.normpath(full_path)
-                    commonprefix = os.path.commonprefix([self.packages[result[0]]['path'], self.current_project ['path']])
-                    if os.path.normpath(commonprefix) == self.current_project ['path']:                    
-                        #print result[0], ' belong to project', self.current_project ['name']
-                        self.packages[result[0]]['current_project'] = True
+                        print '# error path not found for', name
+                        sys.exit(-1)   
+                elif len(result)==5:
+                    name, version, offset, path, importation = line[4:len(line)].split(" ")                                        
+                    if os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'):
+                        full_path = path[1:-1] + '/' + offset + '/' +name + '/' + version + '/cmt'
+                    elif os.path.exists(path[1:-1] + '/' + offset + '/' +name + '/cmt'):    
+                        full_path = path[1:-1] + '/' + offset + '/' +name + '/cmt'
+                    else:
+                        print '# error path not found for', name
+                        sys.exit(-1)                                                                                                   
+                elif len(result)==3:
+                    name, version, path = line[4:len(line)].split(" ")
+                    if os.path.exists(path[1:-1] + '/' +name + '/' + version + '/cmt'):
+                        full_path = path[1:-1] + '/' +name + '/' + version + '/cmt'
+                    elif os.path.exists(path[1:-1] + '/' +name + + '/cmt'):    
+                        full_path = path[1:-1] + '/' +name + + '/cmt'
+                    else:
+                        print '# error path not found for', name
+                        sys.exit(-1)
+                else:
+                    print "error:",line
+                    print str(result)
+                    sys.exit(-1) 
+                self.packages[result[0]]['path'] = os.path.normpath(full_path)
+                commonprefix = os.path.commonprefix([self.packages[result[0]]['path'], self.current_project ['path']])
+                if os.path.normpath(commonprefix) == self.current_project ['path']:                    
+                    #print result[0], ' belong to project', self.current_project ['name']
+                    self.packages[result[0]]['current_project'] = True
 
     def get_uses(self, content):        
         # initiates variables
@@ -216,25 +202,23 @@ class Scheduler:
         level_stack    = [{'name':previous_client,'level':previous_level},]
         ligne = lignes.pop()        
         while len(lignes)!=0:   
-            current_level = string.find(ligne, 'use')
+            current_level = ligne.find('use')
             while current_level > previous_level:               
-                name    = string.split (ligne)[2]
-                version = string.split (ligne)[3]                              
+                name    = ligne.split()[2]
+                version = ligne.split()[3]                              
                 if not self.packages.has_key (name):
-                  self.packages [name] = {'version': version, 'uses': list(), 
-                                          'client': list(), 'status': 'waiting', 
-                                          'current_project': False, 'path': None}
+                    self.packages [name] = {'version': version, 'uses': list(), 
+                                            'client': list(), 'status': 'waiting', 
+                                            'current_project': False, 'path': None}
                 if name not in self.packages[previous_client]['uses']:# and name != previous_client:
-                   self.packages[previous_client]['uses'].append (name)                
+                    self.packages[previous_client]['uses'].append (name)                
                 level_stack.append({'name':previous_client,'level':previous_level})
                 previous_client = name  
                 previous_level = current_level                  
                 if len(lignes):
                     ligne = lignes.pop()
-                    #print ligne
-                    current_level = string.find(ligne, 'use')
+                    current_level = ligne.find('use')
                                             
-            #self.packages [previous_client]['status'] ='queued'
             # restore the level
             if len(lignes):
                 if len(level_stack):                        
@@ -243,17 +227,15 @@ class Scheduler:
                         item = level_stack.pop()
                     previous_client = item['name']
                     previous_level  = item['level']
-            #print previous_client, '-->',string.split (ligne)[2]
 
-    def instanciate_packages(self, file=None):
+    def instanciate_packages(self, filename=None):
         # We create the schedule of the work units
         print '# First, we initialize the DAG by parsing "cmt show uses"'
-        if file is None:
+        if filename is None:
             cmd  = 'cmt show uses'
         else:    
-            cmd = 'cat ' + file        
+            cmd = 'cat ' + filename        
         status, output = getstatusoutput (cmd)
-#        status, output = commands.getstatusoutput (cmd)
         if status != 0:
             print output
             sys.exit(-1)
@@ -274,29 +256,28 @@ class Scheduler:
             del self.packages[item]
 
     def simulate_execution(self):
-       ok = True
-       indice = 1                     
-       while ok:
-           runnable  = list()
-           for key in self.packages:
-               if  self.packages[key]['status']!='done':
-                   if len(self.packages[key]['uses']) == 0:
-                       runnable.append(key)                                              
-           if len(runnable):
-               print '\n#--------------------------------------------------------------'
-               print "# Execute parallel actions within packages " + str(runnable) 
-           for selected in runnable:       
-               print '#--------------------------------------------------------------'
-               print '# ('+str(indice)+'/'+str(len(self.packages))+') Now trying [] in '+ self.packages[selected]['path']
-               print '#--------------------------------------------------------------'
-               self.packages[selected]['status']='done'        
-               indice = indice + 1
-               for key in self.packages:
-                   if selected in self.packages[key]['uses']:
-                       self.packages[key]['uses'].remove(selected)                                
-                       #print 'remove', selected, 'from',key
-           if len(runnable)==0:
-                           ok = False        
+        ok = True
+        indice = 1                     
+        while ok:
+            runnable  = list()
+            for key in self.packages:
+                if  self.packages[key]['status']!='done':
+                    if len(self.packages[key]['uses']) == 0:
+                        runnable.append(key)                                              
+            if len(runnable):
+                print '\n#--------------------------------------------------------------'
+                print "# Execute parallel actions within packages " + str(runnable) 
+            for selected in runnable:       
+                print '#--------------------------------------------------------------'
+                print '# ('+str(indice)+'/'+str(len(self.packages))+') Now trying [] in '+ self.packages[selected]['path']
+                print '#--------------------------------------------------------------'
+                self.packages[selected]['status']='done'        
+                indice = indice + 1
+                for key in self.packages:
+                    if selected in self.packages[key]['uses']:
+                        self.packages[key]['uses'].remove(selected)                                
+            if len(runnable)==0:
+                ok = False        
                 
     def check_execution(self, package, path=list(), cycles=list()):
         #print package,'-->',self.packages[package]['uses']
@@ -308,21 +289,20 @@ class Scheduler:
                 sys.exit(-1)
         path.append(package)
         for item in self.packages[package]['uses']:
-              self.check_execution(package=item, path=path, cycles=cycles)
-              path.pop()        
+            self.check_execution(package=item, path=path, cycles=cycles)
+            path.pop()        
 
     def get_current_package(self):    
         cmd = 'cmt show macro package'
         status, output = getstatusoutput (cmd)
-#        status, output = commands.getstatusoutput (cmd)
         if status != 0:
             print output
             sys.exit(-1)    
-        lines = string.split(output, '\n')
+        lines = output.split('\n')
         for line in lines:
             if line [0] != '#':
-                start = string.find(line,"'")
-                end   = string.find(line[start+1:len(line)],"'")
+                start = line.find("'")
+                end   = line[start+1:len(line)].find("'")
                 return line [start+1:start+end+1]
 
     def get_work_area_path (self, name):        
@@ -332,11 +312,10 @@ class Scheduler:
         #return os.getcwd ()
         cmd = 'cmt -use='+name+' run pwd'
         status, output = getstatusoutput (cmd)
-#        status, output = commands.getstatusoutput (cmd)
         if status != 0:
             print output
             sys.exit(-1)    
-        lines = string.split(output, '\n')
+        lines = output.split('\n')
         for line in lines:
             if line [0] != '#' and line[:5] != "#CMT>":
                 print line
@@ -376,7 +355,6 @@ class Scheduler:
         return result
 
     def is_work_units (self):
-        result = list ()
         for key in self.packages.keys():
             if self.is_work_unit_waiting(key) :
                 return True
@@ -417,100 +395,86 @@ class Scheduler:
         #self.wait()            
         
     def wait (self):
-       self.pool.wait()    
+        self.pool.wait()    
 
     # this will be called each time a result is available
     def result_callback(self, request, result):
-      #print "**Result: %s from request #%s" % (str(result), request.requestID)
-      #print "# Result: %s from request #%s" % (result['package'], request.requestID)
-      #if result['package'] == 'CodeCheck':
-      #    sys.exit(-1)
-      self.execute (result['cmd'])    
+        self.execute (result['cmd'])    
 
     # the work the threads will have to do 
     def do_execute(self, arg):
-      path = self.get_work_area_path (arg['package'])
-      if path == None or not os.path.exists(path):
-          raise RuntimeError('Path to package '+ arg['package'] +' not found')
-      self.set_work_unit_status (arg['package'], 'running')      
-      #cmd = "cmt -use="+ arg['package'] + " run '"+ arg['cmd'] + "'"      
-      #os.chdir(path)
-      #arg['cmd'] = "cd "+ path +";"+ arg['cmd']
-      header = '#--------------------------------------------------------------\n'
-      header = header + '# ('+str(self.get_counter())+'/'+str(len(self.packages))+') Now trying ['+ arg['cmd']+'] in ' + path + '\n'
-      header = header + '#--------------------------------------------------------------\n'
-      print header
-      project_path = self.current_project['path']+'/'+self.current_project['version']+'/'
-      log_name   =  string.replace(path, project_path, '')
-      log_name   = string.replace(log_name, '/cmt', '')
-      log_name   = string.replace(log_name, '/', '_')
-      log_name   = log_name+'.loglog'
-      arg['log'] = log_name
-      cmd = "cd "+ path +";"+ arg['cmd'] 
-      #status, output= commands.getstatusoutput(cmd)
-      # init output file
-      if self.output is not None:
-           f = open (self.output+'/'+ log_name, 'w+')
-           f.write (header)
-           f.close()      
-           if self.error is not None:
-               f = open (self.error+'/error'+log_name, 'w+')
-               f.close()
-      self.packages[arg['package']] ['startTime'] = time.time ()                           
-      status, output, error, pythonError  = exeCommand(sCmd=cmd, oLineCallback=self.redirectOutput, arg=arg)#,iTimeout = 3600)
-      if not self.keep_going and status > 0:
-        sys.exit(status)   
+        path = self.get_work_area_path (arg['package'])
+        if path == None or not os.path.exists(path):
+            raise RuntimeError('Path to package '+ arg['package'] +' not found')
+        self.set_work_unit_status (arg['package'], 'running')      
+        header = '#--------------------------------------------------------------\n'
+        header = header + '# ('+str(self.get_counter())+'/'+str(len(self.packages))+') Now trying ['+ arg['cmd']+'] in ' + path + '\n'
+        header = header + '#--------------------------------------------------------------\n'
+        print header
+        project_path = self.current_project['path']+'/'+self.current_project['version']+'/'
+        log_name   =  path.replace(project_path, '')
+        log_name   = log_name.replace('/cmt', '')
+        log_name   = log_name.replace('/', '_')
+        log_name   = log_name+'.loglog'
+        arg['log'] = log_name
+        cmd = "cd "+ path +";"+ arg['cmd'] 
+        # init output file
+        if self.output is not None:
+            f = open (self.output+'/'+ log_name, 'w+')
+            f.write (header)
+            f.close()      
+            if self.error is not None:
+                f = open (self.error+'/error'+log_name, 'w+')
+                f.close()
+        self.packages[arg['package']] ['startTime'] = time.time ()                           
+        status, output, error, pythonError  = exeCommand(sCmd=cmd, oLineCallback=self.redirectOutput, arg=arg)#,iTimeout = 3600)
+        if not self.keep_going and status > 0:
+            sys.exit(status)   
                      
-      self.packages[arg['package']] ['endTime'] = time.time ()
-      if self.perf:
-          self.semaphore.acquire ()        
-          f = open (self.perf, 'a')
-          f.write (arg['package']+" "+str(self.packages[arg['package']] ['startTime'])+" "+str(self.packages[arg['package']] ['endTime'] )+'\n')  
-          f.close()
-          self.semaphore.release()
-      self.suppress_work_unit (arg['package'])
-      self.set_work_unit_status (arg['package'], 'done')
-      # status, output= commands.getstatusoutput(cmd)
-      #if status != 0:
-      #   raise RuntimeError(output)
-      return {'output':output, 'cmd': arg['cmd'], 'package':arg['package']}
+        self.packages[arg['package']] ['endTime'] = time.time ()
+        if self.perf:
+            self.semaphore.acquire ()        
+            f = open (self.perf, 'a')
+            f.write (arg['package']+" "+str(self.packages[arg['package']] ['startTime'])+" "+str(self.packages[arg['package']] ['endTime'] )+'\n')  
+            f.close()
+            self.semaphore.release()
+        self.suppress_work_unit (arg['package'])
+        self.set_work_unit_status (arg['package'], 'done')
+        return {'output':output, 'cmd': arg['cmd'], 'package':arg['package']}
 
-    def redirectOutput(self, index, buffer, arg):
+    def redirectOutput(self, index, buf, arg):
         """Filter function to redirect the std output and error of the job
            executable for real-time debugging 
         """
         if self.output is not None:
-           if index==0:   
-               f = open (self.output+'/'+arg['log'], 'a')
-               f.write (buffer+'\n')
-               f.close()
-           elif index==1: 
-               if self.error is not None:
-                   f = open (self.error+'/error'+arg['log'], 'a')
-               else:
-                   f = open (self.output+'/'+arg['log'], 'a')                   
-               f.write (buffer+'\n')                   
-               f.close()                               
+            if index==0:   
+                f = open (self.output+'/'+arg['log'], 'a')
+                f.write (buf+'\n')
+                f.close()
+            elif index==1: 
+                if self.error is not None:
+                    f = open (self.error+'/error'+arg['log'], 'a')
+                else:
+                    f = open (self.output+'/'+arg['log'], 'a')                   
+                f.write (buf+'\n')                   
+                f.close()                               
         if not self.silent: 
-            print buffer
+            print buf
               
     # this will be called when an exception occurs within a thread
     def handle_exception(self, request, exc_info):
-        #traceback.print_stack()
-      print '#--------------------------------------------------------------'        
-      #print "# Exception occured in request #%s: %s" %(request.requestID, exc_info[1])
-      if exc_info[0]== exceptions.SystemExit:
-        print "Stop execution (No_keep_going option enabled): exit code == %s " %(exc_info[1])  
+        print '#--------------------------------------------------------------'        
+        if exc_info[0]== exceptions.SystemExit:
+            print "Stop execution (No_keep_going option enabled): exit code == %s " %(exc_info[1])  
+            print '#--------------------------------------------------------------'    
+            sys.exit(exc_info[1])
+        print "# Exception occured: %s" %(exc_info[1])      
+        print exc_info
         print '#--------------------------------------------------------------'    
-        sys.exit(exc_info[1])
-      print "# Exception occured: %s" %(exc_info[1])      
-      print exc_info
-      print '#--------------------------------------------------------------'    
-      #sys.exit(-1)
 
     
-    def generate_make (self, file, command):
-        makefile = open (file, 'w+')
+    def generate_make (self, filename, command):
+        makefile = open (filename, 'w+')
         makefile.write ('MAKE=make\n')
         #MFLAGS= -j10
         self.counter = len(self.packages)
@@ -518,7 +482,7 @@ class Scheduler:
         makefile.close ()
         
     def recursive_make (self, package, command, makefile, indice,actions=list()):
-        lines = self.generate_action_make (package, command, indice)
+        lines = self.generate_action_make (package, command)
         makefile.write (lines)
         #print lines                
         for pkg in self.packages[package] ['uses']:
@@ -528,14 +492,14 @@ class Scheduler:
                 self.counter = self.counter - 1
                 self.recursive_make(pkg, command,makefile, indice, actions)        
         
-    def generate_action_make (self, package, command, indice):
+    def generate_action_make (self, package, command):
         lines = package + ' :: '        
         # add dependencies
         for pkg in self.packages[package] ['uses']:
             lines = lines + ' ' + pkg            
 
         # add the action itself
-        newcommand = string.replace (command, '<package>', package)        
+        newcommand = command.replace('<package>', package)        
         if command =='':
             newcommand='$(MAKE)'
         lines = lines + '\n'

@@ -1,5 +1,7 @@
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/tbroadcast.py: cleaned the indentation and the obsolete/unused imports
+	* scripts/tbroadcast: removed the dynamic import of the tbroadcast directory
 	* python/LbLegacy/install_project.py: fixed import of LHCb_config in the 
 	removeProject function
 

@@ -11,8 +11,6 @@ import os
 import sys
 import string
 
-_tbroadcast_install_dir = os.path.join(os.path.dirname(os.environ["CMTROOT"]), "tbroadcast", "v2.0.5" )
-sys.path.insert(0,os.path.join(_tbroadcast_install_dir,"python"))
 
 from LbLegacy.tbroadcast import Scheduler
 
