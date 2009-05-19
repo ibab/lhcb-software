@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.121 2009-05-18 16:28:38 ibelyaev Exp $
+! $Id: release.notes,v 1.122 2009-05-19 08:21:26 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-05-19 - Vanya  BELYAEV
+
+ - add missing files 
 
 ! 2009-05-16 - Vanya BELYAEV
 

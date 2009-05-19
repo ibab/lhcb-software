@@ -1,0 +1,31 @@
+<!-- 
+     * $Id: CaloUtils.xml,v 1.1 2009-05-19 08:21:26 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for 
+     * Calo/CaloUtils package 
+     * @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     * @date 2008-05-15
+     * ========================================================================
+-->
+
+
+<lcgdict>
+  
+  <class name      = "LHCb::CaloMomentum" />
+  <class name      = "LHCb::CaloParticle" />
+
+  <exclusion>
+
+    <class pattern="LHCb::CaloMomentum::CaloPositions"/>
+    
+    <class pattern="LHCb::Calo*">
+      <field  name="m_caloPositions" />
+      <method name="caloPositions"   />
+    </class>
+
+  </exclusion>
+  
+</lcgdict>
