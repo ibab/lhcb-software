@@ -1,3 +1,12 @@
+2009-05-19 Marco Clemencic <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py:
+	- Added the option "--no-touch-logfile" to avoid the generation of the code that touches the
+	  logfiles used to identify active projects
+	- Added a comment for Python 2.3
+	- For the nightlies, take the extension to CMTPROJECTPATH from the file confSummary.py if present.
+	  Fall back on the XML if missing.
+
 2009-05-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/group_login.csh: 

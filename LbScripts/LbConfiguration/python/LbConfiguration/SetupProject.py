@@ -7,11 +7,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.11 2009-05-05 13:21:18 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.12 2009-05-19 15:46:34 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.11 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.12 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -882,6 +882,8 @@ class SetupProject:
                                              "..","..","external")
                 lcg_externals = os.path.normpath(lcg_externals)
             lcg_sys = os.environ["CMTCONFIG"]
+            # Note: this (python < 2.3) can happen only on SLC3, so it is correct
+            # to strip "_dbg" if present (on SLC5 it would be replace -dbg with -opt)
             if lcg_sys.endswith("_dbg"):
                 lcg_sys = lcg_sys[:-4]
             lcg_python = os.path.join(lcg_externals,"Python","2.4.2",lcg_sys,
@@ -1103,16 +1105,32 @@ class SetupProject:
                 day = days[time.localtime()[6]]
                 # In Python 2.3
                 # day = days[datetime.date.today().weekday()]
-            path = os.path.join(os.environ.get("LHCBNIGHTLIES", "/afs/cern.ch/lhcb/software/nightlies"),
-                                slot, day)
+            # Locate the requested slot in the know nightlies directories
+            nightly_bases = [os.environ.get("LHCBNIGHTLIES", "/afs/cern.ch/lhcb/software/nightlies"),
+                             os.path.normpath(os.path.join(os.environ.get("LCG_release_area", "/afs/cern.ch/sw/lcg/app/releases"), os.pardir, "nightlies"))]
+            slot_dir = None
+            for nightly_base in nightly_bases:
+                slot_dir = os.path.join(nightly_base, slot)
+                if os.path.isdir(slot_dir): break # exit from the loop as soon as the slot is found
+            if not slot_dir:
+                raise OptionValueError("Cannot find slot %s in %s. Check the values of the option %s" % (slot, nightly_bases, opt_str))
+            path = os.path.join(slot_dir, day)
             if not os.path.isdir(path):
                 raise OptionValueError("The directory %s does not exists. Check the values of the option %s" % (path, opt_str))
             parser.values.dev_dirs.append(path)
-            # Parse the configuration file of the nightlies to look for a special CMTPROJECTPATH
+            # Get the extra CMTPROJECTPATH entries needed for the nightlies
+            extraCMTPROJECTPATH = None
+            confSumm_file = os.path.join(path, "confSummary.py")
             config_file = os.path.join(path, "configuration.xml")
-            if os.path.exists(config_file):
-                cmt_p_p = getNightlyCMTPROJECTPATH(config_file, slot, day)
-                parser.values.dev_dirs += cmt_p_p
+            if os.path.exists(confSumm_file): # Try with the python digested version
+                data = {}
+                exec open(confSumm_file).read() in data
+                # Get the list and convert it to strings
+                extraCMTPROJECTPATH = filter(str, data.get("cmtProjectPathList",[]))
+            elif os.path.exists(config_file): # Try with the XML configuration
+                extraCMTPROJECTPATH = getNightlyCMTPROJECTPATH(config_file, slot, day)
+            if extraCMTPROJECTPATH:
+                parser.values.dev_dirs += extraCMTPROJECTPATH
         
         parser.add_option("--nightly", action="callback",
                           metavar = "SLOT [DAY]",  type="string",
@@ -1127,6 +1145,10 @@ class SetupProject:
         
         parser.add_option("--no-user-area", action="store_true",
                           help = "Ignore the user release area when looking for projects.")
+        
+        parser.add_option("--no-touch-logfile", action="store_false",
+                          dest="touch_logfile", default=True,
+                          help="Avoid touching the logfiles used to identify active projects.")
         
         parser.set_defaults(output=None,
                             mktemp=False,
@@ -1645,8 +1667,9 @@ class SetupProject:
         if not self.opts.silent :
             for m in messages:
                 output_script += 'echo "%s"\n' % m
-        #I have to touch a file to tell the release manager which version of the project I'm using
-        output_script += self._touch_project_logfiles()
+        if self.opts.touch_logfile:
+            #I have to touch a file to tell the release manager which version of the project I'm using
+            output_script += self._touch_project_logfiles()
         
         self._verbose("########## done ##########")
         
