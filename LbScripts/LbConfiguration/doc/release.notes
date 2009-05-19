@@ -1,3 +1,7 @@
+2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/External.py: added the version of tbroadcast.
+
 2009-05-19 Marco Clemencic <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py:
