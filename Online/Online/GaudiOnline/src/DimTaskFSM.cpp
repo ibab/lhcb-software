@@ -46,7 +46,7 @@ namespace  {
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
-      m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
+      //m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "configure"  ) {
 	m_target->setTargetState(Target::ST_READY);
 	IOCSENSOR.send(m_target, Target::CONFIGURE);
@@ -198,7 +198,7 @@ std::string DimTaskFSM::stateName(int state) {
 StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   std::string old_state = m_stateName;
   m_stateName = new_state;
-  output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
+  //output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
   m_service->updateService((char*)m_stateName.c_str());
   if ( new_state == ST_NAME_ERROR )
     declareSubState(FAILED_ACTION);

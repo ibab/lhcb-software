@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.79 2009-04-23 12:04:40 dsvantes Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.80 2009-05-19 09:40:52 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -467,7 +467,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_ebState(NOT_READY), m_incidentSvc(0)
 {
   declareProperty("MEPBuffers",       m_MEPBuffers = 4);
-  declareProperty("ethInterface",     m_ethInterface);
+  declareProperty("ethInterface",     m_ethInterface = -1);
   declareProperty("IPNameOdin",       m_IPNameOdin = "");
   declareProperty("maxBadPktRatio",   m_maxBadPktRatio = 0.);
   declareProperty("pktSamplingCount", m_pktSamplingCount = 0);
@@ -875,8 +875,8 @@ void MEPRxSvc::srcSort(int left, int right) {
    
 StatusCode MEPRxSvc::checkProperties() {
   std::ostringstream log;
-  if (m_ethInterface < 0)
-    return error("ethDevIn must be >= 0");
+  if (m_ethInterface < -1)
+    return error("ethDevIn must be >= 0 (or -1 if rxIPAddr is set)");
   else if (m_maxMsForGetSpace < 1)
     return error("maxMsForGetSpace must be > 0");
   else if (m_MEPBuffers < 1 || m_MEPBuffers > 256)

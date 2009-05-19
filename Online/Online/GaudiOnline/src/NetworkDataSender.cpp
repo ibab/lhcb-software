@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.17 2009-05-19 06:54:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.18 2009-05-19 09:40:52 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -167,7 +167,9 @@ void NetworkDataSender::sendAlarm(const string& msg)  {
 
 // Callback on task dead notification
 StatusCode NetworkDataSender::taskDead(const string& task_name)  {
-  sendAlarm("Datasink client:"+task_name+" died.");
+  //sendAlarm("Datasink client:"+task_name+" died.");
+  MsgStream output(msgSvc(),name());
+  output << MSG::INFO << "Datasink client:" << task_name << " died." << endmsg;
   return StatusCode::SUCCESS;
 }
 
