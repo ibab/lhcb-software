@@ -5,14 +5,15 @@
 ###
 import sys, os, re, glob
 ###############################################################################
-def getStats(f,signal,sel,wiki):
+def getStats(f,signal,wiki):
 ###############################################################################
     """ returns the stats
     by Patrick Koppenburg"""
 #    print "ENTRY ", signal, sel
     inTable = 0
-    SelEff = 0
-    Hlt2Sel = 0
+    BestSelEff = 0
+    BestHlt2Sel = 0
+    BestSel = "None"
     foundTable = 0
     Track = 0
     EqualL = 0
@@ -40,19 +41,23 @@ def getStats(f,signal,sel,wiki):
             Hlt1EffOn2 = float((line.split()[6]).replace("%",""))
  #           print "HltDecision", HltEff, HltEffL0
           if ( re.search("Hlt2Global",line) and ( Hlt2EffAlone == 0 )): 
- #           print line
+#            print line
             Hlt2EffAlone = float((line.split()[4]).replace("%",""))
             Hlt2EffOn1   = float((line.split()[5]).replace("%",""))
             Trigger      = Hlt2EffAlone*Hlt1Eff/100
             HltEff       = 100.*Trigger/L0Eff
  #           print "Hlt2EffAlone ", Hlt2EffAlone, Hlt2EffOn1, Trigger, HltEff
-          if re.search("Hlt2"+sel+"Decision",line): 
- #           print line
-            Hlt2Sel = float((line.split()[4]).replace("%",""))
-            if (( line.split()[-1]).find('#')<0) :
-                SelEff = float((line.split()[-1]).replace("%",""))
-            else: SelEff = 0
- #           print "Hlt2Sel"+sel, Hlt2Sel, SelEff
+          if re.search("Decision",line) and re.search("Hlt2",line):
+ #             print line
+              selection = (line.split()[1])
+              Hlt2Sel = float((line.split()[4]).replace("%",""))
+              if ( Hlt2Sel > BestHlt2Sel ):    # should be a dict
+                  BestHlt2Sel = Hlt2Sel
+                  BestSel = selection.replace("Selection","")
+                  if (( line.split()[-1]).find('#')<0) :
+                      SelEff = float((line.split()[-1]).replace("%",""))
+                  else: SelEff = 0
+                  #                print selection, Hlt2Sel, SelEff
           if re.search("FilterTrueTracks",line): 
  #           print line
             Track = float((line.split()[4]).replace("%",""))
@@ -60,7 +65,7 @@ def getStats(f,signal,sel,wiki):
     if foundTable == 1:
         if ( wiki ):
  #           print Hlt2EffAlone, int(Hlt2EffAlone+0.5)
-            print "| <nox>"+signal+"  | <nox>Hlt2"+sel+"  |  ",int(L0Eff+0.5),"% |  ",int(Track+0.5),"% |  ",int(SelEff+0.5),"% |   ",int(Hlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(Hlt1EffL0+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
+            print "| <nox>"+signal+"  | <nox>"+BestSel+"  |  ",int(L0Eff+0.5),"% |  ",int(Track+0.5),"% |  ",int(SelEff+0.5),"% |   ",int(Hlt2Sel+0.5),"% |   ",int(Hlt2EffAlone+0.5),"% |   ",int(Hlt2EffOn1+0.5),"% |   ",int(Hlt1EffL0+0.5),"% |   ",int(HltEff+0.5),"% |   ",int(Trigger+0.5),"% | "
         else :
             print signal.replace("_","\_"), "&", sel.replace("_","\_"), "&", int(L0Eff+0.5), "\\% &", int(Track+0.5), "\\% &", int(SelEff+0.5), "\\% & ", int(Hlt2Sel+0.5), "\\% & ", int(Hlt2EffAlone+0.5), "\\% & ", int(Hlt2EffOn1+0.5), "\\% & ", int(Hlt1EffL0+0.5), "\\% & ", int(HltEff+0.5), "\\% & ", int(Trigger+0.5), "\\% \\\\"
 
@@ -93,7 +98,7 @@ else :
     head = mainhead
 files = sorted(glob.glob(head+'-*'))
 if ( wiki ):
-    print "| *Signal*  | *Sel*  | *L0* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt1* | *Hlt* | *Trigger* |"    
+    print "| *Signal*  | *Best Sel*  | *L0* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt1* | *Hlt* | *Trigger* |"    
 else :
     print "\\begin{slide}{Signal efficiencies of HLT 2 after HLT 1}"
     print "\\topleft{\\scalebox{0.5}{\\begin{tabular}{ll|CC|CCC|C|C||| LLLLLL}"
@@ -101,24 +106,8 @@ else :
     print "\\hline"
 for f in files :
     s = f.split('-')[1]
-    #        print f, s
-    h = s
-    if ( s=="B2JpsiX_MuMu"): h = "UnbiasedDiMuon"
-    if ( s=="B2MuMu"): h = "UnbiasedDiMuon"
-    if ( s=="Bu2eeK"): h = "Bu2LLKSignal"
-    if ( s=="Bu2MuMuK"): h = "Bu2LLKSignal"
-    if ( s=="Bs2DsH"): h = "TopoTF4BodyReq4Yes"
-    if ( s=="Bs2JpsiPhi"): h = "Bs2JpsiPhiSignal"
-    if ( s=="Bd2JpsiMuMuKsUnbiased"): h = "UnbiasedJPsi"
-    if ( s=="Bd2JpsiMuMuKsBiased"): h = "UnbiasedJPsi"
-    if ( s=="Bs2DsDs"): h = "TopoTF4BodyReq4Yes"
-    if ( s=="Bs2JpsieePhi"): h = "TopoTF4BodyReq4Yes"
-    if ( s=="Bs2KstarKstar"): h = "TopoTF4BodyReq4Yes"
-    if ( s=="HidValley"): h = "B2MuTrackNoPT"
-    if ( s=="Z0"): h = "Z02MuMu"
-    
     f  = open(f, 'r')
-    getStats(f,s,h,wiki)
+    getStats(f,s,wiki)
 if ( wiki ):
     print "   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
     print "   $ *Sel* : Selection used as ``signal'' selection. See =Hlt/HltSelections= options. "

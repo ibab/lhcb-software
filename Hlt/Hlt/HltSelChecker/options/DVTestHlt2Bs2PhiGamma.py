@@ -18,7 +18,7 @@ signal = "Bs2PhiGamma"
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder())
-FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) ^gamma]cc" 
+FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) gamma]cc"  # ignore photon
 #
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
