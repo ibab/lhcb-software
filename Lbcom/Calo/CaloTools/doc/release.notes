@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.62 2009-05-10 15:22:11 ibelyaev Exp $
+! $Id: release.notes,v 1.63 2009-05-19 13:48:22 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-05-19 - Marco Cattaneo
+ - Add missing #include "Event/Particle.h" following removal from IPart2Calo.h
+ - Replace endreq by endmsg
 
 ! 2009-05-10 - Vanya Belyaev
  - a bit more statistical prinout  

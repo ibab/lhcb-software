@@ -1,4 +1,4 @@
-// $Id: CaloElectron.cpp,v 1.1.1.1 2008-05-08 09:09:02 cattanem Exp $
+// $Id: CaloElectron.cpp,v 1.2 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 // LHCb
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "Event/Particle.h"
+
 // local
 #include "CaloElectron.h"
 

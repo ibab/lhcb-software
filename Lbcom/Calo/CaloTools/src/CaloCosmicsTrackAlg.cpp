@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.5 2008-08-22 10:48:33 odescham Exp $
+// $Id: CaloCosmicsTrackAlg.cpp,v 1.6 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -95,7 +95,7 @@ StatusCode CaloCosmicsTrackAlg::execute() {
   // process tracking
   StatusCode esc = m_caloTrack->processing();
   if(!m_caloTrack->tracked()){
-    debug() << "No track reconstructed" << endreq;
+    debug() << "No track reconstructed" << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -108,18 +108,18 @@ StatusCode CaloCosmicsTrackAlg::execute() {
   
   // Checks
   if ( msgLevel(MSG::DEBUG) ) {
-    debug() << " Track ---- " << endreq;
-    debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endreq;
-    debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endreq;
-    debug() << " firstState : "<< track->firstState() << endreq;
-    debug() << " Time : " << track->info(LHCb::Track::Likelihood, -999.)<< endreq;
-    debug() << " Chi2 : " << track->info(LHCb::Track::MatchChi2, 999.)<< endreq; 
+    debug() << " Track ---- " << endmsg;
+    debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endmsg;
+    debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endmsg;
+    debug() << " firstState : "<< track->firstState() << endmsg;
+    debug() << " Time : " << track->info(LHCb::Track::Likelihood, -999.)<< endmsg;
+    debug() << " Chi2 : " << track->info(LHCb::Track::MatchChi2, 999.)<< endmsg; 
     double z = 8000;
     m_caloTrack->propagate( z );
-    debug() << "Propagated track ---" << endreq;
-    debug() << "Position : " << m_caloTrack->referencePoint() << endreq;
-    debug() << "Position Error : " << sqrt(m_caloTrack->referencePointCovariance()) << endreq;
-    debug() << "Time : " << m_caloTrack->time() << endreq;
+    debug() << "Propagated track ---" << endmsg;
+    debug() << "Position : " << m_caloTrack->referencePoint() << endmsg;
+    debug() << "Position Error : " << sqrt(m_caloTrack->referencePointCovariance()) << endmsg;
+    debug() << "Time : " << m_caloTrack->time() << endmsg;
   }
   
 

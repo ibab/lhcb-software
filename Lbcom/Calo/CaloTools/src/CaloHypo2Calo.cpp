@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.cpp,v 1.5 2009-04-17 11:43:51 odescham Exp $
+// $Id: CaloHypo2Calo.cpp,v 1.6 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ CaloHypo2Calo::~CaloHypo2Calo() {}
 //=============================================================================
 StatusCode CaloHypo2Calo::initialize(){
   StatusCode sc = Calo2Calo::initialize();
-  debug() << "Initialize CaloHypo2Calo tool " << endreq;
+  debug() << "Initialize CaloHypo2Calo tool " << endmsg;
   m_lineID = LHCb::CaloCellID(); // initialize
   m_point  = Gaudi::XYZPoint();
   return sc;
@@ -93,7 +93,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
     double mu;
     Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,plane,m_point,mu);
     m_lineID = m_toDet->Cell( m_point );
-    if ( msgLevel( MSG::DEBUG) ) debug() << "Matching cell " << m_lineID << endreq;
+    if ( msgLevel( MSG::DEBUG) ) debug() << "Matching cell " << m_lineID << endmsg;
   }
   return cellIDs( *cluster, toCalo);
 }
@@ -101,13 +101,13 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
 
 
 const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
-  debug() << " toCalo " << toCalo << endreq;
+  debug() << " toCalo " << toCalo << endmsg;
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
 
-  if ( msgLevel( MSG::DEBUG) ) debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endreq;
+  if ( msgLevel( MSG::DEBUG) ) debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endmsg;
   m_neighbour.setDet ( m_fromDet );
 
   // get data
@@ -126,7 +126,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
     Calo2Calo::cellIDs( digit->cellID() , toCalo, false );
     if ( msgLevel( MSG::DEBUG) )
       debug() << toCalo << ":  digit is selected in front of the cluster : " 
-              << cellID << "/" << seedID << " " << m_digits.size() << endreq;
+              << cellID << "/" << seedID << " " << m_digits.size() << endmsg;
   }
   // photon line
   if(m_line ){
@@ -142,7 +142,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
     if( !(m_lineID == LHCb::CaloCellID()) ){
       addCell( m_lineID , toCalo );
       if ( msgLevel( MSG::DEBUG) )debug() << toCalo << " : digit is selected in the photon line : " 
-                                          << m_lineID << "/" << seedID << " " << m_digits.size() << endreq;
+                                          << m_lineID << "/" << seedID << " " << m_digits.size() << endmsg;
       if(m_neighb){
         const std::vector<LHCb::CaloCellID>&  neighbors = m_toDet->neighborCells( m_lineID );
         for( std::vector<LHCb::CaloCellID>::const_iterator n = neighbors.begin();n!=neighbors.end();n++){
@@ -152,12 +152,12 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloCluster fr
             debug() << *n 
                     << " Point : (" << m_point.X() << "," << m_point.Y() 
                     << " Cell :  ( " << cellCenter.X()<< "," << cellCenter.Y()
-                    << " size/2  : " << halfCell << " Tolerance : " << m_x << "/" << m_y << endreq;
+                    << " size/2  : " << halfCell << " Tolerance : " << m_x << "/" << m_y << endmsg;
           if( fabs(m_point.X() - cellCenter.X()) < (halfCell+m_x) &&
               fabs(m_point.Y() - cellCenter.Y()) < (halfCell+m_y) ){
             addCell( *n , toCalo );
             if ( msgLevel( MSG::DEBUG) )debug() << toCalo << " : digit is selected in the photon line neighborhood : " 
-                                                << *n << "/" << seedID  << " " << m_digits.size() << endreq;
+                                                << *n << "/" << seedID  << " " << m_digits.size() << endmsg;
           } 
         }
       }

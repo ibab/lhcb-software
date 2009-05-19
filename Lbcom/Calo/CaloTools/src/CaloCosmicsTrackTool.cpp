@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.9 2009-03-05 15:51:21 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.10 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
 // From std
@@ -116,13 +116,13 @@ StatusCode CaloCosmicsTrackTool::processing() {
   //
   StatusCode esc = ecal()->processing();
   StatusCode hsc = hcal()->processing();
-  if(esc.isFailure() )debug() << "EcalCosmic processing failed"<<endreq;
-  if(hsc.isFailure() )debug() << "HcalCosmic processing failed"<<endreq;
+  if(esc.isFailure() )debug() << "EcalCosmic processing failed"<<endmsg;
+  if(hsc.isFailure() )debug() << "HcalCosmic processing failed"<<endmsg;
   
 
   if( !ecal()->tracked() || !hcal()->tracked() ){
     debug() << "Cannot reconstruct Cosmics (Ecal/Hcal):("
-            <<ecal()->tracked()<<"/"<<hcal()->tracked()<<")"<<endreq;
+            <<ecal()->tracked()<<"/"<<hcal()->tracked()<<")"<<endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -165,7 +165,7 @@ StatusCode CaloCosmicsTrackTool::processing() {
       m_stime = hcal()->timeVariance();
     } else m_timed = false;
   } else{
-    warning() << "Unexpected timer : '" << m_timer << "' -> NO TIMING INFORMATION" << endreq;
+    warning() << "Unexpected timer : '" << m_timer << "' -> NO TIMING INFORMATION" << endmsg;
     m_timed = false;
   }
   // Update track info
@@ -212,7 +212,7 @@ StatusCode CaloCosmicsTrackTool::matching(){
   double d2 = (dX*dX+dY*dY);
   m_sPhi = (d2 !=0) ? dY*dY/d2/d2*s2X + dX*dX/d2/d2*s2Y :  acos(-1.)*acos(-1.);
 
-  debug() << " Phi = " << m_phi << " +- " << m_sPhi << endreq;
+  debug() << " Phi = " << m_phi << " +- " << m_sPhi << endmsg;
   // Chi2 = (phi-phi_eca<l)^2/sig^2 + (phi-phi_hcal)^2/sig^2 
   double ePhi = ecal()->phi();
   double hPhi = hcal()->phi();
@@ -232,7 +232,7 @@ StatusCode CaloCosmicsTrackTool::matching(){
 
 
 
-  debug() << " Chi2 = " << m_chi2 << endreq;
+  debug() << " Chi2 = " << m_chi2 << endmsg;
 
   if(m_chi2 > m_chi2max)return StatusCode::FAILURE;
   if(m_chi2 < m_chi2min)return StatusCode::FAILURE;
@@ -277,10 +277,10 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   const LHCb::CaloCellID hPId =  hcal()->det()->Cell( hP );
   const LHCb::CaloCellID eMId =  ecal()->det()->Cell( eM );
   const LHCb::CaloCellID hMId =  hcal()->det()->Cell( hM );
-  debug() << "Closest Points " << eP << "/" << hP <<endreq;
-  debug() << "--> " << ePId << "/" << hPId <<endreq;  
-  debug() << "Farest Points " << eM << "/" << hM <<endreq;
-  debug() << "--> " << eMId << "/" << hMId <<endreq;
+  debug() << "Closest Points " << eP << "/" << hP <<endmsg;
+  debug() << "--> " << ePId << "/" << hPId <<endmsg;  
+  debug() << "Farest Points " << eM << "/" << hM <<endmsg;
+  debug() << "--> " << eMId << "/" << hMId <<endmsg;
   //
   std::vector<pointPair> points; // position and variance
   double ePSig = ecal()->det()->cellSize(ePId)*m_fac;
@@ -316,13 +316,13 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   double mu; 
   Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,frontEcal,point,mu); 
   if( ecal()()->det()->geometry()->isInside(point) ){ 
-    debug() << " cosmics cross the whole Ecal" << endreq; 
+    debug() << " cosmics cross the whole Ecal" << endmsg; 
     const LHCb::CaloCellID id =  ecal()->det()->Cell( point ); 
     points.push_back( std::make_pair(eM, Gaudi::XYZPoint(eMsig,eMsig,0.)));
   } 
   Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,backHcal,point,mu); 
   if( hcal()()->det()->geometry()->isInside(point) ){ 
-    debug() << " cosmics cross the whole Hcal" << endreq; 
+    debug() << " cosmics cross the whole Hcal" << endmsg; 
     const LHCb::CaloCellID id =  hcal()->det()->Cell( point ); 
     points.push_back( std::make_pair(hM, Gaudi::XYZPoint(hMsig,hMsig,0.)));
   } 
@@ -359,13 +359,13 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
     Ey += -p.first.Y()/sig2Y;
   }
 
-  debug() << "(A->E)x " << Ax << " " << Bx << " " << Cx << " " << Dx << " " << Ex << endreq;
-  debug() << "(A->E)y " << Ay << " " << By << " " << Cy << " " << Dy << " " << Ey << endreq;
+  debug() << "(A->E)x " << Ax << " " << Bx << " " << Cx << " " << Dx << " " << Ex << endmsg;
+  debug() << "(A->E)y " << Ay << " " << By << " " << Cy << " " << Dy << " " << Ey << endmsg;
   
   
   m_tx = -(Dx*Cx-Bx*Ex)/(Ax*Dx-Bx*Bx);
   m_ty = -(Dy*Cy-By*Ey)/(Ay*Dy-By*By);
-  debug() << "tx = " << m_tx << "  ty = " << m_ty << endreq;
+  debug() << "tx = " << m_tx << "  ty = " << m_ty << endmsg;
   double x0   =  (Bx*Cx-Ax*Ex)/(Ax*Dx-Bx*Bx);
   double y0   =  (By*Cy-Ay*Ey)/(Ay*Dy-By*By);
 
@@ -409,8 +409,8 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
           << "  -> Fit3D : (" 
           << ex << ","
           << ey  << ","
-          << ecal()->referencePoint().Z() << ") " << endreq;
-  debug() << " Theta = " << m_theta << endreq;
+          << ecal()->referencePoint().Z() << ") " << endmsg;
+  debug() << " Theta = " << m_theta << endmsg;
 
   m_slopes = Gaudi::XYZVector( m_tx, m_ty , m_dir );
   m_slopesCov(0,0) = m_stx;
@@ -482,7 +482,7 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
     }
   }
   else{
-    warning() << "Unexpected timer : '" << m_timer << "' -> 1st state is Ecal by default" << endreq;
+    warning() << "Unexpected timer : '" << m_timer << "' -> 1st state is Ecal by default" << endmsg;
     m_track.addToStates( eState ); // 1st state is Ecal
     m_track.addToStates( hState );
   }
