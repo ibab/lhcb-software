@@ -100,7 +100,7 @@ else :
     head = mainhead
 files = sorted(glob.glob(head+'-*'))
 if ( wiki ):
-    print "| *Signal*  | *Best Selection*  | *L0* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt1* | *Hlt* | *Trigger* |"    
+    print "| *Signal*  | *Best Selection*  | *L0* | *Hlt1* | *Tk* | *Sel/Tk* | *Sel* | *Hlt2* | *Hlt2/1* | *Hlt* | *Trigger* |"    
 else :
     print "\\begin{slide}{Signal efficiencies of HLT 2 after HLT 1}"
     print "\\topleft{\\scalebox{0.5}{\\begin{tabular}{ll|CC|CCC|C|C||| LLLLLL}"
