@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-05-18 - Mark Tobin
+ - Change histogram of number of events per sample from 2D to profile in
+ STTAEClusterMonitor
+
+! 2009-05-18 - Mark Tobin
  - Fix unused StatusCode in STClusterMonitor.
  - Add warning for not existing cluster locations in STTAEMonitor 
 

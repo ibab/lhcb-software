@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.2 2009-05-18 11:35:45 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.3 2009-05-19 17:50:13 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -133,11 +133,9 @@ void ST::STClusterMonitor::monitorClusters() {
     // Loop over clusters
     const unsigned int nClusters = clusters->size();
     if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endreq;
-    std::string id1DNClus="Number of clusters";
-    plot1D(nClusters,id1DNClus,id1DNClus,-5.,5005.,501);
+    plot1D(nClusters,"Number of clusters","Number of clusters",-5.,5005.,501);
     if(100  < nClusters) {
-      std::string id1DNClus="Number of clusters (N > 100)";
-      plot1D(nClusters,id1DNClus,id1DNClus, 95.,5005., 491);
+      plot1D(nClusters,"Number of clusters (N > 100)","Number of clusters (N > 100)", 95.,5005., 491);
     }
     for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
       const LHCb::STCluster* cluster = (*itClus);
