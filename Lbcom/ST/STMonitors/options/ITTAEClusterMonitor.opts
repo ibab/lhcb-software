@@ -1,0 +1,30 @@
+// ApplicationMgr.TopAlg += { 
+//   "GaudiSequencer/MoniITSeq"
+// };
+
+MoniITSeq.MeasureTime = true;
+MoniITSeq.Members += {
+  "ST::STTAEClusterMonitor/ITTAEClusterMonitor"
+};
+
+ITTAEClusterMonitor.DetType = "IT";
+ITTAEClusterMonitor.ClusterLocations = {
+   "Prev7/Raw/IT/Clusters",
+   "Prev6/Raw/IT/Clusters",
+   "Prev5/Raw/IT/Clusters",
+   "Prev4/Raw/IT/Clusters",
+   "Prev3/Raw/IT/Clusters",
+   "Prev2/Raw/IT/Clusters",
+   "Prev1/Raw/IT/Clusters",
+   "Raw/IT/Clusters",
+   "Next1/Raw/IT/Clusters",
+   "Next2/Raw/IT/Clusters",
+   "Next3/Raw/IT/Clusters",
+   "Next4/Raw/IT/Clusters",
+   "Next5/Raw/IT/Clusters",
+   "Next6/Raw/IT/Clusters",
+   "Next7/Raw/IT/Clusters"
+};
+ITTAEClusterMonitor.ByServiceBox= true;
+ITTAEClusterMonitor.ByDetectorRegion = false;
+ITTAEClusterMonitor.OutputLevel = 3;
