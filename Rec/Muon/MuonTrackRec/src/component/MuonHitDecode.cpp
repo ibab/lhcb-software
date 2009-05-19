@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonHitDecode.cpp,v 1.2 2009-05-19 16:06:51 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode MuonHitDecode::decodeRawData() {
       newhit->setOdeChannel( oc );
       short int OdeIndex=1;
       newhit->setOdeIndex(OdeIndex ); // to be implemented
-      int time=(*it).second;
+      int time=(*it).second - 7*16; // remove the positive-forcing offset
       newhit->setTime( time );
 
       m_hits.push_back(newhit);

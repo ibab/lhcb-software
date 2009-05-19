@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.3 2009-05-19 16:06:51 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -135,30 +135,35 @@ double MuonTrack::correctTOF(double rawT,
            (1-MuonTrackRec::Zref/Z) );
 }
 
-void MuonTrack::correctMisAlignment(MuonHit& hit) {
+double MuonTrack::correctMisAlignment(MuonHit& hit) {
   long int key=0;
+  double tcor=hit.hitTime();
   MuonLogPad* pad=hit.logPad();
+  //  std::cout << "hit type ="<<(int)pad->type()<<std::endl;
   if (pad->type() == MuonLogPad::XTWOFE) {
-    float d1=0.,d2=0.;
+    double d1=0.,d2=0.;
     key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
                                       pad->tile()->station(),
                                       pad->tile()->region(),
                                       pad->tile()->nX(),
                                       pad->tile()->nY() ,
-                                      1);
+                                      0);//1);
     if (MuonTrackRec::ResMap->count(key)) {
-      d1 = -((*MuonTrackRec::ResMap)[key]);
+      d1 = (*MuonTrackRec::ResMap)[key];
     }
     key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
                                       pad->tile()->station(),
                                       pad->tile()->region(),
                                       pad->tile()->nX(),
                                       pad->tile()->nY() ,
-                                      2);
+                                      0);//2);
     if (MuonTrackRec::ResMap->count(key)) {
-      d2 = -((*MuonTrackRec::ResMap)[key]);
+      d2 = (*MuonTrackRec::ResMap)[key];
     }
+    //    std::cout<<"correcting double r. hit by "<<-d1<<" and "<<-d2<<"   Time was "<<tcor<<std::endl;
+    tcor -=  ( (d1+d2)/2. );
     pad->shiftTimes( d1, d2 );
+    //    std::cout << " now is "<<tcor <<std::endl;
   }
   else {
     key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
@@ -168,10 +173,13 @@ void MuonTrack::correctMisAlignment(MuonHit& hit) {
                                       pad->tile()->nY() ,
                                       0);
     if (MuonTrackRec::ResMap->count(key)) {
-      float delay= -((*MuonTrackRec::ResMap)[key]);
-      pad->shiftTime( delay );
+      //      std::cout<<"correcting single r. hit by "<<-((*MuonTrackRec::ResMap)[key])<<"   Time was "<<tcor<<std::endl;
+      double avres= (*MuonTrackRec::ResMap)[key];
+      tcor -= avres;
+      //       std::cout << " now is "<<tcor <<std::endl;
     }
   }
+  return tcor;
 }
 
 double MuonTrack::correctTime(double rawT,
@@ -185,9 +193,11 @@ double MuonTrack::correctTime(double rawT,
   return t;
 }
 
-float MuonTrack::correctedTime(MuonHit& hit) {
-  correctMisAlignment(hit);
-  return correctTime( hit.hitTime(), hit.X(), hit.Y(), hit.Z());
+double MuonTrack::correctedTime(MuonHit& hit) {
+  double tc = hit.hitTime();
+  if(MuonTrackRec::OfflineTimeAlign)
+    tc = correctMisAlignment(hit);
+  return correctTime( tc, hit.X(), hit.Y(), hit.Z());
 }
 
 /// track fitting with linear Chi^2
@@ -308,7 +318,7 @@ Gaudi::XYZTPoint& MuonTrack::residuals(MuonHit& hit) {
   return m_point;
 }
 
-// Z versor giving the track direction (obtained from y slope)
+// Z versor giving the track direction (obtained from y slope for cosmics)
 double MuonTrack::sz() const {return ( MuonTrackRec::IsPhysics ? 1. : 
                                      ( MuonTrackRec::IsCosmic ? (m_sy>0 ? -1.: 1.):
                                        (m_speed>0 ? 1.: -1.) ) );}
@@ -379,7 +389,7 @@ StatusCode MuonTrack::AddXTalk(std::vector< MuonHit* > m_trackhits)
     this->insert(idhit,( (const MuonHit) **tj));
   }
 
-  //  std::cout << "nXTalk " << nXTalk << " added "<< tt_hits.size()<< " track "<<this->getHits().size()<<std::endl;
+  //std::cout << "nXTalk " << nXTalk << " added "<< tt_hits.size()<< " track "<<this->getHits().size()<<std::endl;
 
   return StatusCode::SUCCESS;
 }

@@ -6,7 +6,7 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !-----------------------------------------------------------------------------
 
-! 2009-05-13 - G. Graziani v1r2
+! 2009-05-19 - G. Graziani v1r2
  - be compatible with LHCB v27r0
  - improved time alignment corrections (not bkw compatible!)
 

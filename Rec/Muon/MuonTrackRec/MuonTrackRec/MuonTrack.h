@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.3 2009-05-19 16:06:51 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -109,7 +109,7 @@ public:
   // residuals
   Gaudi::XYZTPoint& residuals(MuonHit& hit);
   // corrected time of i-th hit (i from 0)
-  float correctedTime(MuonHit& hit);
+  double correctedTime(MuonHit& hit);
 
 
 private:
@@ -118,7 +118,7 @@ private:
                     double X,
                     double Y,
                     double Z);
-  void correctMisAlignment(MuonHit& hit);
+  double correctMisAlignment(MuonHit& hit);
   double correctTime(double rawT,
                      double X,
                      double Y,

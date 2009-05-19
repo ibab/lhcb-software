@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.3 2009-05-13 10:59:47 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.4 2009-05-19 16:06:51 ggiacomo Exp $
 
 #include <list>
 #include <fstream>
@@ -615,13 +615,18 @@ bool MuonNNetRec::loadTimeRes() {
   std::ifstream resList;
   resList.open(m_timeResidualFile.c_str());
   if (resList.good() ) {
+    info() << "Loading Time Alignment correction from file "<<m_timeResidualFile<<endmsg;
+    int nc=0;
     MuonTrackRec::ResMap = new std::map<long int, float>;
     while (! resList.eof()) {
       resList.getline(inbuf,sizeof(inbuf));
-      sscanf(inbuf,"M%dR%dQ%d %d %d v%d %f",&s,&r,&q,&nx,&ny,&v,&res);
+      sscanf(inbuf,"M%dR%dQ%d %d %d v%d  %f",&s,&r,&q,&nx,&ny,&v,&res);
+      //sscanf(inbuf,"M%dR%dQ%d %d %d %f",&s,&r,&q,&nx,&ny,&res);
       long int key = MuonTrackRec::logicalPadKey(q-1, s-1, r-1, nx, ny, v);
       (*MuonTrackRec::ResMap)[key] = res /25. * 16. ; // convert from ns to TDC units
+      nc++;
     }
+    info() << "Loaded "<<nc<<" corrections"<<endmsg;
   }
   else {
     out = false;
