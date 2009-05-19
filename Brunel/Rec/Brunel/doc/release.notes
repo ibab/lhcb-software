@@ -3,6 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-05-19 - Marco Cattaneo
+ - Update references for:
+   . Change in ST Monitor names and additional histograms
+   . Addition of RichOfflineGPIDSeq as wrapper to existing GPID sequences
+   . Fix to Rich particle type names
+ - Add QMTest brunel-mc09-withtruth-invfield, same as brunel-mc09-withtruth but
+   with inverted magnetic field, to check identical output
+
 ! 2009-05-13 - Marco Cattaneo
  - Add a python module Brunel/QMTest/BrunelExclusions.py containing a QMTest
    preprocessor that can be given to the QMTest ValidateWithReference function
