@@ -54,7 +54,7 @@ def getStats(f,signal,wiki):
               if ( Hlt2Sel > BestHlt2Sel ):    # should be a dict
  #                 print selection, Hlt2Sel, "better than", BestSel
                   BestHlt2Sel = Hlt2Sel
-                  BestSel = selection.replace("Selection","")
+                  BestSel = selection.replace("Decision","")
                   if (( line.split()[-1]).find('#')<0) :
                       BestSelEff = float((line.split()[-1]).replace("%",""))
                   else: SelEff = 0
