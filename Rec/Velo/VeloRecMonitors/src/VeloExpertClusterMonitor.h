@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.5 2009-04-14 13:54:02 erodrigu Exp $
+// $Id: VeloExpertClusterMonitor.h,v 1.6 2009-05-19 12:24:53 jmylroie Exp $
 #ifndef VELOEXPERTCLUSTERMONITOR_H 
 #define VELOEXPERTCLUSTERMONITOR_H 1
 
@@ -34,6 +34,7 @@ namespace Velo
   protected:
     LHCb::Tracks*       tracks;
     LHCb::VeloClusters* m_clusters;
+
    
       
   private:
@@ -47,10 +48,18 @@ namespace Velo
                           int sensor_num = -400);
     StatusCode plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::VeloChannelID idtemp, double adc,
                               std::string path,double clsize,std::string ClusterType, double theta);
-   
-    //    LHCb::VeloClusters m_clusters;
-    bool m_useExpert;   
-    bool m_useShift;  
+    bool m_Expert;   
+    bool m_Shift;  
+    bool m_PhiZones;
+    bool m_BothRange;
+    bool m_RZones;
+    bool m_RRange;
+    bool m_PhiRange;
+    bool m_RapidRange;
+    bool m_Matching;
+    bool m_ThetaRange;
+    int m_i_max;
+    
     std::string m_clusterCont;
     std::string m_trackCont; 
 
