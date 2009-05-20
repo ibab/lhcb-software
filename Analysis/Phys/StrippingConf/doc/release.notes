@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-05-20 - Patrick Koppenburg
+ - Remove StrippingConf.pyc file from cvs.
+
 !========================== StrippingConf v1r0 2009-05-15 =====================
 ! 2009-05-15  Anton Poluektov
 
