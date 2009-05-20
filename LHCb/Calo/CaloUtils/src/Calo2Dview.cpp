@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.15 2009-04-20 15:42:36 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.16 2009-05-20 13:38:02 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -142,6 +142,8 @@ void Calo2Dview::getCaloParam(unsigned int calo){
   m_refCell = m_refCellMap[calo];
 
   int nArea = (6+m_reg)/4;
+  m_xsize.clear();
+  m_ysize.clear();
   for (int i = 0 ; i < nArea; ++i){
     m_xsize.push_back( m_calo->cellSize( m_refCell[i] ) );
     m_ysize.push_back( m_xsize[i] )  ;// * m_calo->YtoXratio()
