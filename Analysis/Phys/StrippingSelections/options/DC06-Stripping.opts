@@ -1,0 +1,1922 @@
+//STRIP ******  STRIPPING FOR DC06 ******
+//STRIP =================================
+//STRIP
+//STRIP PREPARED Wed Feb 11 16:00:11 2009
+//STRIP
+//STRIP PACKAGE B2Dilepton v*
+//STRIP     SELECTION PreselBs2GammaMuMu, author: Nicola Serra, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2Kstaree, author: Helder Lopes, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselB2EMu, author: N. Serra, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2KMuMu, author: Tom Blake, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselB2DiMuon, author: Helder Lopes, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2KstarMuMu, author: Jeremy Dickens, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2MuMu, author: Jose A. Hernando, D. Martinez, F. Teubert, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2LLK, author: P. Koppenburg, usesLoKi: False, selType: Presel
+//STRIP PACKAGE Ccbar v*
+//STRIP     SELECTION PreselJpsi2ee, author: M. Calvo, A.Hicheur, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselHeavyDimuon, author: J. Amoraal, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2PhiEtac, author: L.Fernandez, J. Borel, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselUnbiasedJpsi2ee, author: M. Calvo, A.Hicheur, usesLoKi: False, selType: Presel
+//STRIP PACKAGE Radiative v*
+//STRIP     SELECTION PreselXb2GammaX, author: Lesya Shchutska Lesya.Shchutska@cern.ch, usesLoKi: False, selType: Presel
+//STRIP PACKAGE B2uds v*
+//STRIP     SELECTION PreselBd2PhiKst, author: Nick Styles and Philip Clark, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselLambdaB2LambdaOmega, author: Eric Conte, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2PhiPhi, author: Bruno Souza de Paula, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2PhiKs, author: Yuehong Xie, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselLambdaB2LambdaRho, author: Eric Conte, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2KsPiPi, author: Gabriel Guerrer, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselB2HH, author: Angelo Carbone, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselLambdaB2LambdaPhi, author: Eric Conte, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2Kst0Kst0, author: D.Martinez, P.Estevez, B.Adeva (USC), usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2HHH, author: G.Guerrer, P.David, L.Delbuono, usesLoKi: False, selType: Presel
+//STRIP PACKAGE B2DsX v*
+//STRIP     SELECTION PreselBs2DsDs, author: S. Monteil, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2DsRho, author: S. Monteil + Yasmine Amhis + O. Deschamps, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2DsMuX, author: Yuehong Xie, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBs2DsH, author: Jeroen van Tilburg, Jeremie Borel, usesLoKi: False, selType: Presel
+//STRIP PACKAGE B2DstarX v*
+//STRIP     SELECTION PreselBd2DstarMu, author: Marta Calvi, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselDstar2D0Pi_D02HHHH, author: Andrew Powell, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselDstarNoPID, author: Vladimir Gligorov, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselDstar2D0Pi_D02HH, author: Patrick Spradlin, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2DstarPi, author: Vladimir Gligorov, usesLoKi: False, selType: Presel
+//STRIP PACKAGE B2D0X v*
+//STRIP     SELECTION PreselBu2D0H_D02HH, author: Mitesh Patel, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02KMuNu, author: Mitesh Patel, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02KsKPi, author: Jim Libby, maintained by Jim Libby and Chris Jones, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2D0Kst_D02KsPiPi, author: Cristina Lazzeroni, maintained by Jim Libby and Chris Jones, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02KsKK, author: Cristina Lazzeroni, maintained by Jim Libby and Chris Jones, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0Mu, author: P. Koppenburg, Julien Babel, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02KsPiPi, author: Cristina Lazzeroni, maintained by Jim Libby and Chris Jones, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02HHHH, author: Andrew Powell, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2D0Kst_D02HH, author: Kazu Akiba, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0Tau2PiPiPi, author: Marta Calvi, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBu2D0K_D02KPiPi0, author: Patrick Spradlin, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2D0Kst_D02KsKK, author: Cristina Lazzeroni, maintained by Jim Libby and Chris Jones, usesLoKi: False, selType: Presel
+//STRIP PACKAGE B2DplusX v*
+//STRIP     SELECTION PreselBd2DPi, author: Vladimir Gligorov, usesLoKi: False, selType: Presel
+//STRIP PACKAGE Bd2PiPiPi0 v*
+//STRIP     SELECTION PreselBd2KPiPi0, author: Olivier Deschamps, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2PiPiPi0, author: Olivier Deschamps, usesLoKi: False, selType: Presel
+//STRIP     SELECTION PreselBd2Rho0Rho0, author: Olivier Deschamps, usesLoKi: False, selType: Presel
+/** @file 
+ *  Base of stripping
+ *
+ *  @author H. Ruiz
+ *  @date 2003-12-18
+ */
+
+
+DstWriter.ItemList += {"/Event/Phys/Selections#1" };
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#pragma print off
+
+
+
+
+//STRIP OPTIONS PreselBs2GammaMuMu  DimuonForPreselBs2GammaMuMu PreselBs2GammaMuMu
+// From DVPreselBs2GammaMuMu.opts:
+//In ->DVPreselBs2GammaMuMu->DoPreselBs2GammaMuMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2GammaMuMu" } ;
+SeqPreselBs2GammaMuMu.Members += { "MakeResonances/DimuonForPreselBs2GammaMuMu", "MakeResonances/PreselBs2GammaMuMu", "PrintHeader/PrintPreselBs2GammaMuMu" } ;
+//In ->DVPreselBs2GammaMuMu->DoPreselBs2GammaMuMu->DimuonForPreselBs2GammaMuMu
+DimuonForPreselBs2GammaMuMu.PhysDesktop.InputLocations  = { "Phys/StdDC06TightMuons" } ;
+DimuonForPreselBs2GammaMuMu.DecayDescriptors  = { "J/psi(1S) -> mu+ mu-" } ;
+DimuonForPreselBs2GammaMuMu.Window  = 3000.0*MeV ;
+DimuonForPreselBs2GammaMuMu.MotherFilter.Selections  = { "J/psi(1S) :       VtxFilterCriterion" } ;
+DimuonForPreselBs2GammaMuMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 14.0 ;
+DimuonForPreselBs2GammaMuMu.DaughterFilter.Selections  = { "mu+ : KinFilterCriterion/muPKin" } ;
+DimuonForPreselBs2GammaMuMu.DaughterFilter.muPKin.MinPt  = 500*MeV ;
+//In ->DVPreselBs2GammaMuMu->DoPreselBs2GammaMuMu->PreselBs2GammaMuMu
+PreselBs2GammaMuMu.PhysDesktop.InputLocations  = { "Phys/DimuonForPreselBs2GammaMuMu", "Phys/StdDC06LooseAllPhotons" } ;
+PreselBs2GammaMuMu.DecayDescriptor  = "B_s0 -> gamma J/psi(1S)" ;
+PreselBs2GammaMuMu.Window  = 1000.0*MeV ;
+PreselBs2GammaMuMu.MotherFilter.Selections  = { "B_s0 :  PVIPFilterCriterion,
+                                                      Momentum2FlightAngleFilterCriterion" } ;
+PreselBs2GammaMuMu.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBs2GammaMuMu.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+PreselBs2GammaMuMu.DaughterFilter.Selections  = { "gamma  : KinFilterCriterion/GammaKin" } ;
+PreselBs2GammaMuMu.DaughterFilter.GammaKin.MinPt  = 1000*MeV ;
+//Added:
+SeqPreselBs2GammaMuMu.MeasureTime  = true ;
+PrintPreselBs2GammaMuMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2Kstaree  DiLeptonForBd2LLKstar Kstar2KPiForBd2LLKstar PreselBd2Kstaree
+// From DVPreselBd2Kstaree.opts:
+//In ->DVPreselBd2Kstaree->DoPreselBd2Kstaree
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2Kstaree" } ;
+SeqPreselBd2Kstaree.Members  = { "MakeResonances/DiLeptonForBd2LLKstar", "MakeResonances/Kstar2KPiForBd2LLKstar", "MakeResonances/PreselBd2Kstaree", "PrintHeader/PrintPreselBd2Kstaree" } ;
+//In ->DVPreselBd2Kstaree->DoPreselBd2Kstaree->PreselBd2Kstaree
+DiLeptonForBd2LLKstar.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseElectrons" } ;
+DiLeptonForBd2LLKstar.DecayDescriptors  = { "J/psi(1S) -> e+ e-" } ;
+DiLeptonForBd2LLKstar.DaughterFilter.Selections  = { "e+ : KinFilterCriterion,PVIPFilterCriterion" } ;
+DiLeptonForBd2LLKstar.DaughterFilter.KinFilterCriterion.MinPt  = 500*MeV ;
+DiLeptonForBd2LLKstar.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 1.5 ;
+DiLeptonForBd2LLKstar.MotherFilter.Selections  = { "J/psi(1S) : VtxFilterCriterion , FlightDistanceFilterCriterion" } ;
+DiLeptonForBd2LLKstar.MotherFilter.VtxFilterCriterion.MaxChi2  = 15 ;
+DiLeptonForBd2LLKstar.MotherFilter.FlightDistanceFilterCriterion.MinFPV  = 1.0 ;
+Kstar2KPiForBd2LLKstar.PhysDesktop.InputLocations  = { "Phys/StdDC06TightPions", "Phys/StdDC06TightKaons" } ;
+Kstar2KPiForBd2LLKstar.DecayDescriptor  = "[K*(892)0 -> K+ pi-]cc" ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.Selections  = { "K+ : KinFilterCriterion/KaonKinFilter,PVIPFilterCriterion", "pi- : KinFilterCriterion/pionKinFilter,PVIPFilterCriterion" } ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.KaonKinFilter.MinPt  = 400*MeV ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.pionKinFilter.MinPt  = 300*MeV ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.KaonKinFilter.MinMomentum  = 3000.0*MeV ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.pionKinFilter.MinMomentum  = 3000.0*MeV ;
+Kstar2KPiForBd2LLKstar.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 2.0 ;
+Kstar2KPiForBd2LLKstar.MotherFilter.Selections  = { "K*(892)0 : PVIPFilterCriterion
+                                                         , VtxFilterCriterion
+                                                         , FlightDistanceFilterCriterion" } ;
+Kstar2KPiForBd2LLKstar.Window  = 200.*MeV ;
+Kstar2KPiForBd2LLKstar.MotherFilter.VtxFilterCriterion.MaxChi2  = 15 ;
+Kstar2KPiForBd2LLKstar.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 1.0 ;
+Kstar2KPiForBd2LLKstar.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 1.0 ;
+PreselBd2Kstaree.PhysDesktop.InputLocations  = { "Phys/DiLeptonForBd2LLKstar", "Phys/Kstar2KPiForBd2LLKstar" } ;
+PreselBd2Kstaree.DecayDescriptor  = "[B0 -> K*(892)0 J/psi(1S)]cc" ;
+PreselBd2Kstaree.MotherFilter.Selections  = { "B0 :  PVIPFilterCriterion
+                                            , VtxFilterCriterion
+                                            , FlightDistanceFilterCriterion
+                                            , Momentum2FlightAngleFilterCriterion" } ;
+PreselBd2Kstaree.Window  = 1000.*MeV ;
+PreselBd2Kstaree.KillOverlap  = false ;
+PreselBd2Kstaree.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 8. ;
+PreselBd2Kstaree.MotherFilter.VtxFilterCriterion.MaxChi2  = 15 ;
+PreselBd2Kstaree.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 4.0 ;
+PreselBd2Kstaree.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9997 ;
+DiLeptonForBd2LLKstar.HistoProduce  = true ;
+DiLeptonForBd2LLKstar.DaughterPlots.Variables  = { "P", "Pt", "IPs" } ;
+DiLeptonForBd2LLKstar.MotherPlots.Variables  = { "M", "Chi2", "P", "Pt", "IPs", "FS" } ;
+DiLeptonForBd2LLKstar.MotherPlots.Minima  = { 3000.0, 0.0, 0.0, 0.0, 0.0, 0.0 } ;
+DiLeptonForBd2LLKstar.MotherPlots.Maxima  = { 3000.0, 50.0, 20000.0, 10000.0, 10.0, 10.0 } ;
+Kstar2KPiForBd2LLKstar.HistoProduce  = true ;
+Kstar2KPiForBd2LLKstar.DaughterPlots.Variables  = { "P", "Pt", "IPs" } ;
+Kstar2KPiForBd2LLKstar.MotherPlots.Variables  = { "M", "Chi2", "P", "Pt", "IPs", "FS" } ;
+Kstar2KPiForBd2LLKstar.MotherPlots.Minima  = { 300.0, 0.0, 0.0, 0.0, 0.0, 0.0 } ;
+Kstar2KPiForBd2LLKstar.MotherPlots.Maxima  = { 300.0, 50.0, 20000.0, 10000.0, 10.0, 10.0 } ;
+PreselBd2Kstaree.HistoProduce  = true ;
+PreselBd2Kstaree.DaughterPlots.Variables  = { "P", "Pt", "IPs" } ;
+PreselBd2Kstaree.MotherPlots.Variables  = { "M", "Chi2", "P", "Pt", "IPs", "FS" } ;
+PreselBd2Kstaree.MotherPlots.Minima  = { 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0 } ;
+PreselBd2Kstaree.MotherPlots.Maxima  = { 1000.0, 50.0, 20000.0, 10000.0, 10.0, 10.0 } ;
+//In ->DVPreselBd2Kstaree->DoPreselBd2Kstaree
+DiLeptonForBd2LLKstar.OutputLevel  = 3 ;
+Kstar2KPiForBd2LLKstar.OutputLevel  = 3 ;
+PreselBd2Kstaree.OutputLevel  = 3 ;
+//Added:
+SeqPreselBd2Kstaree.MeasureTime  = true ;
+PrintPreselBd2Kstaree.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselB2EMu  PreselB2EMu
+// From DVPreselB2EMu.opts:
+//In ->DVPreselB2EMu->DoPreselB2EMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselB2EMu" } ;
+SeqPreselB2EMu.Members  = { "MakeResonances/PreselB2EMu", "PrintHeader/PrintPreselB2EMu" } ;
+//In ->DVPreselB2EMu->DoPreselB2EMu->PreselB2EMu
+PreselB2EMu.PhysDesktop.InputLocations  = { "Phys/StdDC06TightMuons", "Phys/StdDC06TightElectrons" } ;
+PreselB2EMu.DecayDescriptor  = "[B_s0 -> e+ mu-]cc" ;
+PreselB2EMu.Window  = 1000.*MeV ;
+PreselB2EMu.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion,
+PVIPFilterCriterion/PVIPCut, Momentum2FlightAngleFilterCriterion/Mom2Flight" } ;
+PreselB2EMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 14.0 ;
+PreselB2EMu.MotherFilter.PVIPCut.MaxIPsignif  = 6.0 ;
+PreselB2EMu.MotherFilter.Mom2Flight.CosAngle  = 0.9995 ;
+//Added:
+SeqPreselB2EMu.MeasureTime  = true ;
+PrintPreselB2EMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2KMuMu  PreselBu2KMuMu
+// From DVPreselBu2KMuMu.opts:
+//In ->DVPreselBu2KMuMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2KMuMu" } ;
+SeqPreselBu2KMuMu.Members += { "MakeResonances/PreselBu2KMuMu", "PrintHeader/PrintPreselBu2KMuMu" } ;
+PreselBu2KMuMu.DecayDescriptor  = "[ B+ -> J/psi(1S) K+ ]cc" ;
+PreselBu2KMuMu.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePenguinDimuon", "Phys/StdDC06LooseKaons" } ;
+PreselBu2KMuMu.Window  = 500.0*MeV ;
+PreselBu2KMuMu.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, PVIPFilterCriterion, Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2KMuMu.DaughterFilter.Selections  = { "K+ : PVIPFilterCriterion" } ;
+PreselBu2KMuMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 30.0 ;
+PreselBu2KMuMu.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 1000.0 ;
+PreselBu2KMuMu.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+SeqPreselBu2KMuMu.MeasureTime  = true ;
+//Added:
+SeqPreselBu2KMuMu.MeasureTime  = true ;
+PrintPreselBu2KMuMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselB2DiMuon  PreselB2DiMuon
+// From DVPreselB2DiMuon.opts:
+//In ->DVPreselB2DiMuon->DoPreselB2DiMuon
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselB2DiMuon" } ;
+SeqPreselB2DiMuon.Members  = { "MakeResonances/PreselB2DiMuon", "PrintHeader/PrintPreselB2DiMuon" } ;
+//In ->DVPreselB2DiMuon->DoPreselB2DiMuon->PreselB2DiMuon
+PreselB2DiMuon.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseMuons" } ;
+PreselB2DiMuon.DecayDescriptor  = "J/psi(1S) -> mu+ mu-" ;
+PreselB2DiMuon.DaughterFilter.Selections  = { " mu+ : KinFilterCriterion/LKin, 
+                                         PVIPFilterCriterion/LPVIP" } ;
+PreselB2DiMuon.DaughterFilter.LKin.MinPt  = 800*MeV ;
+PreselB2DiMuon.DaughterFilter.LKin.MinMomentum  = 8000*MeV ;
+PreselB2DiMuon.DaughterFilter.LPVIP.MinIPsignif  = 3.0 ;
+PreselB2DiMuon.MotherFilter.Selections  = { "J/psi(1S) :  VtxFilterCriterion, 
+                                           FlightDistanceFilterCriterion" } ;
+PreselB2DiMuon.MotherFilter.VtxFilterCriterion.MaxChi2  = 10 ;
+PreselB2DiMuon.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3.0 ;
+PreselB2DiMuon.HistoProduce  = false ;
+PreselB2DiMuon.DaughterPlots.Variables  = { "P", "Pt", "IPs" } ;
+PreselB2DiMuon.MotherPlots.Variables  = { "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
+PreselB2DiMuon.MotherPlots.Minima  = { 3000.0, 0.0, -150., 0.0, 0.0, 0.0, 0.0 } ;
+PreselB2DiMuon.MotherPlots.Maxima  = { 3000.0, 50.0, 150.0, 20000.0, 10000.0, 10.0, 10.0 } ;
+//In ->DVPreselB2DiMuon->DoPreselB2DiMuon
+PreselB2DiMuon.OutputLevel  = 3 ;
+Plots.OutputLevel  = 4 ;
+//Added:
+SeqPreselB2DiMuon.MeasureTime  = true ;
+PrintPreselB2DiMuon.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2KstarMuMu  PreselBd2KstarMuMu
+// From DVPreselBd2KstarMuMu.opts:
+//In ->DVPreselBd2KstarMuMu->DoPreselBd2KstarMuMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2KstarMuMu" } ;
+SeqPreselBd2KstarMuMu.Members += { "MakeResonances/PreselBd2KstarMuMu", "PrintHeader/PrintPreselBd2KstarMuMu" } ;
+//In ->DVPreselBd2KstarMuMu->DoPreselBd2KstarMuMu->PreselBd2KstarMuMu
+PreselBd2KstarMuMu.DecayDescriptor  = "[B0 -> K*(892)0 J/psi(1S)]cc" ;
+PreselBd2KstarMuMu.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePenguinDimuon", "Phys/StdDC06LooseKstar2KPi" } ;
+PreselBd2KstarMuMu.Window  = 500.0*MeV ;
+PreselBd2KstarMuMu.MotherFilter.Selections  = { "B0 : VtxFilterCriterion, PVIPFilterCriterion, 
+                                                      Momentum2FlightAngleFilterCriterion" } ;
+PreselBd2KstarMuMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 30.0 ;
+PreselBd2KstarMuMu.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 1000.0 ;
+PreselBd2KstarMuMu.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+//Added:
+SeqPreselBd2KstarMuMu.MeasureTime  = true ;
+PrintPreselBd2KstarMuMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2MuMu  PreselBs2MuMu
+// From DVPreselBs2MuMu.opts:
+//In ->DVPreselBs2MuMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2MuMu" } ;
+SeqPreselBs2MuMu.Members  = { "MakeResonances/PreselBs2MuMu", "PrintHeader/PrintPreselBs2MuMu" } ;
+PreselBs2MuMu.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseMuons" } ;
+PreselBs2MuMu.DecayDescriptor  = "B_s0 -> mu+ mu-" ;
+PreselBs2MuMu.Window  = 600.*MeV ;
+PreselBs2MuMu.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion,
+PVIPFilterCriterion/PVIPCut " } ;
+PreselBs2MuMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 14.0 ;
+PreselBs2MuMu.MotherFilter.PVIPCut.MaxIPsignif  = 6.0 ;
+//Added:
+SeqPreselBs2MuMu.MeasureTime  = true ;
+PrintPreselBs2MuMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2LLK  DiLeptonForPreselBu2LLK PreselBu2LLK
+// From DVPreselBu2LLK.opts:
+//In ->DVPreselBu2LLK->DoPreselBu2LLK
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2LLK" } ;
+SeqPreselBu2LLK.Members  = { "MakeResonances/DiLeptonForPreselBu2LLK", "MakeResonances/PreselBu2LLK", "PrintHeader/PrintPreselBu2LLK" } ;
+//In ->DVPreselBu2LLK->DoPreselBu2LLK->DiLeptonForPreselBu2LLK
+DiLeptonForPreselBu2LLK.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseMuons", "Phys/StdDC06LooseElectrons" } ;
+DiLeptonForPreselBu2LLK.DecayDescriptor  = "J/psi(1S) -> l+ l-" ;
+DiLeptonForPreselBu2LLK.DecayDescriptors  = { "J/psi(1S) -> mu+ mu-", "J/psi(1S) -> e+ e-" } ;
+DiLeptonForPreselBu2LLK.DaughterFilter.Selections  = { "mu+ : KinFilterCriterion", "e+ : KinFilterCriterion" } ;
+DiLeptonForPreselBu2LLK.DaughterFilter.KinFilterCriterion.MinPt  = 1000*MeV ;
+DiLeptonForPreselBu2LLK.LowerWindow  = 3000.*MeV ;
+DiLeptonForPreselBu2LLK.UpperWindow  = 2500.*MeV ;
+DiLeptonForPreselBu2LLK.MotherFilter.Selections  = { "J/psi(1S) : VtxFilterCriterion" } ;
+DiLeptonForPreselBu2LLK.MotherFilter.VtxFilterCriterion.MaxChi2  = 9 ;
+//In ->DVPreselBu2LLK->DoPreselBu2LLK->PreselBu2LLK
+PreselBu2LLK.PhysDesktop.InputLocations  = { "Phys/DiLeptonForPreselBu2LLK", "Phys/StdDC06LooseKaons" } ;
+PreselBu2LLK.DecayDescriptor  = "[ B+ -> J/psi(1S) K+ ]cc" ;
+PreselBu2LLK.DaughterFilter.Selections  = { " K+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+PreselBu2LLK.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 2 ;
+PreselBu2LLK.DaughterFilter.KinFilterCriterion.MinPt  = 1400*MeV ;
+PreselBu2LLK.Window  = 600*MeV ;
+PreselBu2LLK.MotherFilter.Selections  = { " B+ : PVIPFilterCriterion, VtxFilterCriterion,
+                                                 FlightDistanceFilterCriterion,
+                                     Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2LLK.MotherFilter.VtxFilterCriterion.MaxChi2  = 30 ;
+PreselBu2LLK.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5 ;
+PreselBu2LLK.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 5 ;
+PreselBu2LLK.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.999 ;
+//In ->DVPreselBu2LLK->DoPreselBu2LLK
+DiLeptonForPreselBu2LLK.OutputLevel  = 3 ;
+PreselBu2LLK.OutputLevel  = 3 ;
+//In ->DVPreselBu2LLK
+Plots.OutputLevel  = 4 ;
+//Added:
+SeqPreselBu2LLK.MeasureTime  = true ;
+PrintPreselBu2LLK.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselJpsi2ee  PreselJpsi2ee
+// From DVPreselJpsi2ee.opts:
+//In ->DVPreselJpsi2ee
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselJpsi2ee" } ;
+//In ->DVPreselJpsi2ee->DoPreselJpsi2ee
+SeqPreselJpsi2ee.Members += { "FilterDesktop/PreselJpsi2ee", "PrintHeader/PrintPreselJpsi2ee" } ;
+PreselJpsi2ee.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseBiasedJpsi2ee" } ;
+PreselJpsi2ee.DecayDescriptor  = "J/psi(1S) -> e+ e-" ;
+PreselJpsi2ee.Code  = "(ALL)" ;
+//Added:
+SeqPreselJpsi2ee.MeasureTime  = true ;
+PrintPreselJpsi2ee.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselHeavyDimuon  PreselHeavyDimuon
+// From DVPreselHeavyDimuon.opts:
+//In ->DVPreselHeavyDimuon
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselHeavyDimuon" } ;
+//In ->DVPreselHeavyDimuon->DoPreselHeavyDimuon
+SeqPreselHeavyDimuon.Members += { "FilterDesktop/PreselHeavyDimuon", "PrintHeader/PrintPreselHeavyDimuon" } ;
+PreselHeavyDimuon.PhysDesktop.InputLocations  = { "Phys/StdDC06UnbiasedHeavyDimuon" } ;
+PreselHeavyDimuon.DecayDescriptor  = "J/psi(1S) -> mu+ mu-" ;
+PreselHeavyDimuon.Code  = "(ALL)" ;
+//Added:
+SeqPreselHeavyDimuon.MeasureTime  = true ;
+PrintPreselHeavyDimuon.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2PhiEtac  SeqFilterPionsForPreselBs2EtacPhi FilterKaonsForPreselBs2EtacPhi PreselEtacForBs2EtacPhi PreselBs2PhiEtac FilterPionsForPreselBs2PhiEtac NumberOfParticlesFilterForPreselBs2EtacPhi
+// From DVPreselBs2PhiEtac.opts:
+//In ->DVPreselBs2PhiEtac
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2PhiEtac" } ;
+SeqPreselBs2PhiEtac.Members += { "GaudiSequencer/SeqFilterPionsForPreselBs2EtacPhi", "OldFilterDesktop/FilterKaonsForPreselBs2EtacPhi", "MakeResonances/PreselEtacForBs2EtacPhi", "MakeResonances/PreselBs2PhiEtac", "PrintHeader/PrintPreselBs2PhiEtac" } ;
+SeqPreselBs2PhiEtac.IgnoreFilterPassed  = false ;
+SeqFilterPionsForPreselBs2EtacPhi.IgnoreFilterPassed  = false ;
+SeqFilterPionsForPreselBs2EtacPhi.Members  = { "OldFilterDesktop/FilterPionsForPreselBs2PhiEtac", "NumberOfParticlesFilter/NumberOfParticlesFilterForPreselBs2EtacPhi" } ;
+NumberOfParticlesFilterForPreselBs2EtacPhi.Max  = 30 ;
+NumberOfParticlesFilterForPreselBs2EtacPhi.PhysDesktop.InputLocations  = { "Phys/FilterPionsForPreselBs2PhiEtac" } ;
+FilterPionsForPreselBs2PhiEtac.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions" } ;
+FilterPionsForPreselBs2PhiEtac.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterPionsForPreselBs2PhiEtac.Filter.Selections  = { "pi+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+FilterPionsForPreselBs2PhiEtac.Filter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+FilterPionsForPreselBs2PhiEtac.Filter.KinFilterCriterion.MinMomentum  = 2000.0*MeV ;
+FilterPionsForPreselBs2PhiEtac.Filter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+FilterKaonsForPreselBs2EtacPhi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons" } ;
+FilterPionsForPreselBs2PhiEtac.DecayDescriptor  = "K" ;
+FilterKaonsForPreselBs2EtacPhi.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterKaonsForPreselBs2EtacPhi.Filter.Selections  = { "K+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+FilterKaonsForPreselBs2EtacPhi.Filter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+FilterKaonsForPreselBs2EtacPhi.Filter.KinFilterCriterion.MinMomentum  = 2000.0*MeV ;
+FilterKaonsForPreselBs2EtacPhi.Filter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+PreselEtacForBs2EtacPhi.DecayDescriptors  = { "eta_c(1S) -> pi+ pi- pi+ pi-", "eta_c(1S) ->  K+ K- K+ K-", "eta_c(1S) ->  K+ K- pi+ pi-" } ;
+PreselEtacForBs2EtacPhi.PhysDesktop.InputLocations  = { "Phys/FilterKaonsForPreselBs2EtacPhi", "Phys/FilterPionsForPreselBs2PhiEtac" } ;
+PreselEtacForBs2EtacPhi.Window  = 100.0*MeV ;
+PreselEtacForBs2EtacPhi.MinPt  = 2000.0*MeV ;
+PreselEtacForBs2EtacPhi.KillOverlap  = true ;
+PreselEtacForBs2EtacPhi.MotherFilter.Selections  = { "eta_c(1S) : VtxFilterCriterion, PVIPFilterCriterion" } ;
+PreselEtacForBs2EtacPhi.MotherFilter.VtxFilterCriterion.MaxChi2  = 25.0 ;
+PreselEtacForBs2EtacPhi.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 2.0 ;
+PreselBs2PhiEtac.DecayDescriptor  = "B_s0 -> phi(1020) eta_c(1S)" ;
+PreselBs2PhiEtac.PhysDesktop.InputLocations  = { "Phys/PreselEtacForBs2EtacPhi", "Phys/StdDC06LoosePhi2KK" } ;
+PreselBs2PhiEtac.DaughterFilter.Selections  = { "phi(1020) : KinFilterCriterion/KinFilterPhi, PVIPFilterCriterion/PVIPFilterPhi" } ;
+PreselBs2PhiEtac.DaughterFilter.KinFilterPhi.MinPt  = 1500.0*MeV ;
+PreselBs2PhiEtac.DaughterFilter.PVIPFilterPhi.MinIPsignif  = 2.0 ;
+PreselBs2PhiEtac.Window  = 500.0*MeV ;
+PreselBs2PhiEtac.MinPt  = 0.0*MeV ;
+PreselBs2PhiEtac.KillOverlap  = true ;
+PreselBs2PhiEtac.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion, 
+          PVIPFilterCriterion,
+          FlightDistanceFilterCriterion, 
+          Momentum2FlightAngleFilterCriterion,
+          VtxIsolationFilterCriterion" } ;
+PreselBs2PhiEtac.MotherFilter.VtxFilterCriterion.MaxChi2  = 60.0 ;
+PreselBs2PhiEtac.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBs2PhiEtac.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 1.0 ;
+PreselBs2PhiEtac.MotherFilter.FlightDistanceFilterCriterion.MinFPV  = 1.5*mm ;
+PreselBs2PhiEtac.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.0 ;
+PreselBs2PhiEtac.MotherFilter.VtxIsolationFilterCriterion.NTracks  = -1 ;
+Bs2Phi2KK_Etac2KKPiPiForPreselBs2PhiEtac.AvoidSelResult  = true ;
+Bs2Phi2KK_Etac2KKKKForPreselBs2PhiEtac.AvoidSelResult  = true ;
+Bs2Phi2KK_Etac2PiPiPiPiForPreselBs2PhiEtac.AvoidSelResult  = true ;
+SeqPreselBs2PhiEtac.MeasureTime  = true ;
+//Added:
+SeqPreselBs2PhiEtac.MeasureTime  = true ;
+PrintPreselBs2PhiEtac.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselUnbiasedJpsi2ee  PrescaleUnbiasedJpsi2ee PreselUnbiasedJpsi2ee
+// From DVPreselUnbiasedJpsi2ee.opts:
+//In ->DVPreselUnbiasedJpsi2ee
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselUnbiasedJpsi2ee" } ;
+//In ->DVPreselUnbiasedJpsi2ee->DoPreselUnbiasedJpsi2ee
+SeqPreselUnbiasedJpsi2ee.Members += { "DeterministicPrescaler/PrescaleUnbiasedJpsi2ee", "FilterDesktop/PreselUnbiasedJpsi2ee", "PrintHeader/PrintPreselUnbiasedJpsi2ee" } ;
+PrescaleUnbiasedJpsi2ee.AcceptPattern  = "ARRRR" ;
+PreselUnbiasedJpsi2ee.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseJpsi2ee" } ;
+PreselUnbiasedJpsi2ee.DecayDescriptor  = "J/psi(1S) -> e+ e-" ;
+PreselUnbiasedJpsi2ee.Code  = "(ALL)" ;
+//In ->DVPreselUnbiasedJpsi2ee
+PrescaleUnbiasedJpsi2ee.OutputLevel  = 4 ;
+//Added:
+SeqPreselUnbiasedJpsi2ee.MeasureTime  = true ;
+PrintPreselUnbiasedJpsi2ee.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselXb2GammaX  PreselXb2GammaX
+// From DVPreselXb2GammaX.opts:
+//In ->DVPreselXb2GammaX->DoPreselXb2GammaX
+ApplicationMgr.ExtSvc += { "LoKiSvc" } ;
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselXb2GammaX" } ;
+SeqPreselXb2GammaX.Members  = { "LoKi::PreselXb2GammaX/PreselXb2GammaX", "PrintHeader/PrintPreselXb2GammaX" } ;
+PreselXb2GammaX.ParticleCombiners  = { "": "OfflineVertexFitter", "Adder": "MomentumCombiner" } ;
+SeqPreselXb2GammaX.MeasureTime  = true ;
+PreselXb2GammaX.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseAllPhotons", "Phys/StdDC06LooseKstar2KPi", "Phys/StdDC06LooseRho02PiPi", "Phys/StdDC06LoosePhi2KK", "Phys/StdDC06LooseProtons", "Phys/StdDC06LooseKaons" } ;
+PreselXb2GammaX.DecayDescriptor  = " Xb -> ( X1 X2 )  gamma " ;
+PreselXb2GammaX.NTupleProduce  = false ;
+//Added:
+SeqPreselXb2GammaX.MeasureTime  = true ;
+PrintPreselXb2GammaX.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2PhiKst  PreselBd2PhiKst
+// From DVPreselBd2PhiKst.opts:
+//In ->DVPreselBd2PhiKst
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2PhiKst" } ;
+SeqPreselBd2PhiKst.Members += { "MakeResonances/PreselBd2PhiKst", "PrintHeader/PrintPreselBd2PhiKst" } ;
+PreselBd2PhiKst.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePhi2KK", "Phys/StdDC06TightKstar2KPi" } ;
+PreselBd2PhiKst.DecayDescriptor  = " B0 -> phi(1020) K*(892)0 " ;
+PreselBd2PhiKst.Window  = 0.5*GeV ;
+PreselBd2PhiKst.DaughterFilter.Selections  = { "phi(1020) : PVIPFilterCriterion/PhiIPCriterion ,
+                       KinFilterCriterion/PhiKinFilterCriterion", "K*(892)0  : PVIPFilterCriterion/KstIPCriterion" } ;
+PreselBd2PhiKst.DaughterFilter.PhiIPCriterion.MinIpsignif  = 2 ;
+PreselBd2PhiKst.DaughterFilter.PhiKinFilterCriterion.MinPt  = 200*MeV ;
+PreselBd2PhiKst.DaughterFilter.KstIPCriterion.MinIpsignif  = 2 ;
+PreselBd2PhiKst.MotherFilter.Selections  = { "B0 : VtxFilterCriterion, FlightDistanceFilterCriterion" } ;
+PreselBd2PhiKst.MotherFilter.VtxFilterCriterion.MaxChi2  = 35 ;
+PreselBd2PhiKst.MotherFilter.FlightDistanceFilterCriterion.MinSignedFSPV  = 8 ;
+//Added:
+SeqPreselBd2PhiKst.MeasureTime  = true ;
+PrintPreselBd2PhiKst.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselLambdaB2LambdaOmega  OmegaForLambdaB2LambdaOmega SeqPresel_LambdaBcombinations_Omega PreselLambdaB2LambdaOmega PreselLambdaB2LambdaOmega_LL PreselLambdaB2LambdaOmega_DD
+// From DVPreselLambdaB2LambdaOmega.opts:
+//In ->DVPreselLambdaB2LambdaOmega
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselLambdaB2LambdaOmega" } ;
+//In ->DVPreselLambdaB2LambdaOmega->PreselLambdaB2LambdaOmega
+SeqPreselLambdaB2LambdaOmega.Members += { "MakeResonances/OmegaForLambdaB2LambdaOmega", "GaudiSequencer/SeqPresel_LambdaBcombinations_Omega", "FilterDesktop/PreselLambdaB2LambdaOmega", "PrintHeader/PrintPreselLambdaB2LambdaOmega" } ;
+SeqPreselLambdaB2LambdaOmega.IgnoreFilterPassed  = false ;
+SeqPreselLambdaB2LambdaOmega.MeasureTime  = false ;
+OmegaForLambdaB2LambdaOmega.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LoosePions", "/Event/Phys/StdDC06LooseResolvedPi0s" } ;
+OmegaForLambdaB2LambdaOmega.OutputLevel  = 4 ;
+OmegaForLambdaB2LambdaOmega.DecayDescriptor  = "omega(782) -> pi+ pi- pi0" ;
+OmegaForLambdaB2LambdaOmega.KillOverLap  = true ;
+OmegaForLambdaB2LambdaOmega.MotherFilter.Selections  = { "omega(782) : KinFilterCriterion, 
+                                                                        DaughterMomentumSumFilterCriterion,
+                                                                        VtxFilterCriterion,
+                                                                        PVIPFilterCriterion,
+                                                                        FlightDistanceFilterCriterion" } ;
+OmegaForLambdaB2LambdaOmega.DaughterFilter.Selections  = { "pi+ : PVIPFilterCriterion/picIP", "pi0 : KinFilterCriterion/pi0P" } ;
+OmegaForLambdaB2LambdaOmega.DaughterFilter.picIP.MinIPsignif  = 3. ;
+OmegaForLambdaB2LambdaOmega.DaughterFilter.pi0P.MinPt  = 800. ;
+OmegaForLambdaB2LambdaOmega.Window  = 100.0*MeV ;
+OmegaForLambdaB2LambdaOmega.MinPt  = 2500.0*MeV ;
+OmegaForLambdaB2LambdaOmega.MotherFilter.DaughterMomentumSumFilterCriterion.MinSumPt  = 2000. ;
+OmegaForLambdaB2LambdaOmega.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+OmegaForLambdaB2LambdaOmega.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+OmegaForLambdaB2LambdaOmega.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 4. ;
+SeqPresel_LambdaBcombinations_Omega.Members += { "MakeResonances/PreselLambdaB2LambdaOmega_LL", "MakeResonances/PreselLambdaB2LambdaOmega_DD" } ;
+SeqPresel_LambdaBcombinations_Omega.IgnoreFilterPassed  = true ;
+SeqPresel_LambdaBcombinations_Omega.MeasureTime  = false ;
+PreselLambdaB2LambdaOmega_LL.DecayDescriptor  = "[Lambda_b0 -> Lambda0 omega(782)]cc" ;
+PreselLambdaB2LambdaOmega_LL.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_LL", "Phys/OmegaForLambdaB2LambdaOmega" } ;
+PreselLambdaB2LambdaOmega_LL.MotherFilter.Selections  = { "Lambda_b0 : KinFilterCriterion, VtxFilterCriterion" } ;
+PreselLambdaB2LambdaOmega_LL.DaughterFilter.Selections  = { "Lambda0 : MassFilterCriterion/lambdaM" } ;
+PreselLambdaB2LambdaOmega_DD.DecayDescriptor  = "[Lambda_b0 -> Lambda0 omega(782)]cc" ;
+PreselLambdaB2LambdaOmega_DD.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_DD", "Phys/OmegaForLambdaB2LambdaOmega" } ;
+PreselLambdaB2LambdaOmega_DD.MotherFilter.Selections  = { "Lambda_b0 : KinFilterCriterion, VtxFilterCriterion, 
+                                                          PVIPFilterCriterion" } ;
+PreselLambdaB2LambdaOmega_DD.DaughterFilter.Selections  = { "Lambda0 : MassFilterCriterion/lambdaM" } ;
+PreselLambdaB2LambdaOmega_LL.DaughterFilter.lambdaM.Window  = 7.*MeV ;
+PreselLambdaB2LambdaOmega_LL.Window  = 500.*MeV ;
+PreselLambdaB2LambdaOmega_LL.MotherFilter.lambdaBVertex.MaxChi2  = 8. ;
+PreselLambdaB2LambdaOmega_LL.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 4. ;
+PreselLambdaB2LambdaOmega_DD.DaughterFilter.lambdaM.Window  = 17.*MeV ;
+PreselLambdaB2LambdaOmega_DD.Window  = 500.*MeV ;
+PreselLambdaB2LambdaOmega_DD.MotherFilter.lambdaBVertex.MaxChi2  = 30. ;
+PreselLambdaB2LambdaOmega_DD.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 4. ;
+PreselLambdaB2LambdaOmega.PhysDesktop.InputLocations  = { "Phys/PreselLambdaB2LambdaOmega_LL", "Phys/PreselLambdaB2LambdaOmega_DD" } ;
+PreselLambdaB2LambdaOmega.Code  = "(ALL)" ;
+//Added:
+SeqPreselLambdaB2LambdaOmega.MeasureTime  = true ;
+PrintPreselLambdaB2LambdaOmega.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2PhiPhi  PreselBs2PhiPhi
+// From DVPreselBs2PhiPhi.opts:
+//In ->DVPreselBs2PhiPhi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2PhiPhi" } ;
+//Added:
+SeqPreselBs2PhiPhi.Members += { "MakeResonances/PreselBs2PhiPhi", "PrintHeader/PrintPreselBs2PhiPhi" } ;
+//In ->DVPreselBs2PhiPhi
+PreselBs2PhiPhi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePhi2KK" } ;
+PreselBs2PhiPhi.DecayDescriptor  = " B_s0 -> phi(1020) phi(1020) " ;
+PreselBs2PhiPhi.Window  = 0.5*GeV ;
+PreselBs2PhiPhi.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion" } ;
+PreselBs2PhiPhi.MotherFilter.VtxFilterCriterion.MaxChi2  = 40.0 ;
+//Added:
+SeqPreselBs2PhiPhi.MeasureTime  = true ;
+PrintPreselBs2PhiPhi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2PhiKs  PreselBd2PhiKs
+// From DVPreselBd2PhiKs.opts:
+//In ->DVPreselBd2PhiKs->DoPreselBd2PhiKs
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2PhiKs" } ;
+SeqPreselBd2PhiKs.Members  = { "MakeResonances/PreselBd2PhiKs", "PrintHeader/PrintPreselBd2PhiKs" } ;
+//In ->DVPreselBd2PhiKs->DoPreselBd2PhiKs->PreselBd2PhiKs
+PreselBd2PhiKs.DecayDescriptor  = "B0 -> KS0 phi(1020)" ;
+PreselBd2PhiKs.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LoosePhi2KK", "/Event/Phys/StdDC06LooseKsLL", "/Event/Phys/StdDC06LooseKsDD" } ;
+PreselBd2PhiKs.Window  = 1400.*MeV ;
+PreselBd2PhiKs.MotherFilter.Selections  = { "B0 :   VtxFilterCriterion,
+                                                   PVIPFilterCriterion,
+                                                   KinFilterCriterion,
+                                                   DaughterPtProductFilterCriterion" } ;
+PreselBd2PhiKs.MotherFilter.VtxFilterCriterion.MaxChi2  = 30.0 ;
+PreselBd2PhiKs.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5.0 ;
+PreselBd2PhiKs.MotherFilter.KinFilterCriterion.MinPt  = 200*MeV ;
+PreselBd2PhiKs.MotherFilter.DaughterPtProductFilterCriterion.MinProdPt  = 3500000. ;
+PreselBd2PhiKs.DaughterFilter.Selections  = { "phi(1020): DaughterPVIPFilterCriterion/PhiDaughterPVIPFilterCriterion", "KS0:       MassFilterCriterion/KsMassFilterCriterion" } ;
+PreselBd2PhiKs.DaughterFilter.PhiDaughterPVIPFilterCriterion.CutBestPV  = true ;
+PreselBd2PhiKs.DaughterFilter.PhiDaughterPVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBd2PhiKs.DaughterFilter.KsMassFilterCriterion.Window  = 40*MeV ;
+//In ->DVPreselBd2PhiKs->DoPreselBd2PhiKs
+PreselBd2PhiKs.OutputLevel  = 4 ;
+//Added:
+SeqPreselBd2PhiKs.MeasureTime  = true ;
+PrintPreselBd2PhiKs.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselLambdaB2LambdaRho  RhoForLambdaB2LambdaRho SeqPresel_LambdaBcombinations_Rho PreselLambdaB2LambdaRho PreselLambdaB2LambdaRho_LL PreselLambdaB2LambdaRho_DD
+// From DVPreselLambdaB2LambdaRho.opts:
+//In ->DVPreselLambdaB2LambdaRho
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselLambdaB2LambdaRho" } ;
+//In ->DVPreselLambdaB2LambdaRho->PreselLambdaB2LambdaRho
+SeqPreselLambdaB2LambdaRho.Members += { "OldFilterDesktop/RhoForLambdaB2LambdaRho", "GaudiSequencer/SeqPresel_LambdaBcombinations_Rho", "FilterDesktop/PreselLambdaB2LambdaRho", "PrintHeader/PrintPreselLambdaB2LambdaRho" } ;
+SeqPreselLambdaB2LambdaRho.IgnoreFilterPassed  = false ;
+SeqPreselLambdaB2LambdaRho.MeasureTime  = false ;
+RhoForLambdaB2LambdaRho.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseRho02PiPi" } ;
+RhoForLambdaB2LambdaRho.FilterCriterion  = "ByPIDFilterCriterion" ;
+RhoForLambdaB2LambdaRho.Filter.Selections  = { "rho(770)0 : DaughterMomentumSumFilterCriterion/rhoSumP,
+                                                           VtxFilterCriterion/rhoVertex,
+                                                           FlightDistanceFilterCriterion/rhoFlightDist", "pi+  : KinFilterCriterion/piKin,
+                                                      PVIPFilterCriterion/piIP" } ;
+RhoForLambdaB2LambdaRho.Filter.FilterByDescendents  = true ;
+RhoForLambdaB2LambdaRho.Filter.piKin.MinPt  = 500.*MeV ;
+RhoForLambdaB2LambdaRho.Filter.piIP.MinIPsignif  = 4. ;
+RhoForLambdaB2LambdaRho.Filter.rhoSumP.MinSumPt  = 2000. ;
+RhoForLambdaB2LambdaRho.Filter.rhoFlightDist.MinFSPV  = 4. ;
+RhoForLambdaB2LambdaRho.Filter.rhoVertex.MaxChi2  = 10. ;
+SeqPresel_LambdaBcombinations_Rho.Members += { "MakeResonances/PreselLambdaB2LambdaRho_LL", "MakeResonances/PreselLambdaB2LambdaRho_DD" } ;
+SeqPresel_LambdaBcombinations_Rho.IgnoreFilterPassed  = true ;
+SeqPresel_LambdaBcombinations_Rho.MeasureTime  = false ;
+PreselLambdaB2LambdaRho_LL.DecayDescriptor  = "[Lambda_b0 -> Lambda0 rho(770)0]cc" ;
+PreselLambdaB2LambdaRho_LL.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_LL", "Phys/RhoForLambdaB2LambdaRho" } ;
+PreselLambdaB2LambdaRho_LL.DaughterFilter.Selections  = { "Lambda0 : MassFilterCriterion/lambdaM" } ;
+PreselLambdaB2LambdaRho_LL.MotherFilter.Selections  = { "Lambda_b0 : KinFilterCriterion,
+                                                                      VtxFilterCriterion/lambdaBVertex" } ;
+PreselLambdaB2LambdaRho_DD.DecayDescriptor  = "[Lambda_b0 -> Lambda0 rho(770)0]cc" ;
+PreselLambdaB2LambdaRho_DD.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_DD", "Phys/RhoForLambdaB2LambdaRho" } ;
+PreselLambdaB2LambdaRho_DD.DaughterFilter.Selections  = { "Lambda0 : MassFilterCriterion/lambdaM" } ;
+PreselLambdaB2LambdaRho_DD.MotherFilter.Selections  = { "Lambda_b0 : KinFilterCriterion,
+                                                                      VtxFilterCriterion/lambdaBVertex" } ;
+PreselLambdaB2LambdaRho_LL.DaughterFilter.lambdaM.Window  = 7.*MeV ;
+PreselLambdaB2LambdaRho_LL.Window  = 500.*MeV ;
+PreselLambdaB2LambdaRho_LL.MinPt  = 500.*MeV ;
+PreselLambdaB2LambdaRho_LL.MotherFilter.lambdaBVertex.MaxChi2  = 8. ;
+PreselLambdaB2LambdaRho_DD.DaughterFilter.lambdaM.Window  = 17.*MeV ;
+PreselLambdaB2LambdaRho_DD.Window  = 500.*MeV ;
+PreselLambdaB2LambdaRho_DD.MinPt  = 500.*MeV ;
+PreselLambdaB2LambdaRho_DD.MotherFilter.lambdaBVertex.MaxChi2  = 8. ;
+PreselLambdaB2LambdaRho.PhysDesktop.InputLocations  = { "Phys/PreselLambdaB2LambdaRho_LL", "Phys/PreselLambdaB2LambdaRho_DD" } ;
+PreselLambdaB2LambdaRho.Code  = "(ALL)" ;
+//Added:
+SeqPreselLambdaB2LambdaRho.MeasureTime  = true ;
+PrintPreselLambdaB2LambdaRho.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2KsPiPi  PreselBd2KsPiPi
+// From DVPreselBd2KsPiPi.opts:
+//In ->DVPreselBd2KsPiPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2KsPiPi" } ;
+SeqPreselBd2KsPiPi.Members += { "MakeResonances/PreselBd2KsPiPi", "PrintHeader/PrintPreselBd2KsPiPi" } ;
+PreselBd2KsPiPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions", "Phys/StdDC06LooseKsLL", "Phys/StdDC06LooseKsDD" } ;
+PreselBd2KsPiPi.DecayDescriptor  = "B0 -> pi+ pi- KS0" ;
+PreselBd2KsPiPi.Window  = 300.0*MeV ;
+PreselBd2KsPiPi.MotherFilter.Selections  = { "B0 :       VtxFilterCriterion, 
+                                                                        PVIPFilterCriterion,
+                                                                        Momentum2FlightAngleFilterCriterion,
+                                                                        FlightDistanceFilterCriterion                                                                        
+                                                                        " } ;
+PreselBd2KsPiPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 25.0 ;
+PreselBd2KsPiPi.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6 ;
+PreselBd2KsPiPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = .9997 ;
+PreselBd2KsPiPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3 ;
+PreselBd2KsPiPi.DaughterFilter.Selections  = { "pi+ : KinFilterCriterion/KinFilterCriterionpi,                                                                               
+                                                                              PVIPFilterCriterion/PVIPFilterCriterionpi
+                                                                              ", "KS0 :       KinFilterCriterion/KinFilterCriterionKs,
+                                                                                    FlightDistanceFilterCriterion/FlightDistanceFilterCriterionKs
+                                                                                    " } ;
+PreselBd2KsPiPi.DaughterFilter.KinFilterCriterionpi.MinPt  = 400.0*MeV ;
+PreselBd2KsPiPi.DaughterFilter.PVIPFilterCriterionpi.MinIPsignif  = 4 ;
+PreselBd2KsPiPi.DaughterFilter.KinFilterCriterionKs.MinPt  = 400.0*MeV ;
+PreselBd2KsPiPi.DaughterFilter.FlightDistanceFilterCriterionKs.MinFSPV  = 3 ;
+//Added:
+SeqPreselBd2KsPiPi.MeasureTime  = true ;
+PrintPreselBd2KsPiPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselB2HH  PreselB2HH
+// From DVPreselB2HH.opts:
+//In ->DVPreselB2HH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselB2HH" } ;
+SeqPreselB2HH.Members  = { "MakeResonances/PreselB2HH", "PrintHeader/PrintPreselB2HH" } ;
+PreselB2HH.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions" } ;
+PreselB2HH.DecayDescriptor  = "B0 -> pi+ pi-" ;
+PreselB2HH.Window  = 600.*MeV ;
+PreselB2HH.MotherFilter.Selections  = { "B0 : BooleanFilterCriterion/B0Filter" } ;
+PreselB2HH.MotherFilter.B0Filter.andList  = { "BooleanFilterCriterion/ptEachFilter", "BooleanFilterCriterion/ptOnceFilter", "BooleanFilterCriterion/sIPSEachFilter", "BooleanFilterCriterion/sIPSOnceFilter", "VtxFilterCriterion", "PVIPFilterCriterion/PVIPCut", "FlightDistanceFilterCriterion/FDCut" } ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.andList  = { "ByPIDFilterCriterion/posPiPtEachFilter", "ByPIDFilterCriterion/negPiPtEachFilter" } ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.posPiPtEachFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.negPiPtEachFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.posPiPtEachFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.negPiPtEachFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.posPiPtEachFilter.Selections  = { "pi+ : KinFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.negPiPtEachFilter.Selections  = { "pi- : KinFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.posPiPtEachFilter.KinFilterCriterion.MinPt  = 600.0*MeV ;
+PreselB2HH.MotherFilter.B0Filter.ptEachFilter.negPiPtEachFilter.KinFilterCriterion.MinPt  = 600.0*MeV ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.orList  = { "ByPIDFilterCriterion/posPiPtOnceFilter", "ByPIDFilterCriterion/negPiPtOnceFilter" } ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.posPiPtOnceFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.negPiPtOnceFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.posPiPtOnceFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.negPiPtOnceFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.posPiPtOnceFilter.Selections  = { "pi+ : KinFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.negPiPtOnceFilter.Selections  = { "pi- : KinFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.posPiPtOnceFilter.KinFilterCriterion.MinPt  = 2000.0*MeV ;
+PreselB2HH.MotherFilter.B0Filter.ptOnceFilter.negPiPtOnceFilter.KinFilterCriterion.MinPt  = 2000.0*MeV ;
+PreselB2HH.MotherFilter.B0Filter.VtxFilterCriterion.MaxChi2  = 14.0 ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.andList  = { "ByPIDFilterCriterion/posPiSIPSEachFilter", "ByPIDFilterCriterion/negPiSIPSEachFilter" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.posPiSIPSEachFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.negPiSIPSEachFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.posPiSIPSEachFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.negPiSIPSEachFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.posPiSIPSEachFilter.Selections  = { "pi+ : PVIPFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.negPiSIPSEachFilter.Selections  = { "pi- : PVIPFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.posPiSIPSEachFilter.PVIPFilterCriterion.MinIPsignif  = 3.5 ;
+PreselB2HH.MotherFilter.B0Filter.sIPSEachFilter.negPiSIPSEachFilter.PVIPFilterCriterion.MinIPsignif  = 3.5 ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.orList  = { "ByPIDFilterCriterion/posPiSIPSOnceFilter", "ByPIDFilterCriterion/negPiSIPSOnceFilter" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.posPiSIPSOnceFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.negPiSIPSOnceFilter.FilterByDescendents  = true ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.posPiSIPSOnceFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.negPiSIPSOnceFilter.ApplyCC  = false ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.posPiSIPSOnceFilter.Selections  = { "pi+ : PVIPFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.negPiSIPSOnceFilter.Selections  = { "pi- : PVIPFilterCriterion" } ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.posPiSIPSOnceFilter.PVIPFilterCriterion.MinIPsignif  = 5.5 ;
+PreselB2HH.MotherFilter.B0Filter.sIPSOnceFilter.negPiSIPSOnceFilter.PVIPFilterCriterion.MinIPsignif  = 5.5 ;
+PreselB2HH.MotherFilter.B0Filter.PVIPCut.MaxIPsignif  = 6 ;
+PreselB2HH.MotherFilter.B0Filter.FDCut.MinSignedFSPV  = 12.0 ;
+//Added:
+SeqPreselB2HH.MeasureTime  = true ;
+PrintPreselB2HH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselLambdaB2LambdaPhi  PhiForLambdaB2LambdaPhi SeqPresel_LambdaBcombinations_Phi PreselLambdaB2LambdaPhi PreselLambdaB2LambdaPhi_LL PreselLambdaB2LambdaPhi_DD
+// From DVPreselLambdaB2LambdaPhi.opts:
+//In ->DVPreselLambdaB2LambdaPhi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselLambdaB2LambdaPhi" } ;
+//In ->DVPreselLambdaB2LambdaPhi->PreselLambdaB2LambdaPhi
+SeqPreselLambdaB2LambdaPhi.Members += { "OldFilterDesktop/PhiForLambdaB2LambdaPhi", "GaudiSequencer/SeqPresel_LambdaBcombinations_Phi", "FilterDesktop/PreselLambdaB2LambdaPhi", "PrintHeader/PrintPreselLambdaB2LambdaPhi" } ;
+SeqPreselLambdaB2LambdaPhi.IgnoreFilterPassed  = false ;
+SeqPreselLambdaB2LambdaPhi.MeasureTime  = false ;
+SeqPresel_LambdaBcombinations_Phi.Members += { "MakeResonances/PreselLambdaB2LambdaPhi_LL", "MakeResonances/PreselLambdaB2LambdaPhi_DD" } ;
+SeqPresel_LambdaBcombinations_Phi.IgnoreFilterPassed  = true ;
+SeqPresel_LambdaBcombinations_Phi.MeasureTime  = false ;
+PhiForLambdaB2LambdaPhi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePhi2KK" } ;
+PhiForLambdaB2LambdaPhi.FilterCriterion  = "ByPIDFilterCriterion" ;
+PhiForLambdaB2LambdaPhi.Filter.Selections  = { "phi(1020) : MassFilterCriterion,
+                                                           DaughterMomentumSumFilterCriterion,
+                                                           PVIPFilterCriterion,
+                                                           VtxFilterCriterion" } ;
+PhiForLambdaB2LambdaPhi.MassFilterCriterion.Window  = 15. ;
+PhiForLambdaB2LambdaPhi.Filter.DaughterMomentumSumFilterCriterion.MinSumPt  = 1000. ;
+PhiForLambdaB2LambdaPhi.Filter.PVIPFilterCriterion.MinIPsignif  = 5. ;
+PhiForLambdaB2LambdaPhi.Filter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselLambdaB2LambdaPhi_DD.DecayDescriptor  = "[Lambda_b0 -> Lambda0 phi(1020)]cc" ;
+PreselLambdaB2LambdaPhi_DD.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_DD", "Phys/PhiForLambdaB2LambdaPhi" } ;
+PreselLambdaB2LambdaPhi_LL.DecayDescriptor  = "[Lambda_b0 -> Lambda0 phi(1020)]cc" ;
+PreselLambdaB2LambdaPhi_LL.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseLambda1115_LL", "Phys/PhiForLambdaB2LambdaPhi" } ;
+PreselLambdaB2LambdaPhi_DD.MotherFilter.Selections  = { "Lambda_b0 :  VtxFilterCriterion" } ;
+PreselLambdaB2LambdaPhi_DD.Window  = 500.*MeV ;
+PreselLambdaB2LambdaPhi_DD.MinPt  = 500.*MeV ;
+PreselLambdaB2LambdaPhi_DD.MotherFilter.VtxFilterCriterion.MaxChi2  = 20 ;
+PreselLambdaB2LambdaPhi_LL.Window  = 500.*MeV ;
+PreselLambdaB2LambdaPhi_LL.MinPt  = 500.*MeV ;
+PreselLambdaB2LambdaPhi_LL.MotherFilter.VtxFilterCriterion.MaxChi2  = 50 ;
+PreselLambdaB2LambdaPhi.PhysDesktop.InputLocations  = { "Phys/PreselLambdaB2LambdaPhi_LL", "Phys/PreselLambdaB2LambdaPhi_DD" } ;
+PreselLambdaB2LambdaPhi.Code  = "(ALL)" ;
+//Added:
+SeqPreselLambdaB2LambdaPhi.MeasureTime  = true ;
+PrintPreselLambdaB2LambdaPhi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2Kst0Kst0  PreselBs2Kst0Kst0
+// From DVPreselBs2Kst0Kst0.opts:
+//In ->DVPreselBs2Kst0Kst0
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2Kst0Kst0" } ;
+SeqPreselBs2Kst0Kst0.Members  = { "MakeResonances/PreselBs2Kst0Kst0", "PrintHeader/PrintPreselBs2Kst0Kst0" } ;
+PreselBs2Kst0Kst0.PhysDesktop.InputLocations  = { "Phys/StdDC06TightKstar2KPi" } ;
+PreselBs2Kst0Kst0.DecayDescriptor  = " B_s0 -> K*(892)0 K*(892)~0 " ;
+PreselBs2Kst0Kst0.Window  = 500.*MeV ;
+PreselBs2Kst0Kst0.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion/VtxBs,
+PVIPFilterCriterion/PVIPCut, FlightDistanceFilterCriterion" } ;
+PreselBs2Kst0Kst0.MotherFilter.VtxBs.MaxChi2  = 25. ;
+PreselBs2Kst0Kst0.MotherFilter.PVIPCut.MaxIPsignif  = 4. ;
+PreselBs2Kst0Kst0.MotherFilter.FlightDistanceFilterCriterion.MinSignedFSPV  = 8 ;
+//Added:
+SeqPreselBs2Kst0Kst0.MeasureTime  = true ;
+PrintPreselBs2Kst0Kst0.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2HHH  PreselBu2HHH
+// From DVPreselBu2HHH.opts:
+//In ->DVPreselBu2HHH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2HHH" } ;
+SeqPreselBu2HHH.Members += { "MakeResonances/PreselBu2HHH", "PrintHeader/PrintPreselBu2HHH" } ;
+PreselBu2HHH.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions" } ;
+PreselBu2HHH.DecayDescriptor  = "[B+ -> pi+ pi+ pi-]cc" ;
+PreselBu2HHH.LowerWindow  = 1200.0*MeV ;
+PreselBu2HHH.UpperWindow  = 200.0*MeV ;
+PreselBu2HHH.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, 
+                                                                  PVIPFilterCriterion,
+                                                                  Momentum2FlightAngleFilterCriterion,
+                                                                  FlightDistanceFilterCriterion                                                                  
+                                                                  " } ;
+PreselBu2HHH.MotherFilter.VtxFilterCriterion.MaxChi2  = 15.0 ;
+PreselBu2HHH.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5 ;
+PreselBu2HHH.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = .9998 ;
+PreselBu2HHH.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3 ;
+PreselBu2HHH.DaughterFilter.Selections  = { "pi+ :       KinFilterCriterion/KinFilterCriterionpi,                                                                               
+                                                                              PVIPFilterCriterion/PVIPFilterCriterionpi
+                                                                              " } ;
+PreselBu2HHH.DaughterFilter.KinFilterCriterionpi.MinPt  = 200.0*MeV ;
+PreselBu2HHH.DaughterFilter.PVIPFilterCriterionpi.MinIPsignif  = 4 ;
+//Added:
+SeqPreselBu2HHH.MeasureTime  = true ;
+PrintPreselBu2HHH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2DsDs  PreselBs2DsDs
+// From DVPreselBs2DsDs.opts:
+//In ->DVPreselBs2DsDs->DoPreselBs2DsDs
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2DsDs" } ;
+SeqPreselBs2DsDs.Members += { "MakeResonances/PreselBs2DsDs", "PrintHeader/PrintPreselBs2DsDs" } ;
+//In ->DVPreselBs2DsDs->DoPreselBs2DsDs->PreselBs2DsDs
+SeqPreselBs2DsDs.IgnoreFilterPassed  = false ;
+SeqPreselBs2DsDs.MeasureTime  = true ;
+PreselBs2DsDs.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseDs2KKPi" } ;
+PreselBs2DsDs.DecayDescriptors  = { "B_s0 -> D_s- D_s+" } ;
+PreselBs2DsDs.Window  = 500.0*MeV ;
+PreselBs2DsDs.MinPt  = 4000.0*MeV ;
+PreselBs2DsDs.MotherFilter.Selections  = { "B_s0 :  VtxFilterCriterion,Momentum2FlightAngleFilterCriterion,FlightDistanceFilterCriterion" } ;
+PreselBs2DsDs.MotherFilter.VtxFilterCriterion.MaxChi2  = 5.0 ;
+PreselBs2DsDs.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2.0 ;
+PreselBs2DsDs.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9999 ;
+//Added:
+SeqPreselBs2DsDs.MeasureTime  = true ;
+PrintPreselBs2DsDs.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2DsRho  SelDsForPreselBs2DsRho FilterPionsForPreselBs2DsRho FilterPi0ForPreselBs2DsRho SelRhoForBs2DsRho PreselBs2DsRho
+// From DVPreselBs2DsRho.opts:
+//In ->DVPreselBs2DsRho->DoPreselBs2DsRho
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2DsRho" } ;
+SeqPreselBs2DsRho.IgnoreFilterPassed  = false ;
+SeqPreselBs2DsRho.MeasureTime  = false ;
+SeqPreselBs2DsRho.Members += { "OldFilterDesktop/SelDsForPreselBs2DsRho", "OldFilterDesktop/FilterPionsForPreselBs2DsRho", "OldFilterDesktop/FilterPi0ForPreselBs2DsRho", "MakeResonances/SelRhoForBs2DsRho", "MakeResonances/PreselBs2DsRho", "PrintHeader/PrintPreselBs2DsRho" } ;
+SelDsForPreselBs2DsRho.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LooseDs2KKPi" } ;
+SelDsForPreselBs2DsRho.FilterCriterion  = "ByPIDFilterCriterion" ;
+SelDsForPreselBs2DsRho.Filter.Selections  = { "D_s- : MassFilterCriterion" } ;
+SelDsForPreselBs2DsRho.Filter.MassFilterCriterion.Window  = 15.*MeV ;
+FilterPionsForPreselBs2DsRho.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LoosePions" } ;
+FilterPionsForPreselBs2DsRho.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterPionsForPreselBs2DsRho.Filter.Selections  = { "pi+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+FilterPionsForPreselBs2DsRho.Filter.KinFilterCriterion.MinMomentum  = 2000.0*MeV ;
+FilterPionsForPreselBs2DsRho.Filter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+FilterPionsForPreselBs2DsRho.Filter.PVIPFilterCriterion.MinIPsignif  = 3.0 ;
+FilterPi0ForPreselBs2DsRho.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LooseResolvedPi0s", "/Event/Phys/StdDC06LooseMergedPi0s" } ;
+FilterPi0ForPreselBs2DsRho.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterPi0ForPreselBs2DsRho.Filter.Selections  = { "pi0 : KinFilterCriterion" } ;
+FilterPi0ForPreselBs2DsRho.Filter.KinFilterCriterion.MinMomentum  = 5000.0*MeV ;
+FilterPi0ForPreselBs2DsRho.Filter.KinFilterCriterion.MinPt  = 700.0*MeV ;
+SelRhoForBs2DsRho.VertexFitters += { "": "ParticleAdder" } ;
+SelRhoForBs2DsRho.PhysDesktop.InputLocations  = { "Phys/FilterPionsForPreselBs2DsRho", "Phys/FilterPi0ForPreselBs2DsRho" } ;
+SelRhoForBs2DsRho.DecayDescriptor  = "[rho(770)- -> pi- pi0]cc" ;
+SelRhoForBs2DsRho.DaughterFilter.Selections  = { "pi- : KinFilterCriterion, PVIPFilterCriterion" } ;
+SelRhoForBs2DsRho.DaughterFilter.KinFilterCriterion.MinMomentum  = 2000.0*MeV ;
+SelRhoForBs2DsRho.DaughterFilter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+SelRhoForBs2DsRho.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 1.0 ;
+SelRhoForBs2DsRho.Window  = 300.0*MeV ;
+SelRhoForBs2DsRho.MinPt  = 1500.0*MeV ;
+PreselBs2DsRho.PhysDesktop.InputLocations  = { "Phys/SelDsForPreselBs2DsRho", "Phys/SelRhoForBs2DsRho" } ;
+PreselBs2DsRho.DecayDescriptors  = { "[B_s0 -> D_s- rho(770)+]cc" } ;
+PreselBs2DsRho.Window  = 500.0*MeV ;
+PreselBs2DsRho.MinPt  = 2000.0*MeV ;
+PreselBs2DsRho.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion,
+                                        PVIPFilterCriterion,
+                                      FlightDistanceFilterCriterion,
+                                          Momentum2FlightAngleFilterCriterion ,
+                                          DaughterVertexFilterCriterion" } ;
+PreselBs2DsRho.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselBs2DsRho.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5.0 ;
+PreselBs2DsRho.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3.0 ;
+PreselBs2DsRho.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9999 ;
+//Added:
+SeqPreselBs2DsRho.MeasureTime  = true ;
+PrintPreselBs2DsRho.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2DsMuX  CheckPVForPreselBs2DsMuX PreselBs2DsMuX
+// From DVPreselBs2DsMuX.opts:
+//In ->DVPreselBs2DsMuX->DoPreselBs2DsMuX
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2DsMuX" } ;
+SeqPreselBs2DsMuX.Members  = { "CheckPV/CheckPVForPreselBs2DsMuX", "MakeResonances/PreselBs2DsMuX", "PrintHeader/PrintPreselBs2DsMuX" } ;
+//In ->DVPreselBs2DsMuX->DoPreselBs2DsMuX->PreselBs2DsMuX
+CheckPVForPreselBs2DsMuX.MaxPVs  = 1 ;
+PreselBs2DsMuX.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LooseMuons", "/Event/Phys/StdDC06LooseDs2KKPi" } ;
+PreselBs2DsMuX.DecayDescriptors  = { "[B_s0 -> D_s- mu+]cc", "[B_s0 -> D_s+ mu+]cc" } ;
+PreselBs2DsMuX.DaughterFilter.Selections  = { "D_s- : VtxFilterCriterion/DsVtxFilterCriterion, 
+          KinFilterCriterion/DsKinFilterCriterion", "pi+ : DLLFilterCriterion/pionDLLFilterCriterion,
+         PVIPFilterCriterion/pionPVIPFilterCriterion", "K-  : DLLFilterCriterion/kaonDLLFilterCriterion,
+         PVIPFilterCriterion/kaonPVIPFilterCriterion", "mu+  : KinFilterCriterion/MuKinFilterCriterion, 
+          PVIPFilterCriterion/MuPVIPFilterCriterion,
+          DLLFilterCriterion/MuDLLFilterCriterion" } ;
+PreselBs2DsMuX.DaughterFilter.FilterByDescendents  = true ;
+PreselBs2DsMuX.DaughterFilter.DsVtxFilterCriterion.MaxChi2  = 15.0 ;
+PreselBs2DsMuX.DaughterFilter.DsKinFilterCriterion.MinPt  = 1500.0*MeV ;
+PreselBs2DsMuX.DaughterFilter.pionDLLFilterCriterion.PPFilter.Selection  = { "CombDLL(pi-k)>'-5.0'" } ;
+PreselBs2DsMuX.DaughterFilter.pionPVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBs2DsMuX.DaughterFilter.kaonDLLFilterCriterion.PPFilter.Selection  = { "CombDLL(k-pi)>'-5.0' CombDLL(k-mu)>'-5.0' CombDLL(k-p)>'-5.0'" } ;
+PreselBs2DsMuX.DaughterFilter.kaonPVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBs2DsMuX.DaughterFilter.MuKinFilterCriterion.MinPt  = 600.0*MeV ;
+PreselBs2DsMuX.DaughterFilter.MuPVIPFilterCriterion.MinIPsignif  = 2.0 ;
+PreselBs2DsMuX.DaughterFilter.MuDLLFilterCriterion.PPFilter.Selection  = { "CombDLL(mu-pi)>'-5.0' CombDLL(mu-k)>'-5.0' CombDLL(mu-p)>'-5.0'" } ;
+PreselBs2DsMuX.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion, 
+          Momentum2FlightAngleFilterCriterion, 
+          DaughterVertexFilterCriterion, 
+          MassFilterCriterion" } ;
+PreselBs2DsMuX.MotherFilter.VtxFilterCriterion.MaxChi2  = 10.0 ;
+PreselBs2DsMuX.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.995 ;
+PreselBs2DsMuX.MotherFilter.DaughterVertexFilterCriterion.DaughterName  = "D_s-" ;
+PreselBs2DsMuX.MotherFilter.DaughterVertexFilterCriterion.MinDeltaZ  = 1.0*mm ;
+PreselBs2DsMuX.MotherFilter.MassFilterCriterion.LowerWindow  = 2400.0*MeV ;
+//Added:
+SeqPreselBs2DsMuX.MeasureTime  = true ;
+PrintPreselBs2DsMuX.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBs2DsH  FilterParticlesForPreselBs2DsH FilterDsForPreselBs2DsH PreselBs2DsH
+// From DVPreselBs2DsH.opts:
+//In ->DVPreselBs2DsH->DoPreselBs2DsH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBs2DsH" } ;
+SeqPreselBs2DsH.IgnoreFilterPassed  = false ;
+SeqPreselBs2DsH.Members += { "OldFilterDesktop/FilterParticlesForPreselBs2DsH", "OldFilterDesktop/FilterDsForPreselBs2DsH", "MakeResonances/PreselBs2DsH", "PrintHeader/PrintPreselBs2DsH" } ;
+FilterParticlesForPreselBs2DsH.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" } ;
+FilterParticlesForPreselBs2DsH.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterParticlesForPreselBs2DsH.Filter.Selections  = { "pi+  : KinFilterCriterion, PVIPFilterCriterion", "K+  : KinFilterCriterion, PVIPFilterCriterion" } ;
+FilterParticlesForPreselBs2DsH.Filter.KinFilterCriterion.MinMomentum  = 2000.0*MeV ;
+FilterParticlesForPreselBs2DsH.Filter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+FilterParticlesForPreselBs2DsH.Filter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+FilterDsForPreselBs2DsH.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseDs2KKPi" } ;
+FilterDsForPreselBs2DsH.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterDsForPreselBs2DsH.Filter.Selections  = { "D_s- : MassFilterCriterion" } ;
+FilterDsForPreselBs2DsH.Filter.MassFilterCriterion.Window  = 100*MeV ;
+PreselBs2DsH.PhysDesktop.InputLocations  = { "Phys/FilterParticlesForPreselBs2DsH", "Phys/FilterDsForPreselBs2DsH" } ;
+PreselBs2DsH.DecayDescriptors  = { "[B_s0 -> D_s- pi+]cc", "[B_s0 -> D_s- K+]cc" } ;
+PreselBs2DsH.Window  = 500.*MeV ;
+PreselBs2DsH.KillOverlap  = true ;
+PreselBs2DsH.MotherFilter.Selections  = { "B_s0 : VtxFilterCriterion,
+                                                  PVIPFilterCriterion,
+                                                  FlightDistanceFilterCriterion,
+                                                  Momentum2FlightAngleFilterCriterion,
+                                                  DaughterVertexFilterCriterion" } ;
+PreselBs2DsH.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselBs2DsH.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 8.0 ;
+PreselBs2DsH.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3.0 ;
+PreselBs2DsH.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9999 ;
+FilterParticlesForPreselBs2DsH.AvoidSelResult  = true ;
+PreselDsForBs2DsH.AvoidSelResult  = true ;
+//Added:
+SeqPreselBs2DsH.MeasureTime  = true ;
+PrintPreselBs2DsH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2DstarMu  PreselBd2DstarMu
+// From DVPreselBd2DstarMu.opts:
+//In ->DVPreselBd2DstarMu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2DstarMu" } ;
+//Added:
+SeqPreselBd2DstarMu.Members += { "MakeResonances/PreselBd2DstarMu", "PrintHeader/PrintPreselBd2DstarMu" } ;
+//In ->DVPreselBd2DstarMu
+PreselBd2DstarMu.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseMuons", "Phys/StdDC06LooseDstarWithD02KPi" } ;
+PreselBd2DstarMu.DecayDescriptor  = "[B0 -> D*(2010)- mu+]cc" ;
+PreselBd2DstarMu.DaughterFilter.Selections  = { "mu- : KinFilterCriterion", "D0 : FlightDistanceFilterCriterion", "D*(2010)+  : KinFilterCriterion/DKin" } ;
+PreselBd2DstarMu.DaughterFilter.FilterByDescendents  = true ;
+PreselBd2DstarMu.DaughterFilter.KinFilterCriterion.MinPt  = 400.0*MeV ;
+PreselBd2DstarMu.DaughterFilter.FlightDistanceFilterCriterion.MinFSPV  = 2.5 ;
+PreselBd2DstarMu.DaughterFilter.DKin.MinPt  = 2000.0*MeV ;
+PreselBd2DstarMu.Window  = 2500. ;
+PreselBd2DstarMu.KillOverlap  = true ;
+PreselBd2DstarMu.MotherFilter.Selections  = { "B0 : VtxFilterCriterion" } ;
+PreselBd2DstarMu.MotherFilter.VtxFilterCriterion.MaxChi2  = 20. ;
+//Added:
+SeqPreselBd2DstarMu.MeasureTime  = true ;
+PrintPreselBd2DstarMu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselDstar2D0Pi_D02HHHH  PreselDstar2D0Pi_D02HHHH
+// From DVPreselDstar2D0Pi_D02HHHH.opts:
+//In ->DVPreselDstar2D0Pi_D02HHHH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselDstar2D0Pi_D02HHHH" } ;
+SeqPreselDstar2D0Pi_D02HHHH.IgnoreFilterPassed  = false ;
+SeqPreselDstar2D0Pi_D02HHHH.Members += { "MakeResonances/PreselDstar2D0Pi_D02HHHH", "PrintHeader/PrintPreselDstar2D0Pi_D02HHHH" } ;
+//In ->DVPreselDstar2D0Pi_D02HHHH->PreselDstar2D0Pi_D02HHHH
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/TightD02KKPiPiNoCC/Particles'            TYPE='OldFilterDesktop/TightD02KKPiPiNoCC'", "DATA='/Event/Phys/TightD02KKPiPiNoCC/Vertices'             TYPE='OldFilterDesktop/TightD02KKPiPiNoCC'", "DATA ='/Event/Phys/TightD02KKPiPiNoCCCloned/Particles'     TYPE ='ConjugateNeutralPID/TightD02KKPiPiNoCCCloned'", "DATA ='/Event/Phys/TightD02KKPiPiNoCCCloned/Vertices'      TYPE ='ConjugateNeutralPID/TightD02KKPiPiNoCCCloned'", "DATA='/Event/Phys/TightD02KPiPiPiCA/Particles'             TYPE='OldFilterDesktop/TightD02KPiPiPiCA'", "DATA='/Event/Phys/TightD02KPiPiPiCA/Vertices'              TYPE='OldFilterDesktop/TightD02KPiPiPiCA'", "DATA='/Event/Phys/TightD02KPiPiPiCACloned/Particles'       TYPE='ConjugateNeutralPID/TightD02KPiPiPiCACloned'", "DATA='/Event/Phys/TightD02KPiPiPiCACloned/Vertices'        TYPE='ConjugateNeutralPID/TightD02KPiPiPiCACloned'" } ;
+TightD02KKPiPiNoCC.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KKPiPiNoCC" } ;
+TightD02KKPiPiNoCC.FilterCriterion  = "ByPIDFilterCriterion" ;
+TightD02KKPiPiNoCC.Filter.Selections  = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons", "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions", "D0 :  MassFilterCriterion, VtxFilterCriterion, KinFilterCriterion, PVIPFilterCriterion, FlightDistanceFilterCriterion" } ;
+TightD02KKPiPiNoCC.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+TightD02KKPiPiNoCC.Filter.KinFilterKaons.MinMomentum  = 4.0*GeV ;
+TightD02KKPiPiNoCC.Filter.PVIPFilterKaons.MinIPsignif  = 2.0 ;
+TightD02KKPiPiNoCC.Filter.KinFilterPions.MinPt  = 125.0*MeV ;
+TightD02KKPiPiNoCC.Filter.KinFilterPions.MinMomentum  = 2.0*GeV ;
+TightD02KKPiPiNoCC.Filter.PVIPFilterPions.MinIPsignif  = 2.0 ;
+TightD02KKPiPiNoCC.Filter.MassFilterCriterion.Window  = 50.0*MeV ;
+TightD02KKPiPiNoCC.Filter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+TightD02KKPiPiNoCC.Filter.KinFilterCriterion.MinMomentum  = 22.50*GeV ;
+TightD02KKPiPiNoCC.Filter.KinFilterCriterion.MinPt  = 2.750*GeV ;
+TightD02KKPiPiNoCC.Filter.FlightDistanceFilterCriterion.MinFSPV  = 10.0 ;
+TightD02KKPiPiNoCC.Filter.PVIPFilterCriterion.MinIPsignif  = 2.0 ;
+TightD02KKPiPiNoCCCloned.PhysDesktop.InputLocations  = { "Phys/TightD02KKPiPiNoCC" } ;
+TightD02KKPiPiNoCCCloned.DecayDescriptor  = "D~0 -> K- K+ pi- pi+" ;
+TightD02KPiPiPiCA.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPiPiPiCA" } ;
+TightD02KPiPiPiCA.FilterCriterion  = "ByPIDFilterCriterion" ;
+TightD02KPiPiPiCA.Filter.Selections  = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons", "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions", "D0 :  MassFilterCriterion, VtxFilterCriterion, KinFilterCriterion, PVIPFilterCriterion, FlightDistanceFilterCriterion" } ;
+TightD02KPiPiPiCA.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+TightD02KPiPiPiCA.Filter.KinFilterKaons.MinMomentum  = 4.00*GeV ;
+TightD02KPiPiPiCA.Filter.PVIPFilterKaons.MinIPsignif  = 2.0 ;
+TightD02KPiPiPiCA.Filter.KinFilterPions.MinPt  = 125.0*MeV ;
+TightD02KPiPiPiCA.Filter.KinFilterPions.MinMomentum  = 2.00*GeV ;
+TightD02KPiPiPiCA.Filter.PVIPFilterPions.MinIPsignif  = 2.0 ;
+TightD02KPiPiPiCA.Filter.MassFilterCriterion.Window  = 50.0*MeV ;
+TightD02KPiPiPiCA.Filter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+TightD02KPiPiPiCA.Filter.KinFilterCriterion.MinMomentum  = 22.50*GeV ;
+TightD02KPiPiPiCA.Filter.KinFilterCriterion.MinPt  = 2.750*GeV ;
+TightD02KPiPiPiCA.Filter.FlightDistanceFilterCriterion.MinFSPV  = 10.0 ;
+TightD02KPiPiPiCA.Filter.PVIPFilterCriterion.MinIPsignif  = 2.0 ;
+TightD02KPiPiPiCACloned.PhysDesktop.InputLocations  = { "Phys/TightD02KPiPiPiCA" } ;
+TightD02KPiPiPiCACloned.DecayDescriptor  = "[D0 -> K+ pi- pi+ pi-]cc" ;
+PreselDstar2D0Pi_D02HHHH.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions", "Phys/TightD02KKPiPiNoCC", "Phys/TightD02KKPiPiNoCCCloned", "Phys/TightD02KPiPiPiCA", "Phys/TightD02KPiPiPiCACloned" } ;
+PreselDstar2D0Pi_D02HHHH.DecayDescriptor  = "[D*(2010)+ -> D0 pi+]cc" ;
+PreSelDstar2D0Pi_D02HHHH.OutputLevel  = 3 ;
+PreselDstar2D0Pi_D02HHHH.DaughterFilter.Selections  = { "pi+ : PVIPFilterCriterion/PVIPFilterBachelorPi, KinFilterCriterion/KinFilterBachelorPi" } ;
+PreselDstar2D0Pi_D02HHHH.DaughterFilter.FilterByDescendents  = false ;
+PreselDstar2D0Pi_D02HHHH.DaughterFilter.PVIPFilterBachelorPi.MinIPsignif  = 2.0 ;
+PreselDstar2D0Pi_D02HHHH.DaughterFilter.KinFilterBachelorPi.MinMomentum  = 1.000*GeV ;
+PreselDstar2D0Pi_D02HHHH.DaughterFilter.KinFilterBachelorPi.MinPt  = 100.0*MeV ;
+PreselDstar2D0Pi_D02HHHH.Window  = 60.0*MeV ;
+PreselDstar2D0Pi_D02HHHH.MinPt  = 2.750*GeV ;
+PreselDstar2D0Pi_D02HHHH.KillOverlap  = true ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.Selections  = { "D*(2010)+ : VtxFilterCriterion, PVIPFilterCriterion, MassDifferenceFilterCriterion, MomentumMotherFlightAngleFilterCriterion/MMFlitAng" } ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.VtxFilterCriterion.MaxChi2  = 10.0 ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 4.0 ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MassDifferenceFilterCriterion.MotherName  = "D*(2010)+" ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MassDifferenceFilterCriterion.DaughterName  = "D0" ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MassDifferenceFilterCriterion.Window  = 10.0*MeV ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MMFlitAng.MotherName  = "D*(2010)+" ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MMFlitAng.DaughterName  = "D0" ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 0.9999 ;
+PreselDstar2D0Pi_D02HHHH.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.8 ;
+//Added:
+SeqPreselDstar2D0Pi_D02HHHH.MeasureTime  = true ;
+PrintPreselDstar2D0Pi_D02HHHH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselDstarNoPID  FilterD0ForDstarNoPID PreselDstarNoPID
+// From DVPreselDstarNoPID.opts:
+//In ->DVPreselDstarNoPID
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselDstarNoPID" } ;
+SeqPreselDstarNoPID.IgnoreFilterPassed  = false ;
+SeqPreselDstarNoPID.MeasureTime  = true ;
+SeqPreselDstarNoPID.Members += { "MakeResonances/FilterD0ForDstarNoPID", "MakeResonances/PreselDstarNoPID", "PrintHeader/PrintPreselDstarNoPID" } ;
+FilterD0ForDstarNoPID.PhysDesktop.InputLocations  = { "Phys/StdDC06NoPIDsPions", "Phys/StdDC06NoPIDsKaons" } ;
+FilterD0ForDstarNoPID.DecayDescriptor  = "[D0 -> pi+ K-]cc" ;
+FilterD0ForDstarNoPID.DaughterFilter.Selections  = { "pi+ : PVIPFilterCriterion, KinFilterCriterion", "K+  : PVIPFilterCriterion, KinFilterCriterion" } ;
+FilterD0ForDstarNoPID.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 3. ;
+FilterD0ForDstarNoPID.DaughterFilter.KinFilterCriterion.MinPt  = 0.3*GeV ;
+FilterD0ForDstarNoPID.DaughterFilter.KinFilterCriterion.MinMomentum  = 2.0*GeV ;
+FilterD0ForDstarNoPID.MotherFilter.Selections  = { "D0 : VtxFilterCriterion, FlightDistanceFilterCriterion" } ;
+FilterD0ForDstarNoPID.MotherFilter.VtxFilterCriterion.MaxChi2  = 16. ;
+FilterD0ForDstarNoPID.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 6. ;
+FilterD0ForDstarNoPID.MinPt  = 1.250*GeV ;
+FilterD0ForDstarNoPID.Window  = 50.*MeV ;
+PreselDstarNoPID.PhysDesktop.InputLocations  = { "Phys/StdDC06NoPIDsPions", "Phys/StdDC06NoPIDsVTTPions", "Phys/FilterD0ForDstarNoPID" } ;
+PreselDstarNoPID.DecayDescriptor  = "[D*(2010)+ -> D0 pi+]cc" ;
+PreselDstarNoPID.DaughterFilter.Selections  = { "pi+ : PVIPFilterCriterion" } ;
+PreselDstarNoPID.DaughterFilter.FilterByDescendents  = false ;
+PreselDstarNoPID.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 1. ;
+PreselDstarNoPID.Window  = 50.*MeV ;
+PreselDstarNoPID.MinPt  = 1.250*GeV ;
+PreselDstarNoPID.MotherFilter.Selections  = { "D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion" } ;
+PreselDstarNoPID.MotherFilter.VtxFilterCriterion.MaxChi2  = 16. ;
+PreselDstarNoPID.MotherFilter.MassDifferenceFilterCriterion.Window  = 10.0*MeV ;
+PreselDstarNoPID.MotherFilter.MassDifferenceFilterCriterion.DaughterName  = "D0" ;
+PreselDstarNoPID.MotherFilter.MassDifferenceFilterCriterion.MotherName  = "D*(2010)+" ;
+PreselDstarNoPID.KillOverlap  = true ;
+//Added:
+SeqPreselDstarNoPID.MeasureTime  = true ;
+PrintPreselDstarNoPID.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselDstar2D0Pi_D02HH  PreselDstar2D0Pi_D02HH
+// From DVPreselDstar2D0Pi_D02HH.opts:
+//In ->DVPreselDstar2D0Pi_D02HH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselDstar2D0Pi_D02HH" } ;
+SeqPreselDstar2D0Pi_D02HH.IgnoreFilterPassed  = false ;
+SeqPreselDstar2D0Pi_D02HH.MeasureTime  = true ;
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/FilterD02PiKForDstar/Particles'     TYPE='ConjugateNeutralPID/FilterD02PiKForDstar'", "DATA='/Event/Phys/FilterD02PiKForDstar/Vertices'      TYPE='ConjugateNeutralPID/FilterD02PiKForDstar'" } ;
+FilterD02PiKForDstar.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPi" } ;
+FilterD02PiKForDstar.DecayDescriptor  = "[D0 -> pi- K+]cc" ;
+SeqPreselDstar2D0Pi_D02HH.Members += { "MakeResonances/PreselDstar2D0Pi_D02HH", "PrintHeader/PrintPreselDstar2D0Pi_D02HH" } ;
+PreselDstar2D0Pi_D02HH.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPi", "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06LooseD02KK", "Phys/FilterD02PiKForDstar", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" } ;
+PreselDstar2D0Pi_D02HH.DecayDescriptor  = "[D*(2010)+ -> pi+ D0]cc" ;
+PreselDstar2D0Pi_D02HH.DaughterFilter.Selections  = { "pi+ : PVIPFilterCriterion", "D0 : KinFilterCriterion, VtxFilterCriterion, FlightDistanceFilterCriterion" } ;
+PreselDstarNoPID.DaughterFilter.FilterByDescendents  = false ;
+PreselDstar2D0Pi_D02HH.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 1.0 ;
+PreselDstar2D0Pi_D02HH.DaughterFilter.VtxFilterCriterion.MaxChi2  = 12. ;
+PreselDstar2D0Pi_D02HH.DaughterFilter.FlightDistanceFilterCriterion.MinFSPV  = 8. ;
+PreselDstar2D0Pi_D02HH.DaughterFilter.KinFilterCriterion.MinPt  = 2250. ;
+PreselDstar2D0Pi_D02HH.Window  = 50.0*MeV ;
+PreselDstar2D0Pi_D02HH.MinPt  = 2350.0*MeV ;
+PreselDstar2D0Pi_D02HH.MotherFilter.Selections  = { "D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion" } ;
+PreselDstar2D0Pi_D02HH.MotherFilter.VtxFilterCriterion.MaxChi2  = 12.0 ;
+PreselDstar2D0Pi_D02HH.MotherFilter.MassDifferenceFilterCriterion.Window  = 15.0*MeV ;
+PreselDstar2D0Pi_D02HH.MotherFilter.MassDifferenceFilterCriterion.DaughterName  = "D0" ;
+PreselDstar2D0Pi_D02HH.MotherFilter.MassDifferenceFilterCriterion.MotherName  = "D*(2010)+" ;
+//Added:
+SeqPreselDstar2D0Pi_D02HH.MeasureTime  = true ;
+PrintPreselDstar2D0Pi_D02HH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2DstarPi  FilterDstarForBd2DstarPi PreselBd2DstarPi
+// From DVPreselBd2DstarPi.opts:
+//In ->DVPreselBd2DstarPi->DoPreselBd2DstarPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2DstarPi" } ;
+SeqPreselBd2DstarPi.IgnoreFilterPassed  = false ;
+SeqPreselBd2DstarPi.MeasureTime  = true ;
+SeqPreselBd2DstarPi.Members += { "OldFilterDesktop/FilterDstarForBd2DstarPi", "MakeResonances/PreselBd2DstarPi", "PrintHeader/PrintPreselBd2DstarPi" } ;
+FilterDstarForBd2DstarPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseDstarWithD02KPi" } ;
+FilterDstarForBd2DstarPi.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterDstarForBd2DstarPi.Filter.Selections  = { "D0 : FlightDistanceFilterCriterion/D0FSPV" } ;
+FilterDstarForBd2DstarPi.Filter.FilterByDescendents  = true ;
+FilterDstarForBd2DstarPi.Filter.D0FSPV.MinFSPV  = 2.5 ;
+PreselBd2DstarPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions", "Phys/FilterDstarForBd2DstarPi" } ;
+PreselBd2DstarPi.DecayDescriptor  = "[B0 -> D*(2010)- pi+]cc" ;
+PreselBd2DstarPi.DaughterFilter.Selections  = { "pi+ : KinFilterCriterion/PiKin", "D*(2010)- : VtxFilterCriterion/DstarVtx" } ;
+PreselBd2DstarPi.DaughterFilter.PiKin.MinPt  = 300. ;
+PreselBd2DstarPi.DaughterFilter.DstarVtx.MaxChi2  = 16. ;
+PreselBd2DstarPi.Window  = 500. ;
+PreselBd2DstarPi.KillOverlap  = true ;
+PreselBd2DstarPi.MotherFilter.Selections  = { "B0 : VtxFilterCriterion, PVIPFilterCriterion, Momentum2FlightAngleFilterCriterion, FlightDistanceFilterCriterion" } ;
+PreselBd2DstarPi.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 8. ;
+PreselBd2DstarPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2. ;
+PreselBd2DstarPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 20. ;
+PreselBd2DstarPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+//Added:
+SeqPreselBd2DstarPi.MeasureTime  = true ;
+PrintPreselBd2DstarPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0H_D02HH  PreselBu2D0H_D02HH
+// From DVPreselBu2D0H_D02HH.opts:
+//In ->DVPreselBu2D0H_D02HH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0H_D02HH" } ;
+SeqPreselBu2D0H_D02HH.IgnoreFilterPassed  = false ;
+//In ->DVPreselBu2D0H_D02HH->SpecialD0ForB2D0K
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/PiandKForB2D0K/Particles'     TYPE='OldFilterDesktop/PiandKForB2D0K'", "DATA='/Event/Phys/PiandKForB2D0K/Vertices'      TYPE='OldFilterDesktop/PiandKForB2D0K'", "DATA='/Event/Phys/TightD02KPiForB2D0K/Particles'     TYPE='MakeResonances/TightD02KPiForB2D0K'", "DATA='/Event/Phys/TightD02KPiForB2D0K/Vertices'      TYPE='MakeResonances/TightD02KPiForB2D0K'", "DATA='/Event/Phys/TightD02KK_PiPiForB2D0K/Particles'   TYPE='OldFilterDesktop/TightD02KK_PiPiForB2D0K'", "DATA='/Event/Phys/TightD02KK_PiPiForB2D0K/Vertices'    TYPE='OldFilterDesktop/TightD02KK_PiPiForB2D0K'" } ;
+PiandKForB2D0K.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" } ;
+PiandKForB2D0K.FilterCriterion  = "ByPIDFilterCriterion" ;
+PiandKForB2D0K.Filter.Selections  = { "K+ : TrackTypeFilterCriterion/TrackTypeFilterKaons, 
+                                  KinFilterCriterion/KinFilterKaons, 
+                                          PVIPFilterCriterion/PVIPFilterKaons, 
+                                          DLLFilterCriterion/DLLFilterKaons1, 
+                                          DLLFilterCriterion/DLLFilterKaons2, 
+                                          TrackQualityFilterCriterion/TrackQualityKaons", "pi+ : TrackTypeFilterCriterion/TrackTypeFilterPions, 
+                                          KinFilterCriterion/KinFilterPions, 
+                                          PVIPFilterCriterion/PVIPFilterPions, 
+                                          DLLFilterCriterion/DLLFilterPions, 
+                                          TrackQualityFilterCriterion/TrackQualityPions" } ;
+PiandKForB2D0K.Filter.TrackTypeFilterKaons.RequireLong  = true ;
+PiandKForB2D0K.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterKaons.MaxMomentum  = 100000.0*MeV ;
+PiandKForB2D0K.Filter.PVIPFilterKaons.MinIPsignif  = 3.5 ;
+PiandKForB2D0K.Filter.DLLFilterKaons1.PPFilter.Selection  = { "CombDLL(k-pi)>'-1.0'" } ;
+PiandKForB2D0K.Filter.DLLFilterKaons2.PPFilter.Selection  = { "CombDLL(k-p)>'-5.0'" } ;
+PiandKForB2D0K.Filter.TrackQualityKaons.Chi2Max  = 3.0 ;
+PiandKForB2D0K.Filter.TrackTypeFilterPions.RequireLong  = true ;
+PiandKForB2D0K.Filter.KinFilterPions.MinPt  = 400.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterPions.MinMomentum  = 2000.0*MeV ;
+PiandKForB2D0K.Filter.PVIPFilterPions.MinIPsignif  = 4.0 ;
+PiandKForB2D0K.Filter.DLLFilterPions.PPFilter.Selection  = { "CombDLL(pi-k)>'-5.0'" } ;
+PiandKForB2D0K.Filter.TrackQualityPions.Chi2Max  = 3.0 ;
+TightD02KPiForB2D0K.PhysDesktop.InputLocations  = { "Phys/PiandKForB2D0K" } ;
+TightD02KPiForB2D0K.DecayDescriptors  = { "D~0 -> K+ pi-", "D~0 -> K- pi+" } ;
+TightD02KPiForB2D0K.DaughterFilter.Selections  = { "K+ :  PVIPFilterCriterion/PVIPFilterKaons", "pi+ : PVIPFilterCriterion/PVIPFilterPions" } ;
+TightD02KPiForB2D0K.DaughterFilter.PVIPFilterKaons.MinIPsignif  = 4.0 ;
+TightD02KPiForB2D0K.DaughterFilter.PVIPFilterPions.MinIPsignif  = 4.0 ;
+TightD02KPiForB2D0K.Window  = 21.0*MeV ;
+TightD02KPiForB2D0K.MinPt  = 1100.*MeV ;
+TightD02KPiForB2D0K.KillOverlap  = true ;
+TightD02KPiForB2D0K.MotherFilter.Selections  = { "D0 : VtxFilterCriterion, 
+                                          PVIPFilterCriterion,
+                                          FlightDistanceFilterCriterion" } ;
+TightD02KPiForB2D0K.MotherFilter.VtxFilterCriterion.MaxChi2  = 4.0 ;
+TightD02KPiForB2D0K.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 3.5 ;
+TightD02KPiForB2D0K.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+TightD02KK_PiPiForB2D0K.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06LooseD02KK" } ;
+TightD02KK_PiPiForB2D0K.FilterCriterion  = "ByPIDFilterCriterion" ;
+TightD02KK_PiPiForB2D0K.Filter.Selections  = { "K+ :  TrackTypeFilterCriterion/TrackTypeFilterKaons, 
+                                        KinFilterCriterion/KinFilterKaons, 
+                                                    PVIPFilterCriterion/PVIPFilterKaons, 
+                                                    DLLFilterCriterion/DLLFilterKaons1, 
+                                                    DLLFilterCriterion/DLLFilterKaons2", "pi+ : TrackTypeFilterCriterion/TrackTypeFilterPions, 
+                                                    KinFilterCriterion/KinFilterPions, 
+                                                    PVIPFilterCriterion/PVIPFilterPions, 
+                                                    DLLFilterCriterion/DLLFilterPions", "D0 :  MassFilterCriterion,
+                                          VtxFilterCriterion, 
+                                        KinFilterCriterion, 
+                                        PVIPFilterCriterion,
+                                        Momentum2FlightAngleFilterCriterion,
+                                          FlightDistanceFilterCriterion" } ;
+TightD02KK_PiPiForB2D0K.Filter.FilterByDescendents  = true ;
+TightD02KK_PiPiForB2D0K.Filter.TrackTypeFilterKaons.RequireLong  = true ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterKaons.MinIPsignif  = 2.5 ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterKaons1.PPFilter.Selection  = { "CombDLL(K-pi)>'-50000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterKaons2.PPFilter.Selection  = { "CombDLL(K-p)>'-5000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.TrackTypeFilterPions.RequireLong  = true ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterPions.MinPt  = 400.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterPions.MinMomentum  = 2000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterPions.MinIPsignif  = 2.5 ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterPions.PPFilter.Selection  = { "CombDLL(pi-k)>'-50000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.MassFilterCriterion.Window  = 50.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.Momentum2FlightAngleFilterCriterion.CosAngle  = -1. ;
+TightD02KK_PiPiForB2D0K.Filter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterCriterion.MinMomentum  = 5000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterCriterion.MinPt  = 1000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+//In ->DVPreselBu2D0H_D02HH
+SeqPreselBu2D0H_D02HH.Members += { "MakeResonances/PreselBu2D0H_D02HH", "PrintHeader/PrintPreselBu2D0H_D02HH" } ;
+//In ->DVPreselBu2D0H_D02HH->PreselBu2D0H_D02HH
+PreselBu2D0H_D02HH.PhysDesktop.InputLocations  = { "Phys/PiandKForB2D0K", "Phys/TightD02KPiForB2D0K", "Phys/TightD02KK_PiPiForB2D0K" } ;
+PreselBu2D0H_D02HH.DecayDescriptors  = { "B+ -> D~0 K+", "B- -> D~0 K-", "B+ -> D~0 pi+", "B- -> D~0 pi-" } ;
+PreselBu2D0H_D02HH.DaughterFilter.Selections  = { "D0 : KinFilterCriterion/KinFilterDzero", "K+ : KinFilterCriterion/KinFilterBachelorK, PVIPFilterCriterion/PVIPFilterBachelorK", "pi+ : KinFilterCriterion/KinFilterBachelorK, PVIPFilterCriterion/PVIPFilterBachelorK" } ;
+PreselBu2D0H_D02HH.DaughterFilter.KinFilterDzero.MinMomentum  = 5000.0*MeV ;
+PreselBu2D0H_D02HH.DaughterFilter.KinFilterDzero.MinPt  = 500.0*MeV ;
+PreselBu2D0H_D02HH.DaughterFilter.KinFilterBachelorK.MinMomentum  = 3500.0*MeV ;
+PreselBu2D0H_D02HH.DaughterFilter.KinFilterBachelorK.MinPt  = 300.0*MeV ;
+PreselBu2D0H_D02HH.DaughterFilter.PVIPFilterBachelorK.MinIPsignif  = 2. ;
+PreselBu2D0H_D02HH.Window  = 500.0*MeV ;
+PreselBu2D0H_D02HH.MinPt  = 250.0*MeV ;
+PreselBu2D0H_D02HH.KillOverlap  = true ;
+PreselBu2D0H_D02HH.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, PVIPFilterCriterion, FlightDistanceFilterCriterion, Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2D0H_D02HH.MotherFilter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+PreselBu2D0H_D02HH.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 4.0 ;
+PreselBu2D0H_D02HH.MotherFilter.FlightDistanceFilterCriterion.CutBestPV  = true ;
+PreselBu2D0H_D02HH.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2. ;
+PreselBu2D0H_D02HH.MotherFilter.FlightDistanceFilterCriterion.MinFPV  = 0.*mm ;
+PreselBu2D0H_D02HH.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9990 ;
+//Added:
+SeqPreselBu2D0H_D02HH.MeasureTime  = true ;
+PrintPreselBu2D0H_D02HH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02KMuNu  PreselBu2D0K_D02KMuNu
+// From DVPreselBu2D0K_D02KMuNu.opts:
+//In ->DVPreselBu2D0K_D02KMuNu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02KMuNu" } ;
+SeqPreselBu2D0K_D02KMuNu.IgnoreFilterPassed  = false ;
+SeqPreselBu2D0K_D02KMuNu.MeasureTime  = true ;
+//In ->DVPreselBu2D0K_D02KMuNu->MakeD02KMuNu
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/MuandKForB2D0K/Particles'     TYPE='OldFilterDesktop/MuandKForB2D0K'", "DATA='/Event/Phys/MuandKForB2D0K/Vertices'      TYPE='OldFilterDesktop/MuandKForB2D0K'", "DATA='/Event/Phys/TightD02KMuNuForB2D0K/Particles'     TYPE='MakeResonances/TightD02KMuNuForB2D0K'", "DATA='/Event/Phys/TightD02KMuNuForB2D0K/Vertices'      TYPE='MakeResonances/TightD02KMuNuForB2D0K'" } ;
+MuandKForB2D0K.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LooseMuons" } ;
+MuandKForB2D0K.FilterCriterion  = "ByPIDFilterCriterion" ;
+MuandKForB2D0K.Filter.Selections  = { "K+ : TrackTypeFilterCriterion/TrackTypeFilterKaons, 
+                                KinFilterCriterion/KinFilterKaons, 
+                                PVIPFilterCriterion/PVIPFilterKaons, 
+                                DLLFilterCriterion/DLLFilterKaons1, 
+                                DLLFilterCriterion/DLLFilterKaons2", "mu+ : TrackTypeFilterCriterion/TrackTypeFilterMuons, 
+                                KinFilterCriterion/KinFilterMuons, 
+                                PVIPFilterCriterion/PVIPFilterMuons, 
+                                DLLFilterCriterion/DLLFilterMuons" } ;
+MuandKForB2D0K.Filter.TrackTypeFilterKaons.RequireLong  = true ;
+MuandKForB2D0K.Filter.KinFilterKaons.MinPt  = 600.0*MeV ;
+MuandKForB2D0K.Filter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+MuandKForB2D0K.Filter.PVIPFilterKaons.MinIPsignif  = 2.75 ;
+MuandKForB2D0K.Filter.DLLFilterKaons1.PPFilter.Selection  = { "CombDLL(k-pi)>'-2.0'" } ;
+MuandKForB2D0K.Filter.DLLFilterKaons2.PPFilter.Selection  = { "CombDLL(k-p)>'-1000000.0'" } ;
+MuandKForB2D0K.Filter.TrackTypeFilterMuons.RequireLong  = true ;
+MuandKForB2D0K.Filter.KinFilterMuons.MinPt  = 200.0*MeV ;
+MuandKForB2D0K.Filter.KinFilterMuons.MinMomentum  = 3000.0*MeV ;
+MuandKForB2D0K.Filter.PVIPFilterMuons.MinIPsignif  = 1. ;
+MuandKForB2D0K.Filter.DLLFilterMuons.PPFilter.Selection  = { "CombDLL(mu-pi)>'-2.0'" } ;
+TightD02KMuNuForB2D0K.PhysDesktop.InputLocations  = { "Phys/MuandKForB2D0K" } ;
+TightD02KMuNuForB2D0K.DecayDescriptors  = { "D~0 -> K+ mu-", "D~0 -> K- mu+" } ;
+TightD02KMuNuForB2D0K.KillOverlap  = true ;
+TightD02KMuNuForB2D0K.UpperWindow  = 100.0*MeV ;
+TightD02KMuNuForB2D0K.LowerWindow  = 5279.0*MeV ;
+TightD02KMuNuForB2D0K.MotherFilter.Selections  = { "D0 : VtxFilterCriterion,
+                                           FlightDistanceFilterCriterion" } ;
+TightD02KMuNuForB2D0K.MotherFilter.VtxFilterCriterion.MaxChi2  = 30.0 ;
+TightD02KMuNuForB2D0K.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 4. ;
+//In ->DVPreselBu2D0K_D02KMuNu
+SeqPreselBu2D0K_D02KMuNu.Members += { "MakeResonances/PreselBu2D0K_D02KMuNu", "PrintHeader/PrintPreselBu2D0K_D02KMuNu" } ;
+//In ->DVPreselBu2D0K_D02KMuNu->PreselBu2D0K_D02KMuNu
+PreselBu2D0K_D02KMuNu.PhysDesktop.InputLocations  = { "Phys/MuandKForB2D0K", "Phys/TightD02KMuNuForB2D0K" } ;
+PreselBu2D0K_D02KMuNu.DecayDescriptor  = " [B+ -> D~0 K+]cc " ;
+PreselBu2D0K_D02KMuNu.DecayDescriptors  = { "B+ -> D~0 K+", "B- -> D~0 K-" } ;
+PreselBu2D0K_D02KMuNu.KillOverlap  = true ;
+PreselBu2D0K_D02KMuNu.UpperWindow  = 500.0*MeV ;
+PreselBu2D0K_D02KMuNu.LowerWindow  = 1779.0*MeV ;
+PreselBu2D0K_D02KMuNu.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, 
+                                              Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2D0K_D02KMuNu.MotherFilter.VtxFilterCriterion.MaxChi2  = 30.0 ;
+PreselBu2D0K_D02KMuNu.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9997 ;
+//Added:
+SeqPreselBu2D0K_D02KMuNu.MeasureTime  = true ;
+PrintPreselBu2D0K_D02KMuNu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02KsKPi  PreselBu2D0K_D02KsKPi
+// From DVPreselBu2D0K_D02KsKPi.opts:
+//In ->DVPreselBu2D0K_D02KsKPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02KsKPi" } ;
+SeqPreselBu2D0K_D02KsKPi.IgnoreFilterPassed  = false ;
+SeqPreselBu2D0K_D02KsKPi.Members += { "MakeResonances/PreselBu2D0K_D02KsKPi", "PrintHeader/PrintPreselBu2D0K_D02KsKPi" } ;
+//In ->DVPreselBu2D0K_D02KsKPi->PreselBu2D0K_D02KsKPi
+PreselBu2D0K_D02KsKPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KsKPi", "Phys/StdDC06LooseKaons" } ;
+PreselBu2D0K_D02KsKPi.DecayDescriptors  = { "[B+ -> D~0 K+]cc", "[B+ -> D0 K+]cc" } ;
+PreselBu2D0K_D02KsKPi.DaughterFilter.Selections  = { "K+ : KinFilterCriterion,
+                                                          PVIPFilterCriterion" } ;
+PreselBu2D0K_D02KsKPi.DaughterFilter.KinFilterCriterion.MinPt  = 0.5*GeV ;
+PreselBu2D0K_D02KsKPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBu2D0K_D02KsKPi.KillOverlap  = true ;
+PreselBu2D0K_D02KsKPi.Window  = 500.*MeV ;
+PreselBu2D0K_D02KsKPi.MinPt  = 2.7*GeV ;
+PreselBu2D0K_D02KsKPi.MotherFilter.Selections  = { "B+ :    VtxFilterCriterion,
+                                                 PVIPFilterCriterion,
+                                                 MomentumMotherFlightAngleFilterCriterion/MMFlitAng, 
+                                                 Momentum2FlightAngleFilterCriterion,
+                                                                 VtxIsolationFilterCriterion" } ;
+PreselBu2D0K_D02KsKPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselBu2D0K_D02KsKPi.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9997 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.MMFlitAng.MotherName  = "B+" ;
+PreselBu2D0K_D02KsKPi.MotherFilter.MMFlitAng.DaughterName  = "D~0" ;
+PreselBu2D0K_D02KsKPi.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 4.0 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.9993 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.VtxIsolationFilterCriterion.InputParticles  = { "/Event/Phys/StdDC06LooseKaons", "/Event/Phys/StdDC06LoosePions" } ;
+PreselBu2D0K_D02KsKPi.MotherFilter.VtxIsolationFilterCriterion.IPS  = 3 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.VtxIsolationFilterCriterion.NTracks  = 10 ;
+PreselBu2D0K_D02KsKPi.MotherFilter.VtxIsolationFilterCriterion.Reject  = true ;
+//Added:
+SeqPreselBu2D0K_D02KsKPi.MeasureTime  = true ;
+PrintPreselBu2D0K_D02KsKPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2D0Kst_D02KsPiPi  PreselBd2D0Kst_D02KsPiPi
+// From DVPreselBd2D0Kst_D02KsPiPi.opts:
+//In ->DVPreselBd2D0Kst_D02KsPiPi->PreselBd2D0Kst_D02KsPiPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2D0Kst_D02KsPiPi" } ;
+//Added:
+SeqPreselBd2D0Kst_D02KsPiPi.Members += { "MakeResonances/PreselBd2D0Kst_D02KsPiPi", "PrintHeader/PrintPreselBd2D0Kst_D02KsPiPi" } ;
+//In ->DVPreselBd2D0Kst_D02KsPiPi->PreselBd2D0Kst_D02KsPiPi
+PreselBd2D0Kst_D02KsPiPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KsPiPi", "Phys/StdDC06TightKstar2KPi" } ;
+PreselBd2D0Kst_D02KsPiPi.DecayDescriptor  = "[B0 -> D~0 K*(892)0]cc" ;
+PreselBd2D0Kst_D02KsPiPi.KillOverlap  = true ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.Selections  = { "B0 :    VtxFilterCriterion,
+                                                 PVIPFilterCriterion,
+                                                 KinFilterCriterion,
+                                                 Momentum2FlightAngleFilterCriterion,
+                                      MomentumMotherFlightAngleFilterCriterion/MMFlitAng" } ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 15. ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.KinFilterCriterion.MinPt  = 2.0*GeV ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.MMFlitAng.MotherName  = "B0" ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.MMFlitAng.DaughterName  = "D0" ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 6.0 ;
+PreselBd2D0Kst_D02KsPiPi.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.9990 ;
+PreselBd2D0Kst_D02KsPiPi.Window  = 500.*MeV ;
+//Added:
+SeqPreselBd2D0Kst_D02KsPiPi.MeasureTime  = true ;
+PrintPreselBd2D0Kst_D02KsPiPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02KsKK  PreselBu2D0K_D02KsKK
+// From DVPreselBu2D0K_D02KsKK.opts:
+//In ->DVPreselBu2D0K_D02KsKK->PreselBu2D0K_D02KsKK
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02KsKK" } ;
+//Added:
+SeqPreselBu2D0K_D02KsKK.Members += { "MakeResonances/PreselBu2D0K_D02KsKK", "PrintHeader/PrintPreselBu2D0K_D02KsKK" } ;
+//In ->DVPreselBu2D0K_D02KsKK->PreselBu2D0K_D02KsKK
+PreselBu2D0K_D02KsKK.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KsKK", "Phys/StdDC06LooseKaons" } ;
+PreselBu2D0K_D02KsKK.DecayDescriptor  = "[B+ -> D~0 K+]cc" ;
+PreselBu2D0K_D02KsKK.DaughterFilter.Selections  = { "K+ : KinFilterCriterion,
+                                                        PVIPFilterCriterion" } ;
+PreselBu2D0K_D02KsKK.DaughterFilter.KinFilterCriterion.MinPt  = 0.5*GeV ;
+PreselBu2D0K_D02KsKK.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBu2D0K_D02KsKK.KillOverlap  = true ;
+PreselBu2D0K_D02KsKK.Window  = 500.*MeV ;
+PreselBu2D0K_D02KsKK.MinPt  = 2.0*GeV ;
+PreselBu2D0K_D02KsKK.MotherFilter.Selections  = { "B+ :    VtxFilterCriterion,
+                                                 PVIPFilterCriterion,
+                                     MomentumMotherFlightAngleFilterCriterion/MMFlitAng,  
+                                                 Momentum2FlightAngleFilterCriterion,
+                                                 VtxIsolationFilterCriterion" } ;
+PreselBu2D0K_D02KsKK.MotherFilter.VtxFilterCriterion.MaxChi2  = 15. ;
+PreselBu2D0K_D02KsKK.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBu2D0K_D02KsKK.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+PreselBu2D0K_D02KsKK.MotherFilter.MMFlitAng.MotherName  = "B+" ;
+PreselBu2D0K_D02KsKK.MotherFilter.MMFlitAng.DaughterName  = "D~0" ;
+PreselBu2D0K_D02KsKK.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 4.0 ;
+PreselBu2D0K_D02KsKK.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.9990 ;
+PreselBu2D0K_D02KsKK.MotherFilter.VtxIsolationFilterCriterion.InputParticles  = { "/Event/Phys/StdDC06LooseKaons", "/Event/Phys/StdDC06LoosePions" } ;
+PreselBu2D0K_D02KsKK.MotherFilter.VtxIsolationFilterCriterion.IPS  = 3 ;
+PreselBu2D0K_D02KsKK.MotherFilter.VtxIsolationFilterCriterion.NTracks  = 10 ;
+PreselBu2D0K_D02KsKK.MotherFilter.VtxIsolationFilterCriterion.Reject  = true ;
+//Added:
+SeqPreselBu2D0K_D02KsKK.MeasureTime  = true ;
+PrintPreselBu2D0K_D02KsKK.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0Mu  PreselBu2D0Mu
+// From DVPreselBu2D0Mu.opts:
+//In ->DVPreselBu2D0Mu->DoPreselBu2D0Mu
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0Mu" } ;
+SeqPreselBu2D0Mu.Members  = { "MakeResonances/PreselBu2D0Mu", "PrintHeader/PrintPreselBu2D0Mu" } ;
+//In ->DVPreselBu2D0Mu->DoPreselBu2D0Mu->PreselBu2D0Mu
+PreselBu2D0Mu.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPi", "Phys/StdDC06LooseMuons" } ;
+PreselBu2D0Mu.DecayDescriptor  = "[ B+ -> D~0 mu+ ]cc" ;
+PreselBu2D0Mu.DaughterFilter.Selections  = { " mu+ : KinFilterCriterion, PVIPFilterCriterion", " D~0 : KinFilterCriterion/D0Kin" } ;
+PreselBu2D0Mu.DaughterFilter.FilterByDescendents  = false ;
+PreselBu2D0Mu.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 2 ;
+PreselBu2D0Mu.DaughterFilter.KinFilterCriterion.MinPt  = 2*GeV ;
+PreselBu2D0Mu.DaughterFilter.KinFilterCriterion.MinMomentum  = 8*GeV ;
+PreselBu2D0Mu.DaughterFilter.D0Kin.MinMomentum  = 10*GeV ;
+PreselBu2D0Mu.DaughterFilter.D0Kin.MinPt  = 2*GeV ;
+PreselBu2D0Mu.LowerWindow  = 3579*MeV ;
+PreselBu2D0Mu.UpperWindow  = 721*MeV ;
+PreselBu2D0Mu.MotherFilter.Selections  = { " B+ : VtxFilterCriterion" } ;
+PreselBu2D0Mu.MotherFilter.VtxFilterCriterion.MaxChi2  = 10 ;
+//In ->DVPreselBu2D0Mu->DoPreselBu2D0Mu
+PreselBu2D0Mu.OutputLevel  = 4 ;
+Plots.OutputLevel  = 4 ;
+//Added:
+SeqPreselBu2D0Mu.MeasureTime  = true ;
+PrintPreselBu2D0Mu.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02KsPiPi  PreselBu2D0K_D02KsPiPi
+// From DVPreselBu2D0K_D02KsPiPi.opts:
+//In ->DVPreselBu2D0K_D02KsPiPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02KsPiPi" } ;
+SeqPreselBu2D0K_D02KsPiPi.IgnoreFilterPassed  = false ;
+SeqPreselBu2D0K_D02KsPiPi.Members += { "MakeResonances/PreselBu2D0K_D02KsPiPi", "PrintHeader/PrintPreselBu2D0K_D02KsPiPi" } ;
+//In ->DVPreselBu2D0K_D02KsPiPi->PreselBu2D0K_D02KsPiPi
+PreselBu2D0K_D02KsPiPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KsPiPi", "Phys/StdDC06LooseKaons" } ;
+PreselBu2D0K_D02KsPiPi.DecayDescriptor  = "[B+ -> D~0 K+]cc" ;
+PreselBu2D0K_D02KsPiPi.DaughterFilter.Selections  = { "K+ : KinFilterCriterion,PVIPFilterCriterion" } ;
+PreselBu2D0K_D02KsPiPi.DaughterFilter.KinFilterCriterion.MinPt  = 0.5*GeV ;
+PreselBu2D0K_D02KsPiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 3.0 ;
+PreselBu2D0K_D02KsPiPi.KillOverlap  = true ;
+PreselBu2D0K_D02KsPiPi.Window  = 500.*MeV ;
+PreselBu2D0K_D02KsPiPi.MinPt  = 2.7*GeV ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.Selections  = { "B+ :    VtxFilterCriterion,PVIPFilterCriterion,MomentumMotherFlightAngleFilterCriterion/MMFlitAng, Momentum2FlightAngleFilterCriterion,VtxIsolationFilterCriterion" } ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9997 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.MMFlitAng.MotherName  = "B+" ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.MMFlitAng.DaughterName  = "D~0" ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 4.0 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.9993 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.VtxIsolationFilterCriterion.InputParticles  = { "/Event/Phys/StdDC06LooseKaons", "/Event/Phys/StdDC06LoosePions" } ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.VtxIsolationFilterCriterion.IPS  = 3 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.VtxIsolationFilterCriterion.NTracks  = 10 ;
+PreselBu2D0K_D02KsPiPi.MotherFilter.VtxIsolationFilterCriterion.Reject  = true ;
+//Added:
+SeqPreselBu2D0K_D02KsPiPi.MeasureTime  = true ;
+PrintPreselBu2D0K_D02KsPiPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02HHHH  PreselBu2D0K_D02HHHH
+// From DVPreselBu2D0K_D02HHHH.opts:
+//In ->DVPreselBu2D0K_D02HHHH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02HHHH" } ;
+SeqPreselBu2D0K_D02HHHH.IgnoreFilterPassed  = false ;
+SeqPreselBu2D0K_D02HHHH.Members += { "MakeResonances/PreselBu2D0K_D02HHHH", "PrintHeader/PrintPreselBu2D0K_D02HHHH" } ;
+//In ->DVPreselBu2D0K_D02HHHH->PreselBu2D0K_D02HHHH
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/LooseD02KKPiPiNoCCCloned/Particles'   TYPE='ConjugateNeutralPID/LooseD02KKPiPiNoCCCloned'", "DATA='/Event/Phys/LooseD02KKPiPiNoCCCloned/Vertices'    TYPE='ConjugateNeutralPID/LooseD02KKPiPiNoCCCloned'", "DATA='/Event/Phys/LooseD02KPiPiPiCACloned/Particles'    TYPE='ConjugateNeutralPID/LooseD02KPiPiPiCACloned'", "DATA='/Event/Phys/LooseD02KPiPiPiCACloned/Vertices'     TYPE='ConjugateNeutralPID/LooseD02KPiPiPiCACloned'" } ;
+LooseD02KKPiPiNoCCCloned.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KKPiPiNoCC" } ;
+LooseD02KKPiPiNoCCCloned.DecayDescriptor  = "D~0 -> K- K+ pi- pi+" ;
+LooseD02KPiPiPiCACloned.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPiPiPiCA" } ;
+LooseD02KPiPiPiCACloned.DecayDescriptor  = "[D0 -> K+ pi- pi+ pi-]cc" ;
+PreselBu2D0K_D02HHHH.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons", "Phys/LooseD02KKPiPiNoCCCloned", "Phys/LooseD02KPiPiPiCACloned", "Phys/StdDC06LooseD02KPiPiPiCA" } ;
+PreselBu2D0K_D02HHHH.DecayDescriptors  = { "B+ -> D~0 K+", "B- -> D~0 K-" } ;
+PreselBu2D0K_D02HHHH.DaughterFilter.Selections  = { "K+ : KinFilterCriterion/KinFilterBachelorK, PVIPFilterCriterion/PVIPFilterBachelorK" } ;
+PreselBu2D0K_D02HHHH.DaughterFilter.KinFilterBachelorK.MinMomentum  = 3.750*GeV ;
+PreselBu2D0K_D02HHHH.DaughterFilter.KinFilterBachelorK.MaxMomentum  = 125.0*GeV ;
+PreselBu2D0K_D02HHHH.DaughterFilter.KinFilterBachelorK.MinPt  = 400.0*MeV ;
+PreselBu2D0K_D02HHHH.DaughterFilter.PVIPFilterBachelorK.MinIPsignif  = 3.0 ;
+PreselBu2D0K_D02HHHH.Window  = 500.0*MeV ;
+PreselBu2D0K_D02HHHH.MinPt  = 500.0*MeV ;
+PreselBu2D0K_D02HHHH.KillOverlap  = true ;
+PreselBu2D0K_D02HHHH.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, PVIPFilterCriterion, FlightDistanceFilterCriterion, Momentum2FlightAngleFilterCriterion, MomentumMotherFlightAngleFilterCriterion/MMFlitAng" } ;
+PreselBu2D0K_D02HHHH.MotherFilter.VtxFilterCriterion.MaxChi2  = 17.5 ;
+PreselBu2D0K_D02HHHH.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5.0 ;
+PreselBu2D0K_D02HHHH.MotherFilter.FlightDistanceFilterCriterion.CutBestPV  = true ;
+PreselBu2D0K_D02HHHH.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2.0 ;
+PreselBu2D0K_D02HHHH.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+PreselBu2D0K_D02HHHH.MotherFilter.MMFlitAng.MotherName  = "B+" ;
+PreselBu2D0K_D02HHHH.MotherFilter.MMFlitAng.DaughterName  = "D0" ;
+PreselBu2D0K_D02HHHH.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 2.25 ;
+PreselBu2D0K_D02HHHH.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.998 ;
+//Added:
+SeqPreselBu2D0K_D02HHHH.MeasureTime  = true ;
+PrintPreselBu2D0K_D02HHHH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2D0Kst_D02HH  PreselBd2D0Kst_D02HH
+// From DVPreselBd2D0Kst_D02HH.opts:
+//In ->DVPreselBd2D0Kst_D02HH
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2D0Kst_D02HH" } ;
+SeqPreselBd2D0Kst_D02HH.Members  = { "MakeResonances/PreselBd2D0Kst_D02HH", "PrintHeader/PrintPreselBd2D0Kst_D02HH" } ;
+PreselBd2D0Kst_D02HH.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPi", "Phys/StdDC06LooseD02KK", "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06TightKstar2KPi" } ;
+PreselBd2D0Kst_D02HH.DecayDescriptor  = "[B0 -> D0 K*(892)0]cc" ;
+PreselBd2D0Kst_D02HH.DecayDescriptors  = { "[B0 -> D0 K*(892)0]cc", "[B0 -> D~0 K*(892)0]cc" } ;
+PreselBd2D0Kst_D02HH.DaughterFilter.Selections  = { "D0 : PVIPFilterCriterion/PVIPDzero, KinFilterCriterion/KinDzero", "K*(892)0 : PVIPFilterCriterion/PVIPKstar, KinFilterCriterion/KinKstar " } ;
+PreselBd2D0Kst_D02HH.DaughterFilter.PVIPDzero.MinIPsignif  = 2.00 ;
+PreselBd2D0Kst_D02HH.DaughterFilter.KinDzero.MinPt  = 1000.0*MeV ;
+PreselBd2D0Kst_D02HH.DaughterFilter.PVIPKstar.MinIPsignif  = 2.00 ;
+PreselBd2D0Kst_D02HH.DaughterFilter.KinKstar.MinPt  = 1000.0*MeV ;
+PreselBd2D0Kst_D02HH.KillOverlap  = true ;
+PreselBd2D0Kst_D02HH.Window  = 500*MeV ;
+PreselBd2D0Kst_D02HH.MotherFilter.Selections  = { "B0 : VtxFilterCriterion,
+                                                   PVIPFilterCriterion,
+                                                   Momentum2FlightAngleFilterCriterion" } ;
+PreselBd2D0Kst_D02HH.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 5.0 ;
+PreselBd2D0Kst_D02HH.MotherFilter.VtxFilterCriterion.MaxChi2  = 15.0 ;
+PreselBd2D0Kst_D02HH.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+//Added:
+SeqPreselBd2D0Kst_D02HH.MeasureTime  = true ;
+PrintPreselBd2D0Kst_D02HH.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0Tau2PiPiPi  FilterD0ForBu2D0Tau2PiPiPi FilterTau2PiPiPi PreselBu2D0Tau2PiPiPi
+// From DVPreselBu2D0Tau2PiPiPi.opts:
+//In ->DVPreselBu2D0Tau2PiPiPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0Tau2PiPiPi" } ;
+SeqPreselBu2D0Tau2PiPiPi.Members += { "OldFilterDesktop/FilterD0ForBu2D0Tau2PiPiPi", "MakeResonances/FilterTau2PiPiPi", "MakeResonances/PreselBu2D0Tau2PiPiPi", "PrintHeader/PrintPreselBu2D0Tau2PiPiPi" } ;
+FilterD0ForBu2D0Tau2PiPiPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KPi" } ;
+FilterD0ForBu2D0Tau2PiPiPi.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterD0ForBu2D0Tau2PiPiPi.Filter.Selections += { "D0 : FlightDistanceFilterCriterion, VtxFilterCriterion, Momentum2FlightAngleFilterCriterion" } ;
+FilterD0ForBu2D0Tau2PiPiPi.Filter.FlightDistanceFilterCriterion.MinFSPV  = 5. ;
+FilterD0ForBu2D0Tau2PiPiPi.Filter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9 ;
+FilterD0ForBu2D0Tau2PiPiPi.Filter.VtxFilterCriterion.MaxChi2  = 10. ;
+SeqPreselBu2D0Tau2PiPiPi.IgnoreFilterPassed  = false ;
+FilterTau2PiPiPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions" } ;
+FilterTau2PiPiPi.DecayDescriptor  = "[tau+ -> pi+ pi- pi+]cc" ;
+FilterTau2PiPiPi.DaughterFilter.Selections  = { "pi+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+FilterTau2PiPiPi.DaughterFilter.KinFilterCriterion.MinPt  = 300.0*MeV ;
+FilterTau2PiPiPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 1000.0*MeV ;
+FilterTau2PiPiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 4. ;
+FilterTau2PiPiPi.UpperWindow  = 0.*MeV ;
+FilterTau2PiPiPi.LowerWindow  = 900.*MeV ;
+FilterTau2PiPiPi.MinPt  = 1000.0*MeV ;
+FilterTau2PiPiPi.MotherFilter.Selections  = { "tau+ : VtxFilterCriterion, FlightDistanceFilterCriterion, Momentum2FlightAngleFilterCriterion, VtxIsolationFilterCriterion " } ;
+FilterTau2PiPiPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 12. ;
+FilterTau2PiPiPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2.5 ;
+FilterTau2PiPiPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9 ;
+FilterTau2PiPiPi.MotherFilter.VtxIsolationFilterCriterion.InputParticles  = { "Phys/StdDC06LoosePions" } ;
+FilterTau2PiPiPi.MotherFilter.VtxIsolationFilterCriterion.IPS  = 3 ;
+FilterTau2PiPiPi.MotherFilter.VtxIsolationFilterCriterion.NTracks  = 2 ;
+FilterTau2PiPiPi.MotherFilter.VtxIsolationFilterCriterion.Reject  = true ;
+PreselBu2D0Tau2PiPiPi.PhysDesktop.InputLocations  = { "Phys/FilterD0ForBu2D0Tau2PiPiPi", "Phys/FilterTau2PiPiPi" } ;
+PreselBu2D0Tau2PiPiPi.DecayDescriptor  = "[B+ -> D~0 tau+]cc" ;
+PreselBu2D0Tau2PiPiPi.UpperWindow  = 0. ;
+PreselBu2D0Tau2PiPiPi.LowerWindow  = 2300. ;
+PreselBu2D0Tau2PiPiPi.KillOverlap  = true ;
+PreselBu2D0Tau2PiPiPi.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2D0Tau2PiPiPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 15. ;
+PreselBu2D0Tau2PiPiPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9 ;
+//Added:
+SeqPreselBu2D0Tau2PiPiPi.MeasureTime  = true ;
+PrintPreselBu2D0Tau2PiPiPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBu2D0K_D02KPiPi0  PreselBu2D0K_D02KPiPi0
+// From DVPreselBu2D0K_D02KPiPi0.opts:
+//In ->DVPreselBu2D0K_D02KPiPi0
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBu2D0K_D02KPiPi0" } ;
+SeqPreselBu2D0K_D02KPiPi0.IgnoreFilterPassed  = false ;
+SeqPreselBu2D0K_D02KPiPi0.MeasureTime  = true ;
+//In ->DVPreselBu2D0K_D02KPiPi0->SpecialD0ForB2D0K
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Phys/PiandKForB2D0K/Particles'     TYPE='OldFilterDesktop/PiandKForB2D0K'", "DATA='/Event/Phys/PiandKForB2D0K/Vertices'      TYPE='OldFilterDesktop/PiandKForB2D0K'", "DATA='/Event/Phys/TightD02KPiForB2D0K/Particles'     TYPE='MakeResonances/TightD02KPiForB2D0K'", "DATA='/Event/Phys/TightD02KPiForB2D0K/Vertices'      TYPE='MakeResonances/TightD02KPiForB2D0K'", "DATA='/Event/Phys/TightD02KK_PiPiForB2D0K/Particles'   TYPE='OldFilterDesktop/TightD02KK_PiPiForB2D0K'", "DATA='/Event/Phys/TightD02KK_PiPiForB2D0K/Vertices'    TYPE='OldFilterDesktop/TightD02KK_PiPiForB2D0K'", "DATA='/Event/Phys/TightD02KPiPi0ForB2D0K/Particles'  TYPE='GaudiSequencer/TightD02KPiPi0ForB2D0KSeq'", "DATA='/Event/Phys/TightD02KPiPi0ForB2D0K/Vertices'   TYPE='GaudiSequencer/TightD02KPiPi0ForB2D0KSeq'" } ;
+PiandKForB2D0K.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" } ;
+PiandKForB2D0K.FilterCriterion  = "ByPIDFilterCriterion" ;
+PiandKForB2D0K.Filter.Selections  = { "K+ : TrackTypeFilterCriterion/TrackTypeFilterKaons, 
+                                  KinFilterCriterion/KinFilterKaons, 
+                                          PVIPFilterCriterion/PVIPFilterKaons, 
+                                          DLLFilterCriterion/DLLFilterKaons1, 
+                                          DLLFilterCriterion/DLLFilterKaons2, 
+                                          TrackQualityFilterCriterion/TrackQualityKaons", "pi+ : TrackTypeFilterCriterion/TrackTypeFilterPions, 
+                                          KinFilterCriterion/KinFilterPions, 
+                                          PVIPFilterCriterion/PVIPFilterPions, 
+                                          DLLFilterCriterion/DLLFilterPions, 
+                                          TrackQualityFilterCriterion/TrackQualityPions" } ;
+PiandKForB2D0K.Filter.TrackTypeFilterKaons.RequireLong  = true ;
+PiandKForB2D0K.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterKaons.MaxMomentum  = 100000.0*MeV ;
+PiandKForB2D0K.Filter.PVIPFilterKaons.MinIPsignif  = 3.5 ;
+PiandKForB2D0K.Filter.DLLFilterKaons1.PPFilter.Selection  = { "CombDLL(k-pi)>'-1.0'" } ;
+PiandKForB2D0K.Filter.DLLFilterKaons2.PPFilter.Selection  = { "CombDLL(k-p)>'-5.0'" } ;
+PiandKForB2D0K.Filter.TrackQualityKaons.Chi2Max  = 3.0 ;
+PiandKForB2D0K.Filter.TrackTypeFilterPions.RequireLong  = true ;
+PiandKForB2D0K.Filter.KinFilterPions.MinPt  = 400.0*MeV ;
+PiandKForB2D0K.Filter.KinFilterPions.MinMomentum  = 2000.0*MeV ;
+PiandKForB2D0K.Filter.PVIPFilterPions.MinIPsignif  = 4.0 ;
+PiandKForB2D0K.Filter.DLLFilterPions.PPFilter.Selection  = { "CombDLL(pi-k)>'-5.0'" } ;
+PiandKForB2D0K.Filter.TrackQualityPions.Chi2Max  = 3.0 ;
+TightD02KPiForB2D0K.PhysDesktop.InputLocations  = { "Phys/PiandKForB2D0K" } ;
+TightD02KPiForB2D0K.DecayDescriptors  = { "D~0 -> K+ pi-", "D~0 -> K- pi+" } ;
+TightD02KPiForB2D0K.DaughterFilter.Selections  = { "K+ :  PVIPFilterCriterion/PVIPFilterKaons", "pi+ : PVIPFilterCriterion/PVIPFilterPions" } ;
+TightD02KPiForB2D0K.DaughterFilter.PVIPFilterKaons.MinIPsignif  = 4.0 ;
+TightD02KPiForB2D0K.DaughterFilter.PVIPFilterPions.MinIPsignif  = 4.0 ;
+TightD02KPiForB2D0K.Window  = 21.0*MeV ;
+TightD02KPiForB2D0K.MinPt  = 1100.*MeV ;
+TightD02KPiForB2D0K.KillOverlap  = true ;
+TightD02KPiForB2D0K.MotherFilter.Selections  = { "D0 : VtxFilterCriterion, 
+                                          PVIPFilterCriterion,
+                                          FlightDistanceFilterCriterion" } ;
+TightD02KPiForB2D0K.MotherFilter.VtxFilterCriterion.MaxChi2  = 4.0 ;
+TightD02KPiForB2D0K.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 3.5 ;
+TightD02KPiForB2D0K.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+TightD02KK_PiPiForB2D0K.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06LooseD02KK" } ;
+TightD02KK_PiPiForB2D0K.FilterCriterion  = "ByPIDFilterCriterion" ;
+TightD02KK_PiPiForB2D0K.Filter.Selections  = { "K+ :  TrackTypeFilterCriterion/TrackTypeFilterKaons, 
+                                        KinFilterCriterion/KinFilterKaons, 
+                                                    PVIPFilterCriterion/PVIPFilterKaons, 
+                                                    DLLFilterCriterion/DLLFilterKaons1, 
+                                                    DLLFilterCriterion/DLLFilterKaons2", "pi+ : TrackTypeFilterCriterion/TrackTypeFilterPions, 
+                                                    KinFilterCriterion/KinFilterPions, 
+                                                    PVIPFilterCriterion/PVIPFilterPions, 
+                                                    DLLFilterCriterion/DLLFilterPions", "D0 :  MassFilterCriterion,
+                                          VtxFilterCriterion, 
+                                        KinFilterCriterion, 
+                                        PVIPFilterCriterion,
+                                        Momentum2FlightAngleFilterCriterion,
+                                          FlightDistanceFilterCriterion" } ;
+TightD02KK_PiPiForB2D0K.Filter.FilterByDescendents  = true ;
+TightD02KK_PiPiForB2D0K.Filter.TrackTypeFilterKaons.RequireLong  = true ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterKaons.MinPt  = 400.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterKaons.MinIPsignif  = 2.5 ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterKaons1.PPFilter.Selection  = { "CombDLL(K-pi)>'-50000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterKaons2.PPFilter.Selection  = { "CombDLL(K-p)>'-5000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.TrackTypeFilterPions.RequireLong  = true ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterPions.MinPt  = 400.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterPions.MinMomentum  = 2000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterPions.MinIPsignif  = 2.5 ;
+TightD02KK_PiPiForB2D0K.Filter.DLLFilterPions.PPFilter.Selection  = { "CombDLL(pi-k)>'-50000000.0'" } ;
+TightD02KK_PiPiForB2D0K.Filter.MassFilterCriterion.Window  = 50.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.Momentum2FlightAngleFilterCriterion.CosAngle  = -1. ;
+TightD02KK_PiPiForB2D0K.Filter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterCriterion.MinMomentum  = 5000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.KinFilterCriterion.MinPt  = 1000.0*MeV ;
+TightD02KK_PiPiForB2D0K.Filter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+TightD02KK_PiPiForB2D0K.Filter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+//In ->DVPreselBu2D0K_D02KPiPi0
+SeqPreselBu2D0K_D02KPiPi0.Members += { "MakeResonances/PreselBu2D0K_D02KPiPi0", "PrintHeader/PrintPreselBu2D0K_D02KPiPi0" } ;
+//In ->DVPreselBu2D0K_D02KPiPi0->PreselBu2D0K_D02KPiPi0
+TightD02KPiPi0ForB2D0KSeq.Members += { "MakeResonances/TightD02KPiPi0ForB2D0K" } ;
+TightD02KPiPi0ForB2D0KSeq.MeasureTime  = true ;
+TightD02KPiPi0ForB2D0K.PhysDesktop.InputLocations  = { "Phys/PiandKForB2D0K", "Phys/StdDC06LooseResolvedPi0s", "Phys/StdDC06LooseMergedPi0s" } ;
+TightD02KPiPi0ForB2D0K.DecayDescriptors  = { "D~0 -> K+ pi- pi0", "D~0 -> K- pi+ pi0" } ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.Selections  = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons", "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions", "pi0 : KinFilterCriterion/KinFilterPi0s" } ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterKaons.MinMomentum  = 2000.0*MeV ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterKaons.MinPt  = 400.0*MeV ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.PVIPFilterKaons.MinIPsignif  = 2.5 ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterPions.MinMomentum  = 2000.0*MeV ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterPions.MinPt  = 400.0*MeV ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.PVIPFilterPions.MinIPsignif  = 2.5 ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterPi0s.MinMomentum  = 5000.0*MeV ;
+TightD02KPiPi0ForB2D0K.DaughterFilter.KinFilterPi0s.MinPt  = 750.0*MeV ;
+TightD02KPiPi0ForB2D0K.Window  = 80.0*MeV ;
+TightD02KPiPi0ForB2D0K.MinPt  = 1000.0*MeV ;
+TightD02KPiPi0ForB2D0K.KillOverlap  = true ;
+TightD02KPiPi0ForB2D0K.MotherFilter.Selections  = { "D0 : VtxFilterCriterion, 
+                                                        PVIPFilterCriterion,
+                                                        Momentum2FlightAngleFilterCriterion,
+                                                        FlightDistanceFilterCriterion" } ;
+TightD02KPiPi0ForB2D0K.MotherFilter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+TightD02KPiPi0ForB2D0K.MotherFilter.PVIPFilterCriterion.MinIPsignif  = 2.5 ;
+TightD02KPiPi0ForB2D0K.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = -1. ;
+TightD02KPiPi0ForB2D0K.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 3. ;
+PreselBu2D0K_D02KPiPi0.PhysDesktop.InputLocations  = { "Phys/PiandKForB2D0K", "Phys/TightD02KPiPi0ForB2D0K" } ;
+PreselBu2D0K_D02KPiPi0.DecayDescriptors  = { "B+ -> D~0 K+", "B- -> D~0 K-" } ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.Selections  = { "D0 : KinFilterCriterion/KinFilterDzero", "K+ : KinFilterCriterion/KinFilterBachelorK, PVIPFilterCriterion/PVIPFilterBachelorK" } ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.KinFilterDzero.MinMomentum  = 5000.0*MeV ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.KinFilterDzero.MinPt  = 500.0*MeV ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.KinFilterBachelorK.MinMomentum  = 3500.0*MeV ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.KinFilterBachelorK.MinPt  = 300.0*MeV ;
+PreselBu2D0K_D02KPiPi0.DaughterFilter.PVIPFilterBachelorK.MinIPsignif  = 2. ;
+PreselBu2D0K_D02KPiPi0.Window  = 500.0*MeV ;
+PreselBu2D0K_D02KPiPi0.MinPt  = 250.0*MeV ;
+PreselBu2D0K_D02KPiPi0.KillOverlap  = true ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.Selections  = { "B+ : VtxFilterCriterion, PVIPFilterCriterion, FlightDistanceFilterCriterion, Momentum2FlightAngleFilterCriterion" } ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.VtxFilterCriterion.MaxChi2  = 20.0 ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 4.0 ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.FlightDistanceFilterCriterion.CutBestPV  = true ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2. ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.FlightDistanceFilterCriterion.MinFPV  = 0.*mm ;
+PreselBu2D0K_D02KPiPi0.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9990 ;
+//Added:
+SeqPreselBu2D0K_D02KPiPi0.MeasureTime  = true ;
+PrintPreselBu2D0K_D02KPiPi0.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2D0Kst_D02KsKK  PreselBd2D0Kst_D02KsKK
+// From DVPreselBd2D0Kst_D02KsKK.opts:
+//In ->DVPreselBd2D0Kst_D02KsKK->PreselBd2D0Kst_D02KsKK
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2D0Kst_D02KsKK" } ;
+//Added:
+SeqPreselBd2D0Kst_D02KsKK.Members += { "MakeResonances/PreselBd2D0Kst_D02KsKK", "PrintHeader/PrintPreselBd2D0Kst_D02KsKK" } ;
+//In ->DVPreselBd2D0Kst_D02KsKK->PreselBd2D0Kst_D02KsKK
+PreselBd2D0Kst_D02KsKK.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD02KsKK", "Phys/StdDC06TightKstar2KPi" } ;
+PreselBd2D0Kst_D02KsKK.DecayDescriptor  = "[B0 -> D~0 K*(892)0]cc" ;
+PreselBd2D0Kst_D02KsKK.KillOverlap  = true ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.Selections  = { "B0 :    VtxFilterCriterion,
+                                                 PVIPFilterCriterion,
+                                                 KinFilterCriterion,
+                                                 Momentum2FlightAngleFilterCriterion,
+                                      MomentumMotherFlightAngleFilterCriterion/MMFlitAng" } ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.VtxFilterCriterion.MaxChi2  = 15. ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 6.0 ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9995 ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.KinFilterCriterion.MinPt  = 2.0*GeV ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.MMFlitAng.MotherName  = "B0" ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.MMFlitAng.DaughterName  = "D0" ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.MMFlitAng.Mother2DaughterIPSmax  = 6.0 ;
+PreselBd2D0Kst_D02KsKK.MotherFilter.MMFlitAng.Mother2DaughterAngleMin  = 0.9990 ;
+PreselBd2D0Kst_D02KsKK.Window  = 500.*MeV ;
+//Added:
+SeqPreselBd2D0Kst_D02KsKK.MeasureTime  = true ;
+PrintPreselBd2D0Kst_D02KsKK.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2DPi  FilterDForBd2DPi PreselBd2DPi
+// From DVPreselBd2DPi.opts:
+//In ->DVPreselBd2DPi
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2DPi" } ;
+SeqPreselBd2DPi.IgnoreFilterPassed  = false ;
+SeqPreselBd2DPi.MeasureTime  = true ;
+SeqPreselBd2DPi.Members += { "OldFilterDesktop/FilterDForBd2DPi", "MakeResonances/PreselBd2DPi", "PrintHeader/PrintPreselBd2DPi" } ;
+FilterDForBd2DPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LooseD2KPiPi" } ;
+FilterDForBd2DPi.FilterCriterion  = "ByPIDFilterCriterion" ;
+FilterDForBd2DPi.Filter.Selections  = { "K+ : PVIPFilterCriterion", "pi- : PVIPFilterCriterion" } ;
+FilterDForBd2DPi.Filter.FilterByDescendents  = true ;
+FilterDForBd2DPi.Filter.PVIPFilterCriterion.MinIPSignif  = 1. ;
+PreselBd2DPi.PhysDesktop.InputLocations  = { "Phys/StdDC06LoosePions", "Phys/FilterDForBd2DPi" } ;
+PreselBd2DPi.DecayDescriptor  = "[B0 -> D- pi+]cc" ;
+PreselBd2DPi.DaughterFilter.Selections  = { "pi+ : KinFilterCriterion, PVIPFilterCriterion", "D- : FlightDistanceFilterCriterion, KinFilterCriterion/DKin, PVIPFilterCriterion/DPVIP, VtxFilterCriterion" } ;
+PreselBd2DPi.DaughterFilter.VtxFilterCriterion.MaxChi2  = 20. ;
+PreselBd2DPi.DaughterFilter.DPVIP.MinIPSignif  = 2. ;
+PreselBd2DPi.DaughterFilter.DKin.MinPt  = 1750. ;
+PreselBd2DPi.DaughterFilter.FlightDistanceFilterCriterion.MinFSPV  = 7. ;
+PreselBd2DPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 2000. ;
+PreselBd2DPi.DaughterFilter.PVIPFilterCriterion.MinIPSignif  = 2. ;
+PreselBd2DPi.DaughterFilter.KinFilterCriterion.MinPt  = 450. ;
+PreselBd2DPi.Window  = 500. ;
+PreselBd2DPi.KillOverlap  = true ;
+PreselBd2DPi.MotherFilter.Selections  = { "B0 : VtxFilterCriterion, PVIPFilterCriterion, Momentum2FlightAngleFilterCriterion, FlightDistanceFilterCriterion" } ;
+PreselBd2DPi.MotherFilter.VtxFilterCriterion.MaxChi2  = 10. ;
+PreselBd2DPi.MotherFilter.FlightDistanceFilterCriterion.CutBestPV  = true ;
+PreselBd2DPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV  = 2. ;
+PreselBd2DPi.MotherFilter.PVIPFilterCriterion.MaxIPSignif  = 6.5 ;
+PreselBd2DPi.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9998 ;
+//Added:
+SeqPreselBd2DPi.MeasureTime  = true ;
+PrintPreselBd2DPi.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2KPiPi0  LChargeds PreselBd2KPiPi0
+// From DVPreselBd2KPiPi0.opts:
+//In ->DVPreselBd2KPiPi0->PreselBd2KPiPi0
+PreselBd2KPiPi0.CutPtPi0  = 750. ;
+PreselBd2KPiPi0.CutPtCharged  = 150. ;
+PreselBd2KPiPi0.OwnDll  = false ;
+PreselBd2KPiPi0.CutDllCharged  = 0. ;
+PreselBd2KPiPi0.CutIpsCharged  = 4. ;
+PreselBd2KPiPi0.CutVtxFitChi2  = 4.0 ;
+PreselBd2KPiPi0.CutVtxZ  = 0.5 ;
+PreselBd2KPiPi0.CutDeltaVtxZ  = 1000.0 ;
+PreselBd2KPiPi0.CutIpsMax  = 4. ;
+PreselBd2KPiPi0.CutIpsMin  = 6. ;
+PreselBd2KPiPi0.CutDist3D  = 0.08 ;
+PreselBd2KPiPi0.CutMomAngle  = 0.010 ;
+PreselBd2KPiPi0.CutPtMother  = 2000. ;
+PreselBd2KPiPi0.CutSumPt  = 2500. ;
+PreselBd2KPiPi0.CutMassWindow  = 500 ;
+PreselBd2KPiPi0.DecayDescriptor  = "B0 -> K+ pi- pi0" ;
+PreselBd2KPiPi0.XPlus  = "K+" ;
+PreselBd2KPiPi0.XMinus  = "pi-" ;
+PreselBd2KPiPi0.XZero  = "pi0" ;
+ApplicationMgr.TopAlg += { 
+  // "CombinedParticleMaker/LChargeds",  // not supported anymore
+  "GaudiSequencer/SeqPreselBd2KPiPi0" } ;
+//Added:
+SeqPreselBd2KPiPi0.Members += { "PreselBd2PiPiPi0/PreselBd2KPiPi0", "PrintHeader/PrintPreselBd2KPiPi0" } ;
+//In ->DVPreselBd2KPiPi0->PreselBd2KPiPi0
+LChargeds.TrackSelector.TrackTypes  = { "Long" } ;
+LChargeds.Particle  = "pion" ;
+LChargeds.Electron.Selection  = { "RequiresDet='CALO' e-pi>'0.0'" } ;
+LChargeds.Muon.Selection  = { "RequiresDet='MUON' mu-pi>'0.0'" } ;
+LChargeds.Kaon.Selection  = { "RequiresDet='RICH' k-pi>'0.0'" } ;
+LChargeds.Proton.Selection  = { "RequiresDet='RICH' p-pi>'3.0'" } ;
+ApplicationMgr.Dlls += { "Bd2PiPiPi0" } ;
+PreselBd2KPiPi0.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LooseResolvedPi0s", "/Event/Phys/StdDC06LooseMergedPi0s", "/Event/Phys/LChargeds" } ;
+PreselBd2KPiPi0.GeomTools += { "": "GeomDispCalculator" } ;
+PreselBd2KPiPi0.VertexFitters += { "": "OfflineVertexFitter" } ;
+PreselBd2KPiPi0.OutputLevel  = 3 ;
+PreselBd2KPiPi0.PhysDesktop.OutputLevel  = 3 ;
+PreselBd2KPiPi0.GeomDispCalculator.OutputLevel  = 3 ;
+PreselBd2KPiPi0.BlindVertexFitter.OutputLevel  = 3 ;
+PreselBd2KPiPi0.OfflineVertexFitter.OutputLevel  = 3 ;
+PreselBd2KPiPi0.Stuff.OutputLevel  = 3 ;
+//In ->DVPreselBd2KPiPi0
+PreselBd2PiPiPi0.OutputLevel  = 4 ;
+//Added:
+SeqPreselBd2KPiPi0.MeasureTime  = true ;
+PrintPreselBd2KPiPi0.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2PiPiPi0  LPions UPions PreselBd2PiPiPi0
+// From DVPreselBd2PiPiPi0.opts:
+//In ->DVPreselBd2PiPiPi0->PreselBd2PiPiPi0
+PreselBd2PiPiPi0.CutPtPi0  = 750. ;
+PreselBd2PiPiPi0.CutPtCharged  = 150. ;
+PreselBd2PiPiPi0.OwnDll  = false ;
+PreselBd2PiPiPi0.CutDllCharged  = 0. ;
+PreselBd2PiPiPi0.CutIpsCharged  = 4. ;
+PreselBd2PiPiPi0.CutVtxFitChi2  = 4.0 ;
+PreselBd2PiPiPi0.CutVtxZ  = 0.5 ;
+PreselBd2PiPiPi0.CutDeltaVtxZ  = 1000.0 ;
+PreselBd2PiPiPi0.CutIpsMax  = 4. ;
+PreselBd2PiPiPi0.CutIpsMin  = 6. ;
+PreselBd2PiPiPi0.CutDist3D  = 0.08 ;
+PreselBd2PiPiPi0.CutMomAngle  = 0.010 ;
+PreselBd2PiPiPi0.CutPtMother  = 2000. ;
+PreselBd2PiPiPi0.CutSumPt  = 2500. ;
+PreselBd2PiPiPi0.CutMassWindow  = 500 ;
+PreselBd2PiPiPi0.DecayDescriptor  = "B0 -> pi+ pi- pi0" ;
+ApplicationMgr.TopAlg += { 
+  "CombinedParticleMaker/LPions", 
+   "CombinedParticleMaker/UPions", "GaudiSequencer/SeqPreselBd2PiPiPi0" } ;
+//Added:
+SeqPreselBd2PiPiPi0.Members += { "PreselBd2PiPiPi0/PreselBd2PiPiPi0", "PrintHeader/PrintPreselBd2PiPiPi0" } ;
+//In ->DVPreselBd2PiPiPi0->PreselBd2PiPiPi0
+LPions.TrackSelector.TrackTypes  = { "Long" } ;
+LPions.Particle  = "pion" ;
+LPions.Electron.Selection  = { "RequiresDet='CALO' e-pi>'0.0'" } ;
+LPions.Muon.Selection  = { "RequiresDet='MUON' mu-pi>'0.0'" } ;
+LPions.Kaon.Selection  = { "RequiresDet='RICH' k-pi>'0.0'" } ;
+LPions.Proton.Selection  = { "RequiresDet='RICH' p-pi>'3.0'" } ;
+UPions.Particle  = "pion" ;
+UPions.TrackSelector.TrackTypes  = { "Upstream" } ;
+UPions.Electron.Selection  = { "RequiresDet='CALO' e-pi>'0.0'" } ;
+UPions.Muon.Selection  = { "RequiresDet='MUON' mu-pi>'0.0'" } ;
+UPions.Kaon.Selection  = { "RequiresDet='RICH' k-pi>'0.0'" } ;
+UPions.Proton.Selection  = { "RequiresDet='RICH' p-pi>'3.0'" } ;
+ApplicationMgr.Dlls += { "Bd2PiPiPi0" } ;
+PreselBd2PiPiPi0.PhysDesktop.InputLocations  = { "/Event/Phys/StdDC06LooseResolvedPi0s", "/Event/Phys/StdDC06LooseMergedPi0s", "/Event/Phys/LPions", "/Event/Phys/UPions" } ;
+PreselBd2PiPiPi0.GeomTools += { "": "GeomDispCalculator" } ;
+PreselBd2PiPiPi0.VertexFitters += { "": "OfflineVertexFitter" } ;
+PreselBd2PiPiPi0.OutputLevel  = 3 ;
+PreselBd2PiPiPi0.PhysDesktop.OutputLevel  = 3 ;
+PreselBd2PiPiPi0.GeomDispCalculator.OutputLevel  = 3 ;
+PreselBd2PiPiPi0.BlindVertexFitter.OutputLevel  = 3 ;
+PreselBd2PiPiPi0.OfflineVertexFitter.OutputLevel  = 3 ;
+PreselBd2PiPiPi0.Stuff.OutputLevel  = 3 ;
+//In ->DVPreselBd2PiPiPi0
+PreselBd2PiPiPi0.OutputLevel  = 4 ;
+//Added:
+SeqPreselBd2PiPiPi0.MeasureTime  = true ;
+PrintPreselBd2PiPiPi0.OutputLevel  = 3 ;
+
+
+
+//STRIP OPTIONS PreselBd2Rho0Rho0  PionsForRho0 Rho0ForBd PreselBd2Rho0Rho0
+// From DVPreselBd2Rho0Rho0.opts:
+//In ->DVPreselBd2Rho0Rho0->PreselBd2Rho0Rho0
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselBd2Rho0Rho0" } ;
+SeqPreselBd2Rho0Rho0.IgnoreFilterPassed  = false ;
+SeqPreselBd2Rho0Rho0.MeasureTime  = true ;
+SeqPreselBd2Rho0Rho0.Members += { "CombinedParticleMaker/PionsForRho0", "MakeResonances/Rho0ForBd", "MakeResonances/PreselBd2Rho0Rho0", "PrintHeader/PrintPreselBd2Rho0Rho0" } ;
+PionsForRho0.TrackSelector.TrackTypes  = { "Long" } ;
+PionsForRho0.Particle  = "pion" ;
+PionsForRho0.Electron.Selection  = { "RequiresDet='CALO' e-pi>'0.0'" } ;
+PionsForRho0.Muon.Selection  = { "RequiresDet='MUON' mu-pi>'0.0'" } ;
+PionsForRho0.Kaon.Selection  = { "RequiresDet='RICH' k-pi>'0.0'" } ;
+PionsForRho0.Proton.Selection  = { "RequiresDet='RICH' p-pi>'3.0'" } ;
+Rho0ForBd.PhysDesktop.InputLocations  = { "Phys/PionsForRho0" } ;
+Rho0ForBd.DecayDescriptor  = "rho(770)0 -> pi+ pi-" ;
+Rho0ForBd.DaughterFilter.Selections  = { "pi+ : KinFilterCriterion, PVIPFilterCriterion" } ;
+Rho0ForBd.DaughterFilter.KinFilterCriterion.MinPt  = 150.0*MeV ;
+Rho0ForBd.DaughterFilter.PVIPFilterCriterion.MinIPsignif  = 2.0 ;
+Rho0ForBd.Window  = 300.0*MeV ;
+Rho0ForBd.MinPt  = 400.0*MeV ;
+Rho0ForBd.MotherFilter.Selections  = { "rho(770)0 : VtxFilterCriterion" } ;
+Rho0ForBd.MotherFilter.VtxFilterCriterion.MaxChi2  = 15.0 ;
+PreselBd2Rho0Rho0.PhysDesktop.InputLocations  = { "Phys/Rho0ForBd" } ;
+PreselBd2Rho0Rho0.DecayDescriptors  = { "B0 -> rho(770)0 rho(770)0" } ;
+PreselBd2Rho0Rho0.Window  = 500.0*MeV ;
+PreselBd2Rho0Rho0.MinPt  = 1500.0*MeV ;
+PreselBd2Rho0Rho0.KillOverlap  = true ;
+PreselBd2Rho0Rho0.MotherFilter.Selections  = { "B0 : VtxFilterCriterion,
+                                         PVIPFilterCriterion,
+                                           Momentum2FlightAngleFilterCriterion" } ;
+PreselBd2Rho0Rho0.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle  = 0.9999 ;
+PreselBd2Rho0Rho0.MotherFilter.VtxFilterCriterion.MaxChi2  = 15. ;
+PreselBd2Rho0Rho0.MotherFilter.PVIPFilterCriterion.MaxIPsignif  = 10.0 ;
+//In ->DVPreselBd2Rho0Rho0
+PreselBd2PiPiPi0.OutputLevel  = 4 ;
+//Added:
+SeqPreselBd2Rho0Rho0.MeasureTime  = true ;
+PrintPreselBd2Rho0Rho0.OutputLevel  = 3 ;
+
+
+// INPUT
+#pragma print off
+#pragma print on

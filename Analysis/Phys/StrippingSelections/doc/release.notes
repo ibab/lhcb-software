@@ -8,7 +8,6 @@
  - Moved to here legacy DC06 stripping options
  - Moved python options to options
 
-!========================== StrippingSelections v1r0 2009-05-15 ===============
 ! 2009-05-15  Anton Poluektov
 
   Initial release. Content of this package: 
