@@ -10,5 +10,5 @@ from Gaudi.Configuration import *
 # Import stripping selections
 #
 
-importOptions( "$STRIPPINGSELECTIONSROOT/python/StrippingB2DPi.py")
-importOptions( "$STRIPPINGSELECTIONSROOT/python/StrippingBd2KstarMuMu.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingB2DPi.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py")
