@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.126 2009-05-20 18:55:36 gligorov Exp $
+!$Id: release.notes,v 1.127 2009-05-20 20:36:30 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-20 - V. Gligorov
+  - Removed the obsolete StdLooseDs.py selection. This has been entirely superseeded
+    by StdLooseDplus.py because there is no good reasons for different cuts between
+    the charged D and Ds at this loose level. The mass window is large enough to accomodate
+    both, as described in the log entry below. If your selection is broken, just switch
+    to StdLooseDplus. You will also need to change the Ds to a D+ in your decay
+    descriptors. 
 
 ! 2009-05-20 - V. Gligorov
   - Updated the cuts for the standard D0 to bring it into line with what will be
