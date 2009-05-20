@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02HH.py,v 1.4 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdLooseD02HH.py,v 1.5 2009-05-20 18:50:32 gligorov Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02HH.py
 #  configuration file for 'Standard Loose D0 -> HH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> HH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KPi' ,
@@ -32,10 +32,12 @@ StdLooseD02KPi = CombineParticles ( 'StdLooseD02KPi' )
 StdLooseD02KPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
-StdLooseD02KPi.DaughtersCuts = { "K+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
-                                 "pi+" : "(PT>300*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"} 
-StdLooseD02KPi.CombinationCut = "(ADAMASS('D0')<50) & (APT>1*GeV)"
-StdLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+StdLooseD02KPi.DaughtersCuts = { "K+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
+                                 "pi+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"} 
+#for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
+#~60 MeV below since the lower mass sideband will be for the crystal ball only. 
+StdLooseD02KPi.CombinationCut = "(APT>1*GeV) & (ADAMASS('D0')<200*MeV)"
+StdLooseD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (M > 1800*MeV)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseD02KPi )
