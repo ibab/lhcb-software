@@ -1,4 +1,4 @@
-// $Id: CaloMomentum.h,v 1.6 2009-05-19 10:20:26 ibelyaev Exp $
+// $Id: CaloMomentum.h,v 1.7 2009-05-20 14:28:03 odescham Exp $
 // ============================================================================
 #ifndef CaloUtils_CaloMomentum_H
 #define CaloUtils_CaloMomentum_H 1
@@ -253,8 +253,6 @@ inline void LHCb::CaloMomentum::setReferencePoint
   this -> addToFlag ( LHCb::CaloMomentum::NewReferencePoint);
   this -> addToFlag ( LHCb::CaloMomentum::NewPointCovariance);
 } 
-// ============================================================================
-// The END 
 // ============================================================================
 #endif //CaloUtils_CaloMomentum_H
 // ============================================================================

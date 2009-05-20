@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.123 2009-05-20 13:38:02 odescham Exp $
+! $Id: release.notes,v 1.124 2009-05-20 14:28:03 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
 
 ! 2009-05-20 - Olivier Deschamps
- - Calo2Dview : fix bug in getCaloParam() - affecting L0CaloMonitoring only
+ - CaloMomentum : invariant mass error relies on Gaudi::Math::sigmamass (LHCbMath/Kinematics.h)
 
+! 2009-05-20 - Olivier Deschamps
+ - Calo2Dview : fix bug in getCaloParam() - affecting L0CaloMonitoring only
+  
 
 ! 2009-05-19 - Vanya  BELYAEV
 

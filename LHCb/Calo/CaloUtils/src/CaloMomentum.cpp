@@ -1,6 +1,6 @@
-// $Id: CaloMomentum.cpp,v 1.6 2009-05-18 16:28:38 ibelyaev Exp $ 
+// $Id: CaloMomentum.cpp,v 1.7 2009-05-20 14:28:03 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 #include "Event/CaloHypo.h"
 #include "Event/ProtoParticle.h"
 #include "Event/VertexBase.h"
+#include  "LHCbMath/Kinematics.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -598,12 +599,11 @@ void LHCb::CaloMomentum::setReferencePoint
 double LHCb::CaloMomentum::emass()
 {
   evaluate();
-  Gaudi::Vector4 momentum( m_momentum.Px () ,
-                           m_momentum.Py () ,
-                           m_momentum.Pz () , 
-                           m_momentum.E  () ) ;
-  return sqrt ( Similarity ( momentum, m_momCovMatrix ) / m_momentum.M2() );
+  
+  return Gaudi::Math::sigmamass( m_momentum, m_momCovMatrix);
+  //  Gaudi::Vector4 momentum( m_momentum.Px () ,
+  //                         m_momentum.Py () ,
+  //                         m_momentum.Pz () , 
+  //                         m_momentum.E  () ) ;
+  //return sqrt ( Similarity ( momentum, m_momCovMatrix ) / m_momentum.M2() );
 }
-// =============================================================================
-// The END 
-// =============================================================================
