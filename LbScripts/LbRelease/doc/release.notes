@@ -1,3 +1,7 @@
+2009-05-20 Joel Closier
+
+    * scripts/usedProjects : Add the package COMPAT not to be remove
+
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r10
