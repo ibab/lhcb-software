@@ -1,4 +1,4 @@
-// $Id: ODINFilter.cpp,v 1.1 2008-09-23 13:13:36 ibelyaev Exp $
+// $Id: ODINFilter.cpp,v 1.2 2009-05-20 08:57:40 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -79,7 +79,7 @@ namespace LoKi
       StatusCode sc = setProperty ( "Code" , "ODIN_NONE" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
       sc = setProperty 
-        ( "Factory" , "LoKi::Hybrid::HltFactory/HltFactory::PUBLIC" ) ;
+        ( "Factory" , "LoKi::Hybrid::HltFactory/HltFactory:PUBLIC" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Factory'" , sc ) ;
     } 
     /// virtual and protected destructor 

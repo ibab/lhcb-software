@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.15 2009-05-09 19:27:31 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2009-05-20 08:57:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-20 - Vanya BELYAEV
+
+ - src/Components/HDRFilter.cpp,
+   src/Components/L0Filter.cpp 
+   src/Components/ODINFilter.cpp 
+
+     fix  atype in the name of HltFactory 
+
 
 ! 2009-05-09 - Vanya BELYAEV
 
