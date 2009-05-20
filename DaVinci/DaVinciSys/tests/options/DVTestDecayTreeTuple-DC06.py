@@ -1,17 +1,5 @@
- ## @file HltDecayTreeTuple.opts
+ ## @file DVTestHltDecayTreeTuple-DC06.py
  #
- #  Generic Tuple configuration
- #  @warning Will not work without decay and input data
- #  @code
- #  #importOptions( $HLTSELCHECKERROOT/options/HltDecayTreeTuple.py)
- #  HltDecayTreeTuple.InputLocations = ["HltSelBd2MuMuKstar"]
- #  HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
- #  // optional additional tools fro head or other branches
- #  HltDecayTreeTuple.Branches = {
- #    "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
- #  };
- #  HltDecayTreeTuple.Head.ToolList += [ "TupleToolP2VV" ]
- #  @endcode
  #
  #  See DecayTreeTuple documentation
  #
@@ -21,19 +9,7 @@
 
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import *
-########################################################################
-#
-# If you want to import .opts options, do this first
-#
-importOptions("$STDOPTS/PreloadUnits.opts")
-#######################################################################
-#
-# Selection
-#
-importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts" )
-sel = GaudiSequencer("SeqPreselBu2LLK")
-from Configurables import PrintHeader
-PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ########################################################################
 #
 # The Decay Tuple
@@ -52,8 +28,8 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["DC06SelBu2eeK"]
-tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
+tuple.InputLocations = ["Strip_10Hz_Bd2KstarMuMu"]
+tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -74,20 +50,29 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "[B+ -> ^e+ ^e- ^K+ {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc"
+mcTuple.Decay = "{[ [B0]nos -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc, [ [B~0]os -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc}"
 mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 #mcTuple.OutputLevel = 1
+#######################################################################
+#
+# Selection
+#
+from StrippingConf.Configuration import StrippingConf
+StrippingConf().ActiveLines = []
+StrippingConf().OutputType = "DST"
+importOptions ( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py"  )
+
+from Configurables import DaVinci
+DaVinci().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py" 
 ########################################################################
 #
 # DaVinci
 #
-from Configurables import DaVinci
 DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "DC06" # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple_DC06.root"  # Ntuple
-DaVinci().UserAlgorithms = [ sel ]
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"

@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.4 2009-04-29 13:27:53 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.5 2009-05-20 17:04:01 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -11,6 +11,7 @@ Test file for B0->mumuK* selection
 @date 2007-11-12
 """
 from Gaudi.Configuration import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ##--------------------------------------------------------------
 ##
 ## Truth checking 
@@ -26,9 +27,9 @@ from Configurables import OldFilterDesktop, ByPIDFilterCriterion, TrueMCFilterCr
 SelectTrueNoPIDsDecay = OldFilterDesktop("SelectTrueNoPIDsDecay")
 trueSeq.Members += [ SelectTrueNoPIDsDecay ]
 SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion"
-SelectTrueNoPIDsDecay.InputLocations = [ "StdDC06NoPIDsMuons",
-                                                     "StdDC06NoPIDsKaons",
-                                                     "StdDC06NoPIDsPions"]
+SelectTrueNoPIDsDecay.InputLocations = [ "StdNoPIDsMuons",
+                                         "StdNoPIDsKaons",
+                                         "StdNoPIDsPions"]
 SelectTrueNoPIDsDecay.addTool(ByPIDFilterCriterion("Filter"))
 SelectTrueNoPIDsDecay.Filter.Selections =  [ "K+ : TrueMCFilterCriterion/Decay",
                                              "mu+ : TrueMCFilterCriterion/Decay",
@@ -54,9 +55,9 @@ AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> mu- mu+ K+ pi-]cc"  ## all particle
 ##
 SelectTrueLooseDecay = SelectTrueNoPIDsDecay.clone("SelectTrueLooseDecay")
 trueSeq.Members += [ SelectTrueLooseDecay ]
-SelectTrueLooseDecay.InputLocations = [ "StdDC06LooseMuons",
-                                                    "StdDC06LooseKaons",
-                                                    "StdDC06LoosePions"]
+SelectTrueLooseDecay.InputLocations = [ "StdLooseMuons",
+                                        "StdLooseKaons",
+                                        "StdLoosePions"]
 ##
 ## Dummy MakeResonances to check that all tracks are there
 ##
@@ -72,13 +73,17 @@ trueSeq.Members += [ TestCorrelations  ]
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay", 
-                               "PreselBd2KstarMuMu", "StdDC06LoosePenguinDimuon", "StdDC06LooseKstar2KPi" ]
+                               "Strip_10Hz_Bd2KstarMuMu", "StdLoosePenguinDimuon", "StdLooseKstar2KPi" ]
 ###
 # DaVinci
 ###
 ## Preselection
+from StrippingConf.Configuration import StrippingConf
+StrippingConf().ActiveLines = []
+StrippingConf().OutputType = "DST"
+importOptions ( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py" )
+
 from Configurables import DaVinci
-DaVinci().MainOptions = "$B2DILEPTONROOT/options/DoPreselBd2KstarMuMu.opts"
 DaVinci().UserAlgorithms = [ trueSeq ]
 
 ##

@@ -1,17 +1,4 @@
- ## @file HltDecayTreeTuple.opts
- #
- #  Generic Tuple configuration
- #  @warning Will not work without decay and input data
- #  @code
- #  #importOptions( $HLTSELCHECKERROOT/options/HltDecayTreeTuple.py)
- #  HltDecayTreeTuple.InputLocations = ["HltSelBd2MuMuKstar"]
- #  HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
- #  // optional additional tools fro head or other branches
- #  HltDecayTreeTuple.Branches = {
- #    "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
- #  };
- #  HltDecayTreeTuple.Head.ToolList += [ "TupleToolP2VV" ]
- #  @endcode
+ ## @file DVTestHltDecayTreeTuple-TisTos.py
  #
  #  See DecayTreeTuple documentation
  #

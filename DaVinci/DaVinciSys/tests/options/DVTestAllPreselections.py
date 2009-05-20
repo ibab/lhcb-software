@@ -1,11 +1,11 @@
-## $Id: DVTestAllPreselections.py,v 1.4 2009-03-24 10:43:21 pkoppenb Exp $
+## $Id: DVTestAllPreselections.py,v 1.5 2009-05-20 17:04:01 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 from Gaudi.Configuration import *
 importOptions("$STDOPTS/PreloadUnits.opts")
 from Configurables import DaVinci
-DaVinci().MainOptions  = "$STRIPPINGROOT/options/Presel.opts"
+DaVinci().MainOptions  = "$STRIPPINGSELECTIONSROOT/options/DC06-Stripping.opts"
 DaVinci().EvtMax = 100
 DaVinci().PrintFreq  = 1
 DaVinci().InputType = "RDST"
