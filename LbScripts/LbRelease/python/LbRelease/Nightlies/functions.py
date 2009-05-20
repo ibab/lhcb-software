@@ -466,6 +466,8 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show macro LCG_releases')
     configuration.system('echo "' + '*'*80 + '"')
+    configuration.system('cmt show projects')
+    configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show uses')
     configuration.system('echo "' + '*'*80 + '"')
     #-------------------------------------------------------------------------

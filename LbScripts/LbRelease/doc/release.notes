@@ -1,3 +1,8 @@
+2009-05-20  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: added "cmt show projects"
+	output to the log file just before "cmt show uses"
+
 2009-05-20 Joel Closier
 
     * scripts/usedProjects : Add the package COMPAT not to be remove
