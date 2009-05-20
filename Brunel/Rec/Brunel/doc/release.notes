@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-05-20 - Marco Cattaneo
+ - Update references for PatSeedTool fit initialization bug fix
+
 ! 2009-05-19 - Marco Cattaneo
  - Update references for:
    . Change in ST Monitor names and additional histograms
