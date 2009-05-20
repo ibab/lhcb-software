@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.341 2009-05-13 12:18:41 pkoppenb Exp $
+! $Id: release.notes,v 1.342 2009-05-20 14:18:08 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-05-20 - Patrick Koppenburg
+ - Adapt to new stripping packages
 
 !========================== DaVinci v23r0 2009-05-13 ===================
 

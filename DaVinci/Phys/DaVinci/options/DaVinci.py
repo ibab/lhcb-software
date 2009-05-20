@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.35 2009-03-24 08:26:31 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.36 2009-05-20 14:18:09 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -31,20 +31,18 @@ preselSeq = GaudiSequencer("SeqPreselBu2LLK")
 #
 # Some Monitoring stuff
 #
-from Configurables import GaudiSequencer, PrintDecayTree, PhysDesktop
+from Configurables import GaudiSequencer, PrintDecayTree
 exampleSeq = GaudiSequencer("ExampleSeq")
 tree = PrintDecayTree("PrintBu2LLK")
 exampleSeq.Members += [ tree ]
-tree.addTool( PhysDesktop )
-tree.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
+tree.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #
 # Flavour tagging. Don't ask why you'd be tagging a B+...
 #
-from Configurables import BTagging, PhysDesktop
+from Configurables import BTagging
 tag = BTagging("BTagging")
-tag.addTool( PhysDesktop )
-tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
+tag.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #
 # Standard configuration

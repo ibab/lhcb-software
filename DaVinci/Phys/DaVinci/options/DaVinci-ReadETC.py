@@ -1,11 +1,13 @@
-## $Id: DaVinci-ReadETC.py,v 1.5 2009-03-11 18:09:41 pkoppenb Exp $
+## $Id: DaVinci-ReadETC.py,v 1.6 2009-05-20 14:18:08 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ## ============================================================================
 from Gaudi.Configuration import *
 from Configurables import DaVinci
+####################################################
+importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py")
+####################################################
 
-DaVinci().MainOptions = "$B2DILEPTONROOT/options/DoPreselBd2KstarMuMu.opts"
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "2008"

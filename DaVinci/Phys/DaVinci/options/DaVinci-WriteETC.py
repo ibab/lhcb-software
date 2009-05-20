@@ -1,6 +1,6 @@
-## $Id: DaVinci-WriteETC.py,v 1.4 2009-03-11 18:00:09 pkoppenb Exp $
+## $Id: DaVinci-WriteETC.py,v 1.5 2009-05-20 14:18:08 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 from Gaudi.Configuration import *
 ######################################################
@@ -13,16 +13,14 @@ tag = EventTuple("TagCreator")
 tag.EvtColsProduce = True
 tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
 tag.addTool(TupleToolSelResults )
-tag.TupleToolSelResults.Selections  = [ "PreselB2DiMuon", "PreselB2EMu", "PreselBd2KstarMuMu", "PreselBd2Kstaree", "PreselBs2GammaMuMu", "PreselBs2MuMu", "PreselBu2KMuMu", "PreselBu2LLK", "PreselBs2PhiEtac", "PreselHeavyDimuon", "PreselJpsi2ee", "PreselUnbiasedJpsi2ee", "PreselXb2GammaX", "PreselB2HH", "PreselBd2KsPiPi", "PreselBd2PhiKs", "PreselBd2PhiKst", "PreselBs2Kst0Kst0", "PreselBs2PhiPhi", "PreselBu2HHH", "PreselLambdaB2LambdaOmega", "PreselLambdaB2LambdaPhi", "PreselLambdaB2LambdaRho", "PreselBs2DsDs", "PreselBs2DsH", "PreselBs2DsMuX", "PreselBs2DsRho", "PreselBd2DstarMu", "PreselBd2DstarPi", "PreselDstar2D0Pi_D02HH", "PreselDstar2D0Pi_D02HHHH", "PreselDstarNoPID", "PreselBd2D0Kst_D02HH", "PreselBd2D0Kst_D02KsKK", "PreselBd2D0Kst_D02KsPiPi", "PreselBu2D0H_D02HH", "PreselBu2D0K_D02HHHH", "PreselBu2D0K_D02KMuNu", "PreselBu2D0K_D02KPiPi0", "PreselBu2D0K_D02KsKK", "PreselBu2D0K_D02KsKPi", "PreselBu2D0K_D02KsPiPi", "PreselBu2D0Mu", "PreselBu2D0Tau2PiPiPi", "PreselBd2DPi", "PreselBd2KPiPi0", "PreselBd2PiPiPi0", "PreselBd2Rho0Rho0" ]
+tag.TupleToolSelResults.Selections  = [ "StrippingB2DPiPostScaler", "StrippingB2KstarMuMu_10HzPostScaler" ]
 ####################################################
-
+importOptions("$STRIPPINGSELECTIONSROOT/options/Stripping.py")
 ####################################################
 # main config
-importOptions("$STDOPTS/PreloadUnits.opts")
 from Configurables import DaVinci
-DaVinci().MainOptions  = "$STRIPPINGROOT/options/Presel.opts"
-DaVinci().EvtMax = 500
-DaVinci().PrintFreq  = 1
+DaVinci().EvtMax = 5000
+DaVinci().PrintFreq  = 100
 DaVinci().DataType = "2008"
 DaVinci().MoniSequence = [ tag ]
 DaVinci().ETCFile = "DVPresel_ETC2.root"
