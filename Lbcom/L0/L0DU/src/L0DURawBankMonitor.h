@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.7 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.8 2009-05-20 13:41:35 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -66,7 +66,7 @@ private:
   IL0DUEmulatorTool* m_emuTool;
   IL0CondDBProvider* m_condDB;  
   IEventTimeDecoder* m_odin;
-  ICaloDataProvider* m_prs;
+  ICaloDataProvider* m_spd;
   bool m_conv;
   bool m_data;
   bool m_proc;

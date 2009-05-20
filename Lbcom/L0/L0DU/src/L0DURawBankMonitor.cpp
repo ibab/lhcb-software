@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.13 2009-04-18 23:21:43 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.14 2009-05-20 13:41:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -77,8 +77,8 @@ StatusCode L0DURawBankMonitor::initialize() {
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);
-  // Prs DAQ tool
-  m_prs = tool<ICaloDataProvider>( m_caloTool , "PrsReadoutTool" , this );
+  // Spd DAQ tool
+  m_spd = tool<ICaloDataProvider>( m_caloTool , "SpdReadoutTool" , this );
 
   //
   bookHistos();
@@ -306,7 +306,7 @@ StatusCode L0DURawBankMonitor::execute() {
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- unknown TCK -- ",StatusCode::SUCCESS).ignore();
     }
     unsigned int nSpdDAQ = 0;
-    if( m_prs->getBanks() )nSpdDAQ = m_prs->adcs().size();
+    if( m_spd->getBanks() )nSpdDAQ = m_spd->adcs().size();
     if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::WrongSpdMult , 1 );
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- Wrong Spd Mult -- ",StatusCode::SUCCESS).ignore();
