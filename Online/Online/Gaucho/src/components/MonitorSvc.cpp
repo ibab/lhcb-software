@@ -192,7 +192,7 @@ void MonitorSvc::declareInfo(const std::string& name, const bool&  var,
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), "C:1", (void*)&var, sizeof(bool));
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+    if ("" != dimSvcName.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());    
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -207,6 +207,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
         msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
+	//if (!registerName("monRate", owner)) return;
         if (!registerName("monRate", this)) return;
         msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("MonRate... !!");
@@ -535,13 +536,13 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
 
-  //msg << MSG::DEBUG << "declareInfoMonObject: " << endreq;
+  msg << MSG::DEBUG << "registerName: " << name << endreq;
   m_InfoNamesMapIt = m_InfoNamesMap.find(owner);
   std::string ownerName = infoOwnerName(owner);
   if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
     std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
     if( p.second) {
-      //msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+      msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
     }
     else 
     { // Insertion failed: Name already exists
@@ -550,6 +551,7 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
     }
   }
   else { // Create a new set for this algo and insert name
+    msg << MSG::DEBUG << "registerName: creating new map for owner: "<< ownerName << " name: " << name << endreq;
     m_InfoNamesMap[owner]=std::set<std::string>();
     m_InfoNamesMap[owner].insert(name);
   }
@@ -660,6 +662,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
       undeclService( dimName ) ;
+      undeclService( dimName + "/gauchocomment") ;
       msg << MSG::DEBUG << "undeclareAll: Undeclared info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
@@ -669,6 +672,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
         m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
       undeclareAll( m_InfoNamesMapIt->first );
   }
+  undeclareAll(this);
 }
 
 void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
@@ -738,9 +742,10 @@ void MonitorSvc::resetHistos(bool saveHistos) {
 void MonitorSvc::undeclService(std::string infoName)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-
-  for (m_dimSrvIt = m_dimSrv.begin(); m_dimSrvIt != m_dimSrv.end(); m_dimSrvIt++)
-      msg << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
+   msg << MSG::DEBUG << "undeclSvc: trying to undeclare Service " + infoName  << endreq;
+ 
+//  for (m_dimSrvIt = m_dimSrv.begin(); m_dimSrvIt != m_dimSrv.end(); m_dimSrvIt++)
+//      msg << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
   
   m_dimSrvIt = m_dimSrv.find(infoName);
 
@@ -750,16 +755,17 @@ void MonitorSvc::undeclService(std::string infoName)
     msg << MSG::DEBUG << "undeclSvc: Service " + infoName + " undeclared" << endreq;
     return;
   }
+  
   if (infoName.find("gauchocomment") == std::string::npos) return;
 
-  msg << MSG::ERROR << "undeclSvc: No DimService found with the name:" + infoName << endreq;
+  msg << MSG::DEBUG << "undeclSvc: No DimService found with the name:" + infoName << endreq;
 }
 
 void MonitorSvc::updateService(std::string infoName, bool endOfRun)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   //for (m_dimSrvIt = m_dimSrv.begin(); m_dimSrvIt != m_dimSrv.end(); m_dimSrvIt++)
-  //  mes << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
+  //  msg << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
   m_dimSrvIt = m_dimSrv.find(infoName);
   if(m_dimSrvIt != m_dimSrv.end()) {
     if (m_dimSrvIt->second != 0){
