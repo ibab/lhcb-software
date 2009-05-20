@@ -136,7 +136,7 @@ def printProjects():
     for pName in unusedProjects:
       print pName, ' versions: ', unusedProjectVersions[pName]
       if removeAll:
-        if not pName in ['BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC']:
+        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC']:
           for toberemove in unusedProjectVersions[pName]:
             print 'remove ',pName,' version ',toberemove
             os.popen('cd $MYSITEROOT ; `which install_project` -p '+pName+' -v '+toberemove+' -r')
