@@ -1,7 +1,9 @@
 2009-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the "--no-touch-logfile" option to the
-	call to SetupProject for LbScripts
+	* python/LbConfiguration/LbLogin.py: 
+	- added the "--no-touch-logfile" option to the call to SetupProject for LbScripts
+	- added the "--nightlies-dir" option with the fall back on the LHCBNIGHTLIES env
+	variable.
 
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

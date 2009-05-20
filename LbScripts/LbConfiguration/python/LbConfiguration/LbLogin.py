@@ -44,7 +44,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -163,22 +163,27 @@ class LbLoginScript(Script):
         parser.set_defaults(mysiteroot=None)
         parser.add_option("-m", "--mysiteroot",
                           dest="mysiteroot",
-                          help="set MYSITEROOT")
+                          help="set MYSITEROOT.")
         parser.set_defaults(cmtsite=None)
         parser.add_option("--cmtsite",
                           dest="cmtsite",
-                          help="set the CMTSITE", 
+                          help="set the CMTSITE.", 
                           fallback_env="CMTSITE")
         parser.set_defaults(cmtconfig=None)
         parser.add_option("-c", "--cmtconfig",
                           dest="cmtconfig",
-                          help="set CMTCONFIG", 
+                          help="set CMTCONFIG.", 
                           fallback_env="CMTCONFIG")
         parser.set_defaults(userarea=None)
         parser.add_option("-u", "--userarea",
                           dest="userarea",
-                          help="set User_release_area", 
+                          help="set User_release_area.", 
                           fallback_env="User_release_area")
+        parser.set_defaults(nightlies_dir=None)
+        parser.add_option("-n", "--nightlies-dir",
+                          dest="nightlies_dir",
+                          help="set nightlies directory.", 
+                          fallback_env="LHCBNIGHTLIES")
         parser.set_defaults(remove_userarea=False)
         parser.add_option("--no-userarea",
                           dest="remove_userarea",
@@ -478,6 +483,8 @@ class LbLoginScript(Script):
                 ev["LHCBRELEASES"] = _multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
+                if opts.nightlies_dir :
+                    ev["LHCBNIGHTLIES"] = opts.nightlies_dir
             else :
                 ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
                 ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "project", "logfiles")
@@ -496,6 +503,11 @@ class LbLoginScript(Script):
                 newpath = ev["PATH"].split(os.pathsep)
                 newpath.insert(0, os.path.join(ev["LHCBHOME"], "bin"))
                 ev["PATH"] = os.pathsep.join(newpath)
+                if opts.nightlies_dir :
+                    ev["LHCBNIGHTLIES"] = opts.nightlies_dir
+                else :
+                    ev["LHCBNIGHTLIES"] = os.path.join(ev["SOFTWARE"], "nightlies")
+                    
                 gangasetupdir = os.path.join(ev["SITEROOT"], "sw", "ganga", "install", "etc")
                 if opts.targetshell == "csh" :
                     al["GangaEnv"] = "source %s/setup-lhcb.csh" % gangasetupdir
