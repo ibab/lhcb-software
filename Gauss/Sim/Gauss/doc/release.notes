@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-05-20 - Silvia Miglioranzi
+ - Update of ref file for QMTest gauss-gen-MC09.qmt (for slc4_ia32_gcc34_dbg
+   platform).
+
 ! 2009-05-14 - Silvia Miglioranzi
  - Update of QMTest gauss-MC09.qmt (EVTGEN options patch no longer needed) and 
    update of the corresponding ref files. Update of gauss-2008.qmt 
