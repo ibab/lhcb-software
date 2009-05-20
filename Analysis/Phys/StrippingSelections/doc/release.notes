@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-20 - Patrick Koppenburg
+ - Moved to here legacy DC06 stripping options
+ - Moved python options to options
+
 !========================== StrippingSelections v1r0 2009-05-15 ===============
 ! 2009-05-15  Anton Poluektov
 

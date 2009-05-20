@@ -6,7 +6,7 @@ version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc python
+branches          cmt doc options
 include_path      none
 
 # Used packages. 
