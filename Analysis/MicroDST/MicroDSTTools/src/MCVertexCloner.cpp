@@ -1,4 +1,4 @@
-// $Id: MCVertexCloner.cpp,v 1.3 2008-04-23 13:00:31 jpalac Exp $
+// $Id: MCVertexCloner.cpp,v 1.4 2009-05-20 14:22:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -38,12 +38,18 @@ LHCb::MCVertex* MCVertexCloner::operator() (const LHCb::MCVertex* vertex)
 {
   if (0==vertex) return 0;
   LHCb::MCVertex* clone = getStoredClone<LHCb::MCVertex>(vertex);
-  return 0 != clone ? clone : this->clone(vertex);
+
+  const size_t nProd = vertex->products().size();
+  const size_t nCloneProd = clone ? clone->products().size() : 0;
+  
+   return ((0 != clone ) && (nProd == nCloneProd)) ? clone : this->clone(vertex);
 
 }
 //=============================================================================
 LHCb::MCVertex* MCVertexCloner::clone(const LHCb::MCVertex* vertex)
 {
+
+
 
   LHCb::MCVertex* clone = 
     cloneKeyedContainerItem<LHCb::MCVertex, BasicCloner>(vertex);
@@ -53,7 +59,7 @@ LHCb::MCVertex* MCVertexCloner::clone(const LHCb::MCVertex* vertex)
   clone->clearProducts();
 
   cloneDecayProducts(vertex->products(), clone);
-
+  
   return clone;
 
 }
