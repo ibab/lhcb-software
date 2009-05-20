@@ -1,9 +1,20 @@
-!$Id: release.notes,v 1.125 2009-05-11 13:14:40 jpalac Exp $
+!$Id: release.notes,v 1.126 2009-05-20 18:55:36 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-20 - V. Gligorov
+  - Updated the cuts for the standard D0 to bring it into line with what will be
+    needed in the stripping. Added a track chi2/ndof cut of 10 to help with ghosts,
+    loosened the PT cut to 250 MeV on the final state daughters, and made the mass window
+    run from 100 MeV above the Ds mass (to help with background estimation) to
+    100 MeV below the D0 mass (for the crystal ball).
+  - Fixed a bug in StdLooseDplus which meant the data on demand service was not being
+    updated properly.
+  - Updated the cuts in StdLooseDplus to bring them into line with StdLooseD0. Mass window
+    runs from 200 MeV below the Ds mass to 100 MeV above it.
 
 !========================== CommonParticles v5r1 2009-05-11 ==================
 
