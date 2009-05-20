@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================== PatAlgorithms v3r21 2009-05-20 ===================
 ! 2009-05-19 - Stephanie Hansmann-Menzemer
   - make sure that no hits are rejected in the internal fit in the fit 
     initialization tool
