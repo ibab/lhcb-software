@@ -44,7 +44,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -781,6 +781,7 @@ class LbLoginScript(Script):
                 setupprojargs.append("--silent")
             setupprojargs.append("--no-user-area")
             setupprojargs.append("--disable-CASTOR")
+            setupprojargs.append("--no-touch-logfile")
             if self.output_name :
                 setupprojargs.append("--append=%s" % self.output_name)
             setupprojargs.append("--shell=%s" % opts.targetshell)

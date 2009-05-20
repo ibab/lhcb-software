@@ -1,3 +1,8 @@
+2009-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the "--no-touch-logfile" option to the
+	call to SetupProject for LbScripts
+
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: added the version of tbroadcast.
