@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.1 2009-05-20 15:41:24 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.2 2009-05-21 21:41:50 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiK* stripping selection using LoKi::Hybrid and python
@@ -18,23 +18,23 @@ import GaudiKernel.SystemOfUnits as Units
 #######
 # Kst #
 #######
-StUnbiasedKst2Kpi = CombineParticles("StripStdUnbiasedKst2Kpi")
-StUnbiasedKst2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-StUnbiasedKst2Kpi.InputLocations = ["StdLooseKaons",
+StdUnbiasedKst2Kpi = CombineParticles("StripStdUnbiasedKst2Kpi")
+StdUnbiasedKst2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
+StdUnbiasedKst2Kpi.InputLocations = ["StdLooseKaons",
                                     "StdLoosePions"]
-StUnbiasedKst2Kpi.DaughtersCuts = {"K+" :
+StdUnbiasedKst2Kpi.DaughtersCuts = {"K+" :
                                    "  (MINTREE('K+'==ABSID, (PIDK - PIDp)) >-6.)"\
                                    "& (MINTREE('K+'==ABSID, PIDK) > -5.)"
                                    }
-StUnbiasedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 90.*MeV)"
-StUnbiasedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)<20) & (PT > 1000.*MeV)"
+StdUnbiasedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 90.*MeV)"
+StdUnbiasedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)<20) & (PT > 1000.*MeV)"
 
 ######
 # Bd #
 ######
 Bd2JpsiKst = CombineParticles("StripBd2JpsiKst")
 Bd2JpsiKst.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"
-Bd2JpsiKst.InputLocations = ["StdUnbiasedJpsi2MuMu",
+Bd2JpsiKst.InputLocations = ["StdLTUnbiasedJpsi2MuMu",
                              "StripStdUnbiasedKst2Kpi"]
 # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
 Bd2JpsiKst.addTool( OfflineVertexFitter() )

@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.1 2009-05-20 15:41:24 gcowan Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.2 2009-05-21 21:41:50 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiKS stripping selection using LoKi::Hybrid and python
@@ -42,10 +42,9 @@ KSDDForBd2Jpsi2MuMuKS.Code = "  (MINTREE( ('pi+'==ABSID), P) >2.*GeV)"\
 ################
 Bd2JpsiKS = CombineParticles("StripBd2JpsiKS")
 Bd2JpsiKS.DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc"
-Bd2JpsiKS.addTool( PhysDesktop)
-Bd2JpsiKS.PhysDesktop.InputLocations = ["StripKSLLForBd2Jpsi2MuMuKS",
-                                        "StripKSDDForBd2Jpsi2MuMuKS",
-                                        "StdUnbiasedJpsi2MuMu"]
+Bd2JpsiKS.InputLocations = ["StripKSLLForBd2Jpsi2MuMuKS",
+                            "StripKSDDForBd2Jpsi2MuMuKS",
+                            "StdLTUnbiasedJpsi2MuMu"]
 
 Bd2JpsiKS.addTool( OfflineVertexFitter() )
 Bd2JpsiKS.VertexFitters.update( { "" : "OfflineVertexFitter"} )
@@ -62,6 +61,6 @@ Bd2JpsiKS.MotherCut = "(VFASPF(VCHI2/VDOF)<15)"
 ############################################
 Bd2JpsiKSLine = StrippingLine('Bd2JpsiKSLine'
                , prescale = 1
-               , algos = [KSLLForBd2Jpsi2MuMuKS, KSDDForBd2Jpsi2MuMuKS, Bs2JpsiPhi]
+               , algos = [KSLLForBd2Jpsi2MuMuKS, KSDDForBd2Jpsi2MuMuKS, Bd2JpsiKS]
                , stream = 'BExclusive'
                )

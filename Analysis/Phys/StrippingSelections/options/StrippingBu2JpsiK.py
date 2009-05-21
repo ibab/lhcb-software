@@ -1,8 +1,8 @@
-# $Id: StrippingBu2JpsiK.py,v 1.1 2009-05-20 15:41:24 gcowan Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.2 2009-05-21 21:41:50 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bu->JpsiK stripping selection using LoKi::Hybrid and python
@@ -20,7 +20,7 @@ import GaudiKernel.SystemOfUnits as Units
 ######
 Bu2JpsiK = CombineParticles("StripBu2JpsiK")
 Bu2JpsiK.DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc"
-Bu2JpsiK.InputLocations = ["StdUnbiasedJpsi2MuMu",
+Bu2JpsiK.InputLocations = ["StdLTUnbiasedJpsi2MuMu",
                            "StdLooseKaons"]
 
 Bu2JpsiK.addTool( OfflineVertexFitter() )

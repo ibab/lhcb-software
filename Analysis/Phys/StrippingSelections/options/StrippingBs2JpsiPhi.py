@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.1 2009-05-20 15:41:24 gcowan Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.2 2009-05-21 21:41:50 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -19,7 +19,7 @@ import GaudiKernel.SystemOfUnits as Units
 # Standard Unbiased Phi->KK #
 #############################
 StdUnbiasedPhi2KK = FilterDesktop("StripStdUnbiasedPhi2KK")
-StdUnbiasedPhi2KK.InputLocations =["StdLooseUnbiasedPhi2KK"]
+StdUnbiasedPhi2KK.InputLocations = ["StdLooseUnbiasedPhi2KK"]
 StdUnbiasedPhi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
                          "& (ADMASS('phi(1020)') < 15.*MeV)" \
                          "& (PT > 1000.*MeV)" \
@@ -29,7 +29,7 @@ StdUnbiasedPhi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
 ######
 Bs2JpsiPhi = CombineParticles("StripBs2JpsiPhi")
 Bs2JpsiPhi.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-Bs2JpsiPhi.InputLocations = ["StdUnbiasedJpsi2MuMu",
+Bs2JpsiPhi.InputLocations = ["StdLTUnbiasedJpsi2MuMu",
                              "StripStdUnbiasedPhi2KK"]
 # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Phi
 Bs2JpsiPhi.addTool( OfflineVertexFitter() )

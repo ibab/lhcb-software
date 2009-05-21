@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-21 - Greig Cowan
+ - Updated the beta_s channels to use the new StdLTUnbiasedJpsi CommonParticles.
+
 ! 2009-05-21 - Patrick Koppenburg
  - Bd2KstarMuMu_10Hz line : added the 'd'
 
