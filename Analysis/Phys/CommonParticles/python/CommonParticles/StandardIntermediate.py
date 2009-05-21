@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardIntermediate.py,v 1.1 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StandardIntermediate.py,v 1.2 2009-05-21 09:08:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardIntermediates.py
 #  configuration file for 'Standard Intermediate particles
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Intermediate' particles 
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
@@ -24,8 +24,6 @@ from CommonParticles.StandardJpsi import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseDplus import *
-_locations.update ( locations )
-from CommonParticles.StdLooseDs import *
 _locations.update ( locations )
 from CommonParticles.StdLooseDstarWithD2HH import *
 _locations.update ( locations )

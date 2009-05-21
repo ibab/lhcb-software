@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.127 2009-05-20 20:36:30 gligorov Exp $
+!$Id: release.notes,v 1.128 2009-05-21 09:08:39 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-21 - Patrick Koppenburg
+ - Removed StdLooseDs from StandardIntermediate
 
 ! 2009-05-20 - V. Gligorov
   - Removed the obsolete StdLooseDs.py selection. This has been entirely superseeded
