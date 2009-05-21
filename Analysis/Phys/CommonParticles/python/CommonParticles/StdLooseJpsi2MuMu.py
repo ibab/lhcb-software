@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseJpsi2MuMu.py,v 1.4 2009-05-20 15:40:03 gcowan Exp $ 
+# $Id: StdLooseJpsi2MuMu.py,v 1.5 2009-05-21 12:43:50 ibelyaev Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseJpsi2MuMu.py
 #  configuration file for 'Standard Loose Jpsi2MuMu' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Jpsi2MuMu'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdLooseJpsi2MuMu' ,
@@ -19,8 +19,8 @@ __all__ = (
     'locations'
     )
 # =============================================================================
-from Gaudi.Configuration import *
-from Configurables       import CombineParticles
+from Gaudi.Configuration   import *
+from Configurables         import CombineParticles, FilterDesktop 
 from CommonParticles.Utils import *
 
 ## ============================================================================
@@ -50,7 +50,8 @@ StdUnbiasedJpsi2MuMu.Code = "  (MINTREE('mu+'==ABSID, PT) > 500.*MeV)" \
 
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseJpsi2MuMu, StdUnbiasedJpsi2MuMu )
+locations = updateDoD ( StdLooseJpsi2MuMu    )
+locations = updateDoD ( StdUnbiasedJpsi2MuMu )
 
 ## ============================================================================
 if '__main__' == __name__ :

@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.128 2009-05-21 09:08:39 pkoppenb Exp $
+!$Id: release.notes,v 1.129 2009-05-21 12:43:49 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-21 - Vanya BELYAEV
+ - StdLooseJpsi2MuMu
+
+     fix missing filterDesktop
+     fin invalid usage of "updateDoD"
 
 ! 2009-05-21 - Patrick Koppenburg
  - Removed StdLooseDs from StandardIntermediate
