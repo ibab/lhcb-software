@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.80 2009-05-13 21:29:02 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.81 2009-05-21 08:25:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -238,24 +238,33 @@ class HltConf(LHCbConfigurableUser):
                 if list is not type(x) : x = [ x ]
                 for i in x : disableHistograms(i,filter) 
         if   self.getProp('HistogrammingLevel') == 'None' : 
-            for i in hlt1Lines() : disableHistograms( i.sequencer() )
+            for i in hlt1Lines()+hlt2Lines() : disableHistograms( i.configurable() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 
-            for i in hlt1Lines() : disableHistograms( i.sequencer(), lambda x: x.getType()!='HltLine' ) 
+            for i in hlt1Lines()+hlt2Lines() : disableHistograms( i.configurable(), lambda x: x.getType()!='HltLine' ) 
             
 
     def postConfigAction(self) : 
         from HltConf.HltLine     import Hlt1Line
         from HltConf.HltLine     import Hlt2Line
+        # make sure 'strings' is known...
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        #if 'LoKiCore.functions' not in HltFactory().Modules : HltFactory().Modules += [ 'LoKiCore.functions' ]
+        # these are for Hlt,L0,ODIN filters... (in v27r0 and before)
+        HltFactory('ToolSvc.HltFactory:').Modules += [ 'LoKiCore.functions' ]
+        # and post v27r0...
+        HltFactory('ToolSvc.HltFactory').Modules += [ 'LoKiCore.functions' ]
+        # the following does it  for the HltRoutingBitsWriter...
+        HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions' ]
+
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
         ##
         ## add a line for 'not lumi only' aka not lumi exclusive
         ## -- note: before the 'global' otherwise lumi set global, and we have lumi AND global set...
-        lumi = [ "'" + i +"'"  for i in hlt1Decisions() if i.find('Lumi') != -1 ]
+        lumi = [ str(i) for i in hlt1Decisions() if i.find('Lumi') != -1 ]
         if lumi: 
-            lumi = ','.join(lumi) # Note: at max 4 entries... then should switch to a list..
-            Hlt1Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(" + lumi + ")" )
-            Hlt1Line('Lumi',         HLT = "HLT_PASS("         + lumi + ")" )
+            Hlt1Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(strings(%s))" % str(lumi)  )
+            Hlt1Line('Lumi',         HLT = "HLT_PASS(strings(%s))" % str(lumi) )
         ## finally, add the Hlt1Global line...
         Hlt1Line('Global', HLT = 'HLT_DECISION' )
 
@@ -265,11 +274,11 @@ class HltConf(LHCbConfigurableUser):
         print '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) 
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ] # note : should verify order (?) -- global should be last hlt1line! 
 
-        ### TEMPORARY HACK until HltSelectionsDecision completely obsolete...
         print '# List of configured Hlt2Lines : ' + str(hlt2Lines()) 
         activeLines = self.getProp('ActiveHlt2Lines') 
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
-        Hlt2Global = Hlt2Line( "Global", HLT= "HLT_PASS( strings(" + str([ i.name()+'Decision' for i in lines2 ]) + "))")
+        Hlt2Global = Hlt2Line( "Global", HLT= "HLT_PASS( strings(%s) ) " % str([ i.name()+'Decision' for i in lines2 ]) )
+
         lines2 += [ Hlt2Global ]
         Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
         print '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )

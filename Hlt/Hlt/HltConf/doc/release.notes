@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.237 2009-05-19 09:22:55 graven Exp $ 
+! $Id: release.notes,v 1.238 2009-05-21 08:25:29 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v2r8p1 2009-05-19 =================
+! 2009-05-21 - Gerhard Raven
+ - include Hlt2 in histogramming level
+ - add LoKiCore.functions to modules imported by HltFactory
+
 ! 2009-05-13 - Gerhard Raven
  - make sure type of prescale in slot is not an int but a float
  - do not run L0DUFromRaw explicitly, but use DOD -- not all
