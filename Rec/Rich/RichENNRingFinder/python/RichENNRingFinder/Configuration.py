@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1.1.1 2009-05-21 17:34:14 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2009-05-21 22:12:56 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -24,6 +24,7 @@ class RichENNRingFinderConf(RichConfigurableUser):
        ,"MaxHitsInPanel"      : 300
        ,"AssociateToSegments" : True
        ,"Sequencer"           : None # The sequencer to add the RICH MCMC algorithms to
+       ,"OutputLevel"         : INFO
         }
 
     ## Access the finder for RICH1 top panel
@@ -70,30 +71,33 @@ class RichENNRingFinderConf(RichConfigurableUser):
                 # context
                 cont = self.getProp("Context")
 
+                setOutLevel = self.isPropertySet("OutputLevel")
+                level = self.getProp("OutputLevel")
+
                 # The finders, for each HPD panel
                 if "Rich1Top" in panels :
                     alg                = self.rich1TopFinder()
                     alg.MaxHitsInEvent = maxhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
-                    alg.OutputLevel = DEBUG
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich1Bottom" in panels :
                     alg                = self.rich1BottomFinder()
                     alg.MaxHitsInEvent = maxhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
-                    alg.OutputLevel = DEBUG
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Left" in panels :
                     alg                = self.rich2LeftFinder()
                     alg.MaxHitsInEvent = maxhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
-                    alg.OutputLevel = DEBUG
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Right" in panels :
                     alg                = self.rich2RightFinder()
                     alg.MaxHitsInEvent = maxhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
-                    alg.OutputLevel = DEBUG
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
 
                 # Attempt to associated rings to segments

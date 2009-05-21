@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.1.1.1 2009-05-21 17:34:14 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.2 2009-05-21 22:12:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -50,8 +50,8 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_maxPixelSep      = 260;
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
-    m_minRingRadius    = 150.0;
-    m_maxRingRadius    = 75.0;
+    m_minRingRadius    = 85.0;
+    m_maxRingRadius    = 150.0;
   }
   else // RICH1
   {
@@ -62,8 +62,8 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
-    m_minRingRadius    = 75.0;
-    m_maxRingRadius    = 45.0;
+    m_minRingRadius    = 45.0;
+    m_maxRingRadius    = 75.0;
   }
   // JOs
   declareProperty( "RingLocation",
@@ -96,7 +96,7 @@ StatusCode AlgBase<FINDER>::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Each instance of this algorithm has its own finder. Must delete when finished
-  m_finder = new FINDER( msgLevel(MSG::DEBUG) );
+  m_finder = new FINDER( msgLevel(MSG::VERBOSE) );
 
   return sc;
 }
@@ -139,7 +139,7 @@ StatusCode AlgBase<FINDER>::richInit()
 
   // Make sure RichRecPixels are available
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-  debug() << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
+  debug() << "Found in total " << richPixels()->size() << " RichRecPixels" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -185,6 +185,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
 
   // load or create rings
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
+  const unsigned int nRingsBefore = rings->size();
 
   debug() << "Found " << m_finder->rings().size() << " ENN ring candidates" << endreq;
 
@@ -256,8 +257,12 @@ StatusCode AlgBase<FINDER>::saveRings() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
+    debug() << " -> Saved " << rings->size() - nRingsBefore 
+            << " rings at " << m_ringLocation << endreq;
   }
+
+  // count # found rings per event
+  counter("# Found Rings") += (rings->size() - nRingsBefore);
 
   return StatusCode::SUCCESS;
 }
@@ -287,10 +292,12 @@ bool AlgBase<FINDER>::addDataPoints( ) const
   bool OK = false;
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
+  debug() << "Found " << range.size() << " hits for " << rich() 
+          << " " << Rich::text(rich(),panel()) << endmsg;
   if ( range.size() > m_maxHitsEvent )
   {
     std::ostringstream mess;
-    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
+    mess << "# hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
          << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
     debug() <<  mess.str() << endmsg;
   }

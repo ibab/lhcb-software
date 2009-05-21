@@ -1,3 +1,4 @@
+
 #ifndef _ENNRingFinder_
 #define _ENNRingFinder_
 
@@ -43,22 +44,19 @@ namespace Rich
           Hit( const int _key  = -1,
                const double _x = 0,
                const double _y = 0 )
-            : key(_key), x(_x), y(_y), busy(0),
+            : x(_x), y(_y), busy(0),
               lx(0), ly(0), lr2(0),
               S0(0), S1(0), S2(0), S3(0), S4(0),
               C(0), Cx(0), Cy(0),
-              on_ring(false) { }
+              on_ring(false), key(_key) { }
         public:
           inline bool operator < ( const Hit & h ) const
-          {
-            return ( this->x < h.x );
-          }
+          { return ( this->x < h.x ); }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, const Hit & hit )
           { return os << "[ Hit " << hit.key << " (x,y)=" << hit.x << "," << hit.y << " ]"; }
         public:
-          int key;
           double x, y; // coordinates
           int busy; // quality of the best ring with this hit
           // variables for local search:
@@ -66,6 +64,7 @@ namespace Rich
           double S0, S1, S2, S3, S4; // coefficients for calculation of E
           double C, Cx, Cy; // coefficients for the parameter space
           bool on_ring; // is the hit close to the current ring
+          int key;
         };
 
         //-----------------------------------------------------------------------
