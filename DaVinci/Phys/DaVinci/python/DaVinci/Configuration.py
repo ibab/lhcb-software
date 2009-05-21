@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.62 2009-05-13 12:16:39 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.63 2009-05-21 12:36:25 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -73,7 +73,10 @@ class DaVinci(LHCbConfigurableUser) :
     __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp ]
 
     ## Known monitoring sequences run by default
-    KnownMonitors        = []    
+    KnownMonitors        = []
+
+    mainSeq = GaudiSequencer("DaVinciMainSequence")
+    moniSeq = GaudiSequencer("MonitoringSequence")
 
 ################################################################################
 # Configure slaves
@@ -259,22 +262,6 @@ class DaVinci(LHCbConfigurableUser) :
             DstConf().EnableUnpack = True
 
 ################################################################################
-# Monitoring sequence
-#
-    def moniSequence(self):
-        """
-        Monitoring sequence
-        """
-        from Configurables import GaudiSequencer
-        if ( len(self.KnownMonitors)+len( self.getProp("MoniSequence") ) > 0 ):
-            monSeq = GaudiSequencer("MonitoringSequence")
-            monSeq.IgnoreFilterPassed = True 
-            monSeq.Members = self.KnownMonitors
-            ApplicationMgr().TopAlg += [ monSeq ]
-            for alg in self.getProp("MoniSequence"):
-                monSeq.Members += [ alg ]
-
-################################################################################
 # Ntuple files
 #
     def rootFiles(self):
@@ -328,20 +315,52 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Main Sequence
         """
+        self.mainSeq.IgnoreFilterPassed = True 
+        ApplicationMgr().TopAlg += [ self.mainSeq ]
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
         else :
             log.info("No MainOptions specified. DaVinci() will import no options file!")
         log.info("Creating User Algorithms")
-        if ( len ( self.getProp("UserAlgorithms") ) > 0 ):
-            from Configurables import GaudiSequencer
-            mainSeq = GaudiSequencer("DaVinciMainSequence")
-            mainSeq.IgnoreFilterPassed = True 
-            ApplicationMgr().TopAlg += [ mainSeq ]
-            for alg in self.getProp("UserAlgorithms"):
-                mainSeq.Members += [ alg ]
+        print '##### User',  self.getProp("UserAlgorithms")
+        self.appendToMainSequence( self.getProp("UserAlgorithms")  )        
 
+################################################################################
+# Append to Main sequence
+#
+    def appendToMainSequence(self, algs):
+        """
+        Append to main sequence. Can be called from other configurables
+        """
+        log.info("Append to Main Sequence has been called")
+        for alg in algs:
+            self.mainSeq.Members += [ alg ]
+                    
+################################################################################
+# Monitoring sequence
+#
+    def moniSequence(self):
+        """
+        Monitoring sequence
+        """
+        self.moniSeq.IgnoreFilterPassed = True 
+        self.moniSeq.Members = self.KnownMonitors
+        ApplicationMgr().TopAlg += [ self.moniSeq ]
+        log.info("Creating Moni Algorithms")
+        self.appendToMoniSequence( self.getProp("MoniSequence") )
+
+################################################################################
+# Append to Moni sequence
+#
+    def appendToMoniSequence(self, algs):
+        """
+        Append to moni sequence. Can be called from other configurables
+        """
+        log.info("Append to Moni Sequence has been called")
+        for alg in algs:
+            self.moniSeq.Members += [ alg ]
+                    
 ################################################################################
 # Apply configuration
 #

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.342 2009-05-20 14:18:08 pkoppenb Exp $
+! $Id: release.notes,v 1.343 2009-05-21 12:36:25 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,16 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-05-21 - Patrick Koppenburg
+ - New methods appendToMoniSequence and appendToMainSequence allowing
+   external configurations, e.g. StrippingConf to populate sequencers
+   without tampering UserAlgorithms and MoniSequence slots.
+
+! 2009-05-21 - Patrick Koppenburg
+ - Allow external configurables to append to main and moni sequences :
+   . Create members moniSeq and mainSeq
+   . Create appendToMainSequence and appendToMoniSequence
 
 ! 2009-05-20 - Patrick Koppenburg
  - Adapt to new stripping packages
