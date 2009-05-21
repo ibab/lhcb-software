@@ -4,12 +4,13 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.23 2009-05-21 17:22:46 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2009-05-21 23:06:35 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
 from Alignment import RichAlignmentConf
-from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
+from Configurables import RichMarkovRingFinderConf
+from Configurables import RichENNRingFinderConf
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
 
@@ -147,7 +148,10 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Trackless rings
         if self.getProp("TracklessRingMonitoring") :
-            self.ringsMoni(self.newSeq(sequence,"RichTracklessRingsMoni"))
+            from Configurables import RichRecSysConf
+            types = RichRecSysConf().TracklessRingAlgs
+            for type in types :
+                self.ringsMoni(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsMoni"))
 
         # Alignment monitor
         if self.getProp("AlignmentMonitoring"):
@@ -165,11 +169,16 @@ class RichRecQCConf(RichConfigurableUser):
             self.expertMonitoring(self.newSeq(sequence,"RichExpertChecks"))
 
     ## standalone ring finder monitors
-    def ringsMoni(self,sequence):
+    def ringsMoni(self,type,sequence):
 
         from Configurables import Rich__Rec__MarkovRingFinder__MC__Moni
 
-        conf = RichMarkovRingFinderConf()
+        if type == "Markov" :
+            conf = RichMarkovRingFinderConf()
+        elif type == "ENN" :
+            conf = RichENNRingFinderConf()
+        else :
+            raise RuntimeError("ERROR : Unknown trackless ring finder type")
 
         # Activate histos in the finder algs themselves
         conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
@@ -178,13 +187,14 @@ class RichRecQCConf(RichConfigurableUser):
         conf.rich2RightFinder().HistoProduce  = self.getProp("HistoProduce")
 
         # Add monitors
-        allMoni  = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniAll")
+        allMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniAll")
+        allMoni.RingLocation = "Rec/Rich/"+type+"/RingsAll"
         sequence.Members += [allMoni]
-        bestMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniBest")
-        bestMoni.RingLocation = "Rec/Rich/Markov/RingsBest"
+        bestMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniBest")
+        bestMoni.RingLocation = "Rec/Rich/"+type+"/RingsBest"
         sequence.Members += [bestMoni]
-        isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,"MarkovRingMoniIsolated")
-        isoMoni.RingLocation = "Rec/Rich/Markov/RingsIsolated"
+        isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniIsolated")
+        isoMoni.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
         sequence.Members += [isoMoni]
 
     ## Pixel performance monitors
