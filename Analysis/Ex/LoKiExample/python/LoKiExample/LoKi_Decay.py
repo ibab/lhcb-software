@@ -36,32 +36,23 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-import os 
 from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
-from  Configurables import LoKi__DecayDescriptor as Decay
+
 
 import LoKiExample.LoKi_Bs2PsiPhi
 
 ## configure our own algorithm: 
-alg = Decay('decay')
-alg.addTool ( PhysDesktop() )
-alg.PhysDesktop.InputLocations = [ "Phys/PsiPhi" ] 
-alg.NTupleLUN = "RC"
+from  Configurables import LoKi__DecayDescriptor as Decay
+alg = Decay(
+    'Decay'          ,
+    InputLocations = [ "PsiPhi" ]
+    )
 
-## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 20 )
-appMgr.TopAlg += [ alg ]
-
-## histograms:
-HistogramPersistencySvc ( OutputFile = "Decay_Histos.root" )
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 100    ) 
+from  Configurables import DaVinci 
+davinci = DaVinci( EvtMax = 20 )
+davinci.UserAlgorithms += [ alg ] 
 
 
 # =============================================================================

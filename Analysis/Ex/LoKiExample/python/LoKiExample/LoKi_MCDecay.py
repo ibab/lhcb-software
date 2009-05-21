@@ -36,36 +36,22 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-import os 
-from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
-from  Configurables import LoKi__MCDecayDescriptor as MCDecay
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
+import LoKiExample.LoKi_Decay
 
 ## configure our own algorithm: 
-alg = MCDecay('MCdecay')
-alg.addTool ( PhysDesktop() )
-alg.NTupleLUN = "MC"
-alg.PP2MCs = []
+from  Configurables import LoKi__MCDecayDescriptor as MCDecay
+alg = MCDecay (
+    'MCDecay'           ,
+    PP2MCs         = [] ,
+    InputLocations = []
+    )
 
-## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 10 )
-appMgr.TopAlg = [ alg ]
+from  Configurables import DaVinci 
+DaVinci( UserAlgorithms = [ alg ] ) 
 
-
-## histograms:
-HistogramPersistencySvc ( OutputFile = "GenDecay_Histos.root" )
-
-## n-Tuples
-NTupleSvc ( Output = [ "MC DATAFILE='MCDecay_Tuples.root' TYP='ROOT' OPT='NEW'" ] ) ;
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 10     ) 
 
 # =============================================================================
 # The END

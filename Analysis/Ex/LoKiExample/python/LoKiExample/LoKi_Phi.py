@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_Phi.py,v 1.1 2008-10-04 16:14:48 ibelyaev Exp $ 
+# $Id: LoKi_Phi.py,v 1.2 2009-05-21 13:58:58 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_Phi example
@@ -38,32 +38,35 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-import os 
 from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
+
+## create & configure own algorithm:
 from  Configurables import LoKi__Phi as Phi
+alg = Phi (
+    "Phi"                                 , ## the instance name 
+    InputLocations = [ 'StdTightKaons' ]  , ##   input particles 
+    )
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
-importOptions( "$COMMONPARTICLESROOT/options/StandardKaons.opts" )
-
-## configure our own algorithm: 
-phi = Phi('Phi')
-phi.addTool ( PhysDesktop() )
-phi.PhysDesktop.InputLocations = ['Phys/StdTightKaons']
+## get input data:
+from LoKiExample.Bs2Jpsiphi_mm_data import Inputs as INPUT 
 
 ## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 1000 )
-appMgr.TopAlg += [ phi ]
-
-## histograms:
-HistogramPersistencySvc ( OutputFile = "Phi_Histos.root" )
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 10     ) 
+from  Configurables import DaVinci 
+DaVinci (
+    DataType       = 'DC06'  , ## Data type  
+    Simulation     = True    , ## Monte Carlo 
+    HltType        = ''      ,
+    #
+    UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
+    # delegate this properties to Event Selector 
+    EvtMax        = 1000     ,  
+    SkipEvents    = 0        ,
+    Input         = INPUT    , ## the list of input data files
+    # delegate to Histogram Persistency Service
+    HistogramFile = "Phi_Histos.root"
+    )
 
 # =============================================================================
 # The END

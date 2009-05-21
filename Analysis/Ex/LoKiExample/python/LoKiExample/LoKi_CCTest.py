@@ -36,28 +36,38 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__ = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 # =============================================================================
-
-
-import os 
 from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
-from  Configurables import LoKi__CCTest as CCTest
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
+
 
 ## configure our own algorithm: 
+from  Configurables import LoKi__CCTest as CCTest
 alg = CCTest( 'CCTest'           ,
-              Decays = [ "pi+" ,
-                         "K+pi+++" ,
-                         "some line which contains B0abd other K*(892)0mesons Meson"
-                         ] )
+              Decays = [
+    "pi+" ,
+    "K+pi+++" ,
+    "cc nosos " ,
+    "some line which contains B0/B~0 and other K*(892)0mesons Meson"
+    ] )
 
-ApplicationMgr ( EvtMax = 5       ,
-                 TopAlg = [ alg ] ) 
+## get input data:
+from LoKiExample.Bs2Jpsiphi_mm_data import Inputs as INPUT 
 
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input = Inputs ) 
+## confgure the application itself:
+from  Configurables import DaVinci 
+DaVinci (
+    DataType       = 'DC06'  , ## Data type  
+    Simulation     = True    , ## Monte Carlo 
+    HltType        = ''      ,
+    #
+    UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
+    # delegate this properties to Event Selector 
+    EvtMax        = 10       ,  
+    SkipEvents    = 0        ,
+    Input         = INPUT      ## the list of input data files
+    )
+
+
 
 # =============================================================================
 # The END 

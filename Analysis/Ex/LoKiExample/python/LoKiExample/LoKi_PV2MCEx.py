@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_PV2MCEx.py,v 1.2 2008-11-04 13:53:53 ibelyaev Exp $ 
+# $Id: LoKi_PV2MCEx.py,v 1.3 2009-05-21 13:58:58 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_PV2MCEx example
@@ -38,34 +38,38 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
-import os 
 from  Gaudi.Configuration import * 
-from  Configurables import DataOnDemandSvc 
+
+## create & configure own algorithm:
 from  Configurables import LoKi__Example__PV2MCEx as PV2MCEx
+alg = PV2MCEx(
+    'PV2MCEx'  , 
+    PP2MCs = [ 'Relations/Rec/ProtoP/Charged']
+    )
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
-
+## PV -> MC configuration 
 import LoKiPhysMC.PV2MC_Configuration 
 
-## configure our own algorithm: 
-alg = PV2MCEx('PV2MCEx')
-alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged']
+## get input data:
+from LoKiExample.Bs2Jpsiphi_mm_data import Inputs as INPUT 
 
 ## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 20 , Dlls = [ 'HepMCBack'] )
+from  Configurables import DaVinci 
+DaVinci (
+    DataType       = 'DC06'  , ## Data type  
+    Simulation     = True    , ## Monte Carlo 
+    HltType        = ''      ,
+    #
+    UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
+    # delegate this properties to Event Selector 
+    EvtMax        = 50       ,  
+    SkipEvents    = 0        ,
+    Input         = INPUT      ## the list of input data files
+    )
 
-appMgr.TopAlg += [ alg ]
-appMgr.ExtSvc += [ DataOnDemandSvc ( OutputLevel = 2 ) ] 
 
-importOptions("$DAVINCIROOT/options/DaVinciTestData.opts") 
-
-# suppress printout from muon&rich 
-from Configurables import MuonPIDsFromProtoParticlesAlg as Muon 
-from Configurables import RichPIDsFromProtoParticlesAlg as Rich 
-Muon ( "MuonPIDsFromProtos" , OutputLevel = 6 ) 
-Rich ( "RichPIDsFromProtos" , OutputLevel = 6 )
 
 # =============================================================================
 # The END

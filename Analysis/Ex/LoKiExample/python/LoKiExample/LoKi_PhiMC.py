@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_PhiMC.py,v 1.1 2008-10-04 16:14:48 ibelyaev Exp $ 
+# $Id: LoKi_PhiMC.py,v 1.2 2009-05-21 13:58:58 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_PhiMC example
@@ -38,33 +38,37 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-import os 
-from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
+from  Gaudi.Configuration import *
+
+## create & configure own algorithm:
 from  Configurables import LoKi__PhiMC as PhiMC
+alg = PhiMC (
+    "PhiMC"                                             , ## the instance name 
+    InputLocations = [ 'StdTightKaons' ]                , ##   input particles 
+    PP2MCs         = [ 'Relations/Rec/ProtoP/Charged' ] , ##   PP -> MC tables 
+    )
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
-importOptions( "$COMMONPARTICLESROOT/options/StandardKaons.opts" )
-
-## configure our own algorithm: 
-phi = PhiMC('PhiMC')
-phi.addTool ( PhysDesktop() )
-phi.PhysDesktop.InputLocations = ['Phys/StdTightKaons']
-phi.PP2MCs = [ 'Relations/Rec/ProtoP/Charged']
+## get input data:
+from LoKiExample.Bs2Jpsiphi_mm_data import Inputs as INPUT 
 
 ## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 1000 )
-appMgr.TopAlg += [ phi ]
+from  Configurables import DaVinci 
+DaVinci (
+    DataType       = 'DC06'  , ## Data type  
+    Simulation     = True    , ## Monte Carlo 
+    HltType        = ''      ,
+    #
+    UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
+    # delegate this properties to Event Selector 
+    EvtMax        = 500      ,  
+    SkipEvents    = 0        ,
+    Input         = INPUT    , ## the list of input data files
+    # delegate to Histogram Persistency Service
+    HistogramFile = "PhiMC_Histos.root"
+    )
 
-## histograms:
-HistogramPersistencySvc ( OutputFile = "PhiMC_Histos.root" )
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 10     ) 
 
 # =============================================================================
 # The END

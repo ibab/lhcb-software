@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.48 2009-05-19 10:22:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.49 2009-05-21 13:58:58 ibelyaev Exp $ 
 # =============================================================================
 package         LoKiExample
 version         v8r4
@@ -9,7 +9,7 @@ branches        cmt doc src python
 # ============= dependencies  =================================================
 use             Python      v* LCG_Interfaces -no_auto_imports 
 use             LoKi        v* Phys
-use             HbookCnv    v* 
+##use             HbookCnv    v* 
 use             LHCbMath    v* Kernel  
 
 # ============= patterns ======================================================

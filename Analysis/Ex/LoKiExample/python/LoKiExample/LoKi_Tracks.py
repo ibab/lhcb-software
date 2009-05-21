@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_Tracks.py,v 1.1 2008-10-04 16:14:48 ibelyaev Exp $ 
+# $Id: LoKi_Tracks.py,v 1.2 2009-05-21 13:58:58 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_Phi example
@@ -38,41 +38,46 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-import os 
 from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
+
+
+
+## create & configure our own algorithm:
 from  Configurables import LoKi__SelectTracks          as SelectTracks 
 from  Configurables import LoKi__Hybrid__TrackSelector as Selector 
 
-importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 
-appMgr = ApplicationMgr ( TopAlg = [] ,
-                          EvtMax = 50 )
+alg1 = SelectTracks ('ALL')
+alg1.addTool ( Selector  ( Code = "TrALL" ) ) 
 
-## configure our own algorithm:
-alg = SelectTracks ('ALL')
-alg.addTool ( Selector  ( Code = "TrALL" ) ) 
 
-appMgr.TopAlg += [ alg ]
+## create configure the second algorithm 
+alg2 = SelectTracks ('FASTandGOOD')
+alg2.addTool ( Selector  ( Code = "(TrP>5000)&(TrCHI2<100)" ) )  
 
-## configure our own algorithm:
-alg = SelectTracks ('FASTandGOOD')
-alg.addTool ( Selector  ( Code = "(TrP>5000)&(TrCHI2<100)" ) )  
+## create configure the third algorithm 
+alg3 = SelectTracks ('FASTandPOS')
+alg3.addTool ( Selector  ( Code = "(TrP>10000)&(0<TrQ)" ) )  
 
-appMgr.TopAlg += [ alg ]
 
-## configure our own algorithm:
-alg = SelectTracks ('FASTandPOS')
-alg.addTool ( Selector  ( Code = "(TrP>10000)&(0<TrQ)" ) )  
+## get input data:
+from LoKiExample.Bs2Jpsiphi_mm_data import Inputs as INPUT 
 
-appMgr.TopAlg += [ alg ]
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 10     ) 
+## confgure the application itself:
+from  Configurables import DaVinci 
+DaVinci (
+    DataType       = 'DC06'  , ## Data type  
+    Simulation     = True    , ## Monte Carlo 
+    HltType        = ''      ,
+    #
+    UserAlgorithms = [ alg1 , alg2 , alg3  ] , ## local algorithms
+    # delegate this properties to Event Selector 
+    EvtMax        = 50       ,  
+    SkipEvents    = 0        ,
+    Input         = INPUT      ## the list of input data files
+    )
 
 # =============================================================================
 # The END
