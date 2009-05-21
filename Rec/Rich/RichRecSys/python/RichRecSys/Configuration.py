@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.19 2009-05-18 15:51:12 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-05-21 17:25:15 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -12,7 +12,8 @@ from TrackCreator  import *
 from PixelCreator  import *
 from PhotonCreator import *
 from CKThetaResolution import *
-from RichMarkovRingFinder.Configuration import *
+from Configurables import RichMarkovRingFinderConf
+from Configurables import RichENNRingFinderConf
 #from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
 from RichHLTLocalPID_ import RichHLTLocalPIDConfig
@@ -29,6 +30,7 @@ class RichRecSysConf(RichConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ RichHLTLocalPIDConfig,
                                RichMarkovRingFinderConf,
+                               RichENNRingFinderConf,
                                #RichTemplateRingFinderConf,
                                RichGlobalPIDConfig,
                                RichTrackCreatorConfig,
@@ -216,6 +218,13 @@ class RichRecSysConf(RichConfigurableUser):
             sequence.Members                    += [ mfinderSeq ]
             self.setOtherProp(RichMarkovRingFinderConf(),"Context")
             RichMarkovRingFinderConf().setProp("Sequencer",mfinderSeq)
+
+        if "ENN" in ringalgs :
+            ennfinderSeq                           = GaudiSequencer("Rich"+cont+"ENNRingFinderSeq")
+            ennfinderSeq.MeasureTime               = True
+            sequence.Members                      += [ ennfinderSeq ]
+            self.setOtherProp(RichENNRingFinderConf(),"Context")
+            RichENNRingFinderConf().setProp("Sequencer",ennfinderSeq)
             
         #if "Template" in ringalgs :
         #    tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")

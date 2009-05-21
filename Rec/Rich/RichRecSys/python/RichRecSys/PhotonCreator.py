@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.7 2009-04-20 15:03:50 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.8 2009-05-21 17:25:15 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -23,9 +23,6 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
        ,"Radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : ""
         }
-
-    ## Known selection modes
-    KnowwnSelectionModes =  [ "Tight", "Loose", "All" ]
 
     ## Initialize 
     def initialize(self):
