@@ -72,6 +72,7 @@ use RichRecSys           v3r18   Rich # Chris Jones
 #use RichRecTemplateRings v1r0    Rich # Sajan Easo
 use RichRecTools         v4r8    Rich # Chris Jones
 use RichRecTrackTools    v1r10   Rich # Chris Jones
+use RichENNRingFinder    v1r0    Rich # Chris Jones + Ulrich Kerzel
 
 # Global reco
 use GlobalReco           v6r21   Rec  # Chris Jones

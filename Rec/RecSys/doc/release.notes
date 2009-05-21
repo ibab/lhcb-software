@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-05-21 - Chris Jones
+ - Add new RICH package Rich/RichENNRingFinder for standalone trackless
+   ring finding using an elastic neural network approach.
+
 </PRE><H1><A NAME=v7r0>2009-05-11 RecSys v7r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LHCb v27r0.
 
