@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.129 2009-05-21 12:43:49 ibelyaev Exp $
+!$Id: release.notes,v 1.130 2009-05-21 18:59:53 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-21 - Greig Cowan
+ - Reverted StdLooseJpsi2MuMu to only make the loose Jpsi's. The FilterDesktop code 
+   for the lifetime unbiased Jpsi has been moved into it's own file: 
+   StdLTUnbiasedJpsi2MuMu.py. This particle has been added to StandardJpsi.py. The 
+   lifetime unbiased selection is based on the one in described in LHCb-2009-025 
+   and the beta_s roadmap.
 
 ! 2009-05-21 - Vanya BELYAEV
  - StdLooseJpsi2MuMu
