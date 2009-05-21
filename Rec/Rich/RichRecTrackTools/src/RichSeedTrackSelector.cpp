@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.3 2009-05-21 17:29:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -37,7 +37,8 @@ SeedTrackSelector::SeedTrackSelector( const std::string& type,
   // interface
   declareInterface<IBaseTrackSelector>(this);
   // job options
-  declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
+  //declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
+  declareProperty( "MinSeedLikelihood", m_minSeedLL = boost::numeric::bounds<double>::lowest()  );
   declareProperty( "MaxSeedLikelihood", m_maxSeedLL = boost::numeric::bounds<double>::highest() );
 }
 
@@ -49,7 +50,11 @@ SeedTrackSelector::~SeedTrackSelector() {}
 MsgStream & SeedTrackSelector::printSel( MsgStream & os ) const
 {
   BaseTrackSelector::printSel(os);
-  os << boost::format( " : LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
+  if ( m_minSeedLL > boost::numeric::bounds<double>::lowest() ||
+       m_maxSeedLL < boost::numeric::bounds<double>::highest() )
+  {
+    os << boost::format( " : LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
+  }
   return os;
 }
 
@@ -63,24 +68,24 @@ SeedTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << " -> Apply Seed track specific criteria" << endreq;
+    verbose() << " -> Apply Seed track specific criteria" << endmsg;
   }
 
   // seed likelihood cuts
   LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::TsaLikelihood );
   if ( i == track->extraInfo().end() )
   {
-    Warning( "Seed track does not have Likelihood info").ignore();
+    Warning( "Seed track does not have Likelihood info" ).ignore();
     return false;
   }
   if ( i->second < m_minSeedLL || i->second > m_maxSeedLL )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track failed seed-likelihood cut" << endreq;
+      verbose() << " -> Track failed seed-likelihood cut" << endmsg;
     return false;
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
   return true;
 }
 

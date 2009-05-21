@@ -5,15 +5,15 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.2 2009-05-21 17:29:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichBaseTrackSelector_H
-#define RICHRECTOOLS_RichBaseTrackSelector_H 1
+#ifndef RICHRECTRACKTOOLS_RichBaseTrackSelector_H
+#define RICHRECTRACKTOOLS_RichBaseTrackSelector_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -94,6 +94,12 @@ namespace Rich
       /// Returns the maximum chi^2 cut
       virtual double maxChi2Cut() const;
 
+      /// Returns the minimum likelihood cut
+      virtual double minLikelihoodCut() const;
+
+      /// Returns the maximum likelihood cut
+      virtual double maxLikelihoodCut() const;
+
       /// Returns the charge selection
       virtual int chargeSel() const;
 
@@ -116,6 +122,9 @@ namespace Rich
       double m_minPtCut;   ///< Min pt cut
       double m_maxPtCut;   ///< Max pt cut
 
+      double m_minLL; ///< minimum track likelihood cut
+      double m_maxLL; ///< maximum track likelihood cut
+
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
       bool m_acceptClones; ///< Accept or reject clone tracks
@@ -127,4 +136,4 @@ namespace Rich
   }
 } // RICH namespace
 
-#endif // RICHRECTOOLS_RichBaseTrackSelector_H
+#endif // RICHRECTRACKTOOLS_RichBaseTrackSelector_H

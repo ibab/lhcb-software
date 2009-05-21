@@ -4,6 +4,11 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-05-21 - Chris Jones
+ - Improvements to track selectors. 
+  + Remove use of Tsa specific TsaLikelihood
+  + Add Likelihood cut to all tracks
+
 !======================== RichRecTrackTools v1r10 2009-05-08 =================
 ! 2009-04-15 - Chris Jones
  - Propagate StatusCode from GaudiException to Error(...) call.
