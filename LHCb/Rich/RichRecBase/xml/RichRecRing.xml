@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.17 2009-03-03 10:57:08 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.18 2009-05-21 17:18:06 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -34,6 +34,7 @@
         <location name="SegmentHypoRings" place="Rec/Rich/OfflineEvent/SegmentHypoRings"/>
         <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
         <location name="TemplateRings"    place="Rec/Rich/Template/Rings"/>
+        <location name="ENNRings"         place="Rec/Rich/ENN/Rings"/>
 
 	<typedef 
 		desc   = "type for internal storage for floating point data" 
@@ -107,6 +108,7 @@
           <enumval name="Markov"        value="1"  desc="Markov Chain Monte Carlo ring finder"/>
           <enumval name="Hough"         value="2"  desc="Hough Transform ring finder"/>
           <enumval name="Template"      value="3"  desc="RingFinder using Fourier Correlations from Template Rings"/>
+          <enumval name="ENN"           value="4"  desc="Elastic Neural Network ring finder"/>
         </enum>
 
         <attribute 

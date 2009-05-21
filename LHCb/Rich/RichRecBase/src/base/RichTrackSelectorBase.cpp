@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.11 2008-08-18 19:09:07 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.12 2009-05-21 17:18:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -53,17 +53,21 @@ namespace Rich
 
       declareProperty( "MinPCut",       m_minPCut           ); // in GeV
       declareProperty( "MinPtCut",      m_minPtCut    = 0.0 ); // in GeV
-      declareProperty( "MinFitChi2Cut", m_minChi2Cut  = 0.0 );
+      declareProperty( "MinChi2Cut",    m_minChi2Cut  = 0.0 );
       declareProperty( "MaxPCut",       m_maxPCut     = 200 ); // in GeV
       declareProperty( "MaxPtCut",      m_maxPtCut    = 200 ); // in GeV
-      declareProperty( "MaxFitChi2Cut", m_maxChi2Cut  = 10  );
+      declareProperty( "MaxChi2Cut",    m_maxChi2Cut  = 10  );
       declareProperty( "Charge",        m_chargeSel   = 0   );
       declareProperty( "CloneCut",      m_cloneCut    = -1e10 );
+      declareProperty( "AcceptClones", m_acceptClones = false );
+      declareProperty( "MinLikelihood", m_minLL = -50 );
+      declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
 
       m_jobOpts =
         boost::assign::list_of
         ("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")
-        ("MinChi2Cut")("MaxChi2Cut")("Charge")("CloneCut");
+        ("MinChi2Cut")("MaxChi2Cut")("Charge")("CloneCut")
+        ("MinLikelihood")("MaxLikelihood")("AcceptClones");
 
     }
 
@@ -244,6 +248,23 @@ namespace Rich
     double TrackSelectorBase::maxChi2Cut() const { return m_maxChi2Cut; }
     int    TrackSelectorBase::chargeSel()  const { return m_chargeSel; }
     double TrackSelectorBase::cloneCut()   const { return m_cloneCut; }
+    double TrackSelectorBase::minLikelihoodCut() const { return m_minLL; }
+    double TrackSelectorBase::maxLikelihoodCut() const { return m_maxLL; }
+
+
+    double TrackSelectorBase::minLikelihoodCut( const Rich::Rec::Track::Type type ) const
+    {
+      TrackTools::const_iterator iT = m_tkTools.find(type);
+      return ( iT == m_tkTools.end() ? minLikelihoodCut() : 
+               max(minLikelihoodCut(),iT->second->minLikelihoodCut()) );
+    }
+
+    double TrackSelectorBase::maxLikelihoodCut( const Rich::Rec::Track::Type type ) const
+    {
+      TrackTools::const_iterator iT = m_tkTools.find(type);
+      return ( iT == m_tkTools.end() ? maxLikelihoodCut() :
+               min(maxLikelihoodCut(),iT->second->maxLikelihoodCut()) );
+    }
 
     double TrackSelectorBase::minPCut( const Rich::Rec::Track::Type type ) const
     {

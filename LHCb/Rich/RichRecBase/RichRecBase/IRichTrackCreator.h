@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ITrackCreator
  *
  *  CVS Log :-
- *  $Id: IRichTrackCreator.h,v 1.12 2008-10-29 13:18:48 jonrob Exp $
+ *  $Id: IRichTrackCreator.h,v 1.13 2009-05-21 17:18:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -78,7 +78,7 @@ namespace Rich
        */
       virtual LHCb::RichRecTracks * richTracks() const = 0;
 
-      /** Number of tracks in the input track container (e.g. Tracks, TrStoredTracks or TrgTracks)
+      /** Number of tracks in the input track container 
        *
        *  @todo   Review if this method is really needed
        *

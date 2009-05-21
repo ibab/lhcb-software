@@ -5,15 +5,15 @@
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.6 2008-02-15 14:32:24 cattanem Exp $
+ *  $Id: RichTrackSelectorBase.h,v 1.7 2009-05-21 17:18:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichTrackSelectorBase_H
-#define RICHRECTOOLS_RichTrackSelectorBase_H 1
+#ifndef RICHRECBASE_RichTrackSelectorBase_H
+#define RICHRECBASE_RichTrackSelectorBase_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -109,6 +109,12 @@ namespace Rich
       /// Returns the clone rejection cut
       virtual double cloneCut() const ;
 
+      /// Returns the minimum likelihood cut
+      virtual double minLikelihoodCut() const;
+
+      /// Returns the maximum likelihood cut
+      virtual double maxLikelihoodCut() const;
+
       /// Returns the overall minimum momentum cut value for the given track type
       virtual double minPCut( const Rich::Rec::Track::Type type ) const;
 
@@ -132,6 +138,12 @@ namespace Rich
 
       /// Returns the clone rejection cut for the given track type
       virtual double cloneCut( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the minimum likelihood cut for the given track type
+      virtual double minLikelihoodCut( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the maximum likelihood cut for the given track type
+      virtual double maxLikelihoodCut( const Rich::Rec::Track::Type type ) const;
 
     private: // defintions
 
@@ -188,6 +200,11 @@ namespace Rich
 
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
+      double m_minLL; ///< minimum track likelihood cut
+      double m_maxLL; ///< maximum track likelihood cut
+
+      bool m_acceptClones; ///< Accept or reject clone tracks
+
       /// list of possible options
       std::vector<std::string> m_jobOpts;
 
@@ -201,4 +218,4 @@ namespace Rich
  */
 typedef Rich::Rec::TrackSelectorBase RichTrackSelectorBase;
 
-#endif // RICHRECTOOLS_RichTrackSelectorBase_H
+#endif // RICHRECBASE_RichTrackSelectorBase_H
