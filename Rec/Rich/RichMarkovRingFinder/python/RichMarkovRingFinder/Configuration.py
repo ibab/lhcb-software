@@ -4,12 +4,10 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-04-23 15:16:28 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-05-21 17:13:20 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import ( Rich__Rec__TracklessRingFilterAlg,
-                            Rich__Rec__TracklessRingIsolationAlg )
 
 # ----------------------------------------------------------------------------------
 
@@ -55,6 +53,9 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
     ## @brief Apply the configuration to the given GaudiSequencer
     def applyConf(self):
 
+        from Configurables import ( Rich__Rec__TracklessRingFilterAlg,
+                                    Rich__Rec__TracklessRingIsolationAlg )
+
         if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Rich Markov Ring Finder Sequence not set")
         else :
@@ -73,29 +74,37 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
                 if "Rich1Top" in panels :
                     alg                = self.rich1TopFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
                     sequence.Members  += [alg]
-                    if "Rich1Bottom" in panels :
-                        alg                = self.rich1BottomFinder()
-                        alg.MaxHitsInEvent = maxhits
-                        sequence.Members  += [alg]
-                    if "Rich2Left" in panels :
-                        alg                = self.rich2LeftFinder()
-                        alg.MaxHitsInEvent = maxhits
-                        sequence.Members  += [alg]
-                    if "Rich2Right" in panels :
-                        alg                = self.rich2RightFinder()
-                        alg.MaxHitsInEvent = maxhits
-                        sequence.Members  += [alg]
+                if "Rich1Bottom" in panels :
+                    alg                = self.rich1BottomFinder()
+                    alg.MaxHitsInEvent = maxhits
+                    alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    sequence.Members  += [alg]
+                if "Rich2Left" in panels :
+                    alg                = self.rich2LeftFinder()
+                    alg.MaxHitsInEvent = maxhits
+                    alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    sequence.Members  += [alg]
+                if "Rich2Right" in panels :
+                    alg                = self.rich2RightFinder()
+                    alg.MaxHitsInEvent = maxhits
+                    alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    sequence.Members  += [alg]
 
                 # Attempt to associated rings to segments
                 if self.getProp("AssociateToSegments"):
                     from Configurables import Rich__Rec__TracklessRingSegmentAssociationAlg
                     alg               = Rich__Rec__TracklessRingSegmentAssociationAlg(cont+"MRingsSegAssoc")
+                    alg.InputRings    = "Rec/Rich/Markov/RingsAll"
                     sequence.Members += [alg]
 
                 # Post finding cleaning and ring selection
-                filter            = Rich__Rec__TracklessRingFilterAlg(cont+"BestMRings")
-                iso               = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedMRings")
-                iso.InputRings    = "Rec/Rich/Markov/RingsBest"
-                sequence.Members += [filter,iso]
+                filter             = Rich__Rec__TracklessRingFilterAlg(cont+"BestMRings")
+                filter.InputRings  = "Rec/Rich/Markov/RingsAll"
+                filter.OutputRings = "Rec/Rich/Markov/RingsBest"
+                iso                = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedMRings")
+                iso.InputRings     = "Rec/Rich/Markov/RingsBest"
+                iso.OutputRings    = "Rec/Rich/Markov/RingsIsolated"
+                sequence.Members  += [filter,iso]
             
