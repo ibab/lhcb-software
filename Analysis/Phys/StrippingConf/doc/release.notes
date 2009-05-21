@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-05-21 - Patrick Koppenburg
+ - Allow for output None
+ - Use DaVinci.appendToMainSequence and appendToMoniSequence. 
+   Requires Phys/DaVinci with tag pkoppenb_20090521 or later
+
 ! 2009-05-20 - Patrick Koppenburg
  - Remove StrippingConf.pyc file from cvs.
 

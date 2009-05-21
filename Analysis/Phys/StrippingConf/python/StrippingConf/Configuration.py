@@ -61,6 +61,7 @@ class StrippingConf( LHCbConfigurableUser ):
     def __apply_configuration__ (self): 
 
 	log.info("Stripping configuration")
+        importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py")
 
 #       Attach configurables of all active stripping lines to sequencer
 
@@ -68,7 +69,14 @@ class StrippingConf( LHCbConfigurableUser ):
         GaudiSequencer('StrippingLineSequencer').Members += [ i.configurable() for i in lines ] 
         log.info(GaudiSequencer('StrippingLineSequencer').Members)
 
-	output = self.getProp('OutputType')
+	output = (self.getProp('OutputType')).upper()
+
+        if output not in [ "ETC", "DST", "NONE" ]:
+            raise TypeError( "Invalid output type '%s'"%output )
+
+# always define stripping lines
+
+        DaVinci().appendToMainSequence( [ GaudiSequencer("StrippingLineSequencer") ] )
 
 	if output == "ETC" : 
 
@@ -91,16 +99,14 @@ class StrippingConf( LHCbConfigurableUser ):
 	    seq = GaudiSequencer("StreamSequencer")
 	    for i in lines : 
 	        name = i.name() + "Decision"
-	        print "Created decision " + name
+	        log.info("Created decision " + name)
 		sel = FilterDesktop(name);
 		sel.InputLocations = [ i.outputSelection() ]
 		sel.Code = "ALL"
 		tag.TupleToolSelResults.Selections += [ name ] 
 		seq.Members += [ sel ] 
 
-	    DaVinci().UserAlgorithms = [ GaudiSequencer("StrippingLineSequencer"), seq ]
-
-	    DaVinci().MoniSequence = [ tag ]
+	    DaVinci().appendToMoniSequence( [ tag ] )
 	
 	if output == "DST" : 
 
@@ -122,4 +128,4 @@ class StrippingConf( LHCbConfigurableUser ):
 		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq
 
 	    dstSeq = DaVinciWriteDst().dstSequence()
-	    DaVinci().UserAlgorithms = [ GaudiSequencer("StrippingLineSequencer"), dstSeq ]
+	    DaVinci().appendToMoniSequence( [ dstSeq ] )
