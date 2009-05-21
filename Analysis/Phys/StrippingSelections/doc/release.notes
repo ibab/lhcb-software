@@ -4,11 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-21 - Patrick Koppenburg
+ - Bd2KstarMuMu_10Hz line : added the 'd'
+
 ! 2009-05-20 - Patrick Koppenburg
  - Moved to here legacy DC06 stripping options
  - Moved python options to options
  - Added options/Stripping.py file that can be included trivially from any main file.
-
 
 ! 2009-05-15  Anton Poluektov
 

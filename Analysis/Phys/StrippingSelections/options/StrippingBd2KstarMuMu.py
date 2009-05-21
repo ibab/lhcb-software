@@ -23,7 +23,7 @@ Strip_10Hz_Bd2KstarMuMu.MotherCut="(MIPDV(PRIMARY)<0.08) & (PT>300*MeV) & (BPVDI
 # 
 # Create StrippingLine with this selection. This just takes CombineParticles as an algorithm
 #
-Bd2KstarMuMu_10Hz_line = StrippingLine('B2KstarMuMu_10Hz'
+Bd2KstarMuMu_10Hz_line = StrippingLine('Bd2KstarMuMu_10Hz'
                , prescale = 1
                , algos = [ Strip_10Hz_Bd2KstarMuMu ]
                , stream = 'BExclusive'
