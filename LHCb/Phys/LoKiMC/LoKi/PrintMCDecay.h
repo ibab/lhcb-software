@@ -1,4 +1,4 @@
-// $Id: PrintMCDecay.h,v 1.9 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: PrintMCDecay.h,v 1.10 2009-05-21 14:41:09 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_PRINTMCDECAY_H 
 #define LOKI_PRINTMCDECAY_H 1
@@ -35,6 +35,7 @@ class MsgStream ;
 // ============================================================================
 namespace LoKi 
 {  
+  // ==========================================================================
   namespace PrintMC 
   {
     // ========================================================================
@@ -65,7 +66,7 @@ namespace LoKi
     ( const LHCb::MCParticle*      particle                , 
       std::ostream&                stream                  , 
       const LoKi::MCTypes::MCCuts& cut                     ,
-      const bool                   decayOnly = false       ,
+      const bool                   decayOnly = true        ,
       const int                    level     = s_maxLevel2 ,
       const std::string&           blank     = "<cut>"     ) ;
     // ========================================================================
@@ -89,7 +90,7 @@ namespace LoKi
     printDecay 
     ( const LHCb::MCParticle*      particle                , 
       std::ostream&                stream                  ,
-      const bool                   decayOnly = false       ) ;
+      const bool                   decayOnly = true        ) ;
     // ========================================================================
     /** Simple function to print MC decay in more or less "readable" format 
      *
@@ -112,12 +113,12 @@ namespace LoKi
      */
     MsgStream& 
     printDecay 
-    ( const LHCb::MCParticle*      particle            , 
-      MsgStream&                   stream              , 
-      const LoKi::MCTypes::MCCuts& cut                 ,
-      const bool                   decayOnly = false   ,
-      const int                    level = s_maxLevel2 ,
-      const std::string&           blank = "<cut>"     ) ;
+    ( const LHCb::MCParticle*      particle                , 
+      MsgStream&                   stream                  , 
+      const LoKi::MCTypes::MCCuts& cut                     ,
+      const bool                   decayOnly = true        ,
+      const int                    level     = s_maxLevel2 ,
+      const std::string&           blank     = "<cut>"     ) ;
     // ========================================================================
     /** Simple function to print MC decay in more or less "readable" format 
      *
@@ -139,7 +140,7 @@ namespace LoKi
     printDecay 
     ( const LHCb::MCParticle*      particle          , 
       MsgStream&                   stream            ,
-      const bool                   decayOnly = false ) ;
+      const bool                   decayOnly = true  ) ;
     // ========================================================================
     /** Simple function to print MC decay in more or less "readable" format 
      *
@@ -161,11 +162,11 @@ namespace LoKi
      */
     std::string 
     printDecay 
-    ( const LHCb::MCParticle*      particle            , 
-      const LoKi::MCTypes::MCCuts& cut                 ,
-      const bool                   decayOnly = false   ,
-      const int                    level = s_maxLevel2 ,
-      const std::string&           blank = "<cut>"     ) ;
+    ( const LHCb::MCParticle*      particle                , 
+      const LoKi::MCTypes::MCCuts& cut                     ,
+      const bool                   decayOnly = true        ,
+      const int                    level     = s_maxLevel2 ,
+      const std::string&           blank     = "<cut>"     ) ;
     // ========================================================================
     /** Simple function to print MC decay in more or less "readable" format 
      *
@@ -185,7 +186,7 @@ namespace LoKi
     std::string 
     printDecay 
     ( const LHCb::MCParticle* particle          , 
-      const bool              decayOnly = false ) ;
+      const bool              decayOnly = true  ) ;
     // ========================================================================
   } // end of namespace LoKi::PrintMC
   // ==========================================================================
@@ -196,6 +197,7 @@ namespace LoKi
     using namespace LoKi::PrintMC    ;
     // ========================================================================
   } // end of namespace LoKi::Print  
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-// $Id: PrintMCDecay.cpp,v 1.12 2009-05-21 14:35:10 ibelyaev Exp $
+// $Id: PrintMCDecay.cpp,v 1.13 2009-05-21 14:45:15 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -103,7 +103,7 @@ std::ostream& LoKi::PrintMC::printDecay
   // 
   if ( 0 >= level    ) { return stream << " " << name << " " ; } ; // RETURN 
   // print the decay 
-  stream << " ( " << name << " ->" ;
+  stream << " ( " << name << ( decayOnly ? " ->" : " -x>" ) ;
   for ( MCPs::const_iterator id = daugs.begin() ; 
         daugs.end() != id ; ++id ) 
   { LoKi::PrintMC::printDecay 
