@@ -13,12 +13,6 @@ from StrippingConf.Configuration import StrippingConf
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
-# Import stripping selections
-#
-
-importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py")
-
-#
 # Stripping job configuration
 #
 
