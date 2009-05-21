@@ -1,4 +1,4 @@
-// $Id: PrintHepMCDecay.cpp,v 1.7 2007-11-28 14:08:30 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.8 2009-05-21 15:49:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,6 +30,7 @@
 // Local 
 // ===========================================================================
 #include "LoKi/PrintHepMCDecay.h"
+#include "LoKi/GenOscillated.h"
 // ============================================================================
 /** @file
  *
@@ -95,10 +96,56 @@ std::ostream& LoKi::PrintHepMC::printDecay
   }
   //
   if ( !cut( particle ) ) { return stream << blank ; } ;          // RETURN 
-  // own name 
-  const std::string name = 
-    LoKi::Particles::nameFromPID ( LHCb::ParticleID ( particle->pdg_id() ) ) ;
-  HepMC::GenVertex* ev = particle->end_vertex() ;
+  //
+  const HepMC::GenParticle* osc1 = LoKi::GenParticles::oscillated1 ( particle ) ;
+  const HepMC::GenParticle* osc2 = LoKi::GenParticles::oscillated2 ( particle ) ;  
+  // 
+  // case 1 :
+  //      osc1 == osc2 == 0 
+  //      no oscilation 
+  // case 2 : 
+  //      osc1 != 0 , osc2 == 0 
+  //      oscillated "fictive" particle, print mother ( 'osc1' ) ID 
+  //                               and own daughetrs  
+  // case 3 : 
+  //      osc1 == 0 , osc2 != 0 
+  //      oscillated "real" particle, print own ID and grand-daughetrs  
+  // case 4 : 
+  //      osc1 != 0 , osc2 != 0 
+  //      invalid case 
+  if ( 0 != osc1 && 0 != osc2 ) 
+  {
+    LoKi::Report::Error ( "LoKi::printDecay, invalid oscillation pattern" ) ; 
+    return stream << " <INVALID OSCILLATION PATTERN> " ;               // RETURN
+  }
+  const HepMC::GenParticle* self   = particle ;
+  const HepMC::GenParticle* source = particle ;
+  std::string name ;
+  if ( 0 != osc1 ) 
+  {
+    self    = osc1     ;
+    source  = particle ;
+    name    = "[" + 
+      LoKi::Particles::nameFromPID ( LHCb::ParticleID ( self->pdg_id() ) )
+      + "]os''" ;
+  }
+  else if ( 0 != osc2 ) 
+  {
+    self   = particle ;
+    source = osc2     ;
+    name    = "[" + 
+      LoKi::Particles::nameFromPID ( LHCb::ParticleID ( self->pdg_id() ) )
+      + "]os'" ;
+  }
+  else 
+  {
+    self   = particle ;
+    source = particle ;
+    name   = LoKi::Particles::nameFromPID ( LHCb::ParticleID ( self->pdg_id() ) ) ;
+  }
+
+  // get daughters
+  HepMC::GenVertex* ev = source->end_vertex() ;
   if ( 0 == ev      ) { return stream << " " << name << " " ; }   // RETURN
   HepMC::GenVertex::particle_iterator begin = 
     ev->particles_begin ( HepMC::children ) ;
