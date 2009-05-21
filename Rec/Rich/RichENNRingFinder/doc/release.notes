@@ -1,0 +1,10 @@
+!-------------------------------------------------------------------------------
+! Package     : Rich/RichENNRingFinder
+! Responsible : Ulrich Kerzel, Chris Jones
+! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
+!-------------------------------------------------------------------------------
+
+! 2009-05-21 - Chris Jones
+ - First version. Doesn't quite work yet but close ...
+
+
