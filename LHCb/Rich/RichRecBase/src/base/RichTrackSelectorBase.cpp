@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.12 2009-05-21 17:18:06 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.13 2009-05-21 17:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -60,7 +60,7 @@ namespace Rich
       declareProperty( "Charge",        m_chargeSel   = 0   );
       declareProperty( "CloneCut",      m_cloneCut    = -1e10 );
       declareProperty( "AcceptClones", m_acceptClones = false );
-      declareProperty( "MinLikelihood", m_minLL = -50 );
+      declareProperty( "MinLikelihood", m_minLL = -100 );
       declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
 
       m_jobOpts =
