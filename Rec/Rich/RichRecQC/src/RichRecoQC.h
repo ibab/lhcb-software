@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.25 2009-04-17 11:16:49 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.26 2009-05-21 17:22:46 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -85,12 +85,12 @@ namespace Rich
       private: // data
 
         // Pointers to tool instances
-        mutable const IParticleProperties * m_richPartProp; ///< Rich Particle properties
-        mutable const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-        mutable const ICherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
+        const IParticleProperties * m_richPartProp; ///< Rich Particle properties
+        const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+        const ICherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
         mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
-        mutable const ITrackSelector * m_trSelector;  ///< Track selector
-        mutable const IIsolatedTrack * m_isoTrack;
+        const ITrackSelector * m_trSelector;  ///< Track selector
+        const IIsolatedTrack * m_isoTrack;
 
         /// Pointer to the Stereographic refitting tool
         const IStereoFitter * m_fitter;

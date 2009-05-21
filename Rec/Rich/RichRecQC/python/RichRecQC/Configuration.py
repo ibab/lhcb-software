@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.22 2009-05-03 10:10:08 ukerzel Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2009-05-21 17:22:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -31,6 +31,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"RawMonitoring"             : True
        ,"PidMonitoring"             : True
        ,"PixelMonitoring"           : True
+       ,"TrackMonitoring"           : True
        ,"PhotonMonitoring"          : True
        ,"TracklessRingMonitoring"   : False
        ,"AlignmentMonitoring"       : True
@@ -40,6 +41,8 @@ class RichRecQCConf(RichConfigurableUser):
        ,"RecoTrackTypes": [ ["All"],
                             ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
+       ,"EffTrackTypes": [ ["Forward","Match"],
+                           ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
        ,"ExpertHistos" : False  # set to True to write out expert histos
        ,"ExpertTests" : [ "RichPixelPositions",
@@ -64,12 +67,22 @@ class RichRecQCConf(RichConfigurableUser):
             mon.HistoProduce  = self.getProp("HistoProduce")
 
     ## Configure a default monitor algorithm of given type
-    def createMonitor(self,type,name,trackType=None):
+    def createMonitor(self,type,name,trackType=None,typeSelOnly=False):
         mon = type(name)
         self.setHistosTupleOpts(mon)
         if trackType != None :
             mon.addTool( RichTools().trackSelector(nickname="TrackSelector",private=True) )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
+        if typeSelOnly :
+            mon.TrackSelector.MinPCut    = 0
+            mon.TrackSelector.MaxPCut    = 9e30
+            mon.TrackSelector.MinPtCut   = 0
+            mon.TrackSelector.MaxPtCut   = 9e30
+            mon.TrackSelector.MinChi2Cut = 0
+            mon.TrackSelector.MaxChi2Cut = 9e30
+            mon.TrackSelector.MinLikelihood = -9e30
+            mon.TrackSelector.CloneCut      = -9e30
+            mon.TrackSelector.AcceptClones  = True
         return mon
 
     ## Check a new sequence and add to main sequence
@@ -120,6 +133,10 @@ class RichRecQCConf(RichConfigurableUser):
         if self.getProp("PixelMonitoring") :
             self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
 
+        # Track monitoring
+        if self.getProp("TrackMonitoring") :
+            self.trackMoni(self.newSeq(sequence,"RichTrackMoni"))
+            
         # Reconstruction monitoring
         if self.getProp("PhotonMonitoring") :
             self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
@@ -202,6 +219,24 @@ class RichRecQCConf(RichConfigurableUser):
 
                 # Add to sequence
                 sequence.Members += [pidMon]
+
+    ## Track monitoring
+    def trackMoni(self,sequence):
+
+        from Configurables import ( Rich__Rec__MC__TrackSelEff )
+
+        # Track Types
+        for trackType in self.getProp("EffTrackTypes") :
+
+            # Construct the name for this monitor
+            name = "Ri" + self.trackSelName(trackType) + "TrkEff"
+
+            # Make a monitor alg
+            mon = self.createMonitor(Rich__Rec__MC__TrackSelEff,name,trackType,True)
+            mon.HistoPrint = True
+
+            # Add to sequence
+            sequence.Members += [mon]
 
     ## Reconstruction performance
     def recPerf(self,sequence):

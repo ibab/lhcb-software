@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-21 - Chris Jones
+ - Add new track selection efficiency monitors
+
 !======================= RichRecQC v2r28 2009-05-08 ==========================
 ! 2009-05-03 - Ulrich Kerzel
 - correct typo in in Configurable: IFB monitoring was running if 
