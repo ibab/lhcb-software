@@ -1,4 +1,4 @@
-// $Id: CovarianceEstimator.cpp,v 1.16 2007-01-15 07:53:00 cattanem Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.17 2009-05-21 11:28:17 odescham Exp $ 
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
@@ -181,9 +181,9 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const
   if( 0 >= eT ) 
     {
       LHCb::CaloPosition::Parameters& parameters = cluster->position().parameters();
-      parameters( 1 ) =  -1 * Gaudi::Units::TeV ;
-      parameters( 2 ) =  -1 * Gaudi::Units::km  ;
-      parameters( 3 ) =  -1 * Gaudi::Units::km  ;
+      parameters( LHCb::CaloPosition::E ) =  -1 * Gaudi::Units::TeV ;
+      parameters( LHCb::CaloPosition::X ) =  -1 * Gaudi::Units::km  ;
+      parameters( LHCb::CaloPosition::Y ) =  -1 * Gaudi::Units::km  ;
       return StatusCode(223)     ; 
     }
   

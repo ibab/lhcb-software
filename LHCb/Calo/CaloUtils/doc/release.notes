@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.124 2009-05-20 14:28:03 odescham Exp $
+! $Id: release.notes,v 1.125 2009-05-21 11:28:17 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-05-21 - Olivier Deschamps
+ - CovarianceEstimator : fix parameter index
 
 
 ! 2009-05-20 - Olivier Deschamps
