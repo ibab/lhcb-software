@@ -1,4 +1,4 @@
-## $Id: DVTestBu2LLK-2008.py,v 1.3 2009-04-28 17:10:18 pkoppenb Exp $
+## $Id: DVTestBu2LLK-2008.py,v 1.4 2009-05-21 17:37:54 pkoppenb Exp $
 ## ============================================================================
 ## CVS tag $Name: not supported by cvs2svn $
 ## ============================================================================
@@ -27,8 +27,8 @@ TestCorrelations.Algorithms = [ "Bu2LLK09_DiLepton", "Presel09Bu2LLK", "Sel09Bu2
 # Selection
 ###
 from Configurables import DaVinci
-DaVinci().MainOptions = "$B2DILEPTONROOT/options/Do09selBu2LLK.py"
-DaVinci().UserAlgorithms = [ TestCorrelations ]
+DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
+DaVinci().MoniSequence = [ TestCorrelations ]
 
 ##-- GAUDI data cards generated on 11/19/07 2:55 PM
 ##-- For Event Type = 12123001 / Data type = DST 1

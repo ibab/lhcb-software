@@ -11,19 +11,8 @@ from Configurables import GaudiSequencer
 
 ########################################################################
 #
-# If you want to import .opts options, do this first
-#
-importOptions("$STDOPTS/PreloadUnits.opts")
-
-########################################################################
-#
 # Some selections. 
 #
-#importOptions("$B2DILEPTONROOT/options/DoPreselBu2LLK.opts")
-#preselSeq = GaudiSequencer("SeqPreselBu2LLK")
-#importOptions( "$DAVINCIROOT/options/DC06SelBs2DsPi.opts")
-importOptions( "$B2DPLUSXROOT/options/DC06SelBs2DsPi.opts")
-preselSeq = GaudiSequencer("SeqDC06SelBs2DsPi")
 
 ########################################################################
 #
@@ -34,12 +23,12 @@ importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.py" )
 from Configurables import BTagging, BTaggingChecker
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ "Phys/DC06SelBs2DsPi" ]
+tag.InputLocations = [ "Sel09Bu2LLK" ]
 tag.OutputLevel = 3
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "Phys/BTagging" ]
+tagcheck.InputLocations = [ "BTagging" ]
 
 MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
 ########################################################################
@@ -52,16 +41,12 @@ DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 #DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation    = True
-DaVinci().UserAlgorithms = [ preselSeq, tag, tagcheck ]  # The algorithms
-########################################################################
-# HLT
-DaVinci().ReplaceL0BanksWithEmulated = True  ## true to rerun L0
-#DaVinci().Hlt2IgnoreHlt1Decision = True     
-DaVinci().HltType = ''  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
+DaVinci().MoniSequence = [  tag, tagcheck ]  # The algorithms
 
 
 ########################################################################
 #
 # example data file
 #
-EventSelector().Input   = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002034/DST/0000/00002034_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"    ]
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

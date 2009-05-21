@@ -19,7 +19,7 @@ EventTuple        SUCCESS List of booked N-Tuples in directory "FILE1/EventTuple
 EventTuple        SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=156{L0Decision,Hlt1Global,Hlt1BeamGasCrossingDecision,Hlt1BeamGasDecision,Hlt1BeamGas}
 MCTuple           SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 MCTuple           SUCCESS List of booked N-Tuples in directory "FILE1/MCTuple"
-MCTuple           SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=60 {J_psi_1S_TRUEID,J_psi_1S_TRUEP_E,J_psi_1S_TRUEP_X,J_psi_1S_TRUEP_Y,J_psi_1S_TRUEP}
+MCTuple           SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=53 {J_psi_1S_TRUEID,J_psi_1S_TRUEP_E,J_psi_1S_TRUEP_X,J_psi_1S_TRUEP_Y,J_psi_1S_TRUEP}
 MCTuple           SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |       100 |        100 |(  100.000 +- 1.00000  )%|   -------   |   -------   |

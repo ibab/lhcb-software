@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.5 2009-05-20 17:04:01 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.6 2009-05-21 17:37:54 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -69,7 +69,6 @@ trueSeq.Members += [ AllTrueLooseDecay  ]
 ##
 from Configurables import AlgorithmCorrelationsAlg, AlgorithmCorrelations
 TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
-trueSeq.Members += [ TestCorrelations  ]
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay", 
@@ -79,12 +78,12 @@ TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay",
 ###
 ## Preselection
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = []
-StrippingConf().OutputType = "DST"
-importOptions ( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py" )
+# StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]   # does not work yet
+StrippingConf().OutputType = "NONE"
 
 from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ trueSeq ]
+DaVinci().MoniSequence = [ TestCorrelations ]
 
 ##
 ## Options

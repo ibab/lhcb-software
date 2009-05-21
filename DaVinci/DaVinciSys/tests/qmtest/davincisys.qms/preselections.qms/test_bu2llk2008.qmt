@@ -16,6 +16,6 @@ findReferenceBlock("""
   2 Presel09Bu2LLK       3.0% |   8.6%  #####  *****
   3 Sel09Bu2LLK          0.0% |   0.0%   0.0%  #####
 ===========================================================
-""", stdout, result, causes, signature_offset = 1)
+""", stdout, result, causes, signature_offset = 1, id = "Bu2LLK")
 </text></argument>
 </extension>
