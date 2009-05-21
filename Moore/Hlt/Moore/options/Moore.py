@@ -34,16 +34,15 @@ Moore().Verbose = True
 #Moore().inputFiles = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
 Moore().Simulation = True
-Moore().DataType   = '2008'
+Moore().DataType   = '2009'
 #Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
 Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
 
 EventSelector().PrintFreq = 100
+Moore().EvtMax = 1000
 
-#Moore().DDDBtag  = "default"
-#Moore().CondDBtag = "default"
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+Moore().DDDBtag   = "default"
+Moore().CondDBtag = "default"
 
 # Moore().outputFile = '/tmp/foo.raw'
 
