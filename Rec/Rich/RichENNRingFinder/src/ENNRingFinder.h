@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.6 2009-05-22 21:56:41 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.7 2009-05-22 22:05:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -38,6 +38,9 @@ namespace Rich
 
       public:
         
+        /** Default Constructor
+         *  @param debug Flag to enable debug printout
+         */
         Finder( const bool debug = false ) : m_debug(debug) { }
 
       public:
