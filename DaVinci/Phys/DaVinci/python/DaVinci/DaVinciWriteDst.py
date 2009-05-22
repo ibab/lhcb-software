@@ -1,11 +1,11 @@
 """
 Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciWriteDst.py,v 1.4 2009-04-22 15:51:00 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.5 2009-05-22 15:24:20 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
-from Configurables import ( DstConf )
+from Configurables import ( DstConf, DaVinci )
 
 class DaVinciWriteDst(ConfigurableUser):
     __slots__ = {
@@ -22,11 +22,11 @@ class DaVinciWriteDst(ConfigurableUser):
                                      Example = [ '/Event/Phys/StdUnbiasedJpsi2MuMu#2' ]
                                      Note the #2 !"""
         }
-    __used_configurables__ = [ DstConf ]
+    __used_configurables__ = [ DstConf, DaVinci ]
     KnownDstNames = [ "dst", "DST" ]
 
     def __apply_configuration__(self):
-        log.info("Do nothing")
+        self.dstSequence()
 
     ############################################################################
     # WriteDst Stream Name
@@ -86,4 +86,5 @@ class DaVinciWriteDst(ConfigurableUser):
             log.info("Will configure DST output file "+f)
             self.writeDst(f,s)
             seq.Members += [ s ]
-        return seq
+        DaVinci().appendToMainSequence(seq)
+
