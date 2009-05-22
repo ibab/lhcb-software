@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.7 2009-05-22 22:05:56 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.8 2009-05-22 22:10:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -157,11 +157,17 @@ namespace Rich
                         const double RMin = 2.,
                         const double RMax = 6. );
 
-        /// Access the input hits
+        /// read/write access to the input hits
         inline Hit::Vector  & hits()  { return m_Hits;  }
 
-        /// Access the found rings
+        /// read/write access to the found rings
         inline Ring::Vector & rings() { return m_Rings; }
+
+        /// read-only access to the input hits
+        inline const Hit::Vector  & hits()  const { return m_Hits;  }
+
+        /// read-only access to the found rings
+        inline const Ring::Vector & rings() const { return m_Rings; }
 
         /// Clean up for a new event
         void clear();
