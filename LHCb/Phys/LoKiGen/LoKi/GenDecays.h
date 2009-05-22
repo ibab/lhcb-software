@@ -1,4 +1,4 @@
-// $Id: GenDecays.h,v 1.7 2009-05-14 16:57:38 ibelyaev Exp $
+// $Id: GenDecays.h,v 1.8 2009-05-22 18:13:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENDECAYS_H 
 #define LOKI_GENDECAYS_H 1
@@ -17,6 +17,7 @@
 // LoKiDecay
 // ============================================================================
 #include "LoKi/Trees.h"
+#include "LoKi/DecayDescriptor.h"
 // ============================================================================
 /** @file
  *  Implementation file for LoKi HepMC-specific decay/tree-functors 
