@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.238 2009-05-21 08:25:29 graven Exp $ 
+! $Id: release.notes,v 1.239 2009-05-22 16:40:48 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-22 - J. Nardulli and P. Spradlin
+  - Added seeding and track fitting sequences for Ks->DD reconstruction.
+    + options/Hlt2FitTT.py
+    + options/Hlt2SeedForDX.py
 
 !========================== HltConf v2r8p1 2009-05-19 =================
 ! 2009-05-21 - Gerhard Raven
