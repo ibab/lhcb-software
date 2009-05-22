@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-05-21 - Chris Jones
- - Add configuration options for new ENN ring finder
+ - Add configuration options for new ENN ring finder + enable by default
 
 ! 2009-05-18 - Chris Jones
  - Fix sequencing bug highlighted by the last commit :(
