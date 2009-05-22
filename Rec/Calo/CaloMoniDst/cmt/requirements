@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.16 2009-05-08 14:21:17 cattanem Exp $ 
+# $Id: requirements,v 1.17 2009-05-22 13:02:58 cattanem Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # ============================================================================
 package           CaloMoniDst
-version           v3r6
+version           v3r7
 
 # =============== structure ==================================================
 branches          cmt doc src options 

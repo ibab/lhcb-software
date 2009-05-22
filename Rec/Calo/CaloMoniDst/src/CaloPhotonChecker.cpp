@@ -532,7 +532,7 @@ StatusCode CaloPhotonChecker::execute()
      }
      debug() << " - Chi2        ="<<chi2<<endmsg;
      // Shower Shape
-     double shape=hypo->position()->spread()(1,1)+hypo->position()->spread()(2,2);
+     double shape=hypo->position()->spread()(0,0)+hypo->position()->spread()(1,1);
      debug()<<" - Shower Shape="<<shape<<endmsg;
      //Spd hit and Prs deposit
 
