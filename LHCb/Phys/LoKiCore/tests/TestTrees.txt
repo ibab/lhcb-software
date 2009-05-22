@@ -1,0 +1,10 @@
+X 
+(l+ -> Nu Beauty ~X(3872)+ ... )
+( JSpin(1) -> Nu Beauty ~ ( X(3872)+ ==x> l+ l- ) ) 
+(  ( l+ -> Nu Beauty ~X(3872)+ ... ) , (l- -> Nu Beauty ~X(3872)+ ... ) ) 
+(  ( l+ -> Nu Beauty ~X(3872)+ ... ) && (l- -> Nu Beauty ~X(3872)+ ... ) ) 
+
+
+
+
+

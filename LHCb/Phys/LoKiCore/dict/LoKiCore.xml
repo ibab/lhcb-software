@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.15 2009-05-09 19:15:53 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.16 2009-05-22 18:12:36 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.15 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.16 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -58,7 +58,9 @@
   <enum     name = "Decays::Trees::Oscillation" />
   <enum     name = "Decays::Trees::Alg"   />
   <enum     name = "Decays::Trees::Arrow" />
-
+  <class    name = "Decays::iTree"  />
+  <class    name = "Decays::IDecayNodeFactory" />
+  
   <enum name = "LoKi::Monitoring::Flag"  />
 
   <class name    = "IStatSvc"      />
