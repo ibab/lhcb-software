@@ -1,6 +1,9 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
+!====================== MuonPIDChecker v3r2 2009-05-22 ======================
+! 2009-05-22 - Miriam Gandelman 
+ - Bug fix on some array sizes
 
 !====================== MuonPIDChecker v3r1 2009-02-20 ======================
 ! 2009-02-19 - Erica Polycarpo   

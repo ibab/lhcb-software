@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.6 2008-08-20 15:50:34 miriamg Exp $
+// $Id: MuonPIDChecker.h,v 1.7 2009-05-22 12:47:45 miriamg Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -96,7 +96,7 @@ private:
                //  1 = muons
                //  2 = muons from decays in flight
                //  3 = non-muons  
-  unsigned int m_cpresel[4],m_cisMuon[4], m_cDLL[4], m_cnShared[4];
+  unsigned int m_cpresel[5],m_cisMuon[5], m_cDLL[5], m_cnShared[5];
                // total number of tracks mis-id-ed (0+2+3) 
   unsigned int m_cmisID, m_cmisIDDLL, m_cmisIDnShared;
                // Track info
