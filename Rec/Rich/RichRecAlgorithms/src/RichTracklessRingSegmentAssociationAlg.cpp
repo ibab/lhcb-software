@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.4 2008-06-14 10:42:11 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.5 2009-05-22 15:46:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -41,8 +41,8 @@ StatusCode TracklessRingSegmentAssociationAlg::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings            : " << m_inputRings  << endreq;
-  info() << "Max. seperation        : " << m_maxDist << endreq;
+  info() << "Input Rings            : " << m_inputRings  << endmsg;
+  info() << "Max. seperation        : " << m_maxDist << endmsg;
 
   return sc;
 }
@@ -67,7 +67,8 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
     const Rich::RadiatorType rad = (*iR)->radiator();
     const Rich::DetectorType det = (*iR)->rich();
 
-    verbose() << "Ring " << (*iR)->key() << " " << det << " " << rad << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Ring " << (*iR)->key() << " " << det << " " << rad << endmsg;
 
     // Ring centre point
     const Gaudi::XYZPoint & ringPtnLocal = (*iR)->centrePointLocal();
@@ -93,7 +94,8 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
                                     std::pow ( ringPtnLocal.y()-tkPtnLocal.y(), 2 ) );
       if ( sep < m_maxDist )
       {
-        verbose() << " -> Segment " << (*iSeg)->key() << " within matching distance" << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Segment " << (*iSeg)->key() << " within matching distance" << endmsg;
 
         // Get current best for this segment
         if ( mmap.find(*iSeg) == mmap.end() ) mmap[*iSeg] = SegRingPair(*iR,9e20);
@@ -120,8 +122,9 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
       // This ring is not yet associated, so do so
       ring->setRichRecSegment(seg);
       tmap[ring] = dist;
-      debug() << "Setting  segment " << seg->key() 
-              << " match to ring " << ring->key() << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Setting  segment " << seg->key() 
+                << " match to ring " << ring->key() << endmsg;
     }
     else
     {
@@ -131,8 +134,9 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
         // yes, so update association
         ring->setRichRecSegment(seg);
         tmap[ring] = dist;
-        debug() << "Updating segment " << seg->key() 
-                << " match to ring " << ring->key() << endreq;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Updating segment " << seg->key() 
+                  << " match to ring " << ring->key() << endmsg;
       }
     }
 

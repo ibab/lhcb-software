@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.3 2008-06-14 10:42:11 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.4 2009-05-22 15:46:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -59,6 +59,7 @@ StatusCode TracklessRingFilterAlg::execute()
 
   // Load the input rings
   const LHCb::RichRecRings * inrings = get<LHCb::RichRecRings>(m_inputRings);
+  debug() << "Found " << inrings->size() << " input rings at " << m_inputRings << endmsg;
 
   // Create a container for the output rings
   LHCb::RichRecRings * outrings = new LHCb::RichRecRings();
@@ -70,15 +71,21 @@ StatusCode TracklessRingFilterAlg::execute()
   {
     // average ring hit prob
     const double avProb = (*iRing)->averagePixelProb();
-    if ( avProb < m_minAvProb ) continue;
-
     // Number of pixels on the ring
     const unsigned int nPixels = (*iRing)->richRecPixels().size();
-    if ( nPixels < m_minNumHits ) continue;
+    
+    verbose() << " -> Ring " << (*iRing)->key() 
+              << " av prob = " << avProb
+              << " nPixels = " << nPixels << endmsg;
+ 
+    if ( avProb < m_minAvProb   ||
+         nPixels < m_minNumHits ) continue;
 
     // If get here, ring is selected so clone and save
     outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
   }
+
+  debug() << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
 
   return StatusCode::SUCCESS;
 }

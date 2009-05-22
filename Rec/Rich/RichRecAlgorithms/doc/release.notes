@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Chris Jones
+ - Some improvements to the trackless ring filtering and isolation algorithms
+
 !===================== RichRecAlgorithms v2r14p1 2008-11-21 ==================
 ! 2008-10-16 - Marco Cattaneo
  - Fix trivial compilation warning introduced by Gaudi v20r3
