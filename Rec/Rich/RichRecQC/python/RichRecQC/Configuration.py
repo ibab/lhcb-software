@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.25 2009-05-22 16:24:06 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2009-05-22 23:33:34 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -244,7 +244,7 @@ class RichRecQCConf(RichConfigurableUser):
 
             # Make a monitor alg
             mon = self.createMonitor(Rich__Rec__MC__TrackSelEff,name,trackType,True)
-            mon.HistoPrint = True
+            #mon.HistoPrint = True
 
             # Add to sequence
             sequence.Members += [mon]

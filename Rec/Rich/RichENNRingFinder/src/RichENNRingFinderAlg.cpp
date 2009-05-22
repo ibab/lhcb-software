@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.5 2009-05-22 21:53:51 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.6 2009-05-22 23:37:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -34,11 +34,11 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
                           const Rich::Side         panel,
                           const Rich::RadiatorType rad )
   : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-    m_smartIDTool       ( NULL  ),
-    m_rich              ( rich  ),
-    m_panel             ( panel ),
-    m_rad               ( rad   ),
-    m_finder            ( NULL  )
+    m_smartIDTool           ( NULL  ),
+    m_rich                  ( rich  ),
+    m_panel                 ( panel ),
+    m_rad                   ( rad   ),
+    m_finder                ( NULL  )
 {
   // Set RICH specific parameters
   if ( Rich::Rich2 == rich )
@@ -52,7 +52,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
-    m_maxRingChi2      = 50;
+    m_maxRingChi2      = 200;
     m_minRingPurity    = 0.7;
   }
   else // RICH1
@@ -66,7 +66,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 45.0;
     m_maxRingRadius    = 75.0;
-    m_maxRingChi2      = 50;
+    m_maxRingChi2      = 200;
     m_minRingPurity    = 0.7;
   }
   // JOs
