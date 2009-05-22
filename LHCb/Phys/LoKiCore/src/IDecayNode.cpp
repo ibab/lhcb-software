@@ -1,26 +1,26 @@
-// $Id: IDecayNodeFactory.cpp,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: IDecayNode.cpp,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // Local
 // ============================================================================
-#include "LoKi/IDecayNodeFactory.h"
+#include "LoKi/IDecayNode.h"
 // ============================================================================
 /** @file 
- *  Implementation file for class : IDecayNodeFactory
+ *  Implementation file for class  Decays::IDecayNode
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-05-22
  */
 // ============================================================================
 // virtual & protected destructi
 // ============================================================================
-Decays::IDecayNodeFactory::~IDecayNodeFactory() {}
+Decays::IDecayNode::~IDecayNode () {}
 // ============================================================================
 // unique interface ID 
 // ============================================================================
-const InterfaceID& Decays::IDecayNodeFactory::interfaceID() 
+const InterfaceID& Decays::IDecayNode::interfaceID() 
 {
-  static const InterfaceID s_ID  ( "Decays::IDecayNodeFactory" , 1 , 0 );
+  static const InterfaceID s_ID  ( "Decays::IDecayNode" , 1 , 0 );
   return s_ID ;
 }
 // ============================================================================

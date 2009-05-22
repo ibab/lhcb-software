@@ -1,4 +1,4 @@
-// $Id: DecayFinderBase.cpp,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: DecayBase.cpp,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // =============================================================================
@@ -8,25 +8,23 @@
 // =============================================================================
 // LoKi
 // =============================================================================
-#include "LoKi/DecayFinderBase.h"
-#include "LoKi/IDecayNodeFactory.h"
+#include "LoKi/DecayBase.h"
 #include "LoKi/NodeParser.h"
 #include "LoKi/TreeParser.h"
-#include "LoKi/IDecayNodeFactory.h"
 // =============================================================================
 // Boost 
 // =============================================================================
 #include "boost/regex.hpp"
 // =============================================================================
 /** @file 
- *  Implementation file for class LoKi::DecayFinderBase
+ *  Implementation file for class LoKi::DecayBase
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-05-22
  */
 // =============================================================================
 // constructor 
 // =============================================================================
-LoKi::DecayFinderBase::DecayFinderBase 
+LoKi::DecayBase::DecayBase 
 ( const std::string& type   ,                        // the actual tool type (?)
   const std::string& name   ,                        //     the actual tool name 
   const IInterface*  parent )                        //               the parent
@@ -34,16 +32,15 @@ LoKi::DecayFinderBase::DecayFinderBase
   //
   , m_ppSvc      ( 0 )
 {
-  declareInterface<Decays::IDecayNodeFactory> ( this ) ;  
 }
 // =============================================================================
 // destructor 
 // =============================================================================
-LoKi::DecayFinderBase::~DecayFinderBase (){}
+LoKi::DecayBase::~DecayBase (){}
 // =============================================================================
 // finalize 
 // =============================================================================
-StatusCode LoKi::DecayFinderBase::finalize () 
+StatusCode LoKi::DecayBase::finalize () 
 {
   m_ppSvc = 0 ;
   return GaudiTool::finalize () ;
@@ -55,7 +52,7 @@ StatusCode LoKi::DecayFinderBase::finalize ()
  *  @return status code
  */
 // =============================================================================
-StatusCode LoKi::DecayFinderBase::_parse 
+StatusCode LoKi::DecayBase::_parse 
 ( Decays::Node& node , const std::string& input ) const 
 {
   MsgStream& err = error() ;
@@ -89,7 +86,7 @@ StatusCode LoKi::DecayFinderBase::_parse
  *  @return status code
  */
 // ============================================================================
-StatusCode LoKi::DecayFinderBase::_parse 
+StatusCode LoKi::DecayBase::_parse 
 ( Decays::Parsers::Tree& tree , const std::string& input ) const 
 {
   MsgStream& err = error() ;
@@ -115,8 +112,8 @@ StatusCode LoKi::DecayFinderBase::_parse
 // ============================================================================
 // convert the string ' [ a ]cc ' into ' ( a , Acc ) '
 // ============================================================================
-bool LoKi::DecayFinderBase::_stripCC ( const std::string& input  , 
-                                       std::string&       output ) const 
+bool LoKi::DecayBase::_stripCC ( const std::string& input  , 
+                                 std::string&       output ) const 
 {
   static const boost::regex s_expr  ( "[ ]*\\[([^\\]]*)\\]cc[ ]*" ) ;
   // 
@@ -132,7 +129,7 @@ bool LoKi::DecayFinderBase::_stripCC ( const std::string& input  ,
 // ============================================================================
 // convert the string ' [ a ]cc ' into ' ( a , aCC ) '  
 // ============================================================================
-std::string LoKi::DecayFinderBase::_makeCC 
+std::string LoKi::DecayBase::_makeCC 
 ( const std::string& input ) const 
 {
   std::string _cc ;

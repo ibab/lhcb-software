@@ -1,4 +1,4 @@
-// $Id: DecayFinderBase.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: DecayBase.h,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDERBASE_H 
 #define LOKI_DECAYFINDERBASE_H 1
@@ -16,8 +16,6 @@
 // ============================================================================
 // local
 // ============================================================================
-#include "LoKi/IDecayNodeFactory.h"
-// ============================================================================
 // forward decalrations 
 // ============================================================================
 namespace Decays 
@@ -29,25 +27,14 @@ namespace Decays
 namespace LoKi 
 {
   // ==========================================================================
-  /** @class DecayFinderBase 
+  /** @class DecayBase 
    *  Base class forimplementation of various decay finders 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-05-22
    */
-  class DecayFinderBase 
-    : public GaudiTool 
-    , public Decays::IDecayNodeFactory
+  class DecayBase : public GaudiTool 
   {
-  public:
     // ========================================================================
-    /** build the node ftrom description 
-     *  @see Decays::DecanNodeFactory
-     */
-    StatusCode node 
-    ( const std::string& descriptor , 
-      Decays::Node&      node       ) const 
-    { return _parse ( node , descriptor ) ; }
-    //  =======================================================================
   public:
     // ========================================================================
     /// the specific finalization 
@@ -56,12 +43,12 @@ namespace LoKi
   protected:
     // ========================================================================
     /// constructor 
-    DecayFinderBase 
+    DecayBase 
     ( const std::string& type   ,                   // the actual tool type (?)
       const std::string& name   ,                   //     the actual tool name 
       const IInterface*  parent ) ;                 //               the parent
     /// virtual protected destructor 
-    virtual ~DecayFinderBase() ;
+    virtual ~DecayBase () ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -101,11 +88,11 @@ namespace LoKi
   private:
     // ========================================================================  
     /// the default constructor is disabled 
-    DecayFinderBase () ;                 // the default constructor is disabled 
+    DecayBase () ;                       // the default constructor is disabled 
     /// copy constructor is disabled 
-    DecayFinderBase ( const DecayFinderBase& ) ;          // no copy consructor 
+    DecayBase ( const DecayBase& ) ;                      // no copy consructor 
     /// assignement operator is disabled 
-    DecayFinderBase& operator=( const DecayFinderBase& );     // no assignement
+    DecayBase& operator=( const DecayBase& ) ;                // no assignement
     // ========================================================================
   private:
     // ========================================================================

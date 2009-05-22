@@ -1,4 +1,4 @@
-// $Id: IDecayNodeFactory.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: IDecayNode.h,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IDECAYNODEFINDER_H 
 #define LOKI_IDECAYNODEFINDER_H 1
@@ -11,20 +11,17 @@
 // ============================================================================
 // PartProp
 // ============================================================================
-#include "Kernel/Nodes.h"
+#include "Kernel/iNode.h"
 // ============================================================================
 namespace Decays 
 {
-  // ==========================================================================
-  /// forward decalration 
-  class Node ;                                          // forward declaration 
   // ==========================================================================
   /** @class IDecayNodeFactory LoKi/IDecayNodeFactory.h
    *  Simple factory for creation of decay nodes 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2009-05-22
    */
-  class IDecayNodeFactory : public virtual IAlgTool
+  class IDecayNode : public virtual IAlgTool
   {
     // ========================================================================
   public:
@@ -33,21 +30,17 @@ namespace Decays
      *  
      *  @code
      *
-     *  const Decays::IDecayNodeFactory* finder = ... ;
+     *  const Decays::IDecayNode* finder = ... ;
      * 
-     *  Decays::Node node = ... ; 
-     *  StatusCode sc = finder -> node ( " Beauty & Charm & Baryon " , node ) ;
+     *  Decays::Node node = finder -> node ( " Beauty & Charm & Baryon " ) ;
      *  
-     *  if ( sc.isFailure() || !node.valid() ){  .. error here ... } 
+     *  if ( !node.valid() ){  .. error here ... } 
      *
      *  @endcode 
      *  @param descriptor (INPUT)  node deccriptor 
-     *  @param result       (OUTPUT) the constructed node 
-     *  @return status code 
+     *  @param constructed node 
      */
-    virtual StatusCode node 
-    ( const std::string& decriptor , 
-      Decays::Node&      result    ) const = 0 ;
+    virtual Node node ( const std::string& decriptor ) const = 0 ;
     // ========================================================================
   public:
     // ========================================================================
@@ -57,7 +50,7 @@ namespace Decays
   protected:
     // ========================================================================
     /// virtual & protected destructor 
-    virtual ~IDecayNodeFactory () ;           // virtual & protected destructor 
+    virtual ~IDecayNode () ;                  // virtual & protected destructor 
     // ========================================================================
   }; //                                             end class IDecayNodeFactory  
   // ==========================================================================
