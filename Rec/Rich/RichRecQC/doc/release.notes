@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Chris Jones
+ - Import trackless ring monitor from Markov package + Activate by default for
+   new ENN rings.
+
 ! 2009-05-21 - Chris Jones
  - Add new track selection efficiency monitors
 

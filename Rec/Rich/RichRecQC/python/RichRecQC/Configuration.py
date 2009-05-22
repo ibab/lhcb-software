@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.24 2009-05-21 23:06:35 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2009-05-22 16:24:06 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -34,7 +34,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"PixelMonitoring"           : True
        ,"TrackMonitoring"           : True
        ,"PhotonMonitoring"          : True
-       ,"TracklessRingMonitoring"   : False
+       ,"TracklessRingMonitoring"   : True
        ,"AlignmentMonitoring"       : True
        ,"HPDIFBMonitoring"          : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
@@ -171,7 +171,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## standalone ring finder monitors
     def ringsMoni(self,type,sequence):
 
-        from Configurables import Rich__Rec__MarkovRingFinder__MC__Moni
+        from Configurables import Rich__Rec__MC__TracklessRingMoni
 
         if type == "Markov" :
             conf = RichMarkovRingFinderConf()
@@ -181,19 +181,20 @@ class RichRecQCConf(RichConfigurableUser):
             raise RuntimeError("ERROR : Unknown trackless ring finder type")
 
         # Activate histos in the finder algs themselves
-        conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
-        conf.rich1BottomFinder().HistoProduce = self.getProp("HistoProduce")
-        conf.rich2LeftFinder().HistoProduce   = self.getProp("HistoProduce")
-        conf.rich2RightFinder().HistoProduce  = self.getProp("HistoProduce")
+        if self.getProp("ExpertHistos") :
+            conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
+            conf.rich1BottomFinder().HistoProduce = self.getProp("HistoProduce")
+            conf.rich2LeftFinder().HistoProduce   = self.getProp("HistoProduce")
+            conf.rich2RightFinder().HistoProduce  = self.getProp("HistoProduce")
 
         # Add monitors
-        allMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniAll")
+        allMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniAll")
         allMoni.RingLocation = "Rec/Rich/"+type+"/RingsAll"
         sequence.Members += [allMoni]
-        bestMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniBest")
+        bestMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniBest")
         bestMoni.RingLocation = "Rec/Rich/"+type+"/RingsBest"
         sequence.Members += [bestMoni]
-        isoMoni = self.createMonitor(Rich__Rec__MarkovRingFinder__MC__Moni,type+"RingMoniIsolated")
+        isoMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniIsolated")
         isoMoni.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
         sequence.Members += [isoMoni]
 
