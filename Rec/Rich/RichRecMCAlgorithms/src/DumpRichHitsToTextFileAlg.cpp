@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.3 2009-04-30 14:20:49 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.4 2009-05-22 15:49:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -93,6 +93,8 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
 
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich, panel );
+  debug() << " -> Selected " << range.size() << " hits for " << rich 
+          << " " << Rich::text(rich,panel) << endmsg;
   for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
   {
     // get X and Y
@@ -105,6 +107,7 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
                      (*iPix)->localPosition().y()
                      );
     file << X << " " << Y << " ";
+    verbose() << "  -> Hit " << X << " " << Y << endmsg;
 
     // MC history
     typedef std::vector< const LHCb::MCRichDigitSummary * > Histories;
