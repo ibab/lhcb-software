@@ -1,4 +1,4 @@
-// $Id: ENNRingFinder.cpp,v 1.2 2009-05-21 22:12:56 jonrob Exp $
+// $Id: ENNRingFinder.cpp,v 1.3 2009-05-22 15:33:23 jonrob Exp $
 // Include files
 
 // STL
@@ -50,15 +50,6 @@ void Finder::FindRings( const double HitSigma,
   Rings.clear();
   std::sort( Hits.begin(), Hits.end() );
 
-  if ( m_debug )
-  {
-    std::cout << "Ring Finder has " << Hits.size() << " input hits" << std::endl;
-    for ( iH i = Hits.begin(); i != Hits.end(); ++i )
-    {
-      std::cout << "  " << *i << std::endl;
-    }
-  }
-
   // MAIN LOOP OVER HITS
 
   iH ileft = Hits.begin(), iright = ileft, i = ileft;
@@ -70,8 +61,8 @@ void Finder::FindRings( const double HitSigma,
     double left = i->x - AreaSize;
     double right = i->x + AreaSize;
 
-    while( ileft->x < left ) ++ileft;
-    while( iright != Hits.end() && iright->x < right ) ++iright;
+    while ( ileft->x < left ) ++ileft;
+    while ( iright != Hits.end() && iright->x < right ) ++iright;
 
     Hit::PtnVector SearchArea;
     Hit::PtnVector PickUpArea;
@@ -86,8 +77,9 @@ void Finder::FindRings( const double HitSigma,
 
       S0 = S1 = S2 = S3 = S4 = 0.;
 
-      for( iH j = ileft; j != iright; ++j ){
-        if( j == i ) continue;
+      for( iH j = ileft; j != iright; ++j )
+      {
+        if ( j == i ) continue;
         j->ly = j->y - i->y;
         if( std::fabs(j->ly) > AreaSize ) continue;
         j->lx = j->x - i->x;
@@ -96,7 +88,8 @@ void Finder::FindRings( const double HitSigma,
         j->lr2 = j->S0 + j->S1;
         if( j->lr2 > AreaSize2 ) continue;
         ++NAreaHits;
-        if( j->busy >= 13 ){
+        if( j->busy >= 13 )
+        {
           PickUpArea.push_back( &*j );
           continue;
         }
@@ -111,7 +104,8 @@ void Finder::FindRings( const double HitSigma,
         j->S4 = j->ly * lr2;
         j->C = -lr/2;
 
-        if( lr > 1.E-4 ){
+        if( lr > 1.E-4 )
+        {
           const double w = 1./lr;
           const double w2 = w*w;
           j->Cx = w*j->lx;
@@ -121,7 +115,9 @@ void Finder::FindRings( const double HitSigma,
           S2 += w2*j->S2;
           S3 += w2*j->S3;
           S4 += w2*j->S4;
-        }else {
+        }
+        else 
+        {
           j->Cx = j->Cy = 0;
           S0 += j->S0;
           S1 += j->S1;
@@ -133,15 +129,10 @@ void Finder::FindRings( const double HitSigma,
       if ( NAreaHits+1 < MinRingHits ) continue;
     }// end of initialization of the search area
 
-    if ( m_debug )
-    {
-      std::cout << "  PickupArea size = " << PickUpArea.size() << std::endl;
-      std::cout << "  SearchArea size = " << SearchArea.size() << std::endl;
-    }
-
     // loop for minimization of E and noise rejection
 
-    do{
+    do
+    {
       // calculate parameters of the current ring
       double tmp = S0*S1-S2*S2;
       if( std::fabs(tmp) < 1.E-10 ) break;
@@ -151,30 +142,33 @@ void Finder::FindRings( const double HitSigma,
       R2 = X*X + Y*Y;
       R = std::sqrt( R2 );
 
-      double Dcut = Dmax * Rejection; // cut for noise hits
-      double RingCut = HitSize4 * ( HitSize + R ); // closeness
+      const double Dcut = Dmax * Rejection; // cut for noise hits
+      const double RingCut = HitSize4 * ( HitSize + R ); // closeness
       S0 = S1 = S2 = S3 = S4 = 0.0;
       NRingHits = 1;
       NAreaHits = 0;
       Dmax = -1.;
-      for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j ){
-        double dx = (*j)->lx - X;
-        double dy = (*j)->ly - Y;
-        double d2 = std::fabs( dx*dx + dy*dy - R2 );
+      for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j )
+      {
+        const double dx = (*j)->lx - X;
+        const double dy = (*j)->ly - Y;
+        const double d2 = std::fabs( dx*dx + dy*dy - R2 );
         (*j)->on_ring = ( d2 <= RingCut );
         if( (*j)->on_ring ){
-          NRingHits++;
+          ++NRingHits;
           S0 += (*j)->S0;
           S1 += (*j)->S1;
           S2 += (*j)->S2;
           S3 += (*j)->S3;
           S4 += (*j)->S4;
-        }else {
-          double dp = std::fabs( (*j)->C + (*j)->Cx*X + (*j)->Cy*Y );
+        }
+        else
+        {
+          const double dp = std::fabs( (*j)->C + (*j)->Cx*X + (*j)->Cy*Y );
           if( dp > Dcut ) continue;
           if( dp > Dmax ) Dmax = dp;
-          NAreaHits++;
-          double w = 1./d2;
+          ++NAreaHits;
+          const double w = 1./d2;
           S0 += w*(*j)->S0;
           S1 += w*(*j)->S1;
           S2 += w*(*j)->S2;
@@ -182,7 +176,8 @@ void Finder::FindRings( const double HitSigma,
           S4 += w*(*j)->S4;
         }
       }
-    }while( Dmax > 0 && NRingHits + NAreaHits >= MinRingHits );
+    }
+    while ( Dmax > 0 && NRingHits + NAreaHits >= MinRingHits );
 
     // store the ring if it is found
 
@@ -191,7 +186,8 @@ void Finder::FindRings( const double HitSigma,
     { // final fit of 3 parameters (X,Y,R)
       int n = 1;
       S0 = S1 = S2 = S3 = S4 = S5 = S6 = S7 = 0.0;
-      for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j ){
+      for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j )
+      {
         if( !(*j)->on_ring ) continue;
         S0 += (*j)->S0;
         S1 += (*j)->S1;
@@ -201,7 +197,7 @@ void Finder::FindRings( const double HitSigma,
         S5 += (*j)->lx;
         S6 += (*j)->ly;
         S7 += (*j)->lr2;
-        n++;
+        ++n;
       }
       const double s0 = S6*S0-S2*S5;
       const double s1 = S0*S1-S2*S2;
@@ -216,43 +212,43 @@ void Finder::FindRings( const double HitSigma,
       R = std::sqrt( R2 );
     }// end of the final fit
 
-    if( R2 > R2Max || R2 < R2Min ) continue;
+    if ( R2 > R2Max || R2 < R2Min ) continue;
 
-    Ring tmp;
-    Rings.push_back( tmp );
-    Ring &ring = Rings.back();
-    ring.x = i->x+X;
-    ring.y = i->y+Y;
-    ring.r = R;
+    Rings.push_back( Ring(i->x+X,i->y+Y,R,1) );
+    Ring & ring = Rings.back();
     ring.Hits.push_back(&*i);
-    ring.NHits = 1;
-    ring.chi2 = 0;
-    for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j ){
+    for( iP j = SearchArea.begin(); j != SearchArea.end(); ++j )
+    {
       const double dx = (*j)->lx - X;
       const double dy = (*j)->ly - Y;
       const double d = std::fabs( std::sqrt(dx*dx+dy*dy) - R );
-      if( d <= HitSigma ){
+      if( d <= HitSigma )
+      {
         ring.chi2 += d*d;
         ring.Hits.push_back(*j);
         ring.NHits++;
       }
     }
-    for( iP j = PickUpArea.begin(); j != PickUpArea.end(); ++j ){
+    for( iP j = PickUpArea.begin(); j != PickUpArea.end(); ++j )
+    {
       const double dx = (*j)->x - ring.x;
       const double dy = (*j)->y - ring.y;
       const double d = std::fabs( std::sqrt(dx*dx+dy*dy) - ring.r );
-      if( d <= HitSigma ){
+      if( d <= HitSigma )
+      {
         ring.chi2 += d*d;
         ring.Hits.push_back(*j);
         ring.NHits++;
       }
     }
-    if( ring.NHits < MinRingHits ){
+    if( ring.NHits < MinRingHits )
+    {
       Rings.pop_back();
       continue;
     }
-    ring.chi2 = ring.chi2 / ( ring.NHits - 3)/.3/.3;
-    for( iP j = ring.Hits.begin(); j != ring.Hits.end(); ++j ){
+    ring.chi2 = ring.chi2 / ( ring.NHits - 3 )/.3/.3;
+    for( iP j = ring.Hits.begin(); j != ring.Hits.end(); ++j )
+    {
       if( (*j)->busy<ring.NHits ) (*j)->busy = ring.NHits;
     }
   }// END OF THE MAIN LOOP OVER HITS
@@ -262,46 +258,68 @@ void Finder::FindRings( const double HitSigma,
   typedef Ring::Vector::iterator iR;
 
   for( iH i = Hits.begin(); i != Hits.end(); ++i ) i->busy = 0;
-  for( iR i = Rings.begin(); i != Rings.end(); ++i ){
+  for( iR i = Rings.begin(); i != Rings.end(); ++i )
+  {
     i->skip = i->on = 0;
     i->NOwn = i->NHits;
     if( ( i->NHits < MinRingHits ) ||
         ( i->NHits <= 6 && i->chi2 > .3 ) )
+    {
       i->skip = 1;
+    }
   }
 
-  do{
+  do
+  {
     iR best = Rings.end();
     int bestOwn = 0;
     double bestChi2 = 1.E20;
-    for( iR i = Rings.begin(); i != Rings.end(); ++i ){
+    for( iR i = Rings.begin(); i != Rings.end(); ++i )
+    {
       if( i->skip ) continue;
       if( ( i->NOwn < 1.0*MinRingHits ) ||
-          ( i->NHits < 10 && i->NOwn < 1.00*i->NHits ) ){
+          ( i->NHits < 10 && i->NOwn < 1.00*i->NHits ) )
+      {
         i->skip = 1;
         continue;
       }
       if( ( i->NOwn > 1.2*bestOwn ) ||
-          ( i->NOwn >= 0.8*bestOwn && i->chi2 < bestChi2 ) ){
+          ( i->NOwn >= 0.8*bestOwn && i->chi2 < bestChi2 ) )
+      {
         bestOwn = i->NOwn;
         bestChi2 = i->chi2;
         best = i;
       }
     }
-    if( best == Rings.end() ) break;
+    if ( best == Rings.end() ) break;
     best->skip = 1;
     best->on = 1;
     for( iP i = best->Hits.begin(); i != best->Hits.end(); ++i )
+    {
       (*i)->busy = 1;
-    for( iR i = Rings.begin(); i != Rings.end(); ++i ){
+    }
+    for( iR i = Rings.begin(); i != Rings.end(); ++i )
+    {
       if( i->skip ) continue;
       const double dist = i->r+best->r+2*HitSigma;
       if( std::fabs(i->x-best->x) > dist ||
           std::fabs(i->y-best->y) > dist ) continue;
       i->NOwn = 0;
-      for( iP j = i->Hits.begin(); j != i->Hits.end(); ++j ){
+      for( iP j = i->Hits.begin(); j != i->Hits.end(); ++j )
+      {
         if( !(*j)->busy ) i->NOwn++;
       }
     }
-  }while(1);
+  }
+  while(1);
+
+  // CRJ : Count number of rings each hit is associated with
+  for ( iR r = Rings.begin(); r != Rings.end(); ++r )
+  {
+    for ( iP h = r->Hits.begin(); h != r->Hits.end(); ++h )
+    {
+      ++((*h)->nAssRings);
+    } 
+  }
+
 }

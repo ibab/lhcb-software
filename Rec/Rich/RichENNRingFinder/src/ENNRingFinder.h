@@ -32,7 +32,7 @@ namespace Rich
         //-----------------------------------------------------------------------
         /** @class Hit ENNRingFinder.h
          *
-         * Hit object for ring Finder
+         * Ultitliy Hit class for ring finder
          */
         //-----------------------------------------------------------------------
         class Hit
@@ -41,36 +41,42 @@ namespace Rich
           typedef std::vector<Hit> Vector;
           typedef std::vector<Hit*> PtnVector;
         public:
-          Hit( const int _key  = -1,
+          Hit( const unsigned int _key  = -1,
                const double _x = 0,
                const double _y = 0 )
             : x(_x), y(_y), busy(0),
               lx(0), ly(0), lr2(0),
               S0(0), S1(0), S2(0), S3(0), S4(0),
               C(0), Cx(0), Cy(0),
-              on_ring(false), key(_key) { }
+              on_ring(false), key(_key),
+              nAssRings(0)
+          { }
         public:
           inline bool operator < ( const Hit & h ) const
           { return ( this->x < h.x ); }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, const Hit & hit )
-          { return os << "[ Hit " << hit.key << " (x,y)=" << hit.x << "," << hit.y << " ]"; }
+          { 
+            return os << "[ Hit " << hit.key << " (x,y)= (" << hit.x << "," << hit.y << ")"
+                      << " nAssRings=" << hit.nAssRings << " ]"; 
+          }
         public:
           double x, y; // coordinates
           int busy; // quality of the best ring with this hit
           // variables for local search:
           double lx, ly, lr2; // local coordinates
-          double S0, S1, S2, S3, S4; // coefficients for calculation of E
-          double C, Cx, Cy; // coefficients for the parameter space
-          bool on_ring; // is the hit close to the current ring
-          int key;
+          double S0, S1, S2, S3, S4; ///< coefficients for calculation of E
+          double C, Cx, Cy; ///< coefficients for the parameter space
+          bool on_ring; ///< is the hit close to the current ring
+          unsigned int key;      ///< hit key
+          unsigned int nAssRings; ///< Number of rings associated with
         };
 
         //-----------------------------------------------------------------------
         /** @class Ring ENNRingFinder.h
          *
-         * Ring object for ring Finder
+         *  Utility Ring class for ring finder
          */
         //-----------------------------------------------------------------------
         class Ring
@@ -79,18 +85,31 @@ namespace Rich
           typedef std::vector<Ring> Vector;
           typedef std::vector<Ring*> PtnVector;
         public:
-          Ring() : on(false),
-                   x(0), y(0), r(0),
-                   chi2(0),
-                   NHits(0),
-                   NOwn(0),
-                   skip(false) { }
+          Ring( const double _x     = 0,
+                const double _y     = 0,
+                const double _r     = 0,
+                const int    _nHits = 0 ) 
+            : on(false),
+              x(_x), y(_y), r(_r),
+              chi2(0),
+              NHits(_nHits),
+              NOwn(0),
+              skip(false) { }
         public:
-          inline double radius() const { return r; }
+          inline double radius()     const { return r; }
+          inline double chi2PerHit() const { return ( NHits>0 ? chi2/NHits : 999 ); }
+          inline double purity()     const { return ( NHits>0 ? NOwn/NHits : 0   ); }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, const Ring & ring )
-          { return os << "[ Ring (x,y,r) " << ring.x << "," << ring.y << "," << ring.r << " ]"; }
+          { 
+            return os << "[ Ring (x,y,r) " << ring.x << "," << ring.y << "," << ring.r
+                      << " NHits=" << ring.NHits
+                      << " NOwn="  << ring.NOwn
+                      << " Chi2="  << ring.chi2
+                      << " Chi2/hit=" << ring.chi2PerHit()
+                      << " ]"; 
+          }
         public:
           bool on; // is the ring selected?
           double x, y, r; // parameters

@@ -5,15 +5,15 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.1.1.1 2009-05-21 17:34:14 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.2 2009-05-22 15:33:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHMARKOVRINGFINDER_RichENNRingFinderAlg_H
-#define RICHMARKOVRINGFINDER_RichENNRingFinderAlg_H 1
+#ifndef RICHENNRINGFINDER_RichENNRingFinderAlg_H
+#define RICHENNRINGFINDER_RichENNRingFinderAlg_H 1
 
 // STD
 #include <sstream>
@@ -23,6 +23,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
+
+// RichKernel
+#include "RichKernel/RichHPDIdentifier.h"
 
 // RichRecBase
 #include "RichRecBase/RichRecHistoAlgBase.h"
@@ -157,6 +160,12 @@ namespace Rich
         /// Maximum ring radius
         double m_maxRingRadius;
 
+        /// Max Chi^2 per hit on ring
+        double m_maxRingChi2;
+
+        /// Min ring purity
+        double m_minRingPurity;
+
       };
 
       /// The type of finder for RICH1
@@ -241,4 +250,4 @@ namespace Rich
   }
 }
 
-#endif // RICHMARKOVRINGFINDER_RichENNRingFinderAlg_H
+#endif // RICHENNRINGFINDER_RichENNRingFinderAlg_H

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2009-05-21 22:12:56 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-05-22 15:33:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -22,6 +22,7 @@ class RichENNRingFinderConf(RichConfigurableUser):
         "Context"             :    "Offline"   # The context within which to run
        ,"Panels"              : ["Rich1Top","Rich1Bottom","Rich2Left","Rich2Right"]
        ,"MaxHitsInPanel"      : 300
+       ,"MaxHitsInHPD"        : 30
        ,"AssociateToSegments" : True
        ,"Sequencer"           : None # The sequencer to add the RICH MCMC algorithms to
        ,"OutputLevel"         : INFO
@@ -66,7 +67,8 @@ class RichENNRingFinderConf(RichConfigurableUser):
                 raise RuntimeError("ERROR : No panels set to find ENN Rings")
             else:
                 # maximum hits in each panel for finding
-                maxhits = self.getProp("MaxHitsInPanel")
+                maxhits    = self.getProp("MaxHitsInPanel")
+                maxhpdhits = self.getProp("MaxHitsInHPD")
 
                 # context
                 cont = self.getProp("Context")
@@ -78,24 +80,28 @@ class RichENNRingFinderConf(RichConfigurableUser):
                 if "Rich1Top" in panels :
                     alg                = self.rich1TopFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
                     if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich1Bottom" in panels :
                     alg                = self.rich1BottomFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
                     if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Left" in panels :
                     alg                = self.rich2LeftFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
                     if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Right" in panels :
                     alg                = self.rich2RightFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/ENN/RingsAll"
                     if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
@@ -105,14 +111,17 @@ class RichENNRingFinderConf(RichConfigurableUser):
                     from Configurables import Rich__Rec__TracklessRingSegmentAssociationAlg
                     alg               = Rich__Rec__TracklessRingSegmentAssociationAlg(cont+"ENNRingsSegAssoc")
                     alg.InputRings    = "Rec/Rich/ENN/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members += [alg]
 
                 # Post finding cleaning and ring selection
                 filter             = Rich__Rec__TracklessRingFilterAlg(cont+"BestENNRings")
                 filter.InputRings  = "Rec/Rich/ENN/RingsAll"
                 filter.OutputRings = "Rec/Rich/ENN/RingsBest"
+                if setOutLevel : filter.OutputLevel = level
                 iso                = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedENNRings")
                 iso.InputRings     = "Rec/Rich/ENN/RingsBest"
                 iso.OutputRings    = "Rec/Rich/ENN/RingsIsolated"
+                if setOutLevel : iso.OutputLevel = level
                 sequence.Members  += [filter,iso]
             
