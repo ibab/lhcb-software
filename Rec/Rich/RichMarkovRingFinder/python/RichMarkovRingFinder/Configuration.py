@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2009-05-21 17:13:20 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-05-22 15:35:45 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -22,8 +22,10 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
         "Context"             :    "Offline"   # The context within which to run
        ,"Panels"              : ["Rich1Top","Rich1Bottom","Rich2Left","Rich2Right"]
        ,"MaxHitsInPanel"      : 300
+       ,"MaxHitsInHPD"        : 30
        ,"AssociateToSegments" : True
        ,"Sequencer"           : None # The sequencer to add the RICH MCMC algorithms to
+       ,"OutputLevel"         : INFO
         }
 
     ## Access the finder for RICH1 top panel
@@ -66,30 +68,42 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
             else:
                 # maximum hits in each panel for finding
                 maxhits = self.getProp("MaxHitsInPanel")
-
+                maxhpdhits = self.getProp("MaxHitsInHPD")
+      
                 # context
                 cont = self.getProp("Context")
+
+                setOutLevel = self.isPropertySet("OutputLevel")
+                level = self.getProp("OutputLevel")
 
                 # The finders, for each HPD panel
                 if "Rich1Top" in panels :
                     alg                = self.rich1TopFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich1Bottom" in panels :
                     alg                = self.rich1BottomFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Left" in panels :
                     alg                = self.rich2LeftFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
                 if "Rich2Right" in panels :
                     alg                = self.rich2RightFinder()
                     alg.MaxHitsInEvent = maxhits
+                    alg.MaxHitsInHPD   = maxhpdhits
                     alg.RingLocation   = "Rec/Rich/Markov/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members  += [alg]
 
                 # Attempt to associated rings to segments
@@ -97,14 +111,17 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
                     from Configurables import Rich__Rec__TracklessRingSegmentAssociationAlg
                     alg               = Rich__Rec__TracklessRingSegmentAssociationAlg(cont+"MRingsSegAssoc")
                     alg.InputRings    = "Rec/Rich/Markov/RingsAll"
+                    if setOutLevel : alg.OutputLevel = level
                     sequence.Members += [alg]
 
                 # Post finding cleaning and ring selection
                 filter             = Rich__Rec__TracklessRingFilterAlg(cont+"BestMRings")
                 filter.InputRings  = "Rec/Rich/Markov/RingsAll"
                 filter.OutputRings = "Rec/Rich/Markov/RingsBest"
+                if setOutLevel : filter.OutputLevel = level
                 iso                = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedMRings")
                 iso.InputRings     = "Rec/Rich/Markov/RingsBest"
                 iso.OutputRings    = "Rec/Rich/Markov/RingsIsolated"
+                if setOutLevel : iso.OutputLevel = level
                 sequence.Members  += [filter,iso]
             

@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.73 2008-09-09 09:25:37 ukerzel Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.74 2009-05-22 15:35:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -268,6 +268,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
 
   // load or create rings
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
+  const unsigned int nRingsBefore = rings->size();
 
   debug() << "Found " << output.rings.size() << " Markov ring candidates" << endreq;
 
@@ -365,6 +366,9 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
     debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
   }
 
+  // count # found rings per event
+  counter("# Found Rings") += (rings->size() - nRingsBefore);
+
   return StatusCode::SUCCESS;
 }
 
@@ -425,9 +429,12 @@ bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
       }
       else
       {
-        std::ostringstream mess;
-        mess << "Skipping hits in " << (*iPix)->hpd();
-        ++counter(mess.str());
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          std::ostringstream mess;
+          mess << "Skipping hits in " << Rich::DAQ::HPDIdentifier((*iPix)->hpd()).number();
+          ++counter(mess.str());
+        }
       }
     }
     if ( msgLevel(MSG::DEBUG) )

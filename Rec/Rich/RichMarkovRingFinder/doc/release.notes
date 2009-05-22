@@ -4,6 +4,10 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Chris Jones
+ - Move monitoring algorithm to RichRecQC
+ - Small improvements to the ring finder algorithm
+
 ! 2009-05-21 - Chris Jones
  - Remove obsolete DLL file
  - Fix some bugs in the python Configurable

@@ -5,7 +5,7 @@
  *  Header file for Markov Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.43 2008-12-17 13:50:58 cattanem Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.44 2009-05-22 15:35:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -23,6 +23,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
+
+// RichKernel
+#include "RichKernel/RichHPDIdentifier.h"
 
 // RichRecBase
 #include "RichRecBase/RichRecHistoAlgBase.h"
