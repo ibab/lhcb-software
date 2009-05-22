@@ -1,4 +1,4 @@
-// $Id: NodePIDs.cpp,v 1.2 2009-05-12 11:52:27 ibelyaev Exp $
+// $Id: NodePIDs.cpp,v 1.3 2009-05-22 17:00:51 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -25,6 +25,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
 #include "Kernel/NodesPIDs.h"
+#include "Kernel/Symbols.h"
 // ============================================================================
 /** @file 
  *  The implementation file for various decay nodes 
@@ -65,7 +66,7 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
    */  
-  const double s_INFINITY   =   0.5 * std::numeric_limits<double>::max() ;
+  const double s_INFINITY   = 0.5 * std::numeric_limits<double>::max() ;
   // ==========================================================================
   template <class CONTAINER, class T>
   bool binary_search ( const CONTAINER& cnt , const T& val ) 
@@ -899,6 +900,101 @@ bool Decays::Nodes::StableCharged::operator()
 // ============================================================================
 
 
+
+
+
+// ===========================================================================
+// constructor with high edge and service 
+// ===========================================================================
+Decays::Nodes::Light::Light 
+( const double                      high , 
+  const LHCb::IParticlePropertySvc* svc  ) 
+  : Decays::Nodes::Mass ( -1 * Gaudi::Units::TeV , high , svc ) 
+{}
+// ===========================================================================
+// MANDATORY: virtual destrcutor 
+// ===========================================================================
+Decays::Nodes::Light::~Light () {}
+// ===========================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ===========================================================================
+Decays::Nodes::Light*
+Decays::Nodes::Light::clone() const 
+{ return new Decays::Nodes::Light (*this) ; }
+// ===========================================================================
+// MANDATORY: the specific printout
+// ===========================================================================
+std::ostream& Decays::Nodes::Light::fillStream ( std::ostream& s ) const 
+{ return s << " Light( " << high () << ") "  ; }
+// ===========================================================================
+
+// ===========================================================================
+// constructor with high edge and service 
+// ===========================================================================
+Decays::Nodes::Heavy::Heavy
+( const double                      low , 
+  const LHCb::IParticlePropertySvc* svc  ) 
+  : Decays::Nodes::Mass ( low , s_INFINITY  , svc ) 
+{}
+// ===========================================================================
+// MANDATORY: virtual destrcutor 
+// ===========================================================================
+Decays::Nodes::Heavy::~Heavy () {}
+// ===========================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ===========================================================================
+Decays::Nodes::Heavy*
+Decays::Nodes::Heavy::clone() const 
+{ return new Decays::Nodes::Heavy(*this) ; }
+// ===========================================================================
+// MANDATORY: the specific printout
+// ===========================================================================
+std::ostream& Decays::Nodes::Heavy::fillStream ( std::ostream& s ) const 
+{ return s << " Heavy( " << high () << ") "  ; }
+// ===========================================================================
+
+
+// ===========================================================================
+//  constructor fomr the symbol 
+// ===========================================================================
+Decays::Nodes::Symbol::Symbol ( const std::string& s ) 
+  : Decays::iNode() 
+  , m_symbol ( Decays::Nodes::_Node::Invalid() ) 
+{ 
+  const Decays::Symbols& sym = Decays::Symbols::instance() ;
+  StatusCode sc = sym.symbol ( s , m_symbol ) ;
+  sc.ignore() ;
+}
+// ===========================================================================
+// destructor 
+// ===========================================================================
+Decays::Nodes::Symbol::~Symbol (){}
+// ===========================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ===========================================================================
+Decays::Nodes::Symbol* Decays::Nodes::Symbol::clone() const 
+{ return new Decays::Nodes::Symbol ( *this ) ; }
+// ===========================================================================
+// MANDATORY: the only one essential method
+// ===========================================================================
+bool Decays::Nodes::Symbol::operator() ( const LHCb::ParticleID& pid ) const 
+{ return m_symbol.node (  pid ) ; }
+// ===========================================================================
+// MANDATORY: the specific printout
+// ===========================================================================
+std::ostream& Decays::Nodes::Symbol::fillStream ( std::ostream& s ) const 
+{ return s << m_symbol.node() ; }
+// ===========================================================================
+// MANDATORY: check the validity
+// ===========================================================================
+bool Decays::Nodes::Symbol::valid() const { return m_symbol.valid () ; }
+// ===========================================================================
+// MANDATORY: validate
+// ===========================================================================
+StatusCode Decays::Nodes::Symbol::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
+{ return m_symbol.validate ( svc ) ; }
+// ===========================================================================
 
 
 

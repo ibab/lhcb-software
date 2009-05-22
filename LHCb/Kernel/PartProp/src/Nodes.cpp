@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.9 2009-05-14 16:39:42 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.10 2009-05-22 17:00:51 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,7 +46,7 @@ namespace
     // ========================================================================
   };
   // ==========================================================================
-}
+} //                                                 end of anonymous namespace 
 // ============================================================================
 // operator &= 
 // ============================================================================
@@ -58,6 +58,48 @@ Decays::Node& Decays::Node::operator&= ( const Decays::iNode& right )
 Decays::Node& Decays::Node::operator|= ( const Decays::iNode& right )
 { return  ( *this = ( *m_node  || right ) ) ; }
 // ============================================================================
+
+
+
+// ============================================================================
+Decays::NodeList::NodeList ( const Decays::NodeList::Nodes_& nodes )
+  : m_nodes ( nodes )
+{}
+// ============================================================================
+void Decays::NodeList::push_back ( const Decays::Nodes::_Node& node ) 
+{ m_nodes.push_back ( node ) ;  }
+// ============================================================================
+void Decays::NodeList::push_back ( const Decays::iNode&        node ) 
+{ m_nodes.push_back ( node ) ;  }
+// ============================================================================
+void Decays::NodeList::push_back ( const Decays::NodeList::Nodes_& nodes )
+{ m_nodes.insert ( m_nodes.end() , nodes.begin() , nodes.end() ) ; }
+// ============================================================================
+void Decays::NodeList::push_back ( const NodeList& nodes )
+{ push_back ( nodes.m_nodes ) ; }
+// ============================================================================
+Decays::NodeList& 
+Decays::NodeList::operator=( const Decays::Nodes::_Node& node  ) 
+{ m_nodes.clear() ; push_back ( node ) ; }
+// ============================================================================
+Decays::NodeList& 
+Decays::NodeList::operator=( const Decays::iNode& node  ) 
+{ m_nodes.clear() ; push_back ( node ) ; }
+// ============================================================================
+
+
+
+
+// ============================================================================
+Decays::Nodes::_Node& 
+Decays::Nodes::_Node::operator |= ( const Decays::NodeList& right ) 
+{ if ( !right.empty() ) { m_node |= Decays::Nodes::Or  ( right ) ; } }
+// ============================================================================
+Decays::Nodes::_Node& 
+Decays::Nodes::_Node::operator &= ( const Decays::NodeList& right ) 
+{ if ( !right.empty() ) { m_node &= Decays::Nodes::And ( right ) ; } }
+// ============================================================================
+
 
 // ============================================================================
 // Invalid 
@@ -163,9 +205,9 @@ Decays::Nodes::Or::Or
 // constructor from list of nodes
 // ===========================================================================
 Decays::Nodes::Or::Or 
-( const Decays::SubNodes& nodes ) 
+( const Decays::NodeList& nodes ) 
   : Decays::iNode () 
-  , m_nodes ()
+    , m_nodes ()
 {
   add ( nodes )  ;  
 }
@@ -188,9 +230,9 @@ size_t Decays::Nodes::Or::add ( const Decays::iNode& node )
 // add the list of nodes 
 // ===========================================================================
 size_t Decays::Nodes::Or::add 
-( const Decays::SubNodes& nodes ) 
+( const Decays::NodeList& nodes ) 
 {
-  for ( Decays::SubNodes::const_iterator inode = nodes.begin() ; 
+  for ( Decays::NodeList::const_iterator inode = nodes.begin() ; 
         nodes.end() != inode  ; ++inode ) 
   { add ( *inode ) ; }
   return m_nodes.size () ;
@@ -212,7 +254,7 @@ bool Decays::Nodes::Or::operator() ( const LHCb::ParticleID& pid ) const
 std::ostream& Decays::Nodes::Or::fillStream ( std::ostream& s ) const 
 {
   s << " (" ;
-  for ( Decays::SubNodes::const_iterator node = m_nodes.begin() ;
+  for ( Decays::NodeList::const_iterator node = m_nodes.begin() ;
         m_nodes.end() != node ; ++node ) 
   {
     if ( m_nodes.begin() != node ) { s << "|" ; }    
@@ -286,7 +328,7 @@ Decays::Nodes::And::And
 // constructor form list of nodes
 // ===========================================================================
 Decays::Nodes::And::And
-( const Decays::SubNodes& nodes ) 
+( const Decays::NodeList& nodes ) 
   : Decays::iNode () 
   , m_nodes ()
 {
@@ -311,9 +353,9 @@ size_t Decays::Nodes::And::add ( const Decays::iNode& node )
 // add the list of nodes 
 // ===========================================================================
 size_t Decays::Nodes::And::add 
-( const Decays::SubNodes& nodes ) 
+( const Decays::NodeList& nodes ) 
 {
-  for ( Decays::SubNodes::const_iterator inode = nodes.begin() ; 
+  for ( Decays::NodeList::const_iterator inode = nodes.begin() ; 
         nodes.end() != inode  ; ++inode ) 
   { add ( *inode ) ; }
   return m_nodes.size () ;
@@ -329,7 +371,7 @@ Decays::Nodes::And::clone() const { return new And(*this) ; }
 bool Decays::Nodes::And::operator() ( const LHCb::ParticleID& pid ) const 
 {
   if ( m_nodes.empty() ) { return false ; }
-  for ( Decays::SubNodes::const_iterator node = m_nodes.begin() ;
+  for ( Decays::NodeList::const_iterator node = m_nodes.begin() ;
         m_nodes.end() != node ; ++node ) 
   { if ( (*node != pid ) ) { return false; } }
   return true ;
@@ -340,7 +382,7 @@ bool Decays::Nodes::And::operator() ( const LHCb::ParticleID& pid ) const
 std::ostream& Decays::Nodes::And::fillStream ( std::ostream& s ) const 
 {
   s << " (" ;
-  for ( Decays::SubNodes::const_iterator node = m_nodes.begin() ;
+  for ( Decays::NodeList::const_iterator node = m_nodes.begin() ;
         m_nodes.end() != node ; ++node ) 
   {
     if ( m_nodes.begin() != node ) { s << "&" ; }    
@@ -408,11 +450,11 @@ Decays::Nodes::And::operator+= ( const Decays::iNode& node )
 { add ( node ) ; return *this ; }
 // ============================================================================
 Decays::Nodes::Or& 
-Decays::Nodes::Or::operator+= ( const Decays::SubNodes&  nodes )
+Decays::Nodes::Or::operator+=  ( const Decays::NodeList&  nodes )
 { add ( nodes ) ; return *this ; }
 // ============================================================================
 Decays::Nodes::And& 
-Decays::Nodes::And::operator+= ( const Decays::SubNodes& nodes )
+Decays::Nodes::And::operator+= ( const Decays::NodeList& nodes )
 { add ( nodes ) ; return *this ; }
 // ============================================================================
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.5 2009-05-12 11:52:27 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.6 2009-05-22 17:00:51 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 
 import PyCintex
@@ -204,6 +204,9 @@ _decorated = _decorate ( ( Decays.iNode               ,
                            Decays.Nodes.StableCharged ,
                            Decays.Nodes.CTau          ,
                            Decays.Nodes.Mass          ,
+                           Decays.Nodes.Light         ,
+                           Decays.Nodes.Heavy         ,
+                           Decays.Nodes.Symbol        ,
                            Decays.Nodes._Node         ,
                            Decays.Nodes._Node.Invalid ,
                            #
@@ -276,8 +279,12 @@ ShortLived_   = Decays.Nodes.ShortLived_       # type
 ShortLived    = Decays.Nodes.ShortLived_   ()  # instance
 Stable        = Decays.Nodes.Stable        ()  # instance
 StableCharged = Decays.Nodes.StableCharged ()  # instance
+Mass          = Decays.Nodes.Mass              # type 
+Light         = Decays.Nodes.Light             # type 
+Heavy         = Decays.Nodes.Heavy             # type 
+Symbol        = Decays.Nodes.Symbol            # type 
 
-SubNodes     = std.vector( _Node ) 
+NodeList      = Decays.Nodes.NodeList
 
 if '__main__' == __name__ :
     print ' decorated objects: %s ' % str(_decorated)

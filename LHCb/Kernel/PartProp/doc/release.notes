@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.21 2009-05-14 16:39:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.22 2009-05-22 17:00:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-22 - Vanya BELYAEV
+
+ - substitute SubNodes with NodeList 
 
 ! 2009-05-14 - Vanya BELYAEV
  - add &= and |= operators 

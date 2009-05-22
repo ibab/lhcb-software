@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.7 2009-05-13 16:30:05 ibelyaev Exp $
+// $Id: Nodes.h,v 1.8 2009-05-22 17:00:51 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -17,7 +17,7 @@
 #include "Kernel/iNode.h"
 // ============================================================================
 /** @file Kernel/Nodes.h
- *  Helper general purpuse utiliteis to deal with decay nodes
+ *  Helper general purpuse utilities to deal with decay nodes
  *  @see Decays::iNode 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl 
  *  @date 2008-04-21
@@ -47,6 +47,8 @@ namespace Decays
   template <class TREE> 
   inline StatusCode validate 
   ( TREE begin , TREE end , const LHCb::IParticlePropertySvc* svc ) ;
+  // ==========================================================================
+  class NodeList ;
   // ==========================================================================
   namespace Nodes 
   { 
@@ -133,12 +135,32 @@ namespace Decays
       /// pseudo-assignement from arbitrary node 
       _Node& operator=( const iNode& right ) 
       {  m_node = right ; return *this ; }
+      /// pseudo-assignement from arbitrary node 
+      _Node& operator=( const _Node& right ) 
+      {  m_node = right.m_node ; return *this ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      _Node& operator |= ( const iNode&    right ) 
+      { m_node |= right ; return *this ; }
+      _Node& operator &= ( const iNode&    right ) 
+      { m_node &= right ; return *this ; }
+      // ======================================================================
+      _Node& operator |= ( const NodeList& right ) ;
+      _Node& operator &= ( const NodeList& right ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      _Node& operator |= ( const _Node&    right ) 
+      { m_node |= right ; return *this ; }
+      _Node& operator &= ( const _Node&    right ) 
+      { m_node &= right ; return *this ; }
       // ======================================================================
     public:
       // ======================================================================
       /// the accessor to the node 
       const Decays::iNode& node() const { return m_node.node() ; }
-      /// the cast operator to the node 
+      /// the cast operator to the actual list of nodes
       operator const Decays::iNode&() const { return node() ; }
       // ======================================================================
     private:
@@ -150,8 +172,64 @@ namespace Decays
     // ========================================================================
   } // end of namespace Decays::Nodes 
   // ==========================================================================
-  /// the actual type of the sequence of nodes 
-  typedef std::vector<Decays::Nodes::_Node>                          SubNodes ;
+  class NodeList 
+  {
+  public:
+    // ========================================================================
+    /// the actual type of the sequence of nodes 
+    typedef std::vector<Decays::Nodes::_Node>                  Nodes_         ;    
+    typedef Nodes_::const_iterator                             const_iterator ;
+    typedef Nodes_::iterator                                   iterator       ;
+    typedef Nodes_::value_type                                 value_type     ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// costructor from the list of Nodes
+    NodeList ( const Nodes_& nodes = Nodes_()   ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    void push_back ( const Decays::Nodes::_Node& node  ) ;
+    void push_back ( const Decays::iNode&        node  ) ;
+    void push_back ( const Nodes_&               nodes ) ;
+    void push_back ( const NodeList&             nodes ) ;
+    void clear() { m_nodes.clear() ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    NodeList& operator=( const Decays::Nodes::_Node& node  ) ;
+    NodeList& operator=( const Decays::iNode&        node  ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    NodeList& operator+= ( const Decays::Nodes::_Node& node ) 
+    { push_back ( node  ) ; return *this ; }
+    NodeList& operator+= ( const Decays::iNode&        node ) 
+    { push_back ( node  ) ; return *this ; }  
+    NodeList& operator+= ( const Nodes_&   nodes ) 
+    { push_back ( nodes ) ; return *this ; }  
+    NodeList& operator+= ( const NodeList& nodes ) 
+    { push_back ( nodes ) ; return *this ; }  
+    // ========================================================================
+  public:
+    // ========================================================================
+    size_t         size  () const { return m_nodes.size  () ; }
+    bool           empty () const { return m_nodes.empty () ; }
+    iterator       begin ()       { return m_nodes.begin () ; }
+    iterator       end   ()       { return m_nodes.end   () ; }
+    const_iterator begin () const { return m_nodes.begin () ; }
+    const_iterator end   () const { return m_nodes.end   () ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    operator const Nodes_& () const { return m_nodes ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the actual list of nodes 
+    Nodes_ m_nodes ;                                // the actual list of nodes 
+    // ========================================================================
+  } ;
   // ==========================================================================
   namespace Nodes
   {
@@ -179,7 +257,7 @@ namespace Decays
            const Decays::iNode& n3 , 
            const Decays::iNode& n4 ) ;
       /// constructor from list of nodes 
-      Or ( const Decays::SubNodes& nodes ) ;
+      Or ( const Decays::NodeList& nodes ) ;
       /// MANDATORY: virtual destructor
       virtual ~Or () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -197,12 +275,12 @@ namespace Decays
     protected:
       // ======================================================================
       size_t add ( const Decays::iNode&    node  ) ;
-      size_t add ( const Decays::SubNodes& nodes ) ;
+      size_t add ( const Decays::NodeList& nodes ) ;
       // ======================================================================
     public:
       // ======================================================================
       Or& operator+= ( const Decays::iNode&    node );
-      Or& operator+= ( const Decays::SubNodes& node );
+      Or& operator+= ( const Decays::NodeList& node );
       // ======================================================================
     private:
       // ======================================================================
@@ -212,7 +290,7 @@ namespace Decays
     private:
       // ======================================================================
       /// the sub-nodes 
-      Decays::SubNodes m_nodes ;                               // the sub-nodes 
+      Decays::NodeList m_nodes ;                               // the sub-nodes 
       // ======================================================================
     } ;
     // ========================================================================
@@ -239,7 +317,7 @@ namespace Decays
             const Decays::iNode& n3 , 
             const Decays::iNode& n4 ) ;
       /// constructor from list of nodes 
-      And ( const SubNodes& nodes ) ;
+      And ( const Decays::NodeList& nodes ) ;
       /// MANDATORY: virtual destructor
       virtual ~And () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -257,12 +335,12 @@ namespace Decays
     protected:
       // ======================================================================
       size_t add ( const Decays::iNode&    node  ) ;
-      size_t add ( const Decays::SubNodes& nodes ) ;
+      size_t add ( const Decays::NodeList& nodes ) ;
       // ======================================================================
     public:
       // ======================================================================
       And& operator+= ( const Decays::iNode&    node  );
-      And& operator+= ( const Decays::SubNodes& nodes );
+      And& operator+= ( const Decays::NodeList& nodes );
       // ======================================================================
     private:
       // ======================================================================
@@ -272,7 +350,7 @@ namespace Decays
     private:
       // ======================================================================
       /// the sub-nodes 
-      SubNodes m_nodes ; // the sub-nodes 
+      NodeList m_nodes ; // the sub-nodes 
       // ======================================================================
     } ;
     // ========================================================================

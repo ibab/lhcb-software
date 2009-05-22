@@ -1,4 +1,4 @@
-// $Id: NodesPIDs.h,v 1.2 2009-05-12 11:52:27 ibelyaev Exp $
+// $Id: NodesPIDs.h,v 1.3 2009-05-22 17:00:51 ibelyaev Exp $
 // ============================================================================
 #ifndef PARTPROP_NODESPID_H 
 #define PARTPROP_NODESPID_H 1
@@ -715,7 +715,7 @@ namespace Decays
     {
     public:
       // ======================================================================
-      /// constructor from c-tau range 
+      /// constructor from mass-range 
       Mass ( const double                      low      , 
              const double                      high     , 
              const LHCb::IParticlePropertySvc* svc  = 0 ) ;
@@ -736,6 +736,98 @@ namespace Decays
       Mass() ;                           // the default constructor is disabled
       // ======================================================================      
     } ;
+    // ========================================================================
+    /** @class Light
+     *  simple pid-checker for particle mass 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-05-11
+     */
+    class Light : public Mass
+    {
+    public:
+      // ======================================================================
+      /// constructor from mass-range 
+      Light ( const double                      high     , 
+              const LHCb::IParticlePropertySvc* svc  = 0 ) ;
+      /// MANDATORY : virtual destructor 
+      virtual ~Light() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Light* clone() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      /// the default constructor is disabled 
+      Light() ;                          // the default constructor is disabled
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class Heavy
+     *  simple pid-checker for particle mass 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-05-11
+     */
+    class Heavy : public Mass
+    {
+    public:
+      // ======================================================================
+      /// constructor from mass-range 
+      Heavy ( const double                      low      , 
+              const LHCb::IParticlePropertySvc* svc  = 0 ) ;
+      /// MANDATORY : virtual destructor 
+      virtual ~Heavy() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Heavy* clone() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      /// the default constructor is disabled 
+      Heavy () ;                         // the default constructor is disabled
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    class Symbol : public Decays::iNode
+    {      
+    public :
+      // =======================================================================
+      /// the constructor from the symbol 
+      Symbol ( const std::string& sym ) ;
+      // =======================================================================
+      /// MANDATORY : virtual destructor 
+      virtual ~Symbol() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Symbol* clone() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& pid ) const ;
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      /// MANDATORY: check the validity
+      virtual bool valid () const ;
+      /// MANDATORY: the proper validation of the node
+      virtual StatusCode validate 
+      ( const LHCb::IParticlePropertySvc* svc ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Symbol () ;                        // the default constructor is disabled
+      // ======================================================================      
+    private :
+      // ======================================================================
+      /// the actual symbol 
+      Decays::Node m_symbol ;
+      // ======================================================================
+    };    
     // ========================================================================
   } // end of namespace 
   // ==========================================================================
