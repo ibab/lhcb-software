@@ -1,4 +1,4 @@
-// $Id: ENNRingFinder.cpp,v 1.5 2009-05-22 21:38:58 jonrob Exp $
+// $Id: ENNRingFinder.cpp,v 1.6 2009-05-22 21:53:51 jonrob Exp $
 // Include files
 
 // STL

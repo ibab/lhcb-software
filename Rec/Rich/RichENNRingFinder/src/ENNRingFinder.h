@@ -103,7 +103,7 @@ namespace Rich
           /// The ring radius
           inline double radius()     const { return r; }
           /// Ring purity (fraction of associated hits owned by this ring)
-          inline double purity()     const { return ( NHits>0 ? NOwn/NHits : 0   ); }
+          inline double purity()     const { return ( NHits>0 ? NOwn/NHits : 0 ); }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, const Ring & ring )
@@ -112,14 +112,14 @@ namespace Rich
                       << " NHits=" << ring.NHits
                       << " NOwn="  << ring.NOwn
                       << " Chi2="  << ring.chi2
-                      << " Chi2/hit=" << ring.chi2PerHit()
+                      << " Purity=" << ring.purity()
                       << " ]"; 
           }
         public:
           bool on;   ///< is the ring selected?
           double x;  ///< ring centre point y
           double y;  ///< ring centre point y
-          doublee r; ///< ring radius
+          double r; ///< ring radius
           double chi2; ///< chi2
           Hit::PtnVector Hits; ///< pointers to ring hits
           // variables for the selection procedure:
