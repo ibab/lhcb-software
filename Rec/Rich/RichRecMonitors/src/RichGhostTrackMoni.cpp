@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichGhostTrackMoni
  *
- *  $Id: RichGhostTrackMoni.cpp,v 1.3 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichGhostTrackMoni.cpp,v 1.4 2009-05-22 15:50:08 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -49,7 +49,7 @@ StatusCode GhostTrackMoni::initialize()
   acquireTool( "TrackSelector", m_trSelector, this );
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichCherenkovResolution", m_ckAngleRes  );
-  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
+  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth   );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal    );
 
   return sc;
@@ -131,6 +131,7 @@ StatusCode GhostTrackMoni::execute()
       tuple->array( "NRecR2Gas", nReco.data(Rich::Rich2Gas).begin(), nReco.data(Rich::Rich2Gas).end() );
 
       tuple->write();
+
     }
 
   } // have MC truth
