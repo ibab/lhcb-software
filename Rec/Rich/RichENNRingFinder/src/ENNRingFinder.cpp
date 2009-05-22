@@ -1,4 +1,4 @@
-// $Id: ENNRingFinder.cpp,v 1.3 2009-05-22 15:33:23 jonrob Exp $
+// $Id: ENNRingFinder.cpp,v 1.4 2009-05-22 16:30:13 jonrob Exp $
 // Include files
 
 // STL
@@ -70,7 +70,7 @@ void Finder::FindRings( const double HitSigma,
     double X = 0, Y = 0, R = 0, R2 = 0;
     int NRingHits = 1;
     double Dmax = 0.;
-    double S0, S1, S2, S3, S4, S5, S6, S7;
+    double S0(0), S1(0), S2(0), S3(0), S4(0), S5(0), S6(0), S7(0);
     int NAreaHits = 0;
 
     { // initialize hits in the search area
