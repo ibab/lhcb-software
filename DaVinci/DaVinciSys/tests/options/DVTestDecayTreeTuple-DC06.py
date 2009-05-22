@@ -28,8 +28,10 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["Strip_10Hz_Bd2KstarMuMu"]
-tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
+# tuple.InputLocations = ["Strip_10Hz_Bd2KstarMuMu"]
+# tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
+tuple.InputLocations = ["StdLooseJpsi2MuMu"]       # TMP
+tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"            # TMP
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -59,11 +61,10 @@ mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolRec
 #
 from StrippingConf.Configuration import StrippingConf
 StrippingConf().ActiveLines = []
-StrippingConf().OutputType = "DST"
-importOptions ( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py"  )
+StrippingConf().OutputType = "NONE"
 
 from Configurables import DaVinci
-DaVinci().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py" 
+
 ########################################################################
 #
 # DaVinci

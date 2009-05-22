@@ -15,7 +15,7 @@ Hlt1Global                                                  SUCCESS Number of co
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       391 |          6 |(  1.53453 +- 0.621643 )%|   -------   |   -------   |
+ |*"#accept"                                       |       391 |          5 |(  1.27877 +- 0.568216 )%|   -------   |   -------   |
  | "#errors"                                       |       391 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
