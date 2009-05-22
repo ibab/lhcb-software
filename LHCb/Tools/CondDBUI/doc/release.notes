@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.105 2009-05-12 15:35:54 marcocle Exp $
+! $Id: release.notes,v 1.106 2009-05-22 17:14:33 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-05-22 - Marco Clemencic
+ - Ported the CondDBBrowser to PyQt4 using the pyqt_compat package (which
+   privides the Qt3Support module).
+   Note: there are a couple of bugs in the pyqt_compat package distributed with
+   LCGCMT 56a (work-around added here).
 
 ! 2009-05-12 - Marco Clemencic
  - Added the function CondDBUI.Admin.ReleaseNotes.addGlobalTag.

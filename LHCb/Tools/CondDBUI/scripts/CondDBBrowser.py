@@ -2,15 +2,31 @@
 
 import sys
 import re
-import qt
+from PyQt4 import Qt
 import CondDBUI.guiwin as guiwin
 import CondDBUI
 
 _allowed_partitions = [ "DDDB", "LHCBCOND", "SIMCOND", "ONLINE" ]
 
+#############################
+#     General Variables     #
+#############################
+versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
+if versionNumber == "$":
+    versionNumber = 'HEAD version'
+
+versionId  = '$Id: CondDBBrowser.py,v 1.7 2009-05-22 17:14:33 marcocle Exp $'.split()
+if len(versionId) < 4:
+    versionDate = 'unknown'
+else:
+    versionDate = versionId[3]
+
 def main(args):
     '''Run the Qt application.'''
-    a = qt.QApplication(sys.argv)
+    a = Qt.QApplication(sys.argv)
+    a.setApplicationVersion("%s (%s)" % (versionNumber, versionDate) )
+    a.setOrganizationName("LHCb")
+    a.setOrganizationDomain("lhcb.cern.ch")
     
     if len(args) > 1:
         # the first argument can be the name of a partition
@@ -37,7 +53,7 @@ def main(args):
     a.setMainWidget(mw)
     mw.show()
     
-    a.exec_loop()
+    return a.exec_()
     
 if __name__=="__main__":
-    main(sys.argv)
+    sys.exit(main(sys.argv))

@@ -1,4 +1,4 @@
-import qt
+from PyQt4 import Qt, Qt3Support
 import os.path
 from   xpmimg import *
 ##
@@ -10,17 +10,17 @@ from CondDBUI import ValidityKeyWrapper
 #      Fundamental tree elements      #
 #-------------------------------------#
 
-class dbTree(qt.QListView):
+class dbTree(Qt3Support.Q3ListView):
     '''
     Class of the DB Tree
     '''
-    def __init__(self, bridge, parent = None, name = '', pathColumn = 2, flag = 0):
+    def __init__(self, bridge, parent = None, name = '', pathColumn = 2, flag = Qt.Qt.Widget):
         '''
         Initialise the DB Tree. The "bridge" is an interface between the user interface
         and the database. It allows to access informations in a standard way. The other
         input parameters are the same as for standard QListView constructor.
         '''
-        qt.QListView.__init__(self, parent, name, flag)
+        Qt3Support.Q3ListView.__init__(self, parent, name, flag)
         self.pathColumn   = pathColumn
         self.shortName    = name
         self.fullName     = self.shortName
@@ -97,7 +97,7 @@ class dbTree(qt.QListView):
             return None
         
 
-class guiTreeElement(qt.QListViewItem):
+class guiTreeElement(Qt3Support.Q3ListViewItem):
     '''
     Generic class of all displayable elements of a guiTree object.
     '''
@@ -122,14 +122,13 @@ class guiTreeElement(qt.QListViewItem):
                'The parent object of a guiTreeElement must be either a guiTreeElement or a dbTree'
         assert isinstance(name, str), 'The name of a guiTreeElement must be a string'
 
-        qt.QListViewItem.__init__(self, parent)
+        Qt3Support.Q3ListViewItem.__init__(self, parent)
+        self.pathColumn = parent.pathColumn
         if isinstance(parent, dbTree):
-            pathColumn = parent.pathColumn
             self.shortName = name
             self.fullName  = '/' + name
             self.setText(0, self.fullName)
         else:
-            pathColumn = parent.listView().pathColumn
             if name == '':
                 # give a default identifier.
                 self.shortName = 'NONAME'
@@ -145,7 +144,7 @@ class guiTreeElement(qt.QListViewItem):
             
         # Fill the QListView extra fields:
         self.setText(1, '')            # version
-        self.setText(pathColumn, self.fullName) # full path
+        self.setText(self.pathColumn, self.fullName) # full path
 
         # Load the pixmap if one is given
         if pix:
@@ -169,7 +168,7 @@ class guiTreeElement(qt.QListViewItem):
             self.setPixmap(0, self.openedPix)
         else:
             self.setPixmap(0, self.closedPix)
-        qt.QListViewItem.setOpen(self, open_it)
+        Qt3Support.Q3ListViewItem.setOpen(self, open_it)
 
 
 #-------------------------------------#
@@ -187,9 +186,10 @@ class guiChannel(guiTreeElement):
         Create a guiChannel  given a parent which can only be a guiFolder.
         The "channelID" is an integer.
         '''
-        guiTreeElement.__init__(self, parent, str(channelID), qt.QPixmap(cond_xpm))
+        guiTreeElement.__init__(self, parent, str(channelID), Qt.QPixmap(cond_xpm))
         self.ID          = channelID
         self.condDBCache = {}
+        self.bridge      = parent.bridge
 
     def compare(self, channel, numCol, ascending = False):
         '''
@@ -220,14 +220,14 @@ class guiChannel(guiTreeElement):
         if tagName == '' or tagName == 'HEAD':
             tag = 'HEAD'
         else:
-            folder = self.listView().bridge.db.getFolder(self.parent().fullName)
+            folder = self.bridge.db.getFolder(self.parent().fullName)
             try:
                 tag = folder.resolveTag(tagName)
             except Exception, details:
                 raise Exception, details
             
         self.condDBCache[tag] = []
-        objList = self.listView().bridge.getPayloadList(self.parent().fullName, fromTime, toTime, self.ID, tag)
+        objList = self.bridge.getPayloadList(self.parent().fullName, fromTime, toTime, self.ID, tag)
         for obj in objList:
             payload = obj[0]
             since   = ValidityKeyWrapper(obj[1])
@@ -250,7 +250,7 @@ class guiChannel(guiTreeElement):
         if tagName == '' or tagName == 'HEAD':
             tag = 'HEAD'
         else:
-            folder = self.listView().bridge.db.getFolder(self.parent().fullName)
+            folder = self.bridge.db.getFolder(self.parent().fullName)
             try:
                 tag = folder.resolveTag(tagName)
             except Exception, details:
@@ -268,21 +268,22 @@ class guiFolder(guiTreeElement):
             '''
             Creates a guiFolder.
             '''        
-            guiTreeElement.__init__(self, parent, name, qt.QPixmap(folder_xpm))
+            guiTreeElement.__init__(self, parent, name, Qt.QPixmap(folder_xpm))
             self.setExpandable(True)
             self.channel_loaded = False
             self.tag_loaded = False
             self.tagList = []
             self.versioning  = -1 # 0 for single version, 1 for multi version, -1 for no information
             self.setText(1, '  ?')
+            self.bridge = parent.bridge
 
         def loadTagList(self):
             '''
             Loads the tag list from the CondDB
             '''
             if not self.tag_loaded:
-                folder = self.listView().bridge.db.getFolder(self.fullName)
-                self.tagList = self.listView().bridge.getTagList(self.fullName)
+                folder = self.bridge.db.getFolder(self.fullName)
+                self.tagList = self.bridge.getTagList(self.fullName)
                 self.setVersioning(folder.versioningMode())
                 self.tag_loaded = True
 
@@ -291,7 +292,7 @@ class guiFolder(guiTreeElement):
             If not already done, loads the channels of the folder.
             '''
             if not self.channel_loaded:
-                folder = self.listView().bridge.db.getFolder(self.fullName)
+                folder = self.bridge.db.getFolder(self.fullName)
                 channels = list(folder.listChannels())
                 for channelID in channels:
                     guiChannel(self, channelID)
@@ -314,9 +315,10 @@ class guiFolderSet(guiTreeElement):
     A FolderSet in the CondDB. It contains CondDB Folders and/or other FolderSets 
     '''
     def __init__(self, parent, name = ''):
-        pix = [qt.QPixmap(folderset_closed_xpm), qt.QPixmap(folderset_open_xpm)]
+        pix = [Qt.QPixmap(folderset_closed_xpm), Qt.QPixmap(folderset_open_xpm)]
         guiTreeElement.__init__(self, parent, name, pix)
         self.setExpandable(True)
+        self.bridge = parent.bridge
 
 class guiUnknown(guiTreeElement):
     '''
@@ -325,3 +327,4 @@ class guiUnknown(guiTreeElement):
     '''
     def __init__(self, parent, name = ''):
         guiTreeElement.__init__(self, parent, name, None)
+        self.bridge = parent.bridge

@@ -1,5 +1,5 @@
 import os, re
-import qt, qttable
+from PyQt4 import Qt, Qt3Support
 import CondDBUI, guitree
 import tempfile
 
@@ -23,39 +23,16 @@ def readDBLookup():
         aliasDict[group[0]] = group[1]
     return aliasDict
 
-
-#=============================================#
-#               MEMORYTABLEITEM               #
-#=============================================#
-class memoryTableItem(qttable.QTableItem):
-    '''
-    A simple QTableItem class with an additional memory content
-    allowing to store something more than what is displayed in
-    the cell.
-    '''
-    def __init__(self, table, editType = qttable.QTableItem.OnTyping):
-        '''
-        initialise the table item
-        '''
-        qttable.QTableItem.__init__(self, table, editType)
-        self.textMemory = qt.QString('')
-
-    def setTextMemory(self, text):
-        '''
-        set the text memory
-        '''
-        self.textMemory = qt.QString(text)
-
 #=============================================#
 #               VALKEYVALIDATOR               #
 #=============================================#
 
-class valKeyValidator(qt.QValidator):
+class valKeyValidator(Qt.QValidator):
     '''
     A validator class for cool.ValidityKey editors
     '''
-    def __init__(self, parent, name = 'valKeyValidator'):
-        qt.QValidator.__init__(self, parent, name)
+    def __init__(self, parent):
+        Qt.QValidator.__init__(self, parent)
         #self.valKeyMin = long(CondDBUI.cool.ValidityKeyMin)
         self.valKeyMin = CondDBUI.ValidityKeyWrapper(CondDBUI.cool.ValidityKeyMin)
         #self.valKeyMax = long(CondDBUI.cool.ValidityKeyMax)
@@ -82,13 +59,13 @@ class valKeyValidator(qt.QValidator):
                 try:
                     inVal = CondDBUI.ValidityKeyWrapper(inputValue)
                     if self.valKeyMin <= inVal <= self.valKeyMax:
-                        return (qt.QValidator.Acceptable, cursorPos)
+                        return (Qt.QValidator.Acceptable, cursorPos)
                 except:
                     pass
-                return (qt.QValidator.Invalid, cursorPos)
+                return (Qt.QValidator.Invalid, cursorPos)
             else:
-                return (qt.QValidator.Intermediate, cursorPos)
-        return (qt.QValidator.Invalid, cursorPos)
+                return (Qt.QValidator.Intermediate, cursorPos)
+        return (Qt.QValidator.Invalid, cursorPos)
             
     def fixup(self, inputString):
         '''
@@ -132,41 +109,41 @@ class valKeyValidator(qt.QValidator):
 #                   MOVEPAD                   #
 #=============================================#
 
-class movePad(qt.QVBox):
+class movePad(Qt3Support.Q3VBox):
     '''
     A movePad is a QVbox containing 4 QPushButton. The top and bottom ones
     have a up and down arrow, and the two in the middle have a "x" and a "+"
     on them. The goal of this pad is to provide a unique set of buttons for
     moveUp, moveDown, add and erase actions (in a QTable, for instance).
     '''
-    def __init__(self, parent = 0, name = 'modePad', labels = ['^','v','x','+'], flag = 0):
+    def __init__(self, parent = 0, name = 'modePad', labels = ['^','v','x','+'], flag = Qt.Qt.Widget):
         '''
         Initialisation of the widget
         '''
-        qt.QVBox.__init__(self, parent, name, flag)
+        Qt3Support.Q3VBox.__init__(self, parent, name, flag)
 
         self.setSpacing(5)
         self.labels     = labels
         
-        self.boxTop     = qt.QHBox(self, 'boxTop')
-        self.buttonLeft  = qt.QPushButton(self.labels[3], self.boxTop, 'buttonAdd')
-        self.buttonRight = qt.QPushButton(self.labels[2], self.boxTop, 'buttonDel')
+        self.boxTop     = Qt3Support.Q3HBox(self, 'boxTop')
+        self.buttonLeft  = Qt.QPushButton(self.labels[3], self.boxTop, 'buttonAdd')
+        self.buttonRight = Qt.QPushButton(self.labels[2], self.boxTop, 'buttonDel')
         
-        self.buttonUp   = qt.QPushButton(self.labels[0], self, 'buttonUp')
-        self.buttonDown = qt.QPushButton(self.labels[1], self, 'buttonDown')
+        self.buttonUp   = Qt.QPushButton(self.labels[0], self, 'buttonUp')
+        self.buttonDown = Qt.QPushButton(self.labels[1], self, 'buttonDown')
 
         self.boxTop.setSpacing(5)
-        self.buttonLeft.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
-        self.buttonRight.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
+        self.buttonLeft.setSizePolicy(Qt.QSizePolicy.Expanding, Qt.QSizePolicy.Fixed)
+        self.buttonRight.setSizePolicy(Qt.QSizePolicy.Expanding, Qt.QSizePolicy.Fixed)
         
-        self.setSizePolicy(qt.QSizePolicy.Fixed, qt.QSizePolicy.Fixed)
+        self.setSizePolicy(Qt.QSizePolicy.Fixed, Qt.QSizePolicy.Fixed)
 
     def sizeHint(self):
         '''
         Reimplementation of the virtual function QWidget.sizeHint(). Returns
         the preferred size for the widget ?
         '''
-        return qt.QSize(80,100)
+        return Qt.QSize(80,100)
 
     def setLabels(self, labels):
         '''
@@ -182,28 +159,28 @@ class movePad(qt.QVBox):
         Set the text of button Up
         '''
         self.label[0] = label
-        self.updateLabels()
+        self._updateLabels()
 
     def setLabelDown(self, label):
         '''
         Set the text of button Down
         '''
         self.label[1] = label
-        self.updateLabels()
+        self._updateLabels()
 
     def setLabelLeft(self, label):
         '''
         Set the text of button left
         '''
         self.label[2] = label
-        self.updateLabels()
+        self._updateLabels()
 
     def setLabelRight(self, label):
         '''
         Set the text of button Right
         '''
         self.label[3] = label
-        self.updateLabels()
+        self._updateLabels()
 
     def _updateLabels(self):
         '''
@@ -221,98 +198,99 @@ class movePad(qt.QVBox):
 #                  MYDBTABLE                  #
 #=============================================#
 
-class myDBTable(qt.QSplitter):
+class myDBTable(Qt.QSplitter):
     '''
     Class displaying the contents of a CondDB channel. It allows to chose a
     specific tag and a time slice.
     '''
-    def __init__(self, parent, name = 'myDBTable'):
-        qt.QSplitter.__init__(self, parent, name)
+    def __init__(self, parent):
+        Qt.QSplitter.__init__(self, parent)
 
-        self.setOrientation( qt.Qt.Horizontal)
+        self.setOrientation( Qt.Qt.Horizontal)
         self.activeChannel = None
         self.timeModified  = False
         self.tagNameList = []
 
         #--- text viewer ---#
-        self.textDB = qt.QTextEdit(self, 'textDB')
-        self.textDB.setTextFormat(qt.Qt.PlainText)
-        self.textDB.setFont(qt.QFont("Courier", 10))
+        self.textDB = Qt.QTextEdit(self)
+        self.textDB.setAcceptRichText(False)
+        self.textDB.setFont(Qt.QFont("Courier", 10))
         self.textDB.setReadOnly(True)
-        self.textDB.setSizePolicy(qt.QSizePolicy.MinimumExpanding, qt.QSizePolicy.MinimumExpanding)
+        self.textDB.setSizePolicy(Qt.QSizePolicy.MinimumExpanding, Qt.QSizePolicy.MinimumExpanding)
         #-------------------#
 
         #--- layout ---#
-        self.layoutBrowser = qt.QVBox(self, 'layoutBrowser')
+        self.layoutBrowser = Qt3Support.Q3VBox(self, 'layoutBrowser')
         #--------------#
 
         #--- filter elements ---#
-        self.groupFilter = qt.QVGroupBox('Filter', self.layoutBrowser, 'groupFilter')
-        self.layoutFilter  = qt.QGrid(2, self.groupFilter, 'layoutFilter')
+        self.groupFilter = Qt3Support.Q3VGroupBox('Filter', self.layoutBrowser, 'groupFilter')
+        self.layoutFilter  = Qt3Support.Q3Grid(2, self.groupFilter, 'layoutFilter')
         self.layoutFilter.setSpacing(5)
         self.validatorTime = valKeyValidator(self)
 
-        self.labelTimeFrom = qt.QLabel('From time', self.layoutFilter, 'labelTimeFrom')
-        self.editTimeFrom  = qt.QLineEdit(self.layoutFilter, 'editTimeFrom')
+        self.labelTimeFrom = Qt.QLabel('From time', self.layoutFilter, 'labelTimeFrom')
+        self.editTimeFrom  = Qt.QLineEdit(self.layoutFilter, 'editTimeFrom')
         self.editTimeFrom.setValidator(self.validatorTime)
         self.editTimeFrom.setText(str(self.validatorTime.valKeyMin))
-        self.editTimeFrom.setAlignment(qt.Qt.AlignRight)
+        self.editTimeFrom.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelTimeTo = qt.QLabel('To time', self.layoutFilter, 'labelTimeTo')
-        self.editTimeTo  = qt.QLineEdit(self.layoutFilter, 'editTimeTo')
+        self.labelTimeTo = Qt.QLabel('To time', self.layoutFilter, 'labelTimeTo')
+        self.editTimeTo  = Qt.QLineEdit(self.layoutFilter, 'editTimeTo')
         self.editTimeTo.setValidator(self.validatorTime)
         self.editTimeTo.setText(str(self.validatorTime.valKeyMax))
-        self.editTimeTo.setAlignment(qt.Qt.AlignRight)
+        self.editTimeTo.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelTagName = qt.QLabel('Tag Name', self.layoutFilter, 'labelTag')
-        self.choseTagName = qt.QComboBox(self.layoutFilter, 'choseTagName')
+        self.labelTagName = Qt.QLabel('Tag Name', self.layoutFilter, 'labelTag')
+        self.choseTagName = Qt3Support.Q3ComboBox(self.layoutFilter, 'choseTagName')
         self.choseTagName.setEditable(True)
         #self.choseTagName.lineEdit().setAlignment(qt.Qt.AlignRight)
         self.choseTagName.setAutoCompletion(True)
-        self.choseTagName.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        self.choseTagName.setInsertionPolicy(Qt3Support.Q3ComboBox.NoInsertion)
         self.choseTagName.setEnabled(False)
+        self.choseTagName.setAutoResize(True)
         self.defaultTagIndex = 0
 
-        self.labelTagFilter = qt.QLabel('Hide _auto_', self.layoutFilter, 'labelTagFilter')
-        self.checkTagFilter = qt.QCheckBox('', self.layoutFilter, 'checkTagFilter')
+        self.labelTagFilter = Qt.QLabel('Hide _auto_', self.layoutFilter, 'labelTagFilter')
+        self.checkTagFilter = Qt.QCheckBox('', self.layoutFilter, 'checkTagFilter')
         self.checkTagFilter.setChecked(True)
         #-----------------------#
 
         #--- table ---#
-        self.groupTable = qt.QVGroupBox('IOV Table', self.layoutBrowser, 'groupTable')
+        self.groupTable = Qt3Support.Q3VGroupBox('IOV Table', self.layoutBrowser, 'groupTable')
         self.columnLabels = [('since', 'Since'), ('until', 'Until'), ('insertion', 'Insertion Time')]
-        self.tableDB = qttable.QTable(0, 0, self.groupTable, 'tableDB')
+        self.tableDB = Qt3Support.Q3Table(0, 0, self.groupTable, 'tableDB')
         self.tableDB.setReadOnly(True)
         for col in self.columnLabels:
             i = self.tableDB.numCols()
             self.tableDB.insertColumns(i, 1)
             self.tableDB.horizontalHeader().setLabel(i, col[1])
             self.tableDB.adjustColumn(i)
-        #self.tableDB.setSizePolicy(qt.QSizePolicy.Minimum, qt.QSizePolicy.Minimum)
+        #self.tableDB.setSizePolicy(Qt.QSizePolicy.Minimum, Qt.QSizePolicy.Minimum)
         self.layoutBrowser.setStretchFactor(self.groupTable, 1)
         #-------------#
 
         #--- payload selector ---#
-        self.groupPayload = qt.QVGroupBox('Payload', self.layoutBrowser, 'groupPayload')
-        self.selectPayload = qt.QListBox(self.groupPayload, 'selectPayload')
-        #self.selectPayload.setSizePolicy(qt.QSizePolicy.Minimum, qt.QSizePolicy.Minimum)
+        self.groupPayload = Qt3Support.Q3VGroupBox('Payload', self.layoutBrowser, 'groupPayload')
+        self.selectPayload = Qt3Support.Q3ListBox(self.groupPayload, 'selectPayload')
+        #self.selectPayload.setSizePolicy(Qt.QSizePolicy.Minimum, Qt.QSizePolicy.Minimum)
         self.layoutBrowser.setStretchFactor(self.groupPayload, 1)
         #------------------------#
 
         #--- export button ---#
-        self.buttonExport = qt.QPushButton('Export to File', self.layoutBrowser, 'buttonExport')
+        self.buttonExport = Qt.QPushButton('Export to File', self.layoutBrowser, 'buttonExport')
         #---------------------#
 
         #--- Signal connections ---#
-        self.connect(self.choseTagName, qt.SIGNAL("activated(const QString &)"), self.tagChanged)
-        self.connect(self.checkTagFilter, qt.SIGNAL("toggled (bool)"), self.applyTagFilter)
-        self.connect(self.tableDB, qt.SIGNAL("currentChanged(int, int)"), self.showData)
-        self.connect(self.tableDB, qt.SIGNAL("selectionChanged()"), self.showData)
-        self.connect(self.selectPayload, qt.SIGNAL("selectionChanged()"), self.showData)
-        self.connect(self.selectPayload, qt.SIGNAL("clicked(QListBoxItem *)"), self.showData)
-        self.connect(self.editTimeFrom, qt.SIGNAL("returnPressed()"), self.timeChanged)
-        self.connect(self.editTimeTo, qt.SIGNAL("returnPressed()"), self.timeChanged)
-        self.connect(self.buttonExport, qt.SIGNAL("clicked()"), self.exportPayload)
+        self.connect(self.choseTagName, Qt.SIGNAL("activated(const QString &)"), self.tagChanged)
+        self.connect(self.checkTagFilter, Qt.SIGNAL("toggled (bool)"), self.applyTagFilter)
+        self.connect(self.tableDB, Qt.SIGNAL("currentChanged(int, int)"), self.showData)
+        self.connect(self.tableDB, Qt.SIGNAL("selectionChanged()"), self.showData)
+        self.connect(self.selectPayload, Qt.SIGNAL("selectionChanged()"), self.showData)
+        self.connect(self.selectPayload, Qt.SIGNAL("clicked(Q3ListBoxItem *)"), self.showData)
+        self.connect(self.editTimeFrom, Qt.SIGNAL("returnPressed()"), self.timeChanged)
+        self.connect(self.editTimeTo, Qt.SIGNAL("returnPressed()"), self.timeChanged)
+        self.connect(self.buttonExport, Qt.SIGNAL("clicked()"), self.exportPayload)
         #--------------------------#
 
     def setEnabled(self, enable):
@@ -345,7 +323,7 @@ class myDBTable(qt.QSplitter):
 
         self.choseTagName.setCurrentItem(currentItemIndex)
         if currentItemIndex == self.defaultTagIndex:
-            self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+            self.choseTagName.emit(Qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
 
 
     def setTagList(self, tagList):
@@ -382,7 +360,7 @@ class myDBTable(qt.QSplitter):
         self.applyTagFilter(self.checkTagFilter.isChecked())
         self.choseTagName.setCurrentItem(self.defaultTagIndex)
         if self.activeChannel:
-            self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+            self.choseTagName.emit(Qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
 
 
     def tagChanged(self, tag):
@@ -400,7 +378,7 @@ class myDBTable(qt.QSplitter):
 
             if tagName.find('---') != -1:
                 self.choseTagName.setCurrentItem(self.defaultTagIndex)
-                self.choseTagName.emit(qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
+                self.choseTagName.emit(Qt.SIGNAL("activated"),(self.choseTagName.currentText(),))
                 return
 
             if fromTime > toTime:
@@ -451,7 +429,7 @@ class myDBTable(qt.QSplitter):
         condDBCache is updated by the caller function according to the tag
         name and the time slice.
         '''
-        self.parent().setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.parent().setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
 
         # Reset selection
         self.tableDB.setCurrentCell(0, 0)
@@ -495,8 +473,8 @@ class myDBTable(qt.QSplitter):
             if payloadKey != '':
                 xmlText = self.activeChannel.getCondDBCache(tagName)[row]['payload'][payloadKey]
                 # @todo: make the conversion to Unicode more robust (the src may not be ISO)
-                qs = qt.QTextCodec.codecForName("ISO8859-1").toUnicode(xmlText)
-                self.textDB.setText(qs)
+                qs = Qt.QTextCodec.codecForName("ISO8859-1").toUnicode(xmlText)
+                self.textDB.setPlainText(qs)
                 self.buttonExport.setEnabled(True)
 
 
@@ -504,17 +482,16 @@ class myDBTable(qt.QSplitter):
         '''
         Save the payload data currently displayed in the text viewer to a file.
         '''
-        fileDialogExport = qt.QFileDialog(self, 'fileDialogExport', True)
-        fileDialogExport.setMode(qt.QFileDialog.AnyFile)
-        if fileDialogExport.exec_loop():
+        filename = Qt.QFileDialog.getSaveFileName(self)
+        if filename:
             try:
-                xmlFile = open(str(fileDialogExport.selectedFile()), 'w')
+                xmlFile = open(str(filename), 'w')
             except Exception, details:
                 raise Exception, details
             else:
                 # @todo: make the conversion to Unicode more robust (the src may not be ISO)
-                qs = self.textDB.text()
-                s = qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
+                qs = self.textDB.toPlainText()
+                s = Qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
                 xmlFile.write(str(s))
                 xmlFile.close()
 
@@ -545,25 +522,25 @@ class myDBTable(qt.QSplitter):
 #                 CondDBTREE                 #
 #============================================#
 
-class CondDBTree(qt.QVBox):
+class CondDBTree(Qt3Support.Q3VBox):
     '''
     Widget displaying the database tree and a text editor with the
     current path.
     '''
 
-    def __init__(self, bridge, parent, name = 'CondDBTree', flag = 0):
+    def __init__(self, bridge, parent, name = 'CondDBTree', flag = Qt.Qt.Widget):
         '''
         Initialise the CondDBTree. The bridge parameter is passed to the
         dbTree instance.
         '''
-        qt.QVBox.__init__(self, parent, name, flag)
+        Qt3Support.Q3VBox.__init__(self, parent, name, flag)
 
         #--- Path editor ---#
-        self.layoutPath = qt.QHBox(self, 'layoutPath')
-        self.labelPath = qt.QLabel(' Path ', self.layoutPath, 'labelPath')
-        self.editPath  = qt.QLineEdit('', self.layoutPath, 'editPath')
+        self.layoutPath = Qt3Support.Q3HBox(self, 'layoutPath')
+        self.labelPath = Qt.QLabel(' Path ', self.layoutPath, 'labelPath')
+        self.editPath  = Qt.QLineEdit('', self.layoutPath, 'editPath')
         self.layoutPath.setStretchFactor(self.editPath, 1)
-        self.buttonGo = qt.QPushButton('Go', self.layoutPath, 'buttonGo')
+        self.buttonGo = Qt.QPushButton('Go', self.layoutPath, 'buttonGo')
         # There is no clear use for this button, so hide it for now
         self.buttonGo.hide()
 
@@ -579,10 +556,10 @@ class CondDBTree(qt.QVBox):
         #---------------------#
 
         #--- Signal connections ---#
-        self.connect(self.tree, qt.SIGNAL("expanded(QListViewItem *)"),         self.createLeaves)
-        self.connect(self.tree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.updatePath)
-        self.connect(self.buttonGo, qt.SIGNAL("clicked()"),                     self.resolvePath)
-        self.connect(self.editPath, qt.SIGNAL("returnPressed()"),               self.resolvePath)
+        self.connect(self.tree, Qt.SIGNAL("expanded(Q3ListViewItem *)"),         self.createLeaves)
+        self.connect(self.tree, Qt.SIGNAL("selectionChanged(Q3ListViewItem *)"), self.updatePath)
+        self.connect(self.buttonGo, Qt.SIGNAL("clicked()"),                     self.resolvePath)
+        self.connect(self.editPath, Qt.SIGNAL("returnPressed()"),               self.resolvePath)
         #--------------------------#
 
     def setEnabled(self, enable = True):
@@ -598,7 +575,7 @@ class CondDBTree(qt.QVBox):
         '''
         Build the subelements of the selected tree element
         '''
-        self.parent().setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.parent().setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
             if isinstance(treeElem, guitree.guiFolder):
                 treeElem.fillFolder()
@@ -629,13 +606,13 @@ class CondDBTree(qt.QVBox):
                 self.tree.setSelected(treeElem, True)
                 self.tree.ensureItemVisible(treeElem)
             else:
-                errorMsg = qt.QMessageBox('CondDBUI',\
-                                          '%s\nUnknown path'%str(self.editLocation.text()),\
-                                          qt.QMessageBox.Warning,\
-                                          qt.QMessageBox.Ok,\
-                                          qt.QMessageBox.NoButton,\
-                                          qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
+                errorMsg = Qt.QMessageBox('CondDBUI',\
+                                          '%s\nUnknown path'%str(self.editPath.text()),\
+                                          Qt.QMessageBox.Warning,\
+                                          Qt.QMessageBox.Ok,\
+                                          Qt.QMessageBox.NoButton,\
+                                          Qt.QMessageBox.NoButton)
+                errorMsg.exec_()
         except Exception, details:
             raise Exception, details
 
@@ -643,36 +620,37 @@ class CondDBTree(qt.QVBox):
 #               ConditionEditor              #
 #============================================#
 
-class ConditionEditor(qt.QVBox):
+class ConditionEditor(Qt3Support.Q3VBox):
 
-    def __init__(self, parent, name = 'ConditionEditor', f = 0, extension = '', externalEditorCmd = ''):
-        qt.QVBox.__init__(self, parent, name, f)
+    def __init__(self, parent, name = 'ConditionEditor', f = Qt.Qt.Widget, extension = '', externalEditorCmd = ''):
+        Qt3Support.Q3VBox.__init__(self, parent, name, f)
 
         #--- buttons ---#
-        self.layoutButton = qt.QVBox(self, 'layoutButton')
-        self.layoutButton1 = qt.QHBox(self.layoutButton, 'layoutButton1')
-        self.buttonLoad = qt.QPushButton('Load', self.layoutButton1)
-        self.buttonExport = qt.QPushButton('Export', self.layoutButton1)
-        self.buttonExtEdit = qt.QPushButton('Edit with emacs', self.layoutButton1)
-        self.layoutButton2 = qt.QHBox(self.layoutButton, 'layoutButton2')
-        self.buttonCondition = qt.QPushButton('<condition>', self.layoutButton2)
-        self.buttonAlignmentCondition = qt.QPushButton('<align.condition>', self.layoutButton2)
-        self.buttonParam = qt.QPushButton('<param>', self.layoutButton2)
-        self.buttonParamVector = qt.QPushButton('<paramvector>', self.layoutButton2)
+        self.layoutButton = Qt3Support.Q3VBox(self, 'layoutButton')
+        self.layoutButton1 = Qt3Support.Q3HBox(self.layoutButton, 'layoutButton1')
+        self.buttonLoad = Qt.QPushButton('Load', self.layoutButton1)
+        self.buttonExport = Qt.QPushButton('Export', self.layoutButton1)
+        self.buttonExtEdit = Qt.QPushButton('Edit with emacs', self.layoutButton1)
+        self.layoutButton2 = Qt3Support.Q3HBox(self.layoutButton, 'layoutButton2')
+        self.buttonCondition = Qt.QPushButton('<condition>', self.layoutButton2)
+        self.buttonAlignmentCondition = Qt.QPushButton('<align.condition>', self.layoutButton2)
+        self.buttonParam = Qt.QPushButton('<param>', self.layoutButton2)
+        self.buttonParamVector = Qt.QPushButton('<paramvector>', self.layoutButton2)
         #---------------#
 
         #--- editor ---#
-        self.xmlEditor = qt.QTextEdit(self, 'xmlEditor')
+        self.xmlEditor = Qt.QTextEdit(self)
+        self.xmlEditor.setAcceptRichText(False)
         #--------------#
 
         #--- Signal connections ---#
-        self.connect(self.buttonLoad, qt.SIGNAL("clicked()"), self.loadFromFile)
-        self.connect(self.buttonExport, qt.SIGNAL("clicked()"), self.exportToFile)
-        self.connect(self.buttonExtEdit, qt.SIGNAL("clicked()"), self.editExternally)
-        self.connect(self.buttonCondition, qt.SIGNAL("clicked()"), self.addCondition)
-        self.connect(self.buttonAlignmentCondition, qt.SIGNAL("clicked()"), self.addAlignmentCondition)
-        self.connect(self.buttonParam, qt.SIGNAL("clicked()"), self.addParam)
-        self.connect(self.buttonParamVector, qt.SIGNAL("clicked()"), self.addParamVector)
+        self.connect(self.buttonLoad, Qt.SIGNAL("clicked()"), self.loadFromFile)
+        self.connect(self.buttonExport, Qt.SIGNAL("clicked()"), self.exportToFile)
+        self.connect(self.buttonExtEdit, Qt.SIGNAL("clicked()"), self.editExternally)
+        self.connect(self.buttonCondition, Qt.SIGNAL("clicked()"), self.addCondition)
+        self.connect(self.buttonAlignmentCondition, Qt.SIGNAL("clicked()"), self.addAlignmentCondition)
+        self.connect(self.buttonParam, Qt.SIGNAL("clicked()"), self.addParam)
+        self.connect(self.buttonParamVector, Qt.SIGNAL("clicked()"), self.addParamVector)
         #--------------------------#
 
         #--- External editor ---#
@@ -684,10 +662,9 @@ class ConditionEditor(qt.QVBox):
         '''
         Load the text editor contents from a file
         '''
-        fileDialog = qt.QFileDialog(self, 'fileDialog', True)
-        if fileDialog.exec_loop():
-            fileName = str(fileDialog.selectedFile())
-            xmlText = open(fileName).read()
+        filename = Qt.QFileDialog.getOpenFileName(self)
+        if filename:
+            xmlText = open(str(filename)).read()
             self.setEditorText(xmlText)
 
     def setEditorText(self, text):
@@ -695,28 +672,26 @@ class ConditionEditor(qt.QVBox):
         Set the contents of the xml editor
         '''
         # @todo: make the conversion to Unicode more robust (the src may not be ISO)
-        qs = qt.QTextCodec.codecForName("ISO8859-1").toUnicode(text)
-        self.xmlEditor.clear()
-        self.xmlEditor.setText(qs)
+        qs = Qt.QTextCodec.codecForName("ISO8859-1").toUnicode(text)
+        self.xmlEditor.document().setPlainText(qs)
 
     def getEditorText(self):
         '''
         Returns the contents of the xml editor
         '''
         # @todo: make the conversion to Unicode more robust (the src may not be ISO)
-        qs = self.xmlEditor.text()
-        s = qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
+        qs = self.xmlEditor.document().toPlainText()
+        s = Qt.QTextCodec.codecForName("ISO8859-1").fromUnicode(qs)
         return str(s)
 
     def exportToFile(self):
         '''
         Saves the contents of the editor to a file
         '''
-        fileDialogExport = qt.QFileDialog(self, 'fileDialogExport', True)
-        fileDialogExport.setMode(qt.QFileDialog.AnyFile)
-        if fileDialogExport.exec_loop():
+        filename = Qt.QFileDialog.getSaveFileName(self)
+        if filename:
             try:
-                xmlFile = open(str(fileDialogExport.selectedFile()), 'w')
+                xmlFile = open(str(filename), 'w')
             except Exception, details:
                 raise Exception, details
             else:
@@ -741,7 +716,7 @@ class ConditionEditor(qt.QVBox):
         Add a condition tag to the xml editor, at cursor position
         '''
         conditionTag = '<condition classID="%d" name="%s">\n\n</condition>'%(class_id,name)
-        self.xmlEditor.insert(conditionTag)
+        self.xmlEditor.textCursor().insertText(conditionTag)
 
     def addAlignmentCondition(self, name="##_CONDITION_NAME_HERE_##"):
         '''
@@ -752,19 +727,19 @@ class ConditionEditor(qt.QVBox):
                        '<paramVector name="dRotXYZ" type="double">0 0 0</paramVector>\n' + \
                        '<paramVector name="pivotXYZ" type="double">0 0 0</paramVector>\n' + \
                        '</condition>'
-        self.xmlEditor.insert(conditionTag)
+        self.xmlEditor.textCursor().insertText(conditionTag)
 
     def addParam(self,name="##_PARAM_NAME_HERE_##",type_id='##_INT_DOUBLE_STRING_##',value=''):
         '''
         Add a param tag to the xml editor, at cursor position
         '''
         paramTag = '<param name="%s" type="%s">%s</param>'%(name,type_id,value)
-        self.xmlEditor.insert(paramTag)
+        self.xmlEditor.textCursor().insertText(paramTag)
 
     def addParamVector(self,name="##_PARAMVECTOR_NAME_HERE_##",type_id='##_INT_DOUBLE_STRING_##',value=''):
         '''
         Add a paramVector tag to the xml editor, at cursor position
         '''
         paramVectorTag = '<param name="%s" type="%s">%s</param>'%(name,type_id,value)
-        self.xmlEditor.insert(paramVectorTag)
+        self.xmlEditor.textCursor().insertText(paramVectorTag)
 

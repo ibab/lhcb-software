@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.38 2009-03-31 07:56:28 marcocle Exp $
+# $Id: requirements,v 1.39 2009-05-22 17:14:33 marcocle Exp $
 package CondDBUI
 
-version v2r17
+version v2r18
 
 branches python scripts cmt
 #ignore_pattern package_stamps
@@ -34,7 +34,10 @@ apply_tag    NEEDS_COOL_FACTORY
 use XercesC v* LCG_Interfaces -no_auto_imports
 
 use pyqt v* LCG_Interfaces -no_auto_imports
-macro sip_home '${LCG_external}/sip/$(sip_native_version)/$(LCG_system)'
+use pyqt_compat v* LCG_Interfaces -no_auto_imports
+# Work-around for a couple of problems in pyqt_compat
+macro pyqt_compat_native_version "$(pyqt_compat_config_version)_python$(Python_config_version_twodigit)"
+path_prepend PYTHONPATH   "$(pyqt_compat_home)/lib/python$(Python_version)/site-packages/PyQt4"
 
 # ====================================================================
 # Install scripts and modules

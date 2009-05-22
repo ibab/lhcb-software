@@ -1,25 +1,14 @@
-import qt, qttable
+from PyQt4 import Qt, Qt3Support
 import CondDBUI, guitree, guidialogs, guiextras
 import os, shelve
-
-#############################
-#     General Variables     #
-#############################
-versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
-if versionNumber == "$":
-    versionNumber = 'HEAD'
-
-versionId  = '$Id: guiwin.py,v 1.6 2008-07-23 14:45:32 marcocle Exp $'.split()
-if len(versionId) < 4:
-    versionDate = 'unknown'
-else:
-    versionDate = versionId[3]
 
 ####################################################
 #                   Main Window                    #
 ####################################################
+class NoException:
+    pass
 
-class myWindow(qt.QMainWindow):
+class myWindow(Qt.QMainWindow):
     '''
     Class of the main window. It contains a tree to display the architecture of the CondDB,
     a location editor to navigate "manually" in the CondDB, and a myDBTable widget to display
@@ -27,9 +16,9 @@ class myWindow(qt.QMainWindow):
     DataBase > Open. All communication with the database are done via a CondDBUI.CondDB object
     called "bridge". Most of it are loaded on demand and cached.
     '''
-    def __init__(self, bridge = None, parent = None, name = 'myWindow', flags = qt.Qt.WType_TopLevel):
-        qt.QMainWindow.__init__(self, parent, name, flags)
-
+    def __init__(self, bridge = None, parent = None, flags = Qt.Qt.Window):
+        Qt.QMainWindow.__init__(self, parent, flags)
+        self.setWindowTitle(Qt.QApplication.instance().objectName())
         self.bridge = None
         self.connectionString = ''
         
@@ -56,7 +45,10 @@ class myWindow(qt.QMainWindow):
         #------------------------#
         
         #---- Status Bar ----#
-        self.statusBar = qt.QStatusBar(self, 'statusBar')
+        self.statusBar = Qt.QStatusBar(self)
+        self.statusBarMsg = Qt.QLabel(self.statusBar)
+        self.statusBar.addPermanentWidget(self.statusBarMsg)
+        self.setStatusBar(self.statusBar)
         #--------------------#
 
         #---- Dialog windows ----#
@@ -72,7 +64,7 @@ class myWindow(qt.QMainWindow):
         #------------------------#
 
         #---- Splitter ----#
-        self.splitter = qt.QSplitter(qt.Qt.Horizontal, self)
+        self.splitter = Qt.QSplitter(Qt.Qt.Horizontal, self)
         # self.dbTree   = guitree.dbTree(self.bridge, self.splitter, name='CondDB Tree')
         self.dbTree   = guiextras.CondDBTree(self.bridge, self.splitter, name='dbTree')
         self.dbTable  = guiextras.myDBTable(self.splitter)
@@ -85,47 +77,53 @@ class myWindow(qt.QMainWindow):
         #--------------------------------#
 
         #---- Menu ----#
-        self.menuOldSessions = qt.QPopupMenu(self, 'menuOldSessions')
+        self.menuOldSessions = Qt3Support.Q3PopupMenu(self, 'menuOldSessions')
         for session in self.old_sessions:
             self.menuOldSessions.insertItem(session)
-        self.connect(self.menuOldSessions, qt.SIGNAL("activated(int)"), self.openOldSession)
+        self.connect(self.menuOldSessions, Qt.SIGNAL("triggered(QAction *)"), self.openOldSession)
 
-        menuDB = qt.QPopupMenu(self, 'menuDB')
-        menuDB.insertItem("&New",    self.createNewDB)
-        menuDB.insertItem("&Open",   self.openDB)
-        menuDB.insertItem("&Recent", self.menuOldSessions)
-        menuDB.insertItem("&Slice",  self.createDBSlice)
-        menuDB.insertItem("&Close",  self.delBridge)
-        menuDB.insertSeparator()
-        menuDB.insertItem("&Quit",   self.close)
+        self.menuDB = Qt3Support.Q3PopupMenu(self, 'menuDB')
+        self.menuDB.setTitle("&DataBase")
+        self.menuDB.insertItem("&New",    self.createNewDB)
+        self.menuDB.insertItem("&Open",   self.openDB)
+        self.menuDB.insertItem("&Recent", self.menuOldSessions)
+        self.menuDB.insertItem("&Slice",  self.createDBSlice)
+        self.menuDB.insertItem("&Close",  self.delBridge)
+        self.menuDB.addSeparator()
+        self.menuDB.insertItem("&Quit",   self.close)
 
-        menuEdit = qt.QPopupMenu(self, 'menuEdit')
-        menuEdit.insertItem("Add &Condition", self.openAddConditionDialog)
-        menuEdit.insertItem("New &Tag",       self.createNewTag)
+        self.menuEdit = Qt3Support.Q3PopupMenu(self, 'menuEdit')
+        self.menuEdit.setTitle("&Edit")
+        self.menuEdit.insertItem("Add &Condition", self.openAddConditionDialog)
+        self.menuEdit.insertItem("New &Tag",       self.createNewTag)
 
-        menuSU = qt.QPopupMenu(self, 'menuSU')
-        menuSU.insertItem("New &Node",      self.createNewNode)
-        menuSU.insertItem("Delete &Node",     self.deleteNode)
-        menuSU.insertItem("Delete &Tag",      self.deleteTag)
+        self.menuSU = Qt3Support.Q3PopupMenu(self, 'menuSU')
+        self.menuSU.setTitle("&Advanced")
+        self.menuSU.insertItem("New &Node",      self.createNewNode)
+        self.menuSU.insertItem("Delete &Node",     self.deleteNode)
+        self.menuSU.insertItem("Delete &Tag",      self.deleteTag)
         # menuSU.insertItem("Delete &Database", self.deleteDatabase)
 
-        menuHelp = qt.QPopupMenu(self, 'menuHelp')
-        menuHelp.insertItem("&About", self.aboutconddbui)
+        self.menuHelp = Qt3Support.Q3PopupMenu(self, 'menuHelp')
+        self.menuHelp.setTitle("&Help")
+        self.menuHelp.insertItem("&About", self.aboutconddbui)
 
-        self.menuBar = qt.QMenuBar(self)
-        self.menuBar.insertItem("&DataBase", menuDB)
-        self.menuBar.insertItem("&Edit",     menuEdit)
-        self.menuBar.insertItem("&Advanced", menuSU)
-        self.menuBar.insertItem("&Help",     menuHelp)
+        self.menuBar = Qt.QMenuBar(self)
+        self.menuDBAct = self.menuBar.addMenu(self.menuDB)
+        self.menuEditAct = self.menuBar.addMenu(self.menuEdit)
+        self.menuSUAct = self.menuBar.addMenu(self.menuSU)
+        self.menuHelpAct = self.menuBar.addMenu(self.menuHelp)
 
         # Hide menus that are meaningless when no database is available.
-        self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
-        self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
+        self.menuEditAct.setEnabled(False)
+        self.menuSUAct.setEnabled(False)
+
+        self.setMenuBar(self.menuBar)
         #--------------#
 
         #---- Signal Connections ----#
-        self.connect(self.dbTree.tree, qt.SIGNAL("selectionChanged(QListViewItem *)"), self.resolveSelection)
-        self.connect(self.dialogAddCondition.buttonWrite, qt.SIGNAL("clicked()"), self.writeCondition)
+        self.connect(self.dbTree.tree, Qt.SIGNAL("selectionChanged(Q3ListViewItem *)"), self.resolveSelection)
+        self.connect(self.dialogAddCondition.buttonWrite, Qt.SIGNAL("clicked()"), self.writeCondition)
         #----------------------------#
 
         if bridge:
@@ -143,7 +141,7 @@ class myWindow(qt.QMainWindow):
         the data inside. If it is something else, the table is cleared and nothing
         else happens.
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
             if isinstance(treeElem, guitree.guiChannel):
                 if not treeElem.parent().tag_loaded:
@@ -164,7 +162,7 @@ class myWindow(qt.QMainWindow):
         except IOError, details:
         #except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.resolveSelection', str(Exception), str(details))
+            self.reportException('guiwin.resolveSelection')
         else:
             self.unsetCursor()
 
@@ -173,7 +171,7 @@ class myWindow(qt.QMainWindow):
         '''
         Write a condition objects to the Database and close the dialog window.
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
             self.bridge.storeXMLStringList(self.dialogAddCondition.folderName, self.dialogAddCondition.objectList)
             # Now we need to update the db tree and the db table.
@@ -193,7 +191,7 @@ class myWindow(qt.QMainWindow):
             self.dialogAddCondition.hide()
         except IOError, details:
             self.unsetCursor()
-            self.catchException('guiwin.writeCondition', str(IOError), str(details))
+            self.reportException('guiwin.writeCondition')
         else:
             self.unsetCursor()
 
@@ -207,24 +205,23 @@ class myWindow(qt.QMainWindow):
         Open a dialog to create a new SQLite database and open it.
         '''
         try:
-            if self.dialogCreateNewDB.exec_loop():
+            if self.dialogCreateNewDB.exec_():
                 self.connectionString = self.dialogCreateNewDB.connectionString
                 bridge = CondDBUI.CondDB(self.connectionString, True)
                 self.setBridge(bridge)
                 #self.editLocation.setEnabled(True)
                 #self.buttonGo.setEnabled(True)
         except Exception, details:
-            self.catchException('guiwin.createNewDB', str(Exception), str(details))
+            self.reportException('guiwin.createNewDB')
 
 
-
-    def openOldSession(self, itemID):
+    def openOldSession(self, action):
         '''
         Loads a previously opened session
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
-            sessionText = str(self.menuOldSessions.text(itemID))
+            sessionText = str(action.text())
             if sessionText.find('[rw]') != -1:
                 is_read_only = False
                 sessionText = sessionText.replace('[rw]', '')
@@ -236,7 +233,7 @@ class myWindow(qt.QMainWindow):
             self.setBridge(bridge)
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.openOldSession', str(Exception), str(details))
+            self.reportException('guiwin.openOldSession')
         else:
             self.unsetCursor()
 
@@ -250,18 +247,18 @@ class myWindow(qt.QMainWindow):
         It is also possible to create a new (empty) condition database using this dialog.
         It is limited to the SQLite backend and cannot override an existing DB.
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
-            if self.dialogConnectDB.exec_loop():
+            if self.dialogConnectDB.exec_():
                 connectionString = self.dialogConnectDB.connectString
-                is_read_only = self.dialogConnectDB.buttonLocked.isOn()
+                is_read_only = self.dialogConnectDB.buttonLocked.isChecked()
                 bridge = CondDBUI.CondDB(connectionString,
                                          create_new_db = False,
                                          readOnly = is_read_only)
                 self.setBridge(bridge)
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.openDB', str(Exception), str(details))
+            self.reportException('guiwin.openDB')
         else:
             self.unsetCursor()
 
@@ -279,7 +276,7 @@ class myWindow(qt.QMainWindow):
                 if self.dialogSliceDB.choseNode.count() == 0:
                     self.dialogSliceDB.loadNodes()
 
-                if self.dialogSliceDB.exec_loop():
+                if self.dialogSliceDB.exec_():
                     schema = str(self.dialogSliceDB.editSchema.text())
                     dbName = str(self.dialogSliceDB.editDBName.text())
                     # This will work with COOL > 2.0 (bug #23597)
@@ -300,10 +297,10 @@ class myWindow(qt.QMainWindow):
                 self.dialogSliceDB.reset()
             except IOError, details:
                 self.dialogSliceDB.reset()            
-                self.catchException('guiwin.createDBSlice', str(Exception), str(details))
+                self.reportException('guiwin.createDBSlice')
 
 
-    def close(self, alsoDelete = True):
+    def close(self):
         '''
         Save configuration file
         '''
@@ -311,7 +308,7 @@ class myWindow(qt.QMainWindow):
         for k in ["max_old_sessions", "old_sessions", "external_editor"]:
             f.write("%s = %s\n"%(k,repr(getattr(self,k))))
         f.close()
-        return qt.QMainWindow.close(self, alsoDelete)
+        return Qt.QMainWindow.close(self)
 
     #-------------------------#
 
@@ -322,7 +319,7 @@ class myWindow(qt.QMainWindow):
         '''
         try:
             self.dialogCreateNode.reset()
-            if self.dialogCreateNode.exec_loop():
+            if self.dialogCreateNode.exec_():
                 if self.dialogCreateNode.is_folderset:
                     storageType = 'NODE'
                 else:
@@ -338,14 +335,14 @@ class myWindow(qt.QMainWindow):
                                        self.dialogCreateNode.storageKeys)
                 self.dbTree.tree.addNode(self.dialogCreateNode.nodeName, self.dialogCreateNode.createParents)
         except Exception, details:
-            self.catchException('guiwin.createNewNode', str(Exception), str(details))
+            self.reportException('guiwin.createNewNode')
 
 
     def createNewTag(self):
         '''
         Create a new tag
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
             self.dialogCreateTag.reset()
             item = self.dbTree.tree.selectedItem()
@@ -355,7 +352,7 @@ class myWindow(qt.QMainWindow):
                 self.dialogCreateTag.editNode.setText(item.fullName)
             self.dialogCreateTag.fillTable()
 
-            if self.dialogCreateTag.exec_loop():
+            if self.dialogCreateTag.exec_():
                 tagName = str(self.dialogCreateTag.editTag.text())
                 childTagList = self.dialogCreateTag.selectedTags[:]
                 nodeName = str(self.dialogCreateTag.editNode.text())
@@ -378,7 +375,7 @@ class myWindow(qt.QMainWindow):
 
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.createNewTag', str(Exception), str(details))
+            self.reportException('guiwin.createNewTag')
 
         else:
             self.unsetCursor()
@@ -409,17 +406,17 @@ class myWindow(qt.QMainWindow):
                     xmlDict[k] = item.getCondDBCache(tagName)[row]['payload'][k]
                 self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID, externalEditorCmd = self.external_editor)
             else:
-                errorMsg = qt.QMessageBox('CondDBUI',
+                errorMsg = Qt.QMessageBox('CondDBUI',
                                           "No COOL folder selected\nInsertion in the CondDB can only be done in existing COOL folder",
-                                          qt.QMessageBox.Warning,
-                                          qt.QMessageBox.Ok,
-                                          qt.QMessageBox.NoButton,
-                                          qt.QMessageBox.NoButton)
-                errorMsg.exec_loop()
+                                          Qt.QMessageBox.Warning,
+                                          Qt.QMessageBox.Ok,
+                                          Qt.QMessageBox.NoButton,
+                                          Qt.QMessageBox.NoButton)
+                errorMsg.exec_()
                 return
             self.dialogAddCondition.show()
         except Exception, details:
-            self.catchException('guiwin.openAddConditionDialog', str(Exception), str(details))
+            self.reportException('guiwin.openAddConditionDialog')
 
     #----------------#
 
@@ -435,12 +432,12 @@ class myWindow(qt.QMainWindow):
             else:
                 self.dialogDeleteNode.reset(item.fullName)
 
-            if self.dialogDeleteNode.exec_loop():
+            if self.dialogDeleteNode.exec_():
                 self.bridge.deleteNode(self.dialogDeleteNode.nodeName)
                 self.dbTree.tree.removeNode(self.dialogDeleteNode.nodeName)
 
         except Exception, details:
-            self.catchException('guiwin.deleteNode', str(Exception), str(details))
+            self.reportException('guiwin.deleteNode')
 
 
     def deleteTag(self):
@@ -448,7 +445,7 @@ class myWindow(qt.QMainWindow):
         Will allow the super user to remove a tag from the CondDB. This does not
         change the content of the DB.
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
             item = self.dbTree.tree.selectedItem()
             if isinstance(item, guitree.guiChannel):
@@ -457,7 +454,7 @@ class myWindow(qt.QMainWindow):
                 self.dialogDeleteTag.editNode.setText(item.fullName)
 
             self.dialogDeleteTag.reloadTags()
-            if self.dialogDeleteTag.exec_loop():
+            if self.dialogDeleteTag.exec_():
                 tagName  = str(self.dialogDeleteTag.choseTag.currentText())
                 nodeName = str(self.dialogDeleteTag.editNode.text())
                 self.bridge.deleteTag(nodeName, tagName)
@@ -472,7 +469,7 @@ class myWindow(qt.QMainWindow):
 
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.deleteTag', str(Exception), str(details))
+            self.reportException('guiwin.deleteTag')
 
         else:
             self.unsetCursor()
@@ -482,9 +479,9 @@ class myWindow(qt.QMainWindow):
         '''
         Will allow the super user to delete the active database.
         '''
-        self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
+        self.setCursor(Qt.QCursor(Qt.Qt.WaitCursor))
         try:
-            choice = qt.QMessageBox.warning(self, 'CondDB Browser',
+            choice = Qt.QMessageBox.warning(self, 'CondDB Browser',
                                             "You are about to destroy the current database\nThis action can't be undone !",
                                             "Ok", "Cancel")
             if choice == 0:
@@ -495,7 +492,7 @@ class myWindow(qt.QMainWindow):
                     raise Exception, "The Browser can only drop SQLite databases"
         except Exception, details:
             self.unsetCursor()
-            self.catchException('guiwin.deleteDatabase', str(Exception), str(details))
+            self.reportException('guiwin.deleteDatabase')
         else:
             self.unsetCursor()
 
@@ -503,22 +500,23 @@ class myWindow(qt.QMainWindow):
 
     #--- Menu Help ---#
     def aboutconddbui(self):
+        app = Qt.QApplication.instance()
         message = '''
-        CondDB Browser %s
+        %s %s
 
         Browser for the LHCb-COOL condition database.
 
         This is build on top of the Python API to LHCb-COOL: CondDBUI,
         and the Python API to COOL: PyCool.
 
-        The Graphical Library is PyQt, based on Qt 3.3
+        The Graphical Library is PyQt %s, based on Qt %s
 
         Marco Clemencic, Nicolas Gilardi
-        (last change: %s)
-        '''%(versionNumber, versionDate)
-        aboutMsg = qt.QMessageBox('browser.py', message, qt.QMessageBox.Information,
-                                  qt.QMessageBox.Ok, qt.QMessageBox.NoButton, qt.QMessageBox.NoButton)
-        aboutMsg.exec_loop()
+        '''%(app.objectName(), app.applicationVersion(), Qt.PYQT_VERSION_STR, Qt.qVersion())
+        aboutMsg = Qt.QMessageBox(app.objectName(),
+                                  message, Qt.QMessageBox.Information,
+                                  Qt.QMessageBox.Ok, Qt.QMessageBox.NoButton, Qt.QMessageBox.NoButton)
+        aboutMsg.exec_()
         return
 
     ######################
@@ -552,16 +550,16 @@ class myWindow(qt.QMainWindow):
 
         # Show elements that are useful when the DB is accessible
         if self.bridge.readOnly:
-            self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
-            self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
+            self.menuEditAct.setEnabled(False)
+            self.menuSUAct.setEnabled(False)
         else:
-            self.menuBar.setItemEnabled(self.menuBar.idAt(1), True)
-            self.menuBar.setItemEnabled(self.menuBar.idAt(2), True)
+            self.menuEditAct.setEnabled(True)
+            self.menuSUAct.setEnabled(True)
         self.dbTree.setEnabled(True)
         if bridge:
-            self.statusBar.message(sessionText)
+            self.statusBarMsg.setText(sessionText)
         else:
-            self.statusBar.clear()
+            self.statusBarMsg.clear()
 
     def delBridge(self):
         '''
@@ -575,23 +573,24 @@ class myWindow(qt.QMainWindow):
         self.dbTable.reset()
 
         # Hide elements that are meaningless when no database is available.
-        self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
-        self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
+        self.menuEditAct.setEnabled(False)
+        self.menuSUAct.setEnabled(False)
         self.dbTree.setEnabled(False)
-        self.statusBar.clear()
+        self.statusBarMsg.clear()
 
-    def catchException(self, location, exception, details):
+    def reportException(self, location):
         '''
         Open an error message when an exception is caught
         '''
-        errorMsg = qt.QMessageBox('browser.py',
-                                  "%s\n%s:\n%s"%(location, exception, details),
-                                  qt.QMessageBox.Critical,
-                                  qt.QMessageBox.Ok,
-                                  qt.QMessageBox.NoButton,
-                                  qt.QMessageBox.NoButton)
-        errorMsg.exec_loop()
-
+        import traceback
+        errorMsg = Qt.QMessageBox(Qt.QApplication.instance().objectName(),
+                                  "Called from '%s':\n%s" % (location,
+                                                             traceback.format_exc()),
+                                  Qt.QMessageBox.Critical,
+                                  Qt.QMessageBox.Ok,
+                                  Qt.QMessageBox.NoButton,
+                                  Qt.QMessageBox.NoButton)
+        errorMsg.exec_()
 
 
 

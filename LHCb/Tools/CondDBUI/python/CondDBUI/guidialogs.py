@@ -1,4 +1,4 @@
-import qt, qttable
+from PyQt4 import Qt, Qt3Support
 import os
 import guiextras
 import CondDBUI
@@ -7,7 +7,7 @@ import CondDBUI
 #             SLICINGDIALOG             #
 #=======================================#
 
-class slicingDialog(qt.QDialog):
+class slicingDialog(Qt.QDialog):
     '''
     This dialog allows to select a list of data from the current
     conddb and copy it to a new or existing database.
@@ -17,7 +17,7 @@ class slicingDialog(qt.QDialog):
         '''
         initialisation of the dialog window.
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         # The address of the folder containing the new condition objects
         self.folderName = ''
@@ -29,68 +29,67 @@ class slicingDialog(qt.QDialog):
         self.do_copy = True
 
         #--- Main Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
+        self.layoutDialog = Qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
         #-------------------#
 
         #--- Target database ---#
-        self.groupTarget = qt.QHGroupBox('Target Database', self, 'groupTarget')
+        self.groupTarget = Qt3Support.Q3HGroupBox('Target Database', self, 'groupTarget')
         self.layoutDialog.addWidget(self.groupTarget)
 
-        self.layoutTarget = qt.QGrid(3, self.groupTarget, 'layoutLocation')
+        self.layoutTarget = Qt3Support.Q3Grid(3, self.groupTarget, 'layoutLocation')
         self.layoutTarget.setSpacing(5)
 
-        self.labelSchema  = qt.QLabel('SQLite file name:', self.layoutTarget, 'labelSchema')
-        self.editSchema   = qt.QLineEdit(self.layoutTarget, 'editSchema')
-        self.buttonSchema = qt.QPushButton('...', self.layoutTarget, 'buttonSchema')
+        self.labelSchema  = Qt.QLabel('SQLite file name:', self.layoutTarget, 'labelSchema')
+        self.editSchema   = Qt.QLineEdit(self.layoutTarget, 'editSchema')
+        self.buttonSchema = Qt.QPushButton('...', self.layoutTarget, 'buttonSchema')
         self.buttonSchema.setMaximumWidth(30)
-        self.fileDialogSchema = qt.QFileDialog(self.layoutTarget, 'fileDialogSchema', True)
-        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
 
-        self.labelDBName = qt.QLabel('Database name:', self.layoutTarget, 'labelDBName')
-        self.editDBName  = qt.QLineEdit(self.layoutTarget, 'editDBName')
+        self.labelDBName = Qt.QLabel('Database name:', self.layoutTarget, 'labelDBName')
+        self.editDBName  = Qt.QLineEdit(self.layoutTarget, 'editDBName')
         #-----------------------#
 
         #--- Selection Objects ---#
-        self.groupSelection = qt.QVGroupBox('Selection Object Creation', self, 'groupSelection')
+        self.groupSelection = Qt3Support.Q3VGroupBox('Selection Object Creation', self, 'groupSelection')
         self.layoutDialog.addWidget(self.groupSelection)
 
         # Selection details
-        self.layoutDetails = qt.QGrid(2, self.groupSelection, 'layoutDetails')
+        self.layoutDetails = Qt3Support.Q3Grid(2, self.groupSelection, 'layoutDetails')
         self.layoutDetails.setSpacing(5)
 
         # Database Node
-        self.labelNode = qt.QLabel('Node: ', self.layoutDetails, 'labelNode')
-        self.choseNode = qt.QComboBox(self.layoutDetails, 'choseNode')
-        self.choseNode.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        self.labelNode = Qt.QLabel('Node: ', self.layoutDetails, 'labelNode')
+        self.choseNode = Qt3Support.Q3ComboBox(self.layoutDetails, 'choseNode')
+        self.choseNode.setInsertionPolicy(Qt3Support.Q3ComboBox.NoInsertion)
         self.choseNode.setEditable(True)
         self.choseNode.setAutoCompletion(True)
+        self.choseNode.setAutoResize(True)
 
         # Coordinates (time and tag)
-        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
+        self.timeValidator = guiextras.valKeyValidator(self)
 
-        self.labelSince = qt.QLabel('Since: ', self.layoutDetails, 'labelSince')
-        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutDetails, 'editSince')
+        self.labelSince = Qt.QLabel('Since: ', self.layoutDetails, 'labelSince')
+        self.editSince  = Qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutDetails, 'editSince')
         self.editSince.setValidator(self.timeValidator)
-        self.editSince.setAlignment(qt.Qt.AlignRight)
+        self.editSince.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelUntil = qt.QLabel('Until: ', self.layoutDetails, 'labelUntil')
-        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutDetails, 'editUntil')
+        self.labelUntil = Qt.QLabel('Until: ', self.layoutDetails, 'labelUntil')
+        self.editUntil  = Qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutDetails, 'editUntil')
         self.editUntil.setValidator(self.timeValidator)
-        self.editUntil.setAlignment(qt.Qt.AlignRight)
+        self.editUntil.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelTag  = qt.QLabel('Tag Name: ', self.layoutDetails, 'labelTag')
-        self.choseTag  = qt.QListBox(self.layoutDetails, 'choseTag')
-        self.choseTag.setSelectionMode(qt.QListBox.Extended)
+        self.labelTag  = Qt.QLabel('Tag Name: ', self.layoutDetails, 'labelTag')
+        self.choseTag  = Qt3Support.Q3ListBox(self.layoutDetails, 'choseTag')
+        self.choseTag.setSelectionMode(Qt3Support.Q3ListBox.Extended)
         #--------------------------------#
 
         #--- Condition Objects Stack ---#
-        self.layoutStack = qt.QHBox(self, 'layoutStack')
+        self.layoutStack = Qt3Support.Q3HBox(self, 'layoutStack')
         self.layoutDialog.addWidget(self.layoutStack)
 
         # Stack table
-        self.groupStack = qt.QHGroupBox('Selection Objects List', self.layoutStack, 'groupStack')
+        self.groupStack = Qt3Support.Q3HGroupBox('Selection Objects List', self.layoutStack, 'groupStack')
 
-        self.tableSelectObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
+        self.tableSelectObjects = Qt3Support.Q3Table(0, 0, self.groupStack, 'tableCondObjects')
         self.columnLabels = [('path', 'Path'), ('tag', 'Tag Name'), ('since', 'Since'), ('until', 'Until')]
         for col in self.columnLabels:
             i = self.tableSelectObjects.numCols()
@@ -103,24 +102,24 @@ class slicingDialog(qt.QDialog):
         #-------------------------------#
 
         #--- Exit buttons ---#
-        self.layoutExit = qt.QHBox(self, 'layoutExit')
+        self.layoutExit = Qt3Support.Q3HBox(self, 'layoutExit')
         self.layoutDialog.addWidget(self.layoutExit)
 
-        self.buttonCopy   = qt.QPushButton('Copy', self.layoutExit, 'buttonCopy')
-        self.buttonAppend = qt.QPushButton('Append', self.layoutExit, 'buttonAppend')
-        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
+        self.buttonCopy   = Qt.QPushButton('Copy', self.layoutExit, 'buttonCopy')
+        self.buttonAppend = Qt.QPushButton('Append', self.layoutExit, 'buttonAppend')
+        self.buttonCancel = Qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
         #--------------------#
 
         #--- Signals connection ---#
-        self.connect(self.buttonCancel,        qt.SIGNAL("clicked()"), self.cancel)
-        self.connect(self.buttonCopy,          qt.SIGNAL("clicked()"), self.acceptCopy)
-        self.connect(self.buttonAppend,        qt.SIGNAL("clicked()"), self.acceptAppend)
-        self.connect(self.choseNode,           qt.SIGNAL("textChanged(const QString &)"), self.loadTags)
-        self.connect(self.buttonSchema,        qt.SIGNAL("clicked()"), self.schemaSelect)
-        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.addObject)
-        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.removeObject)
-        self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
-        self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
+        self.connect(self.buttonCancel,        Qt.SIGNAL("clicked()"), self.cancel)
+        self.connect(self.buttonCopy,          Qt.SIGNAL("clicked()"), self.acceptCopy)
+        self.connect(self.buttonAppend,        Qt.SIGNAL("clicked()"), self.acceptAppend)
+        self.connect(self.choseNode,           Qt.SIGNAL("textChanged(const QString &)"), self.loadTags)
+        self.connect(self.buttonSchema,        Qt.SIGNAL("clicked()"), self.schemaSelect)
+        self.connect(self.movePad.buttonLeft,  Qt.SIGNAL("clicked()"), self.addObject)
+        self.connect(self.movePad.buttonRight, Qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonUp,    Qt.SIGNAL("clicked()"), self.moveObjectUp)
+        self.connect(self.movePad.buttonDown,  Qt.SIGNAL("clicked()"), self.moveObjectDown)
         #--------------------------#
 
 
@@ -144,9 +143,9 @@ class slicingDialog(qt.QDialog):
         Load all the nodes in the choseNode combo box
         '''
         nodeList = self.parent().bridge.getAllNodes()
-        self.choseNode.insertStringList(qt.QStringList.fromStrList(nodeList))
+        self.choseNode.insertStringList(nodeList)
         self.choseNode.setCurrentItem(0)
-        self.choseNode.emit(qt.SIGNAL("textChanged"), (self.choseNode.currentText(),))
+        self.choseNode.emit(Qt.SIGNAL("textChanged"), (self.choseNode.currentText(),))
 
     def loadTags(self, nodeName):
         '''
@@ -177,11 +176,10 @@ class slicingDialog(qt.QDialog):
         '''
         set the schema name using the file dialog.
         '''
-        fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
-        fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
-
-        if fileDialogSchema.exec_loop():
-            self.editSchema.setText(fileDialogSchema.selectedFile())
+        fileDialogSchema = Qt.QFileDialog(self, "Select SQLite file")
+        fileDialogSchema.setFileMode(Qt.QFileDialog.AnyFile)
+        if fileDialogSchema.exec_() and fileDialogSchema.selectedFiles():
+            self.editSchema.setText(fileDialogSchema.selectedFiles()[0])
 
     def reset(self):
         '''
@@ -241,13 +239,13 @@ class slicingDialog(qt.QDialog):
                     if str(item.text()).find('-----') == -1:
                         newObject['tag'].append(str(item.text()))
         except:
-            errorMsg = qt.QMessageBox('CondDBUI',\
+            errorMsg = Qt.QMessageBox('CondDBUI',\
                                       'At least one field is not correct\nPlease give all the necessary information to create a new object.',\
-                                      qt.QMessageBox.Warning,\
-                                      qt.QMessageBox.Ok,\
-                                      qt.QMessageBox.NoButton,\
-                                      qt.QMessageBox.NoButton)
-            errorMsg.exec_loop()
+                                      Qt.QMessageBox.Warning,\
+                                      Qt.QMessageBox.Ok,\
+                                      Qt.QMessageBox.NoButton,\
+                                      Qt.QMessageBox.NoButton)
+            errorMsg.exec_()
         else:
             self.objectList.append(newObject)
             self._fillTable()
@@ -277,7 +275,7 @@ class slicingDialog(qt.QDialog):
 #=============================================#
 #               CREATETAGDIALOG               #
 #=============================================#
-class createTagDialog(qt.QDialog):
+class createTagDialog(Qt.QDialog):
     '''
     This dialog allows to assign a new tag to a conddb node.
     '''
@@ -285,34 +283,34 @@ class createTagDialog(qt.QDialog):
         '''
         initialisation of the dialog window
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         self.selectedTags = []
 
         #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 2)
-        self.layoutChild  = qt.QVBoxLayout(self.layoutDialog)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutDialog = Qt.QVBoxLayout(self)
+        self.layoutEdit   = Qt.QGridLayout(self.layoutDialog, 2, 2)
+        self.layoutChild  = Qt.QVBoxLayout(self.layoutDialog)
+        self.layoutExit   = Qt.QHBoxLayout(self.layoutDialog)
 
         #--- Folder ---#
-        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
-        self.editNode  = qt.QLineEdit(self, 'editNode')
+        self.labelNode = Qt.QLabel('Node Name:', self, 'labelNode')
+        self.editNode  = Qt.QLineEdit(self, 'editNode')
         self.editNode.setReadOnly(True)
 
         #--- Tag ---#
-        self.labelTag = qt.QLabel('Tag Name:', self, 'labelTag')
-        self.editTag  = qt.QLineEdit(self, 'editTag')
+        self.labelTag = Qt.QLabel('Tag Name:', self, 'labelTag')
+        self.editTag  = Qt.QLineEdit(self, 'editTag')
 
         #--- Child Table ---#
-        self.labelChild = qt.QLabel('Child Nodes version selection table:', self, 'labelChild')
-        self.tableChild = qttable.QTable(0, 2, self, 'tableChild')
-        self.tableChild.setColumnLabels(qt.QStringList.fromStrList(['Node Path', 'Tag Name']))
+        self.labelChild = Qt.QLabel('Child Nodes version selection table:', self, 'labelChild')
+        self.tableChild = Qt3Support.Q3Table(0, 2, self, 'tableChild')
+        self.tableChild.setColumnLabels(['Node Path', 'Tag Name'])
         self.tableChild.setColumnReadOnly(0, True)
 
         #--- Exit ---#
-        self.buttonOK     = qt.QPushButton('Create', self, 'buttonOK')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.buttonOK     = Qt.QPushButton('Create', self, 'buttonOK')
+        self.buttonCancel = Qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
         self.layoutEdit.addWidget(self.labelNode, 0, 0)
@@ -325,8 +323,8 @@ class createTagDialog(qt.QDialog):
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- signal connections ---#
-        self.connect(self.buttonOK,     qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonOK,     Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.reject)
 
 
     def fillTable(self):
@@ -345,10 +343,10 @@ class createTagDialog(qt.QDialog):
             for i in range(len(childList)):
                 child = childList[i]
                 self.tableChild.setText(i, 0, child)
-                tagList = qt.QStringList()
+                tagList = Qt.QStringList()
                 for tag in bridge.getTagList(child):
                     tagList.append(tag.name)
-                comboItem = qttable.QComboTableItem(self.tableChild, tagList)
+                comboItem = Qt3Support.Q3ComboTableItem(self.tableChild, tagList)
                 self.tableChild.setItem(i, 1, comboItem)
 
     def reset(self):
@@ -364,17 +362,17 @@ class createTagDialog(qt.QDialog):
         for i in range(self.tableChild.numRows()):
             tagInfo = [str(self.tableChild.text(i,0)), str(self.tableChild.item(i,1).currentText())]
             self.selectedTags.append(tagInfo)
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
     def reject(self):
         self.reset()
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 
 #=============================================#
 #               DELETETAGDIALOG               #
 #=============================================#
-class deleteTagDialog(qt.QDialog):
+class deleteTagDialog(Qt.QDialog):
     '''
     This dialog allows to delete a tag associated with
     a node.
@@ -383,25 +381,26 @@ class deleteTagDialog(qt.QDialog):
         '''
         initialisation of the dialog window
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 2)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutDialog = Qt.QVBoxLayout(self)
+        self.layoutEdit   = Qt.QGridLayout(self.layoutDialog, 2, 2)
+        self.layoutExit   = Qt.QHBoxLayout(self.layoutDialog)
 
         #--- Node ---#
-        self.labelNode = qt.QLabel('Node Name:', self, 'labelNode')
-        self.editNode  = qt.QLineEdit(self, 'editNode')
+        self.labelNode = Qt.QLabel('Node Name:', self, 'labelNode')
+        self.editNode  = Qt.QLineEdit(self, 'editNode')
         self.editNode.setReadOnly(True)
 
         #--- Tag ---#
-        self.labelTag = qt.QLabel('Tag Name:', self, 'labelTag')
-        self.choseTag = qt.QComboBox(self, 'choseTag')
+        self.labelTag = Qt.QLabel('Tag Name:', self, 'labelTag')
+        self.choseTag = Qt3Support.Q3ComboBox(self, 'choseTag')
+        self.choseTag.setAutoResize(True)
 
         #--- Exit ---#
-        self.buttonOK     = qt.QPushButton('OK', self, 'buttonOK')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.buttonOK     = Qt.QPushButton('OK', self, 'buttonOK')
+        self.buttonCancel = Qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
         self.layoutEdit.addWidget(self.labelNode, 0, 0)
@@ -412,8 +411,8 @@ class deleteTagDialog(qt.QDialog):
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- signal connections ---#
-        self.connect(self.buttonOK,       qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel,   qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonOK,       Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel,   Qt.SIGNAL("clicked()"), self.reject)
 
     def reloadTags(self):
         '''
@@ -432,18 +431,18 @@ class deleteTagDialog(qt.QDialog):
                     self.choseTag.insertItem(tag.name)
 
     def accept(self):
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
     def reject(self):
         self.editNode.setText('')
         self.choseTag.clear()
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 
 #=============================================#
 #               CREATENODEDIALOG              #
 #=============================================#
-class createNodeDialog(qt.QDialog):
+class createNodeDialog(Qt.QDialog):
     '''
     This dialog allows to create a new folder or a new folderset in the database
     '''
@@ -451,7 +450,7 @@ class createNodeDialog(qt.QDialog):
         '''
         initialisation of the dialog window.
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         self.nodeName   = ''
         self.is_folderset = False
@@ -461,54 +460,54 @@ class createNodeDialog(qt.QDialog):
         self.storageKeys = []
 
         #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
+        self.layoutDialog = Qt.QVBoxLayout(self)
 
         #--- Node info ---#
-        self.groupInfo = qt.QHGroupBox('Node Info', self)
+        self.groupInfo = Qt3Support.Q3HGroupBox('Node Info', self)
         self.layoutDialog.addWidget(self.groupInfo)
 
-        self.layoutInfo = qt.QGrid(2, self.groupInfo)
-        self.labelNode = qt.QLabel('Node Name:', self.layoutInfo, 'labelNode')
-        self.editNode  = qt.QLineEdit(self.layoutInfo, 'editNode')
-        self.labelDescription = qt.QLabel('Description:', self.layoutInfo, 'labelDescription')
-        self.editDescription = qt.QLineEdit(self.layoutInfo, 'editDescription')
+        self.layoutInfo = Qt3Support.Q3Grid(2, self.groupInfo)
+        self.labelNode = Qt.QLabel('Node Name:', self.layoutInfo, 'labelNode')
+        self.editNode  = Qt.QLineEdit(self.layoutInfo, 'editNode')
+        self.labelDescription = Qt.QLabel('Description:', self.layoutInfo, 'labelDescription')
+        self.editDescription = Qt.QLineEdit(self.layoutInfo, 'editDescription')
 
         #--- Storage key ---#
-        self.groupStorage = qt.QVGroupBox('Storage Keys', self)
+        self.groupStorage = Qt3Support.Q3VGroupBox('Storage Keys', self)
         self.layoutDialog.addWidget(self.groupStorage)
 
         # list
-        self.tableKeys = qttable.QTable(1, 1, self.groupStorage)
+        self.tableKeys = Qt3Support.Q3Table(1, 1, self.groupStorage)
         self.tableKeys.horizontalHeader().setLabel(0, 'Key Name')
         self.tableKeys.setText(0, 0, 'data')
 
         # buttons
-        self.layoutButton = qt.QHBox(self.groupStorage)
-        self.buttonAdd = qt.QPushButton('Add', self.layoutButton)
-        self.buttonDel = qt.QPushButton('Del', self.layoutButton)
+        self.layoutButton = Qt3Support.Q3HBox(self.groupStorage)
+        self.buttonAdd = Qt.QPushButton('Add', self.layoutButton)
+        self.buttonDel = Qt.QPushButton('Del', self.layoutButton)
 
         #--- Check boxes ---#
-        self.groupOptions = qt.QVGroupBox('Options', self)
+        self.groupOptions = Qt3Support.Q3VGroupBox('Options', self)
         self.layoutDialog.addWidget(self.groupOptions)
 
-        self.checkFolderset = qt.QCheckBox('Folderset', self.groupOptions, 'checkFolderset')
-        self.checkSingleVersion = qt.QCheckBox('Single Version', self.groupOptions, 'checkSingleVersion')
-        self.checkCreateParents = qt.QCheckBox('Create parents', self.groupOptions, 'checkCreateParents')
+        self.checkFolderset = Qt.QCheckBox('Folderset', self.groupOptions, 'checkFolderset')
+        self.checkSingleVersion = Qt.QCheckBox('Single Version', self.groupOptions, 'checkSingleVersion')
+        self.checkCreateParents = Qt.QCheckBox('Create parents', self.groupOptions, 'checkCreateParents')
         self.checkCreateParents.setChecked(True)
 
 
         #--- Exit buttons ---#
-        self.layoutExit = qt.QHBox(self)
+        self.layoutExit = Qt3Support.Q3HBox(self)
         self.layoutDialog.addWidget(self.layoutExit)
 
-        self.buttonCreate = qt.QPushButton('Create', self.layoutExit, 'buttonCreate')
-        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
+        self.buttonCreate = Qt.QPushButton('Create', self.layoutExit, 'buttonCreate')
+        self.buttonCancel = Qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
 
         #--- Signals connection ---#
-        self.connect(self.buttonAdd,    qt.SIGNAL("clicked()"), self.addKey)
-        self.connect(self.buttonDel,    qt.SIGNAL("clicked()"), self.delKey)
-        self.connect(self.buttonCreate, qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonAdd,    Qt.SIGNAL("clicked()"), self.addKey)
+        self.connect(self.buttonDel,    Qt.SIGNAL("clicked()"), self.delKey)
+        self.connect(self.buttonCreate, Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.reject)
 
 
     def reset(self):
@@ -555,18 +554,18 @@ class createNodeDialog(qt.QDialog):
             text = str(self.tableKeys.text(i, 0))
             if text != '':
                 self.storageKeys.append(text)
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
 
     def reject(self):
         self.reset()
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 
 #=============================================#
 #               DELETENODEDIALOG              #
 #=============================================#
-class deleteNodeDialog(qt.QDialog):
+class deleteNodeDialog(Qt.QDialog):
     '''
     This dialog allows to delete an existing folder or a folderset from the database
     '''
@@ -574,24 +573,24 @@ class deleteNodeDialog(qt.QDialog):
         '''
         initialisation of the dialog window.
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         self.folderName   = ''
 
         #--- Layout ---#
-        self.layoutDialog  = qt.QVBoxLayout(self)
-        self.layoutWarning = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutNode    = qt.QHBoxLayout(self.layoutDialog)
-        self.layoutExit    = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutDialog  = Qt.QVBoxLayout(self)
+        self.layoutWarning = Qt.QHBoxLayout(self.layoutDialog)
+        self.layoutNode    = Qt.QHBoxLayout(self.layoutDialog)
+        self.layoutExit    = Qt.QHBoxLayout(self.layoutDialog)
 
         #--- Folder info ---#
-        self.labelWarning = qt.QLabel('WARNING: removal can not be undone !!', self, 'labelWarning')
-        self.labelNode = qt.QLabel('Node name:', self, 'labelNode')
-        self.editNode  = qt.QLineEdit(self, 'editFolder')
+        self.labelWarning = Qt.QLabel('WARNING: removal can not be undone !!', self, 'labelWarning')
+        self.labelNode = Qt.QLabel('Node name:', self, 'labelNode')
+        self.editNode  = Qt.QLineEdit(self, 'editFolder')
 
         #--- Exit buttons ---#
-        self.buttonDelete = qt.QPushButton('Delete', self, 'buttonDelete')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.buttonDelete = Qt.QPushButton('Delete', self, 'buttonDelete')
+        self.buttonCancel = Qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
         self.layoutWarning.addWidget(self.labelWarning)
@@ -603,8 +602,8 @@ class deleteNodeDialog(qt.QDialog):
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- Signals connection ---#
-        self.connect(self.buttonDelete,     qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel,     qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonDelete,     Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel,     Qt.SIGNAL("clicked()"), self.reject)
 
     def reset(self, defaultNodeName = ''):
         '''
@@ -615,17 +614,17 @@ class deleteNodeDialog(qt.QDialog):
 
     def accept(self):
         self.nodeName = str(self.editNode.text())
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
     def reject(self):
         self.reset()
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 #=============================================#
 #              ADDCONDITIONDIALOG             #
 #=============================================#
 
-class addConditionDialog(qt.QDialog):
+class addConditionDialog(Qt.QDialog):
     '''
     This dialog allows to create a serie of condition objects and add
     them to the selected folder of the CondDB. A condition object "template"
@@ -637,7 +636,7 @@ class addConditionDialog(qt.QDialog):
         '''
         initialisation of the dialog window.
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         # The address of the folder containing the new condition objects
         self.folderName = ''
@@ -650,58 +649,58 @@ class addConditionDialog(qt.QDialog):
         self.xmlEditor = conditionEditorDialog(self, extension = '', externalEditorCmd = externalEditorCmd)
         
         #--- Main Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
+        self.layoutDialog = Qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
         #-------------------#
 
         #--- Condition ObjectLocation ---#
-        self.groupDetails = qt.QHGroupBox('Condition Object Details', self, 'groupDetails')
+        self.groupDetails = Qt3Support.Q3HGroupBox('Condition Object Details', self, 'groupDetails')
         self.layoutDialog.addWidget(self.groupDetails)
 
         # Location in the Database
-        self.groupLocation = qt.QHGroupBox('Location', self.groupDetails, 'groupLocation')
-        self.layoutLocation = qt.QGrid(2, self.groupLocation, 'layoutLocation')
+        self.groupLocation = Qt3Support.Q3HGroupBox('Location', self.groupDetails, 'groupLocation')
+        self.layoutLocation = Qt3Support.Q3Grid(2, self.groupLocation, 'layoutLocation')
         self.layoutLocation.setSpacing(5)
 
-        self.timeValidator = guiextras.valKeyValidator(self, 'timeValidator')
-        self.channelValidator = qt.QIntValidator(self, 'channelValidator')
+        self.timeValidator = guiextras.valKeyValidator(self)
+        self.channelValidator = Qt.QIntValidator(self)
         self.channelValidator.setBottom(0)
 
-        self.labelFolder = qt.QLabel('Folder: ', self.layoutLocation, 'labelFolder')
-        self.editFolder  = qt.QLineEdit(self.layoutLocation, 'editFolder')
+        self.labelFolder = Qt.QLabel('Folder: ', self.layoutLocation, 'labelFolder')
+        self.editFolder  = Qt.QLineEdit(self.layoutLocation, 'editFolder')
         self.editFolder.setReadOnly(True)
 
-        self.labelChannelID = qt.QLabel('ChannelID: ', self.layoutLocation, 'labelChannelID')
-        self.editChannelID  = qt.QLineEdit('0', self.layoutLocation, 'editChannelID')
+        self.labelChannelID = Qt.QLabel('ChannelID: ', self.layoutLocation, 'labelChannelID')
+        self.editChannelID  = Qt.QLineEdit('0', self.layoutLocation, 'editChannelID')
         self.editChannelID.setValidator(self.channelValidator)
-        self.editChannelID.setAlignment(qt.Qt.AlignRight)
+        self.editChannelID.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelSince = qt.QLabel('Since: ', self.layoutLocation, 'labelSince')
-        self.editSince  = qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutLocation, 'editSince')
+        self.labelSince = Qt.QLabel('Since: ', self.layoutLocation, 'labelSince')
+        self.editSince  = Qt.QLineEdit(str(self.timeValidator.valKeyMin), self.layoutLocation, 'editSince')
         self.editSince.setValidator(self.timeValidator)
-        self.editSince.setAlignment(qt.Qt.AlignRight)
+        self.editSince.setAlignment(Qt.Qt.AlignRight)
 
-        self.labelUntil = qt.QLabel('Until: ', self.layoutLocation, 'labelUntil')
-        self.editUntil  = qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutLocation, 'editUntil')
+        self.labelUntil = Qt.QLabel('Until: ', self.layoutLocation, 'labelUntil')
+        self.editUntil  = Qt.QLineEdit(str(self.timeValidator.valKeyMax), self.layoutLocation, 'editUntil')
         self.editUntil.setValidator(self.timeValidator)
-        self.editUntil.setAlignment(qt.Qt.AlignRight)
+        self.editUntil.setAlignment(Qt.Qt.AlignRight)
 
         # Payload list
-        self.groupPayload = qt.QVGroupBox('Payload Keys', self.groupDetails, 'groupPayload')
+        self.groupPayload = Qt3Support.Q3VGroupBox('Payload Keys', self.groupDetails, 'groupPayload')
 
-        self.selectPayload = qt.QListBox(self.groupPayload, 'selectPayload')
-        self.selectPayload.setSelectionMode(qt.QListBox.Extended)
+        self.selectPayload = Qt3Support.Q3ListBox(self.groupPayload, 'selectPayload')
+        self.selectPayload.setSelectionMode(Qt3Support.Q3ListBox.Extended)
 
-        self.buttonEditItem = qt.QPushButton('Edit', self.groupPayload, 'buttonEditItem')
+        self.buttonEditItem = Qt.QPushButton('Edit', self.groupPayload, 'buttonEditItem')
         #--------------------------------#
 
         #--- Condition Objects Stack ---#
-        self.layoutStack = qt.QHBox(self, 'layoutStack')
+        self.layoutStack = Qt3Support.Q3HBox(self, 'layoutStack')
         self.layoutDialog.addWidget(self.layoutStack)
 
         # Stack table
-        self.groupStack = qt.QHGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
+        self.groupStack = Qt3Support.Q3HGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
 
-        self.tableCondObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
+        self.tableCondObjects = Qt3Support.Q3Table(0, 0, self.groupStack, 'tableCondObjects')
         self.columnLabels = [('path', 'Path'), ('channel', 'ChannelID'), ('since', 'Since'), ('until', 'Until')]
         for col in self.columnLabels:
             i = self.tableCondObjects.numCols()
@@ -714,27 +713,27 @@ class addConditionDialog(qt.QDialog):
         #-------------------------------#
 
         #--- Exit buttons ---#
-        self.layoutExit = qt.QHBox(self, 'layoutExit')
+        self.layoutExit = Qt3Support.Q3HBox(self, 'layoutExit')
         self.layoutDialog.addWidget(self.layoutExit)
 
-        self.buttonWrite = qt.QPushButton('Write', self.layoutExit, 'buttonWrite')
-        self.buttonCancel = qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
+        self.buttonWrite = Qt.QPushButton('Write', self.layoutExit, 'buttonWrite')
+        self.buttonCancel = Qt.QPushButton('Cancel', self.layoutExit, 'buttonCancel')
         #--------------------#
 
         #--- Signals connection ---#
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.cancel)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.cancel)
         # Connection to self.buttonWrite "clicked" signal is done in the
         # guiwin.myWindow class.
 
-        self.connect(self.buttonEditItem,   qt.SIGNAL("clicked()"), self.editPayloadKeys)
+        self.connect(self.buttonEditItem,   Qt.SIGNAL("clicked()"), self.editPayloadKeys)
 
-        self.connect(self.tableCondObjects, qt.SIGNAL("currentChanged(int, int)"), self.reloadObject)
-        self.connect(self.tableCondObjects, qt.SIGNAL("selectionChanged()"),       self.reloadObject)
+        self.connect(self.tableCondObjects, Qt.SIGNAL("currentChanged(int, int)"), self.reloadObject)
+        self.connect(self.tableCondObjects, Qt.SIGNAL("selectionChanged()"),       self.reloadObject)
 
-        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.addObject)
-        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.removeObject)
-        self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
-        self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
+        self.connect(self.movePad.buttonLeft,  Qt.SIGNAL("clicked()"), self.addObject)
+        self.connect(self.movePad.buttonRight, Qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonUp,    Qt.SIGNAL("clicked()"), self.moveObjectUp)
+        self.connect(self.movePad.buttonDown,  Qt.SIGNAL("clicked()"), self.moveObjectDown)
         #--------------------------#
 
     def _fillTable(self):
@@ -785,7 +784,7 @@ class addConditionDialog(qt.QDialog):
         if payloadSelected:
             self.xmlEditor.reset()
             self.xmlEditor.setPayload(payloadSelected)
-            if self.xmlEditor.exec_loop():
+            if self.xmlEditor.exec_():
                 payload = self.xmlEditor.getPayload()
                 for k in payload.keys():
                     self.activePayload[k] = payload[k]
@@ -867,13 +866,13 @@ class addConditionDialog(qt.QDialog):
             newObject['path']    = str(self.editFolder.text())
             newObject['payload'] = self.activePayload.copy()
         except:
-            errorMsg = qt.QMessageBox('CondDBUI',\
+            errorMsg = Qt.QMessageBox('CondDBUI',\
                                       'At least one field is not correct\nPlease give all the necessary information to create a new object.',\
-                                      qt.QMessageBox.Warning,\
-                                      qt.QMessageBox.Ok,\
-                                      qt.QMessageBox.NoButton,\
-                                      qt.QMessageBox.NoButton)
-            errorMsg.exec_loop()
+                                      Qt.QMessageBox.Warning,\
+                                      Qt.QMessageBox.Ok,\
+                                      Qt.QMessageBox.NoButton,\
+                                      Qt.QMessageBox.NoButton)
+            errorMsg.exec_()
         else:
             self.objectList.append(newObject)
             self.activeObject = self.objectList[-1]
@@ -915,31 +914,32 @@ class addConditionDialog(qt.QDialog):
 #            CONDITIONEDITORDIALOG            #
 #=============================================#
 
-class conditionEditorDialog(qt.QDialog):
+class conditionEditorDialog(Qt.QDialog):
 
     def __init__(self, parent, name = 'conditionEditorDialog', extension = '', externalEditorCmd = ''):
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
-        self.layoutDialog = qt.QVBoxLayout(self, 0, 10)
+        self.layoutDialog = Qt.QVBoxLayout(self, 0, 10)
 
-        self.tabEditors = qt.QTabWidget(self, 'tabEditors')
+        self.tabEditors = Qt.QTabWidget(self, 'tabEditors')
         self.layoutDialog.addWidget(self.tabEditors)
 
-        self.layoutButtons = qt.QHBox(self, 'layoutButtons')
+        self.layoutButtons = Qt3Support.Q3HBox(self, 'layoutButtons')
         self.layoutDialog.addWidget(self.layoutButtons)
-        self.buttonOK = qt.QPushButton('OK', self.layoutButtons)
-        self.buttonCancel = qt.QPushButton('Cancel', self.layoutButtons)
+        self.buttonOK = Qt.QPushButton('OK', self.layoutButtons)
+        self.buttonCancel = Qt.QPushButton('Cancel', self.layoutButtons)
 
-        self.connect(self.buttonOK, qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonOK, Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.reject)
         
         self.extension = extension
         self.externalEditorCmd = externalEditorCmd
 
     def reset(self):
         while self.tabEditors.count() > 0:
-            page = self.tabEditors.currentPage()
-            self.tabEditors.removePage(page)
+            i = self.tabEditors.currentIndex()
+            page = self.tabEditors.widget(i)
+            self.tabEditors.removeTab(i)
             del(page)
 
     def setPayload(self, payload):
@@ -955,8 +955,8 @@ class conditionEditorDialog(qt.QDialog):
     def getPayload(self):
         payload = {}
         for i in range(self.tabEditors.count()):
-            page = self.tabEditors.page(i)
-            key = str(self.tabEditors.tabLabel(page))
+            page = self.tabEditors.widget(i)
+            key = str(self.tabEditors.tabText(i))
             payload[key] = str(page.getEditorText())
         return payload
 
@@ -966,7 +966,7 @@ class conditionEditorDialog(qt.QDialog):
 #             CONDDBCONNECTDIALOG             #
 #=============================================#
 
-class condDBConnectDialog(qt.QDialog):
+class condDBConnectDialog(Qt.QDialog):
     '''
     This dialog allows to chose the DBLookup alias and database name of
     a CondDB to open. If allowed, the user can also chose the access mode.
@@ -975,44 +975,45 @@ class condDBConnectDialog(qt.QDialog):
         '''
         Initialisation of the dialog window
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         # The string used to connect to the condDB
         self.connectString = ''
 
         #--- Layout ---#
-        self.layoutDialog = qt.QGridLayout(self, 3, 3, 5, -1, 'layoutDialog')
+        self.layoutDialog = Qt.QGridLayout(self, 3, 3, 5, -1, 'layoutDialog')
 
         #--- dbLookup aliases ---#
-        self.labelAlias = qt.QLabel('DBLookup Alias: ', self, 'labelAlias')
-        self.choseAlias = qt.QComboBox(self, 'choseAlias')
+        self.labelAlias = Qt.QLabel('DBLookup Alias: ', self, 'labelAlias')
+        self.choseAlias = Qt3Support.Q3ComboBox(self, 'choseAlias')
         self.choseAlias.setEditable(True)
         self.choseAlias.setAutoCompletion(True)
-        self.choseAlias.setInsertionPolicy(qt.QComboBox.NoInsertion)
+        self.choseAlias.setInsertionPolicy(Qt3Support.Q3ComboBox.NoInsertion)
+        self.choseAlias.setAutoResize(True)
 
         self.aliasDict = guiextras.readDBLookup()
-        self.choseAlias.insertStringList(qt.QStringList.fromStrList(self.aliasDict.keys()))
-        self.choseAlias.listBox().sort(True)
+        self.choseAlias.insertStringList(self.aliasDict.keys())
+        #self.choseAlias.listBox().sort(True)
         self.choseAlias.insertItem('SQLite file')
 
         #--- Database Name ---#
-        self.labelDBName = qt.QLabel('Database Name: ', self, 'labelDBName')
-        self.editDBName  = qt.QLineEdit(self, 'editDBName')
-        #self.choseDBName = qt.QComboBox(self, 'editDBName')
+        self.labelDBName = Qt.QLabel('Database Name: ', self, 'labelDBName')
+        self.editDBName  = Qt.QLineEdit(self, 'editDBName')
+        #self.choseDBName = Qt3Support.Q3ComboBox(self, 'editDBName')
         #self.choseDBName.setEditable(True)
         #self.choseDBName.setAutoCompletion(True)
 
         #--- Action Buttons ---#
         # Display locked/unlocked status of the database
-        self.buttonLocked   = qt.QPushButton('Read Only',   self, 'buttonLocked')
-        self.buttonLocked.setToggleButton(True)
-        self.buttonLocked.setOn(True)
+        self.buttonLocked = Qt.QPushButton('Read Only', self, 'buttonLocked')
+        self.buttonLocked.setCheckable(True)
+        self.buttonLocked.setChecked(True)
         self.buttonLocked.setFlat(True)
         # connect to the DB and exit
-        self.buttonOpenDB = qt.QPushButton('Open DB', self, 'buttonOpenDB')
+        self.buttonOpenDB = Qt.QPushButton('Open DB', self, 'buttonOpenDB')
         # exit whithout doing anything
-        self.buttonCancel = qt.QPushButton('Cancel',  self, 'buttonCancel')
-        self.layoutButton = qt.QHBoxLayout()
+        self.buttonCancel = Qt.QPushButton('Cancel',  self, 'buttonCancel')
+        self.layoutButton = Qt.QHBoxLayout()
 
         #--- Dialog Layout ---#
         self.layoutDialog.addWidget(self.labelAlias, 0, 0)
@@ -1023,20 +1024,20 @@ class condDBConnectDialog(qt.QDialog):
         self.layoutDialog.addWidget(self.editDBName,  1, 1)
         #self.layoutDialog.addWidget(self.choseDBName,  1, 1)
 
-        self.layoutDialog.addMultiCellLayout(self.layoutButton, 2, 2, 0, 2)
+        self.layoutDialog.addItem(self.layoutButton, 2, 0, 2, 2)
         self.layoutButton.addWidget(self.buttonOpenDB)
         self.layoutButton.addWidget(self.buttonCancel)
 
         #--- Signals and slots connections ---#
-        self.connect(self.choseAlias, qt.SIGNAL("activated(const QString &)"), self.aliasChanged)
-        self.connect(self.buttonLocked, qt.SIGNAL("stateChanged(int)"), self.lockStatusChanged)
-        self.connect(self.buttonOpenDB, qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.choseAlias, Qt.SIGNAL("activated(const QString &)"), self.aliasChanged)
+        self.connect(self.buttonLocked, Qt.SIGNAL("toggled(bool)"), self.lockStatusChanged)
+        self.connect(self.buttonOpenDB, Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.reject)
 
         #--- Initialise the session ---#
         # load the first of the saved sessions
         #self.choseAlias.setCurrentItem(0)
-        #self.choseAlias.emit(qt.SIGNAL("activated"),(self.choseAlias.currentText(),))
+        #self.choseAlias.emit(Qt.SIGNAL("activated"),(self.choseAlias.currentText(),))
 
     def aliasChanged(self, newAliasName):
         '''
@@ -1045,25 +1046,30 @@ class condDBConnectDialog(qt.QDialog):
         '''
         # As the alias can be edited by the user, one need to check if it already
         # exists or not.
-        if self.choseAlias.listBox().findItem(newAliasName, qt.Qt.ExactMatch):
+        found = False
+        for i in range(self.choseAlias.count()):
+            if self.choseAlias.text(i) == newAliasName:
+                found = True
+                break
+        if found:
             alias = str(newAliasName)
-            self.buttonLocked.setOn(True)
+            self.buttonLocked.setChecked(True)
             if alias == 'SQLite file':
                 self.buttonLocked.setDisabled(False)
-                fileDialog = qt.QFileDialog(self, 'fileDialog', True)
-                if fileDialog.exec_loop():
-                    self.choseAlias.setCurrentText(fileDialog.selectedFile())
+                filename = Qt.QFileDialog.getOpenFileName(self)
+                if filename:
+                    self.choseAlias.setCurrentText(filename)
             else:
                 if self.aliasDict[alias] != 'update':
                     self.buttonLocked.setDisabled(True)
                 else:
                     self.buttonLocked.setDisabled(False)
 
-    def lockStatusChanged(self, status):
+    def lockStatusChanged(self, checked):
         '''
         Change the lock button display when its status is modified
         '''
-        if status == qt.QButton.On:
+        if checked:
             self.buttonLocked.setText('Read Only')
         else:
             self.buttonLocked.setText('Read/Write')
@@ -1081,20 +1087,20 @@ class condDBConnectDialog(qt.QDialog):
             self.connectString = 'sqlite_file:%s/%s'%(alias, dbname)
         else:
             self.connectString = '%s/%s'%(alias, dbname)
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
     def reject(self):
         '''
         Dialog cancelation function.
         '''
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 
 #=============================================#
 #              CREATECONDDBDIALOG             #
 #=============================================#
 
-class createCondDBDialog(qt.QDialog):
+class createCondDBDialog(Qt.QDialog):
     '''
     Dialog allowing to select the filename and database name
     of a new CondDB with SQLite backend.
@@ -1103,30 +1109,28 @@ class createCondDBDialog(qt.QDialog):
         '''
         initialisation of the dialog window
         '''
-        qt.QDialog.__init__(self, parent, name)
+        Qt.QDialog.__init__(self, parent, name)
 
         self.connectionString = ''
 
         #--- Layout ---#
-        self.layoutDialog = qt.QVBoxLayout(self)
-        self.layoutEdit   = qt.QGridLayout(self.layoutDialog, 2, 3)
-        self.layoutExit   = qt.QHBoxLayout(self.layoutDialog)
+        self.layoutDialog = Qt.QVBoxLayout(self)
+        self.layoutEdit   = Qt.QGridLayout(self.layoutDialog, 2, 3)
+        self.layoutExit   = Qt.QHBoxLayout(self.layoutDialog)
 
         #--- file name ---#
-        self.labelSchema  = qt.QLabel('SQLite file name:', self, 'labelSchema')
-        self.editSchema   = qt.QLineEdit(self, 'editSchema')
-        self.buttonSchema = qt.QPushButton('...', self, 'buttonSchema')
+        self.labelSchema  = Qt.QLabel('SQLite file name:', self, 'labelSchema')
+        self.editSchema   = Qt.QLineEdit(self, 'editSchema')
+        self.buttonSchema = Qt.QPushButton('...', self, 'buttonSchema')
         self.buttonSchema.setMaximumWidth(30)
-        self.fileDialogSchema = qt.QFileDialog(self, 'fileDialogSchema', True)
-        self.fileDialogSchema.setMode(qt.QFileDialog.AnyFile)
 
         #--- Database Name ---#
-        self.labelDBName = qt.QLabel('Database name:', self, 'labelDBName')
-        self.editDBName  = qt.QLineEdit(self, 'editDBName')
+        self.labelDBName = Qt.QLabel('Database name:', self, 'labelDBName')
+        self.editDBName  = Qt.QLineEdit(self, 'editDBName')
 
         #--- Exit ---#
-        self.buttonOK     = qt.QPushButton('OK', self, 'buttonOK')
-        self.buttonCancel = qt.QPushButton('Cancel', self, 'buttonCancel')
+        self.buttonOK     = Qt.QPushButton('OK', self, 'buttonOK')
+        self.buttonCancel = Qt.QPushButton('Cancel', self, 'buttonCancel')
 
         #--- Dialog Window Layout ---#
         self.layoutEdit.addWidget(self.labelSchema,  0, 0)
@@ -1138,16 +1142,18 @@ class createCondDBDialog(qt.QDialog):
         self.layoutExit.addWidget(self.buttonCancel)
 
         #--- signal connections ---#
-        self.connect(self.buttonSchema, qt.SIGNAL("clicked()"), self.schemaSelect)
-        self.connect(self.buttonOK,     qt.SIGNAL("clicked()"), self.accept)
-        self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        self.connect(self.buttonSchema, Qt.SIGNAL("clicked()"), self.schemaSelect)
+        self.connect(self.buttonOK,     Qt.SIGNAL("clicked()"), self.accept)
+        self.connect(self.buttonCancel, Qt.SIGNAL("clicked()"), self.reject)
 
     def schemaSelect(self):
         '''
         set the schema name using the file dialog.
         '''
-        if self.fileDialogSchema.exec_loop():
-            self.editSchema.setText(self.fileDialogSchema.selectedFile())
+        fileDialogSchema = Qt.QFileDialog(self, "Select SQLite file")
+        fileDialogSchema.setFileMode(Qt.QFileDialog.AnyFile)
+        if fileDialogSchema.exec_() and fileDialogSchema.selectedFiles():
+            self.editSchema.setText(fileDialogSchema.selectedFiles()[0])
 
     def accept(self):
         '''
@@ -1156,7 +1162,7 @@ class createCondDBDialog(qt.QDialog):
         self.connectionString = 'sqlite_file:%s/%s'%(str(self.editSchema.text()), str(self.editDBName.text()))
         self.editSchema.setText('')
         self.editDBName.setText('')
-        return qt.QDialog.accept(self)
+        return Qt.QDialog.accept(self)
 
     def reject(self):
         '''
@@ -1165,6 +1171,6 @@ class createCondDBDialog(qt.QDialog):
         self.connectionString = ''
         self.editSchema.setText('')
         self.editDBName.setText('')
-        return qt.QDialog.reject(self)
+        return Qt.QDialog.reject(self)
 
 #================================================#
