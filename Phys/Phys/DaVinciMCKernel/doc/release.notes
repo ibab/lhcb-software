@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.88 2009-05-10 20:35:35 gligorov Exp $
+! $Id: release.notes,v 1.89 2009-05-22 12:51:35 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-05-22 - Marco Cattaneo
+ - Fixed a gcc43 compilation warning in Particle2MCLinker.icpp, algMgr now
+   accessed via a SmartIF 
 
 ! 2009-05-10 - V. Gligorov
  - Added two new categories to IBackgroundCategory.h and updated

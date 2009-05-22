@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.icpp,v 1.7 2009-03-17 12:44:47 cattanem Exp $
+// $Id: Particle2MCLinker.icpp,v 1.8 2009-05-22 12:51:35 cattanem Exp $
 // Include files 
 
 
@@ -64,13 +64,12 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
     NULL != m_myGaudiAlg? m_myGaudiAlg->Error("No alg type given") : 
     NULL != m_myGaudiTool? m_myGaudiTool->Error("No alg type given"): 
     StatusCode::FAILURE;
-  IAlgManager* algMgr = NULL;
-  StatusCode sc = m_svcLoc->getService( "" , IAlgManager::interfaceID() , 
-                                        (IInterface*&) algMgr );
-  if( sc.isFailure() || NULL == algMgr) { return
-    NULL != m_myGaudiAlg? m_myGaudiAlg->Error("Could not locate IAlgManager ", sc ) :
-    NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not locate IAlgManager ", sc ) :
-    sc;}
+
+  SmartIF<IAlgManager> algMgr( m_svcLoc );
+  if( !algMgr.isValid() ) return
+    NULL != m_myGaudiAlg? m_myGaudiAlg->Error("Could not locate IAlgManager " ) :
+    NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not locate IAlgManager " ) :
+    StatusCode::FAILURE;
   // check the existence of the algorithm
   typedef std::list<IAlgorithm*> Algs;
   const Algs& algs = algMgr->getAlgorithms() ;
@@ -85,7 +84,7 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
     return setAlgInputData( alg, inputData) ; 
   }
   // algorithm is noT found: try to create it! 
-  sc = algMgr->createAlgorithm( algType , algName , alg );
+  StatusCode sc = algMgr->createAlgorithm( algType , algName , alg );
   //
 
   if( sc.isFailure()   ) { return
