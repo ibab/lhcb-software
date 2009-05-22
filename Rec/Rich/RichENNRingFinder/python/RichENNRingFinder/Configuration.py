@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2009-05-22 15:33:23 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2009-05-22 20:11:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -21,8 +21,8 @@ class RichENNRingFinderConf(RichConfigurableUser):
     __slots__ = {
         "Context"             :    "Offline"   # The context within which to run
        ,"Panels"              : ["Rich1Top","Rich1Bottom","Rich2Left","Rich2Right"]
-       ,"MaxHitsInPanel"      : 300
-       ,"MaxHitsInHPD"        : 30
+       ,"MaxHitsInPanel"      : 500
+       ,"MaxHitsInHPD"        : 100
        ,"AssociateToSegments" : True
        ,"Sequencer"           : None # The sequencer to add the RICH MCMC algorithms to
        ,"OutputLevel"         : INFO
