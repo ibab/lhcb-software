@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-05-22 - Marco Cattaneo
+ - Update reference for addition of Rich track efficiency monitoring
+
 ! 2009-05-18 - Marco Cattaneo
  - Update reference for:
    . Change in ST Monitors names
