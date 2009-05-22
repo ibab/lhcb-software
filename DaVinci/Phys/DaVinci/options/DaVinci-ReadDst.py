@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-ReadDst.py,v 1.5 2009-05-20 14:18:08 pkoppenb Exp $
+# $Id: DaVinci-ReadDst.py,v 1.6 2009-05-22 15:30:46 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -16,8 +16,7 @@ from Configurables import DaVinci
 #
 from Configurables import PrintDecayTree, PrintHeader
 pJpsi = PrintDecayTree('PrintJpsi')
-pJpsi.InputLocations = [ "Jpsi_3050_3150", "Jpsi_2600_3200", "Jpsi_3000_3500"  ]
-# pJpsi.OutputLevel = 1
+pJpsi.InputLocations = [ "MyJpsi"  ]
 #
 ph = PrintHeader()
 ##############################################################################
@@ -29,13 +28,5 @@ importOptions("$STRIPPINGSELECTIONSROOT/options/Stripping.py")
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "2008" # Default is "DC06"
-DaVinci().Input = [ "DATAFILE='PFN:Jpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:Jpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:Jpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-                    ]
+DaVinci().Input = [ "DATAFILE='PFN:Jpsi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 DaVinci().UserAlgorithms = [  ph, pJpsi ]
-##############################################################################
-#
-# Test as much stuff as possible
-#
-DaVinci().HltType = 'Hlt1+Hlt2'
