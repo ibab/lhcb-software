@@ -1,6 +1,19 @@
 
-#ifndef _ENNRingFinder_
-#define _ENNRingFinder_
+//-----------------------------------------------------------------------------
+/** @file ENNRingFinder.h
+ *
+ *  Header file for ENN ring finder
+ *
+ *  CVS Log :-
+ *  $Id: ENNRingFinder.h,v 1.6 2009-05-22 21:56:41 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   22/05/2009
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef RichENNRingFinder_ENNRingFinder_H
+#define RichENNRingFinder_ENNRingFinder_H 1
 
 #include <vector>
 #include <ostream>
@@ -32,7 +45,7 @@ namespace Rich
         //-----------------------------------------------------------------------
         /** @class Hit ENNRingFinder.h
          *
-         * Ultitliy Hit class for ring finder
+         * Ultility Hit class for ring finder
          */
         //-----------------------------------------------------------------------
         class Hit
@@ -162,4 +175,4 @@ namespace Rich
   }
 }
 
-#endif
+#endif // RichENNRingFinder_ENNRingFinder_H

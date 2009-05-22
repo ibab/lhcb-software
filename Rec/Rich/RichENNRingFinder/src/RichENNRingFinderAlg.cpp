@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.4 2009-05-22 21:38:59 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.5 2009-05-22 21:53:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
