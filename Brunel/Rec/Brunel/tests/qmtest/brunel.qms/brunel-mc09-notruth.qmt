@@ -13,7 +13,8 @@
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
   LineSkipper(["AfterMagnetRegion/T/lvT"]) + \
-  LineSkipper(["BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection"])
+  LineSkipper(["BeforeMagnetRegion/Velo/RFFoil/lvRFDownStreamSection"]) +\
+  LineSkipper(["BeforeMagnetRegion/Velo/PipeSections/lvVeloPipe"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
