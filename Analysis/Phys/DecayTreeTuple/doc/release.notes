@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Patrick Koppenburg
+ - MCTupleToolMCTruth.cpp : add oscillation flag
+
 ! 2009-05-15 - Rob Lambert
  - TupleToolMCInteractions : Fixed bug which was causing warnings.
 		bug caused by new genHeader() entries being unsigned ints, and

@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.cpp,v 1.3 2009-05-14 12:52:39 pkoppenb Exp $
+// $Id: MCTupleToolMCTruth.cpp,v 1.4 2009-05-22 15:17:29 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -69,13 +69,14 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
   
   bool test = true;
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill " << head << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolMCTruth::fill " << head << endmsg ;
 
   int mcPid = 0;
   double mcTau = -1;
   
   Gaudi::XYZVector endVertex, originVertex;
   Gaudi::LorentzVector trueP; 
+  bool hasOsc = false ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill mcp " << mcp << endmsg ;
   // pointer is ready, prepare the values:
@@ -97,6 +98,8 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
         // copied from DecayChainNTuple // 
         mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
         mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
+        hasOsc = mcp->hasOscillated() ;
+        if (msgLevel(MSG::DEBUG)) debug() << head << " " << mcPid << " time " << mcTau << " oscil" << hasOsc << endmsg ;
       }
     }  
   }
@@ -115,8 +118,10 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
       test &= tuple->column( head + "_TRUEENDVERTEX_", endVertex );
     }
     
-    if( m_storePT )
+    if( m_storePT ){
       test &= tuple->column( head + "_TRUETAU", mcTau );
+      test &= tuple->column( head + "_OSCIL", hasOsc );
+    }
   }
   
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill bye " << head << endmsg ;
