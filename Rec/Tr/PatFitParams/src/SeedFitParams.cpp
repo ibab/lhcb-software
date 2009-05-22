@@ -1,4 +1,4 @@
-// $Id: SeedFitParams.cpp,v 1.2 2008-06-29 21:54:49 mschille Exp $
+// $Id: SeedFitParams.cpp,v 1.3 2009-05-22 07:14:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -169,9 +169,9 @@ StatusCode SeedFitParams::execute() {
                          part->key(), vOrigin->position().z(), momentum/1000,
                          trackInfo.hasVelo( part ),
                          trackInfo.hasTT( part ),
-                         trackInfo.hasT( part )  ) << endreq;
+                         trackInfo.hasT( part )  ) << endmsg;
       for ( std::vector<Gaudi::XYZPoint>::iterator itP = trHits.begin(); trHits.end() != itP ; ++itP ) {
-        debug() << format( "  x%8.2f y%8.2f z%8.2f ", (*itP).x(), (*itP).y(), (*itP).z() ) << endreq;
+        debug() << format( "  x%8.2f y%8.2f z%8.2f ", (*itP).x(), (*itP).y(), (*itP).z() ) << endmsg;
       }
     }
 
@@ -197,7 +197,7 @@ StatusCode SeedFitParams::execute() {
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << format( "p %7.3f, N%4d, ax%8.2f bx%8.2f cx%8.2f dp%10.4f",
                          momentum/1000., trHits.size(),
-                         ax, 1.e3*bx, 1.e6*cx, dp ) << endreq;
+                         ax, 1.e3*bx, 1.e6*cx, dp ) << endmsg;
     }    
 
     // work out intercept point of line joining T1 and T3 with z = 0
@@ -297,9 +297,9 @@ StatusCode SeedFitParams::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   MsgStream& msg = info();
-  msg << "============================================" << endreq;
-  msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endreq;
-  msg << "============================================" << endreq;
+  msg << "============================================" << endmsg;
+  msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endmsg;
+  msg << "============================================" << endmsg;
   m_initialArrowPar.updateParameters( msg );
   m_momentumScalePar.updateParameters(  msg );
   m_zMagPar.updateParameters(  msg );

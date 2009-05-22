@@ -1,4 +1,4 @@
-// $Id: PatCalibV0.h,v 1.2 2008-11-06 14:14:04 cattanem Exp $
+// $Id: PatCalibV0.h,v 1.3 2009-05-22 07:14:54 cattanem Exp $
 #ifndef PATCALIBKSHORT_H
 #define PATCALIBKSHORT_H 1
 
@@ -413,7 +413,7 @@ std::cout <<std::endl;}
     double test1=(zX1-m_zKsMin) * (zX1-m_zRefRich1);
     double test2=(zX2-m_zKsMin) * (zX2-m_zRefRich1);
 
-    debug() << "      zX1 " << zX1 << " zX2 " << zX2 << " test1 " << test1 << " test2 " << test2 << endreq;
+    debug() << "      zX1 " << zX1 << " zX2 " << zX2 << " test1 " << test1 << " test2 " << test2 << endmsg;
 
     if( test1 > 0 && test2 > 0)return StatusCode::FAILURE;
 
@@ -427,7 +427,7 @@ std::cout <<std::endl;}
     }
     m_xV0Vtx = pos.x( m_zV0Vtx );
     m_yV0VTx = .5 * ( pos.y( m_zV0Vtx ) + neg.y( m_zV0Vtx ) );
-    debug() << "     Found vertex z " << m_zV0Vtx << " x " << m_xV0Vtx << " y "<< m_yV0VTx << endreq;
+    debug() << "     Found vertex z " << m_zV0Vtx << " x " << m_xV0Vtx << " y "<< m_yV0VTx << endmsg;
     return StatusCode::SUCCESS;
   }
   //-------------------------------------------------------------------------------

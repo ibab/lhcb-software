@@ -1,4 +1,4 @@
-// $Id: FwdParameters.cpp,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
+// $Id: FwdParameters.cpp,v 1.2 2009-05-22 07:14:54 cattanem Exp $
 // Include files 
 #include <stdio.h> 
 
@@ -71,9 +71,9 @@ bool FwdParameters::updateParameters ( MsgStream& log ) {
 
   if ( 0 == m_nbPar ) { return true; }
 
-  log << MSG::INFO << endreq 
-      << "** " << m_title << "Params **" << endreq 
-      << endreq;
+  log << MSG::INFO << endmsg 
+      << "** " << m_title << "Params **" << endmsg 
+      << endmsg;
 
   // Resolve the relation m_dat = m_mat * change
 
@@ -96,7 +96,7 @@ bool FwdParameters::updateParameters ( MsgStream& log ) {
            (0 == m_mat[im][jm])    ) continue;
 
       log << MSG::VERBOSE << "..Handling line " << im
-          << " column " << jm << endreq;
+          << " column " << jm << endmsg;
       for ( i=0 ; m_nbPar > i ; i++ ) {
         sprintf( line, "%10.3e ", m_dat[i] );
         log << MSG::VERBOSE << "[" << i << "] " << line << " : ";
@@ -104,7 +104,7 @@ bool FwdParameters::updateParameters ( MsgStream& log ) {
           sprintf( line, "%10.3e ", m_mat[i][j] );
           log << line;
         }
-        log << endreq;
+        log << endmsg;
       }
       
       den = m_mat[im][im]*m_mat[jm][jm] - m_mat[im][jm]*m_mat[jm][im];
@@ -130,7 +130,7 @@ bool FwdParameters::updateParameters ( MsgStream& log ) {
           m_mat[im][i] = m_mat[m_nbPar][i];
         }
       } else {
-        log << MSG::WARNING << "*** Singular local matrix ! ***" << endreq;
+        log << MSG::WARNING << "*** Singular local matrix ! ***" << endmsg;
         return false;
       }
     }
@@ -147,7 +147,7 @@ bool FwdParameters::updateParameters ( MsgStream& log ) {
                m_dat[i], 
                m_dat[i]/denom, 
                m_par[i]+m_dat[i] );
-      log << MSG::INFO << line << endreq;
+      log << MSG::INFO << line << endmsg;
       m_par[i] += m_dat[i];
     }
   }

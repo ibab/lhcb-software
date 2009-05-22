@@ -1,4 +1,4 @@
-// $Id: PatCalibV0.cpp,v 1.1 2008-01-10 15:36:43 ocallot Exp $
+// $Id: PatCalibV0.cpp,v 1.2 2009-05-22 07:14:54 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -209,7 +209,7 @@ StatusCode PatCalibV0::execute() {
       strangeDown =  trackInfo.hasT( part ) &&  trackInfo.hasTT( part );
 
       info() << "=== Missed long track > 10 GeV in Forward === Velo Space = "
-      << foundSpace << format( " flags %8x",  trackInfo.fullInfo( part ) )<< endreq;
+      << foundSpace << format( " flags %8x",  trackInfo.fullInfo( part ) )<< endmsg;
       abs( part->particleID().pid() ) != 11 electrons
       if ( 0 != mother->originVertex()->mother() ) {
       if  ( 310 == pid &&
@@ -238,10 +238,10 @@ StatusCode PatCalibV0::execute() {
   bool hasNoVeloPair=false;
 
   LHCb::Tracks* downs  = get<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
-  debug() << "Start from " << downs->size() << " downstream tracks." << endreq;
+  debug() << "Start from " << downs->size() << " downstream tracks." << endmsg;
 
   LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>( LHCb::RecVertexLocation::Velo3D );
-  debug() << "Found " << primaryVertices->size() << " primary vertices" << endreq;
+  debug() << "Found " << primaryVertices->size() << " primary vertices" << endmsg;
   m_nbPrimVtx->fill( (double)(primaryVertices->size()) );
   m_pos.clear();
   m_neg.clear();
@@ -262,10 +262,10 @@ StatusCode PatCalibV0::execute() {
     // check track phase space
     bool skipTrk=checkPhaseSpaceAtOrigin();
     if(skipTrk) {
-      debug() << " ... track " << (*itT)->key() << " not in phase space at origin " << endreq;
+      debug() << " ... track " << (*itT)->key() << " not in phase space at origin " << endmsg;
       debug() << format( "   x%7.2f y%7.2f tx%8.4f ty%8.4f",
                          xCoordFast( 0.), yCoordFast( 0. ),
-                         xSlopeFast( 0. ), ySlopeFast( 0. ) ) << endreq;
+                         xSlopeFast( 0. ), ySlopeFast( 0. ) ) << endmsg;
 
       //      continue;   // not active *for checks*
     }
@@ -355,7 +355,7 @@ StatusCode PatCalibV0::execute() {
         << " with track code "  << trackCode
         << " with parent code " <<temp.parentCode
         << "  and grand parent code " << temp.grandParentCode
-        << endreq;
+        << endmsg;
       */
     } else {
       // negative tracks
@@ -365,7 +365,7 @@ StatusCode PatCalibV0::execute() {
         << " with track code "  << trackCode
         << " with parent code "  <<temp.parentCode
         << "  and grand parent code " << temp.grandParentCode
-        << endreq;
+        << endmsg;
       */
     }
   }  // end loop (LHCb::Tracks::const_iterator itT)
@@ -599,14 +599,14 @@ StatusCode PatCalibV0::execute() {
 
       StatusCode  sc= intersection( m_pos[iPos], m_neg[iNeg] );
       if ( sc.isFailure() ) {
-        debug() << " ... Failure for intersection" << endreq;
+        debug() << " ... Failure for intersection" << endmsg;
         continue;
       }
 
       StatusCode sc1b =improveVTX(  m_pos[iPos], m_neg[iNeg] );
       //       StatusCode sc1b =improveVTX_new(  m_pos[iPos], m_neg[iNeg] );
       if( sc1b.isFailure() ){
-        debug () << " ... failure for improveVtx_new" << endreq;
+        debug () << " ... failure for improveVtx_new" << endmsg;
         continue;
       }
 
@@ -650,7 +650,7 @@ StatusCode PatCalibV0::execute() {
       }
 
       if(m_chiSq  > m_chi2VtxLim ) {
-        debug() << "    .. very bad chiSq " << m_chiSq << endreq;
+        debug() << "    .. very bad chiSq " << m_chiSq << endmsg;
         continue;  // to speed up computing
       }
 
@@ -842,7 +842,7 @@ void PatCalibV0::selectSols(){
 
   std::vector<PatV0Candidate>::iterator itS, itS2;
   if(selectOn) {
-    // info()  << " selectOn Loop " << endreq;
+    // info()  << " selectOn Loop " << endmsg;
     for ( itS = m_solutions.begin(); m_solutions.end() > itS; ++itS ) {
       PatV0Candidate& cand = (*itS);
 
@@ -852,17 +852,17 @@ void PatCalibV0::selectSols(){
         PatV0Candidate& cand2 = (*itS2);
         /*
           info() <<" itS2 pair #"<< ++m<< ", Pos " << cand2.posTrk()->key()<< " Neg " << cand2.negTrk()->key()<<" keep ="
-          << cand2.keep() << " chi2=" <<cand2.chi2() <<endreq;
+          << cand2.keep() << " chi2=" <<cand2.chi2() <<endmsg;
         */
         if ( cand.negTrk() != cand2.negTrk() ) continue;
-        //info()  <<" test neg tracks itS, itS2 = " <<  cand.negTrk()->key()<< " , " <<cand2.negTrk()->key()<<endreq;
+        //info()  <<" test neg tracks itS, itS2 = " <<  cand.negTrk()->key()<< " , " <<cand2.negTrk()->key()<<endmsg;
         if( !cand2.keep() ) continue;
         if( cand.chi2() > cand2.chi2() ){
           cand.setKeep( false );
         } else{
           cand2.setKeep( false );
         }
-        //info()  <<" test neg tracks itS, itS2 keep s = " << cand.keep()<< " , " << cand2.keep()<<endreq;
+        //info()  <<" test neg tracks itS, itS2 keep s = " << cand.keep()<< " , " << cand2.keep()<<endmsg;
       }
     }
   }
@@ -952,9 +952,9 @@ void PatCalibV0::selectSols(){
           m_nCounters[7]++;  // count all V0 actually
           m_nCounters_K0[7]++;
           info() << " Bd found with x,y,z #"<< m_nCounters_K0[7]<<" coord Vtx ="
-                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endreq;
+                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endmsg;
           info() << " Bd found with     Pos " << cand.posTrk()->key()<< " Neg "
-                 << cand.negTrk()->key()<<endreq;
+                 << cand.negTrk()->key()<<endmsg;
 
           if(hasNoVeloPair) { // count all V0 actually
             m_nCountersNoVelo[7]++;
@@ -975,9 +975,9 @@ void PatCalibV0::selectSols(){
           m_nCounters[7]++;     // count all V0 actually
           m_nCounters_Lambda[7]++;
           info() << " Lambda_b found with x,y,z #"<< m_nCounters_Lambda[7]<<" coord Vtx ="
-                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endreq;
+                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endmsg;
           info() << "  Lambda_b found with     Pos " << cand.posTrk()->key()<< " Neg "
-                 << cand.negTrk()->key()<<endreq;
+                 << cand.negTrk()->key()<<endmsg;
 
           if(hasNoVeloPair) {
             m_nCountersNoVelo[7]++;  // count all V0 actually
@@ -999,9 +999,9 @@ void PatCalibV0::selectSols(){
           m_nCounters[7]++;     // count all V0 actually
           m_nCounters_LambdaBar[7]++;
           info() << " antiLambda_b found with x,y,z #"<< m_nCounters_Lambda[7]<<" coord Vtx ="
-                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endreq;
+                 <<m_BdVtx[1] <<" , " << m_BdVtx[2] <<" , " << m_BdVtx[0] <<endmsg;
           info() << " antiLambda_b found with     Pos " << cand.posTrk()->key()<< " Neg "
-                 << cand.negTrk()->key()<<endreq;
+                 << cand.negTrk()->key()<<endmsg;
 
           if(hasNoVeloPair) {
             m_nCountersNoVelo[7]++;  // count all V0 actually
@@ -1837,151 +1837,151 @@ StatusCode PatCalibV0::finalize() {
     selected number of pairs nCounters[8] (bkg + signal)
 
   */
-  info()  << "**************************************************************************"<<endreq;
-  info()  << "    All tracks    "<<endreq;
-  info()  << "        "<<endreq;
+  info()  << "**************************************************************************"<<endmsg;
+  info()  << "    All tracks    "<<endmsg;
+  info()  << "        "<<endmsg;
   info()  << "CalibKShort  :: total number of    V0 ="<< m_nCounters[0]
           << " , surviving Ph Sp Cuts = " << m_nCounters[1] << "[ "
           << ((double)m_nCounters[1])/((double)m_nCounters[0])*100 <<" %]"
           << " , and VTX reco = " <<m_nCounters[4]<< "[ " << ((double)m_nCounters[4])/((double)m_nCounters[0])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  :: All V0 , final yield/[Efficiency] = "
           <<m_nCounters[6]<< "[ " << ((double) m_nCounters[6])/((double) m_nCounters[0])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters[6])/((double) m_nCounters[8])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
-  info()  << "CalibKShort  :: V0 Daugthers of Bd /(anti)Lambda_b :: *********" << endreq;
+  info()  << "CalibKShort  :: V0 Daugthers of Bd /(anti)Lambda_b :: *********" << endmsg;
   info()  << "CalibKShort  :: total number of (Bd/(anti)Lambda_b) Ks/Lambda/(anti)Lambda ="<<  m_nCounters[2]
           << " , surviving Ph Sp Cuts = " <<  m_nCounters[3] << "[ "
           << ((double) m_nCounters[3])/((double) m_nCounters[2])*100 <<" %]"
           << " , and VTX reco = " << m_nCounters[5]<< "[ " << ((double) m_nCounters[5])/((double) m_nCounters[2])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  ::  (Bd/(anti)Lambda_b)    Ks/Lambda/(anti)Lambda  final yield/Efficiency = "
           << m_nCounters[7]<< "[ " << ((double) m_nCounters[7])/((double) m_nCounters[2])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters[7])/((double) m_nCounters[8])*100 <<" %]"
-          <<endreq;
-  info()  << "        "<< endreq;
+          <<endmsg;
+  info()  << "        "<< endmsg;
 
-  info()  << "--------------------------------------------------------------------------"<< endreq;
+  info()  << "--------------------------------------------------------------------------"<< endmsg;
   info()  << "CalibKShort  :: total number of    Ks ="<< m_nCounters_K0[0]
           << " , surviving Ph Sp Cuts = " << m_nCounters_K0[1] << "[ "
           << ((double)m_nCounters_K0[1])/((double)m_nCounters_K0[0])*100 <<" %]"
           << " , and VTX reco = " <<m_nCounters_K0[4]<< "[ " 
           << ((double)m_nCounters_K0[4])/((double)m_nCounters_K0[0])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  :: All Ks , final yield/[Efficiency] = "
           <<m_nCounters_K0[6]<< "[ " << ((double) m_nCounters_K0[6])/((double) m_nCounters_K0[0])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters_K0[6])/((double) m_nCounters_K0[8])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
-  info()  << "CalibKShort  :: Ks Daugthers of Bd :: *********" << endreq;
+  info()  << "CalibKShort  :: Ks Daugthers of Bd :: *********" << endmsg;
   info()  << "CalibKShort  :: total number of Bd Ks ="<<  m_nCounters_K0[2]
           << " , surviving Ph Sp Cuts = " <<  m_nCounters_K0[3] << "[ "
           << ((double) m_nCounters_K0[3])/((double) m_nCounters_K0[2])*100 <<" %]"
           << " , and VTX reco = " << m_nCounters_K0[5]<< "[ " 
           << ((double) m_nCounters_K0[5])/((double) m_nCounters_K0[2])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  ::  Bd Ks  final yield/Efficiency = "
           << m_nCounters_K0[7]<< "[ " << ((double) m_nCounters_K0[7])/((double) m_nCounters_K0[2])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters_K0[7])/((double) m_nCounters_K0[8])*100 <<" %]"
-          <<endreq;
-  info()  << "        "<< endreq;
+          <<endmsg;
+  info()  << "        "<< endmsg;
 
-  info()  << "--------------------------------------------------------------------------"<< endreq;
+  info()  << "--------------------------------------------------------------------------"<< endmsg;
   info()  << "CalibKShort  :: total number of  Lambda    ="<< m_nCounters_Lambda[0]
           << " , surviving Ph Sp Cuts = " << m_nCounters_Lambda[1] << "[ "
           << ((double)m_nCounters_Lambda[1])/((double)m_nCounters_Lambda[0])*100 <<" %]"
           << " , and VTX reco = " <<m_nCounters_Lambda[4]<< "[ " 
           << ((double)m_nCounters_Lambda[4])/((double)m_nCounters_Lambda[0])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  :: All Lambda , final yield/[Efficiency] = "
           <<m_nCounters_Lambda[6]<< "[ " << ((double) m_nCounters_Lambda[6])/((double) m_nCounters_Lambda[0])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters_Lambda[6])/((double) m_nCounters_Lambda[8])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
-  info()  << "CalibKShort  :: Lambda Daugthers of Lambda_b :: *********" << endreq;
+  info()  << "CalibKShort  :: Lambda Daugthers of Lambda_b :: *********" << endmsg;
   info()  << "CalibKShort  :: total number of Lambda from Lambda_b ="<<  m_nCounters_Lambda[2]
           << " , surviving Ph Sp Cuts = " <<  m_nCounters_Lambda[3] << "[ "
           << ((double) m_nCounters_Lambda[3])/((double) m_nCounters_Lambda[2])*100 <<" %]"
           << " , and VTX reco = " << m_nCounters_Lambda[5]<< "[ " 
           << ((double) m_nCounters_Lambda[5])/((double) m_nCounters_Lambda[2])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  ::  Lambda_b  Lambda's final yield/Efficiency = "
           << m_nCounters_Lambda[7]<< "[ " << ((double) m_nCounters_Lambda[7])/((double) m_nCounters_Lambda[2])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters_Lambda[7])/((double) m_nCounters_Lambda[8])*100 <<" %]"
-          <<endreq;
-  info()  << "        "<< endreq;
+          <<endmsg;
+  info()  << "        "<< endmsg;
 
-  info()  << "--------------------------------------------------------------------------"<< endreq;
+  info()  << "--------------------------------------------------------------------------"<< endmsg;
   info()  << "CalibKShort  :: total number of  LambdaBar    ="<< m_nCounters_LambdaBar[0]
           << " , surviving Ph Sp Cuts = " << m_nCounters_LambdaBar[1] << "[ "
           << ((double)m_nCounters_LambdaBar[1])/((double)m_nCounters_LambdaBar[0])*100 <<" %]"
           << " , and VTX reco = " <<m_nCounters_LambdaBar[4]<< "[ " 
           << ((double)m_nCounters_LambdaBar[4])/((double)m_nCounters_LambdaBar[0])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  :: All anti-Lambda , final yield/[Efficiency] = "
           <<m_nCounters_LambdaBar[6]<< "[ " << ((double) m_nCounters_LambdaBar[6])/((double) m_nCounters_LambdaBar[0])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCounters_LambdaBar[6])/((double) m_nCounters_LambdaBar[8])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
-  info()  << "CalibKShort  :: anti-Lambda Daugthers of anti-Lambda_b :: *********" << endreq;
+  info()  << "CalibKShort  :: anti-Lambda Daugthers of anti-Lambda_b :: *********" << endmsg;
   info()  << "CalibKShort  :: total number of anti-Lambda from anti-Lambda_b="<<  m_nCounters_LambdaBar[2]
           << " , surviving Ph Sp Cuts = " <<  m_nCounters_LambdaBar[3] << "[ "
           << ((double) m_nCounters_LambdaBar[3])/((double) m_nCounters_LambdaBar[2])*100 <<" %]"
           << " , and VTX reco = " << m_nCounters_LambdaBar[5]<< "[ " 
           << ((double) m_nCounters_LambdaBar[5])/((double) m_nCounters_LambdaBar[2])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  ::  anti-Lambda_b  anti-Lambda's final yield/Efficiency = "
           << m_nCounters_LambdaBar[7]<< "[ " << ((double) m_nCounters_LambdaBar[7])/((double) m_nCounters_LambdaBar[2])*100 
           <<" %]"
           << " , Dilution =" << ((double) m_nCounters_LambdaBar[7])/((double) m_nCounters_LambdaBar[8])*100 <<" %]"
-          <<endreq;
-  info()  << "        "<< endreq;
+          <<endmsg;
+  info()  << "        "<< endmsg;
 
-  info()  << "**************************************************************************"<< endreq;
-  info()  << "    tracks with NoVelo piece    "<<endreq;
-  info()  << "        "<<endreq;
+  info()  << "**************************************************************************"<< endmsg;
+  info()  << "    tracks with NoVelo piece    "<<endmsg;
+  info()  << "        "<<endmsg;
 
   info()  << "CalibKShort  :: total number of    Ks ="<< m_nCountersNoVelo[0]
           << " , surviving Ph Sp Cuts = " << m_nCountersNoVelo[1] << "[ "
           << ((double)m_nCountersNoVelo[1])/((double)m_nCountersNoVelo[0])*100 <<" %]"
           << " , and VTX reco = " <<m_nCountersNoVelo[4]<< "[ "
           << ((double)m_nCountersNoVelo[4])/((double)m_nCountersNoVelo[0])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  :: All Ks , final yield/Efficiency = "
           <<m_nCountersNoVelo[6]<< "[ " << ((double) m_nCountersNoVelo[6])/((double) m_nCountersNoVelo[0])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCountersNoVelo[6])/((double) m_nCountersNoVelo[8])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
-  info()  << "CalibKShort  :: Ks Daugthers of Bd :: *** " << endreq;
+  info()  << "CalibKShort  :: Ks Daugthers of Bd :: *** " << endmsg;
   info()  << "CalibKShort  :: total number of Bd Ks ="<<  m_nCountersNoVelo[2]
           << " , surviving Ph Sp Cuts = " <<  m_nCountersNoVelo[3] << "[ "
           << ((double) m_nCountersNoVelo[3])/((double) m_nCountersNoVelo[2])*100 <<" %]"
           << " , and VTX reco = " << m_nCountersNoVelo[5]<< "[ "
           << ((double) m_nCountersNoVelo[5])/((double) m_nCountersNoVelo[2])*100 <<" %]"
-          <<endreq;
+          <<endmsg;
 
   info()  << "CalibKShort  ::  Bd Ks  final yield/Efficiency = "
           << m_nCountersNoVelo[7]<< "[ " << ((double) m_nCountersNoVelo[7])/((double) m_nCountersNoVelo[2])*100 <<" %]"
           << " , Dilution =" << ((double) m_nCountersNoVelo[7])/((double) m_nCountersNoVelo[8])*100 <<" %]"
-          <<endreq;
-  info()  << "**************************************************************************"<<endreq;
-  info()  << " nombre de K0 parents  (double count+X)  =" <<  m_nK0courts  << " , with accepted pairs ="<<m_acc_Ks <<endreq;
-  info()  << " nombre de Lambda parents  (double count+X)    =" << m_nLambda << " , with accepted pairs ="<<m_acc_Lambda <<endreq;
+          <<endmsg;
+  info()  << "**************************************************************************"<<endmsg;
+  info()  << " nombre de K0 parents  (double count+X)  =" <<  m_nK0courts  << " , with accepted pairs ="<<m_acc_Ks <<endmsg;
+  info()  << " nombre de Lambda parents  (double count+X)    =" << m_nLambda << " , with accepted pairs ="<<m_acc_Lambda <<endmsg;
   info()  << " nombre de LambdaBar parents (double count+X)  =" << m_nLambdaBar << " , with accepted pairs ="<<m_acc_LambdaBar
-          <<endreq;
-  info()  << " nombre de Lamba_b     (double count+X)    =" <<  m_nLambda_b  <<endreq;
-  info()  << " nombre de Lamba_b_Bar (double count+X)    =" <<  m_nLambda_b_Bar <<endreq;
-  info()  << "**************************************************************************"<<endreq;
+          <<endmsg;
+  info()  << " nombre de Lamba_b     (double count+X)    =" <<  m_nLambda_b  <<endmsg;
+  info()  << " nombre de Lamba_b_Bar (double count+X)    =" <<  m_nLambda_b_Bar <<endmsg;
+  info()  << "**************************************************************************"<<endmsg;
   debug() << "==> Finalize" << endmsg;
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions

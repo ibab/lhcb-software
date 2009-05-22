@@ -4,6 +4,10 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Marco Cattaneo
+ - Fix gcc43 compilation warning
+ - Replace all endreq by endmsg
+
 !======================== PatFitParams v3r2p2 2009-02-20 =====================
 ! 2009-01-20 - Marco Cattaneo
  - Remove obsolete includes for Gaudi ParticlePropertySvc

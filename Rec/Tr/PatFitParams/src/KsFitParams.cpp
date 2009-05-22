@@ -1,4 +1,4 @@
-// $Id: KsFitParams.cpp,v 1.2 2009-01-20 15:49:30 cattanem Exp $
+// $Id: KsFitParams.cpp,v 1.3 2009-05-22 07:14:54 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -66,7 +66,7 @@ StatusCode KsFitParams::initialize() {
 // Main execution
 //=============================================================================
 StatusCode KsFitParams::execute() {
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   m_nEvent++;
 
@@ -112,7 +112,7 @@ StatusCode KsFitParams::execute() {
       }
       if ( hasInteractionVertex ) continue;
     
-      debug() << "--- Found pi key " << part->key() << endreq;
+      debug() << "--- Found pi key " << part->key() << endmsg;
     
       TTHits.clear();
       trHits.clear();
@@ -148,9 +148,9 @@ StatusCode KsFitParams::execute() {
                          kDecay->position().x(),
                          kDecay->position().y(),
                          kDecay->position().z() )
-              << endreq;
+              << endmsg;
       debug() << " pion momentum = " << part->momentum().R() / Gaudi::Units::GeV << " GeV"
-              << endreq;
+              << endmsg;
       
       //== Fill ntuple
       double pz = kShort->momentum().Z();
@@ -181,7 +181,7 @@ StatusCode KsFitParams::execute() {
       m_fitTool->fitLine( TTHits, 1, m_zTT1, ayt, byt );
       debug() << format( " x %7.1f tx %7.4f   y %7.1f ty %7.4f ",
                          axt, bxt, ayt, byt ) 
-              << endreq;;
+              << endmsg;;
       tTrack->column( "axt" , axt );
       tTrack->column( "bxt", bxt );
       tTrack->column( "ayt" , ayt );
@@ -195,7 +195,7 @@ StatusCode KsFitParams::execute() {
                              (*itP).x(), (*itP).y(), (*itP).z(),
                              (*itP).x()-(axt+bxt*dz),
                              (*itP).y()-(ayt+byt*dz)
-                             ) << endreq;
+                             ) << endmsg;
         }
       }
       
@@ -211,7 +211,7 @@ StatusCode KsFitParams::execute() {
       
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << format( "  tr: x%7.1f %7.4f %7.3f %7.3f  y%7.1f %7.4f", 
-                           ax, bx, 1.e6*cx, 1.e9*dx, ay, by ) << endreq;
+                           ax, bx, 1.e6*cx, 1.e9*dx, ay, by ) << endmsg;
         
         for ( itP = trHits.begin(); trHits.end() > itP; itP++ ) {
           dz = (*itP).z()-m_zRef;
@@ -219,7 +219,7 @@ StatusCode KsFitParams::execute() {
                              (*itP).x(), (*itP).y(), (*itP).z(),
                            (*itP).x()-(ax + bx*dz + cx*dz*dz + dx*dz*dz*dz),
                              (*itP).y()-(ay + by*dz)
-                             ) << endreq;
+                             ) << endmsg;
         }
       }
       
@@ -262,7 +262,7 @@ StatusCode KsFitParams::execute() {
                          axt + ( zMagnet - m_zTT1 ) * bxt,
                          ayt + ( zMagnet - m_zTT1 ) * byt,
                          ay  + ( zMagnet - m_zRef ) * by )
-              << endreq;
+              << endmsg;
     }
   }
   return StatusCode::SUCCESS;
@@ -276,9 +276,9 @@ StatusCode KsFitParams::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  MsgStream& msg = info() << "============================================" << endreq;
-  msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endreq;
-  msg << "============================================" << endreq;
+  MsgStream& msg = info() << "============================================" << endmsg;
+  msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endmsg;
+  msg << "============================================" << endmsg;
   m_zMagPar.updateParameters( msg );
   m_momPar.updateParameters(  msg );
 

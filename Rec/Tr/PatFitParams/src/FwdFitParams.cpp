@@ -1,4 +1,4 @@
-// $Id: FwdFitParams.cpp,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
+// $Id: FwdFitParams.cpp,v 1.2 2009-05-22 07:14:54 cattanem Exp $
 // Include files
 #include <string>
 #include <stdio.h>
@@ -254,7 +254,7 @@ StatusCode FwdFitParams::execute() {
                       slope.Y() ,
                       (int)myMCPart->particleID().pid() ,
                       momentum / Gaudi::Units::GeV        )
-           << endreq;
+           << endmsg;
     
     // A container for used hits
     std::vector< Gaudi::XYZPoint > trHits;
@@ -272,7 +272,7 @@ StatusCode FwdFitParams::execute() {
           verbose() << format( " Add OT x%9.3f y%9.3f z%10.3f", 
                                (*oHitIt)->midPoint().x(),
                                (*oHitIt)->midPoint().y(),
-                               (*oHitIt)->midPoint().z() ) << endreq;
+                               (*oHitIt)->midPoint().z() ) << endmsg;
         }
         dz = (*oHitIt)->midPoint().Z();
         if ( m_zMag > dz ) {
@@ -296,7 +296,7 @@ StatusCode FwdFitParams::execute() {
           verbose() << format( " Add IT x%9.3f y%9.3f z%10.3f", 
                                (*iHitIt)->midPoint().x(),
                                (*iHitIt)->midPoint().y(),
-                               (*iHitIt)->midPoint().z() ) << endreq;
+                               (*iHitIt)->midPoint().z() ) << endmsg;
         }
         dz = (*iHitIt)->midPoint().Z();
         if ( m_zMag > dz ) {
@@ -370,7 +370,7 @@ StatusCode FwdFitParams::execute() {
         CX = fitX.param( 2 ) * 1.e-6 ;
         DX = fitX.param( 3 ) * 1.e-9 ;
       } else {
-        err() << " X matrix is singular " << endreq;
+        err() << " X matrix is singular " << endmsg;
         continue;
       }
 
@@ -388,7 +388,7 @@ StatusCode FwdFitParams::execute() {
         AY = fitY.param( 0 );
         BY = fitY.param( 1 ) * 1.e-3 ;
       } else {
-        err() << " X matrix is singular " << endreq;
+        err() << " X matrix is singular " << endmsg;
         continue;
       }
 
@@ -416,13 +416,13 @@ StatusCode FwdFitParams::execute() {
           }
           verbose() << format( "At z = %7.1f  dx%8.3f dy%8.3f",
                                (*pt).z(), dx, dy)
-                    << endreq;
+                    << endmsg;
         }
       }
       khi2 = khi2 / (nbMeas-7);
-      verbose() << " Track Khi2 = " << khi2 << endreq;
+      verbose() << " Track Khi2 = " << khi2 << endmsg;
       if ( 100. < khi2 ) {
-        debug() << " Remove worst hit and try again " << endreq;
+        debug() << " Remove worst hit and try again " << endmsg;
         (*badGuy).SetZ(-1.);
       }
     }
@@ -431,7 +431,7 @@ StatusCode FwdFitParams::execute() {
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "-- Bad track : Khi2 = " << khi2
                 << " momentum " << momentum/Gaudi::Units::GeV
-                << endreq;
+                << endmsg;
         
         for ( pt = trHits.begin() ; trHits.end() != pt  ; pt++ ) {
           dz = (*pt).Z() - m_zRef;
@@ -441,7 +441,7 @@ StatusCode FwdFitParams::execute() {
                              (*pt).Z(),
                              (*pt).X(), dx,
                              (*pt).Y(), dy )
-                  << endreq;
+                  << endmsg;
         }
       }
       continue;
@@ -453,7 +453,7 @@ StatusCode FwdFitParams::execute() {
     double slopeX2 = slope.x() * slope.x();
     double slopeY2 = slope.y() * slope.y();
     double tbx = 0.;
-    double dSlope, zCenter;
+    double dSlope = 0.;
     double dSl2 = 0.;
 
     for ( pt = trHits.begin() ; trHits.end() != pt  ; pt++ ) {
@@ -499,7 +499,7 @@ StatusCode FwdFitParams::execute() {
 
         if ( msgLevel( MSG::VERBOSE ) ) {
           verbose() << format( "  N%2d tax%10.3f tbx%10.6f dSlope%10.6f",
-                               nbLoop, tax, tbx, dSlope ) << endreq;
+                               nbLoop, tax, tbx, dSlope ) << endmsg;
         }
         
         nbLoop++;
@@ -513,12 +513,12 @@ StatusCode FwdFitParams::execute() {
       if ( 20 <= nbLoop ) {
         info() << "dSlope Failed to converge : old "
                << dSlope1 << " new " << dSlope
-               << endreq;
+               << endmsg;
         continue;
       }
       
       //== Compute 'automatically' the regressions
-      zCenter = ( m_zRef -
+      double zCenter = ( m_zRef -
                   (origin.x()+( m_zRef-origin.z())*slope.x()- AX )/
                   (slope.x()-BX) );
       double taxP = ( xMagnet -AX ) / zMagnif + (xSeed-xMagnet) ;
@@ -529,7 +529,7 @@ StatusCode FwdFitParams::execute() {
 
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << format( " Z %8.1f  X %8.1f  dx %8.3f  Y %8.1f dy %8.3f",
-                           zSeed, xSeed, taxP-tax, ySeed, ySeed - yPred ) << endreq;
+                           zSeed, xSeed, taxP-tax, ySeed, ySeed - yPred ) << endmsg;
       }
 
       Tuple tPoint = nTuple( m_tupleName2, m_tupleName2 );
@@ -631,16 +631,16 @@ StatusCode FwdFitParams::execute() {
 //=============================================================================
 StatusCode FwdFitParams::finalize() {
 
-  info() << "===========================================" << endreq;
+  info() << "===========================================" << endmsg;
   info() << "We have processed " << m_count[0]
-         << " tracks. " << endreq;
+         << " tracks. " << endmsg;
   if ( 0 != m_count[0] ) {
     info() << "    " << m_count[1] << " ("
-           << 100.*m_count[1]/m_count[0] << " % ) with good Khi2" << endreq
-           << "    " << m_count[2] << " with good momentum match " << endreq;
+           << 100.*m_count[1]/m_count[0] << " % ) with good Khi2" << endmsg
+           << "    " << m_count[2] << " with good momentum match " << endmsg;
   }
   MsgStream& msg = info() << "==========================================="
-                          << endreq;
+                          << endmsg;
 
   if ( 100 < m_count[0] ) {
 
@@ -655,7 +655,7 @@ StatusCode FwdFitParams::finalize() {
 
     m_XsPar.updateParameters( msg );
 
-    info() << endreq << "-- For JobOptions -- " << endreq << endreq;
+    info() << endmsg << "-- For JobOptions -- " << endmsg << endmsg;
 
     std::cout << std::endl;
 
