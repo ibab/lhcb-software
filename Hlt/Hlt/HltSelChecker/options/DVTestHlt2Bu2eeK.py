@@ -10,17 +10,6 @@ from Configurables import CheckSelResult, L0Filter, AlgorithmCorrelationsAlg
 #--------------------------------------------------------------
 signal = "Bu2eeK"
 #
-# Preselection
-#
-importOptions( "$STDOPTS/PreloadUnits.opts")
-importOptions( "$B2DILEPTONROOT/options/DoDC06SelBu2eeK.opts")
-from Configurables import PrintHeader, PrintDecayTree
-PrintHeader("PrintDiLeptonForPreselBu2eeK").OutputLevel = 4 
-PrintHeader("PrintPreselBu2eeK").OutputLevel = 4
-PrintHeader("PrintDC06SelBu2eeK").OutputLevel = 4
-PrintDecayTree("PrintTreeDC06SelBu2eeK").OutputLevel = 4
-presel = GaudiSequencer("SeqDC06SelBu2eeK")
-#
 # True filter criterion
 #
 from Configurables import FilterTrueTracks, MCDecayFinder
@@ -46,21 +35,12 @@ moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
-#
-# Some more correlations
-#
-from Configurables import GaudiSequencer, CheckSelResult
-corrs = GaudiSequencer("Corrs") 
-corrs.Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("eeK") ]
-CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2eeK" ]
-AlgorithmCorrelationsAlg("eeK").Algorithms = [ "DC06SelBu2eeK", "Hlt2SelBu2eeK", "Hlt2SelBu2eeKSignal", "Hlt2SelBu2eeKHighMass", "Hlt2SelBu2eeKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2Decision" ]
 ###
  # Tuple
 ###
 from Configurables import PhysDesktop, DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bu2eeKSignalCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2eeKSignalCombineBu"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 #
 # Configuration
@@ -76,6 +56,5 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ presel ] 
-DaVinci().MoniSequence += [ moni, corrs, DecayTreeTuple("Hlt2DecayTreeTuple") ]
+DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

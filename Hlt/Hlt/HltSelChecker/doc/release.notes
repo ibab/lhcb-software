@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-05-22 - Patrick Koppenburg
+ - Fix eeK bug
+
 ! 2009-05-20 - Patrick Koppenburg
  - New test fo Biased J/psiPhi.
 
