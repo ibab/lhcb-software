@@ -1,4 +1,4 @@
-// $Id: ENNRingFinder.cpp,v 1.4 2009-05-22 16:30:13 jonrob Exp $
+// $Id: ENNRingFinder.cpp,v 1.5 2009-05-22 21:38:58 jonrob Exp $
 // Include files
 
 // STL
@@ -40,8 +40,8 @@ void Finder::FindRings( const double HitSigma,
   const double R2Min     = RMin*RMin;
   const double R2Max     = RMax*RMax;
   const double HitSize   = HitSigma/2.;
-  const double HitSize4  = 4 * HitSize;
-  const double AreaSize  = 2 * ( RMax + HitSigma );
+  const double HitSize4  = 4.0 * HitSize;
+  const double AreaSize  = 2.0 * ( RMax + HitSigma );
   const double AreaSize2 = AreaSize * AreaSize;
 
   typedef Hit::Vector::iterator iH;
@@ -54,12 +54,13 @@ void Finder::FindRings( const double HitSigma,
 
   iH ileft = Hits.begin(), iright = ileft, i = ileft;
 
-  for( ; i != Hits.end(); ++i ){
+  for ( ; i != Hits.end(); ++i )
+  {
+    
+    if ( i->busy >= 1 ) continue; // already found hit
 
-    if( i->busy >= 1 ) continue; // already found hit
-
-    double left = i->x - AreaSize;
-    double right = i->x + AreaSize;
+    const double left  = i->x - AreaSize;
+    const double right = i->x + AreaSize;
 
     while ( ileft->x < left ) ++ileft;
     while ( iright != Hits.end() && iright->x < right ) ++iright;
@@ -67,11 +68,11 @@ void Finder::FindRings( const double HitSigma,
     Hit::PtnVector SearchArea;
     Hit::PtnVector PickUpArea;
 
-    double X = 0, Y = 0, R = 0, R2 = 0;
-    int NRingHits = 1;
-    double Dmax = 0.;
+    double X(0), Y(0), R(0), R2(0);
+    int NRingHits(1);
+    double Dmax(0);
     double S0(0), S1(0), S2(0), S3(0), S4(0), S5(0), S6(0), S7(0);
-    int NAreaHits = 0;
+    int NAreaHits(0);
 
     { // initialize hits in the search area
 
@@ -126,7 +127,9 @@ void Finder::FindRings( const double HitSigma,
           S4 += j->S4;
         }
       }
+
       if ( NAreaHits+1 < MinRingHits ) continue;
+
     }// end of initialization of the search area
 
     // loop for minimization of E and noise rejection
@@ -154,7 +157,8 @@ void Finder::FindRings( const double HitSigma,
         const double dy = (*j)->ly - Y;
         const double d2 = std::fabs( dx*dx + dy*dy - R2 );
         (*j)->on_ring = ( d2 <= RingCut );
-        if( (*j)->on_ring ){
+        if( (*j)->on_ring )
+        {
           ++NRingHits;
           S0 += (*j)->S0;
           S1 += (*j)->S1;
@@ -251,6 +255,7 @@ void Finder::FindRings( const double HitSigma,
     {
       if( (*j)->busy<ring.NHits ) (*j)->busy = ring.NHits;
     }
+
   }// END OF THE MAIN LOOP OVER HITS
 
   // SELECTION OF RINGS
@@ -311,7 +316,7 @@ void Finder::FindRings( const double HitSigma,
       }
     }
   }
-  while(1);
+  while(true);
 
   // CRJ : Count number of rings each hit is associated with
   for ( iR r = Rings.begin(); r != Rings.end(); ++r )

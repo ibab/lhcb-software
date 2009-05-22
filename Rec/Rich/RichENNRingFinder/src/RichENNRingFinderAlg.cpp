@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.3 2009-05-22 15:33:23 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.4 2009-05-22 21:38:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -52,7 +52,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
-    m_maxRingChi2      = 10;
+    m_maxRingChi2      = 50;
     m_minRingPurity    = 0.7;
   }
   else // RICH1
@@ -66,7 +66,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 45.0;
     m_maxRingRadius    = 75.0;
-    m_maxRingChi2      = 10;
+    m_maxRingChi2      = 50;
     m_minRingPurity    = 0.7;
   }
   // JOs
@@ -203,10 +203,10 @@ StatusCode AlgBase<FINDER>::saveRings() const
       verbose() << "Considering ENN Ring : " << *iRing << endmsg;
 
     // Select rings
-    if ( (*iRing).chi2PerHit() > m_maxRingChi2 )
+    if ( (*iRing).chi2 > m_maxRingChi2 )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Chi2/hit too large -> reject " << endmsg;
+        verbose() << " -> Chi^2 too large -> reject " << endmsg;
       continue;
     }
     if ( (*iRing).purity() < m_minRingPurity )

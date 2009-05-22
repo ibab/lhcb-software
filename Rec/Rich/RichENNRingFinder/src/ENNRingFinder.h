@@ -25,7 +25,7 @@ namespace Rich
 
       public:
         
-        Finder( bool debug = false ) : m_debug(debug) { }
+        Finder( const bool debug = false ) : m_debug(debug) { }
 
       public:
 
@@ -41,6 +41,7 @@ namespace Rich
           typedef std::vector<Hit> Vector;
           typedef std::vector<Hit*> PtnVector;
         public:
+          /// Constructor
           Hit( const unsigned int _key  = -1,
                const double _x = 0,
                const double _y = 0 )
@@ -52,6 +53,7 @@ namespace Rich
               nAssRings(0)
           { }
         public:
+          /// Sorting operator
           inline bool operator < ( const Hit & h ) const
           { return ( this->x < h.x ); }
         public:
@@ -62,8 +64,9 @@ namespace Rich
                       << " nAssRings=" << hit.nAssRings << " ]"; 
           }
         public:
-          double x, y; // coordinates
-          int busy; // quality of the best ring with this hit
+          double x; ///< x coordinate
+          double y; ///< y coordinate
+          int busy; ///< quality of the best ring with this hit
           // variables for local search:
           double lx, ly, lr2; // local coordinates
           double S0, S1, S2, S3, S4; ///< coefficients for calculation of E
@@ -85,6 +88,7 @@ namespace Rich
           typedef std::vector<Ring> Vector;
           typedef std::vector<Ring*> PtnVector;
         public:
+          /// Constructor
           Ring( const double _x     = 0,
                 const double _y     = 0,
                 const double _r     = 0,
@@ -96,8 +100,9 @@ namespace Rich
               NOwn(0),
               skip(false) { }
         public:
+          /// The ring radius
           inline double radius()     const { return r; }
-          inline double chi2PerHit() const { return ( NHits>0 ? chi2/NHits : 999 ); }
+          /// Ring purity (fraction of associated hits owned by this ring)
           inline double purity()     const { return ( NHits>0 ? NOwn/NHits : 0   ); }
         public:
           /// Overloaded output to ostream
@@ -111,25 +116,35 @@ namespace Rich
                       << " ]"; 
           }
         public:
-          bool on; // is the ring selected?
-          double x, y, r; // parameters
-          double chi2; // chi2
-          Hit::PtnVector Hits; // pointers to ring hits
+          bool on;   ///< is the ring selected?
+          double x;  ///< ring centre point y
+          double y;  ///< ring centre point y
+          doublee r; ///< ring radius
+          double chi2; ///< chi2
+          Hit::PtnVector Hits; ///< pointers to ring hits
           // variables for the selection procedure:
-          int NHits; // number of ring hits
-          int NOwn; // number of its own hits
-          bool skip; // skip the ring during selection
+          int NHits; ///< number of ring hits
+          int NOwn; ///< number of its own hits
+          bool skip; ///< skip the ring during selection
         };
 
       public:
 
+        /** Do the ring finding with the given parameters
+         *  @param HitSigma hit sigma
+         *  @param MinRIngHits Minimum number of hits on a ring
+         *  @param RMin Minimum ring radius
+         *  @param RMax Maximum ring radius
+         */
         void FindRings( const double HitSigma = 1.,
                         const int MinRingHits = 5,
                         const double RMin = 2.,
                         const double RMax = 6. );
 
+        /// Access the input hits
         inline Hit::Vector  & hits()  { return m_Hits;  }
 
+        /// Access the found rings
         inline Ring::Vector & rings() { return m_Rings; }
 
         /// Clean up for a new event
@@ -137,9 +152,9 @@ namespace Rich
 
       private:
 
-        Hit::Vector  m_Hits;
-        Ring::Vector m_Rings;
-        bool m_debug;
+        Hit::Vector  m_Hits;   ///< The input hits
+        Ring::Vector m_Rings;  ///< The found rings
+        bool m_debug; ///< Turn on debug printout
 
       };
 
