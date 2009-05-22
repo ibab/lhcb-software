@@ -7,7 +7,6 @@ __author__  = "Anton Poluektov <A.O.Poluektov@warwick.ac.uk>"
 #
 # Configuration of stripping framework. 
 #
-#
 
 from os import environ
 from pprint import *
@@ -126,6 +125,3 @@ class StrippingConf( LHCbConfigurableUser ):
 			sel.Code = "ALL" 
 			seq.Members += [ sel ] 
 		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq
-
-	    dstSeq = DaVinciWriteDst().dstSequence()
-	    DaVinci().appendToMoniSequence( [ dstSeq ] )

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-05-22 - Patrick Koppenburg
+ - DaVinciWriteDst now (tag pkoppenb_20090522) populates DaVinci 
+   sequencer directly. No need to pass sequnecer anymore.
+
 ! 2009-05-21 - Patrick Koppenburg
  - Allow for output None
  - Use DaVinci.appendToMainSequence and appendToMoniSequence. 
