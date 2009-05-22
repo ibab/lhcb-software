@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.8 2009-05-13 13:50:47 jonrob Exp $
+!$Id: release.notes,v 1.9 2009-05-22 10:56:59 nmangiaf Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+! 2009-05-22 - Nicola Mangiafave
+ - Improvements to J/Psi selection
 
 ! 2009-05-13 - Chris Jones
  - Improvements to J/Psi selection from Nicola

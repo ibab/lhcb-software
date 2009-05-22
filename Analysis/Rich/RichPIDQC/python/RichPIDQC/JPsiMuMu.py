@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.9 2009-05-13 13:50:14 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.10 2009-05-22 10:54:55 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -44,8 +44,9 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMu.PhysDesktop.InputLocations = ["Phys/StdLooseMuons"]
         JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
         JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF)<6)"
-        JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1000*MeV) & (TRCHI2DOF<2.0)",
-                                               "mu-"     :    "(PT>1000*MeV) & (TRCHI2DOF<2.0) "}
+        JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1000*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10) & (TINFO( LHCb.Track.GhostProbability,-1000,-1000)<0.6)",
+                                               "mu-"     :    "(PT>1000*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10) & (TINFO( LHCb.Track.GhostProbability,-1000,-1000)<0.6)"}
+
         seq.Members += [JPsiMuMu]
 
         # Particle Monitoring plots
