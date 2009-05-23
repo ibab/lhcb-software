@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.h,v 1.3 2008-06-14 10:42:11 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.h,v 1.4 2009-05-23 20:17:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -24,6 +24,9 @@
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/RichRecRing.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 namespace Rich
 {

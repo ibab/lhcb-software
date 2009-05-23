@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.5 2009-05-23 13:38:14 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.6 2009-05-23 20:17:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -65,6 +65,13 @@ StatusCode TracklessRingFilterAlg::execute()
   LHCb::RichRecRings * outrings = new LHCb::RichRecRings();
   put ( outrings, m_outputRings );
 
+  // Count Rings per radiator
+  typedef Rich::Map<Rich::RadiatorType,unsigned int> RadCount;
+  RadCount rCount;
+  //rCount[Rich::Aerogel]  = 0;
+  rCount[Rich::Rich1Gas] = 0;
+  rCount[Rich::Rich2Gas] = 0;
+
   // Loop over the input rings and select the 'best' ones
   for ( LHCb::RichRecRings::const_iterator iRing = inrings->begin();
         iRing != inrings->end(); ++iRing )
@@ -74,19 +81,26 @@ StatusCode TracklessRingFilterAlg::execute()
     // Number of pixels on the ring
     const unsigned int nPixels = (*iRing)->richRecPixels().size();
     
-    verbose() << " -> Ring " << (*iRing)->key() 
-              << " av prob = " << avProb
-              << " nPixels = " << nPixels << endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Ring " << (*iRing)->key() 
+                << " av prob = " << avProb
+                << " nPixels = " << nPixels << endmsg;
  
     if ( avProb < m_minAvProb   ||
          nPixels < m_minNumHits ) continue;
 
     // If get here, ring is selected so clone and save
+    ++rCount[(*iRing)->radiator()];
     outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
   }
 
-  debug() << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
-  counter("Selected Rings") += outrings->size();
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
+
+  for ( RadCount::const_iterator rad = rCount.begin(); rad != rCount.end(); ++rad )
+  {
+    counter("Selected good "+Rich::text(rad->first)+" rings") += rad->second;
+  }
 
   return StatusCode::SUCCESS;
 }

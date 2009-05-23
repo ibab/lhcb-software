@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.9 2009-05-23 13:38:15 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.10 2009-05-23 20:17:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -81,13 +81,19 @@ StatusCode TracklessRingIsolationAlg::execute()
   LHCb::RichRecRings * outrings = new LHCb::RichRecRings();
   put ( outrings, m_outputRings );
 
-  unsigned int noofrings = 0;
+  // Count Rings per radiator
+  typedef Rich::Map<Rich::RadiatorType,unsigned int> RadCount;
+  RadCount rCount;
+  //rCount[Rich::Aerogel]  = 0;
+  rCount[Rich::Rich1Gas] = 0;
+  rCount[Rich::Rich2Gas] = 0;
 
   // Loop over the input rings and select the 'best' ones
   for ( LHCb::RichRecRings::const_iterator iRing = inrings->begin();
         iRing != inrings->end(); ++iRing )
   {
-    debug() << "Trying ring " << (*iRing)->key() << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Trying ring " << (*iRing)->key() << endreq;
 
     bool ringIsIsolated(true);
 
@@ -113,13 +119,16 @@ StatusCode TracklessRingIsolationAlg::execute()
 
       if ( centreXYdif < m_sizesepcut[RingRadiator]   )
       {
-        debug() << " -> Too close to another ring !" << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << " -> Too close to another ring !" << endmsg;
         ringIsIsolated = false;
         break;
       }
 
-
     } // inner ring loop
+
+    // skip if ring is already not isolated
+    if ( !ringIsIsolated ) continue;
 
     //-------------------------------------------------------------------------------------------------
 
@@ -183,12 +192,13 @@ StatusCode TracklessRingIsolationAlg::execute()
 
     if ( frachitsout > m_sizepixelcut[RingRadiator] )
     {
-      debug() << "Too many pixel hits outside ring!" << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Too many pixel hits outside ring!" << endmsg;
       ringIsIsolated = false;
-      break;
     }
 
-    ++noofrings;
+    // skip if ring is already not isolated
+    if ( !ringIsIsolated ) continue;
 
     for ( std::vector<int>::const_iterator iRegion = regTally.begin();
           iRegion != regTally.end(); ++iRegion )
@@ -201,6 +211,9 @@ StatusCode TracklessRingIsolationAlg::execute()
       }
     }
 
+    // skip if ring is already not isolated
+    if ( !ringIsIsolated ) continue;
+
     // refit the ring
     FastRingFitter fitter(**iRing);
     fitter.fit();
@@ -208,25 +221,33 @@ StatusCode TracklessRingIsolationAlg::execute()
     if ( fitter.result().Status != 0 ||
          fitter.result().Variance > m_maxFitVariance[RingRadiator] )
     {
-      debug() << " -> Failed refitting : " 
-              << fitter.result()
-              << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Failed refitting : " 
+                  << fitter.result()
+                  << endmsg;
       ringIsIsolated = false;
-      break;
     }
+
+    // skip if ring is not isolated
+    if ( !ringIsIsolated ) continue;
 
     //----------------------------------------------------------------------
-    // is ring isolated
-    if ( ringIsIsolated )
-    {
-      // clone and save
-      outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
-    }
-
+    // If we get here, ring is isolated
+    
+    // count
+    ++rCount[(*iRing)->radiator()];
+    // clone and save
+    outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
+    
   } // outer ring loop
 
-  debug() << "Selected " << outrings->size() << " isolated rings at " << m_outputRings << endmsg;
-  counter("Isolated Rings") += outrings->size();
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Selected " << outrings->size() << " isolated rings at " << m_outputRings << endmsg;
 
+  for ( RadCount::const_iterator rad = rCount.begin(); rad != rCount.end(); ++rad )
+  {
+    counter("Selected isolated "+Rich::text(rad->first)+" rings") += rad->second;
+  }
+ 
   return StatusCode::SUCCESS;
 }
