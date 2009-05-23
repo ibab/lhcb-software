@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.74 2009-05-22 15:35:45 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.75 2009-05-23 20:21:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -367,7 +367,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
   }
 
   // count # found rings per event
-  counter("# Found Rings") += (rings->size() - nRingsBefore);
+  counter("# "+Rich::text(rich())+" Found Rings") += (rings->size() - nRingsBefore);
 
   return StatusCode::SUCCESS;
 }
