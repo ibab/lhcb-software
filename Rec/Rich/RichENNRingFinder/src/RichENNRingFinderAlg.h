@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.2 2009-05-22 15:33:23 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.3 2009-05-23 10:45:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -60,7 +60,7 @@ namespace Rich
       //-----------------------------------------------------------------------
 
       template < class FINDER >
-      class AlgBase : public RichRecHistoAlgBase
+      class AlgBase : public Rich::Rec::HistoAlgBase
       {
 
       public:
