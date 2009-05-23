@@ -1,4 +1,4 @@
-// $Id: LoKi_GenDecay.cpp,v 1.5 2009-05-19 10:22:02 ibelyaev Exp $
+// $Id: LoKi_GenDecay.cpp,v 1.6 2009-05-23 16:00:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -83,7 +83,7 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   GenPhotos p13 ( p11 ) ;
   
   GenOptional p14 
-    ( CC ( "B_s0" ) , GenExclusive::SubTrees() ) ;
+    ( CC ( "B_s0" ) , GenExclusive::TreeList() ) ;
   p14.addOptional  ("phi(1020)" ) ;
   
   p14 += "J/psi(1S)" ;

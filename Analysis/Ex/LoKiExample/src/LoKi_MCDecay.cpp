@@ -1,4 +1,4 @@
-// $Id: LoKi_MCDecay.cpp,v 1.4 2009-05-19 10:22:02 ibelyaev Exp $
+// $Id: LoKi_MCDecay.cpp,v 1.5 2009-05-23 16:00:43 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -72,12 +72,12 @@ LOKI_MCALGORITHM( MCDecayDescriptor )
   Photos p11 ( p1 ) ;
   p11.setAlg( Decays::Trees::Sections ) ;
   
-  Photos _psi ( Pid("J/psi(1S)") , MCExclusive::SubTrees() ) ;
+  Photos _psi ( Pid("J/psi(1S)") , MCExclusive::TreeList() ) ;
   _psi.setAlg( Decays::Trees::Sections ) ;
   _psi += EllPlus  () ;
   _psi += EllMinus () ;
   
-  Photos _phi ( Pid("phi(1020)") , MCExclusive::SubTrees() ) ;
+  Photos _phi ( Pid("phi(1020)") , MCExclusive::TreeList() ) ;
   _phi.setAlg( Decays::Trees::Sections ) ;
   _phi += Positive () ;
   _phi += Negative () ;
