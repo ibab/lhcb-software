@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.428 2009-05-16 20:31:39 graven Exp $
+! $Id: release.notes,v 1.429 2009-05-23 16:51:25 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-05-23 - Juan PALACIOS
+ - Add new GaudiAlgorithm PVRelatorAlg. It takes either a Particle and a PV TES
+   location, or a Particle->PV relations talbe location and runs an
+   IRelatedPVFinder to create a weighted relations table linking the particles
+   to the primary vertices. The IRelatedPVFinder's type is controlled by
+   an OnOfflineTool.
+ - cmt/requirements
+  . Increase version to v18r5
 
 !========================== DaVinciTools v18r4p1 2009-05-16 =================
 
