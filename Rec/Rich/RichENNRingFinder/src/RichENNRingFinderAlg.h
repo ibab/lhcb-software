@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.3 2009-05-23 10:45:07 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.4 2009-05-23 13:37:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -78,7 +78,7 @@ namespace Rich
         virtual StatusCode execute   ();    ///< Algorithm execution
         virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-      protected:
+      private:
 
         /// Returns the RICH Detector
         inline Rich::DetectorType rich() const { return m_rich; }
@@ -160,7 +160,7 @@ namespace Rich
         /// Maximum ring radius
         double m_maxRingRadius;
 
-        /// Max Chi^2 per hit on ring
+        /// Max ring Chi^2
         double m_maxRingChi2;
 
         /// Min ring purity
@@ -176,7 +176,7 @@ namespace Rich
 
       /**
        * @class  Rich1TopPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH1 top panel using ENN Chains
+       * @brief  Standalone ring finder for RICH1 top panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
        * @date   2003-12-02
@@ -194,7 +194,7 @@ namespace Rich
 
       /**
        * @class  Rich1BottomPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH1 bottom panel using ENN Chains
+       * @brief  Standalone ring finder for RICH1 bottom panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
        * @date   2003-12-02
@@ -212,7 +212,7 @@ namespace Rich
 
       /**
        * @class  Rich2RightPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH2 right panel using ENN
+       * @brief  Standalone ring finder for RICH2 right panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
        * @date   2003-12-02
@@ -230,7 +230,7 @@ namespace Rich
 
       /**
        * @class  Rich2LeftPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH2 left panel using ENN
+       * @brief  Standalone ring finder for RICH2 left panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
        * @date   2003-12-02

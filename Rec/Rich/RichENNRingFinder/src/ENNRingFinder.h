@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.9 2009-05-23 10:45:07 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.10 2009-05-23 13:37:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -119,7 +119,8 @@ namespace Rich
           /// The ring radius
           inline double radius() const { return r; }
           /// Ring purity (fraction of associated hits owned by this ring)
-          inline double purity() const { return ( NHits>0 ? (double)NOwn/(double)NHits : 0 ); }
+          inline double purity() const
+          { return ( NHits>0 ? (double)NOwn/(double)NHits : 0 ); }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, const Ring & ring )
@@ -132,10 +133,10 @@ namespace Rich
                       << " ]"; 
           }
         public:
-          bool on;   ///< is the ring selected?
-          double x;  ///< ring centre point y
-          double y;  ///< ring centre point y
-          double r;  ///< ring radius
+          bool on;     ///< is the ring selected?
+          double x;    ///< ring centre point y
+          double y;    ///< ring centre point y
+          double r;    ///< ring radius
           double chi2; ///< chi2
           Hit::PtnVector Hits; ///< pointers to ring hits
           // variables for the selection procedure:

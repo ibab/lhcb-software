@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.6 2009-05-22 23:37:19 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.7 2009-05-23 13:37:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -52,7 +52,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
-    m_maxRingChi2      = 200;
+    m_maxRingChi2      = 75;
     m_minRingPurity    = 0.7;
   }
   else // RICH1
@@ -64,21 +64,21 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
-    m_minRingRadius    = 45.0;
-    m_maxRingRadius    = 75.0;
-    m_maxRingChi2      = 200;
-    m_minRingPurity    = 0.7;
+    m_minRingRadius    = 25.0;
+    m_maxRingRadius    = 100.0;
+    m_maxRingChi2      = 75;
+    m_minRingPurity    = 0.8;
   }
   // JOs
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::ENNRings+"All" );
-  declareProperty( "MinAssociationProb",   m_minAssProb        );
-  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent      );
-  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD        );
-  declareProperty( "ScaleFactor",          m_scaleFactor       );
-  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep       );
-  declareProperty( "MaxRingChiSquared",    m_maxRingChi2       );
-  declareProperty( "MinRingPurity",        m_minRingPurity     );
+  declareProperty( "MinAssociationProb",   m_minAssProb      );
+  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent    );
+  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD      );
+  declareProperty( "ScaleFactor",          m_scaleFactor     );
+  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep     );
+  declareProperty( "MaxRingChiSquared",    m_maxRingChi2     );
+  declareProperty( "MinRingPurity",        m_minRingPurity   );
   // Disable histograms by default
   setProduceHistos( false );
 }
@@ -130,7 +130,7 @@ StatusCode AlgBase<FINDER>::execute()
   getRings( m_ringLocation );
 
   // RICH init
-  StatusCode sc = richInit();
+  const StatusCode sc = richInit();
   if ( sc.isFailure() ) return sc;
 
   // Ring finder
@@ -286,7 +286,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
   }
 
   // count # found rings per event
-  counter("# Found Rings") += (rings->size() - nRingsBefore);
+  counter("# "+Rich::text(rich())+" Found Rings") += (rings->size() - nRingsBefore);
 
   return StatusCode::SUCCESS;
 }
@@ -294,7 +294,8 @@ StatusCode AlgBase<FINDER>::saveRings() const
 template < class FINDER >
 void AlgBase<FINDER>::addRingToPixels( LHCb::RichRecRing * ring ) const
 {
-  verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endmsg;
   for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
         iP != ring->richRecPixels().end(); ++iP )
   {
