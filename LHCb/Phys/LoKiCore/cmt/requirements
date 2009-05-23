@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.52 2009-05-22 18:12:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.53 2009-05-23 15:54:19 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -39,9 +39,11 @@ apply_pattern      reflex_dictionary                                     \
                    headerfiles=$(LOKICOREROOT)/dict/LoKiCoreDict.h       \
                    selectionfile=$(LOKICOREROOT)/dict/LoKiCore.xml       \
                    options=" -U__MINGW32__ "
-	
-macro_append       NodeGrammarTest_dependencies LoKiCore
-macro_append       TreeGrammarTest_dependencies LoKiCore
+	        
+macro_append       LoKiCore_dependencies        LoKiCoreLib
+macro_append       LoKiCoreDict_dependencies    LoKiCoreLib
+macro_append       NodeGrammarTest_dependencies LoKiCoreLib
+macro_append       TreeGrammarTest_dependencies LoKiCoreLib
 
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=LoKiCoreLib

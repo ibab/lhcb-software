@@ -1,6 +1,6 @@
-// $Id: TreeGrammarTest.cpp,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: TreeGrammarTest.cpp,v 1.2 2009-05-23 15:54:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -21,7 +21,7 @@
 // Decays
 // ============================================================================
 #include "LoKi/TreeHelpers.h"
-#include "Decays/TreeParser.h"
+#include "LoKi/TreeParser.h"
 // ============================================================================
 /** @file
  *  Simple application to test Decay Tree parsers 
@@ -40,13 +40,16 @@ int main()
   std::vector<std::string> symbols, particles ;
   syms.symbols ( symbols ) ;
   
-  particles.push_back("B0") ;
-  particles.push_back("B+") ;
-  particles.push_back("B-") ;
-  particles.push_back("X(3872)+") ;
-  particles.push_back("X(3872)~+") ;
   
-  
+  particles.push_back ( "B0"  ) ;
+  particles.push_back ( "B+"  ) ;
+  particles.push_back ( "B-"  ) ;
+  particles.push_back ( "D0"  ) ;
+  particles.push_back ( "D+"  ) ;
+  particles.push_back ( "D-"  ) ;
+  particles.push_back ( "X(3872)+"  ) ;
+  particles.push_back ( "X(3872)~+" ) ;
+
   std::string input ;
   std::cout << " Enter the tree " << std::endl ;
   

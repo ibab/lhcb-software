@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.9 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: Trees.h,v 1.10 2009-05-23 15:54:19 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1
@@ -23,6 +23,8 @@
 namespace Decays
 {
   // ==========================================================================
+  template <class PARTICLE> class TreeList_ ;
+  // ==========================================================================  
   namespace Trees 
   {
     // ========================================================================
@@ -134,6 +136,47 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Invalid_
+     *  helper class to represent the invalid tree 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-05-08
+     */
+    template <class PARTICLE>
+    class Invalid_ : public Decays::iTree_<PARTICLE>
+    {
+    private:
+      // ======================================================================
+      /// get the actual argument type form the base 
+      typedef typename  Decays::iTree_<PARTICLE>::argument         argument   ;
+      /// get the actual collection type form the base 
+      typedef typename  Decays::iTree_<PARTICLE>::Collection       Collection ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Invalid_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Invalid_* clone() const { return new Invalid_(*this) ; }
+      /// MANDATORY: the only one essential method:
+      virtual bool operator() ( argument /* p */ ) const { return false ; }
+      /// MANDATORY: the printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << " <INVALID> "; }
+      /// Check the validity 
+      virtual bool valid() const { return false ; }
+      /// validate it
+      virtual StatusCode validate 
+      ( const LHCb::IParticlePropertySvc* /* svc */ ) const 
+      { return StatusCode( StatusCode::FAILURE , true ) ; }
+      /// reset the collection cache 
+      virtual void reset () const {} ;
+      /// collect the marked elements 
+      virtual size_t collect ( Collection& /* output */ ) const { return 0 ; }
+      /// has marked elements in the tree ? 
+      virtual bool marked() const { return false ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class _Tree_
      *  Helper class needed to hold temporary Tree-objects 
      *  and for the proper permutations 
@@ -143,47 +186,11 @@ namespace Decays
     template <class PARTICLE> 
     struct _Tree_ 
     {
-    public:
-      // ======================================================================
-      /// the actual type for the vector of trees 
-      typedef std::vector<_Tree_>  SubTrees ;
       // ======================================================================
     public:
       // ======================================================================
-      class Invalid : public Decays::iTree_<PARTICLE>
-      {
-      private:
-        // ====================================================================
-        /// get the actual argument type form the base 
-        typedef typename  Decays::iTree_<PARTICLE>::argument   argument   ;
-        /// get the actual collection type form the base 
-        typedef typename  Decays::iTree_<PARTICLE>::Collection Collection ;
-        // ====================================================================
-      public:
-        // ====================================================================
-        /// MANDATORY: virtual destructor 
-        virtual ~Invalid () {}
-        /// MANDATORY: clone method ("virtual constructor")
-        virtual  Invalid* clone() const { return new Invalid(*this) ; }
-        /// MANDATORY: the only one essential method:
-        virtual bool operator() ( argument /* p */ ) const { return false ; }
-        /// MANDATORY: the printout 
-        virtual std::ostream& fillStream ( std::ostream& s ) const 
-        { return s << " <INVALID> "; }
-        /// Check the validity 
-        virtual bool valid() const { return false ; }
-        /// validate it
-        virtual StatusCode validate 
-        ( const LHCb::IParticlePropertySvc* /* svc */ ) const 
-        { return StatusCode( StatusCode::FAILURE , true ) ; }
-        /// reset the collection cache 
-        virtual void reset () const {} ;
-        /// collect the marked elements 
-        virtual size_t collect ( Collection& /* output */ ) const { return 0 ; }
-        /// has marked elements in the tree ? 
-        virtual bool marked() const { return false ; }
-        // ====================================================================
-      } ;
+      /// invalid class 
+      typedef  Decays::Trees::Invalid_<PARTICLE>                      Invalid ;
       // ======================================================================
     public:
       // ======================================================================
@@ -260,8 +267,13 @@ namespace Decays
     public:
       // ======================================================================
       /// get the actual tree 
-      const Decays::iTree_<PARTICLE>& tree () const 
+      inline const Decays::iTree_<PARTICLE>& tree () const 
       { return m_tree.tree() ; }
+      // ======================================================================
+      /// cast to the actual underlying tree 
+      operator const Decays::iTree_<PARTICLE>& () const { return tree() ; }
+      /// non-const cast to the tree-holder 
+      operator       Decays::Tree_<PARTICLE>&  ()       { return m_tree ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -308,6 +320,92 @@ namespace Decays
       // ======================================================================
     } ;
     // ========================================================================
+  } //                                           end of namespace Decays::Trees 
+  // ==========================================================================
+  /** @class TreeList_ 
+   *  helper class torepreset the helepr list of trees 
+   *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+   *  @date 2009-05-23
+   */
+  template <class PARTICLE>
+  class TreeList_
+  {
+  public:
+    // =======================================================================
+    /// the element type
+    typedef Decays::Trees::_Tree_<PARTICLE>                  _Tree_          ;
+    typedef Decays::Tree_<PARTICLE>                          Tree            ;
+    typedef Decays::iTree_<PARTICLE>                         iTree           ;
+    /// the actual container 
+    typedef std::vector<_Tree_>                              Trees_          ;
+    typedef typename Trees_::iterator                        iterator        ;
+    typedef typename Trees_::const_iterator                  const_iterator  ;
+    typedef typename Trees_::const_reference                 const_reference ;
+    // =======================================================================
+  public:
+    // =======================================================================
+    // constructor from the trees 
+    TreeList_ ( const Trees_& trees ) : m_trees ( trees ) {}
+    /// default constructor 
+    TreeList_ () : m_trees () {}
+    // ========================================================================
+  public:
+    // ========================================================================
+    // constructor from iterators 
+    template <class ITERATOR>
+    TreeList_ ( ITERATOR first , 
+                ITERATOR last  ) 
+      : m_trees ( first, last ) {}
+    // ========================================================================
+  public:
+    // ========================================================================
+    TreeList_& operator+= ( const _Tree_& tree )
+    { m_trees.push_back ( tree  ) ;  return *this ; }
+    TreeList_& operator+= ( const  Tree& tree )
+    { m_trees.push_back ( tree  ) ;  return *this ; }
+    TreeList_& operator+= ( const iTree& tree )
+    { m_trees.push_back ( tree  ) ;  return *this ; }
+    TreeList_& operator+= ( const  Trees_&   trees )
+    { 
+      m_trees.insert ( m_trees.end () , trees.begin() , trees.end() ) ; 
+      return *this ;
+    }
+    TreeList_& operator+= ( const TreeList_& trees )
+    { 
+      m_trees.insert ( m_trees.end () , trees.begin() , trees.end() ) ; 
+      return *this ;
+    }
+    // ========================================================================
+  public:
+    // ========================================================================
+    const_iterator  begin () const { return m_trees . begin () ; }
+    const_iterator  end   () const { return m_trees . end   () ; }
+    iterator        begin ()       { return m_trees . begin () ; }
+    iterator        end   ()       { return m_trees . end   () ; }    
+    bool            empty () const { return m_trees . empty () ; }
+    size_t          size  () const { return m_trees . size  () ; }
+    void            clear ()       {        m_trees . clear () ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    const_reference front () const { return m_trees . front () ; }
+    const_reference back  () const { return m_trees . back  () ; }    
+    // ========================================================================
+  public:
+    // ========================================================================    
+    const Trees_& trees () const { return m_trees ; }
+    operator const Trees_&() const { return trees () ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    ///  the actual container of trees 
+    Trees_    m_trees ;                       //  the actual container of trees
+    // ========================================================================
+  } ;
+  // ==========================================================================
+  namespace Trees 
+  {  
+    // ========================================================================
     /** @class  Op_ 
      *  Simple sub-tree which matches "operation"
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -319,9 +417,12 @@ namespace Decays
     public:
       // ======================================================================
       /// the actual type for subtrees 
-      typedef typename _Tree_<PARTICLE>::SubTrees              SubTrees       ;
-      typedef typename SubTrees::iterator                      iterator       ;
-      typedef typename SubTrees::const_iterator                const_iterator ;
+      typedef Decays::TreeList_<PARTICLE>                      TreeList       ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef typename TreeList::iterator                      iterator       ;
+      typedef typename TreeList::const_iterator                const_iterator ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -347,18 +448,18 @@ namespace Decays
       // ======================================================================
     protected:
       // ======================================================================
-      inline const SubTrees& trees () const { return m_trees ;  }        
-      inline       SubTrees& trees ()       { return m_trees ;  }
+      inline const TreeList& trees () const { return m_trees ;  }        
+      inline       TreeList& trees ()       { return m_trees ;  }
       // ======================================================================
-      inline       iterator begin ()       { return m_trees.begin () ; }
-      inline const_iterator begin () const { return m_trees.begin () ; }
-      inline       iterator end   ()       { return m_trees.end   () ; }
-      inline const_iterator end   () const { return m_trees.end   () ; }          
+      inline       iterator begin  ()       { return m_trees.begin () ; }
+      inline const_iterator begin  () const { return m_trees.begin () ; }
+      inline       iterator end    ()       { return m_trees.end   () ; }
+      inline const_iterator end    () const { return m_trees.end   () ; }          
       // ======================================================================
     protected:
       // ======================================================================
       size_t push_back ( const Decays::iTree_<PARTICLE>& tree ) 
-      { m_trees.push_back ( tree ) ;  return m_trees.size() ; }      
+      { m_trees += tree ;  return m_trees.size() ; }      
       // ======================================================================
     protected:
       // ======================================================================
@@ -367,7 +468,8 @@ namespace Decays
       // ======================================================================
     private:
       // ======================================================================
-      mutable SubTrees m_trees ;
+      /// the actual list of trees 
+      mutable TreeList m_trees ;                    // the actual list of trees 
       // ======================================================================
     } ;
     // ========================================================================
@@ -379,12 +481,20 @@ namespace Decays
     template <class PARTICLE>
     class And_ : public Decays::Trees::Op_<PARTICLE>
     {
+    protected:
+      // =====================================================================
+      /// base class 
+      typedef typename Decays::Trees::Op_<PARTICLE>                     _Base ;
+      // ======================================================================
     public:
       // ======================================================================
       /// the actual type for subtrees 
-      typedef typename Op_<PARTICLE>::SubTrees                 SubTrees       ;
-      typedef typename SubTrees::iterator                      iterator       ;
-      typedef typename SubTrees::const_iterator                const_iterator ;
+      typedef typename _Base::TreeList                               TreeList ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef typename _Base::iterator                               iterator ;
+      typedef typename _Base::const_iterator                   const_iterator ;
       // ======================================================================
     public: 
       // ======================================================================
@@ -392,7 +502,7 @@ namespace Decays
       And_ ( const Decays::iTree_<PARTICLE>& n1 , 
              const Decays::iTree_<PARTICLE>& n2 ) ;
       /// constructor from list of sub-trees 
-      And_ ( const SubTrees& trees ) ;
+      And_ ( const TreeList& trees ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~And_ () {}
       // ======================================================================
@@ -412,20 +522,20 @@ namespace Decays
       { this->addTree  ( tree        ) ; return *this ; }
       And_& operator&= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree  ( tree.tree() ) ; return *this ; }
-      And_& operator&= ( const          SubTrees&               tree ) 
+      And_& operator&= ( const          TreeList&               tree ) 
       { this->addTree  ( tree        ) ; return *this ; }
       // ======================================================================
       And_& operator+= ( const Decays::       iTree_<PARTICLE>& tree ) 
       { this->addTree  ( tree        ) ; return *this ; }
       And_& operator+= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree  ( tree.tree() ) ; return *this ; }
-      And_& operator+= ( const          SubTrees&               tree ) 
+      And_& operator+= ( const          TreeList&               tree ) 
       { this->addTree  ( tree        ) ; return *this ; }
       // ======================================================================
     protected:
       // ======================================================================
       size_t addTree ( const Decays::iTree_<PARTICLE>& tree  ) ;
-      size_t addTree ( const SubTrees&                 trees ) ;
+      size_t addTree ( const TreeList&                 trees ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -442,12 +552,20 @@ namespace Decays
     template <class PARTICLE> 
     class Or_ : public Decays::Trees::Op_<PARTICLE> 
     {
+    protected:
+      // ======================================================================
+      /// base class 
+      typedef typename Decays::Trees::Op_<PARTICLE>                     _Base ;
+      // ======================================================================
     public:
       // ======================================================================
       /// the actual type for subtrees 
-      typedef typename Op_<PARTICLE>::SubTrees                 SubTrees       ;
-      typedef typename SubTrees::iterator                      iterator       ;
-      typedef typename SubTrees::const_iterator                const_iterator ;
+      typedef typename _Base::TreeList                               TreeList ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef typename _Base::iterator                               iterator ;
+      typedef typename _Base::const_iterator                   const_iterator ;
       // ======================================================================
     public:
       // ======================================================================
@@ -455,7 +573,7 @@ namespace Decays
       Or_ ( const Decays::iTree_<PARTICLE>& n1 , 
             const Decays::iTree_<PARTICLE>& n2 ) ;
       /// constructor from list of sub-trees 
-      Or_ ( const SubTrees& trees ) ;
+      Or_ ( const TreeList& trees ) ;
       /// MANDATORY: virtual destrcutor 
       virtual ~Or_() {}
       // ======================================================================
@@ -475,20 +593,20 @@ namespace Decays
       { this->addTree ( tree        ) ; return *this ; }
       Or_& operator|= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree ( tree.tree() ) ; return *this ; }
-      Or_& operator|= ( const                        SubTrees& tree ) 
+      Or_& operator|= ( const                        TreeList& tree ) 
       { this->addTree ( tree        ) ; return *this ; }
       // ======================================================================
       Or_& operator+= ( const Decays::       iTree_<PARTICLE>& tree ) 
       { this->addTree ( tree        ) ; return *this ; }
       Or_& operator+= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree ( tree.tree() ) ; return *this ; }
-      Or_& operator+= ( const                        SubTrees& tree ) 
+      Or_& operator+= ( const                        TreeList& tree ) 
       { this->addTree ( tree        ) ; return *this ; }
       // ======================================================================
     protected:
       // ======================================================================
       size_t addTree ( const Decays::iTree_<PARTICLE>& tree  ) ;
-      size_t addTree ( const                 SubTrees& trees ) ;
+      size_t addTree ( const                 TreeList& trees ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -505,12 +623,20 @@ namespace Decays
     template <class PARTICLE> 
     class List_ : public Decays::Trees::Or_<PARTICLE> 
     {
+    protected:
+      // =====================================================================
+      /// base class 
+      typedef typename Decays::Trees::Or_<PARTICLE>                     _Base ;
+      // ======================================================================
     public:
       // ======================================================================
       /// the actual type for subtrees 
-      typedef typename Or_<PARTICLE>::SubTrees                 SubTrees       ;
-      typedef typename SubTrees::iterator                      iterator       ;
-      typedef typename SubTrees::const_iterator                const_iterator ;
+      typedef typename _Base::TreeList                               TreeList ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      typedef typename _Base::iterator                               iterator ;
+      typedef typename _Base::const_iterator                   const_iterator ;
       // ======================================================================
     public:
       // ======================================================================
@@ -520,7 +646,7 @@ namespace Decays
         : Decays::Trees::Or_<PARTICLE>  ( n1 , n2 ) 
       {}
       /// constructor from list of sub-trees 
-      List_ ( const SubTrees& trees ) 
+      List_ ( const TreeList& trees ) 
         : Decays::Trees::Or_<PARTICLE>  ( trees ) 
       {}
       /// MANDATORY: virtual destrcutor 
@@ -539,14 +665,14 @@ namespace Decays
       { this->addTree   ( tree        ) ; return *this ; }
       List_& operator|= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree   ( tree.tree() ) ; return *this ; }
-      List_& operator|= ( const SubTrees&                        tree ) 
+      List_& operator|= ( const TreeList&                        tree ) 
       { this->addTree   ( tree        ) ; return *this ; }
       // ======================================================================
       List_& operator+= ( const Decays::       iTree_<PARTICLE>& tree ) 
       { this->addTree   ( tree        ) ; return *this ; }
       List_& operator+= ( const Decays::Trees::_Tree_<PARTICLE>& tree ) 
       { this->addTree   ( tree.tree() ) ; return *this ; }
-      List_& operator+= ( const SubTrees&                        tree ) 
+      List_& operator+= ( const TreeList&                        tree ) 
       { this->addTree   ( tree        ) ; return *this ; }
       // ======================================================================
     private:
@@ -559,6 +685,7 @@ namespace Decays
     /** @class  Not_
      * 
      *  @attention Not_ blocks the marked elements!
+     *
      *  Simple sub-tree which matches .NOT. for subtree
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-13
@@ -744,12 +871,18 @@ namespace Decays
       typedef Decays::iTree_<PARTICLE>                           iTree    ;
       /// the actual type of assignable 
       typedef Decays::Tree_<PARTICLE>                            Tree     ;
-      /// the actual type of vectior of assignables 
-      typedef typename Decays::Trees::_Tree_<PARTICLE>::SubTrees SubTrees ;
+      /// the actual type of vector of assignables 
+      typedef Decays::TreeList_<PARTICLE>                        TreeList ;
       // the acutal type of "Any"
       typedef Decays::Trees::Any_<PARTICLE>                      Any      ;
-      // the acutal type of "Marked"
-      typedef Decays::Trees::Marked_<PARTICLE>                   Marked   ;
+      /// the actual type of vector of assignables 
+      typedef Decays::Trees::Invalid_<PARTICLE>                  Invalid  ;
+      // OR
+      typedef Decays::Trees::Or_<PARTICLE>                       Or       ;
+      // AND
+      typedef Decays::Trees::And_<PARTICLE>                      And      ;
+      // LIST
+      typedef Decays::Trees::List_<PARTICLE>                     List     ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -767,10 +900,10 @@ namespace Decays
       InvalidPhotos           , // Invalid 'Photos'     flag 
       InvalidBranch             // Invalid combination of flags 
     };
-    // ======================================================================
-  } // end of namespace Decays::Trees 
+    // ========================================================================
+  } //                                           end of namespace Decays::Trees 
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
 #include "LoKi/Trees.icpp"
 // ============================================================================

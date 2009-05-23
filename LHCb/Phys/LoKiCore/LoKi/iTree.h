@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.10 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: iTree.h,v 1.11 2009-05-23 15:54:19 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -199,7 +199,7 @@ namespace Decays
   public:
     // ======================================================================
     /// get the underlying tree 
-    const Decays::iTree_<PARTICLE>& tree () const { return *m_tree ; }
+    inline const Decays::iTree_<PARTICLE>& tree () const { return *m_tree ; }
     // ======================================================================
   public:
     // ======================================================================
