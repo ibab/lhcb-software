@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.2 2009-05-23 17:25:20 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.3 2009-05-23 18:36:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -91,33 +91,65 @@ StatusCode PVRelatorAlg::execute() {
 //=============================================================================
 const Particle2Vertex::Table* PVRelatorAlg::table() 
 {
+  typedef LHCb::Particle::Container Particles;
+  typedef LHCb::RecVertex::Container Vertices;
+  typedef Particle2Vertex::LightTable RelTable;  
 
-  const LHCb::Particle::Container* particles =
-    i_get<LHCb::Particle::Container>(m_particleInputLocation);
+  const Particles* particles = i_get<Particles>(m_particleInputLocation);
 
-  const LHCb::RecVertex::Container* vertices = 
-    i_get<LHCb::RecVertex::Container>(m_PVInputLocation);
+  const Vertices* vertices = i_get<Vertices>(m_PVInputLocation);
 
   Particle2Vertex::Table* table = new Particle2Vertex::Table();
 
+  if (0==particles || 0==vertices) return table;
+
+  for (Particles::const_iterator iPart = particles->begin();
+       iPart != particles->end(); ++ iPart) {
+    const RelTable::Range range = 
+      m_pvRelator->relatedPVs(*iPart, *vertices).relations();
+    table->merge(range);
+  }  
   return table;
-  
-//   const LHCb::Particle*  bCand = 
-//     const Particle2Vertex::Table* table = 
-//     get<Particle2Vertex::Table>(m_Particle2RefittedPVRelationsLoc);
-//   const  Particle2Vertex::Range range =  table->relations( bCand );
-//   const LHCb::RecVertex* bestPV =  range.empty() ? 0 : 
-//     dynamic_cast<const LHCb::RecVertex*>( range.back().to() );
  
 }
 //=============================================================================
 //=============================================================================
 const Particle2Vertex::Table* PVRelatorAlg::tableFromTable() 
 {
+  typedef LHCb::Particle::ConstVector Particles;
+  typedef LHCb::RecVertex::ConstVector Vertices;
+  typedef Particle2Vertex::LightTable RelTable;
+  typedef Particle2Vertex::Table Table;
 
-  Particle2Vertex::Table* table = new Particle2Vertex::Table();
+  const Table* inputTable = i_get<Table>(m_P2PVInputLocation);
 
-  return table;  
+  Table* table = new Table();
+
+  if (0==table) return table;
+
+  Table::Range range = inputTable->relations();
+
+  Particles particles;
+  Vertices vertices;
+  
+//   for (Table::Range::const_iterator iRange = range.begin();
+//        iRange != range.end(); ++iRange) {
+//     const LHCb::Particle* particle = iRange->from() ;
+//   }
+
+//   for (Particles::const_iterator iPart = particles.begin();
+//        iPart != particles.end(); ++ iPart) {
+//     const Table::Range range = inputTable.relations(*iPart);
+//     for (Table::Range::const_iterator iRange = range.begin();
+//          iRange != range.end();
+//          ++iRange) {
+//       vertices.push_back(iRange->to() );
+//     }
+//   }
+
+  return table;
+
+
 }
 //=============================================================================
 //=============================================================================
