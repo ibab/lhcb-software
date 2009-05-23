@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.1 2009-05-23 16:48:51 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.2 2009-05-23 17:25:20 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -25,6 +25,20 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+private:
+
+  template <typename T>
+  inline T* 
+  i_get(const std::string& location) const
+  {
+    return (exist<T>( location )) ? get<T>( location ) : 0 ;
+  }
+
+  const Particle2Vertex::Table* table();
+  
+  const Particle2Vertex::Table* tableFromTable();
+  
 
 private:
 

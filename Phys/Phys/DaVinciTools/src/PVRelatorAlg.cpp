@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.1 2009-05-23 16:48:54 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.2 2009-05-23 17:25:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -88,7 +88,38 @@ StatusCode PVRelatorAlg::execute() {
 
   return StatusCode::SUCCESS;
 }
+//=============================================================================
+const Particle2Vertex::Table* PVRelatorAlg::table() 
+{
 
+  const LHCb::Particle::Container* particles =
+    i_get<LHCb::Particle::Container>(m_particleInputLocation);
+
+  const LHCb::RecVertex::Container* vertices = 
+    i_get<LHCb::RecVertex::Container>(m_PVInputLocation);
+
+  Particle2Vertex::Table* table = new Particle2Vertex::Table();
+
+  return table;
+  
+//   const LHCb::Particle*  bCand = 
+//     const Particle2Vertex::Table* table = 
+//     get<Particle2Vertex::Table>(m_Particle2RefittedPVRelationsLoc);
+//   const  Particle2Vertex::Range range =  table->relations( bCand );
+//   const LHCb::RecVertex* bestPV =  range.empty() ? 0 : 
+//     dynamic_cast<const LHCb::RecVertex*>( range.back().to() );
+ 
+}
+//=============================================================================
+//=============================================================================
+const Particle2Vertex::Table* PVRelatorAlg::tableFromTable() 
+{
+
+  Particle2Vertex::Table* table = new Particle2Vertex::Table();
+
+  return table;  
+}
+//=============================================================================
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -98,5 +129,4 @@ StatusCode PVRelatorAlg::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
 //=============================================================================
