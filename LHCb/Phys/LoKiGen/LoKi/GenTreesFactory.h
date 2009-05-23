@@ -1,9 +1,9 @@
-// $Id: GenTreesFactory.h,v 1.2 2009-05-22 18:13:09 ibelyaev Exp $
+// $Id: GenTreesFactory.h,v 1.3 2009-05-23 15:56:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENTREESFACTORY_H 
 #define LOKI_GENTREESFACTORY_H 1
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -18,6 +18,8 @@ namespace HepMC { class GenParticle ; }
 namespace Decays 
 {
   // ==========================================================================
+  namespace Parsers  { class Tree ; }
+  // ==========================================================================
   namespace Trees
   {
     // ========================================================================
@@ -29,6 +31,7 @@ namespace Decays
      *   @param daughters  (INPUT)  the list of daughter trees 
      *   @param inclusive  (INPUT)  the flag for inclusive 
      *   @param optional   (INPUT)  the list of "optional" particles 
+     *   @param stream     (OUTPUT) the stream to report errors 
      *   @return StatusCode 
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
@@ -38,24 +41,40 @@ namespace Decays
       const Decays::iNode&                                              mother     , 
       const Decays::Trees::Oscillation&                                 oscillated ,
       const Decays::Trees::Arrow&                                       arrow      ,
-      const Decays::Trees::Types_<const HepMC::GenParticle*>::SubTrees& daughters  , 
+      const Decays::Trees::Types_<const HepMC::GenParticle*>::TreeList& daughters  , 
       const bool                                                        inclusive  ,
-      const Decays::Trees::Types_<const HepMC::GenParticle*>::SubTrees& optional   ) ;
-    // ========================================================================
+      const Decays::Trees::Types_<const HepMC::GenParticle*>::TreeList& optional   ,
+      std::ostream&                                                     stream     ) ;
+      // ========================================================================
     /** "Factory" to create the proper Tree from "short" descriptor
      *   @param tree       (OUTPUT) the constructed tree 
      *   @param mother     (INPUT)  the mother particle 
+     *   @param oscillated (INPUT)  the oscillation flag 
      *   @return status code 
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
     StatusCode factory 
     ( Decays::Trees::Types_<const HepMC::GenParticle*>::Tree& tree       ,
-      const Decays::iNode&                                    mother     ) ;
+      const Decays::iNode&                                    mother     ,
+      const Decays::Trees::Oscillation&                       oscillated ) ;
     // ========================================================================
-  } // end of namespace Decays::Trees::
+    /** "Factory" to create the proper Tree from the parsed tree 
+     *   @param tree       (OUTPUT) the constructed tree 
+     *   @param parsed     (INPUT)  the parsed tree  
+     *   @param stream     (OUTPUT) the stream to report errors 
+     *   @return status code  
+     *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *   @date   2009-05-22 
+     */     
+    StatusCode factory 
+    ( Decays::Trees::Types_<const HepMC::GenParticle*>::Tree& tree   ,
+      const Decays::Parsers::Tree&                            parsed ,
+      std::ostream&                                           stream ) ;
+    // ========================================================================
+  } //                                           end of namespace Decays::Trees
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
 // The END 
 // ============================================================================

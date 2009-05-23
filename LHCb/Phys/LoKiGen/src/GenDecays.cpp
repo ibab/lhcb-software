@@ -1,4 +1,4 @@
-// $Id: GenDecays.cpp,v 1.6 2009-05-14 16:57:38 ibelyaev Exp $
+// $Id: GenDecays.cpp,v 1.7 2009-05-23 15:56:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -107,7 +107,7 @@ namespace
 // ============================================================================
 Decays::Trees::GenExclusive::GenExclusive
 ( const Decays::iNode&                         mother      , 
-  const Decays::Trees::GenExclusive::SubTrees& children    ,
+  const Decays::Trees::GenExclusive::TreeList& children    ,
   const Decays::Trees::Alg                     alg         ,
   const Decays::Trees::Oscillation             oscillation )
   : Decays::iTree_<const HepMC::GenParticle*> () 
@@ -132,6 +132,22 @@ Decays::Trees::GenExclusive::GenExclusive
   , m_children    (            ) 
   , m_alg         ( alg        )
   , m_oscillation ( oscillation )
+{}
+// ============================================================================
+/*  constructor from the node (mother), subtrees and "final" flag
+ *  @param osc require the oscillation flag for mother 
+ *  @param mother the mother node 
+ *  @param osc require the oscillation flag for mother 
+ */
+// ============================================================================
+Decays::Trees::GenExclusive::GenExclusive
+( const Decays::Trees::Oscillation            oscillation ,
+  const Decays::iNode&                        mother      ) 
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother      ( mother                   )
+  , m_children    (                          ) 
+  , m_alg         ( Decays::Trees::Daughters )
+  , m_oscillation ( oscillation              )
 {}
 // ============================================================================
 /*  constructor from the decay 
@@ -180,7 +196,7 @@ size_t Decays::Trees::GenExclusive::collect
 ( Decays::iTree_<const HepMC::GenParticle*>::Collection& output ) const 
 {
   size_t size = 0 ;
-  for ( SubTrees::const_iterator ichild = childBegin() ; 
+  for ( TreeList::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) { size += ichild->collect ( output ) ; }  
   return size ;
 }
@@ -189,7 +205,7 @@ size_t Decays::Trees::GenExclusive::collect
 // ============================================================================
 bool Decays::Trees::GenExclusive::marked () const 
 {
-  for ( SubTrees::const_iterator ichild = childBegin() ; 
+  for ( TreeList::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) 
   { if ( ichild->marked () ) { return true ; } }  
   return false ;
@@ -258,7 +274,7 @@ Decays::Trees::GenExclusive::fillStream ( std::ostream& s ) const
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) { s << ( *itree ) ; }
   //
   return s << ") " ;
@@ -268,7 +284,7 @@ Decays::Trees::GenExclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 void Decays::Trees::GenExclusive::addDaughter 
 ( const Decays::iTree_<const HepMC::GenParticle*>& tree ) 
-{ m_children.push_back ( tree ) ; }
+{ m_children += tree  ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
@@ -380,7 +396,7 @@ Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
 // ============================================================================
 Decays::Trees::GenInclusive::GenInclusive
 ( const Decays::iNode&                         mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::TreeList& children ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
   : Decays::Trees::GenExclusive ( mother   , 
@@ -476,7 +492,7 @@ bool Decays::Trees::GenInclusive::operator()
       if ( LoKi::Algs::found_N 
            ( isect->begin  () , 
              isect->end    () , 
-             children ()      ) ) { return true ; }            // RETURN 
+             children ().trees() ) ) { return true ; }            // RETURN 
       continue ;                                               // CONTINUE ;  
     }
     
@@ -519,7 +535,7 @@ Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) { s << ( *itree ) ; }
   //
   return s << " ... ) " ;
@@ -537,8 +553,8 @@ Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
 ( const Decays::iNode&                         mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::GenExclusive::TreeList& children ,
+  const Decays::Trees::GenExclusive::TreeList& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
   : Decays::Trees::GenExclusive ( mother   , 
@@ -557,7 +573,7 @@ Decays::Trees::GenOptional::GenOptional
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
 ( const Decays::Decay&                         decay    ,
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::GenExclusive::TreeList& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
   : Decays::Trees::GenExclusive ( decay , 
@@ -568,7 +584,7 @@ Decays::Trees::GenOptional::GenOptional
 // ============================================================================
 Decays::Trees::GenOptional::GenOptional
 ( const Decays::Trees::GenOptional::GenExclusive& right    , 
-  const Decays::Trees::GenExclusive::SubTrees&    optional ) 
+  const Decays::Trees::GenExclusive::TreeList&    optional ) 
   : Decays::Trees::GenExclusive ( right ) 
   , m_optional ( optional ) 
 {}
@@ -595,7 +611,7 @@ StatusCode Decays::Trees::GenOptional::validate
 // ============================================================================
 bool Decays::Trees::GenOptional::marked () const 
 {
-  for ( SubTrees::const_iterator iopt = optBegin() ; 
+  for ( TreeList::const_iterator iopt = optBegin() ; 
         optEnd() != iopt ; ++iopt ) { if ( iopt->marked () ) { return true ; } }  
   return Decays::Trees::GenExclusive::marked() ;
 }
@@ -622,11 +638,11 @@ std::ostream& Decays::Trees::GenOptional::fillStream
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ;
+  for ( TreeList::const_iterator itree = childBegin() ;
         childEnd() != itree ; ++itree ) 
   { s << ( *itree ) ; }
   //
-  for ( SubTrees::const_iterator itree = optBegin() ; 
+  for ( TreeList::const_iterator itree = optBegin() ; 
         optEnd () != itree ; ++itree ) 
   { s << " {" << ( *itree ) << "} "; }
   //
@@ -661,7 +677,7 @@ bool Decays::Trees::GenOptional::operator()
     if ( !LoKi::Algs::found_N 
          ( isect->begin (), 
            isect->end   (), 
-           children() )   ) { continue ; }                        // CONTINUE 
+           children().trees() ) ) { continue ; }                        // CONTINUE 
     // (6) make all possible permutations:
     do // loop over all permutations 
     {
@@ -671,7 +687,7 @@ bool Decays::Trees::GenOptional::operator()
         // the temporary iterator 
         Decays::GenSection::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
-        SubTrees opt ( m_optional ) ;
+        TreeList opt ( m_optional ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // start all possible permutations of the optional stuff 
         do  
@@ -692,13 +708,13 @@ bool Decays::Trees::GenOptional::operator()
 // ============================================================================
 void Decays::Trees::GenOptional::addOptional 
 ( const Decays::iTree_<const HepMC::GenParticle*>& tree ) 
-{ m_optional.push_back ( tree ) ; }
+{ m_optional += tree  ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
 void Decays::Trees::GenOptional::addOptional 
 ( const Decays::iNode& node ) 
-{ m_optional.push_back ( GenExclusive ( node ) ) ; }
+{ addOptional ( GenExclusive ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
@@ -779,7 +795,7 @@ void Decays::Trees::GenOptional::setOptional
 // ============================================================================
 Decays::Trees::GenPhotos::GenPhotos
 ( const Decays::iNode&                      mother   , 
-  const Decays::Trees::GenPhotos::SubTrees& children ,
+  const Decays::Trees::GenPhotos::TreeList& children ,
   const Decays::Trees::Alg                  alg      ,
   const Decays::Trees::Oscillation          osc      )
   : Decays::Trees::GenExclusive ( mother   , 
@@ -841,7 +857,7 @@ std::ostream& Decays::Trees::GenPhotos::fillStream ( std::ostream& s ) const
   default       : s << " =>" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) { s << ( *itree ) ; }
   //
   return s << ") " ;
@@ -878,7 +894,7 @@ bool Decays::Trees::GenPhotos::operator()
     if ( !LoKi::Algs::found_N 
          ( isect -> begin () , 
            isect -> end   () , 
-           children()        ) ) { continue ; }
+           children() .trees() ) ) { continue ; }
     // (7) make all possible permutations:
     do 
     {
@@ -906,8 +922,8 @@ bool Decays::Trees::GenPhotos::operator()
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::iNode&                         mother   , 
-  const Decays::Trees::GenExclusive::SubTrees& children ,
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::GenExclusive::TreeList& children ,
+  const Decays::Trees::GenExclusive::TreeList& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
   : Decays::Trees::GenOptional ( mother   , 
@@ -927,7 +943,7 @@ Decays::Trees::GenPhotosOptional::GenPhotosOptional
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::Decay&                         decay    , 
-  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::GenExclusive::TreeList& optional ,
   const Decays::Trees::Alg                     alg      ,
   const Decays::Trees::Oscillation             osc      )
   : Decays::Trees::GenOptional ( decay    , 
@@ -947,7 +963,7 @@ Decays::Trees::GenPhotosOptional::GenPhotosOptional
 // ============================================================================
 Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const Decays::Trees::GenExclusive&           right    ,
-  const Decays::Trees::GenExclusive::SubTrees& optional )
+  const Decays::Trees::GenExclusive::TreeList& optional )
   : Decays::Trees::GenOptional ( right , optional )
   , m_photon ( s_GAMMA )  
 {}
@@ -988,11 +1004,11 @@ std::ostream& Decays::Trees::GenPhotosOptional::fillStream
   default       : s << " =>" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) 
   { s << ( *itree ) ; }
   //
-  for ( SubTrees::const_iterator itree = optBegin() ; 
+  for ( TreeList::const_iterator itree = optBegin() ; 
         optEnd () != itree ; ++itree ) 
   { s << " {" << ( *itree ) << "} "; }
   //
@@ -1024,7 +1040,7 @@ bool Decays::Trees::GenPhotosOptional::operator()
     if ( !LoKi::Algs::found_N 
          ( isect->begin (), 
            isect->end   (), 
-           children() )   ) { continue ; }                        // CONTINUE
+           children().trees() )   ) { continue ; }                  // CONTINUE
     // (5) sort the section 
     std::stable_sort ( isect->begin() , isect->end() ) ;
     // (6) make all possible permutations:
@@ -1038,12 +1054,12 @@ bool Decays::Trees::GenPhotosOptional::operator()
         // nothing to match? 
         if ( aux == isect->end() ) { return true ; } // RETURN
         // create the local container for permutations 
-        SubTrees opt ( optBegin() , optEnd() ) ;
+        TreeList opt ( optBegin() , optEnd() ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // make the nesessary permutations 
         do 
         { 
-          for ( SubTrees::iterator it = opt.begin() ; opt.end() != it ; ++it )
+          for ( TreeList::iterator it = opt.begin() ; opt.end() != it ; ++it )
           {
             // select only the subsequence of the right length 
             if ( it - opt.begin() <= isect->end() - aux ) 

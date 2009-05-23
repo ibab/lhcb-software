@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.23 2009-05-10 10:11:43 ibelyaev Exp $ 
+     * $Id: LoKiMC.xml,v 1.24 2009-05-23 15:58:12 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -72,8 +72,6 @@
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />
 
-
-
   <class name = "Decays::Trees::Any_<const LHCb::MCParticle*>"   />
   <class name = "Decays::Trees::MCExclusive" />
   <class name = "Decays::Trees::MCInclusive" />
@@ -83,8 +81,9 @@
   <class name = "LoKi::Dicts::TreeOps<const LHCb::MCParticle*>" />
   <class name = "Decays::iTree_<const LHCb::MCParticle*>"       />
   <class name = "Decays::Tree_<const LHCb::MCParticle*>"        />
-
-
+  <class name = "Decays::_Tree_<const LHCb::MCParticle*>"       />
+  <class name = "Decays::TreeList_<const LHCb::MCParticle*>"    />
+  <class name = "Decays::TreeList_<const LHCb::MCParticle*>::Trees_" />
   
   <exclusion>
     <class name = "std::vector<const ContainedObject*>"           /> 

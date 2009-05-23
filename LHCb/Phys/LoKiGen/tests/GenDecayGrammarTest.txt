@@ -1,0 +1,12 @@
+( B0  -> X  X0 ) 
+( B0  -> X  X0 ... ) 
+( B0  -> X  X0 { X+ } ) 
+( B0 --> X  X0 ) 
+( B0 --> X  X0 ... ) 
+( B0 --> X  X0 X+ X- { l+} { ( l- -> Nu  ( Beauty & Meson ) ...  ) } )
+( B0  => X  X0 ) 
+( B0  => X  X0 X+ X- { l+} { ( l- -> Nu  ( Beauty & Meson ) ...  ) } )
+( [B0]os   ==> X  X0 ) 
+( [B0]nos  ==> X  X0 Stable ) 
+(  ( B0 | B+ )   => X  X0 X+ X- { l+} { ( l- -> Nu  ( Beauty & Meson ) ...  ) } )
+

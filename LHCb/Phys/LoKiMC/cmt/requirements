@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2009-05-10 10:11:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.35 2009-05-23 15:58:12 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -29,13 +29,18 @@ apply_pattern install_python_modules
 # =============== constituents ===============================================
 library           LoKiMCLib ../src/*.cpp 
 library           LoKiMC    ../src/Components/*.cpp 
+application       MCDecayGrammarTest  tests/MCDecayGrammarTest.cpp
 
-# ============== Produce LCG dictionary ======================================
-apply_pattern    reflex_dictionary                                   \
-                 dictionary=LoKiMC                                   \
-                 headerfiles=$(LOKIMCROOT)/dict/LoKiMCDict.h         \
-                 selectionfile=$(LOKIMCROOT)/dict/LoKiMC.xml         \  
-                 options=" -U__MINGW32__ "
+# =============== Produce LCG dictionary =====================================
+apply_pattern     reflex_dictionary                                   \
+                  dictionary=LoKiMC                                   \
+                  headerfiles=$(LOKIMCROOT)/dict/LoKiMCDict.h         \
+                  selectionfile=$(LOKIMCROOT)/dict/LoKiMC.xml         \  
+                  options=" -U__MINGW32__ "
+
+macro_append      LoKiMC_dependencies             LoKiMCLib
+macro_append      LoKiMCDict_dependencies         LoKiMCLib
+macro_append      MCDecayGrammarTest_dependencies LoKiMCLib
 
 # =============== patterns ===================================================
 apply_pattern     linker_library    library=LoKiMCLib

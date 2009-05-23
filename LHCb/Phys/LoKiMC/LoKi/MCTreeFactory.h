@@ -1,20 +1,27 @@
-// $Id: MCTreeFactory.h,v 1.1 2009-05-06 20:27:54 ibelyaev Exp $
+// $Id: MCTreeFactory.h,v 1.2 2009-05-23 15:58:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCTREEFACTORY_H 
 #define LOKI_MCTREEFACTORY_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <iosfwd>
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/iTree.h"
 #include "LoKi/Trees.h"
 // ============================================================================
-// forward declarations 
-namespace LHCb { class MCParticle ; }
+/// forward declarations 
+namespace LHCb { class MCParticle ; }                   // forward declarations 
 // ============================================================================
 namespace Decays 
 {
+  // ========================================================================== 
+  namespace Parsers { class Tree ; }
+  // ========================================================================== 
   namespace Trees
   {
     // ========================================================================
@@ -26,6 +33,7 @@ namespace Decays
      *   @param daughters  (INPUT)  the list of daughter trees 
      *   @param inclusive  (INPUT)  the flag for inclusive 
      *   @param optional   (INPUT)  the list of "optional" particles 
+     *   @param stream     (OUTPUT) the stream to report errors 
      *   @return StatusCode 
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
@@ -35,24 +43,40 @@ namespace Decays
       const Decays::iNode&                                            mother     , 
       const Decays::Trees::Oscillation&                               oscillated ,
       const Decays::Trees::Arrow&                                     arrow      ,
-      const Decays::Trees::Types_<const LHCb::MCParticle*>::SubTrees& daughters  , 
+      const Decays::Trees::Types_<const LHCb::MCParticle*>::TreeList& daughters  , 
       const bool                                                      inclusive  ,
-      const Decays::Trees::Types_<const LHCb::MCParticle*>::SubTrees& optional   ) ;
+      const Decays::Trees::Types_<const LHCb::MCParticle*>::TreeList& optional   ,
+      std::ostream&                                                   stream     ) ;
     // ========================================================================
     /** "Factory" to create the proper Tree from "short" descriptor
      *   @param tree       (OUTPUT) the constructed tree 
-     *   @param mother     (INPUT)  the mother particle 
+     *   @param mother     (INPUT)  the mother particle  
+     *   @param oscillated (INPUT)  the oscillation flag 
      *   @return status code 
      *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *   @date   2009-05-06 
      */     
     StatusCode factory 
     ( Decays::Trees::Types_<const LHCb::MCParticle*>::Tree& tree       ,
-      const Decays::iNode&                                  mother     ) ;
+      const Decays::iNode&                                  mother     ,
+      const Decays::Trees::Oscillation&                     oscillated ) ;
     // ========================================================================
-  } // end of namespace Decays::Trees::
+    /** "Factory" to create the proper Tree from the parsed tree 
+     *   @param tree       (OUTPUT) the constructed tree 
+     *   @param parsed     (INPUT)  the parsed tree  
+     *   @param stream     (OUTPUT) the stream to report errors 
+     *   @return status code  
+     *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *   @date   2009-05-22 
+     */     
+    StatusCode factory 
+    ( Decays::Trees::Types_<const LHCb::MCParticle*>::Tree& tree   ,
+      const Decays::Parsers::Tree&                          parsed ,
+      std::ostream&                                         stream ) ;
+    // ========================================================================
+  }                                           // end of namespace Decays::Trees
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
 // The END 
 // ============================================================================
