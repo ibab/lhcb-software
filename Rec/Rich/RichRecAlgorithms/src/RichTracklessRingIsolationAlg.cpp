@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.8 2008-09-23 15:40:14 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.9 2009-05-23 13:38:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -224,6 +224,9 @@ StatusCode TracklessRingIsolationAlg::execute()
     }
 
   } // outer ring loop
+
+  debug() << "Selected " << outrings->size() << " isolated rings at " << m_outputRings << endmsg;
+  counter("Isolated Rings") += outrings->size();
 
   return StatusCode::SUCCESS;
 }

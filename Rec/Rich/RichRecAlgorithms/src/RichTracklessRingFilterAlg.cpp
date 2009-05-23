@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.4 2009-05-22 15:46:42 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.5 2009-05-23 13:38:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -32,7 +32,7 @@ TracklessRingFilterAlg::TracklessRingFilterAlg( const std::string& name,
                    m_inputRings  = LHCb::RichRecRingLocation::MarkovRings+"All"  );
   declareProperty( "OutputRings", 
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Best" );
-  declareProperty( "MinMinNumPixels",     m_minNumHits = 5   );
+  declareProperty( "MinNumPixels",        m_minNumHits = 5   );
   declareProperty( "MinAveragePixelProb", m_minAvProb  = 0.7 );
 }
 
@@ -86,6 +86,7 @@ StatusCode TracklessRingFilterAlg::execute()
   }
 
   debug() << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
+  counter("Selected Rings") += outrings->size();
 
   return StatusCode::SUCCESS;
 }
