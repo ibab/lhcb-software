@@ -1,4 +1,4 @@
-// $Id: ENNRingFinder.cpp,v 1.6 2009-05-22 21:53:51 jonrob Exp $
+// $Id: ENNRingFinder.cpp,v 1.7 2009-05-23 18:11:01 jonrob Exp $
 // Include files
 
 // STL
@@ -96,8 +96,8 @@ void Finder::FindRings( const double HitSigma,
         }
         SearchArea.push_back( &*j );
 
-        double &lr2 = j->lr2;
-        const double lr = std::sqrt(lr2);
+        const double &lr2 = j->lr2;
+        const double lr   = std::sqrt(lr2);
         if( lr > Dmax ) Dmax = lr;
 
         j->S2 = j->lx * j->ly;
