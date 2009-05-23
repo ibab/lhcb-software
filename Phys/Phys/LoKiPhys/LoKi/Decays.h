@@ -1,4 +1,4 @@
-// $Id: Decays.h,v 1.7 2009-05-14 16:58:19 ibelyaev Exp $
+// $Id: Decays.h,v 1.8 2009-05-23 15:59:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYS_H 
 #define LOKI_DECAYS_H 1
@@ -43,15 +43,16 @@ namespace Decays
     {
     protected:
       // ======================================================================
-      typedef const LHCb::Particle*                   PARTICLE ;
+      typedef const LHCb::Particle*                                  PARTICLE ;
+      typedef Decays::Trees::Types_<PARTICLE>                           Types ;
       // ======================================================================
     public:
-      // ====================================================================
-      /// the actual type of the ocntainer of children trees 
-      typedef Decays::Trees::Types_<PARTICLE>::SubTrees            SubTrees ;
-      // ====================================================================
+      // ======================================================================
+      /// the actual type of the container of children trees 
+      typedef Types::TreeList                                        TreeList ;
+      // ======================================================================
     public:
-      // ====================================================================
+      // ======================================================================
       /** full constructor from the node (mother), subtrees & flag
        *  @param mother the mother node
        *  @param children the list of daughter substrees
@@ -59,7 +60,7 @@ namespace Decays
        */
       Exclusive
       ( const Decays::iNode&       mother                 ,
-        const SubTrees&            children               ,
+        const TreeList&            children               ,
         const Alg                  alg        = Daughters ) ;
       /** constructor from the node (mother) & flag
        *  @param mother the mother node 
@@ -114,7 +115,7 @@ namespace Decays
     public:
       // ====================================================================        
       /// set children 
-      void setChildren ( const SubTrees& children ) { m_children = children ; }
+      void setChildren ( const TreeList& children ) { m_children = children ; }
       /// set children 
       void setChildren ( const std::vector<std::string>& children ) ;
       /// set children 
@@ -163,15 +164,15 @@ namespace Decays
       // ====================================================================
     protected:
       // ====================================================================
-      inline const SubTrees& children() const { return m_children ; }
+      inline const TreeList& children() const { return m_children ; }
       // ====================================================================
-      SubTrees::const_iterator  childBegin () const { return m_children.begin () ; }
-      SubTrees::const_iterator  childEnd   () const { return m_children.end   () ; }
-      SubTrees::const_reference front      () const { return m_children.front () ; }
-      SubTrees::const_reference back       () const { return m_children.back  () ; }
-      // ====================================================================
+      TreeList::const_iterator  childBegin () const { return m_children.begin () ; }
+      TreeList::const_iterator  childEnd   () const { return m_children.end   () ; }
+      TreeList::const_reference front      () const { return m_children.front () ; }
+      TreeList::const_reference back       () const { return m_children.back  () ; }
+      // ======================================================================
       size_t nChildren () const { return m_children.size() ; }    
-      // ====================================================================
+      // ======================================================================
       // reset the cache 
       inline void i_reset () const 
       {
@@ -179,29 +180,28 @@ namespace Decays
           ( childBegin() , childEnd() , 
             std::mem_fun_ref (&_Tree_<PARTICLE>::reset) ) ;
       }
-      // ====================================================================
+      // ======================================================================
       const Decays::iNode& mother () const { return m_mother ; }
-      // ====================================================================
+      // ======================================================================
       inline bool mother ( const LHCb::ParticleID& pid ) const 
       { return m_mother.node ( pid ) ;  }
-      // ====================================================================
+      // ======================================================================
     private:
-      // ====================================================================
+      // ======================================================================
       /// the default constructor is disabled 
-      Exclusive () ; // the default constructor is disabled
-      // ====================================================================
+      Exclusive () ;                     // the default constructor is disabled
+      // ======================================================================
     private:
-      // ====================================================================
+      // ======================================================================
       /// The mother 
-      Decays::Node m_mother   ; // the mother 
+      Decays::Node       m_mother   ;                          //    the mother 
       /// The children
-      SubTrees           m_children ; // the children 
-      // ====================================================================
+      TreeList           m_children ;                          //  the children 
       /// The algorithm 
-      Decays::Trees::Alg m_alg        ; // the algorithm 
-      // ====================================================================
+      Decays::Trees::Alg m_alg      ;                          // the algorithm 
+      // ======================================================================
     } ;
-    // ======================================================================
+    // ========================================================================
     /** @class Inclusive 
      *  Simple sub tree which consists of the node ("mother") and 
      *  subtrees ("children"). Essentially it represent the 
@@ -212,7 +212,7 @@ namespace Decays
     class Inclusive : public Exclusive 
     {
     public:
-      // ====================================================================
+      // ======================================================================
       /** full constructor from the node (mother), subtrees & flag
        *  @param mother the mother node
        *  @param children the list of daughter substrees
@@ -220,7 +220,7 @@ namespace Decays
        */
       Inclusive 
       ( const Decays::iNode&       mother                 ,
-        const SubTrees&            children               ,
+        const TreeList&            children               ,
         const Alg                  alg        = Daughters ) ;
       /** constructor from the node (mother) & flag
        *  @param mother the mother node 
@@ -273,14 +273,14 @@ namespace Decays
       /// add one more node to the tree 
       Inclusive& operator+= ( const LHCb::ParticleProperty*    node ) 
       { addDaughter ( node ) ; return *this ; }
-      // ====================================================================
+      // ======================================================================
     private:
-      // ====================================================================
+      // ======================================================================
       /// the default constructor is disabled 
-      Inclusive () ; // the default constructor is disabled
-      // ====================================================================
+      Inclusive () ;                     // the default constructor is disabled
+      // ======================================================================
     };
-    // ======================================================================
+    // ========================================================================
     /** @class Optional
      *  Simple sub tree which consists of the node ("mother") and 
      *  subtrees ("children") and optional nodes. Essentially it represent the 
@@ -291,7 +291,7 @@ namespace Decays
     class Optional : public Exclusive
     {
     public:
-      // ====================================================================
+      // ======================================================================
       /** full constructor from the node (mother) and subtrees
        *  @param mother the mother node 
        *  @param children the list of children 
@@ -299,10 +299,10 @@ namespace Decays
        *  @param alg the matching algorithm 
        */
       Optional
-      ( const Decays::iNode&       mother                  ,
-        const SubTrees&            children   = SubTrees() ,
-        const SubTrees&            optional   = SubTrees() ,
-        const Alg                  alg        = Daughters  ) ;
+      ( const Decays::iNode&       mother                   ,
+        const TreeList&            children   = TreeList () ,
+        const TreeList&            optional   = TreeList () ,
+        const Alg                  alg        = Daughters   ) ;
       // ====================================================================
       /** constructor from decay descriptor, optional and flags 
        *  @param decay the decay descriptor
@@ -311,12 +311,12 @@ namespace Decays
        */
       Optional
       ( const Decays::Decay&       decay                    ,
-        const SubTrees&            optional   = SubTrees () ,
+        const TreeList&            optional   = TreeList () ,
         const Alg                  alg        = Daughters   ) ;
       /// constructor form the constructed tree 
       Optional 
-      ( const Exclusive& right                 , 
-        const SubTrees&  optional = SubTrees() ) ;
+      ( const Exclusive& right                  , 
+        const TreeList&  optional = TreeList () ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Optional () {}
       // ====================================================================
@@ -340,7 +340,7 @@ namespace Decays
     public:
       // ====================================================================
       /// set optional
-      void setOptional ( const SubTrees& optional ) { m_optional = optional ; }
+      void setOptional ( const TreeList& optional ) { m_optional = optional ; }
       /// set optional
       void setOptional ( const std::vector<std::string>&       optional ) ;
       /// set children 
@@ -389,26 +389,26 @@ namespace Decays
       // ======================================================================
     protected:
       // ======================================================================
-      SubTrees::const_iterator optBegin () const { return m_optional.begin () ; }
-      SubTrees::const_iterator optEnd   () const { return m_optional.end   () ; }
+      TreeList::const_iterator optBegin () const { return m_optional.begin () ; }
+      TreeList::const_iterator optEnd   () const { return m_optional.end   () ; }
       size_t                   optSize  () const { return m_optional.size  () ; }
       size_t nOptional() const { return optSize() ; }
       // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
-      Optional () ; // the default constructor is disabled
+      Optional () ;                      // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
       /// the optional particles in the tree 
-      SubTrees m_optional ;
+      TreeList m_optional ;               // the optional particles in the tree 
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace Decays::Trees 
+  } //                                           end of namespace Decays::Trees 
   // ==========================================================================
-} // end of namespace LoKi::Decays
+} //                                              end of namespace LoKi::Decays
 // ============================================================================
 
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.40 2009-05-09 19:24:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.41 2009-05-23 15:59:51 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -21,17 +21,21 @@ apply_pattern install_python_modules
 
 # =============== constituents ===============================================
 library           LoKiPhys ../src/*.cpp 
+application       DecayGrammarTest  tests/DecayGrammarTest.cpp
 
-# ============== Produce LCG dictionary =======================================
-apply_pattern    reflex_dictionary                                   \
-                 dictionary=LoKiPhys                                 \
-                 headerfiles=$(LOKIPHYSROOT)/dict/LoKiPhysDict.h     \
-                 selectionfile=$(LOKIPHYSROOT)/dict/LoKiPhys.xml     \  
-                 options=" -U__MINGW32__ "
+# =============== Produce LCG dictionary ======================================
+apply_pattern     reflex_dictionary                                   \
+                  dictionary=LoKiPhys                                 \
+                  headerfiles=$(LOKIPHYSROOT)/dict/LoKiPhysDict.h     \
+                  selectionfile=$(LOKIPHYSROOT)/dict/LoKiPhys.xml     \  
+                  options=" -U__MINGW32__ "
+
+macro_append      LoKiPhysDict_dependencies     LoKiPhys
+macro_append      DecayGrammarTest_dependencies LoKiPhys
 
 # =============== patterns ===================================================
-apply_pattern    linker_library library=LoKiPhys
-apply_pattern    QMTest  
+apply_pattern     linker_library library=LoKiPhys
+apply_pattern     QMTest  
 
 # ============================================================================
 # The END 

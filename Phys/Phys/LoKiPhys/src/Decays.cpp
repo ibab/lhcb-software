@@ -1,4 +1,4 @@
-// $Id: Decays.cpp,v 1.5 2009-05-14 16:58:19 ibelyaev Exp $
+// $Id: Decays.cpp,v 1.6 2009-05-23 15:59:51 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -83,7 +83,7 @@ namespace
 // ============================================================================
 Decays::Trees::Exclusive::Exclusive
 ( const Decays::iNode&                      mother   , 
-  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Exclusive::TreeList& children ,
   const Decays::Trees::Alg                  alg      )
   : Decays::iTree_<const LHCb::Particle*> () 
   , m_mother     ( mother     )
@@ -189,7 +189,7 @@ size_t Decays::Trees::Exclusive::collect
 ( Decays::iTree_<const LHCb::Particle*>::Collection& output ) const 
 {
   size_t size = 0 ;
-  for ( SubTrees::const_iterator ichild = childBegin() ; 
+  for ( TreeList::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) { size += ichild->collect ( output ) ; }  
   return size ;
 }
@@ -198,7 +198,7 @@ size_t Decays::Trees::Exclusive::collect
 // ============================================================================
 bool Decays::Trees::Exclusive::marked () const 
 {
-  for ( SubTrees::const_iterator ichild = childBegin() ; 
+  for ( TreeList::const_iterator ichild = childBegin() ; 
         childEnd() != ichild ; ++ichild ) 
   { if  (ichild->marked() ) { return true ; } }
   return false ;
@@ -258,7 +258,7 @@ Decays::Trees::Exclusive::fillStream ( std::ostream& s ) const
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) { s << ( *itree ) ; }
   //
   return s << ") " ;
@@ -268,7 +268,7 @@ Decays::Trees::Exclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 void Decays::Trees::Exclusive::addDaughter 
 ( const Decays::iTree_<const LHCb::Particle*>& tree ) 
-{ m_children.push_back ( tree ) ; }
+{ m_children += tree ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
@@ -312,7 +312,7 @@ void Decays::Trees::Exclusive::addDaughter
 // ============================================================================
 Decays::Trees::Inclusive::Inclusive
 ( const Decays::iNode&                      mother   , 
-  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Exclusive::TreeList& children ,
   const Decays::Trees::Alg                  alg      ) 
   : Decays::Trees::Exclusive ( mother , children , alg ) 
 {}
@@ -407,7 +407,7 @@ bool Decays::Trees::Inclusive::operator()
       if ( LoKi::Algs::found_N 
            ( isect->begin  () , 
              isect->end    () , 
-             children ()      ) ) { return true ; }            // RETURN 
+             children () . trees() ) ) { return true ; }       // RETURN 
       continue ;                                               // CONTINUE ;  
     }
     
@@ -443,7 +443,7 @@ Decays::Trees::Inclusive::fillStream ( std::ostream& s ) const
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ; 
+  for ( TreeList::const_iterator itree = childBegin() ; 
         childEnd() != itree ; ++itree ) { s << ( *itree ) ; }
   //
   return s << " ... ) " ;
@@ -465,8 +465,8 @@ Decays::Trees::Inclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 Decays::Trees::Optional::Optional
 ( const Decays::iNode&                      mother     , 
-  const Decays::Trees::Exclusive::SubTrees& children   ,
-  const Decays::Trees::Exclusive::SubTrees& optional   ,
+  const Decays::Trees::Exclusive::TreeList& children   ,
+  const Decays::Trees::Exclusive::TreeList& optional   ,
   const Decays::Trees::Alg                  alg        ) 
   : Decays::Trees::Exclusive ( mother   , 
                                children , 
@@ -482,7 +482,7 @@ Decays::Trees::Optional::Optional
 // ============================================================================
 Decays::Trees::Optional::Optional
 ( const Decays::Decay&                              decay    , 
-  const Decays::Trees::Exclusive::SubTrees& optional ,
+  const Decays::Trees::Exclusive::TreeList& optional ,
   const Decays::Trees::Alg                  alg      ) 
   : Decays::Trees::Exclusive ( decay , alg ) 
   , m_optional ( optional ) 
@@ -490,7 +490,7 @@ Decays::Trees::Optional::Optional
 // ============================================================================
 Decays::Trees::Optional::Optional
 ( const Decays::Trees::Optional::Exclusive& right    , 
-  const Decays::Trees::Exclusive::SubTrees& optional ) 
+  const Decays::Trees::Exclusive::TreeList& optional ) 
   : Decays::Trees::Exclusive ( right ) 
   , m_optional ( optional )  
 {}
@@ -517,7 +517,7 @@ StatusCode Decays::Trees::Optional::validate
 // ============================================================================
 bool Decays::Trees::Optional::marked () const 
 {
-  for ( SubTrees::const_iterator iopt = optBegin() ; 
+  for ( TreeList::const_iterator iopt = optBegin() ; 
         optEnd() != iopt ; ++iopt ) 
   { if  ( iopt->marked() ) { return true ; } }
   return Decays::Trees::Exclusive::marked()  ;
@@ -537,9 +537,9 @@ std::ostream& Decays::Trees::Optional::fillStream
   default       : s << " ->" ; break ;
   }
   //
-  for ( SubTrees::const_iterator itree = childBegin() ;
+  for ( TreeList::const_iterator itree = childBegin() ;
         childEnd() != itree ; ++itree )  { s <<         ( *itree )         ; }
-  for ( SubTrees::const_iterator itree = optBegin() ; 
+  for ( TreeList::const_iterator itree = optBegin() ; 
         optEnd () != itree ; ++itree )   { s << " {" << ( *itree ) << "} " ; }
   //
   return s << ") " ;
@@ -572,7 +572,7 @@ bool Decays::Trees::Optional::operator()
     if ( !LoKi::Algs::found_N 
          ( isect->begin (), 
            isect->end   (), 
-           children() )   ) { continue ; }                        // CONTINUE 
+           children().trees() )   ) { continue ; }                   // CONTINUE 
     // (6) make all possible permutations:
     do // loop over all permutations 
     {
@@ -582,7 +582,7 @@ bool Decays::Trees::Optional::operator()
         // the temporary iterator 
         Decays::Section::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
-        SubTrees opt ( m_optional ) ;
+        TreeList opt ( m_optional ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // start all possible permutations of the optional stuff 
         do  
@@ -603,13 +603,13 @@ bool Decays::Trees::Optional::operator()
 // ============================================================================
 void Decays::Trees::Optional::addOptional 
 ( const Decays::iTree_<const LHCb::Particle*>& tree ) 
-{ m_optional.push_back ( tree ) ; }
+{ m_optional += tree  ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
 void Decays::Trees::Optional::addOptional 
 ( const Decays::iNode& node ) 
-{ m_optional.push_back ( Exclusive ( node ) ) ; }
+{ addOptional ( Exclusive ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
