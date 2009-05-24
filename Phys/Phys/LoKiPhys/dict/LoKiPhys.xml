@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.25 2009-05-23 15:59:51 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.26 2009-05-24 15:33:31 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -94,16 +94,16 @@
   <class pattern   = "LoKi::Legacy::*"     />
   
 
-  <class name      = "Decays::Trees::Any_<const LHCb::Particle*>" />
-  <class name      = "Decays::Trees::Exclusive" />
-  <class name      = "Decays::Trees::Inclusive" />
-  <class name      = "Decays::Trees::Optional"  />
-  <class name      = "LoKi::Dicts::TreeOps<const LHCb::Particle*>" />
-  <class name      = "Decays::iTree_<const LHCb::Particle*>" />
-  <class name      = "Decays::Tree_<const LHCb::Particle*>"  />
-  <class name      = "Decays::_Tree_<const LHCb::Particle*>" />
-  <class name      = "Decays::TreeList_<const LHCb::Particle*>"        />
-  <class name      = "Decays::TreeList_<const LHCb::Particle*>::Tree_" />
+  <class name = "Decays::Trees::Any_<const LHCb::Particle*>" />
+  <class name = "Decays::Trees::Exclusive" />
+  <class name = "Decays::Trees::Inclusive" />
+  <class name = "Decays::Trees::Optional"  />
+  <class name = "LoKi::Dicts::TreeOps<const LHCb::Particle*>" />
+  <class name = "Decays::iTree_<const LHCb::Particle*>" />
+  <class name = "Decays::Tree_<const LHCb::Particle*>"  />
+  <class name = "Decays::Trees::_Tree_<const LHCb::Particle*>"    />
+  <class name = "Decays::TreeList_<const LHCb::Particle*>"        />
+  <class name = "Decays::TreeList_<const LHCb::Particle*>::Tree_" />
   
   <exclusion>
     
