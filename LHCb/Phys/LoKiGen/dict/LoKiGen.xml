@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.20 2009-05-23 15:56:20 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.21 2009-05-24 15:33:22 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -75,17 +75,17 @@
   <class name = "std::vector<const HepMC::GenVertex*>"    />  
   
   <class name = "Decays::Trees::Any_<const HepMC::GenParticle*>"   />
-  <class name      = "Decays::Trees::GenExclusive" />
-  <class name      = "Decays::Trees::GenInclusive" />
-  <class name      = "Decays::Trees::GenOptional"  />
-  <class name      = "Decays::Trees::GenPhotos"  />
-  <class name      = "Decays::Trees::GenPhotosOptional"  />
-  <class name      = "LoKi::Dicts::TreeOps<const HepMC::GenParticle*>" />
-  <class name      = "Decays::iTree_<const HepMC::GenParticle*>"            />
-  <class name      = "Decays::Tree_<const HepMC::GenParticle*>"             />
-  <class name      = "Decays::_Tree_<const HepMC::GenParticle*>"            />
-  <class name      = "Decays::TreeList_<const HepMC::GenParticle*>"         />
-  <class name      = "Decays::TreeList_<const HepMC::GenParticle*>::Trees_" />
+  <class name = "Decays::Trees::GenExclusive" />
+  <class name = "Decays::Trees::GenInclusive" />
+  <class name = "Decays::Trees::GenOptional"  />
+  <class name = "Decays::Trees::GenPhotos"  />
+  <class name = "Decays::Trees::GenPhotosOptional"  />
+  <class name = "LoKi::Dicts::TreeOps<const HepMC::GenParticle*>" />
+  <class name = "Decays::iTree_<const HepMC::GenParticle*>"            />
+  <class name = "Decays::Tree_<const HepMC::GenParticle*>"             />
+  <class name = "Decays::Trees::_Tree_<const HepMC::GenParticle*>"     />
+  <class name = "Decays::TreeList_<const HepMC::GenParticle*>"         />
+  <class name = "Decays::TreeList_<const HepMC::GenParticle*>::Trees_" />
 
   
   <exclusion>
