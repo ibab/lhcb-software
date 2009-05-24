@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.429 2009-05-23 16:51:25 jpalac Exp $
+! $Id: release.notes,v 1.430 2009-05-24 11:37:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-05-23 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Add new IRelatedPVFinder methods taking VertexBase* containers
+ - src/PVRelatorAlg.cpp
+  . Add implementation for Table->Table
 
 ! 2009-05-23 - Juan PALACIOS
  - Add new GaudiAlgorithm PVRelatorAlg. It takes either a Particle and a PV TES
