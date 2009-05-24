@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.4 2009-05-23 13:37:13 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.5 2009-05-24 16:16:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -131,7 +131,7 @@ namespace Rich
         /// Location of all output rings in TES
         std::string m_ringLocation;
 
-        /// Min probability to associate a pixel to a ring
+        /// Minimum probability to associate a pixel to a ring
         double m_minAssProb;
 
         /// Maximum number of hits to try ring finding with

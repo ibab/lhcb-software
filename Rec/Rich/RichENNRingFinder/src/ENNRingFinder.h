@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.10 2009-05-23 13:37:13 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.11 2009-05-24 16:16:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -74,9 +74,11 @@ namespace Rich
           { return ( this->x < h.x ); }
         public:
           /// Overloaded output to ostream
-          friend inline std::ostream & operator << ( std::ostream & os, const Hit & hit )
+          friend inline std::ostream & operator << ( std::ostream & os, 
+                                                     const Hit & hit )
           { 
-            return os << "[ Hit " << hit.key << " (x,y)= (" << hit.x << "," << hit.y << ")"
+            return os << "[ Hit " << hit.key 
+                      << " (x,y)= (" << hit.x << "," << hit.y << ")"
                       << " nAssRings=" << hit.nAssRings << " ]"; 
           }
         public:
@@ -123,9 +125,11 @@ namespace Rich
           { return ( NHits>0 ? (double)NOwn/(double)NHits : 0 ); }
         public:
           /// Overloaded output to ostream
-          friend inline std::ostream & operator << ( std::ostream & os, const Ring & ring )
+          friend inline std::ostream & operator << ( std::ostream & os, 
+                                                     const Ring & ring )
           { 
-            return os << "[ Ring (x,y,r) " << ring.x << "," << ring.y << "," << ring.r
+            return os << "[ Ring (x,y,r) " 
+                      << ring.x << "," << ring.y << "," << ring.r
                       << " NHits=" << ring.NHits
                       << " NOwn="  << ring.NOwn
                       << " Chi2="  << ring.chi2

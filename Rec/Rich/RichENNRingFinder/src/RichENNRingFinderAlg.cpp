@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.7 2009-05-23 13:37:13 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.8 2009-05-24 16:16:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -53,7 +53,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
     m_maxRingChi2      = 75;
-    m_minRingPurity    = 0.7;
+    m_minRingPurity    = 0.8;
   }
   else // RICH1
   {
@@ -64,7 +64,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
-    m_minRingRadius    = 25.0;
+    m_minRingRadius    = 40.0;
     m_maxRingRadius    = 100.0;
     m_maxRingChi2      = 75;
     m_minRingPurity    = 0.8;
