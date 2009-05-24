@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.8 2008-10-21 10:12:45 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.9 2009-05-24 11:14:14 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -20,7 +20,7 @@ static const InterfaceID IID_IRelatedPVFinder ( "IRelatedPVFinder", 2, 0 );
 /** @class IRelatedPVFinder IRelatedPVFinder.h Kernel/IRelatedPVFinder.h
  *  
  *  Fill a weighted relations table with the weighted relations between 
- *  an LHCb::Particle and a container of LHCb::RecVertices.
+ *  an LHCb::Particle and a container of LHCb::RecVertices or LHCb::VertexBases.
  *  Replaces interface by Patrick Koppenburg, 2006-10-22.
  *
  *  @author Juan Palacios juan.palacios@nikhef.nl
@@ -61,6 +61,36 @@ public:
    */
   virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
                                                        const LHCb::RecVertex::ConstVector& PVs) const =0;
+
+  /**
+   * Return a range of weighted relations between an LHCb::Particle and a
+   * keyed container of LHCb::VerticeBases
+   * 
+   * @param particle       The LHCb::Particle for which related PVs will be searched
+   * @param PVs            Container of LHCb::VerticeBases to be related to particle
+   *
+   * @return               sorted weighted relations table relating particle and the vertices in PVs. 
+   * Must return empty table if something goes wrong in association.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   */
+  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+                                                       const LHCb::VertexBase::Container& PVs) const =0;
+  /**
+   * Return a range of weighted relations between an LHCb::Particle and a
+   * vector of const LHCb::VertexBase pointers
+   *
+   * @param particle       The LHCb::Particle for which related PVs will be searched
+   * @param PVs            std::vector of LHCb::VertexBase* to be related to particle
+   *
+   * @return               sorted weighted relations table relating particle and the vertices in PVs. 
+   * Must return empty table if something goes wrong in association.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   */
+  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+                                                       const LHCb::VertexBase::ConstVector& PVs) const =0;
+
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices from a TES location
