@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.8 2009-03-04 15:02:03 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.9 2009-05-24 16:21:15 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -47,13 +47,13 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   //Default cut values.  Can change in options file.
 
   //                                                                     Aero  C4F10  CF4
-  declareProperty( "SizeMomCut", m_sizemomcut                 = list_of  (20)  (20)  (20)  );
+  declareProperty( "SizeMomCut", m_sizemomcut                 = list_of  (5)   (10)  (20)  );
   declareProperty( "SizeGeoCut", m_sizegeocut                 = list_of  (0.3) (0.3) (0.3) ); // geometric efficiency
-  declareProperty( "SizeSepCut", m_sizesepcut                 = list_of  (260) (260) (260) ); // track hit point separation
+  declareProperty( "SizeSepCut", m_sizesepcut                 = list_of  (260) (150) (260) ); // track hit point separation
   declareProperty( "SizeXposnCut", m_sizeXexit                = list_of  (0)   (0)   (100) ); // RICH X discontinuity
-  declareProperty( "SizeYposnCut", m_sizeYexit                = list_of  (0)   (50)  (0)   ); // RICH Y discontinuity
+  declareProperty( "SizeYposnCut", m_sizeYexit                = list_of  (50)  (50)  (0)   ); // RICH Y discontinuity
   declareProperty( "SizePhotonAssocCut", m_sizephotonassoccut = list_of  (0.8) (0.8) (0.8) ); // min fraction not assoc with another track
-  declareProperty( "SizeRingWidth", m_sizeringwidth           = list_of  (0.00944)(0.00944)(0.00944) );// theta band width
+  declareProperty( "SizeRingWidth", m_sizeringwidth           = list_of  (0.01)(0.01)(0.00944) );// theta band width
   declareProperty( "SizePhiCut",    m_sizephicut              = list_of  (0.2125) (0.2125) (0.2125)  );// max fraction of photons in one phi region
   declareProperty( "SizeHitRegionCut", m_sizehitregioncut     = list_of  (0.8) (0.8) (0.8) ); // min fraction of photons lying in theta band
   declareProperty( "MaxTrackROI", m_maxROI                    = list_of  (390) (86)  (200) ); // Pixel hit regions
@@ -61,9 +61,9 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   declareProperty( "SepGMax", m_sepGMax                       = list_of  (342) (75) (130) );
   declareProperty( "NPhiRegions", m_nPhiRegions               = list_of  (8)   (8)  (8)   ); // Number of phi regions
   declareProperty( "MinSegPhotons", m_minSegPhotons           = list_of  (2)   (2)  (2)   );
-
   declareProperty( "AbortEarly", m_abortEarly = true );
 
+  setProperty( "UseEfficiencyRowFormat", true );
 }
 
 //=============================================================================
@@ -89,24 +89,6 @@ StatusCode IsolatedTrackTool::initialize()
   }
 
   return sc;
-}
-
-StatusCode IsolatedTrackTool::finalize()
-{
-  // Summary printout
-  const PoissonEffFunctor eff("%7.2f +-%5.2f");
-  for ( CutEffMap::const_iterator iCut = m_summary.begin();
-        iCut != m_summary.end(); ++iCut )
-  {
-    std::string desc = Rich::text(iCut->first.first)+" '"+iCut->first.second+"'";
-    desc.resize(45, ' ');
-    info() << "Cut " << desc << " accepted "
-           <<  eff(iCut->second.passed,iCut->second.total()) 
-           << " % of tracks" << endreq;
-  }
-
-  // must finalise base class
-  return Rich::Rec::ToolBase::finalize();
 }
 
 //=============================================================================
@@ -163,6 +145,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & tkPtnLocal = segment->pdPanelHitPointLocal();
 
   // Loop over all segments to compare ring centre for the chosen segment with all others
+  bool OK(true);
   for ( RichRecSegments::const_iterator iSeg2 = richSegments()->begin();
         iSeg2 != richSegments()->end(); ++iSeg2 )
   {
@@ -182,10 +165,13 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     const double centreXYdif = std::sqrt(Xdifsq+Ydifsq);
 
     // If ring centre too close to any other, return false
-    trackIsIsolated &= testCut( "track CK ring centre proximity", rad, centreXYdif > m_sizesepcut[rad] );
-    if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
+    OK = centreXYdif > m_sizesepcut[rad];
+    if (!OK) break;
     
   }//Segment comparison loop end
+
+  trackIsIsolated &= testCut( "track CK ring centre proximity", rad, OK );
+  if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
   int hittotal    = 0;
   int hitsoutside = 0;

@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-05-24 - Chris Jones
+ - Improvements to track isolation tool
+
 ! 2009-05-21 - Chris Jones
  - Improvements to track selectors. 
   + Remove use of Tsa specific TsaLikelihood

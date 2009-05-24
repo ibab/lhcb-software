@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.h,v 1.3 2008-05-16 14:27:55 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.h,v 1.4 2009-05-24 16:21:15 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -72,8 +72,6 @@ namespace Rich
 
       virtual StatusCode initialize();  ///< Initialization
 
-      virtual StatusCode finalize();    ///< Finalization
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Is this segment isolated
@@ -85,38 +83,19 @@ namespace Rich
 
     private:
 
-      //-----------------------------------------------------------------------------
-      /** @class CutEff RichIsolatedTrackTool.h
-       *
-       *  Tally class to store the result of a single cut
-       *
-       *  @author Susan Haines
-       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       *  @date   15/02/2008
+      /** Test the given cut, and keep a summary tally of the result
+       *  @param desc   Cut description
+       *  @param rad    RICH radiator
+       *  @param result Was the cut passed or failed
+       *  @return result
        */
-      //-----------------------------------------------------------------------------
-      class CutEff
-      {
-      public:
-        CutEff() : failed(0), passed(0) { }
-        /// Total number
-        inline unsigned int total() const { return failed+passed; }
-      public:
-        unsigned int failed; ///< Number that failed the cut
-        unsigned int passed; ///< Number that passed the cut
-      };
-      typedef std::pair< Rich::RadiatorType, std::string > CutEffMapKey;
-      typedef Rich::Map< CutEffMapKey, CutEff > CutEffMap;
-
-      /// Test the given cut, and keep a summary tally of the result
       inline bool testCut( const std::string & desc, 
                            const Rich::RadiatorType rad,
-                           bool result ) const
+                           const bool result ) const
       {
         if ( !m_abortEarly )
         {
-          if ( result ) { ++(m_summary[CutEffMapKey(rad,desc)].passed); }
-          else          { ++(m_summary[CutEffMapKey(rad,desc)].failed); }
+          counter(Rich::text(rad)+" '"+desc+"'") += ( result ? 1.0 : 0.0 );
         }
         return result;
       }
@@ -128,9 +107,7 @@ namespace Rich
       const IGeomTool * m_geomTool;               ///< Pointer to geometry tool
       const Rich::Rec::IGeomEff * m_geomEffic;    ///< Pointer to RichGeomEff tool
 
-      mutable CutEffMap m_summary; ///< Cut performance summary
-
-      bool m_abortEarly; ///< Reject track as soon as possible
+      bool m_abortEarly; ///< Reject tracks as soon as possible
 
       std::vector<double> m_sizemomcut; ///< Minimum momentum
       std::vector<double> m_sizegeocut; ///< Minimum geom. eff.
