@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.11 2009-05-21 17:29:16 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.12 2009-05-24 20:27:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,7 +46,7 @@ TrackCreatorFromRecoTracks( const std::string& type,
   {
     m_trTracksLocation = LHCb::TrackLocation::HltForward;
   }
-  
+
   // job options
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
@@ -180,141 +180,144 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   else
   {
 
+    // Add to reference map
+    if ( bookKeep() ) m_trackDone[trTrack->key()] = true;
+
     // count tried tracks
     ++tkCount.triedTracks;
-
-    // Track selection
-    if ( !trackSelector().trackSelected(trTrack) ) return NULL;
 
     // New track object pointer
     LHCb::RichRecTrack * newTrack = NULL;
 
-    // Form the RichRecSegments for this track
-    std::vector<LHCb::RichTrackSegment*> segments;
-    const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
-
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Found " << Nsegs << " radiator segment(s)" << endreq;
-
-    if ( 0 < Nsegs )
+    // Track selection
+    if ( trackSelector().trackSelected(trTrack) )
     {
 
-      // Form a new RichRecTrack
-      newTrack = new LHCb::RichRecTrack();
+      // Form the RichRecSegments for this track
+      std::vector<LHCb::RichTrackSegment*> segments;
+      const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
 
-      // Configure TrackID for this Track
-      newTrack->trackID().initialiseFor( trTrack );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Found " << Nsegs << " radiator segment(s)" << endreq;
 
-      bool keepTrack = false;
-      for ( std::vector<LHCb::RichTrackSegment*>::iterator iSeg = segments.begin();
-            iSeg != segments.end(); ++iSeg )
+      if ( 0 < Nsegs )
       {
-        if ( !(*iSeg) ) continue;
 
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endreq;
+        // Form a new RichRecTrack
+        newTrack = new LHCb::RichRecTrack();
 
-        // make a new RichRecSegment from this RichTrackSegment
-        // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
-        LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
+        // Configure TrackID for this Track
+        newTrack->trackID().initialiseFor( trTrack );
 
-        // Get PD panel impact point
-        if ( rayTraceHPDPanelPoints(**iSeg,newSegment) )
+        bool keepTrack = false;
+        for ( std::vector<LHCb::RichTrackSegment*>::iterator iSeg = segments.begin();
+              iSeg != segments.end(); ++iSeg )
         {
-          // test if this segment has valid information
-          if ( m_signal->hasRichInfo(newSegment) )
+          if ( !(*iSeg) ) continue;
+
+          if ( msgLevel(MSG::VERBOSE) )
+            verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endreq;
+
+          // make a new RichRecSegment from this RichTrackSegment
+          // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
+          LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
+
+          // Get PD panel impact point
+          if ( rayTraceHPDPanelPoints(**iSeg,newSegment) )
           {
+            // test if this segment has valid information
+            if ( m_signal->hasRichInfo(newSegment) )
+            {
 
-            if ( msgLevel(MSG::VERBOSE) )
-              verbose() << "   -> TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
+              if ( msgLevel(MSG::VERBOSE) )
+                verbose() << "   -> TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
 
-            // keep track
-            keepTrack = true;
+              // keep track
+              keepTrack = true;
 
-            // Save this segment
-            segmentCreator()->saveSegment( newSegment );
+              // Save this segment
+              segmentCreator()->saveSegment( newSegment );
 
-            // Add to the SmartRefVector of RichSegments for this RichRecTrack
-            newTrack->addToRichRecSegments( newSegment );
+              // Add to the SmartRefVector of RichSegments for this RichRecTrack
+              newTrack->addToRichRecSegments( newSegment );
 
-            // set radiator info
-            setDetInfo( newTrack, (*iSeg)->radiator() );
+              // set radiator info
+              setDetInfo( newTrack, (*iSeg)->radiator() );
 
-            // make RichRecRings for the mass hypotheses if requested
-            if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );
+              // make RichRecRings for the mass hypotheses if requested
+              if ( m_buildHypoRings ) m_massHypoRings->massHypoRings( newSegment );
 
-            // Count radiator segments
-            tkCount.countRadiator( (*iSeg)->radiator() );
+              // Count radiator segments
+              tkCount.countRadiator( (*iSeg)->radiator() );
+
+            }
+            else
+            {
+              if ( msgLevel(MSG::VERBOSE) )
+              {
+                verbose() << "   -> TrackSegment has no RICH info -> rejected" << endreq;
+              }
+              delete newSegment;
+              newSegment = NULL;
+            }
 
           }
           else
           {
             if ( msgLevel(MSG::VERBOSE) )
             {
-              verbose() << "   -> TrackSegment has no RICH info -> rejected" << endreq;
+              verbose() << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endreq;
             }
             delete newSegment;
             newSegment = NULL;
           }
 
+        } // end loop over RichTrackSegments
+
+        if ( keepTrack )
+        {
+
+          // give to container
+          richTracks()->insert( newTrack, trTrack->key() );
+
+          // reserve size in vectors
+          newTrack->richRecPhotons().reserve(30);
+          newTrack->richRecPixels().reserve(30);
+
+          // Set vertex momentum
+          newTrack->setVertexMomentum ( trTrack->p()  );
+          newTrack->setVertexPt       ( trTrack->pt() );
+
+          // chi2
+          newTrack->setChi2PerDoF( trTrack->chi2PerDoF() );
+          newTrack->setNDoF      ( trTrack->nDoF()       );
+
+          // track charge
+          newTrack->setCharge( trTrack->charge() );
+
+          // clone variable
+          newTrack->setCloneDist( trTrack->info(LHCb::Track::CloneDist,
+                                                boost::numeric::bounds<float>::highest()) );
+
+          // likelihood
+          newTrack->setLikelihood( trTrack->info(LHCb::Track::Likelihood,0) );
+
+          // Set parent information
+          newTrack->setParentTrack( trTrack );
+
+          // Count selected tracks
+          ++tkCount.selectedTracks;
+
         }
         else
         {
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endreq;
-          }
-          delete newSegment;
-          newSegment = NULL;
+          delete newTrack;
+          newTrack = NULL;
         }
 
-      } // end loop over RichTrackSegments
+      } // end segments if
 
-      if ( keepTrack )
-      {
-
-        // give to container
-        richTracks()->insert( newTrack, trTrack->key() );
-
-        // reserve size in vectors
-        newTrack->richRecPhotons().reserve(30);
-        newTrack->richRecPixels().reserve(30);
-
-        // Set vertex momentum
-        newTrack->setVertexMomentum ( trTrack->p()  );
-        newTrack->setVertexPt       ( trTrack->pt() );
-
-        // chi2
-        newTrack->setChi2PerDoF( trTrack->chi2PerDoF() );
-        newTrack->setNDoF      ( trTrack->nDoF()       );
-
-        // track charge
-        newTrack->setCharge( trTrack->charge() );
-
-        // clone variable
-        newTrack->setCloneDist( trTrack->info(LHCb::Track::CloneDist,
-                                              boost::numeric::bounds<float>::highest()) );
-
-        // likelihood
-        newTrack->setLikelihood( trTrack->info(LHCb::Track::Likelihood,0) );
-        
-        // Set parent information
-        newTrack->setParentTrack( trTrack );
-
-        // Count selected tracks
-        ++tkCount.selectedTracks;
-
-      }
-      else
-      {
-        delete newTrack;
-        newTrack = NULL;
-      }
-
-    } // end segments if
-
-    // Add to reference map
-    if ( bookKeep() ) m_trackDone[trTrack->key()] = true;
+    } // end track selection if
 
     return newTrack;
   }
