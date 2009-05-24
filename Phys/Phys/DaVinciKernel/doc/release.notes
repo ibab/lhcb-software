@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.299 2009-05-07 12:58:50 cattanem Exp $
+!$Id: release.notes,v 1.300 2009-05-24 11:14:33 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-05-24 - Juan PALACIOS
+ - Kernel/IRelatedPVFinder.h
+  . Add methods accepting LHCb::VertexBase* containers.
 
 !======================== DaVinciKernel v7r5 2009-05-07 =====================
 ! 2009-04-30 - Vanya BELYAEV
