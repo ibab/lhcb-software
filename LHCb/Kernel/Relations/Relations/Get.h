@@ -1,4 +1,4 @@
-// $Id: Get.h,v 1.5 2008-02-19 15:26:09 ibelyaev Exp $
+// $Id: Get.h,v 1.6 2009-05-24 16:22:39 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -70,10 +70,10 @@ namespace Relations
   {
     for ( ; first != last ; ++first ) 
     {
-      *output =  first->to()  ;   // FILL THE OUTPUT ITERATOR 
-      ++output;                   // ADVANCE OUTPUT ITERATOR
-    }
-    return output ;
+      *output =  first->to()  ;                  //    FILL THE OUTPUT ITERATOR 
+      ++output;                                  // ADVANCE THE OUTPUT ITERATOR
+    }       
+    return output ;                              //                      RETURN                           
   } 
   // ==========================================================================
   /** simple function to extract all values of "TO" 
@@ -404,6 +404,162 @@ namespace Relations
   ( LINKS  links  , 
     WEIGHT weight ) 
   { return sumWeight( links.begin() , links.end() , weight ) ; } ;
+  // ==========================================================================
+  template <class ITERATOR, class COMPARE, class OUTPUT> 
+  inline OUTPUT  _getUniqueFrom 
+  ( ITERATOR first  ,  
+    ITERATOR last   ,
+    COMPARE  cmp    ,
+    OUTPUT   output )
+  {
+    if ( first == last ) { return output ; }
+    // the previously selected element 
+    LINK prev = last ; 
+    for ( ; first != last ; ++first ) 
+    {
+      if ( prev == last ||  cmp ( *prev , *first ) )
+      {
+        *output = first->from () ;               //    FILL THE OUTPUT ITERATOR 
+        ++output ;                               // ADVANCE THE OUTPUT ITERATOR
+        prev   = first ;                              
+      }  
+    } 
+    return output ;                                                   // RETURN 
+  }
+  // ==========================================================================
+  /** Trivial function to get all "FROM" elements form the sequnce
+   *  @attention the sequence MUST be properly sorted 
+   * 
+   *  @code 
+   * 
+   *   Range links = ... ;
+   *  
+   *   std::vector<FROM> res = ... ;
+   *
+   *   getUniqueFrom ( links.begin () , 
+   *                   links.end   () , 
+   *                   std::back_inserter ( res ) ) ;  
+   *
+   *  @endcode 
+   *
+   *  @param first  (INPUT)  begin of the sequnce 
+   *  @param last   (INPUT)  the end  of the sequnce 
+   *  @param output (OUTPUT) the outptu iterator 
+   *  @return advanced output iterator 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2009-05-24
+   */
+  template <class FROM, class TO, class OUTPUT> 
+  inline OUTPUT  getUniqueFrom 
+  ( typename Relations::RelationTypeTraits<FROM,TO>::iterator first ,  
+    typename Relations::RelationTypeTraits<FROM,TO>::iterator last  ,
+    OUTPUT  output ) 
+  {
+    return _getUniqueFrom 
+      ( first , 
+        last  , 
+        typename Relations::RelationTypeTraits<FROM,TO>::LessByFrom()  , 
+        output ) ;
+  }
+  // ==========================================================================
+  /** Trivial function to get all "FROM" elements form the sequnce
+   *  @attention the sequence MUST be properly sorted 
+   * 
+   *  @code 
+   * 
+   *   Range links = ... ;
+   *  
+   *   std::vector<FROM> res = ... ;
+   *
+   *   getUniqueFrom ( links.begin () , 
+   *                   links.end   () , 
+   *                   std::back_inserter ( res ) ) ;  
+   *
+   *  @endcode 
+   *
+   *  @param first  (INPUT)  begin of the sequnce 
+   *  @param last   (INPUT)  the end  of the sequnce 
+   *  @param output (OUTPUT) the outptu iterator 
+   *  @return advanced output iterator 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2009-05-24
+   */
+  template <class FROM, class TO, class WEIGHT,  class OUTPUT> 
+  inline OUTPUT  getUniqueFrom 
+  ( typename Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT>::iterator first ,  
+    typename Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT>::iterator last  ,
+    OUTPUT   output ) 
+  {    
+    return _getUniqueFrom 
+      ( first , 
+        last  , 
+        typename Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT>::LessByFrom()  , 
+        output ) ;
+  }
+  // ==========================================================================
+  /** Trivial function to get all "FROM" elements form the sequnce
+   *  @attention the sequence MUST be properly sorted 
+   * 
+   *  @code 
+   * 
+   *   Range links = ... ;
+   *  
+   *   std::vector<FROM> res = ... ;
+   *
+   *   getUniqueFrom ( links , 
+   *                   std::back_inserter ( res ) ) ;  
+   *
+   *  @endcode 
+   *
+   *  @param range  (INPUT)  the sequence
+   *  @param output (OUTPUT) the outptu iterator 
+   *  @return advanced output iterator 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2009-05-24
+   */
+  template <class FROM, class TO, class OUTPUT> 
+  inline OUTPUT  getUniqueFrom 
+  ( const typename Relations::RelationTypeTraits<FROM,TO>::Range& range ,  
+    OUTPUT  output ) 
+  {
+    return _getUniqueFrom 
+      ( range.begin () , 
+        range.end   () , 
+        typename Relations::RelationTypeTraits<FROM,TO>::LessByFrom()  , 
+        output ) ;
+  }
+  // ==========================================================================
+  /** Trivial function to get all "FROM" elements form the sequnce
+   *  @attention the sequence MUST be properly sorted 
+   * 
+   *  @code 
+   * 
+   *   Range links = ... ;
+   *  
+   *   std::vector<FROM> res = ... ;
+   *
+   *   getUniqueFrom ( links , 
+   *                   std::back_inserter ( res ) ) ;  
+   *
+   *  @endcode 
+   *
+   *  @param range  (INPUT)  the sequence
+   *  @param output (OUTPUT) the outptu iterator 
+   *  @return advanced output iterator 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2009-05-24
+   */
+  template <class FROM, class TO, class WEIGHT, class OUTPUT> 
+  inline OUTPUT  getUniqueFrom 
+  ( const typename Relations::RelationTypeTraits<FROM,TO>::Range& range ,  
+    OUTPUT  output ) 
+  {
+    return _getUniqueFrom 
+      ( range.begin () , 
+        range.end   () , 
+        typename Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT>::LessByFrom()  , 
+        output ) ;
+  }
   // ==========================================================================
 } // end of the namespace Relations
 // ============================================================================

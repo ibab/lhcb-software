@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.28 2009-04-15 07:46:00 cattanem Exp $
+# $Id: requirements,v 1.29 2009-05-24 16:22:40 ibelyaev Exp $
 # =============================================================================
 package Relations
 author  Vanya.Belyaev
 manager Vanya.Belyaev
-version v5r7
+version v5r8
 # =============================================================================
 
 # ============= structure =====================================================
