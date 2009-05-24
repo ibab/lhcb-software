@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.10 2009-05-22 17:00:51 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.11 2009-05-24 15:27:20 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -78,13 +78,17 @@ void Decays::NodeList::push_back ( const Decays::NodeList::Nodes_& nodes )
 void Decays::NodeList::push_back ( const NodeList& nodes )
 { push_back ( nodes.m_nodes ) ; }
 // ============================================================================
-Decays::NodeList& 
-Decays::NodeList::operator=( const Decays::Nodes::_Node& node  ) 
-{ m_nodes.clear() ; push_back ( node ) ; }
+Decays::NodeList& Decays::NodeList::operator=( const Decays::Nodes::_Node& node  ) 
+{ 
+  m_nodes.clear() ; push_back ( node ) ; 
+  return *this ;
+}
 // ============================================================================
-Decays::NodeList& 
-Decays::NodeList::operator=( const Decays::iNode& node  ) 
-{ m_nodes.clear() ; push_back ( node ) ; }
+Decays::NodeList& Decays::NodeList::operator=( const Decays::iNode& node  ) 
+{
+  m_nodes.clear() ; push_back ( node ) ;
+  return *this ;
+}
 // ============================================================================
 
 
@@ -93,11 +97,17 @@ Decays::NodeList::operator=( const Decays::iNode& node  )
 // ============================================================================
 Decays::Nodes::_Node& 
 Decays::Nodes::_Node::operator |= ( const Decays::NodeList& right ) 
-{ if ( !right.empty() ) { m_node |= Decays::Nodes::Or  ( right ) ; } }
+{ 
+  if ( !right.empty() ) { m_node |= Decays::Nodes::Or  ( right ) ; } 
+  return *this ;
+}
 // ============================================================================
 Decays::Nodes::_Node& 
 Decays::Nodes::_Node::operator &= ( const Decays::NodeList& right ) 
-{ if ( !right.empty() ) { m_node &= Decays::Nodes::And ( right ) ; } }
+{ 
+  if ( !right.empty() ) { m_node &= Decays::Nodes::And ( right ) ; } 
+  return *this ;
+}
 // ============================================================================
 
 

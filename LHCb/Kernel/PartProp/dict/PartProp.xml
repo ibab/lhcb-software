@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: PartProp.xml,v 1.3 2009-05-07 14:45:51 ibelyaev Exp $ 
+     * $Id: PartProp.xml,v 1.4 2009-05-24 15:27:20 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -37,10 +37,11 @@
   <class name = "std::vector<Decays::Decay::Item>" />
   
   <class name    = "std::unary_function<LHCb::ParticleID,bool>"  />
-  <class name    = "Decays::iNode"   />
-  <class name    = "Decays::Node"    />
-  <class pattern = "Decays::Nodes:*" />
+  <class name    = "Decays::iNode"    />
+  <class name    = "Decays::Node"     />
+  <class pattern = "Decays::Nodes:*"  />
   <class name    = "Decays::Dict::NodeOps" />
+  <class name    = "Decays::NodeList" />
   <class name    = "std::vector<Decays::Nodes::_Node>" />
   
 
