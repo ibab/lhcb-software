@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.3 2009-05-23 18:36:51 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.4 2009-05-24 11:36:44 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
 #include "Kernel/Particle2Vertex.h"
-
+#include "Relations/Get.h"
 // local
 #include "PVRelatorAlg.h"
 
@@ -117,35 +117,39 @@ const Particle2Vertex::Table* PVRelatorAlg::table()
 const Particle2Vertex::Table* PVRelatorAlg::tableFromTable() 
 {
   typedef LHCb::Particle::ConstVector Particles;
-  typedef LHCb::RecVertex::ConstVector Vertices;
+  typedef LHCb::VertexBase::ConstVector Vertices;
   typedef Particle2Vertex::LightTable RelTable;
   typedef Particle2Vertex::Table Table;
-
+  typedef Particle2Vertex::Table::InvType InvTable;
+  
   const Table* inputTable = i_get<Table>(m_P2PVInputLocation);
 
   Table* table = new Table();
 
-  if (0==table) return table;
+  if (0==inputTable) return table;
 
-  Table::Range range = inputTable->relations();
+  const InvTable invTable(*inputTable, 1);
+
+  InvTable::Range range = invTable.relations();
 
   Particles particles;
-  Vertices vertices;
-  
-//   for (Table::Range::const_iterator iRange = range.begin();
-//        iRange != range.end(); ++iRange) {
-//     const LHCb::Particle* particle = iRange->from() ;
-//   }
 
-//   for (Particles::const_iterator iPart = particles.begin();
-//        iPart != particles.end(); ++ iPart) {
-//     const Table::Range range = inputTable.relations(*iPart);
-//     for (Table::Range::const_iterator iRange = range.begin();
-//          iRange != range.end();
-//          ++iRange) {
-//       vertices.push_back(iRange->to() );
-//     }
-//   }
+  Relations::getUniqueTo(range.begin(), range.end(), particles);
+
+  for (Particles::const_iterator iPart = particles.begin();
+       iPart != particles.end(); ++iPart) {
+
+    const Table::Range range = inputTable->relations(*iPart);
+
+    Vertices vertices;
+
+    Relations::getUniqueTo(range.begin(), range.end(), vertices);
+    const RelTable::Range rel = 
+      m_pvRelator->relatedPVs(*iPart, vertices).relations();
+
+    table->merge(rel);       
+    
+  }
 
   return table;
 
