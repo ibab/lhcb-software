@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-24 - V. Gligorov
+ - Updated the B2DPi stripping file to select all B2DX combinations where
+   X = {K*,phi,pi,K}. Eventually the file will be renamed but first it needs
+   to be rewritten in terms of StrippingMembers and otherwise cleaned up.
+   
 ! 2009-05-21 - Greig Cowan
  - Updated the beta_s channels to use the new StdLTUnbiasedJpsi CommonParticles.
 
