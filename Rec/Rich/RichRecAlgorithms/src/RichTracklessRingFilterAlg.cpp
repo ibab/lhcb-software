@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.6 2009-05-23 20:17:13 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.7 2009-05-24 16:18:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,12 +28,13 @@ TracklessRingFilterAlg::TracklessRingFilterAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
+  using namespace boost::assign;
   declareProperty( "InputRings",  
                    m_inputRings  = LHCb::RichRecRingLocation::MarkovRings+"All"  );
   declareProperty( "OutputRings", 
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Best" );
-  declareProperty( "MinNumPixels",        m_minNumHits = 5   );
-  declareProperty( "MinAveragePixelProb", m_minAvProb  = 0.7 );
+  declareProperty( "MinNumPixels",        m_minNumHits = list_of(5)  (5)  (5)   );
+  declareProperty( "MinAveragePixelProb", m_minAvProb  = list_of(0.7)(0.7)(0.7) );
 }
 
 // Destructor
@@ -44,10 +45,10 @@ StatusCode TracklessRingFilterAlg::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings            : " << m_inputRings  << endreq;
-  info() << "Output Rings           : " << m_outputRings << endreq;
-  info() << "Min. # pixels per ring : " << m_minNumHits  << endreq;
-  info() << "Min. average prob.     : " << m_minAvProb   << endreq;
+  info() << "Input Rings                 : " << m_inputRings  << endreq;
+  info() << "Output Rings                : " << m_outputRings << endreq;
+  info() << "Min. # pixels per ring      : " << m_minNumHits  << endreq;
+  info() << "Min. average prob.          : " << m_minAvProb   << endreq;
 
   return sc;
 }
@@ -80,17 +81,20 @@ StatusCode TracklessRingFilterAlg::execute()
     const double avProb = (*iRing)->averagePixelProb();
     // Number of pixels on the ring
     const unsigned int nPixels = (*iRing)->richRecPixels().size();
+
+    // radiator
+    const Rich::RadiatorType rad = (*iRing)->radiator();
     
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Ring " << (*iRing)->key() 
                 << " av prob = " << avProb
                 << " nPixels = " << nPixels << endmsg;
  
-    if ( avProb < m_minAvProb   ||
-         nPixels < m_minNumHits ) continue;
+    if ( avProb < m_minAvProb[rad]   ||
+         nPixels < m_minNumHits[rad] ) continue;
 
     // If get here, ring is selected so clone and save
-    ++rCount[(*iRing)->radiator()];
+    ++rCount[rad];
     outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
   }
 

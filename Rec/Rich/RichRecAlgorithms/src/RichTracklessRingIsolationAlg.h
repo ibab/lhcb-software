@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.4 2008-09-17 12:28:51 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.h,v 1.5 2009-05-24 16:18:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -61,8 +61,28 @@ namespace Rich
       virtual StatusCode initialize(); ///< Algorithm initialisation
       virtual StatusCode execute();    ///< Algorithm execution
 
+    private:
+
+      /** Test the given cut, and keep a summary tally of the result
+       *  @param desc   Cut description
+       *  @param rad    RICH radiator
+       *  @param result Was the cut passed or failed
+       *  @return result
+       */
+      inline bool testCut( const std::string & desc, 
+                           const Rich::RadiatorType rad,
+                           const bool result ) const
+      {
+        if ( !m_abortEarly )
+        {
+          counter(Rich::text(rad)+" '"+desc+"'") += ( result ? 1.0 : 0.0 );
+        }
+        return result;
+      }
 
     private:
+
+      bool m_abortEarly; ///< Reject tracks as soon as possible
 
       /// Input location in TES for rings
       std::string m_inputRings;

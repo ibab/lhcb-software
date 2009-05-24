@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.h,v 1.4 2009-05-23 20:17:13 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.h,v 1.5 2009-05-24 16:18:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -27,6 +27,9 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -66,10 +69,10 @@ namespace Rich
       std::string m_outputRings;
 
       /// Minimum number of hits on selected rings
-      unsigned int m_minNumHits;
+      std::vector<unsigned int> m_minNumHits;
 
       /// Minimum average hit probability for selected rings
-      double m_minAvProb;
+      std::vector<double> m_minAvProb;
 
     };
 

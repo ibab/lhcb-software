@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.5 2009-05-22 15:46:42 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.6 2009-05-24 16:18:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -29,8 +29,11 @@ TracklessRingSegmentAssociationAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
+  using namespace boost::assign;
   declareProperty( "InputRings", m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
-  declareProperty( "MaxDistance", m_maxDist   = 50*Gaudi::Units::mm );
+  declareProperty( "MaxDistance", 
+                   m_maxDist   = list_of(50*Gaudi::Units::mm)
+                   (50*Gaudi::Units::mm)(50*Gaudi::Units::mm) );
 }
 
 // Destructor
@@ -41,8 +44,8 @@ StatusCode TracklessRingSegmentAssociationAlg::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input Rings            : " << m_inputRings  << endmsg;
-  info() << "Max. seperation        : " << m_maxDist << endmsg;
+  info() << "Input Rings                 : " << m_inputRings  << endmsg;
+  info() << "Max. seperation             : " << m_maxDist << endmsg;
 
   return sc;
 }
@@ -92,7 +95,7 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
       // compute track / ring centre seperation
       const double sep = std::sqrt( std::pow ( ringPtnLocal.x()-tkPtnLocal.x(), 2 ) +
                                     std::pow ( ringPtnLocal.y()-tkPtnLocal.y(), 2 ) );
-      if ( sep < m_maxDist )
+      if ( sep < m_maxDist[rad] )
       {
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Segment " << (*iSeg)->key() << " within matching distance" << endmsg;

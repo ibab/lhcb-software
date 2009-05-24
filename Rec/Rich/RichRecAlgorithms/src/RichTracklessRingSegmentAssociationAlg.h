@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.h,v 1.1 2008-06-13 12:46:14 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.h,v 1.2 2009-05-24 16:18:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -26,6 +26,9 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -63,7 +66,7 @@ namespace Rich
       std::string m_inputRings;
 
       /// Min ring centre / track seperation distance for association
-      double m_maxDist;
+      std::vector<double> m_maxDist;
 
     };
 
