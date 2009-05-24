@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.1 2009-05-21 17:22:46 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.2 2009-05-24 19:54:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -90,7 +90,9 @@ StatusCode TrackSelEff::execute()
     if ( !m_trSelector->trackSelected(*iT) ) continue;
 
     // Does this track have a RichRecTrack associated ?
-    const LHCb::RichRecTrack * rTrack = trackCreator()->newTrack(*iT);
+    //const LHCb::RichRecTrack * rTrack = trackCreator()->newTrack(*iT);
+    /** @todo figure out problem with track stats when using the above */
+    const LHCb::RichRecTrack * rTrack = richTracks()->object((*iT)->key());
     const double richEff = ( rTrack ? 100.0 : 0.0 );
 
     // Ghost ?
@@ -104,12 +106,4 @@ StatusCode TrackSelEff::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode TrackSelEff::finalize()
-{
-
-  // Execute base class method
-  return Rich::Rec::HistoAlgBase::finalize();
 }

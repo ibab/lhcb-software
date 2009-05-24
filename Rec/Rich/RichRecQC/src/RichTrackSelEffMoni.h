@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.h,v 1.1 2009-05-21 17:22:46 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.h,v 1.2 2009-05-24 19:54:00 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -21,13 +21,6 @@
 // Interfaces
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichTrackSelector.h"
-//#include "RichKernel/IRichParticleProperties.h"
-
-// RichKernel
-//#include "RichKernel/RichStatDivFunctor.h"
-
-// boost
-//#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -58,8 +51,7 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
-        virtual StatusCode finalize  ();    // Algorithm finalization
-        
+  
       private: // data
 
         mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
