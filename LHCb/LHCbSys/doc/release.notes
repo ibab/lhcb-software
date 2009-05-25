@@ -5,6 +5,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v27r1>2009-06-02 LHCbSys v27r1</A></H1><PRE>
+This version uses Gaudi v21r1 and LCG_56a
+
 </PRE><H1><A NAME=v27r0>2009-05-11 LHCbSys v27r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LCG_56
 It is released together with TCK/L0TCK v1r2 and Det/SQLDDDB v5r4
