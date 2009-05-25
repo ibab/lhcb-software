@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.5 2009-05-24 16:16:28 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.6 2009-05-25 13:36:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -111,7 +111,7 @@ namespace Rich
 
         /// Fill the ring points in the final reconstructed rings
         void buildRingPoints( LHCb::RichRecRing * ring,
-                              const unsigned int nPoints = 100 ) const;
+                              const unsigned int  nPoints = 100 ) const;
 
         /// Add references to given ring to associated pixels
         void addRingToPixels( LHCb::RichRecRing * ring ) const;
@@ -165,6 +165,9 @@ namespace Rich
 
         /// Min ring purity
         double m_minRingPurity;
+
+        /// build the 'ring points'
+        bool m_buildRingPoints;
 
       };
 

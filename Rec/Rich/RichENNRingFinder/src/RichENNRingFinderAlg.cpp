@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.8 2009-05-24 16:16:28 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.9 2009-05-25 13:36:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -79,6 +79,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
   declareProperty( "MaxPixelDistFromRing", m_maxPixelSep     );
   declareProperty( "MaxRingChiSquared",    m_maxRingChi2     );
   declareProperty( "MinRingPurity",        m_minRingPurity   );
+  declareProperty( "BuildRingPoints",      m_buildRingPoints = true );
   // Disable histograms by default
   setProduceHistos( false );
 }
@@ -270,7 +271,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
       newRing->setRadius ( (*iRing).radius() * m_scaleFactor );
 
       // build the ring points
-      buildRingPoints ( newRing );
+      if ( m_buildRingPoints ) buildRingPoints ( newRing );
 
       // setup references to this ring in pixels
       addRingToPixels ( newRing );
@@ -367,7 +368,7 @@ bool AlgBase<FINDER>::addDataPoints( ) const
 }
 
 template < class FINDER >
-void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
+void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring, 
                                        const unsigned int nPoints ) const
 {
   if ( nPoints>0 )
@@ -378,8 +379,8 @@ void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
     ring->ringPoints().reserve(nPoints);
     for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
     {
-      const double X ( ring->centrePointLocal().x() + (std::sin(angle)*ring->radius()) );
-      const double Y ( ring->centrePointLocal().y() + (std::cos(angle)*ring->radius()) );
+      const double X( ring->centrePointLocal().x() + (std::sin(angle)*ring->radius())/m_scaleFactor );
+      const double Y( ring->centrePointLocal().y() + (std::cos(angle)*ring->radius())/m_scaleFactor );
       const Gaudi::XYZPoint pLocal ( X, Y, 0*Gaudi::Units::cm );
       ring->ringPoints().push_back( LHCb::RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,
                                                                                             rich(),
