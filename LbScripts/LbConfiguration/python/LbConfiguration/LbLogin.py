@@ -8,8 +8,21 @@ import sys
 import os
 
 # bootstraping the location of the file
-# _this_file = find_module(os.path.splitext(os.path.basename(__file__))[0])[1]
-_this_file = __file__
+try:
+    _this_file = __file__
+except NameError :
+    # special procedure to handle the situation when __file__ is not defined.
+    # It happens typically when trying to use pdb.
+    from imp import find_module, load_module
+    _ff, _filename, _desc = find_module("LbConfiguration")
+    try :
+        lbconf_package = load_module('LbConfiguration', _ff, _filename, _desc)
+        _ff, _filename, _desc = find_module('LbLogin', lbconf_package.__path__)
+        _this_file = _filename
+    finally :
+        _ff.close()
+
+
 _pyconf_dir = os.path.dirname(_this_file)
 _py_dir = os.path.dirname(_pyconf_dir)
 _base_dir = os.path.dirname(_py_dir)
@@ -44,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.37 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
