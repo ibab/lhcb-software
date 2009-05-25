@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2009-05-25 - Marco Cattaneo
+ - In PatChecking.py, switch off TrackAssociator("AssocDownstream") and
+   TrackEffChecker("Downstream") in fieldOff case, for consistency with
+   RecoTracking.py
+
 !============================ TrackSys v4r22 2009-03-10 ======================
 ! 2009-03-04 - Stephanie Hansmann-Menzemer
  - add fitter initialization tool in track fitting sequence

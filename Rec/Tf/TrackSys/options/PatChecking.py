@@ -1,7 +1,4 @@
-from os import environ
-from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-import GaudiKernel.ProcessJobOptions
+from Gaudi.Configuration import GaudiSequencer
 from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
@@ -18,7 +15,7 @@ GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocVelo"),
                                               TrackAssociator("AssocForward"),
                                               TrackAssociator("AssocTTrack"),
                                               TrackAssociator("AssocMatch") ]
-if not TrackSys().veloOpen():
+if not TrackSys().veloOpen() and not TrackSys().fieldOff():
    GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream")]
 
 	 
@@ -52,7 +49,7 @@ GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("Velo"),
                                              TrackEffChecker("Forward"),
                                              TrackEffChecker("TTrack"),
                                              TrackEffChecker("Match") ]
-if not TrackSys().veloOpen():
+if not TrackSys().veloOpen() and not TrackSys().fieldOff():
   GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Downstream") ]
 
 GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("BestTracks") ]
