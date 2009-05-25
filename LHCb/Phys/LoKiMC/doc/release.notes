@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.65 2009-05-21 14:41:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.66 2009-05-25 13:10:53 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,27 +15,21 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v8r3 2009-05-25 ============================
 ! 2009-05-21 - Vanya BELYAEV
-
  - improve the printout of MC decay (add []os for oscillated particles)
  - change the default printout, now "decayOnly" flag is "true"
-
 
 ! 2009-05-14 - Vanya Belyaev
  - clean-up the trees  
 
 ! 2009-05-11 - Vanya Belyaev
-
  - fix for change in Kernel/PartProp
 
 ! 2009-05-09 - Vanya BELYAEV
-
  - remove unnesessary std::unary/binary_function bases 
-
  - cmt/requirements
-
    version incremen to v8r3 
-
 
 !========================== LoKiMC v8r2 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
