@@ -42,8 +42,7 @@ DimRpcGaucho::DimRpcGaucho(std::string name, ISvcLocator* svcLocator) : DimRpc(n
   if (sc.isFailure()) msg << MSG::FATAL << "Unable to locate the ApplicationMgr" << endreq;
   else msg << MSG::DEBUG << "Found ApplicationMgr"<< endreq;
 
-//  SmartIF<IAlgManager> algManager ( IID_IAlgManager, m_applicationMgr);
-  SmartIF<IAlgManager> algManager ( IAlgManager::interfaceID(), m_applicationMgr);
+  SmartIF<IAlgManager> algManager (m_applicationMgr);
   if( algManager.isValid() ) {
     m_algManager=algManager;
     msg << MSG::DEBUG << "Found the AlgoritmFactory" << endreq;

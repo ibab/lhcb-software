@@ -68,6 +68,9 @@ public:
   void declareInfo(const std::string& name, const std::string& format, const void * var, 
                    int size, const std::string& desc, const IInterface* owner) ;
 
+  //Eric: To be implemented?
+  virtual void declareInfo(const std::string&, const StatEntity&, const std::string&, const IInterface*) {}
+
   /** Undeclare monitoring information
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
