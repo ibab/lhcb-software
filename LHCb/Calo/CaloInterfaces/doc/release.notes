@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.53 2009-05-19 13:49:32 cattanem Exp $
+! $Id: release.notes,v 1.54 2009-05-25 12:05:59 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloInterfaces v7r11 2009-05-25 ====================
 ! 2009-05-19 - Marco Cattaneo
  - Remove unnecessary dependence on PhysEvent
 
