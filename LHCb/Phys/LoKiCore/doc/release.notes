@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.141 2009-05-23 15:54:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.142 2009-05-25 13:03:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,24 +15,18 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r1 2009-05-25 ========================
 ! 2009-05-23 - Vanya BELYAEV
-
  - eliminate duplicated lines 
 
 ! 2009-05-14 - Vanya Belyaev
-
  - clean-up the trees  
 
 ! 2009-05-09 - Vanya BELYAEV
-
  - remove unnesesary std:unary/binary function 
-
  - decrease the dictionary 
-
  - cmt/requirements
-
      version increment to v9r1 
-
 
 ! =========================== LoKiCore v9r0 2009-05-07 ========================
 ! 2009-05-06 - Vanya BELYAEV
