@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.160 2009-05-20 13:41:35 odescham Exp $
+! $Id: release.notes,v 1.161 2009-05-25 13:59:19 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r17 2009-05-25 =========================
 ! 2009-05-20 - Olivier Deschamps
  - L0DURawBankMonitor : fix bug in SpdMult error monitoring 
 
