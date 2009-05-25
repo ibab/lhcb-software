@@ -6,6 +6,7 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r18 2009-05-25 ==============================
 ! 2009-05-25 - Marco Cattaneo
  - In RawDataCnvSvc, use SmartDataPtr to retrieve RawEvent, avoids pointer type
    conversion warning from gcc43 -O2
