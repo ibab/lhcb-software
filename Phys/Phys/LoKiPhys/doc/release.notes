@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.101 2009-05-14 16:58:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.102 2009-05-25 08:44:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-05-25 - Vanya Belyaev
+
+ - dict/LoKiPhys.xml
+      fix a typo
 
 ! 2009-05-14 - Vanya Belyaev
  - cleanup the trees 
