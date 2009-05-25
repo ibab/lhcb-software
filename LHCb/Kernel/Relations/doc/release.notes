@@ -1,24 +1,21 @@
-! $Id: release.notes,v 1.66 2009-05-25 06:57:05 jpalac Exp $ 
+! $Id: release.notes,v 1.67 2009-05-25 12:53:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r8 2009-05-25 ============================
 ! 2009-05-25 - Juan PALACIOS
  - Relations/Get.h: 
   . Fix typo in _getUniqueFrom
 
 ! 2009-05-24 - Vanya Belyaev
-
  - Relations/Get.h: 
-
-    add new methods getUnqueFrom
+    add new methods getUniqueFrom
 
  cmt/requirements
-   
     version increment to v5r8
-
 
 !====================== Relations v5r7 2009-05-07 ============================
 ! 2009-04-24 - Vanya BELYAEV
