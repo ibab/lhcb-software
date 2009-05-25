@@ -1,36 +1,28 @@
-! $Id: release.notes,v 1.102 2009-05-25 08:44:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.103 2009-05-25 13:12:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! ========================== LoKiPhys v8r5 2009-05-25 =========================
 ! 2009-05-25 - Vanya Belyaev
-
  - dict/LoKiPhys.xml
       fix a typo
 
 ! 2009-05-14 - Vanya Belyaev
  - cleanup the trees 
 
-
 ! 2009-05-13 - Vanya Belyaev
-
  - patch to fix the conflict between SmartIF & LoKi::Interface  
 
 ! 2009-05-11 - Vanya Belyaev
-
  - fix for changes in Kernel/PartProp
 
 ! 2009-05-09 - Vanya BELYAEV
-
  - remove unnesessary std::unary/binary_function bases 
-
  - cmt/requirements
-
    version increment to v8r5
-
-
 
 ! ========================== LoKiPhys v8r4 2009-05-06 =========================
 ! 2009-05-06 - Vanya BELYAEV
