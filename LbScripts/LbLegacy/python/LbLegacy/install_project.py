@@ -2020,8 +2020,7 @@ def checkBinaryName(binary):
                 sys.exit()
 
 #---------------------------------------------------------------------
-if __name__ == "__main__":
-
+def main():
     lhcb_actions = {'c':'cmtversion',
                     'i':'debug',
                     'm':'run make to compile'}
@@ -2114,3 +2113,5 @@ if __name__ == "__main__":
 
     runInstall(pname, pversion, binary)
 
+if __name__ == "__main__":
+    main()

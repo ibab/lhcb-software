@@ -1,3 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env python
 
-runpy LbLegacy.install_project "$@"
+from LbLegacy.install_project import main
+
+    
+main()

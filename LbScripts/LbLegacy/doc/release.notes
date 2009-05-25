@@ -1,3 +1,7 @@
+2009-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/install_project: fixed the install_project wrapper.
+
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/tbroadcast.py: cleaned the indentation and the obsolete/unused imports
