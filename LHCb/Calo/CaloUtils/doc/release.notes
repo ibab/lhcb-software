@@ -1,31 +1,27 @@
-! $Id: release.notes,v 1.125 2009-05-21 11:28:17 odescham Exp $
+! $Id: release.notes,v 1.126 2009-05-25 12:20:30 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r5 2009-05-25 =========================
 ! 2009-05-21 - Olivier Deschamps
  - CovarianceEstimator : fix parameter index
 
-
 ! 2009-05-20 - Olivier Deschamps
- - CaloMomentum : invariant mass error relies on Gaudi::Math::sigmamass (LHCbMath/Kinematics.h)
+ - CaloMomentum : invariant mass error relies on Gaudi::Math::sigmamass
+                  (LHCbMath/Kinematics.h)
 
 ! 2009-05-20 - Olivier Deschamps
  - Calo2Dview : fix bug in getCaloParam() - affecting L0CaloMonitoring only
   
-
 ! 2009-05-19 - Vanya  BELYAEV
-
  - add missing files 
 
 ! 2009-05-16 - Vanya BELYAEV
-
  - add the dictionary for CaloMomentum/CaloParticle classes 
     (needed for python) and polish a bit these classes 
-
  
 ! 2009-05-08 - Vanya BELYAEV
-
  - CaloUtils/SpreadEstimator.h 
    src/SpreadEstimator.cpp 
 
@@ -37,7 +33,7 @@
     1) evaluate the eigenvalues 
     2) for "suspicion" clusters:
          - "small" eigenvalues
-         - "small" diagonal ements  
+         - "small" diagonal elements  
          - four or less cells with positive energy 
          replace the eigenvalues with max("cellsize*cellsize/12", eigenvalue)
 
@@ -45,10 +41,9 @@
        *and* old eigenvectors ("cluster orientation") 
 
     To decrease the influence of numerical uncertanties  
-    the temporary coordinate bias is intorduced..
+    the temporary coordinate bias is introduced..
      
   - cmt/requirements 
-
     version increment to v8r5 
 
 !========================== CaloUtils v8r4 2009-05-06 =========================
