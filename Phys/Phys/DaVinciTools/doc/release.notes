@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.430 2009-05-24 11:37:01 jpalac Exp $
+! $Id: release.notes,v 1.431 2009-05-25 08:48:46 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-05-25 - Juan PALACIOS
+  - src/PVRelatorAlg{.cpp, .h}
+   . Changes for LHCb v27r0 compatibility. Implement execute method.
 
 ! 2009-05-23 - Juan PALACIOS
  - src/GenericParticle2PVRelator.h
