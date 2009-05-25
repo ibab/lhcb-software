@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.23 2009-05-11 15:28:43 jpalac Exp $
+!$Id: release.notes,v 1.24 2009-05-25 09:22:30 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-05-25 - Juan PALACIOS
+ - python/MicroDSTExample/Helpers.py
+  . Add check for vertex of MCParticle in properTimeMC function.
+ - cmt/requirements
+  . Increase to v2r3p1
 
 !======================= Ex/MicroDSTExample v2r3 2009-05-11 ==================
 
