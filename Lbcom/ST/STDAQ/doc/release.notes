@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r18 2009-05-25 ======================
 ! 2009-05-16 - Mark Tobin
  - Added options files for decoding TAE events in online monitoring.
 
