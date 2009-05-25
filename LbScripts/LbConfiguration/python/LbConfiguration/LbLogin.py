@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.37 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.38 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -759,22 +759,27 @@ class LbLoginScript(Script):
         opts = self.options
         
         self.setHomeDir()
+        
+        use_project_path = False
+        
         if ev.has_key("CMTPROJECTPATH") :
+            use_project_path = True
+        elif opts.cmtvers.find("v1r20") != -1 :
+            use_project_path = True
+            
+        if use_project_path :
             if ev.has_key("CMTPATH") :
                 del ev["CMTPATH"]
-        else :    
-            if opts.cmtvers.find("v1r20") == -1 :
-                if not opts.remove_userarea:
-                    ev["CMTPATH"] = ev["User_release_area"]
-                if ev.has_key("CMTPROJECTPATH") :
-                    del ev["CMTPROJECTPATH"]
+            if not opts.remove_userarea and ev.has_key("User_release_area") :
+                ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
             else :
-                if ev.has_key("CMTPATH") :
-                    del ev["CMTPATH"]
-                if not opts.remove_userarea :
-                    ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
-                else :
-                    ev["CMTPROJECTPATH"] = ev["LHCBPROJECTPATH"]
+                ev["CMTPROJECTPATH"] = ev["LHCBPROJECTPATH"]
+        else :
+            if ev.has_key("CMTPROJECTPATH") :
+                del ev["CMTPROJECTPATH"]
+            if not opts.remove_userarea and ev.has_key("User_release_area"):
+                ev["CMTPATH"] = ev["User_release_area"]
+        
     
     def setupLbScripts(self):
         log = logging.getLogger()

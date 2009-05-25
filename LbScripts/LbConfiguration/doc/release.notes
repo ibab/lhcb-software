@@ -1,8 +1,10 @@
 2009-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added a special procedure for the file to locate
-	itself. By default, it uses the "__file__" but it is not always defined, for example
-	when using pdb.
+	* python/LbConfiguration/LbLogin.py: 
+	- added a special procedure for the file to locate itself. By default, it uses 
+	the "__file__" but it is not always defined, for example when using pdb.
+	- fixed the addition of the User_release_area to the CMTPROJECTPATH which was not working
+	on windows
 
 2009-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
