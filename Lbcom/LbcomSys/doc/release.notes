@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r1>2009-06-02 LbcomSys v7r1</A></H1><PRE>
+This version uses Gaudi v21r1 and LHCb v27r1
+
 </PRE><H1><A NAME=v7r0>2009-05-11 LbcomSys v7r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LHCb v27r0
 
