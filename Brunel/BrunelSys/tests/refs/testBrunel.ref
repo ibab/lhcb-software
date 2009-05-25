@@ -55,7 +55,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r0
-                                          running on lxbuild120.cern.ch on Fri May 22 15:59:41 2009
+                                          running on lxbuild120.cern.ch on Mon May 25 08:51:43 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -68,7 +68,7 @@ Note: (file "(tmpfile)", line 2) File "set" already loaded
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.80 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -370,7 +370,7 @@ NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
 TrackV0Finder.T...   INFO SimplifiedMaterialLocator::initialize()
 TrackV0Finder.T...   INFO Found TrackfitGeometry volume with 17 daughters.
-RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
+RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflineENNRingFinderSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
 RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
 RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
 DeRichSystem         INFO Update triggered for HPD numbering maps
@@ -436,6 +436,16 @@ ToolSvc.Offline...   INFO Will use fully alligned mirror segments for Rich2Gas r
 ToolSvc.Offline...   INFO Will check for Rich2Gas photons that hit the beam pipe
 ToolSvc.Offline...   INFO Minimum active Rich2Gas segment fraction = 0.2
 ToolSvc.Offline...   INFO Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = [3, 3, 3]
+RichOfflineENNR...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1TopPanel/OfflineENNFinderR1Top, Rich::Rec::ENNRingFinder::Rich1BottomPanel/OfflineENNFinderR1Bottom, Rich::Rec::ENNRingFinder::Rich2LeftPanel/OfflineENNFinderR2Left, Rich::Rec::ENNRingFinder::Rich2RightPanel/OfflineENNFinderR2Right, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineIsolatedENNRings, with context 'Offline'
+OfflineENNRings...   INFO Input Rings            : Rec/Rich/ENN/RingsAll
+OfflineENNRings...   INFO Max. seperation        : 50
+OfflineBestENNR...   INFO Input Rings            : Rec/Rich/ENN/RingsAll
+OfflineBestENNR...   INFO Output Rings           : Rec/Rich/ENN/RingsBest
+OfflineBestENNR...   INFO Min. # pixels per ring : 5
+OfflineBestENNR...   INFO Min. average prob.     : 0.7
+OfflineIsolated...   INFO Input Rings            : Rec/Rich/ENN/RingsBest
+OfflineIsolated...   INFO Output Rings           : Rec/Rich/ENN/RingsIsolated
+OfflineIsolated...   INFO Ring centre cut        : [260, 260, 260]
 RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineRichPIDs, with context 'Offline'
 RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
 RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
@@ -595,7 +605,7 @@ BestTracks.Sele...   INFO            Beta * gamma cut : 0 < beta*gamma
 BestTracks.Sele...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 BestTracks.Sele...   INFO            Will reject electrons
 BestTracks.Sele...   INFO            Will reject particles from interations before z=9400
-CheckRICHSeq         INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
+CheckRICHSeq         INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
 RichRawMoni          INFO Member list: Rich::DAQ::DataDBCheck/RichRawDataDBCheck, with context 'Offline'
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, with context 'Offline'
 RichTrackMoni        INFO Member list: Rich::Rec::MC::TrackSelEff/RiLongTrkEff, Rich::Rec::MC::TrackSelEff/RiForwardTrkEff, Rich::Rec::MC::TrackSelEff/RiMatchTrkEff, Rich::Rec::MC::TrackSelEff/RiKsTrackTrkEff, Rich::Rec::MC::TrackSelEff/RiVeloTTTrkEff, Rich::Rec::MC::TrackSelEff/RiSeedTrkEff, with context 'Offline'
@@ -669,6 +679,7 @@ RiPIDMonLong10T...   INFO  Match       : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e
 RiPIDMonLong70T...   INFO Track Selection : [Forward, Match]
 RiPIDMonLong70T...   INFO  Forward     : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : LLcut = -1.00e+02->1.80e+308 : cloneCut = -1.00e+10
 RiPIDMonLong70T...   INFO  Match       : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : LLcut = -1.00e+02->1.80e+308 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
+RichENNTrackles...   INFO Member list: Rich::Rec::MC::TracklessRingMoni/ENNRingMoniAll, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniBest, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniIsolated, with context 'Offline'
 RichMirrAlignMoni    INFO Member list: Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR1, Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR2, with context 'Offline'
 RichAlignMoniR1...   INFO Track Selection : [Match, Forward]
 RichAlignMoniR1...   INFO  Match       : P = 5.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : LLcut = -1.00e+02->1.80e+308 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
@@ -924,7 +935,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.80 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1031,6 +1042,14 @@ TimingAuditor.T...   INFO      RichOfflineTracksSeq     |     0.000 |     0.000 
 TimingAuditor.T...   INFO       CreateOfflineTracks     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichOfflinePhotonsSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       CreateOfflinePhotons    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichOfflineENNRingFinderSe|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineENNFinderR1Top    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineENNFinderR1Bottom |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineENNFinderR2Left   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineENNFinderR2Right  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineENNRingsSegAssoc  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineBestENNRings      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OfflineIsolatedENNRings  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RichOfflinePIDSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichOfflineGPIDSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichOfflineGPIDInitSeq  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1187,6 +1206,10 @@ TimingAuditor.T...   INFO      RiPIDMonLong2To100       |     0.000 |     0.000 
 TimingAuditor.T...   INFO      RiPIDMonLong2To10        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiPIDMonLong10To70       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RiPIDMonLong70To100      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichENNTracklessRingsMoni |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ENNRingMoniAll           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ENNRingMoniBest          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ENNRingMoniIsolated      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RichMirrAlignMoni         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichAlignMoniR1          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichAlignMoniR2          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
