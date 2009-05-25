@@ -241,7 +241,7 @@ class CVS(RevisionControlSystem):
         paths = {}
         # empiric definition:
         # a project is a module all capital letters, with no hat
-        proj_re = re.compile("^[A-Z]*$")
+        proj_re = re.compile("^[A-Z0-9_]*$")
         for m in modules:
             if len(m) > 2:
                 m, path = m[0], m[2]

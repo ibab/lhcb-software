@@ -1,3 +1,8 @@
+2008-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: allow numbers and underscores in the name of
+	a project in CVS (e.g. GEANT4).
+
 2009-05-20  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: added "cmt show projects"
