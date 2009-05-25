@@ -4,9 +4,9 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-
+!======================== GaudiObjDesc v11r7 2009-05-25 ======================
 ! 2009-05-19 - Hubert Degaudenzi 
- - Removed the override of the LD_LIBRARY_PATH env variable in obj2dot and 
+ - Removed the override of the LD_LIBRARY_PATH env variable in obj2doth and 
    obj2dict. They are not needed and cause problems when cross-compiling
    slc4 on the slc5 architecture.
 

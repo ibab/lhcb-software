@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v11r6
+version v11r7
 
 include_path none
 macro xmlsrc "xml"
