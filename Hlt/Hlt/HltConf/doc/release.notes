@@ -1,10 +1,9 @@
-! $Id: release.notes,v 1.240 2009-05-25 12:01:58 gkrocker Exp $ 
+! $Id: release.notes,v 1.241 2009-05-25 12:06:16 gkrocker Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
-<<<<<<< release.notes
 !2009-05-25 - Georg Krocker
 - implemented the possibility to use PatSeeding on unused Hits in the HLT2 reco
   sequence via a switch in the beginning of HltReco.py
@@ -22,7 +21,6 @@
 - Changed input location from Hlt/Track/Forward to Hlt/Track/Long in Hlt2Particles.py
   Hlt2TrackFitForTopo.py, Hlt2TrackFitForIncPhi.py, Hlt2TrackAssociator.py
 - TTHits get added to Tracks by PatForward
-=======
 
 ! 2009-05-22 - J. Nardulli and P. Spradlin
   - Added seeding and track fitting sequences for Ks->DD reconstruction.
@@ -39,7 +37,6 @@
  - do not run L0DUFromRaw explicitly, but use DOD -- not all
    partitions _have_ an L0DU
 
->>>>>>> 1.239
 !========================== HltConf v2r8 2009-05-10 ===================
 
 ! 2009-05-10 - Gerhard Raven
