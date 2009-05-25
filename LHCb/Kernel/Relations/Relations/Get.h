@@ -1,4 +1,4 @@
-// $Id: Get.h,v 1.6 2009-05-24 16:22:39 ibelyaev Exp $
+// $Id: Get.h,v 1.7 2009-05-25 06:56:41 jpalac Exp $
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -414,7 +414,7 @@ namespace Relations
   {
     if ( first == last ) { return output ; }
     // the previously selected element 
-    LINK prev = last ; 
+    ITERATOR prev = last ; 
     for ( ; first != last ; ++first ) 
     {
       if ( prev == last ||  cmp ( *prev , *first ) )
