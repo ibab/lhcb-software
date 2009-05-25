@@ -4,6 +4,7 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+!======================== PatFitParams v3r2p3 2009-05-25 =====================
 ! 2009-05-22 - Marco Cattaneo
  - Fix gcc43 compilation warning
  - Replace all endreq by endmsg
