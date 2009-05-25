@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v1r2 2009-05-25 ==========================
 ! 2009-05-18 - Mark Tobin
  - Change histogram of number of events per sample from 2D to profile in
  STTAEClusterMonitor
