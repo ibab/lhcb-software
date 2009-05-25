@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r22 2009-05-25 ==========================
 ! 2009-05-21 - Chris Jones
  - Improvements to track selector base class (add likelihood cuts)
  - Add definitions to RichRecRing for ENN ring finder
