@@ -4,6 +4,7 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!=================== Rich/RichENNRingFinder v21r0 2009-05-25 ===================
 ! 2009-05-25 - Chris Jones
  - Fix bug in forming ring points around the ring circumference
 
