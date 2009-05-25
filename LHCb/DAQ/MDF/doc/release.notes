@@ -6,6 +6,12 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2009-05-25 - Marco Cattaneo
+ - In RawDataCnvSvc, use SmartDataPtr to retrieve RawEvent, avoids pointer type
+   conversion warning from gcc43 -O2
+ - Change RawEventCopy to be a GaudiAlgorithm (was Algorithm). Component 
+   library now depends on GaudiAlg
+
 !========================= MDF v3r17p1 2009-05-06 =============================
 ! 2009-04-17 - Marco Cattaneo
  - Replace all endreq by endmsg

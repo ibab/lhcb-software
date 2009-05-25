@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.35 2009-04-17 13:24:36 cattanem Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.36 2009-05-25 08:56:21 cattanem Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -326,8 +326,11 @@ RawDataCnvSvc::unpackMEP(const MDFDescriptor& dat, const string& loc, RawEvent* 
           r = raw;
         }
         else  {
-          sc = dataProvider()->retrieveObject(obj_loc,(DataObject*&)r);
-          if ( !sc.isSuccess() )  {
+          SmartDataPtr<RawEvent> rawp( dataProvider(), obj_loc );
+          if( rawp ){
+            r = rawp;
+          }
+          else {
             return error("Failed to access raw event at:"+obj_loc);
           }
         }
