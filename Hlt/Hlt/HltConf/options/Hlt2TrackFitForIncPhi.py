@@ -23,7 +23,7 @@ Hlt2IncPhiTFParticlesSeq.Members += [ Hlt2IncPhiTFTrackFitSeq ]
 Hlt2IncPhiTFTrackFit = TrackEventFitter('Hlt2IncPhiTFTrackFit')
 Hlt2IncPhiTFTrackFitSeq.Members += [ Hlt2IncPhiTFTrackFit ]
 
-Hlt2IncPhiTFTrackFit.TracksInContainer  = "Hlt/Track/Forward"
+Hlt2IncPhiTFTrackFit.TracksInContainer  = "Hlt/Track/Long"
 Hlt2IncPhiTFTrackFit.TracksOutContainer = "Hlt/Track/TFForwardForIncPhi"
 
 Hlt2IncPhiTFTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
@@ -40,7 +40,7 @@ fitter.ZPositions = [ 990., 9450.]
 Hlt2IncPhiTFMakeProtoSeq = GaudiSequencer("Hlt2IncPhiTFMakeProtoSeq")
 Hlt2IncPhiTFParticlesSeq.Members += [ Hlt2IncPhiTFMakeProtoSeq ]
 
-from Configurables import ChargedProtoPAlg #, ChargedProtoCombineDLLsAlg
+from Configurables import ChargedProtoPAlg, TrackSelector #, ChargedProtoCombineDLLsAlg
 Hlt2IncPhiTFChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiTFChargedProtoPAlg')
 #Hlt2IncPhiTFChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiTFChargedProtoCombDLL')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
@@ -48,6 +48,9 @@ Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
 
 Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
 Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForIncPhi"
+# Clones will not be accepted
+Hlt2IncPhiTFChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.AcceptClones = False
 #Hlt2IncPhiTFChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/IncPhiTFCharged"
 
 ######################################################################
@@ -92,7 +95,7 @@ from Configurables import RichTrackCreatorConfig
 RichTrackCreatorConfig().InputTracksLocation = "Hlt/Track/TFForwardForIncPhi"
 
 
-from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg
+from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
 importOptions("$HLTCONFROOT/options/Hlt2Rich.py")
 
 
@@ -103,6 +106,10 @@ Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPh
 
 Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
 Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
+# Clones will not be accepted
+Hlt2IncPhiRichChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.AcceptClones = False
+
 Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
 
 ######################################################################

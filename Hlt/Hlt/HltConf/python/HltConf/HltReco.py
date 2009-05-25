@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.5 2009-05-10 12:52:06 graven Exp $
+# $Id: HltReco.py,v 1.6 2009-05-25 12:01:58 gkrocker Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -36,13 +36,19 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
-          , 'HltSeedSequence' # run seeding...
+	  , 'HltSeedSequence' # run Seeding
           )
-#
-#
-#------------------------------
-# Definition of the Hlt Reconstruction
-#-----------------------------
+#############################################################################################
+# Switches for different reco scenarios
+#############################################################################################
+
+RunSeeding = False
+RunFastFit = False
+RunCloneKiller = False
+
+#############################################################################################
+# Import Configurables
+#############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
@@ -50,20 +56,63 @@ from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltConf.HltLine import bindMembers
+from Configurables import TrackEventFitter, TrackMasterFitter, TrackKalmanFilter, TrackMasterExtrapolator  #@gk for TrackFit
+from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+from Configurables import PatSeeding, PatSeedingTool, PatMatch, CreateFastTrackCollection #@gk for PatSeeding
+from Configurables import TrackEventCloneKiller, TrackCloneFinder
 
-##### pattern recognition algorithms...
+#############################################################################################
+# Configure pattern recognition algorithms
+#############################################################################################
 
+#### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
                                    , OutputTracksName = "Hlt/Track/Velo" )
 
+#### Forward Tracking
 recoForward = PatForward( 'HltRecoForward'
                         , InputTracksName = recoVelo.OutputTracksName
                         , OutputTracksName = "Hlt/Track/Forward" )
+PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" ) 
+recoForward.addTool(PatForwardTool, name='PatForwardTool')
+recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
-PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
+#### Seeding 
+recoSeeding = PatSeeding('HLTSeeding'
+                         , OutputTracksName = "Hlt/Track/Seeding") 
+recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
+recoSeeding.PatSeedingTool.UseForward = True
+recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
+recoSeeding.PatSeedingTool.InputTracksName = "Hlt/Track/Forward"
+
+#### Matching
+recoMatch = PatMatch('HLTMatch'
+                     , VeloInput = "Hlt/Track/Velo"
+                     , SeedInput = "Hlt/Track/Seeding" 
+		     , MatchOutput = "Hlt/Track/Match")
+
+#### FastKalmanFitter
+fastKalmanTrackFit = TrackEventFitter('Hlt2FastTrackFit'
+				      ,TracksInContainer  = "Hlt/Track/Long")
+fastKalmanTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
+fitter = ConfiguredFastFitter( getattr(fastKalmanTrackFit,'Fitter'))
+
+#### CreateFastTrackCollection
+recoCopy = CreateFastTrackCollection('TrackCopy'
+		, InputLocations = ["Hlt/Track/Forward", "Hlt/Track/Match"]
+		, OutputLocation = "Hlt/Track/Long"
+		, SlowContainer = True)
+
+#### FastCloneFlagging
+cloneKiller = TrackEventCloneKiller('FastCloneKiller'
+		, TracksInContainers = ["Hlt/Track/Long"]
+		, SkipSameContainerTracks = False
+		, CopyTracks = False)
+cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
+cloneKiller.CloneFinderTool.RestrictedSearch = True
 
 #### Primary vertex algorithms...
 
@@ -78,7 +127,7 @@ recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 ##### Hlt selections
 
 prepareForward = HltTrackFilter( 'HltPrepareForward' 
-                               , InputSelection = "TES:" + recoForward.OutputTracksName
+		, InputSelection = "TES:Hlt/Track/Long" #@gk temporarily fixed
                                , OutputSelection = "Forward1"
                                , RequirePositiveInputs = False )
 
@@ -112,8 +161,12 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
                              , RequirePositiveInputs = False
                              , OutputSelection   = "PV2D" )
 
-##### Sequencers #### 
 
+#############################################################################################
+# Define the reconstruction sequence 
+#############################################################################################
+
+# first define sequencers for velo tracking
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
                                          , Members = [ patVeloR ] )
 
@@ -125,15 +178,40 @@ recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = Tru
                                     [  recoRZVeloTracksSequence
                                     ,  recoRZPVSequence ] )
 
+# define basic reco sequence, this should be run in any case
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
-                                  ,  recoVelo
-                                  # ,  prepareVelo # nobody uses this...
+				  ,  recoVelo
+                                  ,  prepareVelo
                                   ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
-                                  ,  recoForward
-                                  ,  prepareForward # should be replaced by a dedicated monitoring line...
-                                  ] )
+				  ] )
+
+# Now we add different algorithms for long track reco based on the different reconstruction scenarios
+# first we want to decide if the seeding should run
+
+if not RunSeeding:
+#if only Forward is run, we can write directly to Hlt/Track/Long
+	recoCopy.InputLocations = ["Hlt/Track/Forward"]
+	trackRecoSequence.Members += [ recoForward
+				     , recoCopy]
+# Otherwise we just have to add our stuff
+else:
+	trackRecoSequence.Members += [ recoForward
+				     , recoSeeding
+				     , recoMatch
+				     , recoCopy]
+
+#### now we add the fit 
+if RunFastFit:
+	trackRecoSequence.Members += [ fastKalmanTrackFit]
+
+if RunCloneKiller:
+	trackRecoSequence.Members += [ cloneKiller ]
+#### and last but least prepareForward
+trackRecoSequence.Members += [ prepareForward]
+
+
 ####TODO
 ###           HltTrackRecoSequence                  GaudiSequencer           
 ###              HltRecoRZVelo                      Tf::PatVeloRTracking     
@@ -196,10 +274,10 @@ PatDownstream.OutputLocation="Hlt/Track/SeedTT"
 ## changed: PatSeeding.UseForward = true;
 ##/ToolSvc.PatSeedingTool.UseForward = true;
 ##/**
-## * 
+## *
 ##// the following is without hit blanking
 ##ToolSvc.PatSeedingTool.UseForward = false;
-##// for TT: 
+##// for TT:
 ##PatDownstream.UseForward = false;
 ##PatDownstream.SeedFilter = false;
 ##*/
@@ -207,7 +285,7 @@ PatDownstream.OutputLocation="Hlt/Track/SeedTT"
 ## with hit blanking
 from Configurables import PatSeedingTool
 PatSeedingTool().UseForward = True
-## for TT: 
+## for TT:
 PatDownstream.UseForward = True
 PatDownstream.SeedFilter = True
 
@@ -216,6 +294,7 @@ PatDownstream.SeedFilter = True
 HltSeedSequence = GaudiSequencer("HltSeedSequence")
 HltSeedSequence.Members = [ PatSeeding, PatDownstream ]
 HltSeedSequence.MeasureTime=True
+
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )

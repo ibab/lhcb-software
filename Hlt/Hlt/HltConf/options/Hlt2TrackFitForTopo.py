@@ -50,7 +50,7 @@ from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
 Hlt2TFTrackFitForTopo = TrackEventFitter('Hlt2TFTrackFitForTopo')
 SeqHlt2TFChargedForTopo.Members += [ Hlt2TFTrackFitForTopo ]
 
-Hlt2TFTrackFitForTopo.TracksInContainer  = "Hlt/Track/Forward"
+Hlt2TFTrackFitForTopo.TracksInContainer  = "Hlt/Track/Long"
 Hlt2TFTrackFitForTopo.TracksOutContainer = "Hlt/Track/TFForwardForTopo"
 
 Hlt2TFTrackFitForTopo.addTool(TrackMasterFitter, name = 'Fitter')
@@ -73,14 +73,14 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
 #SeqHlt2TFParticlesForTopo.Members += [ GaudiSequencer('HltRecoCALOSeq') ]
 
 
-#// @todo temporary : redefine HLT track location to "Hlt/Track/ForwardCleaned"
+#// @todo temporary : redefine HLT track location to "Hlt/Track/LongCleaned"
 #from Configurables import InSpdAcceptanceAlg, InPrsAcceptanceAlg
 #from Configurables import InHcalAcceptanceAlg, InEcalAcceptanceAlg
 #from Configurables import InBremAcceptanceAlg, PhotonMatchAlg, BremMatchAlg
 #from Configurables import ElectronMatchAlg, Track2SpdEAlg, Track2PrsEAlg
 #from Configurables import Track2EcalEAlg, Track2HcalEAlg, EcalChi22ID
 #from Configurables import BremChi22ID, ClusChi22ID
-#lclCaloTrackContainers = [ "Hlt/Track/Forward", "Hlt/Track/TFForwardForTopo" ]
+#lclCaloTrackContainers = [ "Hlt/Track/Long", "Hlt/Track/TFForwardForTopo" ]
 #InSpdAcceptanceAlg('HltInSPD').Inputs       = lclCaloTrackContainers
 #InPrsAcceptanceAlg('HltInPRS').Inputs       = lclCaloTrackContainers
 #InHcalAcceptanceAlg('HltInHCAL').Inputs     = lclCaloTrackContainers
@@ -101,7 +101,7 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
 #---------------------------------------------------------------------
 # ChargedProtoPAlg
 #---------------------------------------------------------------------
-from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg
+from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
 Hlt2TFChargedForTopoProtoPAlg = ChargedProtoPAlg('Hlt2TFChargedForTopoProtoPAlg')
 Hlt2TFChargedForTopoProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedForTopoProtoCombDLL')
 SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
@@ -109,6 +109,10 @@ SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
 
 Hlt2TFChargedForTopoProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForTopo"
 Hlt2TFChargedForTopoProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
+# Clones will not be accepted
+Hlt2TFChargedForTopoProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+Hlt2TFChargedForTopoProtoPAlg.TrackSelector.AcceptClones = False
+
 Hlt2TFChargedForTopoProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 
 

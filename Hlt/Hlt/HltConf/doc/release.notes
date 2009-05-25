@@ -1,9 +1,28 @@
-! $Id: release.notes,v 1.239 2009-05-22 16:40:48 spradlin Exp $ 
+! $Id: release.notes,v 1.240 2009-05-25 12:01:58 gkrocker Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+<<<<<<< release.notes
+!2009-05-25 - Georg Krocker
+- implemented the possibility to use PatSeeding on unused Hits in the HLT2 reco
+  sequence via a switch in the beginning of HltReco.py
+- implemented the possibility to use the fast kalman fit in the HLT2 reco sequence
+  via a switch at the beginning of HltReco.py
+- implemented the possibility to flag clones at the end of the HLT2 reco via a
+  switch in HltReco.py
+- Added options to ChargedProtoPAlg in Hlt2TrackfitForTopo.py, Hlt2TrackFitForIncPhi.py
+  so that tracks flagged as clones are not used to make charged particles.
+- changed the output containers for the HLT reco: PatForward writes to Hlt/Track/Forward,
+  PatSeeding to Hlt/Track/Seeding, PatMatch to Hlt/Track/Match in HltReco.py
+- added CreateFastTrackCollection to the HLT reco that copies longtracks found by
+  different Pat Algorithms and writes the to Hlt/Track/Long. Original tracks are kept
+  at their old location.
+- Changed input location from Hlt/Track/Forward to Hlt/Track/Long in Hlt2Particles.py
+  Hlt2TrackFitForTopo.py, Hlt2TrackFitForIncPhi.py, Hlt2TrackAssociator.py
+- TTHits get added to Tracks by PatForward
+=======
 
 ! 2009-05-22 - J. Nardulli and P. Spradlin
   - Added seeding and track fitting sequences for Ks->DD reconstruction.
@@ -20,6 +39,7 @@
  - do not run L0DUFromRaw explicitly, but use DOD -- not all
    partitions _have_ an L0DU
 
+>>>>>>> 1.239
 !========================== HltConf v2r8 2009-05-10 ===================
 
 ! 2009-05-10 - Gerhard Raven

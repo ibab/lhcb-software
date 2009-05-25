@@ -14,7 +14,7 @@ from Configurables import ElectronMatchAlg, BremMatchAlg, PhotonMatchAlg
 from Configurables import Track2SpdEAlg, Track2PrsEAlg, Track2EcalEAlg, Track2HcalEAlg
 from Configurables import EcalChi22ID, BremChi22ID, ClusChi22ID
 from Configurables import MuonID
-from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg
+from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, TrackSelector
 
 
 ##
@@ -37,7 +37,7 @@ GaudiSequencer('Hlt2').Members += [ SeqHlt2Particles ]
 # @todo TEMPORARY kill huge events
 #
 NumberOfTracksFilter =  NumberOfTracksFilter()
-NumberOfTracksFilter.TrackLocations = [ "Hlt/Track/Forward" ]
+NumberOfTracksFilter.TrackLocations = [ "Hlt/Track/Long" ]
 NumberOfTracksFilter.MaxTracks = 1000 
 SeqHlt2Charged.Members += [ NumberOfTracksFilter ]
 
@@ -49,7 +49,7 @@ SeqHlt2Charged.Members += [ GaudiSequencer('SeqTrueSignalTracks') ] #  debug
 # Hacking of errors
 #
 HltInsertTrackErrParam = HltInsertTrackErrParam()
-HltInsertTrackErrParam.InputLocation = "Hlt/Track/Forward" 
+HltInsertTrackErrParam.InputLocation = "Hlt/Track/Long" 
 SeqHlt2Charged.Members += [ HltInsertTrackErrParam ]
 
 
@@ -61,22 +61,22 @@ SeqHlt2Particles.Members += [ GaudiSequencer('HltRecoCALOSeq') ]
 ## Options for Calo reconstruction
 importOptions("$CALORECOROOT/options/HltCaloSeq.opts")
 
-##/ @todo temporary : redefine HLT track location to "Hlt/Track/ForwardCleaned"
-InSpdAcceptanceAlg('HltInSPD').Inputs   =  [ "Hlt/Track/Forward" ]
-InPrsAcceptanceAlg('HltInPRS').Inputs   =  [ "Hlt/Track/Forward" ]
-InEcalAcceptanceAlg('HltInECAL').Inputs =  [ "Hlt/Track/Forward" ]
-InHcalAcceptanceAlg('HltInHCAL').Inputs =  [ "Hlt/Track/Forward" ]
-InBremAcceptanceAlg('HltInBREM').Inputs =  [ "Hlt/Track/Forward" ]
-ElectronMatchAlg('HltElectronMatch').Tracks =["Hlt/Track/Forward"]
-BremMatchAlg('HltBremMatch').Tracks =      ["Hlt/Track/Forward"]
-PhotonMatchAlg('HltClusterMatch').Tracks = ["Hlt/Track/Forward" ]
-Track2SpdEAlg('HltSpdE').Inputs =          ["Hlt/Track/Forward" ]
-Track2PrsEAlg('HltPrsE').Inputs =          ["Hlt/Track/Forward" ]
-Track2EcalEAlg('HltEcalE').Inputs =        ["Hlt/Track/Forward" ]
-Track2HcalEAlg('HltHcalE').Inputs =        ["Hlt/Track/Forward" ]
-EcalChi22ID('HltEcalChi22ID').Tracks =     ["Hlt/Track/Forward"]
-BremChi22ID('HltBremChi22ID').Tracks =    ["Hlt/Track/Forward"]
-ClusChi22ID('HltClusChi22ID').Tracks =    ["Hlt/Track/Forward"]
+##/ @todo temporary : redefine HLT track location to "Hlt/Track/LongCleaned"
+InSpdAcceptanceAlg('HltInSPD').Inputs   =  [ "Hlt/Track/Long" ]
+InPrsAcceptanceAlg('HltInPRS').Inputs   =  [ "Hlt/Track/Long" ]
+InEcalAcceptanceAlg('HltInECAL').Inputs =  [ "Hlt/Track/Long" ]
+InHcalAcceptanceAlg('HltInHCAL').Inputs =  [ "Hlt/Track/Long" ]
+InBremAcceptanceAlg('HltInBREM').Inputs =  [ "Hlt/Track/Long" ]
+ElectronMatchAlg('HltElectronMatch').Tracks =["Hlt/Track/Long"]
+BremMatchAlg('HltBremMatch').Tracks =      ["Hlt/Track/Long"]
+PhotonMatchAlg('HltClusterMatch').Tracks = ["Hlt/Track/Long" ]
+Track2SpdEAlg('HltSpdE').Inputs =          ["Hlt/Track/Long" ]
+Track2PrsEAlg('HltPrsE').Inputs =          ["Hlt/Track/Long" ]
+Track2EcalEAlg('HltEcalE').Inputs =        ["Hlt/Track/Long" ]
+Track2HcalEAlg('HltHcalE').Inputs =        ["Hlt/Track/Long" ]
+EcalChi22ID('HltEcalChi22ID').Tracks =     ["Hlt/Track/Long"]
+BremChi22ID('HltBremChi22ID').Tracks =    ["Hlt/Track/Long"]
+ClusChi22ID('HltClusChi22ID').Tracks =    ["Hlt/Track/Long"]
 
 ##---------------------------------------------------------------------
 ## MuonID
@@ -84,7 +84,7 @@ ClusChi22ID('HltClusChi22ID').Tracks =    ["Hlt/Track/Forward"]
 importOptions("$MUONIDROOT/options/MuonID.py")
 
 HltMuonID = MuonID().clone('HltMuonID')
-HltMuonID.TrackLocation = "Hlt/Track/Forward" 
+HltMuonID.TrackLocation = "Hlt/Track/Long" 
 HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" 
 HltMuonID.MuonTrackLocation = "Hlt/Track/Muon"
 
@@ -108,7 +108,7 @@ SeqHlt2Particles.Members += [ HltMuonIDSeq ]
 ###include "$RICHHLTSYSOPTS/LocalPID.opts"
 
 ## temporary, to use the cleaned forward tracks
-##ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward"
+##ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Long"
 
 ## Explicitly run the RICH reco sequence
 ##SeqHlt2Charged.Members += { "GaudiSequencer/HltRICHReco" }
@@ -130,9 +130,11 @@ SeqHlt2Particles.Members += [ HltMuonIDSeq ]
 ## ChargedProtoPAlg
 ##---------------------------------------------------------------------
 Hlt2ChargedProtoPAlg = ChargedProtoPAlg('Hlt2ChargedProtoPAlg')
-Hlt2ChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward"  #  @todo Correct this
-Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" 
-##Hlt2ChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs"
+Hlt2ChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Long"  #  @todo Correct this
+Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged"
+#Clones will not be accepted
+Hlt2ChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+Hlt2ChargedProtoPAlg.TrackSelector.AcceptClones = False
 Hlt2ChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
 ## Calo PID
 Hlt2ChargedProtoPAlg.UseCaloSpdPID = True 
