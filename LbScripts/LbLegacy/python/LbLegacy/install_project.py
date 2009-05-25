@@ -1511,7 +1511,7 @@ def StripPath(path):
 #  create base directories #################################################
 #
 
-def createBaseDirs():
+def createBaseDirs(pname, pversion):
     global multiple_mysiteroot
     global cmtconfig
     global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir
@@ -1655,7 +1655,7 @@ def runInstall(pname,pversion,binary=''):
     setLHCbEnv(cmtvers)
 
     if pname != 'LbScripts' :
-        script_project_list, script_html_list = getProjectList('LbScripts', lbscripts_version)
+        script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
         getProjectTar(script_project_list)
 
     project_list,html_list = getProjectList(pname,pversion)
@@ -2021,9 +2021,10 @@ def checkBinaryName(binary):
 
 #---------------------------------------------------------------------
 def main():
-    lhcb_actions = {'c':'cmtversion',
-                    'i':'debug',
-                    'm':'run make to compile'}
+    
+    global debug_flag, full_flag, list_flag, remove_flag
+    global cmtversion, md5_check, grid_version, nb_retries
+    global setup_script, check_only, overwrite_mode
 
 # get arguments
     pname =' '
@@ -2101,7 +2102,7 @@ def main():
         list_flag = True
 
 
-    lognm = createBaseDirs()
+    lognm = createBaseDirs(pname, pversion)
 
     filehandler = logging.FileHandler(lognm, "w")
     if python_version < (2, 5, 1) :
