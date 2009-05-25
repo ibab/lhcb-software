@@ -120,8 +120,9 @@ def category(tag) :
 #==============================================================================
 def properTimeMC(particle) :
     tau = -99999.
-    if (pid(particle) == -99000000 ) : return tau
+    if ( particle == None or pid(particle) == -99000000 ) : return tau
     originVertex = particle.originVertex()
+    if None == originVertex : return tau
     decayVtx = decayVertex(particle)
     if (decayVtx !=None) :
         decayPos = decayVtx.position()
