@@ -6,15 +6,14 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r8 2009-05-25 ==========================
 ! 2009-05-23 - Vanya Belyaev
-
  - src/Lomont.cpp
     use unions instead of reinterpret_cast to avoid gcc4 problems 
     for gcc34 the result are identical 
  - add tests for Lomont-compare
  - cmt/requirements 
     version inrement to v3r8
-
 
 !========================= LHCbMath v3r7 2009-05-07 ==========================
 ! 2009-04-08 - Vanya BELYAEV
