@@ -45,3 +45,8 @@ tape = OutputStream("GaussTape")
 tape.Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 ApplicationMgr( OutStream = [tape] )
 
+
+GenMonitor = GaudiSequencer( "GenMonitor" )
+SimMonitor = GaudiSequencer( "SimMonitor" )
+GenMonitor.Members += [ "GaussMonitor::CheckLifeTimeHepMC/Hepmclifetime" ]
+SimMonitor.Members += [ "GaussMonitor::CheckLifeTimeMC/MCLifeTime" ]
