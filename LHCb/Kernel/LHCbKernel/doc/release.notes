@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r4 2009-05-25 ========================
 ! 2009-05-15 - Christopher Rob Jones
  - Some improvements to the ostream operator overloading for enums
 
