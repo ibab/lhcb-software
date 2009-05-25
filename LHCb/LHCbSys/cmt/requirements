@@ -13,8 +13,8 @@ use GaudiObjDesc          v11r7
 #                                         Maintainer
 # Kernel packages
 use KernelSys             v12r0   Kernel  # Marco Cattaneo
-use LHCbKernel            v11r3   Kernel  # Marco Cattaneo
-use LHCbMath              v3r7    Kernel  # Juan Palacios
+use LHCbKernel            v11r4   Kernel  # Marco Cattaneo
+use LHCbMath              v3r8    Kernel  # Juan Palacios
 use CaloKernel            v5r2    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use L0MuonKernel          v8r5    L0      # Andrei Tsaregorodtsev, Julien Cogan
@@ -86,7 +86,7 @@ use LoKiArrayFunctors     v8r4    Phys    # Ivan Belyaev
 use LoKiCore              v9r1    Phys    # Ivan Belyaev
 use LoKiGen               v8r3    Phys    # Ivan Belyaev
 use LoKiGenMC             v8r1   Phys    # Ivan Belyaev
-use LoKiHlt               v2r1   Phys    # Ivan Belyaev
+use LoKiHlt               v2r2   Phys    # Ivan Belyaev
 use LoKiMC                v8r3    Phys    # Ivan Belyaev
 use LoKiNumbers           v8r2    Phys    # Ivan Belyaev
 use LoKiPhys              v8r5    Phys    # Ivan Belyaev
@@ -97,7 +97,7 @@ use MDF                   v3r18   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3    Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
-use RichRecBase           v3r21   Rich    # Chris Jones
+use RichRecBase           v3r22   Rich    # Chris Jones
 use SimComponents         v2r17  Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r14   ST      # Matt Needham
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
