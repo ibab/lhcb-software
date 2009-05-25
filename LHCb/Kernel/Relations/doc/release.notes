@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.65 2009-05-24 16:22:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.66 2009-05-25 06:57:05 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2009-05-25 - Juan PALACIOS
+ - Relations/Get.h: 
+  . Fix typo in _getUniqueFrom
 
 ! 2009-05-24 - Vanya Belyaev
 
