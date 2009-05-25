@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.23 2009-05-24 15:27:20 ibelyaev Exp $ 
+! $Id: release.notes,v 1.24 2009-05-25 12:46:19 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!======================== PartProp v1r2 2009-05-25 ============================
 ! 2009-05-24 - Vanya BELYAEV
-
  - add the missing dictionary 
 
 ! 2009-05-22 - Vanya BELYAEV
-
  - substitute SubNodes with NodeList 
 
 ! 2009-05-14 - Vanya BELYAEV
@@ -20,14 +19,13 @@
  - (undo): move the operators 
     back form local namespace Decays 
     to the global namespace
- 
 
 ! 2009-05-11 - Vanya Belyaev
  - fix typo 
 
 ! 2009-05-11 - Vanya BELYAEV
  - Kernel/Nodes.h 
-     move unnesessary concrete stymbols into the sepaarte file 
+     move unnecessary concrete symbols into a separate file 
  - Kernel/Symbols.h
      make it singleton 
  - src/Components/ParticlePropertySvc.cpp
@@ -39,10 +37,9 @@
     new class Decays::Symbols, which contains the information about the 
     allowed symbols for decay descriptors.
  - dict/PartProp.xml
-    add dictionry for class Decays::Symbols 
+    add dictionary for class Decays::Symbols 
  - cmt/requirements 
     version incremen to v1r2 
-  
 
 !======================== PartProp v1r1 2009-05-07 ============================
 ! 2009-05-06 - Vanya BELYAEV
