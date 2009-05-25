@@ -3,6 +3,8 @@
 ! Responsible : Patrick Robbe 
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2009-05-25 - Mark Whitehead
+ - EvtCPUtil.cpp: Bugs in incoherentmix routine fixed.
 
 ! 2009-04-14 - Patrick Robbe
  - EvtModelReg.cpp: reintroduce EvtLambdaB2LambdaV decay model

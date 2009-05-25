@@ -347,7 +347,7 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
   return ;
 }
 
-
+// No CP violation is assumed
 void EvtCPUtil::incoherentMix(const EvtId id, double &t, int &mix){
 
   int stdHepNum=EvtPDL::getStdHep(id);
@@ -364,10 +364,16 @@ void EvtCPUtil::incoherentMix(const EvtId id, double &t, int &mix){
 
   double ctauL=EvtPDL::getctau(lId);
   double ctauH=EvtPDL::getctau(hId);
-  double ctau=0.5*(ctauL+ctauH);
-  double y=(ctauH-ctauL)/ctau;
 
-  //need to figure out how to get these parameters into the code...
+  // Bug Fixed: Corrected the average as gamma is the relevent parameter
+  double ctau=2.0*(ctauL*ctauH)/(ctauL+ctauH);
+  //double ctau=0.5*(ctauL+ctauH);
+
+  // Bug Fixed: ctau definition changed above
+  //double y=(ctauH-ctauL)/(2*ctau);
+  double y=(ctauH-ctauL)/(ctauH+ctauL);
+
+  //deltam and qoverp defined in DECAY.DEC
 
   std::string qoverpParmName=std::string("qoverp_incohMix_")+partName;
   std::string mdParmName=std::string("dm_incohMix_")+partName;
@@ -383,7 +389,7 @@ void EvtCPUtil::incoherentMix(const EvtId id, double &t, int &mix){
     fac=qoverp*qoverp;
   }
 
-  double mixprob=(x*x+y*y)/(x*x+y*y+fac*(2+x*x-y*y));
+  double mixprob=(x*x+y*y)/(x*x+y*y+fac*(2.0+x*x-y*y));
 
   int mixsign;
 
@@ -391,10 +397,14 @@ void EvtCPUtil::incoherentMix(const EvtId id, double &t, int &mix){
 
   double prob;
 
+  // Find the longest of the two lifetimes
+  double ctaulong = ctauL<=ctauH?ctauH:ctauL;
+
+  // Bug fixed: Ensure cosine argument is dimensionless so /ctau
   do{
-    t=-log(EvtRandom::Flat())*ctauL;
-    prob=1.0+exp(2.0*y*t/ctau)+mixsign*2.0*exp(y*t/ctau)*cos(x*t);
-  }while(prob<4*EvtRandom::Flat());
+    t=-log(EvtRandom::Flat())*ctaulong;
+    prob=1.0+exp(-2.0*fabs(y)*t/ctau)+mixsign*2.0*exp(-fabs(y)*t/ctau)*cos(x*t/ctau);
+  }while(prob<4.0*EvtRandom::Flat());
 
   mix=0;
 
