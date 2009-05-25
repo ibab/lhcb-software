@@ -4,14 +4,11 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r2 2009-05-25 =======================
 ! 2009-05-09 - Vanya BELYAEV
-
  - remove unnesessary std:unary/binary_function bases 
-
  - cmt/requirements 
-
    version incrmen tto v8r2 
-
 
 !========================== LoKiNumbers v8r1 2009-01-08 =======================
 ! 2009-01-08 - Marco Cattaneo
