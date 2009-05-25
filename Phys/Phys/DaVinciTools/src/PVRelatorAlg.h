@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.2 2009-05-23 17:25:20 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.3 2009-05-25 08:48:16 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -35,9 +35,13 @@ private:
     return (exist<T>( location )) ? get<T>( location ) : 0 ;
   }
 
-  const Particle2Vertex::Table* table();
+  Particle2Vertex::Table* table() const;
   
-  const Particle2Vertex::Table* tableFromTable();
+  Particle2Vertex::Table* tableFromTable() const;
+
+  /// @todo remove with LHCb v27r1
+  void getPVsFromVertexBases(const LHCb::VertexBase::ConstVector& v,
+                             LHCb::RecVertex::ConstVector& pvs) const;
   
 
 private:

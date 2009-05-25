@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.4 2009-05-24 11:36:44 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.5 2009-05-25 08:48:16 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ PVRelatorAlg::PVRelatorAlg( const std::string& name,
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2PVRelationsInputLocation",  m_P2PVInputLocation);
-  //  declareProperty("P2PVRelationsOutputLocation",  m_P2PVOutputLocation);
+  declareProperty("P2PVRelationsOutputLocation",  m_P2PVOutputLocation);
   
 }
 //=============================================================================
@@ -64,11 +64,13 @@ StatusCode PVRelatorAlg::initialize() {
        ( m_particleInputLocation!="" ||
          m_PVInputLocation!=LHCb::RecVertexLocation::Primary) ) {
     return Error("You have set P2PVRelationsLocation and one of ParticleInputLocation and PrimaryVertexInputLocation.",
-                 StatusCode::FAILURE, 
-                 1 );    
+                 StatusCode::FAILURE);    
   }
+
+  if (""==m_P2PVOutputLocation) return Error("P2PVRelationsOutputLocation not set");
   
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
+
   if (0==m_OnOffline) return Error("Failed to get IOnOffline tool");
   
   m_pvRelator = tool<IRelatedPVFinder>(m_OnOffline->relatedPVFinderType(), 
@@ -86,10 +88,22 @@ StatusCode PVRelatorAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+  Particle2Vertex::Table* table = (m_useTable) ? this->tableFromTable() : this->table();
+  
+  if (0!=table) {
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Storing relations table in " 
+              << m_P2PVOutputLocation << endmsg;
+      put(table, m_P2PVOutputLocation);
+      } else {
+      Error("No table created!",10).ignore();
+      }
+  }
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-const Particle2Vertex::Table* PVRelatorAlg::table() 
+Particle2Vertex::Table* PVRelatorAlg::table() const
 {
   typedef LHCb::Particle::Container Particles;
   typedef LHCb::RecVertex::Container Vertices;
@@ -114,10 +128,11 @@ const Particle2Vertex::Table* PVRelatorAlg::table()
 }
 //=============================================================================
 //=============================================================================
-const Particle2Vertex::Table* PVRelatorAlg::tableFromTable() 
+Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
 {
   typedef LHCb::Particle::ConstVector Particles;
   typedef LHCb::VertexBase::ConstVector Vertices;
+  typedef LHCb::RecVertex::ConstVector PVs;
   typedef Particle2Vertex::LightTable RelTable;
   typedef Particle2Vertex::Table Table;
   typedef Particle2Vertex::Table::InvType InvTable;
@@ -142,10 +157,15 @@ const Particle2Vertex::Table* PVRelatorAlg::tableFromTable()
     const Table::Range range = inputTable->relations(*iPart);
 
     Vertices vertices;
-
+    PVs pvs;
     Relations::getUniqueTo(range.begin(), range.end(), vertices);
+    /// @todo uncomment with LHCb v27r1
+    //    const RelTable::Range rel = 
+    //      m_pvRelator->relatedPVs(*iPart, vertices).relations();
+    /// @todo remove with LHCb v27r1
+    getPVsFromVertexBases(vertices, pvs);
     const RelTable::Range rel = 
-      m_pvRelator->relatedPVs(*iPart, vertices).relations();
+      m_pvRelator->relatedPVs(*iPart, pvs).relations();
 
     table->merge(rel);       
     
@@ -156,6 +176,23 @@ const Particle2Vertex::Table* PVRelatorAlg::tableFromTable()
 
 }
 //=============================================================================
+/// @todo remove with LHCb v27r1
+void 
+PVRelatorAlg::getPVsFromVertexBases(const LHCb::VertexBase::ConstVector& v,
+                                    LHCb::RecVertex::ConstVector& pvs) const
+{
+  LHCb::VertexBase::ConstVector::const_iterator iVtx = v.begin();
+  for ( ; iVtx != v.end() ; ++ iVtx ) {
+    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(*iVtx);
+    if (pv) {
+      std::cout << "Inserting RecVertex cast from VertexBase" << std::endl;
+      pvs.push_back(pv);
+    } else {
+      Error("VertexBase -> RecVertex dynamic_cast failed!", 10).ignore();
+    }
+  }
+  
+}
 //=============================================================================
 //  Finalize
 //=============================================================================
