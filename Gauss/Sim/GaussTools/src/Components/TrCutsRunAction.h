@@ -1,4 +1,4 @@
-// $Id: TrCutsRunAction.h,v 1.8 2009-04-05 17:50:24 gcorti Exp $
+// $Id: TrCutsRunAction.h,v 1.9 2009-05-26 17:14:34 gcorti Exp $
 #ifndef GAUSSTOOLS_COMPONENTS_TRCUTSRUNACTION_H 
 #define GAUSSTOOLS_COMPONENTS_TRCUTSRUNACTION_H 1
 // Include files
@@ -62,23 +62,27 @@ private:
 
 private:
   
-  double m_ecut;
-  double m_phcut;
-  double m_pKpicut ;
-  double m_ocut;
-  double m_ncut;
-  double m_nucut;
-  double m_mcut;
-  bool m_killloops;
-  int m_maxsteps;
-  double m_minstep;
-  double m_minx, m_miny, m_minz, m_maxx, m_maxy, m_maxz;
-  bool m_killPingPong;
-  int m_nMaxForPingPong;
-  int m_nMaxOfPingPong;
-  double m_stepLenghtPingPong;
-  std::vector<int> m_killAtOrigin;
-
+  double m_ecut;         ///< kinetic energy cut for e+/-
+  double m_phcut;        ///< kinetic energy cut for gamma
+  double m_pKpicut ;     ///< kinetic energy cut for proton, K+/- and pi+/-
+  double m_ocut;         ///< kinetic energy cut for other particles
+  double m_ncut;         ///< kinetic energy cut for neutrons
+  double m_nucut;        ///< kinetic energy cut for neutrinos (when tracked)
+  double m_mcut;         ///< kinetic energy cut for muons
+  bool m_killloops;      ///< kill looping e- and gamma
+  int m_maxsteps;        ///< maximum number of step looping
+  double m_minstep;      ///< minimum lenght for looping cut
+  double m_minx, m_miny, m_minz, m_maxx, m_maxy, m_maxz; ///< world cut limits
+  bool m_killPingPong;   ///< kill particles ping ponging
+  int m_nMaxForPingPong; ///< maximum number of steps to check pingpong
+  int m_nMaxOfPingPong;  ///< maximum number of ping pong
+  double m_stepLenghtPingPong; ///< step lenght to consider in pingpong
+  std::vector<int> m_killAtOrigin; ///< particle to kill at origin (def=neutrino)
+  bool m_killZeroSteps;   ///< kill particle with 'zero' step 
+  int m_nStepsForZero;    ///< number of steps after which to check for 'zero' steps
+  double m_zeroMaxLenght; ///< max lenght to consider a step of 'zero' lenght
+  int m_maxNZeroSteps;    ///< number of steps of zero length to trigger cut
+  std::string m_world;    ///< Name of world volume
 
 };
 // ============================================================================

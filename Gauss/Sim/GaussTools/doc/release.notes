@@ -4,6 +4,14 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v15r3 2009-05-26 ========================
+! 2009-05-26 - Gloria CORTI
+ - Put protection for bug #50862 where chraged patricle go into repeting
+   zero steps in a given volume. Real fix is in geometry. When the new cut
+   (ZeroStepsCut) is applied a messgae is printed.
+   . TrCutsRunAction.{h,cpp}
+   . ZeroStepsCut.{h,cpp}    - NEW
+
 !======================== GaussTools v15r2 2009-04-05 ========================
 ! 2009-04-05 - Gloria CORTI
  - Fix bug #47062 of particle getting stuck and Gauss jobs hanging in 
@@ -18,8 +26,8 @@
    kills only all neutrinos. KillAtOriginCut is also added to TrCutsRunAction,
    to which new properties have been introduced to steer the two new "cuts".
    . TrCutsRunAction.{h,cpp}
-   . KillAtOriginCut.{h,cpp}
-   . PingPongCut.{h,cpp}
+   . KillAtOriginCut.{h,cpp} - NEW
+   . PingPongCut.{h,cpp}     - NEW
 
  - Wrap all cuts in GiGa namespace as at least the base class SpecialCuts 
    and MinEkineCut exist with an identical name in Geant4 (G4physics_lists), 

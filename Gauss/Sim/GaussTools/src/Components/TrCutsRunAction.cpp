@@ -1,4 +1,4 @@
-// $Id: TrCutsRunAction.cpp,v 1.15 2009-04-05 17:50:39 gcorti Exp $
+// $Id: TrCutsRunAction.cpp,v 1.16 2009-05-26 17:14:36 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +18,9 @@
 #include "WorldCuts.h"
 #include "PingPongCut.h"
 #include "KillAtOriginCut.h"
+#include "ZeroStepsCut.h"
 #include "TrCutsRunAction.h"
+
 
 // ============================================================================
 /** @file 
@@ -81,7 +83,19 @@ TrCutsRunAction::TrCutsRunAction
   m_killAtOrigin.push_back(-12);
   m_killAtOrigin.push_back(-14);
   m_killAtOrigin.push_back(-16);
-  declareProperty( "DoNotTrackParticles", m_killAtOrigin );
+  declareProperty( "DoNotTrackParticles", m_killAtOrigin,
+                   "List of particles to discard at their origin" );
+  //
+  declareProperty( "KillZeroSteps", m_killZeroSteps = true,
+                   "Flag to activate killing particles that make step of zero lenght in a volume" );
+  declareProperty( "NmaxForZeroSteps", m_nStepsForZero = 1000000,
+                   "Number of steps after which to check for zero lenght steps");
+  declareProperty( "StepLenghAsZero", m_zeroMaxLenght = 1.0e-9,
+                   "Lenght of steps below which a steps has to be considered as of zero lenght" );
+  declareProperty( "NZeroSteps", m_maxNZeroSteps = 20,
+                   "Number of consecutive steps of zero lenght after which the particle is killed");
+  declareProperty( "WorldName", m_world = "Universe", 
+                   "Name of the world volume" );
   
 };
 // ============================================================================
@@ -194,12 +208,20 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
                                                      m_minstep) );
           }
           
-          if( m_killPingPong ) {
+          if ( m_killPingPong ) {
             procMgr->AddDiscreteProcess( new GiGa::PingPongCut("PingPongCut",
                                                          m_nMaxForPingPong,
                                                          m_stepLenghtPingPong,
                                                          m_nMaxOfPingPong) );
-          }                                               
+          }
+          if ( m_killZeroSteps ) {
+            procMgr->AddDiscreteProcess( new GiGa::ZeroStepsCut("ZeroStepsCut",
+                                                         m_nStepsForZero,
+                                                         m_zeroMaxLenght,
+                                                         m_maxNZeroSteps,
+                                                         m_world) );
+          }
+          
         }
     }
     
