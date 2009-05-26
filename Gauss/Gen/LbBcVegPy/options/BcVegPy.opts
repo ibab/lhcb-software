@@ -1,4 +1,4 @@
-// $Id: BcVegPy.opts,v 1.3 2009-03-04 15:24:13 robbep Exp $ 
+// $Id: BcVegPy.opts,v 1.4 2009-05-26 17:07:56 gcorti Exp $ 
 
 /** @file 
  * 
@@ -14,7 +14,7 @@ ApplicationMgr.Dlls += { "LbBcVegPy" };
 
 Generation.SampleGenerationTool       = "Special";
 Generation.Special.ProductionTool = "BcVegPyProduction";
-Generation.Special.BcVegPyProduction.BcVegPyCommands = {
+Generation.Special.BcVegPyProduction.BcVegPyCommands += {
   "mixevnt imix 1" ,
   "mixevnt imixtype 1" ,
   "counter ibcstate 1",
