@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.130 2009-05-21 18:59:53 gcowan Exp $
+!$Id: release.notes,v 1.131 2009-05-26 13:48:13 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-05-26 - Greig Cowan
+ - Using StdNoPIDsDownPions for the KsDD.
 
 ! 2009-05-21 - Greig Cowan
  - Reverted StdLooseJpsi2MuMu to only make the loose Jpsi's. The FilterDesktop code 

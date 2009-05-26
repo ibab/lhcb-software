@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKs.py,v 1.4 2009-04-27 14:54:16 gcowan Exp $ 
+# $Id: StdLooseKs.py,v 1.5 2009-05-26 13:48:13 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKs.py
 #  configuration file for 'Standard Loose ' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Ks'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdLooseKsLL' ,
@@ -44,7 +44,7 @@ locations = updateDoD ( StdLooseKsLL )
 # ============================================================================= 
 StdLooseKsDD = CombineParticles ( 'StdLooseKsDD' )
 
-StdLooseKsDD.InputLocations = [ "StdLoosePions" ]
+StdLooseKsDD.InputLocations = [ "StdNoPIDsDownPions" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsDD.DaughtersCuts = { "pi+" : "(P>2*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF<20)" } 
