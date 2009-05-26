@@ -6,6 +6,15 @@
 ! See also: http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeFitter v1r2 2009-05-26 =====================
+
+! 2009-05-26 Wouter Hulsbergen
+- added typeconversion functions to Tree suggested by Vanya
+- make sure Tree is also cloning the vertex
+- update vertex chisquare for fitted particle
+
+!======================= DecayTreeFitter v1r1 2009-05-12 =====================
+
 ! 2009-05-14 Wouter Hulsbergen
 - small changes to get rid of compilor warnings
 
