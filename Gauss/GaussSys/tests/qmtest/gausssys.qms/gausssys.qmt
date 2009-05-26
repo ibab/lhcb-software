@@ -2,8 +2,10 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$GAUSSOPTS/Gauss-MC09.py</text>
+    <text>$APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py</text>
+    <text>$APPCONFIGOPTS/Conditions/MC09-20090519-vc-md100.py</text>
     <text>$DECFILESROOT/options/30000000.opts</text>
+    <text>$LBPYTHIAROOT/options/Pythia.opts</text> 
     <text>$GAUSSSYSROOT/tests/options/testGaussSys-defaults.py</text>
   </set></argument>
   <argument name="timeout"><integer>1800</integer></argument>
@@ -15,13 +17,11 @@ preprocessor = normalizeExamples + \
         orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
         repl = r"\1\3") + \
     LineSkipper(["INFO Using TAG", "TimingAuditor.T", "ToolSvc.SequencerTime", "Gauss-"]) + \
-    LineSkipper(["SUCCESS  Add/Modify the particle", "WARNING Setting DECFILESROOT"]) + \
-    LineSkipper(["Properties have beed redefined"]) + \
     LineSkipper(["Total CPU time elapsed for geometry optimisation"]) + \
     LineSkipper(["INFO Connected to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
-    LineSkipper(["INFO Loading simulation attributes file", "UserDecayFile"]) + \
-    LineSkipper(["INFO Opened magnetic field file","EvtGen:In readDecayFile"]) + \
+    LineSkipper(["INFO Loading simulation attributes file"]) + \
+    LineSkipper(["INFO Opened magnetic field file"]) + \
     LineSkipper(["Generation.FixedLumi","Simulation                 INFO Member list"]) + \
     LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"]) 
 strippedOutput = []
