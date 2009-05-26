@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.37 2009-05-26 20:06:10 graven Exp $
+!$Id: release.notes,v 1.38 2009-05-26 21:13:53 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
@@ -6,7 +6,10 @@
 !-----------------------------------------------------------------------------
 ! 2009-05-26 - Gerhard Raven
  - increment raw bank version number to reflect the changes in bitassigments
-   to HltDecReport, and the added TCK + TaskID words in both reader and writer
+   to HltDecReport, and the added TCK + TaskID words in writer
+ - make reader capable of decoding both version 0 and version 1 into 'current'
+   version of HltDecReports.
+   
 
 !========================== HltRawData v1r10 2009-05-06 ==================
 

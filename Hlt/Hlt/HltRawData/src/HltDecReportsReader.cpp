@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.7 2009-05-26 20:06:10 graven Exp $
+// $Id: HltDecReportsReader.cpp,v 1.8 2009-05-26 21:13:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -23,6 +23,41 @@ DECLARE_ALGORITHM_FACTORY( HltDecReportsReader );
 
 
 using namespace LHCb;
+
+
+namespace { 
+         // version 1 layout:
+         // decision:  0x        1                      x
+         // error:     0x        e                   xxx0
+         // #cand:     0x       f0              xxxx 0000
+         // stage:     0x     ff00    xxxx xxxx 0000 0000
+         // id:        0xffff 0000
+         // version 0 layout:
+         // decision:  0x        1                      x
+         // error:     0x       70              0xxx 0000
+         // #cand:     0x     ff80    xxxx xxxx x000 0000
+         // stage:     0x        e                   xxx0
+         // id:        0xffff 0000
+    struct v0_v1 {
+        HltDecReport convert( unsigned int x )  {
+         // ID & decision stay the same
+         unsigned int temp = ( x &   0xffff0001 );
+         // stage needs to be moved
+         temp |= (x&0xe)<<7; 
+         // number of candidates -- move & truncate
+         unsigned int nc = (x>>7)&0x1ff;
+         temp |= ( nc>0xf ? 0xf : nc )<<4;
+         // error just moves
+         temp |= (x&0x70)>>3;
+         return HltDecReport(temp);
+        }
+    };
+
+    struct vx_vx {
+        HltDecReport convert( unsigned int x )  { return HltDecReport(x); }
+    };
+
+}
 
 
 //=============================================================================
@@ -100,19 +135,13 @@ StatusCode HltDecReportsReader::execute() {
   }
 
   // ----------------------------------------------------------
+  const unsigned int *content = hltdecreportsRawBank->begin<unsigned int>();  
 
-  std::vector< unsigned int > bankBody;
-  unsigned int bankSize = (hltdecreportsRawBank->size()+3)/4; // from bytes to words
-  
-  unsigned int i = 0;
   // version 0 has only decreps, version 1 has TCK, taskID, then decreps...
   if (hltdecreportsRawBank->version() > 0 ) {
-     outputSummary->setConfiguredTCK( hltdecreportsRawBank->data()[i++] );
-     outputSummary->setTaskID( hltdecreportsRawBank->data()[i++] );
+     outputSummary->setConfiguredTCK( *content++ );
+     outputSummary->setTaskID( *content++ );
   } 
-  while( i!=bankSize ) {
-    bankBody.push_back( (hltdecreportsRawBank->data())[i++] );
-  }
 
   // --------------------------------- get configuration --------------------
   // TODO: use configuredTCK to get the right mapping...
@@ -131,39 +160,17 @@ StatusCode HltDecReportsReader::execute() {
 
   // ---------------- loop over decisions in the bank body; insert them into the output container
 
-  for( std::vector< unsigned int >::const_iterator idec=bankBody.begin();
-       idec!=bankBody.end();++idec){
-
-    HltDecReport dec( *idec );
-    int id=dec.intDecisionID();
-
-    std::string selName="Dummy";
-    switch(id){
-    case 1: selName="Hlt1Global"; break;      
-    case 2: selName="Hlt2Global"; break;
-    case 3: selName="L0Global"; break;
-    default:
-      for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-           si!=selectionNameToIntMap.end();++si){
-        if( si->second == id ){
-          selName = si->first;
-          break;
-        }
-      }
-    }    
-    if( selName != "Dummy" ){
-      if( outputSummary->hasDecisionName( selName ) ){
-        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
-      } else {
-        outputSummary->insert( selName, dec );
-      }
-    } else {
-      std::ostringstream mess;
-      mess << " No string key found for trigger decision in storage "
-           << " id=" << id;
-      Error(mess.str(), StatusCode::SUCCESS, 50 );
-    }
-  }
+  switch ( hltdecreportsRawBank->version() ) {
+    case 0 : this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
+                                     *outputSummary,
+                                     selectionNameToIntMap );
+        break;
+    case 1 : this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
+                                     *outputSummary,
+                                     selectionNameToIntMap );
+        break;
+    default : Error(" HltDecReports RawBank version number is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE );
+ }
 
 #if 0
   // make this part inactive until have access to real config in off-line
@@ -209,4 +216,47 @@ StatusCode HltDecReportsReader::execute() {
   return StatusCode::SUCCESS;
 }
 
+template <typename HDRConverter, typename I> 
+void
+HltDecReportsReader::decodeHDR(I i, I end,  
+                               HltDecReports& output,
+                               const std::vector<IANNSvc::minor_value_type>& selectionNameToIntMap ) const 
+{
+   HDRConverter converter;
+   while (i != end ) {
+
+    HltDecReport dec(  converter.convert(*i++)  );
+
+    int id=dec.intDecisionID();
+
+    std::string selName="Dummy";
+    switch(id){
+    case 1: selName="Hlt1Global"; break;      
+    case 2: selName="Hlt2Global"; break;
+    case 3: selName="L0Global"; break;
+    default:
+      for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
+           si!=selectionNameToIntMap.end();++si){
+        if( si->second == id ){
+          selName = si->first;
+          break;
+        }
+      }
+    }    
+    static const std::string Dummy("Dummy");
+    if( selName != Dummy ){
+      if( output.hasDecisionName( selName ) ){
+        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
+      } else {
+        output.insert( selName, dec );
+      }
+    } else {
+      std::ostringstream mess;
+      mess << " No string key found for trigger decision in storage "
+           << " id=" << id;
+      Error(mess.str(), StatusCode::SUCCESS, 50 );
+    }
+   }
+    
+}
 //=============================================================================

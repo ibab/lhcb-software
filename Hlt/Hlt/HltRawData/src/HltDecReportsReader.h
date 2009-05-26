@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.h,v 1.3 2009-05-26 20:06:10 graven Exp $
+// $Id: HltDecReportsReader.h,v 1.4 2009-05-26 21:13:53 graven Exp $
 #ifndef HLTDECREPORTSREADER_H 
 #define HLTDECREPORTSREADER_H 1
 
@@ -33,6 +33,12 @@ private:
   enum HeaderIDs { kSourceID=0,
                    kVersionNumber=1 
   };
+
+  template <typename HDRConverter,typename I > 
+  void
+  decodeHDR(I i, I end,  
+            LHCb::HltDecReports& output,
+            const std::vector<IANNSvc::minor_value_type>& NameToIntMap ) const ;
 
   /// location of input H
   StringProperty m_outputHltDecReportsLocation;
