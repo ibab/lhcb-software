@@ -234,7 +234,7 @@ ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvc
   : Service ( name , pSvcLocator )
   ,m_coolConfSvc(0)
 {
-  std::string def( System::getEnv("TCKDATAROOT") );
+  std::string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def = std::string("sqlite_file:") + def + "/db/config.db";
   declareProperty("Connection", m_connection = def );
   declareProperty("ReadOnly", m_readOnly = true );

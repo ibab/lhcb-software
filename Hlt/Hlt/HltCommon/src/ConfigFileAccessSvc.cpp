@@ -25,7 +25,7 @@ DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
 ConfigFileAccessSvc::ConfigFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
 {
-  std::string def( System::getEnv("TCKDATAROOT") );
+  std::string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def += "/config";
   declareProperty("Directory", m_dir = def);
 }
