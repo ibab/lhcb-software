@@ -29,8 +29,16 @@ namespace DecayTreeFitter
     const LHCb::Particle* head() const { return m_head.get() ; }
     // return the non-const head
     LHCb::Particle* head() { return m_head.get() ; }
+    // automatic dereference to a const particle
+    const LHCb::Particle* operator->() const { return head() ; }
+    // automatic dereference to a non-const particle
+    LHCb::Particle* operator->() { return head() ; }
+    // automatic type conversion to a const particle
+    operator const LHCb::Particle* () const { return head() ;}
+    // automatic type conversion to a non-const particle
+    operator LHCb::Particle* () {return head() ;}
     // take ownership of all particles in decay tree
-    LHCb::Particle* release() { return m_head.release() ; }
+    LHCb::Particle* release() { return m_head.release() ; } 
     // find clone of particle in original decay tree
     const LHCb::Particle* findClone( const LHCb::Particle& particle ) const ;
     // find particle based on PID
@@ -45,8 +53,6 @@ namespace DecayTreeFitter
 
     // get access to the map for finding the clone of a particle 
     const CloneMap& cloneMap() const { return m_clonemap ; }
-    // get access to the map for finding the clone of a particle 
-    CloneMap& cloneMap() { return m_clonemap ; }
   private:
     static LHCb::Particle* cloneTree ( const LHCb::Particle& original, CloneMap& clonemap );
     static void deleteTree( LHCb::Particle& particle ) ;

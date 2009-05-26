@@ -16,18 +16,35 @@ namespace DecayTreeFitter
     for(SmartRefVector<LHCb::Particle>::const_iterator idau = origdaughters.begin() ;
 	idau != origdaughters.end() ; ++idau ) 
       clone->addToDaughters( cloneTree( **idau, clonemap ) ) ;
+    // clone the vertex, mae sure to set daughter pointers correctly
+    if( original.endVertex() ) {
+      LHCb::Vertex* vertex = original.endVertex()->clone() ;
+      clone->setEndVertex( vertex ) ;
+      vertex->clearOutgoingParticles() ;
+      BOOST_FOREACH( const LHCb::Particle* daughter, original.endVertex()->outgoingParticles() ) {
+	CloneMap::const_iterator it = clonemap.find( daughter ) ;
+	if( it != clonemap.end() ) vertex->addToOutgoingParticles( it->second ) ;
+	else std::cout << "DecayTreeFitter::Tree::cloneTree: cannot find particle in vertex" << std::endl ;
+      }
+    }
     return clone ;
   }
   
   void Tree::deleteTree( LHCb::Particle& head ) 
   {
-    // delete the daughters if they are of type TreeParticle
+    // delete the daughters
     BOOST_FOREACH( const LHCb::Particle* daughter, head.daughters() ) 
       if( daughter->parent() == 0 ) {
 	deleteTree( const_cast<LHCb::Particle&>(*daughter) ) ;
 	delete daughter ;
       }
     head.setDaughters(SmartRefVector<LHCb::Particle>() ) ;
+    // delete the end vertex
+    LHCb::Vertex* vertex = head.endVertex() ;
+    if( vertex && vertex->parent()==0 ) {
+      delete vertex ;
+      head.setEndVertex(0) ;
+    }
   }
   
   const LHCb::Particle* Tree::findClone( const LHCb::Particle& orig ) const {
