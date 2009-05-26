@@ -1,8 +1,9 @@
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Gauss-2008.py'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Gauss.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/options/Common.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r5p2/options/Gauss/MC09-b5TeV-md100.py'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.py'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
 # RndmGenSvc.Engine.SetSingleton   = true;
 # ApplicationMgr.EvtSel  = "NONE";
 # MessageSvc.OutputLevel         = 3;
@@ -12,7 +13,7 @@
 # MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
 # EventDataSvc.ForceLeaves         = true;
 # EventPersistencySvc.CnvServices  = [];
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r1/GaudiConf/options/SimDicts.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/SimDicts.opts'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -35,11 +36,11 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-Gauss-5ev-20090323
+Gauss-5ev-20090526
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to Gauss version v36r2
-                                          running on lxplus217.cern.ch on Mon Mar 23 16:09:17 2009
+                                                   Welcome to Gauss version v37r0
+                                          running on lxbuild111.cern.ch on Tue May 26 15:55:50 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -56,7 +57,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/s/silviam/cmtuser/Gauss_v36r2/Sim/Gauss/xml/Simulation.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/xml/Simulation.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1Physics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmExtraPhysics
@@ -10753,12 +10754,12 @@ GiGa                       INFO Used Physics List Object is GiGaPhysListModular/
 GiGa                       INFO Stacking Action Object is not required to be loaded
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r2/db/DDDB.db/DDDB"
-DDDB                       INFO Using TAG "head-20090112"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r5/db/DDDB.db/DDDB"
+DDDB                       INFO Using TAG "MC09-20090519"
 EventPersistencySvc        INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'GiGaKine' ]
-EventClockSvc.EventTi...   INFO Event times generated from 0 with steps of 25
-SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r2/db/SIMCOND.db/SIMCOND"
-SIMCOND                    INFO Using TAG "sim-20090112"
+EventClockSvc.EventTi...   INFO Event times generated from 1000000 with steps of 0
+SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r5/db/SIMCOND.db/SIMCOND"
+SIMCOND                    INFO Using TAG "sim-20090402-vc-md100"
 DeRichSystem               INFO Update triggered for HPD numbering maps
 DeRichSystem               INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem               INFO Built mappings for  8 L1 and 288 HPDs in Rich2
@@ -10767,7 +10768,7 @@ ParticlePropertySvc        INFO Opened particle properties file : conddb:///para
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090323-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090526-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -10778,37 +10779,40 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.37 times the speed of a 2.8 GHz Xeon.
 Gauss                      INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.37 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 5 events
 GaussGen                SUCCESS ==================================================================
 Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity. 
-Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 2
-Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 30
-Generation.FixedLumin...   INFO Total cross section (mbarn): 102.4
+Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 0.00116
+Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 0.011245
+Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
+Generation.FixedLumin...   INFO Mean number of interaction/bunch = 1.00269
 Generation.MinimumBias     INFO Generating Minimum Bias events.
 Generation.MinimumBia...SUCCESS ==================================================================
 Generation.MinimumBia...SUCCESS Using as production engine  PythiaProduction
 Generation.MinimumBia...SUCCESS ==================================================================
 Generation.MinimumBia...   INFO Colliding Beam Parameters: 
-Generation.MinimumBia...   INFO Beam Momentum (TeV): 7
+Generation.MinimumBia...   INFO Beam Momentum (TeV): 5
 Generation.MinimumBia...   INFO Vertical crossing angle (microradian): 0
-Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 285
+Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 329
  Warning: requested subprocess 484 has vanishing cross-section.
+ Process switched off!
+ Warning: requested subprocess 485 has vanishing cross-section.
  Process switched off!
 Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution 
 Generation.BeamSpotSm...   INFO  Z primary = 0 mm 
 Generation.BeamSpotSm...   INFO  time of interaction vs T0 of IP is 0 ns
-Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.07 mm, 0.07 mm, 50 mm
+Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.027 mm, 0.027 mm, 38.2 mm
 Generation              SUCCESS ==================================================================
 Generation              SUCCESS Requested to generate EventType 30000000
 Generation              SUCCESS ==================================================================
 GenMonitor                 INFO Member list: GenMonitorAlg
 GenMonitorAlg              INFO Monitor will be applied to all events in container Gen/HepMCEvents
-Simulation                 INFO Member list: SimInit/GaussSim, GiGaDataStoreAlgorithm/GiGaStore, GiGaInputStream/Geo, GenerationToSimulation, GiGaFlushAlgorithm, GiGaCheckEventStatus, SimulationToMCTruth, GaudiSequencer/DetectorsHits, GaudiSequencer/SimMonitor, PackMCParticle, PackMCVertex
+Simulation                 INFO Member list: SimInit/GaussSim, GiGaDataStoreAlgorithm/GiGaStore, GiGaInputStream/Geo, GenerationToSimulation, GiGaFlushAlgorithm, GiGaCheckEventStatus, SimulationToMCTruth, GaudiSequencer/DetectorsHits, GaudiSequencer/SimMonitor, PackMCParticle, PackMCVertex, UnpackMCVertex/TestMCVertex, UnpackMCParticle/TestMCParticle, CompareMCParticle, CompareMCVertex
 GaussSim                SUCCESS ==================================================================
 GaussSim                SUCCESS Requested to process 5 events
 GaussSim                SUCCESS ==================================================================
@@ -10831,7 +10835,7 @@ OTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
 OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090323.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090526.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
 EventLoopMgr            WARNING Unable to locate service "EventSelector" 
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
@@ -10867,19 +10871,12 @@ GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistingui
 GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB  
 GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB  
 GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/OT/lvOTStation .  Please Check Geometry DB  
 RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root" for reading
 SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GiGa.GiGaMgr               INFO GiGaRunManager::  Geometry will be extracted from GiGaGeo
 World is registered to the default region.
 physicsList->Construct() start.
 physicsList->Construct() start.
-RichG4Cerenkov::RichG4Cerenkov constructor
-NOTE: this is now a G4VDiscreteProcess!
-Required change in UserPhysicsList: 
-change: pmanager->AddContinuousProcess(theCerenkovProcess);
-to:     pmanager->AddProcess(theCerenkovProcess);
-        pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
 RichHpdPhotoElectricEffect UseHpdMagDistortions = 0
 RichHpdPhotoElectricEffect PsfPreDc06Flag       = 0
 RichHpdPhotoElectricEffect UseNominalHpdQE =   0
@@ -11019,13 +11016,13 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=86
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
+The cut in range [1e+07 (mm)]   is too big   for material  idx=87
+The cut in energy is set1.79769e+305GeV 
+G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=88
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=89
-The cut in energy is set1.79769e+305GeV 
-G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=90
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=91
@@ -11064,19 +11061,19 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=102
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=106
+The cut in range [1e+07 (mm)]   is too big   for material  idx=103
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=107
+The cut in range [1e+07 (mm)]   is too big   for material  idx=104
+The cut in energy is set1.79769e+305GeV 
+G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
+The cut in range [1e+07 (mm)]   is too big   for material  idx=105
+The cut in energy is set1.79769e+305GeV 
+G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
+The cut in range [1e+07 (mm)]   is too big   for material  idx=109
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=110
-The cut in energy is set1.79769e+305GeV 
-G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=111
-The cut in energy is set1.79769e+305GeV 
-G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=112
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=113
@@ -11133,10 +11130,10 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=130
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=132
+The cut in range [1e+07 (mm)]   is too big   for material  idx=131
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=133
+The cut in range [1e+07 (mm)]   is too big   for material  idx=132
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=134
@@ -11250,7 +11247,7 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=170
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=173
+The cut in range [1e+07 (mm)]   is too big   for material  idx=171
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=174
@@ -11262,7 +11259,7 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=176
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=178
+The cut in range [1e+07 (mm)]   is too big   for material  idx=177
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=179
@@ -11283,7 +11280,10 @@ G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
 The cut in range [1e+07 (mm)]   is too big   for material  idx=184
 The cut in energy is set1.79769e+305GeV 
 G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
-The cut in range [1e+07 (mm)]   is too big   for material  idx=186
+The cut in range [1e+07 (mm)]   is too big   for material  idx=185
+The cut in energy is set1.79769e+305GeV 
+G4VRangeToEnergyConverter::ConvertCutToKineticEnergy   for e-
+The cut in range [1e+07 (mm)]   is too big   for material  idx=187
 The cut in energy is set1.79769e+305GeV 
 
 phot:  Total cross sections from Sandia parametrisation. 
@@ -11414,7 +11414,7 @@ hIoni:   tables are built for  pi+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
       Scaling relation is used from proton dE/dx and range.
-      Delta cross sections and sampling from BetheBloch model for scaled energy > 0.297504 MeV
+      Delta cross sections and sampling from BetheBloch model for scaled energy > 0.297505 MeV
       Parametrisation from Bragg for protons below. NuclearStopping= 1
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
@@ -11427,14 +11427,14 @@ hIoni:   tables are built for  pi-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
       Scaling relation is used from proton dE/dx and range.
-      Delta cross sections and sampling from BetheBloch model for scaled energy > 0.297504 MeV
+      Delta cross sections and sampling from BetheBloch model for scaled energy > 0.297505 MeV
       Parametrisation from Bragg for protons below. NuclearStopping= 1
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 Region <DefaultRegionForTheWorld> -- appears in <Universe> world volume
  Root logical volume(s) : World 
  Pointers : G4VUserRegionInformation[0], G4UserLimits[0], G4FastSimulationManager[0], G4UserSteppingAction[0]
- Materials : /dd/Materials/Air /dd/Materials/Vacuum /dd/Materials/Aluminium /dd/Materials/Pipe/PipeBe /dd/Materials/Copper /dd/Materials/RichMaterials/C4F10 /dd/Materials/RichMaterials/AerogelWrapMaterial /dd/Materials/RichMaterials/Rich1FilterD263Material /dd/Materials/RichMaterials/RichSoftIron /dd/Materials/RichMaterials/Rich1Nitrogen /dd/Materials/RichMaterials/Rich1GasWindowQuartz /dd/Materials/RichMaterials/RichHpdVacuum /dd/Materials/RichMaterials/Kovar /dd/Materials/RichMaterials/HpdIndium /dd/Materials/RichMaterials/HpdWindowQuartz /dd/Materials/RichMaterials/HpdS20PhCathode /dd/Materials/RichMaterials/HpdChromium /dd/Materials/RichMaterials/HpdKapton /dd/Materials/RichMaterials/Supra36Hpd /dd/Materials/RichMaterials/RichHpdSilicon /dd/Materials/RichMaterials/Rich1MirrorCarbonFibre /dd/Materials/RichMaterials/Rich1MirrorGlassSimex /dd/Materials/RichMaterials/Rich1Mirror2SupportMaterial /dd/Materials/RichMaterials/Rich1G10 /dd/Materials/RichMaterials/Rich1PMI /dd/Materials/RichMaterials/Rich1DiaphramMaterial /dd/Materials/Pipe/PipeBeTV56 /dd/Materials/Pipe/PipeAl2219F /dd/Materials/TT/BoxWall /dd/Materials/TT/Jacket /dd/Materials/Silicon /dd/Materials/TT/CableK /dd/Materials/TT/CableHV /dd/Materials/TT/Rail /dd/Materials/TT/CableL /dd/Materials/Pipe/PipeSteel316LN /dd/Materials/Magnet/YokeSteel /dd/Materials/Magnet/CoilAl /dd/Materials/Bcm/Tekapeek /dd/Materials/Bcm/G10 /dd/Materials/Bcm/Wire /dd/Materials/Bcm/Diamond /dd/Materials/IT/ITColumn /dd/Materials/IT/SandwichSupport /dd/Materials/IT/CoolingCable /dd/Materials/IT/CoolingCable2 /dd/Materials/IT/SVBox /dd/Materials/IT/ElecCable /dd/Materials/IT/HVCable /dd/Materials/IT/BoxWall /dd/Materials/IT/BoxSideBottom /dd/Materials/IT/BoxBeam /dd/Materials/IT/Box4 /dd/Materials/IT/SideCover /dd/Materials/IT/KaptonFlex-Side /dd/Materials/IT/USteelConnector-Side /dd/Materials/IT/ShortCablePCB /dd/Materials/IT/Connector /dd/Materials/IT/ShortPCB /dd/Materials/IT/KaptonFlexConnector /dd/Materials/IT/LongPCB /dd/Materials/IT/Pipe /dd/Materials/IT/LongSupport /dd/Materials/IT/Balcony /dd/Materials/IT/LadderTop /dd/Materials/IT/CoolingRodSide /dd/Materials/IT/BoxCenterBeam /dd/Materials/IT/BoxCenter3 /dd/Materials/IT/BoxCenter4 /dd/Materials/IT/CenterCover /dd/Materials/IT/KaptonFlex-Center /dd/Materials/IT/USteelConnector-Center /dd/Materials/IT/ShortSupport /dd/Materials/IT/CoolingRodCenter /dd/Materials/IT/XElecCable /dd/Materials/IT/G10 /dd/Materials/OT/OTCFC /dd/Materials/OT/OTRohacell /dd/Materials/OT/OTSideWallMix /dd/Materials/OT/OTPassiveMix /dd/Materials/OT/OTActiveMix /dd/Materials/RichMaterials/CF4 /dd/Materials/RichMaterials/Rich2MirSupportMaterial /dd/Materials/RichMaterials/Rich2MirrorGlass /dd/Materials/RichMaterials/Rich2GasWindowQuartz /dd/Materials/RichMaterials/Rich2Nitrogen /dd/Materials/RichMaterials/MuMetal /dd/Materials/RichMaterials/Rich2CarbonFibre /dd/Materials/RichMaterials/Rich2Rohacell51IG /dd/Materials/RichMaterials/Rich2SoftIron /dd/Materials/Pipe/PipeAl6082 /dd/Materials/Spd/SpdDrilledAluminium /dd/Materials/Spd/G10 /dd/Materials/Spd/SpdPaper /dd/Materials/Spd/SpdScin /dd/Materials/Spd/SpdInnModFibers /dd/Materials/Spd/SpdMidModFibers /dd/Materials/Spd/SpdOutModFibers /dd/Materials/Prs/PrsLead /dd/Materials/Prs/PrsSteel /dd/Materials/Prs/PrsDrilledAluminium /dd/Materials/Prs/G10 /dd/Materials/Prs/PrsPaper /dd/Materials/Prs/PrsScin /dd/Materials/Prs/PrsInnModFibers /dd/Materials/Prs/PrsMidModFibers /dd/Materials/Prs/PrsOutModFibers /dd/Materials/Ecal/EcalDrilledAluminium /dd/Materials/Ecal/EcalPb /dd/Materials/Ecal/EcalSteel /dd/Materials/Ecal/EcalPlasticInnFC /dd/Materials/Ecal/EcalPlasticBC /dd/Materials/Ecal/EcalSc /dd/Materials/Ecal/EcalPlastic /dd/Materials/Ecal/EcalFiber /dd/Materials/Ecal/EcalPlasticMidFC /dd/Materials/Ecal/EcalPlasticOutFC /dd/Materials/Hcal/HcalPb /dd/Materials/Hcal/HcalMsPlSteel /dd/Materials/Hcal/HcalStripSteel /dd/Materials/Hcal/HcalSc /dd/Materials/Muon/MuonCopper /dd/Materials/Muon/G10 /dd/Materials/Muon/Honeycomb /dd/Materials/Muon/Kapton /dd/Materials/Muon/S_CPC_gas /dd/Materials/Muon/G10Air /dd/Materials/Muon/MuonPolyurethane /dd/Materials/Muon/MuonFilterIron /dd/Materials/Muon/Steel /dd/Materials/Muon/Concrete /dd/Materials/Pipe/Brass /dd/Materials/Pipe/PipeSteel /dd/Materials/Pipe/BakeOutAerogel /dd/Materials/Velo/VeloTPG /dd/Materials/Velo/VeloCarbonFibre /dd/Materials/Velo/VeloKapton /dd/Materials/Velo/VeloInvar 
+ Materials : /dd/Materials/Air /dd/Materials/Vacuum /dd/Materials/Aluminium /dd/Materials/Pipe/PipeBe /dd/Materials/Copper /dd/Materials/RichMaterials/C4F10 /dd/Materials/RichMaterials/AerogelWrapMaterial /dd/Materials/RichMaterials/Rich1FilterD263Material /dd/Materials/RichMaterials/RichSoftIron /dd/Materials/RichMaterials/Rich1Nitrogen /dd/Materials/RichMaterials/Rich1GasWindowQuartz /dd/Materials/RichMaterials/RichHpdVacuum /dd/Materials/RichMaterials/Kovar /dd/Materials/RichMaterials/HpdIndium /dd/Materials/RichMaterials/HpdWindowQuartz /dd/Materials/RichMaterials/HpdS20PhCathode /dd/Materials/RichMaterials/HpdChromium /dd/Materials/RichMaterials/HpdKapton /dd/Materials/RichMaterials/Supra36Hpd /dd/Materials/RichMaterials/RichHpdSilicon /dd/Materials/RichMaterials/Rich1MirrorCarbonFibre /dd/Materials/RichMaterials/Rich1MirrorGlassSimex /dd/Materials/RichMaterials/Rich1Mirror2SupportMaterial /dd/Materials/RichMaterials/Rich1G10 /dd/Materials/RichMaterials/Rich1PMI /dd/Materials/RichMaterials/Rich1DiaphramMaterial /dd/Materials/Pipe/PipeBeTV56 /dd/Materials/Pipe/PipeAl2219F /dd/Materials/TT/BoxWall /dd/Materials/TT/Jacket /dd/Materials/Silicon /dd/Materials/TT/CableK /dd/Materials/TT/CableHV /dd/Materials/TT/Rail /dd/Materials/TT/CableL /dd/Materials/Pipe/PipeSteel316LN /dd/Materials/Pipe/PipeAl6082 /dd/Materials/Pipe/Sintimid15G /dd/Materials/Pipe/AW2219 /dd/Materials/Magnet/YokeSteel /dd/Materials/Magnet/CoilAl /dd/Materials/Bcm/Tekapeek /dd/Materials/Bcm/G10 /dd/Materials/Bcm/Wire /dd/Materials/Bcm/Diamond /dd/Materials/IT/ITColumn /dd/Materials/IT/SandwichSupport /dd/Materials/IT/CoolingCable /dd/Materials/IT/CoolingCable2 /dd/Materials/IT/SVBox /dd/Materials/IT/ElecCable /dd/Materials/IT/HVCable /dd/Materials/IT/BoxWall /dd/Materials/IT/BoxSideBottom /dd/Materials/IT/BoxBeam /dd/Materials/IT/Box4 /dd/Materials/IT/SideCover /dd/Materials/IT/KaptonFlex-Side /dd/Materials/IT/USteelConnector-Side /dd/Materials/IT/ShortCablePCB /dd/Materials/IT/Connector /dd/Materials/IT/ShortPCB /dd/Materials/IT/KaptonFlexConnector /dd/Materials/IT/LongPCB /dd/Materials/IT/Pipe /dd/Materials/IT/LongSupport /dd/Materials/IT/Balcony /dd/Materials/IT/LadderTop /dd/Materials/IT/CoolingRodSide /dd/Materials/IT/BoxCenterBeam /dd/Materials/IT/BoxCenter3 /dd/Materials/IT/BoxCenter4 /dd/Materials/IT/CenterCover /dd/Materials/IT/KaptonFlex-Center /dd/Materials/IT/USteelConnector-Center /dd/Materials/IT/ShortSupport /dd/Materials/IT/CoolingRodCenter /dd/Materials/IT/XElecCable /dd/Materials/IT/G10 /dd/Materials/OT/OTCFC /dd/Materials/OT/OTSideWallMix /dd/Materials/OT/OTPassiveMix /dd/Materials/OT/OTActiveMix /dd/Materials/RichMaterials/CF4 /dd/Materials/RichMaterials/Rich2MirSupportMaterial /dd/Materials/RichMaterials/Rich2MirrorGlass /dd/Materials/RichMaterials/Rich2GasWindowQuartz /dd/Materials/RichMaterials/Rich2Nitrogen /dd/Materials/RichMaterials/MuMetal /dd/Materials/RichMaterials/Rich2CarbonFibre /dd/Materials/RichMaterials/Rich2Rohacell51IG /dd/Materials/RichMaterials/Rich2SoftIron /dd/Materials/Spd/SpdDrilledAluminium /dd/Materials/Spd/G10 /dd/Materials/Spd/SpdPaper /dd/Materials/Spd/SpdScin /dd/Materials/Spd/SpdInnModFibers /dd/Materials/Spd/SpdMidModFibers /dd/Materials/Spd/SpdOutModFibers /dd/Materials/Prs/PrsLead /dd/Materials/Prs/PrsSteel /dd/Materials/Prs/PrsDrilledAluminium /dd/Materials/Prs/G10 /dd/Materials/Prs/PrsPaper /dd/Materials/Prs/PrsScin /dd/Materials/Prs/PrsInnModFibers /dd/Materials/Prs/PrsMidModFibers /dd/Materials/Prs/PrsOutModFibers /dd/Materials/Ecal/EcalDrilledAluminium /dd/Materials/Ecal/EcalPb /dd/Materials/Ecal/EcalSteel /dd/Materials/Ecal/EcalPlasticInnFC /dd/Materials/Ecal/EcalPlasticBC /dd/Materials/Ecal/EcalSc /dd/Materials/Ecal/EcalPlastic /dd/Materials/Ecal/EcalFiber /dd/Materials/Ecal/EcalPlasticMidFC /dd/Materials/Ecal/EcalPlasticOutFC /dd/Materials/Hcal/HcalPb /dd/Materials/Hcal/HcalMsPlSteel /dd/Materials/Hcal/HcalStripSteel /dd/Materials/Hcal/HcalSc /dd/Materials/Muon/MuonCopper /dd/Materials/Muon/G10 /dd/Materials/Muon/Honeycomb /dd/Materials/Muon/Kapton /dd/Materials/Muon/S_CPC_gas /dd/Materials/Muon/G10Air /dd/Materials/Muon/MuonPolyurethane /dd/Materials/Muon/MuonFilterIron /dd/Materials/Muon/Steel /dd/Materials/Muon/Concrete /dd/Materials/Pipe/Brass /dd/Materials/Pipe/PipeSteel /dd/Materials/Pipe/BakeOutAerogel /dd/Materials/Velo/VeloTPG /dd/Materials/Velo/VeloCarbonFibre /dd/Materials/Velo/VeloKapton /dd/Materials/Velo/VeloInvar 
  Production cuts :  gamma 1 cm     e- 10 km     e+ 5 mm 
 
 Region <Rich1AerogelRegion> -- appears in <Universe> world volume
@@ -11698,825 +11698,832 @@ Index : 35     used in the geometry : Yes     recalculation needed : No
     DefaultRegionForTheWorld
 
 Index : 36     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Magnet/YokeSteel
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 60.4019 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 37     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Magnet/CoilAl
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 18.4308 keV    e- 2.88022e+295 J      e+ 2.09445 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 38     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Bcm/Tekapeek
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 6.57913 keV    e- 2.88022e+295 J      e+ 1.80682 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 39     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Bcm/G10
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 13.1088 keV    e- 2.88022e+295 J      e+ 1.52078 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 40     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Bcm/Wire
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 21.7166 keV    e- 2.88022e+295 J      e+ 2.01851 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 41     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/Bcm/Diamond
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 9.34675 keV    e- 2.88022e+295 J      e+ 3.10566 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 42     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/ITColumn
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.79485 keV    e- 2.88022e+295 J      e+ 392.614 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 43     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/SandwichSupport
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.14059 keV    e- 2.88022e+295 J      e+ 347.138 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 44     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/CoolingCable
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.98931 keV    e- 2.88022e+295 J      e+ 407.385 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 45     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/CoolingCable2
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.9891 keV    e- 2.88022e+295 J      e+ 666.59 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 46     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/SVBox
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 10.7865 keV    e- 2.88022e+295 J      e+ 582.169 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 47     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/ElecCable
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 21.0708 keV    e- 2.88022e+295 J      e+ 1.55868 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 48     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/HVCable
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 23.7341 keV    e- 2.88022e+295 J      e+ 1.96942 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 49     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxWall
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.09967 keV    e- 2.88022e+295 J      e+ 217.44 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 50     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxSideBottom
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.35429 keV    e- 2.88022e+295 J      e+ 318.477 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 51     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxBeam
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.74645 keV    e- 2.88022e+295 J      e+ 347.138 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 52     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/Box4
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.72244 keV    e- 2.88022e+295 J      e+ 347.138 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 53     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/SideCover
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.54938 keV    e- 2.88022e+295 J      e+ 369.176 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 54     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/KaptonFlex-Side
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.3931 keV    e- 2.88022e+295 J      e+ 134.534 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 55     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/USteelConnector-Side
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 19.2274 keV    e- 2.88022e+295 J      e+ 1.21851 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 56     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/ShortCablePCB
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 26.9798 keV    e- 2.88022e+295 J      e+ 2.36883 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 57     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/Connector
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 25.62 keV    e- 2.88022e+295 J      e+ 2.614 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 58     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/ShortPCB
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 28.9512 keV    e- 2.88022e+295 J      e+ 2.4884 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 59     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/KaptonFlexConnector
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 16.4479 keV    e- 2.88022e+295 J      e+ 2.31122 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 60     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/LongPCB
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 23.0112 keV    e- 2.88022e+295 J      e+ 2.04351 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 61     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/Pipe
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 13.5039 keV    e- 2.88022e+295 J      e+ 1.63736 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 62     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/LongSupport
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.68055 keV    e- 2.88022e+295 J      e+ 666.59 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 63     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/Balcony
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 22.3545 keV    e- 2.88022e+295 J      e+ 1.99382 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 64     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/LadderTop
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 14.6203 keV    e- 2.88022e+295 J      e+ 1.07738 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 65     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/CoolingRodSide
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 19.1561 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 66     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxCenterBeam
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 5.82212 keV    e- 2.88022e+295 J      e+ 364.659 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 67     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxCenter3
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.31096 keV    e- 2.88022e+295 J      e+ 225.621 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 68     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/BoxCenter4
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.72244 keV    e- 2.88022e+295 J      e+ 369.176 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 69     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/CenterCover
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 3.54938 keV    e- 2.88022e+295 J      e+ 373.749 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 70     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/KaptonFlex-Center
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.18427 keV    e- 2.88022e+295 J      e+ 118.951 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 71     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/USteelConnector-Center
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 17.2268 keV    e- 2.88022e+295 J      e+ 1.02561 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 72     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/ShortSupport
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 4.63102 keV    e- 2.88022e+295 J      e+ 683.206 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 73     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/CoolingRodCenter
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 19.1561 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 74     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/XElecCable
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 30.6694 keV    e- 2.88022e+295 J      e+ 2.95644 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 75     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/IT/G10
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 13.1088 keV    e- 2.88022e+295 J      e+ 1.52078 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 76     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/OT/OTCFC
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 6.47576 keV    e- 2.88022e+295 J      e+ 2.36883 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 77     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/OT/OTRohacell
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 1.30116 keV    e- 2.88022e+295 J      e+ 152.158 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 78     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/OT/OTSideWallMix
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.56574 keV    e- 2.88022e+295 J      e+ 274.74 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 79     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/OT/OTPassiveMix
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.14119 keV    e- 2.88022e+295 J      e+ 239.945 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 80     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/OT/OTActiveMix
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 2.73488 keV    e- 2.88022e+295 J      e+ 255.178 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 81     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/CF4
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 990 eV     e- 2.88022e+295 J      e+ 27.5474 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 82     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2MirSupportMaterial
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 6.13417 keV    e- 2.88022e+295 J      e+ 299.465 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 83     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2MirrorGlass
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 14.9089 keV    e- 2.88022e+295 J      e+ 1.94533 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 84     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2GasWindowQuartz
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 14.7621 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 85     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2Nitrogen
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 990 eV     e- 8.00075 GeV    e+ 2.46634 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 86     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/MuMetal
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 70.5916 keV    e- 2.88022e+295 J      e+ 6.50033 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 87     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2CarbonFibre
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 6.72064 keV    e- 2.88022e+295 J      e+ 1.36128 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 88     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2Rohacell51IG
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 1.49603 keV    e- 2.88022e+295 J      e+ 189.902 keV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 89     used in the geometry : Yes     recalculation needed : No 
- Material : /dd/Materials/RichMaterials/Rich2SoftIron
- Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
- Energy thresholds :  gamma 60.4019 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
- Region(s) which use this couple : 
-    DefaultRegionForTheWorld
-
-Index : 90     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Pipe/PipeAl6082
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 21.3015 keV    e- 2.88022e+295 J      e+ 2.14666 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
+Index : 37     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Pipe/Sintimid15G
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 7.28164 keV    e- 2.88022e+295 J      e+ 1.34463 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 38     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Pipe/AW2219
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 23.2343 keV    e- 2.88022e+295 J      e+ 2.25501 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 39     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Magnet/YokeSteel
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 60.4019 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 40     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Magnet/CoilAl
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 18.4308 keV    e- 2.88022e+295 J      e+ 2.09445 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 41     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Bcm/Tekapeek
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 6.57913 keV    e- 2.88022e+295 J      e+ 1.80682 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 42     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Bcm/G10
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 13.1088 keV    e- 2.88022e+295 J      e+ 1.52078 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 43     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Bcm/Wire
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 21.7166 keV    e- 2.88022e+295 J      e+ 2.01851 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 44     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/Bcm/Diamond
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 9.34675 keV    e- 2.88022e+295 J      e+ 3.10566 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 45     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/ITColumn
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.79485 keV    e- 2.88022e+295 J      e+ 392.614 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 46     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/SandwichSupport
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.14059 keV    e- 2.88022e+295 J      e+ 347.138 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 47     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/CoolingCable
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.98931 keV    e- 2.88022e+295 J      e+ 407.385 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 48     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/CoolingCable2
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.9891 keV    e- 2.88022e+295 J      e+ 666.59 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 49     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/SVBox
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 10.7865 keV    e- 2.88022e+295 J      e+ 582.169 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 50     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/ElecCable
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 21.0708 keV    e- 2.88022e+295 J      e+ 1.55868 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 51     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/HVCable
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 23.7341 keV    e- 2.88022e+295 J      e+ 1.96942 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 52     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxWall
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.09967 keV    e- 2.88022e+295 J      e+ 217.44 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 53     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxSideBottom
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.35429 keV    e- 2.88022e+295 J      e+ 318.477 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 54     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxBeam
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.74645 keV    e- 2.88022e+295 J      e+ 347.138 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 55     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/Box4
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.72244 keV    e- 2.88022e+295 J      e+ 347.138 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 56     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/SideCover
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.54938 keV    e- 2.88022e+295 J      e+ 369.176 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 57     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/KaptonFlex-Side
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.3931 keV    e- 2.88022e+295 J      e+ 134.534 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 58     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/USteelConnector-Side
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 19.2274 keV    e- 2.88022e+295 J      e+ 1.21851 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 59     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/ShortCablePCB
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 26.9798 keV    e- 2.88022e+295 J      e+ 2.36883 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 60     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/Connector
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 25.62 keV    e- 2.88022e+295 J      e+ 2.614 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 61     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/ShortPCB
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 28.9512 keV    e- 2.88022e+295 J      e+ 2.4884 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 62     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/KaptonFlexConnector
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 16.4479 keV    e- 2.88022e+295 J      e+ 2.31122 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 63     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/LongPCB
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 23.0112 keV    e- 2.88022e+295 J      e+ 2.04351 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 64     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/Pipe
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 13.5039 keV    e- 2.88022e+295 J      e+ 1.63736 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 65     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/LongSupport
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.68055 keV    e- 2.88022e+295 J      e+ 666.59 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 66     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/Balcony
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 22.3545 keV    e- 2.88022e+295 J      e+ 1.99382 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 67     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/LadderTop
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 14.6203 keV    e- 2.88022e+295 J      e+ 1.07738 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 68     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/CoolingRodSide
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 19.1561 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 69     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxCenterBeam
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 5.82212 keV    e- 2.88022e+295 J      e+ 364.659 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 70     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxCenter3
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.31096 keV    e- 2.88022e+295 J      e+ 225.621 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 71     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/BoxCenter4
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.72244 keV    e- 2.88022e+295 J      e+ 369.176 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 72     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/CenterCover
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 3.54938 keV    e- 2.88022e+295 J      e+ 373.749 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 73     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/KaptonFlex-Center
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.18427 keV    e- 2.88022e+295 J      e+ 118.951 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 74     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/USteelConnector-Center
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 17.2268 keV    e- 2.88022e+295 J      e+ 1.02561 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 75     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/ShortSupport
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 4.63102 keV    e- 2.88022e+295 J      e+ 683.206 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 76     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/CoolingRodCenter
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 19.1561 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 77     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/XElecCable
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 30.6694 keV    e- 2.88022e+295 J      e+ 2.95644 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 78     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/IT/G10
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 13.1088 keV    e- 2.88022e+295 J      e+ 1.52078 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 79     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/OT/OTCFC
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 6.47576 keV    e- 2.88022e+295 J      e+ 2.36883 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 80     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/OT/OTSideWallMix
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.56574 keV    e- 2.88022e+295 J      e+ 274.74 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 81     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/OT/OTPassiveMix
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.14119 keV    e- 2.88022e+295 J      e+ 239.945 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 82     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/OT/OTActiveMix
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 2.73488 keV    e- 2.88022e+295 J      e+ 255.178 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 83     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/CF4
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 990 eV     e- 2.88022e+295 J      e+ 27.5474 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 84     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2MirSupportMaterial
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 6.13417 keV    e- 2.88022e+295 J      e+ 299.465 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 85     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2MirrorGlass
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 14.9089 keV    e- 2.88022e+295 J      e+ 1.94533 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 86     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2GasWindowQuartz
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 14.7621 keV    e- 2.88022e+295 J      e+ 1.89801 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 87     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2Nitrogen
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 990 eV     e- 8.00075 GeV    e+ 2.46634 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 88     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/MuMetal
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 70.5916 keV    e- 2.88022e+295 J      e+ 6.50033 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 89     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2CarbonFibre
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 6.72064 keV    e- 2.88022e+295 J      e+ 1.36128 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 90     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2Rohacell51IG
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 1.49603 keV    e- 2.88022e+295 J      e+ 189.902 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
 Index : 91     used in the geometry : Yes     recalculation needed : No 
+ Material : /dd/Materials/RichMaterials/Rich2SoftIron
+ Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
+ Energy thresholds :  gamma 60.4019 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 92     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdDrilledAluminium
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 14.6203 keV    e- 2.88022e+295 J      e+ 1.17433 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 92     used in the geometry : Yes     recalculation needed : No 
+Index : 93     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/G10
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 12.3806 keV    e- 2.88022e+295 J      e+ 1.69896 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 93     used in the geometry : Yes     recalculation needed : No 
+Index : 94     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdPaper
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 7.88361 keV    e- 2.88022e+295 J      e+ 2.04351 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 94     used in the geometry : Yes     recalculation needed : No 
+Index : 95     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdScin
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 95     used in the geometry : Yes     recalculation needed : No 
+Index : 96     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdInnModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 96     used in the geometry : Yes     recalculation needed : No 
+Index : 97     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdMidModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 97     used in the geometry : Yes     recalculation needed : No 
+Index : 98     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Spd/SpdOutModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 98     used in the geometry : Yes     recalculation needed : No 
+Index : 99     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsLead
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 282.478 keV    e- 2.88022e+295 J      e+ 6.34224 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 99     used in the geometry : Yes     recalculation needed : No 
+Index : 100     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsSteel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.1334 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 100     used in the geometry : Yes     recalculation needed : No 
+Index : 101     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsDrilledAluminium
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 14.6203 keV    e- 2.88022e+295 J      e+ 1.17433 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 101     used in the geometry : Yes     recalculation needed : No 
+Index : 102     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/G10
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 12.3806 keV    e- 2.88022e+295 J      e+ 1.69896 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 102     used in the geometry : Yes     recalculation needed : No 
+Index : 103     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsPaper
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 7.88361 keV    e- 2.88022e+295 J      e+ 2.04351 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 103     used in the geometry : Yes     recalculation needed : No 
+Index : 104     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsScin
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 104     used in the geometry : Yes     recalculation needed : No 
+Index : 105     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsInnModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 105     used in the geometry : Yes     recalculation needed : No 
+Index : 106     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsMidModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 106     used in the geometry : Yes     recalculation needed : No 
+Index : 107     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Prs/PrsOutModFibers
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.33954 keV    e- 2.88022e+295 J      e+ 155.951 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 107     used in the geometry : Yes     recalculation needed : No 
+Index : 108     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalDrilledAluminium
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 14.6203 keV    e- 2.88022e+295 J      e+ 1.17433 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 108     used in the geometry : Yes     recalculation needed : No 
+Index : 109     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPb
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 282.478 keV    e- 2.88022e+295 J      e+ 6.34224 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 109     used in the geometry : Yes     recalculation needed : No 
+Index : 110     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalSteel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.1334 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 110     used in the geometry : Yes     recalculation needed : No 
+Index : 111     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPlasticInnFC
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 2.8034 keV    e- 2.88022e+295 J      e+ 575.046 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 111     used in the geometry : Yes     recalculation needed : No 
+Index : 112     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPlasticBC
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 1.94349 keV    e- 2.88022e+295 J      e+ 299.465 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 112     used in the geometry : Yes     recalculation needed : No 
+Index : 113     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalSc
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 113     used in the geometry : Yes     recalculation needed : No 
+Index : 114     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPlastic
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 114     used in the geometry : Yes     recalculation needed : No 
+Index : 115     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalFiber
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 115     used in the geometry : Yes     recalculation needed : No 
+Index : 116     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPlasticMidFC
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 2.69158 keV    e- 2.88022e+295 J      e+ 527.568 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 116     used in the geometry : Yes     recalculation needed : No 
+Index : 117     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Ecal/EcalPlasticOutFC
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 2.59929 keV    e- 2.88022e+295 J      e+ 502.219 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 117     used in the geometry : Yes     recalculation needed : No 
+Index : 118     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Hcal/HcalPb
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 282.478 keV    e- 2.88022e+295 J      e+ 6.34224 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 118     used in the geometry : Yes     recalculation needed : No 
+Index : 119     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Hcal/HcalMsPlSteel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.1334 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 119     used in the geometry : Yes     recalculation needed : No 
+Index : 120     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Hcal/HcalStripSteel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.1334 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 120     used in the geometry : Yes     recalculation needed : No 
+Index : 121     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Hcal/HcalSc
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.59563 keV    e- 2.88022e+295 J      e+ 1.59754 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 121     used in the geometry : Yes     recalculation needed : No 
+Index : 122     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/MuonCopper
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 70.1736 keV    e- 2.88022e+295 J      e+ 6.34224 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 122     used in the geometry : Yes     recalculation needed : No 
+Index : 123     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/G10
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 12.3806 keV    e- 2.88022e+295 J      e+ 1.69896 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 123     used in the geometry : Yes     recalculation needed : No 
+Index : 124     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/Honeycomb
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 990 eV     e- 2.88022e+295 J      e+ 39.2823 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 124     used in the geometry : Yes     recalculation needed : No 
+Index : 125     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/Kapton
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 7.35771 keV    e- 2.88022e+295 J      e+ 1.37814 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 125     used in the geometry : Yes     recalculation needed : No 
+Index : 126     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/S_CPC_gas
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 990 eV     e- 27.0226 TeV    e+ 9.8189 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 126     used in the geometry : Yes     recalculation needed : No 
+Index : 127     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/G10Air
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 7.68522 keV    e- 2.88022e+295 J      e+ 842.248 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 127     used in the geometry : Yes     recalculation needed : No 
+Index : 128     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/MuonPolyurethane
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 4.82998 keV    e- 2.88022e+295 J      e+ 604.071 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 128     used in the geometry : Yes     recalculation needed : No 
+Index : 129     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/MuonFilterIron
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 59.0716 keV    e- 2.88022e+295 J      e+ 5.40431 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 129     used in the geometry : Yes     recalculation needed : No 
+Index : 130     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/Steel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.1334 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 130     used in the geometry : Yes     recalculation needed : No 
+Index : 131     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Muon/Concrete
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 18.0784 keV    e- 2.88022e+295 J      e+ 2.1204 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 131     used in the geometry : Yes     recalculation needed : No 
+Index : 132     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Pipe/Brass
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 69.5685 keV    e- 2.88022e+295 J      e+ 6.0375 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 132     used in the geometry : Yes     recalculation needed : No 
+Index : 133     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Pipe/PipeSteel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 60.4019 keV    e- 2.88022e+295 J      e+ 5.74741 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 133     used in the geometry : Yes     recalculation needed : No 
+Index : 134     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Pipe/BakeOutAerogel
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 3.76655 keV    e- 2.88022e+295 J      e+ 206.993 keV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 134     used in the geometry : Yes     recalculation needed : No 
+Index : 135     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Velo/VeloTPG
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 7.88361 keV    e- 2.88022e+295 J      e+ 2.04351 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 135     used in the geometry : Yes     recalculation needed : No 
+Index : 136     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Velo/VeloCarbonFibre
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 6.33627 keV    e- 2.88022e+295 J      e+ 2.25501 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 136     used in the geometry : Yes     recalculation needed : No 
+Index : 137     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Velo/VeloKapton
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 5.6072 keV    e- 2.88022e+295 J      e+ 2.1204 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 137     used in the geometry : Yes     recalculation needed : No 
+Index : 138     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/Velo/VeloInvar
  Range cuts        :  gamma 1 cm     e- 10 km     e+ 5 mm 
  Energy thresholds :  gamma 62.8723 keV    e- 2.88022e+295 J      e+ 5.89067 MeV
  Region(s) which use this couple : 
     DefaultRegionForTheWorld
 
-Index : 138     used in the geometry : Yes     recalculation needed : No 
+Index : 139     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT0
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 139     used in the geometry : Yes     recalculation needed : No 
+Index : 140     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT1
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 140     used in the geometry : Yes     recalculation needed : No 
+Index : 141     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT2
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 141     used in the geometry : Yes     recalculation needed : No 
+Index : 142     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT3
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 142     used in the geometry : Yes     recalculation needed : No 
+Index : 143     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT4
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 143     used in the geometry : Yes     recalculation needed : No 
+Index : 144     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT5
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 144     used in the geometry : Yes     recalculation needed : No 
+Index : 145     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT6
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 145     used in the geometry : Yes     recalculation needed : No 
+Index : 146     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT7
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 146     used in the geometry : Yes     recalculation needed : No 
+Index : 147     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT8
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 147     used in the geometry : Yes     recalculation needed : No 
+Index : 148     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT9
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 148     used in the geometry : Yes     recalculation needed : No 
+Index : 149     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT10
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 149     used in the geometry : Yes     recalculation needed : No 
+Index : 150     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT11
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 150     used in the geometry : Yes     recalculation needed : No 
+Index : 151     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT12
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 151     used in the geometry : Yes     recalculation needed : No 
+Index : 152     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT13
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 152     used in the geometry : Yes     recalculation needed : No 
+Index : 153     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT14
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
  Region(s) which use this couple : 
     Rich1AerogelRegion
 
-Index : 153     used in the geometry : Yes     recalculation needed : No 
+Index : 154     used in the geometry : Yes     recalculation needed : No 
  Material : /dd/Materials/RichMaterials/AerogelT15
  Range cuts        :  gamma 1 cm     e- 1.5 mm     e+ 5 mm 
  Energy thresholds :  gamma 4.32637 keV    e- 124.955 keV    e+ 255.178 keV
@@ -12528,76 +12535,69 @@ Index : 153     used in the geometry : Yes     recalculation needed : No
 Start closing geometry.
 G4GeometryManager::ReportVoxelStats -- Voxel Statistics
 
-    Total memory consumed for geometry optimisation:   2080 kByte
-    Total CPU time elapsed for geometry optimisation: 14 seconds
+    Total memory consumed for geometry optimisation:   2151 kByte
+    Total CPU time elapsed for geometry optimisation: 16 seconds
 
     Voxelisation: top CPU users:
     Percent   Total CPU    System CPU       Memory  Volume
     -------   ----------   ----------     --------  ----------
-       6.23         0.88         0.00           77k World
-       4.46         0.63         0.00          315k /dd/Geometry/DownstreamRegion/Muon/lvMuonBack
-       1.77         0.25         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ0
-       1.70         0.24         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ1
-       1.70         0.24         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ2
-       1.70         0.24         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ3
-       1.49         0.21         0.00           22k /dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel1
-       1.42         0.20         0.00           22k /dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel0
-       0.99         0.14         0.00           18k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH0
-       0.99         0.14         0.00           18k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH1
+       6.26         1.03         0.00           76k World
+       4.44         0.73         0.00          315k /dd/Geometry/DownstreamRegion/Muon/lvMuonBack
+       1.70         0.28         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ0
+       1.70         0.28         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ1
+       1.70         0.28         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ2
+       1.70         0.28         0.00           38k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ3
+       1.46         0.24         0.00           22k /dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel1
+       1.46         0.24         0.00           22k /dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel0
+       0.97         0.16         0.00           18k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH0
+       0.97         0.16         0.00           18k /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH1
 
     Voxelisation: top memory users:
     Percent     Memory      Heads    Nodes   Pointers    Total CPU    Volume
     -------   --------     ------   ------   --------   ----------    ----------
-      15.16        315k      1078     7278      15780         0.63    /dd/Geometry/DownstreamRegion/Muon/lvMuonBack
-       3.69         76k       281     1087       8390         0.88    World
-       3.07         63k       201     1532       3020         0.03    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT1Station
-       2.96         61k       329     1042       4172         0.12    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter3
-       2.96         61k       329     1042       4172         0.13    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter2
-       2.69         55k       293      986       3620         0.10    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter1
-       2.56         53k       160     1291       2500         0.02    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT2Station
-       2.41         50k       159     1208       2324         0.01    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT3Station
-       1.82         37k       170      826       1706         0.25    /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ0
-       1.82         37k       170      826       1706         0.24    /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ1
+      14.66        315k      1074     7292      15710         0.73    /dd/Geometry/DownstreamRegion/Muon/lvMuonBack
+       3.51         75k       276     1069       8260         1.03    World
+       2.97         63k       201     1532       3020         0.03    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT1Station
+       2.85         61k       335     1018       4190         0.14    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter2
+       2.85         61k       335     1018       4190         0.15    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter3
+       2.61         56k       299      982       3638         0.12    /dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter1
+       2.47         53k       160     1291       2500         0.02    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT2Station
+       2.33         50k       159     1208       2324         0.02    /dd/Geometry/AfterMagnetRegion/T/IT/lvITT3Station
+       1.76         37k       170      826       1706         0.28    /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ0
+       1.76         37k       170      826       1706         0.28    /dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Mirror1QuadrantModuleQ3
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
 Start Run processing.
- G4Transportation is killing track that is looping or stuck 
-   This track has 127.22423 MeV energy.
-   Number of trials = 0   No of calls to AlongStepDoIt = 1076395
- G4Transportation is killing track that is looping or stuck 
-   This track has 122.91656 MeV energy.
-   Number of trials = 0   No of calls to AlongStepDoIt = 1189285
- G4: Number of events processed : 1 Timer: User=117.1s Real=117.38s Sys=0.05s
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	639
-IODataManager              INFO Referring to dataset Gauss-5ev-20090323.sim by its file ID:E6DEB970-BE17-DE11-A1A2-000423D657A6
-Gauss-5ev-20090323.sim  SUCCESS Root file version:51800
+ G4: Number of events processed : 1 Timer: User=88.17s Real=88.19s Sys=0.01s
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	751
+Gauss-5ev-20090526.sim  SUCCESS Root file version:51800
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
- G4: Number of events processed : 1 Timer: User=93.08s Real=93.42s Sys=0.07s
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1078
+ G4: Number of events processed : 1 Timer: User=0.12s Real=0.12s Sys=0s
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	12
 GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 GaussSim                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 1254798016, 0]
- G4: Number of events processed : 1 Timer: User=26.6s Real=26.64s Sys=0.01s
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	174
+ G4: Number of events processed : 1 Timer: User=3.34s Real=3.34s Sys=0s
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	92
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
 GaussSim                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 479188555, 0]
- G4: Number of events processed : 1 Timer: User=47.37s Real=47.98s Sys=0.08s
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	404
+ G4: Number of events processed : 1 Timer: User=87.19s Real=87.2s Sys=0s
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	652
 GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
 GaussSim                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 253147997, 0]
- G4: Number of events processed : 1 Timer: User=205.96s Real=206.51s Sys=0.14s
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	1416
+ G4: Number of events processed : 1 Timer: User=36.19s Real=36.21s Sys=0s
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	299
 ApplicationMgr             INFO Application Manager Stopped successfully
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS 5 events processed
 GaussGen                SUCCESS ==================================================================
 Generation                 INFO **************************************************
 Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
-Number of all events (including empty events) : 9
-Number of events with 0 interaction : 4
+Number of all events (including empty events) : 6
+Number of events with 0 interaction : 1
 
 Generation                 INFO ***********   Generation counters   **************
 Number of generated events : 5
-Number of generated interactions : 5
+Number of generated interactions : 7
 Number of generated interactions with >= 1b : 0
 Number of generated interactions with >= 3b : 0
 Number of generated interactions with 1 prompt B : 0
@@ -12606,7 +12606,7 @@ Number of generated interactions with >= 3c : 0
 Number of generated interactions with >= prompt C : 0
 Number of generated interactions with b and c : 0
 Number of accepted events : 5
-Number of interactions in accepted events : 5
+Number of interactions in accepted events : 7
 Number of accepted interactions with >= 1b : 0
 Number of accepted interactions with >= 3b : 0
 Number of accepted interactions with 1 prompt B : 0
@@ -12618,21 +12618,21 @@ Number of accepted interactions with b and c : 0
 GenMonitorAlg              INFO 
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 1577
+= Number of particles generated: 608
 = Number of events: 5
-= Mean multiplicity: 315.4
+= Mean multiplicity: 121.6
 =                                                                 =
-= Number of pseudo stable particles generated: 1344
+= Number of pseudo stable particles generated: 507
 = Number of events: 5
-= Mean pseudo stable multiplicity: 268.8
+= Mean pseudo stable multiplicity: 101.4
 =                                                                 =
-= Number of charged stable particles generated: 394
+= Number of charged stable particles generated: 168
 = Number of events: 5
-= Mean charged stable multiplicity: 78.8
+= Mean charged stable multiplicity: 33.6
 =                                                                 =
-= Number of charged stable particles in LHCb eta 87
+= Number of charged stable particles in LHCb eta 31
 = Number of events: 5
-= Mean charged stable multiplicity in LHCb eta: 17.4
+= Mean charged stable multiplicity in LHCb eta: 6.2
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19 
@@ -12640,92 +12640,91 @@ GaussSim                SUCCESS ================================================
 GaussSim                SUCCESS 5 events processed
 GaussSim                SUCCESS ==================================================================
 GetRichHits                INFO Av. # Invalid RICH flags              =    0.00 +- 0.00
-GetRichHits                INFO Av. # MCRichHits              : Rich1 =  496.00 +- 9.96 (100.00 +-0.00%) Rich2 =  894.60 +-13.38 (100.00 +-0.00%)
+GetRichHits                INFO Av. # MCRichHits              : Rich1 =  212.20 +- 6.51 (100.00 +-0.00%) Rich2 =  272.20 +- 7.38 (100.00 +-0.00%)
 GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal Hits             : Rich1 =  382.80 +- 8.75 ( 77.18 +-0.84%) Rich2 =  201.20 +- 6.34 ( 22.49 +-0.62%)
-GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =   17.20 +- 1.85 (  3.47 +-0.37%) Rich2 =   34.60 +- 2.63 (  3.87 +-0.29%)
-GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =   48.40 +- 3.11 (  9.76 +-0.60%) Rich2 =  638.40 +-11.30 ( 71.36 +-0.68%)
-GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.02 +-0.02%)
-GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.20 +- 0.20 (  0.04 +-0.04%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    3.20 +- 0.80 (  0.65 +-0.16%) Rich2 =    5.40 +- 1.04 (  0.60 +-0.12%)
+GetRichHits                INFO Av. # Signal Hits             : Rich1 =  184.40 +- 6.07 ( 86.90 +-1.04%) Rich2 =  150.60 +- 5.49 ( 55.33 +-1.35%)
+GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =    6.60 +- 1.15 (  3.11 +-0.53%) Rich2 =    1.80 +- 0.60 (  0.66 +-0.22%)
+GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =  103.40 +- 4.55 ( 37.99 +-1.32%)
+GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    1.00 +- 0.45 (  0.47 +-0.21%) Rich2 =    2.00 +- 0.63 (  0.73 +-0.23%)
 GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   49.00 +- 3.13 (  9.88 +-0.60%) Rich2 =  191.00 +- 6.18 ( 21.35 +-0.61%)
-GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   17.40 +- 1.87 (  3.51 +-0.37%) Rich2 =  106.80 +- 4.62 ( 11.94 +-0.48%)
-GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   34.80 +- 2.64 (  7.02 +-0.51%) Rich2 =   77.00 +- 3.92 (  8.61 +-0.42%)
-GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =    9.00 +- 1.34 (  1.81 +-0.27%) Rich2 =   48.20 +- 3.10 (  5.39 +-0.34%)
-GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.20 +- 0.20 (  0.04 +-0.04%) Rich2 =    0.20 +- 0.20 (  0.02 +-0.02%)
+GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   20.40 +- 2.02 (  9.61 +-0.90%) Rich2 =   34.00 +- 2.61 ( 12.49 +-0.90%)
+GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =    5.20 +- 1.02 (  2.45 +-0.47%) Rich2 =   14.80 +- 1.72 (  5.44 +-0.61%)
+GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   15.00 +- 1.73 (  7.07 +-0.79%) Rich2 =   19.00 +- 1.95 (  6.98 +-0.69%)
+GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =    4.20 +- 0.92 (  1.98 +-0.43%) Rich2 =    7.80 +- 1.25 (  2.87 +-0.45%)
+GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.07 +-0.07%)
 GetRichHits                INFO   Av. # PC/QW refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.40 +- 0.28 (  0.08 +-0.06%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    1.40 +- 0.53 (  0.28 +-0.11%) Rich2 =    0.80 +- 0.40 (  0.09 +-0.04%)
-GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    5.60 +- 1.06 (  1.13 +-0.21%) Rich2 =   15.20 +- 1.74 (  1.70 +-0.19%)
-GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   74.00 +- 3.85 ( 14.92 +-0.72%) C4F10 =  308.80 +- 7.86 ( 62.26 +-0.97%) CF4 =  201.20 +- 6.34 ( 22.49 +-0.62%)
-GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    5.00 +- 1.00 (  1.01 +-0.20%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.07 +-0.07%)
+GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    0.60 +- 0.35 (  0.28 +-0.16%) Rich2 =    0.40 +- 0.28 (  0.15 +-0.10%)
+GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    1.40 +- 0.53 (  0.66 +-0.25%) Rich2 =    2.00 +- 0.63 (  0.73 +-0.23%)
+GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   26.00 +- 2.28 ( 12.25 +-1.01%) C4F10 =  158.40 +- 5.63 ( 74.65 +-1.34%) CF4 =  150.60 +- 5.49 ( 55.33 +-1.35%)
+GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    0.60 +- 0.35 (  0.28 +-0.16%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # MCParticle-less hits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Aero hits per tile     :
-GetRichHits                INFO           tile =  0 hits =    0.60 +- 0.35 / event
+GetRichHits                INFO           tile =  0 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  1 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  2 hits =   23.20 +- 2.15 / event
-GetRichHits                INFO           tile =  3 hits =    2.60 +- 0.72 / event
-GetRichHits                INFO           tile =  4 hits =   14.40 +- 1.70 / event
-GetRichHits                INFO           tile =  5 hits =    0.20 +- 0.20 / event
-GetRichHits                INFO           tile =  6 hits =    4.20 +- 0.92 / event
-GetRichHits                INFO           tile =  7 hits =    0.60 +- 0.35 / event
+GetRichHits                INFO           tile =  2 hits =   11.20 +- 1.50 / event
+GetRichHits                INFO           tile =  3 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  4 hits =    7.60 +- 1.23 / event
+GetRichHits                INFO           tile =  5 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  6 hits =    1.40 +- 0.53 / event
+GetRichHits                INFO           tile =  7 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  8 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  9 hits =    0.80 +- 0.40 / event
-GetRichHits                INFO           tile = 10 hits =   16.00 +- 1.79 / event
-GetRichHits                INFO           tile = 11 hits =    5.40 +- 1.04 / event
-GetRichHits                INFO           tile = 12 hits =   14.60 +- 1.71 / event
+GetRichHits                INFO           tile =  9 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile = 10 hits =    1.60 +- 0.57 / event
+GetRichHits                INFO           tile = 11 hits =    3.00 +- 0.77 / event
+GetRichHits                INFO           tile = 12 hits =    5.60 +- 1.06 / event
 GetRichHits                INFO           tile = 13 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 14 hits =    3.80 +- 0.87 / event
+GetRichHits                INFO           tile = 14 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile = 15 hits =    0.00 +- 0.00 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    86.40 +-  4.16 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   343.80 +-  8.29 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   221.40 +-  6.65 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    51.80 +-  3.22 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   686.80 +- 11.72 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Nitrogen =     0.20 +-  0.20 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : AerogelFilter =     0.20 +-  0.20 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =    13.00 +-  1.61 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =    16.40 +-  1.81 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =    13.60 +-  1.65 / event
-GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     4.20 +-  0.92 / event
-GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     4.40 +-  0.94 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Nitrogen =     0.20 +-  0.20 / event
-GetRichSegments            INFO Av. # MCRichSegments       : AerogelFilter =     0.20 +-  0.20 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    30.40 +-  2.47 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   175.20 +-  5.92 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   167.00 +-  5.78 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =     8.40 +-  1.30 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   103.40 +-  4.55 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =     4.00 +-  0.89 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =     7.40 +-  1.22 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =    10.00 +-  1.41 / event
+GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     1.00 +-  0.45 / event
+GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     0.60 +-  0.35 / event
 GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
 VeloGaussMoni              INFO ------------------------------------------------------
 VeloGaussMoni              INFO                 - VeloGaussMoni table -                 
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO | Number of MCHits/Event:       452+/-140.175
-VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 24.2+/-7.4694
+VeloGaussMoni              INFO | Number of MCHits/Event:       200.4+/-82.6862
+VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 10.6+/-4.76319
 VeloGaussMoni              INFO ------------------------------------------------------
 TTHitMonitor               INFO *** Summary ***
-TTHitMonitor               INFO #hits per event: 149
-TTHitMonitor               INFO Mean beta * gamma: 1322.27
-TTHitMonitor               INFO Most Probable deposited charge: 0.151681
+TTHitMonitor               INFO #hits per event: 42.4
+TTHitMonitor               INFO Mean beta * gamma: 1337.59
+TTHitMonitor               INFO Most Probable deposited charge: 0.142443
+TTHitMonitor               INFO Half Sample width 0.0417338
 TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7 
 TTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       745 |   985089.9 |     1322.3 |     3587.3 |   0.0030634 |      31015. |
- | "numberHits"                                    |         5 |        745 |     149.00 |     106.23 |      17.000 |      333.00 |
+ | "betaGamma"                                     |       212 |   283569.6 |     1337.6 |     3431.4 |      1.5214 |      19380. |
+ | "numberHits"                                    |         5 |        212 |     42.400 |     42.505 |      0.0000 |      104.00 |
 ITHitMonitor               INFO *** Summary ***
-ITHitMonitor               INFO #hits per event: 126
-ITHitMonitor               INFO Mean beta * gamma: 3853.79
-ITHitMonitor               INFO Most Probable deposited charge: 0.110788
+ITHitMonitor               INFO #hits per event: 83
+ITHitMonitor               INFO Mean beta * gamma: 543.569
+ITHitMonitor               INFO Most Probable deposited charge: 0.1083
+ITHitMonitor               INFO Half Sample width 0.046453
 ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
 ITHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       630 |    2427887 |     3853.8 |     11262. |     0.43054 |      77975. |
- | "numberHits"                                    |         5 |        630 |     126.00 |     101.57 |      26.000 |      317.00 |
+ | "betaGamma"                                     |       415 |     225581 |     543.57 |     1224.0 |    0.020501 |      8397.5 |
+ | "numberHits"                                    |         5 |        415 |     83.000 |     75.530 |      0.0000 |      188.00 |
 OTHitMonitor               INFO *** Summary ***
-OTHitMonitor               INFO #hits per event: 358
-OTHitMonitor               INFO Mean beta * gamma: 1773.86
-OTHitMonitor               INFO Most Probable deposited charge: 0.224001
+OTHitMonitor               INFO #hits per event: 205.8
+OTHitMonitor               INFO Mean beta * gamma: 852.196
+OTHitMonitor               INFO Most Probable deposited charge: 0.228351
+OTHitMonitor               INFO Half Sample width 0.110131
 OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
 OTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |      1790 |    3175214 |     1773.9 |     5494.2 |    0.012998 |      58374. |
- | "numberHits"                                    |         5 |       1790 |     358.00 |     285.52 |      57.000 |      875.00 |
+ | "betaGamma"                                     |      1029 |   876909.2 |     852.20 |     2831.3 |     0.16190 |      19380. |
+ | "numberHits"                                    |         5 |       1029 |     205.80 |     204.30 |      0.0000 |      516.00 |
 SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
 PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
 EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19 
@@ -12734,14 +12733,14 @@ MuonHitChecker             INFO ------------------------------------------------
 MuonHitChecker             INFO        Muon Monitoring Table 
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO  M1        M2        M3        M4        M5 
-MuonHitChecker             INFO 32.400  4.000  2.000  0.800  0.000   R1
-MuonHitChecker             INFO 31.200  2.800  0.000  0.200  0.000   R2
-MuonHitChecker             INFO 24.800  0.400  0.000  0.200  0.000   R3
-MuonHitChecker             INFO 30.200  1.600  0.800  0.000  0.000   R4
+MuonHitChecker             INFO 19.400  7.000  0.000  0.800  0.400   R1
+MuonHitChecker             INFO 21.600  7.800  0.800  0.000  0.000   R2
+MuonHitChecker             INFO 24.400  0.000  0.000  0.000  0.000   R3
+MuonHitChecker             INFO 21.400  1.600  0.000  0.000  0.000   R4
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO -------    Integrated over regions    ---------------------------
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO 118.600  8.800  2.800  1.200  0.000   allR
+MuonHitChecker             INFO 86.800  16.400  0.800  0.800  0.400   allR
 MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
 GaussTape                  INFO Events output: 5
 EventLoopMgr               INFO Histograms converted successfully according to request.
@@ -12749,21 +12748,21 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
 GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
 GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.37 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO DetectorsHits                 |   208.368 |   209.301 |   36.860     521.2 |       5 |     1.047 |
-ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     6.999 |     6.739 |    0.902      11.3 |       5 |     0.034 |
-ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.200 |     0.227 |    0.097       0.3 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   GetTTHits                   |     5.999 |     6.008 |    0.754      10.6 |       5 |     0.030 |
-ToolSvc.SequencerTime...   INFO   GetITHits                   |     3.399 |     3.293 |    0.789       6.1 |       5 |     0.016 |
-ToolSvc.SequencerTime...   INFO   GetOTHits                   |     9.199 |     9.104 |    1.671      19.4 |       5 |     0.046 |
-ToolSvc.SequencerTime...   INFO   GetMuonHits                 |    10.399 |    11.182 |    6.538      17.5 |       5 |     0.056 |
-ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     4.199 |     4.393 |    1.334      10.0 |       5 |     0.022 |
-ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     5.799 |     5.862 |    2.124      11.5 |       5 |     0.029 |
-ToolSvc.SequencerTime...   INFO   GetEcalHits                 |    28.596 |    28.631 |   10.879      54.3 |       5 |     0.143 |
-ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     3.199 |     3.175 |    1.619       6.3 |       5 |     0.016 |
-ToolSvc.SequencerTime...   INFO   RichHits                    |   130.380 |   130.656 |    4.047     378.4 |       5 |     0.653 |
+ToolSvc.SequencerTime...   INFO DetectorsHits                 |    86.587 |    86.661 |    2.289     223.0 |       5 |     0.433 |
+ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     4.399 |     4.206 |    0.109      12.3 |       5 |     0.021 |
+ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.149 |    0.057       0.3 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   GetTTHits                   |     2.799 |     2.817 |    0.065       9.8 |       5 |     0.014 |
+ToolSvc.SequencerTime...   INFO   GetITHits                   |     2.600 |     2.660 |    0.058       7.9 |       5 |     0.013 |
+ToolSvc.SequencerTime...   INFO   GetOTHits                   |     6.199 |     6.189 |    0.063      17.3 |       5 |     0.031 |
+ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     9.599 |     9.646 |    0.064      18.4 |       5 |     0.048 |
+ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     3.599 |     3.436 |    0.058      11.5 |       5 |     0.017 |
+ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     3.200 |     3.481 |    0.051       9.4 |       5 |     0.017 |
+ToolSvc.SequencerTime...   INFO   GetEcalHits                 |    18.397 |    18.096 |    0.052      45.1 |       5 |     0.090 |
+ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     2.199 |     2.330 |    0.049       4.5 |       5 |     0.012 |
+ToolSvc.SequencerTime...   INFO   RichHits                    |    33.595 |    33.628 |    1.623      86.5 |       5 |     0.168 |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -12777,21 +12776,21 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I            5           271 I  6.500E+01 I
- I  11 f + f' -> f + f' (QCD)       I            1             0 I  1.368E+01 I
+ I   0 All included subprocesses    I            7           101 I  8.919E+01 I
+ I  11 f + f' -> f + f' (QCD)       I            1             0 I  2.578E+01 I
  I  12 f + fbar -> f' + fbar'       I            0             0 I  0.000E+00 I
  I  13 f + fbar -> g + g            I            0             0 I  0.000E+00 I
- I  28 f + g -> f + g               I            1             0 I  1.368E+01 I
+ I  28 f + g -> f + g               I            1             0 I  2.578E+01 I
  I  53 g + g -> f + fbar            I            0             0 I  0.000E+00 I
- I  68 g + g -> g + g               I            2             0 I  2.736E+01 I
- I  91 Elastic scattering           I            0             0 I  0.000E+00 I
+ I  68 g + g -> g + g               I            0             0 I  0.000E+00 I
+ I  91 Elastic scattering           I            2             2 I  2.079E+01 I
  I  92 Single diffractive (XB)      I            0             0 I  0.000E+00 I
- I  93 Single diffractive (AX)      I            0             0 I  0.000E+00 I
- I  94 Double  diffractive          I            1             1 I  1.029E+01 I
- I  95 Low-pT scattering            I            0             4 I  0.000E+00 I
+ I  93 Single diffractive (AX)      I            1             1 I  7.003E+00 I
+ I  94 Double  diffractive          I            2             2 I  9.785E+00 I
+ I  95 Low-pT scattering            I            0             2 I  0.000E+00 I
  I 421 g + g  -> cc~[3S1(1)] + g    I            0             0 I  0.000E+00 I
  I 422 g + g  -> cc~[3S1(8)] + g    I            0             0 I  0.000E+00 I
- I 423 g + g  -> cc~[1S0(8)] + g    I            0             0 I  0.000E+00 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I            0             1 I  4.419E-03 I
  I 424 g + g  -> cc~[3PJ(8)] + g    I            0             0 I  0.000E+00 I
  I 425 g + q  -> q + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
  I 426 g + q  -> q + cc~[1S0(8)]    I            0             0 I  0.000E+00 I
@@ -12799,12 +12798,12 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I 428 q + q~ -> g + cc~[3S1(8)]    I            0             0 I  0.000E+00 I
  I 429 q + q~ -> g + cc~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 431 g + g  -> cc~[3P0(1)] + g    I            0             0 I  0.000E+00 I
- I 432 g + g  -> cc~[3P1(1)] + g    I            0             0 I  0.000E+00 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I            0             1 I  1.652E-02 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I            0             1 I  2.417E-02 I
  I 433 g + g  -> cc~[3P2(1)] + g    I            0             0 I  0.000E+00 I
  I 434 q + g  -> q + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 435 q + g  -> q + cc~[3P1(1)]    I            0             0 I  0.000E+00 I
- I 436 q + g  -> q + cc~[3P2(1)]    I            0             0 I  0.000E+00 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I            0             1 I  2.439E-06 I
  I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 438 q + q~ -> g + cc~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 439 q + q~ -> g + cc~[3P2(1)]    I            0             0 I  0.000E+00 I
@@ -12831,7 +12830,6 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I 481 g + g  -> Upsilon(2S) + g    I            0             0 I  0.000E+00 I
  I 482 g + g  -> Upsilon(3S) + g    I            0             0 I  0.000E+00 I
  I 483 g + g  -> Upsilon(4S) + g    I            0             0 I  0.000E+00 I
- I 485 g + g  -> psi(3770) + g      I            0             0 I  0.000E+00 I
  I                                  I                            I            I
  ==============================================================================
 
@@ -12841,92 +12839,95 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.54 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.37 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 211499.647 | 212694.997 | 26942.453  685874.8 |       5 |  1063.475 |
-TimingAuditor.TIMER        INFO  Gauss                        | 210041.669 | 211218.559 | 26906.470  679949.4 |       5 |  1056.093 |
-TimingAuditor.TIMER        INFO   Generator                   |    30.195 |    30.172 |    6.959      54.0 |       5 |     0.151 |
-TimingAuditor.TIMER        INFO    GaussGen                   |     1.400 |     1.325 |    0.416       4.7 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO    Generation                 |    27.596 |    27.634 |    6.290      45.8 |       5 |     0.138 |
-TimingAuditor.TIMER        INFO    GenMonitor                 |     1.000 |     1.131 |    0.224       3.3 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO     GenMonitorAlg             |     1.000 |     1.111 |    0.214       3.2 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO   Simulation                  | 210011.473 | 211188.355 | 26899.494  679895.3 |       5 |  1055.942 |
-TimingAuditor.TIMER        INFO    GaussSim                   |     0.600 |     0.887 |    0.316       2.7 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.200 |     0.129 |    0.017       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    Geo                        | 37290.131 | 37621.649 |    0.004  188108.2 |       5 |   188.108 |
-TimingAuditor.TIMER        INFO    GenerationToSimulation     | 74388.491 | 74919.662 |   75.873  374029.0 |       5 |   374.598 |
-TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 98076.890 | 98389.639 | 26640.137  206515.4 |       5 |   491.948 |
-TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.200 |     0.023 |    0.012       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     7.798 |     8.278 |    2.181      15.2 |       5 |     0.041 |
-TimingAuditor.TIMER        INFO    DetectorsHits              |   208.368 |   209.306 |   36.864     521.2 |       5 |     1.047 |
-TimingAuditor.TIMER        INFO     GetVeloHits               |     6.999 |     6.726 |    0.895      11.3 |       5 |     0.034 |
-TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.200 |     0.204 |    0.088       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     GetTTHits                 |     5.999 |     5.995 |    0.746      10.6 |       5 |     0.030 |
-TimingAuditor.TIMER        INFO     GetITHits                 |     3.399 |     3.269 |    0.779       6.1 |       5 |     0.016 |
-TimingAuditor.TIMER        INFO     GetOTHits                 |     9.199 |     9.079 |    1.660      19.4 |       5 |     0.045 |
-TimingAuditor.TIMER        INFO     GetMuonHits               |    10.399 |    11.155 |    6.528      17.4 |       5 |     0.056 |
-TimingAuditor.TIMER        INFO     GetSpdHits                |     4.199 |     4.370 |    1.326      10.0 |       5 |     0.022 |
-TimingAuditor.TIMER        INFO     GetPrsHits                |     5.799 |     5.838 |    2.116      11.5 |       5 |     0.029 |
-TimingAuditor.TIMER        INFO     GetEcalHits               |    28.596 |    28.613 |   10.869      54.3 |       5 |     0.143 |
-TimingAuditor.TIMER        INFO     GetHcalHits               |     3.199 |     3.152 |    1.610       6.3 |       5 |     0.016 |
-TimingAuditor.TIMER        INFO     RichHits                  |   130.380 |   130.646 |    4.039     378.3 |       5 |     0.653 |
-TimingAuditor.TIMER        INFO      GetRichHits              |    12.798 |    13.036 |    1.460      25.3 |       5 |     0.065 |
-TimingAuditor.TIMER        INFO      GetRichPhotons           |     3.200 |     3.070 |    0.398       5.9 |       5 |     0.015 |
-TimingAuditor.TIMER        INFO      GetRichSegments          |     7.199 |     7.053 |    0.585      18.7 |       5 |     0.035 |
-TimingAuditor.TIMER        INFO      GetRichTracks            |     2.799 |     2.941 |    0.309      10.4 |       5 |     0.015 |
-TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     1.000 |     0.904 |    0.184       3.6 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |   103.384 |   103.507 |    1.057     334.7 |       5 |     0.518 |
-TimingAuditor.TIMER        INFO    SimMonitor                 |    31.995 |    32.083 |    8.146      60.1 |       5 |     0.160 |
-TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.600 |     0.316 |    0.119       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     MCTruthMonitor            |     1.400 |     1.223 |    0.252       2.5 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     1.200 |     1.454 |    0.253       4.3 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO     DetectorsMonitor          |    28.796 |    29.035 |    7.427      52.1 |       5 |     0.145 |
-TimingAuditor.TIMER        INFO      VeloGaussMoni            |     8.799 |     8.670 |    0.921      18.1 |       5 |     0.043 |
-TimingAuditor.TIMER        INFO      TTHitMonitor             |     2.199 |     2.179 |    0.238       5.2 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO      ITHitMonitor             |     1.200 |     1.269 |    0.266       2.9 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO      OTHitMonitor             |     3.000 |     3.302 |    0.551       7.8 |       5 |     0.017 |
-TimingAuditor.TIMER        INFO      SpdMonitor               |     2.799 |     2.479 |    0.759       5.6 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO      PrsMonitor               |     3.400 |     3.660 |    1.188       6.7 |       5 |     0.018 |
-TimingAuditor.TIMER        INFO      EcalMonitor              |     4.399 |     4.218 |    1.499       7.4 |       5 |     0.021 |
-TimingAuditor.TIMER        INFO      HcalMonitor              |     1.000 |     0.801 |    0.309       1.9 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      MuonHitChecker           |     1.800 |     2.357 |    0.939       5.6 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO    PackMCParticle             |     3.799 |     3.476 |    0.683       6.4 |       5 |     0.017 |
-TimingAuditor.TIMER        INFO    PackMCVertex               |     3.000 |     3.002 |    0.569       6.2 |       5 |     0.015 |
-TimingAuditor.TIMER        INFO  GaussTape                    |  1457.178 |  1475.809 |   35.853    5923.9 |       5 |     7.379 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 163437.754 | 165484.905 |  470.041  699395.6 |       5 |   827.425 |
+TimingAuditor.TIMER        INFO  Gauss                        | 161985.974 | 162050.193 |  465.309  682542.7 |       5 |   810.251 |
+TimingAuditor.TIMER        INFO   Generator                   |    16.998 |    16.868 |    3.026      53.8 |       5 |     0.084 |
+TimingAuditor.TIMER        INFO    GaussGen                   |     1.800 |     1.218 |    0.397       4.3 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO    Generation                 |    14.398 |    14.740 |    2.416      46.1 |       5 |     0.074 |
+TimingAuditor.TIMER        INFO    GenMonitor                 |     0.800 |     0.845 |    0.109       3.1 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.800 |     0.826 |    0.098       3.1 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO   Simulation                  | 161968.976 | 162033.296 |  462.266  682488.8 |       5 |   810.166 |
+TimingAuditor.TIMER        INFO    GaussSim                   |     1.000 |     0.734 |    0.277       2.4 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.094 |    0.014       0.4 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 36194.697 | 36251.035 |    0.004  181255.2 |       5 |   181.255 |
+TimingAuditor.TIMER        INFO    GenerationToSimulation     | 82649.436 | 82652.097 |    0.796  412713.0 |       5 |   413.260 |
+TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         | 42999.663 | 43005.156 |  120.553   88179.6 |       5 |   215.026 |
+TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.020 |    0.010       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     5.399 |     5.412 |    0.937      16.4 |       5 |     0.027 |
+TimingAuditor.TIMER        INFO    DetectorsHits              |    86.587 |    86.666 |    2.293     223.0 |       5 |     0.433 |
+TimingAuditor.TIMER        INFO     GetVeloHits               |     4.399 |     4.194 |    0.103      12.3 |       5 |     0.021 |
+TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.131 |    0.052       0.2 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GetTTHits                 |     2.799 |     2.805 |    0.058       9.8 |       5 |     0.014 |
+TimingAuditor.TIMER        INFO     GetITHits                 |     2.600 |     2.640 |    0.051       7.9 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO     GetOTHits                 |     6.199 |     6.170 |    0.056      17.2 |       5 |     0.031 |
+TimingAuditor.TIMER        INFO     GetMuonHits               |     9.599 |     9.627 |    0.057      18.3 |       5 |     0.048 |
+TimingAuditor.TIMER        INFO     GetSpdHits                |     3.599 |     3.420 |    0.052      11.5 |       5 |     0.017 |
+TimingAuditor.TIMER        INFO     GetPrsHits                |     3.200 |     3.462 |    0.044       9.3 |       5 |     0.017 |
+TimingAuditor.TIMER        INFO     GetEcalHits               |    18.397 |    18.083 |    0.045      45.1 |       5 |     0.090 |
+TimingAuditor.TIMER        INFO     GetHcalHits               |     2.199 |     2.313 |    0.043       4.4 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO     RichHits                  |    33.595 |    33.619 |    1.617      86.5 |       5 |     0.168 |
+TimingAuditor.TIMER        INFO      GetRichHits              |     6.799 |     6.763 |    0.542      18.1 |       5 |     0.034 |
+TimingAuditor.TIMER        INFO      GetRichPhotons           |     1.400 |     1.477 |    0.100       4.2 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO      GetRichSegments          |     3.999 |     4.094 |    0.091      15.1 |       5 |     0.020 |
+TimingAuditor.TIMER        INFO      GetRichTracks            |     2.200 |     2.310 |    0.055       9.9 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.800 |     0.780 |    0.084       3.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |    17.997 |    18.086 |    0.069      49.5 |       5 |     0.090 |
+TimingAuditor.TIMER        INFO    SimMonitor                 |    22.996 |    22.955 |    0.861      72.1 |       5 |     0.115 |
+TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.400 |     0.266 |    0.104       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     MCTruthMonitor            |     1.000 |     0.816 |    0.062       2.5 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     1.000 |     1.071 |    0.219       3.8 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO     DetectorsMonitor          |    20.597 |    20.756 |    0.420      64.8 |       5 |     0.104 |
+TimingAuditor.TIMER        INFO      VeloGaussMoni            |     5.999 |     5.842 |    0.062      20.1 |       5 |     0.029 |
+TimingAuditor.TIMER        INFO      TTHitMonitor             |     1.000 |     1.230 |    0.036       4.7 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.800 |     1.026 |    0.020       2.6 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO      OTHitMonitor             |     2.400 |     2.341 |    0.021       6.0 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO      SpdMonitor               |     2.000 |     2.063 |    0.053       6.8 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO      PrsMonitor               |     2.600 |     2.502 |    0.037       7.5 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO      EcalMonitor              |     2.999 |     2.988 |    0.039       8.6 |       5 |     0.015 |
+TimingAuditor.TIMER        INFO      HcalMonitor              |     0.600 |     0.709 |    0.034       2.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      MuonHitChecker           |     2.000 |     1.963 |    0.055       6.1 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO    PackMCParticle             |     2.200 |     2.285 |    0.143       6.9 |       5 |     0.011 |
+TimingAuditor.TIMER        INFO    PackMCVertex               |     2.200 |     2.021 |    0.086       6.5 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO    TestMCVertex               |     1.400 |     1.408 |    0.107       4.0 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO    TestMCParticle             |     1.400 |     1.368 |    0.098       3.8 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO    CompareMCParticle          |     0.800 |     0.997 |    0.064       2.6 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO    CompareMCVertex            |     1.200 |     0.817 |    0.052       2.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO  GaussTape                    |  1451.380 |  3434.111 |    4.593   16851.4 |       5 |    17.171 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 8210     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
+GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 2847     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:E6DEB970-BE17-DE11-A1A2-000423D657A6[Gauss-5ev-20090323.sim]
-XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:C4569DF5-EB49-DE11-A78F-00304879EE40[Gauss-5ev-20090526.sim]
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot=  490  [s] Ave/Min/Max=   98(+- 62.8)/ 26.6/  206  [s] #=  5
-ChronoStatSvc              INFO Time User   : Tot= 19.5[min]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot=  215  [s] Ave/Min/Max=   43(+- 38.6)/0.121/ 88.2  [s] #=  5
+ChronoStatSvc              INFO Time User   : Tot= 15.2[min]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO      Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-******Stat******           INFO  "#VeloPU MCHits |         5 |        121 |     24.200 |     16.702 |      5.0000 |      45.000 |
-******Stat******           INFO  "#MCRichTracks" |         5 |        189 |     37.800 |     29.068 |      5.0000 |      90.000 |
-******Stat******           INFO  "#MCRichSegment |         5 |        260 |     52.000 |     39.930 |      7.0000 |      123.00 |
-******Stat******           INFO  "#IT MCHits"    |         5 |        630 |     126.00 |     101.57 |      26.000 |      317.00 |
-******Stat******           INFO  "#Muon MCHits"  |         5 |        657 |     131.40 |     67.304 |      62.000 |      253.00 |
-******Stat******           INFO  "#TT MCHits"    |         5 |        745 |     149.00 |     106.23 |      17.000 |      333.00 |
-******Stat******           INFO  "#Hcal MCHits"  |         5 |        794 |     158.80 |     90.360 |      87.000 |      333.00 |
-******Stat******           INFO  "#OT MCHits"    |         5 |       1790 |     358.00 |     285.52 |      57.000 |      875.00 |
-******Stat******           INFO  "#Velo MCHits"  |         5 |       2260 |     452.00 |     313.44 |      57.000 |      915.00 |
-******Stat******           INFO  "#Rich1 MCHits" |         5 |       2480 |     496.00 |     364.17 |      59.000 |      1023.0 |
-******Stat******           INFO  "#Spd MCHits"   |         5 |       2754 |     550.80 |     325.68 |      226.00 |      1113.0 |
-******Stat******           INFO  "#MCParticles"  |         5 |       3711 |     742.20 |     450.48 |      174.00 |      1416.0 |
-******Stat******           INFO  "#Rich2 MCHits" |         5 |       4473 |     894.60 |     824.07 |      91.000 |      2227.0 |
-******Stat******           INFO  "#Prs MCHits"   |         5 |       5506 |     1101.2 |     669.26 |      373.00 |      2220.0 |
-******Stat******           INFO  "#Ecal MCHits"  |         5 |       6272 |     1254.4 |     730.95 |      469.00 |      2447.0 |
-******Stat******           INFO  "#MCRichOpPhoto |         5 |       6953 |     1390.6 |     1105.5 |      150.00 |      3250.0 |
-******Stat******           INFO  "#Rich MCHits"  |         5 |       6953 |     1390.6 |     1105.5 |      150.00 |      3250.0 |
+******Stat******           INFO  "#VeloPU MCHits |         5 |         53 |     10.600 |     10.651 |      0.0000 |      29.000 |
+******Stat******           INFO  "#MCRichTracks" |         5 |         91 |     18.200 |     18.148 |      0.0000 |      43.000 |
+******Stat******           INFO  "#MCRichSegment |         5 |        115 |     23.000 |     23.512 |      0.0000 |      52.000 |
+******Stat******           INFO  "#TT MCHits"    |         5 |        212 |     42.400 |     42.505 |      0.0000 |      104.00 |
+******Stat******           INFO  "#IT MCHits"    |         5 |        415 |     83.000 |     75.530 |      0.0000 |      188.00 |
+******Stat******           INFO  "#Hcal MCHits"  |         5 |        478 |     95.600 |     78.401 |      0.0000 |      167.00 |
+******Stat******           INFO  "#Muon MCHits"  |         5 |        526 |     105.20 |     88.162 |      0.0000 |      218.00 |
+******Stat******           INFO  "#Velo MCHits"  |         5 |       1002 |     200.40 |     184.89 |      0.0000 |      430.00 |
+******Stat******           INFO  "#OT MCHits"    |         5 |       1029 |     205.80 |     204.30 |      0.0000 |      516.00 |
+******Stat******           INFO  "#Rich1 MCHits" |         5 |       1061 |     212.20 |     253.85 |      0.0000 |      649.00 |
+******Stat******           INFO  "#Rich2 MCHits" |         5 |       1361 |     272.20 |     235.37 |      0.0000 |      577.00 |
+******Stat******           INFO  "#Spd MCHits"   |         5 |       1763 |     352.60 |     346.90 |      0.0000 |      887.00 |
+******Stat******           INFO  "#MCParticles"  |         5 |       1806 |     361.20 |     294.89 |      12.000 |      751.00 |
+******Stat******           INFO  "#Rich MCHits"  |         5 |       2422 |     484.40 |     452.65 |      0.0000 |      1101.0 |
+******Stat******           INFO  "#MCRichOpPhoto |         5 |       2422 |     484.40 |     452.65 |      0.0000 |      1101.0 |
+******Stat******           INFO  "#Prs MCHits"   |         5 |       2904 |     580.80 |     606.06 |      0.0000 |      1571.0 |
+******Stat******           INFO  "#Ecal MCHits"  |         5 |       3530 |     706.00 |     705.48 |      0.0000 |      1842.0 |
 ******Stat******           INFO ****************************************************************************************************
 ChronoStatSvc.finalize()   INFO  Service finalized succesfully 
 ApplicationMgr             INFO Application Manager Finalized successfully
