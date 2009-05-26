@@ -1,7 +1,52 @@
+#!/usr/bin/env python
+# $Id: fixlinks,v 1.2 2009-05-26 17:42:47 hmdegaud Exp $
+""" Script to fix absolute links """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
 from LbUtils.Links import fixLinks
 
-import sys
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__author__ = "hmd"
+
+class FixLinksScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        
+        parser.set_defaults(showmode=False)
+        parser.add_option("-s", "--show",
+                          action="store_true", 
+                          dest="showmode",
+                          help="only shows links")
+        
+        parser.set_defaults(dryrunmode=False)
+        parser.add_option("--dry-run",
+                          action="store_true", 
+                          dest="dryrunmode",
+                          help="simulate action")
+        
+        parser.set_defaults(absolutemode=False)
+        parser.add_option("-a", "--absolute",
+                          action="store_true", 
+                          dest="absolutemode",
+                          help="create absolute links")
+
+    def main(self):
+        opts = self.options
+        for di in self.args:
+            fixLinks(di, opts.showmode, opts.absolutemode, opts.dryrunmode)
+
+        return 0
+
 
 if __name__ == '__main__':
-    for d in sys.argv[1:]:
-        fixLinks(d)
+    usage = """
+    %prog --dry-run [dir1 [dir2 ...]]
+    %prog [--show|-s] [dir1 [dir2 ...]]
+    %prog [-q|-v] [-a] [dir1 [dir2 ...]]
+    """        
+    s = FixLinksScript(usage=usage)
+    s.run()
+

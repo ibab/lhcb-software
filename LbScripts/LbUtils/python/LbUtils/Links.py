@@ -8,10 +8,11 @@ module to fix links in a tree
     @author: Hubert Degaudenzi 
 """    
 
-from os.path import islink, walk, join, abspath, realpath
-from os.path import dirname, exists
-from os import readlink, sep, pardir, symlink
+from os.path import islink, walk, join, abspath, realpath, sep, normpath
+from os.path import dirname, exists, split, pardir, splitdrive
+from os import readlink, symlink, remove
 from itertools import izip
+import logging
 
 def isLinkAbsolute(linkname):
     linkcont = readlink(linkname)
@@ -24,12 +25,15 @@ def isLinkBroken(linkname):
 
 def doesLinkPointInTree(treebase, linkname):
     linkdir = dirname(linkname)
+    tbase = abspath(treebase)
     target = abspath(join(linkdir, readlink(linkname)))
-    return target.startswith(treebase)
+    return target.startswith(tbase)
 
-def getCommonPath(dirnm, filename):
-    """ calculate the common path of the 2 entries """
-    dirl = dirnm.split(sep)
+def getCommonPath(dirn, filename):
+    # if the 2 components are on different drives (windows)
+    if splitdrive(dirn)[0] != splitdrive(filename)[0]:
+        return None
+    dirl = dirn.split(sep)
     filel = filename.split(sep)
     commpth = []
     for d, f in izip(dirl, filel):
@@ -45,22 +49,32 @@ def getCommonPath(dirnm, filename):
     return commpth
 
 
-def getRelativePath(dirnm, filename):
-    """ calculate the relative path of filename with regards to dirnm """
-    filename = realpath(filename)
-    dirnm = realpath(dirnm)
-    commonpath = getCommonPath(dirnm, filename)
+def getRelativePath(dirn, filename):
+    """ calculate the relative path of filename with regards to dirn """
+    # Translate the filename to the realpath of the parent directory + basename
+    filepath,basename = split(filename)
+    filename = join(realpath(filepath),basename)
+    # Get the absolute path of the destination directory
+    dirn = realpath(dirn)
+    commonpath = getCommonPath(dirn, filename)
+    # for windows if the 2 components are on different drives
+    if not commonpath:
+        return filename
     relname = filename[len(commonpath):]
-    reldir = dirname[len(commonpath):]
+    reldir = dirn[len(commonpath):]
     if reldir:
-        relname = (pardir+sep)*len(reldir.split(sep)) + relname  
+        relname = (pardir+sep)*len(reldir.split(sep)) + relname
     return relname
 
-def makeRelativeLink(src,dest):
-    """ create a relative symlink (instead of an absolute one) """
-    relpath = getRelativePath(dest, src)
-    symlink(relpath, dest)
 
+def makeRelativeLink(src, dest, dryrunmode):
+    """ create a relative symlink (instead of an absolute one) """
+    relpath = getRelativePath(dirname(dest), src)
+    log = logging.getLogger()
+    log.verbose("Creating relativelink %s -> %s" % (dest, relpath))
+    if not dryrunmode :
+        symlink(relpath, dest)
+        
 def relativizeLink(linkname):
     linkdir = dirname(linkname)
     target = abspath(join(linkdir, readlink(linkname)))
@@ -96,55 +110,66 @@ def getLinkInfo(treebase, linkname):
     return msg
     
 
-def printVisitor(treebase, dirnm, filesindir):
+
+def printVisitor(data, dirnm, filesindir):
     for f in filesindir:
         filename = join(dirnm, f)
         if islink(filename):
-            print getLinkInfo(treebase, filename)
+            print getLinkInfo(data["treebase"], filename)
+
+    
+def fixLink(data, linkname):
+    log = logging.getLogger()
+    absolutemode = data.get("absolute", False)
+    dryrunmode = data.get("dryrun", False)
+    treebase = data.get("treebase", None)
+    if isLinkBroken(linkname) :
+        log.warning("The link %s is broken - removing it" % linkname)
+        if not dryrunmode :
+            remove(linkname)
+    else :
+        if not doesLinkPointInTree(treebase, linkname) :
+            log.warning("The link %s doesn't point in the tree base %s - removing it" % (linkname, treebase))
+            if not dryrunmode :
+                remove(linkname)
+        else :
+            tobefixed = False
+            if isLinkAbsolute(linkname) :
+                log.info("The link %s is absolute" % linkname)
+                if not absolutemode :
+                    linktarget = relativizeLink(linkname)
+                    tobefixed = True
+            else :
+                log.info("The link %s is relative" % linkname)
+                if absolutemode :
+                    linkcont = readlink(linkname)
+                    linktarget = normpath(join(dirname(linkname),linkcont))
+                    tobefixed = True
+            if tobefixed :
+                log.warning("Making %s point to %s" % (linkname, linktarget))
+                if not dryrunmode :
+                    remove(linkname)
+                    symlink(linktarget, linkname)
+
     
 
-def showLinks(treebase):
+def fixVisitor(data, dirnm, filesindir):
+    for f in filesindir:
+        filename = join(dirnm, f)
+        if islink(filename):
+            fixLink(data, filename)
+    
+def fixLinks(treebase, show=False, absolute=False, dryrun=False ):
     """ recursively displays the links of a tree """
-    walk(treebase, printVisitor, treebase)
+    data = dict()
+    data["treebase"] = treebase
+    visitor = fixVisitor
+    data["show"] = show
+    data["absolute"] = absolute
+    data["dryrun"] = dryrun
+    if show:
+        visitor = printVisitor
+    walk(treebase, visitor, data)
     
-def fixLink(treebase, linkname):
-    if isLinkBroken(linkname):
-        print "%s is broken" % linkname
-    else:
-        if not doesLinkPointInTree(treebase, linkname):
-            print "%s does not point in tree" % linkname
-        else:
-            if isLinkAbsolute(linkname):
-                print "%s is relativezed" % linkname
 
-                
-            
-    
-def fixVisitor(treebase, dirnm, filesindir):
-    for f in filesindir:
-        filename = join(dirnm, f)
-        if islink(filename):
-            fixLink(treebase, filename)
-    
-def fixLinks(treebase):
-    walk(treebase, fixVisitor, treebase)
-    
-def removeBrokenLinks(treebase):
-    """ removes links with non-existing targets """
-    # @todo: implement
-    print treebase
-
-
-def relativizeLinks(treebase):
-    """ transforms absolute into relative links. The links are 
-    calculted with regards to the tree base. """
-    # @todo: implement
-    print treebase
-
-
-def correctOvershoot(treebase):
-    """ removes excedental '..' from relative links with regards
-    to the tree base."""
-    # @todo: implement
-    print treebase
 

@@ -1,3 +1,13 @@
+2009-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Links.py: 
+	- fixed the doesLinkPointInTree which was not using abspath for the 
+	comparison on each side.
+	- used the Gaudi version of getCommonPath and getRelativePath
+	- implemented fixLink
+	* scripts/fixlinks: used the Script class instead of the plain call
+	to the function
+
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/castor/common.py: New file.
