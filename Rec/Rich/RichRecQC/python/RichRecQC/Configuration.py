@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.26 2009-05-22 23:33:34 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2009-05-26 08:54:55 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -23,7 +23,7 @@ from DDDB.Configuration import DDDBConf
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ RichAlignmentConf, RichMarkovRingFinderConf ]
+    __used_configurables__ = [ RichAlignmentConf, RichMarkovRingFinderConf, RichENNRingFinderConf ]
 
     ## Steering options
     __slots__ = {

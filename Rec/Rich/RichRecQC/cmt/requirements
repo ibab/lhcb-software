@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.53 2009-05-21 17:22:46 jonrob Exp $
+# $Id: requirements,v 1.54 2009-05-26 08:54:55 jonrob Exp $
 #============================================================================
 
 package           RichRecQC
@@ -22,6 +22,7 @@ use MCEvent              v*    Event
 use RichRecBase          v*    Rich
 use MCInterfaces         v*    Kernel
 use RichMarkovRingFinder v*    Rich      # For python configurables
+use RichENNRingFinder    v*    Rich      # For python configurables
 
 # Component library building rule
 #============================================================================
