@@ -1,4 +1,4 @@
-// $Id: PingPongCut.cpp,v 1.1 2009-04-05 17:49:48 gcorti Exp $
+// $Id: PingPongCut.cpp,v 1.2 2009-05-26 17:15:25 gcorti Exp $
 // Include files 
 
 
@@ -74,15 +74,23 @@ PostStepGetPhysicalInteractionLength(const G4Track& track,
     return proposedStep;    
   }
 
-
   // The particle took an extremely high number of steps check if the next
   // 20 steps very small steps
   double stepLenght = track.GetStepLength();
 
+  if ( stepN == m_maxNumSteps ) {
+    std::cout << "GAUSS::Geant4:: " <<  GetProcessName() << std::endl;
+    std::cout << "   reached " << stepN << " num of steps for track "
+              << track.GetTrackID() << ": " 
+              << track.GetDefinition()->GetParticleName() << " of E_kin = "
+              << track.GetKineticEnergy() << std::endl;
+    std::cout << "   in volume " << currentVol->GetName() << std::endl;
+  }
+
   if ( stepLenght <= m_prevStepLenght ) {
-    
     // Now find if the step is a recursion between two volumes
     if ( currentVol == m_prevPrevVol && m_prevVol == m_prevPrevPrevVol ) {
+      // If not a zero step reset size of previous step
       if ( stepLenght > 0.0 ) {
         m_prevStepLenght = stepLenght + m_fracTolerance*stepLenght;
       }
@@ -92,12 +100,14 @@ PostStepGetPhysicalInteractionLength(const G4Track& track,
     m_countRepeat = 0;
   }
   
-  
   if ( m_countRepeat > m_maxRepeatSteps ) {
     proposedStep = 0.;
     std::cout << "GAUSS::Geant4:: " <<  GetProcessName() << std::endl;
     std::cout << "   reached " << m_countRepeat << " repeated steps for track "
               << track.GetTrackID() << std::endl;
+    std::cout << "   " << track.GetDefinition()->GetParticleName() 
+              << " of E_kin = " << track.GetKineticEnergy() << std::endl;
+    std::cout << "   " << std::endl;
     std::cout << "   at step no. " << stepN << std::endl;
     std::cout << "   last steps lenght are " << m_prevStepLenght << ", "
               << stepLenght << std::endl;
