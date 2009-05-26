@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.22 2009-05-10 13:53:05 graven Exp $
+// $Id: HltLine.cpp,v 1.23 2009-05-26 21:55:18 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -265,7 +265,7 @@ StatusCode HltLine::execute() {
   debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
   LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
-  if (reports->hasSelectionName( m_decision ) ) { 
+  if (reports->hasDecisionName( m_decision ) ) { 
     error() << "HltDecReports already contains report" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -284,12 +284,12 @@ StatusCode HltLine::execute() {
   boost::optional<IANNSvc::minor_value_type> key = annSvc().value(*major,m_decision);
 
   if (!key) {
-    warning() << " selectionName=" << m_decision << " not known under major " << *major << endmsg;
+    warning() << " DecisionName=" << m_decision << " not known under major " << *major << endmsg;
   }
   //TODO: add c'tor with only selID
   LHCb::HltDecReport report( 0, 0, 0, key->second );
-  if (report.invalidIntSelectionID()) {
-    warning() << " selectionName=" << key->first << " has invalid intSelectionID=" << key->second << endmsg;
+  if (report.invalidIntDecisionID()) {
+    warning() << " DecisionName=" << key->first << " has invalid intDecisionID=" << key->second << endmsg;
   } 
   bool accept = !m_stages.empty();
   for (unsigned i=0;i<m_stages.size();++i) {

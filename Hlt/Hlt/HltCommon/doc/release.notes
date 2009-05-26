@@ -3,9 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-
 ! 2009-05-26 - Gerhard Raven
  - use $HLTTCKROOT instead of $TCKDATAROOT to look for TCK files
+ - update HltLine for changes to HltDecReport
 
 !========================== HltCommon v5r5p1 2009-05-10 =================
 ! 2009-05-16 - Gerhard Raven
