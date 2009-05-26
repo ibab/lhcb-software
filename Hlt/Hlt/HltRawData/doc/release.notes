@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.36 2009-05-06 09:03:54 jpalac Exp $
+!$Id: release.notes,v 1.37 2009-05-26 20:06:10 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2009-05-26 - Gerhard Raven
+ - increment raw bank version number to reflect the changes in bitassigments
+   to HltDecReport, and the added TCK + TaskID words in both reader and writer
 
 !========================== HltRawData v1r10 2009-05-06 ==================
 

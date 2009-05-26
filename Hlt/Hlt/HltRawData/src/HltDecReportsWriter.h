@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.h,v 1.3 2009-04-18 18:52:37 graven Exp $
+// $Id: HltDecReportsWriter.h,v 1.4 2009-05-26 20:06:10 graven Exp $
 #ifndef HLTDECREPORTSWRITER_H 
 #define HLTDECREPORTSWRITER_H 1
 
@@ -20,7 +20,7 @@ class HltDecReportsWriter : public GaudiAlgorithm {
 public: 
 
   enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
+                   kVersionNumber=1 
   };
 
   /// Standard constructor

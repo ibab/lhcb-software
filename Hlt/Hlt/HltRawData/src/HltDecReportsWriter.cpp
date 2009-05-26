@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.6 2009-04-18 18:52:37 graven Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.7 2009-05-26 20:06:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode HltDecReportsWriter::execute() {
     for( HltDecReports::Container::const_iterator iRep=inputSummary->begin();
          iRep!=inputSummary->end();++iRep){
       const unsigned int decRep = iRep->second.decReport();
-      verbose() << HltDecReport(decRep).intSelectionID() << "-" << HltDecReport(decRep).decision() << " ";
+      verbose() << HltDecReport(decRep).intDecisionID() << "-" << HltDecReport(decRep).decision() << " ";
     }
     verbose() << endmsg;
   }
@@ -97,6 +97,9 @@ StatusCode HltDecReportsWriter::execute() {
 
   // compose the bank body
   std::vector<unsigned int> bankBody;
+  bankBody.push_back( inputSummary->configuredTCK() );
+  bankBody.push_back( inputSummary->taskID() );
+
   for( HltDecReports::Container::const_iterator iRep=inputSummary->begin();
        iRep!=inputSummary->end();++iRep){
     const unsigned int decRep = iRep->second.decReport();
@@ -105,9 +108,10 @@ StatusCode HltDecReportsWriter::execute() {
     // }
   }  
 
-  // order according to the values, essentially orders by intSelectionID 
+  // order according to the values, essentially orders by intDecisionID 
   // this is important since it will put "*Global" reports at the beginning of the bank
-  if( !bankBody.empty() ) std::sort( bankBody.begin(), bankBody.end(), UDless() );
+  // NOTE: we must skip the first two words (configuredTCK, taskID)
+  if( !bankBody.empty() ) std::sort( bankBody.begin()+2, bankBody.end(), UDless() );
 
   // delete any previously inserted dec reports
   const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
@@ -123,9 +127,11 @@ StatusCode HltDecReportsWriter::execute() {
 
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " Output:  ";  
-    for(std::vector<unsigned int>::const_iterator i=bankBody.begin();
-        i!=bankBody.end();++i){
-      verbose() << HltDecReport(*i).intSelectionID() << "-" << HltDecReport(*i).decision() << " ";
+    std::vector<unsigned int>::const_iterator i=bankBody.begin();
+    verbose() << " configuredTCK = " << *i++ << " " ;
+    verbose() << " taskID = " << *i++ << " " ;
+    for( ; i!=bankBody.end();++i) {
+      verbose() << HltDecReport(*i).intDecisionID() << "-" << HltDecReport(*i).decision() << " ";
     }
     verbose() << endmsg;
   }

@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.6 2009-04-18 18:52:37 graven Exp $
+// $Id: HltDecReportsReader.cpp,v 1.7 2009-05-26 20:06:10 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -89,10 +89,11 @@ StatusCode HltDecReportsReader::execute() {
   if( !hltdecreportsRawBanks.size() ){
     return Warning( " No HltDecReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
   } else if( hltdecreportsRawBanks.size() != 1 ){
-    Warning(" More then one HltDecReports RawBanks in RawEvent. Will process only the first one. " ,StatusCode::SUCCESS, 20 );
+    Warning(" More then one HltDecReports RawBanks in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
   }
-  const RawBank* hltdecreportsRawBank = *(hltdecreportsRawBanks.begin());
+  const RawBank* hltdecreportsRawBank = hltdecreportsRawBanks.front();
   if( hltdecreportsRawBank->version() > kVersionNumber ){
+    Error(" HltDecReports RawBank version number is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE );
   }
   if( hltdecreportsRawBank->sourceID() != kSourceID ){
     Warning( " HltDecReports RawBank has unexpected source ID. Will try to decode it anyway.",StatusCode::SUCCESS, 20 );
@@ -102,13 +103,24 @@ StatusCode HltDecReportsReader::execute() {
 
   std::vector< unsigned int > bankBody;
   unsigned int bankSize = (hltdecreportsRawBank->size()+3)/4; // from bytes to words
-  for(unsigned int i=0; i!=bankSize; ++i){
-    bankBody.push_back( (hltdecreportsRawBank->data())[i] );
+  
+  unsigned int i = 0;
+  // version 0 has only decreps, version 1 has TCK, taskID, then decreps...
+  if (hltdecreportsRawBank->version() > 0 ) {
+     outputSummary->setConfiguredTCK( hltdecreportsRawBank->data()[i++] );
+     outputSummary->setTaskID( hltdecreportsRawBank->data()[i++] );
+  } 
+  while( i!=bankSize ) {
+    bankBody.push_back( (hltdecreportsRawBank->data())[i++] );
   }
 
   // --------------------------------- get configuration --------------------
+  // TODO: use configuredTCK to get the right mapping...
+  //       if not available, go for the value in ODIN ( _not_ guaranteed to be correct! )
+  //                      or go for the 'current' (most recent) mapping... (also not guaranteed)
 
-  // get string-to-int selection ID map
+  // get string-to-int selection ID map 
+  // TODO: only need to do this once per TCK...
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
 
   std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); 
@@ -123,7 +135,7 @@ StatusCode HltDecReportsReader::execute() {
        idec!=bankBody.end();++idec){
 
     HltDecReport dec( *idec );
-    int id=dec.intSelectionID();
+    int id=dec.intDecisionID();
 
     std::string selName="Dummy";
     switch(id){
@@ -140,7 +152,7 @@ StatusCode HltDecReportsReader::execute() {
       }
     }    
     if( selName != "Dummy" ){
-      if( outputSummary->hasSelectionName( selName ) ){
+      if( outputSummary->hasDecisionName( selName ) ){
         Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
       } else {
         outputSummary->insert( selName, dec );
