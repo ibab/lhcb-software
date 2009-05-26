@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-05-26 - Marco Cattaneo
+ - Add Brunel().OutputType = "XDST"
+
 ! 2009-05-25 - Marco Cattaneo
  - Update references for addition of Rich ENN ring finder
 

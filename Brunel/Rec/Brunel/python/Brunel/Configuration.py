@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.74 2009-05-17 11:43:00 mtobin Exp $"
+__version__ = "$Id: Configuration.py,v 1.75 2009-05-26 12:53:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -79,7 +79,7 @@ class Brunel(LHCbConfigurableUser):
        ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
        ,'InputType'    : """ Type of input file. Can be one of ['MDF','DIGI','ETC','RDST','DST'] (default 'MDF') """
        ,'DigiType'     : """ Type of digi, can be ['Minimal','Default','Extended'] """
-       ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','NONE'] (default 'DST') """
+       ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','XDST','NONE'] (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'Histograms'   : """ Type of histograms. Can be one of ['None','Default','Expert'] """
@@ -112,11 +112,11 @@ class Brunel(LHCbConfigurableUser):
     def defineOptions(self):
 
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "XDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
 
         outputType = self.getProp( "OutputType" ).upper()
-        if outputType not in [ "NONE", "DST", "RDST" ]:
+        if outputType not in [ "NONE", "DST", "RDST", "XDST" ]:
             raise TypeError( "Invalid outputType '%s'"%outputType )
 
         histOpt = self.getProp("Histograms").capitalize()
@@ -262,7 +262,7 @@ class Brunel(LHCbConfigurableUser):
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
         
-        if inputType in [ "DST", "RDST", "ETC" ]:
+        if inputType in [ "XDST", "DST", "RDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
@@ -281,7 +281,7 @@ class Brunel(LHCbConfigurableUser):
             ReadStripETC("TagReader").CollectionName = "TagCreator"
             IODataManager().AgeLimit += 1
 
-        if inputType not in [ "DIGI", "DST" ]:
+        if inputType in [ "MDF", "RDST", "ETC" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
@@ -298,7 +298,7 @@ class Brunel(LHCbConfigurableUser):
         """
         Set up output stream
         """
-        if dstType in [ "DST", "RDST" ]:
+        if dstType in [ "XDST", "DST", "RDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
             # Do not pack DC06 DSTs, for consistency with existing productions
@@ -330,12 +330,12 @@ class Brunel(LHCbConfigurableUser):
                     from Configurables import FileRecordDataSvc
                     FileRecordDataSvc().OutputLevel = FATAL
 
+            if dstType == "XDST":
+                # Allow multiple files open at once (SIM,DST,DIGI etc.)
+                IODataManager().AgeLimit += 1
+
             from Configurables import TrackToDST
-            if dstType == "DST":
-                # Sequence for altering DST content
-                # Filter Track States to be written
-                trackFilter = TrackToDST()
-            else:
+            if dstType == "RDST":
                 # Sequence for altering content of rDST compared to DST
                 # Filter Track States to be written
                 trackFilter = TrackToDST("TrackToRDST")
@@ -344,6 +344,10 @@ class Brunel(LHCbConfigurableUser):
                 trackFilter.TTrackStates = ["FirstMeasurement"]
                 trackFilter.downstreamStates = ["FirstMeasurement"]
                 trackFilter.upstreamStates = ["ClosestToBeam"]
+            else:
+                # Sequence for altering DST content
+                # Filter Track States to be written
+                trackFilter = TrackToDST()
                 
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
@@ -367,7 +371,6 @@ class Brunel(LHCbConfigurableUser):
             DstConf().OutputName = self.outputName()
 
 
-
         # Always write an ETC if ETC input
         if self.getProp( "InputType" ).upper() == "ETC":
             etcWriter = TagCollectionSvc("EvtTupleSvc")
@@ -376,12 +379,6 @@ class Brunel(LHCbConfigurableUser):
             importOptions( "$BRUNELOPTS/DefineETC.opts" )
             if not etcWriter.isPropertySet( "Output" ):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
-
-        # Do not print event number at every event (done already by Brunel)
-        EventSelector().PrintFreq = -1;
-        # Modify printout defaults
-        if self.getProp( "NoWarnings" ):
-            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
     def outputName(self):
         """
@@ -414,6 +411,12 @@ class Brunel(LHCbConfigurableUser):
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
         ProcessPhase("Moni").DetectorList += moniSeq
         ProcessPhase('Moni').Context = self.getProp("Context")
+
+        # Do not print event number at every event (done already by Brunel)
+        EventSelector().PrintFreq = -1;
+        # Modify printout defaults
+        if self.getProp( "NoWarnings" ):
+            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
         # Units needed in several of the monitoring options
         importOptions('$STDOPTS/PreloadUnits.opts')

@@ -56,7 +56,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r0
-                                          running on lxbuild120.cern.ch on Mon May 25 08:48:32 2009
+                                          running on lxbuild120.cern.ch on Tue May 26 14:36:13 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -438,15 +438,20 @@ ToolSvc.Offline...   INFO Will check for Rich2Gas photons that hit the beam pipe
 ToolSvc.Offline...   INFO Minimum active Rich2Gas segment fraction = 0.2
 ToolSvc.Offline...   INFO Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = [3, 3, 3]
 RichOfflineENNR...   INFO Member list: Rich::Rec::ENNRingFinder::Rich1TopPanel/OfflineENNFinderR1Top, Rich::Rec::ENNRingFinder::Rich1BottomPanel/OfflineENNFinderR1Bottom, Rich::Rec::ENNRingFinder::Rich2LeftPanel/OfflineENNFinderR2Left, Rich::Rec::ENNRingFinder::Rich2RightPanel/OfflineENNFinderR2Right, Rich::Rec::TracklessRingSegmentAssociationAlg/OfflineENNRingsSegAssoc, Rich::Rec::TracklessRingFilterAlg/OfflineBestENNRings, Rich::Rec::TracklessRingIsolationAlg/OfflineIsolatedENNRings, with context 'Offline'
-OfflineENNRings...   INFO Input Rings            : Rec/Rich/ENN/RingsAll
-OfflineENNRings...   INFO Max. seperation        : 50
-OfflineBestENNR...   INFO Input Rings            : Rec/Rich/ENN/RingsAll
-OfflineBestENNR...   INFO Output Rings           : Rec/Rich/ENN/RingsBest
-OfflineBestENNR...   INFO Min. # pixels per ring : 5
-OfflineBestENNR...   INFO Min. average prob.     : 0.7
-OfflineIsolated...   INFO Input Rings            : Rec/Rich/ENN/RingsBest
-OfflineIsolated...   INFO Output Rings           : Rec/Rich/ENN/RingsIsolated
-OfflineIsolated...   INFO Ring centre cut        : [260, 260, 260]
+OfflineENNRings...   INFO Input Rings                 : Rec/Rich/ENN/RingsAll
+OfflineENNRings...   INFO Max. seperation             : [50, 50, 50]
+OfflineBestENNR...   INFO Input Rings                 : Rec/Rich/ENN/RingsAll
+OfflineBestENNR...   INFO Output Rings                : Rec/Rich/ENN/RingsBest
+OfflineBestENNR...   INFO Min. # pixels per ring      : [5, 5, 5]
+OfflineBestENNR...   INFO Min. average prob.          : [0.7, 0.7, 0.7]
+OfflineIsolated...   INFO Input Rings                 : Rec/Rich/ENN/RingsBest
+OfflineIsolated...   INFO Output Rings                : Rec/Rich/ENN/RingsIsolated
+OfflineIsolated...   INFO Ring centre cut             : [260, 150, 260]
+OfflineIsolated...   INFO Ring width cut              : [0.01, 0.01, 0.00944]
+OfflineIsolated...   INFO Fraction outside ring cut   : [0.2, 0.3, 0.2]
+OfflineIsolated...   INFO # Phi regions               : [8, 8, 8]
+OfflineIsolated...   INFO Max fraction per phi region : [0.2, 0.2125, 0.2125]
+OfflineIsolated...   INFO Max Fit Variance            : [200, 200, 200]
 RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::Rec::HierarchicalPIDMerge/MergeOfflineRichPIDs, with context 'Offline'
 RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
 RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
