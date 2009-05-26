@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-05-26 - Marco Cattaneo
+ - Update reference for new tuning of RichENNRingFinder
+
 ! 2009-05-25 - Marco Cattaneo
  - Update reference file for addition of RichENNRingFinder
 
