@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-26 - Chris Jones
+ - Rework the configurables a little to avoid importing the ring finders by 
+   default
+
 !======================= RichRecQC v2r29 2009-05-25 ==========================
 ! 2009-05-22 - Chris Jones
  - Import trackless ring monitor from Markov package + Activate by default for

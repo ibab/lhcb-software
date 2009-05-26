@@ -4,13 +4,11 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.27 2009-05-26 08:54:55 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2009-05-26 11:52:57 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
 from Alignment import RichAlignmentConf
-from Configurables import RichMarkovRingFinderConf
-from Configurables import RichENNRingFinderConf
 from Configurables import ( GaudiSequencer, MessageSvc )
 from DDDB.Configuration import DDDBConf
 
@@ -23,7 +21,7 @@ from DDDB.Configuration import DDDBConf
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ RichAlignmentConf, RichMarkovRingFinderConf, RichENNRingFinderConf ]
+    __used_configurables__ = [ RichAlignmentConf ]
 
     ## Steering options
     __slots__ = {
@@ -173,15 +171,16 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import Rich__Rec__MC__TracklessRingMoni
 
-        if type == "Markov" :
-            conf = RichMarkovRingFinderConf()
-        elif type == "ENN" :
-            conf = RichENNRingFinderConf()
-        else :
-            raise RuntimeError("ERROR : Unknown trackless ring finder type")
-
         # Activate histos in the finder algs themselves
         if self.getProp("ExpertHistos") :
+            if type == "Markov" :
+                from Configurables import RichMarkovRingFinderConf
+                conf = RichMarkovRingFinderConf()
+            elif type == "ENN" :
+                from Configurables import RichENNRingFinderConf
+                conf = RichENNRingFinderConf()
+            else :
+                raise RuntimeError("ERROR : Unknown trackless ring finder type")
             conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
             conf.rich1BottomFinder().HistoProduce = self.getProp("HistoProduce")
             conf.rich2LeftFinder().HistoProduce   = self.getProp("HistoProduce")
