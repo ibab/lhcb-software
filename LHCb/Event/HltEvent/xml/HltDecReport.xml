@@ -16,9 +16,9 @@
       <attribute
         type = 'bitfield'
         name = 'decReport'
-        desc = 'encoded decision, execution stage, errors, number of candidates and selection ID'
+        desc = 'encoded decision, execution stage, errors, number of candidates and decision ID'
 	init = '0'
-	access = 'PROTECTED' >
+	access = 'PRIVATE' >
 
         <bitfield
             type='unsigned int'
@@ -28,17 +28,9 @@
             setMeth ='FALSE'
 	    />
 
-	<bitfield 
-            type='unsigned int'
-	    name='executionStage'
-	    length='3'
-	    desc='code specifying highest step reached during the trigger line execution (0-7)'
-            setMeth ='FALSE'
-	    />
-  
 
 	<bitfield
-            type='unsigned int'
+        type='unsigned int'
 	    name='errorBits'
 	    length='3'
 	    desc='error code 0=none'
@@ -47,16 +39,24 @@
 	<bitfield
 	    type='unsigned int'
 	    name='numberOfCandidates'
-	    length='9'
-	    desc='number of selected candidates passing trigger selection criteria' 
+	    length='4'
+	    desc='number of selected candidates passing trigger decision criteria' 
+            setMeth ='FALSE'
+	    />
+
+	<bitfield 
+            type='unsigned int'
+	    name='executionStage'
+	    length='8'
+	    desc='code specifying highest step reached during the trigger line execution (0-255)'
             setMeth ='FALSE'
 	    />
 
 	<bitfield
 	    type='unsigned int'
-	    name='intSelectionID'
+	    name='intDecisionID'
 	    length='16'
-	    desc='integer selection ID'
+	    desc='integer decision ID'
             setMeth ='FALSE'
 	    />
 
@@ -69,8 +69,8 @@
       <method
         name='setDecision'
         type='void'
-        argList='int dec' 
-        desc='set decision bit; keep event= (dec!=0)'
+        argList='bool dec' 
+        desc='set decision bit; keep event= (dec==true)'
         >
         <code>
    m_decReport &amp;= ~decisionMask;
@@ -84,11 +84,11 @@
         name='setExecutionStage'
         type='void'
         argList='int stage' 
-        desc='Update code specifying highest step reached during the trigger line execution (0-7)'
+        desc='Update code specifying highest step reached during the trigger line execution (0-255)'
         >
         <code>
   unsigned int val=(stage&lt;0)?0:((unsigned int)stage);
-  val=(val&lt;7)?val:7; 
+  val=(val&lt;255)?val:255; 
   m_decReport &amp;= ~executionStageMask;
   m_decReport |= ((((unsigned int)val) &lt;&lt; executionStageBits)  &amp; executionStageMask);
        </code>
@@ -120,37 +120,48 @@
       </method>        
 
       <method
-        static='TRUE'
         type='unsigned int'
-        name='illegalIntSelectionID' 
-        desc='if intSelectionID in HltDecReport equals this then passed selection ID was out of allowed range'
+        name='intSelectionID' 
+        desc='deprecated backwards compatibility stub'
+        const='TRUE'
         >
         <code>
-  return (unsigned int)(intSelectionIDMask &gt;&gt; intSelectionIDBits);
+  return intDecisionID();
+        </code>
+
+      </method>
+      <method
+        static='TRUE'
+        type='unsigned int'
+        name='illegalIntDecisionID' 
+        desc='if intDecisionID in HltDecReport equals this then passed decision ID was out of allowed range'
+        >
+        <code>
+  return (unsigned int)(intDecisionIDMask &gt;&gt; intDecisionIDBits);
         </code>
       </method>
         
       <method
-        name='setIntSelectionID'
+        name='setIntDecisionID'
         type='void'
-        argList='int selID' 
-        desc='set intSelectionID; set to illegal value if out of allowed range'
+        argList='int decID' 
+        desc='set intDecisionID; set to illegal value if out of allowed range'
         >
         <code>
-  unsigned int val=(selID&lt;=0)?illegalIntSelectionID():((unsigned int)selID);
-  val=(val&lt;illegalIntSelectionID())?val:illegalIntSelectionID(); 
-  m_decReport &amp;= ~intSelectionIDMask;
-  m_decReport |= ((val &lt;&lt; intSelectionIDBits) &amp; intSelectionIDMask);
+  unsigned int val=(decID&lt;=0)?illegalIntDecisionID():((unsigned int)decID);
+  val=(val&lt;illegalIntDecisionID())?val:illegalIntDecisionID(); 
+  m_decReport &amp;= ~intDecisionIDMask;
+  m_decReport |= ((val &lt;&lt; intDecisionIDBits) &amp; intDecisionIDMask);
         </code>   
       </method>
 
       <method
-        name='invalidIntSelectionID'
+        name='invalidIntDecisionID'
         type='bool'
-        desc='checked if intSelectionID was invalid when set'
+        desc='checked if intDecisionID was invalid when set'
         const='TRUE'>
         <code>
-  return ((intSelectionID()==illegalIntSelectionID())||(intSelectionID()==0));
+  return ((intDecisionID()==illegalIntDecisionID())||(intDecisionID()==0));
         </code>
       </method>
 
@@ -164,7 +175,7 @@
 	/>
 
       <constructor
-        argList='int dec, int stage, unsigned int eb, int noc, int selID'
+        argList='bool dec, int stage, unsigned int eb, int noc, int decID'
         desc='create from subfield inputs with allowed range checking'
 	>
         <code>
@@ -173,12 +184,12 @@
    setExecutionStage(stage);
    setErrorBits(eb);          
    setNumberOfCandidates(noc);
-   setIntSelectionID(selID);
+   setIntDecisionID(decID);
         </code>   
       </constructor>
 
       <constructor
-        argList='int dec, unsigned int eb, int noc, int selID'
+        argList='bool dec, unsigned int eb, int noc, int decID'
         desc='create from subset of subfield inputs with allowed range checking'
 	>
         <code>
@@ -187,7 +198,7 @@
    setExecutionStage(0); // not specified
    setErrorBits(eb);          
    setNumberOfCandidates(noc);
-   setIntSelectionID(selID);
+   setIntDecisionID(decID);
         </code>   
       </constructor>
 
@@ -203,10 +214,10 @@
           std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
           ss &lt;&lt; "{ " 
              &lt;&lt; " decision : " &lt;&lt; decision() 
-	     &lt;&lt; " executionStage : " &lt;&lt; executionStage() 
              &lt;&lt; " errorBits : " &lt;&lt; errorBits() 
              &lt;&lt; " numberOfCandidates : " &lt;&lt; numberOfCandidates() 
-             &lt;&lt; " intSelectionID : " &lt;&lt; intSelectionID() 
+	         &lt;&lt; " executionStage : " &lt;&lt; executionStage() 
+             &lt;&lt; " intDecisionID : " &lt;&lt; intDecisionID() 
              &lt;&lt; " }" ;
           return ss;
         </code>
@@ -236,50 +247,63 @@
       <typedef
         type   = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltDecReport &gt;'
         def    = 'Container'
-        desc   = 'container of HltDecReport-s keyed by trigger selection name'
+        desc   = 'container of HltDecReport-s keyed by trigger decision name'
         access = 'PUBLIC'
       />
 
       <attribute
+        type      = 'unsigned int'
+        name      = 'configuredTCK'
+        desc      = 'Trigger Configuration Key used for Configuration'
+        access    = 'PRIVATE' />
+
+      <attribute
+        type      = 'unsigned int'
+        name      = 'taskID'
+        desc      = 'Reserved for online Task / Node ID '
+        access    = 'PRIVATE' />
+
+
+      <attribute
         type      = 'LHCb::HltDecReports::Container'
         name      = 'decReports'
-        desc      = 'container of HltDecReport-s keyed by trigger selection name'
-        access    = 'PROTECTED' />
+        desc      = 'container of HltDecReport-s keyed by trigger decision name'
+        access    = 'PRIVATE' />
 
       <!-- report accessor (for convenience) -->
 
       <method 
          name='decReport'
          type='const LHCb::HltDecReport*'
-         argList = 'const std::string selectionName'
-         desc='return pointer to Hlt Decision Report for given trigger selection name (==0 if not found)'
+         argList = 'const std::string decisionName'
+         desc='return pointer to Hlt Decision Report for given trigger decision name (==0 if not found)'
          const = 'TRUE' >
         <code>
-    Container::const_iterator rep = m_decReports.find(selectionName);
+    Container::const_iterator rep = m_decReports.find(decisionName);
     if( rep==m_decReports.end() )return ((const LHCb::HltDecReport*)(0));
     return &amp;(rep->second);
         </code>
       </method>
 
-      <!-- selection name inquiries (for convenience) -->
+      <!-- decision name inquiries (for convenience) -->
 
       <method
-         name = 'hasSelectionName'
+         name = 'hasDecisionName'
          type = 'bool'
-         argList = 'const std::string selectionName'
-         desc = 'check if the trigger selection name is present in the container'
+         argList = 'const std::string decisionName'
+         desc = 'check if the trigger decision name is present in the container'
          access ='PUBLIC'
          const = 'TRUE'
        >
         <code>
-          return (m_decReports.find(selectionName)!=m_decReports.end());
+          return (m_decReports.find(decisionName)!=m_decReports.end());
        </code>
       </method>
 
       <method
         type = 'std::vector &lt; std::string &gt;'
-        name = 'selectionNames'
-        desc = 'return names of the selections stored in the container'
+        name = 'decisionNames'
+        desc = 'return names of the decisions stored in the container'
         const = 'TRUE' >
         <code>
     std::vector&lt;std::string&gt; names;
@@ -316,11 +340,11 @@
       <method
          name = 'find'
          type = 'LHCb::HltDecReports::Container::const_iterator'
-         argList = 'const std::string selectionName'
-         desc = 'find HltDecReport in the container given its trigger selection name'
+         argList = 'const std::string decisionName'
+         desc = 'find HltDecReport in the container given its trigger decision name'
          const = 'TRUE' >
         <code>
-          return m_decReports.find(selectionName);
+          return m_decReports.find(decisionName);
        </code>
       </method>
         
@@ -342,11 +366,11 @@
       <method
         name='insert'
         type='StatusCode'
-        argList='const std::string selectionName,const LHCb::HltDecReport decReport'
-        desc='insert HltDecReport for given selectionName, returns StatusCode::FAILURE if duplicate selection name'        
+        argList='const std::string decisionName,const LHCb::HltDecReport decReport'
+        desc='insert HltDecReport for given decisionName, returns StatusCode::FAILURE if duplicate decision name'        
       >
         <code>
-   if( m_decReports.insert(selectionName,decReport).second )return StatusCode::SUCCESS;
+   if( m_decReports.insert(decisionName,decReport).second )return StatusCode::SUCCESS;
    return StatusCode::FAILURE;
         </code>
       </method>
@@ -361,12 +385,13 @@
         const='TRUE' >
         <code>
           std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
-          ss &lt;&lt; " HltDecReports : { "  &lt;&lt; std::endl;
+          ss &lt;&lt; " HltDecReports : configuredTCK=" &lt;&lt; m_configuredTCK 
+             &lt;&lt; " {\n" ;
           for(Container::const_iterator i=m_decReports.begin();
                                         i!=m_decReports.end(); ++i){
-           ss &lt;&lt; " selectionName :	" &lt;&lt; i->first
+           ss &lt;&lt; " decisionName :	" &lt;&lt; i->first
               &lt;&lt; " HltDecReport :	" &lt;&lt; i->second 
-              &lt;&lt; std::endl;
+              &lt;&lt; "\n";
           }
           ss &lt;&lt; " }" &lt;&lt; std::endl;
           return ss;

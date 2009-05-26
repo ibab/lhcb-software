@@ -4,6 +4,15 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2009-05-26 - Gerhard Raven
+ - reassign bits in HltDecReports to create more 'stages' and 
+   less dynamic range on # of candidates
+ - rename 'selectionID' to 'decisionID', but keep backwards compatibility
+   accessor function. 
+   (selectionID will become computable from decisionID + stageID)
+ - add configuredTCK in HltDecReports, and reserve one 32 bit word
+   to identify the task in the online farm
+
 !======================== HltEvent v8r16 2009-03-09 ==========================
 ! 2009-02-27 - Tomasz Skwarnicki
  - create custom dictionary for HltObjectSummary::Info
