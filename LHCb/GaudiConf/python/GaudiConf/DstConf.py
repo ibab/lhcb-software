@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.10 2009-04-06 15:26:29 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.11 2009-05-26 12:54:07 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -19,7 +19,7 @@ class DstConf(ConfigurableUser):
          }
 
     _propertyDocDct = { 
-        'DstType'       : """ Type of dst, can be ['DST','RDST'] """
+        'DstType'       : """ Type of dst, can be ['DST','RDST','XDST'] """
        ,'SimType'       : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
        ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
@@ -28,25 +28,30 @@ class DstConf(ConfigurableUser):
        ,'OutputName'    : """ Name of the output file, for MDF writing """ 
        }
 
-    KnownDstTypes  = ['NONE', 'DST','RDST']
-    KnownPackTypes = ['NONE', 'TES','MDF']
+    KnownSimTypes  = ['None','Minimal','Full']
+    KnownDstTypes  = ['NONE','DST','RDST','XDST']
+    KnownPackTypes = ['NONE','TES','MDF']
 
     def _doWrite( self ):
         """
         Define the file content and write it out
         """
+        sType = self.getProp( "SimType" ).capitalize()
+        if sType not in self.KnownSimTypes:
+            raise TypeError( "Unknown SimType '%s'"%sType )
+
         dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
-            raise TypeError( "Unknown DST type '%s'"%dType )
+            raise TypeError( "Unknown DstType '%s'"%dType )
         if dType == 'NONE': return
 
         pType = self.getProp( "PackType" ).upper()
         if pType not in self.KnownPackTypes:
-            raise TypeError( "Unknown packing type '%s'"%pType )
+            raise TypeError( "Unknown PackType '%s'"%pType )
 
         items    = []
         optItems = []
-        self._defineOutputData( dType, pType, items, optItems )
+        self._defineOutputData( dType, pType, sType, items, optItems )
         
         if pType == 'MDF':
             if dType == 'DST': raise TypeError( "Only RDST are supported with MDF packing" )
@@ -55,7 +60,7 @@ class DstConf(ConfigurableUser):
             self._doWritePOOL( items, optItems )
             
 
-    def _defineOutputData( self, dType, pType, items, optItems ):
+    def _defineOutputData( self, dType, pType, sType, items, optItems ):
         """
         Define content of the output dataset
         """
@@ -87,8 +92,8 @@ class DstConf(ConfigurableUser):
                  , "/Event/" + recDir + "/Vertex/Primary"    + depth
                  , "/Event/" + recDir + "/Vertex/V0"         + depth ]
 
-        # Additional objects only on DST
-        if dType == "DST":
+        # Additional objects not on RDST
+        if dType != "RDST":
             items += [ "/Event/" + recDir + "/Track/Muon" + depth ]
 
             # Additional objects not packable as MDF
@@ -99,13 +104,13 @@ class DstConf(ConfigurableUser):
                 optItems += [ "/Event/Phys/Selections#1" ]
 
                 # Add the simulation objects (POOL DST only)
-                if self.getProp("SimType").capitalize() != "None":
+                if sType != "None":
                     # Minimal MC output.
                     items += [ "/Event/Gen/Header#1"
                              , "/Event/MC/Header#1"
                              , "/Event/pSim/MCVertices#1" ]
 
-                    if self.getProp("SimType").capitalize() == "Full":
+                    if sType == "Full":
                         items += [
                              # Links to MCParticles created in Brunel
                                "/Event/Link/Rec/Track/Best#1"
@@ -128,16 +133,35 @@ class DstConf(ConfigurableUser):
                              , "/Event/Link/Raw/Muon/Digits#1"
                              , "/Event/Link/Trig/L0/FullCalo#1" ]
 
-                    # Objects propagated from Boole, not always available
-                    optItems += [ "/Event/Prev/MC/Header#1"
-                                , "/Event/PrevPrev/MC/Header#1"
-                                , "/Event/Next/MC/Header#1"
-                                , "/Event/Link/Raw/Hcal/Digits#1" # From Boole v14r9
-                                ]
+                        # Objects propagated from Boole, not always available
+                        optItems += [ "/Event/Prev/MC/Header#1"
+                                      , "/Event/PrevPrev/MC/Header#1"
+                                      , "/Event/Next/MC/Header#1"
+                                      , "/Event/Link/Raw/Hcal/Digits#1" # From Boole v14r9
+                                      ]
+
+                        if dType == "XDST":
+                            # Add the MCHits (from Gauss) and links to them (from Boole)
+                            items += [
+                                "/Event/MC/PuVeto/Hits#1"
+                                , "/Event/MC/Velo/Hits#1"
+                                , "/Event/MC/TT/Hits#1"
+                                , "/Event/MC/IT/Hits#1"
+                                , "/Event/MC/OT/Hits#1"
+                                , "/Event/MC/Rich/Hits#1"
+                                , "/Event/MC/Prs/Hits#1"
+                                , "/Event/MC/Spd/Hits#1"
+                                , "/Event/MC/Ecal/Hits#1"
+                                , "/Event/MC/Hcal/Hits#1"
+                                , "/Event/MC/Muon/Hits#1"
+                                , "/Event/Link/Raw/Velo/Clusters2MCHits#1"
+                                , "/Event/Link/Raw/TT/Clusters2MCHits#1"
+                                , "/Event/Link/Raw/IT/Clusters2MCHits#1"
+                                , "/Event/Link/Raw/OT/Times2MCHits#1" ]
 
     def _doWritePOOL( self, items, optItems ):
         """
-        Write a DST (or RDST) in POOL format
+        Write a DST (or RDST, XDST) in POOL format
         """
         writer = OutputStream( self.getProp("Writer") )
         ApplicationMgr().OutStream.append( writer )
@@ -193,7 +217,7 @@ class DstConf(ConfigurableUser):
                               , PackRecVertex()
                               , PackTwoProngVertex()
                               ]
-        if self.getProp( "DstType" ).upper() == "DST":
+        if self.getProp( "DstType" ).upper() != "RDST":
             packDST.Members += [ PackTrack( name       = "PackMuons",
                                             InputName  = "/Event/Rec/Track/Muon",
                                             OutputName = "/Event/pRec/Track/Muon") ]

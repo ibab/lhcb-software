@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v12r3 2009-05-25 ========================
+!======================== GaudiConf v12r3 2009-05-26 ========================
+! 2009-05-26 - Marco Cattaneo
+ - Add DstConf().DstType = "XDST", extended DST containing also MCHits
+
 ! 2009-05-13 - Marco Cattaneo
  - Add a python module GaudiConf/QMTest/LHCbExclusions.py containing a QMTest
    preprocessor that can be given to the QMTest ValidateWithReference function
