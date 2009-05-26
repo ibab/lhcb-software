@@ -1,3 +1,15 @@
+2009-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/ProjectLinks.py: New file.
+	* python/LbLegacy/install_project.py: Reenabled the fixProjectLinks procedure 
+	to cure the link target starting with "/afs"
+	* scripts/FixProjectLinks: factored out the functions into the module LbLegacy.ProjectLinks
+	* scripts/mkproject: 
+	  - making use of LbUtils.Links.fixLinks after the builds.
+	  - added a default logger
+	  - removed the call to LbInstallArea
+	* scripts/LbInstallArea: removed!!!
+	  
 2009-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/install_project: fixed the install_project wrapper.

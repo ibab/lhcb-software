@@ -26,12 +26,14 @@ from LbLegacy.vol_for_releases import create_volume
 
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
+from LbUtils.Links import fixLinks
 
 import logging
 import sys, os, getopt, time, commands, fnmatch
 
 script_version = '081007'
 script_name = 'mkproject'
+python_version = sys.version_info[:3]
 
 day = time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime())
 
@@ -145,32 +147,32 @@ def release_project(pname,pversion,action=None):
     log.warning( "============================================================================")
 
 # print action list
-    log.warning('    action list')
-    log.warning( '%s_%s volume will be created if not yet done' % (PACK, pversion) )
+    print '    action list'
+    print '%s_%s volume will be created if not yet done' % (PACK, pversion) 
     if new : 
-        log.warning( '%s_%s directory will be created' % (PACK, pversion) )
+        print '%s_%s directory will be created' % (PACK, pversion) 
     if get :
-        log.warning('%s will be getpack -u -r' % packSys)
+        print '%s will be getpack -u -r' % packSys
     if use : 
-        log.warning( 'check cmt show uses output' )
+        print 'check cmt show uses output' 
     if compile : 
-        log.warning( '%s will be compiled in %s ' % (packSys, CMTCONFIG) )
+        print '%s will be compiled in %s ' % (packSys, CMTCONFIG) 
     if debug : 
-        log.warning('compilation will be done in debug mode')
+        print 'compilation will be done in debug mode'
     if install : 
-        log.warning('InstallArea will be built in %s/%s ' % (rel_dir, maindir) )
+        print 'InstallArea will be built in %s/%s ' % (rel_dir, maindir) 
     if tar : 
-        log.warning( 'project tar files will be built')
+        print 'project tar files will be built'
     if glimpse :
-        log.warning( 'glimpse index files will be built' )
+        print 'glimpse index files will be built' 
     if release : 
-        log.warning('release area will become public')
+        print 'release area will become public'
     if doxygen : 
-        log.warning('doxygen documentation will be built')
+        print 'doxygen documentation will be built'
     if html : 
-        log.warning('html page will be updated')
+        print 'html page will be updated'
     if web : 
-        log.warning('new html page will be published')
+        print 'new html page will be published'
 
     print 'do you agree? [yes|no]'
     next = sys.stdin.readline()
@@ -421,17 +423,8 @@ def release_project(pname,pversion,action=None):
         log.info('end of compilation in debug mode ')
         os.chdir(rel_dir)
 
-# ======================= action: build the InstallArea =======================================
-    if install :
-        log.info( 'build InstallArea' )
-        os.chdir(os.path.join(rel_dir,maindir))
-#        str = os.path.join(script_dir,'LbInstallArea ')
-        str = 'LbInstallArea '
-        if CMTPROJECTPATH == '':
-            os.system(str+CMTCONFIG)
-            os.system(str+CMTDEB)
-        os.system(str+'python')
-        os.chdir(rel_dir)
+
+    fixLinks(os.path.join(rel_dir, maindir))
 
 # ======================= action: build tar files ============================================
     if tar :
@@ -583,6 +576,16 @@ if __name__ == "__main__":
             pname = value
         if key in ('-a', '--action'):
             action = value
+            
+    thelog = logging.getLogger()
+    thelog.setLevel(logging.DEBUG)
+    console = logging.StreamHandler()
+    if python_version < (2, 5, 1) :
+        console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
+    else :
+        console.setFormatter(logging.Formatter("%(levelname)-8s: %(funcName)-25s - %(message)s"))
+    console.setLevel(logging.DEBUG)
+    thelog.addHandler(console)
 
 
     release_project(pname,pversion,action)

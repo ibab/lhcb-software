@@ -200,6 +200,7 @@
  090513 - Added the support for slc5
         - removed the usage of the old scripts.tar.gz for the bootstrapping.
  090515 - Moving to LbScripts v4r0
+ 090526 - Reenabled the fixProjectLinks procedure to cure the link target starting with "/afs"
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -209,7 +210,7 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090515'
+script_version = '090526'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r0"
@@ -1108,9 +1109,9 @@ def getProjectTar(tar_list, already_present_list=None):
                                 os.mkdir ('InstallArea')
                             os.chdir('InstallArea')
                             os.mkdir(pack_ver[2])
-#                    if sys.platform != 'win32' :
-#                        from FixProjectLinks import fixLinks
-#                        fixLinks(pack_ver[3])
+                    if sys.platform != 'win32' :
+                        from LbLegacy.ProjectLinks import fixLinks
+                        fixLinks(pack_ver[3])
                     if multiple_mysiteroot :
                         if os.path.isdir('EXTRAPACKAGES'):
                             extradir = None
