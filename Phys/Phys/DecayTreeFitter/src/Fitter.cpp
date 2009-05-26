@@ -398,7 +398,7 @@ namespace DecayTreeFitter
     Tree tree(*m_particle) ;
     // update the tree. the easy version will only work once we have a proper 'isCloneOf'.
     // updateTree( *tree.head() ) ;
-    for( Tree::CloneMap::iterator it = tree.cloneMap().begin() ;
+    for( Tree::CloneMap::const_iterator it = tree.cloneMap().begin() ;
 	 it != tree.cloneMap().end(); ++it ) {
       const ParticleBase* pb = m_decaychain->locate(*(it->first)) ;
       if(pb!=0) updateCand( *pb, *(it->second) ) ;
@@ -436,9 +436,20 @@ namespace DecayTreeFitter
     particle.setMomCovMatrix( vtxpar.momCovMatrix() ) ;
     particle.setPosCovMatrix( vtxpar.posCovMatrix() ) ;
     particle.setPosMomCovMatrix( vtxpar.momPosCovMatrix() ) ;
-    // VtxVertex* vtx(0) ;
-    //       int posindex = pb->posIndex() ;
-    //       if( posindex>=0 ) {
+    // update the vertex as well, if this is the head of the tree
+    if( &pb == m_decaychain->cand() ) {
+      LHCb::Vertex* vertex = particle.endVertex() ;
+      if( !vertex ) {
+	// create a new vertex
+	vertex = new LHCb::Vertex() ;
+	// don't add any daughters. I don't understand why we need them anyway.
+	particle.setEndVertex( vertex ) ;
+      }
+      vertex->setTechnique( LHCb::Vertex::LastGlobal) ;
+      vertex->setChi2AndDoF( chiSquare(), nDof() ) ;
+      vertex->setPosition( vtxpar.position() ) ;
+      vertex->setCovMatrix( vtxpar.posCovMatrix() ) ;
+    } 
     // 	if( pb ==m_decaychain->cand() ) {
     // 	  vtx = new VtxVertex(chiSquare(),nDof(),vtxpar.pos(),vtxpar.posCov(),vtxpar.xp4Cov()) ;
     // 	  vtx->setStatus(FitStatus::VtxStatus(status())) ;
