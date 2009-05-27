@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.431 2009-05-25 08:48:46 jpalac Exp $
+! $Id: release.notes,v 1.432 2009-05-27 15:35:28 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v18r5 2009-05-27 ===================
+
+! 2009-05-27 - Juan PALACIOS
+ - src/PVRelatorAlg.cpp
+  . Important bug fixes.
 
 ! 2009-05-25 - Juan PALACIOS
   - src/PVRelatorAlg{.cpp, .h}
