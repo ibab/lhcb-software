@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.7 2009-05-04 09:03:49 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.8 2009-05-27 13:46:08 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -143,13 +143,22 @@ template <class PBASE>
 template <class T>
 T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original ) 
 {
+
+  if (0==original) return 0;
+  
   const std::string cloneLocation = 
     outputTESLocation(MicroDST::objectLocation(original->parent()));
 
   if (!exist<typename T::Container>(cloneLocation)) return 0;
 
   typename T::Container* clones = get<typename T::Container>(cloneLocation);
-  // check what this returns if no object found.
+
+  if (0==clones) {
+    this->Error("Didn't find container at "+ cloneLocation,
+                StatusCode::FAILURE,10).ignore();
+    return 0;
+  }
+
   return clones->object(original->key() ); 
     
 }
