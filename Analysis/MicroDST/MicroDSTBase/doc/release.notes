@@ -1,10 +1,18 @@
-!$Id: release.notes,v 1.28 2009-05-11 14:06:27 jpalac Exp $
+!$Id: release.notes,v 1.29 2009-05-27 13:57:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-05-27 - Juan PALACIOS
+ - MicroDST/MicroDSTCommon.icpp
+  . Add some safety checks to getStoredClone method
+ - MicroDST/RelTableFunctors.h
+  . TableCloner: avoid unnecessary extra loop.
+ - MicroDST/RelationsClonerAlg.h
+  . Protect some verbose/debug printout, and add some safety.
 
 !====================== MicroDSTBase v1r4 2008-05-11 ======================
 
