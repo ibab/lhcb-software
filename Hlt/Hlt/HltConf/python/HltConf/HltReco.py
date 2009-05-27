@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.6 2009-05-25 12:01:58 gkrocker Exp $
+# $Id: HltReco.py,v 1.7 2009-05-27 13:51:01 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -35,8 +35,10 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
+          , 'Seed'
+          , 'SeedKF'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
-	  , 'HltSeedSequence' # run Seeding
+	      , 'HltSeedSequence' # run Seeding
           )
 #############################################################################################
 # Switches for different reco scenarios
@@ -59,6 +61,7 @@ from HltConf.HltLine import bindMembers
 from Configurables import TrackEventFitter, TrackMasterFitter, TrackKalmanFilter, TrackMasterExtrapolator  #@gk for TrackFit
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 from Configurables import PatSeeding, PatSeedingTool, PatMatch, CreateFastTrackCollection #@gk for PatSeeding
+from Configurables import PatDownstream
 from Configurables import TrackEventCloneKiller, TrackCloneFinder
 
 #############################################################################################
@@ -81,28 +84,26 @@ recoForward.addTool(PatForwardTool, name='PatForwardTool')
 recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
 #### Seeding 
-recoSeeding = PatSeeding('HLTSeeding'
-                         , OutputTracksName = "Hlt/Track/Seeding") 
+recoSeeding = PatSeeding('HltSeeding' , OutputTracksName = "Hlt/Track/Seeding") 
 recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
 recoSeeding.PatSeedingTool.UseForward = True
 recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
-recoSeeding.PatSeedingTool.InputTracksName = "Hlt/Track/Forward"
+recoSeeding.PatSeedingTool.InputTracksName = recoForward.OutputTracksName
 
 #### Matching
-recoMatch = PatMatch('HLTMatch'
-                     , VeloInput = "Hlt/Track/Velo"
-                     , SeedInput = "Hlt/Track/Seeding" 
-		     , MatchOutput = "Hlt/Track/Match")
+recoMatch = PatMatch('HltMatch'
+                     , VeloInput = recoVelo.OutputTracksName
+                     , SeedInput = recoSeeding.OutputTracksName 
+		             , MatchOutput = "Hlt/Track/Match")
 
 #### FastKalmanFitter
-fastKalmanTrackFit = TrackEventFitter('Hlt2FastTrackFit'
-				      ,TracksInContainer  = "Hlt/Track/Long")
-fastKalmanTrackFit.addTool(TrackMasterFitter, name = 'Fitter')
-fitter = ConfiguredFastFitter( getattr(fastKalmanTrackFit,'Fitter'))
+fastKalman = TrackEventFitter('Hlt2FastTrackFit' ,TracksInContainer  = "Hlt/Track/Long")
+fastKalman.addTool(TrackMasterFitter, name = 'Fitter')
+fitter = ConfiguredFastFitter( getattr(fastKalman,'Fitter'))
 
 #### CreateFastTrackCollection
 recoCopy = CreateFastTrackCollection('TrackCopy'
-		, InputLocations = ["Hlt/Track/Forward", "Hlt/Track/Match"]
+		, InputLocations = [ recoForward.OutputTracksName, recoMatch.MatchOutput ]
 		, OutputLocation = "Hlt/Track/Long"
 		, SlowContainer = True)
 
@@ -123,6 +124,18 @@ recoPV3D =  PatPV3D('Hlt1RecoPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
 recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 
+### Downstream tracking
+PatDownstream = PatDownstream()
+PatDownstream.InputLocation=recoSeeding.OutputTracksName
+PatDownstream.OutputLocation="Hlt/Track/SeedTT"
+PatDownstream.UseForward = True
+PatDownstream.SeedFilter = True
+
+FitSeeding = TrackEventFitter('FitSeedTTTracks')
+FitSeeding.TracksInContainer  = PatDownstream.OutputLocation
+FitSeeding.TracksOutContainer = "Hlt/Track/FitSeedTT"
+FitSeeding.addTool(TrackMasterFitter, name = 'Fitter')
+ConfiguredFastFitter( getattr(FitSeeding,'Fitter'))
 
 ##### Hlt selections
 
@@ -182,33 +195,27 @@ recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = Tru
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
-				  ,  recoVelo
-                                  ,  prepareVelo
+				                  ,  recoVelo
                                   ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
 				  ] )
 
 # Now we add different algorithms for long track reco based on the different reconstruction scenarios
 # first we want to decide if the seeding should run
 
-if not RunSeeding:
 #if only Forward is run, we can write directly to Hlt/Track/Long
-	recoCopy.InputLocations = ["Hlt/Track/Forward"]
-	trackRecoSequence.Members += [ recoForward
-				     , recoCopy]
 # Otherwise we just have to add our stuff
+if not RunSeeding:
+                    recoCopy.InputLocations = ["Hlt/Track/Forward"]
+                    trackRecoSequence.Members += [ recoForward , recoCopy]
 else:
-	trackRecoSequence.Members += [ recoForward
-				     , recoSeeding
-				     , recoMatch
-				     , recoCopy]
+                    trackRecoSequence.Members += [ recoForward , recoSeeding , recoMatch , recoCopy]
 
 #### now we add the fit 
-if RunFastFit:
-	trackRecoSequence.Members += [ fastKalmanTrackFit]
+if RunFastFit    :  trackRecoSequence.Members += [ fastKalman]
+if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 
-if RunCloneKiller:
-	trackRecoSequence.Members += [ cloneKiller ]
-#### and last but least prepareForward
+#### and last prepareForward 
+## TODO: remove as soon as an Hlt2 monitoring line exists for this...
 trackRecoSequence.Members += [ prepareForward]
 
 
@@ -255,45 +262,7 @@ GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') 
 #/// @todo This cannot work, as tracking must have been done to process the rest.
 #//recoSeq.IgnoreFilterPassed = True; // process both track and calo independently
 
-##------------------------------
-## Opts to run the online seeding
-##-----------------------------
-from Configurables import PatSeeding
-PatSeeding = PatSeeding()
-PatSeeding.OutputTracksName="Hlt/Track/Seed"
 
-from Configurables import PatDownstream
-PatDownstream = PatDownstream()
-PatDownstream.InputLocation="Hlt/Track/Seed"
-PatDownstream.OutputLocation="Hlt/Track/SeedTT"
-
-
-##-----------------------------
-## blanking
-##-----------------------------
-## changed: PatSeeding.UseForward = true;
-##/ToolSvc.PatSeedingTool.UseForward = true;
-##/**
-## *
-##// the following is without hit blanking
-##ToolSvc.PatSeedingTool.UseForward = false;
-##// for TT:
-##PatDownstream.UseForward = false;
-##PatDownstream.SeedFilter = false;
-##*/
-
-## with hit blanking
-from Configurables import PatSeedingTool
-PatSeedingTool().UseForward = True
-## for TT:
-PatDownstream.UseForward = True
-PatDownstream.SeedFilter = True
-
-
-
-HltSeedSequence = GaudiSequencer("HltSeedSequence")
-HltSeedSequence.Members = [ PatSeeding, PatDownstream ]
-HltSeedSequence.MeasureTime=True
 
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
@@ -303,5 +272,10 @@ RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
+# warning: Seed is _not_ selfcontained, and relies on Forward having run...
+Seed     = bindMembers( None, [ recoSeeding, PatDownstream ] ).setOutputSelection( PatDownstream.OutputLocation )
+SeedKF   = bindMembers( None, [ Seed, FitSeeding ] ).setOutputSelection( FitSeeding.TracksOutContainer )
+
+HltSeedSequence = GaudiSequencer("HltSeedSequence", MeasureTime = True, Members = Seed.members() )
 HltRecoSequence = recoSeq
 # HltRecoVeloSequence = GaudiSequencer('HltRecoVeloSequence', Members = [ patVeloR, recoVelo ] )
