@@ -1,4 +1,4 @@
-// $Id: RelTableFunctors.h,v 1.1 2009-04-30 12:59:21 jpalac Exp $
+// $Id: RelTableFunctors.h,v 1.2 2009-05-27 13:51:59 jpalac Exp $
 #ifndef MICRODST_RELTABLEFUNCTORS_H 
 #define MICRODST_RELTABLEFUNCTORS_H 1
 
@@ -89,23 +89,15 @@ namespace MicroDST
       TABLE* cloneTable = new TABLE();
 
       typename TABLE::Range relations = table->relations();
-
       for (typename TABLE::Range::const_iterator iRel = relations.begin();
            iRel != relations.end();
            ++iRel ) {
-        if ( iRel->from() ) {
-          typename TABLE::Range range = table->relations(iRel->from());
-          for (typename TABLE::Range::const_iterator iRange = range.begin();
-               iRange != range.end();
-               ++iRange) {
-            typename TABLE::Entry entryClone = m_cloner(*iRange);
-            if (entryClone.from() && entryClone.to() ) {
-              cloneTable->add(entryClone);
-            }
-          } // loop on related Tos
-        } // if From* found
+        typename TABLE::Entry entryClone = m_cloner(*iRel);
+        if (entryClone.from() && entryClone.to() ) {
+          cloneTable->add(entryClone);
+        }
       } // loop on all relations
-  
+      
       return cloneTable;
 
     }
