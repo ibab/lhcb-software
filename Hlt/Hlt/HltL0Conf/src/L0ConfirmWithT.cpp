@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.13 2009-05-27 09:15:21 graven Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.14 2009-05-27 09:16:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,7 @@ StatusCode L0ConfirmWithT::initialize()
   // tool to extrapolate states
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
-  info() << "Selected particle type " << m_particleType << endmsg;
+  debug() << "Selected particle type " << m_particleType << endmsg;
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
   
