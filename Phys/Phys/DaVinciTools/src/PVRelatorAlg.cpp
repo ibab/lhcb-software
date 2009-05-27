@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.5 2009-05-25 08:48:16 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.6 2009-05-27 15:35:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -91,13 +91,15 @@ StatusCode PVRelatorAlg::execute() {
   Particle2Vertex::Table* table = (m_useTable) ? this->tableFromTable() : this->table();
   
   if (0!=table) {
-    if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "Storing relations table in " 
-              << m_P2PVOutputLocation << endmsg;
-      put(table, m_P2PVOutputLocation);
-      } else {
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Storing relations table in " 
+                << m_P2PVOutputLocation << endmsg;
+      verbose() << "Table size " << table->relations().size() << endmsg;
+    }
+    put(table, m_P2PVOutputLocation);
+
+  } else {
       Error("No table created!",10).ignore();
-      }
   }
 
   return StatusCode::SUCCESS;
@@ -105,6 +107,7 @@ StatusCode PVRelatorAlg::execute() {
 //=============================================================================
 Particle2Vertex::Table* PVRelatorAlg::table() const
 {
+
   typedef LHCb::Particle::Container Particles;
   typedef LHCb::RecVertex::Container Vertices;
   typedef Particle2Vertex::LightTable RelTable;  
@@ -119,14 +122,15 @@ Particle2Vertex::Table* PVRelatorAlg::table() const
 
   for (Particles::const_iterator iPart = particles->begin();
        iPart != particles->end(); ++ iPart) {
-    const RelTable::Range range = 
-      m_pvRelator->relatedPVs(*iPart, *vertices).relations();
+    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, *vertices);
+
+    const RelTable::Range range = bestPVTable.relations();
+
     table->merge(range);
   }  
   return table;
  
 }
-//=============================================================================
 //=============================================================================
 Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
 {
@@ -139,40 +143,55 @@ Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
   
   const Table* inputTable = i_get<Table>(m_P2PVInputLocation);
 
-  Table* table = new Table();
+  if (0==inputTable) return 0;
 
-  if (0==inputTable) return table;
+  Table* table = new Table();
 
   const InvTable invTable(*inputTable, 1);
 
-  InvTable::Range range = invTable.relations();
+  InvTable::Range invRange = invTable.relations();
 
   Particles particles;
 
-  Relations::getUniqueTo(range.begin(), range.end(), particles);
+  Relations::getUniqueTo(invRange.begin(), invRange.end(), particles);
 
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "tableFromTable found " 
+            << particles.size() << " Particles" 
+            << endmsg;
+  }
+  
   for (Particles::const_iterator iPart = particles.begin();
        iPart != particles.end(); ++iPart) {
 
     const Table::Range range = inputTable->relations(*iPart);
 
     Vertices vertices;
-    PVs pvs;
-    Relations::getUniqueTo(range.begin(), range.end(), vertices);
-    /// @todo uncomment with LHCb v27r1
-    //    const RelTable::Range rel = 
-    //      m_pvRelator->relatedPVs(*iPart, vertices).relations();
-    /// @todo remove with LHCb v27r1
-    getPVsFromVertexBases(vertices, pvs);
-    const RelTable::Range rel = 
-      m_pvRelator->relatedPVs(*iPart, pvs).relations();
 
-    table->merge(rel);       
-    
+    Relations::getUniqueTo(range.begin(), range.end(), vertices);
+
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "tableFromTable found " 
+                                            << vertices.size() 
+                                            << " related vertices" << endmsg;
+    /// @todo uncomment with LHCb v27r1
+//     const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, vertices);
+
+    /// @todo remove with LHCb v27r1 =========================================
+    PVs pvs;
+    getPVsFromVertexBases(vertices, pvs);    
+    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, pvs);
+    //========================================================================
+    const RelTable::Range rel = bestPVTable.relations();
+
+    if ( msgLevel(MSG::VERBOSE) ) { 
+      verbose() << "Going to add " << rel.size() 
+                << " relations to table" << endmsg;
+    }
+
+    table->merge(rel);       // doesn't seem to work 
   }
 
   return table;
-
 
 }
 //=============================================================================
@@ -184,11 +203,11 @@ PVRelatorAlg::getPVsFromVertexBases(const LHCb::VertexBase::ConstVector& v,
   LHCb::VertexBase::ConstVector::const_iterator iVtx = v.begin();
   for ( ; iVtx != v.end() ; ++ iVtx ) {
     const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(*iVtx);
-    if (pv) {
-      std::cout << "Inserting RecVertex cast from VertexBase" << std::endl;
-      pvs.push_back(pv);
-    } else {
+    if (!pv) {
       Error("VertexBase -> RecVertex dynamic_cast failed!", 10).ignore();
+
+    } else {
+      pvs.push_back(pv);
     }
   }
   

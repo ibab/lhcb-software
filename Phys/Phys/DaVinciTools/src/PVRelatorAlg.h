@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.3 2009-05-25 08:48:16 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.4 2009-05-27 15:35:12 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -43,7 +43,6 @@ private:
   void getPVsFromVertexBases(const LHCb::VertexBase::ConstVector& v,
                              LHCb::RecVertex::ConstVector& pvs) const;
   
-
 private:
 
   std::string m_particleInputLocation;
