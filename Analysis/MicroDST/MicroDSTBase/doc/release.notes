@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.29 2009-05-27 13:57:46 jpalac Exp $
+!$Id: release.notes,v 1.30 2009-05-27 13:59:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -13,6 +13,8 @@
   . TableCloner: avoid unnecessary extra loop.
  - MicroDST/RelationsClonerAlg.h
   . Protect some verbose/debug printout, and add some safety.
+ - cmt/requirements
+  . Increase version to v1r4p1
 
 !====================== MicroDSTBase v1r4 2008-05-11 ======================
 
