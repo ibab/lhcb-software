@@ -1,13 +1,14 @@
-! $Id: release.notes,v 1.18 2009-05-27 06:40:02 graven Exp $ 
+! $Id: release.notes,v 1.19 2009-05-27 14:21:34 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiHlt v2r2 2009-05-27 ==========================
 ! 2009-05-27 - Gerhard Raven
  - adapt to changes in HltDecReport(s)
 
-!========================== LoKiHlt v2r2 2009-05-25 ==========================
  - src/Components/HDRFilter.cpp,
    src/Components/L0Filter.cpp 
    src/Components/ODINFilter.cpp 
