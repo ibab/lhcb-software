@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.54 2008-07-02 12:42:29 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.55 2009-05-27 14:15:57 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -78,14 +78,15 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
   declareProperty("ReadOnly",         m_readonly         = true  );
-  
-  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 120 );
-  
+
+  declareProperty("ConnectionTimeOut", m_connectionTimeOutProp = 120 );
+
   declareProperty("LazyConnect",      m_lazyConnect      = true  );
   declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
                   "Allow direct mapping from CondDB structure to"
                   " transient store.");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -128,6 +129,12 @@ StatusCode CondDBAccessSvc::initialize(){
 
   log << MSG::DEBUG << "Initialize" << endmsg;
 
+  if (m_connectionTimeOutProp) {
+    m_connectionTimeOut = boost::posix_time::seconds(m_connectionTimeOutProp);
+  } else {
+    m_connectionTimeOut = boost::posix_time::pos_infin;
+  }
+
   if ( m_noDB && !m_useCache ) {
     log << MSG::ERROR << "Database access disabled and cache off: I cannot work like that. Ciao!" << endmsg;
     return StatusCode::FAILURE;
@@ -140,13 +147,13 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
       return StatusCode::FAILURE;
     }
-    
+
     if ( ! m_lazyConnect ) {
       sc = i_initializeConnection();
       if (!sc.isSuccess()) return sc;
     }
 
-  } 
+  }
   else {
     log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
   }
@@ -168,7 +175,7 @@ StatusCode CondDBAccessSvc::initialize(){
     log << MSG::FATAL << "Cannot use direct XML mapping without cache (YET)" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   return sc;
 }
 
@@ -181,7 +188,7 @@ StatusCode CondDBAccessSvc::finalize(){
 
   // stop TimeOut thread
   if (NULL != m_timeOutCheckerThread.get()) {
-    m_stop.notify_all(); // tell the thread to stop
+    m_timeOutCheckerThread->interrupt(); // tell the thread to stop
     m_timeOutCheckerThread->join(); // wait for it
     m_timeOutCheckerThread.reset(); // delete it
   }
@@ -207,9 +214,9 @@ StatusCode CondDBAccessSvc::i_initializeConnection(){
   log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
   StatusCode sc = i_openConnection();
   if (!sc.isSuccess()) return sc;
-  
+
   // start TimeOut thread
-  if (m_connectionTimeOut) {
+  if (!m_connectionTimeOut.is_pos_infinity()) {
     touchLastAccess();
     TimeOutChecker tc(this);
     m_timeOutCheckerThread = std::auto_ptr<boost::thread>(new boost::thread(tc));
@@ -241,7 +248,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 
       log << MSG::DEBUG << "Opening connection" << endmsg;
       m_db = dbSvc.openDatabase(connectionString(),m_readonly);
-    
+
     }
     else {
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
@@ -268,7 +275,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 
 StatusCode CondDBAccessSvc::i_validateDefaultTag() {
   MsgStream log(msgSvc(), name() );
-        
+
   // Check the existence of the provided tag.
   StatusCode sc = i_checkTag();
 
@@ -281,7 +288,7 @@ StatusCode CondDBAccessSvc::i_validateDefaultTag() {
     sc = i_checkTag();
     --trials_to_go;
   }
-        
+
   // Fail if the tag is not found
   if (!sc.isSuccess()){
     log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
@@ -399,7 +406,7 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
                                        ?cool::FolderVersioning::SINGLE_VERSION
                                        :cool::FolderVersioning::MULTI_VERSION,
                                        CondDB::getXMLStorageSpec());
-        
+
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
@@ -547,7 +554,7 @@ StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::map
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
@@ -555,7 +562,7 @@ StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::map
     for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
       payload[d->first].setValue<cool::String16M>(d->second);
     }
-    
+
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
 
   } catch (cool::FolderNotFound) {
@@ -648,7 +655,7 @@ std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
       throw GaudiException("Cannot get a pointer to RndmGenSvc","CondDBAccessSvc::generateUniqueTagName",sc);
     }
   }
-  
+
   std::string tag = "";
   do {
     // start with the signature
@@ -698,7 +705,7 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
     reserved.insert(tagName);
 
     // get the list of child nodes (both types)
-    cool::IFolderSetPtr this_folderset = m_db->getFolderSet(path);    
+    cool::IFolderSetPtr this_folderset = m_db->getFolderSet(path);
     std::vector<std::string> folders = this_folderset->listFolders();
     std::vector<std::string> foldersets = this_folderset->listFolderSets();
 
@@ -785,7 +792,7 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
         // now get the data from the cache
         m_cache->get(path,when,channel,since,until,descr,data);
       }
-      
+
       return StatusCode::SUCCESS;
     }
     else {
@@ -815,7 +822,7 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
         since = obj->since();
         until = obj->until();
       }
-      
+
     }
   } catch ( cool::FolderNotFound /*&e*/) {
     //log << MSG::ERROR << e << endmsg;
@@ -849,12 +856,12 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
 
   cool::ValidityKey vk_when = timeToValKey(when);
   cool::ValidityKey vk_since = 0, vk_until = 0;
-    
+
   if (m_useCache) {
-    
+
     // Check if the cache knows about the path
     if ( m_cache->hasPath(path) ) {
-      
+
       // the folder is in the cache
       if ( !use_numeric_chid ) { // we need to convert from name to id
         if (!m_cache->getChannelId(path,channelstr,channel)) {
@@ -869,15 +876,15 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
         return StatusCode::SUCCESS;
       }
     }
-    
+
   }
   // If we get here, either we do not know about the folder, we didn't
   // find the object, or we are not using the cache, so let's try the DB
-  if (m_noDB) { 
+  if (m_noDB) {
     // oops... we are not using the db: no way of getting the object from it
     return StatusCode::FAILURE;
   }
-  
+
   StatusCode sc = i_getObjectFromDB(path,vk_when,data,descr,vk_since,vk_until,use_numeric_chid,channel,channelstr);
   since = valKeyToTime(vk_since);
   until = valKeyToTime(vk_until);
@@ -895,14 +902,14 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
 
   folders.clear();
   foldersets.clear();
-  
+
   try {
 
     if (!m_noDB) { // If I have the DB I always use it!
       DataBaseOperationLock dbLock(this);
       if (database()->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
-        
+
         cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
 
         std::vector<std::string> fldr_names = folderSet->listFolders();
@@ -938,7 +945,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
   }
   return StatusCode::SUCCESS;
 
-  
+
 }
 
 //=========================================================================
@@ -957,7 +964,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
       DataBaseOperationLock dbLock(this);
       if (database()->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
-        
+
         cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
 
         std::vector<std::string> fldr_names = folderSet->listFolders();
@@ -998,7 +1005,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
 // Tells if the path is available in the database.
 //=========================================================================
 bool CondDBAccessSvc::exists(const std::string &path) {
-  
+
   try {
 
     if (!m_noDB) { // If I have the DB I always use it!
@@ -1008,7 +1015,7 @@ bool CondDBAccessSvc::exists(const std::string &path) {
       // if no db, but cache, let's assume we know everything is in there
       return m_cache->hasPath(path);
     }
-    
+
   } catch (coral::Exception &e) {
     MsgStream log(msgSvc(),name());
     report_exception(log,"got CORAL exception",e);
@@ -1021,7 +1028,7 @@ bool CondDBAccessSvc::exists(const std::string &path) {
 // Tells if the path (if it exists) is a folder.
 //=========================================================================
 bool CondDBAccessSvc::isFolder(const std::string &path) {
-  
+
   try {
 
     if (!m_noDB) { // If I have the DB I always use it!
@@ -1031,7 +1038,7 @@ bool CondDBAccessSvc::isFolder(const std::string &path) {
       // if no db, but cache, let's assume we know everything is in there
       return m_cache->isFolder(path);
     }
-    
+
   } catch (coral::Exception &e) {
     MsgStream log(msgSvc(),name());
     report_exception(log,"got CORAL exception",e);
@@ -1044,7 +1051,7 @@ bool CondDBAccessSvc::isFolder(const std::string &path) {
 // Tells if the path (if it exists) is a folderset.
 //=========================================================================
 bool CondDBAccessSvc::isFolderSet(const std::string &path) {
-  
+
   try {
 
     if (!m_noDB) { // If I have the DB I always use it!
@@ -1054,7 +1061,7 @@ bool CondDBAccessSvc::isFolderSet(const std::string &path) {
       // if no db, but cache, let's assume we know everything is in there
       return m_cache->isFolderSet(path);
     }
-    
+
   } catch (coral::Exception &e) {
     MsgStream log(msgSvc(),name());
     report_exception(log,"got CORAL exception",e);
@@ -1101,7 +1108,7 @@ void CondDBAccessSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags )
   }
 
   tags.push_back(LHCb::CondDBNameTagPair(dbName,tagName));
-  
+
 }
 
 //=========================================================================
@@ -1186,7 +1193,7 @@ StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi
   for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
     spec.extend(d->first,cool::StorageType::String16M);
   }
-  
+
   cool::Record payload(spec);
 
   for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
@@ -1228,16 +1235,16 @@ void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path)
   // Get the names of sub-folders and sub-foldersets
   std::vector<std::string> fldr_names, fldrset_names;
   getChildNodes(path, fldr_names, fldrset_names).ignore();
-  
+
   std::string xml;
   CondDB::generateXMLCatalog(folderset_name,fldr_names,fldrset_names,xml);
-  
+
   // Put the data in the cache
   if ( ! m_cache->hasPath(path) )
     cacheAddXMLFolder(path);
-  
+
   // This is needed because we cannot add objects valid for the current event
-  // to the cache using the ICondDBAccessSvc API. 
+  // to the cache using the ICondDBAccessSvc API.
   bool check_enabled = m_cache->setIOVCheck(false);
   cacheAddXMLData(path,Gaudi::Time::epoch(),Gaudi::Time::max(),xml,0).ignore();
   m_cache->setIOVCheck(check_enabled);

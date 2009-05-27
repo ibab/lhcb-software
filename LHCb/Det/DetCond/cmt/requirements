@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.101 2009-04-17 13:32:10 cattanem Exp $
+# $Id: requirements,v 1.102 2009-05-27 14:15:57 marcocle Exp $
 # =============================================================================
 package       DetCond
-version       v12r5p3
+version       v12r6
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
@@ -53,11 +53,7 @@ apply_pattern install_python_modules
 
 # ==============================================================================
 private
-macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) "
-
-macro_append DetCond_use_linkopts " -lboost_date_time-$(Boost_compiler_version)-mt " \
-        Darwin                    " -lboost_date_time-mt-$(Boost_file_version) " \
-        WIN32                     "   boost_date_time-vc71-mt-$(Boost_file_version).lib "
+macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "
 
 apply_pattern QMTest
 # =====================================

@@ -1,5 +1,5 @@
-// $Id: CondDBAccessSvc.h,v 1.37 2008-10-31 09:19:12 cattanem Exp $
-#ifndef COMPONENT_CONDDBACCESSSVC_H 
+// $Id: CondDBAccessSvc.h,v 1.38 2009-05-27 14:15:57 marcocle Exp $
+#ifndef COMPONENT_CONDDBACCESSSVC_H
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
@@ -11,10 +11,11 @@
 #include "DetCond/ICondDBEditor.h"
 #include <set>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/thread/xtime.hpp>
 #include <boost/thread/condition.hpp>
+#include <boost/thread/thread_time.hpp>
 
 #include "CoolKernel/IDatabase.h"
 
@@ -31,7 +32,7 @@ namespace cool {
 }
 
 /** @class CondDBAccessSvc CondDBAccessSvc.h
- *  
+ *
  *  Class used as interface to LCG COOL library API. It should expose as less as
  *  possible COOL internal details.
  *
@@ -43,7 +44,7 @@ class CondDBAccessSvc: public Service,
                        public virtual ICondDBAccessSvc,
                        public virtual ICondDBReader,
                        public virtual ICondDBEditor {
-public: 
+public:
 
   /** Query interfaces of Interface
       @param riid       ID of Interface to be retrieved
@@ -51,7 +52,7 @@ public:
   */
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
-  /// Initilize COOL (CondDB) Access Layer Service
+  /// Initialize COOL (CondDB) Access Layer Service
   virtual StatusCode initialize();
   /// Finalize Service
   virtual StatusCode finalize();
@@ -82,10 +83,10 @@ public:
 
   /// Tells if the path is available in the database.
   virtual bool exists(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folder.
   virtual bool isFolder(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path);
 
@@ -93,7 +94,7 @@ public:
 
   /** Get the current default database tags
    *  @param  tags vector of DB name, tag pairs. Empty if DB not available
-   */ 
+   */
   virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags ) const;
 
   // --------- ICondDBEditor implementation
@@ -132,16 +133,16 @@ public:
 
   /// Used to obtain direct access to the database.
   virtual cool::IDatabasePtr& database() { return m_db; }
-  
+
   /// Convert from Gaudi::Time class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const Gaudi::Time &time) const;
-   
+
   /// Convert from cool::ValidityKey to Gaudi::Time class.
   virtual Gaudi::Time valKeyToTime(const cool::ValidityKey &key) const;
- 
+
   /// Return the currently set TAG to use.
   virtual const std::string &tag() const;
-  
+
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag);
 
@@ -151,20 +152,20 @@ public:
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
                                     const cool::IRecordSpecification& spec);
-  
+
   /// Add a folder-set to the cache (bypass the DB)
   virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr);
-  
+
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path);
-  
+
   /// Add an XML folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path, const std::set<std::string> &fields);
 
   ///Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                     const cool::IRecord& payload, cool::ChannelId channel = 0);
-  
+
   ///Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                      const std::string& data, cool::ChannelId channel = 0);
@@ -181,7 +182,7 @@ public:
 
 protected:
   /// Standard constructor
-  CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc); 
+  CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc);
 
   virtual ~CondDBAccessSvc( ); ///< Destructor
 
@@ -200,13 +201,13 @@ private:
   /** Property CondDBAccessSvc.UseCache: store the retrieved informations into a cache for faster
       later access. */
   bool m_useCache;
-  
+
   /// Property CondDBAccessSvc.CacheLowLevel: minimum fill of the cache.
   size_t m_cacheLL;
 
   /// Property CondDBAccessSvc.CacheHighLevel: maximum fill of the cache.
   size_t m_cacheHL;
-  
+
   /// Property CondDBAccessSvc.NoDB: do not use the database (cache must be on).
   bool m_noDB;
 
@@ -221,7 +222,7 @@ private:
 
   /// Pointer to the service initializing COOL/CORAL.
   ICOOLConfSvc *m_coolConfSvc;
-  
+
   /// Shared pointer to the COOL database instance
   cool::IDatabasePtr m_db;
 
@@ -241,14 +242,14 @@ private:
   /// Enable/disable direct mapping from the database structure to the transient
   /// store using XML persistency format (enabled by default).
   bool m_xmlDirectMapping;
-  
+
   // ----------------------------------------------
   // ---------- Private Member Functions ----------
   // ----------------------------------------------
-  
+
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_initializeConnection();
-  
+
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_openConnection();
 
@@ -266,9 +267,9 @@ private:
                                std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
                                bool use_numeric_chid,
                                cool::ChannelId channel, const std::string &channelstr);
-  
+
   void i_generateXMLCatalogFromFolderset(const std::string &path);
-  
+
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_validateDefaultTag();
 
@@ -279,7 +280,7 @@ private:
   StatusCode i_checkTag(const std::string &tag) const;
 
   /// Generate a tag name that do not create conflicts in the DB.
-  /// Tagnames generated by this mthod will start with "_auto_".
+  /// Tagnames generated by this method will start with "_auto_".
   /// If base value is passed to the method, the result will have
   /// a "_auto_`base`-" prefix.
   std::string generateUniqueTagName(const std::string &base,
@@ -304,16 +305,14 @@ private:
 
   /// Property CondDBAccessSvc.ConnectionTimeOut: How many seconds to keep the connection to the DB open after the
   /// last access (default = 120, 0 means never). The connection will be started again if a new operation is performed.
-  int m_connectionTimeOut;
+  int m_connectionTimeOutProp;
+  boost::posix_time::time_duration m_connectionTimeOut;
 
   /// Mutex to avoid conflicts between the main thread and the thread trying to close the connection.
   boost::mutex m_busy;
 
-  /// Condition used to synchronize the timeout loop to the main one.
-  boost::condition m_stop;
-
   /// The time of last access.
-  boost::xtime     m_lastAccess;
+  boost::system_time     m_lastAccess;
 
   /// Mutex to protect the last access time.
   boost::mutex     m_lastAccessMutex;
@@ -325,78 +324,81 @@ private:
   inline void touchLastAccess()
   {
     boost::mutex::scoped_lock myLock(m_lastAccessMutex);
-    boost::xtime_get(&m_lastAccess,boost::TIME_UTC);
+    m_lastAccess = boost::get_system_time();
   }
-  
+
   /// Get the last access time.
-  inline const boost::xtime &lastAccess() const 
+  inline const boost::system_time &lastAccess() const
   {
     return m_lastAccess;
   }
 
-  class TimeOutChecker 
+  /// Class executed in a separate thread to disconnect from the database if
+  /// a time-out is reached.
+  class TimeOutChecker
   {
+    /// Pointer to the CondDBAccessSvc, used to acquire operation locks and
+    /// access parameters.
     CondDBAccessSvc *m_owner;
+    /// Cached MsgStream to report messages.
     MsgStream        log;
-    //    boost::mutex     &m_busy;
-    //    boost::condition &m_stop;
-    //    boost::xtime     &m_lastAccess;
-    //    int              m_deltaT
-    
+
   public:
     TimeOutChecker(CondDBAccessSvc *owner):
       m_owner(owner),
       log(m_owner->msgSvc(),m_owner->name()+".TimeOutChecker")
     {
     }
-    
 
-    void operator () () 
+    void operator () ()
     {
       log << MSG::VERBOSE << "Starting" << endmsg;
 
-      // prepare lock needed for condition check
-      boost::mutex stop_mutex;
-      boost::mutex::scoped_lock stop_lock(stop_mutex);
-
-      boost::xtime last_access = m_owner->lastAccess();
+      boost::system_time last_access = m_owner->lastAccess();
 
       // set initial check time
-      boost::xtime next_check = last_access;
-      next_check.sec += m_owner->m_connectionTimeOut;
+      boost::system_time next_check = last_access + m_owner->m_connectionTimeOut;
 
-      while ( !m_owner->m_stop.timed_wait(stop_lock,next_check) ) {
+      try {
+        // enter infinite loop
+        while (true) {
+          // Wait until the next check point time is reached.
+          // An early exit must be triggered by a call to this->interrupt(), which
+          // will produce an exception during the sleep.
+          boost::thread::sleep(next_check);
+          log << MSG::VERBOSE << "Time-out reached (" << next_check << ")" << endmsg;
 
-        log << MSG::VERBOSE << "Time-out reached (" << next_check.sec << ")" << endmsg;
+          boost::mutex::scoped_lock busy_lock(m_owner->m_busy);
 
-        boost::mutex::scoped_lock busy_lock(m_owner->m_busy);        
+          if ( last_access == m_owner->lastAccess() ) { // no further accesses
 
-        if ( last_access.sec == m_owner->lastAccess().sec ) { // no further accesses
+            if ( m_owner->database()->isOpen() ) { // close the database
+              log << MSG::INFO << "Disconnect from database after being idle for "
+              << m_owner->m_connectionTimeOut.total_seconds()
+              << "s (will reconnect if needed)"<< endmsg;
+              m_owner->database()->closeDatabase();
+            }
 
-          if ( m_owner->database()->isOpen() ) { // close the database
-            log << MSG::INFO << "Disconnect from database after being idle for "
-                << m_owner->m_connectionTimeOut << "s (will reconnect if needed)"<< endmsg;
-            m_owner->database()->closeDatabase();
+            // schedule the next check for now + dt (seems a good estimate)
+            next_check = boost::get_system_time() + m_owner->m_connectionTimeOut;
+
+          } else {
+
+            log << MSG::VERBOSE << "Wait more" << endmsg;
+
+            // schedule the next check for last_access + dt
+            next_check = last_access = m_owner->lastAccess();
+            next_check += m_owner->m_connectionTimeOut;
           }
-
-          // schedule the next check for now + dt (seems a good estimate)
-          boost::xtime_get(&next_check,boost::TIME_UTC); // current time
-          next_check.sec += m_owner->m_connectionTimeOut;
-
-        } else {
-          
-          log << MSG::VERBOSE << "Wait more" << endmsg;
-
-          // schedule the next check for last_access + dt
-          next_check = last_access = m_owner->lastAccess();
-          next_check.sec += m_owner->m_connectionTimeOut;
-        }        
+        }
       }
+      // Ignore the exception since it is used only to exit from the loop.
+      catch (boost::thread_interrupted&) {}
       log << MSG::VERBOSE << "Stopping" << endmsg;
     }
   };
 
-  class DataBaseOperationLock 
+  class DataBaseOperationLock
   {
     CondDBAccessSvc    *m_owner;
     MsgStream           log;
@@ -425,12 +427,12 @@ private:
         m_owner->m_db->openDatabase(); // ensure that the db is open
       }
     }
- 
-    ~DataBaseOperationLock() 
+
+    ~DataBaseOperationLock()
     {
       m_owner->touchLastAccess(); // update last access time
     }
-  };  
+  };
 
   friend class TimeOutChecker;
   friend class DataBaseOperationLock;
