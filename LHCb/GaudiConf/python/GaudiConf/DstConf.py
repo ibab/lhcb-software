@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.11 2009-05-26 12:54:07 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.12 2009-05-27 15:39:32 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -158,6 +158,14 @@ class DstConf(ConfigurableUser):
                                 , "/Event/Link/Raw/TT/Clusters2MCHits#1"
                                 , "/Event/Link/Raw/IT/Clusters2MCHits#1"
                                 , "/Event/Link/Raw/OT/Times2MCHits#1" ]
+                            # RICH extended information
+                            optItems += [
+                                 "/Event/MC/Rich/OpticalPhotons#1"
+                                ,"/Event/MC/Rich/Tracks#1"
+                                ,"/Event/MC/Rich/Segments#1"
+                                ,"/Event/Link/MC/Particles2MCRichTracks#1"
+                                ,"/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
+                                ]
 
     def _doWritePOOL( self, items, optItems ):
         """

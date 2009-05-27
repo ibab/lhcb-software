@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-05-27 - Chris Jones
+ - Add the RICH extended information to the XDSTs
+
 !======================== GaudiConf v12r3 2009-05-26 ========================
 ! 2009-05-26 - Marco Cattaneo
  - Add DstConf().DstType = "XDST", extended DST containing also MCHits
