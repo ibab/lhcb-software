@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf             v12r3
+use GaudiConf             v12r4
 use GaudiObjDesc          v11r7
 
 #                                         Maintainer
@@ -28,7 +28,7 @@ use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r2   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r16   Det     # Marco Cattaneo
-use DetCond               v12r5p3 Det     # Marco Clemencic
+use DetCond               v12r6   Det     # Marco Clemencic
 use DetDesc               v18r13  Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r9    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v2r3p1  Det     # Marco Clemencic, Matt Needham
