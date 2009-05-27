@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.25 2009-05-22 16:42:54 spradlin Exp $
+$Id: release.notes,v 1.26 2009-05-27 13:40:45 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-05-27 - Gerhard Raven
+ - make Topo2Body.py take pions OR kaons as input
 
 ! 2009-05-22 - J. Nardulli and P. Spradlin
   - Added shared particles for inclusive DX lines

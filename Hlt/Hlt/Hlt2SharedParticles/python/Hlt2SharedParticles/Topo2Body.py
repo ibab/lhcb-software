@@ -22,6 +22,10 @@ Hlt2SharedTopo2Body.DaughtersCuts = {"pi+" : "(ALL)", "K+" : "(ALL)"}
 Hlt2SharedTopo2Body.CombinationCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<0.1) & AALLSAMEBPV"
 Hlt2SharedTopo2Body.MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>1.5*GeV) & (BPVVD>2) & (BPVVDR > 0.2)"
 
-Topo2Body = bindMembers( None, [ GoodPions, GoodKaons, Hlt2SharedTopo2Body ] )
+input = GaudiSequencer('Hlt2SharedTopo2Body_PionsORKaons'
+                      , Members =  GoodPions.members() + GoodKaons.members()
+                      , ModeOR = True
+                      , ShortCircuit = False 
+                      )
 
-
+Topo2Body = bindMembers( None, [ input, Hlt2SharedTopo2Body ] )
