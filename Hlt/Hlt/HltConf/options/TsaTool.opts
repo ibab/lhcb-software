@@ -17,29 +17,3 @@ ToolSvc.TsaConfirmTool.stereoS2.sector = 2;
 ToolSvc.TsaConfirmTool.stereoS3.sector = 3;
 ToolSvc.TsaConfirmTool.stereoS4.sector = 4;
 
-/*
-ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
-
-ToolSvc.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
-
-ToolSvc.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
-ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
-ToolSvc.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
-*/
-//options for T confirmation with L0 muon dimuon
-

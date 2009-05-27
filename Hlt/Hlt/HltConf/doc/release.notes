@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.242 2009-05-27 12:05:12 graven Exp $ 
+! $Id: release.notes,v 1.243 2009-05-27 12:37:39 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 !2009-05-27 - Gerhard Raven
  - reduce hardwired locations in Hlt2TrackFitForIncPhi.py
+ - remove commented out options for TsaTool.opts
 
 !2009-05-25 - Georg Krocker
 - implemented the possibility to use PatSeeding on unused Hits in the HLT2 reco
