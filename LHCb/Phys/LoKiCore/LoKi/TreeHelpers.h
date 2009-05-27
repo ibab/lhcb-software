@@ -1,4 +1,4 @@
-// $Id: TreeHelpers.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: TreeHelpers.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TREEHELPERS_H 
 #define LOKI_TREEHELPERS_H 1
@@ -85,6 +85,7 @@ namespace Decays
     public:
       // ======================================================================
       std::ostream& fillStream( std::ostream& s ) const ;
+      std::string   toString  () const ;
       // ======================================================================
     private:
       // ======================================================================

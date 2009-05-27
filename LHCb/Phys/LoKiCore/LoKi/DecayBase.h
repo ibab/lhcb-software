@@ -1,4 +1,4 @@
-// $Id: DecayBase.h,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
+// $Id: DecayBase.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDERBASE_H 
 #define LOKI_DECAYFINDERBASE_H 1
@@ -74,6 +74,10 @@ namespace LoKi
     // ========================================================================
     /// convert the string ' [ a ]cc ' into ' ( a , aCC ) '  
     std::string _makeCC ( const std::string& input ) const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    Decays::Node LoKi::DecayBase::node ( const std::string& descriptor ) const ;  
     // ========================================================================
   protected:
     // ========================================================================

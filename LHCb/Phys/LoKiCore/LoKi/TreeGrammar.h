@@ -1,4 +1,4 @@
-// $Id: TreeGrammar.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: TreeGrammar.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREEGRAMMAR_H 
 #define DECAYS_TREEGRAMMAR_H 1
@@ -99,12 +99,17 @@ namespace Decays
             >> !( str_p("...") [ tree.tree += true ]        )                  // inclusive 
             >> ')' ;
           
-          operation  = str_p ( "(" ) 
-            >> expression [ operation.tree = arg1 ] 
-            >> +( (   str_p( "&&" )        >> expression [ operation.tree  &= arg1 ] ) | 
-                  ( ( str_p( "||" ) | ',') >> expression [ operation.tree  |= arg1 ] ) ) 
-            >> ')' ;
-          
+          operation  = 
+            ( str_p ( "(" ) 
+              >> expression [ operation.tree = arg1 ] 
+              >> +( ( str_p( "&&" ) >> expression [ operation.tree  &= arg1 ] ) | 
+                    ( str_p( "||" ) >> expression [ operation.tree  |= arg1 ] ) ) 
+              >> ')' ) | 
+            ( str_p ( "[" ) 
+              >> expression [ operation.tree = arg1 ] 
+              >> +( str_p( "," ) >> expression [ operation.tree  |= arg1 ] )
+              >> ']' ) ;
+              
           res = expression [ self.tree = arg1 ] ; 
           
         }      

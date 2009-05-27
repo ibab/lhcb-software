@@ -1,4 +1,4 @@
-// $Id: DecayBase.cpp,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
+// $Id: DecayBase.cpp,v 1.2 2009-05-27 18:37:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // =============================================================================
@@ -69,7 +69,7 @@ StatusCode LoKi::DecayBase::_parse
     ( node , input , _symbols , _particles , err.stream() ) ;
   if ( sc.isFailure() ) 
   {
-    err << std::endl ;
+    err << endmsg ;
     return Error ( "Unable to parse '"+input+"'" , sc ) ;  
   }
   // validate the node 
@@ -103,7 +103,7 @@ StatusCode LoKi::DecayBase::_parse
     ( tree , input , _symbols , _particles , err.stream() ) ;
   if ( sc.isFailure() ) 
   {
-    err << std::endl ;
+    err << endreq ;
     return Error ( "Unable to parse '"+input+"'" , sc ) ;  
   }
   //
@@ -138,6 +138,29 @@ std::string LoKi::DecayBase::_makeCC
   return "( " + _cc + " , " + ppSvc()->cc( _cc ) + " )" ;
 }
 // ========================================================================
+// build the node form the node descriptor
+// ============================================================================
+Decays::Node LoKi::DecayBase::node ( const std::string& descriptor ) const 
+{
+  Decays::Node _node = Decays::Nodes::_Node::Invalid() ;
+  StatusCode sc = _parse ( _node , descriptor ) ;
+  //
+  if ( sc.isFailure() ) 
+  { 
+    Error ( "Error from _parse('" + descriptor + "')" , sc ) ; 
+    return Decays::Nodes::_Node::Invalid() ;                          // RETURN
+  }
+  if ( _node.valid() ) { return _node ; }                             // RETURN 
+  // try to validate it:
+  sc = _node.validate ( ppSvc () )  ;
+  if ( sc.isFailure() ) 
+  { 
+    Error ( "Unable to validate '" + descriptor + "'", sc ) ;
+    return Decays::Nodes::_Node::Invalid() ;                          // RETURN 
+  } 
+  return _node ;                                                      // REUTRN 
+}
+// ============================================================================
 
 
 // =============================================================================

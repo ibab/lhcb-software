@@ -1,6 +1,10 @@
-// $Id: TreeHelpers.cpp,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: TreeHelpers.cpp,v 1.2 2009-05-27 18:37:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <sstream>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -234,9 +238,18 @@ std::ostream& Decays::Parsers::Tree::fillStream ( std::ostream& s ) const
   }
   
   if ( m_children.empty() && m_optional.empty() ) { return s << m_head  ; } // RETURN
+
+
+  s << " (" ;
   
-  
-  s << " (" << m_head ; 
+  switch  ( m_oscillated ) 
+  {
+  case Decays::Trees::Oscillated    : 
+    s << " [" << m_head << "]os "  ; break ;   
+  case Decays::Trees::NotOscillated : 
+    s << " [" << m_head << "]nos " ; break ;   
+  default : s << m_head ;
+  }
   
   s << " " << Decays::Trees::arrow ( m_arrow ) ;
   
@@ -250,13 +263,24 @@ std::ostream& Decays::Parsers::Tree::fillStream ( std::ostream& s ) const
   // 
   return s << " ) " ;
 }
-
-
+// ============================================================================
+// convert to string 
+// ============================================================================
+std::string Decays::Parsers::Tree::toString() const 
+{
+  std::ostringstream s ;
+  fillStream ( s ) ;
+  return s.str() ;
+}
 // ============================================================================
 // operator 
 // ============================================================================
 std::ostream& operator<< ( std::ostream& s , const Decays::Parsers::Tree& t )  
 { return t.fillStream ( s ) ; }
+// ============================================================================
+
+
+
 
 // ============================================================================
 // The END 

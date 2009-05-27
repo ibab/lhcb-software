@@ -1,6 +1,6 @@
-// $Id: NodeGrammar.h,v 1.1 2009-05-22 18:12:36 ibelyaev Exp $
+// $Id: NodeGrammar.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 #ifndef LOKI_NODEGRAMMAR_H 
 #define LOKI_NODEGRAMMAR_H 1
@@ -133,6 +133,8 @@ namespace Decays
             quark      [ atomic.node = arg1 ] |
             // particles 
             parts      [ atomic.node = construct_<Pid>   ( construct_<std::string> ( arg1 , arg2 ) ) ] |
+            // particles 
+            ( str_p("[") >> parts [ atomic.node = construct_<CC>   ( construct_<std::string> ( arg1 , arg2 ) ) ] >> "]cc" ) |
             // symbols 
             symbs      [ atomic.node = construct_<Symbol>( construct_<std::string> ( arg1 , arg2 ) ) ] ;
           ;
