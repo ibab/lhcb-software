@@ -4,6 +4,7 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r17 2009-05-27 ==========================
 ! 2009-05-26 - Gerhard Raven
  - reassign bits in HltDecReports to create more 'stages' and 
    less dynamic range on # of candidates
