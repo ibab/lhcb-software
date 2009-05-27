@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.8 2009-04-30 12:58:55 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.9 2009-05-27 13:57:34 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -83,30 +83,46 @@ namespace MicroDST
     StatusCode execute() 
     {
 
-      debug() << "==> Execute" << endmsg;
-      verbose() << "Going to clone relations from " 
-                << inputTESLocation()
-                << " into " << fullOutputTESLocation() << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "Going to clone relations from " 
+                  << inputTESLocation()
+                  << " into " << fullOutputTESLocation() << endmsg;
+      }
+      
       setFilterPassed(true);
 
       if (exist<TABLE>(inputTESLocation()) )
       {
-        verbose() << "Retrieving relations table from " 
-                  << inputTESLocation() << endmsg;
+        if ( msgLevel(MSG::VERBOSE) ) {
+          verbose() << "Retrieving relations table from " 
+                    << inputTESLocation() << endmsg;
+        }
         const TABLE* table = get<TABLE>(inputTESLocation());
         if (table) {
-          verbose() << "found table!" << endmsg;
+          if ( msgLevel(MSG::VERBOSE) ) {
+            verbose() << "found table with "<< table->relations().size() 
+                      << " entries!" << endmsg;
+          }
           TABLE* cloneTable = m_tableCloner(table);
-          verbose() << "Going to store relations table from " 
-                    << inputTESLocation()
-                    << " into " << fullOutputTESLocation() << endmsg;
+          if ( msgLevel(MSG::VERBOSE) ) {
+            verbose() << "Going to store relations table from " 
+                      << inputTESLocation()
+                      << " into " << fullOutputTESLocation() << endmsg;
+            verbose() << "Number of relations in cloned table: "
+                      << cloneTable->relations().size() << endmsg;
+          }
           put( cloneTable, fullOutputTESLocation() );
           return StatusCode::SUCCESS;
         }
         return StatusCode::FAILURE;
       } else {
-        verbose() << "Found no table at " << inputTESLocation() << ". storing empty table"<< endmsg;
+        if ( msgLevel(MSG::VERBOSE) ) {
+          verbose() << "Found no table at " << inputTESLocation() 
+                    << ". storing empty table"<< endmsg;
+        }
+        
         TABLE* cloneTable = new TABLE();
         put( cloneTable, fullOutputTESLocation() );
         return StatusCode::SUCCESS;
@@ -133,8 +149,15 @@ namespace MicroDST
     inline const CLONER* cloner() { return m_cloner; }
     inline const typename TABLE::From cloneFrom(const typename TABLE::From from) 
     {
+
+      if (0==from) {
+        error() << "FROM is NUL!!!!" << endmsg;
+        return 0;
+      }
       return getStoredClone< _From >(from);
+
     }
+
     inline const typename TABLE::To cloneTo(const typename TABLE::To to) 
     {
       const typename TABLE::To storedTo = getStoredClone< TO_TYPE >(to);
