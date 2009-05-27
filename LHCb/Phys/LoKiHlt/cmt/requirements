@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.6 2009-05-09 19:27:31 ibelyaev Exp $ 
+# $Id: requirements,v 1.7 2009-05-27 06:40:02 graven Exp $ 
 # ============================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           LoKiHlt
-version           v2r2
+version           v2r3
         
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 

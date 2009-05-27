@@ -1,4 +1,4 @@
-// $Id: Hlt.cpp,v 1.3 2008-10-04 11:48:55 ibelyaev Exp $
+// $Id: Hlt.cpp,v 1.4 2009-05-27 06:40:02 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,17 +16,17 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
-// constructor from the selection name 
+// constructor from the decision name 
 // ============================================================================
-LoKi::HLT::HasSelection::HasSelection 
+LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name  ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names ( 1 , name ) 
 {}
 // ============================================================================
-// constructor from the selection names 
+// constructor from the decision names 
 // ============================================================================
-LoKi::HLT::HasSelection::HasSelection 
+LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name1 , 
   const std::string& name2 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
@@ -36,9 +36,9 @@ LoKi::HLT::HasSelection::HasSelection
   m_names.push_back ( name2 ) ;
 }
 // ============================================================================
-// constructor from the selection names 
+// constructor from the decision names 
 // ============================================================================
-LoKi::HLT::HasSelection::HasSelection 
+LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name1 , 
   const std::string& name2 ,
   const std::string& name3 ) 
@@ -50,9 +50,9 @@ LoKi::HLT::HasSelection::HasSelection
   m_names.push_back ( name3 ) ;
 }
 // ============================================================================
-// constructor from the selection names 
+// constructor from the decision names 
 // ============================================================================
-LoKi::HLT::HasSelection::HasSelection 
+LoKi::HLT::HasDecision::HasDecision 
 ( const std::string& name1 , 
   const std::string& name2 ,
   const std::string& name3 , 
@@ -66,29 +66,29 @@ LoKi::HLT::HasSelection::HasSelection
   m_names.push_back ( name4 ) ;
 }
 // ============================================================================
-// constructor form the selection names ("OR") 
+// constructor form the decision names ("OR") 
 // ============================================================================
-LoKi::HLT::HasSelection::HasSelection 
-( const LoKi::HLT::HasSelection::Names& names ) 
+LoKi::HLT::HasDecision::HasDecision 
+( const LoKi::HLT::HasDecision::Names& names ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
   , m_names ( names ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::HLT::HasSelection::result_type
-LoKi::HLT::HasSelection::operator() 
-  ( LoKi::HLT::HasSelection::argument a ) const 
+LoKi::HLT::HasDecision::result_type
+LoKi::HLT::HasDecision::operator() 
+  ( LoKi::HLT::HasDecision::argument a ) const 
 {
   Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
   for ( Names::const_iterator iname = begin() ; end() != iname ; ++iname ) 
-  { if ( a -> hasSelectionName ( *iname ) ) { return true ; } } // RETURN
+  { if ( a -> hasDecisionName ( *iname ) ) { return true ; } } // RETURN
   return false ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
 // ============================================================================
-std::ostream& LoKi::HLT::HasSelection::print 
+std::ostream& LoKi::HLT::HasDecision::print 
 ( std::ostream&      s    , 
   const std::string& name ) const
 {
@@ -124,9 +124,9 @@ std::ostream& LoKi::HLT::HasSelection::print
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
-LoKi::HLT::PassSelection::result_type
-LoKi::HLT::PassSelection::operator() 
-  ( LoKi::HLT::PassSelection::argument a ) const 
+LoKi::HLT::PassDecision::result_type
+LoKi::HLT::PassDecision::operator() 
+  ( LoKi::HLT::PassDecision::argument a ) const 
 {
   Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //

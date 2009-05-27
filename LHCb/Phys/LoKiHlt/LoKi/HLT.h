@@ -1,4 +1,4 @@
-// $Id: HLT.h,v 1.3 2008-10-03 13:07:02 ibelyaev Exp $
+// $Id: HLT.h,v 1.4 2009-05-27 06:40:02 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLT_H 
 #define LOKI_HLT_H 1
@@ -26,15 +26,15 @@ namespace LoKi
   namespace HLT 
   {    
     // ========================================================================
-    /** @class HasSelection
+    /** @class HasDecision
      *  simple function which allows to check the existence 
-     *  of the selection with the given name  
+     *  of the decision with the given name  
      *  @see LHCb::HltDecReports 
      *  @see LoKi::Cuts::HLT_HAS
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class HasSelection 
+    class HasDecision 
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
     protected:
@@ -43,27 +43,27 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from the selection name 
-      HasSelection ( const std::string& name  ) ;
-      /// constructor from the selection names ("OR") 
-      HasSelection ( const std::string& name1 , 
+      /// constructor from the decision name 
+      HasDecision ( const std::string& name  ) ;
+      /// constructor from the decision names ("OR") 
+      HasDecision ( const std::string& name1 , 
                      const std::string& name2 ) ;
-      /// constructor from the selection names ("OR") 
-      HasSelection ( const std::string& name1 , 
+      /// constructor from the decision names ("OR") 
+      HasDecision ( const std::string& name1 , 
                      const std::string& name2 , 
                      const std::string& name3 ) ;
-      /// constructor from the selection names ("OR") 
-      HasSelection ( const std::string& name1 , 
+      /// constructor from the decision names ("OR") 
+      HasDecision ( const std::string& name1 , 
                      const std::string& name2 , 
                      const std::string& name3 ,
                      const std::string& name4 ) ;
-      /// constructor form the selection names ("OR") 
-      HasSelection ( const Names&       names ) ;
+      /// constructor form the decision names ("OR") 
+      HasDecision ( const Names&       names ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~HasSelection () {}
+      virtual ~HasDecision () {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  HasSelection* clone() const 
-      { return new HasSelection ( *this ) ; }
+      virtual  HasDecision* clone() const 
+      { return new HasDecision ( *this ) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
@@ -72,7 +72,7 @@ namespace LoKi
       // ======================================================================
     protected:
       // ======================================================================
-      // get the selection names 
+      // get the decision names 
       const Names& names() const { return m_names ; }
       // ======================================================================
     protected:
@@ -85,57 +85,57 @@ namespace LoKi
     private:
       // ======================================================================
       /// the default constructor is disabled 
-      HasSelection () ;                  // the default constructor is disabled 
+      HasDecision () ;                  // the default constructor is disabled 
       // ======================================================================
     private:
       // ======================================================================
-      /// the list of selection names 
-      Names m_names ; // the list of selection names 
+      /// the list of decision names 
+      Names m_names ; // the list of decision names 
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PassSelection
-     *  simple function which allows to check if the selection  
+    /** @class PassDecision
+     *  simple function which allows to check if the decision  
      *  has been passed  
-     *  of the selection with the given name  
+     *  of the decision with the given name  
      *  @see LHCb::HltDecReports 
      *  @see LoKi::Cuts::HLT_PASS
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    class PassSelection : public HasSelection
+    class PassDecision : public HasDecision
     {
     public:
       // ======================================================================
-      /// constructor from the selection name 
-      PassSelection ( const std::string& name  ) 
-        : HasSelection ( name ) 
+      /// constructor from the decision name 
+      PassDecision ( const std::string& name  ) 
+        : HasDecision ( name ) 
       {}
-      /// constructor from the selection names ("OR") 
-      PassSelection ( const std::string& name1 , 
+      /// constructor from the decision names ("OR") 
+      PassDecision ( const std::string& name1 , 
                       const std::string& name2 ) 
-        : HasSelection ( name1 , name2 ) 
+        : HasDecision ( name1 , name2 ) 
       {}
-      /// constructor from the selection names ("OR") 
-      PassSelection ( const std::string& name1 , 
+      /// constructor from the decision names ("OR") 
+      PassDecision ( const std::string& name1 , 
                       const std::string& name2 , 
                       const std::string& name3 ) 
-        : HasSelection ( name1 , name2 , name3 ) 
+        : HasDecision ( name1 , name2 , name3 ) 
       {}
-      /// constructor from the selection names ("OR") 
-      PassSelection ( const std::string& name1 , 
+      /// constructor from the decision names ("OR") 
+      PassDecision ( const std::string& name1 , 
                       const std::string& name2 , 
                       const std::string& name3 ,
                       const std::string& name4 ) 
-        : HasSelection ( name1 , name2 , name3 , name4 ) 
+        : HasDecision ( name1 , name2 , name3 , name4 ) 
       {}
-      /// constructor form the selection names ("OR") 
-      PassSelection ( const Names& names ) : HasSelection ( names ) {}
+      /// constructor form the decision names ("OR") 
+      PassDecision ( const Names& names ) : HasDecision ( names ) {}
       /// MANDATORY: virtual destructor 
-      virtual ~PassSelection () {}
+      virtual ~PassDecision () {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  PassSelection* clone() const 
-      { return new PassSelection ( *this ) ; }
+      virtual  PassDecision* clone() const 
+      { return new PassDecision ( *this ) ; }
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
@@ -145,12 +145,12 @@ namespace LoKi
     private:
       // ======================================================================
       /// the default constructor is disabled 
-      PassSelection () ;                 // the default constructor is disabled 
+      PassDecision () ;                 // the default constructor is disabled 
       // ======================================================================
     } ;
     // ========================================================================
     /** @class Size 
-     *  simple function which returns the number of known selections 
+     *  simple function which returns the number of known decision 
      *  @see LHCb::HltDecReports 
      *  @see LHCb::HltDecReports::size 
      *  @see LoKi::Cuts::HLT_SIZE 
@@ -175,7 +175,7 @@ namespace LoKi
     };
     // ========================================================================
     /** @class NPass
-     *  simple function which returnn the number of 'passes' selections 
+     *  simple function which returnn the number of 'passes' decision 
      *  @see LHCb::HltDecReports 
      *  @see LHCb::HltDecReports::decReports  
      *  @see LHCb::HltDecReport
