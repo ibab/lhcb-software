@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.241 2009-05-25 12:06:16 gkrocker Exp $ 
+! $Id: release.notes,v 1.242 2009-05-27 12:05:12 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!2009-05-27 - Gerhard Raven
+ - reduce hardwired locations in Hlt2TrackFitForIncPhi.py
+
 !2009-05-25 - Georg Krocker
 - implemented the possibility to use PatSeeding on unused Hits in the HLT2 reco
   sequence via a switch in the beginning of HltReco.py

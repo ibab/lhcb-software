@@ -46,7 +46,8 @@ Hlt2IncPhiTFChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiTFChargedProtoPAlg')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
 #                                   , Hlt2IncPhiTFChargedProtoCombDLL ]
 
-Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
+
+Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForIncPhi"
 # Clones will not be accepted
 Hlt2IncPhiTFChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
@@ -74,7 +75,8 @@ from Configurables import ProtoParticleCALOFilter
 Hlt2IncPhiTFKaons = NoPIDsParticleMaker('Hlt2IncPhiTFKaons')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFKaons ]
 
-Hlt2IncPhiTFKaons.Input =  "Hlt/ProtoP/TFChargedForIncPhi" 
+
+Hlt2IncPhiTFKaons.Input = Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation 
 Hlt2IncPhiTFKaons.Particle = "kaon"
 
 ######################################################################
@@ -92,7 +94,7 @@ Hlt2IncPhiRichParticlesSeq = GaudiSequencer('Hlt2IncPhiRichParticlesSeq')
 # Set up Rich ChargedProtoPAlg
 ######################################################################
 from Configurables import RichTrackCreatorConfig
-RichTrackCreatorConfig().InputTracksLocation = "Hlt/Track/TFForwardForIncPhi"
+RichTrackCreatorConfig().InputTracksLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 
 
 from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
@@ -104,13 +106,14 @@ Hlt2IncPhiRichChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiRichCh
 Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPhiRichChargedProtoPAlg
                                    , Hlt2IncPhiRichChargedProtoCombDLL ]
 
-Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForIncPhi"
+Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
 # Clones will not be accepted
 Hlt2IncPhiRichChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
 Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.AcceptClones = False
 
-Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
+
+Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
 
 ######################################################################
 # Rich ProtoParticles
@@ -131,7 +134,7 @@ Hlt2IncPhiRichChargedProtoPAlg.UseVeloPID = 0
 HltIncPhiRichPIDsKaons = CombinedParticleMaker('HltIncPhiRichPIDsKaons')
 Hlt2IncPhiRichParticlesSeq.Members += [ HltIncPhiRichPIDsKaons ]
 
-HltIncPhiRichPIDsKaons.Input = "Hlt/ProtoP/RichChargedForIncPhi"
+HltIncPhiRichPIDsKaons.Input = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
 HltIncPhiRichPIDsKaons.Particle = "kaon"
 HltIncPhiRichPIDsKaons.addTool(TrackSelector())
 HltIncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
