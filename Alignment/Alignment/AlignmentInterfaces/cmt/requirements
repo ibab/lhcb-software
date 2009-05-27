@@ -10,7 +10,6 @@ version           v2r8
 branches          cmt dict doc AlignmentInterfaces
 
 # =============== dependencies ==============================================
-use TrackEvent	      v*    Event
 use GaudiKernel       v*
 use SolvKernel	      v*    Alignment
 
