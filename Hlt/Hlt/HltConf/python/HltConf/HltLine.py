@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.59 2009-05-06 18:33:49 graven Exp $ 
+# $Id: HltLine.py,v 1.60 2009-05-27 12:39:36 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.59 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.60 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -853,15 +853,13 @@ class Hlt1Line(object):
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
         if _members : 
-            # TODO: if len(_members) = 1, we don't need a sequencer...
-            # TODO: but what about the name of the algorithm?
-            #if len(_members) == 1 : 
-            #    mdict.update( { 'Filter1' : _members[0] })
-            #else :
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )
+
+        # fix numbering scheme of line members
+        self._index = computeIndices( self._configurable )
 
         ## finally assign the decision name!
         self._decision = decisionName ( line )
@@ -945,7 +943,13 @@ class Hlt1Line(object):
         if not self._outputsel :
             raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
         return self._outputsel
-    
+
+    # determine the index for the given algorithm name
+    def index( self, name = None ) :
+        if name :
+            return self._index.index(name) if name in self._index else None
+        else :
+            return self._index
     
     ## Clone the line  
     def clone ( self , name , **args ) :
@@ -1247,8 +1251,9 @@ class Hlt2Line(object):
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )
-        # print 'created HLT2 HltLine configurable for ' + name
-        # print self._configurable
+
+        # fix numbering scheme of line members
+        self._index = computeIndices( self._configurable )
 
         ## finally assign the decision name!
         self._decision = decisionName ( line, 'Hlt2' )
@@ -1296,6 +1301,11 @@ class Hlt2Line(object):
         if not self._decision :
             raise AttributeError, "The line %s does not define valid decision " % self.subname()
         return self._decision
+
+    # determine the index for the given algorithm name
+    def index( self, name ) :
+        return self._index.index(name) if name in self._index else None
+
     ## Clone the line  
     def clone ( self , name , **args ) :
         """
@@ -1368,10 +1378,33 @@ class Hlt2Line(object):
                           postscale = __postscale  ,
                           algos     = __algos      , **__args )
     
-    
+#
+#
+#
+def computeIndices( configurable ) :
+    # note: for decisions, we can have positive sequencer, with negative members
+    #       (OR, or ignoreFilterPassed)
+    #       and if sequencer pass, then no need to check its members..
+    #       But if the aim is to 'number' selections, there is no reason
+    #       to keep the sequencer... On the other hand, we should have 
+    #       a single scheme (both for keeping tracks where we stopped,
+    #       and for selections), and being 'sparse' is not a problem...
+    #       For decisions, the seqeuencer depends on its members,
+    #       so logically, the sequencer comes _after_ the members
+    # As a result, we do a 'depth first' traversal of the tree.
+    list = []
+    if hasattr( configurable, 'Members' ) :
+        for i in getattr( configurable, 'Members' ) : 
+            list += computeIndices(i)
+    elif type(configurable) == Line :
+        stages = [ 'Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale' ]
+        for i in [ getattr( configurable, j ) for j in stages if hasattr(configurable,j) ] :
+            list +=  computeIndices( i )
+    list += [ configurable.name() ]
+    return list
 
 # =============================================================================
-# Soem useful decorations 
+# Some useful decorations 
 # =============================================================================
 ## Calculate the effective length of the string
 #  which is the length from the last '\n'-symbol 
