@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.26 2009-05-27 13:40:45 graven Exp $
+$Id: release.notes,v 1.27 2009-05-27 13:43:20 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -7,6 +7,7 @@ $Id: release.notes,v 1.26 2009-05-27 13:40:45 graven Exp $
 
 ! 2009-05-27 - Gerhard Raven
  - make Topo2Body.py take pions OR kaons as input
+ - some cleanup in V0.py -- use the fact that seed reco is already defined in HltReco
 
 ! 2009-05-22 - J. Nardulli and P. Spradlin
   - Added shared particles for inclusive DX lines

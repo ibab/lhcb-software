@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Hlt2SharedParticles.BasicParticles import NoCutsPions
 from Configurables import GaudiSequencer, CreateHltVzero, HltV0ParticleMakerAlg
 from HltConf.HltLine import bindMembers
-from HltConf.HltReco import HltSeedSequence
+from HltConf.HltReco import Seed, SeedKF
 
 #---------------------------------------------------------------------
 # Special case for Vzero particles  @todo TO BE REVISED
@@ -38,14 +38,12 @@ Hlt2KsDDParticles.MakeKs = True
 Hlt2KsDDParticles.MakeLambda = False
 
 
-importOptions( "$HLTCONFROOT/options/Hlt2SeedForDX.py" )
-importOptions( "$HLTCONFROOT/options/Hlt2FitTT.py" )
 Hlt2V0DDFit = Hlt2V0DD.clone('Hlt2V0DDFit')
-Hlt2V0DDFit.InputTrackContainer = 'Hlt/Track/FitSeedTT'
+Hlt2V0DDFit.InputTrackContainer = SeedKF.outputSelection() 
 Hlt2V0DDFit.OutputVertexContainer = "Hlt/Vertex/KsDDFit"
 
 Hlt2KsDDFitParticles = Hlt2KsDDParticles.clone('Hlt2KsDDFitParticles')
-Hlt2KsDDFitParticles.V0Location = "Hlt/Vertex/KsDDFit"
+Hlt2KsDDFitParticles.V0Location = Hlt2V0DDFit.OutputVertexContainer
 
 ###@TODO/@FIXME there are no Protons...
 #Hlt2LambdaLLParticles = HltV0ParticleMakerAlg('Hlt2LambdaLLParticles')
@@ -60,8 +58,8 @@ Hlt2KsDDFitParticles.V0Location = "Hlt/Vertex/KsDDFit"
 
 #LambdaLL = bindMembers(None, [ NoCutsPions, Protons, Hlt2V0LL, Hlt2LambdaLLParticles ] )
 KsLL     = bindMembers(None, [ NoCutsPions, Hlt2V0LL, Hlt2KsLLParticles ] )
-KsDD     = bindMembers(None, [ HltSeedSequence, Hlt2V0DD, Hlt2KsDDParticles ] )
-KsDDFit  = bindMembers(None, [ GaudiSequencer('SeqHlt2KShortForDX'), GaudiSequencer('SeqFitPionsForKS0'), Hlt2V0DDFit, Hlt2KsDDFitParticles] )
+KsDD     = bindMembers(None, [ Seed, Hlt2V0DD, Hlt2KsDDParticles ] )
+KsDDFit  = bindMembers(None, [ SeedKF, Hlt2V0DDFit, Hlt2KsDDFitParticles] )
 
 
 __all__ = ( KsLL, KsDD )
