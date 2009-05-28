@@ -29,7 +29,7 @@ use CaloDet               v10r2   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r17   Det     # Marco Cattaneo
 use DetCond               v12r6   Det     # Marco Clemencic
-use DetDesc               v18r13  Det     # Marco Clemencic, Juan Palacios
+use DetDesc               v18r13p1 Det    # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r9    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v2r3p1  Det     # Marco Clemencic, Matt Needham
 use Magnet                v5r2    Det     # Adlene Hicheur
