@@ -3,6 +3,7 @@
 
 /** Includes */
 #include "GaudiKernel/GaudiException.h"
+#include <algorithm> // For std::swap_ranges
 
 /** @class StaticArray StaticArray.h "DetDesc/StaticArray.h"
  *
