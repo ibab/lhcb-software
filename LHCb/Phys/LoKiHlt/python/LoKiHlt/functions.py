@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.5 2009-05-27 09:03:53 graven Exp $ 
+# $Id: functions.py,v 1.6 2009-05-28 07:18:14 graven Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -220,7 +220,7 @@ HLT_DECISION =    LoKi.HLT.Decision ()
 HLT_FALSE    =    LoKi.Constant ( _hlt + ',bool'   ) ( False )
 
 ## @see LoKi::Cuts::HLT_HAS
-HLT_HAS      =    LoKi.HLT.HasSelection 
+HLT_HAS      =    LoKi.HLT.HasDecision
 
 ## @see LoKi::Cuts::HLT_NONE
 HLT_NONE     =    LoKi.Constant ( _hlt + ',bool'   ) ( False )
