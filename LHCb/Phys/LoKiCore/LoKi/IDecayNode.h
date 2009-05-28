@@ -1,4 +1,4 @@
-// $Id: IDecayNode.h,v 1.1 2009-05-22 19:15:14 ibelyaev Exp $
+// $Id: IDecayNode.h,v 1.2 2009-05-28 08:55:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IDECAYNODEFINDER_H 
 #define LOKI_IDECAYNODEFINDER_H 1
@@ -16,7 +16,7 @@
 namespace Decays 
 {
   // ==========================================================================
-  /** @class IDecayNodeFactory LoKi/IDecayNodeFactory.h
+  /** @class IDecayNode LoKi/IDecayNode.h
    *  Simple factory for creation of decay nodes 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2009-05-22
@@ -37,10 +37,13 @@ namespace Decays
      *  if ( !node.valid() ){  .. error here ... } 
      *
      *  @endcode 
-     *  @param descriptor (INPUT)  node deccriptor 
+     * 
+     *  For the empty string the "default" node is returned  
+     *
+     *  @param descriptor (INPUT)  node descriptor 
      *  @param constructed node 
      */
-    virtual Node node ( const std::string& decriptor ) const = 0 ;
+    virtual Node node ( const std::string& descriptor = "" ) const = 0 ;
     // ========================================================================
   public:
     // ========================================================================

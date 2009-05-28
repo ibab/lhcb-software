@@ -1,4 +1,4 @@
-// $Id: DecayBase.cpp,v 1.2 2009-05-27 18:37:50 ibelyaev Exp $
+// $Id: DecayBase.cpp,v 1.3 2009-05-28 08:55:34 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // =============================================================================
@@ -30,8 +30,18 @@ LoKi::DecayBase::DecayBase
   const IInterface*  parent )                        //               the parent
   : GaudiTool ( type , name , parent ) 
   //
-  , m_ppSvc      ( 0 )
+  , m_ppSvc        ( 0 )
+  , m_default_node () 
+  , m_default_tree ()
 {
+  declareProperty 
+    ( "DefaultNode"  , 
+      m_default_node ,
+      "The default node" ) ;
+  declareProperty 
+    ( "DefaultTree"  , 
+      m_default_tree ,
+      "The default tree" ) ;
 }
 // =============================================================================
 // destructor 
@@ -142,6 +152,13 @@ std::string LoKi::DecayBase::_makeCC
 // ============================================================================
 Decays::Node LoKi::DecayBase::node ( const std::string& descriptor ) const 
 {
+  if ( descriptor.empty() && !defaultNode().empty() ) 
+  {
+    if ( msgLevel( MSG::DEBUG ) ) 
+    { debug () << "Use default node '" << defaultNode() << "'" << endmsg ; }
+    return node  ( defaultNode() ) ;                                  // RETURN 
+  }
+  //
   Decays::Node _node = Decays::Nodes::_Node::Invalid() ;
   StatusCode sc = _parse ( _node , descriptor ) ;
   //

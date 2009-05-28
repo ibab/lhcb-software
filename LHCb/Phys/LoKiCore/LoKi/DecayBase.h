@@ -1,4 +1,4 @@
-// $Id: DecayBase.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
+// $Id: DecayBase.h,v 1.3 2009-05-28 08:55:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDERBASE_H 
 #define LOKI_DECAYFINDERBASE_H 1
@@ -77,7 +77,7 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    Decays::Node LoKi::DecayBase::node ( const std::string& descriptor ) const ;  
+    Decays::Node node ( const std::string& descriptor ) const ;  
     // ========================================================================
   protected:
     // ========================================================================
@@ -88,6 +88,9 @@ namespace LoKi
         ( "LHCb::ParticlePropertySvc" , true ) ;
       return m_ppSvc ;                                                // RETURN 
     }
+    // ========================================================================
+    const std::string& defaultNode () const { return m_default_node ; }
+    const std::string& defaultTree () const { return m_default_tree ; }      
     // ========================================================================
   private:
     // ========================================================================  
@@ -102,6 +105,11 @@ namespace LoKi
     // ========================================================================
     /// the particle proeprty service 
     mutable const LHCb::IParticlePropertySvc* m_ppSvc ; //  particle properties
+    // ========================================================================    
+    /// the default node  
+    std::string m_default_node ;                            // the default node  
+    /// the default tree 
+    std::string m_default_tree ;                            // the default tree
     // ========================================================================    
   };
   // ==========================================================================
