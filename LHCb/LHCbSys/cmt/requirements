@@ -43,16 +43,16 @@ use XmlTools              v6r3    Tools   # Marco Clemencic
 # Event data model
 use EventSys              v25r0   Event   # Marco Cattaneo
 use DAQEvent              v7r20   Event   # Marco Cattaneo, Markus Frank
-use DigiEvent             v2r11   Event   # Marco Cattaneo and sub-det experts
-use EventAssoc            v4r6    Event   # Ivan Belyaev
+use DigiEvent             v2r11p1 Event   # Marco Cattaneo and sub-det experts
+use EventAssoc            v4r6p1  Event   # Ivan Belyaev
 use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r6    Event   # Gloria Corti
-use HltEvent              v8r17   Event   # Jose Angel Hernando-Morata
+use HltEvent              v8r17p1 Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
 use LumiEvent             v2r0    Event   # Jaap Panman
 use L0Event               v17r5   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r14   Event   # Gloria Corti and sub-det experts
-use PackedEvent           v3r5    Event   # Marco Cattaneo, Olivier Callot
+use PackedEvent           v3r5p1  Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r8   Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r20   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r20   Event   # Matt Needham
@@ -78,7 +78,7 @@ use DaVinciMCKernel       v3r3    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use HltInterfaces         v2r0   Kernel  # Patrick Koppenburg
 use LHCbAlgs              v2r26   Kernel  # Marco Cattaneo
-use LinkerInstances       v3r4   Event   # Thomas Ruf
+use LinkerInstances       v3r4p1  Event   # Thomas Ruf
 use LoKi                  v8r1   Phys    # Ivan Belyaev
 use LoKiAlgo              v8r1   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v8r1   Phys    # Ivan Belyaev
@@ -91,18 +91,18 @@ use LoKiMC                v8r3    Phys    # Ivan Belyaev
 use LoKiNumbers           v8r2    Phys    # Ivan Belyaev
 use LoKiPhys              v8r5    Phys    # Ivan Belyaev
 use LoKiPhysMC            v8r3    Phys    # Ivan Belyaev
-use L0Interfaces          v1r4    L0      # Olivier Deschamps
-use MCInterfaces          v1r8   Kernel  # Marco Cattaneo et al.
+use L0Interfaces          v1r4p1  L0      # Olivier Deschamps
+use MCInterfaces          v1r8p1  Kernel  # Marco Cattaneo et al.
 use MDF                   v3r18   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3    Tf      # Stephanie Hansmann-Menzemer
-use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
+use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
 use RichRecBase           v3r22   Rich    # Chris Jones
 use SimComponents         v2r17  Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r14   ST      # Matt Needham
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
-use TfKernel              v2r11   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v4r3    Tr      # Matt Needham
+use TfKernel              v2r11p1 Tf      # Stephanie Hansmann-Menzemer
+use TrackInterfaces       v4r3p1  Tr      # Matt Needham
 use TsaKernel             v3r5   Tf      # Matt Needham
 # LHCb  Examples
 use DetCondExample        v11r7  Ex      # Marco Clemencic
