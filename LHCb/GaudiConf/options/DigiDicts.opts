@@ -1,4 +1,0 @@
-#pragma print on
-// This file ($STDOPTS/DigiDicts.opts) is obsolete, use GaudiPoolDbRoot.opts directly
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#pragma print off

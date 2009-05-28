@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-05-28 - Marco Cattaneo
+ - Remove obsolete options files SimDicts.opts, SimContents.opts,
+   DigiContent.opts, DstContent.opts
+
 !======================== GaudiConf v12r3 2009-05-27 ========================
 ! 2009-05-27 - Chris Jones
  - Add the RICH extended information to the XDSTs
