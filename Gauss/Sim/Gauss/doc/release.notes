@@ -4,6 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v37r1 2009-05-28 =============================
+! 2009-05-28 - Gloria CORTI
+ - Include directly the options GaudiPoolDbRoot.opts instead of through
+   SimDicts.opts that only had 'pragma print off' that prevented seeing the
+   files included and configurable configurations.
+   . Common.opts
+ - Add monitoring of multiple scattering in muon system
+   . Monitor.opts 
+ - Use latest version of DecFiles v18r* (forces use of decay file with mixing
+   ON).
+   . requirements
+
 ! 2009-05-26 - Silvia Miglioranzi
  - Update of QMTest gauss-MC09.qmt (and corresponding ref files) which runs
    with the options used for production:
