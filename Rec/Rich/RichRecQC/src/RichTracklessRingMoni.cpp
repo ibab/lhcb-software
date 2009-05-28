@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.2 2009-05-28 10:29:07 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.3 2009-05-28 10:30:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -137,9 +137,9 @@ StatusCode TracklessRingMoni::execute()
       plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
               0, 200, m_nBins );
-      plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
-              RAD+" Refitted Trackless Ring Variance",
-              0, m_maxFitVariance[rad], m_nBins );
+      //plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
+      //        RAD+" Refitted Trackless Ring Variance",
+      //        0, m_maxFitVariance[rad], m_nBins );
     }
 
   }//outer ring loop
