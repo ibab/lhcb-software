@@ -21,7 +21,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009", "2008", "DC06"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009","2008","MC09","DC06"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
     
@@ -87,6 +87,11 @@ class DDDBConf(ConfigurableUser):
             raise ValueError("Invalid value %r for property DetDesc().DataType."
                              " (allowed: %r)"% (dataType,
                                                 self.__data_types_handlers__.keys()))
+        if dataType in [ "DC06", "MC09" ]:
+            sim = self.getProp("Simulation")
+            if not sim:
+                log.info("%s data is _always_ simulation", dataType )
+        
         # calls the specific configuration function for the requested data type
         self.__data_types_handlers__[dataType](self)
 
@@ -109,40 +114,45 @@ class DDDBConf(ConfigurableUser):
 
     def __2009_conf__(self):
         """
-        2009-specific configuration.
+        Default configuration for 2009 data and corresponding MonteCarlo
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20090330")
-        self.__set_tag__(["LHCBCOND"], "head-20090402")
-        self.__set_tag__(["SIMCOND"], "sim-20090402-vc-mu100")
+        self.__set_tag__(["DDDB"], "MC-20090526")
+        self.__set_tag__(["LHCBCOND"], "head-20090508")
+        self.__set_tag__(["SIMCOND"], "sim-20090508-vc-md100")
     
     def __2008_conf__(self):
         """
-        2008-specific configuration.
+        Default configuration for 2008 data and corresponding MonteCarlo
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20090330")
         self.__set_tag__(["LHCBCOND"], "head-20090402")
         self.__set_tag__(["SIMCOND"], "sim-20090212")
     
+    def __MC09_conf__(self):
+        """
+        Default configuration for MC09 MonteCarlo production and analysis
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "MC-20090526")
+        self.__set_tag__(["SIMCOND"], "sim-20090402-vc-md100")
+    
     def __DC06_conf__(self):
         """
-        DC06-specific configuration.
+        Default configuration for DC06 MonteCarlo production and analysis
         """
         # Set the tags
         tag = "DC06-20081002"
         self.__set_tag__(["DDDB", "LHCBCOND"], tag)
         
-        # Special for DC06
-        sim = self.getProp("Simulation")
-        if not sim:
-            log.info("DC06 data is _always_ simulation")
-        # the configuration of the database for DC06 is like the one for real data
-        # (no SIMCOND) 
+        # Specials for DC06
+
+        # The configuration of the database is like the one for real data (no SIMCOND) 
         CondDB().Simulation = False
         
-        from Configurables import MagneticFieldSvc
         # Force negative polarity (i.e. don't take it from ONLINE)
+        from Configurables import MagneticFieldSvc
         MagneticFieldSvc(Polarity = -1,
                          OutputLevel = ERROR)
 
@@ -151,4 +161,5 @@ class DDDBConf(ConfigurableUser):
     
     __data_types_handlers__ =  { "2009": __2009_conf__,
                                  "2008": __2008_conf__,
+                                 "MC09": __MC09_conf__,
                                  "DC06": __DC06_conf__ }
