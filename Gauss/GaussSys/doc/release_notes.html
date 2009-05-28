@@ -3,9 +3,10 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-</PRE><H1><A NAME="v37r0">2009-04-08 - GaussSys v37r0</A></H1><PRE>
-<H2><A NAME="Note">DC09 version. Support latest DDDB tags lhcb-20090330
-   and SIMCOND tag sim-20090402-xx
+</PRE><H1><A NAME="v37r1">2009-04-08 - GaussSys v37r0</A></H1><PRE>
+<H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090526
+   and SIMCOND tag sim-20090402-xx. Previous tags are depracated: results
+   may be inconsistent.
    </A></H2>
 <H3><A NAME="Use">This version uses:
    LHCb v26r3 (and Gaudi v20r4)
@@ -13,9 +14,9 @@ Purpose: LHCb Simulation program
    (via LCG_GeneratorsInterfaces)
    HepMC 2.03.09 (via LCG_Interfaces)
    Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
-   <b>DecFiles v17r0</b>, 
+   <b>DecFiles v18r0</b>, 
    ParamFiles v8r0, 
-   SQLDDDB v5r3, FieldMap v5r* (latest v5r1), 
+   SQLDDDB v5r3, FieldMap v5r* (latest v5r2), 
    XmlVis v1r11,
    herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
@@ -39,6 +40,136 @@ Purpose: LHCb Simulation program
    reference files for 1 MinBias event created.
  - QMtests activated in GaussSys requirements file.
  
+!======================== Gauss v37r1 2009-05-28 =============================
+! 2009-05-28 - Gloria CORTI
+ - Include directly the options GaudiPoolDbRoot.opts instead of through
+   SimDicts.opts that only had 'pragma print off' that prevented seeing the
+   files included and configurable configurations.
+   . Common.opts
+ - Add monitoring of multiple scattering in muon system
+   . Monitor.opts
+ - Use latest version of DecFiles v18r* (forces use of decay file with mixing
+   ON).
+   . requirements
+
+! 2009-05-26 - Silvia Miglioranzi
+ - Update of QMTest gauss-MC09.qmt (and corresponding ref files) which runs
+   with the options used for production:
+   - $APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py
+   - $APPCONFIGOPTS/Conditions/MC09-20090519-vc-md100.py
+   - $LBPYTHIAROOT/options/Pythia.opts.
+
+! 2009-05-25 - Silvia Miglioranzi
+ - Update of QMTest gauss-gen-MC09.qmt (and corresponding ref files) which runs
+   with the options used for production:
+   - $APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py
+   - $APPCONFIGOPTS/Conditions/MC09-20090519-vc-md100.py
+   - $LBPYTHIAROOT/options/Pythia.opts.
+
+! 2009-05-20 - Silvia Miglioranzi
+ - Update of ref file for QMTest gauss-gen-MC09.qmt (for slc4_ia32_gcc34_dbg
+   platform).
+
+! 2009-05-14 - Silvia Miglioranzi
+ - Update of QMTest gauss-MC09.qmt (EVTGEN options patch no longer needed) and
+   update of the corresponding ref files. Update of gauss-2008.qmt
+   ref files (few Rich messages in the stdoutput are no longer produced).
+
+! 2009-05-08 - Silvia Miglioranzi
+ - New QMTest (gauss-gen-MC09.qmt) was added to the suite of Gauss tests; it is
+   running in generator stand-alone mode over 1K of "11144103" events. A set of
+   .ref files for this test were added.
+
+! 2009-04-16 - Silvia Miglioranzi
+ - One QMTest was renamed (from gauss-MC09.qmt to gauss-mc09.qmt).
+
+! 2009-04-08 - Silvia Miglioranzi
+ - New QMTest (gauss-MC09.qmt) was added to the suite of Gauss tests; it is
+   running the new Gauss-MC09.py steering script. A set of .ref files for this
+   test were added.
+
+!========================== EvtGen v11r1 2009-05-27 ==========================
+! 2009-05-25 - Mark Whitehead
+ - EvtCPUtil.cpp: Bugs in incoherentmix routine fixed.
+
+! 2009-04-14 - Patrick Robbe
+ - EvtModelReg.cpp: reintroduce EvtLambdaB2LambdaV decay model
+
+!====================== Generators v10r1 2009-05-27 ==========================
+! 2009-04-23 - Patrick Robbe
+ - Add possibility to obtain Upsilon from higher mass states, in
+   UpsilonDaughtersInLHCb
+
+!===================== LbBcVegPy v2r1 2009-05-26 =====================
+! 2009-05-26 - Gloria CORTI
+ - Put command for control as "+=" instead of "=" to allow to set energy
+   in primary Gauss options.
+
+!=========================== LbMIB v3r3 2009-05-05 ===========================
+! 2009-05-05 - Magnus Lieng
+ - Added variable 'CombW' to TTree 'Particles' in root file generation
+   scripts. 'CombW' is equal to 'PartW' multiplied by 'LossW' of the related
+   event. 'CombW' thus represents the likelyhood of the given particle to be
+   generated P = CombW/Sum(CombW). The variable is present only for user
+   analysis. It is not used by LbMIB itself.
+   .makeRootFileFromNewFormat.py
+   .makeRootFileFromOldFormat.py
+
+ - Changed script name 'makeRootFile.py' to 'makeRootFileFromNewFormat.py' to
+   to make the separation between it and 'makeRootFileFromOldFormat.py' more
+   obvious.
+   .makeRootFile.py
+   .makeRootFileFromNewFormat.py
+
+ - Added option file example for the use of the time correlated source.
+   .TimeCorr-Example.opts
+
+ - Fixed histogram generation. Dimensions are now plotted in cm.
+   .TimeCorrSource.cpp
+
+ - Fixed random interaction selection. The linear search in the root file did
+   not return the correct value. Result was that the first interaction in the
+   envelope was always selected.
+   .TimeCorrSource.cpp
+
+!======================== GaussTools v15r3 2009-05-26 ========================
+! 2009-05-26 - Gloria CORTI
+ - Put protection for bug #50862 where chraged patricle go into repeting
+   zero steps in a given volume. Real fix is in geometry. When the new cut
+   (ZeroStepsCut) is applied a messgae is printed.
+   . TrCutsRunAction.{h,cpp}
+   . ZeroStepsCut.{h,cpp}    - NEW
+
+!======================== GaussRICH v9r4p1 2009-05-28 ========================
+! 2009-04-24 - Sajan Easo
+    - Commented out some redundant printout lines from RichG4Cerenkov.cc.
+
+!======================== MuonMoniSim v2r5 2009-05-28 ========================
+! 2009-04-27  - Stefania Vecchi
+ - added Algorithm MuonMultipleScatteringChecher: provide histograms to check
+   the MS simulation in CALORIMETERS and MuonFilters
+
+!=============================================================================
+</PRE><H1><A NAME="v37r0">2009-04-08 - GaussSys v37r0</A></H1><PRE>
+<H2><A NAME="Note">DC09 version. Support latest DDDB tags lhcb-20090330
+   and SIMCOND tag sim-20090402-xx
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   <b>DecFiles v17r0</b>, 
+   ParamFiles v8r0, 
+   SQLDDDB v5r3, FieldMap v5r* (latest v5r1), 
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
 !======================== Gauss v37r0 2009-04-08 =============================
 ! 2009-04-08 - Patrick ROBBE
  - First version of script to produce spill-over events with Gauss with 'older'
