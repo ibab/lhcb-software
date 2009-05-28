@@ -36,5 +36,3 @@ apply_pattern    component_library library=HltLine
 # ======= the patterns ========================================================
 macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
 apply_pattern install_python_modules
-
-macro_append Boost_linkopts " $(Boost_linkopts_regex) "

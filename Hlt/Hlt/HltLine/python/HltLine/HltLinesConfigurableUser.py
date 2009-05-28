@@ -3,10 +3,10 @@
 #  @author Gerhard Raven  (Gerhard.Raven@nikhef.nl)
 #  @date   25/03/2009
 
-__version__ = "$Id: HltLinesConfigurableUser.py,v 1.1.1.1 2009-05-28 09:57:08 graven Exp $"
+__version__ = "$Id: HltLinesConfigurableUser.py,v 1.2 2009-05-28 19:59:43 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
-from LHCbKernel.Configuration import *
+from LHCbKernel.Configuration import LHCbConfigurableUser
 
 # ----------------------------------------------------------------------------------
 
