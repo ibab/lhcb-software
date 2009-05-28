@@ -1,0 +1,40 @@
+#============================================================================
+# Created    : 2009-05-28
+# Maintainer : Gerhard raven 
+#============================================================================
+package           HltLine
+version           v1r0
+
+# Structure
+#============================================================================
+branches          cmt doc src python
+include_path none
+
+# Used packages
+#============================================================================
+use GaudiAlg            v*
+
+use Boost               v*  LCG_Interfaces
+use Python              v*  LCG_Interfaces 
+use AIDA                v*  LCG_Interfaces
+use HltEvent            v*  Event
+
+use HltBase             v*  Hlt
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltLine    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltLine
+
+# =============================================================================
+# ======= the patterns ========================================================
+macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
+apply_pattern install_python_modules
+
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
