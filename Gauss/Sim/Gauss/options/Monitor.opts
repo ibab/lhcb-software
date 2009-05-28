@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.26 2008-10-08 13:05:36 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.27 2009-05-28 16:53:16 gcorti Exp $ 
 
 /** @file 
  * 
@@ -83,5 +83,6 @@ HcalMonitor.OutputLevel = 4;
 
 // Muon system
 DetectorsMonitor.Members += { "MuonHitChecker" };
+DetectorsMonitor.Members += { "MuonMultipleScatteringChecker" };
 MuonHitChecker.FullDetail = true;
 
