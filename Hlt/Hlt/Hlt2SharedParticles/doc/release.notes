@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.28 2009-05-28 12:45:01 graven Exp $
+$Id: release.notes,v 1.29 2009-05-28 19:52:28 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -7,6 +7,7 @@ $Id: release.notes,v 1.28 2009-05-28 12:45:01 graven Exp $
 
 ! 2009-05-28 - Gerhard Raven
  - follow move of HltLine.py to Hlt/HltLine
+ - use pythonized HltKShort config in V0.py
 
 ! 2009-05-27 - Gerhard Raven
  - make Topo2Body.py take pions OR kaons as input
