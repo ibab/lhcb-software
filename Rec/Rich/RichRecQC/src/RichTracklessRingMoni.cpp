@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.1 2009-05-22 16:24:06 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.2 2009-05-28 10:29:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,7 +35,7 @@ TracklessRingMoni::TracklessRingMoni( const std::string& name,
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "NumberBins", m_nBins = 100 );
   declareProperty( "MaxFitVariance",
-                   m_maxFitVariance = boost::assign::list_of(200)(200)(200) );
+                   m_maxFitVariance = boost::assign::list_of(100)(100)(100) );
 }
 
 // Destructor
@@ -137,6 +137,9 @@ StatusCode TracklessRingMoni::execute()
       plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
               0, 200, m_nBins );
+      plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
+              RAD+" Refitted Trackless Ring Variance",
+              0, m_maxFitVariance[rad], m_nBins );
     }
 
   }//outer ring loop

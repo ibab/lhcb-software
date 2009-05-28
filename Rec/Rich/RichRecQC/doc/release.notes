@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-28 - Chris Jones
+ - Replace MessageSvc() with getConfigurable("MessageSvc") in python
+   Configuration to avoid problems with online running, where a different
+   Message Service type is used.
+
 !======================= RichRecQC v2r29 2009-05-26 ==========================
 ! 2009-05-26 - Chris Jones
  - Rework the configurables a little to avoid importing the ring finders by 
