@@ -19,7 +19,7 @@ def getstatus(filename):
     return status
 
 
-def stageinvisitor(data,dirname,fileindir):
+def stageinvisitor(data,dirname,fileindir):#IGNORE:W0613
     if len(fileindir)>0:
         stcmd  = "stagein -A deferred --nowait --rdonly "
         stcmd += " -p %s " % stagepool
