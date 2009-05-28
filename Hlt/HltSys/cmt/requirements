@@ -8,6 +8,7 @@ branches cmt doc options
 #=======================================================
 
 use HltConf             v2r8    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v1r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltBase             v6r4    Hlt   # Gerhard Raven
 use HltCommon           v5r5    Hlt   # Gerhard Raven
 
