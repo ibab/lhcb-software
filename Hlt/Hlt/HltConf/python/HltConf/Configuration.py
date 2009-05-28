@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.82 2009-05-28 12:02:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.83 2009-05-28 12:44:31 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -269,8 +269,8 @@ class HltConf(LHCbConfigurableUser):
             
 
     def postConfigAction(self) : 
-        from HltConf.HltLine     import Hlt1Line
-        from HltConf.HltLine     import Hlt2Line
+        from HltLine.HltLine     import Hlt1Line
+        from HltLine.HltLine     import Hlt2Line
         # make sure 'strings' is known...
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         #if 'LoKiCore.functions' not in HltFactory().Modules : HltFactory().Modules += [ 'LoKiCore.functions' ]

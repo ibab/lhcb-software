@@ -9,30 +9,27 @@
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.BasicParticles import NoCutsPions
 from Configurables import GaudiSequencer, CreateHltVzero, HltV0ParticleMakerAlg
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from HltConf.HltReco import Seed, SeedKF
+from HltKshort.HltKshort import createHltV0DD, createHltV0LL
 
 #---------------------------------------------------------------------
 # Special case for Vzero particles  @todo TO BE REVISED
 #---------------------------------------------------------------------
 
-Hlt2V0LL = CreateHltVzero('Hlt2V0LL')
-importOptions("$HLTKSHORTROOT/options/HltV0LL.opts")
-Hlt2V0LL.InputTrackContainer = "Hlt/Track/Forward"
+Hlt2V0LL = createHltV0LL( 'Hlt2V0LL', input = 'Hlt/Track/Forward' )
 
 Hlt2KsLLParticles = HltV0ParticleMakerAlg('Hlt2KsLLParticles')
-Hlt2KsLLParticles.V0Location = "Hlt/Vertex/KsLL" 
+Hlt2KsLLParticles.V0Location = Hlt2V0LL.OutputVertexContainer
 Hlt2KsLLParticles.RefitVertex = True   #/// @todo Remove when covariance is fixed
 Hlt2KsLLParticles.MakeKs = True 
 Hlt2KsLLParticles.MakeLambda = False 
 Hlt2KsLLParticles.InputLocations = [ NoCutsPions.outputSelection() ]
 
 
-Hlt2V0DD = CreateHltVzero('Hlt2V0DD')
-importOptions( "$HLTKSHORTROOT/options/HltV0DD.opts" )
-
+Hlt2V0DD = createHltV0DD( 'Hlt2V0DD', input = 'Hlt/Track/Forward' )
 Hlt2KsDDParticles = HltV0ParticleMakerAlg("Hlt2KsDDParticles")
-Hlt2KsDDParticles.V0Location = "Hlt/Vertex/KsDD" 
+Hlt2KsDDParticles.V0Location = Hlt2V0DD.OutputVertexContainer
 Hlt2KsDDParticles.RefitVertex = True
 Hlt2KsDDParticles.MakeKs = True
 Hlt2KsDDParticles.MakeLambda = False

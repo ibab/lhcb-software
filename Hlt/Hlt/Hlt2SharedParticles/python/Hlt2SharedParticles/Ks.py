@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.GoodParticles import GoodPions
 from Configurables import CombineParticles
-from HltConf.HltLine import bindMembers, Hlt2Member
+from HltLine.HltLine import bindMembers, Hlt2Member
 
 __all__ = ( 'KsLL' )
 

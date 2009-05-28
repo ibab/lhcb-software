@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter

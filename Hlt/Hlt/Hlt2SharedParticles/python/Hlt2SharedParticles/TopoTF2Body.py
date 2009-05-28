@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
 from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 
 __all__ = ( 'TopoTF2Body' )
 

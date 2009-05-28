@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Configurables import FilterDesktop
 from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
 ##########################################################################

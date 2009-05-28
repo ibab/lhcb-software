@@ -7,7 +7,7 @@
 #
 ##
 from Gaudi.Configuration import *
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Configurables import PhotonMaker, ResolvedPi0Maker, MergedPi0Maker
 from GaudiKernel.SystemOfUnits import MeV
 ##########################################################################

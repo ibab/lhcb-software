@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.BasicParticles import Muons
 from Configurables import CombineParticles, FilterDesktop
-from HltConf.HltLine import bindMembers, Hlt2Member
+from HltLine.HltLine import bindMembers, Hlt2Member
 
 __all__ = ( 'DiMuon' , 'Jpsi2MuMu' , 'HighPtJpsi2MuMu' )
 

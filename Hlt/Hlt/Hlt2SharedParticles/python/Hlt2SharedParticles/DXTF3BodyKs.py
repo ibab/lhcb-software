@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
 from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
 from Hlt2SharedParticles.DXTF2BodyKs import DXTF2BodyKsDD
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Hlt2SharedParticles.V0 import KsDD
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.8 2009-05-28 12:02:26 graven Exp $
+# $Id: HltReco.py,v 1.9 2009-05-28 12:44:31 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -57,7 +57,7 @@ from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Configurables import TrackEventFitter, TrackMasterFitter, TrackKalmanFilter, TrackMasterExtrapolator  #@gk for TrackFit
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 from Configurables import PatSeeding, PatSeedingTool, PatMatch, CreateFastTrackCollection #@gk for PatSeeding

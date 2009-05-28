@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
 from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 
 __all__ = ( 'Dplus2KPiPi','Dplus2KKPi','Dplus2KPiPiCS','Dplus2PiPiPi' )
 

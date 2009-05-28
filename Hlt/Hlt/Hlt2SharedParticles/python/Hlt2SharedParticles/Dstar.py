@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
 from Hlt2SharedParticles.BasicParticles import NoCutsPions
 from Hlt2SharedParticles.D0 import D02KPi, D02KK, D02PiPi
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 
 __all__ = ( 'DstarWithD02KPi', 'DstarWithD02KK', 'DstarWithD02PiPi' )
 

@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
 from Hlt2SharedParticles.BasicParticles import Electrons
-from HltConf.HltLine import bindMembers, Hlt2Member
+from HltLine.HltLine import bindMembers, Hlt2Member
 
 __all__ = ( 'DiElectron'  )
 

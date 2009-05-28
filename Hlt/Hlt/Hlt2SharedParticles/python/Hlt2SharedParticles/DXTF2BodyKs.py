@@ -9,7 +9,7 @@
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
 from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Hlt2SharedParticles.V0 import KsDDFit
 
 __all__ = ( 'DXTF2BodyKsDD' )

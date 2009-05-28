@@ -5,7 +5,7 @@
 ##
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Hlt2SharedParticles.GoodParticles import GoodPions
 
 __all__ = ('Rho0')

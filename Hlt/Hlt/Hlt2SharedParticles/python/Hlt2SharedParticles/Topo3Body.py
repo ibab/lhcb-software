@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import CombineParticles, FilterDesktop
 from Hlt2SharedParticles.GoodParticles import GoodPions
 from Hlt2SharedParticles.Topo2Body import Topo2Body
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 
 __all__ = ( 'Topo3Body' )
 

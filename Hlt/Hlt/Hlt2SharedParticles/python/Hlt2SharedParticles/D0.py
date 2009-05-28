@@ -11,8 +11,8 @@ from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
 from Hlt2SharedParticles.Ks import KsLL
 from Hlt2SharedParticles.V0 import KsLL as KsV0LL
 from Configurables import CombineParticles, GaudiSequencer
-from HltConf.HltLine import Hlt2Member
-from HltConf.HltLine import bindMembers
+from HltLine.HltLine import Hlt2Member
+from HltLine.HltLine import bindMembers
 
 __all__ = ( 'D02KPi', 'D02PiPi', 'D02KK', 'D02KsPiPi', 'D02KsKK' )
 ##########################################################################################
@@ -58,7 +58,9 @@ Hlt2SharedD02KsPiPi = Hlt2Member( CombineParticles
                                 , InputLocations = [ GoodPions, KsV0LL, KsLL ]
                                 )
 
-_KsLL =  GaudiSequencer('SeqKsForHlt2SharedD02KsHH', ModeOR=True, ShortCircuit=False, Members = KsV0LL.members()  + KsLL.members())
+_KsLL =  bindMembers( None
+                    , [ GaudiSequencer('SeqKsForHlt2SharedD02KsHH', ModeOR=True, ShortCircuit=False, Members = KsV0LL.members()  + KsLL.members()) ]
+                    ).setOutputSelection( [ KsV0LL.outputSelection(), KsLL.outputSelection()] )
 ####@TODO:@FIXME: maybe we need seperate D0 -> Ks_1 Pi Pi, D0 -> Ks_2 Pi Pi instead of the this OR...
 
 
