@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: requirements,v 1.2 2009-05-28 19:48:18 graven Exp $
 # =============================================================================
 # The helper package for configuration of Hlt1
 # =============================================================================
@@ -26,7 +26,7 @@ use       HltConf     v*  Hlt
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro Hlt1LinesConfUserModules "Hlt1Lines.HltBeamGasLines Hlt1Lines.HltElectronLines Hlt1Lines.HltExpressLines Hlt1Lines.HltL0Lines Hlt1Lines.LumiCounterDefinition Hlt1Lines.HltLumiLines Hlt1Lines.HltVeloLines Hlt1Lines.HltBeamGasLines Hlt1Lines.HltCommissioningLines Hlt1Lines.HltHadronLines Hlt1Lines.HltMuonLines Hlt1Lines.HltVeloLines Hlt1Lines.HltPhotonLines"
+#macro Hlt1LinesConfUserModules "Hlt1Lines.LumiCounterDefinition Hlt1Lines.HltLumiLines Hlt1Lines.HltBeamGasLines Hlt1Lines.HltElectronLines Hlt1Lines.HltExpressLines Hlt1Lines.HltL0Lines Hlt1Lines.HltVeloLines Hlt1Lines.HltBeamGasLines Hlt1Lines.HltCommissioningLines Hlt1Lines.HltHadronLines Hlt1Lines.HltMuonLines Hlt1Lines.HltVeloLines Hlt1Lines.HltPhotonLines"
 apply_pattern install_python_modules
 # =============================================================================
 
