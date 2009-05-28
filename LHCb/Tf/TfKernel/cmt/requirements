@@ -3,7 +3,7 @@
 # Maintainer : Tracking 'A-Team' for the moment ... Then someone else.
 #============================================================================
 package           TfKernel
-version           v2r11
+version           v2r11p1
 #============================================================================
 
 #============================================================================
@@ -36,3 +36,7 @@ apply_pattern reflex_dictionary                                      \
               headerfiles=$(TFKERNELROOT)/dict/TfKernelDict.h        \
               selectionfile=$(TFKERNELROOT)/dict/TfKernelDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

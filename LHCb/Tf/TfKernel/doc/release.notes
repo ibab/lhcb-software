@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r11p1 2009-05-28 ====================
+! 2009-05-28 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !============================ TfKernel v2r11 2009-05-07 ======================
 ! 2009-03-13 - Olivier Callot
  - Modify the VeloRHit and VeloPhiHit constructors to define the width as
