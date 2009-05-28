@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.31 2008-12-11 12:11:43 gcorti Exp $ 
+// $Id: Common.opts,v 1.32 2009-05-28 16:52:06 gcorti Exp $ 
 
 /** @file 
  * 
@@ -34,7 +34,7 @@ EventDataSvc.ForceLeaves         = true ;
 
 // POOL persistency 
 EventPersistencySvc.CnvServices  = [];  
-#include "$STDOPTS/SimDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // Other outputs
 ApplicationMgr.HistogramPersistency = "NONE";
