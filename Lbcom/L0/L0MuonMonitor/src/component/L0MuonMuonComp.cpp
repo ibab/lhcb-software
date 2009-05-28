@@ -1,7 +1,8 @@
-// $Id: L0MuonMuonComp.cpp,v 1.3 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.4 2009-05-28 13:52:36 jucogan Exp $
 // Include files 
 
 #include <math.h>
+#include <fstream>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -36,6 +37,7 @@ L0MuonMuonComp::L0MuonMuonComp( const std::string& name,
   : L0MuonMonitorBase ( name , pSvcLocator )
 {
   declareProperty( "MuonZS"  , m_muonZS = true);
+  declareProperty( "OutputFileName"  , m_outputFileName = "");
 }
 //=============================================================================
 // Destructor
@@ -216,6 +218,7 @@ StatusCode L0MuonMuonComp::finalize() {
   
   olsErrorSummary(info());
   tilesMismatchSummary(info());
+  if (m_outputFileName.size()>0) tilesMismatchSummary();
   
   return L0MuonMonitorBase::finalize();  // must be called after all other actions
 }
@@ -629,4 +632,74 @@ void L0MuonMuonComp::tilesMismatchSummary(MsgStream & msg) const{
 //   }
 //   msg<<"---";
 
+}
+void L0MuonMuonComp::tilesMismatchSummary() const{
+
+  std::ofstream fout;
+  fout.open(m_outputFileName.c_str());
+
+  std::map<LHCb::MuonTileID,int>::const_iterator ittile;
+
+  std::map<LHCb::MuonTileID,std::vector<LHCb::MuonTileID> > olsmismatch;
+  std::map<LHCb::MuonTileID,std::vector<LHCb::MuonTileID> >::iterator iolsmismatch;
+  for (ittile=m_tiles_mismatch.begin(); ittile!=m_tiles_mismatch.end(); ++ittile) {
+    LHCb::MuonTileID tile=ittile->first;
+    LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+    iolsmismatch=olsmismatch.find(ol);
+    if (iolsmismatch==olsmismatch.end()) {
+      std::vector<LHCb::MuonTileID> vide;
+      olsmismatch[ol]=vide;
+    }
+    
+    olsmismatch[ol].push_back(tile);
+  }
+
+  fout<<"--- L0Muon/Muon comparison error summary : "<<m_tiles_mismatch.size()<<" errors detected "
+     <<" on "<<olsmismatch.size()<<" links"<<"\n";;
+
+  for (iolsmismatch=olsmismatch.begin(); iolsmismatch!=olsmismatch.end(); ++iolsmismatch){
+    LHCb::MuonTileID ol=iolsmismatch->first;
+    LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+    int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+    LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+    int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+
+    std::vector<LHCb::MuonTileID> ltiles=iolsmismatch->second;
+
+    fout<<"-  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+       <<" PB"<<ipb<<" PU"<<ipu
+       <<"\t ol= "<<ol.toString()
+       <<" : "
+       <<"\t nb of tiles in error= "<<ltiles.size()<<"\n";;
+
+    std::vector<LHCb::MuonTileID>::iterator itiles;
+    for (itiles=ltiles.begin(); itiles<ltiles.end(); ++itiles){
+      LHCb::MuonTileID tile=*itiles;
+      const int nerrors=m_tiles_mismatch.find(tile)->second;
+      fout<<"-- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+         <<" PB"<<ipb<<" PU"<<ipu
+         <<"\t ol= "<<ol.toString()
+         <<" :"
+         <<"\t tile= "<<tile.toString()
+         <<"\t : "<<nerrors<<" errors"<<"\n";;
+    }
+  }
+
+//   for (ittile=m_tiles_mismatch.begin(); ittile!=m_tiles_mismatch.end(); ++ittile) {
+//     LHCb::MuonTileID tile=ittile->first;
+//     int nerrors=ittile->second;
+//     LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(tile);
+//     int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+//     LHCb::MuonTileID mid_pu=tile.containerID(MuonLayout(2,2));
+//     int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+    
+//     fout<<"-- "<<"Q"<<(tile.quarter()+1)<<" M"<<(tile.station()+1)<<" R"<<(tile.region()+1)
+//        <<" PB"<<ipb<<" PU"<<ipu
+//        <<"\t ol= "<<m_opt_link_layout.contains(tile).toString()
+//        <<"\t tile= "<<tile.toString()
+//        <<"\t : "<<nerrors<<" errors"<<"\n";
+//   }
+//   fout<<"---"<<"\n";
+  fout.close();
+  
 }

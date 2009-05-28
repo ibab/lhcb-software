@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.h,v 1.2 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonMuonComp.h,v 1.3 2009-05-28 13:52:36 jucogan Exp $
 #ifndef COMPONENT_L0MUONMUONCOMP_H 
 #define COMPONENT_L0MUONMUONCOMP_H 1
 
@@ -48,11 +48,13 @@ private:
                          std::vector<std::pair<LHCb::MuonTileID,int > > & diff);
   
   void tilesMismatchSummary(MsgStream & msg) const;
+  void tilesMismatchSummary() const;
 
   std::map<LHCb::MuonTileID,int> m_tiles_mismatch;
 
-  bool m_muonZS; 
-
+  bool m_muonZS;                 /// use Muon ZeroSuppressed banks
+  std::string m_outputFileName;  /// Output file name
+  
   //  IEventTimeDecoder* m_odin;
 
   L0MuonChannelsHistos* m_channelHist_l0muon;
