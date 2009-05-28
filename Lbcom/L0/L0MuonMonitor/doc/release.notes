@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.22 2009-02-20 12:28:19 cattanem Exp $
+! $Id: release.notes,v 1.23 2009-05-28 13:53:04 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
+! 2009-05-28 - Julien Cogan
+ - L0MuonPadsHistos, L0MuonCandHistos : 
+    o correct 2D histograms filling (requires a version of L0/L0MuonKernel
+      AFTER v8r6)
+    o add the unweighted option for 2D histos (e.g. for pdm events)
+ - L0MuonMuonComp : add the possibility to write the summary on a file
+ 
 !========================== L0MuonMonitor v1r4 2009-02-20 =================
 ! 2009-02-20 - Julien Cogan
  - Fix untested status code
