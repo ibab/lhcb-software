@@ -1,4 +1,4 @@
-// $Id: MonUtilities.h,v 1.5 2008-11-07 16:23:38 jucogan Exp $
+// $Id: MonUtilities.h,v 1.6 2009-05-28 13:44:27 jucogan Exp $
 #ifndef COMPONENT_MONUTILITIES_H 
 #define COMPONENT_MONUTILITIES_H 1
 
@@ -33,7 +33,10 @@ namespace L0Muon
     void filterTilesWithStation(std::vector<LHCb::MuonTileID>& original,
                                 std::vector<LHCb::MuonTileID>& filtered,
                                 unsigned int station);
+
     void flipCoord(int &x, int&y, const int qua);
+    void offsetCoord(double &x, double&y, const int qua);
+
     std::string channelTypeName(Channel_type e);
     std::string quarterName(int qua);
     std::string boardName(int board);

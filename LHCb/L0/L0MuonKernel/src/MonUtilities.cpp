@@ -1,4 +1,4 @@
-// $Id: MonUtilities.cpp,v 1.4 2008-09-21 21:36:58 jucogan Exp $
+// $Id: MonUtilities.cpp,v 1.5 2009-05-28 13:44:27 jucogan Exp $
 // Include files 
 
 #include <sstream>
@@ -61,6 +61,27 @@ void L0Muon::MonUtilities::flipCoord(int &x, int&y, const int qua)
   };
 }
   
+void L0Muon::MonUtilities::offsetCoord(double &x, double&y, const int qua)
+{
+  switch ( qua ) {   
+  case 0: 
+    x+=0.5;
+    y+=0.5;
+    break;
+  case 1: 
+    x+=0.5;
+    y-=0.5;
+    break;
+  case 2: 
+    x-=0.5;
+    y-=0.5;
+    break;
+  case 3: 
+    x-=0.5;
+    y+=0.5;
+    break;
+  };
+}
   
 std::string  L0Muon::MonUtilities::channelTypeName(Channel_type e)
 { 
