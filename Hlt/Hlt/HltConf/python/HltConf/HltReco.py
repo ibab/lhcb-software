@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.7 2009-05-27 13:51:01 graven Exp $
+# $Id: HltReco.py,v 1.8 2009-05-28 12:02:26 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -35,10 +35,10 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
-          , 'Seed'
+          , 'Seed'            # run Seeding
           , 'SeedKF'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
-	      , 'HltSeedSequence' # run Seeding
+	      , 'HltSeedSequence' 
           )
 #############################################################################################
 # Switches for different reco scenarios
@@ -273,8 +273,8 @@ Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
 # warning: Seed is _not_ selfcontained, and relies on Forward having run...
-Seed     = bindMembers( None, [ recoSeeding, PatDownstream ] ).setOutputSelection( PatDownstream.OutputLocation )
-SeedKF   = bindMembers( None, [ Seed, FitSeeding ] ).setOutputSelection( FitSeeding.TracksOutContainer )
+Seed     = bindMembers( None, [ recoSeeding, PatDownstream ] )
+SeedKF   = bindMembers( None, [ Seed, FitSeeding ] )
 
 HltSeedSequence = GaudiSequencer("HltSeedSequence", MeasureTime = True, Members = Seed.members() )
 HltRecoSequence = recoSeq

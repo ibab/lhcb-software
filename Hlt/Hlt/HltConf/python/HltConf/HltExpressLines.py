@@ -1,5 +1,5 @@
-from HltConf.HltLinesConfigurableUser import *
-from HltConf.HltLine import Hlt1Line as Line
+from HltLine.HltLinesConfigurableUser import *
+from HltLine.HltLine import Hlt1Line as Line
 #
 # Define lines that define the XPress stream
 #

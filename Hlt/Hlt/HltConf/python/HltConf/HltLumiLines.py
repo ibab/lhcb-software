@@ -5,9 +5,9 @@
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 
-from HltConf.HltLinesConfigurableUser import *
-from HltConf.HltLine import Hlt1Line   as Line
-from HltConf.HltLine import Hlt1Member as Member
+from HltLine.HltLinesConfigurableUser import *
+from HltLine.HltLine import Hlt1Line   as Line
+from HltLine.HltLine import Hlt1Member as Member
 
 from HltConf.LumiCounterDefinition import LumiCounterDefinitionConf
 from Configurables import ( LumiCountVertices,

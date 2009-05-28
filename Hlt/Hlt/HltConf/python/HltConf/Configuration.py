@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.81 2009-05-21 08:25:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.82 2009-05-28 12:02:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -11,10 +11,10 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltANNSvc 
-from HltConf.HltLine     import hlt1Lines
-from HltConf.HltLine     import hlt2Lines
-from HltConf.HltLine     import hlt1Selections
-from HltConf.HltLine     import hlt1Decisions
+from HltLine.HltLine     import hlt1Lines
+from HltLine.HltLine     import hlt2Lines
+from HltLine.HltLine     import hlt1Selections
+from HltLine.HltLine     import hlt1Decisions
 from HltConf.HltCommissioningLines  import HltCommissioningLinesConf
 from HltConf.HltVeloLines     import HltVeloLinesConf
 from HltConf.HltL0Lines       import HltL0LinesConf
@@ -40,6 +40,7 @@ class HltConf(LHCbConfigurableUser):
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
                              , Hlt1Conf
+                             #, Hlt2MuonLinesConf
                              , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
                 , "HltType"                    : 'Hlt1+Hlt2'
@@ -135,6 +136,11 @@ class HltConf(LHCbConfigurableUser):
                                    }
                     for i in reqs.split('+') :
                         if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
+                # add some Hlt2Lines from configurables
+                #HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
+                #from Configurables import Hlt2MuonLinesConf
+                #Hlt2MuonLinesConf()
+
 
     def configureRoutingBits(self) :
         ## set triggerbits
@@ -173,12 +179,31 @@ class HltConf(LHCbConfigurableUser):
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
-        missingSelections = [ i for i in missing if not i.endswith('Decision') ]
-        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
-        HltANNSvc().Hlt1SelectionID.update( extraSelections )
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
         extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
         HltANNSvc().Hlt1SelectionID.update( extraDecisions )
+
+        missingSelections = [ i for i in missing if not i.endswith('Decision') ]
+
+        if False :
+            for i in hlt1Lines() :
+                decisionName = i.name() + 'Decision'
+                if decisionName in HltANNSvc().Hlt1SelectionID :
+                    id = HltANNSvc().Hlt1SelectionID[ decisionName ] 
+                else :
+                    id = None
+
+                if id :
+                    for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
+                        if key in hlt1Selections()['All'] :
+                            print ' selection %s in line %s should have ID %d:%d' % ( key,  i.name(), id, value)
+                        #else :
+                        #    print ' line %s, algo %s does not have a selection? ' % (i.name(),key)
+                else :
+                    print 'Hlt1Line %s not known to ANNSvc??' % i.name()
+
+        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
+        HltANNSvc().Hlt1SelectionID.update( extraSelections )
         print '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc'
         print '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc' 
 

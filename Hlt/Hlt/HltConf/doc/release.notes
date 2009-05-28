@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.245 2009-05-27 13:51:00 graven Exp $ 
+! $Id: release.notes,v 1.246 2009-05-28 12:02:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!2009-05-28 - Gerhard Raven
+ - follow move of HltLine.cpp to Hlt/HltLine
+
 !2009-05-27 - Gerhard Raven
  - reduce hardwired locations in Hlt2TrackFitForIncPhi.py
  - remove commented out options for TsaTool.opts

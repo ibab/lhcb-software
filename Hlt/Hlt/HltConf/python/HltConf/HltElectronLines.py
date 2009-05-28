@@ -2,11 +2,11 @@
 from Gaudi.Configuration import * 
 
 
-from HltConf.HltLinesConfigurableUser import *
-from HltConf.HltLine import Hlt1Line   as Line
-from HltConf.HltLine import Hlt1Member as Member
-from HltConf.HltLine import bindMembers
-from HltConf.HltLine import Hlt1Tool   as Tool
+from HltLine.HltLinesConfigurableUser import *
+from HltLine.HltLine import Hlt1Line   as Line
+from HltLine.HltLine import Hlt1Member as Member
+from HltLine.HltLine import bindMembers
+from HltLine.HltLine import Hlt1Tool   as Tool
 from HltConf.HltL0Candidates import *
 
 

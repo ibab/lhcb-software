@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.9 2009-04-28 19:55:01 graven Exp $
+# $Id: HltVeloLines.py,v 1.10 2009-05-28 12:02:26 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,15 +9,15 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 #
 # VELO (closing procedure) specific HLT trigger lines
 #
-from HltConf.HltLinesConfigurableUser import *
-from HltConf.HltLine import Hlt1Line   as Line
-from HltConf.HltLine import Hlt1Member as Member
+from HltLine.HltLinesConfigurableUser import *
+from HltLine.HltLine import Hlt1Line   as Line
+from HltLine.HltLine import Hlt1Member as Member
 
 class HltVeloLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Prescale'  : { 'Hlt1VeloClosing' : 1, 'Hlt1Velo.Side' : 0.0001 }  # overrule inherited default
