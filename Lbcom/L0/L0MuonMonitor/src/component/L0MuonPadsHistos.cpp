@@ -1,5 +1,7 @@
-// $Id: L0MuonPadsHistos.cpp,v 1.3 2009-02-18 13:39:32 jucogan Exp $
+// $Id: L0MuonPadsHistos.cpp,v 1.4 2009-05-28 13:51:51 jucogan Exp $
 // Include files 
+
+#include  <math.h>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -27,6 +29,9 @@ L0MuonPadsHistos::L0MuonPadsHistos( const std::string& type,
   : GaudiHistoTool ( type, name , parent )
 {
   declareInterface<L0MuonPadsHistos>(this);
+  
+  declareProperty( "unweighted"  , m_unweighted  = false ) ;
+
   
   m_stationLayouts[L0Muon::MonUtilities::M1]=MuonLayout(24,8);
   m_stationLayouts[L0Muon::MonUtilities::M2]=MuonLayout(48,8);
@@ -101,10 +106,15 @@ void L0MuonPadsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int
     int f=1<<reg;
     for (int ix=X*f; ix<X*f+f; ++ix){
       for (int iy=Y*f; iy<Y*f+f; ++iy){
-        int x= ix;
-        int y= iy;
-        L0Muon::MonUtilities::flipCoord(x,y,qua);
-        fill(m_hmap[sta],x,y,1./(1.*f*f));
+        int iix= ix;
+        int iiy= iy;
+        L0Muon::MonUtilities::flipCoord(iix,iiy,qua);
+        double x= iix;
+        double y= iiy;
+        L0Muon::MonUtilities::offsetCoord(x,y,qua);
+        double weight=1./(1.*f*f);
+        if (m_unweighted) weight=1.;
+        fill(m_hmap[sta],x,y,weight);
       }
     }
     ++multi[sta][reg];
@@ -129,3 +139,4 @@ void L0MuonPadsHistos::fillHistos(int *npad)
       fill(m_hmulti[sta],npad[sta],1);
   }
 }
+

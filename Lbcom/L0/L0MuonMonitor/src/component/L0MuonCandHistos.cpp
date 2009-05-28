@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.cpp,v 1.6 2009-02-18 13:39:32 jucogan Exp $
+// $Id: L0MuonCandHistos.cpp,v 1.7 2009-05-28 13:51:51 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,8 @@ L0MuonCandHistos::L0MuonCandHistos( const std::string& type,
   : GaudiHistoTool ( type, name , parent )
 {
   declareInterface<L0MuonCandHistos>(this);
+
+  declareProperty( "unweighted"  , m_unweighted  = false ) ;
 
   m_stationLayouts[L0Muon::MonUtilities::M1]=MuonLayout(24,8);
   m_stationLayouts[L0Muon::MonUtilities::M2]=MuonLayout(48,8);
@@ -117,10 +119,15 @@ void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts, int bid
         
         for (int ix=X*f; ix<X*f+f; ++ix){
           for (int iy=Y*f; iy<Y*f+f; ++iy){
-            int x= ix;
-            int y= iy;
-            L0Muon::MonUtilities::flipCoord(x,y,qua);
-            fill(m_hpos[sta],x,y,1./(1.*f*f));
+            int iix= ix;
+            int iiy= iy;
+            L0Muon::MonUtilities::flipCoord(iix,iiy,qua);
+            double x=iix;
+            double y=iiy;
+            L0Muon::MonUtilities::offsetCoord(x,y,qua);
+            double weight=1./(1.*f*f);
+            if (m_unweighted) weight=1.;
+            fill(m_hpos[sta],x,y,weight);
           }
         }
       }

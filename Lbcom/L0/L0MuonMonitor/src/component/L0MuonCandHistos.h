@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.h,v 1.3 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonCandHistos.h,v 1.4 2009-05-28 13:51:51 jucogan Exp $
 #ifndef COMPONENT_L0MUONCANDHISTOS_H 
 #define COMPONENT_L0MUONCANDHISTOS_H 1
 
@@ -37,6 +37,8 @@ public:
 protected:
 
 private:
+
+  bool  m_unweighted; // do not weight the 2D histos according to the region (e.g. for PDM runs)
 
   MuonLayout m_stationLayouts[3];
 
