@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.3 2009-05-19 17:50:13 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.4 2009-05-28 15:42:07 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -170,7 +170,7 @@ void ST::STTAEClusterMonitor::monitorClusters() {
           const double totalCharge = cluster->totalCharge();
 
           std::string id2DADCBase = "Cluster ADC values vs sampling point";
-          std::string idprofADCBase =  "Mean Cluster ADC values vs sampling point";
+          std::string idprofADCBase =  "ADC MPV vs sampling point";// PREMPTIVE - CURRENTLY THIS IS THE MEAN VALUE
           plot2D(sample, totalCharge, id2DADCBase, id2DADCBase, -m_maxSample, m_maxSample, -2., 202., m_nSamples, 51);
           // Always fill histograms per readout quadrant for TT
           if(detType() == "TT") {
