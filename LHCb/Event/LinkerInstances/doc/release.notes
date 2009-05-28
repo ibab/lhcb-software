@@ -3,6 +3,10 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+!==================== LinkerInstances v3r4p1 2009-05-28 =======================
+! 2009-05-28 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !==================== LinkerInstances v3r4 2007-12-11 =========================
 ! 2007-12-11 - Thomas Ruf
  - modified the help for linkedto and linkedfrom

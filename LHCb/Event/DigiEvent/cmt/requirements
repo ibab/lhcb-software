@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.19 2009-03-01 09:56:02 mneedham Exp $
+# $Id: requirements,v 1.20 2009-05-28 14:18:59 cattanem Exp $
 package DigiEvent
-version v2r11
+version v2r11p1
 
 branches Event xml cmt doc
 
@@ -24,3 +24,7 @@ macro_append DigiEventObj2Dict_dependencies DigiEventCustomDict
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
 apply_pattern god_dictionary files=../xml/*.xml
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.21 2007-12-09 20:13:20 ibelyaev Exp $
+# $Id: requirements,v 1.22 2009-05-28 14:18:22 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version  v3r4
+version  v3r4p1
 branches cmt dict doc python xml 
 
 use LinkerEvent  v*    Event
@@ -24,17 +24,11 @@ apply_pattern reflex_dictionary                                          \
               selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
               options="-U__MINGW32__"
 
-#============================================================================
-# Hack for cmt v1r19 bug to link dictionary on windows
-#============================================================================
-macro LinkerInstancesDict_use_linkopts $(use_linkopts)
-
 # =============================================================================
 # Standard patterns
 # =============================================================================
 apply_pattern install_python_modules 
 
-
-# =============================================================================
-# The END 
-# =============================================================================
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

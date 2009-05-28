@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.28 2009-05-06 15:32:52 cattanem Exp $
+# $Id: requirements,v 1.29 2009-05-28 14:16:50 cattanem Exp $
 # =============================================================================
 # Created    : 19/12/2003
 # =============================================================================
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           EventAssoc
-version           v4r6
+version           v4r6p1
 
 # =============== structure ===================================================
 branches          cmt doc dict 
@@ -27,6 +27,6 @@ apply_pattern     reflex_dictionary                              \
                   selectionfile=../dict/selection.xml            \
                   options="-U__MINGW32__"
 
-# =============================================================================
-# The END 
-# =============================================================================
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

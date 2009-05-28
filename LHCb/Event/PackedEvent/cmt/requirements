@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           PackedEvent
-version           v3r5
+version           v3r5p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -29,3 +29,6 @@ apply_pattern reflex_dictionary \
                   imports=ROOT
 
 
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

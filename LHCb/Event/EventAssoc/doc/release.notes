@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v4r6p1 2009-05-28 ========================
+! 2009-05-28 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !======================= EventAssoc v4r6 2009-05-06 ==========================
 ! 2009-04-23 - Juan PALACIOS
  - dict/selection.py

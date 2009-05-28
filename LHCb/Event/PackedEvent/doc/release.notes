@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v3r5p1 2009-05-28 =======================
+! 2009-05-28 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !======================= PackedEvent v3r5 2009-02-18 =========================
 ! 2009-01-27 - Marco Cattaneo
  - Add missing dictionaries for new class
