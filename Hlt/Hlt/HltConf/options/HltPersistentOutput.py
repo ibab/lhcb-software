@@ -17,14 +17,6 @@ HltSelReportsWriter = HltSelReportsWriter()
 HltVertexReportsWriter = HltVertexReportsWriter()
 HltPersistentOutputSeq.Members += [ HltDecReportsWriter, HltSelReportsWriter,HltVertexReportsWriter ]
 
-HltDecReportsMaker.OutputLevel            = 3
-HltDecReportsWriter.OutputLevel            = 3
-HltSelReportsMaker.OutputLevel            = 3
-HltSelReportsWriter.OutputLevel            = 3
-HltVertexReportsMaker.OutputLevel            = 3
-HltVertexReportsWriter.OutputLevel            = 3
-
-
 # 0=infinity 1=always 100=every 100th event etc.
 HltDecReportsMaker.DebugEventPeriod = 0
 # default info levels  0=no output 1=if passed 2=if errors 3=if passed or errors 4=always
