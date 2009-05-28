@@ -7,7 +7,6 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import HltSelectionsDecision
 # ---------------------------------------------------------------------
 #  HLT exclusive Selections
 # ---------------------------------------------------------------------

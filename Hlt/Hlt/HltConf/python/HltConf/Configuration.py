@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.83 2009-05-28 12:44:31 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.84 2009-05-28 19:57:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,16 +15,16 @@ from HltLine.HltLine     import hlt1Lines
 from HltLine.HltLine     import hlt2Lines
 from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
-from HltConf.HltCommissioningLines  import HltCommissioningLinesConf
-from HltConf.HltVeloLines     import HltVeloLinesConf
-from HltConf.HltL0Lines       import HltL0LinesConf
-from HltConf.HltLumiLines     import HltLumiLinesConf
-from HltConf.HltMuonLines     import HltMuonLinesConf
-from HltConf.HltHadronLines   import HltHadronLinesConf
-from HltConf.HltElectronLines import HltElectronLinesConf
-from HltConf.HltPhotonLines   import HltPhotonLinesConf
-from HltConf.HltExpressLines  import HltExpressLinesConf
-from HltConf.HltBeamGasLines  import HltBeamGasLinesConf
+from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
+from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
+from Hlt1Lines.HltL0Lines       import HltL0LinesConf
+from Hlt1Lines.HltLumiLines     import HltLumiLinesConf
+from Hlt1Lines.HltMuonLines     import HltMuonLinesConf
+from Hlt1Lines.HltHadronLines   import HltHadronLinesConf
+from Hlt1Lines.HltElectronLines import HltElectronLinesConf
+from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
+from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
+from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
 from HltConf.Hlt1             import Hlt1Conf
 from RichRecSys.Configuration import *
 
@@ -60,11 +60,11 @@ class HltConf(LHCbConfigurableUser):
                 from Configurables import L0DUMultiConfigProvider
                 if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
                     raise KeyError('requested L0 TCK %s is not known'%L0TCK)
-                from HltConf.HltL0Candidates import decodeL0Channels
+                from Hlt1Lines.HltL0Candidates import decodeL0Channels
                 channels = decodeL0Channels( L0TCK )
             else :
                 channels = [ 'Muon','MuonNoGlob','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
-            from HltConf.HltL0Candidates import setupL0Channels
+            from Hlt1Lines.HltL0Candidates import setupL0Channels
             setupL0Channels( channels ) 
 
 

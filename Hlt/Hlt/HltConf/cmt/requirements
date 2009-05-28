@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.33 2009-05-28 12:02:25 graven Exp $ 
+# $Id: requirements,v 1.34 2009-05-28 19:57:17 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
 package HltConf
-version v3r0  
+version v3r0
 
 # =============================================================================
 # ======= the actual dependencies =============================================
@@ -11,6 +11,7 @@ use       GaudiPolicy v*
 use       Python      v* LCG_Interfaces 
 use       HltCommon   v*  Hlt
 use       HltLine     v*  Hlt
+use       Hlt1Lines   v*  Hlt
 
 use       RichRecSys  v*  Rich
 
@@ -26,7 +27,7 @@ branches cmt doc options python tests
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro HltConfConfUserModules "HltConf.HltBeamGasLines HltConf.HltElectronLines HltConf.HltExpressLines HltConf.HltL0Lines HltConf.LumiCounterDefinition HltConf.HltLumiLines HltConf.HltVeloLines HltConf.Hlt1 HltConf.HltBeamGasLines HltConf.HltCommissioningLines HltConf.HltHadronLines HltConf.HltMuonLines HltConf.HltVeloLines HltConf.HltPhotonLines HltConf.Configuration"
+macro HltConfConfUserModules "HltConf.Hlt1 HltConf.Configuration"
 apply_pattern install_python_modules
 # =============================================================================
 
