@@ -4,43 +4,31 @@ from math import sqrt, fabs
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from LHCbMath import XYZVector, XYZPoint
 #==============================================================================
-class EventLoop:
-    def __init__(self, am ):
+class NextEvent:
+    def __init__(self, am ) :
         self.appMgr = am
-        svc = Helper.service(self.appMgr._svcloc, 'LHCb::ParticlePropertySvc')
-        self.partSvc = InterfaceCast(gbl.LHCb.IParticlePropertySvc)(svc)
-        self.sel = self.appMgr.evtSel()
-        self.evt = self.appMgr.evtSvc()
-        self.tools = self.appMgr.toolsvc()
-
-    def nextEvent(self):
+    def __call__(self) :
         self.appMgr.run(1)
-        return  self.evt['/Event'] != None
-    
-    def partProp(self, pid):
+        return  self.appMgr.evtSvc()['/Event'] != None
+#==============================================================================
+class PartPropSvc:
+    def __init__(self, am) :
+        self.appMgr = am
+        _svc = Helper.service(self.appMgr._svcloc, 'LHCb::ParticlePropertySvc')
+        self.Svc = InterfaceCast(gbl.LHCb.IParticlePropertySvc)(_svc)
+    def __call__(self, pid) :
         pidx = gbl.LHCb.ParticleID(pid)
-        return self.partSvc.find( pidx )
-
-    def getEvtStuff(self, location, verbose = False) :
-        stuff = self.evt[location]
-        if (verbose == True) and (stuff == None) :
-            print "Found no stuff in ", location
-        return stuff
-    
-    def countAndPlotNEntries(self, location, histo) :
-        entries = self.evt[location]
-        nEntries = 0
-
-        if (entries != None) :
-            nEntries = entries.size()
-        else :
-            print "Found nothing at ", location
-
-        histo.Fill(nEntries)
-        return nEntries
-
-    def partName(self, pid) :
-        return self.partProp(pid).particle()
+        return self.Svc.find( pidx )
+#==============================================================================
+class TESContainerLoop:
+    def __init__(self, evt, fun ) :
+        self.evt = evt
+        self.fun = fun
+    def __call__(self, location) :
+        container = self.evt[location]
+        for item in container :
+            self.fun(item)
+        return container.size()
 #==============================================================================
 class Plots :
     def __init__(self, name="Plots") :
