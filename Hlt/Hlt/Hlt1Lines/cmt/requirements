@@ -1,0 +1,35 @@
+# $Id: requirements,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# =============================================================================
+# The helper package for configuration of Hlt1
+# =============================================================================
+package     Hlt1Lines
+version     v1r0  
+
+# =============================================================================
+# ======= structure =======================================================
+branches cmt doc python tests 
+# =============================================================================
+
+
+# =============================================================================
+# ======= the actual dependencies =============================================
+use       GaudiPolicy v*                             
+use       Python      v*  LCG_Interfaces 
+# need to have HltLine.HltLinesConfigurableUser build 'before' us...
+use       HltLine     v*  Hlt
+# temporary 
+use       HltConf     v*  Hlt
+
+
+# =============================================================================
+
+
+# =============================================================================
+# ======= the patterns ========================================================
+macro Hlt1LinesConfUserModules "Hlt1Lines.HltBeamGasLines Hlt1Lines.HltElectronLines Hlt1Lines.HltExpressLines Hlt1Lines.HltL0Lines Hlt1Lines.LumiCounterDefinition Hlt1Lines.HltLumiLines Hlt1Lines.HltVeloLines Hlt1Lines.HltBeamGasLines Hlt1Lines.HltCommissioningLines Hlt1Lines.HltHadronLines Hlt1Lines.HltMuonLines Hlt1Lines.HltVeloLines Hlt1Lines.HltPhotonLines"
+apply_pattern install_python_modules
+# =============================================================================
+
+# =============================================================================
+# The END 
+# =============================================================================
