@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.11 2009-01-07 13:28:03 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-05-28 10:13:34 cattanem Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
@@ -11,8 +11,7 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBTimeSwitchSvc, 
                             CondDBCnvSvc,
                             CondDBSQLiteCopyAccSvc,
-                            CondDBLogger,
-                            MessageSvc )
+                            CondDBLogger )
 
 import os, re
 
@@ -310,7 +309,8 @@ class CondDB(ConfigurableUser):
                                                LogFile = filename)
         
         # Suppress pointless warning from COOL_2_5_0
-        MessageSvc().setError.append("RelationalDatabase")
+        msgSvc = getConfigurable("MessageSvc")
+        msgSvc.setError.append("RelationalDatabase")
 
         # Set up Virtual File System service, can be used by ParticlePropertySvc
         from Gaudi.Configuration import VFSSvc
