@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.25 2009-05-28 16:20:19 jpalac Exp $
+!$Id: release.notes,v 1.26 2009-05-29 16:05:16 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-05-29 - Juan PALACIOS
+ - python/MicroDSTExample/HistoUtils.py
+  . Borrowed from GaudiPython to allow some fixes.
+ - python/MicroDSTExample/Functors.py
+  . Add HistoPlotter class.
+ - python/MicroDSTReadingExample.py
+  . greatly simplify.
+ - options/TestMicroDSTMake.py
+  . New PV-refitting and best re-fitted PV linking.
 
 ! 2009-05-28 - Juan PALACIOS
  -  python/MicroDSTExample/Helpers.py
