@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-05-29 - V. Gligorov
+ - Added a stripping line for the topological trigger.
+
+! 2009-05-29 - V. Gligorov
  - Removed the K* mass cuts in the B2DPi stripping file for the B->DKpi Dalitz
    analysis.
 
