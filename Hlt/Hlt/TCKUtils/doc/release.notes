@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/TCKUtils
+! Responsible : Gerhard Raven
+! Purpose     : utilities for managing and querying Trigger Configuration Keys,
+!               and the underlying information
+!-----------------------------------------------------------------------------
+
+! 2009-05-29 - Gerhard Raven
+ - initial import
