@@ -1,10 +1,12 @@
-// $Id: SeedStub.h,v 1.3 2007-10-09 18:03:39 smenzeme Exp $
+// $Id: SeedStub.h,v 1.4 2009-05-29 13:38:52 cattanem Exp $
 #ifndef SEEDSTUB_H
 #define SEEDSTUB_H 1
 
 #include "GaudiKernel/KeyedObject.h"
 
+#ifndef _WIN32
 #include "GaudiKernel/boost_allocator.h"
+#endif
 
 //class SeedHit;
 #include "TsaKernel/SeedHit.h"

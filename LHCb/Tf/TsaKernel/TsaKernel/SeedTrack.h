@@ -1,9 +1,11 @@
-// $Id: SeedTrack.h,v 1.3 2007-10-09 18:03:39 smenzeme Exp $
+// $Id: SeedTrack.h,v 1.4 2009-05-29 13:38:52 cattanem Exp $
 #ifndef SEEDTRACK_H
 #define SEEDTRACK_H 1
 
 #include "GaudiKernel/KeyedObject.h"
+#ifndef _WIN32
 #include "GaudiKernel/boost_allocator.h"
+#endif
 
 #include <algorithm>
 

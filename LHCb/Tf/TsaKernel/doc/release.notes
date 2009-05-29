@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= TsaKernel v3r5p1 2009-05-29 =========================
+! 2009-05-29 - Marco Cattaneo
+ - In SeedStub.h and SeedTrack.h, do not include boost_allocator.h on Win32
+   since it's not needed and brings in unnecessarily windows.h
+
 !======================= TsaKernel v3r5 2008-11-17 ===========================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation

@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.6 2008-10-28 15:11:34 cattanem Exp $
+// $Id: SeedHit.h,v 1.7 2009-05-29 13:38:52 cattanem Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
@@ -6,7 +6,6 @@
 
 #include "Kernel/OTChannelID.h"
 
-//#include "GaudiKernel/boost_allocator.h"
 #include "GaudiKernel/KeyedObject.h"
 
 #include <vector>
