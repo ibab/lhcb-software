@@ -268,11 +268,6 @@
     <string>Close</string>
    </property>
   </action>
-  <action name="actionRecent1" >
-   <property name="text" >
-    <string>Recent1</string>
-   </property>
-  </action>
   <action name="actionAdd_Condition" >
    <property name="text" >
     <string>Add Condition</string>
@@ -316,21 +311,6 @@
   <action name="actionDump_to_files" >
    <property name="text" >
     <string>Dump to files</string>
-   </property>
-  </action>
-  <action name="actionDDDB" >
-   <property name="text" >
-    <string>DDDB</string>
-   </property>
-  </action>
-  <action name="actionLHCBCOND" >
-   <property name="text" >
-    <string>LHCBCOND</string>
-   </property>
-  </action>
-  <action name="actionSIMCOND" >
-   <property name="text" >
-    <string>SIMCOND</string>
    </property>
   </action>
  </widget>
