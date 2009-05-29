@@ -1,7 +1,7 @@
 package HltSys
 version v6r1
 
-branches cmt doc options
+branches cmt doc 
 
 #=======================================================
 # HLT1 and common packages
@@ -37,6 +37,7 @@ use HltPython	        v1r14   Hlt   # Jose Angel Hernando-Morata
 #=======================================================
 
 use HltSelections       v9r1    Hlt   # Patrick Koppenburg
+use Hlt2Lines           v1r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
 use Hlt2SharedParticles v1r1    Hlt   # Patrick Koppenburg/Gerhard Raven
 use Fidel               v1r3p1  Phys  # Sara Furcas    
 use HltKshort           v1r7    Hlt   # Jaap Panman
@@ -54,5 +55,4 @@ use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
-
 
