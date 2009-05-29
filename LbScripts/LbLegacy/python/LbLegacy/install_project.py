@@ -1139,10 +1139,10 @@ def getProjectTar(tar_list, already_present_list=None):
                             if os.path.exists(prodlink) :
                                 if os.path.islink(prodlink) :
                                     os.remove(prodlink)
+                                    os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
+                                    log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
                                 else :
-                                    log.error("%s is not a link. Please remove this file/directory")
-                            os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
-                            log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
+                                    log.error("%s is not a link. Please remove this file/directory" % prodlink)
                         my_dir = os.path.dirname(this_lhcb_dir)
                         for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
                             if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):

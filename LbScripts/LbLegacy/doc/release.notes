@@ -1,3 +1,8 @@
+2009-05-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixing problem at the creation of the 
+	prod link to the latest version of the LbScripts project.
+
 2009-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/ProjectLinks.py: New file.
