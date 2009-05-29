@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-29 - V. Gligorov
+ - Removed the K* mass cuts in the B2DPi stripping file for the B->DKpi Dalitz
+   analysis.
+
 ! 2009-05-24 - V. Gligorov
  - Updated the B2DPi stripping file to select all B2DX combinations where
    X = {K*,phi,pi,K}. Eventually the file will be renamed but first it needs
