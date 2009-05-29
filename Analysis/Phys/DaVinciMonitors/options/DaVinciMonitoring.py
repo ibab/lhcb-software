@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DaVinciMonitoring.py,v 1.2 2009-05-14 11:25:57 jonrob Exp $
+# $Id: DaVinciMonitoring.py,v 1.3 2009-05-29 14:03:22 asarti Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -26,5 +26,6 @@ DaVinci().MoniSequence += [ EventCountHisto("DaVinciMonitor") ]
 #
 importOptions( "$DAVINCIMONITORSROOT/options/Jpsi2MuPi.py" ) 
 importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py" ) 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py" ) 
-importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
+#importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py" ) 
+#importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
+importOptions( "$DAVINCIMONITORSROOT/options/MuID2BodyPlot.py" ) 

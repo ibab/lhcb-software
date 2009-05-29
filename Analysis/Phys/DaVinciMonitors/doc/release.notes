@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-29 - Alessio Sarti
+ - Added the MuID2BodyPlot class for muon ID and misID monitoring
+ - Disabled the creation of mass plots trough the already existing Muon* algorithms
+   in DaVinciMonitoring.py : now all the plots come with MuID2BodyPlot
+
 ! 2009-05-14 - Chris Jones
  - make Mass range limits in MassPlotTool controllable via job options
  - Remove duplicated calls to declareInterface(...)

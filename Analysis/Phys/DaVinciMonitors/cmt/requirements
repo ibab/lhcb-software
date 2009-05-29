@@ -17,6 +17,7 @@ use PartProp v* Kernel
 use DaVinciKernel  v*    Phys
 use LoKiPhys              v* Phys
 use LoKiArrayFunctors     v* Phys
+use MuonDet		v* Det
 
 include_path      none
 #============================================================================
