@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.11 2009-05-24 15:27:20 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.12 2009-05-29 13:03:36 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -15,7 +15,6 @@
 // ============================================================================
 /** @file 
  *  The implementation file for various decay nodes 
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
@@ -34,7 +33,7 @@ namespace
     /// constructor 
     _Pid ( const LHCb::ParticleID& pid ) : m_pid ( pid ) {}
     /// the only one imporant operator 
-    inline bool operator () ( const Decays::Nodes::_Node& node ) const 
+    inline bool operator () ( const Decays::Nodes::_Node& node ) const
     { return node  ( m_pid ) ; }  
     // ========================================================================
   private:
@@ -48,17 +47,6 @@ namespace
   // ==========================================================================
 } //                                                 end of anonymous namespace 
 // ============================================================================
-// operator &= 
-// ============================================================================
-Decays::Node& Decays::Node::operator&= ( const Decays::iNode& right )
-{ return  ( *this = ( *m_node  && right ) ) ; }
-// ============================================================================
-// operator |= 
-// ============================================================================
-Decays::Node& Decays::Node::operator|= ( const Decays::iNode& right )
-{ return  ( *this = ( *m_node  || right ) ) ; }
-// ============================================================================
-
 
 
 // ============================================================================
