@@ -156,8 +156,8 @@ bestVertexZ =  book(histoPath+"BestPV/PVz",
 omegaPlots = {}
 # flavour tagging plot: plot mistag for each category.
 for cat in range(0,6) :
-    omegaPlots[cat] = book(histoPath+"FlavourTags/Mis_tag",
-                           "Mis-tag fraction per category",
+    omegaPlots[cat] = book(histoPath+"FlavourTags/MisTagCat"+str(cat),
+                           "Mis-tag fraction category "+ str(cat),
                            100, 0., 1.)
 
 # a little functor to print out MC association trees
