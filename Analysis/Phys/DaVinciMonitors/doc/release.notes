@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-05-29 - Patrick Koppenburg
+ - Remove all PhysDesktop
+
 ! 2009-05-29 - Alessio Sarti
  - Added the MuID2BodyPlot class for muon ID and misID monitoring
  - Disabled the creation of mass plots trough the already existing Muon* algorithms

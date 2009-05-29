@@ -18,7 +18,7 @@ mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolRec
 #
 # The reconstructed tuple
 #
-from Configurables import DecayTreeTuple, PhysDesktop 
+from Configurables import DecayTreeTuple
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
       "TupleToolMCTruth"
@@ -30,8 +30,7 @@ tuple.ToolList +=  [
     , "TupleToolEventInfo"
     , "TupleToolTrackInfo"
      ]
-tuple.addTool( PhysDesktop)
-tuple.PhysDesktop.InputLocations = ["StdLooseKsLL", "StdLooseKsDD"]
+tuple.InputLocations = ["StdLooseKsLL", "StdLooseKsDD"]
 tuple.Decay = "[KS0 -> ^pi+ ^pi-]cc"
 
 ########################################################################
