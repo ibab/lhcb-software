@@ -1,0 +1,19 @@
+/*
+ * WTSSDEF.H
+ *
+ * From object module WTSSDEF
+ * Module version 0
+ * Compiled on  9-JAN-1995 13:51
+ *
+ */
+#define WT_SS_FAC_OUTRANGE	0X9E28052
+#define WT_SS_CLUSNOTEQ	    0X9E2804A
+#define WT_SS_NOTINIT	      0X9E28042
+#define WT_SS_UNSUBSCRIBED	0X9E28038
+#define WT_SS_NOACTION	    0X9E28030
+#define WT_SS_BADACTIONSTAT	0X9E28028
+#define WT_SS_USERFLAGS	    0X9E28020
+#define WT_SS_ALR_INIT	    0X9E2801B
+#define WT_SS_NOTSUBSCR	    0X9E28013
+#define WT_SS_NORMAL	      0X9E28009
+#define WT$_FACILITY	      0X9E2

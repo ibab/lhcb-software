@@ -1,6 +1,4 @@
 // $ID:
-#include "RTL/ProcessGroup.h"
-
 #include <cstdio>
 #include <signal.h>
 #include "rtl_internal.h"
