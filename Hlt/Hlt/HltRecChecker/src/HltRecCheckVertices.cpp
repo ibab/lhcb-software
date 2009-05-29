@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.8 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.9 2009-05-29 21:19:20 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,6 @@
 // local
 #include "HltRecCheckVertices.h"
 #include "HltRecCheckUtils.h"
-#include "HltBase/ESequences.h"
 
 using namespace LHCb;
 
