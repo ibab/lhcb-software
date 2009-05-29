@@ -56,7 +56,7 @@ use PackedEvent           v3r5p1  Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r8   Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r20   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r20   Event   # Matt Needham
-use VeloEvent             v16r7   Event   # Tomasz Szumlak, Chris Parkes
+use VeloEvent             v16r7p1 Event   # Tomasz Szumlak, Chris Parkes
 use STTELL1Event          v1r7    ST      # Matt Needham
 use EventPacker           v1r4    Event   # Olivier Callot
 use PartProp              v1r2    Kernel  # Vanya Belyaev 
