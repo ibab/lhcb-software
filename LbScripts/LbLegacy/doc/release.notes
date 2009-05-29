@@ -1,5 +1,9 @@
 2009-05-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkLHCbtar: fix for Panoramix. Since version v17r0 Openscientist
+	becomes osc_vis.
+	* scripts/mkexternaltar: added missing file. This is used for packaging
+	CMT, Openscientist and osc_vis
 	* python/LbLegacy/install_project.py: fixing problem at the creation of the 
 	prod link to the latest version of the LbScripts project.
 

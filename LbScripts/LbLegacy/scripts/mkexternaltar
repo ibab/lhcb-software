@@ -1,0 +1,134 @@
+#!/bin/tcsh
+#==============================================
+# mkexternaltar           F.Ranjard - 030123
+# create a tar file with all externals
+# P1 = cmt|openScientist|osc_vis version 
+# P2 = binary
+#==============================================
+# 051012 - dereference when making a OpenScientist tar file 
+#          for win32.
+# 060523 - create a linux, win32, mac CMT tar file
+# 070205 - do not build GENSER nor LCGCMT tar files with this script 
+# 070502 - fix Usage"
+#===============================================
+#set echo on
+
+set LHCBEXTERNAL = "/afs/cern.ch/lhcb/externallib"
+set CONTRIB = "/afs/cern.ch/sw/contrib"
+set here = `pwd`
+
+set nar = $#argv
+if ($nar != 0) then
+  if ("$argv[${nar}]" == "-v") then
+         set echo on
+         set verb = "-v"
+         set argv[${nar}] = ""
+         @ nar = ${nar} - 1
+  endif
+endif
+if ($nar < 2) then
+ echo "Usage:"
+ echo "mkexternaltar CMT <version> <linux|win32|mac> [-v]"
+ echo "mkexternaltar OpenScientist <version> <binary> [-v]"
+ goto exec_end  
+endif
+#=======================================================
+set package = $1
+set version = $2
+set binary = $3
+
+# =========================================================================
+if ($package == "CMT" || $package == "OpenScientist" || $package == "osc_vis") then
+  if !( -d ${CONTRIB}/${package}/${version} ) then
+    echo "${CONTRIB}/${package}/${version} does not exist - exit"
+    goto exec_end
+endif
+
+# ============================= CMT =========================================
+if ($package == "CMT") then
+  cd $CONTRIB
+  if ($binary == "slc4_ia32_gcc34") set binary = "linux"
+  if ($binary == "slc3_ia32_gcc323") set binary = "linux"
+  if ($binary == "win32_vc71") set binary = "win32"
+  if ($binary == "osf10" || $binary == "Darwin-PowerMacintosh") set binary = "mac"
+
+  if ($binary == "linux") then
+     set exclude = " --exclude Darwin-PowerMacintosh --exclude demo --exclude tbroadcast --exclude Visual --exclude VisualC --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude .svn --exclude LinuxDebug"
+  else if ($binary == "win32") then
+     set exclude = " --exclude Darwin-PowerMacintosh --exclude demo --exclude Linux-ia64 --exclude Linux-x86_64 --exclude tbroadcast --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude Linux-i686 --exclude .svn --exclude LinuxDebug"
+  else if ($binary == "mac") then
+     set exclude = "--exclude demo --exclude Linux-ia64 --exclude Linux-x86_64 --exclude tbroadcast --exclude CYGWIN_NT-5.1-i686 --exclude doc --exclude Linux-i686 --exclude Visual --exclude VisualC --exclude .svn --exclude LinuxDebug"
+  else
+     set exclude = ""
+  endif
+  tar zcv ${exclude} -f ${LHCBTAR}/source/CMT_${version}_${binary}.tar.gz CMT/${version}
+  goto exec_end
+endif
+
+# =========================== OpenScientist ================================
+if ($package == "OpenScientist" && ${version} == "v12r0p1") then
+  cd $CONTRIB
+
+  tar cvhf  $LHCBTAR/source/${package}_${version}_${binary}.tar OpenScientist/${version}/InstallArea/${binary}/lib
+  
+  set include = "OnX Lib HEPVis CoinGL"
+  set exclude = " --exclude slc3_ia32_gcc323 --exclude win32_vc71 --exclude rh73_gcc32  --exclude i686-rh73-gcc32-dbg --exclude Visual --exclude doc --exclude Doxygen --exclude tests "
+  set mode = "rv"
+  if ($binary == "win32_vc71") set mode = "hrv"
+  foreach p ($include[*])
+    tar ${mode} ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar OpenScientist/${version}/${p}
+  end
+  gzip $LHCBTAR/source/${package}_${version}_${binary}.tar 
+  goto exec_end
+endif
+
+if ($package == "OpenScientist" && ${version} == "v15r0p1") then
+  cd $CONTRIB
+  set exclude = " --exclude examples --exclude templates " 
+  tar zc ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar.gz \
+   ${package}/${version}/${binary}/bin \
+   ${package}/${version}/${binary}/lib \
+   ${package}/${version}/${binary}/Resources/OnX \
+   ${package}/${version}/${binary}/Resources/Lab \
+   ${package}/${version}/${binary}/Resources/CoinGL \
+   ${package}/${version}/${binary}/Resources/HEPVis \
+   ${package}/${version}/${binary}/Resources/Lib
+  goto exec_end
+endif
+
+if ($package == "OpenScientist") then
+  cd $CONTRIB
+  set exclude = " --exclude examples --exclude templates " 
+  tar zc ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar.gz \
+   ${package}/${version}/${binary}/bin \
+   ${package}/${version}/${binary}/lib \
+   ${package}/${version}/${binary}/Resources/OnX \
+   ${package}/${version}/${binary}/Resources/CoinPython \
+   ${package}/${version}/${binary}/Resources/expat \
+   ${package}/${version}/${binary}/Resources/Slash \
+   ${package}/${version}/${binary}/Resources/CoinGL \
+   ${package}/${version}/${binary}/Resources/HEPVis \
+   ${package}/${version}/${binary}/Resources/Lib
+  goto exec_end
+endif
+
+if ($package == "osc_vis") then
+  cd $CONTRIB
+  set exclude = " --exclude examples --exclude templates " 
+  tar zc ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar.gz \
+   ${package}/${version}/${binary}/bin \
+   ${package}/${version}/${binary}/lib \
+   ${package}/${version}/${binary}/Resources/OnX \
+   ${package}/${version}/${binary}/Resources/CoinPython \
+   ${package}/${version}/${binary}/Resources/expat \
+   ${package}/${version}/${binary}/Resources/Slash \
+   ${package}/${version}/${binary}/Resources/CoinGL \
+   ${package}/${version}/${binary}/Resources/HEPVis \
+   ${package}/${version}/${binary}/Resources/Lib
+  goto exec_end
+endif
+
+#=======================================================================
+exec_end:
+cd $here
+exit

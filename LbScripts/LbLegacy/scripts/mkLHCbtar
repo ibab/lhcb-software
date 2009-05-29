@@ -292,8 +292,12 @@ def make_tar(pname, pversion, binary=''):
         dver = os.path.basename(p)
         if dver == 'DBASE' or dver == 'PARAM' : continue
         dnam = dver.split('_')[0]
-        if dnam == 'LCGCMT' or p.find('OpenScientist') != -1:
-            if dnam != 'LCGCMT' : dver = 'OpenScientist_'+dver
+        if dnam == 'LCGCMT' or p.find('OpenScientist') != -1 or p.find('osc_vis') != -1 :
+            if dnam != 'LCGCMT' :
+                if p.find('OpenScientist') != -1 : 
+                    dver = 'OpenScientist_' + dver
+                elif p.find('osc_vis') != -1 :
+                    dver = 'osc_vis' + '_' + dver
             if PACK == 'LHCBGRID':
                 dver = 'LCGGrid' + '_' + pversion
             if PACK == 'DIRAC' and dnam == 'LCGCMT' :
