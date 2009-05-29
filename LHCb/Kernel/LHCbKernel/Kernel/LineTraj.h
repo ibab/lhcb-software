@@ -1,10 +1,15 @@
-// $Id: LineTraj.h,v 1.20 2008-10-04 15:45:47 cattanem Exp $
+// $Id: LineTraj.h,v 1.21 2009-05-29 13:26:55 cattanem Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
 // Include files
 #include "Kernel/DifTraj.h"
-
+#ifdef _WIN32
+// Avoid conflict of Windows macro with std::max
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif
+#endif
 #include "GaudiKernel/boost_allocator.h"
 
 namespace LHCb

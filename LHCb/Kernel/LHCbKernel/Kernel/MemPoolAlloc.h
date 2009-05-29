@@ -5,7 +5,7 @@
  *  Header file for class LHCb::MemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: MemPoolAlloc.h,v 1.5 2008-10-04 15:45:47 cattanem Exp $
+ *  $Id: MemPoolAlloc.h,v 1.6 2009-05-29 13:26:55 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -16,6 +16,12 @@
 #define LHCBKERNEL_MEMPOOLALLOC_H 1
 
 // boost stuff from Gaudi
+#ifdef _WIN32
+// Avoid conflict of Windows macro with std::max
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif
+#endif
 #include "GaudiKernel/boost_allocator.h"
 
 namespace LHCb
