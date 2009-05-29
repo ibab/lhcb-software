@@ -1,0 +1,389 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>965</width>
+    <height>655</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QVBoxLayout" name="verticalLayout_4" >
+    <item>
+     <widget class="QSplitter" name="splitter" >
+      <property name="orientation" >
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget" >
+       <layout class="QVBoxLayout" name="browseLayout" >
+        <item>
+         <layout class="QHBoxLayout" name="pathBarLayout" >
+          <item>
+           <widget class="QLabel" name="pathLabel" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string>Path</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="pathComboBox" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editable" >
+             <bool>true</bool>
+            </property>
+            <property name="insertPolicy" >
+             <enum>QComboBox::NoInsert</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTreeView" name="hierarchyTreeView" />
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget" >
+       <layout class="QVBoxLayout" name="dataLayout" >
+        <item>
+         <widget class="QTextEdit" name="dateTextEdit" />
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget" >
+       <layout class="QVBoxLayout" name="filterLayout" >
+        <item>
+         <widget class="QGroupBox" name="iovTagFilterGroupBox" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title" >
+           <string>Filter</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout" >
+           <item row="0" column="0" >
+            <widget class="QLabel" name="sinceLabel" >
+             <property name="text" >
+              <string>From time</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QLineEdit" name="sinceLineEdit" />
+           </item>
+           <item row="1" column="0" >
+            <widget class="QLabel" name="untilLabel" >
+             <property name="text" >
+              <string>To time</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" >
+            <widget class="QLineEdit" name="untilLineEdit" />
+           </item>
+           <item row="2" column="0" >
+            <widget class="QLabel" name="tagLabel" >
+             <property name="text" >
+              <string>Tag name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" >
+            <widget class="QComboBox" name="tagComboBox" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" >
+            <widget class="QLabel" name="hideAutoLabel" >
+             <property name="text" >
+              <string>Hide _auto_</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QCheckBox" name="hideAutoCheckBox" >
+             <property name="text" >
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="iovTableGroupBox" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title" >
+           <string>IOV Table</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="payloadGroupBox" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title" >
+           <string>Payload</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>965</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDataBase" >
+    <property name="title" >
+     <string>DataBase</string>
+    </property>
+    <widget class="QMenu" name="menuRecent" >
+     <property name="title" >
+      <string>Recent</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuStandard" >
+     <property name="title" >
+      <string>Standard</string>
+     </property>
+    </widget>
+    <addaction name="actionNew" />
+    <addaction name="actionOpen" />
+    <addaction name="menuRecent" />
+    <addaction name="menuStandard" />
+    <addaction name="actionSlice" />
+    <addaction name="actionDump_to_files" />
+    <addaction name="actionClose" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
+     <string>Edit</string>
+    </property>
+    <addaction name="actionAdd_Condition" />
+    <addaction name="actionNew_Tag" />
+   </widget>
+   <widget class="QMenu" name="menuAdvanced" >
+    <property name="title" >
+     <string>Advanced</string>
+    </property>
+    <addaction name="actionNew_Node" />
+    <addaction name="actionDelete_Node" />
+    <addaction name="actionDelete_Tag" />
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout" />
+    <addaction name="actionAbout_Qt" />
+   </widget>
+   <addaction name="menuDataBase" />
+   <addaction name="menuEdit" />
+   <addaction name="menuAdvanced" />
+   <addaction name="menuHelp" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="actionNew" >
+   <property name="text" >
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionOpen" >
+   <property name="text" >
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSlice" >
+   <property name="text" >
+    <string>Slice</string>
+   </property>
+  </action>
+  <action name="actionClose" >
+   <property name="text" >
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionRecent1" >
+   <property name="text" >
+    <string>Recent1</string>
+   </property>
+  </action>
+  <action name="actionAdd_Condition" >
+   <property name="text" >
+    <string>Add Condition</string>
+   </property>
+  </action>
+  <action name="actionNew_Tag" >
+   <property name="text" >
+    <string>New Tag</string>
+   </property>
+  </action>
+  <action name="actionNew_Node" >
+   <property name="text" >
+    <string>New Node</string>
+   </property>
+  </action>
+  <action name="actionDelete_Node" >
+   <property name="text" >
+    <string>Delete Node</string>
+   </property>
+  </action>
+  <action name="actionDelete_Tag" >
+   <property name="text" >
+    <string>Delete Tag</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="text" >
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionQuit" >
+   <property name="text" >
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt" >
+   <property name="text" >
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionDump_to_files" >
+   <property name="text" >
+    <string>Dump to files</string>
+   </property>
+  </action>
+  <action name="actionDDDB" >
+   <property name="text" >
+    <string>DDDB</string>
+   </property>
+  </action>
+  <action name="actionLHCBCOND" >
+   <property name="text" >
+    <string>LHCBCOND</string>
+   </property>
+  </action>
+  <action name="actionSIMCOND" >
+   <property name="text" >
+    <string>SIMCOND</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>451</x>
+     <y>336</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAbout_Qt</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutQt()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>451</x>
+     <y>336</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>closeDatabase()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>451</x>
+     <y>336</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAbout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>aboutQt()</slot>
+  <slot>openStandardDatabase()</slot>
+  <slot>closeDatabase()</slot>
+  <slot>aboutDialog()</slot>
+ </slots>
+</ui>
