@@ -2,11 +2,160 @@
 !-----------------------------------------------------------------------------
 ! Package     : LHCbSys
 ! Responsible : Florence Ranjard, Marco Cattaneo
-! Purpose     : LHCb OO kernel packages
+! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v27r1>2009-06-02 LHCbSys v27r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LCG_56a
+
+- Packages modified: GaudiConf v12r4, GaudiObjDesc v11r7, LHCbKernel v11r4,
+    LHCbMath v3r8, Relations v5r8, DDDB v1r17, DetCond v12r6, DetDesc v18r13p1,
+    STDet v4r10, DigiEvent v2r11p1, EventAssoc v4r6p1, HltEvent v8r17,
+    PackedEvent v3r5p1, PartProp v1r2, CaloInterfaces v7r11, CaloUtils v8r5,
+    CondDBUI v2r18, DaVinciKernel v7r6, DaVinciMCKernel v3r3,
+    LinkerInstances v3r4p1, LoKiArrayFunctors v8r4, LoKiCore v9r1,
+    LoKiGen v8r3, LoKiHlt v2r2, LoKiMC v8r3, LoKiNumbers v8r2, LoKiPhys v8r5,
+    LoKiPhysMC v8r3, L0Interfaces v1r4p1, MCInterfaces v1r8p1, MDF v3r18,
+    RecInterfaces v1r0p1, RichRecBase v3r22, STKernel v1r14, TfKernel v2r11p1,
+    TrackInterfaces v4r3p1
+
+- In GaudiConf v12r4, v12r3
+  . Add LHCbKernel dependency, for LHCbConfigurableUser used by Configuration.py
+  . Remove obsolete options files SimDicts.opts, SimContents.opts,
+    DigiContent.opts, DstContent.opts
+  . Add DstConf().DstType = "XDST", extended DST containing also MCHits and
+    RICH extended information
+  . Add GaudiConf/QMTest/LHCbExclusions.py containing a QMTest preprocessor that
+    can be given to the QMTest ValidateWithReference function to exclude lines
+    expected to change in the QMTest output
+
+- In GaudiObjDesc v11r7
+  . In importUtils.py, add temporary workaround for windows: define NOMINMAX
+    when including GaudiKernel/boost_allocator.h, to avoid conflict with max()
+    macro defined in windows.h. To be removed with Gaudi v21r2
+  . Removed the override of the LD_LIBRARY_PATH env variable in obj2doth and 
+    obj2dict. They are not needed and cause problems when cross-compiling
+    slc4 on the slc5 architecture.
+
+- In LHCbKernel v11r4
+  . Some improvements to the ostream operator overloading for enums
+
+- In LHCbMath v3r8
+  . src/Lomont.cpp: use unions instead of reinterpret_cast to avoid gcc4 problems
+  . Add tests for Lomont-compare
+
+- In Relations v5r8
+  . Relations/Get.h: Add new methods getUniqueFrom
+
+- In DDDB v1r17
+  . Update 2009 default tags to latest tags in SQLDDDB v5r6
+  . Add default tags for MC09 
+
+- In DetCond v12r6
+  . In Configurable, do not access MessageSvc() directly, use instead
+    getConfigurable("MessageSvc"), allow to replace MessageSvc instance online
+  . Modified the way CondDBAccessSvc::finalize() synchronizes with the second
+    thread.
+  . Updated the usage of the Boost Thread module (use more recent classes).
+  . Added a test triggering the connection time-out.
+
+- In DetDesc v18r13p1
+  . Add a missing include for Windows compilation
+
+- In STDet v4r10
+  . DeSTSector: Status conditions are now updated using the setXxxStatus methods.
+  . StatusMap: removed set-protection for Open, Short and Pinhole channels.
+  . Replaced all endreq with endmsg.
+
+- In HltEvent v8r17
+  . Reassign bits in HltDecReports to create more 'stages' and less dynamic range
+    on # of candidates
+  . Rename selectionID to decisionID, but keep backwards compatibility accessor
+    function (selectionID will become computable from decisionID + stageID)
+  . Add configuredTCK in HltDecReports, and reserve one 32 bit word to identify
+    the task in the online farm
+
+- In PartProp v1r2
+  . New class Decays::Symbols, which contains the information about the 
+    allowed symbols for decay descriptors.
+  . Substitute SubNodes with NodeList 
+  . Kernel/Nodes.h: Move unnecessary concrete symbols into a separate file 
+  . ParticlePropertySvc.cpp: Remove the duplicated list of symbols 
+
+- In CaloInterfaces v7r11
+  . Remove unnecessary dependence on PhysEvent
+
+- In CaloUtils v8r5
+  . CovarianceEstimator : fix parameter index
+  . CaloMomentum : invariant mass error relies on Gaudi::Math::sigmamass
+  . Calo2Dview : fix bug in getCaloParam() - affecting L0CaloMonitoring only
+  . Add the dictionary for CaloMomentum/CaloParticle classes (needed for python)
+    and polish a bit these classes 
+  . SpreadEstimator: Put more protection for evaluation of cluster covariance
+    ("spread") matrix. To decrease the influence of numerical uncertanties a
+    temporary coordinate bias is introduced..
+
+- In CondDBUI v2r18
+  . Ported the CondDBBrowser to PyQt4 using the pyqt_compat package (which
+    provides the Qt3Support module). Note: there are a couple of bugs in the
+    pyqt_compat package distributed with LCGCMT 56a (work-around added here).
+  . Added the function CondDBUI.Admin.ReleaseNotes.addGlobalTag.
+
+- In DaVinciKernel v7r6
+  . IRelatedPVFinder.h: Add methods accepting LHCb::VertexBase* containers.
+
+- In DaVinciMCKernel v3r3
+  . Fixed a gcc43 compilation warning in Particle2MCLinker.icpp, algMgr now
+    accessed via a SmartIF 
+  . Added two new categories to IBackgroundCategory.h
+
+- In LoKiArrayFunctors v8r4, LoKiCore v9r1, LoKiGen v8r3, LoKiHlt v2r2,
+     LoKiMC v8r3, LoKiNumbers v8r2, LoKiPhys v8r5, LoKiPhysMC v8r3
+  . Remove unnecessary std::unary/binary_function bases 
+
+- In LoKiCore v9r1, LoKiGen v8r3, LoKiMC v8r3, LoKiPhys v8r5
+  . Clean up the trees 
+
+- In LoKiGen v8r3, LoKiMC v8r3, LoKiPhys v8r5
+  . Fix for changes in Kernel/PartProp  
+
+- In LoKiCore v9r1
+  . Eliminate duplicated lines 
+  . Decrease the dictionary 
+
+- In LoKiHlt v2r2
+  . Adapt to changes in HltDecReport(s)
+  . HDRFilter.cpp, L0Filter.cpp, ODINFilter.cpp: Fix typo in name of HltFactory 
+
+- In LoKiMC v8r3
+  . Improve the printout of MC decay (add []os for oscillated particles)
+  . Change the default printout, now "decayOnly" flag is "true"
+
+- In LoKiPhys v8r5
+  . Patch to fix the conflict between SmartIF & LoKi::Interface  
+
+- MDF v3r18
+  . In RawDataCnvSvc, use SmartDataPtr to retrieve RawEvent, avoids pointer type
+    conversion warning from gcc43 -O2
+  . Change RawEventCopy to be a GaudiAlgorithm (was Algorithm). Component 
+    library now depends on GaudiAlg
+
+- In RichRecBase v3r22
+  . Improvements to track selector base class (add likelihood cuts)
+  . Add definitions to RichRecRing for ENN ring finder
+  . Add likelihood to RichRecTrack
+  . Improvements to enum ostream operator << overloading
+
+- In STKernel v1r14
+  . Bug fix in TTNumberToSourceIDMap
+
+
+- In DigiEvent v2r11p1, EventAssoc v4r6p1, HltEvent v8r17, PackedEvent v3r5p1,
+     CaloInterfaces v7r11, LinkerInstances v3r4p1, L0Interfaces v1r4p1,
+     MCInterfaces v1r8p1, RecInterfaces v1r0p1, TfKernel v2r11p1, 
+     TrackInterfaces v4r3p1
+  . In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 
 </PRE><H1><A NAME=v27r0>2009-05-11 LHCbSys v27r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LCG_56
