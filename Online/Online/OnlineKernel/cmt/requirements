@@ -3,23 +3,21 @@ version v1r10
 
 branches  cmt doc src
 use GaudiPolicy v*
+use OnlineStubs v* Online
 use Reflex      v* LCG_Interfaces -no_auto_imports
 
 apply_pattern install_more_includes more=OnlineKernel
 
-library       OnlineKernel ../src/WT/*.cpp      \
-                           ../src/MBM/*.cpp     \
+library OnlineKernel       ../src/CPP/*.cpp     \
                            ../src/RTL/*.cpp     \
-                           ../src/PUBAREA/*.cpp \
-                           ../src/TAN/*.cpp     \
-                           ../src/AMS/*.cpp     \
-                           ../src/SCR/*.cpp     \
-                           ../src/CPP/*.cpp     \
-                           ../src/NET/*.cpp
+                           ../src/MBM/*.cpp
 
 macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
 apply_pattern ld_library_path
 apply_pattern linker_library          library=OnlineKernel
+#
+#  Applications:
+#
 application   test                    ../main/wt.cpp
 application   gentest                 ../main/gentest.cpp
 application   mbm_remove              ../main/mbm_remove.cpp
@@ -34,15 +32,15 @@ path_append PYTHONPATH                $(ONLINEKERNELROOT)/python
 ###  macro cpp 'gcc32 -m32 '
 ###  macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
 
-apply_pattern reflex_dictionary dictionary=OnlineKernel \
-                                headerfiles=$(ONLINEKERNELROOT)/dict/dictionary.h \
-                                selectionfile=$(ONLINEKERNELROOT)/dict/dictionary.xml \
-                                imports=Python
+#apply_pattern reflex_dictionary dictionary=OnlineKernel \
+#                                headerfiles=$(ONLINEKERNELROOT)/dict/dictionary.h \
+#                                selectionfile=$(ONLINEKERNELROOT)/dict/dictionary.xml \
+#                                imports=Python
 macro_append OnlineKernel_reflex_options " -D__GCCXML"
 
 # Gnerate dictionary rootmap file
-apply_pattern generate_rootmap library=OnlineKernelDict
-apply_pattern declare_python_modules files=*.py
+#apply_pattern generate_rootmap library=OnlineKernelDict
+#apply_pattern declare_python_modules files=*.py
 
 apply_pattern QMTest
 apply_pattern QMTestSummarize

@@ -29,6 +29,7 @@
     <class name="Event"/>
     <class name="Interactor"/>
     <class name="CPP::PyInteractor"/>
+<!--
     <class name="IOPortManager"/>
     <class name="NetworkChannel"/>
     <class name="NetworkConnection"/>
@@ -36,7 +37,7 @@
     <class name="TcpConnection"/>
     <class name="UdpNetworkChannel"/>
     <class name="UdpConnection"/>
-
+-->
     <function pattern="MBM::*"/>
     <class pattern="MBM::*"/>
     <function pattern="mbm_*"/>
