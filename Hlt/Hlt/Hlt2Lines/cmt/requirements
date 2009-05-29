@@ -1,0 +1,23 @@
+# $Id: requirements,v 1.1.1.1 2009-05-29 09:01:39 graven Exp $
+# Created    : 2009/05/19
+# Maintainer : 
+
+package           Hlt2Lines
+version           v0r0
+
+# ============================================================================
+# ======= the structure ======================================================
+branches          cmt doc python
+include_path      none
+
+# ============================================================================
+# ======= the actual dependencies ============================================
+#TODO: the HltLines infrastructure should move out of HltConf... (HltCommon?
+#      dedicated package?)
+#use HltConf              v*     Hlt
+# 
+use Hlt2SharedParticles  v*     Hlt
+
+# ============================================================================
+# ======= the patterns =======================================================
+apply_pattern install_python_modules

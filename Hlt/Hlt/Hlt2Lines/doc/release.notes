@@ -1,0 +1,10 @@
+$Id: release.notes,v 1.1.1.1 2009-05-29 09:01:39 graven Exp $
+!-----------------------------------------------------------------------------
+! Package     : Hlt/Hlt2Lines
+! Responsible : P. Koppenburg / G. Raven / V. Gligorov
+! Purpose     : define the Hlt2Lines
+!-----------------------------------------------------------------------------
+
+
+! 2009-05-29 - Gerhard Raven
+  - initial import
