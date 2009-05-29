@@ -12,62 +12,83 @@
   <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <layout class="QVBoxLayout" name="verticalLayout_4" >
+  <widget class="QWidget" name="mainPanel" >
+   <layout class="QVBoxLayout" name="mainPanelLayout" >
+    <property name="margin" >
+     <number>9</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splitter" >
       <property name="orientation" >
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" name="browseLayout" >
+      <widget class="QWidget" native="1" name="browsePanel" >
+       <layout class="QVBoxLayout" name="browsePanelLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item>
-         <layout class="QHBoxLayout" name="pathBarLayout" >
-          <item>
-           <widget class="QLabel" name="pathLabel" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text" >
-             <string>Path</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="pathComboBox" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="editable" >
-             <bool>true</bool>
-            </property>
-            <property name="insertPolicy" >
-             <enum>QComboBox::NoInsert</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" native="1" name="pathPanel" >
+          <layout class="QHBoxLayout" name="horizontalLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="pathLabel" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text" >
+              <string>Path</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="pathComboBox" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editable" >
+              <bool>true</bool>
+             </property>
+             <property name="insertPolicy" >
+              <enum>QComboBox::NoInsert</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
          <widget class="QTreeView" name="hierarchyTreeView" />
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="verticalLayoutWidget" >
-       <layout class="QVBoxLayout" name="dataLayout" >
-        <item>
-         <widget class="QTextEdit" name="dateTextEdit" />
-        </item>
-       </layout>
+      <widget class="QTextEdit" name="dataTextEdit" >
+       <property name="acceptDrops" >
+        <bool>false</bool>
+       </property>
+       <property name="undoRedoEnabled" >
+        <bool>false</bool>
+       </property>
+       <property name="acceptRichText" >
+        <bool>false</bool>
+       </property>
+       <property name="textInteractionFlags" >
+        <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+       </property>
       </widget>
-      <widget class="QWidget" name="layoutWidget" >
-       <layout class="QVBoxLayout" name="filterLayout" >
+      <widget class="QWidget" native="1" name="filterPanel" >
+       <layout class="QVBoxLayout" name="filterPanelLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item>
          <widget class="QGroupBox" name="iovTagFilterGroupBox" >
           <property name="sizePolicy" >
@@ -79,7 +100,7 @@
           <property name="title" >
            <string>Filter</string>
           </property>
-          <layout class="QFormLayout" name="formLayout" >
+          <layout class="QFormLayout" name="iovTagFilterLayout" >
            <item row="0" column="0" >
             <widget class="QLabel" name="sinceLabel" >
              <property name="text" >

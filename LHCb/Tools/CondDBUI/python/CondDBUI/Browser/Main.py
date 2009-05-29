@@ -29,14 +29,14 @@ def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py")
 #  @see getStandardConnectionStrings()
 def main(argv = []):
     from PyQt4.QtGui import QApplication
-    from MainWindow import createMainWindow
+    from MainWindow import MainWindow
 
     # Extract version informations from CVS keywords
     __versionNumber__ = '$Name: not supported by cvs2svn $'.split()[1]
     if __versionNumber__ == "$":
         __versionNumber__ = 'HEAD version'
 
-    __versionId__  = '$Id: Main.py,v 1.2 2009-05-29 13:06:11 marcocle Exp $'.split()
+    __versionId__  = '$Id: Main.py,v 1.3 2009-05-29 17:08:02 marcocle Exp $'.split()
     if len(__versionId__) < 4:
         __versionDate__ = 'unknown'
     else:
@@ -48,7 +48,7 @@ def main(argv = []):
     app.setOrganizationName("LHCb")
     app.setOrganizationDomain("lhcb.cern.ch")
 
-    mw = createMainWindow()
+    mw = MainWindow()
     mw.setDefaultDatabases(getStandardConnectionStrings())
 
     # Use the first argument as name of the database to open

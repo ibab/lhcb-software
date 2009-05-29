@@ -21,18 +21,20 @@ class MainWindow(QMainWindow):
     #  Initialises the base class, define some internal structures and set the icon of
     #  the window.
     def __init__(self, parent = None, flags = Qt.Widget):
+        # Base class constructor.
         super(MainWindow, self).__init__(parent, flags)
-        self.model = None
+        # Preconfigured databases
         self.defaultDatabases = {} # action
+        # Icons for the model (property)
         self._icons = None
+        # Set the window icon.
         self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__),"icon.png")))
-
-    ## Attach the item model for the database to the hierachy tree view.
-    #  It also tells the model which icons to use.
-    def setModel(self, model):
-        self.model = model
+        # Prepare the GUI.
+        uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
+        # Part of the initialization that require the GUI objects.
+        self.model = CondDBStructureModel()
         self.model.icons = self.icons
-        self.hierarchyTreeView.setModel(model)
+        self.hierarchyTreeView.setModel(self.model)
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -63,7 +65,11 @@ class MainWindow(QMainWindow):
                                      "The conditions database '%s' is not in the list of known database." % name)
                 return
         # Open the database using the connection string in the action
-        self.model.connectDB(CondDB(str(sender.data().toString())))
+        try:
+            db = CondDB(str(sender.data().toString()))
+            self.model.connectDB(db)
+        except:
+            self.exceptionDialog()
 
     def closeDatabase(self):
         self.model.connectDB(None)
@@ -102,9 +108,13 @@ class MainWindow(QMainWindow):
                 self._icons[iconName] = style.standardIcon(iconId)
         return self._icons
 
-## Factory function to create the main window.
-#  The interface is dynamically loaded from the Qt-designer file MainWindow.ui.
-def createMainWindow():
-    mw = uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), MainWindow())
-    mw.setModel(CondDBStructureModel())
-    return mw
+    ## Show a critical dialog with the latest exception traceback.
+    #  @param source string representing the function that trapped the exception.
+    def exceptionDialog(self, source = None):
+        import traceback
+        if source:
+            msg = "Called from '%s':\n" % source
+        else:
+            msg = ""
+        msg += traceback.format_exc()
+        QMessageBox.critical(self, "Exception in Python code", msg)
