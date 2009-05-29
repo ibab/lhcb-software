@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.15 2009-05-11 15:11:17 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.16 2009-05-29 16:04:43 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -21,6 +21,7 @@ from Configurables import CopyParticles
 from Configurables import CopyPrimaryVertices
 from Configurables import CopyFlavourTag
 from Configurables import CopyParticle2PVRelations
+from Configurables import PVRelatorAlg
 from Configurables import CopyParticle2MCRelations
 from Configurables import P2MCRelatorAlg
 from Configurables import MakeResonances
@@ -39,7 +40,7 @@ storeMCInfo = True
 # B tagging?
 BTaggingInfo = True
 # re-fit PV?
-PVRefit = False
+PVRefit = True
 #==============================================================================
 importOptions("$STDOPTS/LHCbApplication.opts")
 #mySelection = Selections.KstarSel
@@ -50,7 +51,7 @@ importOptions(mySelection.mainOptions)
 importOptions(mySelection.dataFiles)
 mainLocation = mySelection.mainLocation
 mainSelector = MakeResonances(mySelection.mainSelector)
-mainSelector.ReFitPVs=True
+#mainSelector.ReFitPVs=True
 mainSelector.OutputLevel=4
 #
 if (storeMCInfo) :
@@ -64,7 +65,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt_NewReFitPVs.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt_OldReFitPVsSorted.dst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
@@ -173,6 +174,10 @@ if (BTaggingInfo) :
 #==============================================================================
 # PV re-fit
 if (PVRefit) :
+    # re-fit PVs for each selected particle
+    # This produces a relations table linking each particle to the PVs that
+    # have been re-fitted after extracting it's tracks. The order is the
+    # same as in the original PV container. No best PV criteria applied!
     PVReFitter = PVReFitterAlg("PVReFitterAlg")
     PVReFitter.ParticleInputLocation = mainLocation+"/Particles"
     refittedPVLocation = mainLocation+"/RefittedVertices"
@@ -181,13 +186,17 @@ if (PVRefit) :
     PVReFitter.P2VRelationsOutputLocation = p2ReFitPVRelationsLoc
     PVReFitter.OutputLevel=4
     MySelection.Members += [PVReFitter]
-    # put the re-fitted vertices on the MicroDST
-    copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
-    copyReFittedPVs.InputLocation = refittedPVLocation
-    MySelection.Members += [copyReFittedPVs]
-    # copy the Particle->PV relations table
+    # Take Particle->PV relations table from previous step and produce
+    # new table, sorted according to an IRelatedPVFinder
+    PVRelator = PVRelatorAlg()
+    PVRelator.OutputLevel=4
+    PVRelator.P2PVRelationsInputLocation = p2ReFitPVRelationsLoc
+    p2pvSortedRelationsLoc = mainLocation + "/P2ReFitPVSortedRelations"
+    PVRelator.P2PVRelationsOutputLocation = p2pvSortedRelationsLoc
+    MySelection.Members += [PVRelator]
+    # copy sorted table. This also copies the re-fitted PVs.
     copyP2RefitPVRel = CopyParticle2PVRelations("CopyP2RefitPVRelations")
-    copyP2RefitPVRel.InputLocation = p2ReFitPVRelationsLoc
+    copyP2RefitPVRel.InputLocation = p2pvSortedRelationsLoc
     copyP2RefitPVRel.OutputLevel=4
     MySelection.Members += [copyP2RefitPVRel]
 #==============================================================================
