@@ -73,6 +73,17 @@ class BestVertex:
             if ( not PVRange.empty()) :
                 return PVRange.back().to()
 #==============================================================================
+class HistoPlotter :
+    def __init__(self, histos, keyGetter, func) :
+        self.histos = histos
+        self.key = keyGetter
+        self.func = func
+    def __call__(self, obj) :
+        if obj != None :
+            value = self.func(obj)
+            if value != None :
+                self.histos[self.key(obj)].fill(value)
+#==============================================================================
 class GenericPlotter:
     def __init__(self,
                  plots,
