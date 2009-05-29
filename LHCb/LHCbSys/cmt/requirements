@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf             v12r3
+use GaudiConf             v12r4
 use GaudiObjDesc          v11r7
 
 #                                         Maintainer
