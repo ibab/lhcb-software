@@ -10,6 +10,7 @@ apply_pattern install_more_includes more=OnlineKernel
 
 library OnlineKernel       ../src/CPP/*.cpp     \
                            ../src/RTL/*.cpp     \
+                           ../src/SCR/*.cpp     \
                            ../src/MBM/*.cpp
 
 macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
