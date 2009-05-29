@@ -31,6 +31,7 @@
 #include "bm_struct.h"
 #include "bm_internals.h"
 #include "RTL/DoubleLinkedQueue.h"
+#include "RTL/DoubleLinkedQueueScan.h"
 #define MBM_MAX_BUFF  32
 
 #ifdef _WIN32
@@ -71,7 +72,8 @@ static inline int mbm_error_status()  {
 #define MBM_ERROR_STATUS mbm_error_status()
 #undef MBM_ERROR
 #define  MBM_ERROR mbm_error(__FILE__,__LINE__);
-#define  MBMQueue RTL::DoubleLinkedQueue
+#define  MBMQueue   RTL::DoubleLinkedQueue
+#define  MBMScanner RTL::DoubleLinkedQueueScan
 using namespace MBM;
 
 static qentry_t *desc_head;
@@ -851,7 +853,7 @@ int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove)  {
 // clear events with freqmode = notall
 int _mbm_check_freqmode (BMID bm)  {
   int ret = 0;
-  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
+  MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* ev=que.get(); ev; ev = que.get() )  {
     ev->isValid();
     //if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->umask2.mask_summ() && !ev->held_mask.mask_summ() )  {
@@ -898,11 +900,11 @@ int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
 
 // try to get a single event ... 
 int _mbm_get_ev(BMID bm, USER* u)  {
-  //MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
-  //for(EVENT* e = que.get(); e != 0; e = que.get() )  {
-  EVENT* start = (EVENT*)bm->evDesc;
-  for(EVENT* ee = (EVENT*)(((char*)start)+(((long)start->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
-    EVENT* e = add_ptr(ee,-EVENT_next_off);
+  MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+  for(EVENT* e = que.get(); e != 0; e = que.get() )  {
+    //EVENT* start = (EVENT*)bm->evDesc;
+    //for(EVENT* ee = (EVENT*)(((char*)start)+(((long)start->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
+    //EVENT* e = add_ptr(ee,-EVENT_next_off);
     if ( e->isValid() && (e->busy != 2) && (e->busy !=0) )  {
       int req_one = e->umask2.test(u->uid);
       if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
@@ -960,7 +962,7 @@ int _mbm_del_wev (BMID /* bm */, USER* u) {
 
 // check wait event queue
 int _mbm_check_wev (BMID bm, EVENT* e)  {
-  MBMQueue<USER> que(&bm->usDesc->wev_head, -USER_we_off);
+  MBMScanner<USER> que(&bm->usDesc->wev_head, -USER_we_off);
   for(USER* u = que.get(); u != 0; u = que.get() )  {
     u->isValid();
     int req_one = e->umask2.test(u->uid);
@@ -1014,7 +1016,7 @@ int _mbm_check_wsp (BMID bm)  {
   char    *bitmap = bm->bitmap;
   int      shift  = ctrl->shift_p_Bit;
 
-  MBMQueue<USER> que(&bm->usDesc->wsp_head, -USER_ws_off);
+  MBMScanner<USER> que(&bm->usDesc->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
     //int s, l;
@@ -1053,7 +1055,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
   int i;
   REQ *rq;
   UserMask dummy;
-  MBMQueue<USER> que(bm->usDesc, -USER_next_off);
+  MBMScanner<USER> que(bm->usDesc, -USER_next_off);
   for(USER* u=que.get(); u; u=que.get() )  {
     u->isValid();
     if (((u->partid != 0) && (partid != 0) && (u->partid != partid)) || (u->c_state == S_pause))  {
@@ -1089,7 +1091,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
 
 // check existance of name
 int _mbm_findnam (BMID bm, const char* name) {
-  MBMQueue<USER> que(bm->usDesc,-USER_next_off);
+  MBMScanner<USER> que(bm->usDesc,-USER_next_off);
   for(USER* u=que.get(); u; u=que.get())  {
     if ( u->isValid() && ::strncmp(u->name, name, sizeof(u->name)) == 0 )  {
       return u->uid;
@@ -1226,7 +1228,7 @@ int _mbm_uclean (BMID bm)  {
   if ( u->held_eid != EVTID_NONE )    { // free the held event
     _mbm_rel_event (bm, u);             // release event
   }
-  MBMQueue<EVENT> que(bm->evDesc,-EVENT_next_off);
+  MBMScanner<EVENT> que(bm->evDesc,-EVENT_next_off);
   for(EVENT* e=que.get(); e; e=que.get() )  {
     e->isValid();
     e->umask0.clear(uid);
@@ -1393,7 +1395,7 @@ int _mbm_del_wes (BMID /* bm */, USER* us)   {
 
 // check wait event slot
 int _mbm_check_wes (BMID bm)   {
-  MBMQueue<USER> que(&bm->usDesc->wes_head,-USER_wes_off);
+  MBMScanner<USER> que(&bm->usDesc->wes_head,-USER_wes_off);
   for(USER* u=que.get(); u; u=que.get() )  {
     if (u->isValid() && u->p_state == S_weslot)    {
       _mbm_del_wes (bm, u);
@@ -1896,12 +1898,12 @@ int _mbm_check_cons (BMID bm)  {
   if (us->uid != owner)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  //MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
-  //for(EVENT* e=que.get(); e; e=que.get() )  {
-  EVENT* start = (EVENT*)bm->evDesc;
-  EVENT* ee = (EVENT*)bm->evDesc;
-  for(ee = (EVENT*)(((char*)ee)+(((long)ee->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
-    EVENT* e = add_ptr(ee,-EVENT_next_off);
+  MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+  for(EVENT* e=que.get(); e; e=que.get() )  {
+    //EVENT* start = (EVENT*)bm->evDesc;
+    //EVENT* ee = (EVENT*)bm->evDesc;
+    //for(ee = (EVENT*)(((char*)ee)+(((long)ee->next))); ee != start; ee = (EVENT*)(((char*)ee)+(((long)ee->next))) )  {
+    //EVENT* e = add_ptr(ee,-EVENT_next_off);
     e->isValid();
     if (e->busy != 2)     {
       continue;
