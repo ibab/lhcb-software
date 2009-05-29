@@ -1185,6 +1185,7 @@ int _mbm_efree (BMID bm, EVENT* e)  {
   return MBM_NORMAL;
 }
 
+/// Remove event from active event queue
 int _mbm_del_event(BMID bm, EVENT* e, int len)  {
   int add = e->ev_add;
   _mbm_efree (bm, e);           // de-allocate event 
@@ -1192,7 +1193,7 @@ int _mbm_del_event(BMID bm, EVENT* e, int len)  {
   return MBM_NORMAL;
 }
 
-// release event held by this user
+/// release event held by this user
 int _mbm_rel_event (BMID bm, USER* u)  {
   EVENT *e = bm->event + u->held_eid;
   u->held_eid = EVTID_NONE;
@@ -1206,7 +1207,7 @@ int _mbm_rel_event (BMID bm, USER* u)  {
   return MBM_NORMAL;
 }
 
-// clean-up this user
+/// clean-up this user
 int _mbm_uclean (BMID bm)  {
   int   uid = bm->owner;
   USER* u  = bm->user + uid;
@@ -1245,7 +1246,7 @@ int _mbm_uclean (BMID bm)  {
   return MBM_NORMAL;
 }
 
-// deallocate space
+/// deallocate buffer space
 int _mbm_sfree (BMID bm, int add, int size)  {
   CONTROL *ctrl = bm->ctrl;
   int bit   =  add >> ctrl->shift_p_Bit;
