@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2009-05-28 19:57:17 graven Exp $ 
+# $Id: requirements,v 1.35 2009-05-29 09:07:33 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -12,6 +12,7 @@ use       Python      v* LCG_Interfaces
 use       HltCommon   v*  Hlt
 use       HltLine     v*  Hlt
 use       Hlt1Lines   v*  Hlt
+use       Hlt2Lines   v*  Hlt
 
 use       RichRecSys  v*  Rich
 

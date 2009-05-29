@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.84 2009-05-28 19:57:17 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.85 2009-05-29 09:07:33 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -25,11 +25,20 @@ from Hlt1Lines.HltElectronLines import HltElectronLinesConf
 from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
 from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
 from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
+from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
+from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
+from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
+from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
+from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
+from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
+
 from HltConf.Hlt1             import Hlt1Conf
 from RichRecSys.Configuration import *
 
 class HltConf(LHCbConfigurableUser):
-    __used_configurables__ = [ HltCommissioningLinesConf
+    __used_configurables__ = [ Hlt1Conf
+                             # Hlt1 Lines
+                             , HltCommissioningLinesConf
                              , HltVeloLinesConf
                              , HltLumiLinesConf
                              , HltBeamGasLinesConf
@@ -39,8 +48,13 @@ class HltConf(LHCbConfigurableUser):
                              , HltElectronLinesConf
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
-                             , Hlt1Conf
-                             #, Hlt2MuonLinesConf
+                             # Hlt2 Lines
+                             , Hlt2B2DXLinesConf
+                             , Hlt2B2JpsiXLinesConf
+                             , Hlt2InclusiveDiMuonLinesConf
+                             , Hlt2InclusiveMuonLinesConf
+                             , Hlt2InclusivePhiLinesConf
+                             , Hlt2TopologicalLinesConf
                              , RichRecSysConf ]
     __slots__ = { "L0TCK"                      : ''
                 , "HltType"                    : 'Hlt1+Hlt2'
@@ -137,9 +151,13 @@ class HltConf(LHCbConfigurableUser):
                     for i in reqs.split('+') :
                         if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
                 # add some Hlt2Lines from configurables
-                #HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
-                #from Configurables import Hlt2MuonLinesConf
-                #Hlt2MuonLinesConf()
+                Hlt2B2DXLinesConf()
+                Hlt2B2JpsiXLinesConf()
+                Hlt2InclusiveDiMuonLinesConf()
+                Hlt2InclusiveMuonLinesConf()
+                Hlt2InclusivePhiLinesConf()
+                Hlt2TopologicalLinesConf()
+
 
 
     def configureRoutingBits(self) :

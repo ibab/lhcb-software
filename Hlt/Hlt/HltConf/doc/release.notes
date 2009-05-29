@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.248 2009-05-28 19:57:17 graven Exp $ 
+! $Id: release.notes,v 1.249 2009-05-29 09:07:33 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!2009-05-29 - Gerhard Raven
+ - use configurables from Hlt/Hlt2Lines for some Hlt2 lines,
+   still include (implicitly!) HltSelections/Hlt2Lines.py for
+   the rest
+
 !2009-05-28 - Gerhard Raven
  - follow move of HltLine.cpp to Hlt/HltLine
  - follow move of HltLine.py to Hlt/HltLine
