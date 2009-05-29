@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.70 2009-01-15 11:19:23 pkoppenb Exp $
+!$Id: release.notes,v 1.71 2009-05-29 21:17:10 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2009-05-29 - Gerhard Raven
+ - remove unneeded include
 
 !========================== HltTracking v3r8 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven
