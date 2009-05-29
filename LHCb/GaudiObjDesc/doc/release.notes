@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaudiObjDesc v11r7 2009-05-25 ======================
+! 2008-09-26 - Marco Cattaneo
+ - In importUtils.py, add temporary workaround for windows: define NOMINMAX
+   when including GaudiKernel/boost_allocator.h, to avoid conflict with max()
+   macro defined in windows.h. This workaround will become unnecessary with
+   Gaudi v21r2
+
 ! 2009-05-19 - Hubert Degaudenzi 
  - Removed the override of the LD_LIBRARY_PATH env variable in obj2doth and 
    obj2dict. They are not needed and cause problems when cross-compiling

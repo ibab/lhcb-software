@@ -51,6 +51,14 @@ class importUtils:
   def genIncludes(self):
     s = ''
     for imp in self.include :
+      # workaround for Windows max() macro problem, to be moved to GaudiKernel/boost_allocator.h in Gaudi v21r2
+      if imp.find('GaudiKernel/boost_allocator.h') != -1 : 
+        s += '#ifdef _WIN32\n'
+        s += '// Avoid conflict of Windows macro with std::max\n'
+        s += '  #ifndef NOMINMAX\n'
+        s += '    #define NOMINMAX\n'
+        s += '  #endif\n'
+        s += '#endif\n'
       if imp.find('.') != -1 : s += '#include "%s"\n' % imp
       else                   : s += '#include "%s.h"\n' % imp
     s += self.genStdIncludes()
