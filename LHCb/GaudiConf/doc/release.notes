@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r4 2009-05-29 ========================
+! 2009-05-29 - Marco Cattaneo
+ - Add LHCbKernel dependency, to pick up LHCbConfigurableUser used by
+   Configuration.py
+   
 ! 2009-05-28 - Marco Cattaneo
  - Remove obsolete options files SimDicts.opts, SimContents.opts,
    DigiContent.opts, DstContent.opts
