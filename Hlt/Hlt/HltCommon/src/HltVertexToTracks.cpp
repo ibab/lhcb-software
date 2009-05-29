@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.7 2008-12-29 12:56:09 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.8 2009-05-29 21:36:32 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/foreach.hpp"
@@ -8,7 +8,6 @@
 
 // local
 #include "HltVertexToTracks.h"
-#include "HltBase/ESequences.h"
 #include "Event/RecVertex.h"
 
 using namespace LHCb;

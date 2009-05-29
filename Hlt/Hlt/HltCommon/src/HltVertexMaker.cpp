@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.33 2009-02-26 15:53:58 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.34 2009-05-29 21:36:32 graven Exp $
 // Include files 
 
 
@@ -8,7 +8,6 @@
 // local
 #include "HltVertexMaker.h"
 #include "EParser.h"
-#include "HltBase/ESequences.h"
 
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"

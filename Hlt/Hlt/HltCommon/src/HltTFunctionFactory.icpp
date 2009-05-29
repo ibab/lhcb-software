@@ -1,11 +1,10 @@
-// $Id: HltTFunctionFactory.icpp,v 1.10 2009-02-22 19:53:24 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.11 2009-05-29 21:38:02 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
 #include "EParser.h"
-#include "HltBase/ESequences.h"
 
 
 // local

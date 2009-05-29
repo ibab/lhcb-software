@@ -1,11 +1,10 @@
-// $Id: HltAlgorithm.cpp,v 1.52 2009-04-28 07:03:37 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.53 2009-05-29 21:39:54 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/ESequences.h"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/foreach.hpp"
