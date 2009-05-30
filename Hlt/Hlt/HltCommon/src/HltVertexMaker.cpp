@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.34 2009-05-29 21:36:32 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.35 2009-05-30 11:37:13 graven Exp $
 // Include files 
 
 
@@ -181,7 +181,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
         double val = (*m_functions[i])(*track1,*track2);
         rejected = !(*m_filters[i])(val);
         verbose() << " value " << val << " rejected? " << rejected << endreq;
-        if (produceHistos()) { fillHisto(*m_histos[i],val,1.); }
+        if (produceHistos()) { fill(m_histos[i],val,1.); }
         if (rejected) break;
         m_tcounters[i] += 1;
         m_vals.push_back(val);

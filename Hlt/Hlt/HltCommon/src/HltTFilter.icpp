@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.20 2009-05-30 07:19:56 graven Exp $
+// $Id: HltTFilter.icpp,v 1.21 2009-05-30 11:37:13 graven Exp $
 // Include files
 
 #include "EParser.h"
@@ -156,8 +156,8 @@ StatusCode HltTFilter<T>::execute() {
         debug() << endreq; 
         debug() << " best " << val << endreq;
       }
-      fillHisto(*filter->histovalues,vals,1.);
-      fillHisto(*filter->histobest,val,1.);
+      fill(filter->histovalues,vals,1.);
+      fill(filter->histobest,val,1.);
     }
 
     // filter 

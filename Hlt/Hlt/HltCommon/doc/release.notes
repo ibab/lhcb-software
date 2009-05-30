@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 ! 2009-05-29 - Gerhard Raven
  - remove unused includes
+ - use fill directly instead of fillHisto
 
 ! 2009-05-28 - Gerhard Raven
  - move HltLine to Hlt/HltLine
