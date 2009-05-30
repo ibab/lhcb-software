@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.72 2009-05-30 11:29:00 graven Exp $
+!$Id: release.notes,v 1.73 2009-05-30 11:39:21 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -7,6 +7,7 @@
 ! 2009-05-29 - Gerhard Raven
  - remove unneeded include
  - move EDictionary from HltBase to HltTracking
+ - remove options from branches in cmt/requirements
 
 !========================== HltTracking v3r8 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven

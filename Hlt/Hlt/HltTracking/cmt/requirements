@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.23 2008-12-19 17:37:27 graven Exp $
+#$Id: requirements,v 1.24 2009-05-30 11:39:21 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Jose Angel Hernando Morata 
@@ -8,7 +8,7 @@ version           v3r8
 
 # Structure
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src 
 include_path      none
 
 # Used packages
