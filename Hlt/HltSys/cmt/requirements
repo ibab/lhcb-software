@@ -14,7 +14,6 @@ use HltBase             v6r4    Hlt   # Gerhard Raven
 use HltCommon           v5r5    Hlt   # Gerhard Raven
 
 use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
-use HltHadAlley         v3r3p1  Hlt   # Jose Angel Hernando-Morata
 
 use HltEcalAlley        v1r6p1  Hlt   # Mariusz Witek
 
@@ -31,6 +30,7 @@ use HltRawData          v1r10    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
 use HltPython	        v1r14   Hlt   # Jose Angel Hernando-Morata
+use TCKUtils            v1r0    Hlt   # Gerhard Raven
 
 #=======================================================
 # HLT2 packages
