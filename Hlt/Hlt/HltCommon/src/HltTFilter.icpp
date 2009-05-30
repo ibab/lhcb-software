@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.19 2009-02-22 19:50:43 graven Exp $
+// $Id: HltTFilter.icpp,v 1.20 2009-05-30 07:19:56 graven Exp $
 // Include files
 
 #include "EParser.h"
@@ -166,7 +166,7 @@ StatusCode HltTFilter<T>::execute() {
                                 make_adaptor(*filter->filter) ),
                 out->end() );
 
-    size_t ncan = out->ncandidates();
+    size_t ncan = out->size();
     debug() << " filtered  " << ncan << endreq;
     
     filter->counter += !out->empty();

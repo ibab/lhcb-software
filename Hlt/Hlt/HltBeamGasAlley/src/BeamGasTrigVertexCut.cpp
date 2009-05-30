@@ -121,7 +121,7 @@ StatusCode BeamGasTrigVertexCut::execute() {
     	z_r0 = z - r/t;
         if( std::fabs(z_r0 - zPosOfMaxBin) < m_binWidth*0.5 ) m_trackSelection->push_back( *itT );
       }
-      debug() << "Number of Objects in the outputSelection = " << m_trackSelection->ncandidates() << endmsg;
+      debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
            
       if( zPosOfMaxBin > 0 ) m_trigEventsZpositive += 1;
       else m_trigEventsZnegative += 1;

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.53 2009-05-29 21:39:54 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.54 2009-05-30 07:20:33 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -116,7 +116,7 @@ StatusCode HltAlgorithm::endExecute() {
   setDecision();
   if (produceHistos()) monitorOutput();
   
-  debug() << " output candidates " << m_outputSelection->ncandidates() 
+  debug() << " output candidates " << m_outputSelection->size() 
           << " decision " << m_outputSelection->decision() 
           << " filterpassed " << filterPassed() << endreq;
   return StatusCode::SUCCESS;
@@ -137,7 +137,7 @@ bool HltAlgorithm::verifyInput()
               << " decision " << i->decision() 
               << " process status " << i->processed() 
               << " error status " << i->error() 
-              << " candidates " << i->ncandidates() << endreq;
+              << " candidates " << i->size() << endreq;
   }
 
   if (!ok) {
@@ -152,7 +152,7 @@ bool HltAlgorithm::verifyInput()
                 << " decision " << i->decision()
                 << " processed " << i->processed()
                 << " error " << i->error()
-                << " candidates " << i->ncandidates() << endreq;      
+                << " candidates " << i->size() << endreq;      
     }
     warning() << endreq;
     warning() << endreq;
@@ -167,14 +167,14 @@ void HltAlgorithm::monitorInputs()
   if (!produceHistos()) return;
   for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it) {
-    fillHisto(*m_inputHistos[(*it)->id()],(*it)->ncandidates(),1.);
+    fillHisto(*m_inputHistos[(*it)->id()],(*it)->size(),1.);
   }
   // verbose() << " end monitor inputs " <<endreq;
 }
 
 void HltAlgorithm::monitorOutput() {
   if (!produceHistos()) return;
-  size_t nCandidates = m_outputSelection->ncandidates();
+  size_t nCandidates = m_outputSelection->size();
   Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
   fillHisto(*m_outputHisto,nCandidates,1.);
 }
@@ -185,7 +185,7 @@ void HltAlgorithm::monitorOutput() {
 // but in case there are no candidates, we MUST call setDecision(bool) explicitly!!
 void HltAlgorithm::setDecision() {
   Assert (0 != m_outputSelection," setDecision() no output selection! ");
-  size_t n = m_outputSelection->ncandidates();
+  size_t n = m_outputSelection->size();
   counter("#candidates accepted") += n ; 
   if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
   setDecision( m_outputSelection->decision() );
