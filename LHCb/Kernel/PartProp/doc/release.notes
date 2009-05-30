@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.27 2009-05-30 12:16:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2009-05-30 13:06:28 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!======================== PartProp v1r2 2009-05-30 ============================
 ! 2009-05-30 - Vanya BELYAEV 
  - put a proper fix for operator|= and operator&=
  - undo the previous patch with dictionaries 
 
-
-!======================== PartProp v1r2 2009-05-29 ============================
 ! 2009-05-29 - Vanya BELYAEV
      temporary fix: 
 
