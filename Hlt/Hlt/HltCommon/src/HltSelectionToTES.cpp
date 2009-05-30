@@ -1,8 +1,9 @@
-// $Id: HltSelectionToTES.cpp,v 1.7 2009-01-14 21:04:37 graven Exp $
+// $Id: HltSelectionToTES.cpp,v 1.8 2009-05-30 11:46:11 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "HltBase/HltSelection.h"
 #include "HltSelectionToTES.h"
 
 using namespace LHCb;
