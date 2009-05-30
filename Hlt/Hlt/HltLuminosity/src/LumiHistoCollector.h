@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.h,v 1.6 2009-02-25 09:01:42 graven Exp $
+// $Id: LumiHistoCollector.h,v 1.7 2009-05-30 11:34:45 graven Exp $
 #ifndef LUMIHISTOCOLLECTOR_H 
 #define LUMIHISTOCOLLECTOR_H 1
 
@@ -7,6 +7,7 @@
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
 #include "HltBase/HltBaseAlg.h"
+// #include "GaudiAlg/GaudiHistoAlg.h"
 
 class IRegistry;
 class IDataManagerSvc;

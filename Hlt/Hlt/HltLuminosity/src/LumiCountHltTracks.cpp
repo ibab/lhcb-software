@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.8 2009-05-30 11:34:45 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -6,6 +6,8 @@
 #include "Event/Track.h"
 #include "Event/HltLumiSummary.h"
 #include "Event/LumiCounters.h"
+
+#include "HltBase/HltSelection.h"
 
 // local
 #include "LumiCountHltTracks.h"

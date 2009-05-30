@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.11 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiHistoMaker.cpp,v 1.12 2009-05-30 11:34:45 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -116,10 +116,10 @@ StatusCode LumiHistoMaker::execute() {
     AIDA::IHistogram1D *histo = m_Histos[i];
     AIDA::IHistogram1D *thresholdHisto = m_ThresholdHistos[i];
     int ivalue = m_HltLumiSummary->info(counter,-1);
-    fillHisto(*histo, (double) ivalue, 1.);
+    fill(histo, (double) ivalue, 1.);
     double digit=0;
     if ( ivalue > m_Thresholds[i] ) digit=1.;
-    fillHisto(*thresholdHisto, digit, 1.);
+    fill(thresholdHisto, digit, 1.);
     debug() << "histo:" << cname << " value " << ivalue << " threshold " << digit<< endmsg;
   }
   
