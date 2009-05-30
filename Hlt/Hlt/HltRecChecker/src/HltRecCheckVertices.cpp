@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.9 2009-05-29 21:19:20 graven Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.10 2009-05-30 11:22:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -118,9 +118,9 @@ void HltRecCheckVertices::checkVertices() {
 
   int nrcver = m_relVertexMCVertex.size();
   int nmcver = m_relMCVertexVertex.size();
-  fillHisto(*m_histoNRCV,nrcver,1.);
-  fillHisto(*m_histoNMCV,nmcver,1.);
-  fillHisto(*m_histoNDV,nrcver-nmcver,1.);
+  fill(m_histoNRCV,nrcver,1.);
+  fill(m_histoNMCV,nmcver,1.);
+  fill(m_histoNDV,nrcver-nmcver,1.);
   
   debug() << " n rec vertices " << nrcver << endreq;
   debug() << " n mc vertices " << nmcver << endreq;
@@ -139,13 +139,13 @@ void HltRecCheckVertices::checkVertices() {
     double mcy = mcver->position().y();
     double mcz = mcver->position().z();
     
-    fillHisto(*m_histoX,x,1.);
-    fillHisto(*m_histoY,y,1.);
-    fillHisto(*m_histoZ,z,1.);
+    fill(m_histoX,x,1.);
+    fill(m_histoY,y,1.);
+    fill(m_histoZ,z,1.);
 
-    fillHisto(*m_histoDX,x-mcx,1.);
-    fillHisto(*m_histoDY,y-mcy,1.);
-    fillHisto(*m_histoDZ,z-mcz,1.);
+    fill(m_histoDX,x-mcx,1.);
+    fill(m_histoDY,y-mcy,1.);
+    fill(m_histoDZ,z-mcz,1.);
 
     debug() << " dx vertex " << x-mcx << endreq;
     debug() << " dy vertex " << y-mcy << endreq;

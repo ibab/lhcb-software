@@ -6,6 +6,7 @@
 
 ! 2009-05-29 - Gerhard Raven
  - remove unused include
+ - use fill instead of fillHisto
 
 !========================== HltRecChecker v1r9 2009-02-23 ===================
 ! 2009-02-03 - V Gligorov

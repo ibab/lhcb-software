@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.cpp,v 1.5 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecCheckTracks.cpp,v 1.6 2009-05-30 11:22:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -88,13 +88,13 @@ StatusCode HltRecCheckTracks::execute() {
     double dpop = (track.p()-mcp)/mcp;
 
 
-    fillHisto( *m_histoDx, dx, 1.);
-    fillHisto( *m_histoDy, dy, 1.);
-    fillHisto( *m_histoDz, dz, 1.);
+    fill( m_histoDx, dx, 1.);
+    fill( m_histoDy, dy, 1.);
+    fill( m_histoDz, dz, 1.);
 
-    fillHisto( *m_histoDTx, dtx, 1.);
-    fillHisto( *m_histoDTy, dty, 1.);
-    fillHisto( *m_histoPOP, dpop, 1.);
+    fill( m_histoDTx, dtx, 1.);
+    fill( m_histoDTy, dty, 1.);
+    fill( m_histoPOP, dpop, 1.);
     
 
   }
@@ -102,7 +102,7 @@ StatusCode HltRecCheckTracks::execute() {
   int ntracks = m_selections.input<1>()->size();
   if (ntracks!=0) {
       double rat = double(nghost)/double(ntracks);
-      fillHisto( *m_histoGhost, rat, 1.);
+      fill( m_histoGhost, rat, 1.);
       debug() << " checkReco ghost " << nghost << " " 
               << ntracks << " " << rat << endreq;
   }

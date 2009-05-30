@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.3 2009-02-03 18:17:35 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.4 2009-05-30 11:22:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "boost/foreach.hpp"
 
+#include "HltBase/HltSelection.h"
 // local
 #include "HltRecCheckGhosts.h"
 
