@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.54 2009-05-27 18:37:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.55 2009-05-30 13:09:17 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiCore
-version            v9r2
+version            v9r1
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
@@ -40,10 +40,10 @@ apply_pattern      reflex_dictionary                                     \
                    selectionfile=$(LOKICOREROOT)/dict/LoKiCore.xml       \
                    options=" -U__MINGW32__ "
 	        
-macro_append       LoKiCore_dependencies        LoKiCoreLib
-macro_append       LoKiCoreDict_dependencies    LoKiCoreLib
-macro_append       NodeGrammarTest_dependencies LoKiCoreLib
-macro_append       TreeGrammarTest_dependencies LoKiCoreLib
+macro_append       LoKiCore_dependencies        " LoKiCoreLib " 
+macro_append       LoKiCoreDict_dependencies    " LoKiCoreLib " 
+macro_append       NodeGrammarTest_dependencies " LoKiCoreLib " 
+macro_append       TreeGrammarTest_dependencies " LoKiCoreLib " 
 
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=LoKiCoreLib
