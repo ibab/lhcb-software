@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.12 2009-01-14 08:32:43 graven Exp $
+// $Id: HltSelection.h,v 1.13 2009-05-30 07:21:55 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -39,7 +39,6 @@ namespace Hlt
     bool error() const {return m_error;} //TODO: is bool really what we want??? do we want more???
 
     virtual CLID classID() const {return DataObject::clID();}
-    virtual size_t ncandidates() const {return 0;}
     virtual void clean() {m_decision = false; m_processed = false; m_error = false;}    
 
     template <typename T>
@@ -75,7 +74,6 @@ namespace Hlt
     virtual ~TSelection() ;
 
     CLID classID() const { return T::classID(); }
-    size_t ncandidates() const  {return m_candidates.size();}
     void clean();
 
     // forward container functionality..
