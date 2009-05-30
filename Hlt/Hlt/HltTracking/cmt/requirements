@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.25 2009-05-30 12:46:18 graven Exp $
+#$Id: requirements,v 1.26 2009-05-30 12:58:12 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Jose Angel Hernando Morata 
@@ -14,13 +14,12 @@ include_path      none
 # Used packages
 #============================================================================
 
+use GaudiKernel         v*
 use GaudiAlg            v*
-use HltEvent            v*    Event
-use TrackEvent		v*    Event
-
-use TrackInterfaces       v*    Tr
-
-use HltBase     v*      Hlt
+use HltBase             v*  Hlt
+use HltEvent            v*  Event
+use TrackEvent          v*  Event
+use TrackInterfaces     v*  Tr
 
 #============================================================================
 # Component library building rule
