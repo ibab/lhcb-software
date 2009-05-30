@@ -1,4 +1,4 @@
-// $Id: HltDeltaPTool.cpp,v 1.2 2008-10-24 13:32:21 leandrop Exp $
+// $Id: HltDeltaPTool.cpp,v 1.3 2009-05-30 19:43:58 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -53,23 +53,20 @@ StatusCode HltDeltaPTool::initialize() {
 
 //=============================================================================
 
-double  HltDeltaPTool::function(const Track& ctrack)
+double  HltDeltaPTool::function(const Track& track)
 {
   
-  // A dirty trick!
-  Track* track = (Track*) &ctrack;
-  
-  std::vector< LHCb::LHCbID >  lista = track->lhcbIDs ();
+  std::vector< LHCb::LHCbID >  lista = track.lhcbIDs ();
   MuonTileID tile;
   std::vector<LHCbID>::iterator it; 
   float ptrack, pancestor, dpop;
   
-  ptrack=ctrack.p();
+  ptrack=track.p();
   // looping over lhcbIDs
   for(it=lista.end()-1;it>=lista.begin();it--){
     if(it->isMuon()){
       MuonTileID tile=it->muonID();
-      const SmartRefVector<Track>& ancestors = ctrack.ancestors();
+      const SmartRefVector<Track>& ancestors = track.ancestors();
       if (msgLevel (MSG::DEBUG)) debug() << " # of ancestors = " << ancestors.size() << endreq;
       if (ancestors.size() == 0) return 0;
       pancestor=(*ancestors[0]).p();

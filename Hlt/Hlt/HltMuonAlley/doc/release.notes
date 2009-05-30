@@ -6,6 +6,7 @@
 
 ! 2009-04-30 - Gerhard Raven
  - move track matching code to HltTracking
+ - remove unneeded cast
 
 !========================== HltMuonAlley v2r9 2009-05-06 ===================
 
