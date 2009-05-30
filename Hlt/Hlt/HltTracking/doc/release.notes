@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.75 2009-05-30 12:46:18 graven Exp $
+!$Id: release.notes,v 1.76 2009-05-30 19:24:13 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -10,6 +10,7 @@
  - remove options from branches in cmt/requirements
  - move the forward + track match algorithms from HltHadAlley here
  - move the track match algorithms from HltMuonAlley here
+ - move the track match algorithms from HltEcalAlley here
 
 !========================== HltTracking v3r8 2009-01-15 ===================
 ! 2008-12-29 - Gerhard Raven

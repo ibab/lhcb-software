@@ -1,4 +1,4 @@
-// $Id: HltVeloEcalMatch.h,v 1.2 2009-02-17 16:25:04 witekma Exp $
+// $Id: HltVeloEcalMatch.h,v 1.1 2009-05-30 19:24:13 graven Exp $
 #ifndef HLTVELOECALMATCH_H 
 #define HLTVELOECALMATCH_H 1
 
