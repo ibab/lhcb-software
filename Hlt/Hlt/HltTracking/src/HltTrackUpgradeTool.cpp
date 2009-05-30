@@ -1,9 +1,10 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.31 2009-05-29 21:17:11 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.32 2009-05-30 11:29:00 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
+#include "EDictionary.h"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
 #include "GaudiKernel/IJobOptionsSvc.h"

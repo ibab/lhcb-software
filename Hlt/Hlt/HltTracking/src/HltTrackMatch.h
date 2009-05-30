@@ -1,9 +1,10 @@
-// $Id: HltTrackMatch.h,v 1.5 2008-09-08 10:14:22 graven Exp $
+// $Id: HltTrackMatch.h,v 1.6 2009-05-30 11:29:00 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKMATCH_H 
 #define HLTTRACKING_HLTTRACKMATCH_H 1
 
 // Include files
 // from Gaudi
+#include "EDictionary.h"
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "TrackInterfaces/ITrackMatch.h"
