@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.23 2009-05-30 12:14:28 graven Exp $
+// $Id: HltBase.icpp,v 1.24 2009-05-30 13:43:01 graven Exp $
 // Include files
 
 
@@ -69,11 +69,6 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
   EBASE::debug() << " booking histogram  " << hd << endreq;
   return EBASE::book(hd);
 };
-
-template <class EBASE>
-void HltBase<EBASE>::fillHisto( AIDA::IHistogram1D& histo, double x, double weight) {
-  if (EBASE::produceHistos()) EBASE::fill( &histo , x, weight);
-}
 
 template <class EBASE>
 IHltDataSvc& HltBase<EBASE>::dataSvc() const {

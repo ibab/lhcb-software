@@ -6,6 +6,7 @@
 
 ! 2009-05-30 - Gerhard Raven
  - remove Selection::ncandidates; please use Selection::size instead
+ - remove HltBase::fillHisto; please use fill instead
  - reduce the number of implicitly included include files
 
 !========================== HltBase v6r4 2009-05-06 ===================
