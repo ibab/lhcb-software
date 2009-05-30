@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.34 2009-05-30 13:11:05 ibelyaev Exp $ 
+# $Id: requirements,v 1.35 2009-05-30 13:52:25 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v8r3
+version            v8r4
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
