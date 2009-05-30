@@ -3,12 +3,12 @@
 # Maintainer : Jose Angel Hernando Morata
 #============================================================================
 package           HltPython
-version           v1r14
+version           v1r15
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src python examples options
+branches          cmt doc python examples options
 
 #============================================================================
 # Used packages.
@@ -20,8 +20,6 @@ use	LinkerInstances v* Event
 #------------------------------------------------------------------------------
 
 # =============== running options =============================================
-path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"
-path_prepend PYTHONPATH "$(GAUDIPYTHONROOT)/python"
 path_remove  PYTHONPATH "/HltPython/" WIN32 "\HltPython\"
 path_append  PYTHONPATH "$(HLTPYTHONROOT)/python/modules"
 path_append  PYTHONPATH "$(HLTPYTHONROOT)/python/examples"
