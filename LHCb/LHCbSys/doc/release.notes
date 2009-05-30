@@ -83,7 +83,6 @@ This version uses Gaudi v21r1 and LCG_56a
   . Substitute SubNodes with NodeList 
   . Kernel/Nodes.h: Move unnecessary concrete symbols into a separate file 
   . ParticlePropertySvc.cpp: Remove the duplicated list of symbols 
-  . Temporarily exclude "|=" and "&=" operators from the dictionary
 
 - In CaloInterfaces v7r11
   . Remove unnecessary dependence on PhysEvent
