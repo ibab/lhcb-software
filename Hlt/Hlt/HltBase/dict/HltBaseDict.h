@@ -20,6 +20,7 @@
 #include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/IConfigAccessSvc.h"
 #include "HltBase/IHltDataSvc.h"
+#include "HltBase/HltSelection.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
