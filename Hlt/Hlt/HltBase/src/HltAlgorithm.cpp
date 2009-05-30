@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.54 2009-05-30 07:20:33 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.55 2009-05-30 12:14:28 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -167,7 +167,7 @@ void HltAlgorithm::monitorInputs()
   if (!produceHistos()) return;
   for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it) {
-    fillHisto(*m_inputHistos[(*it)->id()],(*it)->size(),1.);
+    fill(m_inputHistos[(*it)->id()],(*it)->size(),1.);
   }
   // verbose() << " end monitor inputs " <<endreq;
 }
@@ -176,7 +176,7 @@ void HltAlgorithm::monitorOutput() {
   if (!produceHistos()) return;
   size_t nCandidates = m_outputSelection->size();
   Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
-  fillHisto(*m_outputHisto,nCandidates,1.);
+  fill(m_outputHisto,nCandidates,1.);
 }
 
 //@TODO: 

@@ -1,14 +1,10 @@
-// $Id: HltTypes.h,v 1.11 2009-01-21 10:01:28 graven Exp $
+// $Id: HltTypes.h,v 1.12 2009-05-30 12:14:28 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
-#include <vector>
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ContainedObject.h"
 #include "HltBase/EFunctions.h"
-#include "HltBase/EDictionary.h"
 #include "HltBase/ERelations.h"
-#include "HltBase/HltSelection.h"
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 
@@ -17,18 +13,9 @@ namespace LHCb {
   class RecVertex;
 }
 
-namespace AIDA {
-  class IHistogram1D;
-}
-
 namespace Hlt {
-  template <class OBJ>
-  class DObj : public OBJ, public DataObject {};
   
-  typedef std::vector<Hlt::Selection*> Selections;
-  typedef std::vector<Hlt::Selection*>::iterator SelectionIterator;
-
-  typedef DObj<zen::IntRelation> IntRelation;
+  class IntRelation : public zen::IntRelation, public DataObject {};
   
   typedef zen::filter<double> Filter;
   

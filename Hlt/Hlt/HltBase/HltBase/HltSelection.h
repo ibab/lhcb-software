@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.13 2009-05-30 07:21:55 graven Exp $
+// $Id: HltSelection.h,v 1.14 2009-05-30 12:14:28 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -63,7 +63,7 @@ namespace Hlt
     bool m_processed; // did we actually set the decision?
     bool m_error;     // did an error occur during processing?
   };
-  
+
   template <typename T>
   class TSelection : public Selection {
   public:

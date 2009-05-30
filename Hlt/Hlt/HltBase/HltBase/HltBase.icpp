@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.22 2009-04-28 07:03:37 graven Exp $
+// $Id: HltBase.icpp,v 1.23 2009-05-30 12:14:28 graven Exp $
 // Include files
 
 
@@ -74,17 +74,6 @@ template <class EBASE>
 void HltBase<EBASE>::fillHisto( AIDA::IHistogram1D& histo, double x, double weight) {
   if (EBASE::produceHistos()) EBASE::fill( &histo , x, weight);
 }
-
-template <class EBASE>
-void HltBase<EBASE>::fillHisto( AIDA::IHistogram1D& histo, 
-                                const std::vector<double>& x, 
-                                double weight) {
-  if (EBASE::produceHistos()) 
-      for (std::vector<double>::const_iterator it = x.begin(); 
-                                               it != x.end(); ++it)
-         EBASE::fill( &histo, *it, weight);
-}
-
 
 template <class EBASE>
 IHltDataSvc& HltBase<EBASE>::dataSvc() const {

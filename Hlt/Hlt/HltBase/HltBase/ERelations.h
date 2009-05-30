@@ -1,7 +1,8 @@
-// $Id: ERelations.h,v 1.6 2009-01-01 21:17:48 graven Exp $
+// $Id: ERelations.h,v 1.7 2009-05-30 12:14:28 graven Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
+#include "GaudiKernel/GaudiException.h"
 #include <functional>
 #include <algorithm>
 #include <ostream>

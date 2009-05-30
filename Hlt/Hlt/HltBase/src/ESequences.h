@@ -16,23 +16,9 @@ namespace zen {
   
   //-------- sequences in interators ---------------------
 
-  template<class INPUT , class OUTPUT , class FILTER>
-  inline OUTPUT select( INPUT begin , 
-                        const INPUT& end   ,
-                        const FILTER& filter,
-                        OUTPUT out )
-  {
-    for( ; begin != end ; ++begin ) 
-    {if( filter(**begin) ) *(out++) = *begin ;  }
-    return out ;
-  };
-  
-  template <class INPUT, class OUTPUT>
-  inline void copy(const INPUT& c1, OUTPUT& c2) 
-  {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
-
   template <class INPUT> 
   size_t count(INPUT b1, const INPUT& e1, const INPUT& b2, const INPUT& e2) {
+      // If ranges are sorted, use distance( set_intersection(b1,e1,b2,e2), e1 )
     size_t n = 0;
     for (;b1 != e1; ++b1) {if (std::find(b2,e2,*b1)!=e2) ++n;}
     return n;

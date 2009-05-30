@@ -1,10 +1,10 @@
-// $Id: HltAlgorithm.h,v 1.38 2009-02-06 20:20:53 graven Exp $
+// $Id: HltAlgorithm.h,v 1.39 2009-05-30 12:14:28 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
-#include "HltBase/HltTypes.h"
 #include "HltBase/HltBaseAlg.h"
+#include "HltBase/HltSelection.h"
 
 /** @class HltAlgorithm 
  *  

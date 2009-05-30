@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.21 2009-01-01 21:20:34 graven Exp $
+// $Id: HltBase.h,v 1.22 2009-05-30 12:14:28 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -54,10 +54,6 @@ protected:
 
   // fill histogram
   void fillHisto( AIDA::IHistogram1D& histo, double x, double weight );
-
-  // fill histogram
-  void fillHisto( AIDA::IHistogram1D& histo, const std::vector<double>& x, 
-                  double weight );
 
   // print info of this container
   template <class CONT>

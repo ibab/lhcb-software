@@ -1,5 +1,5 @@
 #include "HltBase/HltUtils.h"
-#include "HltBase/ESequences.h"
+#include "ESequences.h"
 
 #include <cassert>
 
@@ -334,6 +334,8 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
 
 double HltUtils::matchIDsFraction(const LHCb::Track& tref,
                                   const LHCb::Track& track) {
+  // TODO: can we use std::set_intersection on lhcbIDs? 
+  //       i.e. are they sorted?
   return (tref.lhcbIDs().empty()) ? 0. :
              double(zen::count(tref.lhcbIDs(),track.lhcbIDs())) / 
              double(tref.lhcbIDs().size());
