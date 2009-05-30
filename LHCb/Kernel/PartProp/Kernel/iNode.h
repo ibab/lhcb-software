@@ -1,4 +1,4 @@
-// $Id: iNode.h,v 1.6 2009-05-29 13:03:36 ibelyaev Exp $
+// $Id: iNode.h,v 1.7 2009-05-30 12:16:34 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_NODE_H 
 #define DECAYS_NODE_H 1
@@ -99,8 +99,8 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
-    Node& operator&=( const iNode& right ) ;
-    Node& operator|=( const iNode& right ) ;    
+    Node& operator&=( const iNode& right ) { return op_and ( right ) ; }
+    Node& operator|=( const iNode& right ) { return op_or  ( right ) ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -117,6 +117,11 @@ namespace Decays
     Node& operator=( const  Node& right ) ;
     /// assignement from arbitrary node 
     Node& operator=( const iNode& right ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    Node& op_and ( const iNode& right ) ;
+    Node& op_or  ( const iNode& right ) ;    
     // ========================================================================
   private:
     // ========================================================================

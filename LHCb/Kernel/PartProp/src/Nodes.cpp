@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.12 2009-05-29 13:03:36 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.13 2009-05-30 12:16:34 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -84,14 +84,14 @@ Decays::NodeList& Decays::NodeList::operator=( const Decays::iNode& node  )
 
 // ============================================================================
 Decays::Nodes::_Node& 
-Decays::Nodes::_Node::operator |= ( const Decays::NodeList& right ) 
+Decays::Nodes::_Node::op_or  ( const Decays::NodeList& right ) 
 { 
   if ( !right.empty() ) { m_node |= Decays::Nodes::Or  ( right ) ; } 
   return *this ;
 }
 // ============================================================================
 Decays::Nodes::_Node& 
-Decays::Nodes::_Node::operator &= ( const Decays::NodeList& right ) 
+Decays::Nodes::_Node::op_and ( const Decays::NodeList& right ) 
 { 
   if ( !right.empty() ) { m_node &= Decays::Nodes::And ( right ) ; } 
   return *this ;

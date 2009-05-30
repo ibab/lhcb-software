@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: PartProp.xml,v 1.5 2009-05-29 13:03:36 ibelyaev Exp $ 
+     * $Id: PartProp.xml,v 1.6 2009-05-30 12:16:34 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -49,14 +49,6 @@
     <class name = "LHCb::ParticleID">
       <method name="digit_"/>
       <method name="digits_"/>
-    </class>
-    <class name = "Decays::Node">
-      <method name="|="/>
-      <method name="&amp;="/>
-    </class>
-    <class name = "Decays::Nodes::_Node">
-      <method name="|="/>
-      <method name="&amp;="/>
     </class>
   </exclusion>
 

@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.8 2009-05-22 17:00:51 ibelyaev Exp $
+// $Id: Nodes.h,v 1.9 2009-05-30 12:16:34 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -146,8 +146,8 @@ namespace Decays
       _Node& operator &= ( const iNode&    right ) 
       { m_node &= right ; return *this ; }
       // ======================================================================
-      _Node& operator |= ( const NodeList& right ) ;
-      _Node& operator &= ( const NodeList& right ) ;
+      _Node& operator |= ( const NodeList& right ) { return op_or  ( right ) ; }
+      _Node& operator &= ( const NodeList& right ) { return op_and ( right ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -162,6 +162,11 @@ namespace Decays
       const Decays::iNode& node() const { return m_node.node() ; }
       /// the cast operator to the actual list of nodes
       operator const Decays::iNode&() const { return node() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      _Node& op_or  ( const NodeList& right ) ;
+      _Node& op_and ( const NodeList& right ) ;
       // ======================================================================
     private:
       // ======================================================================

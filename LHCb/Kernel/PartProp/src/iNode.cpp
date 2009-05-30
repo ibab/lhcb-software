@@ -1,4 +1,4 @@
-// $Id: iNode.cpp,v 1.2 2009-05-29 13:03:36 ibelyaev Exp $
+// $Id: iNode.cpp,v 1.3 2009-05-30 12:16:34 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -128,12 +128,12 @@ Decays::Node* Decays::Node::clone () const
 // ============================================================================
 // operator &= 
 // ============================================================================
-Decays::Node& Decays::Node::operator&= ( const Decays::iNode& right )
+Decays::Node& Decays::Node::op_and ( const Decays::iNode& right )
 { return  ( *this = ( *m_node  && right ) ) ; }
 // ============================================================================
 // operator |= 
 // ============================================================================
-Decays::Node& Decays::Node::operator|= ( const Decays::iNode& right )
+Decays::Node& Decays::Node::op_or ( const Decays::iNode& right )
 { return  ( *this = ( *m_node  || right ) ) ; }
 // ============================================================================
 
