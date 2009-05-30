@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.12 2009-05-02 15:51:36 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.13 2009-05-30 11:28:02 graven Exp $
 // #define DEBUGCODE
 // Include files 
 
@@ -16,6 +16,7 @@
 //#include "Kernel/CaloCellCode.h"
 
 #include "HltBase/stringKey.h"
+#include "HltBase/HltSelection.h"
 #include "HltBase/IHltDataSvc.h"
 // local
 #include "HltSelReportsMaker.h"
