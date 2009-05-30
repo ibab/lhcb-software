@@ -1,4 +1,5 @@
 #include "HltDataSvc.h"
+#include "HltBase/HltSelection.h"
 #include "Event/HltSummary.h"
 #include "GaudiKernel/SvcFactory.h"
 // #include "GaudiKernel/DataSvc.h"
