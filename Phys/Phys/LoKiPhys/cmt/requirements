@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.43 2009-05-30 13:14:23 ibelyaev Exp $ 
+# $Id: requirements,v 1.44 2009-05-30 13:51:24 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v8r5
+version           v8r6
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -20,7 +20,8 @@ apply_pattern install_more_includes  more=LoKi
 apply_pattern install_python_modules 
 
 # =============== constituents ===============================================
-library           LoKiPhys  ../src/*.cpp 
+library           LoKiPhysLib ../src/*.cpp 
+library           LoKiPhys    ../src/Components/*.cpp 
 application       DecayGrammarTest  tests/DecayGrammarTest.cpp
 
 # =============== Produce LCG dictionary ======================================
@@ -30,11 +31,13 @@ apply_pattern     reflex_dictionary                                   \
                   selectionfile=$(LOKIPHYSROOT)/dict/LoKiPhys.xml     \  
                   options=" -U__MINGW32__ "
 
-macro_append      LoKiPhysDict_dependencies     " LoKiPhys " 
-macro_append      DecayGrammarTest_dependencies " LoKiPhys " 
+macro_append      LoKiPhys_dependencies         " LoKiPhysLib " 
+macro_append      LoKiPhysDict_dependencies     " LoKiPhysLib " 
+macro_append      DecayGrammarTest_dependencies " LoKiPhysLib " 
 
 # =============== patterns ===================================================
-apply_pattern     linker_library    library=LoKiPhys
+apply_pattern     linker_library    library=LoKiPhysLib
+apply_pattern     component_library library=LoKiPhys
 apply_pattern     QMTest  
 
 # ============================================================================
