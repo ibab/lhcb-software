@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2009-04-30 - Gerhard Raven
+ - move track matching code to HltTracking
+
 !========================== HltMuonAlley v2r9 2009-05-06 ===================
 
 ! 2009-04-30 - Alessia Satta
