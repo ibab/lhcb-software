@@ -152,7 +152,7 @@ if "Match" in trackAlgs :
    cloneKiller.TracksInContainers += ["Rec/Track/Match"]
 
 ## Downstream
-if "Downstream" in trackAlgs and TrackSys().fieldOff() == False :
+if "Downstream" in trackAlgs :
    track.DetectorList += [ "DownstreamPat","DownstreamPreFit","DownstreamFit" ]
    GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
    ## downstream fit initialization

@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2009-05-31 - Stephanie Hansmann-Menzemer
+- Use Downstream tracking both in RecoTracking.py and PatChecking.py in case
+  off fieldOff
 
 !============================ TrackSys v4r23 2009-05-25 ======================
 ! 2009-05-25 - Marco Cattaneo
