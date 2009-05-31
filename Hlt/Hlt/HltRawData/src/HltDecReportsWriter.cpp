@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.7 2009-05-26 20:06:10 graven Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.8 2009-05-31 11:26:22 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,7 @@
 #include "Event/HltDecReports.h"
 #include "Event/RawEvent.h"
 
-
+#include <functional>
 
 // local
 #include "HltDecReportsWriter.h"
@@ -24,13 +24,6 @@ DECLARE_ALGORITHM_FACTORY( HltDecReportsWriter );
 
 using namespace LHCb;
 
-namespace {
-  class UDless {
-  public:
-    bool operator() (unsigned int elem1, unsigned int elem2 )const
-        { return elem1 < elem2; }
-  };
-}
 
 
 //=============================================================================
@@ -111,7 +104,7 @@ StatusCode HltDecReportsWriter::execute() {
   // order according to the values, essentially orders by intDecisionID 
   // this is important since it will put "*Global" reports at the beginning of the bank
   // NOTE: we must skip the first two words (configuredTCK, taskID)
-  if( !bankBody.empty() ) std::sort( bankBody.begin()+2, bankBody.end(), UDless() );
+  if( !bankBody.empty() ) std::sort( bankBody.begin()+2, bankBody.end(), std::less<unsigned int>() );
 
   // delete any previously inserted dec reports
   const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );

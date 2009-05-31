@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.38 2009-05-26 21:13:53 graven Exp $
+!$Id: release.notes,v 1.39 2009-05-31 11:26:22 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2009-05-31 - Gerhard Raven
+ - replace UDLess with std::less<unsigned int>
+
 ! 2009-05-26 - Gerhard Raven
  - increment raw bank version number to reflect the changes in bitassigments
    to HltDecReport, and the added TCK + TaskID words in writer
