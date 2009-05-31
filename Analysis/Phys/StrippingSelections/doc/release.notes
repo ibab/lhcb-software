@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-05-31 - V. Gligorov
+ - Fixed stupid bug introduced when removing the K* mass cuts. 
+
 ! 2009-05-29 - V. Gligorov
  - Added a stripping line for the topological trigger.
 

@@ -21,8 +21,8 @@ DSignalcut = "((M > 1840.*MeV) & (M < 1895.*MeV)) | ((M > 1944.*MeV ) & (M < 199
 Dcombcut = "((APT > 1*GeV))"
 
 KPhiMothercut = "((VFASPF(VCHI2/VDOF) < 12) & (MIPCHI2DV(PRIMARY) > 4.))"
-Kstarcut = "(1==1)"
-KstarSignalcut = "(1==1)" #Removed K* mass cuts for B->DKpi Dalitz analysis 
+Kstarcut = "(M > 0)"
+KstarSignalcut = "(M > 0)" #Removed K* mass cuts for B->DKpi Dalitz analysis 
                           #funny coding for now, clean all this up 
 Phicut = "(ADMASS('phi(1020)') < 100*MeV)"
 PhiSignalcut = "(ADMASS('phi(1020)') < 12*MeV)"
