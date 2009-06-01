@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.86 2009-06-01 15:42:31 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.87 2009-06-01 20:33:34 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -131,7 +131,12 @@ class HltConf(LHCbConfigurableUser):
                 conf = type2conf[i]()
                 if ThresholdSettings and i in ThresholdSettings : 
                     for (k,v) in ThresholdSettings[i].iteritems() :
-                        if hasattr(conf,k) and getattr(conf,k):
+                        # configurables have an exception for list and dict: 
+                        #   even if not explicitly set, if you ask for them, you get one...
+                        #   this is done to make foo().somelist += ... work.
+                        # hence we _assume_ that, even if we have an attr, but it matches the
+                        # default, it wasn't set explicitly, and we overrule it...
+                        if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
                             print '# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k))
                         else :
                             setattr(conf,k,v)

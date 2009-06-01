@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.249 2009-05-29 09:07:33 graven Exp $ 
+! $Id: release.notes,v 1.250 2009-06-01 20:33:34 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!2009-06-01 - Gerhard Raven
+ - overrule using thresholdsettings if property value is set, but same as its default
+   (see Configuration.py for more on why)
+
 !2009-05-29 - Gerhard Raven
  - use configurables from Hlt/Hlt2Lines for some Hlt2 lines,
    still include (implicitly!) HltSelections/Hlt2Lines.py for
