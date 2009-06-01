@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r19 2009-06-01 =============
+2009-06-01
++ print/save page as eps, pdf, png etc.
+
 !============ Presenter v0r17 2009-04-14 =============
 ! 2009-04-14
 + initial Brunel and DaVinci file support
