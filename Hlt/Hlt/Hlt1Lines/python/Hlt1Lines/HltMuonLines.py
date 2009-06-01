@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
+# $Id: HltMuonLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 
@@ -31,8 +31,6 @@ from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 class HltMuonLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 
-        'Prescale'             :{}
-        , 'Postscale'             :{}
     #  DC06 (FFFF) Muon Lines
         #'Lines'                    :['SingleMuonNoIPL0','SingleMuonNoIPGEC','SingleMuonIPCL0','SingleMuonIPCGEC',
         #                             'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
@@ -46,7 +44,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         #,'L0DiMuonNoPV'             :""
         #,'DiMuon_SumPtCut'          : 1500.
     #  DC09 Muon Lines
-        , 'Lines'                  :['SingleMuonNoIPL0','SingleMuonIPCL0',                    
+        'Lines'                     :['SingleMuonNoIPL0','SingleMuonIPCL0',                    
                                      'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
                                      'DiMuonIPCL0Di','DiMuonIPC2L0','DiMuonIPCL0Seg',
                                      'DiMuonNoPVL0Di','DiMuonNoPV2L0','DiMuonNoPVL0Seg']

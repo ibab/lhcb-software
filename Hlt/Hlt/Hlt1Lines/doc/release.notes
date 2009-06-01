@@ -1,14 +1,9 @@
-! $Id: release.notes,v 1.2 2009-06-01 15:32:32 graven Exp $
+! $Id: release.notes,v 1.3 2009-06-01 20:35:08 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
-
-! 2009-06-01 - Gerhard Raven
- - move Prescale and Postscale defauls out of HltLinesConfigurableUser into
-   the lines themselves to avoid overruling defaults, which sets an attribute
-   when none is needed, which interferes with the HltThresholdSettings code...
 
 ! 2009-05-28 - Gerhard Raven
  - initial import of bits from HltConf 

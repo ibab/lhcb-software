@@ -13,9 +13,7 @@ from Hlt1Lines.HltL0Candidates import *
 class HltElectronLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
-    __slots__ = { 'Prescale'             : {}
-                , 'Postscale'            : {}
-                , 'Compan_PtCut'         :  1000.    # for global optimization 1
+    __slots__ = { 'Compan_PtCut'         :  1000.    # for global optimization 1
                 , 'Ele_IPCut'            :  0.1      # for global optimization 2
                 , 'SingleEle_PtCut'      :  3000.    # for global optimization 3 optional
                 , 'Jpsi_LowMassCut'      :  2400.

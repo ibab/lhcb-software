@@ -8,7 +8,6 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
                                , 'Hlt1VeloAlign' : 0.000001 
                                }
-                , 'Postscale' : {}
                 } 
 
     def __apply_configuration__(self) : 

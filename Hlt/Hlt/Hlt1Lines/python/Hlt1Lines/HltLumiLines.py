@@ -46,9 +46,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
                 , 'FullReco'             : True
                 , 'OutputLevel'          : INFO
                 , 'Debug'                : False
-                , 'Prescale' : {}
-                , 'Postscale' : {}
-        }
+                }
 
 
     def __create_lumi_line__(self, BXType, counters):

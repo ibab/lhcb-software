@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
+# $Id: HltHadronLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -54,20 +54,19 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
     #     HadCompanion_PtCut
     #
     __slots__ = { 'L0Channel'               : "Hadron" 
-                  , 'HadMain_IPCut'           : 0.1
-                  , 'HadMain_PTCut'           : 2500.
-                  , 'HadMain_TrackFitChi2Cut' : 10.
-                  , 'HadCompanion_DOCACut'    : 0.2
-                  , 'HadCompanion_DZCut'      : 1.5
-                  , 'HadCompanion_IPCut'      : 0.1
-                  , 'HadCompanion_PTCut'      : 1000.
-                  , 'HadCompanion_PointingCut': 0.4
-                  , 'SingleHadron_PTCut'      : 5000.
-                  , 'SoftHadMain_ETCut'       : 2500. 
-                  , 'SoftHadMain_PTCut'       : 1500.
-                  , 'SoftHadMain_IPCut'       : 0.1
-                  , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
-                  , 'Postscale' : {}
+                , 'HadMain_IPCut'           : 0.1
+                , 'HadMain_PTCut'           : 2500.
+                , 'HadMain_TrackFitChi2Cut' : 10.
+                , 'HadCompanion_DOCACut'    : 0.2
+                , 'HadCompanion_DZCut'      : 1.5
+                , 'HadCompanion_IPCut'      : 0.1
+                , 'HadCompanion_PTCut'      : 1000.
+                , 'HadCompanion_PointingCut': 0.4
+                , 'SingleHadron_PTCut'      : 5000.
+                , 'SoftHadMain_ETCut'       : 2500. 
+                , 'SoftHadMain_PTCut'       : 1500.
+                , 'SoftHadMain_IPCut'       : 0.1
+                , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
                 }
     
     def __apply_configuration__(self) : 

@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -26,7 +26,6 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt1L0Forced' : 0 
                               , 'Hlt1RawBankConversion' : 0.000001
                               }
-               , 'Postscale' : {}
                }
    def __apply_configuration__(self):
         Line('Physics' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
