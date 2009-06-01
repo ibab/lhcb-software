@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-06-01 - Gerhard Raven
+ - add HltDiffHltDecReports -- does a 'diff' between two DecReports
+   (e.g. one from rawbank, one from re-running the HLT)
+
 ! 2009-05-29 - Gerhard Raven
  - remove unused includes
  - use fill directly instead of fillHisto
