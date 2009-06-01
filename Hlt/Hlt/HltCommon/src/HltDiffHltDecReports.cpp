@@ -1,9 +1,10 @@
-// $Id: HltDiffHltDecReports.cpp,v 1.1 2009-06-01 08:43:11 graven Exp $
+// $Id: HltDiffHltDecReports.cpp,v 1.2 2009-06-01 09:35:41 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltDecReports.h"
+#include <iterator>
 
 class HltDiffHltDecReports : public GaudiAlgorithm {
 public: 
@@ -49,12 +50,14 @@ HltDiffHltDecReports::execute() {
     LHCb::HltDecReports *lhs = get<LHCb::HltDecReports>( m_lhs );
     LHCb::HltDecReports *rhs = get<LHCb::HltDecReports>( m_rhs );
 
-    always() << "configuredTCK: " << lhs->configuredTCK() << " <-> " << rhs->configuredTCK() << endmsg;
+    always() << " <<< " << m_lhs << " configuredTCK: " << lhs->configuredTCK() << endmsg;
+    always() << " >>> " << m_rhs << " configuredTCK: " << rhs->configuredTCK() << endmsg;
 
     LHCb::HltDecReports::Container::const_iterator l = lhs->begin(), r = rhs->begin();
     while ( l != lhs->end() || r != rhs->end()) {
         bool rend = ( r == rhs->end() );
         bool lend = ( l == lhs->end() );
+
         if ( !lend && ( rend || l->first < r->first )) { 
             always() << " only in " << m_lhs << " : " << l->first << " : " << l->second << endmsg;
             ++l;
@@ -65,7 +68,7 @@ HltDiffHltDecReports::execute() {
             if ( l->second.decReport() != r->second.decReport()) {
                 always() << " dif: " << l->first << " : " << l->second << "  <-> " << r->second << endmsg;
             } else {
-                always() << " match: " << l->first << " : " << l->second << endmsg;
+                // always() << " match: " << l->first << " : " << l->second << endmsg;
             }
             ++l;
             ++r;
