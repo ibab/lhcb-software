@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -36,6 +36,8 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'L0ChannelLeft'           : "Hadron" # assume the L0 puts the special trigger here
                 , 'BeamGas_EtCut'           : 500.     # low EtCut 
                 , 'BeamGas_PtCut'           : 500.     # low PtCut 
+                , 'Prescale' : {}
+                , 'Postscale' : {}
                 }
 
     def __apply_configuration__(self) : 

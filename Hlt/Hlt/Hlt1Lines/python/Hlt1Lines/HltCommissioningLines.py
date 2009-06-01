@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -21,10 +21,12 @@ from HltLine.HltLine import Hlt1Member as Member
 
 class HltCommissioningLinesConf(HltLinesConfigurableUser):
 
-   __slots__ = { 'Prescale' : { 'Hlt1Physics'  : 1 # update default prescales for these lines
-                              , 'Hlt1Random'   : 1 # @OnlineEnv.AcceptRate
+   __slots__ = { 'Prescale' : { 'Hlt1Physics'  : 1
+                              , 'Hlt1Random'   : 0.000001 # @OnlineEnv.AcceptRate
                               , 'Hlt1L0Forced' : 0 
+                              , 'Hlt1RawBankConversion' : 0.000001
                               }
+               , 'Postscale' : {}
                }
    def __apply_configuration__(self):
         Line('Physics' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'

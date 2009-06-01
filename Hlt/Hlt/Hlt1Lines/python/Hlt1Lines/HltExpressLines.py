@@ -6,7 +6,10 @@ from HltLine.HltLine import Hlt1Line as Line
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
-                               , 'Hlt1VeloAlign' : 0.000001 } } # overrule inherited default
+                               , 'Hlt1VeloAlign' : 0.000001 
+                               }
+                , 'Postscale' : {}
+                } 
 
     def __apply_configuration__(self) : 
         from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter

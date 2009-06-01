@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: HltVeloLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 #
@@ -20,12 +20,14 @@ from HltLine.HltLine import Hlt1Line   as Line
 from HltLine.HltLine import Hlt1Member as Member
 
 class HltVeloLinesConf(HltLinesConfigurableUser):
-   __slots__ = { 'Prescale'  : { 'Hlt1VeloClosing' : 1, 'Hlt1Velo.Side' : 0.0001 }  # overrule inherited default
+   __slots__ = { 'Prescale' : { 'Hlt1VeloClosing' : 1, 'Hlt1Velo.Side' : 0.0001 } 
+               , 'Postscale' : {}
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
                }
+
    def __apply_configuration__(self):
         from Configurables import VeloClusterFilter
         from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager

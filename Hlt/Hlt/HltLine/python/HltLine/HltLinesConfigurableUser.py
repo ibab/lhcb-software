@@ -3,7 +3,7 @@
 #  @author Gerhard Raven  (Gerhard.Raven@nikhef.nl)
 #  @date   25/03/2009
 
-__version__ = "$Id: HltLinesConfigurableUser.py,v 1.2 2009-05-28 19:59:43 graven Exp $"
+__version__ = "$Id: HltLinesConfigurableUser.py,v 1.3 2009-06-01 15:33:21 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from LHCbKernel.Configuration import LHCbConfigurableUser
@@ -15,11 +15,6 @@ from LHCbKernel.Configuration import LHCbConfigurableUser
 #  @author Gerhard Raven  (Gerhard.Raven@nikhef.nl)
 #  @date   25/03/2009
 class HltLinesConfigurableUser(LHCbConfigurableUser):
-
-    ## Default options, common to all specializations of  HltLinesConfigurable
-    __slots__ = { 'Prescale'  : {} 
-                , 'Postscale' : {}
-                }
 
     def _scale(self,line,arg) :
         import re

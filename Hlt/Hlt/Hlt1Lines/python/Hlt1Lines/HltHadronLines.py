@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: HltHadronLines.py,v 1.2 2009-06-01 15:32:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -66,7 +66,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                   , 'SoftHadMain_ETCut'       : 2500. 
                   , 'SoftHadMain_PTCut'       : 1500.
                   , 'SoftHadMain_IPCut'       : 0.1
-                  , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 } # overrule imported default
+                  , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
+                  , 'Postscale' : {}
                 }
     
     def __apply_configuration__(self) : 
