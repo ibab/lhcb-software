@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2009-06-01 - Patrick Koppenburg
+ - More debugging
+
 ! 2009-05-22 - Patrick Koppenburg
  - MCTupleToolMCTruth.cpp : add oscillation flag
 

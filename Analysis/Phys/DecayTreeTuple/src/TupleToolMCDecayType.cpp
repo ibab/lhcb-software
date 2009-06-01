@@ -1,4 +1,4 @@
-// $Id: TupleToolMCDecayType.cpp,v 1.1 2009-03-06 16:45:25 rlambert Exp $
+// $Id: TupleToolMCDecayType.cpp,v 1.2 2009-06-01 15:40:27 pkoppenb Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -31,8 +31,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolMCDecayType::TupleToolMCDecayType( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
+                                            const std::string& name,
+                                            const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_mother(0)
   , m_top(0)
@@ -101,20 +101,20 @@ StatusCode TupleToolMCDecayType::initialize(){
 
   if(!m_findEventTypes.empty()) sc=m_mcEventType->setEventTypes(m_findEventTypeSet);
   if(!m_findEventTypes.empty() && sc.isFailure())
-    {
-      warning()<<"Error setting the event types starting with " << m_findEventTypes[0] << endmsg;
-      m_findEventTypes.clear();
-    }
+  {
+    warning()<<"Error setting the event types starting with " << m_findEventTypes[0] << endmsg;
+    m_findEventTypes.clear();
+  }
   
   if (m_mcDecay && m_hasMCDecay!="") sc=m_mcDecay->setDecay(m_hasMCDecay);
   if(sc.isFailure())
-    {
-      warning()<<"Error setting this decay string " << m_hasMCDecay << endmsg;
-      m_mcDecay=NULL;
-      m_hasMCDecay="";
+  {
+    warning()<<"Error setting this decay string " << m_hasMCDecay << endmsg;
+    m_mcDecay=NULL;
+    m_hasMCDecay="";
       
-    }
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE))
+  }
+  if(msgLevel(MSG::DEBUG))
   {
     //output all the options
     debug() << "TupleToolMCDecayType initialised. Values are set as follows:" << endmsg;
@@ -140,12 +140,12 @@ StatusCode TupleToolMCDecayType::initialize(){
 }
 
 StatusCode TupleToolMCDecayType::fill( const LHCb::Particle* 
-				 , const LHCb::Particle* P
-				 , const std::string& head
-				 , Tuples::Tuple& tuple ){
+                                       , const LHCb::Particle* P
+                                       , const std::string& head
+                                       , Tuples::Tuple& tuple ){
 
 
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Filling TupleToolMCDecayType" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Filling TupleToolMCDecayType" << endmsg;
   
 
   //The fill method is is two stages and is steered by the options.
@@ -157,7 +157,7 @@ StatusCode TupleToolMCDecayType::fill( const LHCb::Particle*
   bool test=true;
   
   
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "finding event types for MCAssociate" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "finding event types for MCAssociate" << endmsg;
   LHCb::EventTypeSet foundfull;
   LHCb::EventTypeSet foundfast;
   
@@ -167,124 +167,124 @@ StatusCode TupleToolMCDecayType::fill( const LHCb::Particle*
   m_pChi2 = m_linkerTool_Chi2->linker(Particle2MCMethod::Chi2,m_assocInputs);
   
   Assert( ( !m_useChi2Method && m_pLink && m_bkg ) 
-	  ||
-	  ( m_useChi2Method || m_pChi2 )
-	  , "One of your associator hasn't been initialized!");
+          ||
+          ( m_useChi2Method || m_pChi2 )
+          , "One of your associator hasn't been initialized!");
   
   const MCParticle* mcp(0);
   
   if( P )
+  {
+    if ( m_useChi2Method && m_pChi2)
     {
-      if ( m_useChi2Method && m_pChi2)
-        {
-          double w=0;
-          mcp = m_pChi2->firstMCP( P, w );
+      double w=0;
+      mcp = m_pChi2->firstMCP( P, w );
           
           
-        } 
-      else
-        {
-          if( P->isBasicParticle() && m_pLink) mcp = m_pLink->firstMCP( P );
-          else if( m_bkg)            mcp = m_bkg->origin( P );
-        }
-      //find the mother if requested
-      if(m_mother && mcp) mcp = mcp->mother();
-      //loop to the top if requested
-      while(m_top && mcp && mcp->mother()) mcp = mcp->mother();
-      
+    } 
+    else
+    {
+      if( P->isBasicParticle() && m_pLink) mcp = m_pLink->firstMCP( P );
+      else if( m_bkg)            mcp = m_bkg->origin( P );
     }
+    //find the mother if requested
+    if(m_mother && mcp) mcp = mcp->mother();
+    //loop to the top if requested
+    while(m_top && mcp && mcp->mother()) mcp = mcp->mother();
+      
+  }
   
   // pointer is ready, prepare the sets:
   if( mcp ) 
+  {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "found MC Particle" << endmsg;
+    //fast or slow?
+    if(m_fillSlowFind) sc=m_mcEventType->findDecayType(foundfull,mcp);
+    if(sc.isFailure())
     {
-      verbose() << "found MC Particle" << endmsg;
-      //fast or slow?
-      if(m_fillSlowFind) sc=m_mcEventType->findDecayType(foundfull,mcp);
-      if(sc.isFailure())
-        {
-          warning() << "Could not perform the fill using the slow method, reverting to the fast method" << endmsg;
-          m_fillSlowFind=false;
-          m_fillPseudoFind=true;
-        }
+      warning() << "Could not perform the fill using the slow method, reverting to the fast method" << endmsg;
+      m_fillSlowFind=false;
+      m_fillPseudoFind=true;
+    }
         
-      if(m_fillPseudoFind) sc=m_mcEventType->constructDecayType(foundfast,mcp);
-      if(sc.isFailure())
-        {
-          warning() << "Could not perform the fill using the fast method, I therefore cannot find the overall event type" << endmsg;
-          m_fillPseudoFind=false;
-        }
+    if(m_fillPseudoFind) sc=m_mcEventType->constructDecayType(foundfast,mcp);
+    if(sc.isFailure())
+    {
+      warning() << "Could not perform the fill using the fast method, I therefore cannot find the overall event type" << endmsg;
+      m_fillPseudoFind=false;
     }
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "filling info for MCAssociate" << endmsg;
+  }
+  if(msgLevel(MSG::DEBUG)) debug() << "filling info for MCAssociate" << endmsg; 
   if(m_fillSlowFind)
+  {
+    test &= tuple->column( head+"_MCP_numFoundTypes", foundfull.size() );
+    //insert "found" as an farray
+    std::vector<long unsigned int> foundvec(0);
+    set2vec(foundfull,foundvec);
+    test &= tuple->farray( head+"_MCP_FoundTypes", foundvec, head+"_MCP_FoundLen", 20 );
+      
+    if(!m_hasEventTypeSet.empty()) //book the matching types
     {
-      test &= tuple->column( head+"_MCP_numFoundTypes", foundfull.size() );
+          
+      LHCb::EventTypeSet intersection;
+      std::set_intersection(foundfull.begin(),foundfull.end(),
+                            m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
+                            std::inserter(intersection,intersection.begin()),
+                            LHCb::EventTypeComp() );
+          
+      //bool foundGiven=(intersection.size()>0);
+      test &= tuple->column( head+"_MCP_numMatchingTypes", intersection.size() );
+      if(msgLevel(MSG::DEBUG)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
       //insert "found" as an farray
       std::vector<long unsigned int> foundvec(0);
-      set2vec(foundfull,foundvec);
-      test &= tuple->farray( head+"_MCP_FoundTypes", foundvec, head+"_MCP_FoundLen", 20 );
-      
-      if(!m_hasEventTypeSet.empty()) //book the matching types
-        {
-          
-          LHCb::EventTypeSet intersection;
-          std::set_intersection(foundfull.begin(),foundfull.end(),
-                                m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
-                                std::inserter(intersection,intersection.begin()),
-				LHCb::EventTypeComp() );
-          
-          //bool foundGiven=(intersection.size()>0);
-          test &= tuple->column( head+"_MCP_numMatchingTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
-          //insert "found" as an farray
-          std::vector<long unsigned int> foundvec(0);
-          set2vec(intersection,foundvec);
-          test &= tuple->farray( head+"_MCP_MatchingTypes", foundvec, head+"_MCP_MatchLen", m_hasEventTypeSet.size() );
-        }
+      set2vec(intersection,foundvec);
+      test &= tuple->farray( head+"_MCP_MatchingTypes", foundvec, head+"_MCP_MatchLen", m_hasEventTypeSet.size() );
     }
+  }
   if(m_fillPseudoFind)
+  {
+    test &= tuple->column( head+"_MCP_numPseudoTypes", foundfast.size() );
+    //insert "found" as an farray
+    std::vector<long unsigned int> foundvec(0);
+    set2vec(foundfast,foundvec);
+    test &= tuple->farray( head+"_MCP_PseudoTypes", foundvec, head+"_MCP_PseudoLen", 20 );
+      
+    if(!m_hasEventTypeSet.empty()) //book the matching types
     {
-      test &= tuple->column( head+"_MCP_numPseudoTypes", foundfast.size() );
+          
+      LHCb::EventTypeSet intersection;
+      std::set_intersection(foundfast.begin(),foundfast.end(),
+                            m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
+                            std::inserter(intersection,intersection.begin()),
+                            LHCb::EventTypeComp() );
+          
+      //bool foundGiven=(intersection.size()>0);
+      test &= tuple->column( head+"_MCP_numMatchingPseudoTypes", intersection.size() );
+      if(msgLevel(MSG::DEBUG)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
       //insert "found" as an farray
       std::vector<long unsigned int> foundvec(0);
-      set2vec(foundfast,foundvec);
-      test &= tuple->farray( head+"_MCP_PseudoTypes", foundvec, head+"_MCP_PseudoLen", 20 );
-      
-      if(!m_hasEventTypeSet.empty()) //book the matching types
-        {
-          
-          LHCb::EventTypeSet intersection;
-          std::set_intersection(foundfast.begin(),foundfast.end(),
-                                m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
-                                std::inserter(intersection,intersection.begin()),
-				LHCb::EventTypeComp() );
-          
-          //bool foundGiven=(intersection.size()>0);
-          test &= tuple->column( head+"_MCP_numMatchingPseudoTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
-          //insert "found" as an farray
-          std::vector<long unsigned int> foundvec(0);
-          set2vec(intersection,foundvec);
-          test &= tuple->farray( head+"_MCP_MatchingPseudoTypes", foundvec, head+"_MCP_MatchPseudoLen", m_hasEventTypeSet.size() );
-        }
+      set2vec(intersection,foundvec);
+      test &= tuple->farray( head+"_MCP_MatchingPseudoTypes", foundvec, head+"_MCP_MatchPseudoLen", m_hasEventTypeSet.size() );
     }
+  }
   
   if(m_hasMCDecay!="" && m_mcDecay )
+  {
+    bool hasMCDecay =false;
+    LHCb::MCParticle::ConstVector dummyvec(0); //stupid way, but is the only way!
+    if (mcp) 
     {
-      bool hasMCDecay =false;
-      LHCb::MCParticle::ConstVector dummyvec(0); //stupid way, but is the only way!
-      if (mcp) 
-        {
-          dummyvec.push_back(mcp);
-          hasMCDecay = m_mcDecay->hasDecay(dummyvec);
-        }
-      
-      test &= tuple->column( head+"_MCP_hasGivenDecay", hasMCDecay );
-      //use the standard decay finding method
+      dummyvec.push_back(mcp);
+      hasMCDecay = m_mcDecay->hasDecay(dummyvec);
     }
+      
+    test &= tuple->column( head+"_MCP_hasGivenDecay", hasMCDecay );
+    //use the standard decay finding method
+  }
   
   
 
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "done and returning" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "done and returning" << endmsg;
   return StatusCode(test);
   
 }
@@ -293,9 +293,9 @@ bool TupleToolMCDecayType::vec2set(std::vector<long unsigned int>& avec, LHCb::E
 {
   aset.clear();
   for(std::vector<long unsigned int>::iterator n=avec.begin(); n!=avec.end(); n++)
-    {
-      aset.insert(*n);
-    }
+  {
+    aset.insert(*n);
+  }
   return (aset.size() > 0);
   
 }
@@ -305,9 +305,9 @@ bool TupleToolMCDecayType::set2vec(LHCb::EventTypeSet& aset,std::vector<long uns
   avec.clear();
   avec.reserve(aset.size());
   for(LHCb::EventTypeSet::iterator n=aset.begin(); n!=aset.end(); n++)
-    {
-      avec.push_back(*n);
-    }
+  {
+    avec.push_back(*n);
+  }
   return (avec.size() > 0);
   
 }

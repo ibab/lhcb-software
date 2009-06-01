@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.cpp,v 1.3 2009-02-19 13:50:41 pkoppenb Exp $
+// $Id: MCDecayTreeTuple.cpp,v 1.4 2009-06-01 15:40:27 pkoppenb Exp $
 // Include files 
 
 #include "boost/lexical_cast.hpp" 
@@ -53,6 +53,7 @@ StatusCode MCDecayTreeTuple::initialize() {
 //=============================================================================
 StatusCode MCDecayTreeTuple::execute(){
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+  counter("Event")++;
 
   LHCb::MCParticle::ConstVector mothers ;
   const LHCb::MCParticle* head = 0 ;

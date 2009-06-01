@@ -13,13 +13,12 @@
 //! Trigger all fill procedures
 template<class PARTICLEVECTOR,class DECAYFINDER>
 StatusCode fillTuple( Tuples::Tuple& tuple
-                                      , const PARTICLEVECTOR& heads 
-                                      , DECAYFINDER* dkFinder ){
+                      , const PARTICLEVECTOR& heads 
+                      , DECAYFINDER* dkFinder ){
   typename PARTICLEVECTOR::const_iterator pit = heads.begin();
   PARTICLEVECTOR row;
 
   unsigned int nCandidates=0;
-  counter("Event")++;
   StatusCode test = StatusCode::FAILURE;
 
   for( ; heads.end()!=pit; ++pit ){

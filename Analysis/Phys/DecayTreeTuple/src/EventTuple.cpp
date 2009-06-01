@@ -1,4 +1,4 @@
-// $Id: EventTuple.cpp,v 1.3 2009-02-11 18:02:34 pkoppenb Exp $
+// $Id: EventTuple.cpp,v 1.4 2009-06-01 15:40:27 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,7 @@ StatusCode EventTuple::initialize() {
 StatusCode EventTuple::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  counter("Event")++;
   StatusCode sc = StatusCode::SUCCESS ;
 
   Tuple tuple = ( produceEvtCols () ? evtCol(m_tupleName,m_collectionName) : nTuple( m_tupleName ));
@@ -93,6 +94,7 @@ StatusCode EventTuple::execute() {
     }
   }
   
+  tuple->column( "EventInSequence", counter("Event").nEntries()).ignore();
   for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin() ; i!= m_tools.end() ; ++i){
     if (msgLevel(MSG::VERBOSE)) verbose() << "Filling " << (*i)->name() << endmsg ;
     sc = (*i)->fill(tuple);

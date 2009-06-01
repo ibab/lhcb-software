@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.15 2009-02-19 13:50:41 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.16 2009-06-01 15:40:26 pkoppenb Exp $
 // Include files 
 
 
@@ -60,6 +60,7 @@ StatusCode DecayTreeTuple::initialize() {
 //=============================================================================
 StatusCode DecayTreeTuple::execute(){
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+  counter("Event")++;
   const LHCb::Particle::ConstVector& mothers = desktop()->particles();
   if( mothers.empty() ){
     setFilterPassed(false);
