@@ -6,8 +6,6 @@ export CAMCACHE=/tmp/cam/camcache
 mkdir -p $CAMCACHE/data
 
 #ssh -L 12346:127.0.0.1:12346 lxplus.cern.ch ssh -L 12346:hlte0403:12346 lbgw
-#rm warnings.out
-# wget 127.0.0.1:8888/data/warnings.out
 
 #Takes two arguments:
 #$1 - name of the computer running the CAMERA server.

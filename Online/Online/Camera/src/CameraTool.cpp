@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.4 2009-04-15 09:44:19 rogers Exp $
+// $Id: CameraTool.cpp,v 1.5 2009-06-01 10:00:08 rogers Exp $
 // Include files
 
 // local
@@ -35,7 +35,11 @@ CameraTool::CameraTool( const std::string& type,
   declareInterface<ICameraTool>(this);
   declareProperty("ServerName",m_servername="127.0.0.1");
   declareProperty("ServerPort",m_servport=12345);
+  declareProperty("ServerNames",m_servernames);
+  declareProperty("ServerPorts",m_servports);
   declareProperty("Enabled",m_dosend=true);
+  numErrBZ = 0;
+  numErrCN = 0;
 }
 
 //=============================================================================
@@ -48,21 +52,44 @@ StatusCode CameraTool::initialize()
 {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-
+  
   if (m_dosend) {
-    m_camc = new client(m_servername.c_str(),m_servport);
-    if (m_camc->m_healthy==0) 
-    {
-      Warning( "Failed to setup CAMERA" ).ignore();
-      delete m_camc;
-      m_camc = NULL;
+    if (m_servernames.size() > 0){
+      unsigned int num = m_servernames.size();
+      if (m_servports.size()<num) num = m_servports.size();
+      
+      for (unsigned int i = 0;i<num;++i){
+        client * c = new client(m_servernames[i].c_str(), m_servports[i]);
+        if (c->m_healthy==0) {
+          Warning( "Failed to setup CAMERA client" ).ignore();
+          delete c;
+          c = NULL;
+        }
+        else {
+          m_clients.push_back(c);
+        }
+      }
+      
+    }
+    else{
+      m_camc = new client(m_servername.c_str(),m_servport);
+      if (m_camc->m_healthy==0) {
+        Warning( "Failed to setup CAMERA client" ).ignore();
+        delete m_camc;
+        m_camc = NULL;
+
+      }
+    
+      info() << "Made CAMERA client to "<<m_servername.c_str()<<":"<<m_servport<<endmsg;
+      m_clients.push_back(m_camc);
+      
     }
   }// if(m_dosend)
   else
   {
     debug() << "Camera set to NOT SEND." << endreq;
   }
-
+  
   debug() << "Setup of CameraTool is done"<<endreq;
   return sc;
 }
@@ -74,7 +101,7 @@ StatusCode CameraTool::finalize()
     delete m_camc;
     m_camc = NULL;
   }// if(NULL!=m_camc)
-
+  
   return GaudiTool::finalize();
 }
 
@@ -88,42 +115,76 @@ int CameraTool::SendAndClear(int l,const std::string& who,const std::string& wha
 
   ss << who<<"/"<<l<<"/"<<what<<"\n";
 
-  if (m_dosend && m_camc) {
-
-    if (m_out.entries()>0) m_out.tostream(s);
-
-    if (m_camc->Connect()>0) {
-      char buf[3];
-      while (  m_camc->rd(buf,2)==-2){};
-      buf[2] = 0;
-
-      if (strncmp(buf,"GO",2) == 0 )
-      {
-        // if (m_out.entries()<1) m_camc->nowait();
-        m_camc->wr(ss.str().c_str(),ss.str().length());
-
-        if (m_out.entries()>0)
-          m_camc->wr(s.str().c_str(),s.str().length());
+  bool success = false;
+  //Loop over m_camc[] entries
+  //for () {
+  std::vector<client *>::iterator itc;
+ 
+    
+  if (m_dosend) {
+    
+    for (itc = m_clients.begin(); itc!= m_clients.end(); itc++){
+      m_camc = (*itc);
+      if (m_camc==NULL) continue;
+      
+      if (m_out.entries()>0) m_out.tostream(s);
+      if (m_camc->Connect()>0) {
+        char buf[3];
+        while (  m_camc->rd(buf,2)==-2){};
+        buf[2] = 0;
+        if (strncmp(buf,"GO",2) == 0 ){
+          success =true;
+          int ret=0;
+          // if (m_out.entries()<1) m_camc->nowait();
+          ret = m_camc->wr(ss.str().c_str(),ss.str().length());
+          if (ret != (int)ss.str().length() ) success  = false;
+          if (m_out.entries()>0)
+            ret = m_camc->wr(s.str().c_str(),s.str().length());
+          if (ret != (int)s.str().length() ) success  = false;
+        }
+        else {
+          if (numErrBZ < 5){
+            warning() << "DANGER! All threads of camserv are busy!  -> Aborting message '" << ss.str() << endmsg;
+            numErrBZ++;
+          }
+          if (numErrBZ==5){
+            
+            warning() << "DANGER! All threads of camserv are busy!  -> Aborting message '" << ss.str()<<endmsg;
+            warning() << "Above message repeated "<<numErrBZ<<" times. Aborting further messaging of this type."<<endmsg;
+            numErrBZ++;
+            
+          }
+        }
+	
+        m_camc->new_sock();
+        // if (success) break; // break from the for loop over possible servers.
+        if (success) break;
       }
-      else 
-      {
-        info() << "DANGER! All threads of camserv are busy!" << endmsg;
-        info() << " -> Aborting message '" << ss.str() << endmsg;
+    }    // end the for loop
+    
+    if (!success) {
+      if (numErrCN < 5){
+        warning() << "DANGER! Could not connect to any camera server! -> Aborting message '" << ss.str() << endmsg;
+        numErrCN++;
       }
-
-      m_camc->new_sock();
-
+      else if (numErrCN==5) {
+        warning() << "DANGER! Could not connect to any camera server!  -> Aborting message '" << ss.str()<<endmsg;
+        warning() << "Above message repeated 5 times. Aborting further messaging of this type."<<endmsg;
+        numErrCN++;
+      }
+      // No else, just silently not print the message, after the error.
     }
-
-    m_out.reset();
-
-    m_lastHistoNum = 0;
-  } // if(m_dosend&&m_camc)
+  }// if(m_dosend&&m_camc)
+  
+ 
   else {
     if (msgLevel(MSG::DEBUG))
       debug() << "Sending to CAMERA disabled. Message " << ss.str() << endmsg;
   } // else(m_dosend&&m_camc)
-
+  
+  m_out.reset();
+  m_lastHistoNum = 0;
+  
   return 1;
 }
 

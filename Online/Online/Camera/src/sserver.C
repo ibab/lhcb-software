@@ -26,7 +26,7 @@
 #include "mapconfig.h"
 #include "getnsave.h"
 
-mapconfig mapc("etc/camserv.conf");
+mapconfig mapc;//("etc/camserv.conf");
 const int MAXTH=10;
 int BUSYTHREAD;
 outstack OutStack;
@@ -256,6 +256,7 @@ int server::Listen(){
   AdrMySock.sin_port = htons(port);
   int b = bind(sock, (const sockaddr*)&AdrMySock, sizeof(AdrMySock));
   if (b<0) {
+    std::cerr << "AF_INET, INADDR_ANY, port "<<port<<std::endl;
     perror("Cannot bind:");
     return -1;
   }
@@ -458,11 +459,14 @@ int WarnIn::Go(int csock){
 
 class WarnOut: public server{
 
-
+  int dirnum;
 
 public:
 
   WarnOut(int p):server (p){
+    
+    dirnum = 0;
+    
     std::string fname = "";
 
     if (mapc.get("datadir")!="")
@@ -513,6 +517,8 @@ int WarnOut::Go(int csock)
 int WarnOut::TimeOut()
 {
   OutStack.all_out();
+  //  std::cout << OutStack.MessageCnt<<std::endl;
+ 
   return 0;
 }
 
@@ -533,7 +539,21 @@ void * OutThread(void *){
   return 0;
 }
 
-int main(){
+int main(int argc, char ** argv){
+  std::string configfile = "etc/camserv.conf";
+  
+  for (int i = 0; i<argc;i++){
+    if (strncmp(argv[i],"-C",2) == 0)
+      if (i+1 < argc){
+	configfile = (std::string) argv[i+1];
+      }
+      else{
+	std::cerr<<"ERROR: Usage: "<<argv[0]<<" -C <filename>"<<std::endl;
+	std::cerr<<"ERROR: -C needs an argument: the config file localtion"<<std::endl;
+      }
+  }
+  
+  mapc.setfile(configfile.c_str());
 
   if (mapc.get("ID")!="")
     cout << "Welcome to Cam Server: "<< mapc.get("ID")<<endl;
@@ -550,10 +570,41 @@ int main(){
     ip = mapc.getint("inport");
 
   OutStack.ldir = "data";
-
+  
+  OutStack.wdir = "data";
+ 
+  std::string ws = mapc.get("webserver");
+  if (ws =="") ws = "localhost"; 
+  ws += (string) ":";
+  
+  
+  std::string wp = mapc.get("webport");
+  if (wp =="") wp = "8888"; 
+  wp += (string) "/";
+  
+  ws += wp;
+  
+  std::string wd = mapc.get("webdir");
+  wd += (string) "/";
+  ws+=wd;
+   
   if (mapc.get("datadir") != "")
     OutStack.ldir  = mapc.get("datadir");
 
+  OutStack.wdir  = ws;
+
+
+  OutStack.MaxFiles = -1;
+  OutStack.MaxTime = -1;
+
+  if (mapc.getint("maxfiles") != 0)
+    OutStack.MaxFiles  = mapc.getint("maxfiles");
+
+
+  if (mapc.getint("maxtime") != 0)
+    OutStack.MaxTime  = mapc.getint("maxtime");
+
+  
 
   WarnIn S(ip);
   S.settimeout(1,00000);

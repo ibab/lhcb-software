@@ -656,7 +656,7 @@ void ShowCont(std::string ins){
   InfoWindow * iw = new InfoWindow(&dummy);
   //if (iwAlive < 2)
   iw->display();
-  ////  cout << "selectright"<<endl;
+  //  std::cout << "selectright"<<endl;
   iw->ShowCont(ins);
 }
 

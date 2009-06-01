@@ -1,16 +1,7 @@
 #!/bin/bash
 
-# This is an example if that can be used to prevent against accidental starting
-# of CAMERA servers from the package.
-
-#if [ "$HOST" = "localhost" ]; then
 killall -9 CameraWebServ.exe
 killall -9 CameraServ.exe
-
-
-# The executables will look for their config files in the directory etc from where
-# they were executed. Make sure we are in that directory.
-cd $CAMERAROOT/scripts/
 
 # This is where we save the log files.
 export CAMDIR=$HOME/Camera
@@ -18,13 +9,8 @@ export CAMDIR=$HOME/Camera
 mkdir -p $CAMDIR/data
 
 # Start the Camera server and the web server.
-CameraWebServ.exe > $CAMDIR/log/CameraWebServ.log 2>&1 &
-CameraServ.exe > $CAMDIR/log/CameraServ.log 2>&1 &
+CameraWebServer.exe -C $CAMERAROOT/scripts/etc/CameraWebServer.conf > $CAMDIR/log/CameraWebServer.log 2>&1 &
+CameraServer.exe -C $CAMERAROOT/scripts/etc/CameraServer.conf > $CAMDIR/log/CameraServer.log 2>&1 &
 
 # Creates a new warnings.out file when the camera server is started.
 $CAMERAROOT/scripts/newCameraLog.sh
-
-#fi
-#else
-#    echo "camserv must be run on localhost. camserv not started."
-#fi

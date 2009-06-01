@@ -19,6 +19,18 @@
 
 #include <TGStatusBar.h>
 
+
+// Must be here such that we can compile the dictionary. Forward declaration is not enough.
+//#ifdef _WIN32
+//#include "TClient.h"
+//#endif
+
+
+//#ifndef _WIN32
+//#include "client.h"
+//#endif
+
+
 #include "display.h"
 
 class MessagePresenter: public  TGMainFrame{
@@ -34,6 +46,9 @@ class MessagePresenter: public  TGMainFrame{
 
   static const int MAXLINES=50;
   static const bool FLITEOUT=false;
+
+  std::vector<void* > socklist;
+
  public:
   void display();
 private:  

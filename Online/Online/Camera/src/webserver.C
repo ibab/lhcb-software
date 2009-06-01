@@ -23,7 +23,7 @@
 
 #include "mapconfig.h"
 
-mapconfig mapc("etc/webs.conf");
+mapconfig mapc; //("etc/webs.conf");
 
 
 #include "reply.C"
@@ -336,7 +336,22 @@ int WarnIn::Go(int csock){
 
 
 
-int main(){
+int main(int argc, char **argv){
+  std::string configfile = "etc/webs.conf";
+  
+  for (int i = 0; i<argc;i++){
+    if (strncmp(argv[i],"-C",2) == 0)
+      if (i+1 < argc){
+	configfile = (std::string) argv[i+1];
+      }
+      else{
+	std::cerr<<"ERROR: Usage: "<<argv[0]<<" -C <filename>"<<std::endl;
+	std::cerr<<"ERROR: -C needs an argument: the config file localtion"<<std::endl;
+      }
+  }
+  
+  mapc.setfile(configfile.c_str());
+
   int p;
   
   if ((p=mapc.getint("websport"))==0)

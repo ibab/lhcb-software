@@ -13,10 +13,12 @@ class mapconfig{
   char buf[MAX+1];
  public:
   
-  mapconfig(char * inconf){
+  int setfile(const char * inconf){
+    
     FILE * F = fopen(inconf,"r");
     if (F==NULL){
-      cerr << "Can not open configuration "<<inconf<<endl;
+      cerr << "ERROR: Can not open configuration "<<inconf<<endl;
+      return -1;
     }
     else{
       std::string s;
@@ -34,6 +36,14 @@ class mapconfig{
 	}
       }
     }
+   return 1; 
+  }  
+  mapconfig(char * inconf){
+    if (inconf!=NULL)
+      setfile(inconf);  
+  }
+ 
+  mapconfig(){
   }
   string get(string s){
    map<string,string>::iterator iter = m.find(s);

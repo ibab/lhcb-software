@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.2 2009-02-04 13:00:01 rogers Exp $
+// $Id: CameraTool.h,v 1.3 2009-06-01 10:00:07 rogers Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -12,6 +12,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include <vector>
 
 //#include "AIDA/IHistogram1D.h"
 //#include "GaudiUtils/Aida2ROOT.h"
@@ -37,6 +38,9 @@ class TH2D;
 class CameraTool : public GaudiTool,
                    virtual public ICameraTool
 {
+
+  int numErrBZ;
+  int numErrCN;
 
 public:
   /// Standard constructor
@@ -132,7 +136,12 @@ private:
 
   std::string m_servername; ///! Name of the server to connect to.
   int m_servport; ///! Port to connect to the server on.
+ 
+  std::vector<std::string> m_servernames; ///! Names of the servers to connect to.
+  std::vector<int> m_servports; ///! Ports to connect to the servers on.
+  
   client *m_camc; ///! This is the client that interfaces with the CAMERA server and handles the sending of messages.
+  std::vector<client *> m_clients; //! This is a list of possible client we start from the front and if that one is busy or down the next one is used.
   container m_out; ///! Holds messages that are to be sent to the CAMERA server.
   bool m_dosend; ///! Indicates if the messages are to be stored and sent to CAMERA or not.
   unsigned int m_lastHistoNum; ///! Part of the title hack required until MonObjects are used. Notes how many histograms are to sent.

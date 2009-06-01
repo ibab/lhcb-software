@@ -59,7 +59,7 @@ void * reply::start(){
   while ( (buf[r-1] =='\r') || (buf[r-1] == '\n') ){
     buf[r--] = '\0';
   }
-  printf(">%s<\n",buf);
+  //  printf(">%s<\n",buf);
   if (strncmp(buf,"GET ",4)!=0) return NULL;
   
   string instr = buf;
@@ -75,14 +75,14 @@ void * reply::start(){
   
   char pbuf[PATH_MAX];
   if (realpath(buf, pbuf)==NULL) {
-    // cerr << "Could not resolve path "<<buf<<endl;
+    std::cerr << "Could not resolve path "<<buf<<std::endl;
     perror("realpath");
     return NULL;
   }
   
   if (strncmp(pbuf,allowed,strlen(allowed))!=0){
-    // cerr << "Not allowed "<<buf<<endl;
-   
+    cerr << "Not allowed "<<buf<<endl;
+    cerr << pbuf<< " not in " <<allowed<<endl;
     return NULL;
   }
   

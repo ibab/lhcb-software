@@ -6,17 +6,21 @@
 container out;
 using namespace std;
 
-int main(int /* argc */, char ** argv)
+int main(int  /*argc*/ , char ** argv)
 {
  #ifdef _WIN32
    printf("I will not work properly under windows\n");  
  #endif
   if (argv[1] == NULL){
-    cerr << "usage: camtest <host>"<<endl;
+    cerr << "usage: camtest host [port]"<<endl;
     exit(0);
   }
-
-  client c(argv[1],12345);
+  int port = 12345;
+  
+  if (argv[2] !=NULL) port = atoi(argv[2]);
+  
+  client c(argv[1],port);
+  
   out.reset();
 
   out.add("TEXT","Stress test of bulk warnings");
@@ -45,11 +49,18 @@ int main(int /* argc */, char ** argv)
   out.tostream(s);
   int j=0;
 
-  //  while (1)
-  for (int cntr=0;cntr<10;++cntr)  {
+  //  while (1){	
+  //usleep(10000);	
+	int reps = 10;
+  if (argv[3]!=NULL) {
+	int t=0;
+        if (sscanf(argv[3],"%d",&t)>0)
+	 reps = t;
+  }
+  for (int cntr=0;cntr<reps;++cntr)  {
 
     c.Connect();
-
+    
 
     //  c.wait();
 
@@ -69,6 +80,7 @@ int main(int /* argc */, char ** argv)
     }
     else{
       cerr << "Problem connecting to server"<<endl;
+      
     }
     c.new_sock();
     // usleep(10000);
@@ -76,7 +88,5 @@ int main(int /* argc */, char ** argv)
     //  cout <<j <<" "<< i++ <<endl;
   }
   c.shut_close();
-
-
 
 }

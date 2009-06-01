@@ -16,6 +16,8 @@
 
 InfoWindow::InfoWindow(int * inalive):TGMainFrame()
 {
+  //std::cout <<"Made me"<<std::endl;
+  
   alive = inalive;
   lines=0;
   *alive =1;
@@ -25,11 +27,16 @@ InfoWindow::~InfoWindow(){
   *alive =0;
   cont.reset();
   //  std::cerr << "I am no more" << std::endl;
-
+  
 }
 void InfoWindow::ShowCont(std::string ins){
-
+  //std::cout << "in ShowCont"<<std::endl;
+   SetBit(kDontCallClose);
   std::string cfile =ins;
+
+  this->textclear();
+  this ->canvas()->Clear();
+  this ->canvas()->Update();
 
 
   //  container_ROOT cont;
@@ -42,13 +49,14 @@ void InfoWindow::ShowCont(std::string ins){
     int nrHistos=0;
 
 
-    for (int i=0;i<cont.entries();++i){
 
+    for (int i=0;i<cont.entries();++i){
+      
       std::size_t pos = cont.name(i).find('.');
       std::string cn, cna;
       cn = cont.name(i);
       cna = "";
-
+      
       if (pos!=std::string::npos) cn = cont.name(i).substr(0,pos);
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
 
@@ -56,23 +64,16 @@ void InfoWindow::ShowCont(std::string ins){
       if (cn=="TF1" && (cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) nrHistos++;
       if (cn=="TF2" && (cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) nrHistos++;
       if (cn=="DIM2D" && (cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) nrHistos++;
-
-
     }
     //    cout << "We need space for "<< nrHistos<<" Histos"<<endl;
-
     //if (iwAlive < 1)
     //int dummy;
     //  InfoWindow * iw = new InfoWindow(&dummy);
-    //if (iwAlive < 2)
-    // this->display();
-    this->textclear();
-
+    if ((*alive) < 2)
+      this->display();
+    
+    
     int HistoCnt = 1;
-
-
-    this ->canvas()->Clear();
-    this ->canvas()->Update();
 
     if (nrHistos>1){
       int divx=0;
@@ -91,6 +92,9 @@ void InfoWindow::ShowCont(std::string ins){
     }
 
 
+    numGraphs = 0;
+    numTexts = 0;
+    
 
     for (int i=0;i<cont.entries();++i){
       if (cont.object(i) == NULL) continue;
@@ -105,6 +109,9 @@ void InfoWindow::ShowCont(std::string ins){
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
 
       if (cn=="EVAL"){
+        
+        numGraphs++;
+        
         char * v = (char *)cont.object(i);
 
         gROOT->ProcessLine(v);
@@ -112,7 +119,7 @@ void InfoWindow::ShowCont(std::string ins){
       }
 
       if (cn=="DIM2D"){
-
+        numGraphs++;
         // this->appendline("2D Histo ");
 
         if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
@@ -124,7 +131,7 @@ void InfoWindow::ShowCont(std::string ins){
         this->canvas()->Update();
       }
       if (cn=="DIM1D"){
-
+        numGraphs++;
         // this->appendline("1D Histo ");
 
         if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
@@ -136,7 +143,7 @@ void InfoWindow::ShowCont(std::string ins){
         this->canvas()->Update();
       }
       if (cn=="TF1"){
-
+        numGraphs++;
         // this->appendline("1D Histo ");
 
         if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
@@ -150,7 +157,7 @@ void InfoWindow::ShowCont(std::string ins){
       }
 
       if (cn=="TF2"){
-
+        numGraphs++;
         // this->appendline("1D Histo ");
 
         if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
@@ -166,16 +173,19 @@ void InfoWindow::ShowCont(std::string ins){
       if (cont.name(i)=="TEXT"){
         // this->appendline("Text: ");
         this->appendline((char*)cont.object(i));
-
+        numTexts++;
+        
       }
       if (cont.name(i)=="CTIME"){
         // this->appendline("Date/Time: ");
+        numTexts++;
+        
         this->appendline((char *)cont.object(i));
       }
 
 
       if ((cont.name(i)=="TELLIPSE")||(cont.name(i)=="TTELLIPSE" )){
-
+        numGraphs++;
         // this->appendline("Ellipse");
 
         // this->canvas()->cd(HistoCnt++);
@@ -186,7 +196,7 @@ void InfoWindow::ShowCont(std::string ins){
 
 
       if ((cont.name(i)=="TBOX")||(cont.name(i)=="TTBOX" )){
-
+        numGraphs++;
         // this->appendline("Box");
 
         // this->canvas()->cd(HistoCnt++);
@@ -197,7 +207,7 @@ void InfoWindow::ShowCont(std::string ins){
 
 
       if ((cont.name(i)=="TLINE")||(cont.name(i)=="TTLINE" )){
-
+        numGraphs++;
         // this->appendline("Line");
 
         // this->canvas()->cd(HistoCnt++);
@@ -207,7 +217,7 @@ void InfoWindow::ShowCont(std::string ins){
       }
 
       if ((cont.name(i)=="TARROW")||(cont.name(i)=="TTARROW" )){
-
+        numGraphs++;
         // this->appendline("Arrow");
 
         // this->canvas()->cd(HistoCnt++);
@@ -225,19 +235,54 @@ void InfoWindow::ShowCont(std::string ins){
         sprintf(buf,"GaudiMonitor.exe histo %s &",(char *)cont.object(i));
         system(buf);
       }
+      
+    } // for entries
+    
+    this->Layout();
+     
 
-    }
-
-  }
-
+    
+    
+  }// empty block
+  
+  
   //  new TCanvas;
 }
 
 
-TCanvas * InfoWindow::canvas(){return c123;}
+TCanvas * InfoWindow::canvas(){
+  return c123;
+}
 
-void InfoWindow::textclear(){   fTextEdit532->GetText()->Clear(); fTextEdit532->Layout(); lines=0;}
-void InfoWindow::appendline(const char * fn){fTextEdit532->GetText()->InsLine(lines,fn);lines++; fTextEdit532->Update(); fTextEdit532->Layout(); }
+void InfoWindow::textclear(){
+ 
+  if (fTextEdit532!=NULL){
+    
+    fTextEdit532->GetText()->Clear();
+    
+    fTextEdit532->Clear();
+    
+    //fTextEdit532->GetText()->Clear();
+    
+    //fTextEdit532->Update();
+    
+    //fTextEdit532->Layout();
+    //    this->Layout();
+    
+  }
+  
+
+  lines=0;
+}
+void InfoWindow::appendline(const char * fn){
+  if (fTextEdit532!=NULL){
+    fTextEdit532->GetText()->InsLine(lines,fn);
+    lines++; 
+  }
+  //  only once, please.
+  // fTextEdit532->Update(); 
+  //fTextEdit532->Layout(); 
+} 
 
 
 
@@ -256,19 +301,48 @@ void InfoWindow::raise(){
 
 }
 void InfoWindow::Layout(){
+  
+  
   unsigned int textsize=100;
+  int fWidth,fHeight;
+  
+  if (fMainFrame892){ 
+    fWidth =  fMainFrame892->GetWidth();
+    fHeight =  fMainFrame892->GetHeight();
+    
+    if (3*textsize>=fMainFrame892->GetHeight())
+      textsize=fMainFrame892->GetHeight()/3;
+    
+    if (textsize>=fMainFrame892->GetHeight())
+      textsize=0;
+    
+    if (numTexts > 0){
+      if (numGraphs <1){
+      textsize = fHeight-24;
+      }
+    }
+    else{
+      textsize = 10;
+    }
+  
+  //std::cout <<" Layout " << textsize<< " "<<numGraphs <<std::endl;
+  
 
-  if (3*textsize>=fMainFrame892->GetHeight())
-    textsize=fMainFrame892->GetHeight()/3;
 
-  if (textsize>=fMainFrame892->GetHeight())
-    textsize=0;
+  if (*alive>1)  fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
+  if (*alive>1) fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
+  if (*alive>1)  fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+  fTextEdit532->Update();
+  fTextEdit532->Layout();
+  
+  }
+  //std::cout << this->kDontCallClose<<std::endl;
+ SetBit(kDontCallClose,false);
+ 
+ //this->kDontCallClose = 0;
+  
 
-  int fWidth =  fMainFrame892->GetWidth();
-  int fHeight =  fMainFrame892->GetHeight();
-  fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
-  fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
-  fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+  //  fMainFrame892->CallClose();
 }
 
 void InfoWindow::display(int x,int y)
@@ -283,8 +357,8 @@ void InfoWindow::display(int x,int y)
   fMainFrame892 = this;//new MyFrame;
 
   fMainFrame892->SetLayoutBroken(kTRUE);
-
-  fMainFrame892->Connect("CloseWindow()","InfoWindow",this,"DoClose()");
+  fMainFrame892->DontCallClose();
+  //fMainFrame892->Connect("CloseWindow()","InfoWindow",this,"DoClose()");
   // fMainFrame892->Connect("Resize()","InfoWindow",this,"DoResize()");
 
   fRootEmbeddedCanvas514 = new TRootEmbeddedCanvas(0,fMainFrame892,x,y-textsize-24);
@@ -294,13 +368,13 @@ void InfoWindow::display(int x,int y)
   fRootEmbeddedCanvas514->AdoptCanvas(c123);
 
   fMainFrame892->AddFrame(fRootEmbeddedCanvas514, new TGLayoutHints(kLHintsLeft | kLHintsTop| kLHintsExpandX,2,2,2,2));
-  fRootEmbeddedCanvas514->MoveResize(0,0,x,y-textsize-24);
+  //  fRootEmbeddedCanvas514->MoveResize(0,0,x,y-textsize-24);
 
   // status bar
   fStatusBar528 = new TGStatusBar(fMainFrame892,655,24);
 
   fMainFrame892->AddFrame(fStatusBar528, new TGLayoutHints(kLHintsBottom | kLHintsExpandX));
-  fStatusBar528->MoveResize(0,y-24,x,24);
+  //fStatusBar528->MoveResize(0,y-24,x,24);
 
   fTextEdit532 = new TGTextEdit(fMainFrame892,653,96);
   //fTextEdit532->LoadFile("TxtEdit532");
@@ -309,14 +383,16 @@ void InfoWindow::display(int x,int y)
   //fTextEdit532->GetText()->InsLine(0,"Hello World 2");
 
   fMainFrame892->AddFrame(fTextEdit532, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
-  fTextEdit532->MoveResize(0,y-textsize-24,x,textsize);
+  //fTextEdit532->MoveResize(0,y-textsize-24,x,textsize);
 
   fMainFrame892->MapSubwindows();
 
   //  fMainFrame892->Resize(fMainFrame892->GetDefaultSize());
   fMainFrame892->MapWindow();
   fMainFrame892->Resize(x,y);
-  fStatusBar528->SetText("Ready");
+  //fStatusBar528->SetText("Ready");
+  //std::cout << "Ready"<<std::endl;
+  
   *alive = 2;
 }
 

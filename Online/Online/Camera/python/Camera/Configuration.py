@@ -22,30 +22,53 @@ from GaudiConf.Configuration import *
 class Camera(LHCbConfigurableUser):
     # Steering options
     __slots__ = {
-        'cameraServer' : ''
+        'CameraServers' : []
         }
 
     _propertyDocDct = {
-        'cameraServer' : """This is the server that is running CAMERA.
-                            If left empty then no messages will be sent to CAMERA
-                            and it is effectively disabled. Otherwise it must be
-                            set to the name of the CAMERA server to use. Defaults
-                            to empty string and CAMERA is disabled.
+        'CameraServers' : """This is a list of servers that the tool should attempt
+                             to send CAMERA messages to. The entry is a colon delimited
+                             value of the form host:port e.g. localhost:12345.
+                             The first server in the list is considered to be the
+                             primary server to use. In the event that the tool
+                             cannot connect to the primary server then the remaining
+                             servers are tried in order.
+                             If this list is empty or None is passed then the CAMERA
+                             tool will be disabled.
                          """
         }
     
-    def __apply_configuration__(self):
+    def applyConf(self):
         """Applies all the configuration settings for the class."""
         # We are only exposing the server name and will leave the other
         # properties at their default values.
         from Configurables import CameraTool
-        camera = CameraTool("ToolSvc.CameraTool")
-        serverName = self.getProp("cameraServer")
-        if '' != serverName:
-            camera.Enabled = True
-            camera.ServerName = serverName
-        else:
+        camera = CameraTool('ToolSvc.CameraTool')
+        servers = self.getProp('CameraServers')
+        # Check to see whether we have been given any servers.
+        # If the server dict is none then we will throw a TypeError.
+        # This indicates that we want to disable the CAMERA server.
+        try:
+            if 0 is not len(servers):
+                # We have been given a list of servers so enable the tool.
+                camera.Enabled = True
+                # Need to set the list of servers and ports to the
+                # appropriate proerties.
+                names = []
+                ports = []
+                for server in servers:
+                    name, port = server.split(':')
+                    names.append(name)
+                    ports.append(int(port))
+                # Need to define the primary port to use.
+                camera.ServerName = names[0]
+                camera.ServerPort = ports[0]
+                # Append the full list of servers.
+                camera.ServerNames = names
+                camera.ServerPorts = ports
+            else:
+                camera.Enabled = False
+        except TypeError:
             camera.Enabled = False
-        
-    # def __apply_configuration__()
+    # def applyConf()
 # def Camera()

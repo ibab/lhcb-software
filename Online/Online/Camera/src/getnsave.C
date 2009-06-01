@@ -27,6 +27,8 @@ void * getnsave::start(){
   camline cl;
   cl.in(buf);
 
+  //  std::cout << OutStack.MessageCnt<<std::endl;
+
   //check if buf is a command
   if (strncmp(buf,"COMMAND/",8)==0){
 
@@ -39,8 +41,8 @@ void * getnsave::start(){
       char * buf = (char *)malloc(cl.message.size());
       if (buf !=NULL){
         if ( sscanf(cl.message.c_str(),"%*s %s",buf) ==1){
-          std::string s = ldir+"/"+(std::string)buf;
-          if (os->Fswitch(s.c_str())<0){
+          //std::string s = ldir+"/"+(std::string)buf;
+          if (os->Fswitch(buf)<0){
             os->addline("SERVER/3/OutStack::Fswitch failed");
           }
         }
@@ -60,6 +62,19 @@ void * getnsave::start(){
     //broadcast result
   }
 
+  if ((os->MaxTime >0 ) && ((time(NULL) - os->lastSwitch) > os->MaxTime)) {
+    (os->DirNum)++;
+    std::cerr <<"More than "<<os->MaxTime<< " seconds since last switch."<<std::endl;
+    os->Fswitch(os->lastName.c_str(),os->DirNum);
+  }
+  
+ 
+  if ( (os->MaxFiles >0) && (os->MessageCnt>=os->MaxFiles)) {
+    (os->DirNum)++;
+    std::cerr <<"More than "<<os->MaxFiles<< " files since last switch."<<std::endl;
+    os->Fswitch(os->lastName.c_str(),os->DirNum);
+  }
+
 
   char nbuf[2049];
 
@@ -69,9 +84,16 @@ void * getnsave::start(){
 
   if (re>0){
 
-    sprintf(tempf,"%scam.%s.%d.XXXXXX",ldir.c_str(),id.c_str(),u);
+    // don't start a new file while we are switching locations with Fswitch!
+    pthread_mutex_lock(&(os->locmtx));
+    cldir = os->currLoc();
+    std::string cwdir = os->currWeb();
+    //get the current location
+    //string cloc = os->dataLocation();
+    sprintf(tempf,"%scam.%s.%d.XXXXXX",cldir.c_str(),id.c_str(),u);
     int s = mkstemp(tempf);
-
+    // std::cout <<tempf<<std::endl;
+    
     std::string templ = tempf;
 
     string::size_type st = templ.find_last_of( "/" );
@@ -83,11 +105,12 @@ void * getnsave::start(){
 
     //if (r>0){
 
-    cl.URL = ws+fstr;
+    cl.URL = cwdir+fstr;
     std::string sout;
     cl.out(sout);
     os->addline(sout.c_str());
-
+    pthread_mutex_unlock(&(os->locmtx));
+  
     //}
 
     if (s<0) perror("mkstemp");

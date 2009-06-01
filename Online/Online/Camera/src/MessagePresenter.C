@@ -2,13 +2,22 @@
 // Mainframe macro generated from application: /usr/local/root/bin/root.exe
 
 #include <cmath>
+
+#ifdef _WIN32
+#include "TClient.h"
+#endif
+
+#ifndef _WIN32
 #include "client.h"
+#endif
+
 
 #include <string>
 #include <stdio.h>
 
 #include <stdlib.h>
- #ifndef _WIN32
+
+#ifndef _WIN32
 #include <dlfcn.h>
 #endif
 
@@ -108,9 +117,7 @@ void MessagePresenter::UpdateRight(){
   fListBox863->RemoveAll();
   extradata.clear();
 
-  //  cout<<  fListBox816->GetSelected()<<endl;
-  //cout << names[i]<<endl;
-
+ 
   std::map<std::string,std::vector<std::string>*>::iterator it;
   std::map<std::string,std::vector<std::string>*>::iterator itbegin;
   std::map<std::string,std::vector<std::string>*>::iterator itend;
@@ -150,7 +157,7 @@ void MessagePresenter::UpdateRight(){
         l=3;
       }
 
-      if (l==1 && !doinfo) continue;
+       if (l==1 && !doinfo) continue;
       if (l==2 && !dowarn) continue;
       if (l==3 && !doerr) continue;
 
@@ -159,7 +166,8 @@ void MessagePresenter::UpdateRight(){
       string entrystring;
 
       if (isextra ==1)
-        entrystring = sss+ ":  " + ss.substr(0,position1)  + " :  "+ss.substr(position1+3,position2 - (position1+3))+ " -> ";//+ ss.substr(position2+1);
+        entrystring=sss+":  " + ss.substr(0,position1)  + " :  "+ss.substr(position1+3,position2 - (position1+3))+ " -> ";
+//+ ss.substr(position2+1);
       else
         entrystring = sss+ ":  " + ss.substr(0,position1)  + " :  "+ss.substr(position1+3);
 
@@ -450,36 +458,44 @@ int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
   std::string to;
   if (getenv("CAMCACHE")!=NULL){
     to = (std::string)getenv("CAMCACHE");
-    to = to + "/" + file;
+    to = to + "/" + "cached.tmp";
   }
   else{
-    to = "cache/"+file;
+    to = "./cached.tmp";
   }
-
+  
   if (getenv("CAMPROXY")!=NULL){
     add = (std::string)getenv("CAMPROXY");
     // cerr << "Using proxy "<< getenv("CAMPROXY") <<endl;
   }
-
+  
   std::string::size_type position2 = add.find(":");
   std::string host,port;
-
+  
   host = add;
   port = "8888";
-
+  
 
   if (position2 != std::string::npos){
     host = add.substr(0,position2);
     port = add.substr(position2+1);
   }
-
+  
+//   char * cpy = strdup(to.c_str());
+//   for (int i=0;i<strlen(cpy);++i){
+//     char slash;
+//     if (cpy[i] == '/' || cpy[i] == '\\'){
+//       slash =;  
+//     }
+//   }
+  
   FILE *F = fopen(to.c_str(),"wb");
   if (F==NULL){
-    //std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
-    perror("");
+    std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
+    perror("fopen in GetXtra:");
     return 0;
   }
-
+  
   client c(host.c_str(),atoi(port.c_str()));
 
   if (c.Connect()>0){
@@ -487,7 +503,7 @@ int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
     c.wr("GET ",4);
     c.wr(file.c_str(),strlen(file.c_str()));
     c.wr("\n",1);
-    c.shutwr();
+    //c.shutwr();
     char buf[512];int r;
     while ((r = c.rd(buf,511))!=-1){
       if (r!=-2){
@@ -499,10 +515,8 @@ int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
     }
     fclose(F);
     cachedfile = to;
-
   }
   else{
-
     // std::cerr << "Error Connecting"<<std::endl;
     return -1;
   }
@@ -608,10 +622,25 @@ void MessagePresenter::setup(){
 
   fListBox816->Connect("Selected(Int_t)","MessagePresenter",this,"selectleft()");;
   fListBox863->Connect("Selected(Int_t)","MessagePresenter",this,"selectright()");;
-  //  fMainFrame1933->Connect("CloseWindow()","MessagePresenter",this,"DoClose()");
+  fMainFrame1933->Connect("CloseWindow()","MessagePresenter",this,"DoClose()");
 }
 
 void MessagePresenter::DoClose(){
+
+
+  //  close all active sockets first.
+
+  //  std::cout<<"closing all sockets"<<std::endl;
+  
+  for(unsigned int i = 0;i<socklist.size();++i){
+    if (socklist[i]!=NULL){
+      ((client *)socklist[i])->shut_close();
+      
+    }
+  }
+  
+  exit(0);
+  
   // cout << "I do not like to be closed."<<endl;
   //  fMainFrame1933->DontCallClose();
 }
@@ -664,7 +693,7 @@ void MessagePresenter::selectright(){
     if (iwAlive < 1) iw = new InfoWindow(&iwAlive);
     if (iwAlive < 2) iw->display();
 
-    iw ->ShowCont(cfile);
+    if (iwAlive>1) iw ->ShowCont(cfile);
 
   }
 
@@ -731,7 +760,7 @@ void MessagePresenter::display(){
   fMainFrame1933->AddFrame(fTextButton515, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton515->MoveResize(400,2,90,20);
   //   TGNumberEntry *
-  fNumberEntry670 = new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
+  fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fNumberEntry670->MoveResize(260,2,120,20);
   fNumberEntry670->SetNumber(50);
@@ -870,11 +899,14 @@ void MessagePresenter::messageloop(char * host,char * file){
 
   std::vector<std::string> serverlist;
   std::vector<client *> clientlist;
+  
   std::vector<proto *> protolist;
   std::vector<int> connlist;
+  
+  
 
 
-  if (strcmp(host,"NULL")!=0){
+    if (strcmp(host,"NULL")!=0){
 
     string s = host;
     string str = s;
@@ -891,9 +923,24 @@ void MessagePresenter::messageloop(char * host,char * file){
     serverlist.push_back(str);
 
     for (unsigned int i = 0;i<serverlist.size();++i){
-      client *  c = new client(serverlist[i].c_str(),12346);
+
+      std::string hostpart,portpart;
+      portpart="12346";
+      hostpart=serverlist[i];
+      std::string::size_type pos;
+      pos = serverlist[i].find(":");
+      
+      if (pos!=string::npos){
+        hostpart = serverlist[i].substr(0,pos);
+        portpart = serverlist[i].substr(pos+1);
+      }
+      
+      
+      client *  c = new client(hostpart.c_str(),atoi(portpart.c_str()));
+      
       // cout <<serverlist[i]<<endl;
       clientlist.push_back(c);
+      socklist.push_back((void *)c);
 
       proto *  p = new proto(c);
       protolist.push_back(p);
@@ -901,12 +948,10 @@ void MessagePresenter::messageloop(char * host,char * file){
       connlist.push_back(0);
     }
     TGString savestat=(TGString)"";
-    while (1)
-    {
 
+    while (1){
 
       //fStatusBar528->SetText(TGString("Connecting to ")+TGString(host));
-
 
       for (unsigned int i = 0;i<serverlist.size();++i){
         if (connlist[i] ==0){
@@ -950,7 +995,7 @@ void MessagePresenter::messageloop(char * host,char * file){
           while ((r = protolist[i]->getline(buf,511)) >0 ){
             if (r >0){
               buf[r] = '\0';
-              // printf("%s\n",buf);
+
               std::string s = buf;
               addwarning(s,1);
               gSystem->ProcessEvents();
@@ -964,44 +1009,9 @@ void MessagePresenter::messageloop(char * host,char * file){
             clientlist[i]->new_sock();
             connlist[i] =0;
             string str = "Connection to "+serverlist[i]+" terminated!";
-            //   fStatusBar528->SetText(TGString(str.c_str() ));
-            //gSystem->ProcessEvents();
-            //sleep(2);
+          
           }
-
-          //     gSystem->ProcessEvents();
-          //fStatusBar528->SetText(TGString("Connected to ")+TGString(host));
-
-          //      proto p(clientlist[0]);
-          //      char buf[512];
-          //      int r;
-          //      while ((r = p.getline(buf,511)) != -1 ){
-          //        if (r >0){
-          //   buf[r] = '\0';
-          //   // printf("%s\n",buf);
-          //   std::string s = buf;
-          //   addwarning(s,1);
-          //   gSystem->ProcessEvents();
-          //        }
-          //        else{
-          //   gSystem->ProcessEvents();
-          //        }
-
-          //      }
-
-          //      clientlist[0]->new_sock();
-          //      fStatusBar528->SetText(TGString("Connection terminated! ")) ;
-
-          //      else{
-          //        fStatusBar528->SetText(TGString("Connection failed to ")+TGString(host)); ;
-          //        for (int i=0;i<100;++i){
-
-          //   gSystem->ProcessEvents();
-          //   usleep(20000);
-          //        }
-          //      }
-
-
+          
         }// connlist ==1
       } //for serverlist
     }
@@ -1022,6 +1032,8 @@ int main(int /* argc */, char ** argv){
  #ifndef _WIN32
   dlerror();
  #endif
+  //  std::cout <<"Hello"<<std::endl;
+  
   int   dummy_argc   = 1;
   char *dummy_argv[] =  { "MP", NULL  };
   TApplication * TApp = 

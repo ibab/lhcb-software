@@ -127,6 +127,9 @@ class InfoWindow:public TGMainFrame{
 
   container_ROOT cont;
 
+  int numGraphs, numTexts;
+  
+
 public:
 
   InfoWindow(int *);
@@ -140,8 +143,20 @@ public:
   void DoResize();
   void raise();
   void Layout();
-  void display(int x=600,int y=500);
+  void display(int x=600,int y=700);
+  
   TCanvas * canvas();
+  
+  void print(const char * name = ""){
+    if (*alive ==2){
+      if (name[0] == '\0') 
+        canvas()->Print("canvas.png");
+      else
+        canvas()->Print(name);
+    }
+  }
+  
+  
   //  ClassDef(InfoWindow,1)
 };
 #endif
