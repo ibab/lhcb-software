@@ -4,15 +4,34 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r4 ===============
+! 2009-06-01 - Gareth Rogers
+ - CAMERA tool and configurables have been updated to take a CAMERA server list.
+   Will connect to the first CAMERA server in the list and then successive
+   servers are used as fall backs in the event a server dies.
+ - CAMERA server now has the ability to manage its data directory.
+   It will move to a new directory either after a set time,
+   maximum number of files written or manually.
+   CameraSwitch.exe and newDataDirectory.sh manage the manual switch.
+ - Update to the configuration files for the servers and their start up scripts.
+   The configuration file can now be passed as a command line option.
+ - Added the scripts used in the LHCb online environment to start the servers as system processes.
+
+
+=============== v1r3 ===============
 ! 2009-02-10 - Gareth Rogers
  - Removed compiler warnings from container.h and Configuration.py.
  - CameraTool now print out message when not sending to the server.
 
+
+=============== v1r2 ===============
 ! 2009-02-04 - Gareth Rogers
  - Updated the requirements file to use "" around the dependencies in the
    dependency macro. This fixes the make -j problem and it builds successfully.
  - Added install_python_modules so configurables are built.
 
+
+=============== v1r1 ===============
 ! 2009-02-03 - Gareth Rogers
  - Updated the CameraTool.h to document the functions. CameraTool.cpp had the
    Enabled feature more comprehensively implemented such that a disabled tool
@@ -21,5 +40,7 @@
    slot, which will automatically disable the CameraTool. If a ServerName is
    passed the tool will be enabled.
 
+
+=============== v1r0 ===============
 ! 2009-02-02 - Gareth Rogers
  - Initial release of the CAMERA package.
