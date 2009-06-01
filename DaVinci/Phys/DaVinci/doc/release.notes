@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.345 2009-06-01 15:42:55 pkoppenb Exp $
+! $Id: release.notes,v 1.346 2009-06-01 16:14:24 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-06-01 - Patrick Koppenburg
  - Typo fix
+ - Review of DST handling
 
 ! 2009-05-22 - Patrick Koppenburg
  - Use appendToMainSequence in DaVinciWriteDst. No need to pass

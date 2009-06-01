@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.12 2009-06-01 15:42:55 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.13 2009-06-01 16:14:25 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -18,18 +18,19 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci, DaVinciWriteDst
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #
 # Get a J/psi
 #
 seq = GaudiSequencer("Seq_Jpsi")
-j = FilterDesktop('MyJpsi')
-j.InputLocations = [ 'StdLooseJpsi2MuMu' ]
-j.Code = "ALL"
-d = DeterministicPrescaler("Prescale_Jpsi")
-d.AcceptFraction = 0.5                    # take 50%
-p = PrintDecayTree("Print_Jpsi")
-p.InputLocations = [ "MyJpsi" ]
-seq.Members += [ d, j, p ]
+jpsi = FilterDesktop('MyJpsi')
+jpsi.InputLocations = [ 'StdLooseJpsi2MuMu' ]
+jpsi.Code = "ALL"
+det = DeterministicPrescaler("Prescale_Jpsi")
+det.AcceptFraction = 0.5                    # take 50%
+printDec = PrintDecayTree("Print_Jpsi")
+printDec.InputLocations = [ "MyJpsi" ]
+seq.Members += [ det, jpsi, printDec ]
 #
 # This the bit that declares the sequence to the Dst writer
 # seq will passed to DaVinci()

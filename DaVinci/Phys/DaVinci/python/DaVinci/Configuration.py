@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.63 2009-05-21 12:36:25 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.64 2009-06-01 16:14:25 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, DaVinciWriteDst )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -70,7 +70,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
          }
 
-    __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp ]
+    __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp, DaVinciWriteDst ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []
@@ -237,7 +237,6 @@ class DaVinci(LHCbConfigurableUser) :
         Define Input
         """
         input = self.getProp("Input")
-        print "# DaVinci input is ", input
         if ( len(input) > 0) :
             EventSelector().Input = input
         inputType = self.getProp( "InputType" ).upper()
@@ -271,12 +270,10 @@ class DaVinci(LHCbConfigurableUser) :
         ApplicationMgr().HistogramPersistency = "ROOT"
         if ( self.getProp("HistogramFile") != "" ):
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
-            print "# Histos file will be ``", self.getProp("HistogramFile"), "''"
         if ( self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
             ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
             tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
-            print "# Tuple will be in ``", tupleFile, "''"
             NTupleSvc().Output = [ tuple ]
             NTupleSvc().OutputLevel = 1 
         if ( self.getProp("ETCFile") != "" ):
@@ -305,8 +302,6 @@ class DaVinci(LHCbConfigurableUser) :
         from Configurables import Sequencer
         seq = Sequencer("SeqWriteTag")
         ApplicationMgr().OutStream += [ tagW ]
-        
-        print "# ETC will be in ``", etcFile, "''"
 
 ################################################################################
 # Main sequence
@@ -315,15 +310,18 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Main Sequence
         """
-        self.mainSeq.IgnoreFilterPassed = True 
+        self.mainSeq.IgnoreFilterPassed = True
         ApplicationMgr().TopAlg += [ self.mainSeq ]
         opts = self.getProp( "MainOptions" )
         if not (opts == '') :
             importOptions( self.getProp( "MainOptions" ) )
         else :
             log.info("No MainOptions specified. DaVinci() will import no options file!")
+        seq = DaVinciWriteDst().dstSequence()
+        log.info("Adding DST sequence")
+        self.appendToMainSequence( [ seq ] )
         log.info("Creating User Algorithms")
-        print '##### User',  self.getProp("UserAlgorithms")
+#        print '##### User',  self.getProp("UserAlgorithms")
         self.appendToMainSequence( self.getProp("UserAlgorithms")  )        
 
 ################################################################################

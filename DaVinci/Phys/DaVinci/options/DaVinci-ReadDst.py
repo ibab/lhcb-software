@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-ReadDst.py,v 1.6 2009-05-22 15:30:46 pkoppenb Exp $
+# $Id: DaVinci-ReadDst.py,v 1.7 2009-06-01 16:14:25 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -14,19 +14,20 @@ from Configurables import DaVinci
 #
 # Print the J/psi
 #
-from Configurables import PrintDecayTree, PrintHeader
+from Configurables import PrintDecayTree, PrintHeader, PrintMCTree
 pJpsi = PrintDecayTree('PrintJpsi')
 pJpsi.InputLocations = [ "MyJpsi"  ]
+pMC = PrintMCTree()
+pMC.ParticleNames = [ 'J/psi(1S)' ]
 #
 ph = PrintHeader()
 ##############################################################################
 #
 #
 ##############################################################################
-importOptions("$STRIPPINGSELECTIONSROOT/options/Stripping.py")
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "2008" # Default is "DC06"
 DaVinci().Input = [ "DATAFILE='PFN:Jpsi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-DaVinci().UserAlgorithms = [  ph, pJpsi ]
+DaVinci().UserAlgorithms = [  ph, pJpsi, pMC ]
