@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.344 2009-05-22 15:24:20 pkoppenb Exp $
+! $Id: release.notes,v 1.345 2009-06-01 15:42:55 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-01 - Patrick Koppenburg
+ - Typo fix
 
 ! 2009-05-22 - Patrick Koppenburg
  - Use appendToMainSequence in DaVinciWriteDst. No need to pass

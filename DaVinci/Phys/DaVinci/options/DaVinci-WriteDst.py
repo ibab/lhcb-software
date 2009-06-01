@@ -1,6 +1,6 @@
-a########################################################################
+########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.11 2009-05-22 15:24:20 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.12 2009-06-01 15:42:55 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
