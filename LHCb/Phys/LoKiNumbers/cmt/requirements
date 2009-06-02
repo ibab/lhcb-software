@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2009-05-09 19:19:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2009-06-02 11:28:40 cattanem Exp $ 
 # =============================================================================
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -28,6 +28,10 @@ apply_pattern    reflex_dictionary                                       \
 macro LoKiNumbersDict_use_linkopts $(use_linkopts)
 
 apply_pattern QMTest 
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
 # =============================================================================
 # The END 

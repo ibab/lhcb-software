@@ -4,7 +4,10 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiNumbers v8r2 2009-05-25 =======================
+!========================== LoKiNumbers v8r2 2009-06-02 =======================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 ! 2009-05-09 - Vanya BELYAEV
  - remove unnesessary std:unary/binary_function bases 
  - cmt/requirements 
