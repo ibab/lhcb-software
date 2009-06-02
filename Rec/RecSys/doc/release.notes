@@ -5,9 +5,79 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-05-21 - Chris Jones
- - Add new RICH package Rich/RichENNRingFinder for standalone trackless
-   ring finding using an elastic neural network approach.
+</PRE><H1><A NAME=v7r1>2009-06-03 RecSys v7r1</A></H1><PRE>
+This version uses Gaudi v21r1 and LHCb v27r1.
+
+- Packages added: Rich/RichENNRingFinder - Standalone trackless ring finding 
+                                           using elastic neural network approach.
+
+- Packages modified: CaloMoniDst v3r7, CaloPIDs v4r17, CaloReco v4r19p1,
+    NNTools v1r5, PatFitParams v3r2p3, TrackSys v4r23, PatAlgorithms v3r21,
+    MuonPIDChecker v3r2, RichMarkovRingFinder v2r7, RichRecAlgorithms v2r15,
+    RichRecQC v2r29, RichRecSys v3r19, RichRecTrackTools v1r11
+
+- In CaloMoniDst v3r7
+  . Fix invalid matrix indices in computation of "shape" in CaloPhotonChecker.cpp
+
+- In CaloPIDs v4r17
+  . Fix untested StatusCode on Warning() and Error() calls
+
+- In CaloReco v4r19p1
+  . ClusterSpreadTool.cpp:
+    add (debug) printout of counters for spread-corrected clusters 
+
+- In NNTools v1r5
+  . Use Track::probChi2() instead of TMath::Prob( tr->chi2(), tr->nDoF()) for
+    better protection against FPE
+
+- In PatFitParams v3r2p3
+  . Fix gcc43 compilation warning
+
+- In TrackSys v4r23
+  . In PatChecking.py, switch off TrackAssociator("AssocDownstream") and
+    TrackEffChecker("Downstream") in fieldOff case, for consistency with
+    RecoTracking.py
+
+- In PatAlgorithms v3r21
+  . Make sure that no hits are rejected in the internal fit in the fit 
+    initialization tool
+
+- In MuonPIDChecker v3r2
+  . Bug fix on some array sizes
+
+- In RichMarkovRingFinder v2r7
+  . Move monitoring algorithm to RichRecQC
+  . Small improvements to the ring finder algorithm
+  . Remove obsolete DLL file
+  . Fix some bugs in the python Configurable
+
+- In RichRecAlgorithms v2r15
+  . Some improvements to the trackless ring filtering and isolation algorithms
+
+- In RichRecQC v2r29
+  . Replace MessageSvc() with getConfigurable("MessageSvc") in python
+    Configuration to avoid problems with online running, where a different
+    Message Service type is used.
+  . Rework the configurables a little to avoid importing the ring finders by 
+    default
+  . Import trackless ring monitor from Markov package + Activate by default for
+    new ENN rings.
+  . Add new track selection efficiency monitors
+
+- In RichRecSys v3r19
+  . Add configuration options for new ENN ring finder + enable by default
+  . Fix sequencing bug highlighted by the last commit :(
+  . Remove remaining manual calls to applyConf
+
+- In RichRecTrackTools v1r11
+  . Improvements to track isolation tool
+  . Fix a small bug in track creator selection stats.
+  . Improvements to track selectors. 
+    + Remove use of Tsa specific TsaLikelihood
+    + Add Likelihood cut to all tracks
+
+- In CaloPIDs v4r17, PatFitParams v3r2p3
+  . Replace endreq with endmsg
 
 </PRE><H1><A NAME=v7r0>2009-05-11 RecSys v7r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LHCb v27r0.
@@ -187,6 +257,18 @@ This version uses Gaudi v21r0 and LHCb v27r0.
 - In LumiAlgs v2r0
   . Change input and output FSR locations to be under /FileRecords instead of
     /RunRecords, following reimplementation of FileRecordSvc in Gaudi v21
+
+</PRE><H1><A NAME=v6r6>2009-05-12 RecSys v6r6</A></H1><PRE>
+This version uses Gaudi v20r4 and LHCb v26r3. Built on branch v6b
+
+- Packages modified: PatAlgorithms v3r20, TrackMatching v2r21p2
+
+- In PatAlgorithms v3r19, v3r20
+  . Bug fix for PatForward (prevent from overwriting selected hits flags)
+  . Use scale factor from magnetic field service in PatAddTTCoord
+
+- In TrackMatching v2r21p2
+  . In TrackMatchveloSeed, change default for OmitSeedFitOutliers switch to false
 
 </PRE><H1><A NAME=v6r5>2009-04-22 RecSys v6r5</A></H1><PRE>
 This version uses Gaudi v20r4 and LHCb v26r3.
