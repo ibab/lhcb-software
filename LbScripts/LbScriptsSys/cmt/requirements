@@ -1,9 +1,9 @@
 package LbScriptsSys
-version v4r0
+version v4r1
 
 use LbScriptsPolicy     v2r5
-use LbUtils             v1r15
-use LbRelease           v2r10
-use LbConfiguration     v4r0
-use LbLegacy            v2r0
+use LbUtils             v1r16
+use LbRelease           v2r11
+use LbConfiguration     v4r1
+use LbLegacy            v2r1
 
