@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt1-2008.py,v 1.1 2009-04-29 09:49:41 pkoppenb Exp $
+# $Id: DVTestHlt1-2008.py,v 1.2 2009-06-02 15:13:57 jpalac Exp $
 #
 # Options for Hlt1 tests. Identical to Hlt1&2, except for type.
 #
@@ -15,7 +15,7 @@ from Configurables import GaudiSequencer
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = -1                          # Number of events
+DaVinci().EvtMax = 100                          # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
 DaVinci().DataType = "2008"                    # Default is "DC06"

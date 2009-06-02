@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-2008.py,v 1.3 2009-05-01 14:06:18 pkoppenb Exp $
+# $Id: DVTestHlt12-2008.py,v 1.4 2009-06-02 15:13:57 jpalac Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt12 except for the HltType.
 #
@@ -17,7 +17,7 @@ from Configurables import GaudiSequencer
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = -1                          # Number of events
+DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
 DaVinci().DataType = "2008"                    # Default is "DC06"
