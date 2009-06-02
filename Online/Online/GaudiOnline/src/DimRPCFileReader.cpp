@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.19 2009-01-27 08:30:01 cattanem Exp $
+// $Id: DimRPCFileReader.cpp,v 1.20 2009-06-02 08:52:11 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/DimRPCFileReader.h"
 #include "GaudiOnline/MEPManager.h"
-#include "OnlineKernel/RTL/rtl.h"
+#include "RTL/rtl.h"
 
 #define NOMSG
 #define WIN32_LEAN_AND_MEAN
