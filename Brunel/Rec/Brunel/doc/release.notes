@@ -3,35 +3,29 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-05-26 - Marco Cattaneo
- - Add Brunel().OutputType = "XDST"
+</PRE><H1><A NAME=v35r1>2009-06-03 Brunel v35r1</A></H1><PRE>
 
-! 2009-05-25 - Marco Cattaneo
- - Update references for addition of Rich ENN ring finder
+ - Changes to Configurable:
+   . Add Brunel().OutputType = "XDST"
 
-! 2009-05-22 - Marco Cattaneo
- - Update references for new Rich track selection efficiency monitoring and
-   fixes to RichMarkovRingFinder
-
-! 2009-05-20 - Marco Cattaneo
- - Update references for PatSeedTool fit initialization bug fix
-
-! 2009-05-19 - Marco Cattaneo
- - Update references for:
+ - Changes to references to reflect changes in Brunel v35r1 output:
+   . Addition of Rich ENN ring finder
+   . New Rich track selection efficiency monitoring
+   . Fixes to RichMarkovRingFinder
+   . PatSeedTool fit initialization bug fix
    . Change in ST Monitor names and additional histograms
    . Addition of RichOfflineGPIDSeq as wrapper to existing GPID sequences
    . Fix to Rich particle type names
    . Fix to CaloPID platform dependence
- - Add QMTest brunel-mc09-withtruth-invfield, same as brunel-mc09-withtruth but
-   with inverted magnetic field, to check identical output
+   . Fixes to Calo precision problems
 
-! 2009-05-13 - Marco Cattaneo
- - Add a python module Brunel/QMTest/BrunelExclusions.py containing a QMTest
-   preprocessor that can be given to the QMTest ValidateWithReference function
-   to exclude lines expected to change in the QMTest output. Use it in all the
-   .qmt files
- - Update references for fixes to Calo precision problems
- - Increment version to v35r1
+ - Changes to tests:
+   . Add QMTest brunel-mc09-withtruth-invfield, same as brunel-mc09-withtruth but
+     with inverted magnetic field, to check identical output
+   . Add a python module Brunel/QMTest/BrunelExclusions.py containing a QMTest
+     preprocessor that can be given to the QMTest ValidateWithReference function
+     to exclude lines expected to change in the QMTest output. Use it in all the
+     .qmt files
 
 </PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
 
@@ -55,6 +49,39 @@ Purpose: LHCb reconstruction program
    . Changes in tuning of PatVelo tracking
    . Changes in printout of OdinTypesFilter
    . Extra histograms in TrackMonitor
+
+</PRE><H1><A NAME=v34r7>2009-05-26 Brunel v34r7</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r6
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - New features
+   . New option Brunel().DstType = 'XDST', adds MCHits to MC DST
+     (Brunel v34r7, GaudiConf v12r3)
+
+ - Bug fixes
+   . Make sure that no hits are rejected in the internal fit in the fit
+     initialization tool (PatAlgorithms v3r21). Fixes very infrequent crash in
+     FEST09 reconstruction
+
+</PRE><H1><A NAME=v34r6>2009-05-11 Brunel v34r6</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r6
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - Bug fixes
+  . In PatForward prevent from overwriting selected hits flags
+    (PatAlgorithms v3r19). Fixes infrequent crash in MC09 test production
+  . In PatForward, use scale factor from magnetic field service in PatAddTTCoord,
+    code was assuming md100 (PatAlgorithms v3r20).
+  . In TrackMatchveloSeed, change default for OmitSeedFitOutliers switch to false
+    (TrackMatching v2r21p2). Fixes frequent crashes in MC09 test production
 
 </PRE><H1><A NAME=v34r5>2009-04-22 Brunel v34r5</A></H1><PRE>
 Version built on v34b branch
