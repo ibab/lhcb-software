@@ -9,6 +9,36 @@
 </PRE><H1><A NAME=v7r1>2009-06-02 LbcomSys v7r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r1
 
+- Packages modified: CaloTools v5r9, L0DU v8r17, STAlgorithms v3r7,
+    STCheckers v2r13, STDAQ v3r18, STMonitors v1r2
+
+- In CaloTools v5r9
+  . Add a bit more statistical printout  
+  . Add missing #include "Event/Particle.h" following removal from IPart2Calo.h
+  . Replace endreq by endmsg
+
+- In L0DU v8r17
+  . L0DURawBankMonitor : fix bug in SpdMult error monitoring 
+
+- In STAlgorithms v3r7
+  . WriteSTStatusConditions: removed obsolete replaceChars function, added
+    catalog tag to header and footer, fixed little bug in DTD tag.
+
+- In STCheckers v2r13
+  . Moved STCluster monitoring to STMonitors
+
+- In STDAQ v3r18
+  . Added options files for decoding TAE events in online monitoring.
+
+- In STMonitors v1r2
+  . Fix unused StatusCode in STClusterMonitor.
+  . Moved STClusterMonitor and STLiteClusterMonitor into this package and into ST
+    namespace. 
+  . Added new algorithm ST::STTAEClusterMonitor for monitoring of clusters
+    produced in TAE event.
+  . Added options directory and .py and .opts files for monitoring TAE events
+    online.
+
 </PRE><H1><A NAME=v7r0>2009-05-11 LbcomSys v7r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LHCb v27r0
 
