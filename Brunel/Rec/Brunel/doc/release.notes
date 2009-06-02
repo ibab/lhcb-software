@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-02 - Marco Cattaneo
+ - Update references for addition of Downstream tracking in fieldOff case
+ - Update version to v35r2
+
 </PRE><H1><A NAME=v35r1>2009-06-03 Brunel v35r1</A></H1><PRE>
 
  - Changes to Configurable:
