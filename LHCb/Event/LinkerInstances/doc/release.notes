@@ -2,10 +2,12 @@
 ! Package manager: T.Ruf
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
- 2009-06-02 - Thomas Ruf
- - added support for ContainedObject to dict, required for OTChannelID linking 
 
-!==================== LinkerInstances v3r4p1 2009-05-28 =======================
+!==================== LinkerInstances v3r5 2009-06-02 =========================
+! 2009-06-02 - Thomas Ruf
+ - added support for ContainedObject to dict, required for OTChannelID linking,
+   and removed obsolete dict of OTTime linker 
+
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
 
