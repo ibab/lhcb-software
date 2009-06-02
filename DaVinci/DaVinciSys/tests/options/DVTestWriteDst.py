@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.4 2009-04-29 13:27:53 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.5 2009-06-02 14:57:53 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -49,12 +49,6 @@ for i in MassRanges :
     #
     DaVinciWriteDst().DstFiles[ "Jpsi_"+name+".dst" ] = seq
     DaVinciWriteDst().Items += [ "/Event/Phys/Jpsi_"+name+"#2" ] # will not save StdLooseMuos
-##############################################################################
-# get write out sequence. Pass it to DaVinci()
-#
-seq =  DaVinciWriteDst().dstSequence()
-DaVinci().UserAlgorithms = [ jpsi, seq ]
-#
 ##############################################################################
 DaVinci().EvtMax = 20
 DaVinci().PrintFreq = 1 
