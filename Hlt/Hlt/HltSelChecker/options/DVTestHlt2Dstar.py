@@ -11,7 +11,7 @@ signal = "Dstar"
 #
 #
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, CheckSelResult
 #
 # Preselection
 #
@@ -44,8 +44,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 # Tuple tool
 #
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2DstarFilterDesktopFilter"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2DstarFilter"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[D*(2010)+ -> (^D0 -> ^K- ^pi+) ^pi+]cc" # only Cabibbo-favoured ? 
 #
 # Configuration

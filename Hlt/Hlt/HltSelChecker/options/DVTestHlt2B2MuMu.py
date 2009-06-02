@@ -9,9 +9,7 @@ from Gaudi.Configuration import *
 #--------------------------------------------------------------
 signal = "B2MuMu"
 #
-# Preselection
 #
-# BROKEN # importOptions( "$B2DILEPTONROOT/options/DVPreselBs2MuMu.opts")
 #
 from Configurables import GaudiSequencer
 moni = GaudiSequencer("Hlt2MonitorSeq")
@@ -38,10 +36,9 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = True
 ###
  # Tuple
 ###
-from Configurables import PhysDesktop, DecayTreeTuple
+from Configurables import DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2BiasedDiMuonFilterDesktopFilter"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2BiasedDiMuonFilter"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #
 # Configuration

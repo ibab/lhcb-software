@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.10 2009-04-21 10:26:15 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.11 2009-06-02 08:07:33 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -6,17 +6,9 @@
  #  @date 2007-07-25
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, PrintHeader, CheckSelResult
 #--------------------------------------------------------------
 signal = "Bu2D0K_KsDD"
-#
-# Preselection
-#
-importOptions( "$STDOPTS/PreloadUnits.opts")
-importOptions( "$B2D0XROOT/options/PreselBu2D0K_D02KsPiPi.opts" )
-presel = GaudiSequencer("SeqPreselBu2D0K_D02KsPiPi")
-from Configurables import MakeResonances
-presel.Members += [ MakeResonances("PreselBu2D0K_D02KsPiPi") ]
 #
 # True filter criterion
 #
@@ -44,8 +36,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bu2D0K_Ks2DDCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2D0K_Ks2DDCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "{[B+ -> (^D0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc, [B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc}"
 #
 # Configuration
@@ -59,7 +50,6 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ presel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2KD-KSPiPi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

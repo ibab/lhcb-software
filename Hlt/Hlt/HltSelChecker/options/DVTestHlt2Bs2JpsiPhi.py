@@ -6,16 +6,9 @@
  #  @date 2007-07-20
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, PrintHeader, CheckSelResult
 #--------------------------------------------------------------
 signal = "Bs2JpsiPhi"
-#
-# Preselection
-#
-importOptions( "$STDOPTS/PreloadUnits.opts")
-importOptions( "$CCBARROOT/options/DoPreselHeavyDimuon.opts")
-presel = GaudiSequencer("SeqPreselHeavyDimuon")
-PrintHeader("PrintPreselHeavyDimuon").OutputLevel = 4
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
@@ -43,8 +36,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bs2JpsiPhiSignalCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2JpsiPhiSignalCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 #
 # Configuration
@@ -58,7 +50,6 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ presel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2JpsiPhi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

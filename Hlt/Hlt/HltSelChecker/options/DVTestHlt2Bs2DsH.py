@@ -6,14 +6,9 @@
  #  @date 2007-07-20
  #/
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, CheckSelResult
 #--------------------------------------------------------------
 signal = "Bs2DsH"
-#
-# Preselection
-#
-importOptions( "$STDOPTS/PreloadUnits.opts")
-importOptions( "$B2DSXROOT/options/DoPreselBs2DsH.opts")
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
@@ -40,8 +35,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 # Decay Tree Tuple
 #
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2B2DplusHCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2B2DplusHCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^D+ => ^K+ ^pi+ ^pi- ) ^pi- ]cc" 
 #
 # Configuration

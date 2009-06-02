@@ -6,17 +6,12 @@
  #  @date 2007-07-20
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintDecayTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
-# from Configurables ChargedProtoPAlg, PreLoadParticles, CombineParticles, FilterDesktop
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintDecayTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
 #--------------------------------------------------------------
 signal = "Bd2MuMukstar"
 #
-# Preselection
+# @todo Stripping
 #
-importOptions( "$STDOPTS/PreloadUnits.opts")
-importOptions( "$B2DILEPTONROOT/options/DoDC06SelBd2KstarMuMu.opts")
-dc06sel = GaudiSequencer("SeqDC06SelBd2KstarMuMu")
-# DimuonForDC06SelBd2KstarMuMu.OutputLevel = 3
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
@@ -44,8 +39,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bd2MuMuKstarCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bd2MuMuKstarCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 # special for head
 DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
@@ -68,7 +62,6 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ dc06sel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2KstarMuMu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

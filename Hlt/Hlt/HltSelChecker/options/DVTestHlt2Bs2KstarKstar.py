@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.10 2009-04-21 10:26:15 pkoppenb Exp $
+### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.11 2009-06-02 08:07:33 pkoppenb Exp $
  #
  #  Test file for HLT Bs->KstarKstar selection
  #
@@ -6,7 +6,7 @@
  #  @date 2007-07-10
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, CheckSelResult
 #--------------------------------------------------------------
 signal = "Bs2KstarKstar"
 #
@@ -40,8 +40,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bs2KstarKstarCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2KstarKstarCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^K*(892)0 -> ^K+ ^pi-)(^K*(892)~0 -> ^K- ^pi+)]cc"#
 # Options
 #

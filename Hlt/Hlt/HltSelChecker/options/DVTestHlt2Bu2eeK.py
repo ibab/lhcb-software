@@ -38,7 +38,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 ###
  # Tuple
 ###
-from Configurables import PhysDesktop, DecayTreeTuple
+from Configurables import DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2eeKSignalCombineBu"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"

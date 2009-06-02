@@ -6,15 +6,9 @@
  #  @date 2008-10-09
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, CheckSelResult, PrintHeader
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, TupleToolDecay, CheckSelResult, PrintHeader
 #--------------------------------------------------------------
 signal = "Bd2JpsiMuMuKsBiased"
-#
-# Preselection
-#
-# BROKEN # importOptions( "$CCBARROOT/options/DoDC06SelBd2JpsiKS_Jpsi2MuMu_lifetime_biased.opts")
-PrintHeader("PrintDC06selBd2Jpsi2MuMuKs").OutputLevel = 4
-presel = GaudiSequencer("SeqDC06SelBd2Jpsi2MuMuKs")
 #
 # True filter criterion - will only run HLT on TRUE signal
 #
@@ -43,8 +37,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop)
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2Bd2JpsiMuMuKsLLBiasedCombineParticlesCombine", "Hlt2Bd2JpsiMuMuKsDDBiasedCombineParticlesCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bd2JpsiMuMuKsLLBiasedCombine", "Hlt2Bd2JpsiMuMuKsDDBiasedCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^KS0 => ^pi+ ^pi-) (^J/psi(1S) => ^mu+ ^mu-)]cc"
 # special for head
 DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
@@ -82,7 +75,6 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().UserAlgorithms = [ presel ] 
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 
 DaVinci().Input = [

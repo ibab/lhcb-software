@@ -6,7 +6,7 @@
 !
 ! To generate efficiencies at https://twiki.cern.ch/twiki/bin/view/LHCb/Hlt2EffsRates
 !
-! setenv dvv = <some string>
+! setenv dvv <some string>
 !
 ! foreach a (`ls -1 options/DVTestHlt2* | grep -v Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
 !   gaudirun.py options/DVTestHlt2${a}.py >! ${dvv}-$a &
