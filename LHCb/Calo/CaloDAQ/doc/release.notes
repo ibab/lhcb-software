@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r11p1 2009-06-02 =======================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !========================== CaloDAQ v4r11 2009-05-06 =========================
 ! 2009-04-06 - Olivier Deschamps
   - adapt to change in CaloDet
