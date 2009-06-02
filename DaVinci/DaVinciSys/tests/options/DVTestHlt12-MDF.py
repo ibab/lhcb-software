@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.2 2009-05-01 17:54:59 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.3 2009-06-02 15:38:32 jpalac Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -30,7 +30,7 @@ DaVinci().Hlt2Requires = 'L0+Hlt1'
 DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 DaVinci().InputType = "MDF"
 EventSelector().Input   = [
-    "   DATA='PFN:castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_00000001_1.mdf' SVC='LHCb::MDFSelector'" ]
+    "   DATA='PFN:castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_00000002_1.mdf' SVC='LHCb::MDFSelector'" ]
 
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
