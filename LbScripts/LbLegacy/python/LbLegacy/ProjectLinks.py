@@ -41,10 +41,12 @@ def fixLink(data, linkname):
         if verbose : print "Removing %s" % linkname
         if not dryrunmode: remove(linkname)
         if absolutemode:
-            if verbose : print "Creating absolute link %s -> %s" % (linkname, mysitelink)
-            if not dryrunmode: symlink(mysitelink, linkname )
+            if verbose : 
+                print "Creating absolute link %s -> %s" % (linkname, mysitelink)
+            if not dryrunmode: 
+                symlink(mysitelink, linkname )
         else:
-            makeRelativeLink(mysitelink, linkname, verbose, dryrunmode )
+            makeRelativeLink(mysitelink, linkname, dryrunmode )
     else:
         print "Warning: local %s doesn't exist" % linkcont
 
