@@ -5,7 +5,7 @@
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
 #include "Event/STCluster.h"
-#include "Event/OTTime.h"
+#include "Kernel/OTChannelID.h"
 #include "Event/MuonCoord.h"
 #include "Event/MuonDigit.h"
 #include "Event/CaloDigit.h"
@@ -14,7 +14,7 @@
 namespace {
   LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> i1 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::STCluster>   i2 (0,0,"");
-  LinkedTo<LHCb::MCParticle,LHCb::OTTime>      i3 (0,0,"");
+  LinkedTo<LHCb::MCParticle,ContainedObject>      i3 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::MuonCoord>   i4 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::MuonDigit>   i7 (0,0,"");
   LinkedTo<LHCb::MCParticle,LHCb::CaloDigit>   i8 (0,0,"");
@@ -25,7 +25,7 @@ namespace {
 
   LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> i101 (0,0,"");
   LinkedFrom<LHCb::STCluster,LHCb::MCParticle>   i102 (0,0,"");
-  LinkedFrom<LHCb::OTTime,LHCb::MCParticle>      i103 (0,0,"");
+  LinkedFrom<ContainedObject,LHCb::MCParticle>      i103 (0,0,"");
   LinkedFrom<LHCb::MuonCoord,LHCb::MCParticle>   i104 (0,0,"");
   LinkedFrom<LHCb::MuonDigit,LHCb::MCParticle>   i107 (0,0,"");
   LinkedFrom<LHCb::CaloDigit,LHCb::MCParticle>   i108 (0,0,"");
