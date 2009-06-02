@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteDst.py,v 1.13 2009-06-01 16:14:25 pkoppenb Exp $
+# $Id: DaVinci-WriteDst.py,v 1.14 2009-06-02 14:28:23 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -33,7 +33,7 @@ printDec.InputLocations = [ "MyJpsi" ]
 seq.Members += [ det, jpsi, printDec ]
 #
 # This the bit that declares the sequence to the Dst writer
-# seq will passed to DaVinci()
+# seq will bee passed to DaVinci(). You do not need to pass it yourself.
 # The second line allows to save particles (not yet 100% functional)
 #
 DaVinciWriteDst().DstFiles[ "Jpsi.dst" ] = seq

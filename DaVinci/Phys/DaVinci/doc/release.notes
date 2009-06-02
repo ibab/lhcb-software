@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.346 2009-06-01 16:14:24 pkoppenb Exp $
+! $Id: release.notes,v 1.347 2009-06-02 14:28:22 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-02 - Patrick Koppenburg
+ - DaVinciWriteDst : avoid double initialisation
 
 ! 2009-06-01 - Patrick Koppenburg
  - Typo fix

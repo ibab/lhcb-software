@@ -1,7 +1,7 @@
 """
 Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciWriteDst.py,v 1.6 2009-06-01 16:14:25 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.7 2009-06-02 14:28:23 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -24,9 +24,6 @@ class DaVinciWriteDst(ConfigurableUser):
         }
     __used_configurables__ = [ DstConf ]
     KnownDstNames = [ "dst", "DST" ]
-
-    def __apply_configuration__(self):
-        self.dstSequence()
 
     ############################################################################
     # WriteDst Stream Name
