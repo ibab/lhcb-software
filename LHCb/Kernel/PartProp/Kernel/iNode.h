@@ -1,4 +1,4 @@
-// $Id: iNode.h,v 1.7 2009-05-30 12:16:34 ibelyaev Exp $
+// $Id: iNode.h,v 1.8 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_NODE_H 
 #define DECAYS_NODE_H 1
@@ -54,6 +54,8 @@ namespace Decays
     virtual std::ostream& fillStream ( std::ostream& s ) const = 0 ;
     /// check the validity of the node 
     virtual bool valid() const = 0  ;
+    /// invalid node?
+    virtual bool operator!() const ;
     // ========================================================================
     /** validate the decay node 
      *  @param svc pointer to Particle Property Service

@@ -1,4 +1,4 @@
-// $Id: NodePIDs.cpp,v 1.3 2009-05-22 17:00:51 ibelyaev Exp $
+// $Id: NodePIDs.cpp,v 1.4 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -959,7 +959,7 @@ std::ostream& Decays::Nodes::Heavy::fillStream ( std::ostream& s ) const
 // ===========================================================================
 Decays::Nodes::Symbol::Symbol ( const std::string& s ) 
   : Decays::iNode() 
-  , m_symbol ( Decays::Nodes::_Node::Invalid() ) 
+  , m_symbol ( Decays::Nodes::Invalid() ) 
 { 
   const Decays::Symbols& sym = Decays::Symbols::instance() ;
   StatusCode sc = sym.symbol ( s , m_symbol ) ;

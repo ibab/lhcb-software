@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.13 2009-05-30 12:16:34 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.14 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -104,41 +104,39 @@ Decays::Nodes::_Node::op_and ( const Decays::NodeList& right )
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
-Decays::Nodes::_Node::Invalid::~Invalid() {} 
+Decays::Nodes::Invalid::~Invalid() {} 
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::_Node ::Invalid*
-Decays::Nodes::_Node ::Invalid::clone() const 
+Decays::Nodes::Invalid*
+Decays::Nodes::Invalid::clone() const 
 { return new Invalid ( *this ) ; }
 // ============================================================================
 // MANDATORY: check the validity
 // ============================================================================
-bool Decays::Nodes::_Node::Invalid::valid() const { return false ; }
+bool Decays::Nodes::Invalid::valid() const { return false ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::_Node::Invalid::validate 
+StatusCode Decays::Nodes::Invalid::validate 
 ( const LHCb::IParticlePropertySvc* /*svc */ )  const 
 { return StatusCode ( StatusCode::FAILURE , true ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::_Node::Invalid::operator() 
+bool Decays::Nodes::Invalid::operator() 
   ( const LHCb::ParticleID& /* p */ ) const { return false; }
 // ============================================================================
 std::ostream& 
-Decays::Nodes::_Node::Invalid::fillStream ( std::ostream& s ) const
+Decays::Nodes::Invalid::fillStream ( std::ostream& s ) const
 { return s << " <INVALID> "  ; }
 // ============================================================================
 
 // ============================================================================
 // the default constructor 
 // ============================================================================
-Decays::Nodes::_Node::_Node ()  : m_node ( Invalid() ) {}
+Decays::Nodes::_Node::_Node ()  : m_node ( Decays::Nodes::Invalid() ) {}
 // ============================================================================
-
-
 
 // ============================================================================
 // MANDATORY: virtual destructor

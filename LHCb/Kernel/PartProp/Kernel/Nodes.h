@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.9 2009-05-30 12:16:34 ibelyaev Exp $
+// $Id: Nodes.h,v 1.10 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -51,7 +51,33 @@ namespace Decays
   class NodeList ;
   // ==========================================================================
   namespace Nodes 
-  { 
+  {
+    // ========================================================================
+    /** @class Invalid
+     *  the most simple node to represent the invalid node 
+     *  it matches to all valid the LHCb::Particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-12
+     */
+    class Invalid : public Decays::iNode
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor
+      virtual ~Invalid() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Invalid* clone () const  ; 
+      /// MANDATORY: the only one essential method
+      virtual bool operator() ( const LHCb::ParticleID& /* p */ ) const ;
+      /// MANDATORY: the specific printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      /// MANDATORY: check the validity
+      virtual bool valid() const ;
+      /// MANDATORY: the proper validation of the node
+      virtual StatusCode validate 
+      ( const LHCb::IParticlePropertySvc* svc ) const ;
+      // ======================================================================
+    } ;
     // ========================================================================
     /** @class _Node 
      *  Helper structure (esspectially it is light version node-holder
@@ -74,32 +100,6 @@ namespace Decays
       typedef _Base::argument_type                              argument_type ;
       // ======================================================================
     public:
-      // ======================================================================
-      /** @class Invalid
-       *  the most simple node to represent the invalid node 
-       *  it matches to all valid the LHCb::Particles
-       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @date 2008-04-12
-       */
-      class Invalid : public Decays::iNode
-      {
-      public:
-        // ====================================================================
-        /// MANDATORY: virtual destructor
-        virtual ~Invalid() ;
-        /// MANDATORY: clone method ("virtual constructor")
-        virtual  Invalid* clone () const  ; 
-        /// MANDATORY: the only one essential method
-        virtual bool operator() ( const LHCb::ParticleID& /* p */ ) const ;
-        /// MANDATORY: the specific printout
-        virtual std::ostream& fillStream ( std::ostream& s ) const ;
-        /// MANDATORY: check the validity
-        virtual bool valid() const ;
-        /// MANDATORY: the proper validation of the node
-        virtual StatusCode validate 
-        ( const LHCb::IParticlePropertySvc* svc ) const ;
-        // ====================================================================
-      } ;
       // ======================================================================
     public:
       // ======================================================================
@@ -435,14 +435,6 @@ inline Decays::Nodes::And operator&
 ( const Decays::iNode& o1 , 
   const Decays::iNode& o2 ) 
 { return Decays::Nodes::And ( o1 , o2 ) ; }
-// ============================================================================
-/** Create the "NOT" for the node
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-inline Decays::Nodes::Not operator! 
-( const Decays::iNode& o ) 
-{ return Decays::Nodes::Not ( o ) ; }
 // ============================================================================
 /** Create the "NOT" for the node
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl

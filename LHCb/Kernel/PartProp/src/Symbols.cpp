@@ -1,6 +1,6 @@
-// $Id: Symbols.cpp,v 1.4 2009-05-12 11:52:27 ibelyaev Exp $
+// $Id: Symbols.cpp,v 1.5 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -125,8 +125,17 @@ Decays::Symbols::Symbols ()
   addCC ( "ShortLived_" ) ;
   addCC ( "LongLived_"  ) ;
   addCC ( "Stable"      ) ;
+  addCC ( "Light"       ) ;
+  addCC ( "Heavy"       ) ;
   addCC ( "CTau"        ) ;
   addCC ( "Mass"        ) ;
+  addCC ( "up"          ) ;
+  addCC ( "down"        ) ;
+  addCC ( "strange"     ) ;
+  addCC ( "charm"       ) ;
+  addCC ( "beauty"      ) ;
+  addCC ( "bottom"      ) ;
+  addCC ( "top"         ) ;
   // ==========================================================================
 }
 
@@ -225,7 +234,7 @@ StatusCode Decays::Symbols::symbol
     node = ifind->second ;
     return StatusCode::SUCCESS ;                                      // RETURN
   }
-  node = Decays::Nodes::_Node::Invalid() ;
+  node = Decays::Nodes::Invalid() ;
   return StatusCode ( InvalidSymbol ) ;                               // RETURN 
 }
 // ============================================================================

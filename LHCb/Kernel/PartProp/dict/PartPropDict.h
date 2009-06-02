@@ -1,4 +1,4 @@
-// $Id: PartPropDict.h,v 1.4 2009-05-11 15:49:28 ibelyaev Exp $
+// $Id: PartPropDict.h,v 1.5 2009-06-02 16:45:36 ibelyaev Exp $
 // ============================================================================
 #ifndef PARTPROP_PARTPROPDICT_H 
 #define PARTPROP_PARTPROPDICT_H 1
@@ -159,7 +159,7 @@ namespace Decays
       // =====================================================================
       // __invert__ 
       static Node __invert__ 
-      ( const iNode&                 n1 ) { return !n1 ; }
+      ( const iNode&                 n1 ) { return ~n1 ; }
       // =====================================================================
     };
     // ========================================================================

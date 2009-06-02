@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.6 2009-05-22 17:00:51 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.7 2009-06-02 16:45:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 
 import PyCintex
@@ -207,8 +207,8 @@ _decorated = _decorate ( ( Decays.iNode               ,
                            Decays.Nodes.Light         ,
                            Decays.Nodes.Heavy         ,
                            Decays.Nodes.Symbol        ,
+                           Decays.Nodes.Invalid       ,
                            Decays.Nodes._Node         ,
-                           Decays.Nodes._Node.Invalid ,
                            #
                            Decays.Nodes.Or            ,
                            Decays.Nodes.And           ,
@@ -244,6 +244,7 @@ Nucleus   = Decays.Nodes.Nucleus  ()  # instance
 Or        = Decays.Nodes.Or           # type   
 And       = Decays.Nodes.And          # type   
 Not       = Decays.Nodes.Not          # type
+Invalid   = Decays.Nodes.Invaild()    # instance
 _Node     = Decays.Nodes._Node        # type 
 
 Up        = HasQuark ( LHCb.ParticleID.up      )
@@ -285,6 +286,7 @@ Heavy         = Decays.Nodes.Heavy             # type
 Symbol        = Decays.Nodes.Symbol            # type 
 
 NodeList      = Decays.Nodes.NodeList
+
 
 if '__main__' == __name__ :
     print ' decorated objects: %s ' % str(_decorated)
