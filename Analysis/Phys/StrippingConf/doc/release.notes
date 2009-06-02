@@ -4,6 +4,17 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-06-02 - Anton Poluektov
+   * Fixed DST output (but not completely, every event is written 2 times!)
+   * ActiveStreams now takes "subname" of the line, not "name" 
+     (e.g. "B2DPi" rather than "StrippingB2DPi")
+
+! 2009-05-22 - Anton Poluektov
+ - Bug fixes related to ETC writing in Configuration.py : 
+   * appendToMoniSequence seems not to work, use MainSequence instead
+   * appended StreamSequencer (was forgotten)
+   * IgnoreFilterPassed = TRUE for this sequencer
+
 ! 2009-05-22 - Patrick Koppenburg
  - DaVinciWriteDst now (tag pkoppenb_20090522) populates DaVinci 
    sequencer directly. No need to pass sequnecer anymore.

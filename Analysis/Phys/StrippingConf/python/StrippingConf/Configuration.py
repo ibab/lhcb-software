@@ -22,13 +22,15 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingConf.StrippingLine import strippingLines
 
 class StrippingConf( LHCbConfigurableUser ):
-    __used_configurables__ = [ DaVinci, DaVinciWriteDst ]
+#    __used_configurables__ = [ DaVinci, DaVinciWriteDst ]
+    __used_configurables__ = [ DaVinci ]
 
     __slots__ = { 
 		    "ActiveLines"       : [],    # list of lines to be added
 		    "ActiveStreams"     : [],    # list of active streams
 		    "OutputType"	: "ETC", # Output type. Can be either "ETC" or "DST"
-		    "DSTPrefix"		: ""     # Prefix for DST streams
+		    "DSTPrefix"		: "",    # Prefix for DST streams
+		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py" # Main options file to import
                 }
 
 #
@@ -39,7 +41,7 @@ class StrippingConf( LHCbConfigurableUser ):
     def activeLines (self) : 
         linesList = self.getProp('ActiveLines')
         streamsList = self.getProp('ActiveStreams')
-        lines = [ i for i in strippingLines() if ( (not linesList   or i.name() in linesList ) and 
+        lines = [ i for i in strippingLines() if ( (not linesList   or i.subname() in linesList ) and 
     						   (not streamsList or i.stream() in streamsList )) ]
 	return lines
 #
@@ -60,13 +62,13 @@ class StrippingConf( LHCbConfigurableUser ):
     def __apply_configuration__ (self): 
 
 	log.info("Stripping configuration")
-        importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py")
+
+#       Import main options file (descriptions of all lines)
+        importOptions(self.getProp('MainOptions'))
 
 #       Attach configurables of all active stripping lines to sequencer
 
         lines = self.activeLines()
-        GaudiSequencer('StrippingLineSequencer').Members += [ i.configurable() for i in lines ] 
-        log.info(GaudiSequencer('StrippingLineSequencer').Members)
 
 	output = (self.getProp('OutputType')).upper()
 
@@ -75,7 +77,7 @@ class StrippingConf( LHCbConfigurableUser ):
 
 # always define stripping lines
 
-        DaVinci().appendToMainSequence( [ GaudiSequencer("StrippingLineSequencer") ] )
+#        DaVinci().appendToMainSequence( [ GaudiSequencer("StrippingLineSequencer") ] )
 
 	if output == "ETC" : 
 
@@ -96,16 +98,15 @@ class StrippingConf( LHCbConfigurableUser ):
 #
 
 	    seq = GaudiSequencer("StreamSequencer")
+	    seq.IgnoreFilterPassed = TRUE
 	    for i in lines : 
 	        name = i.name() + "Decision"
 	        log.info("Created decision " + name)
-		sel = FilterDesktop(name);
-		sel.InputLocations = [ i.outputSelection() ]
-		sel.Code = "ALL"
-		tag.TupleToolSelResults.Selections += [ name ] 
-		seq.Members += [ sel ] 
+		tag.TupleToolSelResults.Selections += [ i.name() ] 
+		seq.Members += [ i.configurable() ] 
 
-	    DaVinci().appendToMoniSequence( [ tag ] )
+	    DaVinci().appendToMainSequence( [ seq ] )
+	    DaVinci().appendToMainSequence( [ tag ] )
 	
 	if output == "DST" : 
 
@@ -118,10 +119,8 @@ class StrippingConf( LHCbConfigurableUser ):
 	    log.info(streams)
 	    for i in streams : 
 		seq = GaudiSequencer("StreamSequencer"+i)
+		seq.ModeOR = 1    # Event is selected if at least one selection in the stream is True
 		for line in lines : 
 		    if line.stream() == i :
-			sel = FilterDesktop('SelWrite'+line.name())
-			sel.InputLocations = [ line.outputSelection() ] 
-			sel.Code = "ALL" 
-			seq.Members += [ sel ] 
+			seq.Members += [ line.configurable() ] 
 		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq

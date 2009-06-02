@@ -135,7 +135,7 @@ StrippingAlg::StrippingAlg( const std::string& name,
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "DecisionName"         , m_decision       = name+"Decision"); // TODO: install updateHandler, refuse changes after initialize...
-  declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = true  );   // We want all the lines to run independently
+  declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );   // We want all the lines to run independently
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
