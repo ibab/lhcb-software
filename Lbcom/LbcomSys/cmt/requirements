@@ -18,7 +18,7 @@ use CaloTools         v5r9    Calo      # Olivier Deschamps
 use L0Calo            v9r20   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v8r17   L0        # Olivier Deschamps   
 use L0Muon            v8r5    L0        # Andrei Tsarogorodtsev, Julien Cogan
-use L0MuonMonitor     v1r4    L0        # Julien Cogan
+use L0MuonMonitor     v1r4p1  L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
 
 # Muon
