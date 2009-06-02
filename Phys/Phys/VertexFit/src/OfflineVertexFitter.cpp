@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.35 2009-05-29 18:13:02 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.36 2009-06-02 08:06:24 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -206,7 +206,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
           iterP!=P.daughters().end() ; ++iterP){
       debug() << "       " << (*iterP)->particleID().pid() << " " << (*iterP)->momentum() << " " << endmsg ;
     }
-    debug() << endmsg << P.endVertex()->outgoingParticles().size() << " Vertex outgoing particles are :" ; 
+    debug() << P.endVertex()->outgoingParticles().size() << " Vertex outgoing particles are :" ; 
     for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.endVertex()->outgoingParticles().begin() ; 
           iterP!=P.endVertex()->outgoingParticles().end() ; ++iterP){
       debug() << " " << (*iterP)->particleID().pid() ;
