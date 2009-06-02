@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.5 2009-06-02 19:48:17 gligorov Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.6 2009-06-02 20:45:17 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -464,6 +464,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
     m_ghostClassesVelo.push_back(ghostInfoVelo.classification());
     m_nLinkedVelo.push_back(ghostInfoVelo.nLinked());
   } else {
+      m_ghostToolVelo->info(*dummyVeloTrack,ghostInfoVelo);
       m_ghostResultsVelo.push_back(0);
       m_ghostClassesVelo.push_back(ghostInfoVelo.classification());
       m_nLinkedVelo.push_back(ghostInfoVelo.nLinked());
@@ -481,6 +482,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
     m_ghostClassesVeloR.push_back(ghostInfoVeloR.classification());
     m_nLinkedVeloR.push_back(ghostInfoVeloR.nLinked());
   } else {
+      m_ghostToolVeloR->info(*dummyVeloRTrack,ghostInfoVeloR);
       m_ghostResultsVeloR.push_back(0);
       m_ghostClassesVeloR.push_back(ghostInfoVeloR.classification());
       m_nLinkedVeloR.push_back(ghostInfoVeloR.nLinked());
@@ -497,7 +499,8 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
     verbose() << "This TTrack component is classified as " << ghostInfoTTrack.classification() << endreq;
     m_ghostClassesTTrack.push_back(ghostInfoTTrack.classification());
     m_nLinkedTTrack.push_back(ghostInfoTTrack.nLinked());
-  } else {
+  } else { 
+      m_ghostToolTTrack->info(*dummyTTrack,ghostInfoTTrack);
       m_ghostResultsTTrack.push_back(0);
       m_ghostClassesTTrack.push_back(ghostInfoTTrack.classification());
       m_nLinkedTTrack.push_back(ghostInfoTTrack.nLinked());
