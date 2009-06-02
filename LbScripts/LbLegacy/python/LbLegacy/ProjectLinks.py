@@ -65,4 +65,4 @@ def fixLinks(treebase, opts=None):
         data["options"] = opts
         if opts.showmode:
             visitor = printVisitor
-    walk(data, visitor, data)
+    walk(treebase, visitor, data)
