@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.6 2009-06-01 15:40:27 pkoppenb Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.7 2009-06-02 15:21:48 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -44,8 +44,7 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
       if(protop){
         const LHCb::Track* track = protop->track();
         if(track){
-          //          if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
-          info() << *track << endmsg ;
+          if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
           test &= tuple->column( head+"_TRACK_Type",  track->type() );
           test &= tuple->column( head+"_TRACK_CHI2",  track->chi2() );
           int nDoF = track->nDoF();
