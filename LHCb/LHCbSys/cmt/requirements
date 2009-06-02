@@ -64,7 +64,7 @@ use PartProp              v1r2    Kernel  # Vanya Belyaev
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo
 use MuonDAQ               v4r6p1  Muon    # Alessia Satta
-use OTDAQ                 v7r5    OT      # Jan Amoraal
+use OTDAQ                 v7r5p1  OT      # Jan Amoraal
 use CaloDAQ               v4r11p1 Calo    # Olivier Deschamps
 use SiDAQ                 v2r1    Si      # Matt Needham
 
