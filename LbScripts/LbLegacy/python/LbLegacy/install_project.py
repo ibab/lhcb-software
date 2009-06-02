@@ -202,6 +202,7 @@
  090515 - Moving to LbScripts v4r0
  090526 - Reenabled the fixProjectLinks procedure to cure the link target starting with "/afs"
  090602 - Added AppConfig and L0TCK to the removal process.
+ 090602 - Moved to LbScripts v4r1
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -214,7 +215,7 @@ from shutil import rmtree
 script_version = '090602'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v4r0"
+lbscripts_version = "v4r1"
 compat_version = "v1r0"
 #-----------------------------------------------------------------------------------
 
