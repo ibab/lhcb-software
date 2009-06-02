@@ -1,6 +1,8 @@
 """ General LHCb platform configuration """
 
 
+# CMTCONFIG extraction
+
 def isNewStyleBinary(cmtconfig):
     newstyle = False
     if len(cmtconfig.split("-")) >1 :
@@ -124,4 +126,6 @@ binary_opt_list = ["slc3_ia32_gcc323",
 binary_dbg_list = [ getBinaryDbg(x) for x in binary_opt_list ]
 
 binary_list = binary_opt_list + binary_dbg_list
+
+# Native platform guessing
 

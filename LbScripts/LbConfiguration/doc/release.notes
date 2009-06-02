@@ -1,5 +1,9 @@
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r1
+
+2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbConfiguration/LbLogin.py: rely on the default python which is found in the 
 	LCG externals.
 
