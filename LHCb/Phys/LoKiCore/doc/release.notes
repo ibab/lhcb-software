@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.144 2009-05-28 08:55:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.145 2009-06-02 16:47:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-02 - Vanya BELYAEV
+ - polishing for trees 
 
 ! 2009-05-28 - Vanya BELYAEV
  - fix error for gcc4.3 compiler 

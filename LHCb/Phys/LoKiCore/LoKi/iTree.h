@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.11 2009-05-23 15:54:19 ibelyaev Exp $
+// $Id: iTree.h,v 1.12 2009-06-02 16:47:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -89,6 +89,8 @@ namespace Decays
     virtual std::ostream& fillStream ( std::ostream& s ) const = 0 ;
     /// conversion to the string 
     virtual std::string toString() const ;
+    /// invalid tree? 
+    virtual bool operator!() const { return ! ( this -> valid() ) ; }
     // ======================================================================
     /// virtual destructor 
     virtual ~iTree () ;
@@ -229,7 +231,7 @@ namespace Decays
     Decays::iTree_<PARTICLE>* m_tree ; // the tree itself
     // ======================================================================
   } ;    
-  // ========================================================================
+  // ==========================================================================
 } // end of namespace Decays
 // ============================================================================
 // constructor from the tree 
@@ -260,7 +262,7 @@ Decays::Tree_<PARTICLE>::Tree_
 template <class PARTICLE>
 Decays::Tree_<PARTICLE>& 
 Decays::Tree_<PARTICLE>::operator=
-( const Decays::Tree_<PARTICLE>& right ) // assignement 
+( const Decays::Tree_<PARTICLE>& right )                         // assignement 
 {
   if ( &right == this ) { return *this ; } 
   Decays::iTree_<PARTICLE>* tree = right.m_tree->clone() ; 
@@ -274,7 +276,7 @@ Decays::Tree_<PARTICLE>::operator=
 template <class PARTICLE>
 Decays::Tree_<PARTICLE>& 
 Decays::Tree_<PARTICLE>::operator=
-( const Decays::iTree_<PARTICLE>& right ) // assignement 
+( const Decays::iTree_<PARTICLE>& right )                        // assignement 
 {
   if ( &right == this ) { return *this ; } 
   typedef Decays::Tree_<PARTICLE> Self ;

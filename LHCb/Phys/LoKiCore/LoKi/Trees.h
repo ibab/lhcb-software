@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.10 2009-05-23 15:54:19 ibelyaev Exp $
+// $Id: Trees.h,v 1.11 2009-06-02 16:47:34 ibelyaev Exp $
 // ============================================================================
 #ifndef DECAYS_TREES_H 
 #define DECAYS_TREES_H 1
@@ -796,15 +796,6 @@ operator||
 { 
   return Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ; 
 }
-// ============================================================================
-/** Create the "Not" for the node
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-template <class PARTICLE>
-inline Decays::Trees::Not_<PARTICLE> 
-operator! ( const Decays::iTree_<PARTICLE>& o ) 
-{ return Decays::Trees::Not_<PARTICLE> ( o ) ; }
 // ============================================================================
 /** Create the "Not" for the node
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl

@@ -1,4 +1,4 @@
-// $Id: TreeOps.h,v 1.2 2008-12-18 14:47:25 ibelyaev Exp $
+// $Id: TreeOps.h,v 1.3 2009-06-02 16:47:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TREEOPS_H 
 #define LOKI_TREEOPS_H 1
@@ -53,7 +53,7 @@ namespace LoKi
       static Tree __or__ 
       ( const iTree& t1 , const iTree& t2 ) { return t1 || t2 ; }
       // not 
-      static Tree __invert__ ( const iTree& t1 ) { return !t1 ; }
+      static Tree __invert__ ( const iTree& t1 ) { return ~t1 ; }
       // ======================================================================
     public:
       // ======================================================================

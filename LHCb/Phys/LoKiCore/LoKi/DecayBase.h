@@ -1,4 +1,4 @@
-// $Id: DecayBase.h,v 1.3 2009-05-28 08:55:34 ibelyaev Exp $
+// $Id: DecayBase.h,v 1.4 2009-06-02 16:47:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDERBASE_H 
 #define LOKI_DECAYFINDERBASE_H 1
@@ -58,7 +58,7 @@ namespace LoKi
      *  @return status code
      */
     StatusCode _parse 
-    ( Decays::Node&          node , const std::string& input ) const ;
+    ( Decays::Node& node , std::string input ) const ;
     // ========================================================================
     /** parse the tree
      *  @param tree  (OUTPUT) parsed node 
@@ -66,14 +66,12 @@ namespace LoKi
      *  @return status code
      */
     StatusCode _parse 
-    ( Decays::Parsers::Tree& tree , const std::string& input ) const ;
+    ( Decays::Parsers::Tree& tree , std::string input ) const ;
     // ========================================================================
-    /// convert the string ' [ a ]cc ' into 'a'
-    bool _stripCC ( const std::string& input , 
-                    std::string&       cc    ) const ;
-    // ========================================================================
-    /// convert the string ' [ a ]cc ' into ' ( a , aCC ) '  
-    std::string _makeCC ( const std::string& input ) const ;
+    /** convert the substring ' [ a ]cc ' into ' [ a , aCC ] '  
+     *  The lines are coded by Sascha Mazurov
+     */
+    std::string _makeCC ( std::string input ) const ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -113,7 +111,7 @@ namespace LoKi
     // ========================================================================    
   };
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

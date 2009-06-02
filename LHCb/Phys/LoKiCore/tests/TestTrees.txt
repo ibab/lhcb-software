@@ -1,10 +1,14 @@
-X 
+X
 (l+ -> Nu Beauty ~X(3872)+ ... )
 ( JSpin(1) -> Nu Beauty ~ ( X(3872)+ ==x> l+ l- ) ) 
-(  ( l+ -> Nu Beauty ~X(3872)+ ... ) , (l- -> Nu Beauty ~X(3872)+ ... ) ) 
+[  ( l+ -> Nu Beauty ~X(3872)+ ... ) , (l- -> Nu Beauty ~X(3872)+ ... ) ]
 (  ( l+ -> Nu Beauty ~X(3872)+ ... ) && ([l-]nos -> Nu Beauty ~X(3872)+ ... ) ) 
 (  ( l+ -> Nu Beauty [X(3872)+]cc ... ) && (l- -> Nu Beauty ~X(3872)+ ... ) ) 
 [ (  ( l+ -> Nu Beauty [X(3872)+]cc ... ) && ([l-]os -> Nu Beauty ~X(3872)+ ... ) ) , (l+ -> Nu Beauty ~X(3872)+ ... ) , (l- -> l l Nu ... ) ]
+( X ) 
+( [X(3872)+]cc ) 
+( ( X ) )
+( ( [X(3872)+]cc ) ) 
 
 
 

@@ -1,6 +1,6 @@
-// $Id: NodeGrammar.h,v 1.2 2009-05-27 18:37:49 ibelyaev Exp $
+// $Id: NodeGrammar.h,v 1.3 2009-06-02 16:47:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 #ifndef LOKI_NODEGRAMMAR_H 
 #define LOKI_NODEGRAMMAR_H 1
@@ -139,10 +139,15 @@ namespace Decays
             symbs      [ atomic.node = construct_<Symbol>( construct_<std::string> ( arg1 , arg2 ) ) ] ;
           ;
           
-          expression  = 
-            atomic    [ expression.node = arg1 ] |
+          expression  =
+            // boolean operation 
             operation [ expression.node = arg1 ] |
-            ( ( str_p("~" ) | str_p("!") ) >> expression[ expression.node = construct_<Not> ( arg1 ) ] ) ;
+            // negation:
+            ( str_p("~") >> expression[ expression.node = construct_<Not> ( arg1 ) ]       ) | 
+            // allow extra "()"
+            ( str_p("(") >> expression[ expression.node =                   arg1   ] >> ')') |
+            // simple atomic expression 
+            atomic    [ expression.node = arg1 ] ;
           
           operation  = str_p ( "(" ) >> 
             expression [ operation.node = arg1 ] >>

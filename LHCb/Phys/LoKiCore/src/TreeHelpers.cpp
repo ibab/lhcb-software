@@ -1,4 +1,4 @@
-// $Id: TreeHelpers.cpp,v 1.2 2009-05-27 18:37:50 ibelyaev Exp $
+// $Id: TreeHelpers.cpp,v 1.3 2009-06-02 16:47:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,7 +27,7 @@
 // default constructor 
 // ============================================================================
 Decays::Parsers::Tree::Tree()
-  : m_head ( Decays::Nodes::_Node::Invalid() ) 
+  : m_head ( Decays::Nodes::Invalid() ) 
   , m_or    ()
   , m_and   ()
   , m_arrow      ( Decays::Trees::Single    )
