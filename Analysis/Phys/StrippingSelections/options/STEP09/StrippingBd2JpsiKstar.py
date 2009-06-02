@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.2 2009-06-02 13:59:13 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiK* stripping selection using LoKi::Hybrid and python
@@ -27,7 +27,7 @@ StdUnbiasedKst2Kpi.DaughtersCuts = {"K+" :
                                    "& (MINTREE('K+'==ABSID, PIDK) > -5.)"
                                    }
 StdUnbiasedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 90.*MeV)"
-StdUnbiasedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF) < 20.) & (PT > 1000.*MeV)"
+StdUnbiasedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)<20) & (PT > 1000.*MeV)"
 
 ######
 # Bd #
@@ -43,7 +43,7 @@ Bd2JpsiKst.OfflineVertexFitter.useResonanceVertex = False
 Bd2JpsiKst.ReFitPVs = True
 
 Bd2JpsiKst.CombinationCut = "ADAMASS('B0') < 300.*MeV"
-Bd2JpsiKst.MotherCut = "(VFASPF(VCHI2/VDOF) < 5.) & (BPVIPCHI2() < 25.) & (PT > 2000.*MeV)"
+Bd2JpsiKst.MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (PT > 2000.*MeV)"
 
 ############################################
 # Create StrippingLine with this selection #

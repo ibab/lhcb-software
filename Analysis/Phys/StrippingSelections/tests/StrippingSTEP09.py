@@ -16,13 +16,16 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 # Stripping job configuration
 #
 
-StrippingConf().ActiveLines = []                      # Specify the active stripping lines
+StrippingConf().ActiveLines = []
+                                                      # Specify the active stripping lines
 					              # If empty (default), all defined StrippingLines will be active
 
-StrippingConf().ActiveStreams = []                    # Specify the active streams. Only selections from 
+#StrippingConf().ActiveStreams = ["BExclusive"]        # Specify the active streams. Only selections from 
                                                       # these streams will run. If empty, all streams are active
 
 StrippingConf().OutputType = "ETC"                    # Can be either "ETC" or "DST"
+
+StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/StrippingSelections.py"
 
 #
 # Configure DaVinci
@@ -30,7 +33,7 @@ StrippingConf().OutputType = "ETC"                    # Can be either "ETC" or "
 
 from Configurables import DaVinci, DaVinciWriteDst
 
-DaVinci().EvtMax = 5000                        # Number of events
+DaVinci().EvtMax = 1000                       # Number of events
 DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True                  # It is MC
 DaVinci().ETCFile = "etc.root"
@@ -41,4 +44,6 @@ DaVinci().HistogramFile = "TestStripping.root"
 # Import input DST files (B->JpsiMuMu inclusive)
 #
 # importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-MinimumBiasDst.py")
+# importOptions("$STRIPPINGSELECTIONSROOT/tests/Fest.py")
+# importOptions("$STRIPPINGSELECTIONSROOT/tests/DC06-MinimumBiasDst.py")
+# importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-MinimumBiasDst.py")

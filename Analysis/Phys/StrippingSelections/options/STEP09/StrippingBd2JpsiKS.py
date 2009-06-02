@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.2 2009-06-02 13:59:13 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiKS stripping selection using LoKi::Hybrid and python
@@ -54,7 +54,7 @@ Bd2JpsiKS.ReFitPVs = True
 Bd2JpsiKS.DaughtersCuts = {'KS0' : 'PT>1.*GeV',
                            'J/psi(1S)' : 'PT>1.*GeV'}
 Bd2JpsiKS.CombinationCut = "ADAMASS('B0') < 300.*MeV"
-Bd2JpsiKS.MotherCut = "(VFASPF(VCHI2/VDOF) < 15.) & (BPVIPCHI2() < 25.)"
+Bd2JpsiKS.MotherCut = "(VFASPF(VCHI2/VDOF)<15)"
 
 ############################################
 # Create StrippingLine with this selection #

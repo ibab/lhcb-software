@@ -1,8 +1,8 @@
-# $Id: StrippingBu2JpsiK.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.2 2009-06-02 13:59:13 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bu->JpsiK stripping selection using LoKi::Hybrid and python
@@ -37,7 +37,7 @@ Bu2JpsiK.DaughtersCuts = {"K+" :
                           }
 
 Bu2JpsiK.CombinationCut = "ADAMASS('B+') < 300.*MeV"
-Bu2JpsiK.MotherCut = "(VFASPF(VCHI2/VDOF) < 5.) & (BPVIPCHI2() < 25.)"
+Bu2JpsiK.MotherCut = "(VFASPF(VCHI2/VDOF)<5.)"
 
 ############################################
 # Create StrippingLine with this selection #

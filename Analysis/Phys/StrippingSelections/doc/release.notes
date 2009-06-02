@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-06-02 - Anton Poluektov
+ - Added selections and test job for STEP09.
+
 ! 2009-05-31 - V. Gligorov
  - Fixed stupid bug introduced when removing the K* mass cuts. 
 
@@ -18,7 +21,15 @@
  - Updated the B2DPi stripping file to select all B2DX combinations where
    X = {K*,phi,pi,K}. Eventually the file will be renamed but first it needs
    to be rewritten in terms of StrippingMembers and otherwise cleaned up.
-   
+
+! 2009-05-29 - Greig Cowan
+ - Updated beta_s channel strippings to use BPVIPCHI2 rather than 
+   MIPCHI2DV(PRIMARY) so that PV refitting is done.
+
+! 2009-05-22 - Anton Poluektov
+ - Included Greig's selections into StrippingSelections.py
+ - Made a DaVinci test file (TestGreig.py) to test Bs2JpsiPhi selection.
+
 ! 2009-05-21 - Greig Cowan
  - Updated the beta_s channels to use the new StdLTUnbiasedJpsi CommonParticles.
 

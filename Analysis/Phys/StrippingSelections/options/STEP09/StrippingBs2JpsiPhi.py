@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.2 2009-06-02 13:59:13 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -39,7 +39,7 @@ Bs2JpsiPhi.ReFitPVs = True
 
 # Basic + loose offline PID
 Bs2JpsiPhi.CombinationCut = "ADAMASS('B_s0') < 300.*MeV"
-Bs2JpsiPhi.MotherCut = "(VFASPF(VCHI2/VDOF) < 5.) & (BPVIPCHI2() < 25.)"
+Bs2JpsiPhi.MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (MIPCHI2DV(PRIMARY) < 25.0)"
 
 ############################################
 # Create StrippingLine with this selection #

@@ -59,6 +59,6 @@ TopoStrippingSequence.ModeOR = 1
 # Create the lines for this selection
 line = StrippingLine('Topo'
                , prescale = 1.
-               , algos = [TopoStrippingSequence]
-               , stream = 'Topological'
+               ,  algos = [TopoStrippingSequence]
+               ,  stream = 'Topological'
                )

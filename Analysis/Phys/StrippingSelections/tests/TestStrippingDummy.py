@@ -13,22 +13,18 @@ from StrippingConf.Configuration import StrippingConf
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
-# Import stripping selections
-#
-
-importOptions( "$STRIPPINGSELECTIONSROOT/tests/StrippingDummy.py")
-
-#
 # Stripping job configuration
 #
 
-StrippingConf().ActiveLines = []                      # Specify the active stripping lines
+StrippingConf().ActiveLines = [ "StrippingDummy1" ]   # Specify the active stripping lines
 					              # If empty (default), all defined StrippingLines will be active
 
-StrippingConf().ActiveStreams = [ "dummy" ]           # Specify the active streams. Only selections from 
+#StrippingConf().ActiveStreams = [ "dummy" ]          # Specify the active streams. Only selections from 
                                                       # these streams will run. If empty, all streams are active
 
 StrippingConf().OutputType = "ETC"                    # Can be either "ETC" or "DST"
+
+StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/tests/StrippingDummy.py"
 
 #
 # Configure DaVinci
