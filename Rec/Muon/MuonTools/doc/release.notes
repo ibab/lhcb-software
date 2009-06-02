@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.45 2009-05-08 14:31:52 cattanem Exp $
+! $Id: release.notes,v 1.46 2009-06-02 13:42:27 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
+
+!======================== MuonTools v5r0p1 2009-06-02 =========================
+! 2009-06-02 - Marco Cattaneo
+ - Add missing MuonTools_dll.cpp file, needed on Windows
 
 !======================== MuonTools v5r0 2009-05-08 ========================
 ! 2009-04-29 - A. Satta
