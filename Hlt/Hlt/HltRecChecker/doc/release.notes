@@ -4,6 +4,12 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-06-02 - V. Gligorov
+ - A major update to HltRecCheckGhosts. Many new track parameters are saved, to
+   help study the ghost properties. Also, the tool now uses the 70% track
+   associators criterion to decide if a track is a ghost or not, and the
+   ghost classification tool to classify it.  
+
 ! 2009-05-29 - Gerhard Raven
  - remove unused include
  - use fill instead of fillHisto
