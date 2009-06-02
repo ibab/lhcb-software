@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v7r5p1 2009-06-02 =======================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !======================= OTDAQ v7r5 2009-02-18 =======================
 ! 2009-02-18 - Wouter Hulsbergen
  - OTMultiRawBankDecoder: add missing retrieve/release of ToolHandle
