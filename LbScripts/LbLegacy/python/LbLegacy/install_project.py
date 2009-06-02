@@ -510,12 +510,6 @@ def cleanTmpDirectory():
 
 #----------------------------------------------------------------------------
 
-def getMakeCmd():
-    make = 'gmake'
-    if sys.platform == 'win32':
-        make = 'nmake /f nmake'
-    return make
-
 def getScriptExt():
     ext = 'sh'
     if sys.platform == 'win32':
@@ -629,8 +623,9 @@ def getCMT(version=0):
 
     os.environ['CMTBIN'] = cmtbin
 
+    file ='CMT_'+cmtvers+'_'+platform+'.tar.gz'
     # if the version does not exist get it from the web site
-    if overwrite_mode or not os.path.isdir(os.path.join(this_contrib_dir,'CMT',cmtvers)):
+    if overwrite_mode or not isInstalled(file):
         os.chdir(this_contrib_dir)
 
         # get the tar file
@@ -639,7 +634,6 @@ def getCMT(version=0):
         # untar it
         checkWriteAccess(this_contrib_dir)
         os.chdir(this_contrib_dir)
-        file ='CMT_'+cmtvers+'_'+platform+'.tar.gz'
         rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
         if rc != 0 :
             removeAll(os.path.join(this_contrib_dir, 'CMT'))
@@ -655,6 +649,7 @@ def getCMT(version=0):
             for l in output.split("\n") :
                 log.debug(l)
         log.info('install CMT %s' % cmtvers)
+        setInstalled(file)
     else:
         log.info( 'CMT %s is already installed' % cmtvers)
 
@@ -937,6 +932,13 @@ def getProjectList(name,version,binary=' '):
     checkWriteAccess(this_html_dir)
     os.chdir(this_html_dir)
     getFile(url_dist+'html/',tar_file+'.html')
+    
+    disthtm = "distribution.htm"
+    
+    if os.path.exists(disthtm) :
+        os.remove(disthtm)
+    log.debug("Downloading %s/%s" % (url_dist + "html", disthtm) )
+    getFile(url_dist + "html", disthtm)
 
     # loop over projects to be downloaded
     project_list = {}
@@ -979,7 +981,7 @@ def getProjectList(name,version,binary=' '):
 
     os.chdir(here)
 
-    return project_list,html_list
+    return project_list, html_list
 
 #----------------------------------------------------------------------------------
 # check installation
@@ -1002,6 +1004,9 @@ def setInstalled(file):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
     installedfilename = os.path.join(this_log_dir,file.replace(".tar.gz", ".installed"))
+
+    if os.path.exists(installedfilename) :
+        os.remove(installedfilename)
 
     f = open(installedfilename, "w")
     f.write("Done\n")
@@ -1219,19 +1224,6 @@ def cleanBootScripts():
     if os.path.isdir(this_bootscripts_dir) :
         log.debug("Removing the %s directory" % this_bootscripts_dir)
         removeAll(this_bootscripts_dir)
-#
-#  get untar_flag ==========================================================
-#
-def getUntarFlag(file,exist_flag):
-    log = logging.getLogger()
-    log.debug('for %s' % file)
-
-    if exist_flag == True:
-        untar_flag = 'no'
-    else:
-        untar_flag = 'yes'
-    return untar_flag
-
 
 #
 #  list available versions ==============================================================================
