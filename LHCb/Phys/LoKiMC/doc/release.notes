@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.67 2009-05-27 18:41:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.68 2009-06-02 16:48:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2009-06-02 - Vanya BELYAEV
+ - polishing of decay finder 
 
 ! 2009-05-27 - Vanya BELYAEV
 

@@ -1,4 +1,4 @@
-// $Id: MCDecay.cpp,v 1.2 2009-05-27 18:41:00 ibelyaev Exp $
+// $Id: MCDecay.cpp,v 1.3 2009-06-02 16:48:23 ibelyaev Exp $
 // ============================================================================
 // Include
 // ============================================================================
@@ -34,6 +34,10 @@ namespace LoKi
     /// the friend factory for instantiation
     friend class ToolFactory<LoKi::MCDecay> ;                    // the factory
     // ========================================================================
+  protected:
+    // ========================================================================
+    typedef Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid   Invalid ;
+    // ========================================================================
   public:
     // ========================================================================
     /** create the decay tree from the descriptor
@@ -59,6 +63,7 @@ namespace LoKi
               const std::string& name   ,                  // the instance name 
               const IInterface*  parent )                  //        the parent
       : LoKi::DecayBase ( type , name , parent ) 
+      , m_tree ( Invalid() )
     {
       declareInterface<Decays::IMCDecay>   ( this ) ;
       declareInterface<Decays::IDecayNode> ( this ) ;
@@ -75,58 +80,58 @@ namespace LoKi
     /// the assignement operator is disabled 
     MCDecay& operator=( const MCDecay& ) ;           // no assignement operator
     // ========================================================================
+  private:
+    // ========================================================================
+    // the default tree 
+    mutable Tree m_tree ;                                   // the default tree 
+    // ========================================================================
   } ; //                                                   end of class MCDecay
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 // create the decay tree from the descriptor
 // ============================================================================
-Decays::IMCDecay::Tree 
-LoKi::MCDecay::tree ( const std::string& decay ) const 
+Decays::IMCDecay::Tree LoKi::MCDecay::tree ( const std::string& decay ) const 
 {
+  // check for the default tree
+  if ( decay.empty() && m_tree.valid() ) { return m_tree ; }  // default tree? 
+  
   MsgStream& err = error() ;
   
-  typedef Decays::Trees::Types_<const LHCb::MCParticle*>  Types ;
-  
-  std::string _decay = _makeCC ( decay ) ;
-  
-
-  // 1) parse the intout into "generic tree" 
-  Decays::Parsers::Tree tree ;
-  
-  StatusCode sc = _parse  ( tree , _decay ) ;
+  // 1) parse the the descriptor into "generic tree" 
+  Decays::Parsers::Tree ptree ;
+  StatusCode sc = _parse  ( ptree , decay ) ;
   if ( sc.isFailure() ) 
   {
-    Error("Error from _parse('" + _decay + "')" , sc ) ;
-    return  Types::Invalid() ;                                         // RETURN 
+    Error("Error from _parse('" + decay + "')" , sc ) ;
+    return  Invalid () ;                                              // RETURN 
   }
-  // 2) convert it into reasonable decay tree
-  Tree mctree = Types::Invalid() ;
-  
-  sc = Decays::Trees::factory ( mctree , tree , err.stream() )  ;
+  // 2) convert parsed tree into reasonable decay tree
+  Tree tree = Invalid () ;
+  sc = Decays::Trees::factory ( tree , ptree , err.stream() )  ;
   if ( sc.isFailure() ) 
   {
     err << endmsg ;
-    Error ( "Unable to create the tree from '" + tree.toString() + "'", sc ) ;  
-    return  Types::Invalid() ;                                        // RETURN
+    Error ( "Unable to create the tree from '" + ptree.toString() + "'", sc ) ;  
+    return  Invalid () ;                                              // RETURN
   }
-  
-  /// validate the tree 
-  if ( !mctree.valid() ) 
+  // 3) validate the tree 
+  if ( !tree ) 
   {
-    sc = mctree.validate ( ppSvc () ) ;
+    sc = tree.validate ( ppSvc () ) ;
     if ( sc.isFailure() ) 
     {
-      Error ( "Unable to validate the tree '" + mctree.toString() + "'" , sc ) ;  
-      return  Types::Invalid() ;                                        // RETURN
+      Error ( "Unable to validate the tree '" + tree.toString() + "'" , sc ) ;  
+      return  Invalid () ;                                           // RETURN
     }
   }
-  // finally: 
-  return mctree ;
+  
+  // 4) store the default tree 
+  if ( decay.empty() ) { m_tree = tree ; }            // store the default tree 
+  
+  // 5) finally: 
+  return tree ;
 }
-// ============================================================================
-
-
 // ============================================================================
 //                                                the factory for instantiation 
 // ============================================================================

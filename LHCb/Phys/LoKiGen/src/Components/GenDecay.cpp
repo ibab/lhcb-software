@@ -1,4 +1,4 @@
-// $Id: GenDecay.cpp,v 1.1 2009-05-27 18:43:13 ibelyaev Exp $
+// $Id: GenDecay.cpp,v 1.2 2009-06-02 16:49:17 ibelyaev Exp $
 // ============================================================================
 // Include
 // ============================================================================
@@ -34,6 +34,8 @@ namespace LoKi
     /// the friend factory for instantiation
     friend class ToolFactory<LoKi::GenDecay> ;                   // the factory
     // ========================================================================
+    typedef Decays::Trees::Types_<const HepMC::GenParticle*>::Invalid Invalid ;
+    // ========================================================================
   public:
     // ========================================================================
     /** create the decay tree from the descriptor
@@ -59,6 +61,7 @@ namespace LoKi
                const std::string& name   ,                 // the instance name 
                const IInterface*  parent )                 //        the parent
       : LoKi::DecayBase ( type , name , parent ) 
+      , m_tree ( Invalid () )
     {
       declareInterface<Decays::IGenDecay>  ( this ) ;
       declareInterface<Decays::IDecayNode> ( this ) ;
@@ -75,6 +78,11 @@ namespace LoKi
     /// the assignement operator is disabled 
     GenDecay& operator=( const GenDecay& ) ;         // no assignement operator
     // ========================================================================
+  private:
+    // ========================================================================
+    /// the default tree 
+    mutable Tree m_tree ;                                   // the default tree 
+    // ========================================================================
   } ; //                                                  end of class GenDecay
   // ==========================================================================
 } //                                                      end of namespace LoKi
@@ -82,46 +90,46 @@ namespace LoKi
 // create the decay tree from the descriptor
 // ============================================================================
 Decays::IGenDecay::Tree 
-LoKi::GenDecay::tree ( const std::string& decay ) const 
+LoKi::GenDecay::tree ( const std::string& decay ) const
 {
+  // check for the default tree
+  if ( decay.empty() && m_tree.valid() ) { return m_tree ; }  // default tree? 
+  
   MsgStream& err = error() ;
   
-  typedef Decays::Trees::Types_<const HepMC::GenParticle*>  Types ;
-  
-  std::string _decay = _makeCC ( decay ) ;
-  
-  // 1) parse the intout into "generic tree" 
-  Decays::Parsers::Tree tree ;
-  
-  StatusCode sc = _parse  ( tree , _decay ) ;
+  // 1) parse the the descriptor into "generic tree" 
+  Decays::Parsers::Tree ptree ;
+  StatusCode sc = _parse  ( ptree , decay ) ;
   if ( sc.isFailure() ) 
   {
-    Error("Error from _parse('" + _decay + "')" , sc ) ;
-    return  Types::Invalid() ;                                         // RETURN 
+    Error("Error from _parse('" + decay + "')" , sc ) ;
+    return  Invalid () ;                                              // RETURN 
   }
-  // 2) convert it into reasonable decay tree
-  Tree mctree = Types::Invalid() ;
-  
-  sc = Decays::Trees::factory ( mctree , tree , err.stream() )  ;
+  // 2) convert parsed tree into reasonable decay tree
+  Tree tree = Invalid () ;
+  sc = Decays::Trees::factory ( tree , ptree , err.stream() )  ;
   if ( sc.isFailure() ) 
   {
     err << endmsg ;
-    Error ( "Unable to create the tree from '" + tree.toString() + "'", sc ) ;  
-    return  Types::Invalid() ;                                        // RETURN
+    Error ( "Unable to create the tree from '" + ptree.toString() + "'", sc ) ;  
+    return  Invalid () ;                                              // RETURN
   }
-  
-  /// validate the tree 
-  if ( !mctree.valid() ) 
+  // 3) validate the tree 
+  if ( !tree ) 
   {
-    sc = mctree.validate ( ppSvc () ) ;
+    sc = tree.validate ( ppSvc () ) ;
     if ( sc.isFailure() ) 
     {
-      Error ( "Unable to validate the tree '" + mctree.toString() + "'" , sc ) ;  
-      return  Types::Invalid() ;                                        // RETURN
+      Error ( "Unable to validate the tree '" + tree.toString() + "'" , sc ) ;  
+      return  Invalid () ;                                           // RETURN
     }
   }
-  // finally: 
-  return mctree ;
+  
+  // 4) store the default tree 
+  if ( decay.empty() ) { m_tree = tree ; }            // store the default tree 
+  
+  // 5) finally: 
+  return tree ;
 }
 // ============================================================================
 

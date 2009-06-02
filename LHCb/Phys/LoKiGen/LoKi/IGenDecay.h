@@ -1,4 +1,4 @@
-// $Id: IGenDecay.h,v 1.1 2009-05-27 18:43:12 ibelyaev Exp $
+// $Id: IGenDecay.h,v 1.2 2009-06-02 16:49:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IGENDECAY_H 
 #define LOKI_IGENDECAY_H 1
@@ -8,6 +8,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/iTree.h"
+#include "LoKi/DecayFinder.h"
 #include "LoKi/IDecayNode.h"
 // ============================================================================
 // forward declaration
@@ -28,7 +29,9 @@ namespace Decays
   public:
     // ========================================================================
     // the actual type of the tree 
-    typedef Decays::Tree_<const HepMC::GenParticle*>                     Tree ;
+    typedef Decays::Tree_<const HepMC::GenParticle*>                   Tree   ;
+    // the actual type of decay finder:
+    typedef Decays::Finder_<const HepMC::GenParticle*>                 Finder ;
     // ========================================================================
   public:
     // ========================================================================
@@ -36,7 +39,7 @@ namespace Decays
      *  @param descriptor (INPUT)  the decay descriptor 
      *  @param tree       (OUTPUT) the decay tree 
      */
-    virtual Tree tree ( const std::string& decay ) const = 0 ;
+    virtual Tree tree ( const std::string& decay = "" ) const = 0 ;
     // ========================================================================
   public:
     // ========================================================================

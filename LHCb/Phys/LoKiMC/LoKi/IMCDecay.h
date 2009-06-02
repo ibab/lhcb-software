@@ -1,4 +1,4 @@
-// $Id: IMCDecay.h,v 1.1 2009-05-23 15:58:12 ibelyaev Exp $
+// $Id: IMCDecay.h,v 1.2 2009-06-02 16:48:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMCDECAY_H 
 #define LOKI_IMCDECAY_H 1
@@ -8,9 +8,10 @@
 // LoKi
 // ============================================================================
 #include "LoKi/iTree.h"
+#include "LoKi/DecayFinder.h"
 #include "LoKi/IDecayNode.h"
 // ============================================================================
-// forward declaration
+// forward declarations
 // ============================================================================
 namespace LHCb { class MCParticle ; }
 // ============================================================================
@@ -28,7 +29,9 @@ namespace Decays
   public:
     // ========================================================================
     // the actual type of the tree 
-    typedef Decays::Tree_<const LHCb::MCParticle*>                       Tree ;
+    typedef Decays::Tree_<const LHCb::MCParticle*>                     Tree   ;
+    // the actual type of decay finder:
+    typedef Decays::Finder_<const LHCb::MCParticle*>                   Finder ;
     // ========================================================================
   public:
     // ========================================================================
@@ -36,7 +39,7 @@ namespace Decays
      *  @param descriptor (INPUT)  the decay descriptor 
      *  @param tree       (OUTPUT) the decay tree 
      */
-    virtual Tree tree ( const std::string& decay ) const = 0 ;
+    virtual Tree tree ( const std::string& decay = "" ) const = 0 ;
     // ========================================================================
   public:
     // ========================================================================
