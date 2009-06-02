@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.39 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.40 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -217,7 +217,7 @@ class LbLoginScript(Script):
         parser.add_option("--scripts-version",
                           dest="scriptsvers",
                           help="version of LbScripts to be setup [default: %default")
-        parser.set_defaults(pythonvers=Python_version)
+        parser.set_defaults(pythonvers=None)
         parser.add_option("--python-version",
                           dest="pythonvers",
                           help="version of python to be setup [default: %default]")
