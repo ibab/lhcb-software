@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.h,v 1.6 2009-05-05 18:35:31 frankb Exp $
+// $Id: FarmMonitor.h,v 1.7 2009-06-02 16:21:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.6 2009-05-05 18:35:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmMonitor.h,v 1.7 2009-06-02 16:21:23 frankb Exp $
 #ifndef ROMON_FARMMONITOR_H
 #define ROMON_FARMMONITOR_H 1
 
@@ -92,7 +92,7 @@ namespace ROMon {
 
 
     /// Set a new alarm
-    void setAlarm(Alarms& alms, const std::string& node, int type, time_t when, const std::string& dsc="", const std::string& opt="");
+    void setAlarm(Alarms& alms, const std::string& node, int type, time_t when, const std::string& dsc="");
 
   public:
     /// Initializing constructor
@@ -105,10 +105,10 @@ namespace ROMon {
     std::ostream& log(const std::string& tag,const std::string& node="");
 
     /// Check if data snapshor should be analyzed
-    bool useSnapshot()  const;
+    virtual bool useSnapshot()  const;
 
     /// Disconnect from services: Only destructor may be called afterwards
-    void disconnect();
+    virtual void disconnect();
 
     /// Set timeout error
     virtual void setTimeoutError();
@@ -161,7 +161,8 @@ namespace ROMon {
     typedef std::map<std::string, InternalMonitor*> SubMonitors;
     typedef std::vector<std::string>  Farms;
     typedef std::vector<Alarm*>       TypeAlarms;
-    typedef std::map<int,TypeAlarms>  AlarmsByType;
+    typedef std::map<int,TypeAlarms>  AlarmsByType; 
+    typedef std::map<std::string,std::pair<size_t,AlarmsByType> > AlarmsBySource;
     typedef std::map<int,Alarm*>      AlarmMap;
 
     std::string                       m_match;
@@ -178,15 +179,26 @@ namespace ROMon {
     std::auto_ptr<PartitionListener>  m_listener;
     SubMonitors                       m_farmMonitors;
     Farms                             m_farms;
-    AlarmsByType                      m_alarms;
-    AlarmsByType                      m_newAlarms;
-    AlarmsByType                      m_clrAlarms;
+
+    AlarmsByType                      m_activeAlarms;
+    AlarmsByType                      m_allAlarms;
+
     AlarmMap                          m_sumAlarms;
     int                               m_runState;
     long                              m_farmEvents;
 
     /// Update alarms from a subfarm
+    void removeAlarmsBySubfarm(const std::string& sf_name);
+    /// Update alarms from a subfarm
     void updateAlarms(const std::string& subfarm, Alarms& alarms);
+
+    void publishAlarms();
+    void publishRegularAlarms(AlarmsByType& alarms);
+    void publishTypeAlarms(const AlarmsByType& alarms);
+    void publishSourceAlarms(const AlarmsBySource& alarms);
+
+    void getTypeAlarms(AlarmsByType& alms, const AlarmsByType& alarms);
+    void getSourceAlarms(AlarmsByType& alms, const AlarmsBySource& alarms);
 
 public:
     /// Standard constructor
@@ -209,19 +221,12 @@ public:
 
     /// Analyse monitored data
     virtual void analyzeData() {}
-
     
     /// Allow clients to check if the system is running
     bool isRunning() const;
 
-    /// Publish alarm summary
-    virtual void publishSummary(const AlarmSummary& summary);
-
     /// Publish alarm
     virtual void publish(const std::string& tag, const Alarm& alm);
-
-    /// Handle new incoming alarm and update summary
-    virtual void handleAlarmSummary(const std::string& alarm);
 
     /// Show subfarm monitor
     int showSubfarm();

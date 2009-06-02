@@ -80,26 +80,33 @@ void CtrlSubfarmMonitor::updateContent(XML::TaskSupervisorParser& ts) {
     const Cluster::Node& n = (*i).second;
     time_t when = time(0);
     if ( n.status == "DEAD" ) {
-      setAlarm(alarms->second,n.name,ERR_NODE_DEAD,when);
+      setAlarm(alarms->second,n.name,ERR_NODE_DEAD,when,n.name);
     }
     else {
       for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q) {
 	bool pvss_ok = (*q).eventMgr && (*q).dataMgr && (*q).distMgr;
-	if ( !pvss_ok ) setAlarm(alarms->second,n.name,ERR_NO_PVSS_PROJECT,when,(*q).name);
+	std::string nam = (*q).name;
+	nam += "@";
+	nam += n.name;
+	if ( !pvss_ok ) setAlarm(alarms->second,n.name,ERR_NO_PVSS_PROJECT,when,nam);
       }
       if ( n.taskCount > 0 ) {
-	for(Cluster::Node::Tasks::const_iterator j=n.tasks.begin(); j != n.tasks.end(); ++j)
-	  if ( !(*j).second ) setAlarm(alarms->second,n.name,ERR_TASK_MISSING,when,(*j).first);
+	for(Cluster::Node::Tasks::const_iterator j=n.tasks.begin(); j != n.tasks.end(); ++j) {
+	  std::string nam = (*j).first;
+	  nam += "@";
+	  nam += n.name;
+	  if ( !(*j).second ) setAlarm(alarms->second,n.name,ERR_TASK_MISSING,when,nam);
+	}
       }
       else {
-	setAlarm(alarms->second,n.name,ERR_NO_TASKS,when);
+	setAlarm(alarms->second,n.name,ERR_NO_TASKS,when,n.name);
       }
       if ( n.connCount > 0 ) {
 	for(Cluster::Node::Connections::const_iterator j=n.conns.begin(); j != n.conns.end(); ++j)
 	  if ( !(*j).second ) setAlarm(alarms->second,n.name,ERR_CONNECTION_MISSING,when,(*j).first);
       }
       else {
-	setAlarm(alarms->second,n.name,ERR_NO_CONNECTIONS,when);
+	setAlarm(alarms->second,n.name,ERR_NO_CONNECTIONS,when,n.name);
       }
     }
   }

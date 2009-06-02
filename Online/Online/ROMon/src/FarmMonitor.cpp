@@ -1,4 +1,4 @@
-// $Id: FarmMonitor.cpp,v 1.7 2009-05-05 18:35:31 frankb Exp $
+// $Id: FarmMonitor.cpp,v 1.8 2009-06-02 16:21:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.7 2009-05-05 18:35:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.8 2009-06-02 16:21:23 frankb Exp $
 
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
@@ -62,11 +62,21 @@ namespace ROMon {
   struct FindAlarm {
     const Alarm&  m_a;
     FindAlarm(const Alarm& a) : m_a(a) {}
-    void operator()(const pair<const int,vector<Alarm*> >& a)  const
-    {  for_each(a.second.begin(),a.second.end(),FindAlarm(m_a));    }
     bool operator()(const Alarm& a) const {  return this->operator()(&a);  }
+    //bool operator()(const Alarm* a) const  
+    //{  return 0 != a && a->code == m_a.code && a->node == m_a.node && a->description == m_a.description && a->optional == m_a.optional;  }
     bool operator()(const Alarm* a) const  
     {  return 0 != a && a->code == m_a.code && a->node == m_a.node && a->description == m_a.description;        }
+    bool find(const vector<Alarm*>& b) const {
+      for(vector<Alarm*>::const_iterator ib=b.begin(); ib!=b.end();++ib)
+	if ( this->operator()(*ib) ) return true;
+      return false;
+    }
+    bool find(const vector<Alarm>& b) const {
+      for(vector<Alarm>::const_iterator ib=b.begin(); ib!=b.end();++ib)
+	if ( this->operator()(&(*ib)) ) return true;
+      return false;
+    }
   };
   struct PrintAlarm {
     const string& tag;
@@ -142,7 +152,7 @@ namespace ROMon {
   class OutputLogger : public std::streambuf     { 
   public: 
     /// Standard Constructor
-    OutputLogger (); 
+    OutputLogger (int lvl); 
     /// Standard destructor
     ~OutputLogger (); 
     /// Callback to fill stream buffer
@@ -150,7 +160,9 @@ namespace ROMon {
     /// Callback indicating EOF
     int underflow (); 
 
-  private:  
+  private:
+    /// Default output level
+    int m_level;
     /// Save old stream buffer
     std::streambuf* _old; 
     /// String currently beeing assembled
@@ -171,7 +183,7 @@ namespace {
 }
 
 /// Standard Constructor
-OutputLogger::OutputLogger()   {
+OutputLogger::OutputLogger(int lvl) : m_level(lvl)  {
   _buf = ""; 
   ::printf("Redirecting cout to OutputLogger....\n");
   _old = cout.rdbuf(this);
@@ -187,13 +199,20 @@ int OutputLogger::overflow (int c)    {
   if (c == '\n')     {
     _buf += c;
     switch(::toupper(_buf[0])) {
-    case 'D':
     case 'V':
+      if ( m_level > 1 ) break;
+    case 'D':
+      if ( m_level > 2 && _buf[2] == 'B' ) break;
     case 'I':
+      if ( m_level > 3 ) break;
     case 'N':
+      if ( m_level > 3 ) break;
     case 'W':
+      if ( m_level > 4 ) break;
     case 'E':
+      if ( m_level > 5 ) break;
     case 'F':
+      if ( m_level > 6 ) break;
     default:
       ::printf(_buf.c_str());
     break;
@@ -307,9 +326,10 @@ void InternalMonitor::updateContent(const Nodeset& ns) {
 void InternalMonitor::setTimeoutError() {
   auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
   setAlarm(alarms->second,m_name,ERR_NO_UPDATES,time(0));
-  log("ERROR") << "Update info is " << int(time(0)-m_lastUpdate) << " seconds old." 
+  log("DEBUG") << "Update info is " << int(time(0)-m_lastUpdate) << " seconds old." 
 	       << " Maximum is " << int(3*m_snapshotDiff) << " seconds " << endl;
   m_lastUpdate = time(0);
+  m_parent->removeAlarmsBySubfarm(m_name);
   m_parent->updateAlarms(alarms->first, alarms->second);
 }
 
@@ -324,9 +344,9 @@ void InternalMonitor::update(const void* address) {
 }
 
 /// Set a new alarm
-void InternalMonitor::setAlarm(Alarms& alms, const string& node, int typ, time_t when, const string& dsc, const string& opt) {
+void InternalMonitor::setAlarm(Alarms& alms, const string& node, int typ, time_t when, const string& dsc) {
   string subfarm = ::isdigit(node[node.length()-3]) ? node.substr(0,node.length()-2) : node;
-  alms.push_back(Alarm(typ,when,subfarm,node,dsc,opt));
+  alms.push_back(Alarm(typ,when,subfarm,node,dsc));
   m_hasProblems = true;
 }
 
@@ -425,6 +445,8 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
   m_runState  = 0;
   m_numEvent = 0;
   ::dis_start_serving((char*)service.c_str());
+  ::lib_rtl_sleep(1000);
+  IocSensor::instance().send(this,CMD_CLEAR,(void*)0);
 }
 
 /// Standard destructor
@@ -496,70 +518,6 @@ void FarmMonitor::dnsDataHandler(void* tag, void* address, int* size) {
   }
 }
 
-/// Publish alarm summary
-void FarmMonitor::publishSummary(const AlarmSummary& summary) {
-  char text[1024];
-  for(AlarmSummary::const_iterator i=summary.begin();i != summary.end(); ++i) {
-    if ( (*i).first == ERR_REMOVEDALL ) {
-      printf(" --------------------------- Summary: No alarms pending! \n");
-      return;
-    }
-  }
-  printf(" --------------------------- Summary \n");
-  for(AlarmSummary::const_iterator j=summary.begin();j != summary.end(); ++j) {
-    const AlarmSum& s = (*j).second;
-    if ( s.nodes.size() == 1 ) {
-      for(size_t k=0; k<s.nodes.size(); ++k) {
-	const Alarm* a = s.nodes[k];
-	::sprintf(text,"%-12s %-12s %s%s",a->node.c_str(),a->time().c_str(),a->message(),a->description.c_str());
-	::printf("SUMMARY  %s\n",text);
-      }
-    }
-    else if ( s.nodes.size() < 10 ) {
-      map<string,vector<Alarm*> > alms;
-      for(size_t k=0; k<s.nodes.size(); ++k)
-	alms[s.nodes[k]->description].push_back(s.nodes[k]);
-      for(map<string,vector<Alarm*> >::const_iterator l=alms.begin(); l!=alms.end();++l) {
-	set<string> opts;
-	const Alarm* a = ((*l).second)[0];
-	::sprintf(text,"%-4d %-7s %-12s %s%s ",int(s.nodes.size()),
-		  "alarms",a->time().c_str(),a->message(),(*l).first.c_str());
-	for(size_t k=0; k<(*l).second.size(); ++k) {
-	  const string& item = (*l).second[k]->node;
-	  if ( opts.find(item) == opts.end() ) {
-	    opts.insert(item);
-	    ::strcat(text,item.c_str());
-	    ::strcat(text," ");
-	    if ( k>5 ) {
-	      ::strcat(text," ..... ");
-	      break;
-	    }
-	  }
-	}
-      }
-      ::printf("SUMMARY  %s\n",text);
-    }
-    else  {
-      const Alarm* a = s.nodes[0];
-      ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",a->time().c_str(),a->message());
-      set<string> opts;
-      for(size_t k=0; k<s.nodes.size(); ++k) {
-	const string& item = s.nodes[k]->node;
-	if ( opts.find(item) == opts.end() ) {
-	  opts.insert(item);
-	  ::strcat(text,item.c_str());
-	  ::strcat(text," ");
-	  if ( k>5 ) {
-	    ::strcat(text," ..... ");
-	    break;
-	  }
-	}
-      }
-      ::printf("SUMMARY:%s\n",text);
-    }
-  }
-}
-
 /// Publish alarm
 void FarmMonitor::publish(const string& tag, const Alarm& alm) {
   PrintAlarm p(tag);
@@ -567,82 +525,247 @@ void FarmMonitor::publish(const string& tag, const Alarm& alm) {
   IocSensor::instance().send(this,CMD_SHOW_ALARM,new Alarm(alm,tag));
 }
 
-/// Update alarms from a subfarm
-void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
-  int cnt_new = 0, cnt_clr = 0;
-  bool canHaveAlarms = true;//m_numEvent>0;  //m_runState < 0 && runState >= 2;
-  if ( canHaveAlarms ) {
-    for(Alarms::iterator i=alarms.begin(); i!=alarms.end(); ++i)   {
-      TypeAlarms& a = m_alarms[(*i).code];
-      if ( find_if(a.begin(),a.end(),FindAlarm(*i)) == a.end() )  {
-	a.push_back(new Alarm(*i));
-	m_newAlarms[(*i).code].push_back(a.back());
-	++cnt_new;
+/// Remove all alarms from one subfarm identified by name
+void FarmMonitor::removeAlarmsBySubfarm(const std::string& subfarm_name) {
+  for(AlarmsByType::iterator p=m_allAlarms.begin(); p!=m_allAlarms.end(); ++p)  {
+    TypeAlarms& a = (*p).second;
+    for(size_t k=0; k<a.size(); ++k) {
+      if ( a[k]->subfarm == subfarm_name ) {
+	a.erase(a.begin()+k);
+	--k;
       }
     }
   }
+}
 
+/// Update alarms from a subfarm
+void FarmMonitor::updateAlarms(const string& subfarm, Alarms& alarms) {
+  bool canHaveAlarms = true;//m_numEvent>0;  //m_runState < 0 && runState >= 2;
+  if ( canHaveAlarms ) {
+    for(Alarms::iterator i=alarms.begin(); i!=alarms.end(); ++i)   {
+      TypeAlarms& a = m_allAlarms[(*i).code];
+      if ( !FindAlarm(*i).find(a) )
+	a.push_back(new Alarm(*i));
+    }
+  }
   // Have to do the reverse as well:
   // -- If the alarm is present with this code,node,subfarm, it has to be removed
-  for(AlarmsByType::iterator p=m_alarms.begin(); p!=m_alarms.end(); ++p)  {
+  for(AlarmsByType::iterator p=m_allAlarms.begin(); p!=m_allAlarms.end(); ++p)  {
     TypeAlarms& a = (*p).second;
     for(size_t k=0; k<a.size(); ++k) {
       Alarm& alm = *a[k];
       // Only clear alarms which origine from the same subfarm....
       if ( canHaveAlarms ) {
 	if ( alm.subfarm == subfarm ) {
-	  if ( find_if(alarms.begin(),alarms.end(),FindAlarm(alm)) == alarms.end() ) {
-	    m_clrAlarms[alm.code].push_back(&alm);
+	  if ( !FindAlarm(alm).find(alarms) ) {
 	    a.erase(a.begin()+k);
-	    ++cnt_clr;
 	    --k;
 	  }
 	}
       }
       else {
-	m_clrAlarms[alm.code].push_back(&alm);
 	a.erase(a.begin()+k);
-	++cnt_clr;
 	--k;
       }
     }
   }
-  //cout << subfarm << " All:" << alarms.size() << " New:" << cnt_new << " Clear:" << cnt_clr << endl;
-  //cout << "Statesummary:";
-  //for_each(m_stateSummary.begin(),m_stateSummary.end(),PrintStateSummary());
-  //cout << endl;
 }
 
-/// Handle new incoming alarm and update summary
-void FarmMonitor::handleAlarmSummary(const string& alarm) {
-  const char* text = alarm.c_str();
-  unsigned int val;
-  auto_ptr<AlarmSummary> summary(new AlarmSummary);
-  AlarmSummary::iterator k;
-  AlarmMap::iterator i;
-  bool removeAll = false;
-  if ( alarm.length()>5 && text[5] == 'A' ) {      // CLEARALL
-    removeAll = true;
-  }
-  else if ( (i=m_sumAlarms.find(val=Alarm::hash32(text+17))) == m_sumAlarms.end() ) {
-    if ( text[0] == 'D' ) {         // DECLARE
-      Alarm* alm = new Alarm(text);
-      m_sumAlarms[val] = alm;
+static const size_t m_maxPubAlarms = 4;
+static const size_t m_maxBadNodes  = 5;
+static const size_t m_maxBadSubfarms  = 8;
+static int g_typ = 0;
+void FarmMonitor::publishRegularAlarms(AlarmsByType& alms) {
+  AlarmsByType                      newAlarms;
+  AlarmsByType                      clrAlarms;
+  for(AlarmsByType::const_iterator i=alms.begin(); i!=alms.end(); ++i)   {
+    TypeAlarms& a = m_activeAlarms[(*i).first];
+    const TypeAlarms& b = (*i).second;
+    for(TypeAlarms::const_iterator j=b.begin();j!=b.end();++j) {
+      if ( !FindAlarm(**j).find(a) )  {
+	Alarm* alm = new Alarm(**j);
+	a.push_back(alm);
+	newAlarms[alm->code].push_back(alm);
+	//cout << "Adding:   " << *alm << " size:" << m_activeAlarms[alm->code].size() << endl;
+      }
     }
   }
-  else  if ( text[0] == 'C' ) {     // CLEAR
-    delete (*i).second;
-    m_sumAlarms.erase(i);
+  // -- If the alarm is present with this code,node,subfarm, it has to be removed
+  for(AlarmsByType::iterator p=m_activeAlarms.begin(); p!=m_activeAlarms.end(); ++p)  {
+    TypeAlarms& a = (*p).second;
+    for(size_t k=0; k<a.size(); ++k) {
+      Alarm& alm = *a[k];
+      AlarmsByType::const_iterator q=alms.find(alm.code);
+      bool found = (q != alms.end()) && FindAlarm(alm).find((*q).second);
+      if ( !found ) {
+	clrAlarms[alm.code].push_back(&alm);
+	//cout << "Clearing: " << alm << " size:" << m_activeAlarms[alm.code].size() << endl;
+	a.erase(a.begin()+k);
+	--k;
+      }
+    }
   }
-  if ( removeAll ) {
-    (*summary)[ERR_REMOVEDALL].nodes.push_back(new Alarm(ERR_REMOVEDALL,time(0),"",""));
+  if ( clrAlarms.size() > 0 || newAlarms.size() > 0 ) {
+    if ( g_typ == 0 )
+      log("INFO") << "Regular alarms:" << endl;
+    else if ( g_typ == 1 )
+      log("INFO") << "Node alarms:" << endl;
+    else if ( g_typ == 2 )
+      log("INFO") << "Subfarm alarms:" << endl;
+    else if ( g_typ == 3 )
+      log("INFO") << "Farm alarms:" << endl;
+  }
+  /// Check for new alarms
+  for_each(clrAlarms.begin(),clrAlarms.end(),PublishAlarm("CLEAR",this));
+  for_each(newAlarms.begin(),newAlarms.end(),PublishAlarm("DECLARE",this));
+  for_each(clrAlarms.begin(),clrAlarms.end(),DeleteAlarm());
+  clrAlarms.clear();
+  newAlarms.clear();
+
+}
+
+void FarmMonitor::publishTypeAlarms(const AlarmsByType& alarms) {
+  AlarmsByType alms;
+  getTypeAlarms(alms,alarms);
+  publishRegularAlarms(alms);
+}
+
+void FarmMonitor::publishSourceAlarms(const AlarmsBySource& alarms) {
+  AlarmsByType alms;
+  getSourceAlarms(alms,alarms);
+  publishRegularAlarms(alms);
+}
+
+void FarmMonitor::getTypeAlarms(AlarmsByType& alms, const AlarmsByType& alarms) {
+  for(AlarmsByType::const_iterator p=alarms.begin(); p!=alarms.end(); ++p)  {
+    const TypeAlarms& a = (*p).second;
+    if ( a.size() < 2 ) {
+      for(size_t i=0; i<a.size();++i) {
+	Alarm* alm = new Alarm(*a[i]);
+	alms[a[i]->code].push_back(alm);
+      }
+    }
+    else {
+      Alarm* alm = new Alarm(*a[0]);
+      alm->description = "";
+      for(size_t i=0; i<a.size();++i) {
+	if ( a[i]->description.length() > 0 ) {
+	  alm->description += a[i]->description; 
+	  if ( alm->description.length() >= 128 ) {
+	    alm->description += "...";
+	    break;
+	  }
+	  alm->description += " ";
+	}
+      }
+      // Special traetment subfarm alarms: tweak node name to subfarm name
+      if ( g_typ == 2 ) alm->node = a[0]->subfarm;
+      alms[alm->code].push_back(alm);
+    }
+  }
+}
+
+void FarmMonitor::getSourceAlarms(AlarmsByType& alms, const AlarmsBySource& alarms) {
+  for(AlarmsBySource::const_iterator q=alarms.begin(); q!=alarms.end(); ++q)  {
+    const pair<size_t,AlarmsByType>& n = (*q).second;
+    const AlarmsByType& abt = n.second;
+    if ( abt.size() > 0 ) {
+      for(AlarmsByType::const_iterator p=abt.begin(); p!=abt.end(); ++p)  {
+	const TypeAlarms& a = (*p).second;
+	if ( a.size() > 0 ) {
+	  Alarm* alm = 0;
+	  TypeAlarms& b = alms[(*p).first];
+	  if ( b.size()==0 )   {
+	    alm = new Alarm(*a[0]);
+	    alm->node = (*q).first;
+	    alm->subfarm = (*q).first;
+	    alm->description = "";
+	    b.push_back(alm);
+	  }
+	  else {
+	    alm = b[0];
+	  }
+	  if ( alm->description.length() < 128 ) {
+	    for(size_t i=0; i<a.size();++i) {
+	      if ( alm->description.length() >= 128 ) {
+		alm->description += "...";
+		break;
+	      }
+	      else if ( a[i]->description.length() > 0 ) {
+		alm->description += a[i]->description; 
+	      }
+	      alm->description += " ";	      
+	    }
+	  }
+	  alms[alm->code].push_back(alm);
+	}
+      }
+    }
+  }
+}
+
+void FarmMonitor::publishAlarms() {
+  size_t count = 0;
+  AlarmsBySource nodeAlarms;
+  AlarmsBySource subfarmAlarms;
+  for(AlarmsByType::iterator q=m_allAlarms.begin(); q!=m_allAlarms.end(); ++q)  {
+    TypeAlarms& a = (*q).second;
+    for(TypeAlarms::iterator k=a.begin(); k!=a.end(); ++k) {
+      Alarm& alm = *(*k);
+      pair<size_t,AlarmsByType>& n = nodeAlarms[alm.node];
+      pair<size_t,AlarmsByType>& s = subfarmAlarms[alm.subfarm];
+      n.second[alm.code].push_back(&alm);
+      s.second[alm.code].push_back(&alm);
+      ++n.first;
+      ++s.first;
+      ++count;
+    }
+  }
+  // cout << "Update alarm summary: Got " << count << " alarms. " << endl;
+  if ( count < m_maxPubAlarms ) {
+    // Publish original alarms
+    g_typ = 0;
+    publishRegularAlarms(m_allAlarms);
+  }
+  else if ( nodeAlarms.size() < m_maxBadNodes ) {
+    // Publish summary of alarms node by node
+    size_t i, len = nodeAlarms.size();
+    AlarmsByType all;
+    AlarmsByType* alms = new AlarmsByType[len];
+    AlarmsBySource::iterator j;
+    g_typ = 1;
+    for(j=nodeAlarms.begin(), i=0; i<len; ++i, ++j) {
+      getTypeAlarms(alms[i],(*j).second.second);
+      for(AlarmsByType::iterator k=alms[i].begin();k!=alms[i].end();++k) {
+	TypeAlarms& a = all[(*k).first];
+	a.insert(a.end(),(*k).second.begin(),(*k).second.end());
+      }
+    }
+    publishRegularAlarms(all);
+  }
+  else if ( subfarmAlarms.size() < m_maxBadSubfarms ) {
+    // Publish summary of alarms subfarm by subfarm
+    //publishSourceAlarms(subfarmAlarms);
+    size_t i, len = subfarmAlarms.size();
+    AlarmsByType all;
+    AlarmsByType* alms = new AlarmsByType[len];
+    AlarmsBySource::iterator j;
+
+    g_typ = 2;
+    for(j=subfarmAlarms.begin(), i=0; i<len; ++i, ++j) {
+      getTypeAlarms(alms[i],(*j).second.second);
+      for(AlarmsByType::iterator k=alms[i].begin();k!=alms[i].end();++k) {
+	TypeAlarms& a = all[(*k).first];
+	a.insert(a.end(),(*k).second.begin(),(*k).second.end());
+      }
+    }
+    publishRegularAlarms(all);
   }
   else {
-    for(i=m_sumAlarms.begin(); i != m_sumAlarms.end(); ++i)
-      (*summary)[(*i).second->code].nodes.push_back((*i).second);
+    // Publish summary of alarms by their type
+    g_typ = 3;
+    publishTypeAlarms(m_allAlarms);
   }
-  publishSummary(*summary.get());
-  //IocSensor::instance().send(this,CMD_SHOW_SUMMARY,summary.release());
 }
 
 /// DIM command service callback
@@ -699,7 +822,7 @@ void FarmMonitor::update(const void* address) {
 
 /// Allow clients to check if the system is running
 bool FarmMonitor::isRunning() const {
-  return (m_lastNumEvt-m_numEvent) > 0;
+  return true; // (m_lastNumEvt-m_numEvent) > 0;
 }
 
 /// Interactor overload: Monitor callback handler
@@ -711,14 +834,8 @@ void FarmMonitor::handle(const Event& ev) {
   case IocEvent:
     switch(ev.type) {
       
-    case CMD_SHOW_SUMMARY: {
-      auto_ptr<AlarmSummary> val(ev.iocPtr<AlarmSummary>());
-      publishSummary(*val.get());
-      break;
-    }
     case CMD_SHOW_ALARM: {
       auto_ptr<Alarm> val(ev.iocPtr<Alarm>());
-      //handleAlarmSummary(*val);
       m_currAlarm = val.get();
       ::dis_update_service(m_serviceID);
       m_currAlarm = 0;
@@ -740,28 +857,25 @@ void FarmMonitor::handle(const Event& ev) {
     case CMD_PARTITIONID:
       log("INFO") << "Partition ID:" << ev.iocData<long>() << endl;
       break;
+
     case CMD_CLEAR:
       log("INFO") << "Received CLEARALL request....." << endl;
       m_time = ::time(0);
-      m_alarms.clear();
-      m_clrAlarms.clear();
-      m_newAlarms.clear();
+      m_activeAlarms.clear();
+      m_allAlarms.clear();
       publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
       ::dis_update_service(m_hartBeatID);
       break;
     case CMD_SHOW:
       break;
+
     case CMD_UPDATE:
-      /// Check for new alarms
-      for_each(m_clrAlarms.begin(),m_clrAlarms.end(),PublishAlarm("CLEAR  ",this));
-      for_each(m_newAlarms.begin(),m_newAlarms.end(),PublishAlarm("DECLARE",this));
-      for_each(m_clrAlarms.begin(),m_clrAlarms.end(),DeleteAlarm());
-      m_clrAlarms.clear();
-      m_newAlarms.clear();
+      publishAlarms();
       //log("INFO") << "Farm events:" << m_numEvent << endl;
       m_time = ::time(0);
       ::dis_update_service(m_hartBeatID);
       break;
+
     case CMD_ADD: {
       auto_ptr<string> val(ev.iocPtr<string>());
       if ( find(m_farms.begin(),m_farms.end(),*val.get()) == m_farms.end() ) {
@@ -780,7 +894,7 @@ void FarmMonitor::handle(const Event& ev) {
       auto_ptr<AlarmInfo> alms(ev.iocPtr<AlarmInfo>());
       m_stateSummary.clear();
       for_each(m_farmMonitors.begin(),m_farmMonitors.end(),CheckMonitor(now));
-      log("INFO") << "Checking sub monitors for errors....." << endl;
+      //log("INFO") << "Checking sub monitors for errors....." << endl;
       updateAlarms(alms->first, alms->second);
       IocSensor::instance().send(this,int(CMD_UPDATE),this);
       break;
@@ -880,7 +994,10 @@ static size_t do_output(void*,int level,const char* fmt, va_list args) {
 }
 
 extern "C" int romon_farmmon(int argc,char** argv) {
-  OutputLogger logger;
+  int level = 3;
+  RTL::CLI cli(argc,argv,help);
+  cli.getopt("printlevel", 2, level);
+  OutputLogger logger(level);
   FarmMonitor* disp = new FarmMonitor(argc,argv);
   ::lib_rtl_install_printer(do_output,0);
   IocSensor::instance().run();

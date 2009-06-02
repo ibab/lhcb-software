@@ -47,7 +47,6 @@ namespace ROMon {
     typedef std::pair<std::string,const FSMTask*> TaskDesc;
     typedef std::map<std::string,TaskDesc>        TaskMap;
 
-    bool       m_inUse;
     Monitors   m_nodes;
     Monitors   m_history;
     NodeMon    m_sum;
@@ -67,6 +66,10 @@ namespace ROMon {
     /// Analyse monitored data
     virtual void analyzeData();
 
+    virtual bool useSnapshot() const {
+      time_t now = time(0);
+      return (now - m_lastUpdate) >= 10;//m_snapshotDiff;
+    }
   };
   InternalMonitor* createSubfarmMonitor(FarmMonitor* parent, const std::string& title);
 }
@@ -95,7 +98,6 @@ namespace {
 };
 
 InternalMonitor* ROMon::createSubfarmMonitor(FarmMonitor* parent, const string& title) {
-  cout << "Connecting to subfarm " << title << endl;
   InternalMonitor* m = new SubfarmMonitor(parent,title);
   return m;
 }
@@ -143,13 +145,14 @@ void SubfarmMonitor::NodeMon::reset() {
 
 /// Initializing constructor
 SubfarmMonitor::SubfarmMonitor(FarmMonitor* parent, const string& title) 
-  : InternalMonitor(parent,title)
+: InternalMonitor(parent,title)
 {
   string svc = "/";
   for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_title = svc;
+  cout << "Connecting to subfarm " << title << " with service " << m_title << endl;
 }
 
 /// Standard destructor
@@ -348,6 +351,7 @@ void SubfarmMonitor::analyzeData() {
   time_t now = time(0);
   bool    running  = parent()->isRunning();
   auto_ptr<AlarmInfo> alarms(new AlarmInfo(m_name,Alarms()));
+  cout << name() << "Running:" << running << " ";
 
   m_hasProblems = false;
   for(Monitors::const_iterator i=m_nodes.begin(); i!=m_nodes.end();++i) {
@@ -356,10 +360,11 @@ void SubfarmMonitor::analyzeData() {
     const NodeMon& h = *m_history[(*i).first];
     time_t      when = m.update;
     txt[0] = 0;
+    cout << node << " ";
     if ( now-m.update > m_snapshotDiff )
-      setAlarm(alarms->second,node,ERR_NO_UPDATES,when);
+      setAlarm(alarms->second,node,ERR_NO_UPDATES,when,node);
     else if ( !m.inUse )
-      setAlarm(alarms->second,node,ERR_NOT_USED,when);
+      setAlarm(alarms->second,node,ERR_NOT_USED,when,node);
     else   {
       NodeMon::Clients::const_iterator ih;
       if ( m.mepRx.output < 0 || m.mepRx.state == TASK_FSM_STATE_DEAD )                 // MEPRX DEAD/not present
@@ -391,7 +396,7 @@ void SubfarmMonitor::analyzeData() {
 	    if ( ih == h.moores.end() ) continue;
 	    if ( t->input <= (*ih).second.input ) {
 	      ::sprintf(txt,"%d %d",t->input,(*ih).second.input);
-	      setAlarm(alarms->second,node,ERR_MOORE_STUCK,when,n,txt);
+	      setAlarm(alarms->second,node,ERR_MOORE_STUCK,when,n /*,txt */);
 	    }
 	  }
 	}
@@ -406,27 +411,31 @@ void SubfarmMonitor::analyzeData() {
 	if ( m.slotEVENT < SLOTS_MIN ) ::strcat(txt,"EVENT ");
 	if ( m.slotSEND  < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
 	if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"",txt);
+	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
 	else
-	  setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when,"",txt);
+	  setAlarm(alarms->second,node,ERR_SLOTS_LIMIT,when,"");
       }
       else if ( m.spacMEP < SPACE_MIN || m.spacEVENT < SPACE_MIN || m.spacSEND < SPACE_MIN  ) {
 	if ( m.spacMEP   < SPACE_MIN ) ::strcat(txt,"MEP ");
 	if ( m.spacEVENT < SPACE_MIN ) ::strcat(txt,"EVENT ");
 	if ( m.spacSEND  < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
 	if ( m.evtMEP == h.evtMEP || m.evtEVENT == h.evtEVENT || m.evtSEND == h.evtSEND )
-	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"",txt);
+	  setAlarm(alarms->second,node,ERR_NODE_STUCK,when,"");
 	else
-	  setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when,"",txt);
+	  setAlarm(alarms->second,node,ERR_SPACE_LIMIT,when,"");
+	cout << "1111 ";
       }
       else if ( m.evtMEP   <= h.evtMEP && m_sum.evtMEP == m_sumHist.evtMEP )    // No activity on any MEP buffer
-	setAlarm(alarms->second,node,ERR_NODAQ_ACTIVITY,when);
+	setAlarm(alarms->second,node,ERR_NODAQ_ACTIVITY,when,node);
       else if ( m.evtSEND  <= h.evtSEND  && m_sum.evtSEND == m_sumHist.evtSEND )// No activity on any send buffer
-	setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when);
+	setAlarm(alarms->second,node,ERR_NOSTORAGE_ACTIVITY,when,node);
       else if ( m.evtEVENT > 0 && m.evtEVENT <= h.evtEVENT && m_sum.evtEVENT  == m_sumHist.evtEVENT ) // No activity EVENT buffer
-	setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when);
+	setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
+      else if ( m.evtEVENT == 0 && m.evtEVENT == h.evtEVENT && m_sumHist.maxEVENT > 1000 ) // No activity EVENT buffer
+	setAlarm(alarms->second,node,ERR_NOHLT_ACTIVITY,when,node);
     }
   }
+  cout << endl;
   IocSensor::instance().send(m_parent,CMD_CHECK,alarms.release());
 }
 

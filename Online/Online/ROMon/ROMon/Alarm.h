@@ -1,4 +1,4 @@
-// $Id: Alarm.h,v 1.1 2009-05-05 18:35:46 frankb Exp $
+// $Id: Alarm.h,v 1.2 2009-06-02 16:21:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Alarm.h,v 1.1 2009-05-05 18:35:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Alarm.h,v 1.2 2009-06-02 16:21:23 frankb Exp $
 #ifndef ROMON_ALARM_H
 #define ROMON_ALARM_H 1
 
@@ -124,7 +124,8 @@ namespace ROMon {
     }
   };
 
-  typedef std::vector<Alarm> Alarms;
+  typedef std::vector<Alarm>  Alarms;
+  typedef std::vector<Alarm*> AlarmsPtr;
   typedef std::pair<std::string, Alarms> AlarmInfo;
   typedef std::map<char,int>             StateSummary;
 
