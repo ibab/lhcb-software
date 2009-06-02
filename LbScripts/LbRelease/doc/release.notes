@@ -1,3 +1,7 @@
+2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r11
+
 2008-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: allow numbers and underscores in the name of
