@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-06-02 - Gloria CORTI
+ - Take latest tag for MC09 in Gauss-MC09.opts. It also sets velo close and
+   magnet down as 'default' settings. 
+ - Remove Gauss-2008.py that is obolete.
+
 !======================== Gauss v37r1 2009-05-28 =============================
 ! 2009-05-28 - Gloria CORTI
  - Include directly the options GaudiPoolDbRoot.opts instead of through
