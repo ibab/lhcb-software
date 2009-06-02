@@ -720,7 +720,7 @@ def getFile(url,file):
                     else:
                         log.info('%s on %s' % (file, os.getcwd()))
 
-    elif file.find('.html') != -1:
+    elif file.find('.html') != -1 or file.find('.htm') != -1 :
         this_html_dir = html_dir.split(os.pathsep)[0]
         dest = os.path.join(this_html_dir,file)
         filetype = 'html'

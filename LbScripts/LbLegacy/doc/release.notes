@@ -1,5 +1,9 @@
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r1
+
+2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: 
 	- added AppConfig and L0TCK to the removal process.
 	- added the download of the distribution.htm. Necessary for the used_projects script.
