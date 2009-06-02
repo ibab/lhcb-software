@@ -135,7 +135,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItems(NULL),
   m_folderItemsIt(NULL),
   m_folderItem(NULL),
-  m_benchmark(NULL)
+  m_benchmark(NULL),
+  m_deadTasksOnPage(0)
 {
 
   m_benchmark = new TBenchmark();
@@ -227,6 +228,11 @@ PresenterMainFrame::~PresenterMainFrame()
   if (0 != m_dimBrowser) { delete m_dimBrowser; m_dimBrowser = NULL; }
   if (0 != m_archive) { delete m_archive; m_archive = NULL; }
   
+  
+  std::vector<std::string*>::iterator pageString;
+  for (pageString = m_loadedPagesHistory.begin();pageString != m_loadedPagesHistory.end(); ++pageString) 
+    delete *pageString; 
+  
   if (0 != m_intervalPicker) {
     m_intervalPicker->UnmapWindow();
     m_intervalPicker->CloseWindow();
@@ -258,7 +264,7 @@ void PresenterMainFrame::buildGUI()
   // set minimun size
   // SetWMSizeHints(400 + 200, 370+50, 2000, 1000, 1, 1);
   m_fileText = new TGHotString("&File");
-//  m_filePrint = new TGHotString("Save/&Print Page to File...");
+  m_filePrint = new TGHotString("Save/&Print Page to File...");
     m_fileNew = new TGHotString("&Create Page");
     m_fileSaveText = new TGHotString("&Save Page to Database...");
     m_fileLoginText = new TGHotString("&Login to Database...");
@@ -294,6 +300,7 @@ void PresenterMainFrame::buildGUI()
     m_toolOffline = new TGHotString("&History mode");
 //    m_toolSetUtgidTaskText = new TGHotString("Set &UTGID for Task...");
     m_toolSetDimDnsText = new TGHotString("Set &DIM DNS...");
+    m_toolFullBenchmarkText = new TGHotString("Benchmark all pages");
 
   m_helpText = new TGHotString("&Help");
     m_helpContentsText = new TGHotString("&Contents");
@@ -336,7 +343,7 @@ void PresenterMainFrame::buildGUI()
   m_fileMenu->AddEntry(m_fileNew, CLEAR_PAGE_COMMAND);
   m_fileMenu->AddSeparator();
   m_fileMenu->AddEntry(m_fileSaveText, SAVE_PAGE_TO_DB_COMMAND);
-//  m_fileMenu->AddEntry(m_filePrint, SAVE_PAGE_TO_FILE_COMMAND);
+  m_fileMenu->AddEntry(m_filePrint, SAVE_PAGE_TO_FILE_COMMAND);
   m_fileMenu->AddSeparator();
   m_fileMenu->AddEntry(m_fileLoginText, LOGIN_COMMAND);
   m_fileMenu->AddEntry(m_fileLogoutText, LOGOUT_COMMAND);
@@ -402,8 +409,8 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
   m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
   m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
-//  m_toolMenu->AddSeparator();
-//  m_toolMenu->AddEntry(m_toolSetUtgidTaskText, SET_UTGID_TASK_COMMAND);
+  m_toolMenu->AddSeparator();
+  m_toolMenu->AddEntry(m_toolFullBenchmarkText, FULL_BENCHMARK_COMMAND);
 //  m_toolMenu->AddSeparator();
 //  m_toolMenu->AddEntry(m_toolSetDimDnsText, SET_DIM_DNS_COMMAND);
   m_toolMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
@@ -454,6 +461,34 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_toolBar = new TGToolBar(m_toolBarDock, 60, 20, kHorizontalFrame);
 //  m_toolbarElement = new ToolBarData_t();
 
+  const TGPicture* previousPage = picpool->GetPicture("tb_back.xpm");
+  m_previousPageSaveButton = new TGPictureButton(m_toolBar, previousPage,
+                                          LOAD_PREVIOUS_PAGE_COMMAND);
+  m_previousPageSaveButton->SetToolTipText("Load previous page");
+  m_previousPageSaveButton->AllowStayDown(false);
+  m_toolBar->AddButton(this, m_previousPageSaveButton, 0);
+  m_previousPageSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
+                             "loadPreviousPage()");
+                             
+  const TGPicture* nextPage = picpool->GetPicture("tb_forw.xpm");
+  m_nextPageButton = new TGPictureButton(m_toolBar, nextPage,
+                                         LOAD_NEXT_PAGE_COMMAND);
+  m_nextPageButton->SetToolTipText("Load next page");
+  m_nextPageButton->AllowStayDown(false);
+  m_toolBar->AddButton(this, m_nextPageButton, 0);
+  m_nextPageButton->Connect("Clicked()", "PresenterMainFrame", this,
+                             "loadNextPage()");
+                             
+
+  const TGPicture* printpic = picpool->GetPicture("ed_print.png");
+  m_printSaveButton = new TGPictureButton(m_toolBar, printpic,
+                                          SAVE_PAGE_TO_FILE_COMMAND);
+  m_printSaveButton->SetToolTipText("Print/Save page");
+  m_printSaveButton->AllowStayDown(false);
+  m_toolBar->AddButton(this, m_printSaveButton, 8);
+  m_printSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
+                             "savePageToFile()");
+
   // New page
   const TGPicture* newPage16pic = picpool->GetPicture("newPage16",
                                                       (char**)newPage16);
@@ -461,7 +496,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                         CLEAR_PAGE_COMMAND);
   m_newPageButton->SetToolTipText("New page");
   m_newPageButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_newPageButton, 0);
+  m_toolBar->AddButton(this, m_newPageButton, 8);
   m_newPageButton->Connect("Clicked()", "PresenterMainFrame", this,
                            "removeHistogramsFromPage()");
 
@@ -473,7 +508,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                                    SAVE_PAGE_TO_DB_COMMAND);
   m_savePageToDatabaseButton->SetToolTipText("Save page to Database");
   m_savePageToDatabaseButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_savePageToDatabaseButton, 8);
+  m_toolBar->AddButton(this, m_savePageToDatabaseButton, 0);
   m_savePageToDatabaseButton->SetState(kButtonDisabled);
   m_savePageToDatabaseButton->Connect("Clicked()", "PresenterMainFrame",
                                       this, "savePageToHistogramDB()");
@@ -1243,9 +1278,9 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case SAVE_PAGE_TO_DB_COMMAND:
       savePageToHistogramDB();
       break;
-//    case SAVE_PAGE_TO_FILE_COMMAND:
-//      savePageToFile();
-//      break;
+    case SAVE_PAGE_TO_FILE_COMMAND:
+      savePageToFile();
+      break;
     case M_Previous_Interval:
       previousInterval();
       break;
@@ -1281,6 +1316,9 @@ void PresenterMainFrame::handleCommand(Command cmd)
       break;
     case OFFLINE_MODE_COMMAND:
       setPresenterMode(History);
+      break;
+    case FULL_BENCHMARK_COMMAND:
+      loadAllPages();
       break;
     case ONLINE_MODE_COMMAND:
       setPresenterMode(Online);
@@ -1355,21 +1393,26 @@ void PresenterMainFrame::handleCommand(Command cmd)
       m_nextIntervalButton->SetState(kButtonEngaged);
       m_nextIntervalButton->SetState(kButtonUp);
 //      m_currentPageName = selectedPageFromDbTree();
-      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
-      break;      
+      if (!m_currentPageName.empty()) {
+        loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+      }
+      break;
+    case LOAD_NEXT_PAGE_COMMAND:
+      loadNextPage();
+      break;            
+    case LOAD_PREVIOUS_PAGE_COMMAND:
+      loadPreviousPage();
+      break;   
     case M_LoadPage_COMMAND:
     case M_LAST_1_HOURS:
     case M_LAST_8_HOURS:
     case M_Last_File: {
-      if (Online == m_presenterMode ||
-          (EditorOffline == m_presenterMode && !canWriteToHistogramDB())) {
-        //Bug workaround: maybe fixed in some ROOT > 5.18.00
-//        m_historyIntervalQuickButton->SetState(kButtonDisabled);
-      }
       m_previousIntervalButton->SetState(kButtonDisabled);
       m_nextIntervalButton->SetState(kButtonDisabled);
       m_currentPageName = selectedPageFromDbTree();
-      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
+      if (!m_currentPageName.empty()) {
+      	loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+      }
     }
       break;
     case M_File_Picker: {
@@ -1382,8 +1425,8 @@ void PresenterMainFrame::handleCommand(Command cmd)
         fileInfo.SetMultipleSelection(false);
 // if (true == fileInfo.fMultipleSelection) { TList 1st element};
         new TGFileDialog(gClient->GetRoot(),this,kFDOpen,&fileInfo);
-//        if(!fileInfo.fFilename) {        
-          m_savesetFileName = std::string(fileInfo.fFilename);
+        m_savesetFileName = std::string(fileInfo.fFilename);
+        if(false == m_savesetFileName.empty()) {        
           if (EditorOffline == m_presenterMode) {
             refreshHistogramSvcList(s_withTree);
           }
@@ -1391,8 +1434,11 @@ void PresenterMainFrame::handleCommand(Command cmd)
           m_nextIntervalButton->SetState(kButtonDisabled);
 // std::cout << "selected m_savesetFileName: " << m_savesetFileName << std::endl;
           m_currentPageName = selectedPageFromDbTree();                  
-          loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
-//        }
+
+          if (!m_currentPageName.empty()) {
+            loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+          }          
+        }
     }
       break;      
     case M_DeletePage_COMMAND:
@@ -1541,6 +1587,55 @@ bool PresenterMainFrame::canWriteToHistogramDB()
     return false;
   }
 }
+void PresenterMainFrame::savePageToFile()
+{
+  static const char *gSaveAsTypes[] = {"Encapsulated PostScript", "*.eps",
+                                      "PDF",          "*.pdf",
+                                      "SVG",          "*.svg",
+                                      "GIF",          "*.gif",
+                                      "ROOT macros",  "*.C",
+                                      "ROOT files",   "*.root",
+                                      "XML",          "*.xml",
+                                      "PNG",          "*.png",
+                                      "XPM",          "*.xpm",
+                                      "JPEG",         "*.jpg",
+                                      "TIFF",         "*.tiff",
+                                      "XCF",          "*.xcf",
+                                      "PostScript",   "*.ps",
+                                      0,              0 };
+  
+  static TString dir(gSystem->TempDirectory()); //HomeDirectory(const char* userName = 0)
+  static Int_t typeidx = 0;
+  static Bool_t overwr = kFALSE;
+  TGFileInfo fi;
+  fi.fFileTypes   = gSaveAsTypes;
+  fi.fIniDir      = StrDup(dir);
+  fi.fFileTypeIdx = typeidx;
+  fi.fOverwrite = overwr;
+  new TGFileDialog(fClient->GetDefaultRoot(), this, kFDSave, &fi);
+  TString fn = fi.fFilename;
+  TString ft = fi.fFileTypes[fi.fFileTypeIdx+1];
+  fn += ft(ft.Index("."), ft.Length());
+  if (false == fn.IsNull()) {
+    if (fn.EndsWith(".root") ||
+        fn.EndsWith(".ps")   ||
+        fn.EndsWith(".eps")  ||
+        fn.EndsWith(".pdf")  ||
+        fn.EndsWith(".svg")  ||
+        fn.EndsWith(".gif")  ||
+        fn.EndsWith(".xml")  ||
+        fn.EndsWith(".xpm")  ||
+        fn.EndsWith(".jpg")  ||
+        fn.EndsWith(".png")  ||
+        fn.EndsWith(".xcf")  ||
+        fn.EndsWith(".tiff")) {
+      editorCanvas->SaveAs(fn);
+    } else if (fn.EndsWith(".C")) {
+        editorCanvas->SaveSource(fn);
+    }
+  }
+}
+
 void PresenterMainFrame::savePageToHistogramDB()
 {
   if (ReadWrite == m_databaseMode) {
@@ -1772,17 +1867,19 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
       std::vector<int>::const_iterator m_alarmMessageIDsIt;
       for (m_alarmMessageIDsIt = m_alarmMessageIDs.begin();
            m_alarmMessageIDsIt != m_alarmMessageIDs.end();
-           ++m_alarmMessageIDsIt) {
+           m_alarmMessageIDsIt++) {
         OMAMessage* message = new OMAMessage(*m_alarmMessageIDsIt, *m_histogramDB);
-        std::string nodeName (message->humanTime());
-        nodeName.erase(nodeName.length()-1); // remove \n
-        nodeName = nodeName + ": ";
-        nodeName = nodeName + message->ananame();
-        TGListTreeItem* treeNode = listView->AddItem(treeRoot, nodeName.c_str());
-        setTreeNodeIcon(treeNode, message->levelString());        
-        listView->SetCheckBox(treeNode, false);
-        treeNode->SetUserData((void*)&(*m_alarmMessageIDsIt));
-        delete message;
+        if (message) {
+          std::string nodeName (message->humanTime());
+          nodeName.erase(nodeName.length()-1); // remove \n
+          nodeName = nodeName + ": ";
+          nodeName = nodeName + message->ananame();
+          TGListTreeItem* treeNode = listView->AddItem(treeRoot, nodeName.c_str());
+          setTreeNodeIcon(treeNode, message->levelString());        
+          listView->SetCheckBox(treeNode, false);
+          treeNode->SetUserData((void*)&(*m_alarmMessageIDsIt));
+          delete message;
+        }
       }
     } catch (std::string sqlException) {
         // TODO: add error logging backend
@@ -2070,10 +2167,20 @@ void PresenterMainFrame::stopBenchmark(const std::string &timer)
  
 void PresenterMainFrame::printBenchmark(const std::string &timer)
 {
-  std::cout << timer <<";"<< (m_benchmark->GetRealTime(timer.c_str())) << std::endl ;
+  std::cout << m_deadTasksOnPage << "," 
+            << timer << ","
+            << (m_benchmark->GetRealTime(timer.c_str())) << ","
+            << int(dbHistosOnPage.size()) << ",";
+  std::vector<DbRootHist*>::iterator timer_dbHistosOnPageIt = dbHistosOnPage.begin();
+  while( timer_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
+  	std::cout << (*timer_dbHistosOnPageIt)->identifier() << "," 
+              << int(((*timer_dbHistosOnPageIt)->rootHistogram)->GetEntries()) << ","
+              << m_benchmark->GetRealTime((*timer_dbHistosOnPageIt)->identifier().c_str()) << ",";
+    timer_dbHistosOnPageIt++;
+  }
+  std::cout << std::endl ; 
   m_benchmark->Reset(); 
 }
-
 
 void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
                                                 std::vector<std::string> & histogramList,
@@ -2152,7 +2259,6 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
    histogramIDStream.str("");
    }
 }
-
 
 void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
                                          const std::string & type)
@@ -2995,7 +3101,10 @@ void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
              NULL == node->GetFirstChild() &&
              ((EditorOnline != m_presenterMode) || (EditorOffline != m_presenterMode))) {
     m_currentPageName = selectedPageFromDbTree();
-    loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
+    if (!m_currentPageName.empty()) {
+      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+    }     
+
   } else if (0 != node &&
              NULL == node->GetFirstChild() &&
              ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode))) {
@@ -3011,7 +3120,10 @@ void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
   } else if (0 != node &&
              NULL == node->GetFirstChild() &&
              isConnectedToHistogramDB()) {
-    loadSelectedAlarmFromDB(selectedAlarmFromDbTree());
+    int id = selectedAlarmFromDbTree();
+    if (id !=-1) {
+      loadSelectedAlarmFromDB(id);
+    }
   }
 }
 void PresenterMainFrame::addHistoToHistoDB()
@@ -3581,6 +3693,19 @@ int PresenterMainFrame::selectedAlarmFromDbTree(){
     return -1;
   }
 }
+void PresenterMainFrame::loadAllPages()
+{
+  if (isConnectedToHistogramDB()) {
+     m_localDatabaseFolders.clear();
+     //m_histogramDB->getPageFolderNames(m_localDatabaseFolders, "_ALL_");
+     m_histogramDB->getPageNames(m_localDatabaseFolders);
+
+     for (m_folderIt = m_localDatabaseFolders.begin();
+          m_folderIt != m_localDatabaseFolders.end(); ++m_folderIt) {
+      loadSelectedPageFromDB(*m_folderIt, s_startupFile, m_savesetFileName, false);
+     }
+  }
+}
 void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
 {
   if (isConnectedToHistogramDB()) {
@@ -3609,9 +3734,34 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
     }
   }
 }
+void PresenterMainFrame::loadPreviousPage()
+{
+  if ((false == m_loadedPagesHistory.empty()) &&
+      (m_loadedPagesHistoryIt > m_loadedPagesHistory.begin())) {
+    m_loadedPagesHistoryIt--;
+    if (m_loadedPagesHistoryIt != m_loadedPagesHistory.end() &&
+      (false == (**m_loadedPagesHistoryIt).empty())) {
+    m_currentPageName = **m_loadedPagesHistoryIt;
+    loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_noPageHistory);  
+    } 
+  }
+}
+void PresenterMainFrame::loadNextPage()
+{
+  if ((false == m_loadedPagesHistory.empty()) &&
+      (m_loadedPagesHistoryIt < m_loadedPagesHistory.end()-1)) {
+    m_loadedPagesHistoryIt++;
+    if ((m_loadedPagesHistoryIt != m_loadedPagesHistory.end()) &&
+      (false == (**m_loadedPagesHistoryIt).empty())) {
+      m_currentPageName = **m_loadedPagesHistoryIt;
+      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_noPageHistory);  
+    }    
+  }
+}
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
-                                                const std::string & pastDuration)
+                                                const std::string & pastDuration,
+                                                bool pageHistoryMode)
 {
   if (isConnectedToHistogramDB()) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
@@ -3651,8 +3801,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         std::cout << "Navigation step size" << global_stepSize << std::endl;
       }
     }
-
-startBenchmark(pageName);                                     
+//    startBenchmark(pageName); 
       try {
         removeHistogramsFromPage();
         m_onlineHistosOnPage.clear();
@@ -3708,8 +3857,9 @@ startBenchmark(pageName);
 ////       } 
           page->getHistogramList(&m_onlineHistosOnPage);
           m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
-          m_tasksNotRunning.clear();          
+          m_tasksNotRunning.clear();
           while (m_onlineHistosOnPageIt != m_onlineHistosOnPage.end()) {
+//            startBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
             DbRootHist* dbRootHist;
             if((History == m_presenterMode) || (EditorOffline == m_presenterMode)) { // no need for DIM
               dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->histo->identifier(),
@@ -3798,6 +3948,7 @@ startBenchmark(pageName);
              }
            }
           dbRootHist->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, overlayOnPad);
+//          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());          
           m_onlineHistosOnPageIt++;
           }
           
@@ -3807,14 +3958,14 @@ startBenchmark(pageName);
           m_pageDescriptionView->DataChanged();    
   // workaround attempt for ROOT painter objects:
   // reliable random crashes when below invoked... via TH painter (timing dependent?)
-  editorCanvas->Update();
-  std::vector<DbRootHist*>::iterator drawOpt_dbHistosOnPageIt;
-  drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
-  while( drawOpt_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
-     (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
-     drawOpt_dbHistosOnPageIt++;
-  }
-  editorCanvas->Update();        
+        editorCanvas->Update();
+        std::vector<DbRootHist*>::iterator drawOpt_dbHistosOnPageIt;
+        drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
+        while( drawOpt_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
+           (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
+           drawOpt_dbHistosOnPageIt++;
+        }
+        editorCanvas->Update();        
 
         }
         
@@ -3828,11 +3979,18 @@ startBenchmark(pageName);
                           sqlException.c_str()),
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
-stopBenchmark(pageName);
-printBenchmark(pageName);      
-    
+      
+//    stopBenchmark(pageName);
+    m_deadTasksOnPage = m_tasksNotRunning.size();
+//    printBenchmark(pageName);      
+    if (false == pageHistoryMode) {
+      std::string* history = new std::string(pageName.c_str());
+      m_loadedPagesHistory.push_back(history);
+      m_loadedPagesHistoryIt = m_loadedPagesHistory.end()-1;      
+    }
     
     if (resumeRefreshAfterLoading) { startPageRefresh(); }
+    
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
   }
@@ -4101,7 +4259,9 @@ void PresenterMainFrame::previousInterval()
     global_timePoint = m_archive->substractIsoTimeDate(global_timePoint,
                                                        global_stepSize);
 //    m_currentPageName = selectedPageFromDbTree();
-    loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);                                                       
+    if (!m_currentPageName.empty()) {
+      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+    }
     if (m_verbosity >= Verbose) {
       std::cout << "after previousInterval global_timePoint " << global_timePoint << std::endl;
     }
@@ -4117,7 +4277,9 @@ void PresenterMainFrame::nextInterval()
     global_timePoint = m_archive->addIsoTimeDate(global_timePoint,
                                                  global_stepSize);
 //    m_currentPageName = selectedPageFromDbTree();                                                 
-    loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
+    if (!m_currentPageName.empty()) {
+      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+    }
     if (m_verbosity >= Verbose) {
       std::cout << "after nextInterval global_timePoint " << global_timePoint << std::endl;
     }
@@ -4257,7 +4419,9 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
                std::cout << "loadPage: " << ((*eventInfo_dbHistosOnPageIt)->onlineHistogram())->page2display() << std::endl;
             }
             m_currentPageName = ((*eventInfo_dbHistosOnPageIt)->onlineHistogram())->page2display();
-            loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
+            if (!m_currentPageName.empty()) {
+              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+            }
             break;
           }  
         }

@@ -74,12 +74,16 @@ class PresenterMainFrame : public TGMainFrame
       SET_DIM_DNS_COMMAND,
       LOGOUT_COMMAND,
       LOGIN_COMMAND,
+      LOAD_NEXT_PAGE_COMMAND,
+      LOAD_PREVIOUS_PAGE_COMMAND,
       CLEAR_PAGE_COMMAND,
+      SAVE_PAGE_TO_FILE_COMMAND,
       SAVE_PAGE_TO_DB_COMMAND,
       REMOVE_HISTO_FROM_CANVAS_COMMAND,
       CLEAR_HISTOS_COMMAND,
       EDIT_HISTO_COMMAND,
       EDIT_PAGE_PROPERTIES_COMMAND,
+      FULL_BENCHMARK_COMMAND,
       INSPECT_HISTO_COMMAND,
       HISTOGRAM_DESCRIPTION_COMMAND,
       INSPECT_PAGE_COMMAND,
@@ -172,6 +176,7 @@ class PresenterMainFrame : public TGMainFrame
 
     void dockAllFrames();
     void handleCommand(Command id = X_ENIGMA_COMMAND);
+    void savePageToFile();
     void savePageToHistogramDB();
     void autoCanvasLayout();
     void loginToHistogramDB();
@@ -184,6 +189,8 @@ class PresenterMainFrame : public TGMainFrame
     void startPageRefresh();
     void stopPageRefresh();
     void clearHistos();
+    void loadNextPage();
+    void loadPreviousPage();
     void nextInterval();
     void previousInterval();
     void refreshPage();
@@ -293,9 +300,11 @@ class PresenterMainFrame : public TGMainFrame
     std::string selectedPageFromDbTree();
     int selectedAlarmFromDbTree();
     void loadSelectedAlarmFromDB(int msgId);
+    void loadAllPages();
     void loadSelectedPageFromDB(const std::string & pageName = "",
                                 const std::string & timePoint = "",
-                                const std::string & pastDuration = "");
+                                const std::string & pastDuration = "",
+                                bool pageHistoryMode = false);
     void deleteSelectedPageFromDB();
     void deleteSelectedFolderFromDB();
     void pickReferenceHistogram();
@@ -324,6 +333,9 @@ class PresenterMainFrame : public TGMainFrame
 //    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
 
   private:
+
+    static const bool s_previousPageToHistory = false;
+    static const bool s_noPageHistory = true;
 
     pres::MsgLevel    m_verbosity;
     bool              m_historyMode;
@@ -376,7 +388,7 @@ class PresenterMainFrame : public TGMainFrame
     TGMenuBar*    m_menuBar;
     TGPopupMenu*  m_fileMenu;
       TGHotString*  m_fileText;
-//      TGHotString*  m_filePrint;
+      TGHotString*  m_filePrint;
       TGHotString*  m_fileNew;
       TGHotString*  m_fileSaveText;
       TGHotString*  m_fileLoginText;
@@ -415,6 +427,7 @@ class PresenterMainFrame : public TGMainFrame
       TGHotString*  m_toolOffline;
       TGHotString*  m_toolSetUtgidTaskText;
       TGHotString*  m_toolSetDimDnsText;
+      TGHotString*  m_toolFullBenchmarkText;
 
     TGPopupMenu*  m_helpMenu;
     TGHotString*  m_helpText;
@@ -426,6 +439,9 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_loginButton;
     TGPictureButton*  m_logoutButton;
     TGPictureButton*  m_savePageToDatabaseButton;
+    TGPictureButton*  m_printSaveButton;
+    TGPictureButton*  m_previousPageSaveButton;
+    TGPictureButton*  m_nextPageButton;
     TGPictureButton*  m_newPageButton;
     TGPictureButton*  m_startRefreshButton;
     TGPictureButton*  m_stopRefreshButton;
@@ -510,7 +526,9 @@ class PresenterMainFrame : public TGMainFrame
     TObject*   m_histogramIdItem;
 
     TBenchmark* m_benchmark;
-
+    int m_deadTasksOnPage;
+    std::vector<std::string> m_histoTimerName;
+    
     std::string convDimToHistoID(const std::string & dimSvcName);
 
 
@@ -548,6 +566,9 @@ class PresenterMainFrame : public TGMainFrame
     
     std::vector<std::string>      m_candidateDimServices;
     std::vector<std::string>::const_iterator m_candidateDimServicesIt;
+
+    std::vector<std::string*>      m_loadedPagesHistory;
+    std::vector<std::string*>::const_iterator m_loadedPagesHistoryIt;
 
     std::vector<OnlineHistoOnPage*>      m_onlineHistosOnPage;
     std::vector<OnlineHistoOnPage*>::const_iterator m_onlineHistosOnPageIt;
