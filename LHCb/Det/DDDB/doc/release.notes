@@ -4,7 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r17 2009-05-28 ============================
+!========================== DDDB v1r17 2009-06-02 ============================
+! 2009-06-02 - Marco Clemencic
+ - Update 2009 default tags to latest tags in SQLDDDB v5r7:
+   . MC09-20090602         for DDDB
+
 ! 2009-05-28 - Marco Cattaneo
  - Update 2009 default tags to latest tags in SQLDDDB v5r6:
    . MC09-20090526         for DDDB

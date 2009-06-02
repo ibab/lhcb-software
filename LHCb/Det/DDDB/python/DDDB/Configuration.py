@@ -117,7 +117,7 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2009 data and corresponding MonteCarlo
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "MC09-20090526")
+        self.__set_tag__(["DDDB"], "MC09-20090602")
         self.__set_tag__(["LHCBCOND"], "head-20090508")
         self.__set_tag__(["SIMCOND"], "sim-20090508-vc-md100")
     
@@ -135,7 +135,7 @@ class DDDBConf(ConfigurableUser):
         Default configuration for MC09 MonteCarlo production and analysis
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "MC09-20090526")
+        self.__set_tag__(["DDDB"], "MC09-20090602")
         self.__set_tag__(["SIMCOND"], "sim-20090402-vc-md100")
     
     def __DC06_conf__(self):
