@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r4
+
 ! 2009-05-29 - Patrick Koppenburg
  - Remove all PhysDesktop
 
