@@ -362,7 +362,7 @@ int GaudiTask::startApplication()  {
 int GaudiTask::stopApplication()  {
   if ( m_subMgr )  {
     // If the event thread finished, join it....
-    if ( m_handle && m_eventThread == false )  {
+    if ( m_handle )   {  //&& m_eventThread == false )  {
       ::lib_rtl_join_thread(m_handle);
       m_handle = 0;
     }
