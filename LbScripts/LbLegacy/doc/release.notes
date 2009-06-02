@@ -1,3 +1,8 @@
+2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added AppConfig and L0TCK to the removal
+	process.
+
 2009-05-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: fix for Panoramix. Since version v17r0 Openscientist

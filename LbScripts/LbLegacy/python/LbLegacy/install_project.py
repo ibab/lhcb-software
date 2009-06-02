@@ -201,6 +201,7 @@
         - removed the usage of the old scripts.tar.gz for the bootstrapping.
  090515 - Moving to LbScripts v4r0
  090526 - Reenabled the fixProjectLinks procedure to cure the link target starting with "/afs"
+ 090602 - Added AppConfig and L0TCK to the removal process.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -210,7 +211,7 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090526'
+script_version = '090602'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r0"
@@ -1350,12 +1351,14 @@ def removeProject(project,pvers):
             log.info('remove %s' % os.path.join(head, project, pvers))
 
     head = os.path.join(this_lhcb_dir,'PARAM')
-    if project.find('Field') != -1:
+    if project.find('Field') != -1 or project.find("AppConfig") != -1:
         head = os.path.join(this_lhcb_dir,'DBASE')
     if project.find('DDDB') != -1:
         head = os.path.join(this_lhcb_dir,'DBASE','Det')
     if project.find('Dec') != -1:
         head = os.path.join(this_lhcb_dir,'DBASE','Gen')
+    if project.find('L0TCK') != -1 :
+        head = os.path.join(this_lhcb_dir, 'DBASE', "TCK")
     if os.path.isdir(os.path.join(head,project,pvers)):
         shutil.rmtree(os.path.join(head,project,pvers))
         log.info('remove %s' % os.path.join(head, project, pvers))
