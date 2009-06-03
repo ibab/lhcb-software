@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.8 2009-03-19 09:25:09 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.9 2009-06-03 11:42:54 cattanem Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -6,6 +6,14 @@
 #include "gsl/gsl_math.h"
 
 // Gaudi
+// Include files
+#include "Kernel/DifTraj.h"
+#ifdef _WIN32
+// Avoid conflict of Windows macro with std::max
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif
+#endif
 #include "GaudiKernel/boost_allocator.h"
 
 #include "Event/Track.h"
