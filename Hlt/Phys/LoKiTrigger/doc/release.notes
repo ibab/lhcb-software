@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.37 2009-05-14 08:06:30 ibelyaev Exp $
+! $Id: release.notes,v 1.38 2009-06-03 10:32:04 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
-! 2009-05-14 - Vanya Belyaev
+!!========================== LoKiTrigger v9r2 2009-06-03 ===================
+ 2009-05-14 - Vanya Belyaev
 
  - fix the problem with the bad interference of 
      new SmartIF and LoKi::Interface 
