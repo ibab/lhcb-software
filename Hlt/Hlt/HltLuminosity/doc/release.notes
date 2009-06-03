@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r8 2009-06-03 ===================
 ! 2009-05-30 - Gerhard Raven
  - use fill directly instead of fillHisto
 !========================== HltLuminosity v2r7 2009-05-06 ===================
