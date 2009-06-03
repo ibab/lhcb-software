@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingMoni.h,v 1.1 2009-05-22 16:24:06 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.h,v 1.2 2009-06-03 09:20:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -94,6 +94,9 @@ namespace Rich
 
         std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
         std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
+
+        std::vector<double> m_radiiMax;   ///< Max radii limit for histos for each rad
+        std::vector<double> m_radiiMin;   ///< Min radii limit for histos for each rad
 
         // Max fit variance
         std::vector<double> m_maxFitVariance;

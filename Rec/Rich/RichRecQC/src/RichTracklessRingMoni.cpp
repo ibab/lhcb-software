@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.3 2009-05-28 10:30:40 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.4 2009-06-03 09:20:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,6 +33,10 @@ TracklessRingMoni::TracklessRingMoni( const std::string& name,
                    m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
+  declareProperty( "RingRadiiHistoLimitMin",
+                   m_radiiMin = boost::assign::list_of(200.0)(20.0)(60.0) );
+  declareProperty( "RingRadiiHistoLimitMax",
+                   m_radiiMax = boost::assign::list_of(400.0)(100.0)(175.0) );
   declareProperty( "NumberBins", m_nBins = 100 );
   declareProperty( "MaxFitVariance",
                    m_maxFitVariance = boost::assign::list_of(100)(100)(100) );
@@ -136,7 +140,7 @@ StatusCode TracklessRingMoni::execute()
     {
       plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
-              0, 200, m_nBins );
+              m_radiiMin[rad], m_radiiMax[rad], m_nBins );
       //plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
       //        RAD+" Refitted Trackless Ring Variance",
       //        0, m_maxFitVariance[rad], m_nBins );

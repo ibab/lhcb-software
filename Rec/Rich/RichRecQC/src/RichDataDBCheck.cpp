@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.4 2008-12-04 15:22:43 jonrob Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.5 2009-06-03 09:20:26 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -31,9 +31,9 @@ DECLARE_ALGORITHM_FACTORY( DataDBCheck );
 DataDBCheck::DataDBCheck( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : Rich::HistoAlgBase ( name , pSvcLocator ),
-    m_SmartIDDecoder   ( NULL ),
-    m_RichSys          ( NULL ),
-    m_taeEvents        (   1, ""            )
+    m_SmartIDDecoder   ( NULL  ),
+    m_RichSys          ( NULL  ),
+    m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
 }

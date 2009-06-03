@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Chris Jones
+ - Add a new monitor, RichRawDataSize, to monitor the size of the L1 banks.
+ - Small improvement to the trackless ring monitor (improve histogram limits).
+
 !======================= RichRecQC v2r29 2009-05-28 ==========================
 ! 2009-05-28 - Chris Jones
  - Replace MessageSvc() with getConfigurable("MessageSvc") in python

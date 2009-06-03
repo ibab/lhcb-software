@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.29 2009-05-28 10:29:07 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2009-06-03 09:20:26 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -122,8 +122,16 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Some monitoring of raw information
         if self.getProp("RawMonitoring") :
+            
+            rawSeq = self.newSeq(sequence,"RichRawMoni")
+                
+            # Data Sizes
+            from Configurables import Rich__DAQ__RawDataSize
+            dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
+            rawSeq.Members += [dataSize]
+
+            # Data base consistency
             if self.getProp("DataType") not in ["DC06"]:
-                rawSeq = self.newSeq(sequence,"RichRawMoni")
                 from Configurables import Rich__DAQ__DataDBCheck
                 dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
                 rawSeq.Members += [dbCheck]
@@ -181,10 +189,7 @@ class RichRecQCConf(RichConfigurableUser):
                 conf = RichENNRingFinderConf()
             else :
                 raise RuntimeError("ERROR : Unknown trackless ring finder type")
-            conf.rich1TopFinder().HistoProduce    = self.getProp("HistoProduce")
-            conf.rich1BottomFinder().HistoProduce = self.getProp("HistoProduce")
-            conf.rich2LeftFinder().HistoProduce   = self.getProp("HistoProduce")
-            conf.rich2RightFinder().HistoProduce  = self.getProp("HistoProduce")
+            conf.enableHistos( self.getProp("HistoProduce") )
 
         # Add monitors
         allMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniAll")

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.8 2008-06-11 09:14:41 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.9 2009-06-03 09:20:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,12 +32,10 @@ HPDHitsMoni::HPDHitsMoni( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_decoder           ( NULL ),
-    m_richSys           ( NULL )
-{
-}
+    m_richSys           ( NULL ) { }
 
 // Destructor
-HPDHitsMoni::~HPDHitsMoni() {};
+HPDHitsMoni::~HPDHitsMoni() { }
 
 //  Initialize
 StatusCode HPDHitsMoni::initialize()
