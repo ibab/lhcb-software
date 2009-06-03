@@ -10,7 +10,10 @@ conf.MicroDSTSelectionAlg = "DC06selBs2JpsiPhi_unbiased"
 conf.CopyL0DUReport = True
 conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
-conf.CopyReFittedPVs = True
+# tu use the PV re-fitting, need to re-fit PVs, relate them, and pass the relations table location to the MicroDST maker.
+conf.CopyRelatedPVs = False
+conf.P2PVRelationsSuffix = "P2ReFitPVSortedRelations"
+#
 conf.CopyBTags = True
 dv = DaVinci()
 dv.EvtMax = 500
