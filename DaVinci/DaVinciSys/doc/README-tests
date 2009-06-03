@@ -16,6 +16,7 @@ cmt qmtest_run davincisys.hlt.test_hlt1_2008
 cmt qmtest_run davincisys.hlt.test_hlt12_mdf
 cmt qmtest_run davincisys.hlt.test_hlt12_2008
 cmt qmtest_run davincisys.hlt.test_hlt12_dc06
+cmt qmtest_run davincisys.preselections.test_stripping
 cmt qmtest_run davincisys.preselections.test_bbstripping
 cmt qmtest_run davincisys.preselections.test_bd2kstarmumu
 cmt qmtest_run davincisys.preselections.test_bu2llk2008
