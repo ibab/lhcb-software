@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.8 2009-04-30 13:05:12 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.9 2009-06-03 12:26:09 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -19,7 +19,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "CopyParticles"        : True
         , "CopyPVs"              : True
         , "CopyBTags"            : True
-        , "CopyReFittedPVs"      : False
+        , "CopyRelatedPVs"       : False
+        , "P2PVRelationsSuffix"  : ""
         , "CopyL0DUReport"       : False
         , "CopyHltDecReports"    : False
         , "CopyMCTruth"          : False
@@ -97,7 +98,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.setOutputPrefix(copyParticles)
         self.seqMicroDST().Members += [copyParticles]  
 
-    def copyP2PVLink(self, name, location) :
+    def copyP2PVRelations(self, name, location) :
         from Configurables import CopyParticle2PVRelations
         copyP2PVRel = CopyParticle2PVRelations(name)
         copyP2PVRel.InputLocation = location
@@ -113,8 +114,8 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.setOutputPrefix(copyPV)
         self.seqMicroDST().Members += [copyPV]
         if self.getProp("CopyParticles") :
-            self.copyP2PVLink("CopyP2PVLink",
-                              self.mainLocation()+"/Particle2VertexRelations")
+            self.copyP2PVRelations("CopyP2PVRelations",
+                                   self.mainLocation()+"/Particle2VertexRelations")
         
     def copyMCInfo(self) :
         """
@@ -154,33 +155,13 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.setOutputPrefix(copyFlavTag)
         self.seqMicroDST().Members += [copyFlavTag]
 
-    def reFitPVLocation(self) :
-        return self.mainLocation()+"/RefittedVertices"
-        
-    def P2ReFitPVRelationsLoc(self) :
-        return self.mainLocation()+"/Particle2ReFittedVertexRelations"
+    def P2PVLocation(self) :
+        return self.mainLocation()+self.getProp("P2PVRelationsSuffix")
 
-    
-    def refitPVs(self) :
-        from Configurables import PVReFitterAlg
-        PVReFitter = PVReFitterAlg("PVReFitterAlg")
-        PVReFitter.ParticleInputLocation = self.mainLocation()+"/Particles"
-        PVReFitter.VertexOutputLocation = self.reFitPVLocation()
-        PVReFitter.P2VRelationsOutputLocation = self.P2ReFitPVRelationsLoc()
-        PVReFitter.OutputLevel=4
-        self.seqMicroDST().Members += [PVReFitter]
-        
-
-    def copyReFittedPVs(self) :
-        from Configurables import CopyPrimaryVertices
-        self.refitPVs()
-        copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
-        copyReFittedPVs.InputLocation = self.reFitPVLocation()
-        self.setOutputPrefix(copyReFittedPVs)
-        self.seqMicroDST().Members += [copyReFittedPVs]
+    def copyRelatedPVs(self) :
         if self.getProp("CopyParticles") :
-            self.copyP2PVLink("CopyP2RefitPVLink",
-                              self.P2ReFitPVRelationsLoc() )
+            self.copyP2PVRelations("CopyUserP2PVRelations",
+                                   self.P2PVLocation() )
 
     def copyL0DUReport(self) :
         from Configurables import CopyL0DUReport
@@ -219,6 +200,6 @@ class PhysMicroDST(LHCbConfigurableUser) :
         if self.getProp("CopyBTags") : self.copyBTaggingInfo()
         if self.getProp("CopyL0DUReport") : self.copyL0DUReport()
         if self.getProp("CopyHltDecReports") : self.copyHltDecReports()
-        if self.getProp("CopyReFittedPVs") : self.copyReFittedPVs()
+        if self.getProp("CopyRelatedPVs") : self.copyRelatedPVs()
         if self.getProp("CopyMCTruth") : self.copyMCInfo()
         mdstSeq.Members += [self.initMicroDSTStream()]
