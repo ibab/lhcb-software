@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.6 2009-05-21 17:37:54 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.7 2009-06-03 18:01:31 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -19,8 +19,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from Configurables import GaudiSequencer
 trueSeq = GaudiSequencer("FindTrueDecay")
 trueSeq.IgnoreFilterPassed = True
-##----------------------------------------------------------------------------------------------------
-##
+##------------------------------------------------------------------------------##
 ## Truth filter No PID
 ##
 from Configurables import OldFilterDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
@@ -72,14 +71,15 @@ TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay", 
-                               "Strip_10Hz_Bd2KstarMuMu", "StdLoosePenguinDimuon", "StdLooseKstar2KPi" ]
+                               "Strip_10Hz_Bd2KstarMuMu", "Strip_Penguin_Jpsi2MuMu", "Strip_Penguin_Kstar2KPi" ]
 ###
 # DaVinci
 ###
 ## Preselection
 from StrippingConf.Configuration import StrippingConf
-# StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]   # does not work yet
+StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]   # does not work yet
 StrippingConf().OutputType = "NONE"
+StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/StrippingSelections.py"
 
 from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ trueSeq ]

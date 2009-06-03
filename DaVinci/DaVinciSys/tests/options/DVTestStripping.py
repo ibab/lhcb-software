@@ -31,7 +31,7 @@ StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/Stripping
 # Configure DaVinci
 #
 
-from Configurables import DaVinci, DaVinciWriteDst
+from Configurables import DaVinci
 
 DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().DataType = "2008"                    # Default is "DC06"
