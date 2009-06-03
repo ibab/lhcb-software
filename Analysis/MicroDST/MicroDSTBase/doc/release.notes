@@ -1,10 +1,12 @@
-!$Id: release.notes,v 1.30 2009-05-27 13:59:05 jpalac Exp $
+!$Id: release.notes,v 1.31 2009-06-03 11:23:50 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+!====================== MicroDSTBase v1r4p1 2009-06-03 ====================
 
 ! 2009-05-27 - Juan PALACIOS
  - MicroDST/MicroDSTCommon.icpp
@@ -16,7 +18,7 @@
  - cmt/requirements
   . Increase version to v1r4p1
 
-!====================== MicroDSTBase v1r4 2008-05-11 ======================
+!====================== MicroDSTBase v1r4 2009-05-11 ======================
 
 ! 2009-04-30 - Juan PALACIOS
  - MicroDST/TableExtraTraits.h
@@ -42,7 +44,7 @@
  - cmt/requirements
   . Increase version to v1r4
 
-!====================== MicroDSTBase v1r3 2008-04-08 ======================
+!====================== MicroDSTBase v1r3 2009-04-08 ======================
 
 ! 2009-03-20 - Juan PALACIOS
  - MicroDST/MicroDSTCommon.icpp, KeyedContainerClonerAlg.h
