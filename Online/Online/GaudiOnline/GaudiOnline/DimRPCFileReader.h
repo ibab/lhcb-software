@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.9 2008-12-09 20:16:10 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.10 2009-06-03 07:30:48 frankb Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -6,9 +6,9 @@
 #include "GaudiKernel/IRunable.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "GaudiOnline/OnlineService.h"
-#include "OnlineKernel/RTL/rtl.h"
-#include <GaudiKernel/IEventProcessor.h>
+#include "GaudiKernel/IEventProcessor.h"
 #include "DimRPCFileReaderCommand.h"
+#include "RTL/rtl.h"
 #include <ctime>
 
 // Forward declarations
