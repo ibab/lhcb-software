@@ -3,7 +3,7 @@
 # Maintainer : Stephanie Hansmann-Menzemer 
 #============================================================================
 package           PatKernel
-version           v2r3
+version           v2r3p1
 
 #============================================================================
 # Structure
@@ -39,3 +39,7 @@ apply_pattern reflex_dictionary                                     \
               headerfiles=$(PATKERNELROOT)/dict/PatKernelDict.h     \
               selectionfile=$(PATKERNELROOT)/dict/PatKernelDict.xml \
               options="-U__MINGW32__"
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

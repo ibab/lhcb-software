@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================= PatKernel v2r3p1 2009-06-03 ===================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !============================= PatKernel v2r3 2009-05-07 =====================
 ! 2009-03-31 - Olivier Callot
  - New interface IPatDebugTrackTool to debug track properties inside pattern
