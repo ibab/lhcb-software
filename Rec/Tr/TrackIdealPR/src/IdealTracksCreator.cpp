@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.42 2008-01-23 11:50:49 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.43 2009-06-03 20:23:12 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -494,7 +494,7 @@ StatusCode IdealTracksCreator::initEvent() const{
 
   if (m_addOTTimes == true){
     m_otLinker = OTLinker( evtSvc(), msgSvc(), OTTimeLocation::Default );
-    if ( m_ttLinker.notFound() ) {
+    if ( m_otLinker.notFound() ) {
       return Error( "Unable to retrieve OTTimes to MCParticle Linker table");
     }
   }
@@ -519,17 +519,17 @@ StatusCode IdealTracksCreator::initEvent() const{
 void IdealTracksCreator::printMCParticle(const MCParticle* mcParticle) const{
 
   debug() << "- MCParticle of type "
-        << " , (key # " << mcParticle -> key() << ")" << endreq
-        << "    - vertex = " << mcParticle -> originVertex() ->position()
-        << endreq
-        << "    - momentum = " << mcParticle -> momentum() << " MeV" 
-        << endreq
-        << "    - P        = " << mcParticle -> p()
-        << " MeV" <<endreq
-        << "    - PID   = "
-        << ( mcParticle -> particleID().pid() ) << endreq
-        << "    - charge   = "
-        << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
+	  << " , (key # " << mcParticle -> key() << ")" << endreq
+	  << "    - vertex = " << mcParticle -> originVertex() ->position()
+	  << endreq
+	  << "    - momentum = " << mcParticle -> momentum() << " MeV" 
+	  << endreq
+	  << "    - P        = " << mcParticle -> p()
+	  << " MeV" <<endreq
+	  << "    - PID   = "
+	  << ( mcParticle -> particleID().pid() ) << endreq
+	  << "    - charge   = "
+	  << ( mcParticle -> particleID().threeCharge() / double(3) ) << endreq;
 }
 
 void IdealTracksCreator::printTrack(const Track* track) const{

@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Wouter Hulsbergen
+ - fixed two inconsequential bugs in IdealTracksCreator
+
 !======================= TrackIdealPR v2r15 2008-01-30 =======================
 ! 2008-01-23 - Wouter Hulsbergen
  - added missing PatRecID flag to track in IdealTracksCreator
