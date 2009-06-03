@@ -47,7 +47,7 @@ _scripts_dir = os.path.join(_base_dir, "scripts")
 
 from LbConfiguration.Platform import getBinaryDbg, getConfig
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
-from LbConfiguration.External import Python_version, CMT_version
+from LbConfiguration.External import CMT_version
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.40 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.41 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -829,7 +829,8 @@ class LbLoginScript(Script):
             if not opts.no_compat :
                 setupprojargs.append("--runtime-project")            
                 setupprojargs.append("COMPAT")
-                setupprojargs.append('--use "CompatSys v*"')
+                setupprojargs.append("--use")
+                setupprojargs.append("CompatSys v*")
                 
     
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
