@@ -3,7 +3,44 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-</PRE><H1><A NAME="v37r1">2009-04-08 - GaussSys v37r0</A></H1><PRE>
+</PRE><H1><A NAME="v37r2">2009-06-03 - GaussSys v37r2</A></H1><PRE>
+<H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090602
+   and SIMCOND tag sim-20090402-xx. Previous tags are depracated.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   AppConfig v2r* (<b>latest v2r7</b>)
+   DecFiles v18r0, 
+   ParamFiles v8r0, 
+   SQLDDDB v5r* (<b>latest v5r7</b>), FieldMap v5r* (latest v5r3),
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================== Gauss v37r2 2009-06-03 =============================
+! 2009-06-03 - Gloria CORTI
+ - Remove gauss-2008.qmt as the options that it was using have been removed
+ - Pick up latest DDDB and CondDB tag from AppConfig.
+
+! 2009-06-02 - Gloria CORTI
+ - Take latest tag for MC09 in Gauss-MC09.opts. It also sets velo close and
+   magnet down as 'default' settings.
+ - Remove Gauss-2008.py that is obsolete.
+
+!========================== EvtGen v11r2 2009-06-03 ==========================
+! 2009-06-03 - Patrick Robbe
+ - EvtParticle.cpp: Allow mixing of aliases, fixing problem seen of signal
+   particle no longer decaying in forced manner after oscillation.
+
+!============================================================================
+</PRE><H1><A NAME="v37r1">2009-05-28 - GaussSys v37r1</A></H1><PRE>
 <H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090526
    and SIMCOND tag sim-20090402-xx. Previous tags are depracated: results
    may be inconsistent.
