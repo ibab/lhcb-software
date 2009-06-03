@@ -14,7 +14,12 @@ Purpose     : LHCb analysis packages
       framework by Anton Poluektov, packages Phys/StrippingSelections and 
       Phys/StrippingConf.
       Users of PhysSel packages will need to getpack them from now on.
-  * Various minor improvements and bug-fixes
+  * (MC)DecayTreeTuple
+   . Property RevertToPositiveID is now true by default. No longer necessary
+     to configure DecayTreeTuple to force calling B candidate always "B0"
+  * Continuing evolution of python based CommonParticles
+  * Bug fix to MicroDST MC particle decay tree cloning.
+  * Various improvements and minor bug fixes
 
 </PRE><H1><A NAME=v3r3>2009-05-1 Analysis v3r3 </A></H1><PRE>
 
