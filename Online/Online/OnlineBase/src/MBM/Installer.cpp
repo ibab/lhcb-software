@@ -196,6 +196,7 @@ int MBM::Installer::install()  {
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
   EVENT*   event = m_bm->event;
+#ifndef _WIN32
   lib_rtl_lock_t lockid = 0;
   status = ::lib_rtl_create_lock2(&ctrl->mbm_handle, &lockid, true);
   if(!::lib_rtl_is_success(status))   {   
@@ -206,6 +207,7 @@ int MBM::Installer::install()  {
     ::lib_rtl_output(LIB_RTL_ERROR,"Cannot create section %s. Exiting....",buff_mod);
     return status;
   }
+#endif
   ctrl->p_umax       = p_umax;
   ctrl->p_emax       = p_emax;
   ctrl->buff_size    = p_size<<10; /* in bytes*/
