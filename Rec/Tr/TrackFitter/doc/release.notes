@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-06-03 - Wouter Hulsbergen
+ - bug fix in fast fit configurable
 !=========================== TrackFitter v2r33 2009-05-08 ===================
 ! 2009-04-03 - Jose A. Hernando (from X. Cid)
  - in src/TrackMasterExtrapolator.h(cpp) add UseSeedStateErrors property to fit
