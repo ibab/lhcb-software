@@ -1,8 +1,10 @@
 ! -----------------------------------------------------------------------------
-! Package     : Phys/StrippingAlg
+! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!============================= StrippingConf v1r0 2009-06-02 ==================
 
 ! 2009-06-02 - Anton Poluektov
    * Fixed DST output (but not completely, every event is written 2 times!)

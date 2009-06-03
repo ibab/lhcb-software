@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r0 2009-06-03 ====================
+
 ! 2009-06-02 - Anton Poluektov
  - Added selections and test job for STEP09.
 
