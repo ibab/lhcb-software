@@ -15,7 +15,8 @@ This version uses Gaudi v21r1 and LHCb v27r1.
     NNTools v1r5, PatFitParams v3r2p3, TrackSys v4r23, PatAlgorithms v3r21,
     MuonPIDChecker v3r2, RichMarkovRingFinder v2r7, RichRecAlgorithms v2r15,
     RichRecQC v2r29, RichRecSys v3r19, RichRecTrackTools v1r11, MuonTools v5r0p1,
-    PatVelo v3r13p1, VeloRecMonitors v1r7, TrackFitEvent v3r21p1
+    PatVelo v3r13p1, VeloRecMonitors v1r7, TrackFitEvent v3r21p1,
+    TrackMonitors v1r9p1
 
 - In CaloMoniDst v3r7
   . Fix invalid matrix indices in computation of "shape" in CaloPhotonChecker.cpp
@@ -88,7 +89,7 @@ This version uses Gaudi v21r1 and LHCb v27r1.
   . Added ADC MPV difference plots to sampling monitor
   . Added TAE name (if applicable) to title in per Tell1 occupancy plots
 
-- In MuonTools v5r0p1, VeloRecMonitors v1r7
+- In MuonTools v5r0p1, VeloRecMonitors v1r7, TrackMonitors v1r9p1
   . Add missing <package>_dll.cpp file, needed on Windows
 
 - In CaloPIDs v4r17, PatFitParams v3r2p3

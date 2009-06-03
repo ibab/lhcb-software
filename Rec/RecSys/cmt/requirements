@@ -28,7 +28,7 @@ use TrackFitEvent        v3r21p1 Tr   # Eduardo Rodrigues
 use TrackFitter          v2r33   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r15   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r23   Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r9    Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r9p1  Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r22   Tr   # Wouter Hulsbergen
 use TrackTools           v3r17   Tr   # Eduardo Rodrigues
 use TrackUtils           v1r26   Tr   # Eduardo Rodrigues
