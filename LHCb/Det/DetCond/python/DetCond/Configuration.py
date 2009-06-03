@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.12 2009-05-28 10:13:34 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-06-03 15:55:23 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
@@ -165,6 +165,11 @@ class CondDB(ConfigurableUser):
         # If the directory for the local copies is not specified, we do nothing        
         if not local_dir:
             return accsvc
+        # Check if we are using Oracle or SQLite
+        if self.getProp("UseOracle"):
+            log.warning("Conflicting properties in CondDB Configurable: "
+                        "ignoring SQLiteLocalCopiesDir because UseOracle is set to True")
+            return accsvc        
         # Modify partitions to use local copies of the DBs
         newaccsvc = accsvc # fallback return value (no change)
         if isinstance(accsvc, CondDBAccessSvc):
@@ -200,9 +205,10 @@ class CondDB(ConfigurableUser):
             # use the same time switcher replacing its content,
             # but we need to parse its options (in format "'%s':(%d,%d)")
             readers_list = accsvc.getProp("Readers")
-            readers = eval("{%s}" % (",".join(readers_list)))
             new_readers = []
-            for r, iov in readers.items():
+            for line in readers_list:
+                # Parse the line for the reader (it looks like "'name':(0,1)")
+                r, iov = map(eval, line.rsplit(":"))
                 new_reader = self.__make_sqlite_local_copy__(r, local_dir)
                 new_readers.append("'%s':(%d,%d)" %
                                    (new_reader.getFullName(), iov[0], iov[1]))
@@ -221,10 +227,6 @@ class CondDB(ConfigurableUser):
         """
         Converts the high-level information passed as properties into low-level configuration.
         """
-        # Check options consistency
-        if self.getProp("UseOracle") and self.getProp("SQLiteLocalCopiesDir"):
-            raise RuntimeError("Conflicting properties in CondDB Configurable: UseOracle and SQLiteLocalCopiesDir")
-        
         if self.getProp("UseOracle"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
         else:   
