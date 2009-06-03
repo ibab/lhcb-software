@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.70 2009-01-26 12:31:52 cattanem Exp $
+# $Id: requirements,v 1.71 2009-06-03 07:55:40 marcocle Exp $
 package DetCondExample
-version v11r7
+version v11r8
 
 branches doc src job options cmt XMLDDDB python logs
 ignore_pattern package_stamps 
@@ -52,6 +52,8 @@ private
 #==> Detector Conditions example
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 
+macro_append Boost_linkopts "$(Boost_linkopts_date_time)"
+
 # Set default environment variables to use SQLite by default for tests.
 set CONDDBCONNECTIONSTRING  "sqlite_file:CONDDB.db/CONDDB"
 
@@ -64,8 +66,6 @@ set CONDDBCONNECTIONSTRING2 "sqlite_file:CONDDB2.db/CONDDB2"
 set DAQFOLDERNAME DAQ
 #set DAQRECORDSIZE 100000
 set DAQCONNECTIONSTRING  "sqlite_file:DAQ.db/DAQ"
-
-macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
 
 path JOBOPTSEARCHPATH ../options
 

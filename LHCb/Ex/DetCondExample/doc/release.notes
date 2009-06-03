@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.114 2009-02-18 14:15:28 cattanem Exp $
+! $Id: release.notes,v 1.115 2009-06-03 07:55:40 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+!============ Ex/DetCondExample v11r8 2009-06-03 ==============================
+! 2009-06-03 - Marco Clemencic
+ - Fixed link options for Win32 (missing Boost library).
 
 !============ Ex/DetCondExample v11r7 2009-02-18 ==============================
 ! 2009-01-27 - Marco Cattaneo
