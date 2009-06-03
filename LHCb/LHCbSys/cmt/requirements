@@ -95,7 +95,7 @@ use L0Interfaces          v1r4p1  L0      # Olivier Deschamps
 use MCInterfaces          v1r8p1  Kernel  # Marco Cattaneo et al.
 use MDF                   v3r18   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
-use PatKernel             v2r3    Tf      # Stephanie Hansmann-Menzemer
+use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
 use RichRecBase           v3r22   Rich    # Chris Jones
 use SimComponents         v2r17  Sim     # Gloria Corti, Marco Cattaneo
