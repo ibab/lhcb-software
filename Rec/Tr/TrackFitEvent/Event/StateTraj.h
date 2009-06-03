@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.17 2008-02-27 14:29:24 jonrob Exp $
+// $Id: StateTraj.h,v 1.18 2009-06-03 13:52:45 cattanem Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -10,6 +10,12 @@
 
 // from LHCbKernel
 #include "Kernel/DifTraj.h"
+#ifdef _WIN32
+// Avoid conflict of Windows macro with std::max
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif
+#endif
 #include "GaudiKernel/boost_allocator.h"
 
 // from TrackEvent

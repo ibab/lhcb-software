@@ -4,6 +4,13 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r21p1 2009-06-03 =================
+! 2009-06-03 - Marco Cattaneo
+ - In StateTraj.h: 
+   add temporary workaround for windows: define NOMINMAX when including
+   GaudiKernel/boost_allocator.h, to avoid conflict with max() macro 
+   defined in windows.h. This will become unnecessary with Gaudi v21r2
+
 !========================== TrackFitEvent v3r21 2009-05-08 ===================
 ! 2009-04-16 Wouter Hulsbergen
  - added accessor to matrix A and B in TrackStateVertex
