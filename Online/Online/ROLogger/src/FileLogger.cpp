@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.11 2009-05-05 17:54:12 frankb Exp $
+// $Id: FileLogger.cpp,v 1.12 2009-06-03 11:44:28 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.11 2009-05-05 17:54:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.12 2009-06-03 11:44:28 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -34,8 +34,12 @@ extern "C" {
 #include <sys/stat.h>
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
+#define stat64     __stat64
+#define stat64Func _stat64
+#define fopen64    fopen
 #else
 #include <unistd.h>
+#define stat64Func stat64
 #endif
 static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
@@ -112,7 +116,7 @@ FILE* FileLogger::openOutput() {
   ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d.log",now);
   sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
   if ( m_output ) ::fclose(m_output);
-  if ( ::stat64(txt,&st) == 0 ) {
+  if ( ::stat64Func(txt,&st) == 0 ) {
     ::lib_rtl_output(LIB_RTL_INFO,"The output file: %s  exists already. Reconnecting.....",txt);
   }
   m_output = ::fopen64(txt,"a+");
