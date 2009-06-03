@@ -19,6 +19,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v8r2 2009-06-03 ===================
 ! 2009-05-25 - Georg Krocker
  - Changed input location for FilterTrueTrack to Hlt/Track/Long in FilterTrueTrack.py
    in accordance with changes in Hlt/HltConf/python/HltConf/HltReco.py
