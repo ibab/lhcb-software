@@ -6,6 +6,13 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v4r23>2009-06-02 OnlineSys v4r23</A></H1><PRE>
+     New version v4r23 built against LHCb v27r1 and GAUDI v21r0.
+     - Updates to Gaucho, GaudiOnline, GaudiSerialize, OMAlib,
+       OnlineHistDB, OnlineKernel, OnlineTasks, ROMon and Writer.
+     - Package OnlineKernel is now split. New package OnlineBase
+       contains dataflow components (buffer manager, network library, etc.).
+
 </PRE><H1><A NAME=v4r21>2009-04-10 OnlineSys v4r21</A></H1><PRE>
      New version v4r21 built against LHCb v26r3 and GAUDI v20r4.
      - Updates to Gaucho, GaudiOnline, OnlineKernel, OnlineTasks, 
