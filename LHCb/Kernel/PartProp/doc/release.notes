@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.29 2009-06-02 16:45:36 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2009-06-03 08:32:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-03 - Vanya BELYAEV
+ - python/PartProp/Nodes.py 
+    fix a typo 
+
 
 ! 2009-06-02 - Vanya BELYAEV
  - further polishing of nodes & service 

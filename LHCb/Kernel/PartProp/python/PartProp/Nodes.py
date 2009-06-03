@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.7 2009-06-02 16:45:36 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.8 2009-06-03 08:32:30 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 
 import PyCintex
@@ -244,7 +244,7 @@ Nucleus   = Decays.Nodes.Nucleus  ()  # instance
 Or        = Decays.Nodes.Or           # type   
 And       = Decays.Nodes.And          # type   
 Not       = Decays.Nodes.Not          # type
-Invalid   = Decays.Nodes.Invaild()    # instance
+Invalid   = Decays.Nodes.Invalid ()   # instance
 _Node     = Decays.Nodes._Node        # type 
 
 Up        = HasQuark ( LHCb.ParticleID.up      )
