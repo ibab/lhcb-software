@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.131 2009-05-26 13:48:13 gcowan Exp $
+!$Id: release.notes,v 1.132 2009-06-03 10:28:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v5r2 2009-06-03 ==================
 
 ! 2009-05-26 - Greig Cowan
  - Using StdNoPIDsDownPions for the KsDD.
