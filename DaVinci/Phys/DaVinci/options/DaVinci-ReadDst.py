@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-ReadDst.py,v 1.7 2009-06-01 16:14:25 pkoppenb Exp $
+# $Id: DaVinci-ReadDst.py,v 1.8 2009-06-03 15:24:49 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -21,6 +21,13 @@ pMC = PrintMCTree()
 pMC.ParticleNames = [ 'J/psi(1S)' ]
 #
 ph = PrintHeader()
+#
+from Configurables import DecayTreeTuple
+tuple = DecayTreeTuple("Tuple")
+tuple.InputLocations = [ "MyJpsi" ]
+tuple.ToolList +=  [ "TupleToolMCBackgroundInfo", "TupleToolMCTruth", "TupleToolKinematic" ]
+tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
+
 ##############################################################################
 #
 #
@@ -30,4 +37,5 @@ DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "2008" # Default is "DC06"
 DaVinci().Input = [ "DATAFILE='PFN:Jpsi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-DaVinci().UserAlgorithms = [  ph, pJpsi, pMC ]
+DaVinci().UserAlgorithms = [  ph, pJpsi, pMC, tuple ]
+DaVinci().TupleFile = "Tuple.root"
