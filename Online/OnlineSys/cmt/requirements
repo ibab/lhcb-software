@@ -43,9 +43,9 @@ use RawBankSizes      v1r5     Online
 use ROMon             v1r16    Online
 use ROLogger          v0r12    Online
 use UPI               v1r15    Online
-use UPIR              v1r1     Online
+use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
-#use Writer            v1r15    Online
+use Writer            v1r15    Online
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
