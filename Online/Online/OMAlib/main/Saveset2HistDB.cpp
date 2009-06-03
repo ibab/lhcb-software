@@ -1,4 +1,4 @@
-// $Id: Saveset2HistDB.cpp,v 1.3 2008-10-09 18:03:14 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.4 2009-06-03 13:33:11 ggiacomo Exp $
 #include <iostream>
 #include <TFile.h>
 #include <TKey.h>
@@ -119,7 +119,7 @@ int declareDir(TDirectory* dir, std::string algo,std::string hpath) {
   int nh=0;
   TIter next(dir->GetListOfKeys());
   TKey *k;
-  while (k=(TKey*)next()) {
+  while ( (k=(TKey*)next()) ) {
     if(std::string(k->GetClassName()) == "TDirectoryFile") {
       std::string passpath=hpath;
       std::string passalgo=algo;
