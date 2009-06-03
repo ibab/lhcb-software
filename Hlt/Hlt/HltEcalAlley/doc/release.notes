@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r7 2009-06-03 ===================
 ! 2009-05-30- Gerhard Raven
  - move Hlt{,RZ}VeloEcalMatch.{cpp,h} to Hlt/HltTracking
 
