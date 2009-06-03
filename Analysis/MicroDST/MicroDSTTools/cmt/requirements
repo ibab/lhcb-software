@@ -2,11 +2,11 @@
 # Created    : 2007-12-10
 # Maintainer : Juan Palacios   Juan.Palacios@nikhef.nl 
 #==============================================================================
-# $Id: requirements,v 1.6 2009-04-15 20:20:11 jpalac Exp $
+# $Id: requirements,v 1.7 2009-06-03 11:27:20 jpalac Exp $
 #==============================================================================
 
 package MicroDST/MicroDSTTools
-version v1r4
+version v1r4p1
 
 # =============== structure ===================================================
 branches src cmt doc
