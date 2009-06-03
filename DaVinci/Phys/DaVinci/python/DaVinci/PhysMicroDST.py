@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.9 2009-06-03 12:26:09 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.10 2009-06-03 12:26:49 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -33,7 +33,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "CopyParticles"        : """ """
         , "CopyPVs"              : """ """
         , "CopyBTags"            : """ """
-        , "CopyReFittedPVs"      : """ """
+        , "CopyRelatedPVs"      : """ """
         , "CopyMCTruth"          : """ """
         }
 
