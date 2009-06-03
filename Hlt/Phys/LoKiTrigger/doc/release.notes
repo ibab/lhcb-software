@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.38 2009-06-03 10:32:04 pkoppenb Exp $
+! $Id: release.notes,v 1.39 2009-06-03 10:51:22 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-06-03 - Vanya BELYAEV
+
+ - dict/LoKiTrigger.xml
+
+   remove unnesessary assignement operators to suppress compiler warnings 
+   for lhcb2-nightlies 
+   surprizingly there are no warning for lhcb3 nightlies 
+
+   
 
 !!========================== LoKiTrigger v9r2 2009-06-03 ===================
  2009-05-14 - Vanya Belyaev
