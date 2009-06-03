@@ -44,7 +44,7 @@ use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r13   ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r18   ST        # Jeroen van Tilburg, Matt Needham
 use STMonitors        v1r2    ST        # Mark Tobin
-use STTools           v3r9    ST        # Jeroen van Tilburg, Matt Needham
+use STTools           v3r9p1  ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v4r8    Velo      # Tomasz Szumlak
