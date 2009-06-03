@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.39 2009-05-31 11:26:22 graven Exp $
+!$Id: release.notes,v 1.40 2009-06-03 10:27:36 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+!========================== HltRawData v1r11 2009-06-03 ===================
 ! 2009-05-31 - Gerhard Raven
  - replace UDLess with std::less<unsigned int>
 
@@ -13,7 +15,6 @@
  - make reader capable of decoding both version 0 and version 1 into 'current'
    version of HltDecReports.
    
-
 !========================== HltRawData v1r10 2009-05-06 ==================
 
 ! 2009-05-02 - Tomasz Skwarnicki
