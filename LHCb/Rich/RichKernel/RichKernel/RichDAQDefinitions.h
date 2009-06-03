@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.25 2008-09-21 12:50:40 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.26 2009-06-03 08:36:23 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -553,6 +553,8 @@ namespace Rich
      */
     enum BankVersion
       {
+        /// Undefined
+        UndefinedBankVersion = -1,
         /// Compatible with DC04
         LHCb0  = 0,
         /// Same as LHCb0 with new header + Level1 grouping

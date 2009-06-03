@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.217 2009-05-07 13:17:13 cattanem Exp $
+! $Id: release.notes,v 1.218 2009-06-03 08:36:23 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-06-03 - Chris Jones
+ - Add an undefined setting to the Rich::DAQ::BankVersion enum
 
 !====================== RichKernel v7r21 2009-05-07 ====================
 ! 2009-04-24 - Chris Jones

@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::DecodedData
  *
  *  CVS Log :-
- *  $Id: RichDecodedData.h,v 1.4 2008-07-25 15:26:19 jonrob Exp $
+ *  $Id: RichDecodedData.h,v 1.5 2009-06-03 08:36:23 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -49,9 +49,9 @@ namespace Rich
       HPDInfo() { }
 
       /// Constructor from info
-      HPDInfo( const LHCb::RichSmartID&  input,
-               const Header&             header,
-               const Footer&             footer )
+      HPDInfo( const LHCb::RichSmartID& input,
+               const Header&            header,
+               const Footer&            footer )
         : m_hpdID(input),
           m_header(header),
           m_footer(footer)
