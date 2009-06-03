@@ -78,7 +78,7 @@ use RichRecTrackTools    v1r11   Rich # Chris Jones
 use GlobalReco           v6r21   Rec  # Chris Jones
 
 # Velo
-use VeloRecMonitors      v1r6    Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v1r7     Velo # Malcom John, Eduardo Rodrigues
 
 # Lumi
 use LumiAlgs             v2r0    Rec  # Jaap Panman
