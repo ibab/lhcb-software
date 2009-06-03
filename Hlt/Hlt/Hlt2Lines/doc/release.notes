@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.1.1.1 2009-05-29 09:01:39 graven Exp $
+$Id: release.notes,v 1.2 2009-06-03 10:21:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,5 +6,6 @@ $Id: release.notes,v 1.1.1.1 2009-05-29 09:01:39 graven Exp $
 !-----------------------------------------------------------------------------
 
 
+!========================== Hlt2Lines v1r0 2009-06-03 ===================
 ! 2009-05-29 - Gerhard Raven
   - initial import
