@@ -4,6 +4,12 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Juan PALACIOS
+ - xml/HltDecReport.xml
+  . Add operators < and ==
+ - dict/lcgDict.h, xml/lcgdict/lcg_selection.xml
+  . Add dictionary for LHCb::HltDecReports::Container
+
 !======================== HltEvent v8r17 2009-05-28 ==========================
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
