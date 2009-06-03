@@ -3,6 +3,13 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+
+!======================= VeloRecMonitors v1r7 2009-06-03 =====================
+! 2009-06-03 - Marco Cattaneo
+ - added hack to define snprintf as _snprintf on Windows. This should be fixed
+   properly, snprintf is not a standard C++ function
+ - added missing VeloRecMonitors_dll.cpp file
+
 ! 2009-05-19 - James Mylroie-Smith
  - added options to choose specific expert plots in VeloExpertClusterMon
 

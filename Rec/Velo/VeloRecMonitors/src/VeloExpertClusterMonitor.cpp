@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.6 2009-05-19 12:24:53 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.7 2009-06-03 13:17:37 cattanem Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -23,6 +23,14 @@
 #include "boost/format.hpp"
 #include <fstream>
 #include <cmath>
+
+// Hack due to compiler dependence of snprintf. To be fixed!
+#ifdef _WIN32
+#define SNPRINTF _snprintf
+#else
+#define SNPRINTF snprintf
+#endif
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloExpertClusterMonitor
 //
@@ -144,13 +152,13 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
       unsigned int zone = (m_veloDet->sensor(cluster->channelID().sensor())->zoneOfStrip(cluster->channelID().strip()));  
       if(idfilter.isRType() && (m_RZones||m_Expert)){
         debug() << "\t-> is r type" << endmsg;
-        snprintf(dirName, 99, "raw/non_corr/r_zone_%03d",zone );   
+        SNPRINTF(dirName, 99, "raw/non_corr/r_zone_%03d",zone );   
         debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
       else if (idfilter.isPhiType() && (m_PhiZones||m_Expert)){
         debug() << "\t-> is phi type" << endmsg;
-        snprintf(dirName, 99, "raw/non_corr/phi_zone_%03d",zone );   
+        SNPRINTF(dirName, 99, "raw/non_corr/phi_zone_%03d",zone );   
         debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
@@ -207,11 +215,11 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
         plot1D(prap,"ontrack/pseudoRap_plot", "pseudorapidity",0,6.2,100);
         
         if(idfilter.isRType() && (m_RZones||m_Expert)){
-          snprintf(dirName, 99, "ontrack/r_zone_%03d",zone );   
+          SNPRINTF(dirName, 99, "ontrack/r_zone_%03d",zone );   
           plotCluster(cluster,dirName,theta,prap);
         }
         else if (idfilter.isPhiType()&& (m_PhiZones||m_Expert)){
-          snprintf(dirName, 99, "ontrack/phi_zone_%03d",zone );   
+          SNPRINTF(dirName, 99, "ontrack/phi_zone_%03d",zone );   
           plotCluster(cluster,dirName,theta,prap);
         }
         if (m_Expert){
@@ -282,11 +290,11 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
           char rapname[100];
           char corr_rapname[100];
           if(prap<max_rap && prap>min_rap){
-            snprintf(rapname,99,"/non_corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
+            SNPRINTF(rapname,99,"/non_corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
             rapName = (rapname);
             plotSensorsADC(adc,rapName,ClusterType,clsens);
             plotSensorsSize(clsize,rapName,ClusterType,clsens);
-            snprintf(corr_rapname,99,"/corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
+            SNPRINTF(corr_rapname,99,"/corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
             corr_rapName = (corr_rapname);
             plotSensorsADC(corr_adc,corr_rapName,ClusterType,clsens);
             plotSensorsSize(corr_clsize,corr_rapName,ClusterType,clsens);
@@ -325,14 +333,14 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
         std::string theta_corr_rangeName;
         char theta_corr_range[100];
         if(theta<max_theta_range && theta>min_theta_range){
-          snprintf(theta_range,99,"/non_corr/theta/adc_theta_max_%03f", max_theta_range);    
+          SNPRINTF(theta_range,99,"/non_corr/theta/adc_theta_max_%03f", max_theta_range);    
           theta_rangeName = (theta_range);
           //-----------------------------------------------------------------------
           //plots the noncorrected adc and size for different theta range
           //-----------------------------------------------------------------------
           plotSensorsADC(adc,theta_rangeName,ClusterType,clsens);
           plotSensorsSize(clsize,theta_rangeName,ClusterType,clsens);
-          snprintf(theta_corr_range,99,"/corr/theta/adc_theta_max_%03f", max_theta_range);    
+          SNPRINTF(theta_corr_range,99,"/corr/theta/adc_theta_max_%03f", max_theta_range);    
           theta_corr_rangeName = (theta_corr_range);
           //-----------------------------------------------------------------------
           //plots the corrected adc and size for different theta range
@@ -377,7 +385,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     
     const DeVeloRType *rsens = m_veloDet->rSensor(clsens);
     rsensnum = clsens;
-    snprintf(senName, 99, "adc_cluster_sen_%03d", clsens);
+    SNPRINTF(senName, 99, "adc_cluster_sen_%03d", clsens);
     double rad_step = 43/m_i_max;
     
     for(int i = 0;i<m_i_max;i++){
@@ -393,7 +401,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       if(radius<max_radius && radius>min_radius){
         debug() << "\t\t\t\t ->if in rad range" << endmsg;
         
-        snprintf(radiusname,99,"/r_range/adc_cluster_r_max_%03f", max_radius);
+        SNPRINTF(radiusname,99,"/r_range/adc_cluster_r_max_%03f", max_radius);
         radiusName = path + (radiusname);
         plotSensorsADC(adc,radiusName,ClusterType,clsens);
         plotSensorsSize(clsize,radiusName,ClusterType,clsens);
@@ -425,7 +433,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double phi = psens->idealPhi(clstr,phi_strfr);
       if(phi<max_phi && phi>min_phi){
         debug() << "\t\t\t ->in phi range" << endmsg;
-        snprintf(phiname,99,"/phi_range/adc_cluster_phi_max_%03f", max_phi);    
+        SNPRINTF(phiname,99,"/phi_range/adc_cluster_phi_max_%03f", max_phi);    
         phiName = path +(phiname) ;
         plotSensorsADC(adc,phiName,ClusterType,clsens);
         plotSensorsSize(clsize,phiName,ClusterType,clsens);
@@ -449,7 +457,7 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
   plot1D(adc, ClusterType+corr+"/cluster_adc", "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
     char senName[100];
-    snprintf(senName, 99, "adc_cluster_sen_%03d", sensor_num);
+    SNPRINTF(senName, 99, "adc_cluster_sen_%03d", sensor_num);
     plot1D(adc, ClusterType+corr+"/adc/"+senName, "Cluster ADC ", 0, 100, 100);
   }
   return StatusCode::SUCCESS;
@@ -467,7 +475,7 @@ Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
     char senName[100];
-    snprintf(senName, 99, "cluster_size%03d", sensor_num);
+    SNPRINTF(senName, 99, "cluster_size%03d", sensor_num);
     plot1D(clsize, ClusterType+corr+"/clsize/"+senName, "Cluster Size ", -0.5, 9.5, 10);
   }
   return StatusCode::SUCCESS;
@@ -485,7 +493,7 @@ Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
     char senName[100];
-    snprintf(senName, 99, "/adc_cluster_sen_%03d", sensor_num);
+    SNPRINTF(senName, 99, "/adc_cluster_sen_%03d", sensor_num);
     plot1D(adc, ClusterType+range+senName, "Cluster ADC ", 0, 100, 100);
   }
   return StatusCode::SUCCESS;
