@@ -223,6 +223,27 @@
         </code>
       </method>
 
+      <method
+	desc="Equality operator, compares address"
+        name="operator=="
+        const="TRUE"
+	type="bool" >
+	<arg name="rhs" type="LHCb::HltDecReport" const="TRUE"/>
+	<code>
+	  return this == &amp;rhs;
+	</code>
+      </method>
+
+      <method
+	desc="Less-than operator, compares address"
+        name="operator&lt;"
+        const="TRUE"
+	type="bool" >
+	<arg name="rhs" type="LHCb::HltDecReport" const="TRUE"/>
+	<code>
+	  return this &lt; &amp;rhs;
+	</code>
+      </method>
 
     </class>
 
