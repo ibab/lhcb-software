@@ -36,7 +36,7 @@ use RichMCTools       v3r11   Rich      # Chris Jones
 use RichTools         v2r26   Rich      # Chris Jones
 
 # Silicon detectors
-use SiTools           v1r7    Si        # Matt Needham
+use SiTools           v1r7p1  Si        # Matt Needham
 
 # Silicon Tracker
 use STAlgorithms      v3r7    ST        # Jeroen van Tilburg, Matt Needham

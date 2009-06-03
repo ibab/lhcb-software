@@ -11,7 +11,7 @@ This version uses Gaudi v21r1 and LHCb v27r1
 
 - Packages modified: CaloTools v5r9, L0DU v8r17, STAlgorithms v3r7,
     STCheckers v2r13, STDAQ v3r18, STMonitors v1r2, L0MuonMonitor v1r4p1,
-    STTools v3r9p1
+    STTools v3r9p1, SiTools v1r7p1
 
 - In CaloTools v5r9
   . Add a bit more statistical printout  
@@ -43,8 +43,8 @@ This version uses Gaudi v21r1 and LHCb v27r1
 - In L0MuonMonitor v1r4p1
   . Add missing L0MuonMonitor_dll.cpp file for component library on Windows 
 
-- In STTools v3r9p1
-  . Fix a scoping problem on Windows
+- In STTools v3r9p1, SiTools v1r7p1
+  . Fixes for Windows compilation
 
 </PRE><H1><A NAME=v7r0>2009-05-11 LbcomSys v7r0</A></H1><PRE>
 This version uses Gaudi v21r0 and LHCb v27r0
