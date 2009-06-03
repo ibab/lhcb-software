@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.16 2009-05-29 16:04:43 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.17 2009-06-03 12:33:07 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -180,8 +180,7 @@ if (PVRefit) :
     # same as in the original PV container. No best PV criteria applied!
     PVReFitter = PVReFitterAlg("PVReFitterAlg")
     PVReFitter.ParticleInputLocation = mainLocation+"/Particles"
-    refittedPVLocation = mainLocation+"/RefittedVertices"
-    PVReFitter.VertexOutputLocation = refittedPVLocation
+    PVReFitter.VertexOutputLocation = mainLocation+"/RefittedVertices"
     p2ReFitPVRelationsLoc = mainLocation+"/Particle2ReFittedVertexRelations"
     PVReFitter.P2VRelationsOutputLocation = p2ReFitPVRelationsLoc
     PVReFitter.OutputLevel=4
