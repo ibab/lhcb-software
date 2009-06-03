@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.9 2009-05-25 13:36:02 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.10 2009-06-03 08:52:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -19,10 +19,12 @@
 using namespace Rich::Rec::ENNRingFinder;
 
 // Declaration of the Algorithm Factories
-DECLARE_ALGORITHM_FACTORY( Rich1TopPanel    );
-DECLARE_ALGORITHM_FACTORY( Rich1BottomPanel );
-DECLARE_ALGORITHM_FACTORY( Rich2LeftPanel   );
-DECLARE_ALGORITHM_FACTORY( Rich2RightPanel  );
+DECLARE_ALGORITHM_FACTORY( Rich1AerogelTopPanel    );
+DECLARE_ALGORITHM_FACTORY( Rich1AerogelBottomPanel );
+DECLARE_ALGORITHM_FACTORY( Rich1GasTopPanel        );
+DECLARE_ALGORITHM_FACTORY( Rich1GasBottomPanel     );
+DECLARE_ALGORITHM_FACTORY( Rich2GasLeftPanel       );
+DECLARE_ALGORITHM_FACTORY( Rich2GasRightPanel      );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,9 +43,10 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_finder                ( NULL  )
 {
   // Set RICH specific parameters
-  if ( Rich::Rich2 == rich )
+  if ( Rich::Rich2Gas == rad )
   {
-    m_scaleFactor      = 0.0283/128.0;
+    //m_scaleFactor      = 0.0283/128.0;
+    m_scaleFactor      = 0.03/130.0;
     m_minAssProb       = 0.05;
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
@@ -52,22 +55,40 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
-    m_maxRingChi2      = 75;
+    m_maxRingChi2      = 150;
     m_minRingPurity    = 0.8;
+    m_rejectionFactor  = 0.5;
   }
-  else // RICH1
+  else if ( Rich::Rich1Gas == rad )
   {
-    m_scaleFactor      = 0.047/64.0; // CRJ : TO BE CHECKED
+    //m_scaleFactor      = 0.047/64.0; 
+    m_scaleFactor      = 0.052/75.0; 
     m_minAssProb       = 0.05;
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
-    m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
+    m_maxPixelSep      = 150; 
     m_hitSigma         = 5.0;
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 40.0;
-    m_maxRingRadius    = 100.0;
-    m_maxRingChi2      = 75;
+    m_maxRingRadius    = 85.0;
+    m_maxRingChi2      = 150;
     m_minRingPurity    = 0.8;
+    m_rejectionFactor  = 0.5;
+  }
+  else // Aerogel (Experimental .....)
+  {
+    m_scaleFactor      = 0.24/342.0;
+    m_minAssProb       = 0.05;
+    m_maxHitsEvent     = 300;
+    m_maxHitsHPD       = 30;
+    m_maxPixelSep      = 150; 
+    m_hitSigma         = 5.0;
+    m_minHitsPerRing   = 5;
+    m_minRingRadius    = 200.0;
+    m_maxRingRadius    = 400.0;
+    m_maxRingChi2      = 150;
+    m_minRingPurity    = 0.8;
+    m_rejectionFactor  = 0.5;
   }
   // JOs
   declareProperty( "RingLocation",
@@ -79,6 +100,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
   declareProperty( "MaxPixelDistFromRing", m_maxPixelSep     );
   declareProperty( "MaxRingChiSquared",    m_maxRingChi2     );
   declareProperty( "MinRingPurity",        m_minRingPurity   );
+  declareProperty( "NoiseRejectionFactor", m_rejectionFactor );
   declareProperty( "BuildRingPoints",      m_buildRingPoints = true );
   // Disable histograms by default
   setProduceHistos( false );
@@ -103,7 +125,13 @@ StatusCode AlgBase<FINDER>::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Each instance of this algorithm has its own finder. Must delete when finished
-  m_finder = new FINDER( msgLevel(MSG::VERBOSE) );
+  typename FINDER::Config config ( m_hitSigma,
+                                   m_minHitsPerRing, 
+                                   m_minRingRadius, 
+                                   m_maxRingRadius,
+                                   m_rejectionFactor,
+                                   msgLevel(MSG::VERBOSE) );
+  m_finder = new FINDER(config);
 
   return sc;
 }
@@ -166,7 +194,7 @@ StatusCode AlgBase<FINDER>::runRingFinder()
     // hit selection was OK, so do the ring finding
 
     // run the fit
-    m_finder->FindRings(m_hitSigma,m_minHitsPerRing,m_minRingRadius,m_maxRingRadius);
+    m_finder->FindRings();
 
     // some plots on fit stats
     if ( produceHistos() )
@@ -176,8 +204,6 @@ StatusCode AlgBase<FINDER>::runRingFinder()
 
     // finalise the results as TES rings
     sc = saveRings();
-    if ( sc.isFailure() ) return sc;
-
   }
 
   // count processed (or not) events
@@ -227,8 +253,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "  -> Associated hit " << **iHit << endmsg;
-      // CRJ : Maybe the prob can be better computed ?
-      const double prob = ( (**iHit).nAssRings>0 ? 1.0/(**iHit).nAssRings : 0.0 );
+      const double prob = m_finder->hitProbability(*iRing,**iHit);
       if ( prob > m_minAssProb )
       {
         LHCb::RichRecPixel * pix = richPixels()->object( (*iHit)->key );
@@ -316,24 +341,21 @@ template < class FINDER >
 bool AlgBase<FINDER>::addDataPoints( ) const
 {
   bool OK = false;
+
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
-  debug() << "Found " << range.size() << " hits for " << rich() 
-          << " " << Rich::text(rich(),panel()) << endmsg;
-  if ( range.size() > m_maxHitsEvent )
-  {
-    std::ostringstream mess;
-    mess << "# hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
-         << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
-    debug() <<  mess.str() << endmsg;
-  }
-  else if ( range.size() < 3 )
+  
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << range.size() << " hits for " << rich() 
+            << " " << Rich::text(rich(),panel()) << endmsg;
+
+  if ( range.size() < 3 )
   {
     debug() <<  "Too few hits (<3) to find any rings" << endmsg;
   }
   else
   {
-    OK = true;
+
     m_finder->hits().reserve( range.size() );
     for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
@@ -357,11 +379,24 @@ bool AlgBase<FINDER>::addDataPoints( ) const
           ++counter(mess.str());
         }
       }
+    } // loop over pixels
+
+    if ( m_finder->hits().size() > m_maxHitsEvent )
+    {
+      m_finder->hits().clear();
+      std::ostringstream mess;
+      mess << "# hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
+           << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
+      debug() <<  mess.str() << endmsg;
     }
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "Selected " << m_finder->hits().size() << " data points for "
-              << Rich::text(rich()) << " " << Rich::text(rich(),panel())
-              << endmsg;
+    else
+    {
+      OK = true;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Selected " << m_finder->hits().size() << " data points for "
+                << Rich::text(rich()) << " " << Rich::text(rich(),panel())
+                << endmsg;
+    }
   }
 
   return OK;

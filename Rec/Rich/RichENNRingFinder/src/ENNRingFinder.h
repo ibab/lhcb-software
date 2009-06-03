@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.11 2009-05-24 16:16:28 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.12 2009-06-03 08:52:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -35,13 +35,6 @@ namespace Rich
       //-----------------------------------------------------------------------
       class Finder
       {
-
-      public:
-        
-        /** Default Constructor
-         *  @param debug Flag to enable debug printout
-         */
-        Finder( const bool debug = false ) : m_debug(debug) { }
 
       public:
 
@@ -149,18 +142,96 @@ namespace Rich
           bool skip; ///< skip the ring during selection
         };
 
+        //-----------------------------------------------------------------------
+        /** @class Config ENNRingFinder.h
+         *
+         *  Utility Configuration class for ring finder
+         */
+        //-----------------------------------------------------------------------
+        class Config
+        {
+        public:
+          /// Default constructor
+          Config( const double _HitSigma = 5.0,
+                  const int _minRingHits = 8,
+                  const double _rMin     = 85.0,
+                  const double _rMax     = 150.0,
+                  const double _rejFact  = 0.5,
+                  const bool _debug      = false ) 
+            : m_HitSigma        ( _HitSigma  ),
+              m_MinRingHits     ( _minRingHits   ),
+              m_RMin            ( _rMin ),
+              m_RMax            ( _rMax  ),
+              m_RejectionFactor ( _rejFact ),
+              m_debugMode       ( _debug ),
+              // cached values
+              m_R2Min           ( _rMin*_rMin ),
+              m_R2Max           ( _rMax*_rMax ),
+              m_HitSize         ( _HitSigma / 2.0 ),
+              m_AreaSize        (  2.0 * ( _rMax + _HitSigma ) )
+          {
+            m_AreaSize2 = m_AreaSize * m_AreaSize;
+          }
+        public:
+          /// Overloaded output to ostream
+          friend inline std::ostream & operator << ( std::ostream & os, 
+                                                     const Config & config )
+          { 
+            return os << "[ HitSigma=" << config.hitSigma()
+                      << " MinRingHits=" << config.minRingHits()
+                      << " RMin=" << config.rMin()
+                      << " RMax=" << config.rMax()
+                      << " RejectionFactor=" << config.rejectionFact()
+                      << " ]";
+          }
+        public:
+          inline double hitSigma()      const { return m_HitSigma; }
+          inline int minRingHits()      const { return m_MinRingHits; }
+          inline double rMin()          const { return m_RMin; }
+          inline double rMax()          const { return m_RMax; }
+          inline double rejectionFact() const { return m_RejectionFactor; }
+          inline bool debugMode()       const { return m_debugMode; }
+          // cached values
+          inline double r2Min()         const { return m_R2Min; }
+          inline double r2Max()         const { return m_R2Max; }
+          inline double hitSize()       const { return m_HitSize; }
+          inline double areaSize()      const { return m_AreaSize; }
+          inline double areaSize2()     const { return m_AreaSize2; }
+        private:
+          double m_HitSigma;          ///< Hit sigma
+          int m_MinRingHits;          ///< Minimum number of hits on a ring
+          double m_RMin;              ///< Minimum ring radius
+          double m_RMax;              ///< Maximum ring radius
+          double m_RejectionFactor;   ///< Factor for background rejection
+          bool m_debugMode;           ///< debug mode
+          // cached values
+          double m_R2Min;             ///< Minimum ring radius squared
+          double m_R2Max;             ///< Maximum ring radius squared
+          double m_HitSize;           ///< Hit Size
+          double m_AreaSize;          ///< Search area
+          double m_AreaSize2;         ///< Search area squared
+        };
+
+      public:
+        
+        /** Default Constructor
+         *  @param debug Flag to enable debug printout
+         */
+        Finder( const Config & _config ) : m_config(_config) 
+        { 
+          if ( config().debugMode() ) { std::cout << config() << std::endl; }
+        }
+
       public:
 
-        /** Do the ring finding with the given parameters
-         *  @param HitSigma hit sigma
-         *  @param MinRIngHits Minimum number of hits on a ring
-         *  @param RMin Minimum ring radius
-         *  @param RMax Maximum ring radius
-         */
-        void FindRings( const double HitSigma = 1.,
-                        const int MinRingHits = 5,
-                        const double RMin     = 2.,
-                        const double RMax     = 6. );
+        /// Access the configuration object
+        const Config & config() const { return m_config; }
+
+        /// Do the ring finding 
+        void FindRings( );
+
+        /// Return the probability the given Hit is associated to the given ring
+        double hitProbability( const Ring & ring, const Hit & hit );
 
         /// read/write access to the input hits
         inline Hit::Vector  & hits()  { return m_Hits;  }
@@ -179,11 +250,17 @@ namespace Rich
 
       private:
 
+        Config m_config;       ///< Configuration object
         Hit::Vector  m_Hits;   ///< The input hits
         Ring::Vector m_Rings;  ///< The found rings
-        bool m_debug;          ///< Turn on debug printout
 
       };
+
+      inline void Finder::clear()
+      {
+        hits().clear();
+        rings().clear();
+      }
 
     }
   }

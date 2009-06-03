@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.6 2009-05-25 13:36:02 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.7 2009-06-03 08:52:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -166,6 +166,9 @@ namespace Rich
         /// Min ring purity
         double m_minRingPurity;
 
+        /// Noise rejection factor
+        double m_rejectionFactor;
+
         /// build the 'ring points'
         bool m_buildRingPoints;
 
@@ -178,72 +181,108 @@ namespace Rich
       typedef Finder Rich2Finder;
 
       /**
-       * @class  Rich1TopPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH1 top panel using an ENN
+       * @class  Rich1AerogelTopPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 Aerogel top panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       * @date   2003-12-02
+       * @date   21/05/2009
        */
-      class Rich1TopPanel : public AlgBase<Rich1Finder>
+      class Rich1AerogelTopPanel : public AlgBase<Rich1Finder>
       {
       public:
         /// Default Constructor
-        Rich1TopPanel( const std::string& name,
-                       ISvcLocator* pSvcLocator )
+        Rich1AerogelTopPanel( const std::string& name,
+                              ISvcLocator* pSvcLocator )
+          : AlgBase<Rich1Finder>( name, pSvcLocator,
+                                  Rich::Rich1, Rich::top, Rich::Aerogel )
+        { }
+      };
+
+      /**
+       * @class  Rich1Aerogel BottomPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 Aerogel bottom panel using an ENN
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   21/05/2009
+       */
+      class Rich1AerogelBottomPanel : public AlgBase<Rich1Finder>
+      {
+      public:
+        /// Default Constructor
+        Rich1AerogelBottomPanel( const std::string& name,
+                                 ISvcLocator* pSvcLocator )
+          : AlgBase<Rich1Finder>( name, pSvcLocator,
+                                  Rich::Rich1, Rich::bottom, Rich::Aerogel )
+        { }
+      };
+
+      /**
+       * @class  Rich1GasTopPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 C4F10 top panel using an ENN
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   21/05/2009
+       */
+      class Rich1GasTopPanel : public AlgBase<Rich1Finder>
+      {
+      public:
+        /// Default Constructor
+        Rich1GasTopPanel( const std::string& name,
+                          ISvcLocator* pSvcLocator )
           : AlgBase<Rich1Finder>( name, pSvcLocator,
                                   Rich::Rich1, Rich::top, Rich::Rich1Gas )
         { }
       };
 
       /**
-       * @class  Rich1BottomPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH1 bottom panel using an ENN
+       * @class  Rich1GasBottomPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 C4F10 bottom panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       * @date   2003-12-02
+       * @date   21/05/2009
        */
-      class Rich1BottomPanel : public AlgBase<Rich1Finder>
+      class Rich1GasBottomPanel : public AlgBase<Rich1Finder>
       {
       public:
         /// Default Constructor
-        Rich1BottomPanel( const std::string& name,
-                          ISvcLocator* pSvcLocator )
+        Rich1GasBottomPanel( const std::string& name,
+                             ISvcLocator* pSvcLocator )
           : AlgBase<Rich1Finder>( name, pSvcLocator,
                                   Rich::Rich1, Rich::bottom, Rich::Rich1Gas )
         { }
       };
 
       /**
-       * @class  Rich2RightPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH2 right panel using an ENN
+       * @class  Rich2GasRightPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH2 CF4 right panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       * @date   2003-12-02
+       * @date   21/05/2009
        */
-      class Rich2RightPanel : public AlgBase<Rich2Finder>
+      class Rich2GasRightPanel : public AlgBase<Rich2Finder>
       {
       public:
         /// Default Constructor
-        Rich2RightPanel( const std::string& name,
-                         ISvcLocator* pSvcLocator )
+        Rich2GasRightPanel( const std::string& name,
+                            ISvcLocator* pSvcLocator )
           : AlgBase<Rich2Finder>( name, pSvcLocator,
                                   Rich::Rich2, Rich::right, Rich::Rich2Gas )
         { }
       };
 
       /**
-       * @class  Rich2LeftPanel RichENNRingFinderAlg.h
-       * @brief  Standalone ring finder for RICH2 left panel using an ENN
+       * @class  Rich2GasLeftPanel RichENNRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH2 CF4 left panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       * @date   2003-12-02
+       * @date   21/05/2009
        */
-      class Rich2LeftPanel : public AlgBase<Rich2Finder>
+      class Rich2GasLeftPanel : public AlgBase<Rich2Finder>
       {
       public:
         /// Default Constructor
-        Rich2LeftPanel( const std::string& name,
-                        ISvcLocator* pSvcLocator )
+        Rich2GasLeftPanel( const std::string& name,
+                           ISvcLocator* pSvcLocator )
           : AlgBase<Rich2Finder>( name, pSvcLocator,
                                   Rich::Rich2, Rich::left, Rich::Rich2Gas )
         { }
