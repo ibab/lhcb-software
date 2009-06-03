@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.64 2009-05-25 13:57:31 cattanem Exp $
+! $Id: release.notes,v 1.65 2009-06-03 12:28:07 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-!========================== CaloTools v5r9 2009-05-25 =========================
+!========================== CaloTools v5r9 2009-06-03 =========================
+! 2009-06-03 - Marco Cattaneo
+ - Add missing CaloTools_dll.cpp file
+
 ! 2009-05-19 - Marco Cattaneo
  - Add missing #include "Event/Particle.h" following removal from IPart2Calo.h
  - Replace endreq by endmsg
