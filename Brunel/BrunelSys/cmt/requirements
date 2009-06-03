@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v35r0 Rec
+use Brunel v35r1 Rec
 
 # Add here any component libraries to be added as patches
 
