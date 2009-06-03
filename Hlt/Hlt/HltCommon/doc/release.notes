@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-06-02 - Gerhard Raven
+ - udpate printout in HltDiffHltDecReports
+ - add counter for # of incidents received by HltIncidentFilter
+
 ! 2009-06-01 - Gerhard Raven
  - add HltDiffHltDecReports -- does a 'diff' between two DecReports
    (e.g. one from rawbank, one from re-running the HLT)

@@ -1,4 +1,4 @@
-// $Id: HltDiffHltDecReports.cpp,v 1.2 2009-06-01 09:35:41 graven Exp $
+// $Id: HltDiffHltDecReports.cpp,v 1.3 2009-06-03 09:44:00 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -50,8 +50,12 @@ HltDiffHltDecReports::execute() {
     LHCb::HltDecReports *lhs = get<LHCb::HltDecReports>( m_lhs );
     LHCb::HltDecReports *rhs = get<LHCb::HltDecReports>( m_rhs );
 
-    always() << " <<< " << m_lhs << " configuredTCK: " << lhs->configuredTCK() << endmsg;
-    always() << " >>> " << m_rhs << " configuredTCK: " << rhs->configuredTCK() << endmsg;
+    if (lhs->configuredTCK() != rhs->configuredTCK() ) {
+        always() << " configuredTCK: " 
+                 << m_lhs << " : " << lhs->configuredTCK() 
+                 << m_rhs << " : " << rhs->configuredTCK() 
+                 << endmsg;
+    }
 
     LHCb::HltDecReports::Container::const_iterator l = lhs->begin(), r = rhs->begin();
     while ( l != lhs->end() || r != rhs->end()) {
@@ -74,7 +78,6 @@ HltDiffHltDecReports::execute() {
             ++r;
        }
     }
-    always() << endmsg;
 
     return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.cpp,v 1.4 2009-01-07 15:59:56 graven Exp $
+// $Id: HltIncidentFilter.cpp,v 1.5 2009-06-03 09:44:00 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode HltIncidentFilter::initialize() {
   incidentSvc->addListener(this,s_incident,int(0),rethrow,oneShot);
   incidentSvc->addListener(this,"EndEvent",int(0),rethrow,oneShot);
 
-  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
+  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted / Incidents recieved by ") + name());
 
   return StatusCode::SUCCESS;
 };
@@ -61,8 +61,8 @@ StatusCode HltIncidentFilter::finalize() {
     StatusCode sc = GaudiHistoAlg::finalize();
     for (std::map<std::string,stat>::const_iterator i = m_stat.begin(); i!= m_stat.end(); ++i) {
         info() << i->first 
-               << " requested: " << i->second.request << " events " 
                << " accepted: "  << i->second.accept << " events"
+               << " requested: " << i->second.request << " events " 
                << endmsg;
     }
     return sc;
@@ -74,7 +74,6 @@ StatusCode HltIncidentFilter::finalize() {
 StatusCode HltIncidentFilter::execute() {
     setFilterPassed(m_keep);
     if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endreq;
-    counter("#accept") += m_keep;
     return StatusCode::SUCCESS;
 };
 
@@ -95,4 +94,5 @@ void HltIncidentFilter::handle(const Incident& incident) {
         }
         if (m_keep) ++s.accept;
     }
+    counter("#accept") += m_keep;
 }
