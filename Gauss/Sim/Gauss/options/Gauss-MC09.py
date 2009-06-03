@@ -1,6 +1,4 @@
 from Gauss.Configuration import *
 
-LHCbApp().DDDBtag = "MC09-20090526"
-LHCbApp().CondDBtag = "sim-20090402-vc-mu100"
-
+importOptions('$APPCONFIGOPTS/Conditions/MC09-20090602-vc-md100.py')
 importOptions('$GAUSSOPTS/Gauss.py')

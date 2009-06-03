@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v37r2 2009-06-03 =============================
+! 2009-06-03 - Gloria CORTI
+ - Remove gauss-2008.qmt as the options that it was using have been removed
+ - Pick up latest DDDB and CondDB tag from AppConfig.
+
 ! 2009-06-02 - Gloria CORTI
  - Take latest tag for MC09 in Gauss-MC09.opts. It also sets velo close and
    magnet down as 'default' settings. 
