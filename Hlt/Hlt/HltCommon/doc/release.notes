@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v5r6 2009-06-03 ===================
 ! 2009-06-02 - Gerhard Raven
  - udpate printout in HltDiffHltDecReports
  - add counter for # of incidents received by HltIncidentFilter
