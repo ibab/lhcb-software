@@ -124,3 +124,13 @@ class StrippingConf( LHCbConfigurableUser ):
 		    if line.stream() == i :
 			seq.Members += [ line.configurable() ] 
 		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq
+
+	if output == "NONE" : 
+
+	    seq = GaudiSequencer("StreamSequencer")
+	    seq.IgnoreFilterPassed = TRUE
+	    for i in lines : 
+		seq.Members += [ i.configurable() ] 
+
+	    DaVinci().appendToMainSequence( [ seq ] )
+	    
