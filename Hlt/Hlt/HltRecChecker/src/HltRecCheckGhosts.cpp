@@ -1,10 +1,12 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.6 2009-06-02 20:45:17 gligorov Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.7 2009-06-03 09:16:07 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "boost/foreach.hpp"
+#include "HltBase/stringKey.h"
+#include "HltBase/HltSelection.h"
 
 // local
 #include "HltRecCheckGhosts.h"
