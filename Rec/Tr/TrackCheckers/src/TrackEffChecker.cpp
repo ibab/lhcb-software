@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.11 2008-09-25 15:18:18 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.12 2009-06-03 12:56:17 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -22,7 +22,10 @@ DECLARE_ALGORITHM_FACTORY( TrackEffChecker );
 //=============================================================================
 TrackEffChecker::TrackEffChecker(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
-TrackCheckerBase( name , pSvcLocator ){
+TrackCheckerBase( name , pSvcLocator ){ 
+
+  declareProperty( "OnlyBTracksInDenominator",
+                   m_fromB = false  );
 
 }
 
@@ -116,7 +119,20 @@ void TrackEffChecker::effInfo(){
   const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default); 
   LHCb::MCParticles::const_iterator iterP = partCont->begin();
   for (; iterP != partCont->end(); ++iterP){
-    if (selected(*iterP) == true){ 
+
+    bool reconstructible = false;
+    
+    if (m_tracksRefContainer != "") {
+      TrackCheckerBase::LinkInfo info = reconstructedInRefContainer(*iterP);
+      reconstructible = (info.track!=0 && info.track->type() == 3);
+    } else
+      reconstructible = selected(*iterP);
+    
+    if (m_fromB)
+      reconstructible = reconstructible && bAncestor(*iterP);
+
+
+    if (reconstructible == true){ 
 
       TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
 

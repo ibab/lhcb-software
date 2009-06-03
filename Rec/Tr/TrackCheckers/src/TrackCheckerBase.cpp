@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.7 2008-12-04 09:59:10 cattanem Exp $
+// $Id: TrackCheckerBase.cpp,v 1.8 2009-06-03 12:56:17 smenzeme Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -12,10 +12,15 @@ TrackCheckerBase::TrackCheckerBase( const std::string& name,
                                     ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg( name , pSvcLocator ),
   m_associator(0,""),
+  m_associator_refContainer(0,""),
   m_all("ALL"){
 
   declareProperty( "TracksInContainer",
                    m_tracksInContainer = LHCb::TrackLocation::Default  );
+
+  declareProperty( "TracksRefContainer",
+		   m_tracksRefContainer = ""  );
+ 
   declareProperty( "Selector",
                    m_selectorName = "MCReconstructible" );
   declareProperty( "Extrapolator",
@@ -52,6 +57,7 @@ StatusCode TrackCheckerBase::initialize()
 
   // Set the path for the linker table Track - MCParticle
   if ( m_linkerInTable == "" ) m_linkerInTable = m_tracksInContainer;
+
 
   m_selector = tool<IMCReconstructible>(m_selectorName,
                                         "Selector", this );
@@ -91,7 +97,19 @@ StatusCode TrackCheckerBase::initializeEvent(){
   m_inverseTable = m_associator.inverse();
   if (!m_inverseTable)  
     return Error("Failed to find inverse table", StatusCode::FAILURE);
-  
+
+  if (m_tracksRefContainer != ""){
+    m_associator_refContainer = AsctTool(evtSvc(), m_tracksRefContainer);
+    m_directTable_refContainer = m_associator_refContainer.direct();
+    if (!m_directTable_refContainer)
+      return Error("Failed to find direct table for reference container",
+                   StatusCode::FAILURE);
+    
+    m_inverseTable_refContainer = m_associator_refContainer.inverse();
+    if (!m_inverseTable_refContainer)
+      return Error("Failed to find inverse table for refContainer", StatusCode::FAILURE);
+  }
+
   return StatusCode::SUCCESS;
 } 
 
@@ -100,6 +118,19 @@ TrackCheckerBase::LinkInfo TrackCheckerBase::reconstructed(const LHCb::MCParticl
   TrackCheckerBase::LinkInfo info; 
   info.track = 0; // in case it is a ghost
   InverseRange range = m_inverseTable->relations(particle);
+  if (!range.empty()) {
+    info.track = range.begin()->to();
+    info.clone = range.size() - 1u;
+    info.purity = range.begin()->weight();
+  }
+  return info; 
+}
+
+TrackCheckerBase::LinkInfo TrackCheckerBase::reconstructedInRefContainer(const LHCb::MCParticle* particle) const {
+  
+  TrackCheckerBase::LinkInfo info; 
+  info.track = 0; // in case it is a ghost
+  InverseRange range = m_inverseTable_refContainer->relations(particle);
   if (!range.empty()) {
     info.track = range.begin()->to();
     info.clone = range.size() - 1u;
@@ -140,6 +171,7 @@ bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const
   const LHCb::MCParticle* mother = mcPart->mother();
   while ( mother !=0 && fromB == false) {
     fromB = mother->particleID().hasBottom();
+    mother = mother->mother();
   } // loop
   return fromB;
 }

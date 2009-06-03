@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.6 2008-11-06 16:58:06 cattanem Exp $
+// $Id: TrackCheckerBase.h,v 1.7 2009-06-03 12:56:17 smenzeme Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -120,6 +120,8 @@ class TrackCheckerBase : public GaudiHistoAlg {
   * @return track 
   */
   LinkInfo reconstructed(const LHCb::MCParticle* particle) const;
+  LinkInfo reconstructedInRefContainer(const LHCb::MCParticle* particle) const;
+
 
   /** What tracks were reconstructed from this particle
   * @param particle
@@ -166,11 +168,16 @@ class TrackCheckerBase : public GaudiHistoAlg {
 
   const std::string& tracksInContainer() { return m_tracksInContainer ; }
 
+
+ protected:
+
+  std::string m_tracksRefContainer;   ///< Reference Tracks container location
+ 
  private:
 
   std::string m_extrapolatorName; 
   std::string m_selectorName;
-  std::string m_tracksInContainer;    ///< Input Tracks container location
+  std::string m_tracksInContainer;    ///< Input Tracks container location 
   std::string m_linkerInTable;
  
   ITrajPoca*         m_poca;          ///<  Pointer to the ITrajPoca interface  
@@ -190,6 +197,11 @@ class TrackCheckerBase : public GaudiHistoAlg {
   AsctTool m_associator;
   DirectTable* m_directTable;
   InverseTable* m_inverseTable;
+
+  AsctTool m_associator_refContainer;
+  DirectTable* m_directTable_refContainer;
+  InverseTable* m_inverseTable_refContainer;
+
 
   bool m_splitByAlgorithm;
   bool m_splitByType;
