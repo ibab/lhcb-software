@@ -1,4 +1,4 @@
-// $Id: STSelectChannelIDByStatus.cpp,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+// $Id: STSelectChannelIDByStatus.cpp,v 1.2 2009-06-03 06:20:31 cattanem Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -36,10 +36,10 @@ StatusCode STSelectChannelIDByStatus::initialize() {
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // to save time convert the strings to a list of status
-  const Status::StatusToStringMap& statusMap = Status::statusDescription();
+  const ::Status::StatusToStringMap& statusMap = ::Status::statusDescription();
   BOOST_FOREACH(std::string statusString, m_statusNames) {
     // try to find the status in the map
-    Status::StatusToStringMap::const_iterator iterMap = statusMap.begin();
+	  ::Status::StatusToStringMap::const_iterator iterMap = statusMap.begin();
     while (iterMap != statusMap.end()){
       if (iterMap->second == statusString) break;
       ++iterMap;

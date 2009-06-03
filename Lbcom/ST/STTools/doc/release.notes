@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r9p1 2009-06-03 ========================
+! 2009-06-03 Marco Cattaneo
+ - STSelectChannelIDByStatus.cpp: Fix a scoping problem on Windows
+
 !=========================== STTools v3r9 2009-05-08 ==========================
 ! 2009-04-24 - Jeroen van Tilburg
  - STOfflinePosition: Improved tune of error estimates using long tracks.
