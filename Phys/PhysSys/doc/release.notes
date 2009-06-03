@@ -3,6 +3,30 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r4>2009-06-02 Phys v8r4 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r4                                  #
+###############################################################################
+
+ - Based on LHCb v27r1 and Gaudi v21r1
+  
+  Hightlights
+
+  * Important fixes in LoKiFitter:
+    . Fix bug in evaluation of impact parameter Chi2 in DistanceCalculator 
+      and TrgDistanceCalculator.
+
+  * New Particle->PV relating functionality in DaVinciTools: 
+    . New PVRelatorAlg GaudiAlgorithm. Takes either Particle and PV TES 
+      locations, or Particle->PV relations table TES location as input, runs
+      an IRelatedPVFinder to get weighted, sorted relations between Particles
+      and vetrices, and produces a new relations table that is places on the
+      TES. It allows to re-run some best PV finding logic on already stored
+      Particles and Vertices, or to re-sort existing relaitons according to 
+      some new "best PV" logic.
+
+
 </PRE><H1><A NAME=v8r3>2009-05-08 Phys v8r3 </A></H1><PRE>
 
 ###############################################################################
