@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.2 2009-02-27 01:09:13 tskwarni Exp $
+// $Id: lcgDict.h,v 1.3 2009-06-03 20:47:23 jpalac Exp $
 #ifndef DICT_LCGDICT_H 
 #define DICT_LCGDICT_H 1
 
@@ -12,9 +12,10 @@
 namespace {
   struct _Instantiations {
     // begin instantiations
-    std::vector<const LHCb::HltObjectSummary*> _i1;
-    std::vector<LHCb::HltObjectSummary*>       _i2; 
-    LHCb::HltObjectSummary::Info _i3;
+    GaudiUtils::VectorMap< std::string, LHCb::HltDecReport > _i0;
+    std::vector<const LHCb::HltObjectSummary*>               _i1;
+    std::vector<LHCb::HltObjectSummary*>                     _i2; 
+    LHCb::HltObjectSummary::Info                             _i3;
     // end instantiations
   };
 }
