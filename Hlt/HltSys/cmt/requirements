@@ -1,5 +1,5 @@
 package HltSys
-version v6r1
+version v6r2
 
 branches cmt doc 
 
@@ -7,50 +7,50 @@ branches cmt doc
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v2r8    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v3r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLine             v1r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use Hlt1Lines           v1r0    Hlt   # Gerhard Raven
-use HltBase             v6r4    Hlt   # Gerhard Raven
-use HltCommon           v5r5    Hlt   # Gerhard Raven
+use HltBase             v6r4p1  Hlt   # Gerhard Raven
+use HltCommon           v5r6    Hlt   # Gerhard Raven
 
-use HltTracking         v3r8    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v4r0    Hlt   # Jose Angel Hernando-Morata
 
-use HltEcalAlley        v1r6p1  Hlt   # Mariusz Witek
+use HltEcalAlley        v1r7    Hlt   # Mariusz Witek
 
 use HltMuon             v3r5    Hlt   # Alessia Satta          
-use HltMuonAlley        v2r9    Hlt   # Sandra Amato 
-use HltL0Conf           v2r9    Hlt   # Johannes Albrecht
+use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
+use HltL0Conf           v2r9p1  Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato  
 
-use HltRecChecker	v1r9	Hlt   # Jose Angel Hernando-Morata
+use HltRecChecker	v1r10	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v2r4p1	Hlt   # Bruno de Paula
-use HltLuminosity       v2r7    Hlt   # Jaap Panman
+use HltLuminosity       v2r8    Hlt   # Jaap Panman
 
-use HltRawData          v1r10    Hlt   # Tomasz Skwarnicki
+use HltRawData          v1r11    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
-use HltPython	        v1r14   Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r15   Hlt   # Jose Angel Hernando-Morata
 use TCKUtils            v1r0    Hlt   # Gerhard Raven
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v9r1    Hlt   # Patrick Koppenburg
 use Hlt2Lines           v1r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use Hlt2SharedParticles v1r1    Hlt   # Patrick Koppenburg/Gerhard Raven
+use HltSelections       v9r2    Hlt   # Patrick Koppenburg
+use Hlt2SharedParticles v1r2    Hlt   # Patrick Koppenburg/Gerhard Raven
 use Fidel               v1r3p1  Phys  # Sara Furcas    
-use HltKshort           v1r7    Hlt   # Jaap Panman
+use HltKshort           v2r0    Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
 
-use HltSelChecker       v8r1    Hlt   # Patrick Koppenburg
+use HltSelChecker       v8r2    Hlt   # Patrick Koppenburg
 
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use LoKiTrigger         v9r1p1 Phys   # Vanya Belyaev
+use LoKiTrigger         v9r2   Phys   # Vanya Belyaev
 use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
 
 # Allow the generation of QMTest summary 
