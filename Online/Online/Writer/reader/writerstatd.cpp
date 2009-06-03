@@ -4,6 +4,8 @@
  *
  */
 
+#if 0
+
 #ifdef _WIN32
 int main(int /* argc */, char** /* argv */) {  return 1; }
 #else
@@ -17,10 +19,12 @@ int main(int /* argc */, char** /* argv */) {  return 1; }
 #include "Writer/writernetfileobject.h"
 #include "Writer/commandhandler.h"
 
+#include <iostream>
+
 using namespace std;
 
 int main() {
-
+/*
     map<string, map<string, string> > filelist;		//list of all files. Each file have a map of properties
 	char closedfile[300];			//most recent closed file
 	
@@ -99,15 +103,23 @@ int main() {
 				string paramname = fullparam.substr(0,fullparam.find("="));
 				string paramvalue = fullparam.substr(fullparam.find("=")+1);
 				filelist[filename][paramname] = paramvalue;
+				cout << "log" << endl;
 		}
 		else if (cmd->name == "closefile") {
-				filelist.remove(cmd->param2);
-				closedfile = cmd->param2 + DELIMITER +  cmd->param3;
+				filelist.erase(filelist.find(cmd->param2));
+				strcpy(closedfile,cmd->param2);
+				strcpy(closedfile+strlen(closedfile),DELIMITER);
+				strcpy(closedfile+strlen(closedfile),cmd->param3);
+				cout << "closefile" << endl;
 		}
 		//else if (cmd->name ==  "openfile") 
 
 		
 	}
-
+*/
+return 0;
 }
+
+#endif
+#endif
 
