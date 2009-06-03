@@ -1,178 +1,213 @@
-// $Id: L0CaloMonit.h,v 1.5 2008-07-22 08:36:37 robbep Exp $
+// $Id: L0CaloMonit.h,v 1.6 2009-06-03 18:04:18 robbep Exp $
 #ifndef L0CALOMONIT_H 
 #define L0CALOMONIT_H 1
-// Include files
 
+// Include files
 // from Gaudi 
 #include "CaloUtils/Calo2Dview.h"
+// from Event
+#include "Event/L0DUBase.h"
 
+// Forward declarations
 class IHistogram1D ;
 class IHistogram2D ;
 class DeCalorimeter ;
+namespace LHCb {
+  class L0CaloCandidate ;
+};
 
 /** @class L0CaloMonit L0CaloMonit.h
  *  Monitoring algorithm for the L0 Calorimeter trigger
- *  Scans the L0CaloCandidate and fills histograms.
+ *  Scans the L0CaloCandidates and fills histograms.
+ *  Looks also for hot cells if requested.
  *
  *  @author Olivier Callot
+ *  @author Marie-Helene Schune
  *  @date   31/05/2001
  */
+
 class L0CaloMonit: public Calo2Dview {
-public:
+
+ public:
   /// Standard constructor
-  L0CaloMonit(const std::string& name, ISvcLocator* pSvcLocator );
-
+  L0CaloMonit( const std::string& name , ISvcLocator* pSvcLocator ) ;
+  
   /// Standard destructor
-  virtual ~L0CaloMonit( ); 
+  virtual ~L0CaloMonit( ) ; 
+  
+  /// Initialization: book histograms
+  virtual StatusCode initialize() ;
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  /// Main execution routine: fill histograms and find hot cells
+  virtual StatusCode execute   () ;
 
-protected:
+  /// Finalization: print hot cells
+  virtual StatusCode finalize  () ;
 
-private:
+ protected:
+  
+ private:
 
-  void SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) ; 
+  /** Automatic search for hot cells from L0 Calo trigger histograms and hits
+   *  and print the information about the hot cells.
+   *  @param[in] hist  Histogram of hit cells for a given type of L0Calo 
+   *                   candidate and a given area of ECAL or HCAL.
+   *                   The histogram is reset once the function is executed
+   *  @param[in] type  The type of candidate corresponding to the histogram
+   */
+  void SearchForHotCellsAndReset( IHistogram1D * hist , const int type ) ; 
 
-  DeCalorimeter * m_ecal            ; ///< Pointer to Ecal detector element
-  DeCalorimeter * m_hcal            ; ///< Pointer to Hcal detector element
+  DeCalorimeter * m_ecal ; ///< Pointer to Ecal detector element
+  DeCalorimeter * m_hcal ; ///< Pointer to Hcal detector element
 
+  unsigned int m_nEvents ; ///< Counter of events with existing L0Calo data
 
-  int m_nEvents ; 
-  int m_nUsefulEvents ; 
+  bool m_fullMonitoring ; ///< Flag to perform full monitoring, set by option
 
-  bool m_fullMonitoring ; 
-  std::string              m_inputDataSuffix ;
+  /** Suffix to add to the default name of L0Calo data containers. Allows
+   *  to select between different sources (data or emulation)
+   *  Set by option.
+   */
+  std::string m_inputDataSuffix ; 
+
+  /** Frequency with which the search of hot cells is launched.
+   *  Set by option.
+   *  @sa SearchForHotCellsAndReset
+   */
   int  m_updateFrequency ; 
+
+  /** Ratio to declare a cell hot.
+   *  Set by option.
+   *  @sa SearchForHotCellsAndReset
+   */
   int m_alarmThresholdRatio ; 
 
+  /** Activate or desactivate hot cell automatic search.
+   *  Set by option.
+   *  @sa SearchForHotCellsAndReset
+   */
   bool  m_lookForHotCells ; 
 
-  IHistogram1D*    m_histEleFreqInn  ; 
-  IHistogram1D*    m_histEleFreqMid  ; 
-  IHistogram1D*    m_histEleFreqOut  ; 
+  /// BCId histogram
+  IHistogram1D * m_bcidHist ;
 
-  IHistogram1D*    m_histPhoFreqInn  ; 
-  IHistogram1D*    m_histPhoFreqMid  ; 
-  IHistogram1D*    m_histPhoFreqOut  ; 
+  /// Et Spectra histogram. Index of vector is type L0DUBase::CaloType
+  std::vector< IHistogram1D *> m_etHist ;
 
-  IHistogram1D*    m_histPilFreqInn  ; 
-  IHistogram1D*    m_histPilFreqMid  ; 
-  IHistogram1D*    m_histPilFreqOut  ; 
+  /** Et Spectra histogram for the full monitoring. 
+   *  Index of vector is type L0DUBase::CaloType
+   */
+  std::vector< IHistogram1D *> m_etFullHist ;
 
-  IHistogram1D*    m_histPigFreqInn  ; 
-  IHistogram1D*    m_histPigFreqMid  ; 
-  IHistogram1D*    m_histPigFreqOut  ; 
+  /** Frequency histogram. Index of vector is type L0DUBase::CaloType
+   *  and area of detector.
+   */
+  std::vector< std::vector< IHistogram1D *> > m_freqHist ;
 
-  IHistogram1D*    m_histHadFreqInn  ; 
-  IHistogram1D*    m_histHadFreqOut  ; 
+  /** Crate histogram. Index of vector is type L0DUBase::CaloType
+   *  and crate number (renumbering from 0).
+   */
+  std::vector< std::vector< IHistogram1D *> > m_crateHist ;
 
-  IHistogram1D*            m_histElectron      ;
-  IHistogram1D*            m_histPhoton        ;
-  IHistogram1D*            m_histHadron        ;
-  IHistogram1D*            m_histPi0Local      ;
-  IHistogram1D*            m_histPi0Global     ;
-  IHistogram1D*            m_histSumEt         ;
-  IHistogram1D*            m_histSumEtZoom     ;
-  IHistogram1D*            m_histSpdMult       ;
+  /// Name of 2D map histograms
+  std::vector< std::string > m_mapName ;
 
-  IHistogram2D*            m_histHadron2DOuter ;
-  IHistogram2D*            m_histHadron2DInner ;
+  /// Title of the 2D map histograms
+  std::vector< std::string > m_mapTitle ;
 
-  IHistogram1D*            m_histHadronCrate22 ;
-  IHistogram1D*            m_histHadronCrate23 ;
-  IHistogram1D*            m_histHadronCrate24 ;
-  IHistogram1D*            m_histHadronCrate25 ;
+  std::vector< std::string > m_histName ; ///< Names of the histograms
+  std::vector< std::string > m_histTitle ; ///< Titles of the histograms
+  std::vector< int >         m_maxScale ; ///< Maximum of the histograms
 
-  IHistogram1D* m_histElectronCrate8 ; 
-  IHistogram1D* m_histElectronCrate9 ; 
-  IHistogram1D* m_histElectronCrate10 ; 
-  IHistogram1D* m_histElectronCrate11 ; 
-  IHistogram1D* m_histElectronCrate12 ; 
-  IHistogram1D* m_histElectronCrate13 ; 
-  IHistogram1D* m_histElectronCrate14 ; 
-  IHistogram1D* m_histElectronCrate15 ; 
-  IHistogram1D* m_histElectronCrate16 ; 
-  IHistogram1D* m_histElectronCrate17 ; 
-  IHistogram1D* m_histElectronCrate18 ; 
-  IHistogram1D* m_histElectronCrate19 ; 
-  IHistogram1D* m_histElectronCrate20 ; 
-  IHistogram1D* m_histElectronCrate21 ; 
-  IHistogram2D* m_histElectron2DOuter  ; 
-  IHistogram2D* m_histElectron2DMiddle ; 
-  IHistogram2D* m_histElectron2DInner  ; 
+  /** Auxiliary function to book one Et spectra histogram
+   *  @param[in]  i      type of candidate (L0DUBase::CaloType)
+   *  @param[out] hist   vector of IHistogram1D to book
+   *  @param[in]  suffix empty or "Full"
+   */
+  void bookEtHist( const unsigned int i , std::vector< IHistogram1D *> & hist , 
+		   const std::string& suffix ) ;
 
-  IHistogram1D* m_histPhotonCrate8 ; 
-  IHistogram1D* m_histPhotonCrate9 ; 
-  IHistogram1D* m_histPhotonCrate10 ; 
-  IHistogram1D* m_histPhotonCrate11 ; 
-  IHistogram1D* m_histPhotonCrate12 ; 
-  IHistogram1D* m_histPhotonCrate13 ; 
-  IHistogram1D* m_histPhotonCrate14 ; 
-  IHistogram1D* m_histPhotonCrate15 ; 
-  IHistogram1D* m_histPhotonCrate16 ; 
-  IHistogram1D* m_histPhotonCrate17 ; 
-  IHistogram1D* m_histPhotonCrate18 ; 
-  IHistogram1D* m_histPhotonCrate19 ; 
-  IHistogram1D* m_histPhotonCrate20 ; 
-  IHistogram1D* m_histPhotonCrate21 ; 
-  IHistogram2D* m_histPhoton2DOuter  ; 
-  IHistogram2D* m_histPhoton2DMiddle ; 
-  IHistogram2D* m_histPhoton2DInner  ; 
+  /** Auxiliary function to book one frequency histogram
+   *  @param[in]  i      type of candidate (L0DUBase::CaloType)
+   *  @param[out] hist   vector of IHistogram1D to book
+   */
+  void bookFreqHist( const unsigned int i , 
+		     std::vector< std::vector< IHistogram1D *> > & hist ) ;
 
-  IHistogram1D* m_histPi0LocalCrate8 ; 
-  IHistogram1D* m_histPi0LocalCrate9 ; 
-  IHistogram1D* m_histPi0LocalCrate10 ; 
-  IHistogram1D* m_histPi0LocalCrate11 ; 
-  IHistogram1D* m_histPi0LocalCrate12 ; 
-  IHistogram1D* m_histPi0LocalCrate13 ; 
-  IHistogram1D* m_histPi0LocalCrate14 ; 
-  IHistogram1D* m_histPi0LocalCrate15 ; 
-  IHistogram1D* m_histPi0LocalCrate16 ; 
-  IHistogram1D* m_histPi0LocalCrate17 ; 
-  IHistogram1D* m_histPi0LocalCrate18 ; 
-  IHistogram1D* m_histPi0LocalCrate19 ; 
-  IHistogram1D* m_histPi0LocalCrate20 ; 
-  IHistogram1D* m_histPi0LocalCrate21 ; 
-  IHistogram2D* m_histPi0Local2DOuter  ; 
-  IHistogram2D* m_histPi0Local2DMiddle ; 
-  IHistogram2D* m_histPi0Local2DInner  ; 
+  /** Auxiliary function to book one crate histogram
+   *  @param[in]  i      type of candidate (L0DUBase::CaloType)
+   *  @param[out] hist   vector of IHistogram1D to book
+   */
+  void bookCrateHist( const unsigned int i , 
+		      std::vector< std::vector< IHistogram1D *> > & hist ) ;
 
-  IHistogram1D* m_histPi0GlobalCrate8 ; 
-  IHistogram1D* m_histPi0GlobalCrate9 ; 
-  IHistogram1D* m_histPi0GlobalCrate10 ; 
-  IHistogram1D* m_histPi0GlobalCrate11 ; 
-  IHistogram1D* m_histPi0GlobalCrate12 ; 
-  IHistogram1D* m_histPi0GlobalCrate13 ; 
-  IHistogram1D* m_histPi0GlobalCrate14 ; 
-  IHistogram1D* m_histPi0GlobalCrate15 ; 
-  IHistogram1D* m_histPi0GlobalCrate16 ; 
-  IHistogram1D* m_histPi0GlobalCrate17 ; 
-  IHistogram1D* m_histPi0GlobalCrate18 ; 
-  IHistogram1D* m_histPi0GlobalCrate19 ; 
-  IHistogram1D* m_histPi0GlobalCrate20 ; 
-  IHistogram1D* m_histPi0GlobalCrate21 ; 
-  IHistogram2D* m_histPi0Global2DOuter  ; 
-  IHistogram2D* m_histPi0Global2DMiddle ; 
-  IHistogram2D* m_histPi0Global2DInner  ; 
+  /** Auxiliary function to fill histograms for the default monitoring
+   *  @param[in] cand  L0CaloCandidate to use to fill histograms
+   */
+  void defaultMonitoring( const LHCb::L0CaloCandidate * cand ) ;
 
-  IHistogram1D*            m_histElectronFull      ;
-  IHistogram1D*            m_histPhotonFull        ;
-  IHistogram1D*            m_histHadronFull        ;
-  IHistogram1D*            m_histPi0LocalFull      ;
-  IHistogram1D*            m_histPi0GlobalFull     ;
-  IHistogram1D*            m_histSumEtFull         ;
-  IHistogram1D*            m_histSumEtZoomFull     ;
-  IHistogram1D*            m_histSpdMultFull       ;
-  IHistogram1D*            m_histHadronSlave1OutFull ;
-  IHistogram1D*            m_histHadronSlave2OutFull ;
-  IHistogram1D*            m_histHadronSlave1InFull ;
-  IHistogram1D*            m_histHadronSlave2InFull ;
-  IHistogram1D*            m_histSumEtSlave1OutFull ;
-  IHistogram1D*            m_histSumEtSlave2OutFull ;
-  IHistogram1D*            m_histSumEtSlave1InFull ;
-  IHistogram1D*            m_histSumEtSlave2InFull ;
+  /** Auxiliary function to print the location of the hot cells for 
+   *  all candidate types.
+   */
+  void printHotCellSummary( ) ;
 
+  /** Returns the detector element for a given type: Ecal for Electron,
+   *  Photon, Local pi0 and Global pi0, and Hcal for hadron
+   */
+  inline DeCalorimeter * detector( const int type ) const {
+    if ( L0DUBase::CaloType::Hadron == type ) return m_hcal ;
+    return m_ecal ;
+  }
+
+  /// Returns the crate number counting from zero
+  inline int crateOrder( const int type , const int crate ) const {
+    if ( L0DUBase::CaloType::Hadron == type ) return ( crate - 22 ) ;
+    return ( crate - 8 ) ;
+  }
+
+  /// Returns the crate number as a string
+  inline std::string crateNumber( const int type , const int crate ) const {
+    std::ostringstream theStr ;
+    if ( L0DUBase::CaloType::Hadron == type ) theStr << ( crate + 22 ) ;
+    else theStr << (crate + 8) ;
+    return theStr.str() ;
+  }
+
+  /// Returns the name of the candidate type
+  inline std::string fullName( const int type ) const {
+    switch ( type ) {
+    case L0DUBase::CaloType::Electron:  return "Electron"  ; break ;
+    case L0DUBase::CaloType::Photon:    return "Photon"    ; break ;
+    case L0DUBase::CaloType::Pi0Local:  return "Pi0Local"  ; break ;
+    case L0DUBase::CaloType::Pi0Global: return "Pi0Global" ; break ;
+    case L0DUBase::CaloType::Hadron:    return "Hadron"    ; break ;
+    default: break ;
+    }
+    return "default" ;
+  }
+
+  /// Returns the abbreviation of the candidate type
+  inline std::string abbrev( const int type ) const {
+    switch ( type ) {
+    case L0DUBase::CaloType::Electron:  return "Ele" ; break ;
+    case L0DUBase::CaloType::Photon:    return "Pho" ; break ;
+    case L0DUBase::CaloType::Pi0Local:  return "Pil" ; break ;
+    case L0DUBase::CaloType::Pi0Global: return "Pig" ; break ;
+    case L0DUBase::CaloType::Hadron:    return "Had" ; break ;
+    default: break ;
+    }
+    return "default" ;
+  }
+
+  /// Name corresponding to the area
+  inline std::string area( const int type ) const {
+    switch ( type ) {
+    case 0: return "Outer"  ; break ;
+    case 1: return "Middle" ; break ;
+    case 2: return "Inner"  ; break ;
+    default: break ;
+    }
+    return "default" ;
+  }
 };
 #endif // L0CALOMONIT_H
