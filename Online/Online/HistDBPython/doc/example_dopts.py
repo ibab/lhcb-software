@@ -1,42 +1,33 @@
-# this file defines the display options for histogram
-
-# needed in all display option files
 from Gaudi.Configuration import *
 from Configurables import SetHistDisplayOptions
 setDisplay = SetHistDisplayOptions("setDisplay")
 
-# Setting up the lists for the display options. There is one 
-# list for each data type. 
-# floatOptions is actually stored in a <string, double>-map 
-# but the values are cast to float before setting
+# Setting up the dictionaries for the display options. 
+#   There is one dictionary for each data type with the structure 
+#   { string : <datatype> }
+#   (floatOptions is internally stored in a <string, double>-map 
+#    but the values are cast to float before setting)
 setDisplay.intOptions = {}
 setDisplay.floatOptions  = {}
 setDisplay.stringOptions = {}
 
 
-# ****** BEGIN EDITABLE ******
-
-# map with the identifiers for the histograms to edit
-# strucutre:  { string : int } 
-# *) the string is the identifier of the histogram, the string will get 
-# prefixed with the content of HistoBase defined in the 
-# generalOptions (included below)
-# *) if int is true, saveHistoSetDisplayOptions() will be called
-# i.e. the changes will be applied for the whole set
+# ***********************************************
+# defining the histograms to edit
+#   HistoNames is a dictionary with strucutre { string : boolean } 
+#   *) the string is the identifier of the histogram, the string will get 
+#      prefixed with the content of HistoBase  
+#   *) if int is true, saveHistoSetDisplayOptions() will be called
+#      i.e. the changes will be applied for the whole set
 setDisplay.HistoNames = {
-  "/error-types_$tell1" : 1
+  "/error-types_$tell1" : True
 } 
 
 # Should all display options for these Histograms be unset 
 # before the changes below are made?
-setDisplay.UnsetOptions = 1 
+setDisplay.UnsetOptions = True 
     
-# The actual definition of the display options. 
-# unused options should just be commented out
-#   This list is not updated on regular basis
-#   check histdbdoc for the latest list of 
-#   availbale options
-
+# Filling the display option dicitonaries with entries 
 setDisplay.stringOptions["LABEL_X"]   = "Optical Link"
 setDisplay.intOptions["NDIVX"]        = 424
 
@@ -45,9 +36,12 @@ setDisplay.floatOptions["LAB_Y_SIZE"] = 0.04
 
 setDisplay.stringOptions["DRAWOPTS"]  = "box"
 
+
+# ***********************************************
 # Define custom bin labels
 #   for each axis there is a list with one 
-#   string for each bin  
+#   string for each bin 
+#setDisplay.xLabels = [];
 setDisplay.yLabels = []
 setDisplay.yLabels.append("None");
 setDisplay.yLabels.append("CorruptedBank");
@@ -61,7 +55,6 @@ setDisplay.yLabels.append("PseudoHeader");
 setDisplay.yLabels.append("WrongPCN");
 
 
-# ****** END EDITABLE ******
-
+# ***********************************************
 # application manager and messag service settings
 importOptions("example_genSet.py")

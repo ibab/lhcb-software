@@ -2,34 +2,31 @@ from Gaudi.Configuration import *
 from Configurables import RemovePages
 rmAlg = RemovePages("rmAlg")
 
-
-# StartFolders is the list of folders 
-# that should be deleted.
-#   !! All pages and subfolders will be 
-#   !! delete as well.
+# defining the root of the branches to delete
+#   StartFolders is a list of stings
+#   !! All pages and subfolders will be delete
 rmAlg.StartFolders = [ "/TestFolder/subfolder1", "/TestFolder/subfolder2" ]
 
-# If DryRun = True no changes will be 
-# written to the OnlineHistDB.
-# This should be used to check which 
-# pages really get deleted. 
+# simulate deletion?
+#   If DryRun = True all pages affected by this configuration will be printed
+#   but no changes will be written to the OnlineHistDB.
+# This should be used to check which pages really get deleted. 
 rmAlg.DryRun       = True
 
-
-# PasswordFile points to the file containing the password for HIST_WRITER
-# the options should give the file name of the password 
-# file, either relative to run directory or absolut.
-# default value is 'password'
+# specifying the password file
+#   this sting points to the file containing the password for HIST_WRITER
+#   the file can be given either relative to the run directory or with
+#   an absolut path.
+#   the default value is 'password'
 #rmAlg.PasswordFile = "password"
 
+# Protect top level directories from deletion
 # ----------------------------------------
 # !! do not change unless you know what !!
 # !! you are doing!                     !!
 # ----------------------------------------
-# This protects top level directories  
-#   (e.g. "/TT" or "/VELO")
-# from being deleted 
-# default value is True
+#   if ProtectTopLevel is True, top level directories (e.g. "/TT" or "/VELO")
+#   in StartFolders will get ignored
 #rmAlg.ProtectTopLevel = True
 
 # set output level 

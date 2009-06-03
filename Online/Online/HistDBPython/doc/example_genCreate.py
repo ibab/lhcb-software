@@ -1,26 +1,22 @@
-# this file contains general configurations for the creation of pages
-# and adds the algorithm to the application manager
-
-# needed in all option files
 from Gaudi.Configuration import *
 from Configurables import CreateHistDBPages
 createHistAlg = CreateHistDBPages("createHistAlg")
 
-# setting the general options of the Application
-
-# PasswordFile points to the file containing the password for HIST_WRITER
-# the options should give the file name of the password 
-# file, either relative to run directory or absolut.
-# default value is 'password'
+# specifying the password file
+#   this sting points to the file containing the password for HIST_WRITER
+#   the file can be given either relative to the run directory or with
+#   an absolut path.
+#   the default value is 'password'
 #createHistAlg.PasswordFile = "password"
 
-# PageBase is prepended all pages.
-# This should be used to define the correct 
-# main folder for the project
+# define a fixed part for all page names
+#   This will be prepended to all page names and should be used to define 
+#   the correct main folder for the project
 createHistAlg.PageBase = "/TestDir"
 
-# HistoBase can be used to define a fixed part for all histogram names
-# (e.g. task and algorithm name)
+# define a fixed part for all histogram names
+#   This will be prepended to all histogram names and can be used to specify 
+#   task and algorithm name
 createHistAlg.HistoBase = "TestMon"
 
 # set the output level for the message service
@@ -28,7 +24,6 @@ createHistAlg.HistoBase = "TestMon"
 # additionally there are: NIL (0), VERBOSE (1), ALWAYS (7), NUM_LEVELS (8)
 createHistAlg.OutputLevel = INFO
 
-# Add the algorithm to the application manager
-# from Gaudi
+# Add the algorithm to the application manager from Gaudi
 app = ApplicationMgr()
 app.TopAlg.append(createHistAlg)
