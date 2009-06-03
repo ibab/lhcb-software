@@ -50,7 +50,7 @@ use HltSelChecker       v8r2    Hlt   # Patrick Koppenburg
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use LoKiTrigger         v9r2   Phys   # Vanya Belyaev
+use LoKiTrigger         v9r2p1  Phys   # Vanya Belyaev
 use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
 
 # Allow the generation of QMTest summary 
