@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.2 2009-04-24 13:27:16 kkruzele Exp $
+# $Id: GetPack.py,v 1.3 2009-06-03 13:01:53 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -99,7 +99,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.2 2009-04-24 13:27:16 kkruzele Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.3 2009-06-03 13:01:53 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -282,6 +282,9 @@ class GetPack(Script):
                 else:
                     self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions)
+        # Fix the case of the special version "head"
+        if version.lower() == "head":
+            version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
         rep.checkout(package, version, vers_dir = self.options.version_dirs)
         # Call "cmt config"
@@ -316,7 +319,8 @@ class GetPack(Script):
                 else:
                     self.log.warning("Version not specified for project '%s'" % project)
                 version = self._askVersion(versions)
-        else:
+        # Fix the case of the special version "HEAD"
+        if version.lower() == "head":
             version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
         rep.checkout(project, version, vers_dir = True, project = True)
