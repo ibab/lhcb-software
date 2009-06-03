@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.164 2009-05-29 18:13:02 pkoppenb Exp $
+! $Id: release.notes,v 1.165 2009-06-03 09:28:20 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v5r6p1 2009-06-02 ===============
 
 ! 2009-05-29 - Patrick Koppenburg
  - A bit more debugging in OfflineVertexFitter
