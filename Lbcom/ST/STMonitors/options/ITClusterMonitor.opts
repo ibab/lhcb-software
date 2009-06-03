@@ -5,20 +5,20 @@
 MoniITSeq.MeasureTime = true;
 MoniITSeq.Members += {
   "ST::STClusterMonitor/ITClusterMonitorCentral"
-  ,"ST::STClusterMonitor/ITClusterMonitorPrev7"
-  ,"ST::STClusterMonitor/ITClusterMonitorPrev6"
-  ,"ST::STClusterMonitor/ITClusterMonitorPrev5"
-  ,"ST::STClusterMonitor/ITClusterMonitorPrev4"
-  ,"ST::STClusterMonitor/ITClusterMonitorPrev3"
+//  ,"ST::STClusterMonitor/ITClusterMonitorPrev7"
+//  ,"ST::STClusterMonitor/ITClusterMonitorPrev6"
+//  ,"ST::STClusterMonitor/ITClusterMonitorPrev5"
+//  ,"ST::STClusterMonitor/ITClusterMonitorPrev4"
+//  ,"ST::STClusterMonitor/ITClusterMonitorPrev3"
   ,"ST::STClusterMonitor/ITClusterMonitorPrev2"
   ,"ST::STClusterMonitor/ITClusterMonitorPrev1"
   ,"ST::STClusterMonitor/ITClusterMonitorNext1"
   ,"ST::STClusterMonitor/ITClusterMonitorNext2"
-  ,"ST::STClusterMonitor/ITClusterMonitorNext3"
-  ,"ST::STClusterMonitor/ITClusterMonitorNext4"
-  ,"ST::STClusterMonitor/ITClusterMonitorNext5"
-  ,"ST::STClusterMonitor/ITClusterMonitorNext6"
-  ,"ST::STClusterMonitor/ITClusterMonitorNext7"
+//  ,"ST::STClusterMonitor/ITClusterMonitorNext3"
+//  ,"ST::STClusterMonitor/ITClusterMonitorNext4"
+//  ,"ST::STClusterMonitor/ITClusterMonitorNext5"
+//  ,"ST::STClusterMonitor/ITClusterMonitorNext6"
+//  ,"ST::STClusterMonitor/ITClusterMonitorNext7"
 };
 
 ITClusterMonitorCentral.DetType = "IT";
@@ -26,6 +26,7 @@ ITClusterMonitorCentral.ClusterLocation = "Raw/IT/Clusters";
 ITClusterMonitorCentral.HitMaps = false;
 ITClusterMonitorCentral.ByDetectorRegion = false;
 ITClusterMonitorCentral.ByServiceBox = true;
+ITClusterMonitorCentral.ByLink = true;
 ITClusterMonitorCentral.FullDetail = false;
 ITClusterMonitorCentral.OutputLevel = 3;
 
@@ -34,6 +35,7 @@ ITClusterMonitorPrev7.ClusterLocation = "Prev7/Raw/IT/Clusters";
 ITClusterMonitorPrev7.HitMaps = false;
 ITClusterMonitorPrev7.ByDetectorRegion = false;
 ITClusterMonitorPrev7.ByServiceBox = true;
+ITClusterMonitorPrev7.ByLink = true;
 ITClusterMonitorPrev7.FullDetail = false;
 ITClusterMonitorPrev7.OutputLevel = 3;
 
@@ -42,6 +44,7 @@ ITClusterMonitorPrev6.ClusterLocation = "Prev6/Raw/IT/Clusters";
 ITClusterMonitorPrev6.HitMaps = false;
 ITClusterMonitorPrev6.ByDetectorRegion = false;
 ITClusterMonitorPrev6.ByServiceBox = true;
+ITClusterMonitorPrev6.ByLink = true;
 ITClusterMonitorPrev6.FullDetail = false;
 ITClusterMonitorPrev6.OutputLevel = 3;
 
@@ -50,6 +53,7 @@ ITClusterMonitorPrev5.ClusterLocation = "Prev5/Raw/IT/Clusters";
 ITClusterMonitorPrev5.HitMaps = false;
 ITClusterMonitorPrev5.ByDetectorRegion = false;
 ITClusterMonitorPrev5.ByServiceBox = true;
+ITClusterMonitorPrev5.ByLink = true;
 ITClusterMonitorPrev5.FullDetail = false;
 ITClusterMonitorPrev5.OutputLevel = 3;
 
@@ -58,6 +62,7 @@ ITClusterMonitorPrev4.ClusterLocation = "Prev4/Raw/IT/Clusters";
 ITClusterMonitorPrev4.HitMaps = false;
 ITClusterMonitorPrev4.ByDetectorRegion = false;
 ITClusterMonitorPrev4.ByServiceBox = true;
+ITClusterMonitorPrev4.ByLink = true;
 ITClusterMonitorPrev4.FullDetail = false;
 ITClusterMonitorPrev4.OutputLevel = 3;
 
@@ -66,6 +71,7 @@ ITClusterMonitorPrev3.ClusterLocation = "Prev3/Raw/IT/Clusters";
 ITClusterMonitorPrev3.HitMaps = false;
 ITClusterMonitorPrev3.ByDetectorRegion = false;
 ITClusterMonitorPrev3.ByServiceBox = true;
+ITClusterMonitorPrev3.ByLink = true;
 ITClusterMonitorPrev3.FullDetail = false;
 ITClusterMonitorPrev3.OutputLevel = 3;
 
@@ -74,6 +80,7 @@ ITClusterMonitorPrev2.ClusterLocation = "Prev2/Raw/IT/Clusters";
 ITClusterMonitorPrev2.HitMaps = false;
 ITClusterMonitorPrev2.ByDetectorRegion = false;
 ITClusterMonitorPrev2.ByServiceBox = true;
+ITClusterMonitorPrev2.ByLink = true;
 ITClusterMonitorPrev2.FullDetail = false;
 ITClusterMonitorPrev2.OutputLevel = 3;
 
@@ -82,6 +89,7 @@ ITClusterMonitorPrev1.ClusterLocation = "Prev1/Raw/IT/Clusters";
 ITClusterMonitorPrev1.HitMaps = false;
 ITClusterMonitorPrev1.ByDetectorRegion = false;
 ITClusterMonitorPrev1.ByServiceBox = true;
+ITClusterMonitorPrev1.ByLink = true;
 ITClusterMonitorPrev1.FullDetail = false;
 ITClusterMonitorPrev1.OutputLevel = 3;
 
@@ -90,6 +98,7 @@ ITClusterMonitorNext1.ClusterLocation = "Next1/Raw/IT/Clusters";
 ITClusterMonitorNext1.HitMaps = false;
 ITClusterMonitorNext1.ByDetectorRegion = false;
 ITClusterMonitorNext1.ByServiceBox = true;
+ITClusterMonitorNext1.ByLink = true;
 ITClusterMonitorNext1.FullDetail = false;
 ITClusterMonitorNext1.OutputLevel = 3;
 
@@ -98,6 +107,7 @@ ITClusterMonitorNext2.ClusterLocation = "Next2/Raw/IT/Clusters";
 ITClusterMonitorNext2.HitMaps = false;
 ITClusterMonitorNext2.ByDetectorRegion = false;
 ITClusterMonitorNext2.ByServiceBox = true;
+ITClusterMonitorNext2.ByLink = true;
 ITClusterMonitorNext2.FullDetail = false;
 ITClusterMonitorNext2.OutputLevel = 3;
 
@@ -106,6 +116,7 @@ ITClusterMonitorNext3.ClusterLocation = "Next3/Raw/IT/Clusters";
 ITClusterMonitorNext3.HitMaps = false;
 ITClusterMonitorNext3.ByDetectorRegion = false;
 ITClusterMonitorNext3.ByServiceBox = true;
+ITClusterMonitorNext3.ByLink = true;
 ITClusterMonitorNext3.FullDetail = false;
 ITClusterMonitorNext3.OutputLevel = 3;
 
@@ -114,6 +125,7 @@ ITClusterMonitorNext4.ClusterLocation = "Next4/Raw/IT/Clusters";
 ITClusterMonitorNext4.HitMaps = false;
 ITClusterMonitorNext4.ByDetectorRegion = false;
 ITClusterMonitorNext4.ByServiceBox = true;
+ITClusterMonitorNext4.ByLink = true;
 ITClusterMonitorNext4.FullDetail = false;
 ITClusterMonitorNext4.OutputLevel = 3;
 
@@ -122,6 +134,7 @@ ITClusterMonitorNext5.ClusterLocation = "Next5/Raw/IT/Clusters";
 ITClusterMonitorNext5.HitMaps = false;
 ITClusterMonitorNext5.ByDetectorRegion = false;
 ITClusterMonitorNext5.ByServiceBox = true;
+ITClusterMonitorNext5.ByLink = true;
 ITClusterMonitorNext5.FullDetail = false;
 ITClusterMonitorNext5.OutputLevel = 3;
 
@@ -130,6 +143,7 @@ ITClusterMonitorNext6.ClusterLocation = "Next6/Raw/IT/Clusters";
 ITClusterMonitorNext6.HitMaps = false;
 ITClusterMonitorNext6.ByDetectorRegion = false;
 ITClusterMonitorNext6.ByServiceBox = true;
+ITClusterMonitorNext6.ByLink = true;
 ITClusterMonitorNext6.FullDetail = false;
 ITClusterMonitorNext6.OutputLevel = 3;
 
@@ -138,6 +152,7 @@ ITClusterMonitorNext7.ClusterLocation = "Next7/Raw/IT/Clusters";
 ITClusterMonitorNext7.HitMaps = false;
 ITClusterMonitorNext7.ByDetectorRegion = false;
 ITClusterMonitorNext7.ByServiceBox = true;
+ITClusterMonitorNext7.ByLink = true;
 ITClusterMonitorNext7.FullDetail = false;
 ITClusterMonitorNext7.OutputLevel = 3;
 

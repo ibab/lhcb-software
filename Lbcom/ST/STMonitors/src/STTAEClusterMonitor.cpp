@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.4 2009-05-28 15:42:07 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.5 2009-06-03 09:16:49 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -156,7 +156,6 @@ void ST::STTAEClusterMonitor::monitorClusters() {
       int sample = static_cast<int>(iSample-(m_nSamples-1)/2);
       profile1D(sample, clusters->size(),"Number of clusters vs sampling points",
                 "Number of clusters vs sampling points",-m_maxSample, m_maxSample, m_nSamples);
-
       for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
         const LHCb::STCluster* cluster = (*itClus);
         const unsigned int clusterSize = cluster->size();

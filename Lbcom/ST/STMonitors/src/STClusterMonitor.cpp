@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.4 2009-05-28 15:42:07 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.5 2009-06-03 09:16:49 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -52,6 +52,9 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   /// Plots per detector region
   declareProperty( "ByDetectorRegion", m_plotByDetRegion=false );
 
+  /// Plot by link 
+  declareProperty( "ByLink", m_plotByLink=false );
+
   /// Plot hitmap for each layer
   declareProperty( "HitMaps", m_hitMaps=false );
 
@@ -83,6 +86,7 @@ StatusCode ST::STClusterMonitor::initialize() {
     m_hitMaps = true;
     m_plotBySvcBox = true;
     m_plotByDetRegion = true;
+    m_plotByLink = true;
   }
 
   // sig to noise tool
@@ -173,7 +177,11 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   }
   plot2D(TELL1ID, totalCharge, "Cluster Charge vs TELL1", "Cluster Charge vs TELL1",  
          0.5, m_nTELL1s+0.5, -5., 205., m_nTELL1s, 21);
-
+  if(m_plotByLink) {
+    const unsigned int tell1Channel = cluster->tell1Channel();
+    unsigned int link = tell1Channel/32;
+    plot2D(TELL1ID, link, "Clusters per link vs TELL1", "Clusters per link vs TELL1",  0.5, m_nTELL1s+0.5, -0.5, 95.5, m_nTELL1s, 96);
+  }
   // Always fill histograms per readout quadrant for TT
   // Get service box and set up histogram IDs
   std::string id1DCharge = "Cluster ADC Values";

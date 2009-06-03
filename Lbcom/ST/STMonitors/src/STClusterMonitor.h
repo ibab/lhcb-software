@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.2 2009-05-18 11:35:45 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.3 2009-06-03 09:16:49 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -56,6 +56,7 @@ namespace ST
     bool m_plot2D; ///< Toggle 2D plots on/off
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
+    bool m_plotByLink; ///< Plot number of clusters/tell1 by vs link
     bool m_hitMaps; ///< True if cluster maps are to be shown
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose

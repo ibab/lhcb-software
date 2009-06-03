@@ -12,6 +12,7 @@ ttClusterMonitorCentral.ClusterLocation = "Raw/TT/Clusters"
 ttClusterMonitorCentral.HitMaps = False
 ttClusterMonitorCentral.ByDetectorRegion = False
 ttClusterMonitorCentral.ByServiceBox = True
+ttClusterMonitorCentral.ByLink = True
 ttClusterMonitorCentral.FullDetail = False
 ttClusterMonitorCentral.OutputLevel = 3
 
@@ -20,6 +21,7 @@ ttClusterMonitorPrev7.ClusterLocation = "Prev7/Raw/TT/Clusters"
 ttClusterMonitorPrev7.HitMaps = False
 ttClusterMonitorPrev7.ByDetectorRegion = False
 ttClusterMonitorPrev7.ByServiceBox = True
+ttClusterMonitorPrev7.ByLink = True
 ttClusterMonitorPrev7.FullDetail = False
 ttClusterMonitorPrev7.OutputLevel = 3
 
@@ -28,6 +30,7 @@ ttClusterMonitorPrev6.ClusterLocation = "Prev6/Raw/TT/Clusters"
 ttClusterMonitorPrev6.HitMaps = False
 ttClusterMonitorPrev6.ByDetectorRegion = False
 ttClusterMonitorPrev6.ByServiceBox = True
+ttClusterMonitorPrev6.ByLink = True
 ttClusterMonitorPrev6.FullDetail = False
 ttClusterMonitorPrev6.OutputLevel = 3
 
@@ -36,6 +39,7 @@ ttClusterMonitorPrev5.ClusterLocation = "Prev5/Raw/TT/Clusters"
 ttClusterMonitorPrev5.HitMaps = False
 ttClusterMonitorPrev5.ByDetectorRegion = False
 ttClusterMonitorPrev5.ByServiceBox = True
+ttClusterMonitorPrev5.ByLink = True
 ttClusterMonitorPrev5.FullDetail = False
 ttClusterMonitorPrev5.OutputLevel = 3
 
@@ -44,6 +48,7 @@ ttClusterMonitorPrev4.ClusterLocation = "Prev4/Raw/TT/Clusters"
 ttClusterMonitorPrev4.HitMaps = False
 ttClusterMonitorPrev4.ByDetectorRegion = False
 ttClusterMonitorPrev4.ByServiceBox = True
+ttClusterMonitorPrev4.ByLink = True
 ttClusterMonitorPrev4.FullDetail = False
 ttClusterMonitorPrev4.OutputLevel = 3
 
@@ -52,6 +57,7 @@ ttClusterMonitorPrev3.ClusterLocation = "Prev3/Raw/TT/Clusters"
 ttClusterMonitorPrev3.HitMaps = False
 ttClusterMonitorPrev3.ByDetectorRegion = False
 ttClusterMonitorPrev3.ByServiceBox = True
+ttClusterMonitorPrev3.ByLink = True
 ttClusterMonitorPrev3.FullDetail = False
 ttClusterMonitorPrev3.OutputLevel = 3
 
@@ -60,6 +66,7 @@ ttClusterMonitorPrev2.ClusterLocation = "Prev2/Raw/TT/Clusters"
 ttClusterMonitorPrev2.HitMaps = False
 ttClusterMonitorPrev2.ByDetectorRegion = False
 ttClusterMonitorPrev2.ByServiceBox = True
+ttClusterMonitorPrev2.ByLink = True
 ttClusterMonitorPrev2.FullDetail = False
 ttClusterMonitorPrev2.OutputLevel = 3
 
@@ -68,48 +75,70 @@ ttClusterMonitorPrev1.ClusterLocation = "Prev1/Raw/TT/Clusters"
 ttClusterMonitorPrev1.HitMaps = False
 ttClusterMonitorPrev1.ByDetectorRegion = False
 ttClusterMonitorPrev1.ByServiceBox = True
+ttClusterMonitorPrev1.ByLink = True
 ttClusterMonitorPrev1.FullDetail = False
 ttClusterMonitorPrev1.OutputLevel = 3
 
 ttClusterMonitorNext1 = ST__STClusterMonitor("TTClusterMonitorNext1")
 ttClusterMonitorNext1.ClusterLocation = "Next1/Raw/TT/Clusters"
 ttClusterMonitorNext1.HitMaps = False
+ttClusterMonitorNext1.ByDetectorRegion = False
+ttClusterMonitorNext1.ByServiceBox = True
+ttClusterMonitorNext1.ByLink = True
 ttClusterMonitorNext1.FullDetail = False
 ttClusterMonitorNext1.OutputLevel = 3
 
 ttClusterMonitorNext2 = ST__STClusterMonitor("TTClusterMonitorNext2")
 ttClusterMonitorNext2.ClusterLocation = "Next2/Raw/TT/Clusters"
 ttClusterMonitorNext2.HitMaps = False
+ttClusterMonitorNext2.ByDetectorRegion = False
+ttClusterMonitorNext2.ByServiceBox = True
+ttClusterMonitorNext2.ByLink = True
 ttClusterMonitorNext2.FullDetail = False
 ttClusterMonitorNext2.OutputLevel = 3
 
 ttClusterMonitorNext3 = ST__STClusterMonitor("TTClusterMonitorNext3")
 ttClusterMonitorNext3.ClusterLocation = "Next3/Raw/TT/Clusters"
 ttClusterMonitorNext3.HitMaps = False
+ttClusterMonitorNext3.ByDetectorRegion = False
+ttClusterMonitorNext3.ByServiceBox = True
+ttClusterMonitorNext3.ByLink = True
 ttClusterMonitorNext3.FullDetail = False
 ttClusterMonitorNext3.OutputLevel = 3
 
 ttClusterMonitorNext4 = ST__STClusterMonitor("TTClusterMonitorNext4")
 ttClusterMonitorNext4.ClusterLocation = "Next4/Raw/TT/Clusters"
 ttClusterMonitorNext4.HitMaps = False
+ttClusterMonitorNext4.ByDetectorRegion = False
+ttClusterMonitorNext4.ByServiceBox = True
+ttClusterMonitorNext4.ByLink = True
 ttClusterMonitorNext4.FullDetail = False
 ttClusterMonitorNext4.OutputLevel = 3
 
 ttClusterMonitorNext5 = ST__STClusterMonitor("TTClusterMonitorNext5")
 ttClusterMonitorNext5.ClusterLocation = "Next5/Raw/TT/Clusters"
 ttClusterMonitorNext5.HitMaps = False
+ttClusterMonitorNext5.ByDetectorRegion = False
+ttClusterMonitorNext5.ByServiceBox = True
+ttClusterMonitorNext5.ByLink = True
 ttClusterMonitorNext5.FullDetail = False
 ttClusterMonitorNext5.OutputLevel = 3
 
 ttClusterMonitorNext6 = ST__STClusterMonitor("TTClusterMonitorNext6")
 ttClusterMonitorNext6.ClusterLocation = "Next6/Raw/TT/Clusters"
 ttClusterMonitorNext6.HitMaps = False
+ttClusterMonitorNext6.ByDetectorRegion = False
+ttClusterMonitorNext6.ByServiceBox = True
+ttClusterMonitorNext6.ByLink = True
 ttClusterMonitorNext6.FullDetail = False
 ttClusterMonitorNext6.OutputLevel = 3
 
 ttClusterMonitorNext7 = ST__STClusterMonitor("TTClusterMonitorNext7")
 ttClusterMonitorNext7.ClusterLocation = "Next7/Raw/TT/Clusters"
 ttClusterMonitorNext7.HitMaps = False
+ttClusterMonitorNext7.ByDetectorRegion = False
+ttClusterMonitorNext7.ByServiceBox = True
+ttClusterMonitorNext7.ByLink = True
 ttClusterMonitorNext7.FullDetail = False
 ttClusterMonitorNext7.OutputLevel = 3
 
