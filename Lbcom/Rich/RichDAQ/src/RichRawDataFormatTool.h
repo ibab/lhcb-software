@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.36 2008-09-23 14:54:01 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.37 2009-06-03 08:45:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -111,10 +111,64 @@ namespace Rich
 
     private: // definitions
 
-      // Summary data
-      typedef std::pair< const Rich::DAQ::BankVersion, Rich::DAQ::Level1HardwareID > L1IDandV;
-      typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > >  L1CountAndSize;
+      /** @class L1IDandV RichRawDataFormatTool.h
+       *
+       *  Utility Class
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   01/06/2009
+       */
+      class L1IDandV
+      {
+      public:
+        /// Default Constructor
+        L1IDandV( )
+          : bankVersion  ( Rich::DAQ::UndefinedBankVersion ) { }
+        /// Constructor from arguments
+        L1IDandV( const Rich::DAQ::BankVersion _version,
+                  const Rich::DAQ::Level1HardwareID& _id )
+          : bankVersion  ( _version ),
+            l1HardwareID ( _id      ) { }
+      public:
+        /// Sorting operator
+        inline bool operator < ( const L1IDandV& id ) const
+        { return this->l1HardwareID < id.l1HardwareID ; }
+      public:
+        Rich::DAQ::BankVersion      bankVersion;  ///< Bank version
+        Rich::DAQ::Level1HardwareID l1HardwareID; ///< L1 hardwareID
+      };
+
+      /** @class L1CountAndSize RichRawDataFormatTool.h
+       *
+       *  Utility Class
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   01/06/2009
+       */
+      class L1CountAndSize
+      {
+      public:
+        /// Default Constructor
+        L1CountAndSize( const unsigned long _nHPDs  = 0,
+                        const unsigned long _nHits  = 0,
+                        const unsigned long _nWords = 0,
+                        const unsigned long _nFills = 0 )
+          : nHPDs  ( _nHPDs  ),
+            nHits  ( _nHits  ),
+            nWords ( _nWords ),
+            nFills ( _nFills ) { }
+      public:
+        unsigned long nHPDs;  ///< Number of HPDs
+        unsigned long nHits;  ///< Number of Hits
+        unsigned long nWords; ///< Number of 32 bit words
+        unsigned long nFills; ///< Number of data entries
+      };
+
+      /// Summary data per L1 board
       typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
+
+      /// Summary for each TAE location
+      typedef Rich::Map< const std::string, L1TypeCount > L1TypeCountTAE;
 
     private: // methods
 
@@ -200,7 +254,7 @@ namespace Rich
                                   Rich::DAQ::L1Map & decodedData ) const;
 
       /// Print the given data word as Hex and as bits, to the given precision
-      void rawDump( MsgStream & os, 
+      void rawDump( MsgStream & os,
                     const LongType word,
                     const ShortType nBits = 32 ) const;
 
@@ -231,11 +285,11 @@ namespace Rich
       /// Flag to turn on and off the summary information
       bool m_summary;
 
-      mutable L1TypeCount m_l1decodeSummary; ///< Summary object for decoding
+      mutable L1TypeCountTAE m_l1decodeSummary; ///< Summary object for decoding
       mutable L1TypeCount m_l1encodeSummary; ///< Summary object for encoding
 
       /// Number of events processed
-      mutable unsigned int m_evtCount;
+      mutable unsigned long m_evtCount;
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled;
@@ -286,7 +340,7 @@ namespace Rich
       /// Flag to turn on/off decoding of each RICH detector (default is both on)
       std::vector<bool> m_richIsActive;
 
-      /** Flag to turn on/off the purging off data from HPDs that fail the data 
+      /** Flag to turn on/off the purging off data from HPDs that fail the data
        *  integrity checks (default is on) */
       bool m_purgeHPDsFailIntegrity;
 

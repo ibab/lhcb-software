@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.19 2008-10-16 16:04:54 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.20 2009-06-03 08:45:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -122,23 +122,19 @@ namespace Rich
       /// Pointer to RICH raw data format tool
       const IRawDataFormatTool * m_rawFormatT;
 
-      /// The decoded data for the main events(s)
-      mutable Rich::DAQ::L1Map m_richData;
-
       /// The decoded data for particular TAE event(s)
       mutable Rich::HashMap< const std::string, Rich::DAQ::L1Map > m_richDataTAE;
-
-      /// New event flag
-      mutable bool m_newEvent;
 
       /// Input location(s) for RawEvent in TES
       IRawDataFormatTool::RawEventLocations m_rawEventLocs;
 
+      // Cached variables
+      std::string m_taeKey;
+
     };
 
     inline void RawBufferToSmartIDsTool::InitNewEvent()
-    { 
-      m_newEvent = true; 
+    {
       m_richDataTAE.clear();
     }
 

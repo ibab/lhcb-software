@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.26 2008-10-17 11:03:42 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.27 2009-06-03 08:45:11 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -28,8 +28,7 @@ RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
                                                   const IInterface* parent )
   : ToolBase       ( type, name, parent ),
     m_richSys      ( NULL ),
-    m_rawFormatT   ( NULL ),
-    m_newEvent     ( true )
+    m_rawFormatT   ( NULL )
 {
   // Defined interface
   declareInterface<IRawBufferToSmartIDsTool>(this);
@@ -52,6 +51,9 @@ StatusCode RawBufferToSmartIDsTool::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
+
+  // cached variables
+  m_taeKey = taeKey(m_rawEventLocs);
 
   debug() << "RawEvent TAEs : " << m_rawEventLocs << endreq;
 
@@ -180,14 +182,11 @@ RawBufferToSmartIDsTool::allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEve
 
 const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
 {
-  if ( m_newEvent )
+  Rich::DAQ::L1Map & data = m_richDataTAE[ m_taeKey ];
+  if ( data.empty() )
   {
-    // clear current data
-    m_richData.clear();
     // Use raw format tool to decode event
-    m_rawFormatT->decodeToSmartIDs( m_rawEventLocs, m_richData );
-    // Set this event processed
-    m_newEvent = false;
+    m_rawFormatT->decodeToSmartIDs( m_rawEventLocs, data );
   }
-  return m_richData;
+  return data;
 }
