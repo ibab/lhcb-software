@@ -218,28 +218,28 @@ void EvtParticle::initDecay(bool useMinMass) {
     for (size_t i=0;i<par->getNDaug();i++) {
       EvtParticle *tDaug=par->getDaug(i);
       if ( p != tDaug )
-	parMass-=EvtPDL::getMinMass(tDaug->getId());
+        parMass-=EvtPDL::getMinMass(tDaug->getId());
     }
   }
-
+  
   if ( _isInit ) {
     //we have already been here - just reroll the masses!
     if ( _ndaug>0) {
       for(size_t ii=0;ii<_ndaug;ii++){
-	if ( _ndaug==1 ||  EvtPDL::getWidth(p->getDaug(ii)->getId()) > 0.0000001)
-	  p->getDaug(ii)->initDecay(useMinMass);
-	else p->getDaug(ii)->setMass(EvtPDL::getMeanMass(p->getDaug(ii)->getId()));
+        if ( _ndaug==1 ||  EvtPDL::getWidth(p->getDaug(ii)->getId()) > 0.0000001)
+          p->getDaug(ii)->initDecay(useMinMass);
+        else p->getDaug(ii)->setMass(EvtPDL::getMeanMass(p->getDaug(ii)->getId()));
       }
     }
-
+    
     EvtId *dauId=0;
     double *dauMasses=0;
     if ( _ndaug > 0) {
       dauId=new EvtId[_ndaug];
       dauMasses=new double[_ndaug];
       for (size_t j=0;j<_ndaug;j++) { 
-	dauId[j]=p->getDaug(j)->getId();
-	dauMasses[j]=p->getDaug(j)->mass();
+        dauId[j]=p->getDaug(j)->getId();
+        dauMasses[j]=p->getDaug(j)->mass();
       }
     }
     EvtId *parId=0;
@@ -248,13 +248,13 @@ void EvtParticle::initDecay(bool useMinMass) {
     if (tempPar) {
       parId=new EvtId(tempPar->getId());
       if ( tempPar->getNDaug()==2 ) {
-	if ( tempPar->getDaug(0) == this ) othDauId=new EvtId(tempPar->getDaug(1)->getId());
-	else othDauId=new EvtId(tempPar->getDaug(0)->getId());
+        if ( tempPar->getDaug(0) == this ) othDauId=new EvtId(tempPar->getDaug(1)->getId());
+        else othDauId=new EvtId(tempPar->getDaug(0)->getId());
       }
     }
     if ( p->getParent() && _validP4==false ) {
       if ( !useMinMass ) {
-	p->setMass(EvtPDL::getRandMass(p->getId(),parId,_ndaug,dauId,othDauId,parMass,dauMasses));
+        p->setMass(EvtPDL::getRandMass(p->getId(),parId,_ndaug,dauId,othDauId,parMass,dauMasses));
       }
       else p->setMass(EvtPDL::getMinMass(p->getId()));
     }
@@ -264,7 +264,7 @@ void EvtParticle::initDecay(bool useMinMass) {
     if ( dauMasses) delete [] dauMasses;
     return;
   }
-
+  
   
   //Will include effects of mixing here
   //added by Lange Jan4,2000
@@ -276,7 +276,7 @@ void EvtParticle::initDecay(bool useMinMass) {
   static EvtId D0B=EvtPDL::getId("anti-D0");
   static EvtId U4S=EvtPDL::getId("Upsilon(4S)");
   static EvtIdSet borUps(BS0,BSB,BD0,BDB,U4S);
-
+  
   //only makes sense if there is no parent particle which is a B or an Upsilon
   bool hasBorUps=false;
   if ( getParent() && borUps.contains(getParent()->getId()) ) hasBorUps=true;
@@ -296,33 +296,33 @@ void EvtParticle::initDecay(bool useMinMass) {
     
       scalar_part=new EvtScalarParticle;
       if (getId()==BS0) {
-	EvtVector4R p_init(EvtPDL::getMass(BSB),0.0,0.0,0.0);
-	scalar_part->init(BSB,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(BSB),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
       else if (getId()==BSB) {
-	EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
-	scalar_part->init(BS0,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
       else if (getId()==BD0) {
-	EvtVector4R p_init(EvtPDL::getMass(BDB),0.0,0.0,0.0);
-	scalar_part->init(BDB,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(BDB),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
       else if (getId()==BDB) {
-	EvtVector4R p_init(EvtPDL::getMass(BD0),0.0,0.0,0.0);
-	scalar_part->init(BD0,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(BD0),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
       else if (getId()==D0) {
-	EvtVector4R p_init(EvtPDL::getMass(D0B),0.0,0.0,0.0);
-	scalar_part->init(D0B,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(D0B),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
       else if (getId()==D0B) {
-	EvtVector4R p_init(EvtPDL::getMass(D0),0.0,0.0,0.0);
-	scalar_part->init(D0,p_init);
+        EvtVector4R p_init(EvtPDL::getMass(D0),0.0,0.0,0.0);
+        scalar_part->init(EvtPDL::chargeConj(getId()),p_init);
       }
-
+      
       scalar_part->setLifetime(0);
       scalar_part->setDiagonalSpinDensity();      
-    
+      
       insertDaugPtr(0,scalar_part);
 
       _ndaug=1;
@@ -334,7 +334,6 @@ void EvtParticle::initDecay(bool useMinMass) {
 
     }
   }
-  if ( _ndaug==1 ) std::cout << "hi " << EvtPDL::name(this->getId()) << std::endl;
 
   EvtDecayBase *decayer;
   decayer = EvtDecayTable::getDecayFunc(p);
@@ -345,7 +344,7 @@ void EvtParticle::initDecay(bool useMinMass) {
     for(size_t i=0;i<p->getNDaug();i++){
       //      std::cout << EvtPDL::name(p->getDaug(i)->getId()) << " " << i << " " << p->getDaug(i)->getSpinType() << " " << EvtPDL::name(p->getId()) << std::endl;
       if ( EvtPDL::getWidth(p->getDaug(i)->getId()) > 0.0000001)
-	p->getDaug(i)->initDecay(useMinMass);
+        p->getDaug(i)->initDecay(useMinMass);
       else p->getDaug(i)->setMass(EvtPDL::getMeanMass(p->getDaug(i)->getId()));
     }
   }

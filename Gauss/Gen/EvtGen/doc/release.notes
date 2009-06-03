@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Patrick Robbe
+ - EvtParticle.cpp: Allow mixing of aliases
+
 !========================== EvtGen v11r1 2009-05-27 ==========================
 ! 2009-05-25 - Mark Whitehead
  - EvtCPUtil.cpp: Bugs in incoherentmix routine fixed.
