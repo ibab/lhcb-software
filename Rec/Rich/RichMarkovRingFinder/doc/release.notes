@@ -4,6 +4,9 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Chris Jones
+ - Sychronise the configurable with the ENN Configurable.
+
 !=================== Rich/RichMarkovRingFinder v2r7 2009-05-25 ===============
 ! 2009-05-22 - Chris Jones
  - Move monitoring algorithm to RichRecQC
