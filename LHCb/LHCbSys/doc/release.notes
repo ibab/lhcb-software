@@ -51,7 +51,7 @@ This version uses Gaudi v21r1 and LCG_56a
   . Relations/Get.h: Add new methods getUniqueFrom
 
 - In DDDB v1r17
-  . Update 2009 default tags to latest tags in SQLDDDB v5r6
+  . Update 2009 default tags to latest tags in SQLDDDB v5r7
   . Add default tags for MC09 
 
 - In DetCond v12r6
