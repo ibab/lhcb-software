@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v6r4p1 2009-06-03 ===================
 ! 2009-05-30 - Gerhard Raven
  - remove Selection::ncandidates; please use Selection::size instead
  - remove HltBase::fillHisto; please use fill instead
