@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.432 2009-05-27 15:35:28 jpalac Exp $
+! $Id: release.notes,v 1.433 2009-06-03 09:38:11 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v18r5p1 2009-06-02 =================
+
+! 2009-06-02 - Juan PALACIOS
+ - src/PVRelatorAlg{.cpp, .h}
+  . Remove LHCb v27r0 backwards compatibility hacks.
+ - cmt/requirements
+  . v18r5p1
 
 !========================== DaVinciTools v18r5 2009-05-27 ===================
 
