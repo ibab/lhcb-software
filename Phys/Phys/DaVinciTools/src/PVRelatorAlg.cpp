@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.6 2009-05-27 15:35:12 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.7 2009-06-03 09:37:59 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -173,14 +173,9 @@ Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "tableFromTable found " 
                                             << vertices.size() 
                                             << " related vertices" << endmsg;
-    /// @todo uncomment with LHCb v27r1
-//     const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, vertices);
 
-    /// @todo remove with LHCb v27r1 =========================================
-    PVs pvs;
-    getPVsFromVertexBases(vertices, pvs);    
-    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, pvs);
-    //========================================================================
+    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, vertices);
+
     const RelTable::Range rel = bestPVTable.relations();
 
     if ( msgLevel(MSG::VERBOSE) ) { 
@@ -188,29 +183,11 @@ Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
                 << " relations to table" << endmsg;
     }
 
-    table->merge(rel);       // doesn't seem to work 
+    table->merge(rel);
   }
 
   return table;
 
-}
-//=============================================================================
-/// @todo remove with LHCb v27r1
-void 
-PVRelatorAlg::getPVsFromVertexBases(const LHCb::VertexBase::ConstVector& v,
-                                    LHCb::RecVertex::ConstVector& pvs) const
-{
-  LHCb::VertexBase::ConstVector::const_iterator iVtx = v.begin();
-  for ( ; iVtx != v.end() ; ++ iVtx ) {
-    const LHCb::RecVertex* pv = dynamic_cast<const LHCb::RecVertex*>(*iVtx);
-    if (!pv) {
-      Error("VertexBase -> RecVertex dynamic_cast failed!", 10).ignore();
-
-    } else {
-      pvs.push_back(pv);
-    }
-  }
-  
 }
 //=============================================================================
 //  Finalize
