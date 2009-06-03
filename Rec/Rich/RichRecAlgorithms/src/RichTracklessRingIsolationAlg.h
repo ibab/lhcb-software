@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.5 2009-05-24 16:18:25 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.h,v 1.6 2009-06-03 09:04:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -75,6 +75,10 @@ namespace Rich
       {
         if ( !m_abortEarly )
         {
+          if ( msgLevel(MSG::VERBOSE) && !result )
+          {
+            verbose() << "  -> '" << desc << "' FAILED" << endmsg;
+          }
           counter(Rich::text(rad)+" '"+desc+"'") += ( result ? 1.0 : 0.0 );
         }
         return result;
@@ -92,6 +96,9 @@ namespace Rich
         
       /// Minimum separation between ring centres for each radiator
       std::vector<double> m_sizesepcut;
+
+      /// Search window for pixels
+      std::vector<double> m_pixelWin;
 
       /// Minimum fraction of pixels in ring region
       std::vector<double> m_sizeringwidth;

@@ -4,6 +4,10 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Chris Jones
+ - Yet more improvements to the trackless ring filtering and isolation 
+   algorithms.
+
 !===================== RichRecAlgorithms v2r15 2009-05-25 ====================
 ! 2009-05-22 - Chris Jones
  - Some improvements to the trackless ring filtering and isolation algorithms

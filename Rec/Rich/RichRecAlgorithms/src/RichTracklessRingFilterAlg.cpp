@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.7 2009-05-24 16:18:25 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.8 2009-06-03 09:04:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -60,7 +60,8 @@ StatusCode TracklessRingFilterAlg::execute()
 
   // Load the input rings
   const LHCb::RichRecRings * inrings = get<LHCb::RichRecRings>(m_inputRings);
-  debug() << "Found " << inrings->size() << " input rings at " << m_inputRings << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << inrings->size() << " input rings at " << m_inputRings << endmsg;
 
   // Create a container for the output rings
   LHCb::RichRecRings * outrings = new LHCb::RichRecRings();
@@ -69,7 +70,7 @@ StatusCode TracklessRingFilterAlg::execute()
   // Count Rings per radiator
   typedef Rich::Map<Rich::RadiatorType,unsigned int> RadCount;
   RadCount rCount;
-  //rCount[Rich::Aerogel]  = 0;
+  rCount[Rich::Aerogel]  = 0;
   rCount[Rich::Rich1Gas] = 0;
   rCount[Rich::Rich2Gas] = 0;
 
