@@ -1,4 +1,4 @@
-// $Id: CaloEMuChecker.cpp,v 1.1 2009-04-21 14:19:32 odescham Exp $
+// $Id: CaloEMuChecker.cpp,v 1.2 2009-06-03 13:07:23 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -205,7 +205,7 @@ bool CaloEMuChecker::acceptMu(const LHCb::ProtoParticle *proto) const
   if ( !proto->info( LHCb::ProtoParticle::InAccEcal, false )     ) return false;
   if ( !proto->info( LHCb::ProtoParticle::InAccHcal, false )     ) return false;
 
-  if ( int(fabs(static_cast<MoniVarsMC *>(m_var)->mcid)) != int(fabs(m_muID)) ) return false;
+  if ( int(abs(static_cast<MoniVarsMC *>(m_var)->mcid)) != int(abs(m_muID)) ) return false;
 
   return true;
 }
@@ -216,7 +216,7 @@ bool CaloEMuChecker::acceptMu(const LHCb::ProtoParticle *proto) const
 bool CaloEMuChecker::acceptE(const LHCb::ProtoParticle *proto) const
 {
   if ( !proto->info( LHCb::ProtoParticle::InAccEcal, false )    ) return false;
-  if ( int(fabs(static_cast<MoniVarsMC *>(m_var)->mcid)) != int(fabs(m_eID)) ) return false;
+  if ( int(abs(static_cast<MoniVarsMC *>(m_var)->mcid)) != int(abs(m_eID)) ) return false;
 
   return true;
 }
