@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2009-06-03 10:51:22 ibelyaev Exp $
+! $Id: release.notes,v 1.40 2009-06-03 10:52:07 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,9 @@
    for lhcb2-nightlies 
    surprizingly there are no warning for lhcb3 nightlies 
 
+ - cmt/requirements 
+
+    version increment to v9r2p1 
    
 
 !!========================== LoKiTrigger v9r2 2009-06-03 ===================
