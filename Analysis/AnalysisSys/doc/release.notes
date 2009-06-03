@@ -3,6 +3,19 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r4>2009-06-03 Analysis v3r4 </A></H1><PRE>
+
+ - Based on LHCb v27r1 and Gaudi v21r1
+
+  Highlights:
+
+  * New Stripping
+    . Removed all of PhysSel and old Stripping package. Added new stripping
+      framework by Anton Poluektov, packages Phys/StrippingSelections and 
+      Phys/StrippingConf.
+      Users of PhysSel packages will need to getpack them from now on.
+  * Various minor improvements and bug-fixes
+
 </PRE><H1><A NAME=v3r3>2009-05-1 Analysis v3r3 </A></H1><PRE>
 
  - Based on LHCb v27r0 and Gaudi v21r0

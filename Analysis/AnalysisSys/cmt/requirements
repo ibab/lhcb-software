@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.95 2009-05-19 13:51:31 pkoppenb Exp $
+# $Id: requirements,v 1.96 2009-06-03 13:09:39 jpalac Exp $
 package AnalysisSys
-version v3r3
+version v3r4
 
 branches doc cmt
 
@@ -9,16 +9,16 @@ branches doc cmt
 
 use  AnalysisConf               v1r2     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
-use  CommonParticles            v5r1     Phys   # Juan Palacios, WGs
+use  CommonParticles            v5r2     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r4     Phys   # Marco Musy
 use  DaVinciFilter              v6r12    Phys   # Patrick Koppenburg - deprecated
 
-use  DaVinciMonitors            v1r3     Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r1     Rich   # Chris Jones
+use  DaVinciMonitors            v1r4     Phys   # Patrick Koppenburg
+use  RichPIDQC                  v1r2     Rich   # Chris Jones
 use  DstCalibSel                v1r1     Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r19    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r20    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v1r0     Phys   # Juan Palacios
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
@@ -27,7 +27,7 @@ use  FlavourTaggingChecker      v3r5     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v2r2     Phys   # Jeremie Borel
+use  DecayTreeTuple             v2r3     Phys   # Jeremie Borel
 ####################################################################
 #
 # Stripping
@@ -40,16 +40,16 @@ use StrippingSelections         v1r0     Phys   # Anton Poluektov
 # use $(use_LoKiJets)
 
 ####################################################################
-use  MicroDSTBase        	v1r4    MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r4p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r2    MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r4    MicroDST          # Juan Palacios
+use  MicroDSTTools      	v1r4p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r6    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r1p1  Tutorial          # P. Koppenburg
-use LoKiExample         	v8r3    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r3    Ex                # Juan Palacios
+use LoKiExample         	v8r4    Ex                # Vanya Belyaev
+use MicroDSTExample             v2r4    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
