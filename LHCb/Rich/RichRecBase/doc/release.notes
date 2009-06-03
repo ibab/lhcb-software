@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-03 - Chris Jones
+ - Add reserve calls when filling X and Y vectors in FastRingFitter
+
 !===================== RichRecBase v3r22 2009-05-25 ==========================
 ! 2009-05-21 - Chris Jones
  - Improvements to track selector base class (add likelihood cuts)

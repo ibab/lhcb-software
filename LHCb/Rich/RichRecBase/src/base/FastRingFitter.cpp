@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Rec::FastRingFitter
  *
  *  CVS Log :-
- *  $Id: FastRingFitter.cpp,v 1.4 2008-09-19 06:40:03 jonrob Exp $
+ *  $Id: FastRingFitter.cpp,v 1.5 2009-06-03 08:40:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-01
@@ -138,6 +138,8 @@ void FastRingFitter::addPoints( const LHCb::RichRecRing & ring )
   const Rich::RadiatorType rad = ring.radiator();
 
   // loop over hits on the ring
+  m_X.reserve( ring.richRecPixels().size() );
+  m_Y.reserve( ring.richRecPixels().size() );
   for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iP = ring.richRecPixels().begin();
         iP != ring.richRecPixels().end(); ++iP )
   {
