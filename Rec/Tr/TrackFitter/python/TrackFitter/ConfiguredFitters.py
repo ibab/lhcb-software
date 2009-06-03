@@ -209,7 +209,7 @@ def ConfiguredFastEventFitter( Name, TracksInContainer ):
     eventfitter = TrackEventFitter(Name)
     eventfitter.TracksInContainer = TracksInContainer
     fittername = Name + ".Fitter"
-    eventfitter.addTool( ConfiguredFastMasterFitter( Name = fittername ), name = "Fitter")
+    eventfitter.addTool( ConfiguredFastFitter( Name = fittername ), name = "Fitter")
     return eventfitter
 
 def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
