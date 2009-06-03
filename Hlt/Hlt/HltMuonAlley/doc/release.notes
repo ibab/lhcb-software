@@ -4,6 +4,7 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v3r0 2009-06-03 ===================
 ! 2009-04-30 - Gerhard Raven
  - move track matching code to HltTracking
  - remove unneeded cast
