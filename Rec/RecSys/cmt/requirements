@@ -36,7 +36,7 @@ use TrackUtils           v1r26   Tr   # Eduardo Rodrigues
 # Tf packages: Track Pattern Recognition
 use TrackSys             v4r23   Tf   # Stephanie Hansmann-Menzemer 
 use PatAlgorithms        v3r21   Tf   # Stephanie Hansmann-Menzemer
-use PatVelo              v3r13   Tf   # David Hutchcroft
+use PatVelo              v3r13p1 Tf   # David Hutchcroft
 use PatVeloTT            v3r6    Tf   # Mariusz Witek
 use TfTools              v1r7    Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r22   Tf   # Eduardo Rodrigues
