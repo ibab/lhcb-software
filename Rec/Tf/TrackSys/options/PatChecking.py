@@ -64,7 +64,7 @@ TrackEffChecker("BestTracks").Selector.Selector.zInteraction = 9400.;
 TrackEffChecker("BestTracks").SelectionCriteria = "ChargedLong";
 TrackEffChecker("BestTracks").HistoPrint = False;
 TrackEffChecker("BestTracks").StatPrint = False;
-
+TrackEffChecker("BestTracks").RequireLongTrack = True;
 
 TrackEffChecker("VeloRZ").FullDetail = False;
 TrackEffChecker("VeloRZ").TracksInContainer = "Rec/Track/RZVelo";
