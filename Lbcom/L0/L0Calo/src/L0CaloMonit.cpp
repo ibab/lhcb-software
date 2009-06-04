@@ -1,4 +1,4 @@
-// $Id: L0CaloMonit.cpp,v 1.30 2009-06-04 07:47:17 robbep Exp $
+// $Id: L0CaloMonit.cpp,v 1.31 2009-06-04 07:53:00 robbep Exp $
 
 // local
 #include "L0CaloMonit.h"
@@ -284,6 +284,7 @@ void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) {
   
   // Type of the candidate (L0DUBase::CaloType) 
   int type = cand -> type() ;
+  int card = -1 ;
   
   switch ( type ) {
     
@@ -294,7 +295,7 @@ void L0CaloMonit::defaultMonitoring( const LHCb::L0CaloCandidate * cand ) {
   case L0DUBase::CaloType::Pi0Global:
     
     m_etHist[ type ] -> fill( cand -> etCode() , 1. ) ;
-    int card = detector( type ) -> cardNumber( caloCell ) ;
+    card = detector( type ) -> cardNumber( caloCell ) ;
     
     if ( m_lookForHotCells ) 
       m_freqHist[ type ][ caloCell.area() ] -> fill( caloCell.all() , 1. ) ;
