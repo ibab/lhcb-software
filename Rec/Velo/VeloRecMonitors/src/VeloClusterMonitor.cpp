@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.13 2009-05-14 15:28:36 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.14 2009-06-04 08:46:06 parkesb Exp $
 // Include files 
 // -------------
 
@@ -186,7 +186,40 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 	    -0.5, 5.5, 6 );
     plot1D( adc, "Cluster ADC value", "ADC value per cluster",
 	    -0.5, 128*4+0.5, 128*4+1 );
-    
+
+    //find the strip with the highest charge (seed strip)
+    unsigned int iseedstrip=0;
+    double adcseedstrip=0.;
+    for (unsigned int j=0; j<nstrips; ++j) {
+      if (cluster -> adcValue(j)>adcseedstrip){
+        iseedstrip=j;
+        adcseedstrip=cluster ->adcValue(j);
+      }
+    }
+    plot1D( adcseedstrip, "ADC value of cluster seed strips", "ADC value of cluster seed strips",
+	    -0.5, 128*1+0.5, 128*1+1 );
+    if (cluster->isRType()) plot1D( adcseedstrip, "ADC value of cluster seed strips (R)", "ADC value of cluster seed strips (R)",
+	    -0.5, 128*1+0.5, 128*1+1 );
+    if (cluster->isPhiType()) plot1D( adcseedstrip, "ADC value of cluster seed strips (Phi)", "ADC value of cluster seed strips (Phi)",
+	    -0.5, 128*1+0.5, 128*1+1 );
+
+    //plot the adc values of the include strips
+
+    for (unsigned int j=0; j<nstrips; ++j) {
+      double adcstrip=cluster -> adcValue(j);
+      //info() << " strip number " << j << " adc value " << adcstrip << endmsg;
+      if (j!=iseedstrip) {
+       plot1D( adcstrip, "ADC value of cluster include strips", "ADC value of cluster include strips",
+	    -0.5, 128*0.5+0.5, 128*0.5+1 );
+       if (cluster->isRType()) plot1D( adcstrip, "ADC value of cluster include strips (R)", "ADC value of cluster include strips (R)",
+	    -0.5, 128*0.5+0.5, 128*0.5+1 );
+       if (cluster->isPhiType()) plot1D( adcstrip, "ADC value of cluster include strips (Phi) ", "ADC value of cluster include strips (Phi)",
+	    -0.5, 128*0.5+0.5, 128*0.5+1 );
+      }
+    }
+
+    //info() << " seed strip " << iseedstrip << " seed strip adc " << adcseedstrip << endmsg;
+ 
     if( cluster -> isRType() )
       plot1D( adc, "Cluster ADC value (R)", "ADC value per cluster (R)",
 	      -0.5, 128*4+0.5, 128*4+1 );
