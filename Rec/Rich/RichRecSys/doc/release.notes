@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-04 - Chris Jones
+ - Add back Template Ring finder algorithm (FFTW3 now available in the LCG 
+   area)
+
 !====================== RichRecSys v3r19 2009-05-25 ==========================
 ! 2009-05-21 - Chris Jones
  - Add configuration options for new ENN ring finder + enable by default

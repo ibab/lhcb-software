@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.21 2009-05-22 16:26:14 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2009-06-04 15:28:40 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -14,7 +14,7 @@ from PhotonCreator import *
 from CKThetaResolution import *
 from Configurables import RichMarkovRingFinderConf
 from Configurables import RichENNRingFinderConf
-#from Configurables import RichTemplateRingFinderConf
+from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
 from RichHLTLocalPID_ import RichHLTLocalPIDConfig
 from Configurables import GaudiSequencer
@@ -31,7 +31,7 @@ class RichRecSysConf(RichConfigurableUser):
     __used_configurables__ = [ RichHLTLocalPIDConfig,
                                RichMarkovRingFinderConf,
                                RichENNRingFinderConf,
-                               #RichTemplateRingFinderConf,
+                               RichTemplateRingFinderConf,
                                RichGlobalPIDConfig,
                                RichTrackCreatorConfig,
                                RichPixelCreatorConfig,
@@ -55,7 +55,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"TracklessRingAlgs": ["ENN"]   # Run the given Trackless ring finding algorithms
+       ,"TracklessRingAlgs": ["ENN"]  # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
        ,"MakeSummaryObjects": False # Make the reconstruction summary TES data objects
@@ -226,12 +226,12 @@ class RichRecSysConf(RichConfigurableUser):
             self.setOtherProp(RichENNRingFinderConf(),"Context")
             RichENNRingFinderConf().setProp("Sequencer",ennfinderSeq)
             
-        #if "Template" in ringalgs :
-        #    tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
-        #    tfinderSeq.MeasureTime               = True
-        #    sequence.Members                    += [ tfinderSeq ]
-        #    self.setOtherProp(RichTemplateRingFinderConf(),"Context")
-        #    RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
+        if "Template" in ringalgs :
+            tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
+            tfinderSeq.MeasureTime               = True
+            sequence.Members                    += [ tfinderSeq ]
+            self.setOtherProp(RichTemplateRingFinderConf(),"Context")
+            RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
            
         #-----------------------------------------------------------------------------
         # PID
