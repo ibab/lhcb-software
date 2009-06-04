@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2008-03-03 10:24:38 cattanem Exp $
+# $Id: requirements,v 1.15 2009-06-04 08:56:20 hmdegaud Exp $
 # Created    : 17/08/2005
 # Maintainer : Marco Cattaneo
 #
@@ -23,3 +23,7 @@ end_private
 apply_pattern god_headers files=../xml/*.xml 
 apply_pattern install_more_includes more=Event
 apply_pattern god_dictionary files=../xml/*.xml 
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
