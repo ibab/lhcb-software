@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2009-06-04 - Tomasz Skwarnicki
+ - duplicate Juan's additions also for HltObjectSummary,HltVertexReports
+ - add numericalInfoKeys() method to HltObjectSummary
+
 ! 2009-06-03 - Juan PALACIOS
  - xml/HltDecReport.xml
   . Add operators < and ==

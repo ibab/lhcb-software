@@ -1,5 +1,7 @@
 <lcgdict>
   <class name = "LHCb::HltDecReports::Container" />
+  <class name = "LHCb::HltSelReports::Container" />
+  <class name = "LHCb::HltVertexReports::Container" />
   <class name = "std::vector<const LHCb::HltObjectSummary*>" />
   <class name = "LHCb::HltObjectSummary::Info" /> 
 </lcgdict>

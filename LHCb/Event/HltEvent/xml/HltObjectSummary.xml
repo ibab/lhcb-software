@@ -149,7 +149,35 @@
         </code>       
       </method>
           
+      <!--- keys of numerical infos -->
          
+      <method 
+          name='numericalInfoKeys'
+          type='std::vector&lt; std::string &gt;'
+          desc='string keys present in numericalInfo'
+          const='TRUE' >
+        <code>
+          std::vector&lt;std::string&gt; names;
+          Info::const_iterator it = m_numericalInfo.begin();
+          while ( it != m_numericalInfo.end()) names.push_back((it++)->first);
+          return names;
+        </code>
+      </method>
+
+      <method 
+          name='numericalInfoFlattenedKeys'
+          type='std::vector&lt; std::string &gt;'
+          desc='string keys present in numericalInfoFlattened'
+          const='TRUE' >
+        <code>
+          std::vector&lt;std::string&gt; names;
+          Info nif = numericalInfoFlattened();
+          Info::const_iterator it = nif.begin();
+          while ( it != nif.end()) names.push_back((it++)->first);
+          return names;
+        </code>
+      </method>
+
      <!-- readable printout -->
 
       <method
@@ -186,6 +214,30 @@
          return ss;
         </code>
       </method>
+
+
+      <method
+	desc="Equality operator, compares address"
+        name="operator=="
+        const="TRUE"
+	type="bool" >
+	<arg name="rhs" type="LHCb::HltObjectSummary" const="TRUE"/>
+	<code>
+	  return this == &amp;rhs;
+	</code>
+      </method>
+
+      <method
+	desc="Less-than operator, compares address"
+        name="operator&lt;"
+        const="TRUE"
+	type="bool" >
+	<arg name="rhs" type="LHCb::HltObjectSummary" const="TRUE"/>
+	<code>
+	  return this &lt; &amp;rhs;
+	</code>
+      </method>
+
 
     </class>
 
@@ -228,7 +280,7 @@
          name='selReport'
          type='const LHCb::HltObjectSummary*'
          argList = 'const std::string selectionName'
-         desc='returns a pointer to Hlt Decision Report for given trigger selection name (==0 if not found)'
+         desc='returns a pointer to Hlt Selection Report for given trigger selection name (==0 if not found)'
          const = 'TRUE' >
         <code>
     Container::const_iterator rep = m_selReports.find(selectionName);
@@ -305,7 +357,7 @@
      <method
         name='size'
         type='LHCb::HltSelReports::Container::size_type'
-        desc='size of the HltSelReports container (i.e. number of decision reports stored)'
+        desc='size of the HltSelReports container (i.e. number of selection reports stored)'
         const = 'TRUE' >
         <code>
    return m_selReports.size();
