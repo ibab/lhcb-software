@@ -1,17 +1,14 @@
-// $Id: L0CaloCompare.h,v 1.3 2008-10-31 13:20:12 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.4 2009-06-04 15:14:17 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
-// Include files
 
-// from Gaudi 
-//#include "GaudiAlg/GaudiHistoAlg.h"
-//#include "GaudiAlg/GaudiTupleAlg.h"
+// Include files
 #include "CaloUtils/Calo2Dview.h"
-#include "CaloDet/DeCalorimeter.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
+
+class IHistogram1D ;
 
 /** @class L0CaloCompare L0CaloCompare.h
+ *
  *  Monitoring algorithm for the L0 Calorimeter trigger
  *  Scans the L0CaloCandidate and fills histograms.
  *
@@ -20,33 +17,27 @@ class L0CaloCompare: public Calo2Dview {
 public:
   /// Standard constructor
   L0CaloCompare(const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   /// Standard destructor
   virtual ~L0CaloCompare( ); 
-
-  StatusCode initialize();    ///< Algorithm initialization
-  StatusCode execute   ();    ///< Algorithm execution
-  StatusCode finalize  ();    ///< Algorithm finalization
-
+  
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  
 protected:
-
+  
 private:
-
-  DeCalorimeter* m_ecal            ; ///< Pointer to Ecal detector element
-  DeCalorimeter* m_hcal            ; ///< Pointer to Hcal detector element
-
-  int m_nEvents ; 
-  int m_nUsefulEvents ; 
-  bool m_fullMonitoring ; 
+  bool m_fullMonitoring ;
 
   IHistogram1D*            m_histSpdMult_Comp ; 
-  IHistogram1D*            m_histSumEt_Comp ; 
-  
-  IHistogram1D * m_bcIdErrorsEle , * m_bcIdErrorsPho , 
-    * m_bcIdErrorsPil , * m_bcIdErrorsPig , 
-    * m_bcIdErrorsHad , * m_bcIdErrorsSpd ;
+  IHistogram1D*            m_histSumEt_Comp ;
+
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
 
+  std::vector< std::string >  m_mapCompareName ;
+  std::vector< std::string >  m_mapCompareTitle ;
+  std::vector< std::string >  m_mapAllName ;
+  std::vector< std::string >  m_mapAllTitle ;
 };
 #endif // L0CALOCOMPARE_H
