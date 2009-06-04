@@ -6,6 +6,9 @@
 
 !======================== DecayTreeTuple v2r3 2009-06-03 =====================
 
+! 2009-06-04 - Rob Lambert
+ - More documentation in MCTupleToolEventType/MCTupleToolDecayType
+
 ! 2009-06-03 - Rob Lambert
  - Major changes. Modified TupleToolMCTruth to take a list 
                   of MCParticleTupleTools.
