@@ -6,6 +6,9 @@
 
 !========================== AnalysisConf v1r2 2009-05-1 =====================
 
+! 2009-06-04 - Patrick Koppenburg
+ - Bug fix in RedoMCLink sequence
+
 ! 2009-05-11 - Patrick Koppenburg
  - Print self in info
 

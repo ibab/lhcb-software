@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.15 2009-05-11 06:37:05 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2009-06-04 12:32:22 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -47,14 +47,18 @@ class AnalysisConf(LHCbConfigurableUser) :
             redo = self.getProp("RedoMCLinks")
             if ( redo ):
                 from Configurables import (GaudiSequencer,TESCheck,EventNodeKiller,TrackAssociator)
-                mcLinkSeq = GaudiSequencer("RedoMCLinks")
-                tescheck = TESCheck("DaVinciEvtCheck")
-                tescheck.Inputs = ["Link/Rec/Track/Best"]
-                tescheck.Stop = False
-                tescheck.OutputLevel = 5
-                evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller")
-                evtnodekiller.Nodes = ["Link/Rec"]
-                mcLinkSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]
+                mcKillSeq = GaudiSequencer("KillMCLinks") # The sequence killing the node of it exists
+                tescheck = TESCheck("DaVinciEvtCheck")    # Check for presence of node ...
+                tescheck.Inputs = ["Link/Rec/Track/Best"] # 
+                tescheck.Stop = False                     # But don't stop
+                tescheck.OutputLevel = 1                  # don't print warnings
+                evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller") # kill nodes
+                evtnodekiller.Nodes = ["Link/Rec"]        # Kill that
+                mcKillSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]  
+                
+                mcLinkSeq = GaudiSequencer("RedoMCLinks") # The sequence redoing the links
+                mcLinkSeq.IgnoreFilterPassed = True       # Run it always
+                mcLinkSeq.Members = [ mcKillSeq, TrackAssociator() ]  
                 init.Members += [ mcLinkSeq ]
 #
 # Set MC
