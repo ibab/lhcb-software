@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-06-04 - Stephanie Hansmann-Menzemer
+ - fix bug in LongTrack GhostClassification & two more categories
 
 !======================= TrackMCTools v2r23 2009-05-08 =======================
 ! 2009-04-01 - Olivier Callot

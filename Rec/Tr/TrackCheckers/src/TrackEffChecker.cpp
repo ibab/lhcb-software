@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.14 2009-06-04 13:26:53 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.15 2009-06-04 15:55:37 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -103,7 +103,8 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
         LHCb::GhostTrackInfo gInfo;
         ghostClassification()->info(**iterT,gInfo);
         const LHCb::GhostTrackInfo::Classification& gtype = gInfo.classification();
-        ++counter(Gaudi::Utils::toString(gtype));
+        plot(gtype,"ghost classification",-0.5, 30.5, 31);
+	++counter(Gaudi::Utils::toString(gtype));
       }
     }
     else {

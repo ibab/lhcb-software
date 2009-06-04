@@ -7,6 +7,7 @@
  - add check not for MC reconstructible but for track found in best container
    (needed to validated HLT vs. offline efficiency)
  - add switch to check efficiency only for B daughters and for long tracks 
+ - fill ghost category in plot
  - bug fix in MC bAncestor method
 
 

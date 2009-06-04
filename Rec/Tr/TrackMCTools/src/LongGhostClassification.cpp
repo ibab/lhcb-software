@@ -1,4 +1,4 @@
-// $Id: LongGhostClassification.cpp,v 1.6 2009-01-30 08:32:39 mneedham Exp $
+// $Id: LongGhostClassification.cpp,v 1.7 2009-06-04 15:54:01 smenzeme Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -48,9 +48,14 @@ void LongGhostClassification::specific(LHCbIDs::const_iterator& start,
   // match the velo Hits
   LHCb::GhostTrackInfo::LinkPair vMatch = bestPair(vHits);
 
-  if (tMatch.first == 0 || vMatch.first == 0 || tMatch.second < m_purityCut || vMatch.second < m_purityCut){
+  if ((tMatch.first == 0 || tMatch.second < m_purityCut) &&  (vMatch.first == 0 && vMatch.second < m_purityCut)){
     tinfo.setClassification(GhostTrackInfo::GhostParent);  
-  }
+  } else
+      if ((tMatch.first == 0 || tMatch.second < m_purityCut))
+	  tinfo.setClassification(GhostTrackInfo::GhostTParent);
+      else
+	  if ((vMatch.first == 0 || vMatch.second < m_purityCut))
+	      tinfo.setClassification(GhostTrackInfo::GhostVeloParent);
 
 
   if (isMatched(vMatch) && isMatched(tMatch) && vMatch.first != tMatch.first){
@@ -83,8 +88,12 @@ bool LongGhostClassification::isGhost(TrackGhostClassificationBase::LHCbIDs::con
 
   // match the velo Hits
   LHCb::GhostTrackInfo::LinkPair vMatch = bestPair(vHits);
-  return isReal(vMatch) ? false : true;
-    
+  if (isReal(vMatch) == false) return true;
+
+  if (vMatch.first != tMatch.first)
+      return true;
+  else
+      return false;
 }
 
 
