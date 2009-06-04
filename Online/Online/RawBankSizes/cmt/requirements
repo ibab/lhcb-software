@@ -14,3 +14,9 @@ use MDF         v* DAQ
 use Gaucho      v* Online
 use GaudiSvc    v*
 use GaudiOnline v* Online
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
+
+
