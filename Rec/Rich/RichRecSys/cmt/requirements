@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.91 2009-05-21 17:25:15 jonrob Exp $
+# $Id: requirements,v 1.92 2009-06-04 15:28:40 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -40,8 +40,8 @@ use RichRecMCTools      v*   Rich
 
 # Ring finder
 use RichMarkovRingFinder  v*   Rich
-use  RichENNRingFinder    v*   Rich
-#use RichRecTemplateRings  v*   Rich
+use RichENNRingFinder     v*   Rich
+use RichRecTemplateRings  v*   Rich
 
 # Setup Python Configurables
 apply_pattern install_python_modules
