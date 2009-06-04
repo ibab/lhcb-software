@@ -28,7 +28,9 @@
                   SpilloverAndNoise = 20,  
                   GhostParent = 21, 
                   InconsistentParts = 22,
-                  Combinatoric = 23"
+                  Combinatoric = 23,
+                  GhostVeloParent = 24,
+                  GhostTParent=25"
         access = "PUBLIC"
    />
 
