@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.13 2009-06-04 11:46:03 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.14 2009-06-04 13:26:53 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -27,7 +27,7 @@ TrackCheckerBase( name , pSvcLocator ){
   declareProperty( "OnlyBTracksInDenominator",
                    m_fromB = false  );
   declareProperty( "RequireLongTrack",
-                   m_requireLong = false  );
+                   m_requireLong = false );
 
 }
 
@@ -57,13 +57,26 @@ StatusCode TrackEffChecker::execute()
 
   // get the input data
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
-  counter("nTrack") += tracks->size();
+ 
   
+
+  LHCb::Tracks::const_iterator iterT = tracks->begin();
+  for (; iterT != tracks->end(); ++iterT){  
+    if ((*iterT)->type() != LHCb::Track::Long && m_requireLong )
+      continue;
+    counter("nTracksInThisEvent") += 1;
+  }
+  
+  counter("nTrack") += counter("nTracksInThisEvent").flag();
+
   // we want to count ghosts etc
   ghostInfo(tracks);
 
   // then we want to look at efficiencies
   effInfo();
+
+
+  counter("nTracksInThisEvent") = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -75,6 +88,9 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
   LHCb::Tracks::const_iterator iterT = tracks->begin();
   for (; iterT != tracks->end(); ++iterT){
     
+    if ((*iterT)->type() != LHCb::Track::Long && m_requireLong )
+      continue;
+
     const LHCb::MCParticle* particle = mcTruth(*iterT);
 
     splitByAlgorithm() == true ? 
@@ -99,13 +115,13 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
   counter("nGhost") += nGhost;
  
   // plot the event ghost rate
-  if (tracks->size() != 0)
-    plot(nGhost/double(tracks->size()),"ghost rate", -0.01, 1.01, 51);
+  if (counter("nTracksInThisEvent").flag() != 0)
+    plot(nGhost/double(counter("nTracksInThisEvent").flag()),"ghost rate", -0.01, 1.01, 51);
   if (fullDetail() == true) {
     // ghost rate versus # interactions
     long nVert = visPrimVertTool()->countVertices();
-    if (tracks->size() != 0)
-      plot2D(nVert,100*nGhost/double(tracks->size()), "ghost rate vs visible",
+    if (counter("nTracksInThisEvent").flag() != 0)
+      plot2D(nVert,100*nGhost/double(counter("nTracksInThisEvent").flag()), "ghost rate vs visible",
 	     -0.5,20.5, -0.5, 100.5,21, 101);
   }
 }
@@ -126,7 +142,7 @@ void TrackEffChecker::effInfo(){
     
     if (m_tracksRefContainer != "") {
       TrackCheckerBase::LinkInfo info = reconstructedInRefContainer(*iterP);
-      reconstructible = (info.track!=0 && info.track->type() == 3);
+      reconstructible = (info.track!=0 && info.track->type() == LHCb::Track::Long);
     } else
       reconstructible = selected(*iterP);
     
@@ -146,7 +162,7 @@ void TrackEffChecker::effInfo(){
       if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	++nToFindG5;
       
-      if (info.track != 0 && (info.track->type == long || !m_requireLong)) {
+      if (info.track != 0 && (info.track->type() == LHCb::Track::Long || !m_requireLong)) {
 	++nFound;
 	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	  ++nFoundG5;

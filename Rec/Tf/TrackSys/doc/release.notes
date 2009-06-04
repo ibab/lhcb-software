@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2009-06-04
+- require long tracks in efficiency checking of best track container
+
 ! 2009-05-31 - Stephanie Hansmann-Menzemer
 - Use Downstream tracking both in RecoTracking.py and PatChecking.py in case
   off fieldOff
