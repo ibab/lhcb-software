@@ -3,24 +3,16 @@
 # Maintainer : Juan PALACIOS juan.palacios@cern.ch
 # =============================================================================
 package Phys/PhysDict
-version v3r0
+version v4r0
 # =============== structure ===================================================
 branches         cmt doc dict
 # =============== dependencies ================================================
-use              GaudiPython v* 
-use              MCEvent     v* Event
-use              RecEvent    v* Event
-use              PhysEvent   v* Event
-use              DaVinciKernel v* Phys
-use              DaVinciMCKernel v* Phys
-use              DaVinciMCTools v* Phys
-
+use HltEvent v* Event
+use GaudiKernel v*
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
                   dictionary=Phys                               \
                   headerfiles=$(PHYSDICTROOT)/dict/PhysDict.h     \
                   selectionfile=$(PHYSDICTROOT)/dict/PhysDict.xml \
                   options="-U__MINGW32__"
-
-macro PhysDict_use_linkopts $(use_linkopts)
 
