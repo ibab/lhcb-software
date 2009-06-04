@@ -1,4 +1,4 @@
-// $Id: L0CaloMonit.cpp,v 1.29 2009-06-03 18:04:18 robbep Exp $
+// $Id: L0CaloMonit.cpp,v 1.30 2009-06-04 07:47:17 robbep Exp $
 
 // local
 #include "L0CaloMonit.h"
@@ -420,11 +420,10 @@ void L0CaloMonit::SearchForHotCellsAndReset( IHistogram1D * hist ,
       // crate, card slot and channel number in the card
       card  = detector( type ) -> cardNumber( caloCell) ; 
       crate = detector( type ) -> cardCrate(card) ; 
-      cardSlot = detector( type ) -> cardSlot(card) ; 
-      std::vector< LHCb::CaloCellID >& myCardChannels = 
-        detector( type ) -> cardChannels( card ) ;
+      cardSlot = detector( type ) -> cardSlot(card) ;
       
-      for ( itc = myCardChannels.begin() ; itc != myCardChannels.end() ; 
+      for ( itc = detector( type ) -> cardChannels( card ).begin() ; 
+            itc != detector( type ) -> cardChannels( card ).end() ; 
             ++itc ) {
         if ( (*itc) == caloCell) { 
           cellChannel = channelNum ;
