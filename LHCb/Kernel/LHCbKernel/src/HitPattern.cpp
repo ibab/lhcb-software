@@ -46,8 +46,7 @@ namespace LHCb
       case LHCbID::Muon:
 	{
 	  LHCb::MuonTileID muonid = id->muonID() ;
-	  std::cout << "muon station  : " <<  muonid.station() << std::endl ;
-	  m_muon.set( muonid.station()-1 ) ;
+	  m_muon.set( muonid.station() ) ;
 	}
 	break ;
       default:

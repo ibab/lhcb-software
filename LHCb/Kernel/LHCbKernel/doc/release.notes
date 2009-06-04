@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-06-04 - Wouter Hulsbergen
+ - Fixed bug in HitPattern for muon hits
+
 !===================== LHCbKernel v11r4 2009-05-25 ========================
 ! 2008-09-26 - Marco Cattaneo
  - In LineTraj.h, CircleTraj.h, ParapolaTraj.h, MemPoolAlloc.h: 
