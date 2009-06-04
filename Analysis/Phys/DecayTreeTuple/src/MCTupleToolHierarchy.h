@@ -1,21 +1,21 @@
-// $Id: TupleToolMCHierarchy.h,v 1.2 2008-07-08 11:18:33 sposs Exp $
+// $Id: MCTupleToolHierarchy.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
 #ifndef SPOSS_TUPLETOOLMCHIERARCHY_H
 #define SPOSS_TUPLETOOLMCHIERARCHY_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticleTupleTool.h"            // Interface
+#include "Kernel/IMCParticleTupleTool.h"            // Interface
 
 //struct Particle2MCLinker;
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 
-/** @class TupleToolMCHierarchy
+/** @class MCTupleToolHierarchy
  *
  * \brief Fill MC hierarchy info if a link is present
  *
- * Based on the same association than the TupleToolMCTruth
+ * Requires association from TupleToolMCTruth, or a MCDecayTreeTuple
  *
  *
  * - head_MC_MOTHER_ID : true mc mother ID
@@ -35,17 +35,17 @@
  *  @author Stephane Poss
  *  @date   2008-02-28
  */
-class TupleToolMCHierarchy : public GaudiTool, virtual public IParticleTupleTool {
+class MCTupleToolHierarchy : public GaudiTool, virtual public IMCParticleTupleTool {
 public:
   /// Standard constructor
-  TupleToolMCHierarchy( const std::string& type,
+  MCTupleToolHierarchy( const std::string& type,
 		    const std::string& name,
 		    const IInterface* parent);
 
-  virtual ~TupleToolMCHierarchy(){}; ///< Destructor
+  virtual ~MCTupleToolHierarchy(){}; ///< Destructor
 
-  virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
+  virtual StatusCode fill( const LHCb::MCParticle*
+			   , const LHCb::MCParticle*
 			   , const std::string&
 			   , Tuples::Tuple& );
 
@@ -56,16 +56,6 @@ private:
 
   //  const GaudiAlgorithm* getParent() const ;
 
-  Particle2MCLinker *m_pLink;
-  Particle2MCLinker *m_pComp;
-  Particle2MCLinker *m_pChi2;
-
-  IDaVinciAssociatorsWrapper* m_linkerTool_Links;
-  IDaVinciAssociatorsWrapper* m_linkerTool_Chi2;
-  IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
-
-  std::vector<std::string> m_assocInputs;
-  bool m_useChi2Method; //!< Use the chi2 associator instead of the link and composite associator
 };
 
 #endif // SPOSS_TUPLETOOLMCHIERARCHY_H

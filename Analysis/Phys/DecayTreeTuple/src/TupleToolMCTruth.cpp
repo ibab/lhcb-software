@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.13 2009-04-15 12:34:24 gligorov Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.14 2009-06-04 10:54:46 rlambert Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -36,27 +36,13 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 				    const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_smartAssociation(0)
+  , m_toolList(0)
+  , m_mcTools(0)
 {
   declareInterface<IParticleTupleTool>(this);
-  
-  // Associator input location. Empty should be fine for most of the case
-  declareProperty( "InputLocations", m_assocInputs = std::vector<std::string>(1,"") );
 
-  // Store the number of associations seen
-  declareProperty( "StoreAssociationNumbers", m_storeNumberOfAssoc=false );
-
-  // Store kinetic information from the associated candidate
-  declareProperty( "StoreKineticInfo",  m_storeKinetic = true );
-
-  // Store the end and origin true vertex information
-  declareProperty( "StoreVertexInfo",  m_storeVertexes = true );
-  
-  // Store the propertime information for associated composite particle
-  declareProperty( "StorePropertimeInfo", m_storePT = true );
-
-  // Store the true angular information 
-  declareProperty( "FillAngles", m_fillangles = false );
-  declareProperty( "Calculator", m_calculator = "MCBd2KstarMuMuAngleCalculator" );
+  // The names of MCTupleTools to use on the associated mcp
+  declareProperty( "ToolList", m_toolList = std::vector<std::string>(1,"MCTupleToolKinematic") );
 }
 
 //=============================================================================
@@ -66,8 +52,18 @@ StatusCode TupleToolMCTruth::initialize(){
 
   m_smartAssociation = tool<IParticle2MCWeightedAssociator>("DaVinciSmartAssociator", this);
 
-   if (m_fillangles) m_angleTool  = tool<IP2VVMCPartAngleCalculator>(m_calculator,this);
-
+   //initialise the tools
+  std::sort( m_toolList.begin(), m_toolList.end() );
+  std::unique( m_toolList.begin(), m_toolList.end() );
+  for( std::vector<std::string>::const_iterator it = m_toolList.begin(); m_toolList.end()!=it ; ++it )
+  {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Adding the tool " << *it << endmsg ;
+    IMCParticleTupleTool* aTool=tool<IMCParticleTupleTool>(*it,this);
+    if(aTool) m_mcTools.push_back(aTool);
+    else Warning("There was a problem retrieving " + *it +" , this tool will be ignored");
+  }
+  
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Completed TupleTool intialisation, " << m_mcTools.size() << " tools added " << endmsg ;
   return StatusCode::SUCCESS;
 }
 
@@ -77,142 +73,33 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 				 , Tuples::Tuple& tuple ){
 
   Assert( m_smartAssociation 
-	  , "One of your associators hasn't been initialized!");
+	  , "The DaVinci smart associator hasn't been initialized!");
   
-  int assignedPid = 0;
   
-  int mcPid = 0;
-  int nbAss = 0;
-  double mcTau = -1;
-
-  Gaudi::XYZVector endVertex, originVertex;
-  Gaudi::LorentzVector trueP;
-
-  const MCParticle* mcp(0);
+  int mcPid=0;
   bool test = true;
-  bool badTrueTAU = false;
-
+  const LHCb::MCParticle* mcp(0);
+  
   if( P ){
-    assignedPid = P->particleID().pid();
+    //assignedPid = P->particleID().pid();
+    if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::getting related MCP to " << P << endmsg ;
     mcp = m_smartAssociation->relatedMCP(P);
+    if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::got mcp " << mcp << endmsg ;
   }
  
   // pointer is ready, prepare the values:
-  if( mcp ) {
-
-    mcPid = mcp->particleID().pid();
-
-    trueP = mcp->momentum();
-
-    const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
-    if (endVertices.size() != 0 ) {
-    
-      if (endVertices.front()) {
-        endVertex = endVertices.front()->position(); // the first item, the other are discarded.
-      } else {
-        endVertex.SetXYZ(-9999.,-9999.,-9999.);
-        badTrueTAU = true;
-      }
-      if (mcp->originVertex()) {
-        originVertex = mcp->originVertex()->position();
-      } else {
-        originVertex.SetXYZ(-9999.,-9999.,-9999.);
-        badTrueTAU = true;
-      }
-
-      // lifetime
-      if( m_storePT && !badTrueTAU){
-        Gaudi::XYZVector dist = endVertex - originVertex;
-        // copied from DecayChainNTuple // 
-        mcTau = trueP.M() * dist.Dot( trueP.Vect() ) / trueP.Vect().mag2();
-        mcTau /= Gaudi::Units::picosecond * Gaudi::Units::c_light;
-      } else mcTau = -9999.;
-    } else{
-      //MC particle has no endvertices
-      endVertex.SetXYZ(-9999.,-9999.,-9999.); 
-      mcTau = -9999.;
-    }
+  if( mcp )
+  {
+    mcPid=mcp->particleID().pid();
   }
-
+  
   // fill the tuple:
   test &= tuple->column( head+"_TRUEID", mcPid );  
 
-  if( m_storeNumberOfAssoc )
-    test &= tuple->column( head + "_MC_ASSOCNUMBER", nbAss );
-
-  if( m_storeKinetic )
-    test &= tuple->column( head + "_TRUEP_", trueP );
-
-  if( m_storeVertexes ){
-    test &= tuple->column( head + "_TRUEORIGINVERTEX_", originVertex );
-    test &= tuple->column( head + "_TRUEENDVERTEX_", endVertex );
-  }
-
-  if( m_storePT )
-    test &= tuple->column( head + "_TRUETAU", mcTau );
-
-  // true angles information:
-  if(m_fillangles) {
-    // only for Bs or Bd (patch, not meant to be elegant)
-    if (abs(assignedPid) == 511 || abs(assignedPid) == 531) {
-      
-    //Helicity
-    double thetaL(9999), thetaK(9999), phi(9999);
-
-    StatusCode sc_hel = false;
-    if (mcp) sc_hel = m_angleTool->calculateAngles( mcp, thetaL, thetaK, phi);
-
-    if ( !sc_hel ) {
-      thetaL=9999.;
-      thetaK=9999.;
-      phi=9999.;      
-    }
-    
-      
-    if (msgLevel(MSG::DEBUG)) debug() << "Three true helicity angles are theta_L : " 
-                                      << thetaL 
-                                      << " K: "<< thetaK
-                                      << " phi: " << phi << endmsg ;
-      
-      
-    
-      test &= tuple->column( head+"_TRUEThetaL", thetaL );
-      test &= tuple->column( head+"_TRUEThetaK", thetaK );
-      test &= tuple->column( head+"_TRUEPhi",    phi  );
-
-    //Transversity
-    double Theta_tr(9999), Phi_tr(9999), Theta_V(9999);
-      
-    StatusCode sc_tr = false;
-    if (mcp) sc_tr = m_angleTool->calculateTransversityAngles( mcp,Theta_tr,Phi_tr,Theta_V );
-      
-
-    if ( !sc_tr ) {
-      Theta_tr=9999.;
-      Phi_tr=9999.;
-      Theta_V=9999.;
-    }
-    
-
-      if (msgLevel(MSG::DEBUG)) debug() << "Three true transversity angles are Theta_tr : " 
-					<< Theta_tr 
-					<< " Phi_tr: " << Phi_tr
-					<< " Theta_phi_tr: " << Theta_V 
-					<< endmsg ;
-      
-      
-      
-
-          test &= tuple->column( head+"_TRUEThetaTr", Theta_tr );
-          test &= tuple->column( head+"_TRUEPhiTr", Phi_tr );
-          test &= tuple->column( head+"_TRUEThetaVtr", Theta_V  );
-       
-    }
-    
-    
-  }
+  //fill all requested MCTools
+  for(std::vector< IMCParticleTupleTool* >::const_iterator it=m_mcTools.begin(); it!=m_mcTools.end(); it++)
+    test &=(*it)->fill(NULL,mcp,head,tuple);
   
-
   return StatusCode(test);
 }
 

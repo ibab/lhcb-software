@@ -6,6 +6,15 @@
 
 !======================== DecayTreeTuple v2r3 2009-06-03 =====================
 
+! 2009-06-03 - Rob Lambert
+ - Major changes. Modified TupleToolMCTruth to take a list 
+                  of MCParticleTupleTools.
+                  TupleToolMCTruth is now the only place assosciation occurs
+                  Altered all TupleToolMC to inherit from MCParticleTupleTool
+                  Renamed all things needing MC to MCTupleTool*
+                  Renamed MCTupleToolMCTruth to MCTupleToolKinematic
+                  
+
 ! 2009-06-01 - Patrick Koppenburg
  - More debugging
 

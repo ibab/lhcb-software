@@ -1,10 +1,10 @@
-// $Id: TupleToolMCEventType.cpp,v 1.1 2009-03-06 16:45:25 rlambert Exp $
+// $Id: MCTupleToolEventType.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 // local
-#include "TupleToolMCEventType.h"
+#include "MCTupleToolEventType.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -13,20 +13,20 @@
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TupleToolMCEventType
+// Implementation file for class : MCTupleToolEventType
 //
 // 2009-03-04 : R Lambert
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMCEventType );
+DECLARE_TOOL_FACTORY( MCTupleToolEventType );
 
 using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolMCEventType::TupleToolMCEventType( const std::string& type,
+MCTupleToolEventType::MCTupleToolEventType( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : GaudiTool ( type, name , parent )
@@ -71,7 +71,7 @@ TupleToolMCEventType::TupleToolMCEventType( const std::string& type,
 
 //=============================================================================
 
-StatusCode TupleToolMCEventType::initialize(){
+StatusCode MCTupleToolEventType::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   StatusCode sc=StatusCode::SUCCESS;
   
@@ -100,7 +100,7 @@ StatusCode TupleToolMCEventType::initialize(){
   if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE))
   {
     //output all the options
-    debug() << "TupleToolMCEventType initialised. Values are set as follows:" << endmsg;
+    debug() << "MCTupleToolEventType initialised. Values are set as follows:" << endmsg;
     debug() << "-m_fillGenEvent " << m_fillGenEvent << endmsg;
     debug() << "-m_findGenEvent " << m_findGenEvent << endmsg;
     debug() << "-m_fillWholeEvent " << m_fillWholeEvent << endmsg;
@@ -119,13 +119,13 @@ StatusCode TupleToolMCEventType::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode TupleToolMCEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Particle* 
+StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Particle* 
 				 , const LHCb::Particle* P
 				 , const std::string& 
 				 , Tuples::Tuple& tuple )*/{
 
 
-  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Filling TupleToolMCEventType" << endmsg;
+  if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Filling MCTupleToolEventType" << endmsg;
   
 
   //The fill method is is two stages and is steered by the options.
@@ -289,7 +289,7 @@ StatusCode TupleToolMCEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
   return StatusCode(test);
 }
 
-bool TupleToolMCEventType::vec2set(std::vector<long unsigned int>& avec, LHCb::EventTypeSet& aset)
+bool MCTupleToolEventType::vec2set(std::vector<long unsigned int>& avec, LHCb::EventTypeSet& aset)
 {
   aset.clear();
   for(std::vector<long unsigned int>::iterator n=avec.begin(); n!=avec.end(); n++)
@@ -300,7 +300,7 @@ bool TupleToolMCEventType::vec2set(std::vector<long unsigned int>& avec, LHCb::E
   
 }
 
-bool TupleToolMCEventType::set2vec(LHCb::EventTypeSet& aset,std::vector<long unsigned int>& avec)
+bool MCTupleToolEventType::set2vec(LHCb::EventTypeSet& aset,std::vector<long unsigned int>& avec)
 {
   avec.clear();
   avec.reserve(aset.size());

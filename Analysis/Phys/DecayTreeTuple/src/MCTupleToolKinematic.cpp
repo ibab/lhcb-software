@@ -1,4 +1,4 @@
-// $Id: MCTupleToolMCTruth.cpp,v 1.4 2009-05-22 15:17:29 pkoppenb Exp $
+// $Id: MCTupleToolKinematic.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/Vector3DTypes.h"
 
 // local
-#include "MCTupleToolMCTruth.h"
+#include "MCTupleToolKinematic.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -17,19 +17,19 @@
 
 using namespace LHCb;
 //-----------------------------------------------------------------------------
-// Implementation file for class : MCTupleToolMCTruth
+// Implementation file for class : MCTupleToolKinematic
 //
 // 2009-01-19 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTupleToolMCTruth );
+DECLARE_TOOL_FACTORY( MCTupleToolKinematic );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MCTupleToolMCTruth::MCTupleToolMCTruth( const std::string& type,
+MCTupleToolKinematic::MCTupleToolKinematic( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
@@ -49,40 +49,44 @@ MCTupleToolMCTruth::MCTupleToolMCTruth( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTupleToolMCTruth::~MCTupleToolMCTruth() {} 
+MCTupleToolKinematic::~MCTupleToolKinematic() {} 
 
 //=============================================================================
 // initialize
 //=============================================================================
 
-StatusCode MCTupleToolMCTruth::initialize(){
+StatusCode MCTupleToolKinematic::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle* 
+StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle* 
                                      , const LHCb::MCParticle* mcp
                                      , const std::string& head
                                      , Tuples::Tuple& tuple ){
   
   bool test = true;
   
-  if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolMCTruth::fill " << head << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "MCTupleToolKinematic::fill " << head << endmsg ;
 
   int mcPid = 0;
   double mcTau = -1;
+  double mcM = -1;
+  double mcPT = 0;
   
   Gaudi::XYZVector endVertex, originVertex;
   Gaudi::LorentzVector trueP; 
   bool hasOsc = false ;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill mcp " << mcp << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill mcp " << mcp << endmsg ;
   // pointer is ready, prepare the values:
   if( mcp ) {
     mcPid = mcp->particleID().pid();
     trueP = mcp->momentum();
+    mcPT= mcp->pt();
+    mcM=sqrt(trueP.M2());
     if (msgLevel(MSG::VERBOSE)) verbose() << "      " << trueP << endmsg ;
     if (!isStable(mcp)){
       const SmartRefVector< LHCb::MCVertex > & endVertices = mcp->endVertices();
@@ -104,13 +108,16 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
     }  
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill filling " << head << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill filling " << head << endmsg ;
 
   // fill the tuple:
-  test &= tuple->column( head+"_TRUEID", mcPid );  
+  //test &= tuple->column( head+"_TRUEID", mcPid );  
   if( m_storeKinetic )
-    test &= tuple->column( head + "_TRUEP_", trueP );
-    
+    {
+      test &= tuple->column( head + "_TRUEP_", trueP );
+      test &= tuple->column( head+"_TRUEPT", mcPT );
+    }
+  
   if (!isStable(mcp)){
     
     if( m_storeVertexes ){
@@ -124,7 +131,7 @@ StatusCode MCTupleToolMCTruth::fill( const LHCb::MCParticle*
     }
   }
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolMCTruth::fill bye " << head << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill bye " << head << endmsg ;
   
   return StatusCode(test);
 }

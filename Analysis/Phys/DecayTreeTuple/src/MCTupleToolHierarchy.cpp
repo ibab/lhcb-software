@@ -1,11 +1,11 @@
-// $Id: TupleToolMCHierarchy.cpp,v 1.3 2008-07-15 16:19:14 gligorov Exp $
+// $Id: MCTupleToolHierarchy.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 // local
-#include "TupleToolMCHierarchy.h"
+#include "MCTupleToolHierarchy.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -21,60 +21,38 @@
 
 // Declaration of the Tool Factory
 // actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMCHierarchy );
+DECLARE_TOOL_FACTORY( MCTupleToolHierarchy );
 
 using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolMCHierarchy::TupleToolMCHierarchy( const std::string& type,
+MCTupleToolHierarchy::MCTupleToolHierarchy( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_pLink(0)
-  , m_pComp(0)
-  , m_pChi2(0)
-  , m_linkerTool_Links(0)
-  , m_linkerTool_Chi2(0)
-  , m_linkerTool_Composite(0)
 {
-  declareInterface<IParticleTupleTool>(this);
+  declareInterface<IMCParticleTupleTool>(this);
 
-  // Associator input location. Empty should be fine for most of the case
-  declareProperty( "InputLocations", m_assocInputs = std::vector<std::string>(1,""));
-
-  // Use the chi2 associator instead of the link and composite associator
-  declareProperty( "UseChi2Method", m_useChi2Method=false );
 
 }
 
 //=============================================================================
 
-StatusCode TupleToolMCHierarchy::initialize(){
+StatusCode MCTupleToolHierarchy::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
-
-  m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
-  m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
-  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
 
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-StatusCode TupleToolMCHierarchy::fill( const LHCb::Particle*
-                                       , const LHCb::Particle* P
+StatusCode MCTupleToolHierarchy::fill( const LHCb::MCParticle*
+                                       , const LHCb::MCParticle* mcp
                                        , const std::string& head
                                        , Tuples::Tuple& tuple ){
 
-  m_pLink = m_linkerTool_Links->linker(Particle2MCMethod::Links,m_assocInputs); 
-  m_pComp = m_linkerTool_Composite->linker(Particle2MCMethod::Composite,m_assocInputs);
-  m_pChi2 = m_linkerTool_Chi2->linker(Particle2MCMethod::Chi2,m_assocInputs);
-
-  Assert( ( !m_useChi2Method && m_pLink && m_pComp )
-          ||
-          ( m_useChi2Method || m_pChi2 )
-          , "One of your associator hasn't been initialized!");
-
+  bool test=true;
+  
 
   int mc_mother_id = 0;
   int mc_mother_key = 0;
@@ -83,20 +61,6 @@ StatusCode TupleToolMCHierarchy::fill( const LHCb::Particle*
   int mc_gd_gd_mother_id = 0;
   int mc_gd_gd_mother_key = 0;
 
-
-  const MCParticle* mcp(0);
-  bool test = true;
-
-  if( P ){
-    if ( m_useChi2Method ){
-      double w=0;
-      mcp = m_pChi2->firstMCP( P, w );
-
-    } else {
-      if( P->isBasicParticle() ) mcp = m_pLink->firstMCP( P );
-      else                       mcp = m_pComp->firstMCP( P );
-    }
-  }
 
   // pointer is ready, prepare the values:
   if( mcp ){

@@ -1,6 +1,6 @@
-// $Id: TupleToolMCInteractions.h,v 1.5 2009-05-15 11:43:08 rlambert Exp $
-#ifndef TUPLETOOLGENERATION_H
-#define TUPLETOOLGENERATION_H 1
+// $Id: MCTupleToolInteractions.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+#ifndef MCTUPLETOOLINTERACTIONS_H
+#define MCTUPLETOOLINTERACTIONS_H 1
 
 // Include files
 // from Gaudi
@@ -10,7 +10,7 @@
 
 class ITupleTool;
 
-/** @class TupleToolMCInteractions TupleToolMCInteractions.h rlambert/TupleToolMCInteractions.h
+/** @class MCTupleToolInteractions MCTupleToolInteractions.h rlambert/MCTupleToolInteractions.h
  *
  * \brief Number of interactions. This TupleTool will allow the calculation of a scaling factor
  *          as an event-by-event weight. When applied to events it will approximate a different mean number of
@@ -54,17 +54,17 @@ class ITupleTool;
  *                       -by default this is LHCb::RecVertexLocation::Primary
  *
  * \sa DecayTreeTuple
- *  @author P. Koppenburg
- *  @date   2008-07-01
+ *  @author R. Lambert
+ *  @date   2009-05-01
  */
-class TupleToolMCInteractions : public GaudiTool, virtual public IEventTupleTool {
+class MCTupleToolInteractions : public GaudiTool, virtual public IEventTupleTool {
 public:
   /// Standard constructor
-  TupleToolMCInteractions( const std::string& type,
+  MCTupleToolInteractions( const std::string& type,
 		      const std::string& name,
 		      const IInterface* parent);
 
-  virtual ~TupleToolMCInteractions( ){}; ///< Destructor
+  virtual ~MCTupleToolInteractions( ){}; ///< Destructor
 
   StatusCode fill( Tuples::Tuple& );
   virtual StatusCode initialize();
@@ -89,4 +89,4 @@ private :
   double power(const double a, const unsigned int x);
 
 };
-#endif // TUPLETOOLGENERATION_H
+#endif // MCTUPLETOOLINTERACTIONS_H

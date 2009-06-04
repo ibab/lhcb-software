@@ -1,10 +1,11 @@
-// $Id: TupleToolMCTruth.h,v 1.6 2009-04-09 19:10:07 gligorov Exp $
+// $Id: TupleToolMCTruth.h,v 1.7 2009-06-04 10:54:46 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLMCTRUTH_H
 #define JBOREL_TUPLETOOLMCTRUTH_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "Kernel/IMCParticleTupleTool.h"            // Interface
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 //struct Particle2MCLinker;
@@ -12,43 +13,31 @@
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "Kernel/IParticle2MCWeightedAssociator.h"
 #include "Kernel/MCAssociation.h"
+#include <vector>
 /** @class TupleToolMCTruth TupleToolMCTruth.h jborel/TupleToolMCTruth.h
  *
  * \brief Fill MC truth info if a link is present
  *
- * Whenever their is more than one associated candidate, stores only
- * the first one.
+ * Uses the DaVinci smart associator to perform the association.
  *
- * See the properties inline documentation to toggle on/off some of
- * the columns
  *
- * - head_TRUEID : true pic
+ * - head_TRUEID : true pid
  *
- * - head_MC_ASSOCNUMBER : the number of associated mc candidates
-     (only tell how many you missed)
+ 
+ * To add more entries, add the appropriate MCTupleTool
 
- * - head_TRUEP[E|X|Y|Z] : true four vector momentum
+ * Configure the option ToolList to add MCTupleTools
 
- * - head_TRUEORIGINVERTEX_[X|Y|Z] : position of the true origin vertex.
+ * The MCAssociation is run only once, then these tuple tools are called
 
- * - head_TRUEENDVERTEX_[X|Y|Z] : position of the true end vertex (the
-     first one)
-
- * - head_TRUETAU : true propertime
-
- * - head_TRUE{ThetaL,ThetaK,Phi} : true helicity angles
-
- * - head_TRUE{ThetaTr,PhiTr,ThetaVtr} : true transversity angles
 
  * \sa DecayTreeTuple
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
  *  2008-09-23 Adlene Hicheur - Added true angles information for P2VV
+ *  2009-06-03 Rob Lambert - Major Changes
  */
-
-class IP2VVMCPartAngleCalculator;
-class IBackgroundCategory;
 
 class TupleToolMCTruth : public GaudiTool, virtual public IParticleTupleTool {
 public:
@@ -69,20 +58,12 @@ public:
 
 private:
 
-  //  const GaudiAlgorithm* getParent() const ;
-
   IParticle2MCWeightedAssociator* m_smartAssociation;
 
-  IP2VVMCPartAngleCalculator*   m_angleTool;
-
-  std::vector<std::string> m_assocInputs;
-  bool m_storeNumberOfAssoc; //!< Store in the tuple the number of MC Association found;
-  bool m_storeKinetic; //!< Store kinetic information from the associated candidate
-  bool m_storePT; //!< Store the propertime information for associated composite particle
-  bool m_storeVertexes; //!< Store the end and origin true vertex information
-  bool m_fillangles; //!< Store the true angular information (from P2VV)
-  std::string m_calculator; //!< Name of the tool for the angles calculation
-
+  std::vector< std::string > m_toolList;///<names of all MCTupleTools, set by the option ToolList
+  
+  std::vector< IMCParticleTupleTool* > m_mcTools;///<vector of MCTools to fill
+  
 };
 
 #endif // JBOREL_TUPLETOOLMCTRUTH_H

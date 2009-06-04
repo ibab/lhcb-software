@@ -1,11 +1,11 @@
-// $Id: TupleToolMCInteractions.cpp,v 1.4 2009-05-15 11:43:08 rlambert Exp $
+// $Id: MCTupleToolInteractions.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "TupleToolMCInteractions.h"
+#include "MCTupleToolInteractions.h"
 
 #include "Event/GenHeader.h" 
 #include "Event/MCHeader.h" 
@@ -27,12 +27,12 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolMCInteractions );
+DECLARE_TOOL_FACTORY( MCTupleToolInteractions );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolMCInteractions::TupleToolMCInteractions( const std::string& type,
+MCTupleToolInteractions::MCTupleToolInteractions( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
   : GaudiTool ( type, name , parent )
@@ -69,7 +69,7 @@ TupleToolMCInteractions::TupleToolMCInteractions( const std::string& type,
 
 //=============================================================================
 
-StatusCode TupleToolMCInteractions::initialize() {
+StatusCode MCTupleToolInteractions::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
@@ -77,7 +77,7 @@ StatusCode TupleToolMCInteractions::initialize() {
 
 //=============================================================================
 
-StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
+StatusCode MCTupleToolInteractions::fill( Tuples::Tuple& tuple ) {
 
   unsigned int n =1;
   int MCI =-1;
@@ -183,24 +183,24 @@ StatusCode TupleToolMCInteractions::fill( Tuples::Tuple& tuple ) {
 
 //=============================================================================
 
-double TupleToolMCInteractions::poisson(const double mu, const unsigned int n)
+double MCTupleToolInteractions::poisson(const double mu, const unsigned int n)
 {
   return exp(-mu)*power(mu,n)/factorial(n);
 }
 
-double TupleToolMCInteractions::weight(const double mu1, const double mu2, const unsigned int n)
+double MCTupleToolInteractions::weight(const double mu1, const double mu2, const unsigned int n)
 {
   return exp(mu1-mu2)*power(mu2/mu1,n);
 }
 
-double TupleToolMCInteractions::factorial(const unsigned int n)
+double MCTupleToolInteractions::factorial(const unsigned int n)
 {
   double nfact=1.;
   for(unsigned int i=1;i<=n;i++) nfact*=i;
   return nfact;
 }
 
-double TupleToolMCInteractions::power(const double a, const unsigned int x)
+double MCTupleToolInteractions::power(const double a, const unsigned int x)
 {
   if(x==0) return 1;
   double npow=a;

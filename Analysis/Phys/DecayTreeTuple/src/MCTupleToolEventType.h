@@ -1,11 +1,11 @@
-// $Id: TupleToolMCDecayType.h,v 1.1 2009-03-06 16:45:25 rlambert Exp $
-#ifndef TUPLETOOLMCDECAYTYPE_H
-#define TUPLETOOLMCDECAYTYPE_H 1
+// $Id: MCTupleToolEventType.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+#ifndef MCTUPLETOOLEVENTTYPE_H
+#define MCTUPLETOOLEVENTTYPE_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IParticleTupleTool.h"            // Interface
+#include "Kernel/IEventTupleTool.h"            // Interface
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 
@@ -14,9 +14,8 @@
 #include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "MCInterfaces/IMCEventTypeFinder.h"
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Kernel/IBackgroundCategory.h"
 #include <set>
-/** @class TupleToolMCDecayType TupleToolMCDecayType.h jborel/TupleToolMCDecayType.h
+/** @class MCTupleToolEventType MCTupleToolEventType.h jborel/MCTupleToolEventType.h
  *
  * \brief 
  * \sa DecayTreeTuple
@@ -24,8 +23,7 @@
  *  @author Robert Lambert
  *  @date   2009-02-25
  *  
- *  This TupleTool enables you to output the LHCb EventTypes for the MC particle associated to this candidate and/or search for a given MCDecay string
- *  The association is done with BackgroundCategory where possible, and the Links associator for basic particles
+ *  This TupleTool enables you to output the LHCb EventTypes for this event and/or search for a given MCDecay string
  *  
  *  There are two methods used to find the event type   (Pseudo or Slow)
  *   and several places you can look for the event type (GenHeader, FullEvent, MCAssociate)
@@ -48,39 +46,36 @@
  *                        If this is all you need, and you want no information on the other
  *                        possible decays in this event, you can stop here.
  *                        If all you want to do is find the heaviest quark in the event,
- *                        use the TupleToolGeneration.
+ *                        use the TupleToolGeneration
  *
  *  2) The Full Event   : Every MCParticle in the event is checked to see how it decayed.
  *                        The full list of all possible event types of this event can then be found.
  *
- *  3) The MCAssociate  : The decay of the MCAssociate, or it's mother, or the top of the tree, is checked.
+ *  3) The MCAssociate  : The decay of the MCAssociate, or it's mother, or the top of the tree is checked.
  *                        A categorisation of any fully or partially reconstructed backgrounds
  *                        can then be made.
  *                        This output is complimentary to background category and the MCHierachy and
  *                        can be used as a rudimentary categorisation of backgrounds.
- *
- *  For method (3) use this TupleTool. For methods (1) and (2) use the TupleToolMCEventType
- *
+ * 
+ *  To check the GenHeader and the event (1,2), use this tool.
+ *  To check the MCAssociate (3), use TupleToolMCDecayType
  *
  *  OPTIONS:
  *  
  * 
- *  mother         bool   Actually categorise the mc mother of this particle, not the associate itself
+ *  fillGenEvent   bool   should I write out the gen event header?
+ *                        by default this is true
+ *  findGenEvent   bool   should I look for the generated type in the event?
  *                        by default this is false
- *  top            bool   Actually categorise the ultimate mcmother of this mcparticle, not the associate itself
- *                        by default this is false
- *
- *  UseChi2Method  bool   assosciate using chi2
- *                        by default this is false
- *  InputLocations bool   Associator input location.
- *                        by default this is empty, fine for most cases
+ *  fillWholeEvent bool   should I examine every MC particle in the event?
+ *                        by default this is true
  * 
  *  fillSlowFind   bool   search through using decay strings, very slow method
  *                        by default this is false
  *  fillPseudoFind bool   construct the event types logically, much faster but less accurate
  *                        by default this is true
  *
- *  allEventTypes std::vector   the full list of all event types to consider. for the slow find.
+ *  allEventTypes  std::vector   the full list of all event types to consider. for the slow find.
  *                               This is ignored by the fast find.
  *                               By default this is the whole list in the DekFile doc
  *  hasEventTypes  std::vector   list of event types, the number of these types in the event
@@ -94,54 +89,54 @@
  *  Depending on the options, different entries will be written out.
  *  By default, only the Pseudo event types will be looked for
  *  
- *  _MCP_FoundTypes              (farray)            List of all found event types for the assosciate
- *  _MCP_FoundLen                (unsigned int)      Maximum length of this farray
- *  _MCP_numFoundTypes           (unsigned int)      number of types found in this case
- *  _MCP_MatchingTypes           (farray)            List of Event types which match those in hasEventType for the assosciate
- *  _MCP_MatchLen                (unsigned int)      Maximum length of this farray
- *  _MCP_numMatchingTypes        (unsigned int)      How many of hasEventType there are in the Event Types for the assosciate
+ *  EVT_GenEvent                (long unsigned int) The event type in the GenHeader
+ *  EVT_hasGenEvent             (bool)              Does the GenEvent decay string appear?
+ *  EVT_hasPseudoGenEvent       (bool)              is there a pseudo decay like the one generated?
+ *
+ *  EVT_FoundTypes              (farray)            List of all found event types
+ *  EVT_FoundLen                (unsigned int)      Maximum length of this farray
+ *  EVT_numFoundTypes           (unsigned int)      number of types found in this case
+ *  EVT_MatchingTypes           (farray)            List of Event types which match those in hasEventType
+ *  EVT_MatchLen                (unsigned int)      Maximum length of this farray
+ *  EVT_numMatchingTypes        (unsigned int)      How many of hasEventType there are in the Event Types
  *  
- *  _MCP_PseudoTypes             (farray)            List of all found event types for the assosciate
- *  _MCP_PseudoLen               (unsigned int)      Maximum length of this farray
- *  _MCP_numPseudoTypes          (unsigned int)      number of pseudo types found in this case
- *  _MCP_MatchingPseudoTypes     (farray)            List of Pseudo Event types which match those in hasEventType for the assosciate
- *  _MCP_MatchPseudoLen          (unsigned int)      Maximum length of this farray
- *  _MCP_numMatchingPseudoTypes  (unsigned int)      How many of hasEventType there are in the Pseudo Event Types for the assosciate
+ *  EVT_PseudoTypes             (farray)            List of all found event types
+ *  EVT_PseudoLen               (unsigned int)      Maximum length of this farray
+ *  EVT_numPseudoTypes          (unsigned int)      number of pseudo types found in this case
+ *  EVT_MatchingPseudoTypes     (farray)            List of Pseudo Event types which match those in hasEventType
+ *  EVT_MatchPseudoLen          (unsigned int)      Maximum length of this farray
+ *  EVT_numMatchingPseudoTypes  (unsigned int)      How many of hasEventType there are in the Pseudo Event Types
  * 
- *  _MCP_hasGivenDecay           (bool)              does this MCP decay by the string in hasMCDecay?
+ *  EVT_hasGivenDecay           (bool)              does this event contain the decay in hasMCDecay
+ * 
  * 
  */
 
 
-class TupleToolMCDecayType : public GaudiTool, virtual public IParticleTupleTool {
+class MCTupleToolEventType : public GaudiTool, virtual public IEventTupleTool {
 public:
   /// Standard constructor
-  TupleToolMCDecayType( const std::string& type,
+  MCTupleToolEventType( const std::string& type,
 		    const std::string& name,
 		    const IInterface* parent);
 
-  virtual ~TupleToolMCDecayType(){}; ///< Destructor
+  virtual ~MCTupleToolEventType(){}; ///< Destructor
 
-  virtual StatusCode fill( const LHCb::Particle*
+  virtual StatusCode fill(Tuples::Tuple&);/*( const LHCb::Particle*
 			   , const LHCb::Particle*
 			   , const std::string&
-			   , Tuples::Tuple& );
+			   , Tuples::Tuple& );*/
 
   virtual StatusCode initialize();
   //  virtual StatusCode finalize();
 
 private:
 
-  //  const GaudiAlgorithm* getParent() const ;
-
   //Members which are set by the options:
- 
-  bool m_mother; //!< set by mother option categorise the mcmother of this mcparticle, not the associate itself
-  bool m_top; //!< set by top option. categorise the ultimate mcmother of this mcparticle, not the associate itself
 
-  std::vector<std::string> m_assocInputs;
-  bool m_useChi2Method; //!< Use the chi2 associator instead of the link and composite associator
-
+  bool m_fillGenEvent;   //< set by the fillGenEvent   option, should I check the gen event header?
+  bool m_findGenEvent;   //< set by the findGenEvent   option, should I look for the gen event header in the events?
+  bool m_fillWholeEvent; //< set by the fillWholeEvent option, to fill info on the whole event
   bool m_fillSlowFind;   //< set by the fillSlowFind   option, search through using decay strings
   bool m_fillPseudoFind; //< set by the fillPseudoFind option, construct the event types logically, much faster but less accurate
 
@@ -154,23 +149,13 @@ private:
   LHCb::EventTypeSet m_findEventTypeSet; //< loaded from m_findEventTypes
   LHCb::EventTypeSet m_hasEventTypeSet;  //< loaded from m_hasEventType
   
-  Particle2MCLinker *m_pLink; //< linker for basic particles
-  //Particle2MCLinker *m_pComp; //< linker for composite particles
-  Particle2MCLinker *m_pChi2; //< if you want to use the chi2 method
-
-  IDaVinciAssociatorsWrapper* m_linkerTool_Links;     //< linker for basic particles
-  IDaVinciAssociatorsWrapper* m_linkerTool_Chi2;      //< if you want to use the chi2 method
-  //IDaVinciAssociatorsWrapper* m_linkerTool_Composite; //< linker for composite particles
-
   IMCEventTypeFinder* m_mcEventType; //< the EventTypeFinder tool
   IMCDecayFinder* m_mcDecay;         //< the DecayTypeFinder tool
-  IBackgroundCategory* m_bkg;        //< the backcat tool, for associating composites
   
   ///convert a std::vector to a std::set
   bool vec2set(std::vector<long unsigned int>& avec,LHCb::EventTypeSet& aset);
   bool set2vec(LHCb::EventTypeSet& aset,std::vector<long unsigned int>& avec);
-  //want to cache genEventID/string??
 
 };
 
-#endif // TUPLETOOLMCDECAYTYPE_H
+#endif // MCTUPLETOOLEVENTTYPE_H
