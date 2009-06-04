@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.5 2009-06-04 08:18:08 jpalac Exp $
+// $Id: PhysDict.h,v 1.6 2009-06-04 11:55:33 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -14,14 +14,15 @@
 
 namespace 
 {
-  static bool operator==(const LHCb::HltDecReport& lhs, 
+  
+  inline bool operator==(const LHCb::HltDecReport& lhs, 
                          const LHCb::HltDecReport& rhs) 
   {
     return &lhs == & rhs;
   }
 
-  static bool operator<(const LHCb::HltDecReport& lhs, 
-                         const LHCb::HltDecReport& rhs) 
+  inline bool operator<(const LHCb::HltDecReport& lhs, 
+                        const LHCb::HltDecReport& rhs) 
   {
     return &lhs < & rhs;
   }
