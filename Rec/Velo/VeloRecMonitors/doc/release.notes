@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= VeloRecMonitors v1r7 2009-06-03 =====================
+! 2009-06-03 - Paula Collins & Chris Parkes
+ - added to VeloClusterMonitor.cpp plots for seeding and inclusion thresholds
+
 ! 2009-06-03 - Marco Cattaneo
  - added hack to define snprintf as _snprintf on Windows. This should be fixed
    properly, snprintf is not a standard C++ function
