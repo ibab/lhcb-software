@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.87 2009-06-01 20:33:34 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.88 2009-06-04 13:36:05 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -141,6 +141,12 @@ class HltConf(LHCbConfigurableUser):
                         else :
                             setattr(conf,k,v)
             Hlt1Conf()
+            if hlttype is 'PA' :  # if _only_ PA, we strip down even more...
+                Hlt1Conf().EnableHltGlobalMonitor = False
+                Hlt1Conf().EnableHltSelReports = False
+                Hlt1Conf().EnableHltVtxReports = False
+                Hlt1Conf().EnableLumiEventWriting = False
+                self.setProp('ActiveHlt1Lines',[ 'Hlt1Physics','Hlt1Random'] )
             if hlttype.find('Hlt2') != -1 :   
                 importOptions('$HLTCONFROOT/options/Hlt2.py')
                 # TODO: this next one should become a property of the Hlt2 configurable, and we
@@ -277,18 +283,18 @@ class HltConf(LHCbConfigurableUser):
         HltGlobalMonitor().GroupLabels = group_labels 
 
 
-        def disableHistograms(c,filter = lambda x : True) :
+        def _disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
                 c.HistoProduce = False
             for p in [ 'Members','Filter0','Filter1' ] :
                 if not hasattr(c,p) : continue
                 x = getattr(c,p)
                 if list is not type(x) : x = [ x ]
-                for i in x : disableHistograms(i,filter) 
+                for i in x : _disableHistograms(i,filter) 
         if   self.getProp('HistogrammingLevel') == 'None' : 
-            for i in hlt1Lines()+hlt2Lines() : disableHistograms( i.configurable() )
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 
-            for i in hlt1Lines()+hlt2Lines() : disableHistograms( i.configurable(), lambda x: x.getType()!='HltLine' ) 
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='HltLine' ) 
             
 
     def postConfigAction(self) : 
@@ -314,10 +320,11 @@ class HltConf(LHCbConfigurableUser):
             Hlt1Line('IgnoringLumi', HLT = "HLT_PASSIGNORING(strings(%s))" % str(lumi)  )
             Hlt1Line('Lumi',         HLT = "HLT_PASS(strings(%s))" % str(lumi) )
         ## finally, add the Hlt1Global line...
-        Hlt1Line('Global', HLT = 'HLT_DECISION' )
+        Hlt1Global = Hlt1Line('Global', HLT = 'HLT_DECISION' )
 
         activeLines = self.getProp('ActiveHlt1Lines') 
         lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
+        if Hlt1Global not in lines1 : lines1 += [ Hlt1Global ]
         print '# List of configured Hlt1Lines : ' + str(hlt1Lines()) 
         print '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) 
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ] # note : should verify order (?) -- global should be last hlt1line! 
