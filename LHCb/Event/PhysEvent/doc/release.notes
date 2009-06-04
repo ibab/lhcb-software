@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.143 2009-02-20 11:50:23 cattanem Exp $
+! $Id: release.notes,v 1.144 2009-06-04 17:21:34 musy Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2009-06-04 - Marco Musy
+  changed xml/Tagger.xml to pass pointer to Particle instead of the object
 
 !======================== PhysEvent v11r8 2009-02-20 ========================
 ! 2009-02-20 - Marco Musy
