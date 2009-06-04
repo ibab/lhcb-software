@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.53 2009-05-11 13:37:34 jpalac Exp $
+! $Id: release.notes,v 1.54 2009-06-04 17:19:02 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-04-24 - Marco Musy
+  adapt for changes in the Event Model Event/xml/Tagger.xml where
+  std::vector&lt;LHCb::Particle&gt; becomes std::vector&lt;LHCb::Particle*&gt;
+  still getting a crash when the Tagger is returned.
 
 !=====================FlavourTaggingChecker v3r5 2009-05-11 ================
 

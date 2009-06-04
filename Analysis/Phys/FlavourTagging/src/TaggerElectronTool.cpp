@@ -145,7 +145,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     tele.setOmega( 1-pn );
     tele.setDecision(iele->charge()>0 ? -1: 1);
 //   }  
-  tele.addTaggerPart(*iele);
+  tele.addTaggerPart(iele);
   tele.setType( Tagger::OS_Electron );
 
   return tele;

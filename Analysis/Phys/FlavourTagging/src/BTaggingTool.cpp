@@ -208,16 +208,20 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   bool isBs = false; if( AXB->particleID().hasStrange()) isBs = true;
   bool isBu = false; if( AXB->particleID().hasUp() )     isBu = true;
 
-
   ///Choose Taggers ------------------------------------------------------ 
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
   Vertex::ConstVector allVtx;
   Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
+
   if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
 
   if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
 
-  if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
+  info()<<" entering taggerKaon..  "<<endreq;
+
+  if(m_EnableKaonOS)        m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
+
+  info()<<" end of taggerKaon..  "<<endreq;
 
   if(m_EnableKaonSS) if(isBs)  
                        kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
@@ -237,13 +241,13 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       for ( j=i+1; j!=vtags.end(); j++) if(iproto==(*j)->proto()) continue;
       if( m_UseVtxOnlyWithoutOS ) {
 	if(muon.type()!=0) 
-	  if(muon.taggerParts().at(0).proto() == iproto ) 
+	  if(muon.taggerParts().at(0)->proto() == iproto ) 
 	    vtagsPlusOS.push_back(*i);
 	if(elec.type()!=0) 
-	  if(elec.taggerParts().at(0).proto() == iproto ) 
+	  if(elec.taggerParts().at(0)->proto() == iproto ) 
 	    vtagsPlusOS.push_back(*i);
 	if(kaon.type()!=0)
-	  if(kaon.taggerParts().at(0).proto() == iproto ) 
+	  if(kaon.taggerParts().at(0)->proto() == iproto ) 
 	    vtagsPlusOS.push_back(*i);
       }
       vtagsPlusOS.push_back(*i);
@@ -266,7 +270,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( isBu || isBd ) if (msgLevel(MSG::DEBUG)) debug()<<"tagger pS   1-w = "<< 1-pionS.omega()<<endreq;
   if (msgLevel(MSG::DEBUG)) debug()<<"tagger vtx  1-w = "<< 1-vtxCh.omega()<<endreq;
 
-    
   //----------------------------------------------------------------------
   //Now combine the individual tagger decisions into 
   //one final B flavour tagging decision. Such decision 

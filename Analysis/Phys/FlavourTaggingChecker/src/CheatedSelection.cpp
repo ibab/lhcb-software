@@ -54,7 +54,7 @@ StatusCode CheatedSelection::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS;
+  return DVAlgorithm::initialize() ;
 }
 
 //=============================================================================
@@ -138,7 +138,7 @@ StatusCode CheatedSelection::execute() {
 //=============================================================================
 StatusCode CheatedSelection::finalize() {
   if( NULL != m_linker ) delete m_linker;
-  return StatusCode::SUCCESS;
+  return DVAlgorithm::finalize();
 }
 
 //============================================================================

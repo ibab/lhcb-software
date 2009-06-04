@@ -514,7 +514,7 @@ StatusCode BTaggingAnalysis::execute() {
       Particle::ConstVector::iterator kp;
       if(itagger.type()==Tagger::VtxCharge) {
         for( unsigned int i=0; i!=itagger.taggerParts().size(); i++){
-          partsInSV.push_back( itagger.taggerParts().at(i).proto() );
+          partsInSV.push_back( itagger.taggerParts().at(i)->proto() );
         }
       }
       

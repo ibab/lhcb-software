@@ -20,7 +20,7 @@ importOptions( "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.py" )
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = 100                        # Number of events
+DaVinci().EvtMax = 200                        # Number of events
 #DaVinci().DataType = "2008"                  # Default is "DC06"
 DaVinci().Simulation   = True
 

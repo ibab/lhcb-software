@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesData.cpp,v 1.3 2008-07-24 08:21:09 cattanem Exp $
+// $Id: TaggingTuplesData.cpp,v 1.4 2009-06-04 17:19:02 musy Exp $
 // Include files 
 
 // from Gaudi
@@ -321,12 +321,12 @@ StatusCode TaggingTuplesData::execute() {
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<Particle> taggerparts = itag->taggerParts();
-        std::vector<Particle>::iterator kp;
+        std::vector<const Particle*> taggerparts = itag->taggerParts();
+        std::vector<const Particle*>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-                   debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
-                           << " p= "  << kp->p()/Gaudi::Units::GeV << endmsg;
-	}
+                   debug() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+                           << " p= "  << (*kp)->p()/Gaudi::Units::GeV << endmsg;
+        }
           if(tts=="OS_Muon"){
           osmuondec=itag->decision();
           debug() << "--> OSMuondec: " << osmuondec <<endreq;

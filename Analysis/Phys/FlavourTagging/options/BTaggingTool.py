@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: BTaggingTool.py,v 1.4 2009-04-24 09:45:13 pkoppenb Exp $
+# $Id: BTaggingTool.py,v 1.5 2009-06-04 17:17:42 musy Exp $
 #
 # Tagging options
 #
@@ -44,6 +44,5 @@ dod.AlgMap.update( { hat + eName + '/Particles' : 'CombinedParticleMaker/'+eName
                      hat + eName + '/Vertices'  : 'CombinedParticleMaker/'+eName } )
 dod.AlgMap.update( { hat + tagName + '/Particles' : 'FilterDesktop/'+tagName ,
                      hat + tagName + '/Vertices'  : 'FilterDesktop/'+tagName } )
-
 
 ##############################################################################

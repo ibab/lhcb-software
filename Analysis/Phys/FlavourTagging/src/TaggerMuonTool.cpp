@@ -115,16 +115,10 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   }
 
-//   if(pn<0.5){
-//     pn = 1-pn;
-//     tmu.setOmega( 1-pn );
-//     tmu.setDecision(imuon->charge()>0 ? 1: -1);
-//   } else {
-    tmu.setOmega( 1-pn );
-    tmu.setDecision(imuon->charge()>0 ? -1: 1);
-//   }
+  tmu.setOmega( 1-pn );
+  tmu.setDecision(imuon->charge()>0 ? -1: 1);
   tmu.setType( Tagger::OS_Muon ); 
-  tmu.addTaggerPart(*imuon);
+  tmu.addTaggerPart(imuon);
 
   return tmu;
 }

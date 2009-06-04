@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesSignal.cpp,v 1.4 2008-09-25 06:52:22 pkoppenb Exp $
+// $Id: TaggingTuplesSignal.cpp,v 1.5 2009-06-04 17:19:02 musy Exp $
 // Include files 
 // local
 #include "TaggingTuplesSignal.h"
@@ -297,12 +297,12 @@ StatusCode TaggingTuplesSignal::execute() {
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<Particle> taggerparts = itag->taggerParts();
-        std::vector<Particle>::iterator kp;
-        for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-            debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
-                    << " p= "  << kp->p()<< endreq;///GeV << endreq;
-	}
+//         std::vector<Particle> taggerparts = itag->taggerParts();
+//         std::vector<Particle>::iterator kp;
+//         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
+//             debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
+//                     << " p= "  << kp->p()<< endreq;///GeV << endreq;
+//         }
           if(tts=="OS_Muon"){
           osmuondec=itag->decision();
           debug() << "--> OSMuondec: " << osmuondec <<endreq;

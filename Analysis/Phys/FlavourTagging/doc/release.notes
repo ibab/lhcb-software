@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.132 2009-05-11 13:18:53 jpalac Exp $
+! $Id: release.notes,v 1.133 2009-06-04 17:17:42 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-04-24 - Marco Musy
+  adapt for changes in the Event Model Event/xml/Tagger.xml where
+  std::vector&lt;LHCb::Particle&gt; becomes std::vector&lt;LHCb::Particle*&gt;
+  still getting a crash when the Tagger is returned.
 
 !======================= FlavourTagging v8r4 2009-05-11 ====================
 

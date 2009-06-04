@@ -120,10 +120,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
     double IP, IPerr;
     m_util->calcIP(ikaon, RecVert, IP, IPerr);
-//     if(SecVert) {
-//       m_util->calcIP(ikaon, SecVert, ip, iperr);
-//       if(!iperr) IPT = ip/iperr;
-//     } else IPT = -1000.; 
 
     std::vector<double> NNinputs(5);
     NNinputs.at(0) = m_util->countTracks(vtags);
@@ -136,20 +132,20 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
   }
 
-//   if(pn<0.5){
-//     pn = 1-pn;
-//     tkaon.setOmega( 1-pn );
-//     tkaon.setDecision(ikaon->charge()>0 ? 1: -1);
-//   } else {
-    tkaon.setOmega( 1-pn );
-    tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
-//   }
+  tkaon.setOmega( 1-pn );
+  tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
   tkaon.setType( Tagger::OS_Kaon ); 
-  tkaon.addTaggerPart(*ikaon);
 
+  info()<<"storing k pointer"<<endreq;
+  tkaon.addTaggerPart(ikaon);
+
+  info()<<"tagger kaon returning now. Pointer stored="<<ikaon<<endreq;
   return tkaon;
 }
 
 //==========================================================================
-StatusCode TaggerKaonOppositeTool::finalize() { return StatusCode::SUCCESS; }
+StatusCode TaggerKaonOppositeTool::finalize() { 
+  info()<<"finalizing "<<endreq;
+  return StatusCode::SUCCESS; 
+}
 

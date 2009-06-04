@@ -21,8 +21,9 @@ importOptions("$STDOPTS/PreloadUnits.opts")
 #
 #importOptions("$B2DILEPTONROOT/options/DoPreselBu2LLK.opts")
 #preselSeq = GaudiSequencer("SeqPreselBu2LLK")
-#importOptions( "$DAVINCIROOT/options/DC06SelBs2DsPi.opts")
-importOptions( "$B2DPLUSXROOT/options/DC06SelBs2DsPi.opts")
+#importOptions( "$B2DPLUSXROOT/options/DC06SelBs2DsPi.opts")
+#preselSeq = GaudiSequencer("SeqDC06SelBs2DsPi")
+importOptions( "/afs/cern.ch/user/m/musy/w0/cmtuser/DaVinci_HEAD/PhysSel/B2DplusX/options/DC06SelBs2DsPi.opts" )
 preselSeq = GaudiSequencer("SeqDC06SelBs2DsPi")
 
 ########################################################################
