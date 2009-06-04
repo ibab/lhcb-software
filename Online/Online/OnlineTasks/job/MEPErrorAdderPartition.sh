@@ -5,6 +5,8 @@
 ###
 ### author David Svantesson
 
+cd /group/online/latestOnline/Online/OnlineTasks/job
+
 # List of partitions to start algorithm for
 if test -n "$1" ; then
    # list given by input argument
