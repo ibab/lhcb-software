@@ -70,7 +70,7 @@ use RichRecPhotonTools   v1r5    Rich # Chris Jones
 use RichRecQC            v2r29   Rich # Chris Jones
 use RichRecStereoTools   v1r5p1  Rich # Chris Jones
 use RichRecSys           v3r19   Rich # Chris Jones
-#use RichRecTemplateRings v1r0    Rich # Sajan Easo
+use RichRecTemplateRings v1r0    Rich # Sajan Easo
 use RichRecTools         v4r8    Rich # Chris Jones
 use RichRecTrackTools    v1r11   Rich # Chris Jones
 

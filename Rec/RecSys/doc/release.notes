@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-06-04 - Chris Jones
+ - Add RichRecTemplateRings to RICH packages
+
 </PRE><H1><A NAME=v7r1>2009-06-03 RecSys v7r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r1.
 
