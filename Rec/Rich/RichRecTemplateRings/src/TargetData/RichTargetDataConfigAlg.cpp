@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.2 2009-03-19 17:13:31 seaso Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.3 2009-06-04 16:30:48 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -115,7 +115,8 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetRichHitInfo()
      rt()->tgD()->StoreTargetHitData(r2h,r2s,r2inv);
   
   } else {
-     warning() << "RichRingRec TargetData: No Rich Target hits data in this event "<<endmsg;
+    
+     debug() << "RichRingRec TargetData: No Rich Target hits data in this event " << endmsg;
     
   }
   
