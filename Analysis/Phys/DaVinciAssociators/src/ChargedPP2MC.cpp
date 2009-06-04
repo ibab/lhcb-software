@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.13 2007-06-15 16:05:37 pkoppenb Exp $
+// $Id: ChargedPP2MC.cpp,v 1.14 2009-06-04 13:59:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -73,6 +73,7 @@ ChargedPP2MC::ChargedPP2MC( const std::string& name,
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
+  m_inputData.push_back( ProtoParticleLocation::HltCharged );
   m_outputTable = ChargedPP2MCAsctLocation;
 
   m_trackLocations.push_back(TrackLocation::Default);

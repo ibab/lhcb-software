@@ -1,4 +1,4 @@
-// $Id: P2MCPFromProtoP.cpp,v 1.2 2009-04-08 12:12:31 jpalac Exp $
+// $Id: P2MCPFromProtoP.cpp,v 1.3 2009-06-04 14:02:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,8 @@ P2MCPFromProtoP::P2MCPFromProtoP( const std::string& type,
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
+  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltCharged ) ;
+  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ) ;
 }
 //=============================================================================
 StatusCode P2MCPFromProtoP::initialize() {
