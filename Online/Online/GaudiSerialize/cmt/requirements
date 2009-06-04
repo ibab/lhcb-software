@@ -19,4 +19,7 @@ library     GaudiSerialize ../src/*.cpp ../$(tag)/dict/GaudiSerialize/*.cpp
 macro_append  GaudiSerialize_dependencies GaudiSerializeGen
 apply_pattern component_library library=GaudiSerialize
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
