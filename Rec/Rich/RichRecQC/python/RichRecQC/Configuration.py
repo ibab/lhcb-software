@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.30 2009-06-03 09:20:26 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.31 2009-06-04 16:32:02 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -187,6 +187,9 @@ class RichRecQCConf(RichConfigurableUser):
             elif type == "ENN" :
                 from Configurables import RichENNRingFinderConf
                 conf = RichENNRingFinderConf()
+            elif type == "Template" :
+                from Configurables import RichTemplateRingFinderConf
+                conf = RichTemplateRingFinderConf()
             else :
                 raise RuntimeError("ERROR : Unknown trackless ring finder type")
             conf.enableHistos( self.getProp("HistoProduce") )

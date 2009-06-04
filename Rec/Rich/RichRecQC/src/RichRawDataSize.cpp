@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.1 2009-06-03 09:20:26 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.2 2009-06-04 16:32:02 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -85,7 +85,6 @@ StatusCode RawDataSize::execute()
       for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
             iIngressMap != ingressMap.end(); ++iIngressMap )
       {
-        //const Rich::DAQ::L1IngressID   l1IngressID = iIngressMap->first;
         const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
         const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
 

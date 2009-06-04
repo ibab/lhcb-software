@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-04 - Chris Jones
+ - Update trackless ring monitoring to handle "Template" rings
+
 ! 2009-06-03 - Chris Jones
  - Add a new monitor, RichRawDataSize, to monitor the size of the L1 banks.
  - Small improvement to the trackless ring monitor (improve histogram limits).
