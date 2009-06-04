@@ -22,8 +22,6 @@ macro_append ChangeTaskName_dependencies " OnlineHistDB "
 application  ChangeAlgorithmName ../main/ChangeAlgorithmName.cpp
 macro_append ChangeAlgorithmName_dependencies " OnlineHistDB "
 
-#use the -full version to work with cern DBDEV10 Oracle server
-macro oracle_config_version 10.2.0.3-full
 #macro LCG_system '$(CMTCONFIG)-opt'
 
 macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
