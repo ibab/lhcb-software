@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysDict
 ! Responsible : Juan PALACIOS
-! Purpose     : REFLEX dictionaries for Phys classes
+! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
+
+ 2007-01-29 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v4r0
+  - dict/PhysDict.h, dict/PhysDict.xml
+    . Add dicitonaries for GaudiUtils::VectorMap< std::string, LHCb::HltDecReport >
+
 
 !========================== PhysDict v2r2 2007-01-29 =======================
 

@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.3 2007-01-19 10:09:03 jpalac Exp $
+// $Id: PhysDict.h,v 1.4 2009-06-04 07:51:38 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -10,54 +10,16 @@
  *  @author Juan PALACIOS
  *  @date   2006-10-02
  */
-// ============================================================================
-// DaVinciKernel
-// ============================================================================
-#include "Kernel/IAlgorithm2ID.h"
-#include "Kernel/IBestParticles.h"
-#include "Kernel/IBTaggingTool.h"
-#include "Kernel/ICaloParticleMaker.h"
-#include "Kernel/ICheckOverlap.h"
-#include "Kernel/ICheckSelResults.h"
-#include "Kernel/IContextTool.h"
-#include "Kernel/IDecayFinder.h"
-#include "Kernel/IDecodeSimpleDecayString.h"
-#include "Kernel/IDirectionFit.h"
-#include "Kernel/IFilterCriteriaTESTool.h"
-#include "Kernel/IFilterCriterion.h"
-#include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IJetMaker.h"
-#include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IMassVertexFit.h"
-#include "Kernel/IOnOffline.h"
-#include "Kernel/IParticle2State.h"
-#include "Kernel/IParticle2VertexAsct.h"
-#include "Kernel/IParticleCombiner.h"
-#include "Kernel/IParticleDescendants.h"
-#include "Kernel/IParticleFilter.h"
-#include "Kernel/IParticleMaker.h"
-#include "Kernel/IParticleReFitter.h"
-#include "Kernel/IParticleStuffer.h"
-#include "Kernel/IPhysDesktop.h"
-#include "Kernel/IPlotTool.h"
-#include "Kernel/IProtoParticleFilter.h"
-#include "Kernel/IPVReFitter.h"
-#include "Kernel/IRelatedPV.h"
-//#include "Kernel/ISecondaryVertexTool.h"
-//#include "Kernel/ITagger.h"
-#include "Kernel/IVertexFit.h"
-// ============================================================================
-// DaVinciMCKernel
-// ============================================================================
-#include "Kernel/IBackgroundCategory.h"
-#include "Kernel/ICheatedLifetimeFitter.h"
-#include "Kernel/IDebugTool.h"
-#include "Kernel/IMCReconstructible.h"
-#include "Kernel/IVisPrimVertTool.h"
-// ============================================================================
-// MCEvent
-// ============================================================================
-#include "Kernel/IMCDecayFinder.h"
-// ============================================================================
+#include "Event/HltDecReports.h"
+
+namespace 
+{
+  struct _Instantiations 
+  {
+    GaudiUtils::VectorMap< std::string, LHCb::HltDecReport > _i2;
+  };
+  
+}
+
 
 #endif // DICT_PHYSDICT_H
