@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.16 2009-06-04 12:32:22 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-06-04 12:36:04 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -51,7 +51,7 @@ class AnalysisConf(LHCbConfigurableUser) :
                 tescheck = TESCheck("DaVinciEvtCheck")    # Check for presence of node ...
                 tescheck.Inputs = ["Link/Rec/Track/Best"] # 
                 tescheck.Stop = False                     # But don't stop
-                tescheck.OutputLevel = 1                  # don't print warnings
+                tescheck.OutputLevel = 5                  # don't print warnings
                 evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller") # kill nodes
                 evtnodekiller.Nodes = ["Link/Rec"]        # Kill that
                 mcKillSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]  
