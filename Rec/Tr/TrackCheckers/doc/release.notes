@@ -6,8 +6,9 @@
 ! 2009-06-03 - Stephanie Hansmann-Menzemer
  - add check not for MC reconstructible but for track found in best container
    (needed to validated HLT vs. offline efficiency)
- - add switch to check efficiency only for B daughters
+ - add switch to check efficiency only for B daughters and for long tracks 
  - bug fix in MC bAncestor method
+
 
 !======================= TrackCheckers v4r5 2009-01-12 =======================
 ! 2008-12-04 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.h,v 1.4 2009-06-03 12:56:17 smenzeme Exp $
+// $Id: TrackEffChecker.h,v 1.5 2009-06-04 11:46:03 smenzeme Exp $
 #ifndef TRACKEFFCHECKER_H
 #define TRACKEFFCHECKER_H 1
  
@@ -42,6 +42,7 @@ class TrackEffChecker : public TrackCheckerBase {
  private:
   
   bool m_fromB;
+  bool m_requireLong;
 
   void ghostInfo(const LHCb::Tracks* tracks);
 

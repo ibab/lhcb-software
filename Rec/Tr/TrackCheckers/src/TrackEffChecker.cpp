@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.12 2009-06-03 12:56:17 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.13 2009-06-04 11:46:03 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -26,6 +26,8 @@ TrackCheckerBase( name , pSvcLocator ){
 
   declareProperty( "OnlyBTracksInDenominator",
                    m_fromB = false  );
+  declareProperty( "RequireLongTrack",
+                   m_requireLong = false  );
 
 }
 
@@ -136,12 +138,15 @@ void TrackEffChecker::effInfo(){
 
       TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
 
+      
+
+
       plots("mcSelected", *iterP);
       ++nToFind;
       if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	++nToFindG5;
       
-      if (info.track != 0) {
+      if (info.track != 0 && (info.track->type == long || !m_requireLong)) {
 	++nFound;
 	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	  ++nFoundG5;
