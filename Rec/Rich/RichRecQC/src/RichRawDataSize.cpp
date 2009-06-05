@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.3 2009-06-05 16:02:07 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.4 2009-06-05 16:19:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -67,44 +67,44 @@ StatusCode RawDataSize::initialize()
 //=============================================================================
 StatusCode RawDataSize::execute()
 {
-  // use a try block in case of DB lookup errors
-  try
+  // get the raw data
+  const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
+
+  for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
+        iL1Map != l1Map.end(); ++iL1Map )
   {
+    const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
+    const Rich::DAQ::IngressMap & ingressMap  = iL1Map->second;
 
-    // get the raw data
-    const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
+    unsigned int nL1Words(Rich::DAQ::NumIngressPerL1); // Start with 1 word per HPD ingress header
 
-    for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
-          iL1Map != l1Map.end(); ++iL1Map )
+    for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
+          iIngressMap != ingressMap.end(); ++iIngressMap )
     {
-      const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
-      const Rich::DAQ::IngressMap & ingressMap  = iL1Map->second;
+      const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
+      const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
 
-      unsigned int nL1Words(Rich::DAQ::NumIngressPerL1); // Start with 1 word per HPD ingress header
-
-      for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
-            iIngressMap != ingressMap.end(); ++iIngressMap )
+      for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
+            iHPDMap != hpdMap.end(); ++iHPDMap )
       {
-        const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
-        const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
+        const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
+        const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
+        const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
+        const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
-        for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
-              iHPDMap != hpdMap.end(); ++iHPDMap )
+        // Only use valid data
+        if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
+
+        // use a try block in case of DB lookup errors
+        try
         {
-          const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
-          const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
-          const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
-          const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
-
-          // Only use valid data
-          if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
 
           // Get the HPD hardware ID
-          const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
+          const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdID);
 
           // number of data words for this HPD
-          const unsigned int nHPDwords = ( hpdHeader.nDataWords()   + 
-                                           hpdHeader.nHeaderWords() + 
+          const unsigned int nHPDwords = ( hpdHeader.nDataWords()   +
+                                           hpdHeader.nHeaderWords() +
                                            hpdFooter.nFooterWords() );
           nL1Words += nHPDwords;
 
@@ -116,53 +116,53 @@ StatusCode RawDataSize::execute()
             plot1D( nHPDwords, ID.str(), title.str(), -0.5, 500.5, 501 );
           }
 
-        } // loop over HPDs
+        }
+        catch ( const GaudiException & excpt )
+        {
+          Error( excpt.message() ).ignore();
+        }
 
-      } // loop over ingresses
+      } // loop over HPDs
 
-      std::ostringstream title, ID;
-      title << "Data Size (# 32-bit words) : L1 HardwareID " << l1HardID;
-      ID << "L1s/L1HardwareID" << l1HardID;
-      plot1D( nL1Words, ID.str(), title.str(), -0.5, 500.5, 501 );
+    } // loop over ingresses
 
-    } // loop over L1 boards
+    std::ostringstream title, ID;
+    title << "Data Size (# 32-bit words) : L1 HardwareID " << l1HardID;
+    ID << "L1s/L1HardwareID" << l1HardID;
+    plot1D( nL1Words, ID.str(), title.str(), -0.5, 500.5, 501 );
 
-  }
-  catch ( const GaudiException & excpt )
-  {
-    Error( excpt.message() ).ignore();
-  }
+  } // loop over L1 boards
 
   // test, by going direct to the RawBanks
   /*
-  {
+    {
     // full TES location for this event
     const std::string reLoc = LHCb::RawEventLocation::Default;
 
     // load the raw RICH data at this location
     if ( exist<LHCb::RawEvent>(reLoc) )
     {
-      LHCb::RawEvent * rawEvent = get<LHCb::RawEvent>(reLoc);
+    LHCb::RawEvent * rawEvent = get<LHCb::RawEvent>(reLoc);
 
-      // Get the banks for the Rich
-      const LHCb::RawBank::Vector & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
+    // Get the banks for the Rich
+    const LHCb::RawBank::Vector & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
 
-      // Loop over data banks
-      for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
-            iBank != richBanks.end(); ++iBank )
-      {
-        const int L1size     = (*iBank)->size() / 4; // size in # 32 bit words
-        const Level1HardwareID L1ID ( (*iBank)->sourceID() );
+    // Loop over data banks
+    for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
+    iBank != richBanks.end(); ++iBank )
+    {
+    const int L1size     = (*iBank)->size() / 4; // size in # 32 bit words
+    const Level1HardwareID L1ID ( (*iBank)->sourceID() );
 
-        std::ostringstream title, ID;
-        title << "Main Event Data Size (# 32-bit words) : L1 HardwareID " << L1ID; 
-        ID << "RawBanks/L1ID" << L1ID;
-        plot1D( L1size, ID.str(), title.str(), -0.5, 500.5, 501 );
+    std::ostringstream title, ID;
+    title << "Main Event Data Size (# 32-bit words) : L1 HardwareID " << L1ID;
+    ID << "RawBanks/L1ID" << L1ID;
+    plot1D( L1size, ID.str(), title.str(), -0.5, 500.5, 501 );
 
-      } // raw banks
+    } // raw banks
 
     } // raw event exists
-  }
+    }
   */
 
   return StatusCode::SUCCESS;
