@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================== MuonDAQ v4r6p1 2009-06-02 ========================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !========================== MuonDAQ v4r6 2009-05-07 ==========================
 ! 2009-04-28 - Alessia Satta
  - Add MuonTAE Rec algo for reconstruction in TAE events. 

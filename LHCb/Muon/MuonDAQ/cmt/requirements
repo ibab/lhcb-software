@@ -1,5 +1,5 @@
 package MuonDAQ
-version v4r6
+version v4r6p1
 
 # ================ structure ===========================================
 branches src Event MuonDAQ cmt doc
@@ -30,4 +30,3 @@ apply_pattern reflex_dictionary                                    \
 # Hack for Gaudi v21r1 to link dictionary on windows
 private
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
-
