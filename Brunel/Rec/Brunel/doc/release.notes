@@ -4,7 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2009-06-05 - Marco Cattaneo
- - Updated references for improvements to Rich
+ - Updated references for improvements to Rich:
+   . improvements to ring finding
+   . fix in event sizes reported by decoding tools
+   . new RichRawDataSize monitor
 
 ! 2009-06-02 - Marco Cattaneo
  - Update references for addition of Downstream tracking in fieldOff case
