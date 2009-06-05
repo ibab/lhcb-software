@@ -85,6 +85,8 @@ namespace LHCb {
 
     bool m_NeedOTConv;
 
+    int m_InitialCredits;
+
     /// Protected Attributes
     Requirements m_Req; /* Vector of strings which tells the options to access to buffer managers,             */
                         /* Most are useless and the vector should be like this :                               */
