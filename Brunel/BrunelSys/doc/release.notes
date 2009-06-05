@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-06-05 - Marco Cattaneo
+ - Update reference for Rich tuning and monitoring changes
+
 </PRE><H1><A NAME=v35r1>2009-06-05 Brunel v35r1</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r1, Lbcom v7r1, Rec v7r1
  and SQLDDDB v5r7, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
