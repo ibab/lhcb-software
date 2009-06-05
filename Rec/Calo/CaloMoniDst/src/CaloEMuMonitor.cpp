@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.3 2009-06-03 13:07:23 cattanem Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.4 2009-06-05 15:57:41 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -135,13 +135,7 @@ void CaloEMuMonitor::bookMonitoringHistograms(){
       return;
     }
 
-    char buf[64];
-#ifdef _WIN32
-	_snprintf(buf, sizeof(buf)-1, "tanh(CaloEcalChi2 / %f)", m_chi2eNorm);
-#else
-	snprintf(buf, sizeof(buf)-1, "tanh(CaloEcalChi2 / %f)", m_chi2eNorm);
-#endif
-	m_refPar["tanhe"].htitle = buf; 
+    m_refPar["tanhe"].htitle = std::string( format("tanh(CaloEcalChi2 / %f)",  m_chi2eNorm ) ); 
   }
 
   // book monitoring histograms

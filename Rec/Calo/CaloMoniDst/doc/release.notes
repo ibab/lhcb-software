@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.41 2009-06-03 13:07:23 cattanem Exp $ 
+! $Id: release.notes,v 1.42 2009-06-05 15:57:41 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-05 - Olivier Deschamps
+ - change _snprintf() to std::string
 
 !========================== CaloMoniDst v3r7 2009-06-03 =======================
 ! 2009-06-03 - Marco Cattaneo
