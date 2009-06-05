@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v1r6p1 2009-06-05 ================
+! 2009-06-05 - Marco Cattaneo
+ - Fix Windows compilation error
+
 !========================= STDigiAlgorithms v1r6 2009-05-13 ==================
 ! 2009-04-15 M Needham
  - Fix warning

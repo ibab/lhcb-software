@@ -114,7 +114,7 @@ void STCommonModeSim::processPort(STDigits::const_iterator& start,
 
   unsigned int nMissed = LHCbConstants::nStripsInPort - (end - start);
   double noiseCounts = m_sigNoiseTool->noiseInADC((*start)->channelID());
-  double ranNoise = (nMissed* m_cmNoise) + m_gaussDist->shoot()*noiseCounts *sqrt(nMissed);
+  double ranNoise = (nMissed* m_cmNoise) + m_gaussDist->shoot()*noiseCounts *sqrt((double)nMissed);
 
   // make tmp list of charges
   std::vector<double> startCharge;
