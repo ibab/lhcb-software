@@ -3,15 +3,19 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-05-18 - Marco Cattaneo
- - Update configurable for new ST cluster monitor names
- - Update references accordingly (and for modified ST monitor histograms)
+</PRE><H1><A NAME=v19r1>2009-06-08 Boole v19r1</A></H1><PRE>
+ - Changes to Configurable:
+   . Update for new ST cluster monitor names
 
-! 2009-05-14 - Marco Cattaneo
- - Remove tests/qmtest/python/BooleExclusions.py file, import instead
-   GaudiConf.QMTest.LHCbExclusions. 
- - No longer add tests/qmtest/python to PYTHONPATH
- - Increment version to v19r1
+ - Changes to requirements
+   . No longer add tests/qmtest/python to PYTHONPATH
+
+ - Changes to QMTests:
+   . Remove tests/qmtest/python/BooleExclusions.py file, import instead
+     GaudiConf.QMTest.LHCbExclusions. 
+
+ - Changes to references to reflect changes in Boole v19r0 output:
+   . Update for new ST cluster monitor names and modified ST monitor histograms
 
 </PRE><H1><A NAME=v19r0>2009-05-14 Boole v19r0</A></H1><PRE>
  - Bug fixes:
@@ -31,7 +35,7 @@ Purpose: LHCb Digitization program
    . Add tests/qmtest/python/BooleExclusions.py, contains shared lines for
      exclusion from reference comparisons in QMTests, imported by boole*.qmt
 
- - Changes to references to reflect changes in Boole v18r0 output:
+ - Changes to references to reflect changes in Boole v19r0 output:
    . Changes related to SQLDDDB v5r4: new calorimeter calibration,
                                       new Muon chamber time response
    . Change due to fix to OT drift time sorting
