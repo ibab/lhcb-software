@@ -4,7 +4,9 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
-! 2007-06-04 - Juan PALACIOS
+!========================== PhysDict v4r0 2009-06-05 =======================
+
+! 2009-06-04 - Juan PALACIOS
   - dict/PhysDict.xml
     . Exclude operators HltDecReport::operator< and HleDecReport::operator== 
       from selection to avoid compilation problems. 
