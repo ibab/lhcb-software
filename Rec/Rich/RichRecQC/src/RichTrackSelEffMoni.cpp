@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.2 2009-05-24 19:54:00 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.3 2009-06-05 10:47:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -67,6 +67,13 @@ StatusCode TrackSelEff::execute()
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
+  // Get the raw input tracks
+  if ( !exist<LHCb::Tracks>(m_trTracksLocation) )
+  {
+    return Warning("No Tracks at "+m_trTracksLocation,StatusCode::SUCCESS);
+  }
+  const LHCb::Tracks * trTracks = get<LHCb::Tracks>( m_trTracksLocation );
+
   // Rich Histo ID
   const RichHistoID hid;
 
@@ -76,9 +83,6 @@ StatusCode TrackSelEff::execute()
 
   // Is MC available
   const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
-
-  // Get the raw input tracks
-  const LHCb::Tracks * trTracks = get<LHCb::Tracks>( m_trTracksLocation );
 
   // Loop over the raw tracks
   for ( LHCb::Tracks::const_iterator iT = trTracks->begin();

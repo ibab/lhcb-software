@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-05 - Chris Jones
+ - Do not abort processig when input tracks to RichTrackSelEffMoni are missing.
+   Instead just issue a warning message and carry on.
+
 ! 2009-06-04 - Chris Jones
  - Update trackless ring monitoring to handle "Template" rings
 
