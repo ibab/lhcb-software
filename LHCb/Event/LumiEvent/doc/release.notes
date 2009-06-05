@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r0p1 2009-06-02 ==========================
+! 2009-06-02 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+
 !======================== LumiEvent v2r0 2009-05-06 ==========================
 ! 2009-04-15 - Marco Cattaneo
  - Change default location of LumiFSR to be under /FileRecords instead of
