@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.2 2009-06-04 16:32:02 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.3 2009-06-05 16:02:07 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -95,10 +95,12 @@ StatusCode RawDataSize::execute()
           const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
-          const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
 
           // Only use valid data
           if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
+
+          // Get the HPD hardware ID
+          const Rich::DAQ::HPDHardwareID hpdHardID     = m_RichSys->hardwareID(hpdID);
 
           // number of data words for this HPD
           const unsigned int nHPDwords = ( hpdHeader.nDataWords()   + 
