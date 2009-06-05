@@ -45,7 +45,7 @@ use EventSys              v25r0   Event   # Marco Cattaneo
 use DAQEvent              v7r20   Event   # Marco Cattaneo, Markus Frank
 use DigiEvent             v2r11p1 Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v4r6p1  Event   # Ivan Belyaev
-use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
+use EventBase             v2r5p1  Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r6    Event   # Gloria Corti
 use HltEvent              v8r17   Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r6    Event   # Olivier Callot
