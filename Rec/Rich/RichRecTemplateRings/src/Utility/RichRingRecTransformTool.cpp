@@ -1,4 +1,4 @@
-// $Id: RichRingRecTransformTool.cpp,v 1.2 2009-03-23 17:26:43 seaso Exp $
+// $Id: RichRingRecTransformTool.cpp,v 1.3 2009-06-05 17:21:34 jonrob Exp $
 // Include files 
 #include<TMath.h>
 
@@ -13,6 +13,8 @@
 //
 // 2007-06-12 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichRingRecTransformTool );

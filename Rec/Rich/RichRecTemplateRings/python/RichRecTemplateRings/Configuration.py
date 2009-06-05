@@ -5,7 +5,7 @@
 #  @author Sajan Easo   (Sajan.Easo@cern.ch)
 #  @date   02/03/2009
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-06-04 16:30:48 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-06-05 17:21:31 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -49,12 +49,12 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         level = self.getProp("OutputLevel")
 
         # Ring finding algs
-        from Configurables import ( RichRingRecAlgBase,
-                                    RichTargetDataConfigAlg,
-                                    RichRingMasterAlg )
-        base   = RichRingRecAlgBase()
-        config = RichTargetDataConfigAlg()
-        master = RichRingMasterAlg()
+        from Configurables import ( Rich__Rec__TemplateRings__RichRingRecAlgBase,
+                                    Rich__Rec__TemplateRings__RichTargetDataConfigAlg,
+                                    Rich__Rec__TemplateRings__RichRingMasterAlg )
+        base   = Rich__Rec__TemplateRings__RichRingRecAlgBase()
+        config = Rich__Rec__TemplateRings__RichTargetDataConfigAlg()
+        master = Rich__Rec__TemplateRings__RichRingMasterAlg()
         master.RingLocation = AllRingsLoc
         sequence.Members += [ base, config, master ]
 

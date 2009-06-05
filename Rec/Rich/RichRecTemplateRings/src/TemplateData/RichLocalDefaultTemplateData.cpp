@@ -1,10 +1,10 @@
-// $Id: RichLocalDefaultTemplateData.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichLocalDefaultTemplateData.cpp,v 1.2 2009-06-05 17:21:34 jonrob Exp $
 // Include files 
-
-
 
 // local
 #include "RichLocalDefaultTemplateData.h"
+
+using namespace Rich::Rec::TemplateRings;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichLocalDefaultTemplateData

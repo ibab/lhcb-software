@@ -1,5 +1,5 @@
-// $Id: IRichRingRecMass.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
-#ifndef RICHRINGREC_IRICHRINGRECMASS_H 
+// $Id: IRichRingRecMass.h,v 1.2 2009-06-05 17:21:32 jonrob Exp $
+#ifndef RICHRINGREC_IRICHRINGRECMASS_H
 #define RICHRINGREC_IRICHRINGRECMASS_H 1
 
 // Include files
@@ -9,28 +9,40 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IRichRingRecMass ( "IRichRingRecMass", 1, 0 );
+namespace Rich
+{
+  namespace Rec
+  {
+    namespace TemplateRings
+    {
 
-/** @class IRichRingRecMass IRichRingRecMass.h RichRingRec/IRichRingRecMass.h
- *  
- *
- *  @author Sajan EASO
- *  @date   2007-07-06
- */
-class IRichRingRecMass : virtual public IAlgTool {
-public: 
+      static const InterfaceID IID_IRichRingRecMass ( "IRichRingRecMass", 1, 0 );
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IRichRingRecMass; }
+      /** @class IRichRingRecMass IRichRingRecMass.h RichRingRec/IRichRingRecMass.h
+       *
+       *
+       *  @author Sajan EASO
+       *  @date   2007-07-06
+       */
+      class IRichRingRecMass : virtual public IAlgTool {
+      public:
 
-  virtual void RichReconMassForTrackSegment(int itk, int irad )=0;
-  virtual StatusCode bestReconstructedMassForRichTrack (VI SegmentIndex,
-              int currentTrackIndex)=0;
-  
+        // Return the interface ID
+        static const InterfaceID& interfaceID() { return IID_IRichRingRecMass; }
 
-protected:
+        virtual void RichReconMassForTrackSegment(int itk, int irad )=0;
+        virtual StatusCode bestReconstructedMassForRichTrack (VI SegmentIndex,
+                                                              int currentTrackIndex)=0;
 
-private:
 
-};
+      protected:
+
+      private:
+
+      };
+
+    }
+  }
+}
+
 #endif // RICHRINGREC_IRICHRINGRECMASS_H

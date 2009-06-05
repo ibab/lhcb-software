@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.cpp,v 1.3 2009-03-23 17:27:14 seaso Exp $
+// $Id: RichRingReconParam.cpp,v 1.4 2009-06-05 17:21:32 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 //
 // 2007-06-12 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichRingReconParam );

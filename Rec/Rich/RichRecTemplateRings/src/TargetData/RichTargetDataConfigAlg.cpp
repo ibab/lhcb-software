@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.3 2009-06-04 16:30:48 jonrob Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.4 2009-06-05 17:21:33 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +12,7 @@
 //
 // 2007-05-14 : Sajan EASO
 //-----------------------------------------------------------------------------
-using namespace Rich::Rec;
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( RichTargetDataConfigAlg );

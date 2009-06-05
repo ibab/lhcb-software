@@ -1,4 +1,4 @@
-// $Id: RichSingleEvMonHistoTool.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichSingleEvMonHistoTool.cpp,v 1.2 2009-06-05 17:21:32 jonrob Exp $
 // Include files 
 
 
@@ -27,6 +27,8 @@
 //
 // 2007-06-18 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichSingleEvMonHistoTool );

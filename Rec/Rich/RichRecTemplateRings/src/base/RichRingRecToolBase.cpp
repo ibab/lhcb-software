@@ -1,4 +1,4 @@
-// $Id: RichRingRecToolBase.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingRecToolBase.cpp,v 1.2 2009-06-05 17:21:35 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 //
 // 2007-05-18 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichRingRecToolBase );
@@ -36,24 +38,24 @@ StatusCode RichRingRecToolBase::initialize() {
   const StatusCode sc = RichRecHistoToolBase::initialize();
 
 
-  m_RichRingRecConstants = tool<IRichRingRecConstants>("RichRingRecConstants");
+  m_RichRingRecConstants = tool<IRichRingRecConstants>("Rich::Rec::TemplateRings::RichRingRecConstants");
   
   // acquiretool does not seem to work here. so using the basic version which seems to work fine.
-  m_TargetDataTool = tool<IRichTargetDataTool>("RichTargetDataTool");
+  m_TargetDataTool = tool<IRichTargetDataTool>("Rich::Rec::TemplateRings::RichTargetDataTool");
   //if(!m_TargetDataTool)  acquireTool("RichTargetDataTool", m_TargetDataTool);
   
-  m_TemplateDataTool = tool<IRichTemplateDataTool>("RichTemplateDataTool");
-  m_RichRingRecTransformTool= tool<IRichRingRecTransformTool>("RichRingRecTransformTool");
-  m_RichRingReconParam= tool<IRichRingReconParam>("RichRingReconParam");
-  m_RichLocalTargetConfig = tool<IRichLocalTargetConfig>("RichLocalTargetConfig");
-  m_RichLocalTemplateConfig = tool<IRichLocalTemplateConfig>("RichLocalTemplateConfig");
-  m_RichFFPlan = tool<IRichFFPlan>("RichFFPlan");
-  m_RichRingRecResult = tool<IRichRingRecResult>("RichRingRecResult");
-  m_RichSingleEvMonHistoTool=tool<IRichSingleEvMonHistoTool>("RichSingleEvMonHistoTool");
+  m_TemplateDataTool = tool<IRichTemplateDataTool>("Rich::Rec::TemplateRings::RichTemplateDataTool");
+  m_RichRingRecTransformTool= tool<IRichRingRecTransformTool>("Rich::Rec::TemplateRings::RichRingRecTransformTool");
+  m_RichRingReconParam= tool<IRichRingReconParam>("Rich::Rec::TemplateRings::RichRingReconParam");
+  m_RichLocalTargetConfig = tool<IRichLocalTargetConfig>("Rich::Rec::TemplateRings::RichLocalTargetConfig");
+  m_RichLocalTemplateConfig = tool<IRichLocalTemplateConfig>("Rich::Rec::TemplateRings::RichLocalTemplateConfig");
+  m_RichFFPlan = tool<IRichFFPlan>("Rich::Rec::TemplateRings::RichFFPlan");
+  m_RichRingRecResult = tool<IRichRingRecResult>("Rich::Rec::TemplateRings::RichRingRecResult");
+  m_RichSingleEvMonHistoTool=tool<IRichSingleEvMonHistoTool>("Rich::Rec::TemplateRings::RichSingleEvMonHistoTool");
   
 
-  m_RichMCTruthData = tool<IRichMCTruthData>("RichMCTruthData");  
-  m_RichRingRecMass=tool<IRichRingRecMass>("RichRingRecMass");
+  m_RichMCTruthData = tool<IRichMCTruthData>("Rich::Rec::TemplateRings::RichMCTruthData");  
+  m_RichRingRecMass=tool<IRichRingRecMass>("Rich::Rec::TemplateRings::RichRingRecMass");
   //  m_IRichRingRecStorePidTool=tool<IRichRingRecStorePidTool>("RichRingRecStorePidTool");
   
 
@@ -67,13 +69,9 @@ StatusCode RichRingRecToolBase::initialize() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichRingRecToolBase::finalize() {
-
-  const StatusCode sc = RichRecHistoToolBase::finalize();
-
-
-  return StatusCode::SUCCESS;
-  
+StatusCode RichRingRecToolBase::finalize() 
+{
+  return RichRecHistoToolBase::finalize();  
 }
 //=============================================================================
 // tools access 

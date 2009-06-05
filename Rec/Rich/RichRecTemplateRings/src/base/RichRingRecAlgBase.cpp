@@ -1,4 +1,4 @@
-// $Id: RichRingRecAlgBase.cpp,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
+// $Id: RichRingRecAlgBase.cpp,v 1.2 2009-06-05 17:21:35 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 //
 // 2007-05-17 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( RichRingRecAlgBase );
@@ -35,8 +37,10 @@ RichRingRecAlgBase::~RichRingRecAlgBase() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RichRingRecAlgBase::initialize() {
-  StatusCode sc = RichRecAlgBase::initialize(); // must be executed first
+StatusCode RichRingRecAlgBase::initialize() 
+{
+
+  const StatusCode sc = RichRecAlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize RichRingRecAlgBase  " << endmsg;
@@ -47,12 +51,12 @@ StatusCode RichRingRecAlgBase::initialize() {
 
   // acquiretool does not seem to work here.
 
-    m_ringtool = tool<IRichRingRecToolBase>("RichRingRecToolBase");
+    m_ringtool = tool<IRichRingRecToolBase>("Rich::Rec::TemplateRings::RichRingRecToolBase");
   //    acquireTool("RichRingRecToolBase",m_ringtool);
           
 
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.3 2009-03-19 17:15:43 seaso Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.4 2009-06-05 17:21:31 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -12,6 +12,8 @@
 //
 // 2007-05-17 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( RichRingMasterAlg );
@@ -289,7 +291,7 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin()+aInvIndex;
       const LHCb::RichRecSegment * segment = *iSeg;
       const Gaudi::XYZPoint & centrePointGlobal = segment->pdPanelHitPoint();
-      double aRadius =  rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
+      double aRadius = rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
 
       newRing->setCentrePointLocal ( centrePointLocal );
       newRing->setCentrePointGlobal( centrePointGlobal );

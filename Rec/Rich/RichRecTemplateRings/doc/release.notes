@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !==================== RichRecTemplateRings v1r0 2009-03-10 ===================
+
+! 2009-06-05 - Chris Jones
+ - Move everything to the namespace Rich::Rec::TemplateRings::
+
 ! 2009-03-23  Sajan Easo
   - Added an option to  have a max number of RichRecSegments used per radiator
     in order to limit the cpu time used. The limit for each radiator can be

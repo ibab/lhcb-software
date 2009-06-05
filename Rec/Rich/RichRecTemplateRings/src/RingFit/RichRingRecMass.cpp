@@ -1,4 +1,4 @@
-// $Id: RichRingRecMass.cpp,v 1.2 2009-03-08 18:38:20 seaso Exp $
+// $Id: RichRingRecMass.cpp,v 1.3 2009-06-05 17:21:33 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -15,6 +15,8 @@
 //
 // 2007-07-06 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichRingRecMass );

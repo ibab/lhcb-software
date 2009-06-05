@@ -1,5 +1,5 @@
-// $Id: RichRingRecAlgBase.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
-#ifndef RICHRINGRECALGBASE_H 
+// $Id: RichRingRecAlgBase.h,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+#ifndef RICHRINGRECALGBASE_H
 #define RICHRINGRECALGBASE_H 1
 
 // Include files
@@ -12,51 +12,54 @@
 
 using namespace LHCb;
 
-using namespace Rich::Rec;
+namespace Rich
+{
+  namespace Rec
+  {
+    namespace TemplateRings
+    {
 
-
-//-----------------------------------------------------------------------------
-//namespace Rich
-//{
-//  namespace Rec
-//  {
-//    namespace RingRec
-//    {
+      //-----------------------------------------------------------------------------
+      //namespace Rich
+      //{
+      //  namespace Rec
+      //  {
+      //    namespace RingRec
+      //    {
 
       /** @class RichRingRecAlgBase RichRingRecAlgBase.h
-       *  
+       *
        *
        *  @author Sajan EASO
        *  @date   2007-05-14
        */
 
-     class RichRingRecAlgBase: public RichRecAlgBase
+      class RichRingRecAlgBase: public RichRecAlgBase
       {
 
-       public: 
-       /// Standard constructor
-       RichRingRecAlgBase( const std::string& name, ISvcLocator* pSvcLocator );
+      public:
+        /// Standard constructor
+        RichRingRecAlgBase( const std::string& name, ISvcLocator* pSvcLocator );
 
-      virtual ~RichRingRecAlgBase( ); ///< Destructor
-      virtual StatusCode initialize();    ///< Algorithm initialization
-      virtual StatusCode execute   ();    ///< Algorithm execution
-      virtual StatusCode finalize  ();    ///< Algorithm finalization
-      
-        IRichRingRecToolBase* rt() 
+        virtual ~RichRingRecAlgBase( ); ///< Destructor
+        virtual StatusCode initialize();    ///< Algorithm initialization
+        virtual StatusCode execute   ();    ///< Algorithm execution
+        virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+        IRichRingRecToolBase* rt()
         {  return  m_ringtool; }
-        
+
       protected:
 
       private:
 
-       IRichRingRecToolBase* m_ringtool;
+        IRichRingRecToolBase* m_ringtool;
 
-      
+
       };
-//    }
-    
-//  }
-  
-//}
+
+    }
+  }
+}
 
 #endif // RICHRINGRECALGBASE_H

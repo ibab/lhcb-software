@@ -1,4 +1,4 @@
-// $Id: RichFFPlan.cpp,v 1.2 2009-03-19 17:14:22 seaso Exp $
+// $Id: RichFFPlan.cpp,v 1.3 2009-06-05 17:21:32 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,8 @@
 //
 // 2007-06-15 : Sajan EASO
 //-----------------------------------------------------------------------------
+
+using namespace Rich::Rec::TemplateRings;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RichFFPlan );

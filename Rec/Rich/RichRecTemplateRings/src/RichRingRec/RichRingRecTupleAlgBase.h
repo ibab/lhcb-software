@@ -1,5 +1,5 @@
-// $Id: RichRingRecTupleAlgBase.h,v 1.1.1.1 2009-03-04 12:01:45 jonrob Exp $
-#ifndef RICHRINGREC_RICHRINGRECTUPLEALGBASE_H 
+// $Id: RichRingRecTupleAlgBase.h,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+#ifndef RICHRINGREC_RICHRINGRECTUPLEALGBASE_H
 #define RICHRINGREC_RICHRINGRECTUPLEALGBASE_H 1
 
 // Include files
@@ -12,32 +12,40 @@
 
 using namespace LHCb;
 
-using namespace Rich::Rec;
+namespace Rich
+{
+  namespace Rec
+  {
+    namespace TemplateRings
+    {
 
+      /** @class RichRingRecTupleAlgBase RichRingRecTupleAlgBase.h RichRingRec/RichRingRecTupleAlgBase.h
+       *
+       *
+       *  @author Sajan EASO
+       *  @date   2007-06-29
+       */
+      class RichRingRecTupleAlgBase : public RichRecTupleAlgBase {
+      public:
+        /// Standard constructor
+        RichRingRecTupleAlgBase( const std::string& name, ISvcLocator* pSvcLocator );
 
+        virtual ~RichRingRecTupleAlgBase( ); ///< Destructor
 
-/** @class RichRingRecTupleAlgBase RichRingRecTupleAlgBase.h RichRingRec/RichRingRecTupleAlgBase.h
- *  
- *
- *  @author Sajan EASO
- *  @date   2007-06-29
- */
-class RichRingRecTupleAlgBase : public RichRecTupleAlgBase {
-public: 
-  /// Standard constructor
-  RichRingRecTupleAlgBase( const std::string& name, ISvcLocator* pSvcLocator );
+        virtual StatusCode initialize();    ///< Algorithm initialization
+        virtual StatusCode execute   ();    ///< Algorithm execution
+        virtual StatusCode finalize  ();    ///< Algorithm finalization
+        IRichRingRecToolBase* rt(){  return  m_ringtool; }
 
-  virtual ~RichRingRecTupleAlgBase( ); ///< Destructor
+      protected:
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-  IRichRingRecToolBase* rt(){  return  m_ringtool; }
+      private:
+        IRichRingRecToolBase* m_ringtool;
 
-protected:
+      };
 
-private:
-       IRichRingRecToolBase* m_ringtool;
+    }
+  }
+}
 
-};
 #endif // RICHRINGREC_RICHRINGRECTUPLEALGBASE_H
