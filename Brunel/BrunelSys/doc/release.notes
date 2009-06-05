@@ -3,24 +3,67 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-05-26 - Marco Cattaneo
- - Update reference for new tuning of RichENNRingFinder
+</PRE><H1><A NAME=v35r1>2009-06-05 Brunel v35r1</A></H1><PRE>
+This version uses projects Gaudi v21r1, LHCb v27r1, Lbcom v7r1, Rec v7r1
+ and SQLDDDB v5r7, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
 
-! 2009-05-25 - Marco Cattaneo
- - Update reference file for addition of RichENNRingFinder
+This is a development version for changes subsequent to the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
 
-! 2009-05-22 - Marco Cattaneo
- - Update reference for addition of Rich track efficiency monitoring
+ - Persistency changes
+   . Add option Brunel().OutputType = "XDST"
+     XDST is a new "extended DST" file type, contanining also .sim containers.
+     Replaces the need to save and subsequently access .sim files when MCHits are
+     to be kept for special studies (Brunel v35r1, GaudiConf v12r4)
 
-! 2009-05-18 - Marco Cattaneo
- - Update reference for:
-   . Change in ST Monitors names
-   . Fix to Rih Particle types names
-   . Change in sequencing of Rich PID
+ - New tuning
+   . Improvements to track isolation tool 
+     (RichRecTrackTools v1r11, RichRecBase v3r22)
+   . Changes to Rich track selection criteria. Tsa track specific "TsaLikelihood"
+     selection cut replaced by more global "Likelihood" cut for all tracks.
+     (RichRecTrackTools v1r11, RichRecBase v3r22)
+   . Some improvements to the trackless ring filtering and isolation algorithms
+     (RichRecAlgorithms v2r15)
+   . Small improvements to the ring finder algorithm (RichMarkovRingFinder v2r7)
 
-! 2009-05-13 - Marco Cattaneo
- - Change brunelsys.qmt to get from Brunel/QMTest/BrunelExclusions.py the
-   exclusions to be passed to ValidateWithReference()
+ - Bug fixes
+   . CaloPhotonChecker.cpp: fix invalid matrix indices in computation of "shape"
+     (CaloMoniDst v3r7)
+   . Fix untested StatusCode on Warning() and Error() calls (CaloPIDs v4r17)
+   . Use Track::probChi2() instead of TMath::Prob( tr->chi2(), tr->nDoF()) for
+     better protection against FPE (NNTools v1r5)
+   . In PatChecking.py, switch off TrackAssociator("AssocDownstream") and
+     TrackEffChecker("Downstream") in fieldOff case, for consistency with
+     RecoTracking.py (TrackSys v4r23)
+   . Make sure that no hits are rejected in the internal fit in the fit 
+     initialization tool (PatAlgorithms v3r21)
+   . Bug fix on some array sizes (MuonPIDChecker v3r2)
+   . Replace MessageSvc() with getConfigurable("MessageSvc") in python
+     Configuration to avoid problems with online running, where a different
+     Message Service type is used (RichRecQC v2r29, DetCond v12r6)
+   . Fix a small bug in track creator selection stats. (RichRecTrackTools v1r11)
+   . Fix precision and platform dependence problems in Calo reconstruction
+     (CaloUtils v8r5)
+
+ - Monitoring changes
+   . Add new set of Rich track selection efficiency monitors (RichRecQC v2r29)
+   . New 'ENN' trackless ring finding algorithm enabled by default. The rings are
+     currently only used for monitoring purposes (RichRecQC v2r29)
+   . Add a bit more statistical printout (CaloTools v5r9)
+   . Fix unused StatusCode in STClusterMonitor (STMonitors v1r2)
+
+ - Changes to tests:
+   . Add QMTest brunel-mc09-withtruth-invfield, same as brunel-mc09-withtruth but
+     with inverted magnetic field, to check identical output
+   . Add preprocessors that can be given to the QMTest ValidateWithReference 
+     function to exclude lines expected to change in the QMTest output
+     (Brunel v35r1, GaudiConf v12r3)
+
+ - New packaging
+   . Cleanups in Rich configurables (RichRecQC v2r29, RichRecSys v3r19)
+   . Add RichOfflineGPIDSeq as wrapper to existing GPID sequences 
+   . Moved STClusterMonitor and STLiteClusterMonitor into ST namespace. 
+     (STMonitors v1r2)
 
 </PRE><H1><A NAME=v35r0>2009-05-13 Brunel v35r0</A></H1><PRE>
 This version uses projects Gaudi v21r0, LHCb v27r0, Lbcom v7r0, Rec v7r0
@@ -83,6 +126,39 @@ Output requires DaVinci v22r1 or greater
    . Small improvements to the PID plots (RichRecTools v4r8)
    . Various changes to Velo reconstruction monitors (VeloRecMonitors v1r6)
    . Various changes to ST monitors (STMonitors v1r1)
+
+</PRE><H1><A NAME=v34r7>2009-05-26 Brunel v34r7</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r6
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - New features
+   . New option Brunel().DstType = 'XDST', adds MCHits to MC DST
+     (Brunel v34r7, GaudiConf v12r3)
+
+ - Bug fixes
+   . Make sure that no hits are rejected in the internal fit in the fit
+     initialization tool (PatAlgorithms v3r21). Fixes very infrequent crash in
+     FEST09 reconstruction
+
+</PRE><H1><A NAME=v34r6>2009-05-11 Brunel v34r6</A></H1><PRE>
+Version built on v34b branch
+This version uses projects Gaudi v20r4, LHCb v26r3, Lbcom v6r27, Rec v6r6
+ and SQLDDDB v5r3, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a production version for the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
+
+ - Bug fixes
+  . In PatForward prevent from overwriting selected hits flags
+    (PatAlgorithms v3r19). Fixes infrequent crash in MC09 test production
+  . In PatForward, use scale factor from magnetic field service in PatAddTTCoord,
+    code was assuming md100 (PatAlgorithms v3r20).
+  . In TrackMatchveloSeed, change default for OmitSeedFitOutliers switch to false
+    (TrackMatching v2r21p2). Fixes frequent crashes in MC09 test production
 
 </PRE><H1><A NAME=v34r5>2009-04-22 Brunel v34r5</A></H1><PRE>
 Version built on v34b branch
