@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.5 2009-03-12 14:38:50 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.6 2009-06-05 12:02:41 krinnert Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -88,7 +88,7 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
       resetMemory();
     }
   }else{
-    return ( StatusCode::FAILURE );
+    return ( StatusCode::SUCCESS );
   }
   //
   debug()<< " end of execute" <<endmsg;
@@ -110,7 +110,7 @@ StatusCode PrepareVeloFullRawBuffer::getRawEvent()
   debug()<< "--------------------" <<endmsg;
   //
   if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
-    error()<< " ==> There is no RawEvent at: "
+    info()<< " ==> There is no RawEvent at: "
            << m_rawEventLoc <<endmsg;
     return ( StatusCode::FAILURE );
   }else{  
