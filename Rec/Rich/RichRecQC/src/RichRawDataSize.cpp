@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.4 2009-06-05 16:19:08 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.5 2009-06-05 16:24:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -95,32 +95,32 @@ StatusCode RawDataSize::execute()
         // Only use valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
 
-        // use a try block in case of DB lookup errors
-        try
+        // number of data words for this HPD
+        const unsigned int nHPDwords = ( hpdHeader.nDataWords()   +
+                                         hpdHeader.nHeaderWords() +
+                                         hpdFooter.nFooterWords() );
+
+        // count words per L1 board
+        nL1Words += nHPDwords;
+
+        if ( m_hpdPlots )
         {
-
-          // Get the HPD hardware ID
-          const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdID);
-
-          // number of data words for this HPD
-          const unsigned int nHPDwords = ( hpdHeader.nDataWords()   +
-                                           hpdHeader.nHeaderWords() +
-                                           hpdFooter.nFooterWords() );
-          nL1Words += nHPDwords;
-
-          if ( m_hpdPlots )
+          // use a try block in case of DB lookup errors
+          try
           {
+            // Get the HPD hardware ID
+            const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(hpdID);
+            // fill plots
             std::ostringstream title, ID;
             title << "Data Size (# 32-bit words) : HPD Hardware ID " << hpdHardID;
             ID << "hpds/HPDHardwareID" << hpdHardID;
             plot1D( nHPDwords, ID.str(), title.str(), -0.5, 500.5, 501 );
           }
-
-        }
-        catch ( const GaudiException & excpt )
-        {
-          Error( excpt.message() ).ignore();
-        }
+          catch ( const GaudiException & excpt )
+          {
+            Error( excpt.message() ).ignore();
+          }
+        } // do individual HPD plots
 
       } // loop over HPDs
 
