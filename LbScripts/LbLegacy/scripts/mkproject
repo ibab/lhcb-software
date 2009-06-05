@@ -80,7 +80,7 @@ def help() :
     sys.exit()
 
 #-----------------------------------------------------------------------------------
-def release_project(pname,pversion,action=None):
+def release_project(pname,pversion,action=None, yes_mode=False):
     log = logging.getLogger()
 
     projconf = getProject(pname)
@@ -174,10 +174,12 @@ def release_project(pname,pversion,action=None):
     if web : 
         print 'new html page will be published'
 
-    print 'do you agree? [yes|no]'
-    next = sys.stdin.readline()
-    if next.lower()[0] == 'n': 
-        sys.exit('you disagree - STOP')
+
+    if not yes_mode :
+        print 'do you agree? [yes|no]'
+        next = sys.stdin.readline()
+        if next.lower()[0] == 'n': 
+            sys.exit('you disagree - STOP')
 
 # set tbroadcast command
     status,tbroadcast = commands.getstatusoutput('which tbroadcast')
@@ -552,8 +554,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hp:v:a:',
-            ['help','project=','version=','action='])
+        keys, values = getopt.getopt(arguments,'hyp:v:a:',
+            ['help','yes','project=','version=','action='])
 
     except getopt.GetoptError:
         print 'wrong arguments'
@@ -566,10 +568,14 @@ if __name__ == "__main__":
         sys.exit()
 
     action = None
+    yes_mode = False
+
 
     for key,value in keys:
         if key in ('-h', '--help'):
             help()
+        if key in ('-y', '--yes'):
+            yes_mode = True
         if key in ( '-v', '--version'):
             pversion = value
         if key in ('-p', '--project'):
@@ -588,4 +594,4 @@ if __name__ == "__main__":
     thelog.addHandler(console)
 
 
-    release_project(pname,pversion,action)
+    release_project(pname, pversion, action, yes_mode)
