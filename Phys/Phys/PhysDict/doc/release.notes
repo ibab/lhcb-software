@@ -4,7 +4,14 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
- 2007-01-29 - Juan PALACIOS
+! 2007-06-04 - Juan PALACIOS
+  - dict/PhysDict.xml
+    . Exclude operators HltDecReport::operator< and HleDecReport::operator== 
+      from selection to avoid compilation problems. 
+  - dict/PhysDict.h
+    . remove free binary operators == and < for HltDecReport.
+
+! 2007-06-04 - Juan PALACIOS
   - cmt/requirements
     . Increase version to v4r0
   - dict/PhysDict.h, dict/PhysDict.xml
