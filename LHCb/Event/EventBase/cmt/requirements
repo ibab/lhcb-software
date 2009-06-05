@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.15 2009-06-04 08:56:20 hmdegaud Exp $
+# $Id: requirements,v 1.16 2009-06-05 05:36:34 cattanem Exp $
 # Created    : 17/08/2005
 # Maintainer : Marco Cattaneo
 #
 package           EventBase
-version           v2r5
+version           v2r5p1
 
 # Structure, i.e. directories to process. 
 #============================================================================

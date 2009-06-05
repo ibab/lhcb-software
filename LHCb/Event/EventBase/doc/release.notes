@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.18 2008-03-03 10:24:38 cattanem Exp $
+! $Id: release.notes,v 1.19 2009-06-05 05:36:34 cattanem Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+!========================== EventBase v2r5p1 2009-06-05 ====================
+! 2009-06-05 - Marco Cattaneo
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
 
 !========================== EventBase v2r5 2008-03-04 ======================
 ! 2008-02-27 - Chris Jones
