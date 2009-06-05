@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.31 2009-06-04 16:32:02 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2009-06-05 19:32:30 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -122,16 +122,17 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Some monitoring of raw information
         if self.getProp("RawMonitoring") :
-            
-            rawSeq = self.newSeq(sequence,"RichRawMoni")
-                
-            # Data Sizes
-            from Configurables import Rich__DAQ__RawDataSize
-            dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
-            rawSeq.Members += [dataSize]
 
-            # Data base consistency
             if self.getProp("DataType") not in ["DC06"]:
+            
+                rawSeq = self.newSeq(sequence,"RichRawMoni")
+                
+                # Data Sizes
+                from Configurables import Rich__DAQ__RawDataSize
+                dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
+                rawSeq.Members += [dataSize]
+
+                # Data base consistency
                 from Configurables import Rich__DAQ__DataDBCheck
                 dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
                 rawSeq.Members += [dbCheck]

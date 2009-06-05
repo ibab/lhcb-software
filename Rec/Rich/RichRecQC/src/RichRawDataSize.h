@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.h,v 1.1 2009-06-03 09:20:26 jonrob Exp $
+ *  $Id: RichRawDataSize.h,v 1.2 2009-06-05 19:32:30 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -21,6 +21,7 @@
 // RichKernel
 #include "RichKernel/RichHistoAlgBase.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
+#include "RichKernel/RichMap.h"
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
