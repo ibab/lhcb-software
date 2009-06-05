@@ -1,10 +1,12 @@
-$Id: release.notes,v 1.2 2009-06-03 10:21:30 pkoppenb Exp $
+$Id: release.notes,v 1.3 2009-06-05 22:03:00 spradlin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
+! 2009-06-06 - Patrick Spradlin
+  - Initial clunky migration of Topological lines.
 
 !========================== Hlt2Lines v1r0 2009-06-03 ===================
 ! 2009-05-29 - Gerhard Raven

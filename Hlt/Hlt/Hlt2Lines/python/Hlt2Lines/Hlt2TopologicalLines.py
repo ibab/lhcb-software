@@ -43,11 +43,48 @@
 ## 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from HltLine.HltLine import Hlt2Line
+from HltLine.HltLine import Hlt2Member
 
 class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
+    # steering variables
+    #------------------------
+    # Don't touch my variables!
+    __slots__ = { 'RobustPointingUL'        : 0.2
+                , 'CharmRobustPointUL'      : 0.10
+                , 'CharmTFPointUL'          : 0.10
+                , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 0.001
+                                               , 'Hlt2TopoTF3BodySA' : 0.001
+                                               , 'Hlt2TopoTF4BodySA' : 0.001
+                                               , 'Hlt2TopoTF2BodyCharmWideMass' : 0.05
+                                               , 'Hlt2TopoTF3BodyCharmWideMass' : 0.05
+                                               , 'Hlt2TopoTF4BodyCharmWideMass' : 0.05
+                                              }
+                , 'Postscale'               : {'Hlt2Topo2BodySA' : 0.02
+                                               , 'Hlt2Topo3BodySA' : 0.001
+                                               , 'Hlt2Topo4BodySA' : 0.001
+                                               , 'Hlt2Topo2BodyCharmSA' : 0.002
+                                               , 'Hlt2Topo3BodyCharmSA' : 0.0005
+                                               , 'Hlt2Topo4BodyCharmSA' : 0.0005
+                                              }
+                }
+
     def __apply_configuration__(self) :
         from Configurables import HltANNSvc
+        from Configurables import FilterDesktop,CombineParticles
+        from Hlt2SharedParticles.Topo2Body import Topo2Body
+        from Hlt2SharedParticles.Topo3Body import Topo3Body
+        from Hlt2SharedParticles.GoodParticles import GoodPions
+        from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
+        from Hlt2SharedParticles.TopoTF2Body import TopoTF2Body
+        from Hlt2SharedParticles.TopoTF3Body import TopoTF3Body
+
+
+        ## alias to get the slot associated to a name
+        _cut = lambda x: str(self.getProp(x))
+
+
         ##
         #
         # Topological track-by-track
@@ -57,80 +94,411 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #Just for readability, add the refit options here as well.
         importOptions( "$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
 
-        ###
-        #    ID 50700 - Topological 2-body, track-by-track, no track fit
-        #    ID 50730-60 - Topological 2-body, track-by-track, after track fit
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo2BodyDEV.py" )
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopoTF2BodyDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo2BodyDEVSADecision" : 50700 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodySADEVDecision" : 50730 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq2YesDEVDecision" : 50740 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq3YesDEVDecision" : 50750 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq4YesDEVDecision" : 50760 } )
-
-        ###
-        #    ID 50710 - Topological 3-body, track-by-track, no track fit
-        #    ID 50770-800 - Topological 3-body, track-by-track, after track fit
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo3BodyDEV.py" )
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopoTF3BodyDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo3BodyDEVSADecision" : 50710 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodySADEVDecision" : 50770 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq2YesDEVDecision" : 50780 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq3YesDEVDecision" : 50790 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq4YesDEVDecision" : 50800 } )
-
-        ###
-        #    ID 50720 - Topological 4-body, track-by-track, no track fit
-        #    ID 50810-40 - Topological 4-body, track-by-track, after track fit
-        ###
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo4BodyDEV.py" )
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopoTF4BodyDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo4BodyDEVSADecision" : 50720 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodySADEVDecision" : 50810 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq2YesDEVDecision" : 50820 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq3YesDEVDecision" : 50830 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq4YesDEVDecision" : 50840 } )
+        # First pass: include the topological sequencing almost verbatim
 
         ##
         #
-        # Toplogical for charm
+        # Filters for standard topological
+        #
+        ##
+        ###################################################################
+        # 2-body robust filter
+        ###################################################################
+        filterTopo2Body = FilterDesktop('Hlt2FilterTopo2Body'
+                               , InputLocations = [Topo2Body.outputSelection()]
+                               , Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.2)"
+                               )
+
+        ###################################################################
+        # 3-body robust filter
+        ###################################################################
+        filterTopo3Body = filterTopo2Body.clone('Hlt2FilterTopo3Body')
+        filterTopo3Body.InputLocations = [Topo3Body.outputSelection()]
+
+        ###################################################################
+        # 4-body robust filter
+        # Clone the 3-body in the shared particles for common cuts
+        # Does the configuration track?
+        ###################################################################
+        combineTopo4Body = CombineParticles("Hlt2SharedTopo3Body").clone('Hlt2CombineTopo4Body')
+        combineTopo4Body.DecayDescriptors = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+"]
+        combineTopo4Body.InputLocations = [ GoodPions.outputSelection(), Topo3Body.outputSelection() ]
+        combineTopo4Body.CombinationCut += "& (4*GeV<AM)"
+        combineTopo4Body.MotherCut += "& (BPVTRGPOINTINGWPT<0.2)"
+
+
+        ###################################################################
+        # 2-body post-track-fit filter
+        ###################################################################
+        filterTopoTF2Body = FilterDesktop('Hlt2FilterTopoTF2Body')
+        filterTopoTF2Body.InputLocations = [TopoTF2Body.outputSelection()]
+        filterTopoTF2Body.Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.1)"
+
+        ###################################################################
+        # 3-body post-track-fit filter
+        ###################################################################
+        filterTopoTF3Body = filterTopoTF2Body.clone('Hlt2FilterTopoTF3Body')
+        filterTopoTF3Body.InputLocations = ["Hlt2SharedTopoTF3Body"]
+
+        ###################################################################
+        # 4-body post-track-fit filter
+        # Clone the 3-body in the shared particles for common cuts
+        # Does the configuration track?
+        ###################################################################
+        combineTopoTF4Body = CombineParticles("Hlt2SharedTopoTF3Body").clone('Hlt2CombineTopoTF4Body')
+        combineTopoTF4Body.DecayDescriptors = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+"]
+        combineTopoTF4Body.InputLocations = [ TopoTFInputParticles.outputSelection(), TopoTF3Body.outputSelection() ]
+        combineTopoTF4Body.CombinationCut += "& (AM > 4*GeV)"
+        combineTopoTF4Body.MotherCut += "& (BPVTRGPOINTINGWPT<0.1)"
+
+
+        ##
+        #
+        # Standalone lines for the robust topological.  Heavily post-scaled.
+        #
+        ##
+        ###################################################################
+        # Line for the 2-body robust.
+        ###################################################################
+        Hlt2Line('Topo2BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo2Body, filterTopo2Body ]
+                )
+
+        ###################################################################
+        # Line for the 3-body robust.
+        ###################################################################
+        Hlt2Line('Topo3BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo3Body, filterTopo3Body ]
+                )
+
+        ###################################################################
+        # Line for the 4-body robust.
+        ###################################################################
+        Hlt2Line('Topo4BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ GoodPions, Topo3Body, combineTopo4Body ]
+                )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo2BodySADecision" : 50700 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo3BodySADecision" : 50710 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo4BodySADecision" : 50720 } )
+
+
+        ##
+        #
+        # Standalone lines for the post-TF topological.  Heavily pre-scaled.
+        #
+        ##
+        ###################################################################
+        # Line for monitoring 2-body post-track-fit.
+        ###################################################################
+        Hlt2Line('TopoTF2BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ TopoTFInputParticles, TopoTF2Body, filterTopoTF2Body ]
+                )
+
+        ###################################################################
+        # Line for monitoring 3-body post-track-fit.
+        ###################################################################
+        Hlt2Line('TopoTF3BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ TopoTFInputParticles, TopoTF3Body, filterTopoTF3Body ]
+                )
+
+        ###################################################################
+        # Line for monitoring 4-body post-track-fit.
+        ###################################################################
+        Hlt2Line('TopoTF4BodySA'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ TopoTFInputParticles, TopoTF3Body, combineTopoTF4Body ]
+                )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodySADecision" : 50730 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodySADecision" : 50770 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodySADecision" : 50810 } )
+
+
+        ##
+        #
+        # Lines with Any-body robust followed by 2-body post-TF topological.
+        #
+        ##
+        Hlt2Line('TopoTF2BodyReq2Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo2Body, filterTopo2Body, TopoTFInputParticles, TopoTF2Body, filterTopoTF2Body ]
+                )
+
+        Hlt2Line('TopoTF2BodyReq3Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo3Body, filterTopo3Body, TopoTFInputParticles, TopoTF2Body, filterTopoTF2Body ]
+                )
+
+        Hlt2Line('TopoTF2BodyReq4Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ GoodPions, Topo3Body, combineTopo4Body, TopoTFInputParticles, TopoTF2Body, filterTopoTF2Body ]
+                )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq2YesDecision" : 50740 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq3YesDecision" : 50750 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyReq4YesDecision" : 50760 } )
+
+
+        ##
+        #
+        # Lines with Any-body robust followed by 3-body post-TF topological.
+        #
+        ##
+        Hlt2Line('TopoTF3BodyReq2Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo2Body, filterTopo2Body, TopoTFInputParticles, TopoTF3Body, filterTopoTF3Body ]
+                )
+
+        Hlt2Line('TopoTF3BodyReq3Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo3Body, filterTopo3Body, TopoTFInputParticles, TopoTF3Body, filterTopoTF3Body ]
+                )
+
+        Hlt2Line('TopoTF3BodyReq4Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ GoodPions, Topo3Body, combineTopo4Body, TopoTFInputParticles, TopoTF3Body, filterTopoTF3Body ]
+                )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq2YesDecision" : 50780 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq3YesDecision" : 50790 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyReq4YesDecision" : 50800 } )
+
+
+        ##
+        #
+        # Lines with Any-body robust followed by 4-body post-TF topological.
+        #
+        ##
+        Hlt2Line('TopoTF4BodyReq2Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo2Body, filterTopo2Body, TopoTFInputParticles, TopoTF3Body, combineTopoTF4Body ]
+                )
+
+        Hlt2Line('TopoTF4BodyReq3Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ Topo3Body, filterTopo3Body, TopoTFInputParticles, TopoTF3Body, combineTopoTF4Body ]
+                )
+
+        Hlt2Line('TopoTF4BodyReq4Yes'
+                 , prescale = self.prescale
+                 , postscale = self.postscale
+                 , algos = [ GoodPions, Topo3Body, combineTopo4Body, TopoTFInputParticles, TopoTF3Body, combineTopoTF4Body ]
+                )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq2YesDecision" : 50820 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq3YesDecision" : 50830 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyReq4YesDecision" : 50840 } )
+
+
+
+
+        ##
+        #
+        # Toplogical for charm, 2-body
         #
         ##
 
         #Just for readability, add the refit options here as well.
         importOptions( "$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
 
-        ###
-        #    ID 50850 - Topological 2-body, charm mass, track-by-track, no track fit
-        #    ID 50880-900 - Topological 2-body, charm mass, track-by-track, after track fit
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo2BodyCharmDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo2BodyCharmDEVSADecision" : 50850 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyCharmSignalDEVDecision" : 50880 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyCharmLowMassDEVDecision" : 50890 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyCharmHighMassDEVDecision" : 50900 } )
+        ###################################################################
+        # Concrete instance for 2-body charm robust stage filtering
+        ###################################################################
+        filterTopo2BodyCharm = FilterDesktop('Hlt2FilterTopo2BodyCharm'
+                                    , InputLocations = [Topo2Body.outputSelection()]
+                                    , Code = "(M > 1700*MeV) & (M < 2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
+                                    )
 
-        ###
-        #    ID 50860 - Topological 3-body, charm mass, track-by-track, no track fit
-        #    ID 50910-940 - Topological 3-body, charm mass, track-by-track, after track fit
+        ###################################################################
+        # Hlt2Member instance for tiling mass instances
+        ###################################################################
+        filter = Hlt2Member( FilterDesktop
+                            , 'Filter'
+                            , InputLocations = [TopoTF2Body]
+                            , Code = "(M > 1839*MeV) & (M < 1889*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
+                           )
         ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo3BodyCharmDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo3BodyCharmDEVSADecision" : 50860 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmSignalDEVDecision" : 50910 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmLowMassDEVDecision" : 50920 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmMidMassDEVDecision" : 50930 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmHighMassDEVDecision" : 50940 } )
+        #
+        # Define the 2-body charm lines
+        #
+        ##
+        ###################################################################
+        # Main 2-body charm line
+        ###################################################################
+        line = Hlt2Line('TopoTF2BodyCharmSignal'
+                        , prescale = self.prescale
+                        , postscale = self.postscale
+                        , algos = [ Topo2Body, filterTopo2BodyCharm, TopoTFInputParticles, TopoTF2Body, filter]
+                       )
 
-        ###
-        #    ID 50870 - Topological 4-body, charm mass, track-by-track, no track fit
-        #    ID 50950-970 - Topological 4-body, charm mass, track-by-track, after track fit
+        ###################################################################
+        # Monitoring line for 2-body charm robust.  Heavily post-scaled.
+        ###################################################################
+        line.clone('Topo2BodyCharmSA'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , algos = [ Topo2Body, filterTopo2BodyCharm ]
+                  )
+
+        ###################################################################
+        # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        line.clone( 'TopoTF2BodyCharmWideMass'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , Filter = { 'Code' : "(M > 1700*MeV) & (M < 2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")" }
+                  )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo2BodyCharmSADecision" : 50850 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyCharmSignalDecision" : 50880 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF2BodyCharmWideMassDecision" : 50890 } )
+
+
         ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineTopo4BodyCharmDEV.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo4BodyCharmDEVSADecision" : 50870 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyCharmSignalDEVDecision" : 50950 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyCharmLowMassDEVDecision" : 50960 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyCharmHighMassDEVDecision" : 50970 } )
+        #
+        # Toplogical for charm, 3-body
+        #
+        ##
+        ###################################################################
+        # Concrete instance for 3-body charm robust stage filtering
+        ###################################################################
+        filterTopo3BodyCharm = filterTopo2BodyCharm.clone('Hlt2FilterTopo3BodyCharm')
+        filterTopo3BodyCharm.InputLocations = [Topo3Body.outputSelection()]
+
+
+        ###################################################################
+        # Hlt2Member instance for tiling mass instances
+        ###################################################################
+        filter  = Hlt2Member( FilterDesktop
+                             , 'Filter'
+                             , InputLocations = [TopoTF3Body]
+                             , Code = "(((M > 1844*MeV) & (M < 1894*MeV)) | ((M > 1943.) & (M < 1993.)))& (BPVTRGPOINTINGWPT<0.1)"
+                            )
+
+
+        ##
+        #
+        # Define the 3-body charm lines
+        #
+        ##
+        ###################################################################
+        # Main 3-body charm line
+        ###################################################################
+        line = Hlt2Line('TopoTF3BodyCharmSignal'
+                        , prescale = self.prescale
+                        , postscale = self.postscale
+                        , algos = [ Topo3Body, filterTopo3BodyCharm, TopoTFInputParticles, TopoTF3Body, filter ]
+                       )
+
+        ###################################################################
+        # Monitoring line for 3-body charm robust.  Heavily post-scaled.
+        ###################################################################
+        line.clone('Topo3BodyCharmSA'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , algos = [ Topo3Body, filterTopo3BodyCharm ]
+                  )
+
+        ###################################################################
+        # Line for 3-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        line.clone( 'TopoTF3BodyCharmWideMass'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , Filter = { 'Code' : "(M > 1700*MeV) & (M < 2100*MeV) & (BPVTRGPOINTINGWPT<0.1)" }
+                  )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo3BodyCharmSADecision" : 50860 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmSignalDecision" : 50910 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF3BodyCharmWideMassDecision" : 50920 } )
+
+
+        ##
+        #
+        # Toplogical for charm, 4-body
+        #
+        ##
+        ###################################################################
+        # Concrete instance for 4-body charm robust stage filtering
+        ###################################################################
+        combine = CombineParticles('Hlt2CombineTopo4BodyCharm'
+                          , DecayDescriptors = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+"]
+                          , InputLocations = [ GoodPions.outputSelection(), Topo3Body.outputSelection() ]
+                          , CombinationCut = "(AM > 1700*MeV) & (AM < 2100*MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
+                          , MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>1.5*GeV) & (BPVVD>2) & (BPVVDR > 0.2) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
+                          )
+
+        ###################################################################
+        # Concrete instance for 4-body charm post-TF combinatorics
+        ###################################################################
+        combineTF = CombineParticles('Hlt2CombineTopoTF4BodyCharm'
+                            , DecayDescriptors = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+"]
+                            , InputLocations = [ TopoTFInputParticles.outputSelection(), TopoTF3Body.outputSelection() ]
+                            , CombinationCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
+                            , MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>1.5*GeV) & (BPVVDCHI2 > 100)"
+                            )
+
+        ###################################################################
+        # Hlt2Member instance for tiling mass instances
+        ###################################################################
+        filter = Hlt2Member( FilterDesktop, 'Filter'
+                   , InputLocations = [combineTF]
+                   , Code = "(M > 1839*MeV) & (M < 1889*MeV) & (BPVTRGPOINTINGWPT<0.1)"
+                   )
+
+        ##
+        #
+        # Define the 4-body charm lines
+        #
+        ##
+        ###################################################################
+        # Main 4-body charm line
+        ###################################################################
+        line = Hlt2Line('TopoTF4BodyCharmSignal'
+                        , prescale = self.prescale
+                        , postscale = self.postscale
+                        , algos = [ GoodPions, Topo3Body, combine, TopoTFInputParticles, TopoTF3Body, combineTF, filter ]
+                       )
+
+        ###################################################################
+        # Monitoring line for 4-body charm robust.  Heavily post-scaled.
+        ###################################################################
+        line.clone('Topo4BodyCharmSA'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , algos = [ GoodPions, Topo3Body, combine ]
+                  )
+
+        ###################################################################
+        # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        line.clone( 'TopoTF4BodyCharmWideMass'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , Filter = { 'Code' :  "(M > 1700*MeV) & (M < 2100*MeV) & (BPVTRGPOINTINGWPT<0.1)" }
+                  )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Topo4BodyCharmSADecision" : 50870 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyCharmSignalDecision" : 50950 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TopoTF4BodyCharmWideMassDecision" : 50960 } )
 
