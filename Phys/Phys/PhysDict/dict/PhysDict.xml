@@ -1,3 +1,9 @@
 <lcgdict>
   <class name = "LHCb::HltDecReports::Container" />
+  <exclusion>
+    <class pattern = "*HltDecReport*">
+      <method name = "=="/>
+      <method name = "<"/>
+    </class>
+  </exclusion>
 </lcgdict>
