@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.15 2009-06-05 13:20:33 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.16 2009-06-05 15:40:17 krinnert Exp $
 // Include files 
 // -------------
 
@@ -101,12 +101,22 @@ StatusCode Velo::VeloClusterMonitor::execute() {
           ++hIt ) {
         hIt->second->Reset();
       }
+      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_channelOccupancyHistPerSensor.begin();
+          hIt != m_channelOccupancyHistPerSensor.end(); 
+          ++hIt ) {
+        hIt->second->Reset();
+      }
       m_histOccSpectAll->Reset();
       m_histOccSpectLow->Reset();
     } else {
       ++m_occupancyDenom;
       for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_stripOccupancyHistPerSensor.begin();
           hIt != m_stripOccupancyHistPerSensor.end(); 
+          ++hIt ) {
+        hIt->second->Scale((m_occupancyDenom-1.0)/m_occupancyDenom);
+      }
+      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_channelOccupancyHistPerSensor.begin();
+          hIt != m_channelOccupancyHistPerSensor.end(); 
           ++hIt ) {
         hIt->second->Scale((m_occupancyDenom-1.0)/m_occupancyDenom);
       }
@@ -287,7 +297,6 @@ void Velo::VeloClusterMonitor::monitorClusters() {
       }
       double occ = occHist->GetBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom);
       occHist->SetBinContent(stripNumber+1,occ*100.0);
-      occ = occHistCh->GetBinContent(chipChannel+1)/100.0+(1.0/m_occupancyDenom);
       occHistCh->SetBinContent(chipChannel+1,occ*100.0);
     }    
 

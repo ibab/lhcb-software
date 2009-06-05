@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-05 - Kurt Rinnert
+ - bugfix in VeloClusterMonitor, the scale on the new channel occupancy plots
+   was wrong.
+
+! 2009-06-05 - Kurt Rinnert
  - VeloClusterMonitor: added occupancy plots in channel order, changed
    occupancy scale to %, fixed conversion warnings in some calls to plot1D,
    made the highest bin in number of clusters plot a visible overflow bin.
