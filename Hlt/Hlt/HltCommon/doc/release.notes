@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-06-04 - Gerhard Raven
+ - add ConfigTarFileAccessSvc: read configurations from a tarfile..
 
 !========================== HltCommon v5r6 2009-06-03 ===================
 ! 2009-06-02 - Gerhard Raven
