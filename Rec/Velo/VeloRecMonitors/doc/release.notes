@@ -4,6 +4,13 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-05 - Kurt Rinnert
+ - VeloClusterMonitor: added occupancy plots in channel order, changed
+   occupancy scale to %, fixed conversion warnings in some calls to plot1D,
+   made the highest bin in number of clusters plot a visible overflow bin.
+ - VeloSamplingMonitor: added new plots of cluster ADC values vs. TAE
+   separated for top and bottom.
+
 !======================= VeloRecMonitors v1r7 2009-06-03 =====================
 ! 2009-06-03 - Paula Collins & Chris Parkes
  - added to VeloClusterMonitor.cpp plots for seeding and inclusion thresholds

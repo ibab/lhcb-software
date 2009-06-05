@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.5 2009-05-18 15:04:22 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.6 2009-06-05 13:20:33 krinnert Exp $
 // Include files
 // -------------
 
@@ -60,9 +60,11 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   m_histClusADCSampAll = Gaudi::Utils::Aida2ROOT::aida2root(
       book2D("ClusADCSampAll", "Cluster ADC vs. Sampling Index",-0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51)); 
   m_histTaeADCDiffNext = Gaudi::Utils::Aida2ROOT::aida2root(
-      book1D("TAEADCDiffNext", "ADC MPV Differences", -0.5, nxbins - 0.5, nxbins)); 
+      book1D("TAEADCDiffNext", "ADC MPV Difference to next", -0.5, nxbins - 0.5, nxbins)); 
   m_histTaeADCDiffPrev = Gaudi::Utils::Aida2ROOT::aida2root(
-      book1D("TAEADCDiffPrev", "ADC MPV Differences", -0.5, nxbins - 0.5, nxbins)); 
+      book1D("TAEADCDiffPrev", "ADC MPV Difference to prev.", -0.5, nxbins - 0.5, nxbins));
+  m_histTaeADCDiffDiff = Gaudi::Utils::Aida2ROOT::aida2root(
+      book1D("TAEADCDiffDiff", "ADC MPV Difference, next - prev.", -0.5, nxbins - 0.5, nxbins));
 
   return StatusCode::SUCCESS;
 }
@@ -143,7 +145,7 @@ Velo::VeloSamplingMonitor::veloClusters( std::string samplingLocation ) {
 LHCb::VeloTELL1Datas*
 Velo::VeloSamplingMonitor::veloTell1Data( std::string samplingLocation ) {
   
-  std::string tesPath = "Raw/Velo/" + samplingLocation + "/ADCCMSuppressed";
+  std::string tesPath = "Raw/Velo/" + samplingLocation + "/DecodedADC";
   size_t pos = tesPath.find( "//" );
   if ( pos != std::string::npos )
     tesPath.replace( pos, 2, "/" );
@@ -180,6 +182,7 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
   for ( itVC = clusters -> begin(); itVC != clusters -> end(); ++itVC ) {
     
     LHCb::VeloCluster* cluster = (*itVC);
+    unsigned int sensorNumber = cluster->channelID().sensor();
 
     // Total charge
     // ------------
@@ -209,18 +212,45 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
             histTitle,
             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
    
+
+    std::string histIDtb;
+    std::string histTitletb;
+    if (isTop(sensorNumber)) {
+      histIDtb = histIDBase + "T";
+      histTitletb = histTitleBase + "Top";
+    } else {
+      histIDtb = histIDBase + "B";
+      histTitletb = histTitleBase + "Bottom";
+    }
+    
+    plot2D( samplingIndex, adc, histIDtb,
+            histTitletb,
+            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+   
+       
+      
+    
+    
     // C is right, A is left
     bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
     if ( isCSide ) {
       histID = histID + "C";
       histTitle = histTitle + ", C-Side";
+      histIDtb = histIDtb + "C";
+      histTitletb = histTitletb + ", C-Side";
     } else { // A side
       histID = histID + "A";
       histTitle = histTitle + ", A-Side";
+      histIDtb = histIDtb + "A";
+      histTitletb = histTitletb + ", A-Side";
     }
     
     plot2D( samplingIndex, adc, histID,
             histTitle,
+            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+   
+    plot2D( samplingIndex, adc, histIDtb,
+            histTitletb,
             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
    
   }
@@ -236,32 +266,32 @@ void Velo::VeloSamplingMonitor::monitorTAEDiff()
 
   m_histTaeADCDiffNext->Reset();
   m_histTaeADCDiffPrev->Reset();
+  m_histTaeADCDiffDiff->Reset();
   for (unsigned int bin=1; bin<=nxbins; ++bin) {
     TH1D* hpy = m_histClusADCSampAll->ProjectionY("hpy",bin,bin);
     if ( !(0.0 < hpy->GetEntries()) ) {
-      m_histTaeADCDiffNext->SetBinContent(bin,-999.0);
-      m_histTaeADCDiffPrev->SetBinContent(bin,-999.0);
       continue;
     }
     double mpv = hpy->GetBinCenter(hpy->GetMaximumBin());
 
     // difference to next TAE
+    double mpvNext = 0.0;
     hpy = m_histClusADCSampAll->ProjectionY("hpy",bin+1,bin+1);
-    if ( bin == nxbins || !(0.0 < hpy->GetEntries()) ) {
-      m_histTaeADCDiffNext->SetBinContent(bin,-999.0);
-    } else {
-      double mpvNext = hpy->GetBinCenter(hpy->GetMaximumBin());
+    if ( bin != nxbins && 0.0 < hpy->GetEntries() ) {
+      mpvNext = hpy->GetBinCenter(hpy->GetMaximumBin());
       m_histTaeADCDiffNext->SetBinContent(bin,mpv - mpvNext);
     }
 
     // difference to previous TAE
+    double mpvPrev = 0.0;
     hpy = m_histClusADCSampAll->ProjectionY("hpy",bin-1,bin-1);
-    if ( 1 == bin || !(0.0 < hpy->GetEntries()) ) {
-      m_histTaeADCDiffPrev->SetBinContent(bin,-999.0);
-    } else {
-      double mpvPrev = hpy->GetBinCenter(hpy->GetMaximumBin());
+    if ( 1 != bin && 0.0 < hpy->GetEntries() ) {
+      mpvPrev = hpy->GetBinCenter(hpy->GetMaximumBin());
       m_histTaeADCDiffPrev->SetBinContent(bin,mpv - mpvPrev);
     }
+
+    // difference of differences
+    m_histTaeADCDiffDiff->SetBinContent(bin, mpvNext-mpvPrev);
   }
   
 }
@@ -282,21 +312,25 @@ void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
     
     LHCb::VeloTELL1Data* data = (*itD);
     
-    for( unsigned int channel = 0; channel < VeloTELL1::SENSOR_CHANNELS;
-         ++channel ) {
-      
-      // Charge for each channel
-      // -----------------------      
-      signed int adc = data -> channelADC( channel );
-      
-      unsigned int samplingIndex = 999;
-      for( size_t i = 0; i < nxbins; ++i )
-        if ( m_samplingLocations[i] == samplingLocation )
-          samplingIndex = i;
+    std::pair< std::vector<int>::const_iterator, std::vector<int>::const_iterator > linkADCs;
+    for( unsigned int link = 0; link < 64; ++link) {
+    
+      //std::cout << "--->> A LINK # " << link << std::endl;
 
-      plot2D( samplingIndex, adc, "ChanADCSamp",
-              "Channel ADC values versus sampling index",
-              -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+       linkADCs = (*data)[link];
+
+       for ( std::vector<int>::const_iterator adc=linkADCs.first;
+            adc != linkADCs.second;
+            ++adc ) {
+         unsigned int samplingIndex = 999;
+         for( size_t i = 0; i < nxbins; ++i )
+           if ( m_samplingLocations[i] == samplingLocation )
+             samplingIndex = i;
+
+         plot2D( samplingIndex, *adc, "ChanADCSamp",
+             "Channel ADC values versus sampling index",
+             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+       }
     }
   }
   

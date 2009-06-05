@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.9 2009-05-14 15:28:36 krinnert Exp $
+// $Id: VeloClusterMonitor.h,v 1.10 2009-06-05 13:20:33 krinnert Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -67,7 +67,8 @@ namespace Velo
     TH1D* m_histOccSpectAll;
     TH1D* m_histOccSpectLow;
     TH1D* m_histAvrgSensor;
-    std::map< unsigned int,  TH1D* > m_occupancyHistPerSensor;
+    std::map< unsigned int,  TH1D* > m_stripOccupancyHistPerSensor;
+    std::map< unsigned int,  TH1D* > m_channelOccupancyHistPerSensor;
     unsigned int m_occupancyDenom;
     
     
