@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.12 2009-06-03 08:52:59 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.13 2009-06-06 16:58:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -260,6 +260,14 @@ namespace Rich
       {
         hits().clear();
         rings().clear();
+      }
+
+      inline double Finder::hitProbability( const Ring & /* ring */, 
+                                            const Hit & hit )
+      {
+        /** @todo Improve this calculation */
+        const double prob = ( hit.nAssRings > 0 ? 1.0/hit.nAssRings : 0.0 );
+        return prob;
       }
 
     }

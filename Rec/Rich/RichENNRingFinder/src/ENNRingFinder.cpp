@@ -5,7 +5,7 @@
  *  Implementation file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.cpp,v 1.9 2009-06-06 16:44:14 jonrob Exp $
+ *  $Id: ENNRingFinder.cpp,v 1.10 2009-06-06 16:58:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
