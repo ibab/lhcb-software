@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.7 2009-06-03 13:17:37 cattanem Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.8 2009-06-06 12:00:10 hennessy Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -188,6 +188,10 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
       if((*iID).isVelo()) {
         const LHCb::VeloChannelID vcID = (*iID).veloID();
         LHCb::VeloCluster *cluster = m_clusters->object( vcID );
+	if ( 0 == cluster ) {
+	  error() << "Missing cluster with ID " << vcID << endmsg;
+	  continue;
+	}
         LHCb::VeloChannelID idfilter = cluster->channelID();
         //        std::cout<<"\n\t the new lhcb channel id is: "<< idfilter.sensor()<<" ";
         int zone = (m_veloDet->sensor(cluster->channelID().sensor())->zoneOfStrip(cluster->channelID().strip()));  
