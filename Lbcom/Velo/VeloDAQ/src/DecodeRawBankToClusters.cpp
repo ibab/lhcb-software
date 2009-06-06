@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.15 2008-10-16 15:31:30 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.16 2009-06-06 12:00:04 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -147,7 +147,7 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
           << "Strip = " << vcid.strip() << ", sensor = " << vcid.sensor()  
           << ". This inidicates a TELL1 problem." << std::endl;
       errorMsg = errmsg.str();  
-      return 0;
+      continue;
     }
 
     // got all we need, now append new cluster

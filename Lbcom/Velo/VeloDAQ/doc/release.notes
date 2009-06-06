@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-06-06 - Kurt Rinnert
+ - more robustness in full cluster decoding. Duplicate channel IDs now only
+   causes a cluster to be dropped, not the entire bank for a source ID.
+
 ! 2009-06-05 - Kurt Rinnert
  - made PrepareVeloFullRawBuffer handle missing input container gracefully
 
