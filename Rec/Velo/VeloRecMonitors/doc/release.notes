@@ -5,10 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-07 - Kurt Rinnert
+ - VeloClusterMonitor: changed active chip link plot to more straight forward
+   binning.
  - VeloClusterMonitor: appended TAE sample name to number of clusters
    histogram title.
-
-! 2009-06-07 - Kurt Rinnert
  - VeloClusterMonitor: fixed name magnling for occupancy histogram titles,
    reverted the default for occupancy plots to false.
 

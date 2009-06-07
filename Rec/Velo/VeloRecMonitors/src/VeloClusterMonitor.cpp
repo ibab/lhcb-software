@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.18 2009-06-07 11:51:11 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.19 2009-06-07 12:05:38 krinnert Exp $
 // Include files 
 // -------------
 
@@ -270,14 +270,10 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
     unsigned int stripNumber   = cluster -> channelID().strip();
     unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
-    unsigned int chip          = veloSensor -> ChipFromChipChannel( chipChannel ); // 0 -> 15
-    unsigned int channelInChip = chipChannel % 128; // 0 -> 127
-    unsigned int linkInChip    = static_cast<int>( channelInChip / 32 ); // 0 -> 3
-    // number 6 introduced to have 2 bins separating every 4 links per chip
-    unsigned int activeLink = chip*6 + linkInChip;
+    unsigned int activeLink = chipChannel/32;
     plot2D( sensorNumber, activeLink, "Active chip links vs sensor",
         "Active chip links versus sensor",
-        -0.5, 131.5, -0.5, 95.5, 132, 96 );
+        -0.5, 131.5, -0.5, 63.5, 132, 64 );
 
     // Produce occupancy plots
     // -----------------------
