@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.16 2009-06-05 15:40:17 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.17 2009-06-07 11:00:20 krinnert Exp $
 // Include files 
 // -------------
 
@@ -53,7 +53,7 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
   declareProperty( "RSensorNumbersForPlots",   m_rSensorNumbers );
   declareProperty( "PhiSensorNumbersForPlots", m_phiSensorNumbers );
   declareProperty( "PerSensorPlots", m_perSensorPlots=false );
-  declareProperty( "OccupancyPlots", m_occupancyPlots=true );
+  declareProperty( "OccupancyPlots", m_occupancyPlots=false );
   declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
 }
 
@@ -70,8 +70,16 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_tae = name();
-  m_tae.erase(0,3);
+  std::string tmpTae = name();
+  size_t posPrev = tmpTae.find("Prev");
+  size_t posNext = tmpTae.find("Next");
+  if ( tmpTae.size() != posPrev ) {
+    m_tae = tmpTae.substr(posPrev, 5);
+  } else if ( tmpTae.size() != posNext ) {
+    m_tae = tmpTae.substr(posNext, 5);
+  } else {
+    m_tae = "Default";
+  }
 
   if ( m_occupancyPlots ) {
     m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 

@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-07 - Kurt Rinnert
+ - VeloClusterMonitor: fixed name magnling for occupancy histogram titles,
+   reverted the default for occupancy plots to false.
+
 ! 2009-06-05 - Kurt Rinnert
  - bugfix in VeloClusterMonitor, the scale on the new channel occupancy plots
    was wrong.
