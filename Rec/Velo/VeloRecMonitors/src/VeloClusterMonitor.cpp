@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.19 2009-06-07 12:05:38 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.20 2009-06-07 12:45:07 krinnert Exp $
 // Include files 
 // -------------
 
@@ -73,9 +73,9 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   std::string tmpTae = name();
   size_t posPrev = tmpTae.find("Prev");
   size_t posNext = tmpTae.find("Next");
-  if ( tmpTae.size() != posPrev ) {
+  if ( std::string::npos != posPrev ) {
     m_tae = tmpTae.substr(posPrev, 5);
-  } else if ( tmpTae.size() != posNext ) {
+  } else if ( std::string::npos != posNext ) {
     m_tae = tmpTae.substr(posNext, 5);
   } else {
     m_tae = "Default";
