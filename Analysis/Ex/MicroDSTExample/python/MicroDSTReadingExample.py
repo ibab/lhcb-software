@@ -73,7 +73,7 @@ lhcbApp.CondDBtag = 'default'
 
 appMgr = AppMgr(outputlevel=4)
 appMgr.config( files = ['$STDOPTS/LHCbApplication.opts',
-                        '$STDOPTS/SimDicts.opts',
+                        '$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts',
                         '$DDDBROOT/options/DC06.opts'])
 appMgr.initialize()
 appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
@@ -204,7 +204,7 @@ while ( nextEvent() ) :
         Helpers.particleTreeLoop(particles, ptPlotter)
         Helpers.particleTreeLoop(particles, massPlotter)
         Helpers.particleTreeLoop(particles, massResPlotter)
-#        Helpers.particleTreeLoop(particles, assocCounter)
+        Helpers.particleTreeLoop(particles, assocCounter)
 
         tauFunc = Functors.PropTime(bestVertexFun, properTimeFitter)
         refitTauFunc = Functors.PropTime(refitBestVertexFun, properTimeFitter)
