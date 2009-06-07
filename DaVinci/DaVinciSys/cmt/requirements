@@ -1,4 +1,4 @@
-ecpackage DaVinciSys
+package DaVinciSys
 version v23r1
 
 branches doc cmt
