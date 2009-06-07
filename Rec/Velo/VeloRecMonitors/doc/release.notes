@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-07 - Kurt Rinnert
+ - VeloClusterMonitor: appended TAE sample name to number of clusters
+   histogram title.
+
+! 2009-06-07 - Kurt Rinnert
  - VeloClusterMonitor: fixed name magnling for occupancy histogram titles,
    reverted the default for occupancy plots to false.
 

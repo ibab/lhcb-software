@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.17 2009-06-07 11:00:20 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.18 2009-06-07 11:51:11 krinnert Exp $
 // Include files 
 // -------------
 
@@ -185,11 +185,12 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   // ----------------------------
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
+  std::string nCluTitle = "Number of VeloClusters per event, " + m_tae;
   if ( nclus > 0 && nclus < 20000 )
-    plot1D( nclus, "# VELO clusters", "Number of VeloClusters per event",
+    plot1D( nclus, "# VELO clusters", nCluTitle,
         -0.5, 20000.5, 2000 );
   else if ( nclus > 0 )
-    plot1D( 20000, "# VELO clusters", "Number of VeloClusters per event",
+    plot1D( 20000, "# VELO clusters", nCluTitle,
         -0.5, 20000.5, 2000 );
 
   // Loop over the VeloClusters
