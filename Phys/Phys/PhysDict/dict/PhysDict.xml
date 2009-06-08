@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name = "std::pair<std::string, LHCb::HltDecReport>" />
   <class name = "LHCb::HltDecReports::Container" />
   <exclusion>
     <class pattern = "*HltDecReport*">
