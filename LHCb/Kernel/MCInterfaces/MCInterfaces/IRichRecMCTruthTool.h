@@ -2,9 +2,9 @@
 //-----------------------------------------------------------------------------
 /** @file IRichRecMCTruthTool.h
  *
- *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
+ *  Header file for RICH reconstruction tool interface : Rich::Rec::MC::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.2 2007-06-01 09:16:38 cattanem Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.3 2009-06-08 16:52:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,10 +75,33 @@ namespace Rich
 
       public:
 
+        //-----------------------------------------------------------------------------
+        /** @class MCPartAssocInfo IRichRecMCTruthTool.h
+         *
+         *  Simple object storing MCparticle association info
+         *
+         *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+         *  @date   15/03/2002
+         */
+        //-----------------------------------------------------------------------------
+        class MCPartAssocInfo
+        {
+        public:
+          /// Default Constructor
+          MCPartAssocInfo() : mcParticle(NULL), associationFrac(0) { }
+        public:
+          const LHCb::MCParticle * mcParticle;   ///< The associated MCParticle
+          double associationFrac;                ///< The association fraction (weight).
+        };
+        
+      public:
+
         /** static interface identification
          *  @return unique interface identifier
          */
         static const InterfaceID& interfaceID() { return IID_IRichRecMCTruthTool; }
+
+      public:
 
         /** Find best MCParticle association for a given reconstructed Track
          *
@@ -165,17 +188,6 @@ namespace Rich
          */
         virtual bool mcParticle( const LHCb::RichRecPixel * richPixel,
                                  std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
-
-        /** Find the parent MCRichDigit association for a given RichRecPixel
-         *
-         *  @param richPixel Pointer to RichRecPixel
-         *
-         *  @return Pointer to associated MCRichDigit
-         *  @retval NULL  No Monte Carlo association was possible
-         *  @retval !NULL Monte Carlo association was successful
-         */
-        //virtual const LHCb::MCRichDigit *
-        //mcRichDigit( const LHCb::RichRecPixel * richPixel ) const = 0;
 
         /** Find the parent MCRichHits for a given RichRecPixel
          *
@@ -436,6 +448,20 @@ namespace Rich
          */
         virtual const LHCb::RichRecRing *
         mcCKRing( const LHCb::RichRecSegment * segment ) const = 0;
+
+        /** Access the MCParticle associated to a given RichRecRing
+         *
+         *  @param ring Pointer to the RichRecRing
+         *  @param assocFrac The fraction of hits from a single 
+         *                   MCParticle required for a good association
+         *  
+         *  @return Pointer to the associated MCParticle
+         *  @retval NULL  No MCparticle associated
+         *  @retval !NULL An MCParticle was associated
+         */
+        virtual MCPartAssocInfo
+        mcParticle( const LHCb::RichRecRing * ring,
+                    const double assocFrac = 0.75 ) const = 0;
 
         /** Is this RichRecPixel background ?
          *
