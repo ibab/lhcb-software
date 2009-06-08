@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-06-08 - Gerhard Raven
+ - use SetupProject python module instead of the script
+
 ! 2009-05-29 - Gerhard Raven
  - update cmt/requirements to take into account TCKData -> HltTCK, TCKUtils split
 
