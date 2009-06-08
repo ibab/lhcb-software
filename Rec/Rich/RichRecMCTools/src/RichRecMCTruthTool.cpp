@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.33 2008-09-12 15:47:24 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.34 2009-06-08 17:14:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -594,6 +594,75 @@ MCTruthTool::mcCKRing( const LHCb::RichRecSegment * segment ) const
   if ( msgLevel(MSG::DEBUG) )
     debug() << "No MC association available for MCRichSegment -> MCCKRings" << endreq;
   return NULL;
+}
+
+// Access the MCParticle associated to a given RichRecRing
+IMCTruthTool::MCPartAssocInfo
+MCTruthTool::mcParticle( const LHCb::RichRecRing * ring,
+                         const double assocFrac ) const
+{
+  IMCTruthTool::MCPartAssocInfo info;
+  if ( ring )
+  {
+    if ( ring->type() == LHCb::RichRecRing::RayTracedCK )
+    {
+      // This ring is ray traced from a track segment, so use the MC association for that
+      info.mcParticle = mcParticle( ring->richRecSegment(), assocFrac );
+    }
+    else if ( ring->type() == LHCb::RichRecRing::TracklessRing )
+    {
+      // trackless ring.
+
+      // See what the pixels have to say
+      typedef Rich::Map<const LHCb::MCParticle *, unsigned int> MCPMap;
+      MCPMap mcpMap;
+      unsigned int totMCPs(0);
+      for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iPix = ring->richRecPixels().begin();
+            iPix != ring->richRecPixels().end(); ++iPix )
+      {
+        // get the MCPs for this pixel
+        std::vector<const LHCb::MCParticle*> mcParts;
+        if ( mcParticle( iPix->pixel() , mcParts ) )
+        {
+          for ( std::vector<const LHCb::MCParticle*>::const_iterator imcp = mcParts.begin();
+                imcp != mcParts.end(); ++imcp )
+          {
+            ++totMCPs;
+            ++mcpMap[*imcp];
+          }
+        }
+      } // loop over pixels
+
+      const LHCb::MCParticle * pixel_mcP = NULL;
+      double best_mcAssoc(0);
+      if ( totMCPs > 0 )
+      {
+        for ( MCPMap::const_iterator iMCP = mcpMap.begin();
+              iMCP != mcpMap.end(); ++iMCP )
+        {
+          const double assoc = (double)(iMCP->second) / (double)totMCPs;
+          if ( assoc > assocFrac && assoc > best_mcAssoc )
+          {
+            pixel_mcP = iMCP->first;
+            best_mcAssoc = assoc;
+          }
+        }
+      }
+
+      // It might still have an associated segment via secondary matching
+      // so lets see what track that gives us
+      //const LHCb::MCParticle * track_mcP = mcParticle( ring->richRecSegment() );
+
+      // decide best association
+      info.mcParticle      = pixel_mcP;
+      info.associationFrac = best_mcAssoc;
+
+    } // trackless ring type
+
+  } // ring OK
+
+  // return final association
+  return info;
 }
 
 void MCTruthTool::cleanUpLinkers()

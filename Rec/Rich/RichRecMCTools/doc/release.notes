@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-06-08 - Chris Jones
+ - Implement new method in MCTruth tool to return MCParticle for a given
+   RichRecRing pointer.
+
 !====================== RichRecMCTools v2r21 2009-05-08 =======================
 ! 2009-03-30 - Chris Jones
  - Update RichPixelCreatorFromRichDigitsWithBg to check the status of both the 

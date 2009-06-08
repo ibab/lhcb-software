@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.27 2009-01-20 15:49:30 cattanem Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.28 2009-06-08 17:14:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -123,9 +123,6 @@ namespace Rich
         bool mcParticle( const LHCb::RichRecPixel * richPixel,
                          std::vector<const LHCb::MCParticle*> & mcParts ) const;
 
-        // Find parent MCRichDigit association for a given RichRecPixel
-        //const LHCb::MCRichDigit * mcRichDigit( const LHCb::RichRecPixel * richPixel ) const;
-
         // Find parent MCRichHits for a given RichRecPixel
         void mcRichHits( const LHCb::RichRecPixel * richPixel,
                          SmartRefVector<LHCb::MCRichHit> & hits ) const;
@@ -206,6 +203,10 @@ namespace Rich
 
         // Access the RichRecRing representing the MC CK ring for te given RichRecSegment
         const LHCb::RichRecRing * mcCKRing( const LHCb::RichRecSegment * segment ) const;
+
+        // Access the MCParticle associated to a given RichRecRing
+        MCPartAssocInfo mcParticle( const LHCb::RichRecRing * ring,
+                                    const double assocFrac = 0.75 ) const;
 
         // Is this RichRecPixel background ?
         bool isBackground( const LHCb::RichRecPixel * pixel ) const;
