@@ -1,4 +1,4 @@
-import os, sys, shutil, re, time, pickle
+import os, sys, shutil, re, time, pickle, string
 from pprint import pformat
 from LbUtils.Lock import Lock
 from threading import Thread
@@ -7,6 +7,25 @@ from setup import *
 sys.path = [os.path.abspath(os.environ['LCG_NIGHTLIES_SCRIPTDIR'])] + sys.path
 import configuration
 
+def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
+    """ http://code.activestate.com/recipes/473878/ """
+    import threading
+    class InterruptableThread(threading.Thread):
+        def __init__(self):
+            threading.Thread.__init__(self)
+            self.result = None
+        def run(self):
+            try:
+                self.result = func(*args, **kwargs)
+            except:
+                self.result = default
+    it = InterruptableThread()
+    it.start()
+    it.join(timeout_duration)
+    if it.isAlive():
+        return default
+    else:
+        return it.result
 
 def copyLocal(sourceDir, targetDir):
     """ tar-pipe copying with locking from <sourceDir> to <targetDir>. Target directory is created if necessary.
@@ -24,7 +43,13 @@ def copyLocal(sourceDir, targetDir):
             path = (root+os.sep).replace(sourceDir, '')
             files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo']
             filesString = ' '.join(files)
-            Lock('mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -',str(os.getpid()),path)
+            cwd = os.getcwd()
+            commandLinux = 'mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -'
+            commandWindows = '(if not exist '+targetDir + path+' mkdir '+ targetDir + path +')'+' '.join([' & ( if not exist '+targetDir+path+x+' copy '+sourceDir + path +x+' '+targetDir+path+' > NUL )' for x in files]) + ' & (cd '+cwd+')'
+            if systemType == 'windows':
+                Lock(commandWindows,str(os.getpid()), path, commandLinux, splitCommand='&')
+            else:
+                Lock(commandLinux,str(os.getpid()), path)
 
 def copySsh(sourceHost, sourceDir, targetDir):
     """ tar-pipe copying by SSH with locking from <sourceHost>:<sourceDir> to <targetDir>. Target directory is created if necessary. Procedure must be used on the target host. <sourceHost> must be accessible by SSH without password.
@@ -84,7 +109,19 @@ def run(slotName, minusj=None, platforms=None):
             if cu.has_key('LCGCMT'):
                 os.environ['LCGCMT_VERSION'] = cu['LCGCMT']
                 break
-        generateBuilders(slot.buildersDir(), listOfProjectNames, minusj)
+        buildersToCopyDict = {}
+        buildersToCopy = []
+        for x in generalConfig.get('externalBuilders', {}).keys():
+            buildersToCopyDict[x] = generalConfig['externalBuilders'].getEnvParsed(x)
+            buildersToCopy.append(x)
+        buildersToGenerate = [x for x in listOfProjectNames if x not in buildersToCopy]
+        for x in buildersToCopy:
+            bTCx = buildersToCopyDict[x]
+            if not os.path.exists(bTCx): continue
+            shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x]))
+            shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.lower()]))
+            shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.upper()]))
+        generateBuilders(slot.buildersDir(), buildersToGenerate, minusj)
         releasePath = slot.releaseDir()
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):
             shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), os.path.join(releasePath,'configuration.xml'))
@@ -170,9 +207,13 @@ def getSlotAndProject(slotName, projectName):
 
         Finds slotObject first and than projectObject in the slot.
     """
-    generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
-    slot = configuration.findSlot(slotName, slotList)
-    project = getProjectObject(slot, projectName)
+    try:
+        generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
+        slot = configuration.findSlot(slotName, slotList)
+        project = getProjectObject(slot, projectName)
+    except:
+        print "ERROR, config from:", os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml')
+        raise
     return slot, project
 
 def setCmtProjectPath(slot):
@@ -320,15 +361,6 @@ def generateBuilders(destPath, projectNames, minusj):
         Creates a set of files and directory structure to act as LCG Nightlies "builders" for each of the project given in the <projectNames> list.
         <minusj> parameter sets the value of "-j" for compiler.
     """
-    lines = """
-action pkg_get "mkdir -p logs ; %(launcher)s get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
-action pkg_config " %(launcher)s config $(packageName) 2>&1"
-action pkg_make " %(launcher)s make $(packageName) %(processes)d 2>&1 ; exit 0"
-action pkg_install " %(launcher)s install $(packageName) 2>&1"
-action pkg_test " %(launcher)s test $(packageName) 2>&1"
-    """ % { "launcher" : python + " -m LbRelease.Nightlies.actionLauncher",
-            "processes": max(0,minusj) }
-
     destPath = os.path.abspath(destPath)
     for p in projectNames:
         for pdir in [ p, p.lower(), p.upper() ]:
@@ -339,6 +371,20 @@ action pkg_test " %(launcher)s test $(packageName) 2>&1"
             f.write('macro packageName "' + p + '"' + os.linesep)
             f.write('use LbScriptsSys' + os.linesep)
             f.write('use Python v* LCG_Interfaces' + os.linesep)
+            lines = """
+action pkg_get "cmt show tags ; mkdir -p logs ; %(launcher)s get %(packageName)s 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log" \
+       WIN32 " if not exist logs mkdir logs & %(launcher)s get %(packageName)s "
+action pkg_config " %(launcher)s config %(packageName)s 2>&1" \
+       WIN32 " %(launcher)s config %(packageName)s"
+action pkg_make "  %(launcher)s make %(packageName)s %(processes)d 2>&1 ; exit 0" \
+       WIN32 " call D:\\local\\lib\\LbLogin.bat && %(launcher)s make %(packageName)s %(processes)d 2>&1 "
+action pkg_install " %(launcher)s install %(packageName)s 2>&1" \
+       WIN32 " %(launcher)s install %(packageName)s 2>&1 "
+action pkg_test " %(launcher)s test %(packageName)s 2>&1" \
+       WIN32 " %(launcher)s test %(packageName)s 2>&1 "
+    """ % { "launcher" : "runpy LbRelease.Nightlies.actionLauncher",
+            "packageName" : p,
+            "processes": max(0,minusj) }
             f.write(lines)
             f.close()
     shutil.rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
@@ -380,6 +426,32 @@ def setCMTEXTRATAGS(slotName):
     if slot is not None and slot.cmtExtraTags is not None:
         os.environ['CMTEXTRATAGS'] = slot.cmtExtraTags
 
+def changeEnvVariables():
+    if systemType != 'windows': return
+    for x in ['CMTPROJECTPATH', 'CMTROOT', 'LD_LIBRARY_PATH', 'LIB', 'INCLUDE', 'PATH']:
+        if not os.environ.has_key(x): continue
+        pth = os.environ[x].split(';')
+        newPth1 = []
+        if x == 'CMTPROJECTPATH':
+            # first position of CMTPROJECTPATH is always local build dir, and the order must not be changed
+            newPth1.append(pth[0])
+            pth = pth[1:]
+        for y in pth:
+            yy = y.lower()
+            newY = yy
+            for q in localDirsOnWindows.keys():
+                if q.lower() in newY:
+                    newY = newY.replace(q.lower(), localDirsOnWindows[q])
+                    newY = newY.lower()
+            if yy != newY:
+                newPth1.append(newY)
+            else:
+                newPth1.append(y)
+        if ';' in os.environ[x]:
+            os.environ[x] = ';'.join([xx for xx in newPth1 if len(xx)>0])
+        else:
+            os.environ[x] = ([xx for xx in newPth1 if len(xx)>0])[0]
+
 def config(slotName, projectName):
     """ config(slotName, projectName)
 
@@ -389,6 +461,7 @@ def config(slotName, projectName):
     setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
+    changeEnvVariables()
 
 def clean(slotName):
     """ clean(slotName)
@@ -402,6 +475,7 @@ def clean(slotName):
     generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
     slot = configuration.findSlot(slotName, slotList)
     if slot is not None: setCmtProjectPath(slot)
+    changeEnvVariables()
     disableLCG_NIGHTLIES_BUILD()
     setCMTEXTRATAGS(slotName)
     #remove contents of build directory:
@@ -417,10 +491,11 @@ def install(slotName, projectName):
     """
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
+    changeEnvVariables()
     disableLCG_NIGHTLIES_BUILD()
     setCMTEXTRATAGS(slotName)
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
-    os.system(cmtCommand + ' br "' + cmtCommand + ' config"')
+
     # copying logs
     os.chdir(os.path.join(slot.buildDir(), 'www'))
     files = os.listdir(os.getcwd())
@@ -451,9 +526,14 @@ def make(slotName, projectName, minusj):
     setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
+    configuration.system('echo "################# START OF MAKE #######################"')
+    changeEnvVariables()
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
     configuration.system('echo "' + '*'*80 + '"')
+    configuration.system('echo "LCG Nightlies:    '+os.path.dirname(configuration.__file__)+'"')
+    configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'"')
+    configuration.system('echo "SITEROOT:         '+os.environ.get('SITEROOT','')+'"')
     configuration.system('echo "CMTPROJECTPATH:   '+os.environ.get('CMTPROJECTPATH','')+'"')
     configuration.system('echo "CMTCONFIG:        '+os.environ.get('CMTCONFIG','')+'"')
     configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
@@ -472,20 +552,18 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     #-------------------------------------------------------------------------
     #configuration.system('cmt br - "cmt make all tests"') # it will break on Windows,
-    makeCmd = cmtCommand + ' make' + minusjcmd
-    if 'CMTEXTRATAGS' in os.environ:
-        makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
-    configuration.system(cmtCommand + ' br - "' + makeCmd + ' all ; ' + makeCmd +' tests"') # it will break on Windows,
-    #configuration.system('cmt br - "cmt make -j 4 all tests"') # it will break on Windows,
-    # use: configuration.system('cmt br - cmt make all_groups') instead
-    # but it breaks PANORAMIX on Linux
-    #-------------------------------------------------------------------------
-    #configuration.system('cmt br - cmt make all_groups')
-    #configuration.system('cmt br - "/afs/cern.ch/lhcb/software/nightlies/scripts/lockdo.py \\"cmt make all_groups\\" ' + os.environ['CMTCONFIG'] + ' " &')
-    #configuration.system('cmt br - "/afs/cern.ch/lhcb/software/nightlies/scripts/lockdo.py \\"export CMTCONFIGcopy=$CMTCONFIG && source /afs/cern.ch/lhcb/software/releases/scripts/CMT.sh > /dev/null && export CMTCONFIG=$CMTCONFIGcopy && cmt make all_groups 2>&1 \\" ' + os.environ['CMTCONFIG'] + ' " &')
-    #2# configuration.system('cmt br - "cmt make -j 8 all ; cmt make -j 8 all_groups"')
-    #3# configuration.system('cmt br - "cmt make -j ' + str(threads) + ' ' + ' cpp="' + distcc + ' g++" cc="' + distcc + ' gcc" for="' + distcc + ' g77"' + ' all ; cmt make -j 8 ' + ' cpp="' + distcc + ' g++" cc="' + distcc + ' gcc" for="' + distcc + ' g77"' + ' all_groups"')
-    ###configuration.system('cmt br cmt make -j ' + str(threads) + ' cpp="' + distcc + ' g++" cc="' + distcc + ' gcc" for="' + distcc + ' g77"')
+    if systemType == 'windows':
+        makeCmd = cmtCommand + ' make'
+        if 'CMTEXTRATAGS' in os.environ:
+            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
+        configuration.system(cmtCommand + ' br - ' + makeCmd + ' all_groups')
+        install(slotName, projectName)
+    else:
+        makeCmd = cmtCommand + ' make' + minusjcmd
+        if 'CMTEXTRATAGS' in os.environ:
+            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
+        configuration.system(cmtCommand + ' br - "' + makeCmd + ' all ; ' + makeCmd +' tests"') # it will break on Windows,
+    configuration.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
 
 def test(slotName, projectName):
     """ test(slotName, projectName)
@@ -496,16 +574,15 @@ def test(slotName, projectName):
     setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
+    changeEnvVariables()
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
 
-    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    configuration.system('printenv | sort')
+    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
     configuration.system('cmt br - cmt TestPackage')
-    configuration.system('cmt qmtest_summarize 2>&1 | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
-    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" | tee -a ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
+    configuration.system('cmt qmtest_summarize 2>&1 >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
+    configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
 
     #log files copying:
-    #os.chdir(os.path.join(slot.buildDir(), 'www'))
     testSummaryFrom = os.path.join(generatePath(slot, project, 'SYSPACKAGECMT', projectName), '..', '..', 'logs', os.environ['CMTCONFIG'] + '-qmtest.log')
     testSummaryTo = os.path.join(slot.wwwDir(), slotName + '.' + configuration.TODAY + '_' + project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest.log')
     if os.path.exists(testSummaryFrom): shutil.copy2(testSummaryFrom, testSummaryTo)
@@ -519,10 +596,12 @@ def get(slotName, projectName):
     setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
+    changeEnvVariables()
 
     os.chdir(slot.buildDir())
+    if not os.path.exists('www'): os.mkdir('www')
     if os.path.exists(project.getName()):
-	    # create symbolic link: LHCB --> LHCb, LBCOM --> Lbcom, ... [ only on Linux ? ]
+        # create symbolic link: LHCB --> LHCb, LBCOM --> Lbcom, ... [ only on Linux ? ]
         if not os.path.exists(project.getName().upper()): os.symlink(project.getName(), project.getName().upper())
     elif os.path.exists(project.getName().lower()):
         # create symbolic link: LHCB --> lhcb, LBCOM --> lbcom, ... [ only on Linux ? ]

@@ -1,7 +1,14 @@
 2009-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: added CMTEXTRATAGS
-	on command line of "cmt make"
+	on command line of "cmt make", adjustments for Windows, external builders
+	(copied according to configuration.xml, not generated), more verbose
+	message if configuration.xml file is not found
+	* python/LbRelease/Nightlies/setup.py: separate paths for Linux/Win
+	LCG Nightlies, Windows one on local disk
+	* scripts/startNightlies.bat: added source (call) of two .bat files from
+	Visual Studio: DFVARS.BAT and vsvars32.bat. It's done after SetupProject
+	and before starting the Nightlies
 
 2008-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
