@@ -472,7 +472,10 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     #-------------------------------------------------------------------------
     #configuration.system('cmt br - "cmt make all tests"') # it will break on Windows,
-    configuration.system(cmtCommand + ' br - "' + cmtCommand + ' make' + minusjcmd + ' all ; ' + cmtCommand + ' make' + minusjcmd +' tests"') # it will break on Windows,
+    makeCmd = cmtCommand + ' make' + minusjcmd
+    if 'CMTEXTRATAGS' in os.environ:
+        makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
+    configuration.system(cmtCommand + ' br - "' + makeCmd + ' all ; ' + makeCmd +' tests"') # it will break on Windows,
     #configuration.system('cmt br - "cmt make -j 4 all tests"') # it will break on Windows,
     # use: configuration.system('cmt br - cmt make all_groups') instead
     # but it breaks PANORAMIX on Linux

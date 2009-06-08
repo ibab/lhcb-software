@@ -1,3 +1,8 @@
+2009-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: added CMTEXTRATAGS
+	on command line of "cmt make"
+
 2008-05-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: fixed bug #51174 (inconsistent cases for
