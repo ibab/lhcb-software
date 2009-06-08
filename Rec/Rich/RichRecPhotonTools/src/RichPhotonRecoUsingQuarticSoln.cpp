@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.7 2008-08-15 14:37:39 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.8 2009-06-08 17:16:31 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -736,8 +736,8 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
 
   // various quantities needed to create quartic equation
   // see LHCB/98-040 section 3, equation 3
-  const double e        = sqrt(e2);
-  const double d        = sqrt(d2);
+  const double e        = std::sqrt(e2);
+  const double d        = std::sqrt(d2);
   const double cosgamma = evec.Dot(dvec) / (e*d);
   const double singamma = std::sqrt( 1.0 - cosgamma*cosgamma );
   //const double singamma = sin( acos(cosgamma) );
