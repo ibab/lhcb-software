@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-08 - Chris Jones
+ - Use vector typedef in RichRecRing
+
 ! 2009-06-03 - Chris Jones
  - Add reserve calls when filling X and Y vectors in FastRingFitter
 
