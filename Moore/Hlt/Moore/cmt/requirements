@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.53 2009-05-29 12:54:55 graven Exp $
+# $Id: requirements,v 1.54 2009-06-08 11:55:32 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -54,6 +54,9 @@ use PhysSys		v*	     -no_auto_imports
 use OnlineSys           v*           -no_auto_imports
 
 #============================================================================
+set CORAL_SQLITE_TEMP_STORE_MEMORY yes
+#============================================================================
+
 
 apply_pattern application_path
 apply_pattern install_python_modules
