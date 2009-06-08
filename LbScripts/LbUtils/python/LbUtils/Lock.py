@@ -3,7 +3,7 @@ Module which implements simple file-based locking mechanism
 
 @author: Karol Kruzelecki
 """
-import os, time, md5
+import os, time, md5, string
 
 
 def _hash(value):
@@ -23,7 +23,7 @@ class Lock(object):
         - <environment> is a dictionary with a values to set into working environment before <command> launch
         - <lockPath> is a directory where the lockfiles should be stored
     """
-    def __init__(self, command, uniqId, commonId=None, environment=None, lockPath=None):
+    def __init__(self, command, uniqId, commonId=None, environment=None, lockPath=None, splitCommand=None):
         """ object constructor. Parameters described in more details in the __class__.__doc__. """
         if commonId == None: self._hashCmd = _hash(command) # check if it's None - '' is different than None so '== None' is necessary
         else: self._hashCmd = _hash(commonId)
@@ -32,6 +32,7 @@ class Lock(object):
         self._hashUniqId = _hash(uniqId)
         self._lockFileName = '.lock_' + self._hashCmd
         self._env = environment
+        self._splitCommand = splitCommand
         if lockPath is None: self._dir = os.getcwd()
         else: self._dir = lockPath
         while True:
@@ -41,12 +42,12 @@ class Lock(object):
                     self._prevEnv = os.environ.copy()
                     for x in self._env.keys():
                         os.environ[x] = self._env[x]
-                    self.exitCode = os.system(self._command)
+                    self.exitCode = self._runCommand()
                     for x in self._env.keys():
                         if x in self._prevEnv: os.environ[x] = self._prevEnv[x]
                         else: del os.environ[x]
                 else:
-                    self.exitCode = os.system(self._command)
+                    self.exitCode = self._runCommand()
                 self._removeLock()
                 break
             elif c == None:
@@ -81,3 +82,13 @@ class Lock(object):
             os.remove(os.path.join(self._dir, self._lockFileName))
         except OSError:
             pass
+    def _runCommand(self):
+        if self._splitCommand is None:
+            return os.system(self._command)
+        else:
+            cmds = string.split(self._command, self._splitCommand)
+            status = 0
+            for c in cmds:
+                ret = os.system(c)
+                if ret != 0:
+                    return ret

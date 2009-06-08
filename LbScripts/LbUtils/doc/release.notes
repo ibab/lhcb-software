@@ -1,11 +1,17 @@
+2009-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbUtils/Lock.py: added an option to split a command (if complex)
+	and lunch it one by one instead of one long command - useful on Windows
+	where commands easily exceeded the maximum allowed length
+
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r16
 
 2009-05-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Links.py: 
-	- fixed the doesLinkPointInTree which was not using abspath for the 
+	* python/LbUtils/Links.py:
+	- fixed the doesLinkPointInTree which was not using abspath for the
 	comparison on each side.
 	- used the Gaudi version of getCommonPath and getRelativePath
 	- implemented fixLink
@@ -15,9 +21,9 @@
 2009-05-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/castor/common.py: New file.
-	* python/LbUtils/castor/__init__.py: 
-	* python/LbUtils/castor/path.py: 
-	* python/LbUtils/castor/stage.py: 
+	* python/LbUtils/castor/__init__.py:
+	* python/LbUtils/castor/path.py:
+	* python/LbUtils/castor/stage.py:
 	* python/LbUtils/castor/usage.py: clean the way the imports are done
 
 2009-03-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -35,7 +41,7 @@
 
 2009-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Log.py: fixed logging format for python version prior to 
+	* python/LbUtils/Log.py: fixed logging format for python version prior to
 	2.5.1. The "funcName" keyword was not available.
 
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -59,7 +65,7 @@
 
 2009-02-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/runpy.bat: added runpy wrapper for windows 
+	* scripts/runpy.bat: added runpy wrapper for windows
 
 2009-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -99,7 +105,7 @@
 	* scripts/makeSelfExtractScript: New file.
 	* scripts/showCMTProjects: New file.
 	* scripts/showlinks: New file.
-	* scripts/version_db_html: New file. Removed the extension from the python 
+	* scripts/version_db_html: New file. Removed the extension from the python
 	scripts.
 
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -108,7 +114,7 @@
 
 2008-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/doxypy.py: added the doxygen filter for python. It translates the 
+	* scripts/doxypy.py: added the doxygen filter for python. It translates the
 	python docstring into comments.
 
 2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
