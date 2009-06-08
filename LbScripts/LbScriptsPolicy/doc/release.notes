@@ -1,3 +1,8 @@
+2009-06-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/SourceShellAlias.sh: added fix for the word splitting in the new zsh
+	versions (since 4.3).
+
 2009-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r5
