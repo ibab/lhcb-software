@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::MC::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.3 2009-06-08 16:52:58 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.4 2009-06-08 18:21:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -78,7 +78,7 @@ namespace Rich
         //-----------------------------------------------------------------------------
         /** @class MCPartAssocInfo IRichRecMCTruthTool.h
          *
-         *  Simple object storing MCparticle association info
+         *  Simple object storing MCParticle association information
          *
          *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
          *  @date   15/03/2002
@@ -455,9 +455,8 @@ namespace Rich
          *  @param assocFrac The fraction of hits from a single 
          *                   MCParticle required for a good association
          *  
-         *  @return Pointer to the associated MCParticle
-         *  @retval NULL  No MCparticle associated
-         *  @retval !NULL An MCParticle was associated
+         *  @return Associated MCParticle information (Pointer and association weight).
+         *          If MCParticle pointer is NULL, then no association was found.
          */
         virtual MCPartAssocInfo
         mcParticle( const LHCb::RichRecRing * ring,
