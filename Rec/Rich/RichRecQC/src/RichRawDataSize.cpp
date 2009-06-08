@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.6 2009-06-05 19:32:30 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.7 2009-06-08 17:17:44 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -67,6 +67,7 @@ StatusCode RawDataSize::initialize()
 //=============================================================================
 StatusCode RawDataSize::execute()
 {
+  // Map of words per L1 board
   Rich::Map<const Rich::DAQ::Level1HardwareID,unsigned int> l1SizeMap;
 
   // direct to the RawBanks
@@ -145,7 +146,7 @@ StatusCode RawDataSize::execute()
             const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(hpdID);
             // fill plots
             std::ostringstream title, ID;
-            title << "Data Size (# 32-bit words) : HPD Hardware ID " << hpdHardID;
+            title << "Data Size (32bit words) : HPDHardwareID " << hpdHardID;
             ID << "hpds/HPDHardwareID" << hpdHardID;
             plot1D( nHPDwords, ID.str(), title.str(), -0.5, 500.5, 501 );
           }
@@ -160,7 +161,7 @@ StatusCode RawDataSize::execute()
     } // loop over ingresses
 
     std::ostringstream title, ID;
-    title << "Data Size (# 32-bit words) : L1 HardwareID " << l1HardID;
+    title << "Data Size (32bit words) : L1HardwareID " << l1HardID;
     ID << "L1s/L1HardwareID" << l1HardID;
     plot1D( nL1Words, ID.str(), title.str(), -0.5, 500.5, 501 );
 

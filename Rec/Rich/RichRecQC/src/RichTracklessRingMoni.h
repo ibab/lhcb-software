@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingMoni.h,v 1.2 2009-06-03 09:20:26 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.h,v 1.3 2009-06-08 17:17:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,6 +35,7 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
 
 // Kernel
 #include "RichRecBase/FastRingFitter.h"
@@ -88,6 +89,7 @@ namespace Rich
       private: // data
 
         mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
         /// Location of Rings in TES
         std::string m_ringLoc;
@@ -98,11 +100,16 @@ namespace Rich
         std::vector<double> m_radiiMax;   ///< Max radii limit for histos for each rad
         std::vector<double> m_radiiMin;   ///< Min radii limit for histos for each rad
 
+        std::vector<double> m_ckThetaRes; ///< Ring radius - Expected CK theta resolution limits
+
         // Max fit variance
         std::vector<double> m_maxFitVariance;
 
         /// Number of histogram bins
         unsigned int m_nBins;
+
+        /// MC association fraction for rings
+        double m_mcAssocFrac;
 
       };
 
