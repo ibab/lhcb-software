@@ -1,3 +1,8 @@
+2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed strange behavior. Now --binary=value overwrites
+	the CMTCONFIG environment variable.
+
 2009-06-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: added the -y, --yes option in order to not ask for confirmation

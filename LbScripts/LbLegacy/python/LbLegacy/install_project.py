@@ -2063,6 +2063,7 @@ def main():
             binary = os.environ['CMTCONFIG']
         if key == '--binary':
             binary = value
+            os.environ["CMTCONFIG"]
         if key in ('-n','--nocheck'):
             md5_check = False
         if key in ('-g','--grid'):
