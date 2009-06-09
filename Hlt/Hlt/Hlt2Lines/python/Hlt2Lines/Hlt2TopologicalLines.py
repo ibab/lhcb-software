@@ -57,32 +57,36 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # steering variables
     #------------------------
     # Don't touch my variables!
-    __slots__ = { 'RobustPointingUL'        : 0.20       # unitless
-                , 'RobustAllTrkPtLL'        : 300    # in MeV
-                , 'RobustAllTrkPLL'         : 2000    # in MeV
-                , 'RobustAllTrkPVIPLL'      : 0.05    # in mm
-                , 'RobustPairMinDocaUL'     : 0.10    # in mm
-                , 'RobustPairMaxDocaUL'     : 1    # in mm
-                , 'RobustTrkMaxPtLL'        : 1500   # in MeV
-                , 'RobustVtxPVDispLL'       : 2      # in mm
-                , 'RobustVtxPVRDispLL'      : 0.2      # in mm
-                , 'TFAllTrkPtLL'            : 300    # in MeV
-                , 'TFAllTrkPLL'             : 2000    # in MeV
-                , 'TFAllTrkPVIPChi2LL'      : 9    # unitless
-                , 'TFAllTrkChi2UL'          : 10    # unitless
-                , 'TFPairMinDocaUL'         : 0.10    # in mm
-                , 'TFPairMaxDocaUL'         : 1    # in mm
-                , 'TFTrkMaxPtLL'            : 1500   # in MeV
-                , 'TFVtxPVDispChi2LL'       : 100      # unitles
+    __slots__ = { 'ComRobAllTrkPtLL'        : 300    # in MeV
+                , 'ComRobAllTrkPLL'         : 2000    # in MeV
+                , 'ComRobAllTrkPVIPLL'      : 0.05    # in mm
+                , 'ComRobPairMinDocaUL'     : 0.10    # in mm
+                , 'ComRobPairMaxDocaUL'     : 1    # in mm
+                , 'ComRobTrkMaxPtLL'        : 1500   # in MeV
+                , 'ComRobVtxPVDispLL'       : 2      # in mm
+                , 'ComRobVtxPVRDispLL'      : 0.2      # in mm
+                , 'RobustPointingUL'        : 0.20       # unitless
+                , 'ComTFAllTrkPtLL'         : 300    # in MeV
+                , 'ComTFAllTrkPLL'          : 2000    # in MeV
+                , 'ComTFAllTrkPVIPChi2LL'   : 9    # unitless
+                , 'ComTFAllTrkChi2UL'       : 10    # unitless
+                , 'ComTFPairMinDocaUL'      : 0.10    # in mm
+                , 'ComTFPairMaxDocaUL'      : 1    # in mm
+                , 'ComTFTrkMaxPtLL'         : 1500   # in MeV
+                , 'ComTFVtxPVDispChi2LL'    : 100      # unitles
                 , 'TFPointUL'               : 0.10       # unitless
                 , 'CharmRobustPointUL'      : 0.10       # unitless
                 , 'CharmTFPointUL'          : 0.10       # unitless
+                , 'DXRobustCoplanUL'        : 0.10       # unitless
+                , 'DXTFPointUL'             : 0.20       # unitless
                 , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 0.001
                                                , 'Hlt2TopoTF3BodySA' : 0.001
                                                , 'Hlt2TopoTF4BodySA' : 0.001
                                                , 'Hlt2TopoTF2BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF3BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF4BodyCharmWideMass' : 0.05
+                                               , 'Hlt2DX3BodyCopNoKs' : 0.01
+                                               , 'Hlt2DX4BodyCopNoKs' : 0.01
                                               }
                 , 'Postscale'               : {'Hlt2Topo2BodySA' : 0.02
                                                , 'Hlt2Topo3BodySA' : 0.001
@@ -106,6 +110,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoTF4BodyReq2YesDecision' : 50820
                                    , 'Hlt2TopoTF4BodyReq3YesDecision' : 50830
                                    , 'Hlt2TopoTF4BodyReq4YesDecision' : 50840
+                                   # Charm lines
                                    , 'Hlt2Topo2BodyCharmSADecision'   : 50850
                                    , 'Hlt2TopoTF2BodyCharmSignalDecision' : 50880
                                    , 'Hlt2TopoTF2BodyCharmWideMassDecision' : 50890
@@ -115,6 +120,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2Topo4BodyCharmSADecision'   : 50870
                                    , 'Hlt2TopoTF4BodyCharmSignalDecision' : 50950
                                    , 'Hlt2TopoTF4BodyCharmWideMassDecision' : 50960
+                                   # DX lines.  Here temporarily.
+                                   , 'Hlt2DX3BodyCopKsDDDecision'     : 62000
+                                   , 'Hlt2DX4BodyCopKsDDDecision'     : 62010
+                                   , 'Hlt2DX3BodyCopNoKsDecision'     : 62020
+                                   , 'Hlt2DX4BodyCopNoKsDecision'     : 62030
                                    }
                 }
 
@@ -149,9 +159,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                          , ShortCircuit = False
                          )
 
-        str_allpt = "(PT>" + _cut('RobustAllTrkPtLL') + "*MeV)"
-        str_allp  = "(P>" + _cut('RobustAllTrkPLL') + "*MeV)"
-        str_allip = "(MIPDV(PRIMARY)>" + _cut('RobustAllTrkPVIPLL') + ")"
+        str_allpt = "(PT>" + _cut('ComRobAllTrkPtLL') + "*MeV)"
+        str_allp  = "(P>" + _cut('ComRobAllTrkPLL') + "*MeV)"
+        str_allip = "(MIPDV(PRIMARY)>" + _cut('ComRobAllTrkPVIPLL') + ")"
         daugcuts = str_allpt + "&" + str_allp + "&" + str_allip
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -174,10 +184,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         def robustCombine(name, inputSeq, decayDesc) :
             # Construct a cut string for the combination.
-            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('RobustPairMaxDocaUL') + ")"
+            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComRobPairMaxDocaUL') + ")"
             # Special case for the 2-body.  Use tighter doca requirement.
             if (name.find('Topo2Body') <> -1) :
-                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('RobustPairMinDocaUL') + ")"
+                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComRobPairMinDocaUL') + ")"
             combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
             # Special case for the 4-body.  Use a mass lower limit to reduce
             #    combinatorics.  Must be at or below any client mass LL.
@@ -185,9 +195,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 combcuts = combcuts + "&(AM>1700*MeV)"
 
             # Construct a cut string for the vertexed combination.
-            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('RobustTrkMaxPtLL') + "*MeV)"
-            str_pardisp = "(BPVVD>" + _cut('RobustVtxPVDispLL') + ")"
-            str_parrdisp = "(BPVVDR>" + _cut('RobustVtxPVRDispLL') + ")"
+            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComRobTrkMaxPtLL') + "*MeV)"
+            str_pardisp = "(BPVVD>" + _cut('ComRobVtxPVDispLL') + ")"
+            str_parrdisp = "(BPVVDR>" + _cut('ComRobVtxPVRDispLL') + ")"
             parentcuts = str_parpt + "&" + str_pardisp + "&" + str_parrdisp
 
             combineTopoNBody = Hlt2Member( CombineParticles
@@ -273,10 +283,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # (Re)filter the post-track-fit input particles
         ###################################################################
-        str_allpt = "(PT>" + _cut('TFAllTrkPtLL') + "*MeV)"
-        str_allp  = "(P>" + _cut('TFAllTrkPLL') + "*MeV)"
-        str_allipchi2 = "(MIPCHI2DV(PRIMARY)>" + _cut('TFAllTrkPVIPChi2LL') + ")"
-        str_alltrkchi2 = "(TRCHI2DOF<" + _cut('TFAllTrkChi2UL') + ")"
+        str_allpt = "(PT>" + _cut('ComTFAllTrkPtLL') + "*MeV)"
+        str_allp  = "(P>" + _cut('ComTFAllTrkPLL') + "*MeV)"
+        str_allipchi2 = "(MIPCHI2DV(PRIMARY)>" + _cut('ComTFAllTrkPVIPChi2LL') + ")"
+        str_alltrkchi2 = "(TRCHI2DOF<" + _cut('ComTFAllTrkChi2UL') + ")"
         incuts = str_allpt + "&" + str_allp + "&" + str_allipchi2 + "&" + str_alltrkchi2
 
         filter = Hlt2Member( FilterDesktop
@@ -300,19 +310,19 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         def tfCombine(name, inputSeq, decayDesc) :
             # Construct a cut string for the combination.
-            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('TFPairMaxDocaUL') + ")"
+            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComTFPairMaxDocaUL') + ")"
             # Special case for the 2-body.  Use tighter doca requirement.
             if (name.find('TopoTF2Body') <> -1) :
-                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('TFPairMinDocaUL') + ")"
+                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComTFPairMinDocaUL') + ")"
             combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
             # Special case for the 4-body.  Use a mass lower limit to reduce
             #    combinatorics.  Must be at or below any client mass LL.
-            if (name.find('TopoTF4Body') <> -1) :
+            if (name.find('4Body') <> -1) :
                 combcuts = combcuts + "&(AM>1700*MeV)"
 
             # Construct a cut string for the vertexed combination.
-            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('TFTrkMaxPtLL') + "*MeV)"
-            str_pardisp = "(BPVVDCHI2>" + _cut('TFVtxPVDispChi2LL') + ")"
+            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComTFTrkMaxPtLL') + "*MeV)"
+            str_pardisp = "(BPVVDCHI2>" + _cut('ComTFVtxPVDispChi2LL') + ")"
             parentcuts = str_parpt + "&" + str_pardisp
 
             combineTopoNBody = Hlt2Member( CombineParticles
@@ -345,7 +355,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
 
         ###################################################################
-        # post-track-fit 3-body combinations
+        # post-track-fit 2-body combinations
         ###################################################################
         topoTF2Body = tfCombine(  name = 'TmpTopoTF2Body'
                                 , inputSeq = [ lclTFInputParticles ]
@@ -524,7 +534,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         line2Body = Hlt2Line('TopoTF2BodyCharmSignal'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [ charmRobustTopo2BodySeq, TopoTFInputParticles, topoTF2Body, filter ]
+                        , algos = [ charmRobustTopo2BodySeq, topoTF2Body, filter ]
                        )
         self.updateHltANNSvc('TopoTF2BodyCharmSignal')
 
@@ -574,7 +584,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         line3Body = Hlt2Line('TopoTF3BodyCharmSignal'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [ charmRobustTopo3BodySeq, TopoTFInputParticles, topoTF3Body, filter ]
+                        , algos = [ charmRobustTopo3BodySeq, topoTF3Body, filter ]
                        )
         self.updateHltANNSvc('TopoTF3BodyCharmSignal')
 
@@ -650,4 +660,167 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                    , Filter = { 'Code' :  "(M > 1700*MeV) & (M < 2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")" }
                   )
         self.updateHltANNSvc('TopoTF4BodyCharmWideMass')
+
+
+
+
+        ##
+        #
+        # DX inclusive lines
+        #
+        ##
+        from Hlt2SharedParticles.V0 import KsDDFit
+
+
+        ###################################################################
+        # Function to configure a robust filter for the inclusive DX.
+        # The argument inputSeq should be a bindMember sequences that
+        #   produces the particles to filter.
+        ###################################################################
+        def dxRobustFilter(inputSeq) :
+            filter = Hlt2Member( FilterDesktop
+                            , 'DXRobustFilter'
+                            , InputLocations = [inputSeq]
+                            , Code = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
+                               )
+            return filter
+
+        ###################################################################
+        # Construct a bindMember for the DX robust 3-body decision
+        ###################################################################
+        filter = dxRobustFilter(topo3Body)
+        dxRobust3BodySeq = bindMembers( 'DXRobust3BodyCop', [topo3Body, filter] )
+
+        ###################################################################
+        # Construct a bindMember for the DX robust 4-body decision
+        # Note that the original DX trigger had a different set of decay
+        #   descriptors that included
+        #   ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
+        # The default 4-body construction in topo4Body currently does not.
+        ###################################################################
+        filter = dxRobustFilter(topo4Body)
+        dxRobust4BodySeq = bindMembers( 'DXRobust4BodyCop', [topo4Body, filter] )
+
+
+        ###################################################################
+        # DX 2-body combinations with a Ks.
+        # This replaces the shared particles DXTF2BodyKsDD
+        # Performance of this must be checked.  The original DXTF2BodyKsDD
+        #   has no doca requirement.  This will default to the
+        #   ComRobPairMaxDocaUL cut.
+        ###################################################################
+        dxTF2BodyKsDD = tfCombine(  name = 'TmpDXTF2BodyKsDD'
+                                  , inputSeq = [ lclTFInputParticles, KsDDFit ]
+                                  , decayDesc = ["K*(892)0 -> KS0 pi+","K*(892)0 -> KS0 pi-","K*(892)0 -> KS0 K+","K*(892)0 -> KS0 K-"]
+                                  )
+
+        ###################################################################
+        # DX 3-body combinations with a Ks.
+        # This replaces the shared particles DXTF3BodyKsDD
+        ###################################################################
+        dxTF3BodyKsDD = tfCombine(  name = 'TmpDXTF3BodyKsDD'
+                                  , inputSeq = [ lclTFInputParticles, dxTF2BodyKsDD ]
+                                  , decayDesc = ["D*(2010)+ -> K*(892)0 pi+","D*(2010)+ -> K*(892)0 pi-","D*(2010)+ -> K*(892)0 K+","D*(2010)+ -> K*(892)0 K-"]
+                                  )
+
+
+        ###################################################################
+        # DX 4-body combinations with a Ks.
+        # In the original, the mass windows and the pointing cut were
+        #   applied in this CombineParticles.  I have implemented it here
+        #   in two stages, just for consistency among the reconstructions,
+        #   but if it is a problem, the additional cuts should be reintroduced
+        #   as a special case.
+        ###################################################################
+        dxTF4BodyKsDD = tfCombine(  name = 'TmpDXTF4BodyKsDD'
+                                  , inputSeq = [ lclTFInputParticles, dxTF3BodyKsDD ]
+                                  , decayDesc = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+","B0 -> K- D*(2010)+","B0 -> K+ D*(2010)+"]
+                                  )
+
+        ###################################################################
+        # Function to configure a post-track-fit filter for the topological.
+        # The argument inputSeq should be a bindMember sequences that
+        #   produces the particles to filter.
+        ###################################################################
+        def dxTFFilter(inputSeq) :
+            str_mass = "(M>2500*MeV) & (M<6000*MeV)"
+            str_point = "(BPVTRGPOINTINGWPT<" + _cut('DXTFPointUL') + ")"
+            filter = Hlt2Member( FilterDesktop
+                            , 'DXTFFilter'
+                            , InputLocations = [inputSeq]
+                            , Code = str_mass + "&" + str_point
+                               )
+            return filter
+
+
+        ###################################################################
+        # Construct a bindMember for the post-seeding DX 3-body
+        ###################################################################
+        filter = dxTFFilter(dxTF3BodyKsDD)
+        dxTF3BodyKsDDSeq = bindMembers( 'DXPostTF3BodyKsDD', [dxTF3BodyKsDD, filter] )
+
+        ###################################################################
+        # Construct a bindMember for the post-seeding DX 4-body
+        ###################################################################
+        filter = dxTFFilter(dxTF4BodyKsDD)
+        dxTF4BodyKsDDSeq = bindMembers( 'DXPostTF4BodyKsDD', [dxTF4BodyKsDD, filter] )
+
+
+        ###################################################################
+        # Construct a bindMember for the non-Ks 3-body
+        ###################################################################
+        filter = dxTFFilter(topoTF3Body)
+        dxTF3BodySeq = bindMembers( 'DXPostTF3Body', [topoTF3Body, filter] )
+
+        ###################################################################
+        # Construct a bindMember for the non-Ks 4-body
+        ###################################################################
+        filter = dxTFFilter(topoTF4Body)
+        dxTF4BodySeq = bindMembers( 'DXPostTF4Body', [topoTF4Body, filter] )
+
+
+
+
+        ###################################################################
+        #   The 3 body stuff it's 2 lines in total with coplanarity and w/wo ks
+        ###################################################################
+        lineDX = Hlt2Line('DX3BodyCopKsDD'
+                        , prescale = self.prescale
+                        , postscale = self.postscale
+                        , algos = [ dxRobust3BodySeq, dxTF3BodyKsDDSeq ]
+                        )
+        self.updateHltANNSvc('DX3BodyCopKsDD')
+
+
+        lineDX.clone( 'DX3BodyCopNoKs'
+                     , prescale = self.prescale
+                     , postscale = self.postscale
+                     , algos = [ dxRobust3BodySeq, dxTF3BodySeq ] )
+        self.updateHltANNSvc('DX3BodyCopNoKs')
+
+
+        ###########################################################
+        # The 4 body stuff it's 2 lines in total w/wo Ks #
+        ###########################################################
+
+        ##
+        # Combine after the Track Fitting, with and without ks
+        ##
+
+        ##
+        # 4 body lines. 2 lines in total w/wo ks
+        ##
+
+        lineDX.clone( 'DX4BodyCopKsDD'
+                     , prescale = self.prescale
+                     , postscale = self.postscale
+                     , algos = [ dxRobust4BodySeq, dxTF4BodyKsDDSeq ])
+        self.updateHltANNSvc('DX4BodyCopKsDD')
+
+        lineDX.clone( 'DX4BodyCopNoKs'
+                    , prescale = self.prescale
+                    , postscale = self.postscale
+                    , algos = [ dxRobust4BodySeq, dxTF4BodySeq ])
+        self.updateHltANNSvc('DX4BodyCopNoKs')
+
 

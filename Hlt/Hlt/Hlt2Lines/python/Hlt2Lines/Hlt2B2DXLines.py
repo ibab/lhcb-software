@@ -10,10 +10,6 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###
         #   DX inclusive lines
         ## 
-        ## TODO: Hlt2LinesDX.py should disappear, and its contents should appear _here_
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineDX.py" )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DX3BodyCopKsDDDecision" : 62000 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DX4BodyCopKsDDDecision" : 62010 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DX3BodyCopDecision" : 62020 } )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DX4BodyCopDecision" : 62030 } )
-
+        ## TODO: DX lines should appear here.  The are temporarily implemented
+        ##       in Hlt2TopologicalLines.py because they share some
+        ##       combinatorics.
