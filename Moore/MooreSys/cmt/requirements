@@ -10,10 +10,10 @@ branches doc cmt
 use  Moore                  v6r2    Hlt
 use  HltLuminosityMonitor   v1r2    Hlt
 
-### Temporarily here...
-use HltConf                 v3r1    Hlt
-use HltCommon               v5r7    Hlt
-use HltTCK                  v1r1    TCK
+### Temporarily here...TODO: increment by 1
+use HltConf                 v3r0    Hlt
+use HltCommon               v5r6    Hlt
+use HltTCK                  v1r0    TCK
 
 
 
