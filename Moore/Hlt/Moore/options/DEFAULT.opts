@@ -37,8 +37,8 @@ LHCBCOND.CacheHighLevel = 200;
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 //## TODO: adapt from
-//### @OnlineEnv.MooreVersion: Moore_v7r0
-HltConfigSvc.prefetchDir =  "MOORE_v7r0";
+//### @OnlineEnv.MooreVersion: Moore_v7r1
+HltConfigSvc.prefetchDir =  "MOORE_v7r1";
 HltConfigSvc.initialTCK =   "0x80450000";
 HltConfigSvc.checkOdin = false;
 ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
@@ -49,7 +49,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 /////////////////////////////////////
 
 ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MessageSvc.OutputLevel                 = @OnlineEnv.OutputLevel;
 MessageSvc.LoggerOnly                = true;
 ApplicationMgr.ExtSvc                += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";

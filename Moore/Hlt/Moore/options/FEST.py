@@ -22,7 +22,7 @@ Moore().Verbose = True
 Moore().ThresholdSettings = 'FEST'
 veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
        , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D'
-       , 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
+       , 'TES:Hlt/Track/Long', 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
        , 'TES:Hlt/Vertex/PV2D' 
        , 'TES:Hlt/Track/MuonSegmentForL0Single'
        , 'RZVeloBW'
@@ -40,5 +40,5 @@ Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 100000
 
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+Moore().DDDBtag   = "default"
+Moore().CondDBtag = "default"
