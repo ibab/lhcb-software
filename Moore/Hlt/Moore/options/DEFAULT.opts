@@ -36,6 +36,7 @@ LHCBCOND.DefaultTAG = "head-20090402";
 LHCBCOND.CacheHighLevel = 200;
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+MessageSvc.setError = ['RelationalDatabase'];
 //## TODO: adapt from
 //### @OnlineEnv.MooreVersion: Moore_v7r1
 HltConfigSvc.prefetchDir =  "MOORE_v7r1";
@@ -45,7 +46,19 @@ ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" 
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 //ApplicationMgr.HistogramPersistency = "ROOT";
 //HistogramPersistencySvc.OutputFile = "";
-ApplicationMgr.HistogramPersistency  = "NONE";
+//ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "";
+HistogramDataSvc.Input = ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"];
+VFSSvc.FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
+ParticlePropertySvc.ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
+LHCb::ParticlePropertySvc.ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
+
+
+
+
+
+
 /////////////////////////////////////
 
 ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
