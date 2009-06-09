@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.19 2009-03-27 11:11:18 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.20 2009-06-09 17:31:22 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -64,6 +64,10 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string passwd,
 // constructor for passing already existing session environment
 OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) :
   m_ownEnv(false) {
+  copyEnv(m);
+}
+
+void OnlineHistDBEnv::copyEnv(OnlineHistDBEnv &m) {
   m_envhp = m.m_envhp; m_errhp=m.m_errhp; m_svchp = m.m_svchp;
   m_user=m.m_user;
   m_debug = m.debug(); m_excLevel = m.excLevel();
@@ -83,6 +87,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(OnlineHistDBEnv &m) :
   m_savesetsRoot = m.m_savesetsRoot;
   initOCIBinds();
 }
+
 
 // dummy constructor for no-DB operation
 OnlineHistDBEnv::OnlineHistDBEnv()

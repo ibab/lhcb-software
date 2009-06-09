@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v5r2
+version             v5r3
 
 branches            cmt doc src OnlineHistDB sql www main
 use GaudiPolicy    v*

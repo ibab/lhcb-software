@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.3 2009-05-12 07:44:25 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.4 2009-06-09 17:31:16 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -81,6 +81,7 @@ public:
       return (AnaName == m_ananame);
   }
   inline bool isAbort() {return m_isAbort;}
+  void updateEnv(OnlineHistDB* newSession);
 
 private:
   OnlineHistDB* m_dbsession;

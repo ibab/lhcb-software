@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.10 2009-05-12 07:44:25 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.11 2009-06-09 17:31:22 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -231,4 +231,11 @@ void OMAMessage::dump(std::ostream *out) {
   *out << m_msgtext<<std::endl;
   *out << "----------------------------------------------------------------------"<<std::endl<<std::endl;
 
+}
+
+void OMAMessage::updateEnv(OnlineHistDB* newSession) {
+  if (newSession) {
+    m_dbsession = newSession;
+    copyEnv(*newSession);
+  }
 }
