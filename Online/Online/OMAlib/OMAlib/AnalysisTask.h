@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.11 2009-03-27 14:06:33 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.12 2009-06-09 17:34:10 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -24,8 +24,11 @@ public:
   virtual StatusCode execute();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+  /// performs the analysis on the ROOT file in path Saveset for the given Task
   virtual StatusCode analyze(std::string& SaveSet,
                              std::string Task);
+  /// opens DB session
+  void openDBSession();
 
 protected:
   bool m_useDB;

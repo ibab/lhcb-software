@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.17 2009-06-09 14:32:20 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.18 2009-06-09 17:34:10 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -16,7 +16,8 @@ using namespace std;
 // constructor to be used if already connected to HistDB (use NULL for not using HistDB)
 OMAlib::OMAlib(OnlineHistDB* HistDB, 
                std::string Name) : 
-  OMAcommon(HistDB, Name) { 
+  OMAcommon(HistDB, Name), m_listSynced(false)
+{ 
   m_localDBsession=false;
   checkWritePermissions();
   doFitFuncList();
@@ -28,7 +29,8 @@ OMAlib::OMAlib(std::string DBpasswd,
                std::string DBuser , 
                std::string DB,
                std::string Name) : 
-  OMAcommon(new OnlineHistDB(DBpasswd , DBuser, DB), Name) {
+  OMAcommon(new OnlineHistDB(DBpasswd , DBuser, DB), Name), m_listSynced(false)
+{
   checkWritePermissions();
   if(m_histDB) 
     m_localDBsession=true;
@@ -39,7 +41,8 @@ OMAlib::OMAlib(std::string DBpasswd,
 
 // constructor with a new default (read-only) DB session
 OMAlib::OMAlib(std::string Name) : 
-  OMAcommon(new OnlineHistDB(), Name) {
+  OMAcommon(new OnlineHistDB(), Name), m_listSynced(false)
+{
   if(m_histDB) m_localDBsession=true;
   checkWritePermissions();
   doFitFuncList();
@@ -58,8 +61,13 @@ void OMAlib::openDBSession(std::string DBpasswd,
   if(m_histDB) {
     m_localDBsession=true;
     checkWritePermissions();
-    loadMessages();
-    if (m_histDB->canwrite())
+    if (false == m_msgInit) {
+      loadMessages();
+    }
+    else {
+      updateMessages();
+    }
+    if (m_histDB->canwrite() && false == m_listSynced)
       syncList();
   }
 }
@@ -70,6 +78,7 @@ void OMAlib::closeDBSession(bool commit) {
       m_histDB->commit();
     delete m_histDB;
     m_histDB = NULL;
+    m_localDBsession = false;
   }
 }
 
@@ -200,7 +209,7 @@ void OMAlib::doAlgList() {
   m_algorithms["Scale"] = new OMAScale(Env);
 
   if (m_histDB) {
-    if (m_histDB->canwrite())
+    if (m_histDB->canwrite() && false == m_listSynced)
       syncList();
   }
 }
@@ -292,6 +301,7 @@ void OMAlib::syncList() {
         m_histDB->commit();
       }
     }
+    m_listSynced = true;
   }
 }
 

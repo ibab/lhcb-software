@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.12 2009-06-09 14:32:20 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.13 2009-06-09 17:34:10 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -50,6 +50,7 @@ public:
 protected:
   void checkWritePermissions();
   void loadMessages();
+  void updateMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
   std::string m_anaTaskname;
   std::string m_savesetName;
@@ -57,7 +58,7 @@ protected:
   std::string m_anaName;
   int m_anaid;
   OnlineHistDB* m_histDB;
-
+  bool m_msgInit;
 private:
   bool raiseAlarm(OMAMessage& message);
   bool lowerAlarm(OMAMessage& message);

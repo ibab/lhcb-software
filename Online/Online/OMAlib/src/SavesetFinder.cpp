@@ -1,4 +1,4 @@
-// $Id: SavesetFinder.cpp,v 1.8 2009-06-09 14:32:20 ggiacomo Exp $
+// $Id: SavesetFinder.cpp,v 1.9 2009-06-09 17:34:10 ggiacomo Exp $
 
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/AnalysisTask.h"
@@ -18,6 +18,7 @@ void SavesetFinder::infoHandler() {
   if( saveset.find("SAVESETLOCATION") == std::string::npos &&
       saveset.find("Zombie") == std::string::npos) {
     if (saveset.size() >0  && saveset != m_lastSaveset) {
+      m_analysis->openDBSession();
       m_analysis->info() << "calling analyze for task "<<m_taskname <<
         " on saveset "<<saveset << endreq;
       m_analysis->resetMessages(m_taskname);

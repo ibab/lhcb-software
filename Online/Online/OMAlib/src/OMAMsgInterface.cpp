@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.15 2009-04-14 10:42:42 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.16 2009-06-09 17:34:10 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -12,7 +12,7 @@
 OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
                                   std::string Name) : 
   m_anaTaskname(Name), m_savesetName("") , m_taskname(""), 
-  m_anaName(""), m_anaid(0), m_histDB(HistDB), m_outs(NULL)
+  m_anaName(""), m_anaid(0), m_histDB(HistDB), m_msgInit(false), m_outs(NULL)
 {
   m_MessageStore.clear();
   if(m_histDB) 
@@ -55,6 +55,16 @@ void OMAMsgInterface::loadMessages() {
       else {
         delete lmsg;
       }
+    }
+    m_msgInit = true;
+  }
+}
+
+void OMAMsgInterface::updateMessages() {
+  if(m_histDB && "noMessage" != m_anaTaskname) {
+    std::vector<OMAMessage*>::iterator iM;
+    for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
+      (*iM)->updateEnv(m_histDB);
     }
   }
 }
@@ -130,9 +140,11 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
     m_MessageStore.push_back( msg );
   }
   if (msg) {
-    if(m_histDB->canwrite())
-      msg->store();
-    m_histDB->commit();
+    if (m_histDB) {
+      if(m_histDB->canwrite())
+        msg->store();
+      m_histDB->commit();
+    }
   }
   if (msg && send ) {
     raiseAlarm( (*msg) );

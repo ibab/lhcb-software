@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.15 2009-06-09 14:32:20 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.16 2009-06-09 17:34:10 ggiacomo Exp $
 
 
 // from Gaudi
@@ -51,8 +51,7 @@ StatusCode AnalysisTask::initialize() {
   m_anaTaskname = m_anaTaskname+"_"+m_partition;
 
   // use HistDB if requested
-  if(m_useDB)
-    openDBSession( m_DBpw, m_DBuser, m_DB );
+  openDBSession();
 
   if( "default" != m_myRefRoot) 
     setRefRoot(m_myRefRoot);
@@ -92,13 +91,15 @@ StatusCode AnalysisTask::initialize() {
   return StatusCode::SUCCESS;
 }
 
+void AnalysisTask::openDBSession() {
+  if(m_useDB && NULL == m_histDB)
+    OMAlib::openDBSession( m_DBpw, m_DBuser, m_DB );
+}
 
 StatusCode AnalysisTask::analyze(std::string& SaveSet,
                                  std::string Task) {
   m_savesetName=SaveSet;
   m_taskname=Task;
-  if(m_useDB && NULL == m_histDB)
-    openDBSession( m_DBpw, m_DBuser, m_DB );
 
   return StatusCode::SUCCESS;
 }

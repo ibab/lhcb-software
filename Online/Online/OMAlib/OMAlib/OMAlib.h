@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.11 2009-06-09 14:32:20 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.12 2009-06-09 17:34:10 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -53,5 +53,6 @@ class OMAlib : public OMAcommon
   void syncList();
   bool m_localDBsession;
   std::map<std::string, OMAalg*> m_algorithms;
+  bool m_listSynced;
 };
 #endif // OMALIB_OMALIB_H
