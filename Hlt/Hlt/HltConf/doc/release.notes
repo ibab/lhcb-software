@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.252 2009-06-04 13:36:05 graven Exp $ 
+! $Id: release.notes,v 1.253 2009-06-09 11:17:29 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-09 - Chris Jones
+ - Turn off trackless ring finding in RICH HLT reconstruction (Hlt2Rich.py)
+
 !2009-06-04 - Gerhard Raven
  - if HltType == PA, strip down HltEndSequence to the minimum
 
