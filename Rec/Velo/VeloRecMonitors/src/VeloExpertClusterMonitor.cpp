@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.8 2009-06-06 12:00:10 hennessy Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.9 2009-06-09 13:06:30 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -23,14 +23,6 @@
 #include "boost/format.hpp"
 #include <fstream>
 #include <cmath>
-
-// Hack due to compiler dependence of snprintf. To be fixed!
-#ifdef _WIN32
-#define SNPRINTF _snprintf
-#else
-#define SNPRINTF snprintf
-#endif
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloExpertClusterMonitor
 //
@@ -107,7 +99,6 @@ StatusCode Velo::VeloExpertClusterMonitor::execute() {
 StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
   
   debug() << " ==> plotClusters " << endmsg;
-  //  LHCb::Tracks* tracks=get<LHCb::Tracks>("Rec/Track/Velo");
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
     debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
@@ -133,7 +124,7 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
   LHCb::VeloClusters::const_iterator itClusters ;
 
   
-  char dirName[100];
+  std::string dirName;
 //   //=========================
 //   //loop for the raw clusters
 //   //=========================
@@ -152,13 +143,17 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
       unsigned int zone = (m_veloDet->sensor(cluster->channelID().sensor())->zoneOfStrip(cluster->channelID().strip()));  
       if(idfilter.isRType() && (m_RZones||m_Expert)){
         debug() << "\t-> is r type" << endmsg;
-        SNPRINTF(dirName, 99, "raw/non_corr/r_zone_%03d",zone );   
+        boost::format fmtEvt ( "raw/non_corr/r_zone_%03d" ) ;
+        fmtEvt % zone ;
+        dirName = fmtEvt.str() ;
         debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
       else if (idfilter.isPhiType() && (m_PhiZones||m_Expert)){
         debug() << "\t-> is phi type" << endmsg;
-        SNPRINTF(dirName, 99, "raw/non_corr/phi_zone_%03d",zone );   
+        boost::format fmtEvt ( "raw/non_corr/phi_zone_%03d" ) ;
+        fmtEvt % zone ;
+        dirName = fmtEvt.str() ;
         debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
@@ -193,7 +188,6 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
 	  continue;
 	}
         LHCb::VeloChannelID idfilter = cluster->channelID();
-        //        std::cout<<"\n\t the new lhcb channel id is: "<< idfilter.sensor()<<" ";
         int zone = (m_veloDet->sensor(cluster->channelID().sensor())->zoneOfStrip(cluster->channelID().strip()));  
         if(idfilter.isRType()&& (m_Matching||m_Expert)){
           // add loop over track to get the relevent phi sensor cluster
@@ -210,8 +204,6 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
             unsigned int rsenNo = r_to_match->sensorNumber();
             debug() << "\t==> R sensor found to then match to: "<< rsenNo << endmsg;            
             if (phisenNo== init_sensor ){
-              //  std::cout<< "\tThis is a matched track\n";
-              
             }
           }
         }
@@ -219,11 +211,15 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
         plot1D(prap,"ontrack/pseudoRap_plot", "pseudorapidity",0,6.2,100);
         
         if(idfilter.isRType() && (m_RZones||m_Expert)){
-          SNPRINTF(dirName, 99, "ontrack/r_zone_%03d",zone );   
+          boost::format fmtEvt ( "ontrack/r_zone_%03d" ) ;
+          fmtEvt % zone ;
+          dirName = fmtEvt.str() ;
           plotCluster(cluster,dirName,theta,prap);
         }
         else if (idfilter.isPhiType()&& (m_PhiZones||m_Expert)){
-          SNPRINTF(dirName, 99, "ontrack/phi_zone_%03d",zone );   
+          boost::format fmtEvt ( "ontrack/phi_zone_%03d" ) ;
+          fmtEvt % zone ;
+          dirName = fmtEvt.str() ;
           plotCluster(cluster,dirName,theta,prap);
         }
         if (m_Expert){
@@ -273,9 +269,10 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
     plot1D(phi, ClusterType+"/phi", "Phi of Clusters", -4, 4, 50);
   }
   corr_clsize =  clsize*cos(theta);
-  //if (theta != -400.){
+  if (theta != -400.){
     plot1D(theta, ClusterType+"/theta_plot", "Theta(r)", 0, 0.52, 100);
-
+  }
+  
     if(prap!=-400.){
       // rapidity goes from ~1.3 to ~6
       //--------------------------------------------------------------------------------
@@ -290,18 +287,19 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
           double min_rap = 1.1+(step*(i));
           std::string rapName;
           std::string corr_rapName;
-
-          char rapname[100];
-          char corr_rapname[100];
+          std::string rapname;
+          std::string corr_rapname;
           if(prap<max_rap && prap>min_rap){
-            SNPRINTF(rapname,99,"/non_corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
-            rapName = (rapname);
-            plotSensorsADC(adc,rapName,ClusterType,clsens);
-            plotSensorsSize(clsize,rapName,ClusterType,clsens);
-            SNPRINTF(corr_rapname,99,"/corr/rapid/adc_cluster_rap_max_%03f", max_rap);    
-            corr_rapName = (corr_rapname);
-            plotSensorsADC(corr_adc,corr_rapName,ClusterType,clsens);
-            plotSensorsSize(corr_clsize,corr_rapName,ClusterType,clsens);
+            boost::format fmtEvt ( "/non_corr/rapid/adc_cluster_rap_max_%03d" ) ;
+            fmtEvt % max_rap ;
+            rapname = fmtEvt.str() ;
+            plotSensorsADC(adc,rapname,ClusterType,clsens);
+            plotSensorsSize(clsize,rapname,ClusterType,clsens);
+            boost::format fmtCorr ( "/corr/rapid/adc_cluster_rap_max_%03d" ) ;
+            fmtCorr % max_rap ;
+            corr_rapname = fmtCorr.str() ;
+            plotSensorsADC(corr_adc,corr_rapname,ClusterType,clsens);
+            plotSensorsSize(corr_clsize,corr_rapname,ClusterType,clsens);
           }
         }
       }
@@ -315,7 +313,6 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
       if(theta!=-400.){
         plotRPhiRange(cluster,idtemp,corr_adc,"/corr",corr_clsize,ClusterType,theta);
       }
-      
     }
     debug() << "\t ->plot adc and size for all" << endmsg;
     plotSensorsADC(adc,"/non_corr",ClusterType,clsens);
@@ -325,7 +322,6 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
       plotSensorsSize(corr_clsize,"/corr",ClusterType,clsens);
     }
     if (m_Expert||m_ThetaRange){
-      
       double theta_min = 0.;//lower rapidity range
       double theta_max = 0.52;
       double step = (theta_max-theta_min)/m_i_max;
@@ -333,19 +329,19 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
         double max_theta_range = (step*(i+1));
         double min_theta_range = (step*(i));
         std::string theta_rangeName;
-        char theta_range[100];
         std::string theta_corr_rangeName;
-        char theta_corr_range[100];
         if(theta<max_theta_range && theta>min_theta_range){
-          SNPRINTF(theta_range,99,"/non_corr/theta/adc_theta_max_%03f", max_theta_range);    
-          theta_rangeName = (theta_range);
+          boost::format fmtEvt ( "/non_corr/theta/adc_theta_max_%03d" ) ;
+          fmtEvt % max_theta_range ;
+          const std::string theta_rangeName = fmtEvt.str() ;
           //-----------------------------------------------------------------------
           //plots the noncorrected adc and size for different theta range
           //-----------------------------------------------------------------------
           plotSensorsADC(adc,theta_rangeName,ClusterType,clsens);
           plotSensorsSize(clsize,theta_rangeName,ClusterType,clsens);
-          SNPRINTF(theta_corr_range,99,"/corr/theta/adc_theta_max_%03f", max_theta_range);    
-          theta_corr_rangeName = (theta_corr_range);
+          boost::format fmtCorr ( "/corr/theta/adc_theta_max_%03d" ) ;
+          fmtCorr % max_theta_range ;
+          const std::string theta_corr_rangeName = fmtCorr.str() ;
           //-----------------------------------------------------------------------
           //plots the corrected adc and size for different theta range
           //-----------------------------------------------------------------------
@@ -371,11 +367,12 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
 //============================================================================
 // plot r & phi ranges.
 //============================================================================
-StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* cluster,LHCb::VeloChannelID idtemp,
-                                      double adc, std::string path,double clsize,std::string ClusterType, double theta){
+StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* cluster,
+                                                          LHCb::VeloChannelID idtemp,
+                                                          double adc, std::string path,
+                                                          double clsize,std::string ClusterType,
+                                                          double theta){
   debug() << "\t ->plotRPhiRang function" << endmsg;
-  
-  char senName[100];
   int clsens = idtemp.sensor();
   int clstr = idtemp.strip();
   int rsensnum = 0;
@@ -386,26 +383,26 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
   corr_clsize =  clsize*cos(theta);
   if(idtemp.isRType()&&(m_RRange||m_BothRange || m_Expert)) {
     debug() << "\t\t ->rtype sensor" << endmsg;
-    
     const DeVeloRType *rsens = m_veloDet->rSensor(clsens);
     rsensnum = clsens;
-    SNPRINTF(senName, 99, "adc_cluster_sen_%03d", clsens);
+    boost::format fmtEvt ( "adc_cluster_sen_%03d" ) ;
+    fmtEvt % clsens ;
+    const std::string senName = fmtEvt.str() ;
     double rad_step = 43/m_i_max;
     
     for(int i = 0;i<m_i_max;i++){
       debug() << "\t\t\t ->for loop of rad" << endmsg;
-      
       double max_radius = 7+((i+1)*rad_step);
       double min_radius = 7+(i*rad_step);
       std::string radiusName;
-      char radiusname[100];
       double r_strfr = cluster->interStripFraction();
       double radius = rsens->rOfStrip(clstr,r_strfr);
       
       if(radius<max_radius && radius>min_radius){
         debug() << "\t\t\t\t ->if in rad range" << endmsg;
-        
-        SNPRINTF(radiusname,99,"/r_range/adc_cluster_r_max_%03f", max_radius);
+        boost::format fmtEvt ( "/r_range/adc_cluster_r_max_%03d" ) ;
+        fmtEvt % max_radius ;
+        const std::string radiusname = fmtEvt.str() ;        
         radiusName = path + (radiusname);
         plotSensorsADC(adc,radiusName,ClusterType,clsens);
         plotSensorsSize(clsize,radiusName,ClusterType,clsens);
@@ -432,12 +429,14 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double max_phi = -Gaudi::Units::pi+phi_step*(i+1);
       double min_phi = -Gaudi::Units::pi+phi_step*(i);
       std::string phiName;
-      char phiname[100];
+      std::string phiname;
       double phi_strfr = cluster->interStripFraction();
       double phi = psens->idealPhi(clstr,phi_strfr);
       if(phi<max_phi && phi>min_phi){
         debug() << "\t\t\t ->in phi range" << endmsg;
-        SNPRINTF(phiname,99,"/phi_range/adc_cluster_phi_max_%03f", max_phi);    
+        boost::format fmtEvt ( "/phi_range/adc_cluster_phi_max_%03d" ) ;
+        fmtEvt % max_phi ;
+        phiname = fmtEvt.str() ;
         phiName = path +(phiname) ;
         plotSensorsADC(adc,phiName,ClusterType,clsens);
         plotSensorsSize(clsize,phiName,ClusterType,clsens);
@@ -460,8 +459,10 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
   debug() << "\t ->plotSensorsADC" << endmsg;
   plot1D(adc, ClusterType+corr+"/cluster_adc", "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
-    char senName[100];
-    SNPRINTF(senName, 99, "adc_cluster_sen_%03d", sensor_num);
+    std::string senName;
+    boost::format fmtEvt ( "adc_cluster_sen_%03d" ) ;
+    fmtEvt % sensor_num ;
+    senName = fmtEvt.str() ; 
     plot1D(adc, ClusterType+corr+"/adc/"+senName, "Cluster ADC ", 0, 100, 100);
   }
   return StatusCode::SUCCESS;
@@ -469,17 +470,17 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
 //============================================================================
 // plot all sensors size
 //============================================================================
-StatusCode
-Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
-                                                 std::string corr,
-                                                 std::string& ClusterType,
-                                                 int sensor_num ) {
+StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
+                                                            std::string corr,
+                                                            std::string& ClusterType,
+                                                            int sensor_num ) {
   debug() << "\t ->plotSensorSize" << endmsg;
-      
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
-    char senName[100];
-    SNPRINTF(senName, 99, "cluster_size%03d", sensor_num);
+    std::string senName;
+    boost::format fmtEvt ( "cluster_size%03d" ) ;
+    fmtEvt % sensor_num ;
+    senName = fmtEvt.str() ; 
     plot1D(clsize, ClusterType+corr+"/clsize/"+senName, "Cluster Size ", -0.5, 9.5, 10);
   }
   return StatusCode::SUCCESS;
@@ -487,17 +488,17 @@ Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
 //============================================================================
 // seperate angular plots
 //============================================================================
-StatusCode
-Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
-                                            std::string& range,
-                                            std::string& ClusterType,
-                                            //double theta,
-                                            int sensor_num ) {
+StatusCode Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
+                                                       std::string& range,
+                                                       std::string& ClusterType,
+                                                       int sensor_num ) {
   debug() << "\t -> plotAngles" << endmsg;
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
-    char senName[100];
-    SNPRINTF(senName, 99, "/adc_cluster_sen_%03d", sensor_num);
+    std::string senName;
+    boost::format fmtEvt ( "/adc_cluster_sen_%03d" ) ;
+    fmtEvt % sensor_num ;
+    senName = fmtEvt.str() ; 
     plot1D(adc, ClusterType+range+senName, "Cluster ADC ", 0, 100, 100);
   }
   return StatusCode::SUCCESS;
