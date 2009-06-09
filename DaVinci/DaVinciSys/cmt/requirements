@@ -9,7 +9,7 @@ branches doc cmt
 use  DaVinci                 	v23r1   Phys  
 
 # temporary patch package
-use PhysDict v4r0 Phys
+#use PhysDict v4r0 Phys
 
 alias DaVinciTests "cmt qmtest_run"
 
