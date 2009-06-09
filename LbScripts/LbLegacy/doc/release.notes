@@ -1,7 +1,9 @@
 2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed strange behavior. Now --binary=value overwrites
-	the CMTCONFIG environment variable.
+	* python/LbLegacy/install_project.py: 
+	- fixed strange behavior. Now --binary=value overwrites the CMTCONFIG environment 
+	  variable.
+	- fixed the installation of the dbg tarballs.
 
 2009-06-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

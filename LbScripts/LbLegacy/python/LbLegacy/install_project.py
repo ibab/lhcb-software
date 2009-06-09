@@ -848,7 +848,8 @@ def getPackVer(file):
     # get the binary if any
     if file.find("LBSCRIPTS") == -1 :
         import LbConfiguration.Platform
-        for b in LbConfiguration.Platform.binary_list:
+        binary_list = LbConfiguration.Platform.binary_dbg_list + LbConfiguration.Platform.binary_opt_list
+        for b in binary_list:
             if file.find(b) != -1:
                 bin = b
                 if file.find('_'+b) != -1 :
