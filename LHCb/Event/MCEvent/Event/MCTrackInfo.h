@@ -1,4 +1,4 @@
-// $Id: MCTrackInfo.h,v 1.4 2009-04-24 14:27:15 mschille Exp $
+// $Id: MCTrackInfo.h,v 1.5 2009-06-09 06:07:44 cattanem Exp $
 #ifndef MCEVENT_MCTRACKINFO_H 
 #define MCEVENT_MCTRACKINFO_H 1
 
@@ -252,7 +252,7 @@ inline MCTrackInfo::MCTrackInfo(IDataProviderSvc* eventSvc,
     MsgStream msg( msgSvc, "MCTrackInfo" );
     msg << MSG::ERROR 
         << "*** Flag container " << LHCb::MCPropertyLocation::TrackInfo
-        << " not found." << endreq;
+        << " not found." << endmsg;
   }
   m_flags = flags;
 }

@@ -68,9 +68,10 @@
         init="0.0"
        />
        <method
-        desc="position time 4-vector @todo should be an XYZTPoint"
+        desc="position time 4-vector"
         name="position4vector"
-        type="Gaudi::XYZTPoint"
+        type="const Gaudi::XYZTPoint"
+        const="TRUE"
        >
        <code>return Gaudi::XYZTPoint(m_position.X(),m_position.Y(), m_position.Z(), m_time );</code>
        </method>
