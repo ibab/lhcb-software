@@ -15,7 +15,7 @@ from Configurables       import HltSelReportsMaker
 #Moore().generateConfig = True
 #Moore().configLabel = 'PA accept=1'
 
-Moore().HltType = 'PA+Hlt1+Hlt2'
+Moore().HltType = 'PA'
 Moore().Verbose = True
 
 # FEST specific options...
@@ -30,6 +30,7 @@ veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
 HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
 HltSelReportsMaker().DebugEventPeriod = 2000
 HltConf().LumiBankKillerAcceptFraction = 0.9999
+HltConf().HistogrammingLevel = 'Line'
 
 Moore().Simulation = True
 Moore().DataType   = '2008'
@@ -42,3 +43,5 @@ Moore().EvtMax = 100000
 
 Moore().DDDBtag   = "default"
 Moore().CondDBtag = "default"
+
+# Moore().RunOnline = True
