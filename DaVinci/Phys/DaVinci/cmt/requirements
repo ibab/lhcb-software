@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.415 2009-05-20 14:18:08 pkoppenb Exp $
+# $Id: requirements,v 1.416 2009-06-09 09:14:52 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -10,6 +10,8 @@ version           v23r1
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc job options python
+
+use B2Dilepton v* PhysSel
 
 # Set the default path for DaVinci options.
 set DAVINCIOPTS ${DAVINCIROOT}/options
