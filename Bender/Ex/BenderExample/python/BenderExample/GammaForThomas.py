@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: GammaForThomas.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: GammaForThomas.py,v 1.4 2009-06-09 11:05:24 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/GammaForThomas.py
 #  Simple module to test/verify MC-association for the photons
@@ -12,7 +12,7 @@ Simple module to test/verify MC-association for the photons
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -173,7 +173,6 @@ def configure() :
     EventSelector ( Input   = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.30 2009-05-14 17:55:00 ibelyaev Exp $
+! $Id: release.notes,v 1.31 2009-06-09 11:05:24 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -6,9 +6,15 @@
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
 
-! 2009-05-14 - Vanya BELYAEV
 
- - prepare for new release of Bender
+! 2009-06-09 - Vanya Belyaev
+ 
+ - python/BenderExample/Bs2PhiGamma.py, GammaForThomas.py
+     remove missing CASTOR file 
+
+ - cmt/requirements 
+
+    version incremet to v12r1 
  
 
 ! ====================== Ex/BenderExample v11r0 2009-03-04 ====================
