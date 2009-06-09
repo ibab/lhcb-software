@@ -3,7 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-09 - Marco Cattaneo
+ - Updated reference for improved Rich MC based trackless ring monitoring plots 
+
+! 2009-06-08 - Marco Cattaneo
+ - Minor cleanups in configurable
+
 ! 2009-06-05 - Marco Cattaneo
+ - Updated references for track checking change:
+   . In Best container, only Long tracks are checked
+
  - Updated references for improvements to Rich:
    . improvements to ring finding
    . fix in event sizes reported by decoding tools
