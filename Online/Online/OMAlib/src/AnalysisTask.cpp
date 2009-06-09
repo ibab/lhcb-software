@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.14 2009-03-27 14:06:34 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.15 2009-06-09 14:32:20 ggiacomo Exp $
 
 
 // from Gaudi
@@ -97,6 +97,9 @@ StatusCode AnalysisTask::analyze(std::string& SaveSet,
                                  std::string Task) {
   m_savesetName=SaveSet;
   m_taskname=Task;
+  if(m_useDB && NULL == m_histDB)
+    openDBSession( m_DBpw, m_DBuser, m_DB );
+
   return StatusCode::SUCCESS;
 }
 

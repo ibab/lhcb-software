@@ -1,4 +1,4 @@
-// $Id: SavesetFinder.cpp,v 1.7 2009-06-03 13:33:11 ggiacomo Exp $
+// $Id: SavesetFinder.cpp,v 1.8 2009-06-09 14:32:20 ggiacomo Exp $
 
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/AnalysisTask.h"
@@ -24,6 +24,7 @@ void SavesetFinder::infoHandler() {
       m_analysis->analyze( saveset, m_taskname );
       m_analysis->refreshMessageList(m_taskname);
       m_lastSaveset = saveset;
+      m_analysis->closeDBSession();
     }
   }
 }

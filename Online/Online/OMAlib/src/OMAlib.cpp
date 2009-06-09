@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.16 2009-04-02 10:27:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.17 2009-06-09 14:32:20 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -61,6 +61,15 @@ void OMAlib::openDBSession(std::string DBpasswd,
     loadMessages();
     if (m_histDB->canwrite())
       syncList();
+  }
+}
+
+void OMAlib::closeDBSession(bool commit) {
+  if(m_histDB) {
+    if (commit)
+      m_histDB->commit();
+    delete m_histDB;
+    m_histDB = NULL;
   }
 }
 

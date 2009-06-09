@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.10 2009-03-04 14:42:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.11 2009-06-09 14:32:20 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -31,6 +31,8 @@ class OMAlib : public OMAcommon
   void openDBSession(std::string DBpasswd, 
                      std::string DBuser , 
                      std::string DB);
+  /// close DB session
+  void closeDBSession(bool commit=true);
   /// retrieve algorithm from the known algorithm list
   inline OMAalg* getAlg(std::string &Name){    
     return m_algorithms[Name];}
