@@ -3,7 +3,8 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
-
+! 2009-06-09 - James Mylroie-Smith
+ - changed snprintf to strings in VeloExpertClutserMonitor
 ! 2009-06-07 - Kurt Rinnert
  - VeloClusterMonitor: changed active chip link plot to more straight forward
    binning.
