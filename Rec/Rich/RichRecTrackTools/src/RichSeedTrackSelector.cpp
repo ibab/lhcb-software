@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.3 2009-05-21 17:29:16 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.4 2009-06-10 16:12:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,8 +34,6 @@ SeedTrackSelector::SeedTrackSelector( const std::string& type,
                                       const IInterface* parent )
   : BaseTrackSelector ( type, name , parent )
 {
-  // interface
-  declareInterface<IBaseTrackSelector>(this);
   // job options
   //declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
   declareProperty( "MinSeedLikelihood", m_minSeedLL = boost::numeric::bounds<double>::lowest()  );

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.4 2009-06-10 13:29:44 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.5 2009-06-10 16:12:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -48,13 +48,8 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
   declareProperty( "MaxChi2Cut", m_maxChi2Cut  = 10  );
 
-  //declareProperty( "MinLikelihood",  m_minLL = boost::numeric::bounds<double>::lowest() );
   declareProperty( "MinLikelihood",  m_minLL = -100 );
   declareProperty( "MaxLikelihood",  m_maxLL = boost::numeric::bounds<double>::highest() );
-
-  declareProperty( "Charge",       m_chargeSel    = 0 );
-
-  declareProperty( "AcceptClones", m_acceptClones = false );
 
   declareProperty( "MinCloneDistCut", m_minCloneCut    = -1e10 );
   declareProperty( "MaxCloneDistCut", m_maxCloneCut    = boost::numeric::bounds<double>::highest() );
@@ -62,6 +57,9 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest() );
   declareProperty( "MaxGhostProbCut", m_maxGhostProb   = boost::numeric::bounds<double>::highest() );
 
+  declareProperty( "Charge",       m_chargeSel    = 0 );
+
+  declareProperty( "AcceptClones", m_acceptClones = false );
 }
 
 //=============================================================================

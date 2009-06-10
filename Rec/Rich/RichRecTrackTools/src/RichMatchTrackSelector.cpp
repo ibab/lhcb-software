@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.3 2009-06-10 13:29:44 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.4 2009-06-10 16:12:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,14 +34,13 @@ MatchTrackSelector::MatchTrackSelector( const std::string& type,
                                         const IInterface* parent )
   : BaseTrackSelector ( type, name , parent )
 {
-  // interface
-  declareInterface<IBaseTrackSelector>(this);
   // job options
-  //declareProperty( "MinMatchChi2", m_minMatchChi2 = 0   );
-  //declareProperty( "MaxMatchChi2", m_maxMatchChi2 = 200 );
   // Effectively disable these cuts, but keep the possibility to re-enable them later on.
-  declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  );
-  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  ); // was 0
+  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = boost::numeric::bounds<double>::highest() ); // was 200
+  // redefine default GhostProb cuts
+  setProperty( "MinGhostProbCut", boost::numeric::bounds<double>::lowest() );
+  setProperty( "MaxGhostProbCut", 0.99 );
 }
 
 //=============================================================================

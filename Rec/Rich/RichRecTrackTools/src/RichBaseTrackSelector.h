@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.3 2009-06-10 13:29:44 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.4 2009-06-10 16:12:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -120,7 +120,7 @@ namespace Rich
       /// Print the track selection
       virtual MsgStream & printSel( MsgStream & os ) const;
 
-    protected: // data
+    private: // data
 
       double m_minChi2Cut; ///< Min chi^2 cut
       double m_maxChi2Cut; ///< Max chi^2 cut

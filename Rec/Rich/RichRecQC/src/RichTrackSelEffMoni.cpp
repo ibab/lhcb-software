@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.4 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.5 2009-06-10 16:15:01 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -76,9 +76,6 @@ StatusCode TrackSelEff::execute()
   }
   const LHCb::Tracks * trTracks = get<LHCb::Tracks>( m_trTracksLocation );
 
-  // Rich Histo ID
-  const RichHistoID hid;
-
   // Make sure all tracks and segments have been formed
   if ( trackCreator()->newTracks().isFailure() )
     return Error( "Problem creating RichRecTracks" );
@@ -87,6 +84,7 @@ StatusCode TrackSelEff::execute()
   const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
 
   // Loop over the raw tracks
+  unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0);
   for ( LHCb::Tracks::const_iterator iT = trTracks->begin();
         iT != trTracks->end(); ++iT )
   {
@@ -101,6 +99,8 @@ StatusCode TrackSelEff::execute()
     // Ghost ?
     const LHCb::MCParticle * mcP = m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight);
     const std::string tkClass = ( !mcTrackOK ? "All/" : mcP ? "Real/" : "Ghost/" );
+    if ( mcP ) { ++nReal; } else { ++nGhost; }
+    if ( rTrack ) { if ( mcP ) { ++nRealR; } else { ++nGhostR; } }
 
     // Efficiencies plots
     const double richEff = ( rTrack != NULL ? 100.0 : 0.0 );
@@ -124,6 +124,11 @@ StatusCode TrackSelEff::execute()
             tag+"GhostProb", "Track Ghost Probability", 0.0, 1.0, nBins1D() );
 
   } // loop over tracks
+
+  plot1D( nReal,  "nRealTracks",  "# Real (MC Matched) Tracks / Event",      -0.5, 200.5, 201 );
+  plot1D( nGhost, "nGhostTracks", "# Ghost (Not MC Matched) Tracks / Event", -0.5, 200.5, 201 );
+  plot1D( nRealR,  "nRealRichTracks",  "# Real (MC Matched) Rich Tracks / Event",      -0.5, 200.5, 201 );
+  plot1D( nGhostR, "nGhostRichTracks", "# Ghost (Not MC Matched) Rich Tracks / Event", -0.5, 200.5, 201 );
 
   return StatusCode::SUCCESS;
 }

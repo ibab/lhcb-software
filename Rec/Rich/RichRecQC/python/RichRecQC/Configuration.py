@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.33 2009-06-10 13:26:48 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.34 2009-06-10 16:15:01 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -73,16 +73,19 @@ class RichRecQCConf(RichConfigurableUser):
             mon.addTool( RichTools().trackSelector(nickname="TrackSelector",private=True) )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
         if typeSelOnly :
+            bigvalue = 1e+30
             mon.TrackSelector.MinPCut    = 0
-            mon.TrackSelector.MaxPCut    = 9e30
+            mon.TrackSelector.MaxPCut    = bigvalue
             mon.TrackSelector.MinPtCut   = 0
-            mon.TrackSelector.MaxPtCut   = 9e30
+            mon.TrackSelector.MaxPtCut   = bigvalue
             mon.TrackSelector.MinChi2Cut = 0
-            mon.TrackSelector.MaxChi2Cut = 9e30
-            mon.TrackSelector.MinLikelihood = -9e30
-            mon.TrackSelector.MaxLikelihood =  9e30
-            mon.TrackSelector.MinCloneDistCut = -9e30
-            mon.TrackSelector.MaxCloneDistCut =  9e30
+            mon.TrackSelector.MaxChi2Cut = bigvalue
+            mon.TrackSelector.MinLikelihood   = -bigvalue
+            mon.TrackSelector.MaxLikelihood   =  bigvalue
+            mon.TrackSelector.MinCloneDistCut = -bigvalue
+            mon.TrackSelector.MaxCloneDistCut =  bigvalue
+            mon.TrackSelector.MinGhostProbCut = -bigvalue
+            mon.TrackSelector.MaxGhostProbCut =  bigvalue
             mon.TrackSelector.AcceptClones    = True
         return mon
 
