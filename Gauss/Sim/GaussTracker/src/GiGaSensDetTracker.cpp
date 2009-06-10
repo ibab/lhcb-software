@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetTracker.cpp,v 1.13 2008-05-07 07:05:44 gcorti Exp $
+// $Id: GiGaSensDetTracker.cpp,v 1.14 2009-06-10 16:57:25 gcorti Exp $
 // Include files 
 
 // from CLHEP
@@ -37,8 +37,8 @@ DECLARE_TOOL_FACTORY( GiGaSensDetTracker );
 GiGaSensDetTracker::GiGaSensDetTracker( const std::string& type,
                                         const std::string& name,
                                         const IInterface*  parent ) 
-  : GiGaSensDetBase     ( type , name , parent ) 
-  , G4VSensitiveDetector( name  )
+  : G4VSensitiveDetector( name  )
+  , GiGaSensDetBase     ( type , name , parent ) 
 {  
 
   collectionName.insert( "Hits" );

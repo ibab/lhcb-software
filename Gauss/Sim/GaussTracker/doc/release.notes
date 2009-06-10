@@ -5,6 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2009-06-10 - Gloria CORTI
+ - Fix compilation warning of initialization list order mismatch with 
+   respect to constructor declaration order
+   . GiGaSensDetTracker.cpp
+
 !======================= GaussTracker v6r2 2009-04-06 ========================
 ! 2009-03-26 - Patrick Robbe
  - GetTrackerHitsAlg: add possibility to change location of MCParticles by
