@@ -4,6 +4,11 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+! 2009-06-10 - Juan PALACIOS
+ - dict/PhysDict.xml, dict/PhysDict.h
+  . Add dicitonary for vector<pair<string, HltDecReport>, which corresponds
+    to VectorMap<string, HltDecReport>'s on;y data member.
+
 !========================== PhysDict v4r0 2009-06-05 =======================
 
 ! 2009-06-04 - Juan PALACIOS
