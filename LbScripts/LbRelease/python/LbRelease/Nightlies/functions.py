@@ -47,9 +47,9 @@ def copyLocal(sourceDir, targetDir):
             commandLinux = 'mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -'
             commandWindows = '(if not exist '+targetDir + path+' mkdir '+ targetDir + path +')'+' '.join([' & ( if not exist '+targetDir+path+x+' copy '+sourceDir + path +x+' '+targetDir+path+' > NUL )' for x in files]) + ' & (cd '+cwd+')'
             if systemType == 'windows':
-                Lock(commandWindows,str(os.getpid()), path, commandLinux, splitCommand='&')
+                Lock(commandWindows,str(os.getpid()), commandLinux, splitCommand='&')
             else:
-                Lock(commandLinux,str(os.getpid()), path)
+                Lock(commandLinux,str(os.getpid()), commandLinux)
 
 def copySsh(sourceHost, sourceDir, targetDir):
     """ tar-pipe copying by SSH with locking from <sourceHost>:<sourceDir> to <targetDir>. Target directory is created if necessary. Procedure must be used on the target host. <sourceHost> must be accessible by SSH without password.
