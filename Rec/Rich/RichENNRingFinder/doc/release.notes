@@ -4,6 +4,10 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+! 2009-06-09 - Chris Jones
+ - Add the option to refit the rings, to get a better radius value before
+   converting to radians and storing in the output RichRecRing objects.
+
 ! 2009-06-03 - Chris Jones
  - Various technical improvements to first release.
 

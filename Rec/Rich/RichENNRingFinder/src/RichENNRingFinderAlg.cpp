@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.10 2009-06-03 08:52:59 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.11 2009-06-10 13:20:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -75,7 +75,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minRingPurity    = 0.8;
     m_rejectionFactor  = 0.5;
   }
-  else // Aerogel (Experimental .....)
+  else // Aerogel (Very Experimental .....)
   {
     m_scaleFactor      = 0.24/342.0;
     m_minAssProb       = 0.05;
@@ -102,6 +102,7 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
   declareProperty( "MinRingPurity",        m_minRingPurity   );
   declareProperty( "NoiseRejectionFactor", m_rejectionFactor );
   declareProperty( "BuildRingPoints",      m_buildRingPoints = true );
+  declareProperty( "RefitRings",           m_refitRings      = true );
   // Disable histograms by default
   setProduceHistos( false );
 }
@@ -292,8 +293,14 @@ StatusCode AlgBase<FINDER>::saveRings() const
       newRing->setCentrePointLocal ( centreLocal );
       newRing->setCentrePointGlobal( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
 
+      // get the radius on the detector plane
+      double radius = (*iRing).radius();
+
+      // refit the radius ?
+      if ( m_refitRings ) refit( newRing, radius );
+
       // ring radius
-      newRing->setRadius ( (*iRing).radius() * m_scaleFactor );
+      newRing->setRadius ( radius * m_scaleFactor );
 
       // build the ring points
       if ( m_buildRingPoints ) buildRingPoints ( newRing );
@@ -430,3 +437,23 @@ void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
     verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endmsg;
 }
 
+template < class FINDER >
+void AlgBase<FINDER>::refit( LHCb::RichRecRing * ring,
+                             double & radius ) const
+{
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "Radius refitting before = " << radius << " OK = ";
+
+  // make a fitter
+  FastRingFitter fitter(*ring);
+
+  // run the fit
+  fitter.fit();
+
+  // fit was OK so update radius
+  const bool refitOK = ( fitter.result().Status == 0 );
+  if ( refitOK ) radius = fitter.result().Radius;
+
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << refitOK << " after = " << radius << endmsg;
+}
