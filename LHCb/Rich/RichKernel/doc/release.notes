@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.218 2009-06-03 08:36:23 jonrob Exp $
+! $Id: release.notes,v 1.219 2009-06-10 13:13:00 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-06-10 - Chris Jones
+ - Add properties to all 'Histo' and 'Tuple' classes to set the number 
+   of histogram bins.
 
 ! 2009-06-03 - Chris Jones
  - Add an undefined setting to the Rich::DAQ::BankVersion enum
