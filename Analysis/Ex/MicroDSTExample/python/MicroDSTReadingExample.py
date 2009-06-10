@@ -14,6 +14,9 @@ aida2root = gbl.Gaudi.Utils.Aida2ROOT.aida2root
 GenPlotter = Functors.GenericPlotter
 import PartProp.Service
 #==============================================================================
+def safeFill(histo, value) :
+    if value != None : fill(histo, value)
+#==============================================================================
 def EventDataPlots(data, plotter) :
     if (data != None):
         for d in data:
@@ -176,16 +179,16 @@ while ( nextEvent() ) :
     nEvents+=1
     PVs = evtSvc[pvLocation]
     nPrimaryVertices += PVs.size()
-    fill( nPVPlot, PVs.size() )
+    safeFill( nPVPlot, PVs.size() )
     mcParts = evtSvc[mcParticlePath]
     if mcParts != None : nMCEvents += 1
     
-    for PV in PVs : fill(vertexZ, PV.position().z() )
+    for PV in PVs : safeFill(vertexZ, PV.position().z() )
     
     particles = evtSvc[particlePath]
     flavTags = evtSvc[flavTagPath]
     for tag in flavTags :
-        fill( omegaPlots[tag.category()], tag.omega() )
+        safeFill( omegaPlots[tag.category()], tag.omega() )
 
     if (particles!=None):
         nRecEvents+=1
@@ -204,25 +207,25 @@ while ( nextEvent() ) :
         Helpers.particleTreeLoop(particles, ptPlotter)
         Helpers.particleTreeLoop(particles, massPlotter)
         Helpers.particleTreeLoop(particles, massResPlotter)
-        Helpers.particleTreeLoop(particles, assocCounter)
+#        Helpers.particleTreeLoop(particles, assocCounter)
 
         tauFunc = Functors.PropTime(bestVertexFun, properTimeFitter)
         refitTauFunc = Functors.PropTime(refitBestVertexFun, properTimeFitter)
 
         for p in particles:
             stdVertex = bestVertexFun(p)
-            if stdVertex!=None : fill(bestVertexZ, stdVertex.position().z() )
+            if stdVertex!=None : safeFill(bestVertexZ, stdVertex.position().z() )
             stdPropTime = tauFunc(p)
-            fill(propTimePlot, stdPropTime)
+            safeFill(propTimePlot, stdPropTime)
             refitPropTime = refitTauFunc(p)
-            fill(refitPropTimePlot, refitPropTime)
+            safeFill(refitPropTimePlot, refitPropTime)
             assocMCPart = MCAssocFun(p)
             if (assocMCPart != None) :
                 MCPropTime = Helpers.properTimeMC(assocMCPart)
                 stdPropTimeRes = stdPropTime-MCPropTime
                 refitPropTimeRes = refitPropTime-MCPropTime
-                fill(propTimeResPlot, stdPropTimeRes)
-                fill(refitPropTimeResPlot, refitPropTimeRes)
+                safeFill(propTimeResPlot, stdPropTimeRes)
+                safeFill(refitPropTimeResPlot, refitPropTimeRes)
 
     
 print "Found MC info in ", nMCEvents, "/", nEvents, " events"
