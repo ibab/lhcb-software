@@ -1,5 +1,9 @@
 2009-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r1
+
+2009-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: added osc_vis massaging (replaces OpenScientist)
 
 2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -12,10 +16,6 @@
 2009-06-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: added the -y, --yes option in order to not ask for confirmation
-
-2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
-
-	* cmt/requirements: release of version v2r1
 
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
