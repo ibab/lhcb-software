@@ -1,16 +1,17 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.55 2009-06-10 10:03:50 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.56 2009-06-10 19:36:56 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
+from Configurables import HltConf
 from Configurables import HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
 from Configurables import GaudiSequencer
-from Configurables import HltConf, LHCbApp, L0Conf
+from Configurables import LHCbApp, L0Conf
 from Configurables import L0DUMultiConfigProvider
 from Configurables import LHCb__MDFWriter as MDFWriter
 # from HltConf.Configuration import *
@@ -57,18 +58,19 @@ class Moore(LHCbConfigurableUser):
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "CheckOdin"  :       False  # use TCK from ODIN
-        , "InitialTCK" :'0xFFFFFFFF'  # which configuration to use during initialize
+        , "InitialTCK" :'0x804a0000'  # which configuration to use during initialize
         , "prefetchConfigDir" :'MOORE_v7r1'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
-        , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
+        , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "Verbose" :          True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , "RunOnline" : False
+        , "TAE"       : False
         }   
                 
     def _configureOnline(self) :
@@ -84,17 +86,10 @@ class Moore(LHCbConfigurableUser):
         #MagneticFieldSvc().UseSetCurrent = True
         HistogramPersistencySvc().Warnings = False
         EventLoopMgr().Warnings = False
-        # configure services...
-        HistogramDataSvc().Input = ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"];
-        VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
-        ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
-        from Configurables import LHCb__ParticlePropertySvc
-        LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
         app=ApplicationMgr()
         from Configurables import UpdateAndReset
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
         ### TODO: if FEST partition, change DB setup???
-        ### TODO: if TAE, event type = 1 instead of 1...
         #mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','SEND'],True)
         mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],True)
         app.Runable = Online.evtRunable(mepMgr)
@@ -106,6 +101,9 @@ class Moore(LHCbConfigurableUser):
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
         eventSelector = Online.mbmSelector(input='EVENT')
+        ### TODO: if TAE, event type = 1 instead of 2... --> input = 'MEP'
+        if self.getProp('TAE') :
+            raise RunTimeError( 'TODO: update event type to 1 for TAE runs...'  )
         app.ExtSvc.append(eventSelector)
         Online.evtDataSvc()
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
@@ -171,7 +169,7 @@ class Moore(LHCbConfigurableUser):
         if method == 'sqlite' :
             from Configurables import ConfigDBAccessSvc
             return ConfigDBAccessSvc( Connection = 'sqlite_file:' + TCKData +'/db/config.db' )
-        if method == 'tar' :
+        if method == 'tarfile' :
             from Configurables import ConfigTarFileAccessSvc
             return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
 
@@ -226,6 +224,26 @@ class Moore(LHCbConfigurableUser):
             self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
             log.info("Will rerun L0")
 
+    def _config_with_hltconf(self):
+        hltConf = HltConf()
+        self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
+        print hltConf
+        log.info( hltConf )
+
+    def _config_with_tck(self):
+        if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
+        cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
+                          , initialTCK = self.getProp('InitialTCK')
+                          , checkOdin = self.getProp('CheckOdin')
+                          , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
+        # TODO: make sure we are the first one...
+        ApplicationMgr().ExtSvc.append(cfg.getFullName())
+        # configure services...
+        HistogramDataSvc().Input = ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"];
+        VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
+        ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
+        from Configurables import LHCb__ParticlePropertySvc
+        LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
@@ -236,7 +254,19 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
         if not self.getProp("RunOnline") : self._l0()
-        if self.getProp("RunOnline") : self.setProp('UseTCK',True)
+        if self.getProp("RunOnline") : 
+            import OnlineEnv as Online
+            self.setProp('UseTCK',True)
+            self.setProp('Simulation',False)
+            self.setProp('DataType','2009' )
+            # determine the partition we run in, and adapt settings accordingly...
+            if Online.PartitionName == 'FEST' or Online.PartitionName == 'LHCb' :
+                self.setProp('InitialTCK', Online.InitialTCK )
+                self.setProp('CheckOdin',True)
+            if Online.PartitionName == 'FEST' :
+                self.setProp('Simulation',True)
+
+
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
         # forward some settings... 
         app = LHCbApp()
@@ -253,19 +283,9 @@ class Moore(LHCbConfigurableUser):
         self._outputLevel()
         self._profile()
         if self.getProp('UseTCK') :
-            if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
-            cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
-                              , initialTCK = self.getProp('InitialTCK')
-                              , checkOdin = self.getProp('CheckOdin')
-                              , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
-            # TODO: make sure we are the first one...
-            ApplicationMgr().ExtSvc.append(cfg.getFullName())
-            HltConf().HltType = 'NONE'
+            self._config_with_tck()
         else:
-            hltConf = HltConf()
-            self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
-            print hltConf
-            log.info( hltConf )
+            self._config_with_hltconf()
             
         if self.getProp("RunOnline") :
             self._configureOnline()
