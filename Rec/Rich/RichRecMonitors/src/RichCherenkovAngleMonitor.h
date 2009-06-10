@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.13 2008-11-26 13:42:38 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.14 2009-06-10 13:23:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -98,12 +98,6 @@ namespace Rich
 
         /// Track selector
         const ITrackSelector * m_trSelector;
-
-        /// Number of bins for 1D histograms
-        unsigned int m_nBins1D;
-
-        /// Number of bins for 2D histograms
-        unsigned int m_nBins2D;
 
         /// Number of phi regions to use
         unsigned int m_nPhiRegions;

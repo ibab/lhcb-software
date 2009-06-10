@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : StereoPhotonFitTest
  *
- *  $Id: RichStereoPhotonFitTest.cpp,v 1.2 2008-05-08 13:18:27 jonrob Exp $
+ *  $Id: RichStereoPhotonFitTest.cpp,v 1.3 2009-06-10 13:23:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,7 +34,6 @@ StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
     m_ckRes             ( NULL ),
     m_richRecMCTruth    ( NULL )
 {
-  declareProperty( "NumberBins", m_nBins = 100 );
   declareProperty( "ChThetaRecHistoLimitMin",
                    m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
   declareProperty( "ChThetaRecHistoLimitMax",
@@ -152,27 +151,27 @@ StatusCode StereoPhotonFitTest::execute()
     }
 
     // some plots
-    plot1D( fitR.chi2, hid(rad,"fitChi2"), "Fit Chi^2", 0, 100, m_nBins );
-    plot1D( fitR.probChi2, hid(rad,"fitProbChi2"), "Fit Chi^2 Probability", 0, 1, m_nBins );
-    plot1D( fitR.ndof, hid(rad,"fitNDOF"), "Fit NDOF", 0, 100, m_nBins );
+    plot1D( fitR.chi2, hid(rad,"fitChi2"), "Fit Chi^2", 0, 100, nBins1D() );
+    plot1D( fitR.probChi2, hid(rad,"fitProbChi2"), "Fit Chi^2 Probability", 0, 1, nBins1D() );
+    plot1D( fitR.ndof, hid(rad,"fitNDOF"), "Fit NDOF", 0, 100, nBins1D() );
 
     plot1D( fitR.thcFit, hid(rad,"fittedCKtheta"), "Fitted CK theta : All photons",
-            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+            m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
     plot1D( fitR.thcFit-thetaExp, hid(rad,"fittedCKthetaRes"),
             "Fitted CK theta - expected CK theta : All photons",
-            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+            -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
     plot1D( fitR.thcFit-segAvgCKthetaMC, hid(rad,"fittedCKthetaResMC"),
             "Fitted CK theta - Average MC theta : All photons",
-            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+            -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
 
     plot1D( segAvgCKtheta, hid(rad,"avgCKtheta"), "Simple Avg. CK theta : All photons",
-            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+            m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
     plot1D( segAvgCKtheta-thetaExp, hid(rad,"avgCKthetaRes"),
             "Simple Avg. CK theta - expected CK theta : All photons",
-            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+            -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
     plot1D( segAvgCKtheta-segAvgCKthetaMC, hid(rad,"avgCKthetaResMC"),
             "Simple Avg. CK theta - Average MC theta : All photons",
-            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+            -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
 
 
   } // end segment loop

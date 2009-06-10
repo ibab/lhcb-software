@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.h,v 1.3 2008-01-25 13:27:00 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.h,v 1.4 2009-06-10 13:23:57 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -97,12 +97,6 @@ namespace Rich
 
         /// Flag to turn on/off the correction for refraction at aerogel C4F10 boundary
         bool m_refractCorr;
-
-        /// Number of bins for 1D histograms
-        unsigned int m_nBins1D;
-
-        /// Number of bins for 2D histograms
-        unsigned int m_nBins2D;
 
         /// Reject ambiguous photons ?
         bool m_rejectAmbigPhots;

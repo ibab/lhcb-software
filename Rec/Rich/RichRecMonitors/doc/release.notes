@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-10 - Chris Jones
+ - Adapt to new # Bin options in base classes
+
 !====================== RichRecMonitors v2r22 2009-03-10 =====================
 ! 2009-03-10 - Chris Jones
  - Miscellaneous minor improvements to the detailed MC monitors
