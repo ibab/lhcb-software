@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.12 2009-05-24 20:27:07 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.13 2009-06-10 13:29:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -301,6 +301,9 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
           // likelihood
           newTrack->setLikelihood( trTrack->info(LHCb::Track::Likelihood,0) );
+
+          // ghost prob
+          newTrack->setLikelihood( trTrack->info(LHCb::Track::GhostProbability,-1) );
 
           // Set parent information
           newTrack->setParentTrack( trTrack );

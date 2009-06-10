@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.2 2009-05-21 17:29:16 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.3 2009-06-10 13:29:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -103,8 +103,17 @@ namespace Rich
       /// Returns the charge selection
       virtual int chargeSel() const;
 
-      /// Returns the clone rejection cut
-      virtual double cloneCut() const;
+      /// Returns the minimum clone distance rejection cut
+      virtual double minCloneDistCut() const;
+
+      /// Returns the maximum clone distance rejection cut
+      virtual double maxCloneDistCut() const;
+
+      /// Returns the minimum ghost probaility cut
+      virtual double minGhostProbCut() const;
+
+      /// Returns the maximum ghost probaility cut
+      virtual double maxGhostProbCut() const;
 
     protected: // methods
 
@@ -129,7 +138,15 @@ namespace Rich
 
       bool m_acceptClones; ///< Accept or reject clone tracks
 
-      double m_cloneCut;   ///< Clone rejection cut
+      double m_minCloneCut;   ///< Clone rejection cut
+      double m_maxCloneCut;   ///< Clone rejection cut
+
+      double m_minGhostProb; ///< minimum ghost probability cut
+      double m_maxGhostProb; ///< maximum ghost probability cut
+
+      mutable bool m_ghostProbCutEnabled;
+      mutable bool m_cloneDistCutEnabled;
+      mutable bool m_likelihoodCutEnabled;
 
     };
 

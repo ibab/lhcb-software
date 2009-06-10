@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.3 2009-06-10 13:29:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -37,8 +37,11 @@ MatchTrackSelector::MatchTrackSelector( const std::string& type,
   // interface
   declareInterface<IBaseTrackSelector>(this);
   // job options
-  declareProperty( "MinMatchChi2", m_minMatchChi2 = 0   );
-  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = 200 );
+  //declareProperty( "MinMatchChi2", m_minMatchChi2 = 0   );
+  //declareProperty( "MaxMatchChi2", m_maxMatchChi2 = 200 );
+  // Effectively disable these cuts, but keep the possibility to re-enable them later on.
+  declareProperty( "MinMatchChi2", m_minMatchChi2 = boost::numeric::bounds<double>::lowest()  );
+  declareProperty( "MaxMatchChi2", m_maxMatchChi2 = boost::numeric::bounds<double>::highest() );
 }
 
 //=============================================================================
@@ -49,7 +52,13 @@ MatchTrackSelector::~MatchTrackSelector() {}
 MsgStream & MatchTrackSelector::printSel( MsgStream & os ) const
 {
   BaseTrackSelector::printSel(os);
-  os << boost::format( " : MatchChi2 = %|-4.2e|->%|-4.2e|" ) % m_minMatchChi2 % m_maxMatchChi2;
+  m_disabled = true;
+  if ( m_minMatchChi2 > boost::numeric::bounds<double>::lowest() ||
+       m_maxMatchChi2 < boost::numeric::bounds<double>::highest() )
+  {
+    m_disabled = false;
+    os << boost::format( " : MatchChi2 = %|-4.2e|->%|-4.2e|" ) % m_minMatchChi2 % m_maxMatchChi2;
+  }
   return os;
 }
 
@@ -61,23 +70,29 @@ MatchTrackSelector::trackSelected( const LHCb::Track * track ) const
   const bool baseOK = BaseTrackSelector::trackSelected(track);
   if (!baseOK ) return false;
 
-  if ( msgLevel(MSG::VERBOSE) )
+  // do we have any match track specific cuts to apply ?
+  if ( !m_disabled )
   {
-    verbose() << " -> Apply Match track specific criteria" << endreq;
-  }
 
-  // match chi2 cut
-  LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::MatchChi2 );
-  if ( i == track->extraInfo().end() )
-  {
-    Warning( "Match track does not have MatchChi2 info").ignore();
-    return false;
-  }
-  if ( i->second < m_minMatchChi2 || i->second > m_maxMatchChi2 )
-  {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track failed match chi2 cut" << endreq;
-    return false;
+    {
+      verbose() << " -> Apply Match track specific criteria" << endreq;
+    }
+
+    // match chi2 cut
+    LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::MatchChi2 );
+    if ( i == track->extraInfo().end() )
+    {
+      Warning( "Match track does not have MatchChi2 info").ignore();
+      return false;
+    }
+    if ( i->second < m_minMatchChi2 || i->second > m_maxMatchChi2 )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track failed match chi2 cut" << endreq;
+      return false;
+    }
+
   }
 
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
@@ -101,5 +116,3 @@ MatchTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 }
 
 //=============================================================================
-
-

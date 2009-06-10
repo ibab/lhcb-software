@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.h,v 1.2 2009-06-10 13:29:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -63,6 +63,8 @@ namespace Rich
 
       double m_minMatchChi2; ///< minimum match track matching chi^2
       double m_maxMatchChi2; ///< maximum match track matching chi^2
+
+      mutable bool m_disabled; ///< Is this tool effectively disabled ?
 
     };
 
