@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingMoni.h,v 1.3 2009-06-08 17:17:45 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.h,v 1.4 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -104,9 +104,6 @@ namespace Rich
 
         // Max fit variance
         std::vector<double> m_maxFitVariance;
-
-        /// Number of histogram bins
-        unsigned int m_nBins;
 
         /// MC association fraction for rings
         double m_mcAssocFrac;

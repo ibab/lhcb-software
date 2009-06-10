@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.45 2009-04-17 11:16:49 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.46 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -53,9 +53,6 @@ RecoQC::RecoQC( const std::string& name,
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "CKResHistoRange",
                    m_ckResRange = boost::assign::list_of(0.012)(0.006)(0.004) );
-
-  declareProperty( "NumberBins", m_nBins = 100 );
-
 }
 
 // Destructor
@@ -116,7 +113,7 @@ StatusCode RecoQC::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    const std::string& RAD = Rich::text(rad);
+    const std::string        RAD = Rich::text(rad);
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
@@ -127,7 +124,6 @@ StatusCode RecoQC::execute()
     {
       // True particle type
       mcType = richRecMCTool()->mcParticleType( segment );
-      //if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
       if ( Rich::Unknown  == mcType ) mcType = Rich::Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
     }
@@ -159,13 +155,13 @@ StatusCode RecoQC::execute()
         plot1D( fitR.thcFit-thetaExpTrue,
                 hid(rad,"ckResAllStereoRefit"),
                 RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit",
-                -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
         if ( isolated )
         { 
           plot1D( fitR.thcFit-thetaExpTrue,
                   hid(rad,"ckResAllStereoRefitIsolated"),
                   RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
-                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
         }
       }
     }
@@ -185,23 +181,23 @@ StatusCode RecoQC::execute()
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
 
       plot1D( thetaRec, hid(rad,"thetaRec"), RAD+" Reconstructed Ch Theta : All photons",
-              m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+              m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
       plot1D( phiRec, hid(rad,"phiRec"), RAD+" Reconstructed Ch Phi : All photons",
-              0.0, 2.0*Gaudi::Units::pi, m_nBins );
+              0.0, 2.0*Gaudi::Units::pi, nBins1D() );
       plot1D( thetaRec-thetaExpTrue,
               hid(rad,"ckResAll"), RAD+" Rec-Exp Cktheta : All photons",
-              -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+              -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
 
       // isolated segment ?
       if ( isolated )
       {
         plot1D( thetaRec, hid(rad,"thetaRecIsolated"), 
                 RAD+" Reconstructed Ch Theta : All photons : Isolated Tracks",
-                m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+                m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
         plot1D( thetaRec-thetaExpTrue,
                 hid(rad,"ckResAllIsolated"),
                 RAD+" Rec-Exp Cktheta : All photons : Isolated Tracks",
-                -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
       }
 
       if ( mcTrackOK && mcRICHOK )
@@ -215,13 +211,13 @@ StatusCode RecoQC::execute()
           // resolution plot
           plot1D( thetaRec-thetaExpTrue,
                   hid(rad,"ckResTrue"), RAD+" Rec-Exp Cktheta : MC true photons",
-                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
           if ( resExpTrue>0 )
           {
             // pull plot
             const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
             plot1D( ckPull, hid(rad,"ckPull"), 
-                    RAD+" (Rec-Exp)/Res Cktheta", -4, 4, m_nBins );
+                    RAD+" (Rec-Exp)/Res Cktheta", -4, 4, nBins1D() );
           }
         }
         else // fake photon
@@ -229,7 +225,7 @@ StatusCode RecoQC::execute()
           plot1D( thetaRec-thetaExpTrue,
                   hid(rad,"ckResFake"), 
                   RAD+" Rec-Exp Cktheta : MC fake photons",
-                  -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
         }
       } // MC is available
 

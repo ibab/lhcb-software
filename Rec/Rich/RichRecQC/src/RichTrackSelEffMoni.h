@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.h,v 1.2 2009-05-24 19:54:00 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.h,v 1.3 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -54,14 +54,17 @@ namespace Rich
   
       private: // data
 
-        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
-        const ITrackSelector * m_trSelector;  ///< Track selector
+        /// Pointer to RichRecMCTruthTool interface
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+
+        /// Track selector
+        const ITrackSelector * m_trSelector;
 
         /// Input location of Tracks in TES
         std::string m_trTracksLocation;
 
-        /// Number of histogram bins
-        unsigned int m_nBins;
+        /// MCParticle association weight
+        double m_mcAssocWeight;
 
       };
 

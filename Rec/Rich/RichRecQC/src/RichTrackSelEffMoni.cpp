@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.3 2009-06-05 10:47:11 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.4 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -39,7 +39,9 @@ TrackSelEff::TrackSelEff( const std::string& name,
     m_trTracksLocation = LHCb::TrackLocation::HltForward;
   }
   // JOs
-  declareProperty( "NumberBins", m_nBins = 50 );
+  declareProperty( "MCParticleAssocWeight", m_mcAssocWeight = 0.75 );
+  // reset defaults in base class
+  setProperty( "NBins1DHistos", 50 );
 }
 
 // Destructor
@@ -94,20 +96,35 @@ StatusCode TrackSelEff::execute()
     if ( !m_trSelector->trackSelected(*iT) ) continue;
 
     // Does this track have a RichRecTrack associated ?
-    //const LHCb::RichRecTrack * rTrack = trackCreator()->newTrack(*iT);
-    /** @todo figure out problem with track stats when using the above */
     const LHCb::RichRecTrack * rTrack = richTracks()->object((*iT)->key());
-    const double richEff = ( rTrack ? 100.0 : 0.0 );
 
     // Ghost ?
-    const std::string tkClass = ( !mcTrackOK ? "All/" :
-                                  (NULL == m_richRecMCTruth->mcParticle(*iT)) ? "Ghost/" : "Real/" );
+    const LHCb::MCParticle * mcP = m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight);
+    const std::string tkClass = ( !mcTrackOK ? "All/" : mcP ? "Real/" : "Ghost/" );
 
-    // Efficiencies versus momentum
-    profile1D( (*iT)->p(),  richEff, tkClass+"effVP",  "RICH Track Sel. Eff. V P",  1.00*GeV, 100.0*GeV, m_nBins );
-    profile1D( (*iT)->pt(), richEff, tkClass+"effVPt", "RICH Track Sel. Eff. V Pt", 0.10*GeV, 10.0*GeV, m_nBins );
+    // Efficiencies plots
+    const double richEff = ( rTrack != NULL ? 100.0 : 0.0 );
+    profile1D( (*iT)->p(),  richEff, tkClass+"effVP",  "RICH Track Sel. Eff. V P",  1.00*GeV, 100.0*GeV, nBins1D() );
+    profile1D( (*iT)->pt(), richEff, tkClass+"effVPt", "RICH Track Sel. Eff. V Pt", 0.10*GeV, 8.0*GeV,   nBins1D() );
+    profile1D( (*iT)->chi2PerDoF(), richEff, tkClass+"effVChi2PDOF",
+               "RICH Track Sel. Eff. V Chi^2 / D.O.F.", 0, 10, nBins1D() );
+    profile1D( (*iT)->info(LHCb::Track::Likelihood,0), richEff,
+               tkClass+"effVLikelihood", "RICH Track Sel. Eff. V Likelihood", -100, 0, nBins1D() );
+    profile1D( (*iT)->info(LHCb::Track::GhostProbability,999999), richEff,
+               tkClass+"effVGhostProb", "RICH Track Sel. Eff. V Ghost Probability", 0.0, 1.0, nBins1D() );
 
-  }
+    // plot selection variables
+    const std::string tag = ( rTrack != NULL ? tkClass+"Selected/" : tkClass+"Rejected/" );
+    plot1D( (*iT)->p(),  tag+"P",  "Track Momentum",            0*GeV, 100*GeV, nBins1D() );
+    plot1D( (*iT)->pt(), tag+"Pt", "Track Transverse Momentum", 0*GeV, 8*GeV,   nBins1D() );
+    plot1D( (*iT)->chi2PerDoF(), tag+"Chi2PDOF", "Track Chi^2 / D.O.F.", 0, 10, nBins1D() );
+    plot1D( (*iT)->info(LHCb::Track::Likelihood,0),
+            tag+"Likelihood", "Track Likelihood", -100, 0, nBins1D() );
+    plot1D( (*iT)->info(LHCb::Track::GhostProbability,-1),
+            tag+"GhostProb", "Track Ghost Probability", 0.0, 1.0, nBins1D() );
+
+  } // loop over tracks
 
   return StatusCode::SUCCESS;
 }
+

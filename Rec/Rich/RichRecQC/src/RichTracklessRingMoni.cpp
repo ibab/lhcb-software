@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.5 2009-06-08 17:17:44 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.6 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,19 +29,19 @@ TracklessRingMoni::TracklessRingMoni( const std::string& name,
     m_richRecMCTruth    ( NULL ),  
     m_ckAngle           ( NULL )
 {
-  declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings+"All" );
+  using namespace boost::assign;
+  declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::ENNRings+"All" );
   declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = boost::assign::list_of(0.1)(0.025)(0.02) );
+                   m_ckThetaMin = list_of(0.1)(0.025)(0.02) );
   declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = boost::assign::list_of(0.3)(0.06)(0.035) );
+                   m_ckThetaMax = list_of(0.3)(0.06)(0.035) );
   declareProperty( "RingRadiiHistoLimitMin",
-                   m_radiiMin = boost::assign::list_of(200.0)(20.0)(60.0) );
+                   m_radiiMin = list_of(200.0)(20.0)(60.0) );
   declareProperty( "RingRadiiHistoLimitMax",
-                   m_radiiMax = boost::assign::list_of(400.0)(100.0)(175.0) );
-  declareProperty( "NumberBins", m_nBins = 100 );
+                   m_radiiMax = list_of(400.0)(100.0)(175.0) );
   declareProperty( "MaxFitVariance",
-                   m_maxFitVariance = boost::assign::list_of(100)(100)(100) );
-  declareProperty("CKThetaRes", m_ckThetaRes = boost::assign::list_of(0.2)(0.0075)(0.0075) );
+                   m_maxFitVariance = list_of(100)(100)(100) );
+  declareProperty( "CKThetaRes", m_ckThetaRes = list_of(0.2)(0.0075)(0.0075) );
   declareProperty( "MCAssocFrac", m_mcAssocFrac = 0.75 );
 }
 
@@ -72,7 +72,8 @@ StatusCode TracklessRingMoni::execute()
   // Retrieve rings
   if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
   const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
-  debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endreq;
 
   // Rich Histo ID
   const RichHistoID hid;
@@ -86,7 +87,7 @@ StatusCode TracklessRingMoni::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = ring->radiator();
-    const std::string& RAD = Rich::text(rad);
+    const std::string        RAD = Rich::text(rad);
 
     // Ring knows if it is associated or not
     LHCb::RichRecSegment * nearestSeg = ring->richRecSegment();
@@ -100,21 +101,21 @@ StatusCode TracklessRingMoni::execute()
     if ( mcTrackOK )
     {
       // True particle
-      mcType = richRecMCTool()->mcParticleType(nearestSeg);
       segmentMCP = richRecMCTool()->mcParticle(nearestSeg);
-      hasTrackMC  = ( Rich::Unknown != mcType );
-      //if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      mcType     = richRecMCTool()->mcParticleType(nearestSeg);
+      hasTrackMC  = ( segmentMCP != NULL );
       if ( Rich::Unknown  == mcType ) mcType = Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly.
     }
 
+    // count rings per radiator
     ++ringsPerRad[rad];
 
     const double rRadius = ring->radius(); // Ring radius (rads)
 
     // radius plot
     plot1D( rRadius, hid(rad,"ringRadii"), RAD+" Trackless Ring Radii",
-            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+            m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
 
     // Expected CK theta for associated track
     const double avChTheta = ( hasTrackMC && nearestSeg ?
@@ -125,10 +126,10 @@ StatusCode TracklessRingMoni::execute()
       profile1D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadius"),
                  RAD+" Ring Radius versus expected CK theta",
                  m_ckThetaMin[rad], m_ckThetaMax[rad],
-                 m_nBins );
+                 nBins1D() );
       plot1D( rRadius-avChTheta, hid(rad,"ringRadVCKexpect"),
               RAD+" Ring radius - Expected track CK theta",
-              -m_ckThetaRes[rad], m_ckThetaRes[rad], m_nBins );
+              -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() );
     }
 
     // photon yield
@@ -154,10 +155,10 @@ StatusCode TracklessRingMoni::execute()
     {
       plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
-              m_radiiMin[rad], m_radiiMax[rad], m_nBins );
+              m_radiiMin[rad], m_radiiMax[rad], nBins1D() );
       //plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
       //        RAD+" Refitted Trackless Ring Variance",
-      //        0, m_maxFitVariance[rad], m_nBins );
+      //        0, m_maxFitVariance[rad], nBins1D() );
     }
 
     if ( richRecMCTool()->pixelMCHistoryAvailable() )
@@ -170,12 +171,12 @@ StatusCode TracklessRingMoni::execute()
         {
           plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefittedMCtrue"),
                   RAD+" Refitted Trackless Ring Radii (mm on HPD plane) : MCTrue Rings",
-                  m_radiiMin[rad], m_radiiMax[rad], m_nBins );
+                  m_radiiMin[rad], m_radiiMax[rad], nBins1D() );
         }
 
         // association fraction
         plot1D( mcinfo.associationFrac,
-                hid(rad,"mcAssocFrac"), RAD+" MC Association purity", m_mcAssocFrac, 1, m_nBins );
+                hid(rad,"mcAssocFrac"), RAD+" MC Association purity", m_mcAssocFrac, 1, nBins1D() );
 
         // Compare to MC segment expected values
         if ( hasTrackMC && nearestSeg && segmentMCP == mcinfo.mcParticle )
@@ -183,10 +184,10 @@ StatusCode TracklessRingMoni::execute()
           profile1D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadiusMCtrue"),
                      RAD+" Ring Radius versus expected CK theta : MCTrue Rings",
                      m_ckThetaMin[rad], m_ckThetaMax[rad],
-                     m_nBins );
+                     nBins1D() );
           plot1D( rRadius-avChTheta, hid(rad,"ringRadVCKexpectMCtrue"),
                   RAD+" Ring radius - Expected track CK theta : MCTrue Rings",
-                  -m_ckThetaRes[rad], m_ckThetaRes[rad], m_nBins );
+                  -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() );
         }
 
       }

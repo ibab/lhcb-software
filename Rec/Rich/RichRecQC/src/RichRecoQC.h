@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.26 2009-05-21 17:22:46 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.27 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -104,9 +104,6 @@ namespace Rich
 
         std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
         std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
-
-        /// Number of histogram bins
-        unsigned int m_nBins;
 
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;

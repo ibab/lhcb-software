@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryCKResMoni
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryCKResMoni.cpp,v 1.1 2007-11-26 17:33:38 jonrob Exp $
+ *  $Id: RichRecSummaryCKResMoni.cpp,v 1.2 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -48,7 +48,6 @@ SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
   // histo ranges
   declareProperty( "CKResHistoRange",
                    m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
-  declareProperty( "NumberBins", m_nBins = 100 );
 }
 
 // Destructor
@@ -138,7 +137,7 @@ StatusCode SummaryCKResMoni::execute()
 
         plot1D( thetaRec-thetaExpTrue,
                 hid(rad,"ckResAll"), "Rec-Exp Cktheta : All photons",
-                -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
 
         if ( mcRICHOK )
         {
@@ -149,7 +148,7 @@ StatusCode SummaryCKResMoni::execute()
           {
             plot1D( thetaRec-thetaExpTrue,
                     hid(rad,"ckResTrue"), "Rec-Exp Cktheta : MC true photons",
-                    -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+                    -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
           }
         }
 

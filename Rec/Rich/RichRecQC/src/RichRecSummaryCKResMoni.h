@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryCKResMoni
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryCKResMoni.h,v 1.1 2007-11-26 17:33:38 jonrob Exp $
+ *  $Id: RichRecSummaryCKResMoni.h,v 1.2 2009-06-10 13:26:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2007
@@ -93,7 +93,6 @@ namespace Rich
         // Job Options
         std::vector<double> m_minBeta;     ///< minimum beta value for 'saturated' tracks
         std::vector<double> m_ckResRange;  ///< Histogram ranges for CK resolution plots
-        unsigned int m_nBins;              ///< Number of histogram bins
 
       };
 

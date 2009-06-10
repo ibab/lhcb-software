@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.32 2009-06-05 19:32:30 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2009-06-10 13:26:48 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -80,8 +80,10 @@ class RichRecQCConf(RichConfigurableUser):
             mon.TrackSelector.MinChi2Cut = 0
             mon.TrackSelector.MaxChi2Cut = 9e30
             mon.TrackSelector.MinLikelihood = -9e30
-            mon.TrackSelector.CloneCut      = -9e30
-            mon.TrackSelector.AcceptClones  = True
+            mon.TrackSelector.MaxLikelihood =  9e30
+            mon.TrackSelector.MinCloneDistCut = -9e30
+            mon.TrackSelector.MaxCloneDistCut =  9e30
+            mon.TrackSelector.AcceptClones    = True
         return mon
 
     ## Check a new sequence and add to main sequence
