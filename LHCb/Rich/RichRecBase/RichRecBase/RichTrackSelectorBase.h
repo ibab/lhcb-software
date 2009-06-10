@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.7 2009-05-21 17:18:05 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.h,v 1.8 2009-06-10 13:17:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -106,14 +106,25 @@ namespace Rich
       /// Returns the charge selection
       virtual int chargeSel() const;
 
-      /// Returns the clone rejection cut
-      virtual double cloneCut() const ;
+      /// Returns the minimum clone rejection cut
+      virtual double minCloneDistCut() const ;
+
+      /// Returns the maximum clone rejection cut
+      virtual double maxCloneDistCut() const ;
 
       /// Returns the minimum likelihood cut
       virtual double minLikelihoodCut() const;
 
       /// Returns the maximum likelihood cut
       virtual double maxLikelihoodCut() const;
+
+      /// Returns the minimum ghost probaility cut
+      virtual double minGhostProbCut() const;
+
+      /// Returns the maximum ghost probaility cut
+      virtual double maxGhostProbCut() const;
+
+    public:
 
       /// Returns the overall minimum momentum cut value for the given track type
       virtual double minPCut( const Rich::Rec::Track::Type type ) const;
@@ -136,14 +147,23 @@ namespace Rich
       /// Returns the charge selection for the given track type
       virtual int chargeSel( const Rich::Rec::Track::Type type ) const;
 
-      /// Returns the clone rejection cut for the given track type
-      virtual double cloneCut( const Rich::Rec::Track::Type type ) const;
+      /// Returns the minimum clone rejection cut for the given track type
+      virtual double minCloneDistCut( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the minimum clone rejection cut for the given track type
+      virtual double maxCloneDistCut( const Rich::Rec::Track::Type type ) const;
 
       /// Returns the minimum likelihood cut for the given track type
       virtual double minLikelihoodCut( const Rich::Rec::Track::Type type ) const;
 
       /// Returns the maximum likelihood cut for the given track type
       virtual double maxLikelihoodCut( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the minimum ghost probability cut for the given track type
+      virtual double minGhostProbCut( const Rich::Rec::Track::Type type ) const;
+
+      /// Returns the maximum ghost probability cut for the given track type
+      virtual double maxGhostProbCut( const Rich::Rec::Track::Type type ) const;
 
     private: // defintions
 
@@ -196,12 +216,16 @@ namespace Rich
       double m_minPtCut;   ///< Min pt cut
       double m_maxPtCut;   ///< Max pt cut
 
-      double m_cloneCut;   ///< Clone rejection cut
+      double m_minCloneCut;   ///< Clone rejection cut
+      double m_maxCloneCut;   ///< Clone rejection cut
 
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
       double m_minLL; ///< minimum track likelihood cut
       double m_maxLL; ///< maximum track likelihood cut
+
+      double m_minGhostProb; ///< minimum ghost probability cut
+      double m_maxGhostProb; ///< maximum ghost probability cut
 
       bool m_acceptClones; ///< Accept or reject clone tracks
 

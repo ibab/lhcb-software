@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IBaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: IRichBaseTrackSelector.h,v 1.5 2009-05-21 17:18:05 jonrob Exp $
+ *  $Id: IRichBaseTrackSelector.h,v 1.6 2009-06-10 13:17:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -72,6 +72,8 @@ namespace Rich
        */
       virtual bool trackSelected( const LHCb::RichRecTrack * track ) const = 0;
 
+    public:
+
       /// Returns the minimum momentum cut value
       virtual double minPCut() const = 0;
 
@@ -93,14 +95,23 @@ namespace Rich
       /// Returns the charge selection
       virtual int chargeSel() const = 0;
 
-      /// Returns the clone rejection cut
-      virtual double cloneCut() const = 0;
-
       /// Returns the minimum likelihood cut
       virtual double minLikelihoodCut() const = 0;
 
       /// Returns the maximum likelihood cut
       virtual double maxLikelihoodCut() const = 0;
+
+      /// Returns the minimum clone distance rejection cut
+      virtual double minCloneDistCut() const = 0;
+
+      /// Returns the maximum clone distance rejection cut
+      virtual double maxCloneDistCut() const = 0;
+
+      /// Returns the minimum ghost probaility cut
+      virtual double minGhostProbCut() const = 0;
+
+      /// Returns the maximum ghost probaility cut
+      virtual double maxGhostProbCut() const = 0;
 
     };
 

@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-10 - Chris Jones
+ - Improvements to the track selector classes for the upcoming track changes.
+ - Add ghost probability variable to RichRecTrack object.
+
 ! 2009-06-08 - Chris Jones
  - Use vector typedef in RichRecRing
 
