@@ -6,6 +6,7 @@ Purpose     : LHCb HLT application
  - updates to configurable to support online python task
  - use HltTCK for manifest
  - update version to v7r1
+ - add stubs to start online python task
 
 ! 2009-06-08 - Gerhard Raven
  - use SetupProject python module instead of the script
