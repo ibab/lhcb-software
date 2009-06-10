@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.6 2009-05-24 16:18:25 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.7 2009-06-10 13:22:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -54,6 +54,9 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
 {
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // If no track segments, just return. This is OK in some cases.
+  if ( richSegments()->empty()  ) return StatusCode::SUCCESS;
 
   // Load the input rings
   LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_inputRings);
