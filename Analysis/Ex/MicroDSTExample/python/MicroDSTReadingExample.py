@@ -223,9 +223,10 @@ while ( nextEvent() ) :
             if (assocMCPart != None) :
                 MCPropTime = Helpers.properTimeMC(assocMCPart)
                 stdPropTimeRes = stdPropTime-MCPropTime
-                refitPropTimeRes = refitPropTime-MCPropTime
                 safeFill(propTimeResPlot, stdPropTimeRes)
-                safeFill(refitPropTimeResPlot, refitPropTimeRes)
+                if refitPropTime != None and MCPropTime != None :
+                    refitPropTimeRes = refitPropTime-MCPropTime
+                    safeFill(refitPropTimeResPlot, refitPropTimeRes)
 
     
 print "Found MC info in ", nMCEvents, "/", nEvents, " events"
