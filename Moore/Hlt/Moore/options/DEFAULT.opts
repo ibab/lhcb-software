@@ -40,9 +40,9 @@ MessageSvc.setError = ['RelationalDatabase'];
 //## TODO: adapt from
 //### @OnlineEnv.MooreVersion: Moore_v7r1
 HltConfigSvc.prefetchDir =  "MOORE_v7r1";
-HltConfigSvc.initialTCK =   "0x80450000";
+HltConfigSvc.initialTCK =   "0x804a0000";
 HltConfigSvc.checkOdin = false;
-ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
+ApplicationMgr.ExtSvc += { "HltConfigSvc"   };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 //ApplicationMgr.HistogramPersistency = "ROOT";
 //HistogramPersistencySvc.OutputFile = "";
