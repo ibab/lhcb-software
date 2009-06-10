@@ -7,7 +7,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v6r2    Hlt
+use  Moore                  v7r1    Hlt
 use  HltLuminosityMonitor   v1r2    Hlt
 # backwards compatibility stub
 use  TCKData                v2r0    Hlt
