@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.55 2009-06-10 10:05:33 graven Exp $
+# $Id: requirements,v 1.56 2009-06-10 12:37:35 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -24,7 +24,8 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 use DDDB               v1r*  Det            -no_auto_imports
 use ParamFiles         v8r*                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
-use HltTCK             v1r*  TCK            -no_auto_imports
+use HltTCK                  v1r1    TCK
+#use HltTCK             v1r*  TCK            -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
@@ -45,6 +46,11 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
+### Temporarily here...
+use  TCKData                v2r0    Hlt
+use HltConf                 v3r1    Hlt
+use HltCommon               v5r7    Hlt
+use TCKUtils                v1r0p1    Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 

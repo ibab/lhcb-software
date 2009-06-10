@@ -9,11 +9,14 @@ branches doc cmt
 
 use  Moore                  v6r2    Hlt
 use  HltLuminosityMonitor   v1r2    Hlt
+# backwards compatibility stub
+use  TCKData                v2r0    Hlt
 
-### Temporarily here...TODO: increment by 1
-use HltConf                 v3r0    Hlt
-use HltCommon               v5r6    Hlt
-use HltTCK                  v1r0    TCK
+### Temporarily here...
+use HltConf                 v3r1    Hlt
+use HltCommon               v5r7    Hlt
+use HltTCK                  v1r1    TCK
+use TCKUtils                v1r0p1    Hlt
 
 
 
