@@ -1,4 +1,4 @@
-// $Id: GiGaInstall.h,v 1.4 2007-07-02 08:49:07 gcorti Exp $
+// $Id: GiGaInstall.h,v 1.5 2009-06-10 13:56:40 gcorti Exp $
 #ifndef GIGACNV_GIGAINSTALL_H
 #define GIGACNV_GIGAINSTALL_H 1
 
@@ -37,7 +37,7 @@ namespace GiGaInstall
    *  @param name    name of the volume
    *  @param matrix  transformation matrix
    *  @param mother  mother logical volume
-   *  @param log     printout log 
+   *  @param msg     printout msg 
    *  @return status code
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -48,7 +48,7 @@ namespace GiGaInstall
     const std::string&    name   ,
     const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother , 
-    MsgStream&            log    ) ;
+    MsgStream&            msg    ) ;
   
   /** @function installVolume
    *
@@ -62,7 +62,7 @@ namespace GiGaInstall
    *  @param name    name of the volume
    *  @param matrix  transformation matrix
    *  @param mother  mother logical volume
-   *  @param log     printout log 
+   *  @param msg     printout message 
    *  @return status code
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -73,7 +73,7 @@ namespace GiGaInstall
     const std::string&    name   ,
     const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother ,
-    MsgStream&            log    ) ;
+    MsgStream&            msg    ) ;
   
   /** @function installVolume
    *
@@ -87,7 +87,7 @@ namespace GiGaInstall
    *  @param name    name of the volume
    *  @param matrix  transformation matrix
    *  @param mother  mother logical volume
-   *  @param log     printout log 
+   *  @param msg     printout message
    *  @return status code
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -98,7 +98,7 @@ namespace GiGaInstall
     const std::string&    name   ,
     const Gaudi::Transform3D& matrix ,
     G4LogicalVolume*      mother ,
-    MsgStream&            log    ) ;
+    MsgStream&            msg    ) ;
 
 }; ///< end of namespace GiGaInstall
 

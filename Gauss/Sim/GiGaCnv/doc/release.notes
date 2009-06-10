@@ -4,6 +4,11 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-06-10 - Gloria CORTI
+ - Fix warning of unused variable. At the same time change "log" to "msg"
+   and "ednreq" to "endmsg
+   . GiGaInstall.{h,cpp} 
+
 !========================= GiGaCnv v18r6 2008-12-08 ==========================
 ! 2008-10-20 - Patrick Robbe
  - Add link to generator HepMC mother particle in 

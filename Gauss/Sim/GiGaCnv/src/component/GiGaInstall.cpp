@@ -1,4 +1,4 @@
-// $Id: GiGaInstall.cpp,v 1.4 2007-07-02 08:49:47 gcorti Exp $
+// $Id: GiGaInstall.cpp,v 1.5 2009-06-10 13:56:40 gcorti Exp $
 
 // Include files
 // STD & STL 
@@ -59,18 +59,18 @@ StatusCode GiGaInstall::installVolume
   const std::string&    name   , 
   const Gaudi::Transform3D& matrix , 
   G4LogicalVolume*      mother ,
-  MsgStream&            log    )
+  MsgStream&            msg    )
 {
   if( 0 == volume ) 
     {
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume1:: volume  is NULL! " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume1:: volume  is NULL! " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   if( 0 == mother ) 
     { 
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume1:: mother  is NULL! " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume1:: mother  is NULL! " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   /// get the copy number 
@@ -85,19 +85,14 @@ StatusCode GiGaInstall::installVolume
   };
   /// create the placement 
   HepGeom::Transform3D clhepMatrix = LHCb::math2clhep::transform3D( matrix );
-  G4VPhysicalVolume* pv = 
-    new G4PVPlacement( clhepMatrix.inverse() ,
-                       volume           , 
-                       name             , 
-                       mother           , 
-                       false            , 
-                       ncopy            );
+  new G4PVPlacement( clhepMatrix.inverse(), volume, name, mother, false, 
+                     ncopy );
   ///
-  log << MSG::DEBUG
+  msg << MSG::DEBUG
       << " GiGaInstall:: "
       << " new G4PVPlacement is created with the name '" << name  << "'" 
       << " copy number is "                              << ncopy
-      << endreq ;
+      << endmsg;
   ///
   return StatusCode::SUCCESS ;
   ///
@@ -116,7 +111,7 @@ StatusCode GiGaInstall::installVolume
  *  @param name    name of the volume 
  *  @param matrix  transformation matrix 
  *  @param mother  mother logical volume 
- *  @param log     printout log 
+ *  @param msg     printout message 
  *  @return status code 
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -128,19 +123,19 @@ StatusCode GiGaInstall::installVolume
   const std::string&    name   , 
   const Gaudi::Transform3D& matrix , 
   G4LogicalVolume*      mother , 
-  MsgStream&            log    )
+  MsgStream&            msg    )
 {
   /// check arguments 
   if( 0 == volume ) 
     {
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume2:: volume  is NULL! " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume2:: volume  is NULL! " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   if( 0 == mother ) 
     { 
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume2:: mother  is NULL! " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume2:: mother  is NULL! " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   ///
@@ -150,9 +145,9 @@ StatusCode GiGaInstall::installVolume
       G4LogicalVolume* lv = ivol->first.first ;
       if( 0 == lv ) 
         {
-          log << MSG::ERROR 
+          msg << MSG::ERROR 
               << " GiGaInstall::installVolume2:: corrupted assembly '"
-              << volume->name() << "'" << endreq ;
+              << volume->name() << "'" << endmsg ;
           return StatusCode::FAILURE;                             ///< RETURN 
         }
       StatusCode sc = 
@@ -160,12 +155,12 @@ StatusCode GiGaInstall::installVolume
                        name + "#" + ivol->first.second   , 
                        ivol->second * matrix             , 
                        mother                            , 
-                       log                               );
+                       msg                               );
       ///
       if( sc.isFailure() ) 
         { 
-          log << MSG::ERROR
-              << " GiGaInstall::installVolume2:: recursive error! " << endreq ;
+          msg << MSG::ERROR
+              << " GiGaInstall::installVolume2:: recursive error! " << endmsg ;
           return sc ;                                           ///< RETURN 
         } 
     } 
@@ -186,7 +181,7 @@ StatusCode GiGaInstall::installVolume
  *  @param name    name of the volume
  *  @param matrix  transformation matrix
  *  @param mother  mother logical volume
- *  @param log     printout log 
+ *  @param msg     printout msg 
  *  @return status code
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -198,19 +193,19 @@ StatusCode GiGaInstall::installVolume
   const std::string&    name   ,
   const Gaudi::Transform3D& matrix ,
   G4LogicalVolume*      mother ,
-  MsgStream&            log    )
+  MsgStream&            msg    )
 {
   /// check arguments 
   if( !volume.valid() ) 
     {
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume3:: volume  is invalid " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume3:: volume  is invalid " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   if( 0 == mother ) 
     { 
-      log << MSG::ERROR 
-          << " GiGaInstall::installVolume3:: mother  is NULL! " << endreq ;
+      msg << MSG::ERROR 
+          << " GiGaInstall::installVolume3:: mother  is NULL! " << endmsg ;
       return StatusCode::FAILURE ; 
     }
   /// 
@@ -219,16 +214,16 @@ StatusCode GiGaInstall::installVolume
                             name               , 
                             matrix             , 
                             mother             , 
-                            log                ); }
+                            msg                ); }
   else if( 0 != volume.assembly () ) 
     { return installVolume( volume.assembly () , 
                             name               , 
                             matrix             , 
                             mother             ,
-                            log                ); }
+                            msg                ); }
   ///
-  log << MSG::ERROR
-      << " GiGaInstall::installVolume3:: fatal error! " << endreq ;
+  msg << MSG::ERROR
+      << " GiGaInstall::installVolume3:: fatal error! " << endmsg ;
   ///
   return StatusCode::FAILURE ;
 };
