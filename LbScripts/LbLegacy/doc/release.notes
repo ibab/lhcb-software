@@ -1,3 +1,7 @@
+2009-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added osc_vis massaging (replaces OpenScientist)
+
 2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: 

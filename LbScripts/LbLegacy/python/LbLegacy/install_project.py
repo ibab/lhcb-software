@@ -889,7 +889,7 @@ def getPackVer(file):
             file_base = []
             for bd in base_dir :
                 file_base.append(os.path.join(bd, name, name+'_'+vers))
-    if name == "OpenScientist" or name == "DIM" :
+    if name == "OpenScientist" or name == "osc_vis" or name == "DIM" :
         file_path = os.path.join(this_contrib_dir,name,vers)
         base_dir = contrib_dir.split(os.pathsep)
         file_base = []
