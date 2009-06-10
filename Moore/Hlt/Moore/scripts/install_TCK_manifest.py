@@ -9,7 +9,9 @@ import sys
 cmt = subprocess.Popen(['cmt','show','version'],stdout=subprocess.PIPE)
 version = string.strip(cmt.communicate()[0],'\n')
 
-manifest = os.environ['TCKDATAROOT'] + '/manifest/MOORE_' + version
+### use TCKUtils to generate the right TCK manifest, and copy it 
+### directly into InstallArea...
+manifest = os.environ['HLTTCKROOT'] + '/manifest/MOORE_' + version
 target_dir = dirname( sys.argv[1] )
 if exists( manifest)        : 
     print 'copying ' + manifest + ' to ' + sys.argv[1]
