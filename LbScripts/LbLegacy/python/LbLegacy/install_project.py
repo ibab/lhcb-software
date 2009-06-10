@@ -754,7 +754,7 @@ def getFile(url,file):
                     if not checkMD5(url,file,os.path.dirname(dest)):
                         removeReferenceMD5(file, os.path.dirname(dest) )
                         os.remove(dest)
-                        log.warning('md5 check failed on %s' % file)
+                        log.error('md5 check failed on %s' % file)
                     else:
                         hasbeendownloaded = True
                 else:
@@ -762,7 +762,7 @@ def getFile(url,file):
             local_retries = local_retries - 1
 
         if not hasbeendownloaded:
-            sys.exit(' cannot download %s after %s attempts - exit ' %(file,nb_retries)+'\n')
+            sys.exit('Cannot download %s after %s attempts - exit ' %(file,nb_retries)+'\n')
 
     return exist_flag
 
@@ -785,9 +785,9 @@ def calculateMD5(filename):
         buf = f.read(2**13)
     return m.hexdigest()
 
-def removeReferenceMD5(file,dest):
+def removeReferenceMD5(fnm, dest):
     log = logging.getLogger()
-    md5name = getMD5FileName(file)
+    md5name = getMD5FileName(fnm)
     filename = os.path.join(dest,md5name)
     if os.path.exists(filename):
         try:
@@ -1384,7 +1384,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
         llsargs.append("--shell=%s" % usedshell)
         llsargs.append("--mysiteroot=%s" % os.environ["MYSITEROOT"])
         llsargs.append("--scripts-version=%s" % lbscripts_version)
-        llsargs.append("--cmtconfig=%s" % os.environ["CMTCONFIG"])
+        llsargs.append("--cmtconfig=%s" % cmtconfig)
         log.debug("Running LbLogin %s" % " ".join(llsargs))
         env = getLbLoginEnv(llsargs)
         for var in env.keys() :
@@ -1864,7 +1864,7 @@ def untarFile(file):
     md5filename = getMD5FileName(filename)
     htmlfilename = os.path.join(html_dir,getHTMLFileName(file))
     if not os.path.isfile(filename):
-        log.warning('untarFile: %s does not exist' % filename)
+        log.warning('%s does not exist' % filename)
         retcode = 1
         return retcode
 
@@ -1964,8 +1964,8 @@ def untarFile(file):
                 return retcode
             else:
                 if status != 0:
-                    log.warning( 'untarFile - error in: %s' % str)
-                    log.warning( 'untarFile - return code %s' % status )
+                    log.warning( 'error in: %s' % str)
+                    log.warning( 'return code %s' % status )
                     log.warning( 'tar command output:' )
                     for l in tar_output.split("\n") :
                         log.warning(l)
@@ -2064,7 +2064,7 @@ def main():
             binary = os.environ['CMTCONFIG']
         if key == '--binary':
             binary = value
-            os.environ["CMTCONFIG"]
+            os.environ["CMTCONFIG"] = binary
         if key in ('-n','--nocheck'):
             md5_check = False
         if key in ('-g','--grid'):
