@@ -1,4 +1,4 @@
 #!/bin/sh
 echo "invoking" `which python` 
-echo "and loading TCKData.utils"
-exec `which python` -i -c 'from TCKData.utils import *'
+echo "and loading TCKUtils.utils"
+exec `which python` -i -c 'from TCKUtils.utils import *'

@@ -17,7 +17,9 @@ vector_string = GaudiPython.gbl.std.vector('std::string')
 def _appMgr() :
     ApplicationMgr().AppName = ""
     ApplicationMgr().OutputLevel = ERROR
-    return GaudiPython.AppMgr()
+    appMgr = GaudiPython.AppMgr()
+    appMgr.initialize()
+    return appMgr
 
 
 def _tck(x) :
@@ -160,7 +162,6 @@ def _getConfigTree( configID , cas = ConfigFileAccessSvc() ) :
                             ConfigAccessSvc = cas.getFullName() )
     name = pc.getFullName()
     appMgr = _appMgr()
-    appMgr.initialize()
     appMgr.createSvc(name)
     # init TreeNodeCache singleton
     _TreeNodeCache( svc = appMgr.service(name,'IPropertyConfigSvc') )
@@ -171,7 +172,6 @@ def _xget( configIDs , cas = ConfigFileAccessSvc() ) :
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() for id in ids ],
                             ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
-    appMgr.initialize()
     appMgr.createSvc(pc.getFullName())
     svc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
     table = dict()
@@ -199,7 +199,6 @@ def _copyTree(svc,nodeRef,prefix) :
 def _copy( source , target ) :
     csvc = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ], OutputLevel=DEBUG )
     appMgr = _appMgr()
-    appMgr.initialize()
     appMgr.createSvc(csvc.getFullName())
     s = appMgr.service(csvc.getFullName(),'IConfigAccessSvc')
     for label in [ 'TOPLEVEL/','TCK/','ALIAS/' ] :
@@ -229,7 +228,6 @@ def _updateProperties(id, updates, label, cas  ) :
     cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
     # run program...
     appMgr = _appMgr()
-    appMgr.initialize()
     appMgr.createSvc(pc.getFullName())
     cteName = cte.name().split('.')[-1]
     ed = appMgr.toolsvc().create(cteName,interface='IConfigTreeEditor')

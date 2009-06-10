@@ -5,6 +5,11 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r0p1 2009-06-10 ===================
+! 2009-06-10 - Gerhard Raven
+ - move appmgr init into _appmgr
+ - use the right module in TCKsh
+
 !========================== TCKUtils v1r0 2009-06-03 ===================
 ! 2009-05-29 - Gerhard Raven
  - initial import
