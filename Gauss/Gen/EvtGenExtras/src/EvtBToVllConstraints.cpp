@@ -2,7 +2,11 @@
 #include "EvtGenModels/EvtBToVllEvolveWC.hh"
 #include "EvtGenModels/EvtBToVllQCDUtils.hh"
 
+#include <cstdio>
+#include "gsl/gsl_deriv.h"
+#include "gsl/gsl_errno.h"
 #include "gsl/gsl_integration.h"
+#include "gsl/gsl_roots.h"
 
 EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 		fact(_fact){
@@ -398,4 +402,256 @@ double EvtBToVllConstraints::getGammaKstar(const double q2) const{
 	//eqn (3.56) with arbitratry normalisation
 	const double dStar = getDstar(q2,tensors);
 	return uhat*dStar;
+}
+
+inline double EvtBToVllConstraints::getBeta(const double q2) const{
+	return sqrt(1 - ((4*constants::mmu*constants::mmu)/q2));
+	
+}
+inline double EvtBToVllConstraints::getLambda(const double q2) const{
+	const double mB2 = constants::mB * constants::mB;
+	const double mk2 = (constants::mKstar/constants::mB)*(constants::mKstar/constants::mB);
+	return 1 + (mk2*mk2) + (q2*q2)/(mB2*mB2) - 2*( (q2/mB2) + (mk2)*(1 + q2/mB2) );
+}
+inline double EvtBToVllConstraints::getN(const double q2, const double beta, const double lambda) const{
+	const double constant = (constants::GF*constants::GF*constants::alphaEM*constants::alphaEM)/
+		(3*pow(2,10)*pow(constants::Pi,5)*constants::mB);
+	return constants::Vtstb * sqrt(constant * q2 * sqrt(lambda) * beta);
+}
+
+void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const{
+
+	const bool _isBbar = fact.parameters->getisBbar();
+	
+	//get the amplitude tensors
+	std::vector<EvtComplex> tensors(QCDFactorisation::NUMBER_OF_TENSORS);
+	fact.parameters->setBbar(isBbar);
+	fact.getTnAmplitudes(q2,constants::mB,constants::mKstar, &tensors);
+	
+	const double scaleFactor = 1e10;//stop the amplitudes getting too small...
+		
+	const EvtComplex tensA = tensors.at(QCDFactorisation::A);
+	const EvtComplex tensB = tensors.at(QCDFactorisation::B);
+	const EvtComplex tensC = tensors.at(QCDFactorisation::C);
+	const EvtComplex tensD = tensors.at(QCDFactorisation::D);
+	const EvtComplex tensE = tensors.at(QCDFactorisation::E);
+	const EvtComplex tensF = tensors.at(QCDFactorisation::F);
+	const EvtComplex tensG = tensors.at(QCDFactorisation::G);
+	const EvtComplex tensH =tensors.at(QCDFactorisation::H);
+	const EvtComplex tensS2 =tensors.at(QCDFactorisation::S2);
+	
+	DEBUGPRINT("tensA: ", tensA);
+	DEBUGPRINT("tensB: ", tensB);
+	DEBUGPRINT("tensC: ", tensC);
+	DEBUGPRINT("tensE: ", tensE);
+	DEBUGPRINT("tensF: ", tensF);
+	DEBUGPRINT("tensG: ", tensG);
+	DEBUGPRINT("tensH: ", tensH);
+	DEBUGPRINT("tensS2: ", tensS2);
+	
+	//now the auxilleries...
+	const EvtComplex aL = tensB - tensF;
+	const EvtComplex aR = tensB + tensF;
+	const EvtComplex bL = 0.5 * (tensC - tensG);
+	const EvtComplex bR = 0.5 * (tensC + tensG);
+	const EvtComplex cL = 0.5 * (tensA - tensE);
+	const EvtComplex cR = 0.5 * (tensA + tensE);
+	
+	DEBUGPRINT("q2: ",q2);
+	DEBUGPRINT("aLR[L]: ",aL);
+	DEBUGPRINT("aLR[R]: ",aR);
+	DEBUGPRINT("bLR[L]: ",bL);
+	DEBUGPRINT("bLR[R]: ",bR);
+	DEBUGPRINT("cLR[L]: ",cL);
+	DEBUGPRINT("cLR[R]: ",cR);
+	
+	DEBUGPRINT("bbl[1.0]: ",getBeta(1.0));//V
+	DEBUGPRINT("lambda[1.0]: ",getLambda(1.0));//V
+	DEBUGPRINT("Nm[1.0]: ",getN(1.0, getBeta(1.0), getLambda(1.0)));//V
+	
+	const double beta = getBeta(q2);
+	const double lambda = getLambda(q2);
+	const double N = getN(q2, beta, lambda);
+	const double mB2 = constants::mB * constants::mB;
+	const double mk = constants::mKstar/constants::mB;
+	
+	//calculate the form factors
+	double ffA0, ffA1, ffA2, ffV;
+	double ffT1, ffT2, ffT3;
+	double xi1, xi2;
+	
+	fact.getFormFactors(q2,
+			&ffA0,&ffA1,&ffA2,&ffV,
+			&ffT1,&ffT2,&ffT3,
+			&xi1,&xi2);
+	
+	//now calculate the spin amplitudes...
+	const EvtComplex _ATL = scaleFactor * sqrt(2*lambda)*N*constants::mB*cL;
+	const EvtComplex _ATR = scaleFactor * sqrt(2*lambda)*N*constants::mB*cR;
+	
+	const EvtComplex _APL = scaleFactor * -sqrt(2)*N*constants::mB*aL;
+	const EvtComplex _APR = scaleFactor * -sqrt(2)*N*constants::mB*aR;
+	
+	const EvtComplex _A0L = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
+	const EvtComplex _A0R = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2));
+	
+	const EvtComplex _AT = scaleFactor * -(sqrt(2)*aL*constants::mB*N);
+	const EvtComplex _AS = scaleFactor * -(CQ1*ffA0*N*sqrt(lambda));
+	
+	DEBUGPRINT("ATL: ", _ATL);
+	DEBUGPRINT("ATR: ", _ATR);
+	
+	DEBUGPRINT("APL: ", _APL);
+	DEBUGPRINT("APR: ", _APR);
+	
+	DEBUGPRINT("A0L: ", _A0L);
+	DEBUGPRINT("A0R: ", _A0R);
+
+	DEBUGPRINT("AT: ", _AT);
+	DEBUGPRINT("AS: ", _AS);
+	
+	amps->at(ATL) = _ATL;
+	amps->at(ATR) = _ATR;
+	amps->at(APL) = _APL;
+	amps->at(APR) = _APR;
+	amps->at(A0L) = _A0L;
+	amps->at(A0R) = _A0R;
+	amps->at(AT) = _AT;
+	amps->at(AS) = _AS;
+	
+	//reset back to the previous value
+	fact.parameters->setBbar(_isBbar);
+}
+
+const double EvtBToVllConstraints::getJ5(const double q2) const{
+	
+	std::vector<EvtComplex> amps(NUMBER_OF_AMPS);
+	getSpinAmplitudes(q2, &amps, true);//calc for the Bbar
+	
+	return (3*getBeta(q2)*(-((constants::mmu*(Re(amps.at(APL)*Conjugate(amps.at(AS))) +
+			Re(amps.at(APR)*Conjugate(amps.at(AS)))))/sqrt(q2)) + Re(amps.at(A0L)*Conjugate(amps.at(APL))) - 
+	       Re(amps.at(A0R)*Conjugate(amps.at(APR)))))/(2.*sqrt(2));
+	
+}
+
+const double EvtBToVllConstraints::getJ6(const double q2) const{
+	
+	std::vector<EvtComplex> amps(NUMBER_OF_AMPS);
+	getSpinAmplitudes(q2, &amps, true);//calc for the Bbar
+	return ( 1.5*getBeta(q2)*( Re(amps.at(ATL) * Conjugate(amps.at(APL))) - Re(amps.at(ATR) * Conjugate(amps.at(APR))) ) );
+}
+
+const std::pair<double, double> EvtBToVllConstraints::getS5Zero() const{
+	
+	//hack to get const correctness 
+	class s5utils{
+	public:
+		s5utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const s5utils* c = (s5utils*)params;
+			const double result = c->calc->getJ5(q2);//scale up to a more useful range
+			std::cout << q2 << "\t" << result << std::endl;
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	
+	
+	s5utils u(this);
+	
+	
+    gsl_function F;
+    F.function = &s5utils::getValue;
+    F.params = &u;
+    return findZero(&F,2.25);
+
+}
+
+const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
+	
+	//hack to get const correctness 
+	class s6utils{
+	public:
+		s6utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const s6utils* c = (s6utils*)params;
+			const double result = c->calc->getJ6(q2);//scale up to a more useful range
+			std::cout << q2 << "\t" << result << std::endl;
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	
+	
+	s6utils u(this);
+	
+	
+    gsl_function F;
+    F.function = &s6utils::getValue;
+    F.params = &u;
+    return findZero(&F,4.0);
+
+}
+
+const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F, const double r_expected) const{
+
+    int status = 0;
+	int iter = 0;
+	const int max_iter = 100;
+    
+    const gsl_root_fsolver_type *T = gsl_root_fsolver_brent;
+    gsl_root_fsolver *s = gsl_root_fsolver_alloc(T);
+    
+    double q2Min = 1;
+    double q2Max = sqrt(constants::mB*constants::mB - constants::mKstar*constants::mKstar);
+
+    double r = q2Min;
+
+    gsl_root_fsolver_set(s,F,q2Min, q2Max);
+  
+    do
+      {
+        iter++;
+        status = gsl_root_fsolver_iterate(s);
+        r = gsl_root_fsolver_root(s);
+        q2Min = gsl_root_fsolver_x_lower(s);
+        q2Max = gsl_root_fsolver_x_upper(s);
+        status = gsl_root_test_interval(q2Min, q2Max, 0, 0.0001);
+  
+        if (status == GSL_SUCCESS)
+          printf ("Converged:\n");
+  
+        printf ("%5d [%.7f, %.7f] %.7f %+.7f %.7f\n",
+                iter, q2Min, q2Min,
+                r, r - r_expected, 
+                q2Min - q2Max);
+      }
+    while (status == GSL_CONTINUE && iter < max_iter);
+    
+    double gradient = 0.0;
+    if( status != GSL_SUCCESS){
+    	std::cout << "Zero finding failed" << std::endl;
+    	r = -1.0; //outside the kinimatic range
+    }else{
+    	gradient = findZeroGradient(F,r);
+    }
+    gsl_root_fsolver_free(s);
+    
+    
+	return std::make_pair(r,gradient);
+	
+}
+
+const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const double zero) const{
+	
+	double result = 0.0;
+	double abserr = 1e6;
+	
+	gsl_deriv_central(F, zero, 1e-6, &result, &abserr);
+	printf("f'(x) = %.10f +/- %.10f\n", result, abserr);
+	return result;
 }

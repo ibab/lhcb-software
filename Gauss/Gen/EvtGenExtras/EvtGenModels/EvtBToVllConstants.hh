@@ -49,6 +49,7 @@ namespace constants{
 	static const double Vus = 0.2258;
 	static const double Vcb = 4.12e-2;
 	static const double AbsVub = 3.93e-3;
+	static const double Vtstb = 0.0385;
 	//used in the Constraints
 	static const double fBs = 0.268;
 	static const double mBs = 5.3663;

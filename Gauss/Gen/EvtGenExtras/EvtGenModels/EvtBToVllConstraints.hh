@@ -4,9 +4,15 @@
 #include "EvtGenModels/EvtBToKstarllQCDFactorisation.hh"
 #include "EvtGenBase/EvtMathematicaFn.hh"
 
+#include "gsl/gsl_math.h"
+
+#include <utility>
+
 class EvtBToVllConstraints{
 
 public:	
+	
+	enum SpinAmplitudes {A0L = 0, A0R, APL, APR, ATL, ATR, AT, AS, NUMBER_OF_AMPS};
 	
 	EvtBToVllConstraints(const QCDFactorisation& _fact);
 	double findAFBZero() const;
@@ -16,6 +22,9 @@ public:
 	double getBrBToXsGamma() const;
 	double getBrBToXsll() const;
 	
+	void getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const;
+	const std::pair<double, double> getS5Zero() const;
+	const std::pair<double, double> getS6Zero() const;
 
 private:
 
@@ -55,8 +64,17 @@ private:
 	EvtComplex Vts;
 	EvtComplex Vtb;
 	
-	
 	double getAFB(const double q2) const;
+	
+	//useful functions for calculating the K* spin amplitudes
+	inline double getBeta(const double q2) const;
+	inline double getLambda(const double q2) const;
+	inline double getN(const double q2, const double beta, const double lambda) const;
+	
+	const double getJ5(const double q2) const;
+	const double getJ6(const double q2) const;
+	const std::pair<double, double> findZero(gsl_function* F, const double r_expected) const;
+	const double findZeroGradient(gsl_function* F, const double zero) const;
 	
 };
 
