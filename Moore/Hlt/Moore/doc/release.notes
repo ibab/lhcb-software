@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-06-10 - Gerhard Raven
+ - updates to configurable to support online python task
+
 ! 2009-06-08 - Gerhard Raven
  - use SetupProject python module instead of the script
  - use L0 configurable
@@ -10,6 +13,7 @@ Purpose     : LHCb HLT application
 ! 2009-05-29 - Gerhard Raven
  - update cmt/requirements to take into account TCKData -> HltTCK, TCKUtils split
 
+!========================== Moore v7r0 2009-05-?? ===================
 ! 2009-05-13 - Gerhard Raven
  - updates for v7r0, FEST
 

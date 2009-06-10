@@ -1,13 +1,13 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.54 2009-06-08 11:48:40 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.55 2009-06-10 10:03:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
+from Configurables import HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
 from Configurables import GaudiSequencer
 from Configurables import HltConf, LHCbApp, L0Conf
@@ -52,64 +52,84 @@ class Moore(LHCbConfigurableUser):
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
         , "HltType" :          'Hlt1'
-        , "useTCK"     :       False # use TCK instead of options...
+        , "UseTCK"     :       False # use TCK instead of options...
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "CheckOdin"  :       False  # use TCK from ODIN
-        , "initialTCK" :'0x80450000'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v7r0'  # which configurations to prefetch.
+        , "InitialTCK" :'0xFFFFFFFF'  # which configuration to use during initialize
+        , "prefetchConfigDir" :'MOORE_v7r1'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
-        , "TCKData" :          '$TCKDATAROOT' # where do we read/write TCK data from/to?
+        , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "Verbose" :          True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
+        , "RunOnline" : False
         }   
                 
     def _configureOnline(self) :
         import OnlineEnv as Online
-        app=ApplicationMgr()
-        EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-        mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','SEND'],True)
-        app.Runable = Online.evtRunable(mepMgr)
-        app.ExtSvc.append(mepMgr)
-        evtMerger = Online.evtMerger(name='Output',buffer='SEND',datatype=MDF_NONE,routing=1)
-        evtMerger.DataType = MDF_BANKS
-        # append evtMerger to SendSequence, after Hlt1Global...
-        #ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
-        #SendSequence.Members                 = {"Hlt1Global", "LHCb::RawEvent2MBMMergerAlg/Output"};
-        #SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
-        eventSelector = Online.mbmSelector(input='EVENT')
-        app.ExtSvc.append(eventSelector)
-        Online.evtDataSvc()
-        #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
-        Configs.AuditorSvc().Auditors = []
-        app.MessageSvcType = 'LHCb::FmcMessageSvc'
-        del allConfigurables['MessageSvc']
-        app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-        msg=Configs.LHCb__FmcMessageSvc('MessageSvc')
-        msg.LoggerOnly = True
-        #MessageSvc.LoggerOnly                = true;
-        #MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-        msg.fifoPath = os.environ['LOGFIFO']
-        msg.OutputLevel = WARNING
-        msg.doPrintAlways = False
-
-    def _onlineSettings(self) :
         log.warning('overruling settings with online values')
-        self.setProp('useTCK', True)
-        HistogramPersistencySvc().Warnings = false;
-        EventLoopMgr().Warnings = false;
+        self.setProp('UseTCK', True)
+        from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
+        EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
+        from Configurables import DataOnDemandSvc
+        ApplicationMgr().ExtSvc.append( DataOnDemandSvc() ) 
+        importOptions('$STDOPTS/DecodeRawEvent.py')
+        ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
+        #MagneticFieldSvc().UseSetCurrent = True
+        HistogramPersistencySvc().Warnings = False
+        EventLoopMgr().Warnings = False
         # configure services...
         HistogramDataSvc().Input = ["CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'"];
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
+        from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
+        app=ApplicationMgr()
+        from Configurables import UpdateAndReset
+        app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
+        ### TODO: if FEST partition, change DB setup???
+        ### TODO: if TAE, event type = 1 instead of 1...
+        #mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','SEND'],True)
+        mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],True)
+        app.Runable = Online.evtRunable(mepMgr)
+        app.ExtSvc.append(mepMgr)
+        evtMerger = Online.evtMerger(name='Output',buffer='SEND',datatype=Online.MDF_NONE,routing=1)
+        evtMerger.DataType = Online.MDF_BANKS
+        # append evtMerger to SendSequence, after Hlt1Global...
+        #SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
+        if 'EventSelector' in allConfigurables : 
+            del allConfigurables['EventSelector']
+        eventSelector = Online.mbmSelector(input='EVENT')
+        app.ExtSvc.append(eventSelector)
+        Online.evtDataSvc()
+        #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
+        from Configurables import AuditorSvc
+        AuditorSvc().Auditors = []
+        app.MessageSvcType = 'LHCb::FmcMessageSvc'
 
+        del allConfigurables['MessageSvc']
+        app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
+        from Configurables import LHCb__FmcMessageSvc as MessageSvc
+        msg=MessageSvc('MessageSvc')
+        msg.Format = "% F%40W%S%7W%R%T %0W%M"
+        msg.LoggerOnly = True
+        if 'LOGFIFO' not in os.environ :
+            os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
+            print '# WARNING: LOGFIFO not set -- setting to ' + os.environ['LOGFIFO']
+        msg.fifoPath = os.environ['LOGFIFO']
+        msg.OutputLevel = WARNING
+        #MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+        #msg.OutputLevel = Online.OutputLevel
+        msg.doPrintAlways = False
+        SendSequence =  GaudiSequencer('SendSequence')
+        SendSequence.Members = [ GaudiSequencer('Hlt1Global'), evtMerger ]
+        ApplicationMgr().TopAlg.append(SendSequence)
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
@@ -143,12 +163,17 @@ class Moore(LHCbConfigurableUser):
 
     def getConfigAccessSvc(self):
         method = self.getProp('TCKpersistency').lower()
-        if method not in [ 'file', 'sqlite' ] : raise TypeError("invalid TCK persistency '%s'"%method)
+        if method not in [ 'file', 'sqlite', 'tarfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
         TCKData = self.getProp('TCKData')
         if method == 'file' :
+            from Configurables import ConfigFileAccessSvc
             return ConfigFileAccessSvc( Directory = TCKData +'/config' )
         if method == 'sqlite' :
+            from Configurables import ConfigDBAccessSvc
             return ConfigDBAccessSvc( Connection = 'sqlite_file:' + TCKData +'/db/config.db' )
+        if method == 'tar' :
+            from Configurables import ConfigTarFileAccessSvc
+            return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
 
     def addAuditor(self,x) :
         AuditorSvc().Auditors.append( x.name() )
@@ -204,7 +229,14 @@ class Moore(LHCbConfigurableUser):
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self._l0()
+        # verify mutually exclusive settings:
+        #  eg.  Online vs. any L0 setting
+        #       Online vs. generateConfig
+        #       Online vs. DB tags...
+        #       Online vs. EvtMax, SkipEvents, DataType, ...
+        #       Online requires UseTCK
+        if not self.getProp("RunOnline") : self._l0()
+        if self.getProp("RunOnline") : self.setProp('UseTCK',True)
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
         # forward some settings... 
         app = LHCbApp()
@@ -216,31 +248,28 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
-        #MagneticFieldSvc().UseSetCurrent = True
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()
         self._profile()
-        if self.getProp('useTCK') :
-            if (self.getProp('L0TCK')) : raise RunTimeError( 'useTCK and L0TCK are mutually exclusive')
-            # TODO: update to latest HltConfigSvc setup!!!
-            tcks = [ _tck(i) for i in self.getProp('prefetchTCK') ]
+        if self.getProp('UseTCK') :
+            if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
             cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
-                              , initialTCK = self.getProp('initialTCK')
-                              , checkOdin = self.getProp('checkOdin')
+                              , initialTCK = self.getProp('InitialTCK')
+                              , checkOdin = self.getProp('CheckOdin')
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             # TODO: make sure we are the first one...
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
+            HltConf().HltType = 'NONE'
         else:
             hltConf = HltConf()
             self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
             print hltConf
             log.info( hltConf )
             
-        if self.getProp("generateConfig") : self._generateConfig()
-        online = False
-        if online : 
-            print 'not yet done'
+        if self.getProp("RunOnline") :
+            self._configureOnline()
         else :
+            if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
