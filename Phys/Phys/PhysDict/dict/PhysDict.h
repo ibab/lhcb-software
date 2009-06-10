@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.8 2009-06-08 12:18:16 jpalac Exp $
+// $Id: PhysDict.h,v 1.9 2009-06-10 13:15:57 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -17,8 +17,9 @@ namespace
 
   struct _Instantiations 
   {
-    std::pair< std::string, LHCb::HltDecReport > _i1;
-    GaudiUtils::VectorMap< std::string, LHCb::HltDecReport > _i2;
+    std::pair< std::string, LHCb::HltDecReport >               _i1;
+    std::vector< std::pair< std::string, LHCb::HltDecReport > > _i2;
+    GaudiUtils::VectorMap< std::string, LHCb::HltDecReport >   _i3;
   };
   
 }
