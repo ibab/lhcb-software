@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.3 2008-06-04 16:30:15 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.4 2009-06-11 11:57:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -113,7 +113,7 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
 
     // save final result
-    photon->setExpPixelSignalPhots( id, pixelSignal );
+    photon->setExpPixelSignalPhots( id, static_cast<LHCb::RichRecPhoton::FloatType>(pixelSignal) );
 
   }
 

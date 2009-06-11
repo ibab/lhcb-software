@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.8 2009-06-08 17:16:31 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.9 2009-06-11 11:57:40 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -635,13 +635,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = std::fabs( sphReflPoint1.y() / (sphReflPoint1.y() - sphReflPoint2.y()) );
+      fraction = static_cast<float>(std::fabs( sphReflPoint1.y() / (sphReflPoint1.y() - sphReflPoint2.y()) ));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = std::fabs( sphReflPoint2.y() / (sphReflPoint1.y() - sphReflPoint2.y()) );
+      fraction = static_cast<float>(std::fabs( sphReflPoint2.y() / (sphReflPoint1.y() - sphReflPoint2.y()) ));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
@@ -663,13 +663,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
     else if ( sameSide1 )
     {
-      fraction = std::fabs( sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x()) );
+      fraction = static_cast<float>(std::fabs( sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x()) ));
       alongTkFrac = fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
-      fraction = std::fabs( sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x()) );
+      fraction = static_cast<float>(std::fabs( sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x()) ));
       alongTkFrac = 1.0-fraction/2.0;
       m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }

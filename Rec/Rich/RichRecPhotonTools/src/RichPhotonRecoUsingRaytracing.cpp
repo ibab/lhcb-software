@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.7 2008-02-21 16:46:53 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.8 2009-06-11 11:57:40 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -122,20 +122,20 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
   const Rich::RadiatorType radiator   = trSeg.radiator();
 
-  float maxdiff = m_maxdiff[radiator];
+  double maxdiff = m_maxdiff[radiator];
   int maxiter = m_maxiter[radiator];
   // Emission point to use for photon reconstruction
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
   emissionPoint = trSeg.bestPoint();
 
   const Gaudi::XYZPoint & HP = segment->pdPanelHitPointLocal((pixel->panel()).panel());
-  const float mx =  HP.x();
-  const float my =  HP.y();
+  const double mx =  HP.x();
+  const double my =  HP.y();
   const Gaudi::XYZPoint & HPp = pixel->localPosition();
-  const float x = HPp.x();
-  const float y = HPp.y();
-  const float dx = x - mx;
-  const float dy = y - my;
+  const double x = HPp.x();
+  const double y = HPp.y();
+  const double dx = x - mx;
+  const double dy = y - my;
 
   Gaudi::XYZPoint locpos;
   Gaudi::XYZVector sv;
@@ -147,11 +147,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   //estimate the length of the photon path ERL
 
-  float ERL(0);
+  double ERL(0);
   if (m_ERL<0)
   {
-    //const float predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
-    const float predpi = m_satCKtheta[radiator];
+    //const double predpi = ( radiator == Rich::Aerogel ? 0.15 : 0.03 );
+    const double predpi = m_satCKtheta[radiator];
 
     sv = trSeg.vectorAtThetaPhi( predpi, tphi );
 
@@ -165,7 +165,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     }
     locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
-    const float R2 = (locpos.y()-my)*(locpos.y()-my) + (locpos.x()-mx)*(locpos.x()-mx);
+    const double R2 = (locpos.y()-my)*(locpos.y()-my) + (locpos.x()-mx)*(locpos.x()-mx);
 
     ERL = std::sqrt(R2) / std::tan(predpi);
 
@@ -173,8 +173,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   else { ERL = m_ERLSet[radiator]; }
 
   //naive theta
-  float R= dx*dx+dy*dy;
-  //    float ttheta =  atan(sqrt(R)/ERL);
+  double R= dx*dx+dy*dy;
+  //    double ttheta =  atan(sqrt(R)/ERL);
   double ttheta =  (std::sqrt(R)/ERL);
   double theta0 =  ttheta;
 
@@ -186,7 +186,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // the actual iteration
 
   int ii;
-  float damp = m_damping;
+  double damp = m_damping;
 
 
   double dphi,lastdphi,dtheta,lastdtheta;
@@ -276,14 +276,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
 
     // the hit pixel corresponds to what naive theta and phi
-    const float yi = locpos.y();
-    const float xi = locpos.x();
+    const double yi = locpos.y();
+    const double xi = locpos.x();
 
     //       if (isnan(xi)){
     //  debug() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
     //  debug() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
     //       }
-    const float R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
+    const double R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
     //theta1 = atan(sqrt(R2)/ERL);
 
     tthetal5 = tthetal4;
@@ -338,8 +338,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     //debug()<<"===================================="<<endreq;
     ttheta = (ttheta+tthetal+tthetal2+tthetal3+tthetal4+tthetal5)/6.;
   }
-  const float besttheta = ttheta-m_ckFudge[radiator];
-  float bestphi = tphi;
+  const double besttheta = ttheta-m_ckFudge[radiator];
+  double bestphi = tphi;
 
   // is phi out of 0 -> 2PI range ?
   while ( bestphi <  0        ) { bestphi += 2.0*M_PI; }
@@ -351,7 +351,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // fraction of segment path length accessible to the photon
   // cannot determine this here so set to 1
-  const float fraction(1);
+  const double fraction(1);
 
   // flag to say if this photon candidate is un-ambiguous
   // cannot determine this here so set to false
@@ -397,9 +397,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
   // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( besttheta                  );
-  gPhoton.setCherenkovPhi           ( bestphi                    );
-  gPhoton.setActiveSegmentFraction  ( fraction                   );
+  gPhoton.setCherenkovTheta         ( static_cast<float>(besttheta) );
+  gPhoton.setCherenkovPhi           ( static_cast<float>(bestphi)   );
+  gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)  );
   gPhoton.setDetectionPoint         ( pixel->globalPosition()    );
   gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
   gPhoton.setUnambiguousPhoton      ( unambigPhoton              );

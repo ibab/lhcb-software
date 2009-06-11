@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingRaytracing
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.6 2008-02-21 16:46:53 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.h,v 1.7 2009-06-11 11:57:40 jonrob Exp $
  *
  *  @author Claus P Buszello
  *  @date   2008-11-01
@@ -101,14 +101,14 @@ namespace Rich
 
       const Rich::IRayTracing * m_raytrace; ///< raytracing tool
 
-      float m_damping;
+      double m_damping;
       std::vector<double> m_ERLSet;
-      std::vector<float> m_maxdiff;
+      std::vector<double> m_maxdiff;
       std::vector<int> m_maxiter;
 
       std::vector<double> m_satCKtheta;
 
-      float m_ERL;
+      double m_ERL;
 
       bool m_failiter;
 

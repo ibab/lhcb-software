@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 compilation warnings
+
 !======================= RichRecPhotonTools v1r5 2008-09-04 ==================
 ! 2008-08-15 - Chris Jones
  - Update default properties to aid python Configuration

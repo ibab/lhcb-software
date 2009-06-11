@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.6 2008-07-23 12:52:30 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.7 2009-06-11 11:57:40 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -121,17 +121,17 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & pixPRad  = pixel->radCorrLocalPositions().position(radiator);
 
   // x,y differences
-  const float diff_x = segPSide.x() - pixPRad.x();
-  const float diff_y = segPSide.y() - pixPRad.y();
+  const float diff_x = static_cast<float>(segPSide.x() - pixPRad.x());
+  const float diff_y = static_cast<float>(segPSide.y() - pixPRad.y());
 
   // estimate phi from these hits
   // use full atan2
-  //const float phiCerenkov = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
+  //const float phiCerenkov = static_cast<float>(Gaudi::Units::pi + std::atan2( diff_y, diff_x ));
   // use fast atan2
-  const float phiCerenkov = Gaudi::Units::pi + Rich::Maths::atan2_f( diff_y, diff_x );
+  const float phiCerenkov = static_cast<float>(Gaudi::Units::pi+Rich::Maths::atan2_f(diff_y,diff_x));
 
   // Start with CK fudge factor
-  float thetaCerenkov( m_ckFudge[radiator] );
+  float thetaCerenkov( static_cast<float>(m_ckFudge[radiator]) );
 
   // use ring info to determine CK theta
   LHCb::RichRecSegment * seg             = const_cast<LHCb::RichRecSegment*>(segment); // need to remove this
@@ -147,7 +147,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // estimate CK theta from reference point
       const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
                                 gsl_pow_2(segPSide.y()-point->localPosition().y()) );
-      thetaCerenkov += ring->radius() * std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp );
+      thetaCerenkov += static_cast<float>(ring->radius() * std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp ));
 
       // --------------------------------------------------------------------------------------
       // Set (remaining) photon parameters
