@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.42 2008-07-10 11:23:37 dhcroft Exp $
+// $Id: DeVeloSensor.h,v 1.43 2009-06-11 13:27:47 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -196,6 +196,12 @@ public:
 
   /// Returns true if Phi Sensor
   inline bool isPhi() const {return m_isPhi;}
+
+  /// Returns true if sensor is top cabled 
+  inline bool isTop() const {return m_isTop;}
+
+  /// Returns true if sensor is bottom cabled 
+  inline bool isBottom() const {return !m_isTop;}
 
   /// fast cast to R sensor, returns 0 for wrong type
   inline const DeVeloRType* rType() const;
@@ -458,6 +464,7 @@ private:
   std::string m_type;
   std::string m_fullType;
   bool m_isLeft;
+  bool m_isTop;
   bool m_isDownstream;
   bool m_isR;
   bool m_isPhi;

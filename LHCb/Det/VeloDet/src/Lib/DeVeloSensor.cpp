@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.35 2008-07-10 11:23:37 dhcroft Exp $
+// $Id: DeVeloSensor.cpp,v 1.36 2009-06-11 13:27:47 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -163,6 +163,15 @@ void DeVeloSensor::initSensor()
   m_innerRadius = param<double>("InnerRadius");
   m_outerRadius = param<double>("OuterRadius");
   m_siliconThickness = param<double>("SiThick");
+
+  m_isTop = true;
+  if(m_sensorNumber < 64){
+    if((m_sensorNumber%4==0)||(m_sensorNumber%4==1)){ m_isTop = false;}
+  } else if ( m_sensorNumber < 128 ) {
+    if((m_sensorNumber%4==2)||(m_sensorNumber%4==3)){ m_isTop = false;}
+  } else {
+    if ( m_sensorNumber == 128 || m_sensorNumber == 131 ) { m_isTop = false; }
+  }
 
   m_module   = param<std::string>("Module");
   m_type     = param<std::string>("Type");
