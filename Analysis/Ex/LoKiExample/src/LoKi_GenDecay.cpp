@@ -1,6 +1,10 @@
-// $Id: LoKi_GenDecay.cpp,v 1.6 2009-05-23 16:00:43 ibelyaev Exp $
+// $Id: LoKi_GenDecay.cpp,v 1.7 2009-06-11 16:46:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/ParticleID.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -31,8 +35,9 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   GRange b = gselect ( "B" , GABSID == "B_s0" ) ;
   
   MsgStream& log = info() ;
-  
-  GenExclusive p1 ( HasQuark ( LHCb::ParticleID::bottom ) ) ;
+
+  Decays::Node bquark = HasQuark ( LHCb::ParticleID::bottom )  ;
+  GenExclusive p1 ( bquark ) ;
   
   GenExclusive p2 ( Pid("B_s0") ) ;
   
