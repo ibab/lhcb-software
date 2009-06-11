@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.10 2009-06-03 12:26:49 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.11 2009-06-11 15:02:01 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -31,7 +31,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         , "MicroDSTSelectionAlg" : """            # Name of selection algorithm that defines data for MicroDST"""
         , "OutputPrefix"         : """ """
         , "CopyParticles"        : """ """
-        , "CopyPVs"              : """ """
+        , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
         , "CopyBTags"            : """ """
         , "CopyRelatedPVs"      : """ """
         , "CopyMCTruth"          : """ """
@@ -156,7 +156,7 @@ class PhysMicroDST(LHCbConfigurableUser) :
         self.seqMicroDST().Members += [copyFlavTag]
 
     def P2PVLocation(self) :
-        return self.mainLocation()+self.getProp("P2PVRelationsSuffix")
+        return self.mainLocation()+"/"+self.getProp("P2PVRelationsSuffix")
 
     def copyRelatedPVs(self) :
         if self.getProp("CopyParticles") :
