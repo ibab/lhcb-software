@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.3 2009-06-03 13:01:53 marcocle Exp $
+# $Id: GetPack.py,v 1.4 2009-06-11 16:59:46 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -99,7 +99,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.3 2009-06-03 13:01:53 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.4 2009-06-11 16:59:46 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -130,7 +130,8 @@ class GetPack(Script):
         self.parser.add_option("-r", "--recursive", action = "store_true",
                                help = "checkout all packages this one directly depends on")
         self.parser.add_option("-H", "--recursive-head", action = "store_true",
-                               help = "check out all subsequent packages with head revision")
+                               help = "check out all subsequent packages with head revision "
+                               "(it also sets the default version of the requested package/project to 'head')")
         self.parser.add_option("-R", "--really-recursive", action = "store_true",
                                help = "check out >every< package this one depends on")
         self.parser.add_option("-p", "--protocol",
@@ -156,8 +157,16 @@ class GetPack(Script):
                                help = "never ask the user if in doubt, but skip the package")
         self.parser.add_option("--no-config", action = "store_true",
                                help = "prevents executing cmt config for each package")
+        self.parser.add_option("--user-svn", action = "append",
+                               metavar = "URL",
+                               help = "add a custom subversion repository to the known ones")
+        self.parser.add_option("--user-cvs", action = "append",
+                               metavar = "CVSROOT",
+                               help = "add a custom CVS repository to the known ones")
         self.parser.set_defaults(protocol = "default",
-                                 version_dirs = False)
+                                 version_dirs = False,
+                                 user_svn = [],
+                                 user_cvs = [])
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
 
@@ -347,6 +356,25 @@ class GetPack(Script):
                 for rep in repositories.values():
                     rep.user = self.options.user
 
+            if self.options.user_svn or self.options.user_cvs:
+                from urllib import splittype, splituser, splithost
+                # add user-defined repositories
+                i = 0
+                for rep in self.options.user_svn:
+                    # FIXME: need some error checking 
+                    protocol, rest = splittype(rep)
+                    rest, path = splithost(rest)
+                    user, host = splituser(rest)
+                    repositories["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
+                    i += 1
+                i = 0
+                for rep in self.options.user_cvs:
+                    # FIXME: need some error checking 
+                    dummy, protocol, rest, path = rep.split(":")
+                    user, host = splituser(rest)
+                    repositories["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
+                    i += 1
+
             # connect to repositories
             self._repositories = {}
             for rep in repositories:
@@ -414,6 +442,10 @@ class GetPack(Script):
             while old in args:
                 args[args.index(old)] = new
         Script.parseOpts(self, args)
+        # Set the default versions if --recursive-head is requested
+        if self.options.recursive_head:
+            self.project_version = "head"
+            self.requested_package_version = "head"
         # Validate and parse positional arguments
         if self.options.interactive:
             if self.options.project:

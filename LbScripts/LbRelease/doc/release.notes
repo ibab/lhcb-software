@@ -1,3 +1,12 @@
+2008-06-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: Added the a command line option to add a
+	repository URL on the fly (useful for the transition to SVN).
+	When the --recursive-head option is specified, the default version of the
+	package or project is "head", so it is not asked if not specified. 
+	* python/LbRelease/rcs.py: Added string conversion to the revision control
+	system classes (to print them).
+
 2009-06-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: added CMTEXTRATAGS

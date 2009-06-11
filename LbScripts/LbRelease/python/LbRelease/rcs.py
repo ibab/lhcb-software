@@ -340,6 +340,9 @@ class CVS(RevisionControlSystem):
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
+    ## Human-readable description
+    def __str__(self):
+        return "CVS repository at %s" % self.repository
 
 _svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
 class SubversionCmd(RevisionControlSystem):
@@ -472,7 +475,9 @@ class SubversionCmd(RevisionControlSystem):
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
-
+    ## Human-readable description
+    def __str__(self):
+        return "Subversion repository at %s" % self.repository
 
 # get all the implementations of RevisionControlSystem available in the module
 __all_implementations__ = []
