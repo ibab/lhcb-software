@@ -1,5 +1,6 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
+#include "$OPTIONS"
 
 ApplicationMgr.ExtSvc               += { "LHCb::AdderSvc/AdderSvc" };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -9,12 +10,15 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
 AdderSvc.publishRates   = 1;
-AdderSvc.OutputLevel    = 3;
-MessageSvc.OutputLevel  = 3;
+AdderSvc.OutputLevel    = 1;
+MessageSvc.OutputLevel  = 1;
 MessageSvc.LoggerOnly   = 1;
 HistogramPersistencySvc.Warnings = false;
 
 AdderSvc.taskname="RecBrunel"; // Could be empty.
 AdderSvc.refreshTime=10;
-AdderSvc.dimclientdns="pclhcb80";
+AdderSvc.dimclientdns="hlt01";
 AdderSvc.partitionname="LHCb";
+
+AdderSvc.subfarmname=@OnlineEnv.SubFarms;
+AdderSvc.partitionname=@OnlineEnv.PartitionName;
