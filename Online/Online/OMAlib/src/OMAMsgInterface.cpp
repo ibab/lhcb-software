@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.17 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.18 2009-06-11 15:25:26 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -58,7 +58,7 @@ void OMAMsgInterface::loadMessages() {
       }
     }
     if (NULL != m_outs) {
-      (*m_outs) << MSG::DEBUG << "Loaded "<<m_MessageStore.size() <<
+      (*m_outs) << MSG::INFO << "Loaded "<<m_MessageStore.size() <<
         " existing messages for analysis " <<m_anaTaskname << endmsg;
     }
     m_msgInit = true;
