@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./runCamServ.sh
-./runCamera.sh localhost $1
+./runCameraServers.sh
+./runCameraGui.sh localhost $1
