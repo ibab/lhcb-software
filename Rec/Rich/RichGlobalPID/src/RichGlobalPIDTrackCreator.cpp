@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::TrackCreator
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrackCreator.cpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDTrackCreator.cpp,v 1.2 2009-06-11 15:10:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -119,7 +119,7 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
         iHypo != pidTypes().end(); ++iHypo )
   {
     if ( deltaLLs[*iHypo] < 0 ) { deltaLLs[*iHypo] = 0; }
-    deltaLLs[*iHypo] = pionDLL - deltaLLs[*iHypo];
+    deltaLLs[*iHypo] = static_cast<float>( pionDLL - deltaLLs[*iHypo] );
   }
   // final update DLL values in stored RichPID data object
   pid->setParticleLLValues(deltaLLs);

@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.11 2009-06-10 13:20:15 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.12 2009-06-11 15:12:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -300,7 +300,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
       if ( m_refitRings ) refit( newRing, radius );
 
       // ring radius
-      newRing->setRadius ( radius * m_scaleFactor );
+      newRing->setRadius ( static_cast<LHCb::RichRecRing::FloatType>(radius*m_scaleFactor) );
 
       // build the ring points
       if ( m_buildRingPoints ) buildRingPoints ( newRing );

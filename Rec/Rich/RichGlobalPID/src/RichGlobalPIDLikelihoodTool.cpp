@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.6 2008-10-15 12:38:57 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.7 2009-06-11 15:10:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -330,7 +330,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
       const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
 
       // Set the value for deltaLL for this hypothesis
-      (*track)->globalPID()->setParticleDeltaLL( *hypo, deltaLogL );
+      (*track)->globalPID()->setParticleDeltaLL( *hypo, static_cast<float>(deltaLogL) );
 
       // Set new minimum if lower logLikelihood is achieved
       if ( deltaLogL < mindeltaLL )
@@ -353,7 +353,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
         for ( Rich::Particles::const_iterator hypo3 = hypo;
               hypo3 != pidTypes().end(); ++hypo3 )
         {
-          (*track)->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
+          (*track)->globalPID()->setParticleDeltaLL( *hypo3, static_cast<float>(deltaLogL) );
         }
         break;
       }
@@ -465,7 +465,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
       }
 
       // Set the value for deltaLL for this hypothesis
-      gTrack->globalPID()->setParticleDeltaLL( *hypo, deltaLogL );
+      gTrack->globalPID()->setParticleDeltaLL( *hypo, static_cast<float>(deltaLogL) );
 
       // is DLL change significant ?
       if ( deltaLogL < m_epsilon )
@@ -530,7 +530,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
         for ( Rich::Particles::const_iterator hypo3 = hypo;
               hypo3 != pidTypes().end(); ++hypo3 )
         {
-          gTrack->globalPID()->setParticleDeltaLL( *hypo3, deltaLogL );
+          gTrack->globalPID()->setParticleDeltaLL( *hypo3, static_cast<float>(deltaLogL) );
         }
         break;
       }

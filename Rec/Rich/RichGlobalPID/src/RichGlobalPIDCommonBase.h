@@ -5,7 +5,7 @@
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDCommonBase.h,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDCommonBase.h,v 1.2 2009-06-11 15:10:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
@@ -27,6 +27,11 @@
 // Definitions
 #include "RichGlobalPID/RichGlobalPIDTkQuality.h"
 #include "RichRecBase/RichTrackID.h"
+
+// Disable warning on windows
+#ifdef _WIN32
+#pragma warning ( disable:4661 ) // incomplete explicit templates
+#endif
 
 namespace Rich
 {
