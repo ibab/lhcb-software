@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.6 2007-03-07 18:32:53 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.7 2009-06-11 15:30:44 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -381,31 +381,31 @@ public: // Helper classes
     /// Does this ProtoParticle have CALO SPD information
     inline bool hasCaloSPD( const LHCb::ProtoParticle * proto ) const
     {
-      return (bool) proto->info( LHCb::ProtoParticle::InAccSpd, false );
+      return proto->hasInfo( LHCb::ProtoParticle::InAccSpd );
     }
 
     /// Does this ProtoParticle have CALO PRS information
     inline bool hasCaloPRS( const LHCb::ProtoParticle * proto ) const
     {
-      return (bool) proto->info( LHCb::ProtoParticle::InAccPrs, false );
+      return proto->hasInfo( LHCb::ProtoParticle::InAccPrs );
     }
 
     /// Does this ProtoParticle have CALO ECAL information
     inline bool hasCaloECAL( const LHCb::ProtoParticle * proto ) const
     {
-      return (bool) proto->info( LHCb::ProtoParticle::InAccEcal, false );
+      return proto->hasInfo( LHCb::ProtoParticle::InAccEcal );
     }
 
     /// Does this ProtoParticle have CALO HCAL information
     inline bool hasCaloHCAL( const LHCb::ProtoParticle * proto ) const
     {
-      return (bool) proto->info( LHCb::ProtoParticle::InAccHcal, false );
+      return proto->hasInfo( LHCb::ProtoParticle::InAccHcal );
     }
 
     /// Does this ProtoParticle have CALO Brem information
     inline bool hasCaloBREM( const LHCb::ProtoParticle * proto ) const
     {
-      return (bool) proto->info( LHCb::ProtoParticle::InAccBrem, false );
+      return proto->hasInfo( LHCb::ProtoParticle::InAccBrem );
     }
 
     // Methods to test if a ProtoParticle has any sub-det DLL information
