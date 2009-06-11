@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.34 2009-06-08 17:14:25 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.35 2009-06-11 12:41:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -164,7 +164,7 @@ MCTruthTool::mcSegToRingLinks() const
       delete m_mcSegToRingLinks;
       m_mcSegToRingLinks = NULL;
     }
-    else
+    else if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << m_mcSegToRingLinks->direct()->relations().size()
               << " Track to MCRichTrack->MCCKRings associations" << endreq;

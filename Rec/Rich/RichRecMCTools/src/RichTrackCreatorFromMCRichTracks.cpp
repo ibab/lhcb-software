@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.19 2008-10-30 08:36:42 cattanem Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.20 2009-06-11 12:41:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -338,15 +338,15 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         {
           richTracks()->insert( newTrack, mcrTrack->key() );
         }
-        catch ( const GaudiException & excpt )
+        catch ( ... )
         {
-          Warning( "Failed to insert MCRichTrack based RichRecTrack with original key", StatusCode::SUCCESS );
+          Warning( "Failed to insert MCRichTrack based RichRecTrack with original key", StatusCode::SUCCESS ).ignore();
           richTracks()->insert( newTrack );
         }
 
         // Set momentum and pt
-        newTrack->setVertexMomentum( ptot );
-        newTrack->setVertexPt( mcPart->pt() );
+        newTrack->setVertexMomentum( static_cast<LHCb::RichRecTrack::FloatType>(ptot) );
+        newTrack->setVertexPt( static_cast<LHCb::RichRecTrack::FloatType>(mcPart->pt()) );
 
         // track charge
         newTrack->setCharge( (float)charge );

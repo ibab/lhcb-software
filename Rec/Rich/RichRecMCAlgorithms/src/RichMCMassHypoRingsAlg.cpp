@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.2 2008-01-25 13:22:36 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.3 2009-06-11 12:44:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -189,7 +189,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     ring->setType ( LHCb::RichRecRing::RayTracedCK );
 
     // set angle
-    ring->setRadius( theta );
+    ring->setRadius( static_cast<LHCb::RichRecRing::FloatType>(theta) );
 
     // set the PID for this segment
     ring->setMassHypo( mcpid );

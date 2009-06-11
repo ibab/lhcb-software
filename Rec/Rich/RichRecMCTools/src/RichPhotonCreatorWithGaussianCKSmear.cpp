@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.7 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.8 2009-06-11 12:41:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -163,7 +163,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
                     << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
                     << " -> " << newCKtheta << endreq;
         }
-        newPhoton->geomPhoton().setCherenkovTheta( newCKtheta );
+        newPhoton->geomPhoton().setCherenkovTheta( static_cast<float>(newCKtheta) );
 
         // count smeared photons
         ++m_smearCount[rad];

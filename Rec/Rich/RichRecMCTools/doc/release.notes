@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix some WIN32 compilation warnings
+
 ! 2009-06-08 - Chris Jones
  - Implement new method in MCTruth tool to return MCParticle for a given
    RichRecRing pointer.

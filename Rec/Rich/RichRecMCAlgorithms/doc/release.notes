@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 compilation warning
+
 !===================== RichRecMCAlgorithms v1r3 2009-05-08 ===================
 ! 2009-04-30 - Chris Jones
  - Improvements to the hit dumping algorithm

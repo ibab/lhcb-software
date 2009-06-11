@@ -2,8 +2,9 @@
 # Created    : 2007-10-25
 # Maintainer : Chris Jones
 #============================================================================
+
 package           RichRecMCAlgorithms
-version           v1r3
+version           v1r3p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
