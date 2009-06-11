@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.cpp,v 1.6 2009-03-10 12:51:22 rlambert Exp $
+// $Id: MCEventTypeFinder.cpp,v 1.7 2009-06-11 12:43:12 rlambert Exp $
 // Include files 
 #include <sstream>
 #include <math.h>
@@ -41,6 +41,7 @@ MCEventTypeFinder::MCEventTypeFinder( const std::string& type,
     m_diMuon(12000),
     m_muonp(-13),
     m_muonm(13),
+    m_tau(15),
     m_acc_min(-1.0*log(tan(0.4/2.0))), //~1.60
     m_acc_max(-1.0*log(tan(0.05/2.0))), //~6
     m_decProdStr1("DecProdCut"),
@@ -527,7 +528,17 @@ long int MCEventTypeFinder::constructDecayType(const LHCb::MCParticle * mc_mothe
   const LHCb::ParticleID mID = mc_mother->particleID();
   if (mID.pid()==m_muonp) return m_muonp;
   else if (mID.pid()==m_muonm) return m_muonm;
+  else if(abs(mID.pid())==m_tau) return categoriseTau(mc_mother, dimuon);
+  else if(mID.isMeson() || mID.isBaryon()) return categoriseHadron(mc_mother, dimuon);
+  else return 0;
   
+}
+long int MCEventTypeFinder::categoriseHadron(const LHCb::MCParticle * mc_mother, bool & dimuon ) 
+{
+  
+  if(!mc_mother) return 0;
+  
+  const LHCb::ParticleID mID = mc_mother->particleID();
 
   unsigned int g=0, s=0;
 
@@ -580,7 +591,7 @@ long int MCEventTypeFinder::determineDecay(const LHCb::MCParticle * mc_mother, b
   bool anymuon=nmuon||pmuon;
   dimuon=nmudec&&pmudec; //are there two reconstructible muons?
   
-  
+  //LHCb Note 2005-034
   
   int dctnxu=0;
   
@@ -741,5 +752,124 @@ bool MCEventTypeFinder::strcompNoSpace(std::string first, std::string second)
       else its++;
     }
   return second==first;
+  
+}
+
+long int MCEventTypeFinder::categoriseTau(const LHCb::MCParticle * mc_mother, bool & dimuon ) 
+{
+  
+  unsigned int g=3, s=1, d=1;
+  
+  int ctnxu = determineDecay(mc_mother, dimuon);
+  
+  
+  if(msgLevel(MSG::VERBOSE)) verbose() << "found the decay type " << (g*10000000+s*1000000+d*100000+ctnxu) << endmsg;
+  if(dimuon && msgLevel(MSG::VERBOSE)) verbose() << "--which is a dimuon type " << endmsg;
+  
+  return(g*10000000+s*1000000+d*100000+ctnxu);
+  
+  
+}
+
+int MCEventTypeFinder::determineTauDecay(const LHCb::MCParticle * mc_mother, int & nV0,
+                                         bool & nmuon,bool & pmuon,bool & nmudec,bool & pmudec,
+                                         bool & nelectron, int & ntracks, int & neut, bool & dec, 
+                                         int & nPip, int & nPim, int & nKp, int & nKm)
+
+{
+  if(!mc_mother) return 0;
+  const LHCb::ParticleID mID = mc_mother->particleID();
+  if(isStable(mc_mother))  //it's a track
+    {
+      if(abs(mID.pid())==22 ) return 0; //don't follow photons
+      else dec=(dec && mc_mother->pseudoRapidity()>m_acc_min && mc_mother->pseudoRapidity()<m_acc_max); //check if it's not a neutrino
+      
+      if(mID.threeCharge()!=0) 
+      {
+        ntracks++;
+        if(mID.isLepton())
+        {
+          if(mID.pid()==m_muonm)  {nmuon=true; if(dec) nmudec=true;}
+          else if (mID.pid()==m_muonp) {pmuon=true; if(dec) pmudec=true;}
+          else if(abs(mID.pid())==11)  nelectron=true;
+        }
+        else if(mID.isMeson())
+        {
+          
+          if (mID.pid()==211) nPip++;
+          else if (mID.pid()==-211) nPim++;
+          else if (mID.pid()==321) nKp++;
+          else if (mID.pid()==-321) nKm++;
+        }
+        
+      }
+      
+      else
+      {
+        if(nV0==0) 
+        {
+          if(abs(mID.pid())==333) nV0=4; //Phi
+          else if(abs(mID.pid())==313) nV0=5; //K*(892)0
+          else if(abs(mID.pid())==113) nV0=6; //rho0
+          else if(abs(mID.pid())==223) nV0=7; //omega0
+        }
+        
+        if(neut<8 && (abs(mID.pid())==2112 || abs(mID.pid())==130 ) ) neut+=8;//KL0
+        if(neut%8 < 4 && abs(mID.pid())==111 ) neut+=4; //pi0
+      }
+      return 0;
+      
+    }
+  //iterate over decay vertices
+  for(SmartRefVector<LHCb::MCVertex>::const_iterator iV=mc_mother->endVertices().begin(); 
+      iV!=mc_mother->endVertices().end();  iV++) //iterate over daughters
+    for(SmartRefVector<LHCb::MCParticle>::const_iterator iP=(*iV)->products().begin();
+        iP!=(*iV)->products().end(); iP++)
+      determineTauDecay(*iP, nV0, nmuon, pmuon, nmudec,  pmudec, nelectron, ntracks, neut, dec, 
+                     nPip,nPim,nKp,nKm);
+  
+  return 0;
+  
+  
+}
+
+long int MCEventTypeFinder::determineTauDecay(const LHCb::MCParticle * mc_mother, bool & dimuon)
+{
+  bool nmuon=false, pmuon=false, nmudec=false, pmudec=false, nelectron=false, dec=true;
+  int nPip=0, nPim=0, nKp=0, nKm=0;
+  int nV0=0, ntracks=0, neut=0;
+  determineTauDecay(mc_mother, nV0, nmuon, pmuon, nmudec, pmudec, nelectron, ntracks, 
+                 neut, dec, nPip, nPim, nKp, nKm);
+  
+  bool anymuon=nmuon||pmuon;
+  bool anyhadron=nPip||nPim||nKp||nKm;
+  dimuon=nmudec&&pmudec; //are there two reconstructible muons?
+  
+  
+  
+  int ctnxu=0;
+  
+  //LHCb Note 2009-001
+  
+  if (ntracks>9) ntracks=9;
+  ctnxu+=ntracks*1000;
+  if (neut>9) neut=9;
+  ctnxu+=neut*100;
+  
+  if(anymuon) ctnxu+=10000; 
+  else if(nelectron) ctnxu+=20000; 
+
+  if(!anyhadron) ctnxu+=0;
+  else if(nKp && nKm) ctnxu+=40;
+  else if(nPip && nPim) ctnxu+=10;
+  else if( nPip && nKm ) ctnxu+=20;
+  else if( nPim && nKp ) ctnxu+=30;
+  else if( nPim && nKm ) ctnxu+=60;
+  else if( nPim >= 2|| nPip >=2 ) ctnxu+=50;
+  else if( nKm >= 2|| nKp >=2 ) ctnxu+=70;
+  
+  if(nV0<9 && nV0>3) ctnxu+=nV0;
+  
+  return ctnxu;
   
 }

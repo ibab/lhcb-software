@@ -1,4 +1,4 @@
-// $Id: MCEventTypeFinder.h,v 1.3 2009-03-10 12:51:22 rlambert Exp $
+// $Id: MCEventTypeFinder.h,v 1.4 2009-06-11 12:43:12 rlambert Exp $
 #ifndef TOOLS_MCEVENTTYPEFINDER_H 
 #define TOOLS_MCEVENTTYPEFINDER_H 1
 
@@ -29,13 +29,18 @@ class IEvtTypeSvc;
  *  or group of MCParticles by their eventType.
  *  The EvtTypeSvc should be told the location of the dec files txt file
  *  e.g. if you have your own local copy, in Gaudi Python, do 
+
  *  from Configurables import EvtTypeSvc
+
  *  EvtTypeSvc().EvtTypesFile='~/cmtuser/Gauss_HEAD/Gen/DecFiles/doc/table_event.txt'
+
  *  
  *  MCEventTypeFinder is an implimentation of IMCEventTypeFinder.
  *  
  *  This is used in the TupleToolMCEventType, and TupleToolMCDecayType, where you should look for examples on how to use this class.
  * 
+ *  See LHCbNotes 2009-001 and 2005-034  
+ *
  *  METHODS:
  *
  *  There are three ways to get the event type of an event. The genheader, an educated guess, and the decay string (instant, fast, very slow).
@@ -115,7 +120,7 @@ public:
   /// Guess event types in this event based on the quarks/decays in the event, only accepted particles are counted
   virtual StatusCode constructEventTypes(LHCb::EventTypeSet& found);
   
-  /// Guess decay types from this particle based on its decay, no acceptance cut although the type is appended with a 1 if all daughter particles are in the acceptance
+  /// Guess decay types from this particle, no acceptance cut although the type is appended with a 1 if all daughter particles are in the acceptance
   virtual StatusCode constructDecayType(LHCb::EventTypeSet& found, const LHCb::MCParticle * mc_mother );
   
   /// Guess decay types from this particle based on its decay, only accepted particles are counted
@@ -152,22 +157,41 @@ public:
     const long unsigned int m_diMuon;///=12000
     const int m_muonp;///=-13
     const int m_muonm;///=13
+    const int m_tau;///=15
     double m_acc_min;///n=1.6-ish, 400 mrad, set using option acc_min
     double m_acc_max;///n=6-ish, 5 mrad, set using option acc_max
     const std::string m_decProdStr1; ///<"DecProdCut"
     const std::string m_decProdStr2; ///<"InAcc"
     
     static bool m_temp;
+ 
+ 
+    ///method to categorise hadron decays type, gs______
+    long int categoriseHadron(const LHCb::MCParticle * mc_mother, bool & dimuon=m_temp);
     
+    ///method to categorise tau decays type, gsd_____
+    long int categoriseTau(const LHCb::MCParticle * mc_mother, bool & dimuon=m_temp);
+    
+  
     ///method to create the decay type, gs______
     long int constructDecayType(const LHCb::MCParticle * mc_mother, bool & dimuon=m_temp);
     
     ///method to create the decay type, __dctnxu
     long int determineDecay(const LHCb::MCParticle * mc_mother, bool & dimuon=m_temp);
     
+    ///method to create the decay type, __dctnxu
+    long int determineTauDecay(const LHCb::MCParticle * mc_mother, bool & dimuon=m_temp);
+    
     ///iterative method looking for all relevent features of the decay, used to create the decay type, __dctnxu
     int determineDecay(const LHCb::MCParticle * mc_mother, bool & nJPsi, int & ncharm,
-                       bool & nmuon, bool & pmuon, bool & nmudec, bool & pmudec, bool & nelectron, int & ntracks, int & neut, bool & dec, bool & neutrino);
+                       bool & nmuon, bool & pmuon, bool & nmudec, bool & pmudec, 
+                       bool & nelectron, int & ntracks, int & neut, bool & dec, bool & neutrino);
+    
+    ///iterative method looking for all relevent features of Tau decays, used to create the decay type, ___ctnxu
+    int determineTauDecay(const LHCb::MCParticle * mc_mother, int & nV0,
+                       bool & nmuon, bool & pmuon, bool & nmudec, bool & pmudec, 
+                       bool & nelectron, int & ntracks, int & neut, bool & dec,
+                       int & nPip, int & nPim, int & nKp, int & nKm);
     
     ///Annoying way to check if the particle is stable :S
     bool isStable(const LHCb::MCParticle * mc_mother);

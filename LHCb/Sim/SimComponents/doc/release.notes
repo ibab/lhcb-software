@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Rob Lambert
+ - MCEventTypeFinder. Added rare Tau decays, as in LHCbNote 2009-001
+
 !====================== SimComponents v2r17 2009-03-10 =======================
 ! 2009-03-10 - Rob Lambert
  - MCEventTypeFinder, changed default acceptance, closer to true
