@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.27 2009-06-03 12:34:42 jpalac Exp $
+!$Id: release.notes,v 1.28 2009-06-11 15:23:53 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r5 2009-06-11 ==================
+
+! 2009-06-11 - Juan PALACIOS
+ - Move reading scripts to new scropts directory. python now only contains
+   MicroDSTExample modules.
+ - cmt/requirements
+  . Increase version to v2r5
+  . Add scripts directory
 
 !======================= Ex/MicroDSTExample v2r4 2009-06-03 ==================
 
