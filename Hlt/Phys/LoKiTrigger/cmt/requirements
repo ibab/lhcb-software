@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.20 2009-06-03 10:52:07 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2009-06-11 15:29:47 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiTrigger
-version           v9r2p1
+version           v9r3
 
 # =============================================================================
 branches          cmt doc src dict python LoKi 
@@ -24,6 +24,9 @@ apply_pattern install_python_modules
 # =============== constituents ================================================
 library           LoKiTriggerLib ../src/*.cpp 
 library           LoKiTrigger    ../src/Components/*.cpp 
+
+macro_append LoKiTrigger_dependencies      " LoKiTriggerLib "
+macro_append LoKiTriggerDict_dependencies  " LoKiTriggerLib "
 
 # ============== Produce LCG dictionary =======================================
 apply_pattern    reflex_dictionary                                         \

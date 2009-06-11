@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.41 2009-06-03 10:55:16 pkoppenb Exp $
+! $Id: release.notes,v 1.42 2009-06-11 15:29:47 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-06-11 - Vanya BELYAEV  
+
+ - some minor polishing for cmt/requirmeents file
+
+ - cmt/requirements
+
+    version increment to v9r3 
+
 
 !========================== LoKiTrigger v9r2p1 2009-06-03 ===================
 ! 2009-06-03 - Vanya BELYAEV
