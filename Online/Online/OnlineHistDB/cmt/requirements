@@ -22,8 +22,6 @@ macro_append ChangeTaskName_dependencies " OnlineHistDB "
 application  ChangeAlgorithmName ../main/ChangeAlgorithmName.cpp
 macro_append ChangeAlgorithmName_dependencies " OnlineHistDB "
 
-#macro LCG_system '$(CMTCONFIG)-opt'
-
 macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
 macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.42 2009-06-09 17:31:21 ggiacomo Exp $
+! $Id: release.notes,v 1.43 2009-06-11 15:19:09 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,7 +6,7 @@
 ! or using makedoc script in this folder
 !
 
-! 20090609 
+! 20090609 v5r3 (tested on FEST5)
 - changes to OMAMessage, to allow for DB reconnection to Analysis Tasks
 
 ! 20090512 v5r2
