@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.349 2009-06-04 07:46:31 jpalac Exp $
+! $Id: release.notes,v 1.350 2009-06-11 13:30:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,13 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-11 - Juan PALACIOS
+ - cmt/requirements
+   job/DaVinci_Ganga.py
+  . Increase version to v23r1p1
+ - python/DaVinci/Configuration.py
+  . Add "MC09" to possible DataType values.
 
 !========================== DaVinci v23r1 2009-06-04 ===================
 
