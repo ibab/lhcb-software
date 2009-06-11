@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-06-11 - Chris Jones
+ - Remove RichLocalPID and RichHLTLocalPID from the release.
+
 ! 2009-06-04 - Chris Jones
  - Add RichRecTemplateRings to RICH packages
 
