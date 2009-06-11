@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 compilation warnings about double -> float conversions
+
 !======================= RichRecStereoTools v1r5p1 2009-02-20 ================
 ! 2009-01-20 - Marco Cattaneo
  - Remove obsolete includes for Gaudi ParticlePropertySvc

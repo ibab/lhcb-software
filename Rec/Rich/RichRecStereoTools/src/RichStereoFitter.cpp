@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.16 2008-12-17 13:56:44 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.17 2009-06-11 11:13:41 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -366,21 +366,21 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
     Result result(Result::Succeeded);
     if ( m_chi2Prev<m_chi2 )
     {
-      result.chi2      = m_chi2Prev;
-      result.probChi2  = m_probPrev;
+      result.chi2      = (float)m_chi2Prev;
+      result.probChi2  = (float)m_probPrev;
       result.ndof      = m_dofPrev;
-      result.thcFit    = m_CerenkovPrev;
-      result.thcFitErr = m_CerenkovErrPrev;
-      result.thphotErr = m_photonThcSigmaPrev;
+      result.thcFit    = (float)m_CerenkovPrev;
+      result.thcFitErr = (float)m_CerenkovErrPrev;
+      result.thphotErr = (float)m_photonThcSigmaPrev;
     }
     else
     {
-      result.chi2      = m_chi2;
-      result.probChi2  = m_prob;
+      result.chi2      = (float)m_chi2;
+      result.probChi2  = (float)m_prob;
       result.ndof      = m_dof;
-      result.thcFit    = m_Cerenkov;
-      result.thcFitErr = m_CerenkovErr;
-      result.thphotErr = m_photonThcSigma;
+      result.thcFit    = (float)m_Cerenkov;
+      result.thcFitErr = (float)m_CerenkovErr;
+      result.thphotErr = (float)m_photonThcSigma;
     }
 
     //reset segment direction and photon angles to what they where at call time...
@@ -960,8 +960,8 @@ void StereoFitter::updateAllPhotonAngles(RichRecSegment *richSegment,
     // Update angles using updated segment
     double thetaC(0), phiC(0);
     richSegment->trackSegment().angleToDirection( photonDir, thetaC, phiC );
-    gPhot.setCherenkovTheta(thetaC);
-    gPhot.setCherenkovPhi(phiC);
+    gPhot.setCherenkovTheta((float)thetaC);
+    gPhot.setCherenkovPhi((float)phiC);
 
     // reset photon to force recalculation of derived quantites in proceding algorithms  (discard "const")
     iPhotNonConst->reset();
@@ -986,8 +986,8 @@ void StereoFitter::resetSegmentAndPhotons( RichRecSegment *richSegment,
     for ( ThetaPhiMap::const_iterator iP = m_origPhotInfo.begin();
           iP != m_origPhotInfo.end(); ++iP )
     {
-      (*iP).first->geomPhoton().setCherenkovTheta( (*iP).second.first  );
-      (*iP).first->geomPhoton().setCherenkovPhi  ( (*iP).second.second );
+      (*iP).first->geomPhoton().setCherenkovTheta( (float)(*iP).second.first  );
+      (*iP).first->geomPhoton().setCherenkovPhi  ( (float)(*iP).second.second );
       (*iP).first->reset();
     }
   }
