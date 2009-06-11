@@ -1,4 +1,4 @@
-// $Id: MCTupleToolKinematic.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolKinematic.cpp,v 1.2 2009-06-11 15:42:59 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -118,18 +118,19 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
       test &= tuple->column( head+"_TRUEPT", mcPT );
     }
   
-  if (!isStable(mcp)){
+  //if (!isStable(mcp)){ //NO!! becuase then the tuple tools might be different each time
     
     if( m_storeVertexes ){
       test &= tuple->column( head + "_TRUEORIGINVERTEX_", originVertex );
       test &= tuple->column( head + "_TRUEENDVERTEX_", endVertex );
+      test &= tuple->column( head + "_TRUEISSTABLE",  isStable(mcp));
     }
     
     if( m_storePT ){
       test &= tuple->column( head + "_TRUETAU", mcTau );
       test &= tuple->column( head + "_OSCIL", hasOsc );
     }
-  }
+    //}
   
   if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::fill bye " << head << endmsg ;
   

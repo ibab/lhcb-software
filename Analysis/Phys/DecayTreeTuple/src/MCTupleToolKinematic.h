@@ -1,4 +1,4 @@
-// $Id: MCTupleToolKinematic.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolKinematic.h,v 1.2 2009-06-11 15:42:59 rlambert Exp $
 #ifndef MCTUPLETOOLKINEMATIC_H 
 #define MCTUPLETOOLKINEMATIC_H 1
 
@@ -21,9 +21,8 @@
  * - head_TRUEORIGINVERTEX_[X|Y|Z] : position of the true origin vertex.
  * - head_TRUEENDVERTEX_[X|Y|Z] : position of the true end vertex (the
      first one)
+ * - head_TRUEISSTABLE : MCAssociate has no daughters.
  * - head_TRUETAU : true propertime
- * - head_TRUE{ThetaL,ThetaK,Phi} : true helicity angles
- * - head_TRUE{ThetaTr,PhiTr,ThetaVtr} : true transversity angles
  * 
  * \sa MCTupleToolKinematic, DecayTreeTuple, MCDecayTreeTuple
  * 

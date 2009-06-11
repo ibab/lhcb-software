@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Rob Lambert
+ - Fixed a bug in MCTupleToolKinematic
+
 !======================== DecayTreeTuple v2r3 2009-06-03 =====================
 
 ! 2009-06-04 - Rob Lambert
