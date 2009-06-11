@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.75 2009-05-23 20:21:45 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.76 2009-06-11 13:11:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -349,7 +349,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
       newRing->setCentrePointGlobal( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
 
       // ring radius
-      newRing->setRadius ( (*iRing).radius() );
+      newRing->setRadius ( static_cast<LHCb::RichRecRing::FloatType>((*iRing).radius()) );
 
       // build the ring points
       buildRingPoints ( newRing );

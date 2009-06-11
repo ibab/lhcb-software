@@ -153,7 +153,7 @@ namespace Lester {
           };
           // try again!
         };
-      } catch (NoMaxExists nme) {
+      } catch (NoMaxExists&) {
         throw NoSamplesPossible();
       };
     };

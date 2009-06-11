@@ -16,7 +16,7 @@ namespace Lester
     const double viewRangeParameter=0.030*5;
 
     const bool showSomeIdeas = true;
-    const bool numberOfFramesBetweenIdeas =25; //25;
+    const int  numberOfFramesBetweenIdeas   = 25; //25;
     const int  numberOfFramesBetweenUpdates = 500; //500;
 
   }

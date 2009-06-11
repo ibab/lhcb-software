@@ -108,7 +108,7 @@ namespace Lester
     try {
       const Small2Vector centre = centreOfCircleThrough(a,b,c);
       return (a-centre).mag();
-    } catch (PointAtInfinity pai) {
+    } catch (PointAtInfinity&) {
       throw RadiusIsInfinite();
     }
   }

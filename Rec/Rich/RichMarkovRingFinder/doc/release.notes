@@ -4,6 +4,9 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Various WIN32 compilation warning fixes
+
 ! 2009-06-03 - Chris Jones
  - Synchronise the configurable with the ENN Configurable.
 

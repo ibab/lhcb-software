@@ -25,7 +25,7 @@ namespace Lester
     /// m_xMin is the point of lower truncation
     const double m_xMin;
     const double m_oneOnRootTwoPiSigmaSq;
-    const double m_inverseTruncatedArea;
+    double m_inverseTruncatedArea;
   public:
     static double inverseTruncatedArea(const double mean,
                                        const double sigma,
@@ -42,9 +42,10 @@ namespace Lester
                       const double xMin) : m_mean(mean),
                                            m_sigma(fabs(sigma)),
                                            m_xMin(xMin),
-                                           m_oneOnRootTwoPiSigmaSq(1./(sqrt(MathsConstants::twoPi)*m_sigma)),
-                                           m_inverseTruncatedArea(this->inverseTruncatedArea(mean,m_sigma,xMin)) 
-    { }
+                                           m_oneOnRootTwoPiSigmaSq(1./(sqrt(MathsConstants::twoPi)*m_sigma))
+    { 
+      m_inverseTruncatedArea = this->inverseTruncatedArea(mean,m_sigma,xMin);
+    }
     virtual double sample() const
     {
       double ans;

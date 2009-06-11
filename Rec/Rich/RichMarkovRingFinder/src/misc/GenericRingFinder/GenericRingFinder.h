@@ -14,6 +14,10 @@
 #include "GenericRingFinder/GenericConfiguration.h"
 #include "boost/shared_ptr.hpp"
 
+#ifdef _WIN32
+#pragma warning ( disable:4290 ) // Visual C++ does not implement checked exceptions
+#endif
+
 namespace GenRingF
 {
 
