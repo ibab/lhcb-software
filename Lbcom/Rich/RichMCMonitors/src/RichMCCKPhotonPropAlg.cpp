@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonPropAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonPropAlg.cpp,v 1.2 2008-05-08 12:36:28 jonrob Exp $
+ * $Id: RichMCCKPhotonPropAlg.cpp,v 1.3 2009-06-11 19:55:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -31,8 +31,8 @@ DECLARE_ALGORITHM_FACTORY( MCCKPhotonPropAlg );
 //=============================================================================
 MCCKPhotonPropAlg::MCCKPhotonPropAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : Rich::HistoAlgBase ( name , pSvcLocator      ),
-    m_refIndex         ( NULL                    ) { }
+  : Rich::HistoAlgBase ( name , pSvcLocator ),
+    m_refIndex         ( NULL               ) { }
 
 //=============================================================================
 // Destructor
@@ -90,13 +90,13 @@ StatusCode MCCKPhotonPropAlg::execute()
          rad != Rich::Rich2Gas ) continue;
 
     // photon energy
-    const float energy     = (*iP)->energyAtProduction() / Gaudi::Units::electronvolt;
+    const double energy     = (*iP)->energyAtProduction() / Gaudi::Units::electronvolt;
     // wavelength
-    const float wavelength =
+    const double wavelength =
       ( energy>0 ? Gaudi::Units::c_light*Gaudi::Units::h_Planck/(*iP)->energyAtProduction() : 0 )
       / Gaudi::Units::nanometer;
     // ref index for this photon
-    const double refInd    = m_refIndex->refractiveIndex( rad, energy );
+    const double refInd     = m_refIndex->refractiveIndex( rad, energy );
 
     if ( msgLevel(MSG::DEBUG) )
       debug() << rad << " photon : energy=" << energy << " refIndex=" << refInd 

@@ -4,6 +4,9 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 compilation warning
+
 !========================== RichMCMonitors v1r6 2008-05-09 ===================
 ! 2008-05-08 - Chris Jones
  - Tidy up RichMCCKPhotonPropAlg a little and add some new histos for the
