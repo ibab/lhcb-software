@@ -5,4 +5,4 @@
 # Second argument is the server and port in the form server:port.
 # The new directory will be created in the root directory given
 # in the CAMERA server configuration file.
-CameraSwitch.exe $1 $2
+CameraSwitch.exe $1  localhost:12345
