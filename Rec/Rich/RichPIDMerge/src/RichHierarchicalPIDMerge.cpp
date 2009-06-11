@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.10 2008-08-15 14:33:29 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.11 2009-06-11 14:21:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -30,7 +30,6 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
   : Rich::AlgBase ( name , pSvcLocator ),
     m_richPIDLocation       ( LHCb::RichPIDLocation::Default ),
     m_richGlobalPIDLocation ( LHCb::RichGlobalPIDLocation::Default ),
-    m_richLocalPIDLocation  ( LHCb::RichLocalPIDLocation::Default ),
     m_fillProcStat          ( true )
 {
 
@@ -51,14 +50,11 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
   declareProperty( "OutputPIDLocation", m_richPIDLocation );
   // Input location in TDS for RichGlobalPIDs
   declareProperty( "InputGlobalPIDLocation", m_richGlobalPIDLocation );
-  // Input location in TDS for RichLocalPIDs
-  declareProperty( "InputLocalPIDLocation", m_richLocalPIDLocation );
   // Location of processing status object in TES
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
 
   // Flags to turn on/off various PID results
-  declareProperty( "UseLocalPIDs",     m_useLocalPIDs  = true  );
   declareProperty( "UseGlobalPIDs",    m_useGlobalPIDs = true  );
 
   // fill procstat
@@ -111,7 +107,7 @@ StatusCode HierarchicalPIDMerge::execute()
   }
 
   // tallies of number of PID results used of each type
-  unsigned int nUsedglobalPIDs(0), nUsedlocalPIDs(0);
+  unsigned int nUsedglobalPIDs(0);
 
   if ( m_useGlobalPIDs )
   {
@@ -139,45 +135,12 @@ StatusCode HierarchicalPIDMerge::execute()
 
     }
 
-  }
-
-  if ( m_useLocalPIDs )
-  {
-    // iterate over Local PID results and place in output container
-
-    SmartDataPtr<LHCb::RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
-    if ( !lPIDs )
-    {
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cannot locate RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
-    }
-    else
-    {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Successfully located " << lPIDs->size()
-                  << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
-
-      for ( LHCb::RichLocalPIDs::const_iterator lPID = lPIDs->begin();
-            lPID != lPIDs->end(); ++lPID )
-      {
-        // if pid with this key exists, skip
-        if ( !( newPIDs->object((*lPID)->key()) ) )
-        {
-          // Form new PID object, using existing RichPID as template
-          newPIDs->insert( new LHCb::RichPID(**lPID), (*lPID)->key() );
-          ++nUsedlocalPIDs;
-        }
-      }
-
-    }
-
-  }
+  } // use Global PIDs
 
   // Update Rich status words
   if ( procStat )
   {
     procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs",    nUsedglobalPIDs );
-    procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",     nUsedlocalPIDs  );
   }
 
   // Final debug information
@@ -188,7 +151,6 @@ StatusCode HierarchicalPIDMerge::execute()
       debug() << "Successfully registered " << newPIDs->size()
               << " RichPIDs at " << m_richPIDLocation
               << " : Global=" << nUsedglobalPIDs
-              << " Local=" << nUsedlocalPIDs
               << endreq;
     }
     else
@@ -197,7 +159,6 @@ StatusCode HierarchicalPIDMerge::execute()
               << m_richPIDLocation << " with " << newPIDs->size()
               << " new RichPIDs"
               << " : Global=" << nUsedglobalPIDs
-              << " Local=" << nUsedlocalPIDs
               << endreq;
     }
   }

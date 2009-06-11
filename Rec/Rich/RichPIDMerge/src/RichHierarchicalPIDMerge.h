@@ -4,7 +4,7 @@
  *  Header file for RICH algorithm : Rich::Rec::HierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.h,v 1.5 2007-08-09 16:09:58 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.h,v 1.6 2009-06-11 14:21:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -23,7 +23,6 @@
 #include "Event/ProcStatus.h"
 #include "Event/RichPID.h"
 #include "Event/RichGlobalPID.h"
-#include "Event/RichLocalPID.h"
 
 namespace Rich
 {
@@ -34,17 +33,12 @@ namespace Rich
      *
      *  Prepares RichPIDs using results from all individual PID algorithms.
      *
-     *  The PID results are used with the follow order of precedence :-
-     *
-     *    1. The global PID result for each track is used if available and if a Ring
-     *       Refit result has not been used.
-     *
-     *    2. Finally, if no PID result is used and if a local PID result exists, it is used.
+     *  Currently, there is only one PID algorithm - RichGlobalPID...
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   2002-07-10
-     *
+     *  @date   2002-07-10     *
      *  @todo Rewrite this algorithm in a more generic way
+     *  @todo Review if it is needed at all
      */
 
     class HierarchicalPIDMerge : public Rich::AlgBase
@@ -70,12 +64,6 @@ namespace Rich
 
       /// Input location in TES for RichGlobalPIDs
       std::string m_richGlobalPIDLocation;
-
-      /// Input location in TES for RichLocalPIDs
-      std::string m_richLocalPIDLocation;
-
-      /// Flag to turn on/off use of Local PID results
-      bool m_useLocalPIDs;
 
       /// Flag to turn on/off use of Global PID results
       bool m_useGlobalPIDs;

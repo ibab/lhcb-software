@@ -2,11 +2,11 @@
 # Created    : 05/04/2002
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.18 2008-08-15 14:33:29 jonrob Exp $
+# $Id: requirements,v 1.19 2009-06-11 14:21:10 jonrob Exp $
 #============================================================================
 
 package RichPIDMerge
-version v2r6
+version v2r7
 
 # ================ structure ================================================
 branches src cmt doc options
@@ -17,9 +17,6 @@ include_path none
 
 # ================ dependencies =============================================
 use RichGlobalPID     v*  Rich
-use RichLocalPID      v*  Rich
-# Remove until in proper use
-#use RichRingRefit     v*  Rich
 
 # ================ component library=========================================
 library           RichPIDMerge   ../src/*.cpp

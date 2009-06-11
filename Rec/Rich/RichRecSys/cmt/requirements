@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.93 2009-06-04 15:30:45 jonrob Exp $
+# $Id: requirements,v 1.94 2009-06-11 14:23:04 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -26,8 +26,6 @@ use RichRecStereoTools  v*   Rich
 
 # PID packages
 use RichGlobalPID       v*   Rich
-use RichLocalPID        v*   Rich
-use RichHLTLocalPID     v*   Rich
 
 # Result merging algorithms
 use RichPIDMerge        v*    Rich
@@ -38,7 +36,7 @@ use RichRecMonitors     v*    Rich
 # MC packages
 use RichRecMCTools      v*   Rich
 
-# Ring finder
+# Ring finders
 use RichMarkovRingFinder  v*   Rich
 use RichENNRingFinder     v*   Rich
 use RichRecTemplateRings  v*   Rich

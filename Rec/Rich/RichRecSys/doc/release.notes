@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Remove RichLocalPID and RichHLTLocalPID from the release.
+
 ! 2009-06-04 - Chris Jones
  - Add back Template Ring finder algorithm (FFTW3 now available in the LCG 
    area)

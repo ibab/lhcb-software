@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.22 2009-06-04 15:28:40 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2009-06-11 14:23:04 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -16,7 +16,6 @@ from Configurables import RichMarkovRingFinderConf
 from Configurables import RichENNRingFinderConf
 from Configurables import RichTemplateRingFinderConf
 from RichGlobalPID_ import RichGlobalPIDConfig
-from RichHLTLocalPID_ import RichHLTLocalPIDConfig
 from Configurables import GaudiSequencer
 
 # ----------------------------------------------------------------------------------
@@ -28,8 +27,7 @@ from Configurables import GaudiSequencer
 class RichRecSysConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ RichHLTLocalPIDConfig,
-                               RichMarkovRingFinderConf,
+    __used_configurables__ = [ RichMarkovRingFinderConf,
                                RichENNRingFinderConf,
                                RichTemplateRingFinderConf,
                                RichGlobalPIDConfig,
@@ -250,12 +248,6 @@ class RichRecSysConf(RichConfigurableUser):
                 gpidSeq.MeasureTime = True
                 pidSeq.Members += [ gpidSeq ]
                 pidConf.PidSequencer = gpidSeq
-            elif pidMode == "FastLocal" :
-                pidConf = RichHLTLocalPIDConfig()
-                lpidSeq = GaudiSequencer("Rich"+cont+"LPIDSeq")
-                lpidSeq.MeasureTime = True
-                pidSeq.Members += [ lpidSeq ]
-                pidConf.PidSequencer = lpidSeq
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
@@ -264,9 +256,8 @@ class RichRecSysConf(RichConfigurableUser):
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
             #-------------------------------------------------------------------------
-            if pidMode != "FastLocal" :
-                from Configurables import Rich__Rec__HierarchicalPIDMerge
-                pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
+            from Configurables import Rich__Rec__HierarchicalPIDMerge
+            pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
         
         #-----------------------------------------------------------------------------
         # Summary objects
