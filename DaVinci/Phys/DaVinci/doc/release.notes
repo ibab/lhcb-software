@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.350 2009-06-11 13:30:06 jpalac Exp $
+! $Id: release.notes,v 1.351 2009-06-11 15:02:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -15,6 +15,7 @@
   . Increase version to v23r1p1
  - python/DaVinci/Configuration.py
   . Add "MC09" to possible DataType values.
+  . Fix bug in address of P->PV table to be copied
 
 !========================== DaVinci v23r1 2009-06-04 ===================
 
