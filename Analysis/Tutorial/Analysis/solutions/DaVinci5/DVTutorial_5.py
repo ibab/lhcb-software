@@ -1,5 +1,5 @@
 6########################################################################
-# $Id: DVTutorial_5.py,v 1.7 2009-03-12 13:00:28 pkoppenb Exp $
+# $Id: DVTutorial_5.py,v 1.8 2009-06-11 16:22:29 rlambert Exp $
 #
 # Options for exercise 5
 #
@@ -21,8 +21,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
 tree = PrintDecayTree("PrintFoundBs")
-tree.addTool( PhysDesktop )
-tree.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
+tree.InputLocations = [ "Bs2JpsiPhi" ]
 tree.addTool( PrintDecayTreeTool )
 tree.PrintDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 tutorialseq.Members += [ tree ]

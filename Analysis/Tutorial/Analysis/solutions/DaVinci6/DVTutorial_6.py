@@ -19,8 +19,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import DecayTreeTuple, PhysDesktop
 tuple = DecayTreeTuple() 
-tuple.addTool( PhysDesktop )
-tuple.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
+tuple.InputLocations = [ "Bs2JpsiPhi" ]
 tuple.ToolList +=  [
 #      "TupleToolTrigger"
      "TupleToolMCTruth"
@@ -47,7 +46,9 @@ etuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigg
 # Configure the application
 #
 from Configurables import DaVinci
-DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
+#DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
+DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
+DaVinci().HistogramFile='DVHistos.root'
 DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True                  # It's MC
@@ -60,6 +61,7 @@ DaVinci().MainOptions  = ""                    # None
 # Trigger (Restore when fixed on 2008 data)
 #
 DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().RedoMCLinks=True
 ########################################################################
 #
 # To run in shell :

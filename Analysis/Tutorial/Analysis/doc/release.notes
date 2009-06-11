@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Rob Lambert
+ - Added DaVinci7 advanced TupleTool tutorial
+
+! 2009-06-11 - Rob Lambert
+ - Modified to remove PhysDesktop from solutions
+
 !========================== Analysis v8r1p1 2009-03-12 =================
 ! 2009-03-12 - Patrick Koppenburg
  - Fix addTool 

@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_3.py,v 1.7 2009-02-24 15:10:50 pkoppenb Exp $
+# $Id: DVTutorial_3.py,v 1.8 2009-06-11 16:22:28 rlambert Exp $
 #
 # Options for exercise 3
 #
@@ -20,8 +20,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import TutorialAlgorithm, PhysDesktop
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
-jpsi2mumu.addTool( PhysDesktop )
-jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
+jpsi2mumu.InputLocations = [ "StdLooseMuons" ]
 from GaudiKernel.SystemOfUnits import MeV
 jpsi2mumu.MassWindow = 30*MeV 
 jpsi2mumu.MaxChi2 = 100 
@@ -33,8 +32,7 @@ tutorialseq.Members += [ jpsi2mumu ]
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
 
-phi2kk.addTool( PhysDesktop )
-phi2kk.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
+phi2kk.InputLocations = [ "StdLooseKaons" ]
 phi2kk.MassWindow = 50*MeV 
 phi2kk.Particle =  "phi(1020)" 
 phi2kk.MaxChi2 = 20 

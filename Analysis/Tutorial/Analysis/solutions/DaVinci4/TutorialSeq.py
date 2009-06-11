@@ -10,8 +10,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import CombineParticles, PhysDesktop
 jpsi2mumu = CombineParticles("Jpsi2MuMu")
-jpsi2mumu.addTool( PhysDesktop )
-jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ] 
+jpsi2mumu.InputLocations = [ "StdLooseMuons" ] 
 jpsi2mumu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
 jpsi2mumu.DaughtersCuts = { "mu+" : "ALL" } 
 jpsi2mumu.CombinationCut = "ADAMASS('J/psi(1S)')<30*MeV" 
@@ -23,8 +22,7 @@ tutorialseq.Members += [ jpsi2mumu ]
 #
 from Configurables import FilterDesktop
 psifilter = FilterDesktop("PsiFilter")
-psifilter.addTool( PhysDesktop )
-psifilter.PhysDesktop.InputLocations = [ "Jpsi2MuMu" ]
+psifilter.InputLocations = [ "Jpsi2MuMu" ]
 psifilter.Code = "(PT>1*GeV) & (P>3*GeV)"
 tutorialseq.Members += [ psifilter ]
 #######################################################################
@@ -32,8 +30,7 @@ tutorialseq.Members += [ psifilter ]
 # 3) make the Phi
 #
 phi2kk = CombineParticles("Phi2KK")
-phi2kk.addTool( PhysDesktop )
-phi2kk.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
+phi2kk.InputLocations = [ "StdLooseKaons" ]
 phi2kk.DecayDescriptor  =  "phi(1020) -> K+ K-" 
 phi2kk.CombinationCut = "ADAMASS('phi(1020)')<50" 
 phi2kk.MotherCut = "(VFASPF(VCHI2/VDOF)<100)"
@@ -46,8 +43,7 @@ bs2jpsiphi = CombineParticles("Bs2JpsiPhi")
 bs2jpsiphi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"
 bs2jpsiphi.CombinationCut = "ADAMASS('B_s0')<2*GeV"
 bs2jpsiphi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2()<100)"
-bs2jpsiphi.addTool( PhysDesktop )
-bs2jpsiphi.PhysDesktop.InputLocations = [ "PsiFilter", "Phi2KK" ]
+bs2jpsiphi.InputLocations = [ "PsiFilter", "Phi2KK" ]
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool
 import GaudiKernel.SystemOfUnits as Units 
 bs2jpsiphi.HistoProduce = True

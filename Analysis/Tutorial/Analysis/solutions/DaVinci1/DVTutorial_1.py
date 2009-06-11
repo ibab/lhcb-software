@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_1.py,v 1.7 2009-02-24 15:10:50 pkoppenb Exp $
+# $Id: DVTutorial_1.py,v 1.8 2009-06-11 16:22:28 rlambert Exp $
 #
 # Options for exercise 1
 #
@@ -18,11 +18,10 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 # 2) Add the Tutorial algorithm
 #
-from Configurables import TutorialAlgorithm, PhysDesktop
+from Configurables import TutorialAlgorithm
 tutalg = TutorialAlgorithm()
 tutorialseq.Members += [ tutalg ]
-tutalg.addTool( PhysDesktop )
-tutalg.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
+tutalg.InputLocations = [ "StdLooseMuons" ]
 #######################################################################
 #
 # 3) Configure the application
