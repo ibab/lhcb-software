@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 warnings
+
 !======================== RichDet v11r5 2009-05-06 ===========================
 ! 2009-05-01 - Antonis Papanestis
  - Introduce condition to scale refractivity (n-1) of the gas radiators
