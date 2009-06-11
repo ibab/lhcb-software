@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.28 2009-06-11 08:11:30 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.29 2009-06-11 08:12:29 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -87,7 +87,8 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
-  declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
+  //declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
+  m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default ;
 }
 
 void HltConfigSvc::updateMap(Property&) {
