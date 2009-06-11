@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.6 2009-06-05 13:20:33 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.7 2009-06-11 13:29:45 krinnert Exp $
 // Include files
 // -------------
 
@@ -215,7 +215,7 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
 
     std::string histIDtb;
     std::string histTitletb;
-    if (isTop(sensorNumber)) {
+    if (m_velo->sensor(sensorNumber)->isTop()) {
       histIDtb = histIDBase + "T";
       histTitletb = histTitleBase + "Top";
     } else {

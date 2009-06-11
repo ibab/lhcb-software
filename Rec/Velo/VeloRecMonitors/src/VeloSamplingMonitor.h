@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.h,v 1.4 2009-06-05 13:20:33 krinnert Exp $
+// $Id: VeloSamplingMonitor.h,v 1.5 2009-06-11 13:29:45 krinnert Exp $
 #ifndef VELORECMONITORS_VELOSAMPLINGMONITOR_H 
 #define VELORECMONITORS_VELOSAMPLINGMONITOR_H 1
 
@@ -44,20 +44,6 @@ namespace Velo
   protected:
     
   private:
-    
-    /// determine whether a sensor is top or bottom
-    bool isTop(unsigned int sensorNumber) {
-      if(sensorNumber < 64){
-        if((sensorNumber%4==0)||(sensorNumber%4==1)){return false;}
-        else{return true;}
-      } else if ( sensorNumber < 128 ) {
-        if((sensorNumber%4==2)||(sensorNumber%4==3)){return false;}
-        else{return true;}
-      } else {
-        if ( sensorNumber == 129 || sensorNumber == 130 ) { return true; }
-        else { return false; }
-      }
-    }
     
     // Retrieve the VeloClusters
     LHCb::VeloClusters* veloClusters( std::string samplingLocation );
