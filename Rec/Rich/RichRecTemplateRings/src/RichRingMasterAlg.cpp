@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.4 2009-06-05 17:21:31 jonrob Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.5 2009-06-11 10:08:20 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -82,15 +82,14 @@ StatusCode RichRingMasterAlg::execute()
 
 StatusCode RichRingMasterAlg::FindRingsWithTracks()
 {
-  StatusCode sc= StatusCode::SUCCESS;
-  sc = ResetRichEventRingReconParam();
+  StatusCode sc = ResetRichEventRingReconParam();
   // loop through the radiators
   IRichRingRecToolBase* art = rt();
 
 
   for(int irad = art->RParam()->MaxRadiator(); irad >= art->RParam()->MinRadiator();    --irad){
 
-    sc = SetRadiatorSpecificParam(irad);
+    sc = sc && SetRadiatorSpecificParam(irad);
     int iRich =  art->Tfm()->RichDetNumFromRadiator(irad);
 
 
@@ -100,11 +99,11 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
 
       // select and configure the RICH hits in the Field of Interest.
-      sc = art->RLocTgC()-> SelectHitsInFoi (itk, irad, iRich);
+      sc = sc && art->RLocTgC()-> SelectHitsInFoi (itk, irad, iRich);
 
-      sc = art->RLocTDC()->ConfigureTemplateHitsForFF(irad);
+      sc = sc && art->RLocTDC()->ConfigureTemplateHitsForFF(irad);
 
-      sc = art->RLocTgC()->ConfigureTargetHitsInFoiForFF(itk,irad,iRich);
+      sc = sc && art->RLocTgC()->ConfigureTargetHitsInFoiForFF(itk,irad,iRich);
 
       // perform FFT
       VD  aFFTarget =   art->RFFP()->ConvertToFF2d(art->RLocTgC()->RpnTarget(),
@@ -121,9 +120,9 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
 
       // get the peak and store the result
       VI   aRPMaxVec = art->Tfm()->FindPeakInRP( aRPCorr,irad);
-      sc =  art->RLocTDC()->ScaleTemplateHits(aRPMaxVec,itk,irad);
+      sc = sc && art->RLocTDC()->ScaleTemplateHits(aRPMaxVec,itk,irad);
       // determine the mean radius
-      sc = art->RLocTgC()->EstimateMeanRadiusFromRawRadius( itk, irad , iRich );
+      sc = sc && art->RLocTgC()->EstimateMeanRadiusFromRawRadius( itk, irad , iRich );
 
 
       // debug Single track plots
@@ -145,7 +144,7 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
   if(m_storeNtupRadius) {
 
     debug()<<" Now store info in ntuple "<<endmsg;
-    sc = StoreRingInfoInNtup();
+    sc = sc && StoreRingInfoInNtup();
 
   }
 
@@ -291,11 +290,11 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin()+aInvIndex;
       const LHCb::RichRecSegment * segment = *iSeg;
       const Gaudi::XYZPoint & centrePointGlobal = segment->pdPanelHitPoint();
-      double aRadius = rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
+      const double aRadius = rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
 
       newRing->setCentrePointLocal ( centrePointLocal );
       newRing->setCentrePointGlobal( centrePointGlobal );
-      newRing->setRadius(aRadius);
+      newRing->setRadius((LHCb::RichRecRing::FloatType)aRadius);
       newRing->setRichRecSegment(segment);
 
       // now to fill the mass hypothesis. For now just using the closest mass.
