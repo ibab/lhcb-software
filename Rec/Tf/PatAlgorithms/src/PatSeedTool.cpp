@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.10 2009-06-11 07:08:11 smenzeme Exp $
+// $Id: PatSeedTool.cpp,v 1.11 2009-06-11 07:14:25 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -204,7 +204,7 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
 	return false;
       
       parabola.addPoint( hit->z() - track.z0(),
-			 track.distanceForFit( hit ), hit->hit()->weight() );
+			 dist, hit->hit()->weight() );
      
       ++nHits;
     }
