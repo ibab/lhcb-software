@@ -1,11 +1,11 @@
-// $Id: OMACheckEntriesInRange.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMACheckEntriesInRange.cpp,v 1.6 2009-06-11 15:17:31 ggiacomo Exp $
 #include <TH1F.h>
 #include <TF1.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
 #include <sstream>
 
-OMACheckEntriesInRange::OMACheckEntriesInRange(OMAcommon* Env) : 
+OMACheckEntriesInRange::OMACheckEntriesInRange(OMAlib* Env) : 
   OMACheckAlg("CheckEntriesInRange", Env) {
   m_ninput = 3;
   m_inputNames.push_back("Xmin");  m_inputDefValues.push_back(-9.E20);

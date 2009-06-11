@@ -1,15 +1,16 @@
-// $Id: OMAFit.cpp,v 1.3 2009-02-26 15:50:59 ggiacomo Exp $
+// $Id: OMAFit.cpp,v 1.4 2009-06-11 15:17:31 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
 #include <TMath.h>
 #include "OMAlib/OMAAlgorithms.h"
+#include "OMAlib/OMAlib.h"
 using namespace TMath;
 
 // special Check algorithm: fit function is specified for each analysis by the first input parameter
 // no prior knowledge of output algorithms that are taken dinamically according to requested fit function
 // and are defined in dedicated OMAFitFunction objects
-OMAFit::OMAFit(OMAcommon* Env) : 
+OMAFit::OMAFit(OMAlib* Env) : 
   OMACheckAlg("Fit", Env) {
   m_npars = 1;
   m_parnames.push_back("Min_chi2_prob"); m_parDefValues.push_back(0.);

@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.26 2009-06-09 14:32:20 ggiacomo Exp $
+! $Id: release.notes,v 1.27 2009-06-11 15:17:31 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
 
-! 20090609 
+
+! 20090611 v2r6 (tested on FEST5)
 - disconnect from DB at the end of every analyze call, reconnect on next saveset
   (to avoid timeouts)
+- class reordering, OMAcommon renamed to OMAEnv
 
 ! 20090512 v2r5
 - fixes to OMAFitTH2withSinCosC by C. Blanks

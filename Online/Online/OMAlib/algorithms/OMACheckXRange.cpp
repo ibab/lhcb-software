@@ -1,9 +1,9 @@
-// $Id: OMACheckXRange.cpp,v 1.6 2009-04-14 10:34:41 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
-OMACheckXRange::OMACheckXRange(OMAcommon* Env) : 
+OMACheckXRange::OMACheckXRange(OMAlib* Env) : 
   OMACheckAlg("CheckXRange", Env) {
   m_npars = 2;
   m_parnames.push_back("Min"); m_parDefValues.push_back(-999999.);

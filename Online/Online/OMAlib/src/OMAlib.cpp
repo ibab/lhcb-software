@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.18 2009-06-09 17:34:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.19 2009-06-11 15:17:31 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -16,7 +16,7 @@ using namespace std;
 // constructor to be used if already connected to HistDB (use NULL for not using HistDB)
 OMAlib::OMAlib(OnlineHistDB* HistDB, 
                std::string Name) : 
-  OMAcommon(HistDB, Name), m_listSynced(false)
+  OMAMsgInterface(HistDB, Name), m_listSynced(false)
 { 
   m_localDBsession=false;
   checkWritePermissions();
@@ -29,9 +29,8 @@ OMAlib::OMAlib(std::string DBpasswd,
                std::string DBuser , 
                std::string DB,
                std::string Name) : 
-  OMAcommon(new OnlineHistDB(DBpasswd , DBuser, DB), Name), m_listSynced(false)
+  OMAMsgInterface(new OnlineHistDB(DBpasswd , DBuser, DB), Name), m_listSynced(false)
 {
-  checkWritePermissions();
   if(m_histDB) 
     m_localDBsession=true;
   doFitFuncList();
@@ -41,10 +40,9 @@ OMAlib::OMAlib(std::string DBpasswd,
 
 // constructor with a new default (read-only) DB session
 OMAlib::OMAlib(std::string Name) : 
-  OMAcommon(new OnlineHistDB(), Name), m_listSynced(false)
+  OMAMsgInterface(new OnlineHistDB(), Name), m_listSynced(false)
 {
   if(m_histDB) m_localDBsession=true;
-  checkWritePermissions();
   doFitFuncList();
   doAlgList(); 
 }
@@ -84,11 +82,12 @@ void OMAlib::closeDBSession(bool commit) {
 
 
 OMAlib::~OMAlib() {
-  std::map<std::string, OMAalg*>::iterator i;
-  for (i=m_algorithms.begin(); i != m_algorithms.end(); ++i)
+  std::map<std::string, OMAalg*>::iterator ia;
+  for (ia=m_algorithms.begin(); ia != m_algorithms.end(); ++ia)
+    delete (*ia).second ;
+  std::map<std::string, OMAFitFunction*>::iterator i;
+  for (i=m_fitfunctions.begin(); i != m_fitfunctions.end(); ++i)
     delete (*i).second ;
-  if (m_localDBsession)
-    delete m_histDB;
 }
 
 
@@ -192,27 +191,90 @@ TH1* OMAlib::getReference(OnlineHistogram* h,
 
 // initialize available algorithms and synchronize with DB algorithm list
 void OMAlib::doAlgList() {
-  OMAcommon* Env = (OMAcommon*) this;
-  m_algorithms["CheckXRange"] = new OMACheckXRange(Env);
-  m_algorithms["CheckMeanAndSigma"] = new OMACheckMeanAndSigma(Env);
-  m_algorithms["GaussFit"] = new OMAGaussFit(Env);
-  m_algorithms["CheckHolesAndSpikes"] = new OMACheckHolesAndSpikes(Env);
-  m_algorithms["CheckEmptyBins"] = new OMACheckEmptyBins(Env);
-  m_algorithms["CompareToReference"] = new OMACompareToReference(Env);
-  m_algorithms["CheckEntriesInRange"] = new OMACheckEntriesInRange(Env);
-  m_algorithms["Fit"] = new OMAFit(Env);
-  m_algorithms["IfbMonitor"] = new OMAIfbMonitor(Env);
+  m_algorithms["CheckXRange"] = new OMACheckXRange(this);
+  m_algorithms["CheckMeanAndSigma"] = new OMACheckMeanAndSigma(this);
+  m_algorithms["GaussFit"] = new OMAGaussFit(this);
+  m_algorithms["CheckHolesAndSpikes"] = new OMACheckHolesAndSpikes(this);
+  m_algorithms["CheckEmptyBins"] = new OMACheckEmptyBins(this);
+  m_algorithms["CompareToReference"] = new OMACompareToReference(this);
+  m_algorithms["CheckEntriesInRange"] = new OMACheckEntriesInRange(this);
+  m_algorithms["Fit"] = new OMAFit(this);
+  m_algorithms["IfbMonitor"] = new OMAIfbMonitor(this);
 
-  m_algorithms["Efficiency"] = new OMAEfficiency(Env);
-  m_algorithms["Divide"] = new OMADivide(Env);
-  m_algorithms["HMerge"] = new OMAHMerge(Env);
-  m_algorithms["Scale"] = new OMAScale(Env);
+  m_algorithms["Efficiency"] = new OMAEfficiency(this);
+  m_algorithms["Divide"] = new OMADivide(this);
+  m_algorithms["HMerge"] = new OMAHMerge(this);
+  m_algorithms["Scale"] = new OMAScale(this);
 
   if (m_histDB) {
     if (m_histDB->canwrite() && false == m_listSynced)
       syncList();
   }
 }
+
+void OMAlib::doFitFuncList() {
+  std::vector<std::string> ParNames;
+  ParNames.push_back("Constant"); ParNames.push_back("Mean");ParNames.push_back("Sigma");
+  m_fitfunctions["gaus"] = new
+    OMAFitFunction("gaus",
+                   "gaus",
+                   ParNames,
+                   false,
+                   "gaussian function",
+                   true);
+
+  ParNames.clear();
+  ParNames.push_back("Constant"); ParNames.push_back("Slope");
+  m_fitfunctions["expo"] = new
+    OMAFitFunction("expo",
+                   "expo",
+                   ParNames,
+                   false,
+                   "exponential function",
+                   true);
+  ParNames.clear();
+  ParNames.push_back("Constant"); ParNames.push_back("MPV");ParNames.push_back("Sigma");
+  m_fitfunctions["landau"] = new
+    OMAFitFunction("landau",
+                   "landau",
+                   ParNames,
+                   false,
+                   "landau function",
+                   true);
+
+  // polynomials
+  ParNames.clear();
+  for (unsigned int degree=0 ; degree<10; degree++) {
+    std::stringstream pname,fname,fdesc;
+    pname << "P" << degree;
+    fname << "pol" << degree;
+    fdesc << "polynomium of degree "<< degree;
+    ParNames.push_back(pname.str());
+    m_fitfunctions[fname.str()] = new
+      OMAFitFunction(fname.str(),
+                     fname.str(),
+                     ParNames,
+                     false,
+                     fdesc.str(),
+                     true);
+  }
+  OMAFitFunction * newff;
+  // gauss + poly background
+  for (unsigned int degree=0 ; degree<3; degree++) {
+    newff = new OMAFitGausPlusBkg(degree);
+    m_fitfunctions[newff->name()] = newff;
+  }
+  // double gaussian
+  newff = new OMAFitDoubleGaus();
+  m_fitfunctions[newff->name()] = newff;
+
+  // custom functions
+  OMAFitFunction * richfit = new OMAFitTH2withSinCosC();
+  m_fitfunctions[richfit->name()] = richfit;
+
+}
+
+
 
 // check that all algorithms are declared to the DB
 void OMAlib::syncList() {
@@ -304,5 +366,6 @@ void OMAlib::syncList() {
     m_listSynced = true;
   }
 }
+
 
 

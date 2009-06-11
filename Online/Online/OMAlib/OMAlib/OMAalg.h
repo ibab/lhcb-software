@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.8 2009-02-19 10:49:50 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.9 2009-06-11 15:17:31 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -7,14 +7,16 @@
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 3/10/2007
  */
-#include "OMAlib/OMAcommon.h"
+
 #include "OnlineHistDB/OMAMessage.h"
 #include <TH1.h>
+
+class OMAlib;
 
 class OMAalg 
 {
  public:
-  OMAalg(std::string Name, OMAcommon* OMAenv);
+  OMAalg(std::string Name, OMAlib* OMAenv);
   virtual ~OMAalg();
   inline std::string& name() { return m_name;}
   typedef enum { HCREATOR, CHECK} AlgType;
@@ -51,7 +53,7 @@ class OMAalg
   std::vector<std::string> m_parnames;
   std::vector<float> m_parDefValues;
   std::string m_doc;
-  OMAcommon* m_omaEnv;
+  OMAlib* m_omaEnv;
   bool m_needRef;
  private:
    // private dummy copy constructor and assignment operator 
@@ -63,7 +65,7 @@ class OMAalg
 class OMACheckAlg : public OMAalg
 {
  public:
-  OMACheckAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv),
+  OMACheckAlg(std::string Name, OMAlib* OMAenv) : OMAalg(Name,OMAenv),
     m_minEntries(50) {
     setType(OMAalg::CHECK); 
     m_inputNames.clear(); 
@@ -94,7 +96,7 @@ class OMACheckAlg : public OMAalg
 class OMAHcreatorAlg : public OMAalg
 {
  public:
-  OMAHcreatorAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv) {
+  OMAHcreatorAlg(std::string Name, OMAlib* OMAenv) : OMAalg(Name,OMAenv) {
     setType(OMAalg::HCREATOR);}
   virtual ~OMAHcreatorAlg() {}
   

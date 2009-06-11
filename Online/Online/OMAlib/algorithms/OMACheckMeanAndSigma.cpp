@@ -1,11 +1,11 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.5 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.6 2009-06-11 15:17:31 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
 #include "OMAlib/OMAAlgorithms.h"
 using namespace TMath;
 
-OMACheckMeanAndSigma::OMACheckMeanAndSigma(OMAcommon* Env) : 
+OMACheckMeanAndSigma::OMACheckMeanAndSigma(OMAlib* Env) : 
   OMACheckAlg("CheckMeanAndSigma", Env) {
   m_npars = 4;
   m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.);

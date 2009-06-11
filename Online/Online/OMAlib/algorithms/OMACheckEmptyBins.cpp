@@ -4,7 +4,7 @@
 #include "OMAlib/OMAlib.h"
 #include <sstream>
 
-OMACheckEmptyBins::OMACheckEmptyBins(OMAcommon* Env) : 
+OMACheckEmptyBins::OMACheckEmptyBins(OMAlib* Env) : 
   OMACheckAlg("CheckEmptyBins", Env) {
   m_ninput = 0;
   m_npars = 1;

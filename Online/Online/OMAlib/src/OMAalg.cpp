@@ -1,7 +1,8 @@
-// $Id: OMAalg.cpp,v 1.6 2009-02-19 10:49:51 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
+#include "OMAlib/OMAlib.h"
 
-OMAalg::OMAalg(std::string Name, OMAcommon* OMAenv) 
+OMAalg::OMAalg(std::string Name, OMAlib* OMAenv) 
   : m_name(Name),
     m_type(CHECK),
     m_npars(0),

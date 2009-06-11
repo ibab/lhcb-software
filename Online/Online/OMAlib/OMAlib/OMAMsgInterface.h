@@ -1,11 +1,11 @@
-// $Id: OMAMsgInterface.h,v 1.13 2009-06-09 17:34:10 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.14 2009-06-11 15:17:31 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
 /** @class OMAMsgInterface OMAMsgInterface.h OMAlib/OMAMsgInterface.h
- *  Output interface for Online Monitoring Analysis messages 
- *  supports MsgStream when available (analysis tasks),
- *  uses HistDB to log alarms   
+ *  Output interface for Online Monitoring Analysis messages.
+ *  Supports MsgStream when available (analysis Gaudi jobs),
+ *  uses HistDB (if available) to log alarms   
  *
  *  @author Giacomo Graziani
  *  @date   2008-02-29
@@ -13,20 +13,15 @@
 
 #include <string>
 #include <vector>
+#include "OMAlib/OMAEnv.h"
 #include "OnlineHistDB/OMAMessage.h"
 class MsgStream;
 class TH1;
 class OnlineHistDB;
 
-namespace OMAconstants {
-  static const int AlgListID = 11;
-  static const std::string version = "v2r6";
-  
-  static const int AlarmExpTime = 28800; // one shift
-  static const double epsilon = 1.e-10;
-}
 
-class OMAMsgInterface {
+class OMAMsgInterface : public OMAEnv 
+{
 public: 
   OMAMsgInterface(OnlineHistDB* HistDB = NULL, std::string Name=""); 
   virtual ~OMAMsgInterface( ); 
@@ -45,19 +40,19 @@ public:
                     std::string& message,
                     std::string& histogramName,
                     std::string& AnalysisName);  
+  /// set current analysis id for messages
   inline void setAnaId(int id) {m_anaid = id;}
+  /// set current analysis name for messages
   inline void setAnaName(std::string &name) {m_anaName = name;}
 protected:
   void checkWritePermissions();
   void loadMessages();
   void updateMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
-  std::string m_anaTaskname;
   std::string m_savesetName;
   std::string m_taskname;
   std::string m_anaName;
-  int m_anaid;
-  OnlineHistDB* m_histDB;
+  int m_anaid;  
   bool m_msgInit;
 private:
   bool raiseAlarm(OMAMessage& message);

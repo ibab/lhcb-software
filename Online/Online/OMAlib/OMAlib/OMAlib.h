@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.12 2009-06-09 17:34:10 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.13 2009-06-11 15:17:31 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -8,12 +8,13 @@
  *  @date 3/10/2007
  */
 #include "OnlineHistDB/OnlineHistDBEnv.h"
-#include "OMAlib/OMAcommon.h"
+#include "OMAlib/OMAMsgInterface.h"
+#include "OMAlib/OMAFitFunction.h"
 #include "OMAlib/OMAalg.h"
 class OnlineHistDB;
 
 
-class OMAlib : public OMAcommon
+class OMAlib : public OMAMsgInterface
 {
  public:
   /// constructor to be used if already connected to HistDB (use NULL for not using HistDB)
@@ -33,9 +34,12 @@ class OMAlib : public OMAcommon
                      std::string DB);
   /// close DB session
   void closeDBSession(bool commit=true);
-  /// retrieve algorithm from the known algorithm list
+  /// retrieve algorithm from the list of known algorithms
   inline OMAalg* getAlg(std::string &Name){    
     return m_algorithms[Name];}
+  /// retrieve fit function from the list of know fit functions
+  inline OMAFitFunction* getFitFunction(std::string &Name){    
+    return m_fitfunctions[Name];}
   /// find the ROOT object in a TFile of the histogram described by an OnlineHistogram. 
   /// the optional existingHisto field can be used to refresh an analysis histogram without having to recreate it.
   /// RETURNED TH1 OBJECT IS OWNED BY USER
@@ -50,9 +54,10 @@ class OMAlib : public OMAcommon
 
  private:
   void doAlgList();
+  void doFitFuncList();
   void syncList();
-  bool m_localDBsession;
   std::map<std::string, OMAalg*> m_algorithms;
+  std::map<std::string, OMAFitFunction*> m_fitfunctions;
   bool m_listSynced;
 };
 #endif // OMALIB_OMALIB_H

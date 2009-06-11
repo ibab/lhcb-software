@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string>
 
-OMAIfbMonitor::OMAIfbMonitor(OMAcommon* Env) : 
+OMAIfbMonitor::OMAIfbMonitor(OMAlib* Env) : 
   OMACheckAlg("IfbMonitor", Env) {
   m_ninput = 2;
   m_npars = 0;

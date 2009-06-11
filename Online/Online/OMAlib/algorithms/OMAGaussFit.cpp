@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.6 2009-04-02 10:27:25 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -6,7 +6,7 @@
 #include "OMAlib/OMAAlgorithms.h"
 using namespace TMath;
 
-OMAGaussFit::OMAGaussFit(OMAcommon* Env) : 
+OMAGaussFit::OMAGaussFit(OMAlib* Env) : 
   OMACheckAlg("GaussFit", Env) {
   m_npars = 4;
   m_parnames.push_back("MinMean"); m_parDefValues.push_back(-999999.);

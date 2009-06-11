@@ -1,43 +1,18 @@
 
+DBDrivenAnalysisTask.Partition = "FEST";
+DBDrivenAnalysisTask.InputTasks = {"any"};
 
+#pragma print off
 ApplicationMgr.DLLs += { "OMAlib" };
-
-// for using Monitoring Service 
-//ApplicationMgr.ExtSvc += { "MonitorSvc" };
-//ApplicationMgr.DLLs += {"Gaucho"};
-
-
 ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask"};
 ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 3;
 DBDrivenAnalysisTask.useHistDB   = true;
 
-
-DBDrivenAnalysisTask.Partition = "LHCb";
-DBDrivenAnalysisTask.InputTasks = {"MuonDAQMon"};
-
-// use special string "any" to check all monitoring tasks
-//DBDrivenAnalysisTask.InputTasks = {"any"};
-
-
-// for testing offline on existing savesets, uncomment the following:
-//ApplicationMgr.EvtMax = 0;
-//DBDrivenAnalysisTask.InputFiles   = {
-// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
-//};
-
-// for write access (needed if you want to log alarms)
-//DBDrivenAnalysisTask.HistDBuser  = "HIST_WRITER";
-//DBDrivenAnalysisTask.HistDBpw    = "askMe";
-
-// for using test offline DB
-//DBDrivenAnalysisTask.HistDB      = "devdb10";
-//DBDrivenAnalysisTask.HistDBuser  = "lhcb_mon_giacomo";
-//DBDrivenAnalysisTask.HistDBpw    = "askMe";
-
-// for changing the reference path
-//DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
+DBDrivenAnalysisTask.HistDBuser  = "HIST_WRITER";
+DBDrivenAnalysisTask.HistDBpw    = "histeggia194";
+#pragma print on
 
 
 

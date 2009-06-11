@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cmath>
 
-OMACheckHolesAndSpikes::OMACheckHolesAndSpikes(OMAcommon* Env) : 
+OMACheckHolesAndSpikes::OMACheckHolesAndSpikes(OMAlib* Env) : 
   OMACheckAlg("CheckHolesAndSpikes", Env) {
   m_ninput = 2;
   m_inputNames.push_back("Reference");  m_inputDefValues.push_back(0.);

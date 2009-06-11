@@ -4,7 +4,7 @@
 #include "OMAlib/OMAlib.h"
 #include <sstream>
 
-OMACompareToReference::OMACompareToReference(OMAcommon* Env) : 
+OMACompareToReference::OMACompareToReference(OMAlib* Env) : 
   OMACheckAlg("CompareToReference", Env) {
   m_ninput = 1;
   m_inputNames.push_back("Test"); m_inputDefValues.push_back(1.);

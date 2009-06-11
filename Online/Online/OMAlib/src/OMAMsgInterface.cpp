@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.16 2009-06-09 17:34:10 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.17 2009-06-11 15:17:31 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -11,11 +11,12 @@
 
 OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
                                   std::string Name) : 
-  m_anaTaskname(Name), m_savesetName("") , m_taskname(""), 
-  m_anaName(""), m_anaid(0), m_histDB(HistDB), m_msgInit(false), m_outs(NULL)
+  OMAEnv(HistDB, Name), m_savesetName("") , m_taskname(""), 
+  m_anaName(""), m_anaid(0), m_msgInit(false), m_outs(NULL)
 {
+  checkWritePermissions();
   m_MessageStore.clear();
-  if(m_histDB) 
+  if(HistDB) 
     loadMessages();
 }
 
@@ -55,6 +56,10 @@ void OMAMsgInterface::loadMessages() {
       else {
         delete lmsg;
       }
+    }
+    if (NULL != m_outs) {
+      (*m_outs) << MSG::DEBUG << "Loaded "<<m_MessageStore.size() <<
+        " existing messages for analysis " <<m_anaTaskname << endmsg;
     }
     m_msgInit = true;
   }
