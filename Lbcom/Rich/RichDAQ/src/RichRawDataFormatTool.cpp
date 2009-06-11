@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.87 2009-06-03 08:45:11 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.88 2009-06-11 19:45:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -128,7 +128,7 @@ StatusCode RawDataFormatTool::finalize()
   if ( m_summary )
   {
     for ( L1TypeCountTAE::const_iterator iSum = m_l1decodeSummary.begin();
-          iSum != m_l1decodeSummary.end(); ++iSum ) 
+          iSum != m_l1decodeSummary.end(); ++iSum )
     {
       printL1Stats( iSum->second, "RICH Level 1 : Decoding Summary "+iSum->first );
     }
@@ -165,14 +165,14 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
       const Level1HardwareID L1HardID = (*iL1C).first.l1HardwareID;
       Level1LogicalID L1LogID(0);
       try { L1LogID = m_richSys->level1LogicalID(L1HardID); }
-      catch ( const GaudiException & expt )
+      catch ( ... )
       {
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID ).ignore();
       }
       const BankVersion version    = (*iL1C).first.bankVersion;
       Rich::DetectorType rich;
       try { rich = m_richSys->richDetector( L1HardID ); }
-      catch ( const GaudiException & expt )
+      catch ( ... )
       {
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID ).ignore();
         rich = Rich::InvalidDetector;
@@ -1511,21 +1511,5 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
     os << "  -> Bank is empty" << endmsg;
   }
 
-}
-
-// Print the given data word as Hex and as bits, to the given precision
-void RawDataFormatTool::rawDump( MsgStream & os,
-                                 const LongType word,
-                                 const ShortType nBits ) const
-{
-  std::ostringstream hexW;
-  hexW << std::hex << word;
-  std::string tmpW = hexW.str();
-  if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
-  os << tmpW << "  |";
-  for ( int iCol = nBits-1; iCol >= 0; --iCol )
-  {
-    os << "  " << isBitOn( word, iCol );
-  }
 }
 

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.37 2009-06-03 08:45:11 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.38 2009-06-11 19:45:19 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -236,7 +236,8 @@ namespace Rich
                         MsgStream & os ) const;
 
       /// Test if a given bit in a word is set on
-      bool isBitOn( const Rich::DAQ::LongType data, const Rich::DAQ::ShortType pos ) const;
+      template < class TYPE >
+      bool isBitOn( const TYPE data, const Rich::DAQ::ShortType pos ) const;
 
       /// Decode a RawBank into RichSmartID identifiers
       /// Version with DC06 and DC04 compatibility
@@ -254,8 +255,9 @@ namespace Rich
                                   Rich::DAQ::L1Map & decodedData ) const;
 
       /// Print the given data word as Hex and as bits, to the given precision
+      template < class TYPE >
       void rawDump( MsgStream & os,
-                    const LongType word,
+                    const TYPE word,
                     const ShortType nBits = 32 ) const;
 
       /// Returns a default data map
@@ -364,8 +366,9 @@ namespace Rich
       return static_cast< Rich::DAQ::BankVersion > ( bank.version() );
     }
 
+    template < class TYPE >
     inline bool
-    RawDataFormatTool::isBitOn( const Rich::DAQ::LongType data, const Rich::DAQ::ShortType pos ) const
+    RawDataFormatTool::isBitOn( const TYPE data, const Rich::DAQ::ShortType pos ) const
     {
       return ( 0 != (data & (1<<pos)) );
     }
@@ -386,6 +389,24 @@ namespace Rich
       }
       return odin;
     }
+
+    // Print the given data word as Hex and as bits, to the given precision
+    template < class TYPE >
+    inline void RawDataFormatTool::rawDump( MsgStream & os,
+                                            const TYPE word,
+                                            const ShortType nBits ) const
+    {
+      std::ostringstream hexW;
+      hexW << std::hex << word;
+      std::string tmpW = hexW.str();
+      if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
+      os << tmpW << "  |";
+      for ( int iCol = nBits-1; iCol >= 0; --iCol )
+      {
+        os << "  " << isBitOn( word, iCol );
+      }
+    }
+
 
   }
 }
