@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.9 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatSeedTool.cpp,v 1.10 2009-06-11 07:08:11 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -142,7 +142,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
       }
     }
 
-    if ( highestChi2 > maxChi2 ) {
+    if ( highestChi2 > maxChi2 && maxChi2 > 0) {
       // remove worst outlier if above threshold
       (*worst)->hit()->isX()?(--nDoF):(--nDoFS);
       track.removeCoord( worst );
@@ -158,12 +158,14 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
     }
 
     //== If almost there, force one iteration with X fitting, at least...
-    if ( highestChi2 < 2. * maxChi2 ) {
+    if ( highestChi2 < 2. * maxChi2 || maxChi2 < 0 ) {
       if ( ignoreX ) {
 	ignoreX = false;
 	// next line triggers another iteration
-	highestChi2 = 2. * maxChi2;
-      }
+	highestChi2 =  maxChi2 + 1;
+      } else 
+	if (maxChi2 < 0)
+	  highestChi2 = maxChi2 - 1;
     }
     // catch the case where there are too few hits left to determine track
     // parameters with some redundancy (i.e. number of data points <= number
@@ -190,13 +192,20 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 //=========================================================================
 bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
 {
+  double dist = 0;
   for ( unsigned kk = 10 ; kk-- ; ) {
     PatFwdFitParabola  parabola;
     int nHits = 0;
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
       if ( !hit->isSelected() ) continue;
+
+      dist = track.distanceForFit( hit );
+      if (fabs(dist) > 10000)
+	return false;
+      
       parabola.addPoint( hit->z() - track.z0(),
-	  track.distanceForFit( hit ), hit->hit()->weight() );
+			 track.distanceForFit( hit ), hit->hit()->weight() );
+     
       ++nHits;
     }
     if (3 > nHits) return false;
