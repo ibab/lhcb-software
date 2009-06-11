@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 compilation warnings
+
 ! 2009-06-10 - Chris Jones
  - Abort processing early in trackless ring segment association algorithm in
    the case no tracks are available.

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.12 2009-06-03 09:04:15 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.13 2009-06-11 12:50:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -203,10 +203,10 @@ StatusCode TracklessRingIsolationAlg::execute()
         //--------------------------------------------------------------------------------------------------
 
         // x,y differences
-        const float diff_x       = RingCentreLocal.x()-PixelLocal.x();
-        const float diff_y       = RingCentreLocal.y()-PixelLocal.y();
+        const double diff_x       = RingCentreLocal.x()-PixelLocal.x();
+        const double diff_y       = RingCentreLocal.y()-PixelLocal.y();
         // Estimate Ch Phi for pixel
-        const float CherenkovPhi = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
+        const double CherenkovPhi = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
 
         // Which Ch phi region
         const int region = (int)( m_nPhiRegions[rad] * CherenkovPhi / (M_PI*2.0) );

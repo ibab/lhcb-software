@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.8 2007-11-26 16:48:07 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.9 2009-06-11 12:50:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -136,11 +136,11 @@ StatusCode SummaryAlg::execute()
         const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
         // Set expected CK theta angles
-        sumSeg.setExpectedCkTheta( hypo, m_ckAngle->avgCherenkovTheta(*iSeg,hypo) );
+        sumSeg.setExpectedCkTheta( hypo, (float)m_ckAngle->avgCherenkovTheta(*iSeg,hypo) );
         // set expected CK resolutions (errors)
-        sumSeg.setExpectedCkThetaError( hypo, m_ckAngleRes->ckThetaResolution(*iSeg,hypo) );
+        sumSeg.setExpectedCkThetaError( hypo, (float)m_ckAngleRes->ckThetaResolution(*iSeg,hypo) );
         // Expected number of observable signal photons
-        sumSeg.setExpectedNumPhotons( hypo, m_tkSignal->nObservableSignalPhotons(*iSeg,hypo) );
+        sumSeg.setExpectedNumPhotons( hypo, (float)m_tkSignal->nObservableSignalPhotons(*iSeg,hypo) );
 
       }
 
@@ -178,8 +178,8 @@ StatusCode SummaryAlg::execute()
           sumPhots.push_back( LHCb::RichSummaryPhoton() );
           LHCb::RichSummaryPhoton & sumPhot = sumPhots.back();
           // set angles
-          sumPhot.setCherenkovTheta(ckTheta);
-          sumPhot.setCherenkovPhi(ckPhi);
+          sumPhot.setCherenkovTheta((float)ckTheta);
+          sumPhot.setCherenkovPhi((float)ckPhi);
           // channel ID (only store primary ID)
           sumPhot.setSmartID( (*iPhot)->richRecPixel()->hpdPixelCluster().primaryID() );
         }
