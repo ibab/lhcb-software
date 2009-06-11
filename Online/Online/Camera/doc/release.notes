@@ -4,6 +4,17 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-06-11 - Gareth Rogers
+ - Renamed runCamServ.sh to runCameraServers.sh and stopped calling newCameraLog.sh.
+   Replaced it with a call to newDataDirectory.sh with the date instead.
+ - Renamed runCamera.sh to runCameraGui.sh.
+ - Updated run.sh to use the new names.
+ - Removed newCameraLog.sh, not very useful.
+ - Updated commentCamera.sh to call CameraComment.exe not CameraMessage.exe
+   which no longer exists.
+ - newDataDirectory.sh now has the server and port hardcoded into it.
+
+
 =============== v1r4 ===============
 ! 2009-06-01 - Gareth Rogers
  - CAMERA tool and configurables have been updated to take a CAMERA server list.
