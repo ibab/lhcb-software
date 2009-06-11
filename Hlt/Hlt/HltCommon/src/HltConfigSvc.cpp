@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.27 2009-05-16 11:36:31 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.28 2009-06-11 08:11:30 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -18,6 +18,7 @@ namespace bl=boost::lambda;
 #include "GaudiKernel/GaudiException.h"
 
 #include "Event/ODIN.h"
+#include "Event/HltDecReports.h"
 
 // local
 #include "HltConfigSvc.h"
@@ -86,6 +87,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
+  declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
 }
 
 void HltConfigSvc::updateMap(Property&) {
@@ -261,30 +263,35 @@ void HltConfigSvc::checkOdin() {
     debug() << "checkOdin: TCK in ODIN bank: " << TCK << endmsg;
     debug() << "checkOdin: currently configured TCK: " << m_configuredTCK << endmsg;
 
-    if ( m_configuredTCK == TCK ) return;
-    TCKrep TCKr(TCK);
-
-    info() << "requesting configuration update from TCK " 
-           << m_configuredTCK 
-           << " to TCK " << TCKr << endmsg;
-    if (reconfigure( tck2id(TCKr) ).isSuccess()) { 
-        m_configuredTCK = TCKr;
-    } else {
-        error()   << "\n\n\n\n\n"
-                  << "            ****************************************\n"
-                  << "            ****************************************\n"
-                  << "            ****************************************\n"
-                  << "            ********                        ********\n"
-                  << "            ********   RECONFIGURE FAILED   ********\n"
-                  << "            ********                        ********\n"
-                  << "            ****************************************\n"
-                  << "            ****************************************\n"
-                  << "            ****************************************\n"
-                  << "\n\n\n\n\n"
-                  << endmsg;
-        m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-        return;
+    if ( m_configuredTCK != TCK ) {
+        TCKrep TCKr(TCK);
+        info() << "requesting configuration update from TCK " 
+               << m_configuredTCK 
+               << " to TCK " << TCKr << endmsg;
+        if (reconfigure( tck2id(TCKr) ).isSuccess()) { 
+            m_configuredTCK = TCKr;
+        } else {
+            error()   << "\n\n\n\n\n"
+                      << "            ****************************************\n"
+                      << "            ****************************************\n"
+                      << "            ****************************************\n"
+                      << "            ********                        ********\n"
+                      << "            ********   RECONFIGURE FAILED   ********\n"
+                      << "            ********                        ********\n"
+                      << "            ****************************************\n"
+                      << "            ****************************************\n"
+                      << "            ****************************************\n"
+                      << "\n\n\n\n\n"
+                      << endmsg;
+            m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+            return;
+        }
     }
+
+    //TODO: put HltDecReports into event with current TCK...
+    std::auto_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
+    hdr->setConfiguredTCK(m_configuredTCK.uint());
+    m_evtSvc->registerObject(m_outputContainerName,hdr.release());
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {

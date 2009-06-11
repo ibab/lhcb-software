@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.11 2009-02-22 19:52:40 graven Exp $
+// $Id: HltConfigSvc.h,v 1.12 2009-06-11 08:11:30 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -46,6 +46,7 @@ public:
         bool operator<(const TCKrep& rhs) const { return m_unsigned  < rhs.m_unsigned; } 
         bool operator==(const TCKrep& rhs) const { return m_unsigned == rhs.m_unsigned; } 
         bool operator==(unsigned int rhs) const { return m_unsigned == rhs; } 
+        bool operator!=(unsigned int rhs) const { return !operator==(rhs); }
         TCKrep& operator&=(unsigned int rhs) { return set( uint() & rhs ); }
         TCKrep& operator++() { return set( ++m_unsigned ); }
         const std::string&  str() const { return m_stringRep; }
@@ -70,6 +71,7 @@ private:
 
   typedef std::map<TCKrep,std::string> TCKMap_t;
 
+  std::string                  m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
   std::string                  m_prefetchDir;     ///< which set of configurations 
                                                   ///< to search for same types as initial TCK
                                                   ///< and to prefetch...
