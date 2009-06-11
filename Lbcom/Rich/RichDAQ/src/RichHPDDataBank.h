@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.23 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.24 2009-06-11 19:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -259,9 +259,6 @@ namespace Rich
                                        MsgStream & os ) const;
 
     private: // methods
-
-      /// Dis-allow Default constructor
-      HPDDataBankImp() { }
 
       /// Clean up data representation
       inline void cleanUp()

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-03 - Chris Jones
+ - Fix WIN32 compilation warning
+
+! 2009-06-03 - Chris Jones
  - Improvements to the Raw Data format tools
   + Fix bug that causes event sizes to be double counted by 
     RichRawDataFormatTool, when the tool is called more than once per event.
