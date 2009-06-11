@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.16 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatSeedingTool.h,v 1.17 2009-06-11 09:42:52 cattanem Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -93,7 +93,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	const LHCb::State* state = 0);
 
     /** search for tracks in T stations
-     * @param output container for tracks found
+     * @param outputTracks container for tracks found
      * @param state optional parameter: state to restrict region of interest
      * @return StatusCode
      */
@@ -451,6 +451,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
      * @param lay layer in which to give tilt corrected range
      * @param reg region in which to give tilt corrected range
      * @param tyreg region from which to take the permissible ty range
+     * @param dz  delta Z
      * @param slope prediction
      * @param xpred x position prediction
      * @param tol window around xpred before tilt correction

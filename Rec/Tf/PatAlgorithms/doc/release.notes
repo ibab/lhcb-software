@@ -3,11 +3,16 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+========================= PatAlgorithms v3r22 2009-06-11 =====================
+! 2009-06-11 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2009-06-11 - Stephanie Hansmann-Menzemer
- - apport parabola fit in case the distances of hit to reference line
+ - abort parabola fit in case the distances of hit to reference line
    gets unreasonably large
 
-========================= PatAlgorithms v3r21 2009-05-20 ===================
+========================= PatAlgorithms v3r21 2009-05-20 =====================
 ! 2009-05-19 - Stephanie Hansmann-Menzemer
   - make sure that no hits are rejected in the internal fit in the fit 
     initialization tool
