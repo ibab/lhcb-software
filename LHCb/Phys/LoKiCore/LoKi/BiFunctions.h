@@ -1,4 +1,4 @@
-// $Id: BiFunctions.h,v 1.7 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id: BiFunctions.h,v 1.8 2009-06-11 15:30:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BIFUNCTIONS_H 
 #define LOKI_BIFUNCTIONS_H 1
@@ -33,21 +33,15 @@ namespace LoKi
     /// parameters: return value 
     typedef TYPE3                      Type2 ;      // parameters: return value
     // ========================================================================
-  private:
-    // ========================================================================
-    typedef LoKi::Holder<TYPE1,TYPE2>                                  TYPE   ;
+    /// the type of the argument
+    typedef LoKi::Holder<TYPE1,TYPE2>                    Type                 ; 
     // ========================================================================
   private : // fake STL bases 
     // ========================================================================
     /// STD signature (fake base) 
-    typedef typename std::unary_function<TYPE,TYPE3>                   Base_1 ;
+    typedef typename std::unary_function<Type,TYPE3>                   Base_1 ;
     /// STD signature (fake base) 
     typedef typename std::binary_function<TYPE1,TYPE2,TYPE3>           Base_2 ;
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// the type of the argument
-    typedef LoKi::Holder<TYPE1,TYPE2>                    Type                 ; 
     // ========================================================================
   public:  // STD (fake) signature 
     // ========================================================================
@@ -63,7 +57,7 @@ namespace LoKi
   public:  // the actual signature 
     // ========================================================================
     /// the actual type for the argument 
-    typedef typename boost::call_traits<TYPE>::param_type     argument        ;
+    typedef typename boost::call_traits<Type>::param_type     argument        ;
     /// the actual type for the first argument 
     typedef typename boost::call_traits<TYPE1>::param_type    first_argument  ;
     /// teh actual type for the second argument 
