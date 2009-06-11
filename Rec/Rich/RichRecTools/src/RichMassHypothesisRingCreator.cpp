@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.21 2008-08-15 14:43:33 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.22 2009-06-11 11:05:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -154,7 +154,9 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     }
 
     // Get a new ring and save it
-    newRing = new LHCb::RichRecRing( segment, ckTheta, id );
+    newRing = new LHCb::RichRecRing( segment, 
+                                     static_cast<LHCb::RichRecRing::FloatType>(ckTheta), 
+                                     id );
 
     // set ring type info
     newRing->setType ( LHCb::RichRecRing::RayTracedCK );

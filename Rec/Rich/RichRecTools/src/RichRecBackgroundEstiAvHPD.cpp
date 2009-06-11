@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.1 2008-03-27 11:06:01 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.2 2009-06-11 11:05:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -211,7 +211,7 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * trac
 void BackgroundEstiAvHPD::overallRICHBackgrounds() const
 {
   // Initialise detector backgrounds
-  std::vector<LHCb::RichRecStatus::FloatType> bckEstimate(Rich::NRiches,0);
+  std::vector<double> bckEstimate(Rich::NRiches,0);
 
   // Obtain background term PD by PD
   for ( Rich::Detectors::const_iterator iRich = detectors().begin();
@@ -289,14 +289,18 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
           iPD != m_expPDbkg[*iRich].end(); ++iPD )
     {
       if ( iPD->second < 0 ) iPD->second = 0;
-      bckEstimate[ *iRich ] += iPD->second;
+      bckEstimate[*iRich] += iPD->second;
     }
 
   } // end rich loop
 
   // Update detector backgrounds
+  // CRJ : Ugly conversion from double to float .... To be improved
+  std::vector<LHCb::RichRecStatus::FloatType> bckEstiUpdate(Rich::NRiches,0);
+  bckEstiUpdate[Rich::Rich1] = static_cast<LHCb::RichRecStatus::FloatType>(bckEstimate[Rich::Rich1]);
+  bckEstiUpdate[Rich::Rich2] = static_cast<LHCb::RichRecStatus::FloatType>(bckEstimate[Rich::Rich2]);
   LHCb::RichRecStatus * status = const_cast<LHCb::RichRecStatus*>(richStatus());
-  status->setDetOverallBkg(bckEstimate);
+  status->setDetOverallBkg(bckEstiUpdate);
 
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -321,7 +325,7 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
     // Save this value in the pixel
     double bkg = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
     if ( bkg < m_minPixBkg ) bkg = m_minPixBkg;
-    (*pixel)->setCurrentBackground( bkg );
+    (*pixel)->setCurrentBackground( static_cast<LHCb::RichRecRing::FloatType>(bkg) );
 
     // printout
     /*

@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-06-11 - Chris Jones
+ - Fix WIN32 warnings about double -> float conversions
+
 !===================== RichRecTools v4r8 2009-05-08 ===========================
 ! 2009-05-04 - Chris Jones
  - Small improvements to the PID plots.
