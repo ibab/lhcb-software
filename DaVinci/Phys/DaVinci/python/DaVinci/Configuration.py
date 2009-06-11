@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.64 2009-06-01 16:14:25 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.65 2009-06-11 13:28:54 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -17,7 +17,7 @@ class DaVinci(LHCbConfigurableUser) :
          "EvtMax"             :  -1           # Number of events to analyse
        , "SkipEvents"         :   0           # Number of events to skip at beginning for file
        , "PrintFreq"          : 100           # The frequency at which to print event numbers
-       , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008','2009'] Forwarded to PhysConf
+       , "DataType"           : 'DC06'        # Data type, can be ['DC06','2008','2009', 'MC09'] Forwarded to PhysConf
        , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
        , "DDDBtag"            : "default"     # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"          : "default"     # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -47,7 +47,7 @@ class DaVinci(LHCbConfigurableUser) :
          "EvtMax"             : """ Number of events to analyse """
        , "SkipEvents"         : """ Number of events to skip at beginning for file """
        , "PrintFreq"          : """ The frequency at which to print event numbers """
-       , "DataType"           : """ Data type, can be ['DC06','2008', '2009'] Forwarded to PhysConf """
+       , "DataType"           : """ Data type, can be ['DC06','2008', '2009', 'MC09'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
 #       , "PackType"           : """ Type of packing for the DST: ['NONE','TES','MDF'] """
        , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
        , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
@@ -181,7 +181,7 @@ class DaVinci(LHCbConfigurableUser) :
         Does nothing but checking that all is fine
         """
         dataType = self.getProp("DataType")
-        if dataType not in [ "DC06", "2008", "2009" ]:
+        if dataType not in [ "DC06", "2008", "2009", "MC09" ]:
             raise TypeError( "Invalid dataType '%s'"%dataType )
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
