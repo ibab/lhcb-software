@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.16 2009-06-09 17:34:10 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.17 2009-06-11 15:55:18 ggiacomo Exp $
 
 
 // from Gaudi
@@ -71,6 +71,7 @@ StatusCode AnalysisTask::initialize() {
       refreshMessageList(task);
       sleep(5);
     }
+    closeDBSession();
   }
   else {
     std::vector<std::string>::iterator iF;
@@ -78,6 +79,7 @@ StatusCode AnalysisTask::initialize() {
       if (m_inputTasks[0]=="any") 
         getAllTasks();
     }
+    closeDBSession();
     for(iF =  m_inputTasks.begin() ; iF != m_inputTasks.end() ; iF++) {
       info()<< "listening to latest saveset for task "<<*iF << endmsg;
       m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );

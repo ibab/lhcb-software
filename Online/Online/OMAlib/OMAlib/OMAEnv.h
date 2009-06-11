@@ -1,37 +1,38 @@
-// $Id: OMAcommon.h,v 1.9 2009-03-04 09:33:52 ggiacomo Exp $
-#ifndef OMALIB_OMACOMMON_H 
+// $Id: OMAEnv.h,v 1.1 2009-06-11 16:00:21 ggiacomo Exp $
+#ifndef OMALIB_OMAENV_H 
 
-#define OMALIB_OMACOMMON_H 1
+#define OMALIB_OMAENV_H 1
 
 // Include files
 
 #include <map>
-#include "OMAlib/OMAMsgInterface.h"
-#include "OMAlib/OMAFitFunction.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OnlineHistogram.h"
 
 class TFile;
 class TH1;
 
-/** @class OMAcommon OMAcommon.h OMAlib/OMAcommon.h
+/** @class OMAEnv OMAEnv.h OMAlib/OMAEnv.h
  *  
- *
+ *  environment variables and methods for the Online Monitoring Analysis library
  *  @author Giacomo GRAZIANI
  *  @date   2008-08-08 
  */
 
+namespace OMAconstants {
+  static const int AlgListID = 11;
+  static const std::string version = "v2r6";
+  
+  static const int AlarmExpTime = 28800; // one shift
+  static const double epsilon = 1.e-10;
+}
 
-class OMAcommon : public OMAMsgInterface {
+class OMAEnv  {
 public: 
   /// Standard constructor
-  OMAcommon(OnlineHistDB* HistDB = NULL,  
-            std::string Name="") : 
-    OMAMsgInterface(HistDB, Name), m_debug(2) {
-    setDefRefRoot();
-  }
-  virtual ~OMAcommon();
-
+  OMAEnv(OnlineHistDB* HistDB = NULL,  
+         std::string Name="");
+  virtual ~OMAEnv();
   /// get path of reference histogram files
   inline std::string& refRoot() {return m_RefRoot;}
   /// set path of reference histogram files
@@ -43,17 +44,16 @@ public:
   inline int omaDebugLevel() { return m_debug; }
   /// set debug level (0 for nothing, the higher the more verbose)
   inline void setDebug(int DebugLevel) { m_debug = DebugLevel;}
-  /// get OMAlib fit function
-  inline OMAFitFunction* getFitFunction(std::string &Name){    
-    return m_fitfunctions[Name];}
+
 protected:
-  void setDefRefRoot();
-  void doFitFuncList();
   int m_debug;
-  std::map<std::string, OMAFitFunction*> m_fitfunctions;
+  std::string m_anaTaskname;
+  OnlineHistDB* m_histDB;
+  bool m_localDBsession;
+  void setDefRefRoot();
 private:
   std::string m_RefRoot;
 };
 
 
-#endif // OMALIB_OMACOMMON_H
+#endif // OMALIB_OMAENV_H
