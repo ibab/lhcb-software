@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.17 2009-06-03 12:33:07 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.18 2009-06-11 15:21:04 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -21,6 +21,8 @@ from Configurables import CopyParticles
 from Configurables import CopyPrimaryVertices
 from Configurables import CopyFlavourTag
 from Configurables import CopyParticle2PVRelations
+from Configurables import CopyHltDecReports
+from Configurables import CopyL0DUReport
 from Configurables import PVRelatorAlg
 from Configurables import CopyParticle2MCRelations
 from Configurables import P2MCRelatorAlg
@@ -30,7 +32,7 @@ from MicroDSTExample import Selections
 # Some steering options
 #
 # number of events to process
-nEvents = 1000
+nEvents = 500
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
@@ -41,6 +43,10 @@ storeMCInfo = True
 BTaggingInfo = True
 # re-fit PV?
 PVRefit = True
+# L0DUReport?
+L0DUInfo = False
+# HltDecReports?
+HltInfo = False
 #==============================================================================
 importOptions("$STDOPTS/LHCbApplication.opts")
 #mySelection = Selections.KstarSel
@@ -199,6 +205,16 @@ if (PVRefit) :
     copyP2RefitPVRel.OutputLevel=4
     MySelection.Members += [copyP2RefitPVRel]
 #==============================================================================
+if HltInfo :
+    copyHlt = CopyHltDecReports()
+    copyHlt.OutputLevel = 4
+    MySelection.Members += [copyHlt]
+#==============================================================================
+if L0DUInfo :
+    copyL0 = CopyL0DUReport()
+    copyL0.OutputLevel = 4
+    MySelection.Members += [copyL0]
+#==============================================================================
 # make a histogram counting events processed
 from Configurables import EventCountHisto
 evtCountAlg = EventCountHisto('EvtCountAlg')
@@ -206,6 +222,10 @@ evtCountAlg = EventCountHisto('EvtCountAlg')
 # make a DaVinci application configurable and add the crucial sequence to it.
 dv = DaVinci()
 dv.EvtMax = nEvents
+if L0DUInfo :
+    dv.ReplaceL0BanksWithEmulated = True
+if HltInfo :
+    dv.HltType = 'Hlt1+Hlt2'
 dv.HistogramFile = "EventCount.root"
 #dv.SkipEvents = 2*nEvents
 dv.UserAlgorithms = [evtCountAlg, MySelection]
