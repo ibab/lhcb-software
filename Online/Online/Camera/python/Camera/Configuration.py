@@ -38,7 +38,7 @@ class Camera(LHCbConfigurableUser):
                          """
         }
     
-    def applyConf(self):
+    def __apply_configuration__(self):
         """Applies all the configuration settings for the class."""
         # We are only exposing the server name and will leave the other
         # properties at their default values.
@@ -70,5 +70,5 @@ class Camera(LHCbConfigurableUser):
                 camera.Enabled = False
         except TypeError:
             camera.Enabled = False
-    # def applyConf()
+    # def __apply_configuration__()
 # def Camera()
