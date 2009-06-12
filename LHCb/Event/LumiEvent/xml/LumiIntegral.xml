@@ -22,7 +22,7 @@
 
 
       <location name="Default"   
-		place="/RunRecords/EOR/LumiIntegral"/>
+		place="/FileRecords/EOR/LumiIntegral"/>
 
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
