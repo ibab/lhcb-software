@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.5 2009-06-10 16:12:58 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.6 2009-06-12 15:27:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -143,7 +143,7 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Trying Track " << track->key() << " " << track->type()
+    verbose() << "Trying Track key = " << track->key() << " type = " << track->type()
               << endmsg;
   }
 
@@ -152,7 +152,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut" << endmsg;
+      verbose() << " -> P " << p << " failed cut " 
+                << m_minPCut << " -> " << m_maxPCut
+                << endmsg;
     return false;
   }
 
@@ -161,7 +163,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut" << endmsg;
+      verbose() << " -> Pt " << pt << " failed cut " 
+                << m_minPtCut << " -> " << m_maxPtCut
+                << endmsg;
     return false;
   }
 
@@ -170,7 +174,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Chi^2 " << chi2 << " failed cut" << endmsg;
+      verbose() << " -> Chi^2 " << chi2 << " failed cut "
+                << m_minChi2Cut << " -> " << m_maxChi2Cut
+                << endmsg;
     return false;
   }
 
@@ -201,13 +207,15 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::Likelihood );
     if ( i == track->extraInfo().end() )
     {
-      Warning( "Track does not have Likelihood info", StatusCode::FAILURE, 3 ).ignore();
+      Warning( "Track does not have Likelihood info", StatusCode::FAILURE, 0 ).ignore();
       //return false; // disable until all tracks have this variable
     }
     else if ( i->second < m_minLL || i->second > m_maxLL )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed Likelihood cut" << endmsg;
+        verbose() << " -> Track Likelihood " << i->second << " failed cut "
+                  << m_minLL << " -> " << m_maxLL
+                  << endmsg;
       return false;
     }
   }
@@ -218,13 +226,15 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::GhostProbability );
     if ( i == track->extraInfo().end() )
     {
-      Warning( "Track does not have GhostProbability info", StatusCode::FAILURE, 3 ).ignore();
+      Warning( "Track does not have GhostProbability info", StatusCode::FAILURE, 0 ).ignore();
       //return false; // disable until all tracks have this variable
     }
     else if ( i->second < m_minGhostProb || i->second > m_maxGhostProb )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed GhostProbability cut" << endmsg;
+        verbose() << " -> Track GhostProbability " << i->second << " failed cut "
+                  << m_minGhostProb << " -> " << m_maxGhostProb
+                  << endmsg;
       return false;
     }
   }
@@ -250,7 +260,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut" << endmsg;
+      verbose() << " -> P " << p << " failed cut " 
+                << m_minPCut << " -> " << m_maxPCut
+                << endmsg;
     return false;
   }
 
@@ -259,7 +271,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut" << endmsg;
+      verbose() << " -> Pt " << pt << " failed cut " 
+                << m_minPtCut << " -> " << m_maxPtCut
+                << endmsg;
     return false;
   }
 
@@ -268,7 +282,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Chi^2 " << chi2 << " failed cut" << endmsg;
+      verbose() << " -> Chi^2 " << chi2 << " failed cut "
+                << m_minChi2Cut << " -> " << m_maxChi2Cut
+                << endmsg;
     return false;
   }
 
@@ -299,7 +315,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
     if ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed Likelihood cut" << endmsg;
+        verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
+                  << m_minLL << " -> " << m_maxLL
+                  << endmsg;
       return false;
     }
   }
@@ -311,7 +329,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
          track->ghostProbability() > m_maxGhostProb )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed GhostProbability cut" << endmsg;
+        verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
+                  << m_minGhostProb << " -> " << m_maxGhostProb
+                  << endmsg;
       return false;
     }
   }
