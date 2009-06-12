@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.11 2009-06-09 17:31:22 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.12 2009-06-12 09:53:45 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -181,6 +181,7 @@ void OMAMessage::remove() {
     OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
     if (histo) {
       histo->unsetDisplayOption("PADCOLOR");
+      histo->saveHistDisplayOptions();
     }
   }
 
