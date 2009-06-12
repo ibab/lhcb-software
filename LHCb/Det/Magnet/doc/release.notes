@@ -4,7 +4,10 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-!====================== Magnet v5r3 2009-06-10 ===============================
+! 2009-06-12 - Marco Cattaneo
+ - Fix a gcc43 compilation warning in MultipleMagneticFieldSvc.cpp
+ - Replace all endreq by endmsg
+
 ! 2009-06-10 - Magnus Lieng
  - Added MultipleMagneticFieldSvc. This service takes other magnetic field
    services as input and calculated the vector sum of the fields when 

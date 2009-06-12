@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.cpp,v 1.16 2009-01-27 16:13:40 cattanem Exp $
+// $Id: MagFieldReader.cpp,v 1.17 2009-06-12 12:57:17 cattanem Exp $
 // Include files 
 #include "Riostream.h"
 // from Gaudi
@@ -77,7 +77,7 @@ StatusCode MagFieldReader::execute() {
   
   // Print out info messages with the field value at different locations.
 
-  debug() << "m_pIMF = " << m_pIMF << endreq;
+  debug() << "m_pIMF = " << m_pIMF << endmsg;
 
   Tuple nt1 = nTuple( 10, "Field", CLID_ColumnWiseTuple );
 

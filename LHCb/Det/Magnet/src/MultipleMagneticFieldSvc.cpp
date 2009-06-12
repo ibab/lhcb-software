@@ -54,7 +54,7 @@ StatusCode MultipleMagneticFieldSvc::initialize()
       ILHCbMagnetSvc* mfSvc;
       sc = service( (*it), mfSvc, true );
       if( sc.isFailure() || mfSvc == 0) {
-        log << MSG::WARNING << " Member " << (*it) << " not found" << endreq;
+        log << MSG::WARNING << " Member " << (*it) << " not found" << endmsg;
       }
       else {
         m_magneticFieldSvcs.push_back(mfSvc);
@@ -68,7 +68,7 @@ StatusCode MultipleMagneticFieldSvc::initialize()
     for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
       sc = (*field)->initialize();
       if( sc.isFailure() ){
-        log << MSG::WARNING << " Member field failed to initialize" << endreq;
+        log << MSG::WARNING << " Member field failed to initialize" << endmsg;
         m_magneticFieldSvcs.erase(field);
       }
     }
@@ -77,7 +77,7 @@ StatusCode MultipleMagneticFieldSvc::initialize()
    
   /// Warn if no fields are set up
   if( m_magneticFieldSvcs.size() == 0 ) {
-    log << MSG::WARNING << " No member fields configured" << endreq;
+    log << MSG::WARNING << " No member fields configured" << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -95,7 +95,7 @@ StatusCode MultipleMagneticFieldSvc::finalize()
     for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
       sc = (*field)->release();
       if( sc.isFailure() ){
-        log << MSG::WARNING << " Member field failed to finalize" << endreq;
+        log << MSG::WARNING << " Member field failed to finalize" << endmsg;
         m_magneticFieldSvcs.erase(field);
       }
     }
@@ -147,7 +147,8 @@ StatusCode MultipleMagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 double MultipleMagneticFieldSvc::scaleFactor() const
 {
   /// Attaining scale factor of member fields (The average)
-  double scale,sumScale = 0.0;
+  double scale    = 0.0;
+  double sumScale = 0.0;
   int numFields = 0;
   std::vector<ILHCbMagnetSvc*>::const_iterator field;
   for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {

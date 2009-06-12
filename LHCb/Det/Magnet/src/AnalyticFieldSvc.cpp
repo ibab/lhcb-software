@@ -92,12 +92,12 @@ StatusCode AnalyticFieldSvc::initialize()
   
   status = GetParam();
   if ( status.isSuccess() ) {
-    log << MSG::DEBUG << "B maps read successfully" << endreq;
+    log << MSG::DEBUG << "B maps read successfully" << endmsg;
  
     return status;
   }
   else {
-    log << MSG::DEBUG << "B maps failed" << endreq;
+    log << MSG::DEBUG << "B maps failed" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -118,7 +118,7 @@ StatusCode AnalyticFieldSvc::finalize()
   
   
   if ( status.isSuccess() )
-    log << MSG::INFO << "Service finalized successfully" << endreq;
+    log << MSG::INFO << "Service finalized successfully" << endmsg;
   return status;
 }
 
@@ -166,7 +166,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
   
   if (!infile) {
       log << MSG::ERROR << "Unable to open BMap : " 
-           << m_filename[ifile] << endreq;
+           << m_filename[ifile] << endmsg;
   
   }
 
@@ -174,7 +174,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
   if (infile) {
     sc = StatusCode::SUCCESS;
       log << MSG::INFO << "BMap opened successfully : " << m_filename[ifile]
-    	<< endreq;
+    	<< endmsg;
 
        // Skip the header till NREG
     do{
@@ -309,10 +309,11 @@ StatusCode AnalyticFieldSvc::GetParam() {
     int nterms2 = 0;
     if (m_nREGmax>0 && k>=(m_nREGmin-1) && k<=(m_nREGmax-1)) nterms2 = atoi( sTerms[3].c_str() );
 
-    log << MSG::INFO <<" REGION NUMBER: "<<k<<endreq;
+    log << MSG::INFO <<" REGION NUMBER: "<<k<<endmsg;
     
-    log << MSG::INFO << "NTERMS " << nterms << endreq;
-    if (m_nREGmax>0 && k>=(m_nREGmin-1) && k<=(m_nREGmax-1)) log << MSG::INFO << "NTERMS FOR Y>YMAX-30 REGION: " << nterms2 << endreq;
+    log << MSG::INFO << "NTERMS " << nterms << endmsg;
+    if (m_nREGmax>0 && k>=(m_nREGmin-1) && k<=(m_nREGmax-1))
+      log << MSG::INFO << "NTERMS FOR Y>YMAX-30 REGION: " << nterms2 << endmsg;
     MagMat* temp = new MagMat(nterms+2,4);
 
    
@@ -434,7 +435,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
   
   if (!infile) {
       log << MSG::ERROR << "Unable to open BMap : " 
-           << m_filename[ifile] << endreq;
+           << m_filename[ifile] << endmsg;
   
   }
 
@@ -442,7 +443,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
   if (infile) {
     sc = StatusCode::SUCCESS;
       log << MSG::INFO << "BMap opened successfully : " << m_filename[ifile]
-    	<< endreq;
+    	<< endmsg;
  
 
        // Skip the header till ZMINS
@@ -522,7 +523,7 @@ StatusCode AnalyticFieldSvc::GetParam() {
 
     int nterms = atoi( sTerms[1].c_str() );
 
-    log << MSG::INFO << "NTERMS " << nterms << endreq;
+    log << MSG::INFO << "NTERMS " << nterms << endmsg;
 
     MagMat* temp = new MagMat(nterms+2,4);
   
@@ -614,8 +615,10 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
 
     iReg=iz;
     
-    bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && point.z()/Gaudi::Units::cm<zmax[iz] && coord[0]<(fabs(coord[2])*tan(0.3)) && coord[1]<(fabs(coord[2])*tan(0.25));
-    
+    bool condZ = zmin[iz] <= point.z()/Gaudi::Units::cm && 
+                             point.z()/Gaudi::Units::cm < zmax[iz] && 
+                             coord[0]<(fabs(coord[2])*tan(0.3)) &&
+                             coord[1]<(fabs(coord[2])*tan(0.25));
  
     if (m_nREGmax>0 && iz>=(m_nREGmin-1) && iz<=(m_nREGmax-1)) {
       iReg = 2*iz-(m_nREGmin-1);
@@ -673,7 +676,10 @@ void AnalyticFieldSvc::Bcalculation (const Gaudi::XYZPoint&  point,
   
   for (int iz=0;iz < NREG;iz++) {
 
-bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && point.z()/Gaudi::Units::cm<zmax[iz] && coord[0]<(fabs(coord[2])*tan(0.3)) && coord[1]<(fabs(coord[2])*tan(0.25));
+bool condZ = zmin[iz]<=point.z()/Gaudi::Units::cm && 
+             point.z()/Gaudi::Units::cm<zmax[iz] && 
+             coord[0]<(fabs(coord[2])*tan(0.3)) &&
+             coord[1]<(fabs(coord[2])*tan(0.25));
 
     if (condZ) {      
 

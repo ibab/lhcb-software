@@ -1,4 +1,4 @@
-// $Id: BdlTool.cpp,v 1.6 2007-10-05 11:50:50 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.7 2009-06-12 12:57:17 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -44,7 +44,7 @@ StatusCode BdlTool::initialize() {
   // retrieve pointer to magnetic field service
   m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true ); 
 
-  info() << "Start generation of L1 LUT tables" << endreq;
+  info() << "Start generation of L1 LUT tables" << endmsg;
   // prepare table with Bdl integrations
   int nVarLut = 3;
   // Bdl integral depends on 3 track parameters
@@ -75,7 +75,7 @@ StatusCode BdlTool::initialize() {
     iover = m_lutZHalfBdl->incrementIndexVector();
   }
 
-  info() << "Generation of L1 LUT tables finished" << endreq;
+  info() << "Generation of L1 LUT tables finished" << endmsg;
 
   return StatusCode::SUCCESS;
 }

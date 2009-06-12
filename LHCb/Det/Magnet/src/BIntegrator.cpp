@@ -1,4 +1,4 @@
-// $Id: BIntegrator.cpp,v 1.7 2007-03-19 10:31:09 cattanem Exp $
+// $Id: BIntegrator.cpp,v 1.8 2009-06-12 12:57:16 cattanem Exp $
 // Include files 
 // -------------
 
@@ -55,7 +55,7 @@ StatusCode BIntegrator::initialize()
  
   sc = calculateBdlCenter();
   info() << "Center of the field is at the z positions "
-         << m_centerZ << endreq;
+         << m_centerZ << endmsg;
   
   return sc;
 }
