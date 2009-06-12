@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsDownProtons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdNoPIDsDownProtons.py,v 1.3 2009-06-12 16:14:29 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsDownProtons.py
 #  configuration file for 'Standard NoPIDs Downstream Protons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Downstream Protons'
 """
 __author__  = "Alessio Sarti <Alessio.Sarti@lnf.infn.it>"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsDownProtons' ,
@@ -26,9 +26,11 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownProtons'         ,
                                 DecayDescriptor = 'Proton' ,
-                                Particle = 'proton', 
-                                UseLongTracks = False,
-                                 UseDownstreamTracks = True)
+                                Particle = 'proton')
+
+# configure the track selector
+selector = trackSelector ( algorithm ) 
+selector.TrackTypes = [ 'Downstream' ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
