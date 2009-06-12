@@ -4,6 +4,7 @@
 
 // Include files
 #include "Event/State.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 namespace LHCb 
 {
@@ -34,7 +35,6 @@ namespace LHCb
     
     /// Construct vertex from set of states
     TrackStateVertex(const std::vector<const LHCb::State*>& states, double maxdchisq=0.01, size_t maxiterations=10) ;
-    
     ///
     ~TrackStateVertex() ;
     
@@ -80,7 +80,23 @@ namespace LHCb
     const ROOT::Math::SMatrix<double,5,3>& matrixB(size_t i) const ;
     /// Covariance matrix for momentum i and position
     const ROOT::Math::SMatrix<double,3,3>& momPosCovMatrix(size_t i) const ;
-    
+    /// Covariance matrix for momentum i and momentum j (j<=i)
+    const Gaudi::Matrix3x3& momMomCovMatrixFast(size_t i, size_t j) const {
+      return m_mommomcov.empty() ? computeMomMomCov(i,j) : m_mommomcov[symIndex(i,j)] ; }
+    /// Covariance matrix for momentum i and momentum j
+    Gaudi::Matrix3x3 momMomCovMatrix(size_t i, size_t j) const {
+      return j<=i ? momMomCovMatrixFast(i,j) : ROOT::Math::Transpose( momMomCovMatrixFast(j,i) ) ; }  
+    /// Get the total p4 given the mass hypotheses
+    Gaudi::LorentzVector p4(const std::vector<double>& masshypos) const ;
+    /// Get the mass given a set of mass hypotheses
+    double mass(const std::vector<double>& masshypos) const ;
+    /// Get the error on the mass given a set of mass hypotheses
+    double massErr(const std::vector<double>& masshypos) const ;
+    /// Add a mass constraint
+    FitStatus constrainMass(const std::vector<double>& masshypos,double constrainedmass) ;
+  private:
+    size_t symIndex( size_t i, size_t j ) const { return i*(i+1)/2 + j ; }
+    const Gaudi::Matrix3x3& computeMomMomCov(size_t i, size_t j) const ;
   private:
     typedef TrackVertexHelpers::VertexTrack VertexTrack ;
     typedef std::vector< TrackVertexHelpers::VertexTrack* > VertexTrackContainer ;
@@ -91,6 +107,7 @@ namespace LHCb
     VertexTrackContainer m_tracks ;
     PositionParameters m_pos ;
     PositionCovariance m_poscov ;
+    mutable std::vector< Gaudi::Matrix3x3 > m_mommomcov ;
     FitStatus m_fitStatus ;
     mutable double m_chi2 ;
   } ;
