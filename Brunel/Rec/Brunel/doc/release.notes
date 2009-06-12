@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-12 - Marco Cattaneo
+ - Update reference for updates to Rich track selection
+
 ! 2009-06-12 - Jaap Panman
  - configurable: pass on InputType to LumiAlgsConf
 
