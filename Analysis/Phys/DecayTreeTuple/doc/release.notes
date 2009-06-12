@@ -4,7 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+
 !======================= DecayTreeTuple v2r3p1 2009-06-12 =====================
+! 2009-06-12 - Patrick Koppenburg
+ - More debugging
+
 ! 2009-06-11 - Rob Lambert
  - Fixed a bug in MCTupleToolKinematic
 

@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.7 2009-06-02 15:21:48 pkoppenb Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.8 2009-06-12 16:15:46 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -44,6 +44,8 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
       if(protop){
         const LHCb::Track* track = protop->track();
         if(track){
+          if (msgLevel(MSG::DEBUG)) debug() << head << " " << track->type() 
+                                            << " "+head+"_TRACK_CHI2 " << track->chi2() << endmsg ;
           if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
           test &= tuple->column( head+"_TRACK_Type",  track->type() );
           test &= tuple->column( head+"_TRACK_CHI2",  track->chi2() );
@@ -62,7 +64,10 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
                                      track->info(LHCb::Track::FitTNDoF, 0) );
             } else test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
           } else {
-            test &= tuple->column( head+"_TRACK_PCHI2",-1);
+            if (msgLevel(MSG::VERBOSE)) verbose() << "No NDOF" << endmsg ;
+            test &= tuple->column( head+"_TRACK_PCHI2",-1.);
+            test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",-1.);
+            test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
           }
           test &= tuple->column( head+"_TRACK_GhostProb", track->info(LHCb::Track::GhostProbability, -1.) );
           test &= tuple->column( head+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );

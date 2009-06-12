@@ -22,6 +22,7 @@ StatusCode fillTuple( Tuples::Tuple& tuple
   StatusCode test = StatusCode::FAILURE;
 
   for( ; heads.end()!=pit; ++pit ){
+    if (msgLevel(MSG::DEBUG)) debug() << "######################################## New head" << endmsg ;
     test = StatusCode::FAILURE;
     row.clear();
     dkFinder->decayMembers( *pit, row );
@@ -67,6 +68,8 @@ StatusCode fillParticles( Tuples::Tuple& tuple,
     bool test = true;
     const int size = m_parts.size();
     for( int k=0; size>k; ++k ){ // row[0] is the deday head.
+      if (msgLevel(MSG::DEBUG)) debug() << "#### Filling " 
+                                        << row[k]->particleID().pid() << endmsg ;
       test &= fillOnePart( m_parts[k], tuple, row[0], row[k] );
     }
     return StatusCode(test);
