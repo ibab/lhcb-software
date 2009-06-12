@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.16 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.17 2009-06-12 16:06:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,16 +27,8 @@ NoPIDsParticleMaker::NoPIDsParticleMaker(  const std::string& name,ISvcLocator* 
   , m_calls  ( 0 ) 
   , m_sum    ( 0 ) 
   , m_sum2   ( 0 )
-  , m_longTracks ( true )
-  , m_downstreamTracks ( false )  // set to false for HLT
-  , m_vttTracks ( false )         // set to false for HLT
-  , m_veloTracks ( false )         // 
 {
   declareProperty ( "CL"       , m_CL     ) ; 
-  declareProperty ( "UseLongTracks",     m_longTracks );
-  declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
-  declareProperty ( "UseUpstreamTracks",      m_vttTracks );
-  declareProperty ( "UseVeloTracks",      m_veloTracks );
 
 }
 //=============================================================================
@@ -49,14 +41,6 @@ NoPIDsParticleMaker::~NoPIDsParticleMaker() {}
 //=============================================================================
 StatusCode NoPIDsParticleMaker::initialize() {
   StatusCode sc = ChargedParticleMakerBase::initialize();
-
-  if ( !m_longTracks ) info() << "Filtering out long tracks"<< endmsg;
-  if ( !m_downstreamTracks ) info() << "Filtering out downstream tracks" << endmsg;
-  if ( !m_vttTracks ) info() << "Filtering out upstream tracks" << endmsg;
-  if ( m_veloTracks ) info() << "Keeping velo tracks" << endmsg;
-  if (!(( m_longTracks ) || ( m_downstreamTracks) || ( m_vttTracks)|| ( m_veloTracks))){
-    Warning("You have chosen to veto all tracks.") ;
-  }
 
   return StatusCode::SUCCESS;
   

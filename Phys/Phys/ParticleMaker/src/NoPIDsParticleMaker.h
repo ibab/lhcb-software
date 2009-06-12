@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.h,v 1.11 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.h,v 1.12 2009-06-12 16:06:02 pkoppenb Exp $
 #ifndef NOPIDSPARTICLEMAKER_H 
 #define NOPIDSPARTICLEMAKER_H 1
 
@@ -56,18 +56,6 @@ private:
   
   // total created particles (sum2)  
   double                  m_sum2   ;
-  
-  // Job options to keep long tracks
-  bool m_longTracks;
-  
-  // Job options to keep upstream tracks
-  bool m_downstreamTracks;
-  
-  // Job options to keep VTT tracks
-  bool m_vttTracks;
-  
-  // Job options to keep velo tracks
-  bool m_veloTracks;
   
 };
 // ============================================================================
