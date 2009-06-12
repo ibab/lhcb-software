@@ -27,14 +27,14 @@ namespace constants{
 	static const double ed = -1/3.;
 	static const double eq = -2/3.;
 	static const double eu = 2/3.;
-	static const double fB = 0.18;//GeV +- 0.03
+	static const double fB = 0.186;//GeV +- 0.03
 	static const double fKpar = 0.225;//GeV
 	static const double fKperp = 0.185;//GeV
 	static const double Lqcd = 0.220;//GeV +-0.04 -> nF = 5
 	static const int Nc = 3;
 	static const double mB = 5.27953;//GeV
 	static const double mb = 4.8;//GeV
-	static const double mc = 1.4;//GeV
+	static const double mc = 1.27;//GeV
 	static const double mmu = 0.106;
 	static const double mKstar = 0.892;//GeV
 	static const double ms = 0.104;//GeV
@@ -49,7 +49,7 @@ namespace constants{
 	static const double Vus = 0.2258;
 	static const double Vcb = 4.12e-2;
 	static const double AbsVub = 3.93e-3;
-	static const double Vtstb = 0.0385;
+	static const double Vtstb = -0.0407;
 	//used in the Constraints
 	static const double fBs = 0.268;
 	static const double mBs = 5.3663;

@@ -336,10 +336,17 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	DEBUGPRINT("Ceff[8]: ", (CmL(8)/as1 + CmL(3) - CmL(4)/6. + 20*CmL(5) - 10*CmL(6)/3.));
 	DEBUGPRINT("Cb[9]: ", (CmL(9)/as1));
 	DEBUGPRINT("Cb[10]: ", (CmL(10)/as1));
-	
 
 	//now the right handed terms - we neglect CR(1-6) as they will be v. small
+#if 0	
+	if( scale == MU_MB){
+		(*CR_barred)(7) = (constants::ms/constants::mb)*(*C_barred)(7) + runC7(CR(7),CR(8),scale);
+	}else{
+		(*CR_barred)(7) = runC7(CR(7),CR(8),scale);
+	}
+#else
 	(*CR_barred)(7) = runC7(CR(7),CR(8),scale);
+#endif
 	(*CR_barred)(8) = runC8(CR(8),scale);
 	(*CR_barred)(9) = CR(9);
 	(*CR_barred)(10) = CR(10);

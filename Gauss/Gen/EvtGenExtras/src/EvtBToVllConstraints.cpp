@@ -428,7 +428,7 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	fact.parameters->setBbar(isBbar);
 	fact.getTnAmplitudes(q2,constants::mB,constants::mKstar, &tensors);
 	
-	const double scaleFactor = 1e10;//stop the amplitudes getting too small...
+	const double scaleFactor = 1e11;//stop the amplitudes getting too small...
 		
 	const EvtComplex tensA = tensors.at(QCDFactorisation::A);
 	const EvtComplex tensB = tensors.at(QCDFactorisation::B);
@@ -551,22 +551,17 @@ const std::pair<double, double> EvtBToVllConstraints::getS5Zero() const{
 		static double getValue(const double q2, void* params){
 			const s5utils* c = (s5utils*)params;
 			const double result = c->calc->getJ5(q2);//scale up to a more useful range
-			std::cout << q2 << "\t" << result << std::endl;
 			return result;
 		}
 	private:
 		const EvtBToVllConstraints* calc;
 	};
-	
-	
 	s5utils u(this);
-	
 	
     gsl_function F;
     F.function = &s5utils::getValue;
     F.params = &u;
-    return findZero(&F,2.25);
-
+    return findZero(&F);
 }
 
 const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
@@ -579,25 +574,20 @@ const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
 		static double getValue(const double q2, void* params){
 			const s6utils* c = (s6utils*)params;
 			const double result = c->calc->getJ6(q2);//scale up to a more useful range
-			std::cout << q2 << "\t" << result << std::endl;
 			return result;
 		}
 	private:
 		const EvtBToVllConstraints* calc;
 	};
-	
-	
 	s6utils u(this);
-	
 	
     gsl_function F;
     F.function = &s6utils::getValue;
     F.params = &u;
-    return findZero(&F,4.0);
-
+    return findZero(&F);
 }
 
-const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F, const double r_expected) const{
+const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F) const{
 
     int status = 0;
 	int iter = 0;
@@ -613,37 +603,23 @@ const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F, 
 
     gsl_root_fsolver_set(s,F,q2Min, q2Max);
   
-    do
-      {
+    do{
         iter++;
         status = gsl_root_fsolver_iterate(s);
         r = gsl_root_fsolver_root(s);
         q2Min = gsl_root_fsolver_x_lower(s);
         q2Max = gsl_root_fsolver_x_upper(s);
         status = gsl_root_test_interval(q2Min, q2Max, 0, 0.0001);
-  
-        if (status == GSL_SUCCESS)
-          printf ("Converged:\n");
-  
-        printf ("%5d [%.7f, %.7f] %.7f %+.7f %.7f\n",
-                iter, q2Min, q2Min,
-                r, r - r_expected, 
-                q2Min - q2Max);
-      }
-    while (status == GSL_CONTINUE && iter < max_iter);
+    }while(status == GSL_CONTINUE && iter < max_iter);
     
     double gradient = 0.0;
-    if( status != GSL_SUCCESS){
-    	std::cout << "Zero finding failed" << std::endl;
+    if( status != GSL_SUCCESS ){
     	r = -1.0; //outside the kinimatic range
     }else{
     	gradient = findZeroGradient(F,r);
     }
     gsl_root_fsolver_free(s);
-    
-    
 	return std::make_pair(r,gradient);
-	
 }
 
 const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const double zero) const{
@@ -651,7 +627,6 @@ const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const doubl
 	double result = 0.0;
 	double abserr = 1e6;
 	
-	gsl_deriv_central(F, zero, 1e-6, &result, &abserr);
-	printf("f'(x) = %.10f +/- %.10f\n", result, abserr);
+	gsl_deriv_central(F, zero, 0.2, &result, &abserr);
 	return result;
 }

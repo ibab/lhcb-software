@@ -73,7 +73,7 @@ private:
 	
 	const double getJ5(const double q2) const;
 	const double getJ6(const double q2) const;
-	const std::pair<double, double> findZero(gsl_function* F, const double r_expected) const;
+	const std::pair<double, double> findZero(gsl_function* F) const;
 	const double findZeroGradient(gsl_function* F, const double zero) const;
 	
 };
