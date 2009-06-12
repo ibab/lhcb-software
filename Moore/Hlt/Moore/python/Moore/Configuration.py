@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.56 2009-06-10 19:36:56 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.57 2009-06-12 13:15:14 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -65,12 +65,11 @@ class Moore(LHCbConfigurableUser):
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
-        , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
+        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "Verbose" :          True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , "RunOnline" : False
-        , "TAE"       : False
         }   
                 
     def _configureOnline(self) :
@@ -84,6 +83,7 @@ class Moore(LHCbConfigurableUser):
         importOptions('$STDOPTS/DecodeRawEvent.py')
         ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
         #MagneticFieldSvc().UseSetCurrent = True
+        HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False
         EventLoopMgr().Warnings = False
         app=ApplicationMgr()
@@ -91,7 +91,7 @@ class Moore(LHCbConfigurableUser):
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
         ### TODO: if FEST partition, change DB setup???
         #mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','SEND'],True)
-        mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],True)
+        mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],False)
         app.Runable = Online.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
         evtMerger = Online.evtMerger(name='Output',buffer='SEND',datatype=Online.MDF_NONE,routing=1)
@@ -100,10 +100,7 @@ class Moore(LHCbConfigurableUser):
         #SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
-        eventSelector = Online.mbmSelector(input='EVENT')
-        ### TODO: if TAE, event type = 1 instead of 2... --> input = 'MEP'
-        if self.getProp('TAE') :
-            raise RunTimeError( 'TODO: update event type to 1 for TAE runs...'  )
+        eventSelector = Online.mbmSelector(input='EVENT',TAE=( Online.TAE != 0 ))
         app.ExtSvc.append(eventSelector)
         Online.evtDataSvc()
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
@@ -115,15 +112,12 @@ class Moore(LHCbConfigurableUser):
         app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
         from Configurables import LHCb__FmcMessageSvc as MessageSvc
         msg=MessageSvc('MessageSvc')
-        msg.Format = "% F%40W%S%7W%R%T %0W%M"
         msg.LoggerOnly = True
         if 'LOGFIFO' not in os.environ :
             os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
-            print '# WARNING: LOGFIFO not set -- setting to ' + os.environ['LOGFIFO']
+            print '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO']
         msg.fifoPath = os.environ['LOGFIFO']
-        msg.OutputLevel = WARNING
-        #MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-        #msg.OutputLevel = Online.OutputLevel
+        msg.OutputLevel = Online.OutputLevel
         msg.doPrintAlways = False
         SendSequence =  GaudiSequencer('SendSequence')
         SendSequence.Members = [ GaudiSequencer('Hlt1Global'), evtMerger ]
@@ -264,6 +258,7 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('InitialTCK', Online.InitialTCK )
                 self.setProp('CheckOdin',True)
             if Online.PartitionName == 'FEST' :
+		# This is a bad hack which is probably incompatible with the use of snapshots...
                 self.setProp('Simulation',True)
 
 
