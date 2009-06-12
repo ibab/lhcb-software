@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.18 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.19 2009-06-12 09:16:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -114,7 +114,9 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   if ( ckTheta > 0 )
   {
     // make a ring object
-    newRing = new LHCb::RichRecRing( segment, ckTheta, hypo );
+    newRing = new LHCb::RichRecRing( segment, 
+                                     static_cast<LHCb::RichRecRing::FloatType>(ckTheta), 
+                                     hypo );
 
     // set ring type info
     newRing->setType ( LHCb::RichRecRing::RayTracedCK );

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiClustering
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiClustering.cpp,v 1.2 2009-06-11 11:05:37 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiClustering.cpp,v 1.3 2009-06-12 09:16:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -74,7 +74,7 @@ void BackgroundEstiClustering::pixelBackgrounds() const
     const double pixBkg = hpdTotBackground * bckWeight / m_nPixelsPerPD ;
     
     // Save this value in the pixel
-    (*pixel)->setCurrentBackground( pixBkg>0 ? static_cast<LHCb::RichRecRing::FloatType>(pixBkg) : 0.0 );
+    (*pixel)->setCurrentBackground( pixBkg>0 ? static_cast<LHCb::RichRecRing::FloatType>(pixBkg) : 0.0f );
     
     // Debug printout
     if ( msgLevel(MSG::VERBOSE) )
