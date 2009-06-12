@@ -16,9 +16,9 @@ if len(sys.argv)>2:
     moore = os.environ['MOOREROOT']
     setup = os.path.join(moore,'job',env)
     print 'generating ' + setup
-    # ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
-    from LbConfiguration.SetupProject import SetupProject
-    SetupProject().main(['--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
+    ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
+    #from LbConfiguration.SetupProject import SetupProject
+    #SetupProject().main(['--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
 
     print 'removing use of StripPath.sh'
     # remove call to StripPath.sh from generated SetupProject.sh
@@ -42,13 +42,10 @@ source ./setupOnline.sh $*
 # pick up 'our' setup... (which defines $MOOREROOT!)
 source %(setup)s
 # and the options to be used
-export USEROPTS=%(moore)s/options/DEFAULT${IS_TAE_RUN}.opts
-[[ 'x'$PARTNAME == 'xFEST' ]] && USEROPTS=%(moore)s/options/DEFAULT_FEST${IS_TAE_RUN}.opts
-[[ 'x'$PARTNAME == 'xLHCb' ]] && USEROPTS=%(moore)s/options/DEFAULT_LHCb${IS_TAE_RUN}.opts
-export CORAL_SQLITE_TEMP_STORE_MEMORY=yes
-# and run them!
-echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
-exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
+# pick up partition specific OnlineHLTEnv module
+export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:${PYTHONPATH}
+exec -a ${UTGID} ${CLASS1_TASK} -opt=command="import Moore.runOnline; Moore.runOnline.start()"
+
       """%({'setup': setup,'moore':moore}) )
 
 from stat import *
