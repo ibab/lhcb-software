@@ -1,4 +1,4 @@
-// $Id: LumiAccounting.cpp,v 1.2 2009-04-15 16:05:06 cattanem Exp $
+// $Id: LumiAccounting.cpp,v 1.3 2009-06-12 08:17:50 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -120,7 +120,6 @@ StatusCode LumiAccounting::execute() {
       // this is a new file
       m_count_files++;
       m_current_fname = fname;
-      std::string runRecordName = fname+"/EOR";
       if ( msgLevel(MSG::DEBUG) ) debug() << "RunInfo record: " << fname << endmsg;
       // create a new FSR and append to TDS
       m_lumiFSR = new LHCb::LumiFSR();

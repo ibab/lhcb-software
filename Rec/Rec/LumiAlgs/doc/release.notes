@@ -4,6 +4,18 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-06-12 - Jaap Panman
+ - Configuration.py:  when running on DST different location to pass on LumiSummary
+ - LumiReadBackFSR:   new algorithm to test integrator tool
+ - ILumiIntegrator.h: interface for integrator tool
+ - LumiIntegrator:    integrator tool, holds integrated lumi info
+   this tool is meant to be able to apply calibration constants and give
+   an integrated luminosity at the end of a job
+ - LumiIntegrateFSR:  Algorithm to work with the tool.  Picks up all FSRs at 
+	 change of run, navigates FileRecords to find all FSRs, and counts all events
+   on input.  
+ - LumiAccounting:   Follow change to FileRecords
+
 !========================== LumiAlgs v2r0 2009-05-08 =========================
 ! 2009-04-15 - Marco Cattaneo
  - Change input and output FSR locations to be under /FileRecords instead of

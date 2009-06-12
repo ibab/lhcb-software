@@ -23,8 +23,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2008" # Data type, can be ['DC06','2008']
-       ,"LumiSequencer" : None # The sequencer to add the Lumi Accounting to
+       ,"DataType"      : "2008"     # Data type, can be ['DC06','2008','MC09','2009']
+       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST']
+       ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] # bunch crossing types 
        ,"HistoProduce"  : False
         }
@@ -40,9 +41,11 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
         # Set context
         context = self.getProp("Context")
+        
+        # Input data type
+        inputType = self.getProp("InputType")
 
         # Create sub-sequences according to BXTypes
-
         crossings = self.getProp("BXTypes")
         BXMembers = []
         for i in crossings:
@@ -51,11 +54,12 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                TriggerTypes=['RandomTrigger'],
                                                BXTypes=[i],
                                                OutputLevel = debugOPL ))
-            seqMembers.append( HltLumiSummaryDecoder('LumiDecode'+i,
-                                                  OutputLevel = debugOPL ))
-            seqMembers.append( LumiAccounting('LumiCount'+i,
-                                              OutputDataContainer = "/FileRecords/EOR/LumiFSR"+i,
-                                              OutputLevel = debugOPL ))
+            decoder = HltLumiSummaryDecoder('LumiDecode'+i, OutputLevel = debugOPL )
+            seqMembers.append( decoder )
+            accounting = LumiAccounting('LumiCount'+i,
+                                        OutputDataContainer = "/FileRecords/EOR/LumiFSR"+i,
+                                        OutputLevel = debugOPL )
+            seqMembers.append( accounting )
             
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 
                                              Members = seqMembers,
@@ -63,6 +67,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ShortCircuit = True,
                                              MeasureTime = True,
                                              ))
+            if inputType == 'DST':
+                decoder.OutputContainerName='LumiSummaries'
+                accounting.InputDataContainer='LumiSummaries'
 
         sequence.Members = BXMembers
         sequence.MeasureTime = True
