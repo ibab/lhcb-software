@@ -1,5 +1,13 @@
 
 {
+
+  //unsigned int nTracks = 1000000;
+  unsigned int nTracks = -1;
+
+  //std::string dataFile = "/usera/jonesc/NFS/RootFiles/DC09/MC09v2-JPsiee-nu1.protoparticles.root";
+  //std::string dataFile = "/usera/jonesc/NFS/RootFiles/DC06/DC06-v31.protoparticles.tuples.root";
+  std::string dataFile = "/usera/jonesc/gangadir/workspace/jonesc/LocalAMGA/134/output/protoparticles.tuples.root";
+
   gROOT->ProcessLine(".L GlobalPID.C+");
   const double GeV(1000);
 
