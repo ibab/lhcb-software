@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.48 2009-03-12 13:00:28 pkoppenb Exp $ 
+# $Id: requirements,v 1.49 2009-06-12 09:08:50 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.48 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.49 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v8r1p1
+version           v8r2
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -19,26 +19,14 @@ branches          cmt doc src options solutions exercises
 use DaVinciKernel       v*  Phys
 use DaVinciMCKernel     v* Phys
 
-# ============================================================================
-# Use MC
-# ============================================================================
-macro_append     cppflags " -DMCCheck " \
-                 VisualC  " /DMCCheck "
+include_path      none
 # ============================================================================
 # Component library building rule
 # ============================================================================
-library     Analysis     ../src/*.cpp -import=AIDA
+library     Analysis     ../src/*.cpp
 
 # ============================================================================
 # define component library link options
 # ============================================================================
 apply_pattern component_library library=Analysis
 
-# ============================================================================
-# Testing Component library building rule
-# This is only to check that the code compiles in the release
-# ============================================================================
-private
-library     AnalysisTest -suffix=Test ../solutions/DaVinci3/*.cpp 
-apply_pattern linker_library library=AnalysisTest
-end_private
