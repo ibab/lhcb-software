@@ -554,13 +554,14 @@ def make(slotName, projectName, minusj):
     #configuration.system('cmt br - "cmt make all tests"') # it will break on Windows,
     if systemType == 'windows':
         makeCmd = cmtCommand + ' make'
-        if 'CMTEXTRATAGS' in os.environ:
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
             makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
         configuration.system(cmtCommand + ' br - ' + makeCmd + ' all_groups')
         install(slotName, projectName)
     else:
         makeCmd = cmtCommand + ' make' + minusjcmd
-        if 'CMTEXTRATAGS' in os.environ:
+        if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
             makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
         configuration.system(cmtCommand + ' br - "' + makeCmd + ' all ; ' + makeCmd +' tests"') # it will break on Windows,
     configuration.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
