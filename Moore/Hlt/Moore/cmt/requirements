@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.56 2009-06-10 12:37:35 graven Exp $
+# $Id: requirements,v 1.57 2009-06-12 13:16:38 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -11,6 +11,9 @@ version v7r1
 branches doc cmt options python
 
 #============================================================================
+# Set the default path for Moore options.
+set MOOREOPTS ${MOOREROOT}/options
+
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -57,6 +60,7 @@ use HltSys		v*	     -no_auto_imports
 use PhysSys		v*	     -no_auto_imports
 
 #-- Online ??
+use GaudiOnline		v2r29        Online
 use OnlineSys           v*           -no_auto_imports
 
 #============================================================================
