@@ -12,6 +12,7 @@ mbm_requirements={}
 mbm_requirements['MEP']   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 mbm_requirements['EVENT'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 mbm_requirements['RESULT']= "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
+mbm_requirements['SEND']  = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 mbm_requirements['OTHER'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
 
 ApplicationMgr = CFG.ApplicationMgr
@@ -127,6 +128,7 @@ def evtServerRunable(mepMgr,buffer,request=None,name='Runable'):
     if request == 'MEP':      svc.REQ = mbm_requirements['MEP']
     elif request == 'EVENT':  svc.REQ = mbm_requirements['EVENT']
     elif request == 'RESULT': svc.REQ = mbm_requirements['RESULT']
+    elif request == 'SEND':   svc.REQ = mbm_requirements['SEND']
     else:                     svc.REQ = mbm_requirements['OTHER']%(str(request),)
   svc.MEPManager        = mepMgr
   svc.Input             = buffer
@@ -183,6 +185,7 @@ def mbmSelector(input=None,type=None,decode=True):
     if input == 'MEP':          svc.REQ1 = mbm_requirements['MEP']
     elif input == 'EVENT':      svc.REQ1 = mbm_requirements['EVENT']
     elif input == 'RESULT':     svc.REQ1 = mbm_requirements['RESULT']
+    elif input == 'SEND':       svc.REQ1 = mbm_requirements['SEND']
     elif type is not None:      svc.REQ1 = mbm_requirements['OTHER']%(str(type),)
   return svc
 
