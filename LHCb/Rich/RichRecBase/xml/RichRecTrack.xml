@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.20 2009-06-10 13:17:29 jonrob Exp $
+  * $Id: RichRecTrack.xml,v 1.21 2009-06-12 15:25:13 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -254,7 +254,7 @@
 		type        = "LHCb::RichRecTrack::FloatType"
 		compression = "FALSE" 
 		desc        = "Track Ghost Probability" 
-		init        = "999999" 
+		init        = "-1" 
 	/>
             
         <method 

@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-12 - Chris Jones
+ - Update default value of track GhostProbability to -1
+
 ! 2009-06-10 - Chris Jones
  - Improvements to the track selector classes for the upcoming track changes.
  - Add ghost probability variable to RichRecTrack object.
