@@ -6,6 +6,20 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-06-12 - Vanya BELYAEV
+
+ - add new classes:
+
+     Gaudi::Math::ValueWithError
+     Gaudi::Math::Point3DWithError
+     Gaudi::Math::Vector3DWithError
+     Gaudi::Math::LorentzVectorWithError 
+
+ - cmt/requirements 
+
+     version increment to v3r9 
+
+
 !========================= LHCbMath v3r8 2009-05-25 ==========================
 ! 2009-05-23 - Vanya Belyaev
  - src/Lomont.cpp

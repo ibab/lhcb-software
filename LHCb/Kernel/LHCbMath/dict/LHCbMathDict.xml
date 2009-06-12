@@ -15,4 +15,8 @@
   <class name = "Gaudi::Math::MD5"/>
   <class name = "std::vector<Gaudi::Math::MD5>"/>
   <class name = "std::list<Gaudi::Math::MD5>"/>
+  <class name = "Gaudi::Math::ValueWithError"    />
+  <class name = "Gaudi::Math::Point3DWithError"  />
+  <class name = "Gaudi::Math::Vector3DWithError" />
+  <class name = "Gaudi::Math::LorentzVectorWithError" />
 </lcgdict>

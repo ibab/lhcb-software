@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.6 2008-11-28 13:50:59 graven Exp $
+// $Id: LHCbMathDict.h,v 1.7 2009-06-12 14:57:18 ibelyaev Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -14,6 +14,10 @@
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/MD5.h"
+#include "LHCbMath/ValueWithError.h"
+#include "LHCbMath/Point3DWithError.h"
+#include "LHCbMath/Vector3DWithError.h"
+#include "LHCbMath/LorentzVectorWithError.h"
 #include <vector>
 #include <list>
 
