@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-06-12 - Marco Cattaneo
+ - Update references for improvements to Rich track selectors
+
 ! 2009-06-05 - Marco Cattaneo
  - Update reference for Rich tuning and monitoring changes
 
