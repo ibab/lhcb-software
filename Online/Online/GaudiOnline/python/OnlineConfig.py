@@ -9,6 +9,7 @@ MDF_RECORDS = 2
 MDF_BANKS   = 3
 
 mbm_requirements={}
+mbm_requirements['TAE']   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 mbm_requirements['MEP']   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 mbm_requirements['EVENT'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 mbm_requirements['RESULT']= "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
@@ -16,6 +17,16 @@ mbm_requirements['SEND']  = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffff
 mbm_requirements['OTHER'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
 
 ApplicationMgr = CFG.ApplicationMgr
+
+#------------------------------------------------------------------------------------------------
+def _mbmRequirement(input,type,TAE=False):
+  if input == 'MEP' and TAE:  return mbm_requirements['TAE']
+  elif input == 'MEP':        return mbm_requirements['MEP']
+  elif input == 'EVENT':      return mbm_requirements['EVENT']
+  elif input == 'RESULT':     return mbm_requirements['RESULT']
+  elif input == 'SEND':       return mbm_requirements['SEND']
+  elif type is not None:      return mbm_requirements['OTHER']%(str(type),)
+  return 'Unknown requirement'
 
 #------------------------------------------------------------------------------------------------
 def patchExitHandler():
@@ -125,11 +136,7 @@ def mepManager(partitionID,partitionName,buffers,partitionBuffers=False,flags=No
 def evtServerRunable(mepMgr,buffer,request=None,name='Runable'):
   svc = Configs.LHCb__EventServerRunable(name)
   if request is not None: 
-    if request == 'MEP':      svc.REQ = mbm_requirements['MEP']
-    elif request == 'EVENT':  svc.REQ = mbm_requirements['EVENT']
-    elif request == 'RESULT': svc.REQ = mbm_requirements['RESULT']
-    elif request == 'SEND':   svc.REQ = mbm_requirements['SEND']
-    else:                     svc.REQ = mbm_requirements['OTHER']%(str(request),)
+    svc.REQ = _mbmRequirement(request,request,False)
   svc.MEPManager        = mepMgr
   svc.Input             = buffer
   return svc  
@@ -177,16 +184,12 @@ def evtDataSvc():
   return svc
 
 #------------------------------------------------------------------------------------------------
-def mbmSelector(input=None,type=None,decode=True):
+def mbmSelector(input=None,type=None,decode=True,TAE=False):
   svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
   svc.Decode     = decode
   if input is not None:
     svc.Input    = input
-    if input == 'MEP':          svc.REQ1 = mbm_requirements['MEP']
-    elif input == 'EVENT':      svc.REQ1 = mbm_requirements['EVENT']
-    elif input == 'RESULT':     svc.REQ1 = mbm_requirements['RESULT']
-    elif input == 'SEND':       svc.REQ1 = mbm_requirements['SEND']
-    elif type is not None:      svc.REQ1 = mbm_requirements['OTHER']%(str(type),)
+    svc.REQ1 = _mbmRequirement(input,type,tae)
   return svc
 
 #------------------------------------------------------------------------------------------------
