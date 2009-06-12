@@ -194,7 +194,7 @@ def mbmSelector(input=None,type=None,decode=True,TAE=False):
   svc.Decode     = decode
   if input is not None:
     svc.Input    = input
-    svc.REQ1 = _mbmRequirement(input,type,tae)
+    svc.REQ1 = _mbmRequirement(input,type,TAE)
   return svc
 
 #------------------------------------------------------------------------------------------------
