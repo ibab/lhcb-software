@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-06-12 - Jaap Panman
+ - LumiFSR        : add + and += operators
+ - LumiIntegral   : new class, holds integrated FSR from different files
+
 !======================== LumiEvent v2r0p1 2009-06-02 ==========================
 ! 2009-06-02 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 

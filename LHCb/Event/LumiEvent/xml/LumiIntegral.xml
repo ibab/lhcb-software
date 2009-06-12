@@ -8,31 +8,33 @@
   <package name='LumiEvent'>
 
 
-<!-- LumiFSR Class -->
+<!-- LumiIntegral Class -->
 
     <class
-      name="LumiFSR"
+      name="LumiIntegral"
       author="Jaap Panman"
       desc="Accounting class for Lumi in FSR"
       stdVectorTypeDef="TRUE"
       keyedContTypeDef="TRUE"
-      id="13501"
+      id="13502"
       serializers="TRUE"
       >
 
 
       <location name="Default"   
-		place="/FileRecords/EOR/LumiFSR"/>
+		place="/RunRecords/EOR/LumiIntegral"/>
 
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
 
       <import name="vector" std="TRUE"/>
       <import name="GaudiKernel/VectorMap" />
+      <import name="Event/LumiFSR" />
+
 
 
       <typedef
-        type="std::pair&lt;  int, longlong &gt;"
+        type="std::pair&lt;  int, double &gt;"
         def="ValuePair"
         desc="For User information"
         access="PUBLIC"
@@ -45,6 +47,20 @@
         access="PUBLIC"
 	/> 
   
+      <typedef
+        type="std::pair&lt;  int, longlong &gt;"
+        def="LongValuePair"
+        desc="For User information"
+        access="PUBLIC"
+	/>       
+ 
+      <typedef
+        type="GaudiUtils::VectorMap&lt;  int, LongValuePair &gt;"
+        def="LongExtraInfo"
+        desc="User information"
+        access="PUBLIC"
+	/> 
+
       <typedef
         type="std::vector&lt;unsigned int&gt;"
         def="RunNumbers"
@@ -63,9 +79,9 @@
       <method
         desc="Assignment operator"
         name="operator="
-        type="LHCb::LumiFSR&amp;"
+        type="LHCb::LumiIntegral&amp;"
 	>
-	<arg name="rhs" type="LHCb::LumiFSR" const='TRUE'/>
+	<arg name="rhs" type="LumiIntegral" const='TRUE'/>
         <code>
    if ( this != &amp;rhs ) {
       m_runNumbers        = rhs.m_runNumbers;
@@ -81,16 +97,6 @@
 	name = "runNumbers"
 	desc = "Set of run numbers summed up in this job"
 	/>
-
-      <method
-        desc="get method"
-        name="runNumbers"
-        type="RunNumbers&amp;"
-	>
-        <code>
-   return m_runNumbers;
-        </code>
-      </method>
       
       <method
 	type = "void"
@@ -138,16 +144,6 @@
 	name = "fileIDs"
 	desc = "Set of file IDs summed up in this job"
 	/>
-
-      <method
-        desc="get method"
-        name="fileIDs"
-        type="FileIDs&amp;"
-	>
-        <code>
-   return m_fileIDs;
-        </code>
-      </method>
       
       <method
 	type = "void"
@@ -223,7 +219,7 @@
       <method
         name="addInfo"
         desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
-        argList="const int key, const int incr, const longlong count"
+        argList="const int key, const int incr, const double count"
         type="bool"
 	> 
 	<code>
@@ -279,9 +275,83 @@
       </method>
 
       <method
+        desc="sums the values for existing keys and inserts a new key if needed"
+        name="mergeInfo"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="LongExtraInfo" const="TRUE"/>
+        <code> 
+   // sum info or add new key
+   LongExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      LongValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( hasInfo(key) ) {
+         eraseInfo(key);
+      }
+      addInfo( key, valueA.first + valueB.first, valueA.second + (double)valueB.second );
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+      <method
+        desc="sums the values for existing keys normalized to *this"
+        name="mergeInfoNormalized"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="ExtraInfo" const="TRUE"/>
+	<arg name="factor" type="double" const="TRUE"/>
+        <code> 
+   // sum info or add new key
+   ExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      ValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( valueB.first ) {
+      	 if ( hasInfo(key) ) {
+      	    eraseInfo(key);
+      	 }
+         double scale = (double)valueA.first/(double)valueB.first;
+      	 addInfo( key, valueA.first, valueA.second + factor * valueB.second * scale );
+      }
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+      <method
+        desc="sums the values for existing keys normalized to *this"
+        name="mergeInfoNormalized"
+        type="ExtraInfo"
+	>
+	<arg name="rhs" type="LongExtraInfo" const="TRUE"/>
+	<arg name="factor" type="double" const="TRUE"/>
+        <code> 
+   // sum info or add new key
+   LongExtraInfo::iterator iterB;
+   for ( iterB = rhs.begin(); iterB != rhs.end(); iterB++ ) {
+      int key = (*iterB).first;
+      LongValuePair valueB = (*iterB).second;
+      ValuePair valueA = info (key, ValuePair(0,0));
+      if ( valueB.first ) {
+      	 if ( hasInfo(key) ) {
+      	    eraseInfo(key);
+      	 }
+         double scale = (double)valueA.first/(double)valueB.first;
+      	 addInfo( key, valueA.first, valueA.second + factor * (double)valueB.second * scale );
+      }
+   }
+   return m_extraInfo;
+        </code>
+      </method>
+
+      <method
         desc="increments the values for existing keys and inserts a new key if needed"
         name="incrementInfo"
-        argList="const int key, const longlong count"
+        argList="const int key, const double count"
         type="ExtraInfo"
 	>
         <code> 
@@ -296,34 +366,35 @@
    return m_extraInfo;
         </code>
       </method>
- 
+
       <method
         desc="Addition operator"
         name="operator+"
-        type="LHCb::LumiFSR&amp;"
+        type="LHCb::LumiIntegral&amp;"
 	>
-	<arg name="rhs" type="LHCb::LumiFSR" const="TRUE"/>   
+	<arg name="rhs" type="LHCb::LumiIntegral" const="TRUE"/>   
         <code>   
    if ( this != &amp;rhs ) {
       // merge run number sets
-      mergeRuns(rhs.m_runNumbers);
+      mergeRuns(rhs.runNumbers());
       // merge file ID sets
-      mergeFileIDs(rhs.m_fileIDs);
+      mergeFileIDs(rhs.fileIDs());
       // merge the extraInfo
-      mergeInfo(rhs.m_extraInfo);
+      mergeInfo(rhs.extraInfo());
    }
    return *this;
         </code>
       </method> 
+ 
 
       <method
         desc="Addition operator"
         name="operator+"
-        type="LHCb::LumiFSR&amp;"
+        type="LHCb::LumiIntegral&amp;"
 	>
-	<arg name="rhs" type="LHCb::LumiFSR*" const="TRUE"/>   
+	<arg name="rhs" type="LHCb::LumiIntegral*" const="TRUE"/>   
         <code>   
-
+<!--
    if ( this != rhs ) {   
       // merge run number sets
       mergeRuns(rhs->m_runNumbers);
@@ -332,18 +403,78 @@
       // merge the extraInfo
       mergeInfo(rhs->m_extraInfo);
    }
-   return *this;
+-->
+   return *this = *this + *rhs;
+        </code>
+      </method> 
+ 
 
+      <method
+        desc="Addition (increment) operator"
+        name="operator+="
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral" const="TRUE"/>  
+        <code>   
+   if ( this != &amp;rhs ) {
+      *this = *this + rhs;
+   }
+   return *this;
+        </code>
+      </method> 
+ 
+
+      <method
+        desc="Addition (increment) operator"
+        name="operator+="
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral*" const="TRUE"/>   
+        <code>   
+   if ( this != rhs ) {   
+      *this = *this + *rhs;
+   }
+   return *this;
         </code>
       </method> 
  
 
       <method
         desc="Addition operator"
-        name="operator+="
-        type="LHCb::LumiFSR&amp;"
+        name="operator+"
+        type="LHCb::LumiIntegral&amp;"
 	>
 	<arg name="rhs" type="LHCb::LumiFSR" const="TRUE"/>   
+        <code>   
+
+   // merge run number sets
+   mergeRuns(rhs.runNumbers());
+   // merge file ID sets
+   mergeFileIDs(rhs.fileIDs());
+   // merge the extraInfo
+   mergeInfo(rhs.extraInfo());
+   return *this;
+
+        </code>
+      </method> 
+ 
+      <method
+        desc="Addition operator"
+        name="operator+"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR*" const="TRUE"/>   
+        <code>   
+   return *this = *this + *rhs;
+        </code>
+      </method> 
+ 
+      <method
+        desc="Addition (increment) operator"
+        name="operator+="
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR" const="TRUE"/>  
         <code>   
    return *this + rhs;
         </code>
@@ -351,16 +482,74 @@
  
 
       <method
-        desc="Addition operator"
+        desc="Addition (increment) operator"
         name="operator+="
-        type="LHCb::LumiFSR&amp;"
+        type="LHCb::LumiIntegral&amp;"
 	>
 	<arg name="rhs" type="LHCb::LumiFSR*" const="TRUE"/>   
         <code>   
+
    return *this + *rhs;
+
         </code>
       </method> 
  
+      <!-- add/subtract the counter contents scaled to the increment of the first --> 
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs.extraInfo(), factor);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiIntegral*" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs->extraInfo(), factor);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs.extraInfo(), factor);
+   return *this;
+        </code>
+      </method> 
+
+      <method
+        desc="Add scaled to norm"
+        name="addNormalized"
+        type="LHCb::LumiIntegral&amp;"
+	>
+	<arg name="rhs" type="LHCb::LumiFSR*" const="TRUE"/>   
+	<arg name="factor" type="double" const="TRUE" />
+        <code>   
+   // merge the extraInfo
+   mergeInfoNormalized(rhs->extraInfo(), factor);
+   return *this;
+        </code>
+      </method> 
 
       <!-- readable printout -->
       <method
@@ -379,7 +568,7 @@
     for ( run = m_runNumbers.begin(); run != m_runNumbers.end(); run++ ) {
       ss &lt;&lt; *run &lt;&lt; " ";
     }
-    LumiFSR::FileIDs::const_iterator file;
+    LHCb::LumiIntegral::FileIDs::const_iterator file;
     ss &lt;&lt; " files : " ; 
     for ( file = m_fileIDs.begin(); file != m_fileIDs.end(); file++ ) {
       ss &lt;&lt; *file &lt;&lt; " ";
@@ -391,9 +580,9 @@
     for (infoIter = m_extraInfo.begin(); infoIter != m_extraInfo.end(); infoIter++) {
       // get the key and value of the input info
       int key = infoIter->first;
-      LumiFSR::ValuePair values = infoIter->second;
+      LHCb::LumiIntegral::ValuePair values = infoIter->second;
       int incr = values.first;
-      longlong count = values.second;
+      double count = values.second;
       ss &lt;&lt; key &lt;&lt; " " 
          &lt;&lt; incr &lt;&lt; " " 
          &lt;&lt; count &lt;&lt; " / ";
