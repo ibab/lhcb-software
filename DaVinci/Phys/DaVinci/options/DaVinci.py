@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.36 2009-05-20 14:18:09 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.37 2009-06-12 07:27:12 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -25,8 +25,8 @@ importOptions("$STDOPTS/PreloadUnits.opts")
 #
 # Some preselection. This defines a GaudiSequencer.
 #
-importOptions("$B2DILEPTONROOT/options/DoPreselBu2LLK.opts")
-preselSeq = GaudiSequencer("SeqPreselBu2LLK")
+importOptions("$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py")
+preselSeq = GaudiSequencer("Sel09Bu2LLKFilterSequence")
 ########################################################################
 #
 # Some Monitoring stuff
@@ -35,20 +35,20 @@ from Configurables import GaudiSequencer, PrintDecayTree
 exampleSeq = GaudiSequencer("ExampleSeq")
 tree = PrintDecayTree("PrintBu2LLK")
 exampleSeq.Members += [ tree ]
-tree.InputLocations = [ "PreselBu2LLK" ]
+tree.InputLocations = [ "Presel09Bu2LLK" ]
 ########################################################################
 #
 # Flavour tagging. Don't ask why you'd be tagging a B+...
 #
 from Configurables import BTagging
 tag = BTagging("BTagging")
-tag.InputLocations = [ "PreselBu2LLK" ]
+tag.InputLocations = [ "Presel09Bu2LLK" ]
 ########################################################################
 #
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = 100                         # Number of events
+DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 #DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True
