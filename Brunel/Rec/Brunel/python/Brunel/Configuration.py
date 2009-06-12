@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.76 2009-06-09 14:48:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.77 2009-06-12 08:12:43 panmanj Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -245,7 +245,7 @@ class Brunel(LHCbConfigurableUser):
         
         if "Lumi" in initSeq :
             if self.getProp("WriteFSR"):
-                self.setOtherProps(LumiAlgsConf(),["Context","DataType"])
+                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
                 LumiAlgsConf().LumiSequencer = GaudiSequencer("InitLumiSeq")
 
         # Convert Calo 'packed' banks to 'short' banks if needed
