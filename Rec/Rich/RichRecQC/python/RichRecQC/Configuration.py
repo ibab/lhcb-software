@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.34 2009-06-10 16:15:01 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2009-06-13 15:27:16 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -115,9 +115,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Suppress errors from Linker
         getConfigurable("MessageSvc").setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
-                                                    "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
-                                                    "Link/MC/Particles2MCRichTracks"
-                                                    "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" ]
+                                                    "LinkedTo::MC/Particles2MCRichTracks" ]
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
