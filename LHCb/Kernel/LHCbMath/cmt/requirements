@@ -44,6 +44,8 @@ application  TestKine    ../tests/kinematics.cpp
 macro_append TestKine_dependencies     " LHCbMathLib "
 application  TestLomont  ../tests/TestLomontCompare.cpp 
 macro_append TestLomont_dependencies   " LHCbMathLib "
+application  TestErrors  ../tests/withErrors.cpp 
+macro_append TestErrors_dependencies   " LHCbMathLib "
 
 # ================= patterns ================================================
 apply_pattern       linker_library library=LHCbMathLib

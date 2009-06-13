@@ -1,4 +1,4 @@
-// $Id: Vector3DWithError.cpp,v 1.1 2009-06-12 14:57:18 ibelyaev Exp $
+// $Id: Vector3DWithError.cpp,v 1.2 2009-06-13 18:30:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -89,8 +89,8 @@ double Gaudi::Math::Vector3DWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool fail = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
-  if  ( fail ) { return -1 ; }                                 // RETURN  
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right.vector3d() , s_cov2 ) ;
 }
@@ -102,8 +102,8 @@ double Gaudi::Math::Vector3DWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool fail = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
-  if  ( fail ) { return -1 ; }                                 // RETURN  
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right , s_cov2 ) ;
 }

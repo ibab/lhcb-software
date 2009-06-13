@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.h,v 1.1 2009-06-12 14:57:17 ibelyaev Exp $
+// $Id: LorentzVectorWithError.h,v 1.2 2009-06-13 18:30:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_LORENTZVECTORWITHERROR_H 
 #define LHCBMATH_LORENTZVECTORWITHERROR_H 1
@@ -89,6 +89,17 @@ namespace Gaudi
       double chi2 ( const LorentzVectorWithError& right )  const ;
       /// evaluate chi2 distance 
       double chi2 ( const Vector4D&               right )  const ;      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** evaluate  sigma mass 
+       *  @see Gaudi::Math::sigmamass
+       */
+      double sigmaMass() const ;                        // evaluate  sigma mass 
+      /** evaluate chi2-mass
+       *  @see Gaudi::Math::chi2mass
+       */
+      double chi2mass ( const double m0 ) const ;         // evaluate chi2-mass
       // ======================================================================
     public: // helper operators for Python
       // ======================================================================

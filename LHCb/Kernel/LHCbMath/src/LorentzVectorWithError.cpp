@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.cpp,v 1.1 2009-06-12 14:57:18 ibelyaev Exp $
+// $Id: LorentzVectorWithError.cpp,v 1.2 2009-06-13 18:30:12 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,6 +12,7 @@
 #include "LHCbMath/MatrixTransforms.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
 #include "LHCbMath/MatrixInversion.h"
+#include "LHCbMath/Kinematics.h"
 // ============================================================================
 /** @file
  *  Implementation file for class Gaudi::Math::LorentVectorWithError
@@ -144,8 +145,6 @@ Gaudi::Math::LorentzVectorWithError::toString   () const // conversion to the st
   fillStream ( s ) ;
   return s.str() ;
 }
-
-
 // ============================================================================
 // chi2 distance 
 // ============================================================================
@@ -155,8 +154,8 @@ double Gaudi::Math::LorentzVectorWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool fail = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
-  if  ( fail ) { return -1 ; }                                 // RETURN  
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector4d() - right.vector4d() , s_cov2 ) ;
 }
@@ -168,11 +167,24 @@ double Gaudi::Math::LorentzVectorWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool fail = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
-  if  ( fail ) { return -1 ; }                                 // RETURN  
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector4d() - right , s_cov2 ) ;
 }
+// ============================================================================
+// evaluate  sigma mass 
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::sigmaMass () const 
+{ return Gaudi::Math::sigmamass ( vector4d() , cov2() ) ; }
+// ============================================================================
+// evaluate  chi2-mass
+// ============================================================================
+double Gaudi::Math::LorentzVectorWithError::chi2mass ( const double m0 ) const 
+{ return Gaudi::Math::chi2mass( m0 , vector4d() , cov2() ) ; }
+// ============================================================================
+
+
 
 // ============================================================================
 // The END 

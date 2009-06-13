@@ -1,0 +1,139 @@
+// $Id: SVectorWithError.icpp,v 1.1 2009-06-13 18:30:12 ibelyaev Exp $
+// ============================================================================
+#ifndef LHCBMATH_SVECTORWITHERROR_ICPP 
+#define LHCBMATH_SVECTORWITHERROR_ICPP 1
+// ============================================================================
+// Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <sstream>
+#include <cmath>
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/SVectorWithError.h"
+#include "LHCbMath/SymPosDefMatrixInverter.h"
+#include "LHCbMath/MatrixInversion.h"
+// ============================================================================
+/** @file 
+ *  The implementation file for class Gaudi::Math::SVectorWithError
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-06-13
+ */
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline double 
+Gaudi::Math::SVectorWithError<N,SCALAR>::chi2 
+( const Gaudi::Math::SVectorWithError<N,SCALAR>& right ) const
+{
+  Covariance s_cov2 ( this->cov2() ) ;
+  s_cov2 += right.cov2() ;
+  /// use Manuel's inverter:
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                        // RETURN  
+  /// calculate chi2 
+  return ROOT::Math::Similarity ( value() - right.value() , s_cov2 ) ;
+}
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline double 
+Gaudi::Math::SVectorWithError<N,SCALAR>::chi2 
+( const ROOT::Math::SVector<SCALAR,N>& right ) const
+{
+  Covariance s_cov2 ( this->cov2() ) ;
+  /// use Manuel's inverter:
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                        // RETURN  
+  /// calculate chi2 
+  return ROOT::Math::Similarity ( value() - right , s_cov2 ) ;
+}
+// ============================================================================
+template <unsigned int N, class SCALAR>
+template <class B>
+inline double 
+Gaudi::Math::SVectorWithError<N,SCALAR>::chi2 
+( const ROOT::Math::VecExpr<B,SCALAR,N>& right ) const
+{
+  Covariance s_cov2 ( this->cov2() ) ;
+  /// use Manuel's inverter:
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                        // RETURN  
+  /// calculate chi2 
+  return ROOT::Math::Similarity ( value() - right , s_cov2 ) ;
+}
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__add__  
+( const Gaudi::Math::SVectorWithError<N,SCALAR>& right  ) const 
+{ return ( (*this) + right ) ; }
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__sub__  
+( const Gaudi::Math::SVectorWithError<N,SCALAR>& right  ) const 
+{ return ( (*this) - right ) ; }
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__add__  
+( const ROOT::Math::SVector<SCALAR,N>& right  ) const 
+{ return ( (*this) + right ) ; }
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__sub__  
+( const ROOT::Math::SVector<SCALAR,N>& right  ) const 
+{ return ( (*this) - right ) ; }
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__radd__  
+( const ROOT::Math::SVector<SCALAR,N>& right  ) const 
+{ return ( (*this) + right ) ; }
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline
+Gaudi::Math::SVectorWithError<N,SCALAR> 
+Gaudi::Math::SVectorWithError<N,SCALAR>::__rsub__  
+( const ROOT::Math::SVector<SCALAR,N>& right  ) const 
+{ return ( right - (*this) ) ; }
+// ============================================================================
+// conversion to string
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline std::string  
+Gaudi::Math::SVectorWithError<N,SCALAR>::toString   () const // conversion to string
+{
+  std::ostringstream os ;
+  this->fillStream ( os ) ;
+  return os.str() ;
+}
+// ============================================================================
+// printout 
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline std::ostream& 
+Gaudi::Math::SVectorWithError<N,SCALAR>::fillStream ( std::ostream& s ) const 
+{
+  s << "( " ;
+  for ( unsigned int i = 0 ; i < N ; ++i ) 
+  {
+    if ( 0 != i ) { s << " , " ; }
+    s << value()(i) << "+-" ;
+    const double d = m_cov2(i,i) ;
+    s <<  ( 0 <= d ? std::sqrt ( d ) : -std::sqrt(-d) ) ;
+  }
+  return s << " )" ;
+} 
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // LHCBMATH_SVECTORWITHERROR_ICPP 
+// ============================================================================

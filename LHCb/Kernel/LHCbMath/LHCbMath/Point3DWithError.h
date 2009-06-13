@@ -1,4 +1,4 @@
-// $Id: Point3DWithError.h,v 1.2 2009-06-12 15:00:53 ibelyaev Exp $
+// $Id: Point3DWithError.h,v 1.3 2009-06-13 18:30:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_POINT3DWITHERROR_H 
 #define LHCBMATH_POINT3DWITHERROR_H 1
@@ -39,6 +39,8 @@ namespace Gaudi
       typedef Gaudi::XYZPoint                                      Point3D    ;
       /// the actual type of covariance 
       typedef Gaudi::SymMatrix3x3                                  Covariance ;
+      /// the actual type of the point 
+      typedef Gaudi::XYZPoint                                      Value      ;
       // ======================================================================
     public:
       // ======================================================================

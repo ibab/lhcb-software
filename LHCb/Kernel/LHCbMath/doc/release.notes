@@ -6,6 +6,25 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-06-13 - Vanya BELYAEV 
+
+ - add new class:
+
+        SVectorWithError
+
+ - fix matrix inversions 
+
+        Point3DWithError
+        Vector3DWithError 
+        LorentzVectorWithError
+
+ - LorentzVectorWithError:
+
+         add method sigmaMass and chi2mass
+
+ - LHCbMath/Kinematics.h
+         sigmamass: use invalid return valeus for invalid arguments 
+ 
 ! 2009-06-13 - Vanya Belyaev
 
  - fix for Linux

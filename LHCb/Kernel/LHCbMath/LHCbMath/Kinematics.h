@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.2 2008-12-02 15:54:30 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.3 2009-06-13 18:30:12 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_KINEMATICS_H 
 #define LHCBMATH_KINEMATICS_H 1
@@ -111,8 +111,8 @@ namespace Gaudi
       const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
       const double s2m = sigma2mass ( momentum , covariance ) ;
-      if ( 0 < s2m ) { return ::sqrt ( s2m ) ; }
-      return s2m ;
+      if ( 0 <= s2m ) { return std::sqrt ( s2m ) ; }
+      return -1000000 ;                                          // RETURN 
     }
     // ========================================================================
     /** evaluate the chi2 of the mass 
