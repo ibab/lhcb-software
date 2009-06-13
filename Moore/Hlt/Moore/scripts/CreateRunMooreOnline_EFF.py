@@ -16,9 +16,9 @@ if len(sys.argv)>2:
     moore = os.environ['MOOREROOT']
     setup = os.path.join(moore,'job',env)
     print 'generating ' + setup
-    ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
-    #from LbConfiguration.SetupProject import SetupProject
-    #SetupProject().main(['--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
+    #ret = subprocess.call(['python',os.path.join(os.environ['LHCBPYTHON'],'SetupProject.py'),'--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
+    from LbConfiguration.SetupProject import SetupProject
+    SetupProject().main(['--dev-dir=/home/online/ONLINE:/group/hlt/GAUDI','--shell=sh','--output='+setup,'Moore',version])
 
     print 'removing use of StripPath.sh'
     # remove call to StripPath.sh from generated SetupProject.sh
@@ -39,14 +39,14 @@ file = open(sys.argv[1],'w+')
 file.write( """#!/bin/sh
 # pick up the online setup...
 source ./setupOnline.sh $*
-# pick up 'our' setup... (which defines $MOOREROOT!)
+# pick up 'our' setup... 
 source %(setup)s
-# and the options to be used
-# pick up partition specific OnlineHLTEnv module
+# pick up partition specific OnlineEnv module
 export PYTHONPATH=/group/online/dataflow/options/${PARTNAME}/HLT:${PYTHONPATH}
+# and go for it!
 exec -a ${UTGID} ${CLASS1_TASK} -opt=command="import Moore.runOnline; Moore.runOnline.start()"
 
-      """%({'setup': setup,'moore':moore}) )
+"""%({'setup': setup,'moore':moore}) )
 
 from stat import *
 rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
