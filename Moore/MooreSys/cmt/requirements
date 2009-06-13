@@ -15,7 +15,6 @@ use  TCKData                v2r0    Hlt
 ### Temporarily here...
 use HltConf                 v3r1    Hlt
 use HltCommon               v5r7    Hlt
-use HltTCK                  v1r1    TCK
 use TCKUtils                v1r0p1    Hlt
 
 

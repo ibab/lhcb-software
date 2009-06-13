@@ -4,6 +4,7 @@ Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
 </PRE><H1><A NAME=v7r1>2009-06-08 Moore v7r1</A></H1><PRE>
+Based on Hlt v6r2, Phys v8r4, Lbcom v7r1, Rec v7r1 en Online v4r23.
 
 </PRE><H1><A NAME=v7r0>2009-05-27 Moore v7r0</A></H1><PRE>
 Based on Hlt v6r1, Phys v8r3, Lbcom v7r0, Rec v7r0 en Online v4r22.
