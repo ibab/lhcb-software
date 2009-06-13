@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-06-13 - Vanya Belyaev
+
+ - fix for Linux
+
+
 ! 2009-06-12 - Vanya BELYAEV
 
  - add new classes:
