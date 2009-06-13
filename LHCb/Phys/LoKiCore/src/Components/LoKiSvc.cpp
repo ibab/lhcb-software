@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.20 2009-04-27 09:16:45 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.21 2009-06-13 08:06:38 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -353,7 +353,7 @@ public:
     if ( sc.isFailure() ) { return sc ; }
     //
     //
-    { // welcome message 
+    if (m_welcome) { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().welcome( log.stream() ) ;
@@ -430,7 +430,7 @@ public:
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 != rep.reporter() ) { rep.setReporter( 0 ).ignore() ; }
     //
-    { // goodbye message 
+    if (m_welcome) { // goodbye message 
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().goodbye( log.stream() ) ;
@@ -485,7 +485,7 @@ public:
     if ( !LoKi::AuxFunBase::lokiSvc() ) 
     { LoKi::AuxFunBase::setLoKiSvc ( this ) ; }
     //
-    { // welcome message 
+    if (m_welcome) { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().welcome ( log.stream() ) ;
@@ -592,10 +592,13 @@ protected:
     , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/REPORT")
     , m_event        ( -1 )
+    , m_welcome      ( true )
     //
   {
     declareProperty 
       ( "Reporter" , m_reporterName , "The type/name of default Reporter tool") ;
+    declareProperty 
+      ( "Welcome" , m_welcome , "Show Welcome message") ;
   } 
   // ==========================================================================
   /// virtual and protected destructor
@@ -653,6 +656,8 @@ private:
   std::string                   m_reporterName ;        // the name of reporter 
   /// the event marker 
   long                          m_event        ;            // the event marker
+  /// print welcome message
+  bool                          m_welcome      ;       // print welcome message 
   // ==========================================================================
 };
 // ============================================================================

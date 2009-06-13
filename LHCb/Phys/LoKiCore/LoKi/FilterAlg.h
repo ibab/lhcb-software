@@ -1,4 +1,4 @@
-// $Id: FilterAlg.h,v 1.3 2009-04-17 14:48:56 cattanem Exp $
+// $Id: FilterAlg.h,v 1.4 2009-06-13 08:06:37 graven Exp $
 // ============================================================================
 #ifndef LOKI_FILTERALG_H 
 #define LOKI_FILTERALG_H 1
@@ -162,8 +162,7 @@ namespace LoKi
       //
       MsgStream& log = 
         ( Gaudi::StateMachine::INITIALIZED > FSMState() ) ? info () : debug () ;
-      log << " The code    is '" << code () << "'" << endmsg
-          << " The functor is '" << functor << "'" << endmsg ;
+      log << "Requested code: '" << code () << "' -> Decoded functor :'" << functor << "'" << endmsg ;
       //
       m_factory_updated   = false ;
       m_code_updated      = false ;
