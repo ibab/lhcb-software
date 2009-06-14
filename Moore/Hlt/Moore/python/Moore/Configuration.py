@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.57 2009-06-12 13:15:14 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.58 2009-06-14 21:31:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -120,7 +120,8 @@ class Moore(LHCbConfigurableUser):
         msg.OutputLevel = Online.OutputLevel
         msg.doPrintAlways = False
         SendSequence =  GaudiSequencer('SendSequence')
-        SendSequence.Members = [ GaudiSequencer('Hlt1Global'), evtMerger ]
+        from Configurables import HltLine
+        SendSequence.Members = [ HltLine('Hlt1Global'), evtMerger ]
         ApplicationMgr().TopAlg.append(SendSequence)
 
     def _configureInput(self):
