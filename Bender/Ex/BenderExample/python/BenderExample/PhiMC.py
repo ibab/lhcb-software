@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PhiMC.py,v 1.9 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: PhiMC.py,v 1.10 2009-06-14 11:24:41 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak with MC-truth
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak with MC-truth
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -41,11 +41,13 @@ class PhiMC(AlgoMC) :
     Simple class to plot dikaon mass peak
     """
     ## standard constructor
-    def __init__ ( self , name = 'PhiMC' ) :
+    def __init__ ( self , name = 'PhiMC' , **args ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
+        AlgoMC.__init__ ( self , name )
+        for key in args :
+            setattr ( self , key , args[key] )
 
     ## standard method for analyses
     def analyse( self ) :
@@ -107,20 +109,16 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = PhiMC()
+    alg = PhiMC(
+        HistoPrint     = True                ,  ## print histos 
+        InputLocations = [ 'StdTightKaons' ] ,  ## input particles 
+        PP2MCs         = [
+        'Relations/Rec/ProtoP/Charged' ]        ## MC-truth relation tables
+        )
     
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-   
-    ## define the inputs:
-    alg.InputLocations = [
-        '/Event/Phys/StdTightKaons'
-        ]
-        
     ## get input data 
     import LoKiExample.Bs2Jpsiphi_mm_data as input 
     evtSel = gaudi.evtSel()    

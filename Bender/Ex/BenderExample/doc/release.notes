@@ -1,10 +1,22 @@
-! $Id: release.notes,v 1.31 2009-06-09 11:05:24 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2009-06-14 11:24:40 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v12r1 2009-06-14 ====================
+
+! 2009-06-14 - Vanya Belyaev
+
+ - python/BenderExample/muDst.py
+ 
+    new example for reading/processing Juan's microDST stuff
+
+ - python/BenderExample/RadLen.py
+ 
+    new example for evaluation of radiation length vizible by particle
 
 
 ! 2009-06-09 - Vanya Belyaev

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.9 2009-05-14 17:55:00 ibelyaev Exp $
+# $Id: Phi.py,v 1.10 2009-06-14 11:24:41 ibelyaev Exp $
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -41,11 +41,13 @@ class Phi(Algo) :
     Simple class to plot dikaon mass peak
     """    
     ## standard constructor
-    def __init__ ( self , name = 'Phi' ) :
+    def __init__ ( self , name = 'Phi' , **args ) :
         """
         Standard constructor
         """ 
-        return Algo.__init__ ( self , name )
+        Algo.__init__ ( self , name )
+        for key in args : setattr ( self , key , args[key] )
+
 
     ## standard mehtod for analysis
     def analyse( self ) :
@@ -93,19 +95,15 @@ def configure () :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = Phi()
+    alg = Phi(
+        HistoPrint     = True                ,   ## print histos 
+        InputLocations = [ 'StdTightKaons' ]     ## input particles    
+        )
 
-    ## print histos 
-    alg.HistoPrint = True
 
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
      
-    ## define the input:
-    alg.InputLocations = [
-        '/Event/Phys/StdTightKaons'
-        ]    
-    
     ## get input data 
     import LoKiExample.Bs2Jpsiphi_mm_data as input 
     evtSel = gaudi.evtSel()    
