@@ -3,7 +3,6 @@
 #include <math.h>
 
 // from Boost
-#include "boost/static_assert.hpp"
 #include "boost/integer/integer_mask.hpp"
 #include "boost/integer_traits.hpp"
 using boost::uint32_t;
@@ -78,8 +77,7 @@ DeterministicPrescaler::DeterministicPrescaler(const std::string& name, ISvcLoca
   , m_initial(0)
   , m_counter(0)
 {
-  declareProperty( "AcceptPattern" ,  m_prescaleSpec = "" ) ;
-  declareProperty( "AcceptFraction" , m_accFrac = -1 ) ;
+  declareProperty( "AcceptFraction" , m_accFrac = 1 ) ;
 }
 
 DeterministicPrescaler::~DeterministicPrescaler( )
@@ -97,31 +95,7 @@ DeterministicPrescaler::initialize()
 
   if (msgLevel(MSG::DEBUG)) debug() << " generated initial value " << m_initial << endmsg;
   
-  // scan m_prescaleSpec and fill m_prescale accordingly
-  // add support for 'repeats' at a later point...
-  for (std::string::const_iterator  i=m_prescaleSpec.begin();
-       i!=m_prescaleSpec.end(); ++i ) {
-    if(*i!='A'&&*i!='R') {
-      err()  << "Prescale pattern should be consists of a string of 'A' and 'R'"
-             << " to indicate Accept and Reject" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    m_prescale.push_back(*i=='A');
-  }
-
-  if (!m_prescale.empty()) {
-    info() << "Prescaling events according to the pattern "
-           << m_prescale << "[evtnum % " << m_prescale.size() << "]" << endmsg;
-  }
-  if (m_accFrac>0) {
-    info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
-  }
-
-  if (m_accFrac>0 && !m_prescaleSpec.empty()) {
-    fatal() << " either specify AcceptPattern, or AcceptFraction, not both " << endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
   return sc;
 }
 
@@ -141,39 +115,18 @@ DeterministicPrescaler::accept(const LHCb::ODIN& odin)  const
 
   // at this point, we assume 'x' to be uniformly distributed in [0,0xffffffff]
   // (and yes, this was verified to be sufficiently true on a sample of 10K MC events ;-)
-  
-  // TODO: fill a histogram of 'x'/0xffffffff
-  //       compute mean, median, standard deviation on the fly
-  //       to verify statistical properties...
 
   // note that an IEEE754 double has 57 bits of fraction, which is enough precision
   // to cover the entire dynamic range of an uint32_t
   return double(x) < m_accFrac*boost::integer_traits<uint32_t>::const_max;
 }
 
-bool 
-DeterministicPrescaler::accept(const ulonglong& evtNr) const
-{
-  return  m_prescale.empty() || m_prescale[evtNr%m_prescale.size()];
-}
-
 StatusCode
 DeterministicPrescaler::execute()
 {
-  if (!exist<LHCb::ODIN>( LHCb::ODINLocation::Default)) {
-        setFilterPassed(false);
-        return Error( "ODIN missimg",  StatusCode::SUCCESS );
-  }
-
-  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-
-  bool acc = ( m_accFrac >= 0 ? accept(*odin)
-                              : accept(odin->eventNumber()) );
+  bool acc =  ( m_accFrac>0 && accept( *get<LHCb::ODIN> ( LHCb::ODINLocation::Default )));
   setFilterPassed(acc);
   *m_counter += acc;
-  if (msgLevel(MSG::DEBUG)) debug() << " run # "   << odin->runNumber() 
-                                    << " event # " << odin->eventNumber() 
-                                    << " : " << (acc?"Accepted":"Rejected") << endmsg ;
-
+  if (msgLevel(MSG::DEBUG)) debug() << (acc?"Accepted":"Rejected") << endmsg ;
   return StatusCode::SUCCESS;
 }
