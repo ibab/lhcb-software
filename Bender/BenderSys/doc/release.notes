@@ -1,10 +1,22 @@
 <PRE>
-! $Id: release.notes,v 1.21 2009-05-14 17:54:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.22 2009-06-14 11:33:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+</PRE>
+
+
+<H1>
+<A NAME=v12r1>2009-06-14 Bender v12r1 based on the DaVinci v23r1p1 </A>
+</H1>	
+
+<PRE>		
+This version is very similar to the versions in v12r0 family,
+but it is based on the most fresh version of DaVinci v23r1p1.
+Two new exmaples have been added into exampels package: reading&processing
+ of Juan's microDST and evaluation of vizible material along particle flight.
 </PRE>
 
 

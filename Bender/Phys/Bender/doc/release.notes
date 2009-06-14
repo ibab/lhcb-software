@@ -1,13 +1,25 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.36 2009-05-14 17:54:20 ibelyaev Exp $
+! $Id: release.notes,v 1.37 2009-06-14 11:33:06 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.36 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.37 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v12r1 2009-06-14 ===========================
+
+! 2009-06-14 - Vanya Belyaev
+
+ - python/Bender/Startup.py
+
+      suppress the proliferation of empty history files.
+
+ - cmt/requirements 
+
+      version increment to v12r1 
 
 ! ==================== Phys/Bender v12r0 2009-05-14 ===========================
 

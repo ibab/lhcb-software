@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py,v 1.3 2008-06-12 12:44:07 ibelyaev Exp $ 
+# $Id: Startup.py,v 1.4 2009-06-14 11:33:06 ibelyaev Exp $ 
 # =============================================================================
 ## The trivial startup sctript for python Bender session
 #
@@ -36,8 +36,12 @@ try:
     __history__ = os.path.curdir + os.sep + '.BenderHistory'
     
     def _rename_ ( file , app ) :
-        if os.path.exists ( file + app ) :   _rename_ ( file + app ,        app )
-        if os.path.exists ( file       ) : os.rename  ( file       , file + app )
+        if os.path.exists ( file + app ) :
+            if 0 == os.path.getsize( file + app ) : os.remove( file + app )
+            else :   _rename_ ( file + app ,        app )
+        if os.path.exists ( file       ) :
+            if 0 == os.path.getsize( file ) : os.remove( file )
+            else : os.rename  ( file       , file + app )
 
     ## remove/backup the previous history file
     _rename_ ( __history__ , '.OLD' )
