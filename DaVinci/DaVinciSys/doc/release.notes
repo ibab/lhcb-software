@@ -3,6 +3,26 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v23r1p1>2009-06-11 DaVinci v23r1p1 STEP09 stripping release</A></H1><PRE>
+
+Based on Phys v8r4, Analysis v3r4, Rec v7r1, HLT v6r2, Lbcom v7r1, LHCb v27r1, Gaudi v21r1, LCG 56a
+
+Same as v23r1 except for bug-fixes:
+ * DaVinci configurable now accepts "MC09" as DataType
+ * PhysMicroDST configurable fix for Particle -> related PV copying
+ * Uses Phys/PhysDict with reflex dictionaries to allow copying and reading
+   of LHCb::HltDecReports and its container LHCb::HltDecReport objects.
+
+ Highlights from v23r1 release:
+
+ * New stripping framework by Anton Poluektov. PhysSel removed.
+ * Important fixes to LoKiFitters (IP chi2 estimation)
+ * New Particle->PV relating functionality
+ * Re-organisation of Hlt1 and Hlt2 lines. Hlt1 now confomring to bandwidth
+   division and stable. Improvements to Hlt2, which remains unstable.
+ * Changes to DaVinciDstWrite(). Sequencer passed to DaVinci() automatically.
+   Users MUST NOT do this themselves anymore.
+
 </PRE><H1><A NAME=v23r1>2009-06-04 DaVinci v23r1 STEP09 stripping release</A></H1><PRE>
 
 Based on Phys v8r4, Analysis v3r4, Rec v7r1, HLT v6r2, Lbcom v7r1, LHCb v27r1, Gaudi v21r1, LCG 56a
