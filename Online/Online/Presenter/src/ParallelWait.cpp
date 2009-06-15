@@ -84,6 +84,21 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
    }
 }
 
+void refreshHisto(DbRootHist* dbHistoOnPage)
+{
+	if (false == dbHistoOnPage->isEmptyHisto()) {
+		dbHistoOnPage->fillHistogram();
+		dbHistoOnPage->normalizeReference();
+	} else {
+		dbHistoOnPage->beRegularHisto();
+		dbHistoOnPage->initHistogram();
+		if (false == dbHistoOnPage->isEmptyHisto()) {
+			dbHistoOnPage->fillHistogram();
+		  dbHistoOnPage->setTH1FromDB();
+		}
+	}
+}
+
 ParallelWait::ParallelWait(PresenterMainFrame* gui):
   m_gui(gui)
 {
@@ -116,15 +131,21 @@ void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * online
 
 void ParallelWait::refreshHistograms(std::vector<DbRootHist*> * dbHistosOnPage)
 {	
-  TThread::Lock();
+//  TThread::Lock();
+  
+  boost::thread_group thrds;
+  
   std::vector<DbRootHist*>::iterator refresh_dbHistosOnPageIt;
   refresh_dbHistosOnPageIt = dbHistosOnPage->begin();
   while (refresh_dbHistosOnPageIt != dbHistosOnPage->end()) {
-    (*refresh_dbHistosOnPageIt)->fillHistogram();
-    (*refresh_dbHistosOnPageIt)->normalizeReference();
+    thrds.create_thread(boost::bind(&refreshHisto,
+			    													*refresh_dbHistosOnPageIt));
     refresh_dbHistosOnPageIt++;
   }
-  TThread::UnLock();    
+  
+  thrds.join_all();	
+  
+//  TThread::UnLock();    
 }
 
 
