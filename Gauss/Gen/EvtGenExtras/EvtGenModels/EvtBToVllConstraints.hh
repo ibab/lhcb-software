@@ -20,6 +20,7 @@ public:
 	double getBrBsToMuMu() const;
 	double getBrBToXsGamma() const;
 	double getBrBToXsll() const;
+	double getSBToKStarGamma() const;
 	
 	void getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const;
 	const std::pair<double, double> getS5Zero() const;
@@ -55,6 +56,8 @@ private:
 	EvtComplex C8NP;
 	EvtComplex C9NP;
 	EvtComplex C10NP;
+	//
+	EvtComplex C7R;
 	//
 	EvtComplex CQ1;
 	EvtComplex CQ2;

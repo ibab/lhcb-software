@@ -33,6 +33,11 @@ template<typename T> EvtComplex Abs( const T value ){
 	return abs(tmp);
 }
 
+template<typename T> EvtComplex Exp( const T value ){
+	const EvtComplex tmp = Chop(value);//will not compile if this conversion is not defined
+	return exp(tmp);
+}
+
 template<>
 double Chop(const double value);
 EvtComplex Complex(const double re, const double im = 0.0);

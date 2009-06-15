@@ -37,6 +37,8 @@ EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 	C9NP = (*CNP)(9);
 	C10NP = (*CNP)(10);
 	//
+	C7R = qcd::EvtBToVllEvolveWC10D::runC7((*CR)(7),(*CR)(8),qcd::MU_MB);
+	//
 	C7sm = Ceff1_7 - C7NP;
 	C8sm = Ceff1_8 - C8NP;
 	C9sm = Cb1_9 - C9NP;
@@ -106,6 +108,24 @@ double EvtBToVllConstraints::getBrBToXsGamma() const{
 	
 }
 
+/** Calculation of S(B\to K*\gamma) from arXiv:0805.2525 */
+double EvtBToVllConstraints::getSBToKStarGamma() const{
+	
+	const double beta = (21.1/180)*constants::Pi;//Value of beta from HFAG Winter 08/09
+	const EvtComplex tbyxi(-0.08912655225010323,-0.033310267087406725);
+	const double tpbyxi = 0.0;//an approximation - we neglect the NP contribution to C8
+	const EvtComplex Ceffp1_7 = (constants::ms/constants::mb)*C7sm + C7R;
+	
+	const EvtComplex common = ((Ceffp1_7 + tpbyxi)/(Ceff1_7 + tbyxi));
+	const EvtComplex top = 2*Im(common*Exp(EvtComplex(0.0,-2*beta)));
+	const EvtComplex bottom = Abs(common);
+
+	const EvtComplex SBtoKStarGamma =  top/(1 + bottom*bottom);
+	DEBUGPRINT("SBtoKStarGamma: ", SBtoKStarGamma);
+
+	return Re(SBtoKStarGamma);
+}
+	
 double EvtBToVllConstraints::getBrBToXsll() const{
 	
 	class utils{
