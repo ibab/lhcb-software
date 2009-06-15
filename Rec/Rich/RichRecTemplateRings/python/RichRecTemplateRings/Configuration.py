@@ -5,7 +5,7 @@
 #  @author Sajan Easo   (Sajan.Easo@cern.ch)
 #  @date   02/03/2009
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-06-05 17:21:31 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-06-15 12:45:48 seaso Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -23,7 +23,7 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         "Context"             : "Offline"   # The context within which to run
        ,"Sequencer"           : None        # The sequencer to add the RICH MCMC algorithms to
        ,"MakeNtuple"          : False       # Make development ntuple
-       ,"OutputLevel"         : INFO
+       ,"OutputLevel"         : INFO 
         }
 
     ## Turn on histograming for all algs
@@ -58,6 +58,13 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         master.RingLocation = AllRingsLoc
         sequence.Members += [ base, config, master ]
 
+        # Flags local to TemplateRings
+        #master.RichTemplateRingMassFinderActivate=True
+        #from Configurables import Rich__Rec__TemplateRings__RichRingReconParam
+        #Rich__Rec__TemplateRings__RichRingReconParam().ActivateMaxNumberOfTrackSegmentsInRadiator=False
+        #Rich__Rec__TemplateRings__RichRingReconParam().MinRadiator=0
+        #end Flags local to Template Rings
+        
         # selection and isolation algs
         from Configurables import ( Rich__Rec__TracklessRingFilterAlg,
                                     Rich__Rec__TracklessRingIsolationAlg )
@@ -74,8 +81,21 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         # Development ntuple
         if self.getProp("MakeNtuple") :
 
-            from Configurables import NTupleSvc
-            NTupleSvc().Output = ["RICHTUPLE1 DATAFILE='Ntuple_RichTemplateRings.root' TYP='ROOT' OPT='NEW'"]
+            #from Configurables import NTupleSvc
+            #NTupleSvc().Output = ["RICHTUPLE1 DATAFILE='Ntuple_RichTemplateRings.root' TYP='ROOT' OPT='NEW'"]
 
             master.RichTemplateRingNtupProduce = True
             
+    def ringsTMoni(self,sequence):
+
+
+        from Configurables import ( Rich__Rec__TemplateRings__RichMCTruthAcquireAlg,
+                                    Rich__Rec__TemplateRings__RichRingMCCompareNtup )
+
+        mcInfo =  Rich__Rec__TemplateRings__RichMCTruthAcquireAlg()
+        mcCompare = Rich__Rec__TemplateRings__RichRingMCCompareNtup()
+        sequence.Members +=[mcInfo,mcCompare ]
+        #from Configurables import NTupleSvc
+        #NTupleSvc().Output = ["RICHTUPLE1 DATAFILE='Ntuple_RichTemplateCompare_run1.root' TYP='ROOT' OPT='NEW'"]
+
+
