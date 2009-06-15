@@ -120,14 +120,16 @@ void QCDFactorisation::init(){
 #endif
 	EvtBToVllConstraints constrain(*this);
 	if(calcAFBZero){
-		double brBsToMuMu = constrain.getBrBsToMuMu();
+		const double brBsToMuMu = constrain.getBrBsToMuMu();
 		std::cout << "BR(B_s->\\mu\\mu) is: " << brBsToMuMu <<std::endl;
-		double brBToXsGamma = constrain.getBrBToXsGamma();
+		const double brBToXsGamma = constrain.getBrBToXsGamma();
 		std::cout << "BR(B_d->X_s\\gamma) is: " << brBToXsGamma <<std::endl;
-		double brBToXsll = constrain.getBrBToXsll();
+		const double brBToXsll = constrain.getBrBToXsll();
 		std::cout << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
-		double afbZero = constrain.findAFBZero();
-		std::cout << "AFB Zero Crossing point is: " << afbZero << " (GeV^2)" <<std::endl;
+		const std::pair<double, double> s6Zero = constrain.getS6Zero();
+		std::cout << "S6 (~AFB) Zero Crossing point is: " << s6Zero.first << " (GeV^2). Gradient at this point is " <<  s6Zero.second <<std::endl;
+		const std::pair<double, double> s5Zero = constrain.getS5Zero();
+		std::cout << "S5 Zero Crossing point is: " << s5Zero.first << " (GeV^2). Gradient at this point is " << s5Zero.second <<std::endl;
 	}
 	
 #if 0

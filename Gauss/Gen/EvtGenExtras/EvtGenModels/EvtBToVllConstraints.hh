@@ -15,7 +15,6 @@ public:
 	enum SpinAmplitudes {A0L = 0, A0R, APL, APR, ATL, ATR, AT, AS, NUMBER_OF_AMPS};
 	
 	EvtBToVllConstraints(const QCDFactorisation& _fact);
-	double findAFBZero() const;
 	double getDstar(const double q2, const std::vector<EvtComplex>& tensors) const;
 	double getGammaKstar(const double q2) const;
 	double getBrBsToMuMu() const;
@@ -63,8 +62,6 @@ private:
 	EvtComplex Vub;
 	EvtComplex Vts;
 	EvtComplex Vtb;
-	
-	double getAFB(const double q2) const;
 	
 	//useful functions for calculating the K* spin amplitudes
 	inline double getBeta(const double q2) const;
