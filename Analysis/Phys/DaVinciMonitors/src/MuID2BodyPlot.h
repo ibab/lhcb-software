@@ -22,7 +22,6 @@
 #include "Event/MuonCoord.h"
 
 #include "MuonDet/DeMuonDetector.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
 #include "TMath.h"
 
 class MuonPID;
@@ -63,10 +62,6 @@ private:
   /// Calculates the Likelihood given a MuonPID
   StatusCode calcMuonLL( LHCb::MuonPID* muonid);
 
-  /// Calculates the distance from the hit to the extrapolated position
-  /// Input: a MuonPID object
-  StatusCode calcDist( LHCb::MuonPID* muonid, double &dist );
-
   /// check the track is in the p and angle acceptance
   StatusCode preSelection(LHCb::MuonPID* pMuid);
 
@@ -78,6 +73,17 @@ private:
 
   /// Extract the momentum and extrapolate the track to each station
   StatusCode trackExtrapolate(const LHCb::Track *pTrack);
+
+  /// Get closest hit per station
+  StatusCode get_closest(LHCb::MuonPID *pMuid, double *closest_x, double *closest_y, double *closest_region);
+
+  /// Calculate closest distance
+  double calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double *closest_region);
+  double closest_region[5];
+  double closest_x[5];
+  double closest_y[5];
+  double Fdist[5];
+  double small_dist[5];
 
   // Calculates MuProb based on DeltaSx (slope difference)
   float calcMuProb(LHCb::MuonPID * pMuid);
@@ -144,9 +150,6 @@ private:
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 
-  // Tool to provide measurement from LHCbID
-  IMeasurementProvider* m_measProvider;
-    
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]
   std::vector<double> m_padSizeX;

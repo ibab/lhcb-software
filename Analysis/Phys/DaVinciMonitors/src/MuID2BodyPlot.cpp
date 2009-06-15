@@ -174,9 +174,6 @@ StatusCode MuID2BodyPlot::initialize() {
     return StatusCode::FAILURE;
   }
 
-  //  Load MeasurementProvider Tool
-  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider");
-
   return StatusCode::SUCCESS;
 }
 
@@ -259,6 +256,8 @@ StatusCode MuID2BodyPlot::execute() {
   const Particle::ConstVector& selParts = desktop()->particles();
   bool is_signal = kFALSE;
   Gaudi::LorentzVector *plusTr,*minusTr,ksTr; double PMass;
+  plusTr = new Gaudi::LorentzVector(0,0,0,0);
+  minusTr = new Gaudi::LorentzVector(0,0,0,0);
   for (Particle::ConstVector::const_iterator iP = selParts.begin(); iP != selParts.end(); ++iP) {
     //Main particle daughters
     PMass = (*iP)->measuredMass();
@@ -308,7 +307,6 @@ StatusCode MuID2BodyPlot::execute() {
 			    (*iP)->momentum().Py()*track->momentum().Y()+
 			    (*iP)->momentum().Pz()*track->momentum().Z())/((*iP)->momentum().P()*track->p());
 	    double plTr = track->p() * cosTr;
-	    double ptTr = sqrt(track->p()*track->p()-plTr*plTr);
 	    if((*iD)->charge()>0) {
 	      plusTr = new Gaudi::LorentzVector(px,py,pz,en);
 	      dau_pminus = track->p();
@@ -359,7 +357,7 @@ StatusCode MuID2BodyPlot::execute() {
       
       //Matching tracks with reconstructed ones.
       matchInp = kFALSE;
-      for(int idxTr = 0; idxTr<savedTr.size(); idxTr++){
+      for(int idxTr = 0; idxTr<(int)savedTr.size(); idxTr++){
 	const LHCb::Track * trMatch = savedTr.at(idxTr);
 	if(trMatch->key() == (*iTrack)->key()) {
 	  matchInp = kTRUE;
@@ -398,7 +396,7 @@ StatusCode MuID2BodyPlot::execute() {
 	    algo_IsMu = pMuid->IsMuon();
 	    
 	    // calculate the distance from the hit to the extrapolated position
-	    sc = calcDist(pMuid,m_dist);
+	    m_dist = calc_closestDist(pMuid,m_MomentumPre,closest_region);
 	    
 	    ntracks++;
 	    
@@ -437,7 +435,7 @@ StatusCode MuID2BodyPlot::execute() {
 	}//Good Tracks
 	
 	
-	info()<<"Region:: "<<m_region<<"  "<<my_IsDecay<<" "<<my_IsNonMu<<" "<<algo_IsMu<<endreq;
+	info()<<"Region:: "<<(*iTrack)->p()/Gaudi::Units::GeV<<" "<<m_region<<"  "<<my_IsDecay<<" "<<my_IsNonMu<<" "<<algo_IsMu<<" "<<m_dist<<endreq;
 
 	if(m_LklhMu<=0) dllMu = -999;
 	else dllMu = log(m_LklhMu);
@@ -456,130 +454,66 @@ StatusCode MuID2BodyPlot::execute() {
 	plot1D ( dllPi, "matched/BkgLikelihood",
 		 "Bg lik matched Sample",
 		 -50., 0., 1000 );
-	plot1D ( m_dist, "matched/Distance","Distance matched Sample",0., 500., 100 );
-	plot1D ( m_dist, "matched/ZmDistance","Distance matched Sample",0., 20., 100 );
-	if(m_region == 0) {
-	  plot1D ( m_dist, "matched/R1Distance","Distance matched Sample",0., 500., 100 );
-	  plot1D ( m_dist, "matched/R1ZmDistance","Distance matched Sample",0., 20., 100 );
-	} else if(m_region == 1) {
-	  plot1D ( m_dist, "matched/R2Distance","Distance matched Sample",0., 500., 100 );
-	  plot1D ( m_dist, "matched/R2ZmDistance","Distance matched Sample",0., 20., 100 );
-	} else if(m_region == 2) {
-	  plot1D ( m_dist, "matched/R3Distance","Distance matched Sample",0., 500., 100 );
-	  plot1D ( m_dist, "matched/R3ZmDistance","Distance matched Sample",0., 20., 100 );
-	} else if(m_region == 3) {
-	  plot1D ( m_dist, "matched/R4Distance","Distance matched Sample",0., 500., 100 );
-	  plot1D ( m_dist, "matched/R4ZmDistance","Distance matched Sample",0., 20., 100 );
-	} 
-
-	if(my_IsMu) { 
-	  plot1D ( (*iTrack)->p()/Gaudi::Units::GeV, "muons/Momentum",
-		   "P Muon Sample",
-		   0., 100., 100 );
-	  plot1D ( (*iTrack)->pt()/Gaudi::Units::GeV, "muons/TrMomentum",
-		   "Pt Muon Sample",
-		   0., 20., 100 );
-	  profile1D( (*iTrack)->p()/Gaudi::Units::GeV,
-		     algo_IsMu,"muons/MomentumEfficiency","Muon Efficiency vs P",
-		     0., 100., 100 );
-	  profile1D( (*iTrack)->pt()/Gaudi::Units::GeV,
-		     algo_IsMu,"muons/TrMomentumEfficiency","Muon Efficiency vs P",
-		     0., 20., 100 );
-	  plot1D ( dllMu, "muons/SigLikelihood",
-		   "Mu lik muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( dllPi, "muons/BkgLikelihood",
-		   "Bg lik muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( m_dist, "muons/Distance","Distance muons Sample",0., 500., 100 );
-	  plot1D ( m_dist, "muons/ZmDistance","Distance muons Sample",0., 20., 100 );
+	if(m_dist) {
+	  plot1D ( m_dist, "matched/Distance","Distance matched Sample",0., 500., 100 );
+	  plot1D ( m_dist, "matched/ZmDistance","Distance matched Sample",0., 20., 100 );
 	  if(m_region == 0) {
-	    plot1D ( m_dist, "muons/R1Distance","Distance muons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "muons/R1ZmDistance","Distance muons Sample",0., 20., 100 );
+	    plot1D ( m_dist, "matched/R1Distance","Distance matched Sample",0., 500., 100 );
+	    plot1D ( m_dist, "matched/R1ZmDistance","Distance matched Sample",0., 20., 100 );
 	  } else if(m_region == 1) {
-	    plot1D ( m_dist, "muons/R2Distance","Distance muons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "muons/R2ZmDistance","Distance muons Sample",0., 20., 100 );
+	    plot1D ( m_dist, "matched/R2Distance","Distance matched Sample",0., 500., 100 );
+	    plot1D ( m_dist, "matched/R2ZmDistance","Distance matched Sample",0., 20., 100 );
 	  } else if(m_region == 2) {
-	    plot1D ( m_dist, "muons/R3Distance","Distance muons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "muons/R3ZmDistance","Distance muons Sample",0., 20., 100 );
+	    plot1D ( m_dist, "matched/R3Distance","Distance matched Sample",0., 500., 100 );
+	    plot1D ( m_dist, "matched/R3ZmDistance","Distance matched Sample",0., 20., 100 );
 	  } else if(m_region == 3) {
-	    plot1D ( m_dist, "muons/R4Distance","Distance muons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "muons/R4ZmDistance","Distance muons Sample",0., 20., 100 );
+	    plot1D ( m_dist, "matched/R4Distance","Distance matched Sample",0., 500., 100 );
+	    plot1D ( m_dist, "matched/R4ZmDistance","Distance matched Sample",0., 20., 100 );
 	  } 
-	} 
+	}
+	std::string name;
+	if(my_IsMu) { 	  name = "muons";	}
 
-	if(my_IsNonMu) {
-	  plot1D ( (*iTrack)->p()/Gaudi::Units::GeV, "nonmuons/Momentum",
-		   "P Muon Sample",
+	if(my_IsNonMu) {	  name = "nonmuons";	}
+
+	if(my_IsDecay) {	  name = "decay";	}
+
+	plot1D ( (*iTrack)->p()/Gaudi::Units::GeV, name+"/Momentum",
+		 "P Muon Sample",
+		 0., 100., 100 );
+	plot1D ( (*iTrack)->pt()/Gaudi::Units::GeV, name + "/TrMomentum",
+		 "Pt Muon Sample",
+		 0., 20., 100 );
+	profile1D( (*iTrack)->p()/Gaudi::Units::GeV,
+		   algo_IsMu,name + "/MomentumEfficiency","Muon Efficiency vs P",
 		   0., 100., 100 );
-	  plot1D ( (*iTrack)->pt()/Gaudi::Units::GeV, "nonmuons/TrMomentum",
-		   "Pt Muon Sample",
+	profile1D( (*iTrack)->pt()/Gaudi::Units::GeV,
+		   algo_IsMu,name + "/TrMomentumEfficiency","Muon Efficiency vs P",
 		   0., 20., 100 );
-	  profile1D( (*iTrack)->p()/Gaudi::Units::GeV,
-		     algo_IsMu,"nonmuons/MomentumEfficiency","Muon Efficiency vs P",
-		     0., 100., 100 );
-	  profile1D( (*iTrack)->pt()/Gaudi::Units::GeV,
-		     algo_IsMu,"nonmuons/TrMomentumEfficiency","Muon Efficiency vs P",
-		     0., 20., 100 );
-	  plot1D ( dllMu, "nonmuons/SigLikelihood",
-		   "Mu lik Non muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( dllPi, "nonmuons/BkgLikelihood",
-		   "Bg lik non muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( m_dist, "nonmuons/Distance","Distance non muons Sample",0., 500., 100 );
-	  plot1D ( m_dist, "nonmuons/ZmDistance","Distance non muons Sample",0., 20., 100 );
+	plot1D ( dllMu, name + "/SigLikelihood",
+		 "Mu lik Non muons Sample",
+		 -50., 0., 1000 );
+	plot1D ( dllPi, name + "/BkgLikelihood",
+		 "Bg lik non muons Sample",
+		 -50., 0., 1000 );
+	if(m_dist) {
+	  plot1D ( m_dist, name + "/Distance","Distance decay Sample",0., 500., 100 );
+	  plot1D ( m_dist, name + "/ZmDistance","Distance decay Sample",0., 20., 100 );
 	  if(m_region == 0) {
-	    plot1D ( m_dist, "nonmuons/R1Distance","Distance nonmuons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "nonmuons/R1ZmDistance","Distance nonmuons Sample",0., 20., 100 );
+	    plot1D ( m_dist, name + "/R1Distance","Distance decay Sample",0., 500., 100 );
+	    plot1D ( m_dist, name + "/R1ZmDistance","Distance decay Sample",0., 20., 100 );
 	  } else if(m_region == 1) {
-	    plot1D ( m_dist, "nonmuons/R2Distance","Distance nonmuons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "nonmuons/R2ZmDistance","Distance nonmuons Sample",0., 20., 100 );
+	    plot1D ( m_dist, name + "/R2Distance","Distance decay Sample",0., 500., 100 );
+	    plot1D ( m_dist, name + "/R2ZmDistance","Distance decay Sample",0., 20., 100 );
 	  } else if(m_region == 2) {
-	    plot1D ( m_dist, "nonmuons/R3Distance","Distance nonmuons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "nonmuons/R3ZmDistance","Distance nonmuons Sample",0., 20., 100 );
+	    plot1D ( m_dist, name + "/R3Distance","Distance decay Sample",0., 500., 100 );
+	    plot1D ( m_dist, name + "/R3ZmDistance","Distance decay Sample",0., 20., 100 );
 	  } else if(m_region == 3) {
-	    plot1D ( m_dist, "nonmuons/R4Distance","Distance nonmuons Sample",0., 500., 100 );
-	    plot1D ( m_dist, "nonmuons/R4ZmDistance","Distance nonmuons Sample",0., 20., 100 );
+	    plot1D ( m_dist, name + "/R4Distance","Distance decay Sample",0., 500., 100 );
+	    plot1D ( m_dist, name + "/R4ZmDistance","Distance decay Sample",0., 20., 100 );
 	  } 
 	}
 
-
-	if(my_IsDecay) {
-	  plot1D ( (*iTrack)->p()/Gaudi::Units::GeV, "decay/Momentum",
-		   "P Muon Sample",
-		   0., 100., 100 );
-	  plot1D ( (*iTrack)->pt()/Gaudi::Units::GeV, "decay/TrMomentum",
-		   "Pt Muon Sample",
-		   0., 20., 100 );
-	  profile1D( (*iTrack)->p()/Gaudi::Units::GeV,
-		     algo_IsMu,"decay/MomentumEfficiency","Muon Efficiency vs P",
-		     0., 100., 100 );
-	  profile1D( (*iTrack)->pt()/Gaudi::Units::GeV,
-		     algo_IsMu,"decay/TrMomentumEfficiency","Muon Efficiency vs P",
-		     0., 20., 100 );
-	  plot1D ( dllMu, "decay/SigLikelihood",
-		   "Mu lik Non muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( dllPi, "decay/BkgLikelihood",
-		   "Bg lik non muons Sample",
-		   -50., 0., 1000 );
-	  plot1D ( m_dist, "decay/Distance","Distance decay Sample",0., 500., 100 );
-	  plot1D ( m_dist, "decay/ZmDistance","Distance decay Sample",0., 20., 100 );
-	  if(m_region == 0) {
-	    plot1D ( m_dist, "decay/R1Distance","Distance decay Sample",0., 500., 100 );
-	    plot1D ( m_dist, "decay/R1ZmDistance","Distance decay Sample",0., 20., 100 );
-	  } else if(m_region == 1) {
-	    plot1D ( m_dist, "decay/R2Distance","Distance decay Sample",0., 500., 100 );
-	    plot1D ( m_dist, "decay/R2ZmDistance","Distance decay Sample",0., 20., 100 );
-	  } else if(m_region == 2) {
-	    plot1D ( m_dist, "decay/R3Distance","Distance decay Sample",0., 500., 100 );
-	    plot1D ( m_dist, "decay/R3ZmDistance","Distance decay Sample",0., 20., 100 );
-	  } else if(m_region == 3) {
-	    plot1D ( m_dist, "decay/R4Distance","Distance decay Sample",0., 500., 100 );
-	    plot1D ( m_dist, "decay/R4ZmDistance","Distance decay Sample",0., 20., 100 );
-	  } 
-	}
       } // long or downstream tracks and NO Clones
     }  // loop over tracks
   }
@@ -651,7 +585,6 @@ StatusCode MuID2BodyPlot::doID(LHCb::MuonPID *pMuid){
   // bin 1 M1.and.M2.and.M3.and.(M4.or.M5)
   // bin 2 M1.and.M2.and.M3.and.M4.and.M5
   bool isMuon=false;
-  int station;
   if (momentumBin == 0) {
     if (m_occupancy[1]>0 && m_occupancy[2]>0) {isMuon = true;}
   }
@@ -770,77 +703,6 @@ StatusCode MuID2BodyPlot::calcMuonLL(LHCb::MuonPID * muonid){
 
   return StatusCode::SUCCESS;
 
-}
-
-//=============================================================================
-//  Method to calculate the distance from the hit to the extrapolated position
-//============================================================================
-StatusCode MuID2BodyPlot::calcDist( LHCb::MuonPID* muonid, double &dist){
-
-  dist = 0.;
-
-  const LHCb::Track* pTrack = muonid->idTrack();
-  // do the track extrapolations
-  if(m_extrapolated){
-    warning() << " trackExtrapolate fails for track " <<  pTrack << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[muonid];
-  std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
-  double mCoordX[5] = {0.,0.,0.,0.,0.};
-  double mCoordY[5] = {0.,0.,0.,0.,0.};
-  double mCoordDX[5] = {0.,0.,0.,0.,0.};
-  double mCoordDY[5] = {0.,0.,0.,0.,0.};
-  for( iCoord = mcoord.begin() ; iCoord != mcoord.end() ; iCoord++ ){
-    double x,dx,y,dy,z,dz;
-    LHCb::MuonTileID tile=(*iCoord)->key();
-    StatusCode sc =
-      m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-    if(sc.isFailure()){
-      warning()<< "Failed to get x,y,z of tile " << tile << endreq;
-      continue;
-    }
-    int station = (*iCoord)->key().station();
-    if(mCoordX[station] == 0) {
-      // this is the first coord found
-      mCoordX[station] = x;
-      mCoordY[station] = y;
-      // difference between x,y and the extrapolated x,y
-      mCoordDX[station] = ( x - m_trackX[station] ) / dx;
-      mCoordDY[station] = ( y - m_trackY[station] ) / dy;
-    }else{
-      // get best match in X and Y
-      if( (x - m_trackX[station])*(x - m_trackX[station]) +
-          (y - m_trackY[station])*(y - m_trackY[station])  <
-          pow((mCoordX[station]*dx - m_trackX[station]),2) +
-          pow((mCoordY[station]*dy - m_trackY[station]),2) ){
-        // this Coord is a better match
-        mCoordX[station] = x;
-        mCoordY[station] = y;
-        mCoordDX[station] = ( x - m_trackX[station] ) / dx;
-        mCoordDY[station] = ( y - m_trackY[station] ) / dy;
-      }
-    }
-  } // end of Coords loop
-
-  // calculate the square of the distances
-  int nstn = 0;
-  for( int stn = 0 ; stn < 5 ; stn++ ){
-    debug()  << " mCoordDX =  " << stn << mCoordDX[stn] << endreq;
-    debug()  << " mCoordDY =  " << stn << mCoordDY[stn] << endreq;
-    if ( mCoordDX[stn] != 0. ) {
-      nstn++;
-      dist += mCoordDX[stn]*mCoordDX[stn] + mCoordDY[stn]*mCoordDY[stn];
-    }
-  }
-  if(nstn) {
-    dist = dist / nstn; //divide by the number of station
-  } else {
-    dist = 0;
-  }
-  //  info()<<"Sta dist:: "<<dist<<" "<<nstn<<endreq;
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -1053,7 +915,7 @@ void MuID2BodyPlot::resetTrackLocals(){
 StatusCode MuID2BodyPlot::selectHitInFOI(){
 
   int station(1);
-  int region; bool foundHit;
+  int region; bool foundHit = false;
   for(region = 0 ; region < m_NRegion ; region++){
     
     if( !m_coordPos[station*m_NRegion + region].empty() ){
@@ -1085,4 +947,159 @@ StatusCode MuID2BodyPlot::selectHitInFOI(){
   if(foundHit) sc = StatusCode::SUCCESS;
   return sc;
 }
+
+StatusCode MuID2BodyPlot::get_closest(LHCb::MuonPID *pMuid, double *closest_x, double *closest_y, double *closest_region){
+//=============================================================================
+// comment: get the closest hit
+// authors: G. Lanfranchi & S. Furcas, 
+// date: 10/5/09
+//=============================================================================
+
+  double foiXDim,foiYDim;  
+  int nhits=0;
+
+  for (int ista=0; ista<5; ista++){
+    closest_x[ista] = -1;
+    closest_y[ista] = -1;
+    small_dist[ista] = 10000000.;
+    Fdist[ista] = 0;
+    closest_region[ista] = -1;
+  }  
+
+  std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[pMuid];
+  std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
+  for ( iCoord = mcoord.begin() ; iCoord != mcoord.end() ; iCoord++ ){
+    
+    double x,dx,y,dy,z,dz;
+    LHCb::MuonTileID tile=(*iCoord)->key();
+    StatusCode sc =
+      m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
+    if (sc.isFailure()){
+      warning() << "Failed to get x,y,z of tile " << tile << endreq;
+      continue;
+    }
+    
+    int station = (*iCoord)->key().station();
+    int region = (*iCoord)->key().region();
+    foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
+    foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
+
+    // only for M2-M3-M4-M5:
+    if (station > 0 ) {
+
+      if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
+           ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
+        
+        Fdist[station] =((x - m_trackX[station])/dx * (x - m_trackX[station])/dx) 
+          +((y - m_trackY[station])/dy * (y - m_trackY[station])/dy);
+        
+        nhits++;
+        
+        if(Fdist[station] < small_dist[station]){
+          
+          small_dist[station] = Fdist[station];
+          closest_x[station]  = (x - m_trackX[station]) / dx;
+          closest_y[station]  = (y - m_trackY[station]) / dy;
+          closest_region[station] = region;
+
+        }//Fdist
+      }//foi
+    }//station
+  }//coord
+
+  return StatusCode::SUCCESS;
+}
+
+//=====================================================================
+double MuID2BodyPlot::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double *closest_region){
+//=====================================================================
+// comment: Returns the squared distance calculated with closest hit
+// authors: G. Lanfranchi & S. Furcas, 
+// date:    10/5/09
+//=====================================================================
+  
+  double closest_dist=0;
+  
+  StatusCode sc = get_closest(pMuid,closest_x,closest_y,closest_region);
+  
+  if ( sc.isFailure() ){
+    warning() << " Closest_hit failed " << endreq;
+    return -1;
+  }  
+
+
+  if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
+    //3 or 2 stations
+    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]>0){//M2 &&M3 && M4
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+      closest_dist = closest_dist/3.;
+      return closest_dist;
+    }
+    if(m_occupancy[1]>0 && m_occupancy[2]>0){//M2 &&M3
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]);
+      closest_dist = closest_dist/2.;
+      return closest_dist;
+    }
+    if(m_occupancy[1]>0 && m_occupancy[3]>0){//M2 &&M4
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+      closest_dist = closest_dist/2.;
+      return closest_dist;
+    }
+    if(m_occupancy[2]>0 && m_occupancy[3]>0){//M3 &&M4
+      closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+      closest_dist = closest_dist/2.;
+      return closest_dist;
+    }
+  }//3-6
+  
+  if(p>m_MomentumCuts[0]){
+    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){//M2 &&M3&&M4&&M5
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
+        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+      closest_dist = closest_dist/4.;
+      return closest_dist;
+    }
+    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]){//M2 && M3 && M4
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+      closest_dist = closest_dist/3.;
+      return closest_dist;
+    }
+    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[4]){//M2 && M3 && M5
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
+        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+      closest_dist = closest_dist/3.;
+      return closest_dist;
+    }
+    if(m_occupancy[2]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){//M3 &&M4 && M5
+      closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
+        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+      closest_dist = closest_dist/3.;
+      return closest_dist;
+    }   
+    if(m_occupancy[1]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){//M2 &&M4 && M5
+      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
+        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
+        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+      closest_dist = closest_dist/3.;
+      return closest_dist;
+    }
+  }
+  
+  if(!closest_dist) return 0;
+  return closest_dist;
+  
+}
+
+
 
