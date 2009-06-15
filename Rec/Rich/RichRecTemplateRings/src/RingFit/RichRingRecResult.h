@@ -1,4 +1,4 @@
-// $Id: RichRingRecResult.h,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichRingRecResult.h,v 1.3 2009-06-15 09:08:28 seaso Exp $
 #ifndef RINGFIT_RICHRINGRECRESULT_H
 #define RINGFIT_RICHRINGRECRESULT_H 1
 
@@ -87,10 +87,7 @@ namespace Rich
 
         //   int TrackBestReconPidValue(int aTrack) {return m_TrackBestReconPid [aTrack];}         // the best pid reconstructed.
         // void setTrackBestReconPidValue(int apid, int aTrackIndex);
-
-
-
-
+        
         void clearReconSegmentArrays();
         void clearResultTrackArrays();
         void resetResultTrackArrays();
@@ -121,6 +118,7 @@ namespace Rich
         VVI  m_allSelectedSegmentsIndex;  // each element is a vector of size 3 which are the SelectedTrackIndex in radiator 0,1,2.
         //  VI m_TrackBestReconPid;          // the best pid reconstructed.
 
+        
 
       };
 

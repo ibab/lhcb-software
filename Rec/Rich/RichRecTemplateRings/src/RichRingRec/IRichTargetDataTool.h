@@ -1,4 +1,4 @@
-// $Id: IRichTargetDataTool.h,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+// $Id: IRichTargetDataTool.h,v 1.3 2009-06-15 09:08:28 seaso Exp $
 #ifndef IRICHTARGETDATATOOL_H
 #define IRICHTARGETDATATOOL_H 1
 
@@ -34,7 +34,7 @@ namespace Rich
         virtual   int  NumHitsTarget(int iRich)=0;
         virtual   double XHitInpValue(int i, int iRich)=0;
         virtual   double YHitInpValue(int i, int iRich)=0;
-
+        virtual   int HitInvIndexValue(int i, int iRich) =0;
 
 
 

@@ -1,4 +1,4 @@
-// $Id: IRichRingRecConstants.h,v 1.2 2009-06-05 17:21:32 jonrob Exp $
+// $Id: IRichRingRecConstants.h,v 1.3 2009-06-15 09:08:28 seaso Exp $
 #ifndef RICHRINGREC_IRICHRINGRECCONSTANTS_H
 #define RICHRINGREC_IRICHRINGRECCONSTANTS_H 1
 
@@ -56,7 +56,7 @@ namespace Rich
         virtual double  meanRadiusDiff(int irad)=0;
         virtual double  sigmaRadiusDiff(int irad)=0;
         virtual int estimatePidFromMassAlone( double amass)=0;
-
+        virtual double radiusScaleFactorToRadiansSingle(int aRadiator) =0;
 
 
       protected:

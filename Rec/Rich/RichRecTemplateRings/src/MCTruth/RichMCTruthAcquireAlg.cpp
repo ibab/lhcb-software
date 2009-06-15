@@ -1,4 +1,4 @@
-// $Id: RichMCTruthAcquireAlg.cpp,v 1.2 2009-06-05 17:21:32 jonrob Exp $
+// $Id: RichMCTruthAcquireAlg.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -14,8 +14,8 @@
 //
 // 2007-06-26 : Sajan EASO
 //-----------------------------------------------------------------------------
-
 using namespace Rich::Rec::TemplateRings;
+
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( RichMCTruthAcquireAlg );
@@ -48,7 +48,7 @@ StatusCode RichMCTruthAcquireAlg::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
-  acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
+  // acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
   acquireTool( "TrackSelector",       m_trSelector, this );
 
 
@@ -66,16 +66,19 @@ StatusCode RichMCTruthAcquireAlg::execute() {
 
   sc = AcquireMCTruthInfo();
 
-  // sc = CompareReconRadiusWithMC();
-  if(rt()->RParam()-> ActivateMCCompareMassPrint() ) {
-    sc =   CompareMassFromRadiators();
-  }
+  //  sc = CompareReconRadiusWithMC();
+  // if(rt()->RParam()-> ActivateMCCompareMassPrint() ) {
+  //  sc =   CompareMassFromRadiators();
+  // }
   
   
   return sc;
   
 }
 StatusCode RichMCTruthAcquireAlg::CompareMassFromRadiators(){
+
+  debug()<<" Now in compare Mass from radiators "<<endreq;
+  
   StatusCode sc= StatusCode::SUCCESS;
   IRichRingRecToolBase* art = rt();  
     for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
@@ -145,13 +148,14 @@ StatusCode RichMCTruthAcquireAlg::CompareMassFromRadiators(){
           }
           
          }
-         info()<<" Compare mass values "<< CurrentTrackIndex<< endreq;
+         debug()<<" Compare mass values "<< CurrentTrackIndex<< endreq;
          
          for(int irad = art->RParam()->MaxRadiator(); irad >= art->RParam()->MinRadiator();    --irad){
-           //                 if(  fabs(Truepid [irad]) == 211 ) {
-             if(  fabs(Truepid [irad]) == 321 ) {
+
+            if(  fabs(Truepid [irad]) == 211 ) {
+                              //  if(  fabs(Truepid [irad]) == 321 ) {
              
-             info()<<" truepid recmass BG recrad recmom truerad trueBG "<< irad<<"  "<<Truepid [irad]<<"  "
+             debug()<<" truepid recmass BG recrad recmom truerad trueBG "<< irad<<"  "<<Truepid [irad]<<"  "
                    << recmass[irad]<<"   "<<recBG [irad]
                    <<"   "<<recrad[irad]<<"   "<<  recMom[irad]<<"   "<< Truerad[irad]<<"   "<< TrueBG[irad]<<endreq;
               
@@ -160,9 +164,9 @@ StatusCode RichMCTruthAcquireAlg::CompareMassFromRadiators(){
          }
          
 
-         info()<<" Selected Light: radiatorAndmass  Heavy radiatorAndmass  "<<selectedRadLight<<"   "<< selMassLight<<"  "
+         debug()<<" Selected Light: radiatorAndmass  Heavy radiatorAndmass  "<<selectedRadLight<<"   "<< selMassLight<<"  "
                <<selectedRadHeavy<<"     "<< selMassHeavy<<"   "<<endreq;
-         info()<<" end compare mass for this track "<< CurrentTrackIndex<< endreq;
+         debug()<<" end compare mass for this track "<< CurrentTrackIndex<< endreq;
          
            
 
@@ -170,7 +174,8 @@ StatusCode RichMCTruthAcquireAlg::CompareMassFromRadiators(){
     }
     
     
-  
+    debug()<<" end comapre mass values "<<endreq;
+    
 
   return sc;
   
@@ -218,7 +223,8 @@ StatusCode RichMCTruthAcquireAlg::AcquireMCTruthInfo(){
  typedef std::vector< const LHCb::MCParticle * >::iterator MI;
 
   int aNumHitsInp = (int) richPixels()->size();
-
+  // info()<<" MC Truth Alg : richPixelsSize "<<aNumHitsInp<<endreq;
+  
   
   if( aNumHitsInp > 0 ) {
    // Loop through all the RICH hits
@@ -227,23 +233,68 @@ StatusCode RichMCTruthAcquireAlg::AcquireMCTruthInfo(){
         int pixelIndex = iPix - (richPixels()->begin());
         
        const LHCb::RichRecPixel * pixel = *iPix;
-       SmartRefVector<LHCb::MCRichHit> mcHits;
-       m_richRecMCTruth->mcRichHits( pixel, mcHits );
-       // SmartRefVector<LHCb::MCRichHit> mcHits;
-       // m_richRecMCTruth->mcRichHits(  pixel, mcHits );
-    
+          SmartRefVector<LHCb::MCRichHit> mcHits;
+          // const LHCb::MCRichHits* mcHitsInp = get<LHCb::MCRichHits>(LHCb::MCRichHitLocation::Default);
+          //const MCParticles*  mcParticlesInp = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
+          
+           // MC/Rich/Hits
+         //info()<<" MCTruthalg  MCRichHit Size  "<< (int) mcHits->size()<<endreq;
+         // m_richRecMCTruth->m_richRecMCTruth->mcPartToMCRichHisMap();
+          
+          //const LHCb::MCRichHits* mcHitsInp = m_mcTool->mcRichHits();
+          //m_mcTool->mcPartToMCRichHitsMap();
+          // m_mcTool->smartIDToMCRichHitsMap();
+          
+         m_richRecMCTruth->mcRichHits( pixel, mcHits );
+         // info()<<" MCTruthalg  MCRichHit Size  "<< (int) mcHits.size()<<endreq;
+     
+       // SmartRefVector<LHCb::MCRichHit> mcHitsA;
+       // m_richRecMCTruth->mcRichHits(  pixel, mcHitsA );
 
-    if((int) mcHits.size() > 1 ) {
+      if((int) mcHits.size() > 1 ) {
       
-      debug()<<"RichMCTruthFinder multiple mchit per pixel: current pixel mchitsize "
-             <<pixelIndex<<"   "<< (int) mcHits.size()<<endreq;
-    }
+       debug()<<"RichMCTruthFinder multiple mchit per pixel: current pixel mchitsize "
+            <<pixelIndex<<"   "<< (int) mcHits.size()<<endreq;
+      }
     
-    for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcHits.begin();
+        for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcHits.begin();
           iHit != mcHits.end(); ++iHit ){
+    
+          //      info()<<" McHit coord signalflag radiator MCP  smartid "<< (*iHit) ->entry()<<"  "<<(*iHit)->isSignal()
+          //      <<"   "<<(*iHit)->radiator()<<"  "<<(*iHit)->mcParticle()<< (*iHit)-> sensDetID () <<endreq;
+
+          //begin test 
+          //for( LHCb::MCRichHits::const_iterator inpHit =  mcHitsInp->begin(); inpHit != mcHitsInp->end(); ++inpHit) {
+          //  if( ( (*iHit)->entry() == (*inpHit)->entry()) && ( ((*iHit)-> sensDetID ()) == ((*inpHit )-> sensDetID ())  )  ) {
+              
+              //  info() <<" Found the Mc Hit  "<< inpHit- mcHitsInp->begin()<<"   "<<(*inpHit )->entry() <<"  "
+              //       <<(*inpHit )-> sensDetID ()<<  endreq;
+          //    info()<<" Found the Input MCHit  with MCP "<< inpHit- mcHitsInp->begin() <<"   "
+          //          <<  (*inpHit)->mcParticle() <<endreq;
+              
+
+          //            const LHCb::MCParticle* atruePart =  
+          // m_richRecMCTruth->trueCherenkovRadiation(pixel,  (*iHit)->radiator());
+          //  info()<<" Current mc part for pixel "<<atruePart <<endreq;
+            
+
+
+
+          //    }
+            
+          //  }
+          //end test
+          
+
+
+    //for ( LHCb::MCRichHits::const_iterator iHit = mcHits.begin();
+    //      iHit != mcHits.end(); ++iHit ){
 
       if ( !(*iHit)->isBackground() && ( (*iHit)->isSignal()) ){
+       //  if ( ( (*iHit)->isSignal()) ){
         const Rich::RadiatorType radiator = (*iHit)->radiator();
+        //        info()<<" current mc hit is signal in radiator "<<radiator<<endreq;
+        
         // test the following for tests with data with mcopticalphoton.
         //        const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
         // info()<<"current radiator mcphot "<<radiator<<"  "<< mcPhot <<endreq;
@@ -259,6 +310,7 @@ StatusCode RichMCTruthAcquireAlg::AcquireMCTruthInfo(){
         // end of test with mcopticalphoton
 
         const LHCb::MCParticle * mcPa = (*iHit)->mcParticle();
+        // info()<<" Current MC Particle for mc hit "<<   iHit- mcHits.begin() <<"     "<<mcPa<<endreq;
         
             if ( mcPa ) {              
               if(  radiator == Rich::Aerogel ) {
@@ -469,6 +521,8 @@ StatusCode RichMCTruthAcquireAlg::AcquireMCTruthInfo(){
        rt()->MCT()->StoreTrueHit(rus2,n2ht);
        
 
+       //       info()<<" AcquireMCTruthInfo  "<<endreq;
+       
   return  StatusCode::SUCCESS;
 }
 

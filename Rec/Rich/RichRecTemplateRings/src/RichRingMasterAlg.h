@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.h,v 1.3 2009-06-05 17:21:31 jonrob Exp $
+// $Id: RichRingMasterAlg.h,v 1.4 2009-06-15 09:08:28 seaso Exp $
 #ifndef RICHRINGMASTERALG_H
 #define RICHRINGMASTERALG_H 1
 
@@ -38,13 +38,16 @@ namespace Rich
         virtual StatusCode execute   ();    ///< Algorithm execution
         virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-        StatusCode FindRingsWithTracks();  // main ring finding loop for radiators and TrackSegments
+        StatusCode FindRingsWithTracks();  // main ring finding loop 
+                                           // for radiators and TrackSegments
         StatusCode ReconstructMassForRings(); //  find mass for TrackSegments and tracks
         StatusCode SetRadiatorSpecificParam(int irad);
         StatusCode ResetRichEventRingReconParam();
 
         StatusCode StoreRingInfoInNtup();
         StatusCode saveRingsInTES();
+        StatusCode SelectBestMassFromRadiators();
+
         inline LHCb::RichRecRings*  getRings(const std::string aLocation) const
         {
           return getOrCreate<LHCb::RichRecRings,LHCb::RichRecRings>(aLocation);

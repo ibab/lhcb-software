@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.5 2009-06-11 10:08:20 jonrob Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.6 2009-06-15 09:08:28 seaso Exp $
 // Include files
 
 // from Gaudi
@@ -182,9 +182,64 @@ StatusCode RichRingMasterAlg::ReconstructMassForRings()
     }
   }
 
+  sc = sc && SelectBestMassFromRadiators();
+
   return sc;
 }
 
+StatusCode RichRingMasterAlg::SelectBestMassFromRadiators(){
+  
+  StatusCode sc= StatusCode::SUCCESS;
+
+  rt()->RRslt()->setnumberOfRichRecTrack((int) richTracks()->size());
+                                         
+  rt()->RRslt()->resetResultTrackArrays();
+  
+    for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
+          track != richTracks()->end(); ++track ){
+
+            int CurrentTrackIndex = track- richTracks()->begin();
+            
+          // apply track selection
+           if ( !m_trSelector->trackSelected(*track) ) continue;
+
+          // get the reco track
+          const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
+          if ( !trtrack ){
+            Warning( "RichRingMasterAlg: SelectMassFromRadiators:Input track type is not Track -> RichRecTrack skipped" );
+           continue;
+          }
+
+          VI SegmentIndex ( (rt()->RConst()->maxNumRadiator()) , -10);
+          LHCb::RichRecSegment* segment0 = (*track)-> segmentInRad(Rich::Aerogel);
+          if( segment0) {
+            SegmentIndex[0] =  find(richSegments()->begin(),richSegments()->end(), 
+                                    segment0)- richSegments()->begin();              
+          }
+          
+          
+
+          LHCb::RichRecSegment* segment1 = (*track)-> segmentInRad(Rich::Rich1Gas);                
+          if( segment1) {
+             SegmentIndex[1] =  find(richSegments()->begin(),richSegments()->end(), 
+                                    segment1)- richSegments()->begin();           
+          }
+          
+
+
+
+          LHCb::RichRecSegment* segment2 = (*track)-> segmentInRad(Rich::Rich2Gas);
+          if( segment2) {
+             SegmentIndex[2] =  find(richSegments()->begin(),richSegments()->end(), 
+                                    segment2)- richSegments()->begin();           
+          }
+          sc = rt()->RMass()->bestReconstructedMassForRichTrack( SegmentIndex,CurrentTrackIndex);        
+    }
+    
+
+  return sc;
+  
+}
 StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
 {
   StatusCode sc= StatusCode::SUCCESS;
@@ -243,10 +298,16 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
 
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
 
+
+  double aProb =1.0; // for now set the probability to 1.0
+
   // Loop over radiators
   for(int irad = rt()->RParam()->MaxRadiator(); irad >= rt()->RParam()->MinRadiator();    --irad){
     VI tkMM = rt()->Tfm()->getTrackIndexLimits( irad);
     int iRich = rt()->Tfm()->RichDetNumFromRadiator(irad);
+    int  aNumHitsTarget = rt()->tgD()->NumHitsTarget(iRich);
+    double aRadiusTightWidth=rt()->RConst()->RadiusTightSigmaValue(irad);
+
 
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){  // loop over selected RichRecSegments
 
@@ -291,10 +352,13 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       const LHCb::RichRecSegment * segment = *iSeg;
       const Gaudi::XYZPoint & centrePointGlobal = segment->pdPanelHitPoint();
       const double aRadius = rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
+      const double aAngle = aRadius * rt()->RConst()->radiusScaleFactorToRadiansSingle(irad);
+      
 
       newRing->setCentrePointLocal ( centrePointLocal );
       newRing->setCentrePointGlobal( centrePointGlobal );
-      newRing->setRadius((LHCb::RichRecRing::FloatType)aRadius);
+      //      newRing->setRadius((LHCb::RichRecRing::FloatType)aRadius);
+      newRing->setRadius((LHCb::RichRecRing::FloatType)aAngle);
       newRing->setRichRecSegment(segment);
 
       // now to fill the mass hypothesis. For now just using the closest mass.
@@ -313,7 +377,24 @@ StatusCode RichRingMasterAlg::saveRingsInTES(){
       newRing->setMassHypo(aTypeA);
       // end of part which needs improvement in future.
 
-      // Also to be added the RichRecPixels on each ring.
+      // Now adding the RichRecPixels associated to each ring.
+
+      if( aRadius > 0.0 ) {
+        for(int i=0; i<aNumHitsTarget; ++i){    
+          if( rt()->RRslt()->HitSelectedInRecRingsValue(i,irad)) {
+            double rhit = rt()->Tfm()->  CartToPolRadFromTHNum(i,itk,irad);  
+            if( fabs( rhit - aRadius) < aRadiusTightWidth ) {
+              LHCb::RichRecPixel * aPix = *( richPixels()->begin() + ( rt()->tgD()->HitInvIndexValue(i,iRich)));
+              newRing->richRecPixels().push_back( LHCb::RichRecPixelOnRing(aPix,aProb) );              
+
+            } // end test if the hit is selected for current track segment
+            
+          } // end test if the hit is selected for any track segment
+          
+          
+        }// end loop on hits on a rich det  
+        
+      } // end check on Radius value
 
     } // end loop over RichRecSegments in the current radiator
 

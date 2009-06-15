@@ -1,4 +1,4 @@
-// $Id: RichRingMCCompareNtup.cpp,v 1.2 2009-06-05 17:21:32 jonrob Exp $
+// $Id: RichRingMCCompareNtup.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ void RichRingMCCompareNtup:: RingReconNtup(){
       double aTruePid = art->MCT()->MCTruePidValue(itk,irad);
       double aExpRadius  = art->Tfm()->TrackExpectedRadiusFromTruePidCode(itk,irad, (int) aTruePid );
       double aTrueNumHits = art->MCT()-> MCTrueNumHitValue(itk, irad);
-      double aTrackSegReconMass = art->RRslt()->TrackSegReconMassValue(itk, irad);
+      //double aTrackSegReconMass = art->RRslt()->TrackSegReconMassValue(itk, irad);
       double aTrackRecMom = art->tgD()->TrackRecMomValue(itk, irad);
 
             
@@ -101,7 +101,7 @@ void RichRingMCCompareNtup:: RingReconNtup(){
       rgTuple->column("MCTrueGamma", aTrueGammma);
       rgTuple->column("MCTruePid", aTruePid);
       rgTuple->column("MCTrueNumhits", aTrueNumHits );
-      rgTuple->column("RecSegMass",  aTrackSegReconMass);
+      // rgTuple->column("RecSegMass",  aTrackSegReconMass);
       rgTuple->column("RecMom",  aTrackRecMom);
       rgTuple->column("MCExpRad",aExpRadius );
       

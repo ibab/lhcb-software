@@ -1,4 +1,4 @@
-// $Id: RichRingRecConstants.h,v 1.2 2009-06-05 17:21:34 jonrob Exp $
+// $Id: RichRingRecConstants.h,v 1.3 2009-06-15 09:08:28 seaso Exp $
 #ifndef RICHRINGRECCONSTANTS_H
 #define RICHRINGRECCONSTANTS_H 1
 
@@ -89,6 +89,10 @@ namespace Rich
         double sigmaRadiusDiff(int irad) {return m_sigmaRadiusDiff[irad];}
         int estimatePidFromMassAlone( double amass);
 
+        double radiusScaleFactorToRadiansSingle(int aRadiator) 
+        { double aScale = ( (aRadiator > -1)  && (aRadiator < 3) ) ? m_radiusScaleFactorToRadians[aRadiator] : 0;
+          return aScale;}
+
 
 
       protected:
@@ -149,6 +153,10 @@ namespace Rich
         VD m_meanRadiusDiff;  // mean of the radius diff in each radiator
         VD m_sigmaRadiusDiff; // sigma of the radius diff in each radiator
 
+        VD m_radiusSatRingTypical; // radius of typical saturated rings
+        VD m_angleSatRingTypical; // cherenkov angle of typical saturated rings
+        VD m_radiusScaleFactorToRadians; // conversion from Cherenkov radius to angle
+ 
 
       };
 

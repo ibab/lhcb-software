@@ -1,4 +1,4 @@
-// $Id: RichRingRecConstants.cpp,v 1.2 2009-06-05 17:21:34 jonrob Exp $
+// $Id: RichRingRecConstants.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,10 @@ RichRingRecConstants::RichRingRecConstants( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   : RichRingRecToolBase ( type, name , parent ),
-     m_RichParticleTrueMass(VD(0))   
+    m_RichParticleTrueMass(VD(0)),
+    m_radiusSatRingTypical(VD(0)),
+    m_angleSatRingTypical(VD(0)),  
+    m_radiusScaleFactorToRadians(VD(0))
 {
   declareInterface<IRichRingRecConstants>(this);
   InitRichRingRecConstantsParam();
@@ -112,6 +115,20 @@ void RichRingRecConstants::InitRichRingRecConstantsParam()
    //m_RadiusTightSigma[1]=5.0;
    m_RadiusTightSigma[2]=5.0;
 
+
+   m_radiusSatRingTypical.clear();m_radiusSatRingTypical.resize(m_maxNumRadiator);
+   m_angleSatRingTypical.clear(); m_angleSatRingTypical.resize(m_maxNumRadiator);
+   m_radiusScaleFactorToRadians.clear(); m_radiusScaleFactorToRadians.resize(m_maxNumRadiator);
+   m_radiusSatRingTypical[0]= 330.0;
+   m_radiusSatRingTypical[1]= 75.0;
+   m_radiusSatRingTypical[2]= 130.0;
+   m_angleSatRingTypical[0] = 0.24;
+   m_angleSatRingTypical[1] = 0.052;
+   m_angleSatRingTypical[2] = 0.03;
+   m_radiusScaleFactorToRadians[0]=m_angleSatRingTypical[0]/m_radiusSatRingTypical[0];
+   m_radiusScaleFactorToRadians[1]=m_angleSatRingTypical[1]/m_radiusSatRingTypical[1];
+   m_radiusScaleFactorToRadians[2]=m_angleSatRingTypical[2]/m_radiusSatRingTypical[2];
+   
 
   setParticleTrueMass();
   setParticleCherenkovThreshold ();

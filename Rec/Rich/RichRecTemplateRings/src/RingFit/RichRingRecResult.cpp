@@ -1,4 +1,4 @@
-// $Id: RichRingRecResult.cpp,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichRingRecResult.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -59,6 +59,8 @@ void RichRingRecResult::clearReconSegmentArrays(){
   m_HitSelectedInRecRings.resize(nrad);
   m_TrackSegReconMass.resize(nrad);
   m_TrackSegReconBG.resize(nrad);
+
+  
   
 
    for(int irad=0; irad< nrad; ++irad){
