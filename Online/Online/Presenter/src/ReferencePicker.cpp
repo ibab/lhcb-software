@@ -14,6 +14,8 @@
 #include "Archive.h"
 #include "DbRootHist.h"
 
+class boost::mutex;
+
 using namespace pres;
 using namespace std;
 using namespace boost::filesystem;
