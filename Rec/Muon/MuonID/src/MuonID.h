@@ -140,9 +140,6 @@ private:
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 
-  // Tool to provide measurement from LHCbID
-  IMeasurementProvider* m_measProvider;
-    
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]
   std::vector<double> m_padSizeX;
