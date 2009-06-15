@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.32 2009-04-07 16:11:21 gcorti Exp $
+// $Id: Generation.cpp,v 1.33 2009-06-15 17:02:35 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -178,7 +178,6 @@ StatusCode Generation::execute() {
   }
 
   unsigned int  nPileUp( 0 ) ;
-  double        currentLuminosity ;
   
   LHCb::HepMCEvents::iterator itEvents ;
 
@@ -200,7 +199,6 @@ StatusCode Generation::execute() {
     else { 
       // default set to 1 pile and 2.10^32 luminosity
       nPileUp = 1 ;
-//      currentLuminosity = 2.e32/Gaudi::Units::cm2/Gaudi::Units::s ;
       theGenHeader->setLuminosity(3.e32/Gaudi::Units::cm2/Gaudi::Units::s);
       theGenHeader->setLuminosity(30.0*Gaudi::Units::megahertz);
       theGenHeader->setLuminosity(102.4 * Gaudi::Units::millibarn);
@@ -270,7 +268,6 @@ StatusCode Generation::execute() {
     
   // Copy the HepMCevents and Collisions from the temporary containers to 
   // those in TES and update the header information
-  //  theGenHeader->setLuminosity( currentLuminosity );
 
   // Check that number of temporary HepMCEvents is the same as GenCollisions
   if( theEvents->size() != theCollisions->size() ) {

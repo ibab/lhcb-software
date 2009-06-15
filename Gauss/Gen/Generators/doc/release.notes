@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.149 2009-05-27 17:26:52 gcorti Exp $
+! $Id: release.notes,v 1.150 2009-06-15 17:02:45 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-06-15 - Gloria CORTI
+ - Fix compilation warning of unused variable removing leftover old variable 
+   when modified how to store luminosity
+   . Generation.cpp
 
 !====================== Generators v10r1 2009-05-27 ==========================
 ! 2009-04-23 - Patrick Robbe
