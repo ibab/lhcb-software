@@ -3,7 +3,12 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
-
+!-- 2009-06-15 - Sajan Easo
+  - Storage of results itno  LHCb::RichRecRing updated so that Cherenkov angle 
+    is stored instead of Cherenkov Radius. Also the RichRecPixels associated to
+    each ring are also stored.  The storage is done in RichRingMasterAlg.cpp
+  - The comparison of results to MC truth is improved in 
+    RichRingMCCompareNtup and RichMCTruthAcquireAlg.
 !==================== RichRecTemplateRings v1r0 2009-03-10 ===================
 
 ! 2009-06-05 - Chris Jones
