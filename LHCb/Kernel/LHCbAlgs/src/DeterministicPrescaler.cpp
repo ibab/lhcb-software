@@ -57,7 +57,6 @@ inline uint32_t mixString(uint32_t state, const std::string& extra)
 { 
   // prefix name with ' ' until the size is a multiple of 4.
   std::string s = std::string((4-extra.size()%4)%4,' ') + extra;
-  assert(s.size()%4==0);
   for (size_t i=0; i < s.size()/4; ++i) {
      //FIXME: this might do something different on big endian vs. small endian machines...
      uint32_t x = uint32_t(s[i*4  ]) 
