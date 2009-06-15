@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.353 2009-06-12 07:27:11 pkoppenb Exp $
+! $Id: release.notes,v 1.354 2009-06-15 09:32:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-15 - Patrick Koppenburg
+ - Added MC09 Inclusive J/psi example DST data.
+ - Remove 2008 data.
+ - Adapt DaVinciTestData
 
 ! 2009-06-12 - Patrick Koppenburg
  - Do net require Bu2LLK package from DaVinci.py
@@ -22,7 +27,6 @@
  - python/DaVinci/Configuration.py
   . Add "MC09" to possible DataType values.
   . Fix bug in address of P->PV table to be copied
-
 
 !========================== DaVinci v23r1 2009-06-04 ===================
 
