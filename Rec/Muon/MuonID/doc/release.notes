@@ -2,6 +2,11 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+
+! 2009-06-15 - Wouter Hulsbergen
+ - remove creation of measurements in MuonID
+ - add parent track to ancestors in MuonID
+
 !======================== MuonID v6r2 2009-03-06 =====================
 ! 2009-03-06 - Miriam Gandelman
  - Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings) 
