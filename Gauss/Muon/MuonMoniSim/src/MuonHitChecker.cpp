@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.cpp,v 1.11 2009-03-26 21:59:02 robbep Exp $
+// $Id: MuonHitChecker.cpp,v 1.12 2009-06-15 16:57:49 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -107,7 +107,7 @@ StatusCode MuonHitChecker::execute() {
       
       int region  = muonD->regionID(MyDetID);   
 
-      int chamber = muonD->chamberID(MyDetID);        
+      //int chamber = muonD->chamberID(MyDetID);        
 
       debug()<<" Station, Region :: " <<station<<" "<<region<<endmsg;
   

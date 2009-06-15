@@ -4,6 +4,10 @@
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
 
+! 2009-06-15 - Gloria CORTI
+ - Fix compilation warning for unused variables, commenting out line where
+   defined.
+
 !======================== MuonMoniSim v2r5 2009-05-28 ========================
 ! 2009-04-27  - Stefania Vecchi
  - added Algorithm MuonMultipleScatteringChecher: provide histograms to check 
