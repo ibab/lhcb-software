@@ -47,16 +47,26 @@
 
   <class name="std::pair&lt;double,SmartRef&lt;Element&gt; &gt;" />
   <class name="std::pair&lt;double,SmartRef&lt;Isotope&gt; &gt;" />
-  <class name="std::pair&lt;std::pair&lt;double,double&gt;,const Material*&gt;" />
+
+
+  <class name="ILVolume::PVolumes"      />
+  <class name="ILVolume::PVolumePath"   />
+  <class name="ILVolume::Interval"      />
+  <class name="ILVolume::Intersection"  />
+  <class name="ILVolume::Intersections" />
 
   <function pattern="DetDesc::*" />
 
   <exclusion>
     <class name="SolidPolycone::CmpZ" />
     <class name="SolidPolycone::Pair" />
+    <class name="SolidPolycone::Iterator" />
+    <class name="SolidPolycone::Triplet"  />
     <class name="SolidPolycone::Triplets" />
+    <class name="SolidBoolean::SolidChildrens" />
     <class name="SolidTrap::VERTICES" />
     <class name="SolidPolyHedronHelper::VERTICES" />
+    <class name="SolidPolyHedronHelper::PLANES" />
     <function name="DetDesc::print" />
     <function name="DetDesc::services" />
   </exclusion>
