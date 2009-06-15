@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.13 2009-03-19 14:26:58 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.14 2009-06-15 12:55:21 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -161,6 +161,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
   const unsigned int nVeloRHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloR,_1));
   const unsigned int nVeloPhiHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloPhi,_1));
+  const unsigned int nMuonHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isMuon,_1));
   
   plot(nTTHits, type+"/110", "# TT hits",  -0.5, 10.5 ,11);
   plot(nITHits, type+"/111", "# IT hits",  -0.5, 50.5 ,51);
@@ -168,6 +169,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nVeloHits, type+"/113","# Velo hits" ,-0.5, 50.5 ,51);
   plot(nVeloRHits, type+"/114","# Velo R hits" ,-0.5, 20.5 ,21);
   plot(nVeloPhiHits, type+"/115","# Velo phi hits" ,-0.5, 20.5 ,21);
+  plot(nMuonHits, type+"/116","# Muon hits" ,-0.5, 20.5 ,21);
   
   size_t numoutliers(0) ;
   if( track.nodes().size()>0 ) {

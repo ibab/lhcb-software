@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-05-06 Wouter Hulsbergen
+ - Add TrackDiMuonMonitor
+
 !============================ TrackMonitors v1r9p1 2009-06-03 ================
 ! 2009-06-03 - Marco Cattaneo
  - Add missing TrackMonitors_dll.cpp file
