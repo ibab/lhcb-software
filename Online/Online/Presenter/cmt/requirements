@@ -47,7 +47,7 @@ macro_append Boost_linkopts " "
 macro_append Boost_linkopts $(Boost_linkopts_thread)
 macro_append Boost_linkopts " "
 #macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34 " \
-macro_append Boost_linkopts "" WIN32 " boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib "
+macro_append Boost_linkopts "" WIN32 " boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib boost_thread-vc71-mt.lib"
 
 # Setup cppflags
 #macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
