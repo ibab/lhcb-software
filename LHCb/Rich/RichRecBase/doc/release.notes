@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r23 2009-06-16 ==========================
 ! 2009-06-12 - Chris Jones
  - Update default value of track GhostProbability to -1
 
