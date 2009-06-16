@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.220 2009-06-11 15:51:43 jonrob Exp $
+! $Id: release.notes,v 1.221 2009-06-16 10:07:04 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r22 2009-06-16 ====================
 ! 2009-06-11 - Chris Jones
  - Suppress WIN32 warning 4661 (incomplete explicit templates)
 
