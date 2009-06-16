@@ -4,12 +4,12 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
-!==================== MCInterfaces v1r10 2009-06-16 ==========================
+!==================== MCInterfaces v1r9 2009-06-16 ===========================
 ! 2009-06-08 - Chris Jones
  - Add a new method to Rich::Rec::MC::IMCTruthTool to return the associated
    MCParticle for a given RichRecRing
 
-!==================== MCInterfaces v1r9p1 2009-05-28 =========================
+!==================== MCInterfaces v1r8p1 2009-05-28 =========================
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
 
