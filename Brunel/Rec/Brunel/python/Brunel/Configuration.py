@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.79 2009-06-16 14:36:14 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.80 2009-06-16 16:13:26 pkoppenb Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -270,19 +270,17 @@ class Brunel(LHCbConfigurableUser):
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
-            InitReprocSeq.Members.append( "TESCheck" )
-            TESCheck().Inputs = ["Link/Rec/Track/Best"]
-            # in case above container is not on input (e.g. RDST)
-            TESCheck().Stop = False
-            TESCheck().OutputLevel = ERROR
+            if ( self.getProp("Simulation") ):
+                InitReprocSeq.Members.append( "TESCheck" )
+                TESCheck().Inputs = ["Link/Rec/Track/Best"]
+                # in case above container is not on input (e.g. RDST)
+                TESCheck().Stop = False
+                TESCheck().OutputLevel = ERROR
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
         # Read ETC selection results into TES for writing to DST
         if inputType == "ETC":
-            from Configurables import ReadStripETC
-            GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
-            ReadStripETC("TagReader").CollectionName = "TagCreator"
             IODataManager().AgeLimit += 1
 
         if inputType in [ "MDF", "RDST", "ETC" ]:
@@ -368,16 +366,6 @@ class Brunel(LHCbConfigurableUser):
                 GaudiSequencer("OutputDSTSeq").Members += [PackMCVertex()]
                 DstConf().SimType = "Minimal"
             DstConf().OutputName = self.outputName()
-
-
-        # Always write an ETC if ETC input
-        if self.getProp( "InputType" ).upper() == "ETC":
-            etcWriter = TagCollectionSvc("EvtTupleSvc")
-            ApplicationMgr().ExtSvc.append(etcWriter)
-            ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
-            importOptions( "$BRUNELOPTS/DefineETC.opts" )
-            if not etcWriter.isPropertySet( "Output" ):
-               etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
     def outputName(self):
         """

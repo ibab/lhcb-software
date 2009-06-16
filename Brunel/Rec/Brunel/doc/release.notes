@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-16 - Patrick Koppenburg
+ - Changes needed for FEST stripping jobs running onn ETCs
+
 ! 2009-06-16 - Marco Cattaneo
  - Move most of SuppressWarnings.opts functionality into Brunel(). Only
    sub-detector specific suppressions left in SuppressWarnings.opts
