@@ -4,11 +4,12 @@
 #include "EvtGenModels/EvtBToKstarllQCDFactorisation.hh"
 #include "EvtGenBase/EvtMathematicaFn.hh"
 
+#include "gsl/gsl_errno.h"
 #include "gsl/gsl_math.h"
 
 #include <utility>
 
-static int GSL_ERROR_HANDLER_CALLED;//nastly global variable
+extern int GSL_ERROR_HANDLER_CALLED;//nastly global variable
 void debug_handler(const char* reason, const char* file, int line, int gsl_errno);
 
 class EvtBToVllConstraints{

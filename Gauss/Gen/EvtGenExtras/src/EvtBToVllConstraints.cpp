@@ -4,10 +4,10 @@
 
 #include <cstdio>
 #include "gsl/gsl_deriv.h"
-#include "gsl/gsl_errno.h"
 #include "gsl/gsl_integration.h"
 #include "gsl/gsl_roots.h"
 
+int GSL_ERROR_HANDLER_CALLED = GSL_SUCCESS;
 void debug_handler(const char* /*reason*/, const char* /*file*/, int /*line*/, int gsl_errno){
 	//std::cout << "GSL Error in " << file << " (line " << line  << ") (code " << gsl_errno << "): " << reason << std::endl;
 	GSL_ERROR_HANDLER_CALLED = gsl_errno;
