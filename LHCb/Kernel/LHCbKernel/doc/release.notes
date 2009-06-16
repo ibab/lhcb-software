@@ -4,11 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r5 2009-06-16 ========================
 ! 2009-06-04 - Wouter Hulsbergen
  - Fixed bug in HitPattern for muon hits
 
 !===================== LHCbKernel v11r4 2009-05-25 ========================
-! 2008-09-26 - Marco Cattaneo
+! 2009-05-25 - Marco Cattaneo
  - In LineTraj.h, CircleTraj.h, ParapolaTraj.h, MemPoolAlloc.h: 
    add temporary workaround for windows: define NOMINMAX when including
    GaudiKernel/boost_allocator.h, to avoid conflict with max() macro 
