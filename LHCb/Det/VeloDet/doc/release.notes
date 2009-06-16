@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.215 2009-06-11 13:27:47 krinnert Exp $
+! $Id: release.notes,v 1.216 2009-06-16 06:45:06 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r7 2009-06-16 ===========================
 ! 2009-06-11 - Kurt Rinnert
  - the velo sensors now know whether they are top or bottom cabled.
 
