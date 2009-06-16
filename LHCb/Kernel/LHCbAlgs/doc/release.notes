@@ -3,6 +3,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+
+!======================== LHCbAlgs v2r27 2009-06-16 ==========================
 ! 2009-06-14 - Gerhard Raven
  - reduce functionality of DeterministicPrescaler to the strictly needed
    in order to speed it up furhter...
