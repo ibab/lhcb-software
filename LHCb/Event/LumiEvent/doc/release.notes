@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r1 2009-06-16 ==========================
 ! 2009-06-12 - Jaap Panman
  - LumiFSR        : add + and += operators
  - LumiIntegral   : new class, holds integrated FSR from different files
