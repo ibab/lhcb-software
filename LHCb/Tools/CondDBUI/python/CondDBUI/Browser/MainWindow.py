@@ -4,12 +4,16 @@
 #  Definition of the browser MainWindow class.
 
 from PyQt4.QtCore import Qt, QObject, SIGNAL, SLOT, QVariant
-from PyQt4.QtGui import QApplication, QMainWindow, QAction, QMessageBox, QStyle, QStyleFactory, QIcon
+from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
+                         QLabel,
+                         QAction,
+                         QIcon,
+                         QStyle, QStyleFactory)
 from PyQt4 import uic
 
 from CondDBUI import CondDB
 
-from Models import CondDBStructureModel
+from Models import *
 
 import os
 
@@ -23,18 +27,29 @@ class MainWindow(QMainWindow):
     def __init__(self, parent = None, flags = Qt.Widget):
         # Base class constructor.
         super(MainWindow, self).__init__(parent, flags)
+        # Application name
+        app = QApplication.instance()
+        self.appName = str(app.objectName())
         # Preconfigured databases
         self.defaultDatabases = {} # action
         # Icons for the model (property)
         self._icons = None
-        # Set the window icon.
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__),"icon.png")))
         # Prepare the GUI.
         uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
-        # Part of the initialization that require the GUI objects.
-        self.model = CondDBStructureModel()
-        self.model.icons = self.icons
-        self.hierarchyTreeView.setModel(self.model)
+        # --- Part of the initialization that require the GUI objects. ---
+        # Window title
+        self.setWindowTitle(self.appName)
+        # Connect the models
+        self.models = {
+                       "tree": CondDBStructureModel(),
+                       "nodes": CondDBNodesListModel(),
+                       }
+        setModelsIcons(self.icons)
+        self.hierarchyTreeView.setModel(self.models["tree"])
+        self.pathComboBox.setModel(self.models["nodes"])
+        # Label displaying the connection string
+        #self.connStrLabel = QLabel()
+        #self.statusbar.addWidget(self.connStrLabel)
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -53,7 +68,9 @@ class MainWindow(QMainWindow):
             self.menuStandard.addAction(action)
             self.defaultDatabases[name] = action
         self.menuStandard.setEnabled(not self.menuStandard.isEmpty())
-        
+    
+    ## Slot called by the actions in the menu "Database->Standard".
+    #  It can also be called passing the name of one of those databases.
     def openStandardDatabase(self, name = None):
         if name is None:
             sender = self.sender()
@@ -65,18 +82,40 @@ class MainWindow(QMainWindow):
                                      "The conditions database '%s' is not in the list of known database." % name)
                 return
         # Open the database using the connection string in the action
+        self.openDatabase(str(sender.data().toString()))        
+
+    ## Open the database identified by a connection string or by a nickname.
+    #  If name is an empty string (or None) the result is a disconnection from the
+    #  current database.
+    #
+    #  @param connString connection string
+    #  @param readOnly flag to select if the database has to be opened in read-only mode or in read/write mode
+    def openDatabase(self, connString, readOnly = True):
         try:
-            db = CondDB(str(sender.data().toString()))
-            self.model.connectDB(db)
+            if connString:
+                self.db = CondDB(connString, readOnly = readOnly)
+                title = "%s - %s" % (connString, self.appName)
+            else:
+                self.db = None
+                title = self.appName
+            # update the DB instance of the models
+            for model in self.models.values():
+                model.connectDB(self.db)
+            self.setWindowTitle(title)
+            #self.connStrLabel.setText(connString)
         except:
             self.exceptionDialog()
-
+            
+    ## Disconnect from the database.
+    #  @see: openDatabase()
     def closeDatabase(self):
-        self.model.connectDB(None)
+        self.openDatabase(None)
 
+    ## Display the standard Qt information dialog box
     def aboutQt(self):
         QMessageBox.aboutQt(self)
 
+    ## Display the application information dialog box
     def aboutDialog(self):
         from PyQt4 import Qt
         app = QApplication.instance()

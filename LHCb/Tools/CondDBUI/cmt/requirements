@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.39 2009-05-22 17:14:33 marcocle Exp $
+# $Id: requirements,v 1.40 2009-06-16 10:29:54 marcocle Exp $
 package CondDBUI
 
 version v2r18
 
-branches python scripts cmt
+branches cmt doc python scripts qt_resources
 #ignore_pattern package_stamps
 
 # ============== Dependencies ========================================
@@ -54,3 +54,12 @@ private
 #set  CORAL_AUTH_PATH       ${HOME}/private
 #set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
 
+# @FIXME: Temporary work-around until we get the fragments in PyQt LCG_Interfaces 
+macro pyqt_resource_command "pyrcc4"
+make_fragment pyqt_resource -header=pyqt_resource_header
+pattern PyQtResource  \
+   document pyqt_resource PyQtResource qrc_files=<qrc_files> output=<output>
+
+# Generate the resource file for the browser
+apply_pattern PyQtResource qrc_files=../qt_resources/*.qrc output=../python/CondDBUI/Browser/Resources.py
+macro_append CondDBUI_python_dependencies " PyQtResource "

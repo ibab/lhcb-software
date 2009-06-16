@@ -10,7 +10,11 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MainWindow</string>
+   <string comment="Browser for LHCb Conditions Database" >CondDBBrowser</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset resource="../../../qt_resources/Resources.qrc" >
+    <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
   </property>
   <widget class="QWidget" name="mainPanel" >
    <layout class="QVBoxLayout" name="mainPanelLayout" >
@@ -314,7 +318,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../qt_resources/Resources.qrc" />
+ </resources>
  <connections>
   <connection>
    <sender>actionQuit</sender>

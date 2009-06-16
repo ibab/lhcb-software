@@ -1,0 +1,13 @@
+# ============= pyqt_resource_header:begin =============
+inputs := $(wildcard $(qrc_files))
+
+.PHONY: ${CONSTITUENT} ${CONSTITUENT}clean
+
+${CONSTITUENT} :: $(output)
+
+${CONSTITUENT}clean ::
+	$(cmt_uninstallarea_command) $(output)
+
+$(output):: $(inputs)
+	$(pyqt_resource_command) -o $@ $^
+# ============= pyqt_resource_header:end =============
