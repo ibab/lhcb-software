@@ -4,12 +4,12 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r18 2009-06-16 ==========================
 ! 2009-06-11 - Juan PALACIOS
  - Remove operators == and < for HltDecReport and HltObjectSummary, and 
    exclude them from the reflex dictionaries.
  - Add std::pair<std::string, T> and std::vector<std::pair<std::string,T> >
    to dictionaries.
-
 
 ! 2009-06-04 - Tomasz Skwarnicki
  - duplicate Juan's additions also for HltObjectSummary,HltVertexReports

@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando
 #============================================================================
 package           HltEvent
-version           v8r17
+version           v8r18
 
 # Structure, i.e. directories to process. 
 #============================================================================
