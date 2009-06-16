@@ -59,7 +59,7 @@
               </sizepolicy>
              </property>
              <property name="editable" >
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="insertPolicy" >
               <enum>QComboBox::NoInsert</enum>
@@ -70,7 +70,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeView" name="hierarchyTreeView" />
+         <widget class="QTreeView" name="hierarchyTreeView" >
+          <property name="editTriggers" >
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showDropIndicator" stdset="0" >
+           <bool>false</bool>
+          </property>
+          <property name="headerHidden" >
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -142,17 +152,16 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0" >
-            <widget class="QLabel" name="hideAutoLabel" >
-             <property name="text" >
-              <string>Hide _auto_</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="1" >
             <widget class="QCheckBox" name="hideAutoCheckBox" >
+             <property name="toolTip" >
+              <string>If checked, the special tags starting with "_auto_" are not displayed.</string>
+             </property>
              <property name="text" >
-              <string/>
+              <string>Hide _auto_ tags</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -232,6 +241,9 @@
     <addaction name="actionNew_Tag" />
    </widget>
    <widget class="QMenu" name="menuAdvanced" >
+    <property name="enabled" >
+     <bool>true</bool>
+    </property>
     <property name="title" >
      <string>Advanced</string>
     </property>
@@ -386,11 +398,47 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>hierarchyTreeView</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectedItem(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>171</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathComboBox</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectedPath(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>187</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
   <slot>openStandardDatabase()</slot>
   <slot>closeDatabase()</slot>
   <slot>aboutDialog()</slot>
+  <slot>selectedItem(QModelIndex)</slot>
+  <slot>selectedPath(QString)</slot>
+  <slot>testSlot()</slot>
+  <signal>openedDB(P*)</signal>
  </slots>
 </ui>

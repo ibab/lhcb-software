@@ -2,7 +2,10 @@ from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel,
                           QVariant, QModelIndex, Qt)
 from PyQt4.QtGui import QIcon
 
-__all__ = ["CondDBNodesListModel", "CondDBStructureModel", "setModelsIcons"]
+__all__ = ["CondDBNodesListModel",
+           "CondDBStructureModel",
+           "CondDBTagsListModel",
+           "setModelsIcons"]
 #import logging
 #logging.basicConfig(level=logging.INFO)
 #_log = logging.getLogger(__name__)
@@ -85,6 +88,9 @@ class CondDBStructureItem(object):
                 #        dictionary in PyCool).
                 channels = self.node.listChannels()
                 names = self.node.listChannelsWithNames()
+                if len(channels) == 1 and channels[0] == 0 and not names[0]:
+                    # If we have only the default channel, no need to show it
+                    return self._children
                 
                 for c in channels:
                     self._children.append(CondDBStructureItem(db = self.db,
@@ -146,6 +152,7 @@ class CondDBStructureItem(object):
             if icon:
                 return QVariant(icon)
         return QVariant()
+
 
 ## ItemModel used by the CondDB tree view
 class CondDBStructureModel(QAbstractItemModel):
@@ -225,6 +232,28 @@ class CondDBStructureModel(QAbstractItemModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Name")
         return QVariant()
+    
+    ## Return the index of the specified path 
+    def findPath(self, path):
+        if len(path) <= 1:
+            return self.root.index
+        if path[0] == "/":
+            # strip first separator ("/")
+            path = path[1:]
+        item = self.root
+        for n in path.split("/"):
+            cnames = [c.name for c in item.children]
+            try:
+                row = cnames.index(n)
+                c = item.children[row]
+                if not c.index: # This means that the tree was not expanded
+                    c.index = self.createIndex(row, 0, c)
+                item = c
+            except ValueError:
+                # sub-node not found
+                break
+        # At this point item.index is defined 
+        return item.index
 
 class CondDBNodesListModel(QAbstractListModel):
     def __init__(self, db = None, parent = None):
@@ -235,12 +264,18 @@ class CondDBNodesListModel(QAbstractListModel):
     def connectDB(self, db):
         self.reset()
         self.db = db
-        self._nodes = None
-
+        if db:
+            # prepare to fill the cache of node names
+            self._nodes = None
+        else:
+            # without db we need a fake empty cache
+            self._nodes = []
+    
     @property
     def nodes(self):
         if self._nodes is None:
             self._nodes = self.db.getAllNodes()
+            self._nodes.pop(0) # remove "/" (which is always the first one)
         return self._nodes
     
     def rowCount(self, parent):
@@ -258,3 +293,80 @@ class CondDBNodesListModel(QAbstractListModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Name")
         return QVariant()        
+
+## Model class to retrieve the available tags in a folder.
+class CondDBTagsListModel(QAbstractListModel):
+    def __init__(self, db = None, path = None, parent = None):
+        super(CondDBTagsListModel,self).__init__(parent)
+        self.db = None
+        self._path = None
+        self._alltags = None
+        self._tags = None
+        self._hideAutoTags = True
+        
+        self.connectDB(db)
+        self.setPath(path)
+        
+    def connectDB(self, db):
+        self.setPath(None) # trigger a clean up of the cache
+        self.db = db
+        
+    ## Property showAutoTags
+    def hideAutoTags(self):
+        return self._hideAutoTags
+    
+    ## Sets the property showAutoTags.
+    def setHideAutoTags(self, value):
+        newval = value != 0
+        if self._hideAutoTags != newval:
+            self.reset()
+            self._tags = None
+            self._hideAutoTags = newval
+
+    ## Get the current folder.
+    def path(self):
+        return self._path
+    
+    ## Set the folder for which to get the tags. 
+    def setPath(self, path):
+        self.reset()
+        self._path = path
+        if path and self.db.db.existsFolder(path):
+            # invalidate the cache
+            self._tags = None
+            self._alltags = None
+        else:
+            # If no folder is specified or the path is a folderset, use an empty cache
+            self._tags = self._alltags = []
+    
+    def alltags(self):
+        if self._alltags is None:
+            self._alltags = self.db.getTagList(self._path)
+        return self._alltags
+    
+    def tags(self):
+        if self._tags is None:
+            tags = []
+            for t in self.alltags():
+                tags.append(t.name)
+                tags += t.getAncestors()
+            if self._hideAutoTags:
+                tags = [t for t in tags if not t.startswith("_auto_")]
+            self._tags = tags
+        return self._tags
+    
+    def rowCount(self, parent):
+        return len(self.tags())
+    
+    def data(self, index, role):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return QVariant(self.tags()[index.row()])
+        return QVariant()
+    
+    def headerData(self, section, orientation ,role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
+            return QVariant("Tag")
+        return QVariant()        
+
+

@@ -34,6 +34,8 @@ class MainWindow(QMainWindow):
         self.defaultDatabases = {} # action
         # Icons for the model (property)
         self._icons = None
+        # Current selected path in the database
+        self._path = None
         # Prepare the GUI.
         uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
         # --- Part of the initialization that require the GUI objects. ---
@@ -41,15 +43,21 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self.appName)
         # Connect the models
         self.models = {
-                       "tree": CondDBStructureModel(),
+                       "tree":  CondDBStructureModel(),
                        "nodes": CondDBNodesListModel(),
+                       "tags":  CondDBTagsListModel(),
                        }
         setModelsIcons(self.icons)
         self.hierarchyTreeView.setModel(self.models["tree"])
         self.pathComboBox.setModel(self.models["nodes"])
-        # Label displaying the connection string
-        #self.connStrLabel = QLabel()
-        #self.statusbar.addWidget(self.connStrLabel)
+        self.tagComboBox.setModel(self.models["tags"])
+        for m in self.models.values():
+            QObject.connect(self, SIGNAL("openedDB"), m.connectDB)
+        # special settings for the tags model
+        tagsmodel = self.models["tags"]
+        QObject.connect(self, SIGNAL("changedPath"), tagsmodel.setPath)
+        QObject.connect(self.hideAutoCheckBox, SIGNAL("stateChanged(int)"), tagsmodel.setHideAutoTags)
+        tagsmodel.setHideAutoTags(self.hideAutoCheckBox.checkState())
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -98,14 +106,16 @@ class MainWindow(QMainWindow):
             else:
                 self.db = None
                 title = self.appName
-            # update the DB instance of the models
-            for model in self.models.values():
-                model.connectDB(self.db)
             self.setWindowTitle(title)
-            #self.connStrLabel.setText(connString)
+            # Change the status of the editing menus
+            editable = not readOnly
+            self.menuEdit.setEnabled(editable)
+            self.menuAdvanced.setEnabled(editable)
+            # update the DB instance of the models
+            self.emit(SIGNAL("openedDB"), self.db)
         except:
             self.exceptionDialog()
-            
+    
     ## Disconnect from the database.
     #  @see: openDatabase()
     def closeDatabase(self):
@@ -128,6 +138,30 @@ class MainWindow(QMainWindow):
         % (app.objectName(), app.applicationVersion(), Qt.PYQT_VERSION_STR, Qt.qVersion())
         
         QMessageBox.about(self, app.objectName(), message)
+
+    ## Slots to react to a selected item in the structure view
+    def selectedItem(self, index):
+        item = index.internalPointer()
+        if item.path != self._path:
+            try:
+                i = self.models["nodes"].nodes.index(item.path)
+                self._path = item.path
+                self.emit(SIGNAL("changedPath"), self._path)
+            except ValueError:
+                i = -1
+            self.pathComboBox.setCurrentIndex(i)
+
+    ## Slots to react to a selected entry in the path combo box
+    def selectedPath(self, path):
+        path = str(path)
+        if path != self._path:
+            index = self.models["tree"].findPath(str(path))
+            self.hierarchyTreeView.setCurrentIndex(index)
+            self._path = path
+            self.emit(SIGNAL("changedPath"), self._path)
+
+    def testSlot(self):
+        print "Test slot triggered"
 
     @property
     def icons(self, styleName = None):
