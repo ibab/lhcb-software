@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-16 - Marco Cattaneo
+ - Move most of SuppressWarnings.opts functionality into Brunel(). Only
+   sub-detector specific suppressions left in SuppressWarnings.opts
+
 ! 2009-06-12 - Marco Cattaneo
  - Update reference for updates to Rich track selection
 
