@@ -8,6 +8,11 @@
 #include "gsl/gsl_integration.h"
 #include "gsl/gsl_roots.h"
 
+void debug_handler(const char* /*reason*/, const char* /*file*/, int /*line*/, int gsl_errno){
+	//std::cout << "GSL Error in " << file << " (line " << line  << ") (code " << gsl_errno << "): " << reason << std::endl;
+	GSL_ERROR_HANDLER_CALLED = gsl_errno;
+}
+
 EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 		fact(_fact){
 	
@@ -531,37 +536,42 @@ const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
 }
 
 const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F) const{
-
-    int status = 0;
+	
+	//slight hack: recover from errors by setting result to an error value
+	GSL_ERROR_HANDLER_CALLED = GSL_SUCCESS;
+	gsl_error_handler_t* default_handler = gsl_set_error_handler(debug_handler);
+	
+    int status = GSL_FAILURE;
 	int iter = 0;
 	const int max_iter = 100;
     
     const gsl_root_fsolver_type *T = gsl_root_fsolver_brent;
     gsl_root_fsolver *s = gsl_root_fsolver_alloc(T);
     
-    double q2Min = 1;
-    double q2Max = sqrt(constants::mB*constants::mB - constants::mKstar*constants::mKstar);
+    //the kinimatic range (almost!)
+    double q2Min = 0.5;
+    double q2Max = 15;
 
-    double r = q2Min;
-
+    double r = -1;//the error state
     gsl_root_fsolver_set(s,F,q2Min, q2Max);
-  
     do{
         iter++;
         status = gsl_root_fsolver_iterate(s);
         r = gsl_root_fsolver_root(s);
         q2Min = gsl_root_fsolver_x_lower(s);
         q2Max = gsl_root_fsolver_x_upper(s);
+        status = GSL_FAILURE;//reset the flag each time
         status = gsl_root_test_interval(q2Min, q2Max, 0, 0.0001);
-    }while(status == GSL_CONTINUE && iter < max_iter);
+    }while(status == GSL_CONTINUE && iter < max_iter && GSL_ERROR_HANDLER_CALLED == GSL_SUCCESS);
     
     double gradient = 0.0;
-    if( status != GSL_SUCCESS ){
+    if( status != GSL_SUCCESS || GSL_ERROR_HANDLER_CALLED != GSL_SUCCESS ){
     	r = -1.0; //outside the kinimatic range
     }else{
     	gradient = findZeroGradient(F,r);
     }
     gsl_root_fsolver_free(s);
+    gsl_set_error_handler(default_handler);
 	return std::make_pair(r,gradient);
 }
 

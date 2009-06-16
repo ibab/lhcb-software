@@ -8,6 +8,9 @@
 
 #include <utility>
 
+static int GSL_ERROR_HANDLER_CALLED;//nastly global variable
+void debug_handler(const char* reason, const char* file, int line, int gsl_errno);
+
 class EvtBToVllConstraints{
 
 public:	
