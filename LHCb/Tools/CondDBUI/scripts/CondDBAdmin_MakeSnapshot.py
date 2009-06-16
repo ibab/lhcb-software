@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.7 2009-02-12 15:40:35 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.8 2009-06-16 09:00:14 marcocle Exp $"
 
 import os, sys
 
@@ -52,6 +52,9 @@ def guessConnectionString(partition, options):
 def main(argv):
     # Configure the parser
     from optparse import OptionParser
+
+    default_options_file = os.path.join(os.environ["SQLDDDBROOT"], "options", "SQLDDDB.py")
+    
     parser = OptionParser(usage = "%prog [options] partition destination",
                           version = __version__,
                           description =
@@ -66,7 +69,7 @@ connection string. 'destination' must be a connection string.""")
     parser.add_option("--options", type = "string", action = "append",
                       help = "Options files to use to guess the mapping from the" +
                       " partition name to the actual connection string." +
-                      " [default = %default]")
+                      " [default = %s]" % default_options_file)
     parser.add_option("-s", "--since", type = "string",
                       help = "Start of the interesting Interval Of Validity (local time)." + 
                       " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
@@ -81,7 +84,7 @@ connection string. 'destination' must be a connection string.""")
     #                  help = "Do not create the output file."
     #                  )
     parser.set_default("tags", [])
-    parser.set_default("options", [os.path.join(os.environ["SQLDDDBROOT"], "options", "SQLDDDB.py")])
+    parser.set_default("options", [])
     parser.set_default("merge", False)
     parser.set_default("verbose", False)
         
@@ -100,7 +103,9 @@ connection string. 'destination' must be a connection string.""")
     else:
         log.setLevel(logging.DEBUG)
     _fixLogger() # use the global handler
-    
+
+    if not options.options:
+        options.options.append(default_options_file)
     source = os.path.expandvars(guessConnectionString(args[0], options.options))
     dest = os.path.expandvars(args[1])
     
