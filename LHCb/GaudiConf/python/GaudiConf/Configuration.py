@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.19 2009-03-09 07:57:48 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-06-16 14:34:39 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -18,6 +18,8 @@ class LHCbApp(LHCbConfigurableUser):
        ,"CondDBtag"  : ""
        ,"Simulation" : False
        ,"Monitors"   : []
+       ,"Quiet"      : False
+       ,"TimeStamp"  : False
         }
 
     _propertyDocDct = { 
@@ -28,6 +30,8 @@ class LHCbApp(LHCbConfigurableUser):
        ,'CondDBtag'  : """ Tag for CondDB. Default as set in DDDBConf for DataType """
        ,'Simulation' : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'   : """ List of monitors to execute """
+       ,'Quiet'      : """ Flag to suppress most MSG::INFO (default False) """
+       ,'TimeStamp'  : """ Flag to add a time stamp to messages (default False) """
        }
 
     __used_configurables__ = [ DDDBConf ]
@@ -96,10 +100,31 @@ class LHCbApp(LHCbConfigurableUser):
                     raise RuntimeError("Unknown monitor '%s'"%prop)
         if "SC" in self.getProp("Monitors"):
             ApplicationMgr().StatusCodeCheck = True
+            # Ensure output is always kept
+            getConfigurable("StatusCodeSvc").OutputLevel = INFO
         if "FPE" in self.getProp("Monitors"):
             importOptions( "$STDOPTS/FPEAudit.opts" )
+
+    def defineOutput(self):
+        # Modify printout defaults
+        msgSvc = getConfigurable("MessageSvc")
+
+        if self.getProp( "Quiet" ):
+            # Suppress info and below
+            msgSvc.OutputLevel = WARNING
+            getConfigurable("ToolSvc").OutputLevel = WARNING
+            # Information to be kept
+            getConfigurable("EventSelector").OutputLevel = INFO
+            getConfigurable("TimingAuditor").OutputLevel = INFO
+            getConfigurable("EventLoopMgr").OutputLevel  = INFO
+
+        if self.getProp( "TimeStamp" ):
+            # add a time stamp to remaining messages
+            msgSvc.Format = "%u % F%18W%S%7W%R%T %0W%M"
+            msgSvc.timeFormat = "%Y-%m-%d %H:%M:%S UTC"
 
     def __apply_configuration__(self):
         self.defineDB()
         self.defineEvents()
         self.defineMonitors()
+        self.defineOutput()

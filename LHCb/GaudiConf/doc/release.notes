@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r5 2009-06-16 ========================
+! 2009-06-16 - Marco Cattaneo
+ - In Configuration.py:
+   . add LHCbApp().Quiet option to suppress all except most useful INFO messages
+   . add LHCbApp().TimeStamp option to add a time stamp to all messages
+   
 !======================== GaudiConf v12r4 2009-05-29 ========================
 ! 2009-05-29 - Marco Cattaneo
  - Add LHCbKernel dependency, to pick up LHCbConfigurableUser used by
