@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.31 2009-03-23 16:44:35 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.32 2009-06-16 17:39:23 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -220,7 +220,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// thresholds for output parameters must be
   /// specified as vectors of floats and will be set for all histograms in
   /// set (then, you can specify values for single histograms with the {\it
-  /// setAnalysis} method. 
+  /// setAnalysis} method. Doc should document the analysis, Message is a short
+  /// optional sentence that will appear in the warnings/alarms messages.
   /// You can create more than one analysis
   /// with the same algorithm by using instance > 1. If the analysis
   /// identified by Algorithm and instance already exists, parameters are
@@ -229,7 +230,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
                       std::vector<float>* warningThr=NULL, 
                       std::vector<float>* alarmThr=NULL, 
                       std::vector<float>* inputs=NULL, 
-                      int instance=1); 
+                      int instance=1,
+                      std::string *Doc=NULL,
+                      std::string *Message=NULL); 
   /// updates parameters for analysis with ID AnaID (for this histogram only). Returns true on success
   bool setAnalysis(int AnaID, 
                    std::vector<float>* warningThr=NULL, 

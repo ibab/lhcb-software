@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.4 2009-06-09 17:31:16 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.5 2009-06-16 17:39:23 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -14,7 +14,7 @@
  */
 class OMAMessage : public OnlineHistDBEnv {
 public: 
-  typedef enum { INFO=3, WARNING, ALARM} OMAMsgLevel;
+  typedef enum { NOSTAT=2, INFO=3, WARNING, ALARM} OMAMsgLevel;
   typedef enum { ALARMCOLOR=2, WARNINGCOLOR=6 } OMAMsgColor;
    // constructor from OMAlib (with HistDB)
   OMAMessage( std::string& HistName,

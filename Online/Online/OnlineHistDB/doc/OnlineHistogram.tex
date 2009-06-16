@@ -351,14 +351,17 @@
                       std::vector$<$float$>$* warningThr=NULL,\\\mbox{}~~~~~~~~~ 
                       std::vector$<$float$>$* alarmThr=NULL,\\\mbox{}~~~~~~~~~ 
                       std::vector$<$float$>$* inputs=NULL,\\\mbox{}~~~~~~~~~ 
-                      int instance=1);
+                      int instance=1,\\\mbox{}~~~~~~~~~
+                      std::string *Doc=NULL,\\\mbox{}~~~~~~~~~
+                      std::string *Message=NULL);
 
  declare an analysis to be performed on the histogram set. If the algorithm
  requires some parameters, the input parameters and the warning and alarm 
  thresholds for output parameters must be
  specified as vectors of floats and will be set for all histograms in
  set (then, you can specify values for single histograms with the {\it
- setAnalysis} method. 
+ setAnalysis} method. Doc should document the analysis, Message is a short
+ optional sentence that will appear in the warnings/alarms messages.
  You can create more than one analysis
  with the same algorithm by using instance $>$ 1. If the analysis
  identified by Algorithm and instance already exists, parameters are

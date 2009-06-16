@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.43 2009-04-01 13:11:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.44 2009-06-16 17:39:24 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1464,15 +1464,23 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
                                      std::vector<float>* warningThr, 
                                      std::vector<float>* alarmThr, 
                                      std::vector<float>* inputs, 
-                                     int instance ) {
+                                     int instance,
+                                     std::string *Doc,
+                                     std::string *Message) {
   if(!m_anadirLoaded) loadAnalysisDirections();
   // check that Algorithm exists and get number of parameters
   int out=0;
   bool known = false;
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::declareAnalysis";
+  std::string command = "BEGIN :out := ONLINEHISTDB.DECLAREANALYSIS(theSet =>:id,Algo =>:alg,warn=>:w,alr=>:a,instance=>:ins,inputs=>:inp";
+  if (Doc)
+    command += ",Doc=>'" + (*Doc) +"'";
+  if (Message)
+    command += ",Message=>'" + (*Message) +"'";
+  command += "); END;";
   if ( OCI_SUCCESS == prepareOCIStatement
-       (stmt, "BEGIN :out := ONLINEHISTDB.DECLAREANALYSIS(theSet =>:id,Algo =>:alg,warn=>:w,alr=>:a,instance=>:ins,inputs=>:inp); END;") ) {
+       (stmt, command.c_str()) ) {
     OCITable *warn,*alarm,*inps;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,

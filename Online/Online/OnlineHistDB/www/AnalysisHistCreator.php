@@ -70,6 +70,8 @@ else {
     foreach ($alggs as $key => $value) 
       echo "<input type='hidden' name='gs_$key' value='$value'>\n";
     echo "<input type='submit' name='Go' value='Set Input Histograms'> </form>";
+    echo "<br><a href=\"javascript:window.open('algdoc.php?type=HCREATOR','gal','width=800,height=400');void(0);\"> ";
+    echo " see algorithm descriptions </a>\n";
   }
 }
 

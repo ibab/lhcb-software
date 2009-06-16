@@ -150,7 +150,10 @@
                           int Npars,\\\mbox{}~~~~~~~~~
                           std::vector$<$std::string$>$ *parnames,\\\mbox{}~~~~~~~~~
                           bool mustInit,\\\mbox{}~~~~~~~~~
-                          std::string \&doc);
+                          std::string \&doc,\\\mbox{}~~~~~~~~~
+                          std::vector$<$float$>$ *parInitv = NULL,\\\mbox{}~~~~~~~~~
+                          std::vector$<$std::string$>$ *inPars =NULL ,\\\mbox{}~~~~~~~~~
+                          std::vector$<$float$>$ *inDefv = NULL );
 
  declares an available fit function with Npars parameters. parnames must point to a vector
  of length Npars, set mustinit=true if parameters must be initialized

@@ -35,18 +35,20 @@ function update_histo_analysis() {
   $alarms="thresholds(".implode(",",$alr).")";
   $inputs= "thresholds(".implode(",",$inps).")";
 
-  if (! $aid)  // new entry
-    $command="begin :out := OnlineHistDB.DeclareAnalysis(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,999,$inputs); end;";
-  else 
-    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and ".
-      ( $_POST["htype"] == "HID" ? "HISTO='$id'" : "REGEXP_REPLACE(HISTO,'^(.*)/.*\$','\\1')=$id");
-  
+  $Docs="";
+  if ($_POST["a${ia}_doc"]) {
+    $Docs .= ",Doc => '".sqlstring($_POST["a${ia}_doc"])."'";
+  }
+  if ($_POST["a${ia}_mes"]) {
+    $Docs .= ",Message => '".sqlstring($_POST["a${ia}_mes"])."'";
+  }
+
+  $command="begin :out := OnlineHistDB.DeclareAnalysisWithID(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,$aid,$inputs$Docs); end;";
   if($debug) echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
-  if (! $aid)
-    ocibindbyname($stid,":out",$out,10);
+  ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
-  if (!$aid && !$out) return 0;
+  if (!$out) return 0;
   ocicommit($conn);
   ocifreestatement($stid);
   return 1;  

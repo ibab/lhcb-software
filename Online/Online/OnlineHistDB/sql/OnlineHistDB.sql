@@ -79,7 +79,9 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 
  -- analysis
  function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-	instance IN integer:=1, inputs IN thresholds:=thresholds()) return number;
+	instance IN integer:=1, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
+ function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
+	anaID IN integer :=0, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
  procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
 	inputs IN thresholds:=thresholds());
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
@@ -123,7 +125,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
                 theLevel OUT varchar2, theMessage OUT varchar2, theAName OUT varchar2, 
 	       	theAid OUT int, theUXTime OUT int);
  procedure DeleteAllMessages;
- procedure DeleteOldMessages(expTime IN int);
+ procedure DeleteOldMessages(expTime IN int, anaTask IN varchar2);
         
  -- deletion and cleanup
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
@@ -691,20 +693,39 @@ end DeclareFitFunction;
 -----------------------
 
 
-
 function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-                         instance IN integer :=1, inputs IN thresholds:=thresholds()) 
+                         instance IN integer :=1, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
 	return number is
- cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
+ cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
+ myid ANALYSIS.AID%TYPE := 0;
+ ii int := 0;
+begin
+ open ana;
+ while (ii < instance) LOOP
+  fetch ana into myid;
+  if (ana%NOTFOUND) then
+   ii := 9999;
+  else
+   ii := ii+1;
+  end if;
+ end LOOP;
+ if (ana%NOTFOUND) then 
+  myid := 0;
+ end if;
+ return DeclareAnalysisWithID(theSet, Algo, warn, alr, myid, inputs, Doc, Message);
+end DeclareAnalysis;
+-----------------------
+
+function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
+                         anaID IN integer :=0, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
+        return number is cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
  mynh HISTOGRAMSET.NHS%TYPE :=0;
  cursor al is  select ALGTYPE,NPARS,NINPUT from ALGORITHM where ALGNAME=Algo;	
  algotype ALGORITHM.ALGTYPE%TYPE;
  algon ALGORITHM.NPARS%TYPE;
  algonin ALGORITHM.NINPUT%TYPE;
- cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
- myid ANALYSIS.AID%TYPE := 0;
  hid HISTOGRAM.HID%TYPE;
- ii int := 0;
+ myid ANALYSIS.AID%TYPE := 0;
 begin
  SAVEPOINT beforeDAwrite;
  -- check that required histogram set exists
@@ -715,16 +736,7 @@ begin
  end if; 
  close hs;
 
- open ana;
- while (ii < instance) LOOP
-  fetch ana into myid;
-  if (ana%NOTFOUND) then
-   ii := 9999;
-  else
-   ii := ii+1;
-  end if;
- end LOOP;
- if (ana%NOTFOUND) then -- create new analysis
+ if ( anaID = 0) then -- create new analysis
    if (Algo = 'Fit') then -- sepcial case, first input par is function code
     if (inputs.COUNT <1) then
        raise_application_error(-20001,'Fit Algorithm requires function code');
@@ -741,7 +753,7 @@ begin
    if (warn.COUNT != algon or alr.COUNT != algon or inputs.COUNT > algonin ) then
         raise_application_error(-20003,'Bad number of parameters for Algorithm '||Algo);
    else
-    INSERT INTO ANALYSIS(AID,HSET,ALGORITHM) VALUES(Analysis_ID.NEXTVAL,theSet,Algo);
+    INSERT INTO ANALYSIS(AID,HSET,ALGORITHM,ANADOC,ANAMESSAGE) VALUES(Analysis_ID.NEXTVAL,theSet,Algo,Doc,Message);
     SELECT Analysis_ID.CURRVAL into myid  from ERGOSUM;
     UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
     for i IN 1..mynh LOOP
@@ -751,15 +763,16 @@ begin
    end if;
  else
   -- analysis already exists: update parameters
-   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs where ANA=myid and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
+   UPDATE ANALYSIS SET ANADOC=Doc, ANAMESSAGE=Message where AID=anaID;
+   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs where ANA=anaID and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
+   myid := anaID;
  end if;
- close ana;
  return myid;
 exception
  when OTHERS then 
   ROLLBACK TO beforeDAwrite;
   raise_application_error(-20050,SQLERRM);
-end DeclareAnalysis;
+end DeclareAnalysisWithID;
 
 -----------------------
 procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
@@ -1933,9 +1946,10 @@ begin
 end DeleteAllMessages;
 -----------------------
 
-procedure DeleteOldMessages(expTime IN int) is
+procedure DeleteOldMessages(expTime IN int, anaTask IN varchar2) is
 begin
- delete from ANAMESSAGE where TIMEST2UXT(SYSTIMESTAMP)-TIMEST2UXT(MSGTIME) > expTime ;
+ delete from ANAMESSAGE where TIMEST2UXT(SYSTIMESTAMP)-TIMEST2UXT(MSGTIME) > expTime 
+     and ANALYSISTASK=anaTask;
 end DeleteOldMessages;
 -----------------------
 

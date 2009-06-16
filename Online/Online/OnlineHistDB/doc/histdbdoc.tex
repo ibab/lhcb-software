@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{5}
-\docrev{1}
+\docrev{4}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -199,6 +199,9 @@ unique analysis identifier (allowing to assign the same algorithm more
 than once to the same histogram)
 \item{HSET}  (valid HSID)
 \item{Algorithm}  (valid AlgorithmName)
+\item{AnaDoc} (string of max length 2000) documentation
+\item{AnaMessage} (string of max length 200) specific message to be
+added to warning/alarm messages from this analysis 
 \end{description}
 
 \subsubsection{Properties of ANASETTINGS}

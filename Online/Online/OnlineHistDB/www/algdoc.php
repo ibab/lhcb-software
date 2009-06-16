@@ -2,10 +2,11 @@
 <body class=listing>
 <?
 include 'util.php';
+$type=$_GET["type"];
 echo "<table border=1><thead>";
 echo "<tr><td><B>Algorithm name</B></td><td># Input <br>Parameters</td><td># Output <br>Parameters<td><B>Description</B></td></tr></thead>";
 $conn=HistDBconnect();
-$stid = OCIParse($conn,"SELECT ALGNAME,NINPUT,NPARS,ALGDOC from ALGORITHM where algtype='CHECK' order by ALGNAME");
+$stid = OCIParse($conn,"SELECT ALGNAME,NINPUT,NPARS,ALGDOC from ALGORITHM where ALGTYPE='$type' order by ALGNAME");
 OCIExecute($stid);
 while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
   echo "<tr><td>".$myfun["ALGNAME"]."</td><td>".
@@ -15,4 +16,3 @@ while (OCIFetchInto($stid,$myfun,OCI_ASSOC )) {
 echo "</table>";
 ?>
 </body></html>
-

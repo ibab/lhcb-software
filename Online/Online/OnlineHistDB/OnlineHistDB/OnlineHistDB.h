@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.28 2009-04-02 10:26:20 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.29 2009-06-16 17:39:23 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -176,7 +176,7 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   // delete all messages from analysis
   bool deleteAllMessages();
   // delete messages older than expTime seconds
-  bool deleteOldMessages(int expTime);
+  bool deleteOldMessages(int expTime, std::string &anaTask);
 
  private:
   // private dummy copy constructor and assignment operator

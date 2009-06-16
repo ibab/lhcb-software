@@ -739,12 +739,14 @@ function histo_analysis($id,$htype,$mode) {
     // get analysis entries
     $ia=0;
     $hsid=HistoSet($id);
-    $stid = OCIParse($conn,"SELECT AID,ALGORITHM from ANALYSIS WHERE HSET=$hsid order by AID");
+    $stid = OCIParse($conn,"SELECT AID,ALGORITHM,ANADOC,ANAMESSAGE from ANALYSIS WHERE HSET=$hsid order by AID");
     OCIExecute($stid);
     while (OCIFetchInto($stid,$myana,OCI_ASSOC )) {
       $ia++;
       $_POST["a${ia}_id"]=$myana["AID"];
       $_POST["a${ia}_alg"]=$myana["ALGORITHM"];
+      $_POST["a${ia}_doc"]=$myana["ANADOC"];
+      $_POST["a${ia}_mes"]=$myana["ANAMESSAGE"];
     }
     ocifreestatement($stid);
 
@@ -803,12 +805,26 @@ function histo_analysis($id,$htype,$mode) {
       }
       ocifreestatement($stid);
       echo "</select>";
-      echo "<a href=\"javascript:window.open('../algdoc.php','gal','width=800,height=400');void(0);\"> ";
+      echo "<a href=\"javascript:window.open('../algdoc.php?type=CHECK','gal','width=800,height=400');void(0);\"> ";
       echo " see algorithm descriptions </a>\n";
       if (isset($algdoc))
 	foreach ($algdoc as $key => $value) 
 	  echo "<input type='hidden' name='doc_$key' value='$value'>\n";
-    } 
+    }
+    if ($mode != 'display') {
+      echo "<p><table align=\"center\"><tr><td>Documentation <td><textarea valign='center' cols='75' rows='3' name='a${ia}_doc'".
+        ($canwrite ? "" : "readonly")
+        .">".$_POST["a${ia}_doc"]."</textarea></tr>\n";
+      echo "<tr><td>Specific Message (when going in warning/alarm) <td><textarea valign='center' cols='75' rows='1' name='a${ia}_mes'".
+        ($canwrite ? "" : "readonly")
+        .">".$_POST["a${ia}_mes"]."</textarea></tr>\n";
+      echo "</table><br>\n";
+    }
+    else {
+      echo "<input type='hidden' name='a${ia}_doc' value='".$_POST["a${ia}_doc"],"'>\n";
+      echo "<input type='hidden' name='a${ia}_mes' value='".$_POST["a${ia}_mes"],"'>\n";
+    }
+
     if($showpars && $_POST["a${ia}_mask"]) echo "&nbsp <B><font color=red>(masked)</font></B>";
     echo "<br>";
     if ($mode == "newana" || $mode == "newfit") echo "<p>".$_POST["doc_".PutUnderscore($_POST["a${ia}_alg"])]."</p>";

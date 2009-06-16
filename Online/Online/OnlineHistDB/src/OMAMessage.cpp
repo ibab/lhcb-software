@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.12 2009-06-12 09:53:45 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.13 2009-06-16 17:39:24 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -29,7 +29,21 @@ OMAMessage::OMAMessage( std::string& HistName,
   m_histo_null = m_histo.empty() ? 1 : 0;
   m_taskName_null = m_taskName.empty() ? 1 : 0;
   m_ananame_null = m_ananame.empty() ? 1 : 0; 
-  
+  if (anaID) {
+    // add specific analysis message (if defined) to message text
+    OCIStmt *stmt=NULL;
+    m_StmtMethod = "OMAMessage::OMAMessage";
+    text anaMess[VSIZE_ANAMSG]="";
+    if ( OCI_SUCCESS == prepareOCIStatement(stmt, "SELECT ANAMESSAGE FROM ANALYSIS WHERE AID=:1") ) {
+      myOCIBindInt(stmt,":1", anaID);
+    myOCIDefineString(stmt, 1, anaMess , VSIZE_ANAMSG);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      std::string aM = (char *) anaMess;
+      m_msgtext = aM + ". " + Text;
+    }
+    releaseOCIStatement(stmt);
+  }
+  }
 }
 
 // constructor from OMAlib (no HistDB)
@@ -136,7 +150,6 @@ void OMAMessage::store() {
   if(m_ID)
     command << ",theID => "<< m_ID;
   command << ",outTime => :newt, outAname => :newa); end;";
-
 
   if ( OCI_SUCCESS == prepareOCIStatement (stmt, command.str().c_str() ) ) {
     text ANANAME[VSIZE_ANANAME]="";

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.39 2009-04-02 10:26:20 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.40 2009-06-16 17:39:24 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -646,13 +646,14 @@ bool OnlineHistDB::deleteAllMessages() {
   return true;
 }
 
-bool OnlineHistDB::deleteOldMessages(int expTime) {
+bool OnlineHistDB::deleteOldMessages(int expTime, std::string &anaTask) {
   bool out=false;
   m_StmtMethod = "OnlineHistDB::deleteOldMessages";
   OCIStmt *astmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement
-         (astmt, "BEGIN ONLINEHISTDB.DELETEOLDMESSAGES(:t); END;") ) {
+         (astmt, "BEGIN ONLINEHISTDB.DELETEOLDMESSAGES(:t,:a); END;") ) {
     myOCIBindInt   (astmt, ":t", expTime);
+    myOCIBindString(astmt, ":a", anaTask);
     if (OCI_SUCCESS == myOCIStmtExecute(astmt)) {
       out=true;
     }
