@@ -126,6 +126,8 @@ void QCDFactorisation::init(){
 		std::cout << "BR(B_d->X_s\\gamma) is: " << brBToXsGamma <<std::endl;
 		const double brBToXsll = constrain.getBrBToXsll();
 		std::cout << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
+		const double sBToKStarGamma = constrain.getSBToKStarGamma();
+		std::cout << "S(B_d->K*gamma) is: " << sBToKStarGamma << std::endl;
 		const std::pair<double, double> s6Zero = constrain.getS6Zero();
 		std::cout << "S6 (~AFB) Zero Crossing point is: " << s6Zero.first << " (GeV^2). Gradient at this point is " <<  s6Zero.second <<std::endl;
 		const std::pair<double, double> s5Zero = constrain.getS5Zero();
