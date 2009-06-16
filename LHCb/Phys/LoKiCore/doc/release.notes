@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.147 2009-06-13 08:06:38 graven Exp $ 
+! $Id: release.notes,v 1.148 2009-06-16 10:02:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,15 +15,13 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r2 2009-06-16 ========================
 ! 2009-06-13 - Gerhard Raven
  - allow to reduce printout 
 
 ! 2009-06-11 - Vanya BELYAEV
-
  - Kernel/BiFunctions.h
-
       fix for win32 platform 
-
 
 ! 2009-06-02 - Vanya BELYAEV
  - polishing for trees 
@@ -33,14 +31,12 @@
    add the default node  &default tree properties  
  
 ! 2009-05-27 - Vanya BELYAEV
-
  - python/LoKiCore/Vectors.py
      helper module to simplify operations 
      the with Gaudi::XYZPoint/XYZVector/LorentzVector
 
  - cmt/requirements
      version increment to v9r2 
-
 
 ! =========================== LoKiCore v9r1 2009-05-25 ========================
 ! 2009-05-23 - Vanya BELYAEV
