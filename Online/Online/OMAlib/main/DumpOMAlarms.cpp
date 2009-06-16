@@ -1,4 +1,4 @@
-// $Id: DumpOMAlarms.cpp,v 1.1 2009-02-20 15:13:27 ggiacomo Exp $
+// $Id: DumpOMAlarms.cpp,v 1.2 2009-06-16 17:39:49 ggiacomo Exp $
 #include <iostream>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
@@ -6,9 +6,9 @@
 using namespace std;
 
 std::string AnaTask = "any";
-std::string DB = OnlineHistDBEnv_constants::DB;
-std::string DBuser = "HIST_READER";
-std::string DBpw = "READER";
+std::string DB = "devdb10";
+std::string DBuser = "lhcb_devmon_giacomo";
+std::string DBpw = "testhist2009";
 
 OnlineHistDB *HistDB= NULL;
 

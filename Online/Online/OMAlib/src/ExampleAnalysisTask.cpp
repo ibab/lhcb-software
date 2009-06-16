@@ -1,4 +1,4 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.7 2009-03-04 10:33:12 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.8 2009-06-16 17:39:49 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
@@ -9,6 +9,7 @@
 // ROOT includes
 #include <TFile.h>
 #include <TH1.h>
+#include <TKey.h>
 
 DECLARE_ALGORITHM_FACTORY( ExampleAnalysisTask );
 
@@ -40,6 +41,16 @@ StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
   if (false == f->IsZombie()) {
     // do what you want here
 
+    // list histograms found on files
+    info() << "Analyzing saveset "<<SaveSet<<endmsg;
+    info() << "Histogram objects in saveset "<<SaveSet<<endmsg;
+    TIter next1(f->GetListOfKeys());
+    TKey* key;    
+    while ((key = (TKey*)next1())) {
+      info() << key->GetName() << "  class  "<<key->GetClassName()<<endmsg;
+    }
+
+
     // the following example gets the list of monitoring histograms from HistDB and checks 
     // their presence in the input file
     if (m_histDB) {
@@ -58,6 +69,9 @@ StatusCode ExampleAnalysisTask::analyze(std::string& SaveSet,
         }
       }
     }
+
+
+
 
     f->Close();
   } 

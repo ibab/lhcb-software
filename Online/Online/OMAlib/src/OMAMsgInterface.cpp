@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.18 2009-06-11 15:25:26 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.19 2009-06-16 17:39:49 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -44,7 +44,7 @@ void OMAMsgInterface::loadMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
     // clean up old alarms
     if (m_histDB->canwrite())
-      m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime);
+      m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime, m_anaTaskname);
     // load known alarms from DB
     std::vector<int> messID;
     m_histDB->getMessages(messID, m_anaTaskname);
@@ -99,7 +99,8 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
     }
     if (kept) iM++;
   }
-  m_histDB->commit();
+  if(m_histDB)
+    m_histDB->commit();
 }
 
 
@@ -133,7 +134,7 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
       break;
     }
   }
-  if (newMsg) {
+  if (newMsg && level > OMAMessage::INFO ) {
     if(m_histDB)
       msg = new OMAMessage(histIdentifier,  m_taskname, m_anaTaskname, 
                            m_savesetName, m_anaName,

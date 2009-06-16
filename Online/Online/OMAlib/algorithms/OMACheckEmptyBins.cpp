@@ -28,7 +28,7 @@ void OMACheckEmptyBins::exec(TH1 &Histo,
   for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {
     for (int ihy=1 ; ihy<= Histo.GetNbinsY() ; ihy++) {
       if( Histo.GetBinContent(ihx,ihy) < OMAconstants::epsilon)
-	NemptyBins++;
+        NemptyBins++;
     }
   }
   

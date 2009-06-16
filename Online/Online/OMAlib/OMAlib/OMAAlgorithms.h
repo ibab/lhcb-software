@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.12 2009-06-11 15:17:30 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.13 2009-06-16 17:39:49 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -157,7 +157,17 @@ private:
   int ID2Xnum2(int ID);
   int ID2Ynum2(int ID);
 };
-
+class OMACheckDeadBins  : public OMACheckAlg
+{
+ public:
+  OMACheckDeadBins(OMAlib* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    TH1* Ref);
+};
 
 //------ Histogram Creator Algorithms ------------------//
 

@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.27 2009-06-11 15:17:31 ggiacomo Exp $
+! $Id: release.notes,v 1.28 2009-06-16 17:39:49 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
-
+! 20090616 v2r7 
+- don't lower alarms if low statistics
+- new algorithm CheckDeadBins to spot significantly empty bins
 
 ! 20090611 v2r6 (tested on FEST5)
 - disconnect from DB at the end of every analyze call, reconnect on next saveset

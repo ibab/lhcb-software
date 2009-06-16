@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.12 2009-03-04 14:42:35 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.13 2009-06-16 17:39:49 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -79,12 +79,16 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                       m_ownedRefs[(*ih)->identifier()] = myref;
                     }
                   }
-                  cka->exec(*(rooth),
-                            warningThr,
-                            alarmThr,
-                            inputs,
-                            anaIDs[iana],
-                            myref);
+                  // check if we have statistics first, then exec the algorithm
+                  if (cka->checkStats(rooth,
+                                      anaIDs[iana]) ) {
+                    cka->exec(*(rooth),
+                              warningThr,
+                              alarmThr,
+                              inputs,
+                              anaIDs[iana],
+                              myref);
+                  }
                   if (myref) delete myref;
                 }
                 else {

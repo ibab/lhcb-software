@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.9 2009-06-11 15:17:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.10 2009-06-16 17:39:49 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -28,6 +28,8 @@ class OMAalg
   inline std::string& parName(int i)  { return m_parnames[i];}
   inline float parDefValue(int i)  { return m_parDefValues[i];}
   inline bool needRef() { return m_needRef; }
+  virtual bool checkStats(TH1* h,
+                          unsigned int anaID);
 
  protected:
   inline void setType(AlgType type) {m_type = type;}
@@ -45,6 +47,7 @@ class OMAalg
                     std::string message,
                     std::string& histogramName);
   inline void setNeedRef() { m_needRef = true; }
+  virtual bool notEnoughStats(TH1* h);
 
   std::string m_name;
   AlgType m_type;

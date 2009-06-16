@@ -1,6 +1,7 @@
-// $Id: OMAalg.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.8 2009-06-16 17:39:49 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 #include "OMAlib/OMAlib.h"
+#include <TH1.h>
 
 OMAalg::OMAalg(std::string Name, OMAlib* OMAenv) 
   : m_name(Name),
@@ -59,4 +60,21 @@ void OMAalg::raiseMessage(unsigned int Id,
     raiseMessage(Id, level, message, histogramName);
   }
   return;
+}
+
+bool OMAalg::notEnoughStats(TH1* h) {
+  int nb=h->GetXaxis()->GetNbins();
+  return (h->GetEntries() < nb * 5);
+}
+
+bool OMAalg::checkStats(TH1* h,
+                                unsigned int anaID) {
+  bool ok=true;
+  std::string message="";
+  std::string hname=h->GetName();
+  if (notEnoughStats(h)) {
+    raiseMessage(anaID, OMAMessage::NOSTAT, message, hname);
+    ok=false;
+  }
+  return ok;
 }
