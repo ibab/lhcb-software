@@ -21,6 +21,8 @@ using namespace boost;
 boost::mutex listMutex;
 boost::mutex oraMutex;
 boost::mutex dimMutex;
+boost::mutex rootMutex;
+boost::mutex loadAnaMutex;
 
 void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage)
 {
@@ -34,7 +36,9 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                gui->verbosity(),
 	                                NULL,
 	                                oraMutex,
-	                                dimMutex);
+	                                dimMutex,
+                                  rootMutex,
+                                  loadAnaMutex);
 	  } else if((Online == gui->presenterMode()) || (EditorOnline == gui->presenterMode())) {
 //	    bool taskNotRunning(false);             
 //	    for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
@@ -60,7 +64,9 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                gui->verbosity(),
 	                                dimBrowser,
 	                                oraMutex,
-	                                dimMutex);
+	                                dimMutex,
+                                  rootMutex,
+                                  loadAnaMutex);
 	                            
 //	    if (dbRootHist->isEmptyHisto()) {
 //	      m_tasksNotRunning.push_back(onlineHistosOnPage->histo->task());
@@ -70,9 +76,13 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	  if (0 != gui->archive() &&
 	      ((History == gui->presenterMode()) ||
 	       (EditorOffline == gui->presenterMode() && gui->canWriteToHistogramDB()))) {
-	    gui->archive()->fillHistogram(dbRootHist,
-	                             gui->rw_timePoint,
-	                             gui->rw_pastDuration);
+   boost::mutex::scoped_lock lock(rootMutex);
+   if (lock) {
+      gui->archive()->fillHistogram(dbRootHist,
+                               gui->rw_timePoint,
+                               gui->rw_pastDuration);
+   }
+
 	//              if (dbRootHist && dbRootHist->isEmptyHisto()) {
 //	      gui->setResumeRefreshAfterLoading(false);
 	//              }                                       

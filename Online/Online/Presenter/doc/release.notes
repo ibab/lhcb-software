@@ -4,6 +4,16 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r20 2009-06-16 =============
+2009-06-16
++ create entry to logbook
++ test // loading of histograms
++ new config file, DB login changed!
+issues:
+- loadAnaSources() disabled
+- only works with db pages, no Editor
+
+
 !============ Presenter v0r19 2009-06-01 =============
 2009-06-01
 + print/save page as eps, pdf, png etc.
