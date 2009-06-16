@@ -1,14 +1,14 @@
-!$Id: release.notes,v 1.302 2009-06-11 15:30:44 jonrob Exp $
+!$Id: release.notes,v 1.303 2009-06-16 10:00:37 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r7 2009-06-16 =====================
 ! 2009-06-11 - Chris Jones
  - Fix WIN32 warnings in ProtoParticleSelection.h
 
 !======================== DaVinciKernel v7r6 2009-05-25 =====================
-
 ! 2009-05-24 - Juan PALACIOS
  - Kernel/IRelatedPVFinder.h
   . Add methods accepting LHCb::VertexBase* containers.
