@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.78 2009-06-16 13:50:23 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.79 2009-06-16 14:36:14 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -415,22 +415,13 @@ class Brunel(LHCbConfigurableUser):
         EventSelector().PrintFreq = -1
         # Modify printout defaults
         if self.getProp( "NoWarnings" ):
-            # Suppress info and below
-            msgSvc = getConfigurable("MessageSvc")
-            msgSvc.OutputLevel = WARNING
-            getConfigurable("ToolSvc").OutputLevel = WARNING
-            # Information to be kept
-            getConfigurable("BrunelInit").OutputLevel    = INFO
-            getConfigurable("EventSelector").OutputLevel = INFO
-            getConfigurable("DstWriter").OutputLevel     = INFO
-            getConfigurable("TimingAuditor").OutputLevel = INFO
-            getConfigurable("EventLoopMgr").OutputLevel  = INFO
-            getConfigurable("StatusCodeSvc").OutputLevel = INFO
+            LHCbApp().setProp( "Quiet",     True )
+            LHCbApp().setProp( "TimeStamp", True )
+            # Additional information to be kept
+            getConfigurable("BrunelInit").OutputLevel = INFO
+            getConfigurable("DstWriter").OutputLevel  = INFO
             # Suppress known warnings
             importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
-            # add a time stamp to remaining messages
-            msgSvc.Format = "%u % F%18W%S%7W%R%T %0W%M"
-            msgSvc.timeFormat = "%Y-%m-%d %H:%M:%S UTC"
 
         # Units needed in several of the monitoring options
         importOptions('$STDOPTS/PreloadUnits.opts')
