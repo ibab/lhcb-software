@@ -1,10 +1,11 @@
-# $Id: release.notes,v 1.171 2009-06-03 15:55:23 marcocle Exp $
+# $Id: release.notes,v 1.172 2009-06-16 06:38:57 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r7 2009-06-16 ==========================
 ! 2009-06-03 - Marco Clemencic
  - Changes in the CondDB ConfigurableUser:
    - Fixed a bug causing a failure when using SQLite local copies and
