@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-15 - Michael Alexander
+ - added VeloIPResolutionMonitor.{cpp,h} to src
+ - added VeloIPResolutionMonitor algorithm to BrunelMoni_Velo.py monitoring 
+   sequence
+
 ! 2009-06-11 - Kurt Rinnert
  - the sampling monitor now uses the new accessor of DeVeloSensor to determine
    whehther a sensor is top or bottom cabled.
