@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.68 2009-06-02 16:48:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.69 2009-06-16 10:04:40 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,11 +15,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v8r4 2009-06-16 ============================
 ! 2009-06-02 - Vanya BELYAEV
  - polishing of decay finder 
 
 ! 2009-05-27 - Vanya BELYAEV
-
  - new tool LoKi::MCDecay
       new decay finder 
  - cmt/requirements 
