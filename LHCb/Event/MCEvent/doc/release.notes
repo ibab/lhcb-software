@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.117 2009-06-09 06:07:44 cattanem Exp $
+! $Id: release.notes,v 1.118 2009-06-16 06:51:06 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r15 2009-06-16 ===========================
 ! 2009-06-09 - Marco Cattaneo
  - Make MCVertex::position4vector() method const
  - Replace endreq by endmsg
