@@ -1,19 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.400 2009-06-15 15:24:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.401 2009-06-16 06:40:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r14 2009-06-16 =============================
 ! 2009-06-15 - Vanya Belyaev
-
  - add missing classes into the dictionary:
- 
         ILVolume::PVolumes
         ILVolume::PVolumePath, etc...
-
  - cmt/requirements 
-
     version increment to v19r14 
 
 !====================== DetDesc v18r13p1 2009-05-28 ===========================
