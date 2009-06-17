@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v2r1 2009-06-17 =========================
 ! 2009-06-12 - Jaap Panman
  - Configuration.py:  when running on DST different location to pass on LumiSummary
  - LumiReadBackFSR:   new algorithm to test integrator tool
