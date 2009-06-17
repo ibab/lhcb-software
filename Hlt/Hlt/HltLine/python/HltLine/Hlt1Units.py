@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hlt1Units.py,v 1.1.1.1 2009-05-28 09:57:08 graven Exp $ 
+# $Id: Hlt1Units.py,v 1.2 2009-06-17 09:25:04 graven Exp $ 
 # =============================================================================
 ## @file HltConf/Hlt1Units.py
 #  Collection of utilities for dealing with Hlt1 "units"
@@ -25,7 +25,7 @@ See:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1.1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'TConf'         , ## the 'track-upgrade'-configuration for TConf
@@ -35,7 +35,7 @@ __all__ = (
     'Velo'          , ## the 'track-upgrade'-configuration for Velo
     'VeloTT'        , ## the 'track-upgrade'-configuration for VeloTT
     'Forward'       , ## the 'track-upgrade'-configuration for Forward
-    'GiudedForward' , ## the 'track-upgrade'-configuration for GuidedForward
+    'GuidedForward' , ## the 'track-upgrade'-configuration for GuidedForward
     'FitTrack'      , ## the 'track-upgrade'-configuration for FitTrack
     'VeloCalo'      , ## the 'track-match'-configuration   for VeloCalo
     'VeloTDist'     , ## the 'track-match'-configuration   for VeloTDist
