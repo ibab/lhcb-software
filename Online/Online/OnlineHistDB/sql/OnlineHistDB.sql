@@ -1947,9 +1947,33 @@ end DeleteAllMessages;
 -----------------------
 
 procedure DeleteOldMessages(expTime IN int, anaTask IN varchar2) is
-begin
- delete from ANAMESSAGE where TIMEST2UXT(SYSTIMESTAMP)-TIMEST2UXT(MSGTIME) > expTime 
+ cursor mes is select ID,HISTO from ANAMESSAGE where TIMEST2UXT(SYSTIMESTAMP)-TIMEST2UXT(MSGTIME) > expTime 
      and ANALYSISTASK=anaTask;
+ mid int;
+ myh ANAMESSAGE.HISTO%TYPE;
+ cursor padc(Xh HISTOGRAM.HID%TYPE) is select OPT,DOID from DISPLAYOPTIONS D,HISTOGRAM H where H.hid=Xh
+    and D.DOID = H.DISPLAY;
+ myopt dispopt;
+ mydoid DISPLAYOPTIONS.DOID%TYPE;
+begin
+ open mes;
+ LOOP 
+  fetch mes into mid,myh;
+  EXIT WHEN mes%NOTFOUND;
+  if (myh is not NULL) then
+   -- remove pad color from histogram
+   open padc(myh);
+   fetch padc into myopt,mydoid;
+   if (padc%FOUND) then
+      myopt.PADCOLOR := NULL;      
+      update DISPLAYOPTIONS set opt=myopt where doid=mydoid;
+   end if;
+   close padc;
+  end if;
+  delete from ANAMESSAGE where ID=mid;
+  EXIT WHEN mes%NOTFOUND;
+ end LOOP;
+ close mes;
 end DeleteOldMessages;
 -----------------------
 

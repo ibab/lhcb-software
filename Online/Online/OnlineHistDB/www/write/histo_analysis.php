@@ -15,6 +15,7 @@ if (!$conn) {
 function update_histo_analysis() {
   global $conn,$id;
   global $debug;
+
   $ia=$_POST["Iana"];
   $aid=$_POST["a${ia}_id"];
   $warn=$alr=$inps=array();
@@ -43,12 +44,23 @@ function update_histo_analysis() {
     $Docs .= ",Message => '".sqlstring($_POST["a${ia}_mes"])."'";
   }
 
-  $command="begin :out := OnlineHistDB.DeclareAnalysisWithID(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,$aid,$inputs$Docs); end;";
+
+  if ( $_POST["htype"] == "HSID") {
+    $command="begin :out := OnlineHistDB.DeclareAnalysisWithID(".$_POST["id"].",'".$_POST["a${ia}_alg"]."',$warnings,$alarms,$aid,$inputs$Docs); end;";
+    $gAna=1;
+  }
+  else { // just update settings for this single histogram
+    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
+    $gAna=0; $out=1;
+  }  
+
+
   if($debug) echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
-  ocibindbyname($stid,":out",$out,10);
+  if ($gAna)
+    ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
-  if (!$out) return 0;
+  if (!$out || !$r) return 0;
   ocicommit($conn);
   ocifreestatement($stid);
   return 1;  
