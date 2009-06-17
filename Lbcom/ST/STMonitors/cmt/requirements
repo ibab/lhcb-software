@@ -3,13 +3,10 @@
 # Maintainer : Mark Tobin
 #            : Mathias Knecht
 #            : Nicola Chiapolini
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 
 package STMonitors
-version v1r2
+version v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
