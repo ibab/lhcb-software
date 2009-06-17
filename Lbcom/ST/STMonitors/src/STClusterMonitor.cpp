@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.5 2009-06-03 09:16:49 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.6 2009-06-17 12:07:26 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -16,6 +16,7 @@
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeSTSensor.h"
 #include "Kernel/Trajectory.h"
 // from Boost
 #include <boost/assign/list_of.hpp>
@@ -180,7 +181,9 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   if(m_plotByLink) {
     const unsigned int tell1Channel = cluster->tell1Channel();
     unsigned int link = tell1Channel/32;
-    plot2D(TELL1ID, link, "Clusters per link vs TELL1", "Clusters per link vs TELL1",  0.5, m_nTELL1s+0.5, -0.5, 95.5, m_nTELL1s, 96);
+    plot2D(TELL1ID, link, "Clusters per link vs TELL1", 
+           "Clusters per link vs TELL1",  0.5, m_nTELL1s+0.5, 
+           -0.5, 95.5, m_nTELL1s, 96);
   }
   // Always fill histograms per readout quadrant for TT
   // Get service box and set up histogram IDs
@@ -249,9 +252,21 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
     Gaudi::XYZPoint begin= tmpTraj->beginPoint();
     Gaudi::XYZPoint end  = tmpTraj->endPoint();
     Gaudi::XYZPoint middle = begin + (end-begin)/2;
-    // Plot hitmap with 17 ladders, 4 chips, 5 bins == 17*4
-    plot2D(middle.x(), middle.y(), idMap, idMap, -850., 850., -700., 700., 170, 14);
-  }else if(detType() == "IT") {// Cluster map for IT
+    
+    // Loop over all sensors in a sector to get the y-centre
+    const DeSTSector::Sensors sensors = aSector->sensors();
+    DeSTSector::Sensors::const_iterator iSensor = sensors.begin();
+    for( ; iSensor != sensors.end(); ++iSensor ) {
+      double y = (*iSensor)->globalCentre().y();
+      double sensorHeight = (*iSensor)->activeHeight();
+      // Fill the Hitmap (twice, due to the binning)
+      plot2D(middle.x(), y+0.25*sensorHeight, idMap, idMap, -850., 850., 
+             -8*sensorHeight, 8*sensorHeight, 170, 32);
+      plot2D(middle.x(), y-0.25*sensorHeight, idMap, idMap, -850., 850., 
+             -8*sensorHeight, 8*sensorHeight, 170, 32);
+    }
+
+  } else if( detType() == "IT" ) {// Cluster map for IT
     // Look at plot and try to make differently?????
     int originx=0;
     int originy=0;
