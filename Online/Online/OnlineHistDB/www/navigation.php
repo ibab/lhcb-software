@@ -95,7 +95,7 @@ or HID <input type="Text" name="searchHID" size=10> <br>
 </select>
 <input type="submit" target="mymain" name="Go" value="Go">
 <hr>
-<a href='AnalysisHistCreator.php' target=mymain> <h4> Create Analysis Histogram</h4> </a>
+<a href='AnalysisHistCreator.php' target=mymain> <h4> Create Virtual Histogram</h4> </a>
 <?
   }
 }
