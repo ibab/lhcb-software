@@ -3,7 +3,9 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
-!-- 2009-06-15 - Sajan Easo
+
+!==================== RichRecTemplateRings v1r0 2009-06-17 ===================
+! 2009-06-15 - Sajan Easo
   - Configuration.py improved to include the comparison to MCtruth. This can
     be activated from the Configuration.py of the package RichRecQC.
   - Storage of results itno  LHCb::RichRecRing updated so that Cherenkov angle 
@@ -11,7 +13,6 @@
     each ring are also stored.  The storage is done in RichRingMasterAlg.cpp
   - The comparison of results to MC truth is improved in 
     RichRingMCCompareNtup and RichMCTruthAcquireAlg.
-!==================== RichRecTemplateRings v1r0 2009-03-10 ===================
 
 ! 2009-06-05 - Chris Jones
  - Move everything to the namespace Rich::Rec::TemplateRings::
@@ -21,6 +22,7 @@
     in order to limit the cpu time used. The limit for each radiator can be
     set using the options. The default configuraiton is to 
     use up to 15 segments per radiator. 
+
 ! 2009-03-19  Sajan Easo
  - Added couple of options switches in RichRingMasterAlg
  - Improved the cpu time in a minor way by configuring the 
@@ -29,6 +31,7 @@
    a Cherenkov Momentum Threshold.
  - In  RichRingReconParam.cpp the aerogel rings are swiched off as
    a default setup. They can be be switched on using the python options.
+
 ! 2009-03-08  Sajan Easo
   Fixed a typo in RichRingRecMass
  
