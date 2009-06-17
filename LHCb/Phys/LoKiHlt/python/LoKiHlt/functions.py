@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.6 2009-05-28 07:18:14 graven Exp $ 
+# $Id: functions.py,v 1.7 2009-06-17 12:02:57 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -68,13 +68,21 @@ HLT_Cut  = LoKi.FunctorFromFunctor     ( _hlt + ',bool'   )
 L0_ALL           = LoKi.Constant ( _l0 + ',bool'   ) ( True  )
 
 ## @see LoKi::Cuts::L0_CHANNEL 
-L0_CHANNEL       = LoKi.L0.ChannelDecision
+L0_CHANNEL        = LoKi.L0.ChannelDecision
+## @see LoKi::Cuts::L0_CHANNEL_SUBSTR 
+L0_CHANNEL_SUBSTR = LoKi.L0.ChannelDecisionSubString
+## @see LoKi::Cuts::L0_CHANNEL_RE
+L0_CHANNEL_RE     = LoKi.L0.ChannelDecisionRegex 
 
 ## @see LoKi::Cuts::L0_CHDECISION
 L0_CHDECISION    = LoKi.L0.ChannelDecision
 
 ## @see LoKi::Cuts::L0_CHPREDECISION
 L0_CHPREDECISION = LoKi.L0.ChannelPreDecision
+## @see LoKi::Cuts::L0_CHPREDECISION_SUBSTR
+L0_CHPREDECISION_SUBSTR = LoKi.L0.ChannelPreDecisionSubString
+## @see LoKi::Cuts::L0_CHPREDECISION_RE
+L0_CHPREDECISION_RE     = LoKi.L0.ChannelPreDecisionRegex 
 
 ## @see LoKi::Cuts::L0_CONDITION
 L0_CONDITION     = LoKi.L0.ConditionValue 
@@ -121,6 +129,10 @@ L0_TIMINGBIT     = LoKi.L0.TimingBit ()
 
 ## @see LoKi::Cuts::L0_TRIGGER 
 L0_TRIGGER       = LoKi.L0.TriggerDecision 
+## @see LoKi::Cuts::L0_TRIGGER_SUBSTR 
+L0_TRIGGER_SUBSTR = LoKi.L0.TriggerDecisionSubString
+## @see LoKi::Cuts::L0_TRIGGER 
+L0_TRIGGER_RE     = LoKi.L0.TriggerDecisionRegex 
 
 ## @see LoKi::Cuts::L0_TRUE
 L0_TRUE          = LoKi.Constant ( _l0 + ',bool'   ) ( True  )
@@ -220,7 +232,11 @@ HLT_DECISION =    LoKi.HLT.Decision ()
 HLT_FALSE    =    LoKi.Constant ( _hlt + ',bool'   ) ( False )
 
 ## @see LoKi::Cuts::HLT_HAS
-HLT_HAS      =    LoKi.HLT.HasDecision
+HLT_HAS        =    LoKi.HLT.HasDecision
+## @see LoKi::Cuts::HLT_HAS_SUBSTR
+HLT_HAS_SUBSTR =    LoKi.HLT.HasDecisionSubString
+## @see LoKi::Cuts::HLT_HAS_RE
+HLT_HAS_RE     =    LoKi.HLT.HasDecisionRegex
 
 ## @see LoKi::Cuts::HLT_NONE
 HLT_NONE     =    LoKi.Constant ( _hlt + ',bool'   ) ( False )
@@ -235,10 +251,18 @@ HLT_NULL     =    LoKi.Constant ( _hlt + ',double' ) ( 0 )
 HLT_ONE      =    LoKi.Constant ( _hlt + ',double' ) ( 1 )
 
 ## @see LoKi::Cuts::HLT_PASS
-HLT_PASS     =    LoKi.HLT.PassDecision 
+HLT_PASS        =    LoKi.HLT.PassDecision 
+## @see LoKi::Cuts::HLT_PASS_SUBSTR
+HLT_PASS_SUBSTR =    LoKi.HLT.PassDecisionSubString
+## @see LoKi::Cuts::HLT_PASS_RE
+HLT_PASS_RE     =    LoKi.HLT.PassDecisionRegex
 
 ## @see LoKi::Cuts::HLT_PASSIGNORING 
-HLT_PASSIGNORING  =    LoKi.HLT.DecisionBut
+HLT_PASSIGNORING         =    LoKi.HLT.DecisionBut
+## @see LoKi::Cuts::HLT_PASSIGNORING_SUBSTR 
+HLT_PASSIGNORING_SUBSTR  =    LoKi.HLT.DecisionButSubString
+## @see LoKi::Cuts::HLT_PASSIGNORING_RE
+HLT_PASSIGNORING_RE      =    LoKi.HLT.DecisionButRegex
 
 ## @see LoKi::Cuts::HLT_SIZE
 HLT_SIZE     =    LoKi.HLT.Size () 

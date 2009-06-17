@@ -1,4 +1,4 @@
-// $Id: L0.h,v 1.2 2008-10-29 14:05:08 ibelyaev Exp $
+// $Id: L0.h,v 1.3 2009-06-17 12:02:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0_H 
 #define LOKI_L0_H 1
@@ -13,6 +13,10 @@
 // ============================================================================
 #include "Event/L0DUReport.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/regex.hpp"
+// ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
@@ -24,13 +28,6 @@ namespace LoKi
    */      
   namespace L0 
   {
-    // ========================================================================
-    enum Flag { 
-      /// get channel by name 
-      ByName ,                                           // get channel by name 
-      /// get channel by number 
-      ByNumber                                         // get channel by number 
-    } ;
     // ========================================================================
     /** @class SumEt 
      *  @see LHCb::L0DUReport 
@@ -136,174 +133,6 @@ namespace LoKi
       DataDigit () ;                     // the default constructor is disabled 
       // ======================================================================
     };
-    // ========================================================================
-    /** @class ChannelDecision 
-     *  Accessor to the channel decision
-     *  @see LHCb::L0DUReport::channelDecision 
-     *  @see LHCb::L0DUReport::channelDecisionNyName  
-     *  @see LoKi::Cuts::L0_CHDECISION 
-     *  @see LoKi::Cuts::L0_CHANNEL
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-09-19
-     */     
-    class ChannelDecision 
-      : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
-    {
-    protected:
-      // ======================================================================
-      typedef std::vector<std::string>                                  Names ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// channel decision by channel number 
-      ChannelDecision ( const unsigned int channel , const int bx = 0 ) ;
-      /// channel decision by channel name 
-      ChannelDecision ( const std::string& channel , const int bx = 0 ) ;
-      /// channel decision by channel names  ("OR")
-      ChannelDecision ( const std::vector<std::string>& channels , 
-                        const int bx = 0 ) ;
-      /// virtual destructor 
-      virtual ~ChannelDecision () {}
-      /// MANDATORY: clone method ('virtual constructor')
-      virtual  ChannelDecision* clone() const 
-      { return new ChannelDecision ( *this ) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      unsigned int index () const { return m_channel ; }
-      const Names&       names () const { return m_names   ; }      
-      // ======================================================================
-      Flag mode () const { return m_mode ; }
-      int  bx   () const { return m_bx   ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      ChannelDecision() ;                // the default constructor is disabled 
-      // ====================================================================== 
-    private:
-      // ====================================================================== 
-      Flag         m_mode    ;
-      /// the channel number 
-      unsigned int m_channel ;                            // the channel number 
-      /// the channel names
-      Names        m_names   ;                             // the channel names 
-      /// the bx-id 
-      int          m_bx      ;                                     // the bx-id 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class ChannelPreDecision 
-     *  Accessor to the channel predecision
-     *  @see LHCb::L0DUReport::channelPreDecision 
-     *  @see LHCb::L0DUReport::channelPreDecisionNyName  
-     *  @see LoKi::Cuts::L0_CHPREDECISION 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-09-19
-     */     
-    class ChannelPreDecision : public ChannelDecision
-    {
-    public:
-      // ======================================================================
-      /// channel decision by channel number 
-      ChannelPreDecision ( const unsigned int channel , const int bx = 0 ) ;
-      /// channel decision by channel name 
-      ChannelPreDecision ( const std::string& channel , const int bx = 0 ) ;
-      /// channel decision by channel names  ("OR")
-      ChannelPreDecision ( const std::vector<std::string>& channels , 
-                           const int bx = 0 ) ;
-      /// virtual destructor 
-      virtual ~ChannelPreDecision () {}
-      /// MANDATORY: clone method ('virtual constructor')
-      virtual  ChannelPreDecision* clone() const 
-      { return new ChannelPreDecision ( *this ) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      ChannelPreDecision() ;             // the default constructor is disabled 
-      // ====================================================================== 
-    } ;
-    // ========================================================================
-    /** @class ConditionValue 
-     *  Accessor to the condition value 
-     *  @see LHCb::L0DUReport::conditionValue
-     *  @see LHCb::L0DUReport::conditionValueByName
-     *  @see LoKi::Cuts::L0_CONDITION
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-09-19
-     */     
-    class ConditionValue : public ChannelDecision
-    {
-    public:
-      // ======================================================================
-      /// channel decision by channel number 
-      ConditionValue ( const unsigned int channel , const int bx = 0 ) ;
-      /// channel decision by channel name 
-      ConditionValue ( const std::string& channel , const int bx = 0 ) ;
-      /// channel decision by channel names  ("OR")
-      ConditionValue ( const std::vector<std::string>& channels , 
-                       const int bx = 0 ) ;
-      /// virtual destructor 
-      virtual ~ConditionValue () {}
-      /// MANDATORY: clone method ('virtual constructor')
-      virtual  ConditionValue* clone() const 
-      { return new ConditionValue ( *this ) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      ConditionValue () ;               // the default constructor is disabled 
-      // ====================================================================== 
-    } ;
-    // ========================================================================
-    /** @class TriggerDecision
-     *  Accessor to the trigger decision 
-     *  @see LHCb::L0DUReport::triggerDecision
-     *  @see LHCb::L0DUReport::triggerDecisionByName
-     *  @see LoKi::Cuts::L0_TRIGGER
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2008-09-19
-     */     
-    class TriggerDecision : public ChannelDecision
-    {
-    public:
-      // ======================================================================
-      /// channel decision by channel number 
-      TriggerDecision ( const unsigned int channel , const int bx = 0 ) ;
-      /// channel decision by channel name 
-      TriggerDecision ( const std::string& channel , const int bx = 0 ) ;
-      /// channel decision by channel names  ("OR")
-      TriggerDecision ( const std::vector<std::string>& channels , 
-                       const int bx = 0 ) ;
-      /// virtual destructor 
-      virtual ~TriggerDecision () {}
-      /// MANDATORY: clone method ('virtual constructor')
-      virtual  TriggerDecision* clone() const 
-      { return new TriggerDecision ( *this ) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled 
-      TriggerDecision () ;               // the default constructor is disabled 
-      // ====================================================================== 
-    } ;
     // ========================================================================
     /** @class SumDecision
      *  check the decision form the summary
@@ -428,6 +257,358 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
     };
+    // ========================================================================
+    /** @class ChannelDecision 
+     *  Accessor to the channel decision
+     *  @see LHCb::L0DUReport::channelDecision 
+     *  @see LHCb::L0DUReport::channelDecisionNyName  
+     *  @see LoKi::Cuts::L0_CHDECISION 
+     *  @see LoKi::Cuts::L0_CHANNEL
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class ChannelDecision 
+      : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate 
+    {
+    protected:
+      // ======================================================================
+      typedef std::vector<std::string>                                  Names ;
+      typedef std::vector<unsigned int>                              Channels ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// channel decision by channel name 
+      ChannelDecision ( const std::string& channel , const int bx = 0 ) ;
+      /// channel decision by channel names  ("OR")
+      ChannelDecision ( const std::vector<std::string>& channels , 
+                        const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~ChannelDecision () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  ChannelDecision* clone() const 
+      { return new ChannelDecision ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Channels&    channels () const { return m_channels ; }
+      const Names&       names    () const { return m_names    ; }      
+      // ======================================================================
+      int  bx   () const { return m_bx   ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      unsigned int tckPrev   ()                 const { return m_tckPrev   ; }
+      void     setTckPrev    ( const int tck  ) const { m_tckPrev = tck    ; }
+      void     clearChannels ()                 const { m_channels.clear() ; }
+      void     addChannel    ( unsigned int c ) const 
+      { m_channels.push_back ( c ) ; }
+      void     clearNames    ()                 const { m_names.clear() ; }
+      void     addName       ( const std::string& c ) const 
+      { m_names.push_back ( c ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      ChannelDecision() ;                // the default constructor is disabled 
+      // ====================================================================== 
+    private:
+      // ====================================================================== 
+      /// the channel names
+      mutable Names m_names  ;                             // the channel names
+      /// channels 
+      mutable Channels m_channels ; // the channels  
+      /// the bx-id 
+      int          m_bx      ;                                     // the bx-id 
+      // cached TCK 
+      mutable unsigned int m_tckPrev ;                           // cached  TCK 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class ChannelPreDecision 
+     *  Accessor to the channel predecision
+     *  @see LHCb::L0DUReport::channelPreDecision 
+     *  @see LHCb::L0DUReport::channelPreDecisionNyName  
+     *  @see LoKi::Cuts::L0_CHPREDECISION 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class ChannelPreDecision : public ChannelDecision
+    {
+    public:
+      // ======================================================================
+      /// channel decision by channel name 
+      ChannelPreDecision ( const std::string& channel , const int bx = 0 ) ;
+      /// channel decision by channel names  ("OR")
+      ChannelPreDecision ( const std::vector<std::string>& channels , 
+                           const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~ChannelPreDecision () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  ChannelPreDecision* clone() const 
+      { return new ChannelPreDecision ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      ChannelPreDecision() ;             // the default constructor is disabled 
+      // ====================================================================== 
+    } ;    
+    // ========================================================================
+    /** @class TriggerDecision
+     *  Accessor to the trigger decision 
+     *  @see LHCb::L0DUReport::triggerDecision
+     *  @see LHCb::L0DUReport::triggerDecisionByName
+     *  @see LoKi::Cuts::L0_TRIGGER
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class TriggerDecision : public ChannelDecision
+    {
+    public:
+      // ======================================================================
+      /// channel decision by channel name 
+      TriggerDecision ( const std::string& channel , const int bx = 0 ) ;
+      /// channel decision by channel names  ("OR")
+      TriggerDecision ( const std::vector<std::string>& channels , 
+                       const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~TriggerDecision () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  TriggerDecision* clone() const 
+      { return new TriggerDecision ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TriggerDecision () ;               // the default constructor is disabled 
+      // ====================================================================== 
+    } ;
+    // ========================================================================
+    /** @class ConditionValue 
+     *  Accessor to the condition value 
+     *  @see LHCb::L0DUReport::conditionValue
+     *  @see LHCb::L0DUReport::conditionValueByName
+     *  @see LoKi::Cuts::L0_CONDITION
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class ConditionValue : public ChannelDecision
+    {
+    public:
+      // ======================================================================
+      /// channel decision by channel name 
+      ConditionValue ( const std::string& channel , const int bx = 0 ) ;
+      /// channel decision by channel names  ("OR")
+      ConditionValue ( const std::vector<std::string>& channels , 
+                       const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~ConditionValue () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  ConditionValue* clone() const 
+      { return new ConditionValue ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      ConditionValue () ;               // the default constructor is disabled 
+      // ====================================================================== 
+    } ;
+    // ========================================================================
+    class ChannelDecisionSubString : public ChannelDecision 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring
+      ChannelDecisionSubString 
+      ( const std::string& substr     , 
+        const int          bx     = 0 ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChannelDecisionSubString() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChannelDecisionSubString* clone() const 
+      { return new ChannelDecisionSubString ( *this ) ; }
+      /// MANDATORY: the only one essential methos 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================      
+    public:
+      // ======================================================================      
+      const std::string& substr() const { return names()[0] ; }
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disabled 
+      ChannelDecisionSubString () ;      // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the substring 
+      std::string m_substr ;                                   // the substring 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    class ChannelDecisionRegex : public ChannelDecisionSubString
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring
+      ChannelDecisionRegex 
+      ( const std::string& substr     , 
+        const int          bx     = 0 ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChannelDecisionRegex() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChannelDecisionRegex* clone() const 
+      { return new ChannelDecisionRegex ( *this ) ; }
+      /// MANDATORY: the only one essential methos 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================      
+    public:
+      // ======================================================================      
+      const boost::regex& expression() const { return m_expression ; }
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disabled 
+      ChannelDecisionRegex () ;      // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ====================================================================== 
+      /// the regular expression 
+      boost::regex m_expression ;                     // the regular expression 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    class ChannelPreDecisionSubString : public ChannelDecisionSubString 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring
+      ChannelPreDecisionSubString 
+      ( const std::string& substr     , 
+        const int          bx     = 0 ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChannelPreDecisionSubString() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChannelPreDecisionSubString* clone() const 
+      { return new ChannelPreDecisionSubString ( *this ) ; }
+      /// MANDATORY: the only one essential methos 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disabled 
+      ChannelPreDecisionSubString () ;   // the default constructor is disabled 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    class ChannelPreDecisionRegex : public ChannelDecisionRegex
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring
+      ChannelPreDecisionRegex 
+      ( const std::string& substr     , 
+        const int          bx     = 0 ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChannelPreDecisionRegex() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChannelPreDecisionRegex* clone() const 
+      { return new ChannelPreDecisionRegex ( *this ) ; }
+      /// MANDATORY: the only one essential methos 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disabled 
+      ChannelPreDecisionRegex () ;       // the default constructor is disabled 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class TriggerDecisionSubString
+     *  Accessor to the trigger decision 
+     *  @see LHCb::L0DUReport::triggerDecision
+     *  @see LHCb::L0DUReport::triggerDecisionByName
+     *  @see LoKi::Cuts::L0_TRIGGER_SUBSTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class TriggerDecisionSubString : public ChannelDecisionSubString
+    {
+    public:
+      // ======================================================================
+      /// trigger decision by name 
+      TriggerDecisionSubString ( const std::string& channel , const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~TriggerDecisionSubString () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  TriggerDecisionSubString* clone() const 
+      { return new TriggerDecisionSubString ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TriggerDecisionSubString () ;      // the default constructor is disabled 
+      // ====================================================================== 
+    } ;
+    // ========================================================================
+    /** @class TriggerDecisionRegex
+     *  Accessor to the trigger decision 
+     *  @see LHCb::L0DUReport::triggerDecision
+     *  @see LHCb::L0DUReport::triggerDecisionByName
+     *  @see LoKi::Cuts::L0_TRIGGER_SUBSTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */     
+    class TriggerDecisionRegex : public ChannelDecisionRegex
+    {
+    public:
+      // ======================================================================
+      /// trigger decision by name 
+      TriggerDecisionRegex ( const std::string& channel , const int bx = 0 ) ;
+      /// virtual destructor 
+      virtual ~TriggerDecisionRegex () {}
+      /// MANDATORY: clone method ('virtual constructor')
+      virtual  TriggerDecisionRegex* clone() const 
+      { return new TriggerDecisionRegex ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      TriggerDecisionRegex () ;          // the default constructor is disabled 
+      // ====================================================================== 
+    } ;
     // ========================================================================
   } // end of namespace LoKi::L0 
   // ==========================================================================

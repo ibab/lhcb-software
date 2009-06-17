@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.19 2009-05-27 14:21:34 cattanem Exp $ 
+! $Id: release.notes,v 1.20 2009-06-17 12:02:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-17 - Vanya Belyaev
+
+ - add many "re&re-like" functors 
+
+ - cmt/requirements
+
+    version increment to v2r3 
+
 
 !========================== LoKiHlt v2r2 2009-05-27 ==========================
 ! 2009-05-27 - Gerhard Raven

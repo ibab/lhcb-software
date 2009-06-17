@@ -1,4 +1,4 @@
-// $Id: HLTCuts.h,v 1.4 2009-05-27 06:40:02 graven Exp $
+// $Id: HLTCuts.h,v 1.5 2009-06-17 12:02:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTCUTS_H 
 #define LOKI_HLTCUTS_H 1
@@ -56,6 +56,48 @@ namespace LoKi
      */
     typedef LoKi::HLT::HasDecision                                   HLT_HAS ;
     // ========================================================================
+    /** @typedef HLT_HAS_SUBSTR 
+     *  Simple predicate to check the presence of decison with has 
+     *  a certain substring
+     *
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_HAS_SUBST h1 = HLT_HAS ( "Muon" ) ;
+     *
+     *   const bool has1 = h1 ( hlt ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::HLT::HasDecisionSubString
+     *  @see LHCb::HltDecReports 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    typedef LoKi::HLT::HasDecisionSubString                    HLT_HAS_SUBSTR ;
+    // ========================================================================
+    /** @typedef HLT_HAS_RE
+     *  Simple predicate to check the presence of decison with has 
+     *  match with regular expression 
+     *
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_HAS_RE h1 = HLT_HAS_RE ( *some regular expression here* ) ;
+     *
+     *   const bool has1 = h1 ( hlt ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::HLT::HasDecisionRegex
+     *  @see LHCb::HltDecReports 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    typedef LoKi::HLT::HasDecisionRegex                            HLT_HAS_RE ;
+    // ========================================================================
     /** @var HLT_NPASS
      *  simple functor which evaluates the number of passed decision 
      *  @see LoKi::HLT::NPass
@@ -93,6 +135,50 @@ namespace LoKi
      */
     typedef LoKi::HLT::PassDecision                                 HLT_PASS ;
     // ========================================================================
+    /** @typedef HLT_PASS_SUBSTR
+     *  Simple predicate to check the positive decision for the selection
+     *  which matches the substring 
+     *
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_PASS_SUBSTR p1 = HLT_PASS_SUBSTR ( "Muon" ) ;
+     *
+     *   const bool pass1 = p1 ( hlt ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::HLT::PassDecisionSubString
+     *  @see LHCb::HltDecReports 
+     *  @see LHCb::HltDecReport::decision
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    typedef LoKi::HLT::PassDecisionSubString                  HLT_PASS_SUBSTR ;
+    // ========================================================================
+    /** @typedef HLT_PASS_RE
+     *  Simple predicate to check the positive decision for the selection
+     *  which matches the substring 
+     *
+     *  @code 
+     * 
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_PASS_RE p1 = HLT_PASS_RE ( "some regular expression" ) ;
+     *
+     *   const bool pass1 = p1 ( hlt ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::HLT::PassDecisionRegex
+     *  @see LHCb::HltDecReports 
+     *  @see LHCb::HltDecReport::decision
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    typedef LoKi::HLT::PassDecisionRegex                          HLT_PASS_RE ;
+    // ========================================================================
     /** @typedef HLT_PASSIGNORING 
      *  simple predicate which checks the overall decision, 
      *  ignoring "the special" decisions:
@@ -119,6 +205,48 @@ namespace LoKi
      *  @date 2008-10-03
      */
     typedef LoKi::HLT::DecisionBut                           HLT_PASSIGNORING ;
+    // ========================================================================        
+    /** @typedef HLT_PASSIGNORING_SUBSTR 
+     *  simple predicate which checks the overall decision, 
+     *  ignoring "the special" decisions:
+     *
+     *  @code 
+     *
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_PASSIGNORING_SUBSTR p1 = HLT_PASSIGNORING_SUBSTR ( "Lumi" ) ;
+     *
+     *   const bool pass1 = p1 ( hlt ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::HLT::DecisionButSubString 
+     *  @see LHCb::HltDecReports 
+     *  @see LHCb::HltDecReport::decision
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-10-03
+     */
+    typedef LoKi::HLT::DecisionButSubString           HLT_PASSIGNORING_SUBSTR ;
+    // ========================================================================        
+    /** @typedef HLT_PASSIGNORING_RE
+     *  simple predicate which checks the overall decision, 
+     *  ignoring "the special" decisions:
+     *
+     *  @code 
+     *
+     *   const LHCb::HtlDecReports* hlt = ... ;
+     * 
+     *   const HLT_PASSIGNORING_RE p1 = HLT_PASSIGNORING_RE ( "Lumi" ) ;
+     *
+     *   const bool pass1 = p1 ( hlt ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::HLT::DecisionButRegex
+     *  @see LHCb::HltDecReports 
+     *  @see LHCb::HltDecReport::decision
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-10-03
+     */
+    typedef LoKi::HLT::DecisionButRegex                   HLT_PASSIGNORING_RE ;
     // ========================================================================        
     /** @var HLT_SIZE 
      *  simple functor which evaluates number of known decisions  

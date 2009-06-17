@@ -1,4 +1,4 @@
-// $Id: HLT.h,v 1.4 2009-05-27 06:40:02 graven Exp $
+// $Id: HLT.h,v 1.5 2009-06-17 12:02:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT_H 
 #define LOKI_HLT_H 1
@@ -12,6 +12,10 @@
 // L0Event
 // ============================================================================
 #include "Event/HltDecReports.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include "boost/regex.hpp"
 // ============================================================================
 namespace LoKi 
 {
@@ -113,20 +117,20 @@ namespace LoKi
       {}
       /// constructor from the decision names ("OR") 
       PassDecision ( const std::string& name1 , 
-                      const std::string& name2 ) 
+                     const std::string& name2 ) 
         : HasDecision ( name1 , name2 ) 
       {}
       /// constructor from the decision names ("OR") 
       PassDecision ( const std::string& name1 , 
-                      const std::string& name2 , 
-                      const std::string& name3 ) 
+                     const std::string& name2 , 
+                     const std::string& name3 ) 
         : HasDecision ( name1 , name2 , name3 ) 
       {}
       /// constructor from the decision names ("OR") 
       PassDecision ( const std::string& name1 , 
-                      const std::string& name2 , 
-                      const std::string& name3 ,
-                      const std::string& name4 ) 
+                     const std::string& name2 , 
+                     const std::string& name3 ,
+                     const std::string& name4 ) 
         : HasDecision ( name1 , name2 , name3 , name4 ) 
       {}
       /// constructor form the decision names ("OR") 
@@ -233,7 +237,7 @@ namespace LoKi
      *  Simple predicate which checks the positive decisison, ignoring 
      *  "the special" cases
      *  @see LHCb::HltDecReports 
-     *  @see LoKi::Cuts::HLT_PASSBUT 
+     *  @see LoKi::Cuts::HLT_PASSIGNORING 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-10-03
      */
@@ -275,6 +279,207 @@ namespace LoKi
       // ======================================================================
       /// the actual vector of "special" decision 
       Names m_special ; // the actual vector of "special" decision 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class HasDecisionSubString
+     *  simple function which allows to check the existence 
+     *  of the decision with the given name  
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_HAS_SUBSTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    class HasDecisionSubString 
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      HasDecisionSubString ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~HasDecisionSubString () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  HasDecisionSubString* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to the substring 
+      const std::string& substr() const { return m_substr ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HasDecisionSubString () ;          // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the substring to be looked 
+      std::string m_substr ;                      // the substring to be looked 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PassDecisionSubString
+     *  Simple class to check the presence of at least one passes selection 
+     *  which contains the substring 
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_PASS_SUBSTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-06-16
+     */
+    class PassDecisionSubString : public HasDecisionSubString 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      PassDecisionSubString ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PassDecisionSubString () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual PassDecisionSubString* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PassDecisionSubString () ;          // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class DecisionButSubString
+     *  Simple predicate which checks the positive decisison, ignoring 
+     *  "the special" cases
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_PASSIGNORING_SUBSTR
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-06-16
+     */
+    class DecisionButSubString : public PassDecisionSubString 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      DecisionButSubString ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DecisionButSubString () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual DecisionButSubString* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecisionButSubString () ;          // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class HasDecisionRegex
+     *  Simple class to check the presence of at least one passes selection 
+     *  which matches the regular expression 
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_HAS_RE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-06-16
+     */
+    class HasDecisionRegex : public HasDecisionSubString 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      HasDecisionRegex ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~HasDecisionRegex () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  HasDecisionRegex* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      HasDecisionRegex () ;              // the default constructor is disabled 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// regurn the regular expression 
+      const boost::regex& expression () const { return m_expression ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the regular expression 
+      boost::regex  m_expression ;                    // the regular expression 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class PAssDecisionRegex
+     *  Simple class to check the presence of at least one passes selection 
+     *  which matches the regular expression 
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_HAS_RE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-06-16
+     */
+    class PassDecisionRegex : public HasDecisionRegex 
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      PassDecisionRegex ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~PassDecisionRegex () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  PassDecisionRegex* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PassDecisionRegex () ;             // the default constructor is disabled 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class DecisionButRegex
+     *  Simple predicate which checks the positive decisison, ignoring 
+     *  "the special" cases
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_PASSIGNORING_RE
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-06-16
+     */
+    class DecisionButRegex : public PassDecisionRegex
+    {
+    public:
+      // ======================================================================
+      /// constructor from substring 
+      DecisionButRegex ( const std::string& substr ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DecisionButRegex () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual DecisionButRegex* clone () const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DecisionButRegex () ;          // the default constructor is disabled 
       // ======================================================================
     };
     // ========================================================================

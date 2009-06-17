@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.5 2009-05-09 19:27:31 ibelyaev Exp $ 
+     * $Id: LoKiHlt.xml,v 1.6 2009-06-17 12:02:57 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -128,6 +128,15 @@
     </class>
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
       <method name="=" />
+    </class>
+
+
+    <class name="LoKi::HasDecision::Names"/>
+
+    <class pattern="LoKi::HLT::*Regex">
+      <method name="=" />
+      <method name="expression"   />
+      <member name="m_expression" />
     </class>
 
  </exclusion>

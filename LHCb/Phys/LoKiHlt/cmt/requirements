@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.8 2009-05-27 14:21:34 cattanem Exp $ 
+# $Id: requirements,v 1.9 2009-06-17 12:02:57 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           LoKiHlt
-version           v2r2
+version           v2r3
         
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -27,6 +27,9 @@ apply_pattern install_python_modules
 # =============== constituents ===============================================
 library           LoKiHltLib    ../src/*.cpp 
 library           LoKiHlt       ../src/Components/*.cpp 
+
+macro_append LoKiHlt_dependencies     " LoKiHltLib " 
+macro_append LoKiHltDict_dependencies " LoKiHltLib " 
 
 # ============== Produce LCG dictionary =======================================
 apply_pattern    reflex_dictionary                                \
