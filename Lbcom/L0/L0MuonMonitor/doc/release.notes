@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.25 2009-06-02 14:14:52 cattanem Exp $
+! $Id: release.notes,v 1.26 2009-06-17 06:27:57 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
+!========================== L0MuonMonitor v1r5 2009-06-17 =================
 ! 2009-05-28 - Julien Cogan
  - L0MuonPadsHistos, L0MuonCandHistos : 
     o correct 2D histograms filling (requires a version of L0/L0MuonKernel
