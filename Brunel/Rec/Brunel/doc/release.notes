@@ -3,8 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-17 - Marco Cattaneo
+ - Cleanup configurable for reprocessing case
+ - Remove obsolete DefineETC.opts, Brunel never writes an ETC
+
 ! 2009-06-16 - Patrick Koppenburg
- - Changes needed for FEST stripping jobs running onn ETCs
+ - Changes needed for FEST stripping jobs running on ETCs
 
 ! 2009-06-16 - Marco Cattaneo
  - Move most of SuppressWarnings.opts functionality into Brunel(). Only

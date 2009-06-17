@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.80 2009-06-16 16:13:26 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.81 2009-06-17 08:34:03 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -270,12 +270,10 @@ class Brunel(LHCbConfigurableUser):
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
-            if ( self.getProp("Simulation") ):
+            if ( self.getProp("WithMC") and inputType in ["XDST","DST"] ):
+                # Load linkers, to kill them (avoid appending to them later)
                 InitReprocSeq.Members.append( "TESCheck" )
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
-                # in case above container is not on input (e.g. RDST)
-                TESCheck().Stop = False
-                TESCheck().OutputLevel = ERROR
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
