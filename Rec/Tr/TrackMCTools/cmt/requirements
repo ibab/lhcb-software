@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackMCTools
-version           v2r23
+version           v2r24
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -12,8 +12,7 @@ branches          cmt doc src
 include_path      none
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use   GaudiAlg          v*
 
