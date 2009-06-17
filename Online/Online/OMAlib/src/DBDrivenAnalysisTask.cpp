@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.13 2009-06-16 17:39:49 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.14 2009-06-17 13:15:44 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -80,7 +80,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                     }
                   }
                   // check if we have statistics first, then exec the algorithm
-                  if (cka->checkStats(rooth,
+                  if ( cka->checkStats(rooth,
                                       anaIDs[iana]) ) {
                     cka->exec(*(rooth),
                               warningThr,
@@ -88,6 +88,10 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                               inputs,
                               anaIDs[iana],
                               myref);
+                  }
+                  else {
+                    debug() << "not enough stats for histogram "<<rooth->GetName()
+                            << " entries="<< rooth->GetEntries() << endmsg;
                   }
                   if (myref) delete myref;
                 }
