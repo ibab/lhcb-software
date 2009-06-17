@@ -3,7 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
-! 2009-06-04
+
+!============================ TrackSys v4r24 2009-06-17 ======================
+! 2009-06-04 - Stephanie Hansmann-Menzemer
 - require long tracks in efficiency checking of best track container
 
 ! 2009-05-31 - Stephanie Hansmann-Menzemer
