@@ -4,12 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r12 2009-06-17 =================
 ! 2009-06-10 - Chris Jones
  - Improvements to the track selectors. Remove the use of obsolete variables
    and instead use the 'recommended' cuts.
 
 !======================== RichRecTrackTools v1r11 2009-05-25 =================
-
 ! 2009-05-24 - Chris Jones
  - Improvements to track isolation tool
  - Fix a small bug in track creator selection stats.
