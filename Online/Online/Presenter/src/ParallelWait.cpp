@@ -97,11 +97,13 @@ void refreshHisto(DbRootHist* dbHistoOnPage)
 		dbHistoOnPage->fillHistogram();
 		dbHistoOnPage->normalizeReference();
 	} else {
-		dbHistoOnPage->beRegularHisto();
-		dbHistoOnPage->initHistogram();
+    dbHistoOnPage->beRegularHisto();
+    dbHistoOnPage->resetRetryInit();
+    dbHistoOnPage->initHistogram();
 		if (false == dbHistoOnPage->isEmptyHisto()) {
 			dbHistoOnPage->fillHistogram();
 		  dbHistoOnPage->setTH1FromDB();
+      dbHistoOnPage->normalizeReference();
 		}
 	}
 }
