@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-06-17 - Julien Cogan
+ - ErrorHandler : fix warnings for Windows
+
 !============================ L0MuonKernel v8r6 2009-06-16 ==================== 
 ! 2009-05-28 - Julien Cogan
  - MonUtilities : function depending on the quarter 

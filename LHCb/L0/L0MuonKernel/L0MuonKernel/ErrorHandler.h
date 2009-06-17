@@ -1,4 +1,4 @@
-// $Id: ErrorHandler.h,v 1.4 2008-12-09 18:47:28 cattanem Exp $
+// $Id: ErrorHandler.h,v 1.5 2009-06-17 16:38:27 jucogan Exp $
 #ifndef L0MUONKERNEL_ERRORHANDLER_H 
 #define L0MUONKERNEL_ERRORHANDLER_H 1
 
@@ -64,7 +64,7 @@ namespace L0Muon {
     int value() const { return m_value;}
     
     /// True if in error (value does not match reference)
-    int inError() const { return m_inError;}
+    bool inError() const { return m_inError;}
     
     /// Error counter (incremented each time the value did not match the reference)
     int counter() const {return m_counter;}
