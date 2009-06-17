@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.4 2009-04-16 13:04:03 odescham Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.5 2009-06-17 18:24:00 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -197,8 +197,9 @@ StatusCode CaloClusterizationTool::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&     clusters   ,
-                                        const LHCb::CaloDigits* hits, const DeCalorimeter* m_detector, 
+template <class TYPE>
+StatusCode CaloClusterizationTool::_clusterize(std::vector<LHCb::CaloCluster*>&     clusters   ,
+                                        const TYPE& hits, const DeCalorimeter* m_detector, 
                                         const std::vector<LHCb::CaloCellID>&  _cell_list, 
                                         const unsigned int m_neig_level){
 
@@ -214,13 +215,15 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
   // fill with data if level >0 and no predefined seed list
   if( cell_list.empty() && m_neig_level>0){
     useData = true;
-    for( LHCb::CaloDigits::const_iterator it = hits->begin() ; it != hits->end();it++){
+
+    typename TYPE::const_iterator it;
+    for(it = hits.begin() ; it != hits.end(); it++){
       const CaloNeighbors& neighbors = m_detector->neighborCells( (*it) -> cellID() ) ;
       double e = (*it)->e();
       bool loc = true;
       for(CaloNeighbors::const_iterator in = neighbors.begin(); in!=neighbors.end();in++){
         if( !m_detector->valid( *in ))continue;
-        LHCb::CaloDigit* dig = hits->object( *in );
+        LHCb::CaloDigit* dig = hits( *in );
         if( dig == NULL)continue;
         if( dig->e() > e){
           loc = false;
@@ -266,14 +269,14 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
   SeqVector taggedCellsSeq                              ;
   typedef std::vector<CelAutoTaggedCell> _Local ;
 
-  size_t local_size = cell_list.empty() ? hits->size() : out_cells.size();
+  size_t local_size = cell_list.empty() ? hits.size() : out_cells.size();
   const CelAutoTaggedCell cell0_ = CelAutoTaggedCell () ; 
   _Local local_cells ( local_size  , cell0_ ) ;  
 
   if( cell_list.empty() ){
-    taggedCellsDirect.reserve ( hits->size() ) ;
+    taggedCellsDirect.reserve ( hits.size() ) ;
     taggedCellsDirect.setSize ( 14000        ) ;
-    taggedCellsSeq.reserve    ( hits->size() ) ;
+    taggedCellsSeq.reserve    ( hits.size() ) ;
   }
   else{
     taggedCellsDirect.reserve ( out_cells.size() ) ;
@@ -286,7 +289,7 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
     size_t index = 0 ;
 
     for( LHCb::CaloDigits::const_iterator ihit = 
-           hits->begin() ; hits->end() != ihit ; ++ihit , ++index ){
+           hits.begin() ; hits.end() != ihit ; ++ihit , ++index ){
       const LHCb::CaloDigit* digit   = *ihit ;
       if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
@@ -302,7 +305,7 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
     for(std::set<LHCb::CaloCellID>::const_iterator icell = out_cells.begin();
         out_cells.end() != icell; ++icell , ++index){
 
-      const LHCb::CaloDigit* digit   = hits->object(*icell);
+      const LHCb::CaloDigit* digit   = hits(*icell);
       if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
       
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
@@ -430,6 +433,7 @@ StatusCode CaloClusterizationTool::clusterize(std::vector<LHCb::CaloCluster*>&  
 
   return StatusCode::SUCCESS;
 }
+
 
 
 //=============================================================================

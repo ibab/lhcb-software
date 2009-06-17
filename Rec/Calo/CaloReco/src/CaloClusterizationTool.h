@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.h,v 1.3 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloClusterizationTool.h,v 1.4 2009-06-17 18:24:00 odescham Exp $
 #ifndef CALOCLUSTERIZATIONTOOL_H 
 #define CALOCLUSRERIZATIONTOOL_H 1
 // ============================================================================
@@ -41,13 +41,28 @@ public:
                  const std::string& name,
                  const IInterface* parent);
 
-  
   virtual StatusCode clusterize
   ( std::vector<LHCb::CaloCluster*>&      clusters   , 
     const LHCb::CaloDigits*               hits       , 
     const DeCalorimeter*                  detector   ,
     const std::vector<LHCb::CaloCellID>&  seeds      , 
-    const unsigned int                    level      )  ;
+    const unsigned int                    level      )  
+  {
+    return _clusterize ( clusters , *hits , detector , seeds , level ) ;
+  }
+
+  // ==========================================================================
+
+  virtual StatusCode clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters   , 
+    const CaloVector<LHCb::CaloDigit*>&   hits       , 
+    const DeCalorimeter*                  detector   ,
+    const std::vector<LHCb::CaloCellID>&  seeds      , 
+    const unsigned int                    level      )  
+  {
+    return _clusterize ( clusters , hits , detector , seeds , level ) ;
+  }
+  
   // ==========================================================================
   virtual StatusCode clusterize
   ( std::vector<LHCb::CaloCluster*>&      clusters   , 
@@ -74,6 +89,15 @@ public:
   virtual StatusCode initialize() ; 
 
   virtual ~CaloClusterizationTool( ); ///< Destructor
+
+protected:
+  
+  template<class TYPE> StatusCode _clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters   , 
+    const TYPE&                           data       , 
+    const DeCalorimeter*                  detector   ,
+    const std::vector<LHCb::CaloCellID>&  seeds      , 
+    const unsigned int                    level      )  ;
 
 protected:
 
