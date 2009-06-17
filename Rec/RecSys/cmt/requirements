@@ -1,5 +1,5 @@
 package RecSys
-version v7r1
+version v7r2
 
 branches cmt doc python
  
@@ -13,7 +13,7 @@ use RecCheckers          v1r2    Rec  # Marco Cattaneo
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst          v3r7    Calo # Olivier Deschamps
+use CaloMoniDst          v3r8    Calo # Olivier Deschamps
 use CaloPIDs             v4r17   Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v4r19p1 Calo # Olivier Deschamps
 
@@ -22,20 +22,20 @@ use NNTools              v1r5    Tr   # Adrian Perieanu
 use PatChecker           v3r4p1  Tr   # Olivier Callot, David Hutchcroft
 use PatFitParams         v3r2p3  Tr   # Olivier Callot
 use TrackAssociators     v2r6    Tr   # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers        v4r5    Tr   # Eduardo Rodrigues
+use TrackCheckers        v4r6    Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r21   Tr   # Eduardo Rodrigues
-use TrackFitEvent        v3r21p1 Tr   # Eduardo Rodrigues
+use TrackFitEvent        v3r22   Tr   # Eduardo Rodrigues
 use TrackFitter          v2r33   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r15   Tr   # Eduardo Rodrigues
-use TrackMCTools         v2r23   Tr   # Eduardo Rodrigues
+use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r9p1  Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r22   Tr   # Wouter Hulsbergen
 use TrackTools           v3r17   Tr   # Eduardo Rodrigues
 use TrackUtils           v1r26   Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
-use TrackSys             v4r23   Tf   # Stephanie Hansmann-Menzemer 
-use PatAlgorithms        v3r21   Tf   # Stephanie Hansmann-Menzemer
+use TrackSys             v4r24   Tf   # Stephanie Hansmann-Menzemer 
+use PatAlgorithms        v3r22   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r13p1 Tf   # David Hutchcroft
 use PatVeloTT            v3r6    Tf   # Mariusz Witek
 use TfTools              v1r7    Tf   # Stephanie Hansmann-Menzemer
@@ -48,38 +48,38 @@ use PatPV                v3r8    Tr   # Mariusz Witek
 
 # Muon
 #use MuonUtils	         v1r0    Muon # N.N.
-use MuonID               v6r2    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonID               v6r3    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v3r2    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r0p1  Muon # Alessia Satta
 use MuonTrackAlign       v1r7p2  Muon # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichENNRingFinder    v1r0    Rich # Chris Jones + Ulrich Kerzel
-use RichGlobalPID        v3r10p1 Rich # Chris Jones
+use RichENNRingFinder    v1r1    Rich # Chris Jones + Ulrich Kerzel
+use RichGlobalPID        v3r10p2 Rich # Chris Jones
 use RichIFBAnalysis      v1r0    Rich # Ross Young, Chris Jones
-use RichMarkovRingFinder v2r7    Rich # Chris Jones
-use RichPIDMerge         v2r6    Rich # Chris Jones
-use RichRecAlgorithms    v2r15   Rich # Chris Jones
-use RichRecMCAlgorithms  v1r3    Rich # Chris Jones
-use RichRecMCTools       v2r21   Rich # Chris Jones
-use RichRecMonitors      v2r22   Rich # Chris Jones
-use RichRecPhotonTools   v1r5    Rich # Chris Jones
-use RichRecQC            v2r29   Rich # Chris Jones
-use RichRecStereoTools   v1r5p1  Rich # Chris Jones
-use RichRecSys           v3r19   Rich # Chris Jones
+use RichMarkovRingFinder v2r8    Rich # Chris Jones
+use RichPIDMerge         v2r7    Rich # Chris Jones
+use RichRecAlgorithms    v2r16   Rich # Chris Jones
+use RichRecMCAlgorithms  v1r3p1  Rich # Chris Jones
+use RichRecMCTools       v2r22   Rich # Chris Jones
+use RichRecMonitors      v2r23   Rich # Chris Jones
+use RichRecPhotonTools   v1r6    Rich # Chris Jones
+use RichRecQC            v2r30   Rich # Chris Jones
+use RichRecStereoTools   v1r6    Rich # Chris Jones
+use RichRecSys           v3r20   Rich # Chris Jones
 use RichRecTemplateRings v1r0    Rich # Sajan Easo
-use RichRecTools         v4r8    Rich # Chris Jones
-use RichRecTrackTools    v1r11   Rich # Chris Jones
+use RichRecTools         v4r9    Rich # Chris Jones
+use RichRecTrackTools    v1r12   Rich # Chris Jones
 
 # Global reco
 use GlobalReco           v6r21   Rec  # Chris Jones
 
 # Velo
-use VeloRecMonitors      v1r7     Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v1r8    Velo # Malcom John, Eduardo Rodrigues
 
 # Lumi
-use LumiAlgs             v2r0    Rec  # Jaap Panman
+use LumiAlgs             v2r1    Rec  # Jaap Panman
 
 # Setup Python Configurables
 apply_pattern install_python_modules
