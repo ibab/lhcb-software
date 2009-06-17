@@ -4,6 +4,7 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+!===================== RichRecMCAlgorithms v1r3p1 2009-06-17 =================
 ! 2009-06-11 - Chris Jones
  - Fix WIN32 compilation warning
 
