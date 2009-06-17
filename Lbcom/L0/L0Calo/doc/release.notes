@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.131 2009-06-04 15:14:16 robbep Exp $
+! $Id: release.notes,v 1.132 2009-06-17 06:26:18 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r21 2009-06-17 ========================
 ! 2009-06-04 - Patrick Robbe
  - L0CaloCompare: clean code
 
