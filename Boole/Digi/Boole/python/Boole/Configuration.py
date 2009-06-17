@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.50 2009-05-17 11:49:04 mtobin Exp $"
+__version__ = "$Id: Configuration.py,v 1.51 2009-06-17 14:55:23 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -130,8 +130,18 @@ class Boole(LHCbConfigurableUser):
         ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
         GaudiSequencer("InitBooleSeq").Members += [ "BooleInit" ]
 
-        # Do not print event number at every event (done already by Boole)
-        MessageSvc().OutputLevel = INFO
+        # Modify printout defaults
+        if self.getProp( "NoWarnings" ):
+            LHCbApp().setProp( "Quiet",     True )
+            LHCbApp().setProp( "TimeStamp", True )
+            # Additional information to be kept
+            getConfigurable("BooleInit").OutputLevel  = INFO
+            # Suppress known warnings
+            importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
+        else:
+            getConfigurable("MessageSvc").OutputLevel = INFO
+            
+        # Do not print event number at every event (done already by BooleInit)
         EventSelector().PrintFreq = -1
 
         if self.getProp("UseSpillover"):
@@ -476,6 +486,8 @@ class Boole(LHCbConfigurableUser):
             if not digiWriter.isPropertySet( "Output" ):
                 digiWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
             digiWriter.RequireAlgs.append( "Filter" )
+            if self.getProp( "NoWarnings" ) and not digiWriter.isPropertySet( "OutputLevel" ):
+                digiWriter.OutputLevel = INFO
 
             # Set up the Digi content
             DigiConf().Writer = writerName
@@ -495,6 +507,8 @@ class Boole(LHCbConfigurableUser):
             MyWriter = TagCollectionStream( "WR" )
             if not MyWriter.isPropertySet( "Output" ):
                 L0Conf().ETCOutput = self.getProp("DatasetName") + "-L0ETC.root"
+            if self.getProp( "NoWarnings" ) and not MyWriter.isPropertySet( "OutputLevel" ):
+                MyWriter.OutputLevel = INFO
 
         if "MDF" in outputs:
             # Set up the MDF persistency
@@ -517,10 +531,10 @@ class Boole(LHCbConfigurableUser):
             if not MyWriter.isPropertySet( "Output" ):
                 MyWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
             MyWriter.RequireAlgs.append( "Filter" )
+            if self.getProp( "NoWarnings" ) and not MyWriter.isPropertySet( "OutputLevel" ):
+                MyWriter.OutputLevel = INFO
             ApplicationMgr().OutStream += [ nodeKiller, MyWriter ]
 
-        nowarn = self.getProp( "NoWarnings" )
-        if nowarn: importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
 
     def outputName(self):
         """

@@ -3,12 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-06-09 - Marco Cattaneo
- - Update references for 
+</PRE><H1><A NAME=v19r2>2009-06-18 Boole v19r2</A></H1><PRE>
+ - Changes to Configurable:
+   . Move most of SuppressWarnings.opts functionality into Boole(). 
+     Only sub-detector specific suppressions remains in SuppressWarnings.opts
+
+ - Changes to references to reflect changes in Boole v19r2 output:
    . Changes in L0Calo monitoring
    . Fixes to Rich data size monitoring
-
- - Increase version to v19r2
 
 </PRE><H1><A NAME=v19r1>2009-06-08 Boole v19r1</A></H1><PRE>
  - Changes to Configurable:
@@ -21,7 +23,7 @@ Purpose: LHCb Digitization program
    . Remove tests/qmtest/python/BooleExclusions.py file, import instead
      GaudiConf.QMTest.LHCbExclusions. 
 
- - Changes to references to reflect changes in Boole v19r0 output:
+ - Changes to references to reflect changes in Boole v19r1 output:
    . Update for new ST cluster monitor names and modified ST monitor histograms
 
 </PRE><H1><A NAME=v19r0>2009-05-14 Boole v19r0</A></H1><PRE>
