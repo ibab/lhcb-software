@@ -10,7 +10,6 @@
 + test // loading of histograms
 + new config file, DB login changed!
 issues:
-- loadAnaSources() disabled
 - only works with db pages, no Editor
 
 

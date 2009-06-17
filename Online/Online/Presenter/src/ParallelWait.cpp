@@ -19,10 +19,9 @@ using namespace std;
 using namespace boost;
 
 boost::mutex listMutex;
-boost::mutex oraMutex;
-boost::mutex dimMutex;
-boost::mutex rootMutex;
-boost::mutex loadAnaMutex;
+boost::recursive_mutex oraMutex;
+boost::recursive_mutex dimMutex;
+boost::recursive_mutex rootMutex;
 
 void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage)
 {
@@ -37,8 +36,7 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                NULL,
 	                                oraMutex,
 	                                dimMutex,
-                                  rootMutex,
-                                  loadAnaMutex);
+                                  rootMutex);
 	  } else if((Online == gui->presenterMode()) || (EditorOnline == gui->presenterMode())) {
 //	    bool taskNotRunning(false);             
 //	    for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
@@ -65,8 +63,7 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                dimBrowser,
 	                                oraMutex,
 	                                dimMutex,
-                                  rootMutex,
-                                  loadAnaMutex);
+                                  rootMutex);
 	                            
 //	    if (dbRootHist->isEmptyHisto()) {
 //	      m_tasksNotRunning.push_back(onlineHistosOnPage->histo->task());
@@ -76,7 +73,7 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	  if (0 != gui->archive() &&
 	      ((History == gui->presenterMode()) ||
 	       (EditorOffline == gui->presenterMode() && gui->canWriteToHistogramDB()))) {
-   boost::mutex::scoped_lock lock(rootMutex);
+   boost::recursive_mutex::scoped_lock lock(rootMutex);
    if (lock) {
       gui->archive()->fillHistogram(dbRootHist,
                                gui->rw_timePoint,
