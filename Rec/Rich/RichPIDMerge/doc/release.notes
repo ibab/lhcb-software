@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v2r7 2009-06-17 =======================
 ! 2009-06-11 - Chris Jones
  - Remove use of RichLocalPIDs (package obsoleted)
 
