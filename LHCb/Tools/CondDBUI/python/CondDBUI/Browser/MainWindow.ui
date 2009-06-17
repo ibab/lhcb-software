@@ -122,18 +122,12 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="QLineEdit" name="sinceLineEdit" />
-           </item>
            <item row="1" column="0" >
             <widget class="QLabel" name="untilLabel" >
              <property name="text" >
               <string>To time</string>
              </property>
             </widget>
-           </item>
-           <item row="1" column="1" >
-            <widget class="QLineEdit" name="untilLineEdit" />
            </item>
            <item row="2" column="0" >
             <widget class="QLabel" name="tagLabel" >
@@ -162,6 +156,77 @@
              </property>
              <property name="checked" >
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QDateTimeEdit" name="sinceFilterEdit" >
+             <property name="minimumDate" >
+              <date>
+               <year>1970</year>
+               <month>1</month>
+               <day>1</day>
+              </date>
+             </property>
+             <property name="minimumTime" >
+              <time>
+               <hour>0</hour>
+               <minute>0</minute>
+               <second>0</second>
+              </time>
+             </property>
+             <property name="displayFormat" >
+              <string>dd/MM/yyyy HH:mm</string>
+             </property>
+             <property name="calendarPopup" >
+              <bool>true</bool>
+             </property>
+             <property name="timeSpec" >
+              <enum>Qt::UTC</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" >
+            <widget class="QDateTimeEdit" name="untilFilterEdit" >
+             <property name="minimumDateTime" >
+              <datetime>
+               <hour>0</hour>
+               <minute>0</minute>
+               <second>0</second>
+               <year>1970</year>
+               <month>1</month>
+               <day>1</day>
+              </datetime>
+             </property>
+             <property name="minimumDate" >
+              <date>
+               <year>1970</year>
+               <month>1</month>
+               <day>1</day>
+              </date>
+             </property>
+             <property name="maximumTime" >
+              <time>
+               <hour>22</hour>
+               <minute>59</minute>
+               <second>59</second>
+              </time>
+             </property>
+             <property name="minimumTime" >
+              <time>
+               <hour>0</hour>
+               <minute>0</minute>
+               <second>0</second>
+              </time>
+             </property>
+             <property name="displayFormat" >
+              <string>dd/MM/yyyy HH:mm</string>
+             </property>
+             <property name="calendarPopup" >
+              <bool>true</bool>
+             </property>
+             <property name="timeSpec" >
+              <enum>Qt::UTC</enum>
              </property>
             </widget>
            </item>
@@ -227,6 +292,9 @@
     <addaction name="actionOpen" />
     <addaction name="menuRecent" />
     <addaction name="menuStandard" />
+    <addaction name="separator" />
+    <addaction name="actionRead_Only" />
+    <addaction name="separator" />
     <addaction name="actionSlice" />
     <addaction name="actionDump_to_files" />
     <addaction name="actionClose" />
@@ -327,6 +395,23 @@
   <action name="actionDump_to_files" >
    <property name="text" >
     <string>Dump to files</string>
+   </property>
+  </action>
+  <action name="actionRead_Only" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Read Only</string>
+   </property>
+   <property name="statusTip" >
+    <string>Change the opening mode of the database (re-opens it)</string>
    </property>
   </action>
  </widget>
@@ -430,6 +515,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRead_Only</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reopenDatabase(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -439,6 +540,7 @@
   <slot>selectedItem(QModelIndex)</slot>
   <slot>selectedPath(QString)</slot>
   <slot>testSlot()</slot>
+  <slot>reopenDatabase(bool)</slot>
   <signal>openedDB(P*)</signal>
  </slots>
 </ui>

@@ -36,6 +36,11 @@ class MainWindow(QMainWindow):
         self._icons = None
         # Current selected path in the database
         self._path = None
+        # The database
+        self.db = None
+        # Current connection string. Needed because the copy in
+        # self.db has the variables expanded.    
+        self._connectionString = None
         # Prepare the GUI.
         uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
         # --- Part of the initialization that require the GUI objects. ---
@@ -103,18 +108,29 @@ class MainWindow(QMainWindow):
             if connString:
                 self.db = CondDB(connString, readOnly = readOnly)
                 title = "%s - %s" % (connString, self.appName)
+                self.actionRead_Only.setEnabled(True)
             else:
                 self.db = None
                 title = self.appName
+                self.actionRead_Only.setEnabled(False)
             self.setWindowTitle(title)
             # Change the status of the editing menus
             editable = not readOnly
             self.menuEdit.setEnabled(editable)
             self.menuAdvanced.setEnabled(editable)
+            self.actionRead_Only.setChecked(readOnly)
+            # remember the used connection string
+            self._connectionString = connString
             # update the DB instance of the models
             self.emit(SIGNAL("openedDB"), self.db)
         except:
             self.exceptionDialog()
+    
+    ## Re-open the current database, changing the readOnly flag.
+    #  If the database is already in the correct mode, nothing is done.
+    def reopenDatabase(self, readOnly):
+        if readOnly != self.db.readOnly:
+            self.openDatabase(self._connectionString, readOnly) 
     
     ## Disconnect from the database.
     #  @see: openDatabase()
