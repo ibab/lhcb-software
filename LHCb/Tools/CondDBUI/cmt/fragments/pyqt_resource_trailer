@@ -1,0 +1,4 @@
+# ============= pyqt_resource_trailer:begin =============
+$(output):: $(inputs)
+	$(pyqt_resource_command) -o $(output) $(inputs)
+# ============= pyqt_resource_trailer:end =============
