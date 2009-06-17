@@ -1,4 +1,4 @@
-// $Id: ICaloClusterization.h,v 1.3 2008-09-22 00:50:30 odescham Exp $
+// $Id: ICaloClusterization.h,v 1.4 2009-06-17 18:31:37 odescham Exp $
 #ifndef CALOINTERFACES_ICALOCLUSTERIZATION_H 
 #define CALOINTERFACES_ICALOCLUSTERIZATION_H 1
 
@@ -11,6 +11,7 @@
 
 // from LHCb
 #include "Kernel/CaloCellID.h"
+#include "CaloKernel/CaloVector.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"
 
@@ -66,6 +67,21 @@ public:
   ( std::vector<LHCb::CaloCluster*>&      clusters   , 
     const LHCb::CaloDigits*               digits     , 
     const DeCalorimeter*                  detector   ) = 0 ;
+
+  // ==========================================================================
+  /**  The main clusterization method
+   * @ param pointer to CaloDigit
+   * @ param pointer to DeCalorimeter object
+   * @ param vector of Calo cell ID's
+   * @ param number of neigbour levels around cell
+   * @ return vector of pointers of Calo clusters
+   */
+  virtual StatusCode clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters   ,
+    const CaloVector<LHCb::CaloDigit*>&    data     ,
+    const DeCalorimeter*                  detector   ,
+    const std::vector<LHCb::CaloCellID>&  seeds      ,
+    const unsigned int                    level      ) = 0 ;
 
   virtual unsigned int iterations()=0;
   
