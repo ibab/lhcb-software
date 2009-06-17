@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.81 2009-06-17 08:34:03 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.82 2009-06-17 15:39:03 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -253,6 +253,16 @@ class Brunel(LHCbConfigurableUser):
             GaudiSequencer("InitCaloSeq").Members += ["GaudiSequencer/CaloBanksHandler"]
             importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
 
+        # Do not print event number at every event (done already by BrunelInit)
+        EventSelector().PrintFreq = -1
+        # Modify printout defaults
+        if self.getProp( "NoWarnings" ):
+            LHCbApp().setProp( "Quiet",     True )
+            LHCbApp().setProp( "TimeStamp", True )
+            # Suppress known warnings
+            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
+            if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
+
 
     def configureInput(self, inputType):
         """
@@ -307,6 +317,8 @@ class Brunel(LHCbConfigurableUser):
                 outputFile = self.outputName()
                 outputFile = outputFile + '.' + self.getProp("OutputType").lower()
                 dstWriter.Output = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
+            if self.getProp( "NoWarnings" ) and not dstWriter.isPropertySet( "OutputLevel" ):
+                dstWriter.OutputLevel = INFO
 
             # FSR output stream
             if self.getProp("WriteFSR"):
@@ -320,6 +332,8 @@ class Brunel(LHCbConfigurableUser):
                 FSRWriter.Output = dstWriter.getProp("Output")
 
                 ApplicationMgr().OutStream.append(FSRWriter)
+                if self.getProp( "NoWarnings" ) and not FSRWriter.isPropertySet( "OutputLevel" ):
+                    FSRWriter.OutputLevel = INFO
                 # Suppress spurious error when reading POOL files without run records
                 if self.getProp( "InputType" ).upper() not in [ "MDF" ]:
                     from Configurables import FileRecordDataSvc
@@ -396,18 +410,6 @@ class Brunel(LHCbConfigurableUser):
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
         ProcessPhase("Moni").DetectorList += moniSeq
         ProcessPhase('Moni').Context = self.getProp("Context")
-
-        # Do not print event number at every event (done already by Brunel)
-        EventSelector().PrintFreq = -1
-        # Modify printout defaults
-        if self.getProp( "NoWarnings" ):
-            LHCbApp().setProp( "Quiet",     True )
-            LHCbApp().setProp( "TimeStamp", True )
-            # Additional information to be kept
-            getConfigurable("BrunelInit").OutputLevel = INFO
-            getConfigurable("DstWriter").OutputLevel  = INFO
-            # Suppress known warnings
-            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
         # Units needed in several of the monitoring options
         importOptions('$STDOPTS/PreloadUnits.opts')
