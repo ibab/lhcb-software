@@ -97,13 +97,15 @@ class StrippingConf( LHCbConfigurableUser ):
 #           but the outputSelection names can be weird. Is there a better way? 
 #
 
-	    seq = GaudiSequencer("StreamSequencer")
-	    seq.IgnoreFilterPassed = TRUE
+	    seq = GaudiSequencer("StrippingGlobal")
+	    seq.ModeOR = TRUE
 	    for i in lines : 
 	        name = i.name() + "Decision"
 	        log.info("Created decision " + name)
 		tag.TupleToolSelResults.Selections += [ i.name() ] 
 		seq.Members += [ i.configurable() ] 
+		
+	    tag.TupleToolSelResults.Selections += ["StrippingGlobal"]
 
 	    DaVinci().appendToMainSequence( [ seq ] )
 	    DaVinci().appendToMainSequence( [ tag ] )

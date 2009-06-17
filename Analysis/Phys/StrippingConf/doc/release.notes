@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-06-17 - Anton Poluektov
+
+   * Added "StrippingGlobal" decision to ETC: the OR of all decisions.
+
 !============================= StrippingConf v1r0 2009-06-02 ==================
 
 ! 2009-06-02 - Anton Poluektov
