@@ -1,4 +1,4 @@
-// $Id: L0.cpp,v 1.2 2009-06-17 12:02:57 ibelyaev Exp $
+// $Id: L0.cpp,v 1.3 2009-06-17 14:37:25 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -102,7 +102,11 @@ LoKi::L0::ConditionValue::operator()
     for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
     {
       LHCb::L0DUElementaryCondition::Map::const_iterator ifind = m.find (*iname) ;
-      Assert ( m.end() != ifind , "Non-existing condition is required" );
+      if ( m.end() == ifind ) 
+      {
+        Error ( "Non-existing condition '" + (*iname) + "' has been requested" );
+        continue ;
+      }
       const LHCb::L0DUElementaryCondition* channel = ifind->second ;
       Assert ( 0 != channel , "LHCb::L0DUElementaryCondition* points to NULL" ) ;
       addChannel ( channel -> id() ) ;
@@ -219,7 +223,11 @@ LoKi::L0::ChannelDecision::operator()
     for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
     {
       LHCb::L0DUChannel::Map::const_iterator ifind = m.find (*iname) ;
-      Assert ( m.end() != ifind , "Non-existing channel is required" );
+      if ( m.end() == ifind ) 
+      {
+        Error ( "Non-existing channel '" + (*iname) + "' has been requested" );
+        continue ;
+      }
       const LHCb::L0DUChannel* channel = ifind->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
       addChannel ( channel -> id() ) ;
@@ -294,7 +302,11 @@ LoKi::L0::ChannelPreDecision::operator()
     for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
     {
       LHCb::L0DUChannel::Map::const_iterator ifind = m.find (*iname) ;
-      Assert ( m.end() != ifind , "Non-existing channel is required" );
+      if ( m.end() == ifind ) 
+      {
+        Error ( "Non-existing channel '" + (*iname) + "' has been requested" );
+        continue ;
+      }
       const LHCb::L0DUChannel* channel = ifind->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
       addChannel ( channel -> id() ) ;
@@ -373,7 +385,7 @@ LoKi::L0::TriggerDecision::operator()
       LHCb::L0DUTrigger::Map::const_iterator ifind = m.find ( *iname ) ;
       if ( m.end() == ifind ) 
       {
-        Error ("Unknown trigger '" + (*iname) + "'") ;
+        Error ("Unknown trigger '" + (*iname) + "' has been requested") ;
         continue ;
       }
       const LHCb::L0DUTrigger* trigger = ifind->second ;
@@ -383,7 +395,7 @@ LoKi::L0::TriggerDecision::operator()
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
-
+  
   // loop over the defined triggers 
   for ( Names::const_iterator ic = names().begin()  ; names().end()!= ic ; ++ic ) 
   { if ( a -> triggerDecisionByName ( *ic , bx() ) ) { return true ; } }    // REUTRN 
@@ -698,10 +710,9 @@ LoKi::L0::TriggerDecisionSubString::operator()
   // sanity check:
   if ( names().empty() ) 
   { 
-    Error ( "empty list of triggers, return false" ) ;
+    Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
     return false ;                                                    // RETURN 
   }
-  
 
   // loop over the defined triggers 
   for ( Names::const_iterator ic = names().begin()  ; names().end()!= ic ; ++ic ) 
@@ -759,7 +770,7 @@ LoKi::L0::TriggerDecisionRegex::operator()
   // sanity check:
   if ( names().empty() ) 
   { 
-    Error ( "empty list of triggers, return false" ) ;
+    Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
     return false ;                                                    // RETURN 
   }
   
