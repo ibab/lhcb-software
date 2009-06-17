@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r10p2 2009-06-17 ====================
 ! 2009-06-11 - Chris Jones
  - Fixes for WIN32 warnings
 
