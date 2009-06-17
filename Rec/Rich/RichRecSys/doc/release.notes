@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r20 2009-06-17 ==========================
 ! 2009-06-11 - Chris Jones
  - Remove RichLocalPID and RichHLTLocalPID from the release.
 
