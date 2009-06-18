@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v12r5 2009-06-16 ========================
+!======================== GaudiConf v12r5 2009-06-18 ========================
+! 2009-06-18 - Marco Cattaneo
+ - In LHCbExclusions.py: ignore changes in name of latest ONLINE snapshot
+
 ! 2009-06-16 - Marco Cattaneo
  - In Configuration.py:
    . add LHCbApp().Quiet option to suppress all except most useful INFO messages
