@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.2 2009-06-18 07:39:55 graven Exp $
+// $Id: HltLine.h,v 1.3 2009-06-18 09:19:01 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -10,6 +10,7 @@
 #include "boost/array.hpp"
 
 // Forward declarations
+class StatEntity;
 class ISequencerTimerTool;
 class Algorithm;
 class IJobOptionsSvc;
@@ -132,6 +133,9 @@ private:
   AIDA::IHistogram1D *m_stepHisto;
   mutable IANNSvc *m_hltANNSvc;
   mutable IHltDataSvc *m_hltDataSvc;
+  StatEntity *m_acceptCounter;
+  StatEntity *m_errorCounter;
+  StatEntity *m_slowCounter;
   Hlt::Selection* m_selection;
   std::string m_outputContainerName;
   std::string m_decision;

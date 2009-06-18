@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.3 2009-06-18 07:39:55 graven Exp $
+// $Id: HltLine.cpp,v 1.4 2009-06-18 09:19:01 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -157,6 +157,9 @@ HltLine::HltLine( const std::string& name,
   , m_errorHisto(0)
   , m_hltANNSvc(0)
   , m_hltDataSvc(0)
+  , m_acceptCounter(0)
+  , m_errorCounter(0)
+  , m_slowCounter(0)
   , m_selection(0)
   , m_acceptRate(0)
 {
@@ -242,9 +245,12 @@ StatusCode HltLine::initialize() {
   }
 
   //== and the counters
-  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + m_decision);
-  counter("#errors"); // do not export to DIM -- we have a histogram for this..
+  m_acceptCounter = &counter("#accept");
+  declareInfo("#accept","",m_acceptCounter,0,std::string("Events accepted by ") + m_decision);
+  m_errorCounter = &counter("#errors"); // do not export to DIM -- we have a histogram for this..
   //declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
+  m_slowCounter = &counter("#slow events");
+
 
   m_acceptRate=0;
   declareInfo("COUNTER_TO_RATE["+m_decision+"Accept]", m_acceptRate, m_decision + " Accept Rate");
@@ -321,11 +327,14 @@ StatusCode HltLine::execute() {
   reports->insert( key->first , report );
 
   // update monitoring
-  counter("#accept") += accept;
+  assert(m_acceptCounter);
+  *m_acceptCounter += accept;
   if (accept) ++m_acceptRate;
   // don't flag slow events as error, so mask the bit
-  counter("#errors") += ( (report.errorBits()&~0x2)!=0) ;
-  counter("#slow events") += ( report.errorBits() & 0x2 !=0 );
+  assert(m_errorCounter);
+  *m_errorCounter += ( (report.errorBits()&~0x2)!=0) ;
+  assert(m_slowCounter);
+  *m_slowCounter += ( report.errorBits() & 0x2 !=0 );
 
   fill( m_errorHisto, report.errorBits(),1.0);
   // make stair plot
