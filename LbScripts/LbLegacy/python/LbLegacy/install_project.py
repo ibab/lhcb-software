@@ -349,7 +349,7 @@ def callPostInstallCommand(project):
             if c[1] :
                 os.chdir(c[1])
             os.system("%s" % c[0])
-            log.debug("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]) )
+            log.info("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]) )
     else :
         log.debug("Project %s has no postinstall command" % project)
 
@@ -672,7 +672,7 @@ def getCMT(version=0):
 #
 def getFile(url,file):
     log = logging.getLogger()
-    log.debug('%s %s ' % (url, file))
+    log.debug('%s/%s ' % (url, file))
 
     if file.find('.tar.gz') != -1:
         filetype = 'x-gzip'
@@ -698,7 +698,6 @@ def getFile(url,file):
                         f = os.path.join(f,bin)
                     else:
                         f = os.path.join(f,'InstallArea',bin)
-                    log.debug('file_path = %s %s ' % (f, os.path.exists(f)))
                     if os.path.exists(f):
                         if overwrite_mode :
                             exist_flag = False
@@ -812,7 +811,7 @@ def getReferenceMD5(url,file,dest):
 def checkMD5(url, file, dest):
     log = logging.getLogger()
     isok = False
-    log.debug("Checking %s tar ball consistency ..." % file)
+    log.info("Checking %s tar ball consistency ..." % file)
     refmd5 = getReferenceMD5(url, file, dest)
     if debug_flag :
         log.info("   reference md5 sum is: %s" % refmd5)
@@ -907,7 +906,6 @@ def getPackVer(file):
             file_base.append(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES', name, vers))
         for bd in base_dir :
             file_base.append(os.path.join(bd, packver[0], name, vers))
-    log.debug('%s %s %s %s ' % (file, name, vers, file_path))
     return (name, vers, bin, file_path, file_base)
 
 #
@@ -950,7 +948,7 @@ def getProjectList(name,version,binary=' '):
     fdlines = fd.readlines()
     for fdline in fdlines:
         if fdline.find('was not found on this server') != -1:
-            log.info('getProjectList - the required project %s %s %s is not available' % (name, version, binary))
+            log.info('the required project %s %s %s is not available' % (name, version, binary))
             log.info('remove %s.html and exit ' % tar_file)
             fd.close()
             os.remove(tar_file+'.html')
@@ -1636,14 +1634,15 @@ def runInstall(pname,pversion,binary=''):
         listVersions(pname)
         sys.exit()
 
+# start the project installation
+    getBootScripts()
+
+
 # if remove flag is set then correspondind tar files and directories will
 # be removed
     if remove_flag :
         removeProject(pname,pversion)
         sys.exit()
-
-# start the project installation
-    getBootScripts()
 
 # check binary name
     checkBinaryName(binary)
