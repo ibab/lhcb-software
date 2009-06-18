@@ -25,17 +25,22 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {   'UnbiasedDiMuonPrescale'   : 0.05
-                    ,'UnbiasedJPsiPrescale'    : 1
-                    ,'UnbiasedPsi2SPrescale'   : 1
-                    ,'UnbiasedBmmPrescale'     : 1
-                    ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
-                    ,'UnbiasedDiMuonPt'        : 1000      # MeV
-                    ,'UnbiasedJPsiMassWindow'  : 120       # MeV
-                    ,'UnbiasedJPsiPt'          : 1000      # MeV
-                    ,'UnbiasedPsi2SMassWindow' : 120       # MeV
-                    ,'UnbiasedPsi2SPt'         : 1000      # MeV
-                    }
+    __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon' :  0.05 }
+                   ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
+                   ,'UnbiasedDiMuonPt'        : 1000      # MeV
+                   ,'UnbiasedDiMuonMuPt'      : 500       #MeV
+                   ,'UnbiasedDiMuonVertexChi2':  20
+                   ,'UnbiasedJPsiMassWindow'  : 120       # MeV
+                   ,'UnbiasedJPsiPt'          : 1000      # MeV
+                   ,'UnbiasedJPsiMuPt'        : 500      # MeV
+                   ,'UnbiasedJPsiVertexChi2'  :  20
+                   ,'UnbiasedPsi2SMassWindow' : 120       # MeV
+                   ,'UnbiasedPsi2SPt'         : 1000      # MeV
+                   ,'UnbiasedPsi2SMuPt'       : 500      # MeV
+                   ,'UnbiasedPsi2SVertexChi2' :  20
+                   ,'UnbiasedBmmMinMass'      : 5000      # MeV
+                   ,'UnbiasedBmmVertexChi2'   :  20
+                   }
 
 
     def __apply_configuration__(self) :
@@ -57,26 +62,26 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                , "Filter"
                                , Code = "(MM>"+str(self.getProp('UnbiasedDiMuonMinMass'))+"*MeV) "
                                +"& (PT>"+str(self.getProp('UnbiasedDiMuonPt'))+"*MeV) "
-                               +"& (MINTREE('mu-'==ABSID,PT)>500*MeV) "
-                               +"& (VFASPF(VCHI2/VDOF)<20)"
+                               +"& (MINTREE('mu-'==ABSID,PT)>"+str(self.getProp('UnbiasedDiMuonMuPt'))+"*MeV) "
+                               +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedDiMuonVertexChi2'))+")"
                                , InputLocations  = [ DiMuon ]
                                )
         '''
             unbiased heavy dimuon - prescaled
         '''
         line = Hlt2Line('UnbiasedDiMuon'
-                        , prescale = self.getProp('UnbiasedDiMuonPrescale')
+                        , prescale = self.prescale 
                         , algos = [ DiMuon, filter ])
 
         '''
             unbiased J/psi
         '''
         line.clone( 'UnbiasedJPsi'
-                    , prescale = self.getProp('UnbiasedJPsiPrescale')
+                    , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<"+str(self.getProp('UnbiasedJPsiMassWindow'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedJPsiPt'))+"*MeV) "
-                                 +"& (MINTREE('mu-'==ABSID,PT)>500*MeV) "
-                                 +"& (VFASPF(VCHI2/VDOF)<20)" }
+                                 +"& (MINTREE('mu-'==ABSID,PT)>"+str(self.getProp('UnbiasedJPsiMuPt'))+"*MeV) "
+                                 +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedJPsiVertexChi2'))+")" }
                     )
 
         
@@ -84,20 +89,20 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             unbiased Psi(2S)
         '''
         line.clone( 'UnbiasedPsi2S'
-                    , prescale = self.getProp('UnbiasedPsi2SPrescale')
+                    , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<"+str(self.getProp('UnbiasedPsi2SMassWindow'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedPsi2SPt'))+"*MeV) "
-                                 +"& (MINTREE('mu-'==ABSID,PT)>500*MeV) "
-                                 +"& (VFASPF(VCHI2/VDOF)<20)"}
+                                 +"& (MINTREE('mu-'==ABSID,PT)>"+str(self.getProp('UnbiasedPsi2SMuPt'))+"*MeV) "
+                                 +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedPsi2SVertexChi2'))+")"}
                     )
 
         '''
             unbiased B
         '''
         line.clone( 'UnbiasedBmm'
-                    , prescale = self.getProp('UnbiasedBmmPrescale')
-                    , Filter = { 'Code': "(MM>5000*MeV) "
-                                 +"& (VFASPF(VCHI2/VDOF)<20)"}
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('UnbiasedBmmMinMass'))+"*MeV) "
+                                 +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedBmmVertexChi2'))+")"}
                     )
 
         
