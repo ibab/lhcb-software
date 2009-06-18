@@ -64,14 +64,14 @@ Hlt2Photons.PhotonMaker.PtCut = 200.* MeV
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
 #
-# from Hlt2SharedParticles.BasicParticles import Hlt2Muons
+# from Hlt2SharedParticles.BasicParticles import Muons
 #
 
-__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muon', 'RichPIDsKaons', 'Electrons', 'Photons' )
+__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
 
 NoCutsPions   = bindMembers( None, [ Hlt2NoCutsPions ] )
 NoCutsKaons   = bindMembers( None, [ Hlt2NoCutsKaons ] )
 Muons         = bindMembers( None, [ Hlt2Muons ] )
 Electrons     = bindMembers( None, [ Hlt2Electrons ] )
-RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] )
+RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!
 Photons       = bindMembers( None, [ Hlt2Photons ] )
