@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r16 2009-06-18 =======================
 ! 2008-06-03 - Wouter Hulsbergen
  - fixed two inconsequential bugs in IdealTracksCreator
 
