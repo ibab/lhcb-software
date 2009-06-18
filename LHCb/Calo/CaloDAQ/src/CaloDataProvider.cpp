@@ -123,9 +123,14 @@ CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(int source){
   decodeTell1(source);
   return m_adcs;
 }
-
-CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source){
-  adcs(source);
+CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(std::vector<int> sources){
+  clear();
+  for(std::vector<int>::iterator i=sources.begin();i!=sources.end();i++){
+    decodeTell1(*i);
+  }
+  return m_adcs;
+}
+void CaloDataProvider::adc2digit(){
   for(CaloVector<LHCb::CaloAdc>::iterator iadc = m_adcs.begin();iadc!=m_adcs.end();++iadc){
     int temp = (*iadc).adc();
     LHCb::CaloCellID id = (*iadc).cellID() ;
@@ -133,10 +138,17 @@ CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source){
     LHCb::CaloDigit dig(id,e);
     m_digits.addEntry( dig , id);
   }
+}
+CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(std::vector<int> sources){
+  adcs(sources);
+  adc2digit();
   return m_digits;
 }
-
-
+CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source){
+  adcs(source);
+  adc2digit();
+  return m_digits;
+}
 //========== 
 //  Get data
 //==========

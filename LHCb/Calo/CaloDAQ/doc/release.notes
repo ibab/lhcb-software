@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-06-19 - Olivier Deschamps
+ - (I)Calo(L0)DataProvider(FromTES) : new method for partial CaloBank decoding from a vector of sourceIDs
+
+
+
 !========================== CaloDAQ v4r11p1 2009-06-02 =======================
 ! 2009-06-02 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 

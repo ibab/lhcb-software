@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.2 2008-10-28 15:24:31 cattanem Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.3 2009-06-18 21:07:26 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H 
 #define CALODATAPROVIDERFROMTES_H 1
 
@@ -29,6 +29,8 @@ public:
   virtual double digit(LHCb::CaloCellID id);
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
+  virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources);
+  virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources);
   virtual void clear();
   virtual void cleanData(int feb);
   virtual bool getBanks();
@@ -45,6 +47,7 @@ public:
 protected:
 
 private:
+  bool checkSrc(int source);
   bool fromAdc(){
     std::string out( m_data );
     std::transform( m_data.begin() , m_data.end() , out.begin () , ::toupper ) ;
@@ -84,10 +87,12 @@ private:
   std::string m_adcLoc;
   std::string m_digLoc;
   std::string m_loc;
-  
+
+  std::vector<int> m_readSources;
   
   LHCb::CaloDigits* m_digCont;
   LHCb::CaloAdcs* m_adcCont;
+
 
 };
 #endif // CALODATAPROVIDERFROMTES_H

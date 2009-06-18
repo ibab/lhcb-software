@@ -114,6 +114,13 @@ CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(int source){
   decodeTell1(source);
   return m_adcs;
 }
+CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(std::vector<int> sources){
+  clear();
+  for(std::vector<int>::iterator i = sources.begin();i!=sources.end();i++){
+    decodeTell1(*i);
+  }
+  return m_adcs;
+}
 
 //-------------------------------------------------------
 int CaloL0DataProvider::l0Adc (LHCb::CaloCellID id){

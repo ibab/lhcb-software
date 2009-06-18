@@ -31,10 +31,13 @@ public:
   virtual unsigned int nTell1s(){return m_tell1s;};
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
+  virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> source);
+  virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> source);
   virtual void clear();
   virtual void cleanData(int feb);
   
 protected:
+  void adc2digit();
   bool decodeCell(LHCb::CaloCellID id);
   bool decodeTell1(int tell1);
   bool decodeBank(LHCb::RawBank* bank);

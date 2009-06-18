@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.33 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.34 2009-06-18 21:07:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" << rootInTES() << m_raw <<endreq;
+    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endreq;
     m_first=false;
     return false;
   }

@@ -30,6 +30,7 @@ public:
   virtual int l0Adc(LHCb::CaloCellID id)=0;
   virtual unsigned int nTell1s()=0;
   virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(int source=-1)=0;
+  virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(std::vector<int> sources)=0;
 
 protected:
 
