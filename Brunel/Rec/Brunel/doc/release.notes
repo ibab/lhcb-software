@@ -3,41 +3,26 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-06-17 - Marco Cattaneo
- - Cleanup configurable for reprocessing case
- - Remove obsolete DefineETC.opts, Brunel never writes an ETC
+</PRE><H1><A NAME=v35r2>2009-06-18 Brunel v35r2</A></H1><PRE>
 
-! 2009-06-16 - Patrick Koppenburg
- - Changes needed for FEST stripping jobs running on ETCs
+ - Changes to Configurable:
+   . Cleanup configurable for reprocessing case
+   . Update for running with ETC input, for FEST stripping use case
+   . Improve handling of NoWarning functionality
+   . Propagate InputType option to LumiAlgsConf
 
-! 2009-06-16 - Marco Cattaneo
- - Move most of SuppressWarnings.opts functionality into Brunel(). Only
-   sub-detector specific suppressions left in SuppressWarnings.opts
+ - Changes to references to reflect changes in Brunel v35r2 output:
+   . Addition of Downstream tracking in fieldOff case
+   . Addition of TrackDiMuonMonitor and RichRawDataSize monitors
+   . Addition of Muon Hits histograms in TrackMonitor
+   . Improvements to ring finding in Rich
+   . Updates to Rich track selection
+   . Improved Rich MC based trackless ring monitoring plots 
+   . In Best container, only Long tracks are now checked
+   . Fix in event sizes reported by Rich decoding tools
 
-! 2009-06-12 - Marco Cattaneo
- - Update reference for updates to Rich track selection
-
-! 2009-06-12 - Jaap Panman
- - configurable: pass on InputType to LumiAlgsConf
-
-! 2009-06-09 - Marco Cattaneo
- - Updated reference for improved Rich MC based trackless ring monitoring plots 
-
-! 2009-06-08 - Marco Cattaneo
- - Minor cleanups in configurable
-
-! 2009-06-05 - Marco Cattaneo
- - Updated references for track checking change:
-   . In Best container, only Long tracks are checked
-
- - Updated references for improvements to Rich:
-   . improvements to ring finding
-   . fix in event sizes reported by decoding tools
-   . new RichRawDataSize monitor
-
-! 2009-06-02 - Marco Cattaneo
- - Update references for addition of Downstream tracking in fieldOff case
- - Update version to v35r2
+ - Changes to options
+   . Remove obsolete DefineETC.opts, Brunel never writes an ETC
 
 </PRE><H1><A NAME=v35r1>2009-06-03 Brunel v35r1</A></H1><PRE>
 
