@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.1.1.1 2009-05-28 09:57:08 graven Exp $ 
+# $Id: HltLine.py,v 1.2 2009-06-18 07:39:54 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -864,7 +864,14 @@ class Hlt1Line(object):
                       , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
                       } )
         if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
-        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
+        if L0DU : 
+            from Configurables import L0DUFromRawAlg
+            _s = GaudiSequencer( l0entryName(line) + 'Sequence'
+                               , Members = [ L0DUFromRawAlg()
+                                           , L0Filter( l0entryName( line ) , Code = self._L0DU  )
+                                           ] 
+                               )
+            mdict.update( { 'L0DU' : _s } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
         if _members : 

@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.2 2009-05-30 11:24:53 graven Exp $
+// $Id: HltLine.cpp,v 1.3 2009-06-18 07:39:55 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -170,6 +170,7 @@ HltLine::HltLine( const std::string& name,
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
+  declareProperty( "FlagAsSlowThreshold"  , m_slowThreshold  = 500000, "microseconds"  );
 
 }
 //=============================================================================
@@ -309,9 +310,7 @@ StatusCode HltLine::execute() {
   double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
   fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
 
-  if (elapsedTime>5000) { //TODO: flag an error..
-      report.setErrorBits( report.errorBits() | 0x2 );
-  }
+  if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x2 );
 
   report.setDecision(accept ? 1u : 0u);
   report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
@@ -324,7 +323,9 @@ StatusCode HltLine::execute() {
   // update monitoring
   counter("#accept") += accept;
   if (accept) ++m_acceptRate;
-  counter("#errors") += ( report.errorBits()!=0);
+  // don't flag slow events as error, so mask the bit
+  counter("#errors") += ( (report.errorBits()&~0x2)!=0) ;
+  counter("#slow events") += ( report.errorBits() & 0x2 !=0 );
 
   fill( m_errorHisto, report.errorBits(),1.0);
   // make stair plot
@@ -336,9 +337,9 @@ StatusCode HltLine::execute() {
         if (i->second==1) break; // don't have subalgos, so this is where we stopped
         ++i; // descend into subalgorithms, figure out which one failed.....
         // Note: what to do if subalgos pass, but parent failed?? 
-        // actually need to invert parent/daughters, such that if daugthers OK,
-        // but parent isn't, we enter the plot at the parent, but that should be
-        // _after_ the daughters...
+        // actually need to invert parent/daughters, such that if daughters OK,
+        // but parent isn't, we enter the plot at the _parent_, but that should appear
+        // _after_ the daughters (which may be confusing)...
      }
   }
   fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.4 2009-06-03 10:22:53 pkoppenb Exp $
+! $Id: release.notes,v 1.5 2009-06-18 07:39:54 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2009-06-18 - Gerhard Raven
+ - make thresholds at which events are flagged as 'slow' a property,
+   change default to 50 ms.
+ - make sure that 'slow' events are not flagged as errors, but keep
+   seperate statistics
 
 !========================== HltLine v1r0 2009-06-03 ===================
 ! 2009-05-28 - Gerhard Raven

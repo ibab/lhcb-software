@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.1.1.1 2009-05-28 09:57:08 graven Exp $
+// $Id: HltLine.h,v 1.2 2009-06-18 07:39:55 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -141,6 +141,7 @@ private:
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   bool m_acceptOnError;                  ///< Forces accept if error
   int  m_timer;                          ///< Timer number for the sequencer
+  unsigned m_slowThreshold;
   double m_errorRate;                    ///< TODO: why double?
   double m_acceptRate;                   ///< TODO: why double?
 };
