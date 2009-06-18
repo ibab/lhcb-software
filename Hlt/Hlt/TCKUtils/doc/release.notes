@@ -5,6 +5,8 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-06-18 - Gerhard Raven
+ - make ConfigTarFileAccessSvc the default (used to be ConfigFileAccessSvc)
 !========================== TCKUtils v1r0p1 2009-06-10 ===================
 ! 2009-06-10 - Gerhard Raven
  - move appmgr init into _appmgr

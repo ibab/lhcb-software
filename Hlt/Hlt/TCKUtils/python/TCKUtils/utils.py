@@ -1,6 +1,9 @@
 import GaudiPython
 from Gaudi.Configuration import*
-from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc,ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
+from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
+
+# pick the default config access svc
+from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
 
 from TCKUtils.Sandbox import execInSandbox
 from pprint import pprint
@@ -21,12 +24,11 @@ def _appMgr() :
     appMgr.initialize()
     return appMgr
 
-
 def _tck(x) :
     if type(x) == str and x[0:2] == '0x' :  return int(x,16)
     return int(x)
 
-def _tck2id(x,cas = ConfigFileAccessSvc() ) :
+def _tck2id(x,cas = ConfigAccessSvc() ) :
     name = cas.getFullName()
     appMgr = _appMgr()
     appMgr.createSvc(name)
@@ -52,7 +54,7 @@ def tck2id(x,cas) :
     else :
         raise KeyError("not a valid TCK: "+str(x))
 
-def _orphanScan(cas = ConfigFileAccessSvc() ) :
+def _orphanScan(cas = ConfigAccessSvc() ) :
     treeNodeDict = dict()
     leafNodeDict = dict()
     import os
@@ -135,7 +137,7 @@ def _createTCKEntries(d, cas ) :
         s.writeConfigTreeNodeAlias(alias)
 
 
-def _getConfigurations( cas = ConfigFileAccessSvc() ) :
+def _getConfigurations( cas = ConfigAccessSvc() ) :
     name = cas.getFullName()
     appMgr = _appMgr()
     appMgr.createSvc(name)
@@ -156,7 +158,7 @@ def _getConfigurations( cas = ConfigFileAccessSvc() ) :
             if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
     return info
 
-def _getConfigTree( configID , cas = ConfigFileAccessSvc() ) :
+def _getConfigTree( configID , cas = ConfigAccessSvc() ) :
     id = _digest(tck2id(configID,cas),cas)
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
@@ -167,7 +169,7 @@ def _getConfigTree( configID , cas = ConfigFileAccessSvc() ) :
     _TreeNodeCache( svc = appMgr.service(name,'IPropertyConfigSvc') )
     return Tree(id)
 
-def _xget( configIDs , cas = ConfigFileAccessSvc() ) :
+def _xget( configIDs , cas = ConfigAccessSvc() ) :
     ids = [ _digest(i,cas) for i in configIDs ]
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() for id in ids ],
                             ConfigAccessSvc = cas.getFullName() )
@@ -317,7 +319,7 @@ class Tree(object):
            for x in i._inorder() : yield x
  
 
-def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
+def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     (lhs,rhs) = (tck2id(lhs,cas),tck2id(rhs,cas))
     table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
     setl = set( table[lhs].keys() )
@@ -341,26 +343,26 @@ def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
 
 
 
-def updateProperties(id,updates,label='', cas = ConfigFileAccessSvc() ) :
+def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
-def createTCKEntries(d, cas = ConfigFileAccessSvc() ) :
+def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
-def copy( source = ConfigFileAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
+def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
     return execInSandbox( _copy, source, target )
 
-def listComponents( id, cas = ConfigFileAccessSvc() ) :
+def listComponents( id, cas = ConfigAccessSvc() ) :
     tree = execInSandbox( _getConfigTree, id, cas )
     for i in tree : 
         if i.leaf : 
           s =  i.depth*3*' ' + i.leaf.name
           print s + (80-len(s))*' ' + str(i.leaf.digest)
-def listAlgorithms( id, cas = ConfigFileAccessSvc() ) :
+def listAlgorithms( id, cas = ConfigAccessSvc() ) :
     tree =  execInSandbox( _getConfigTree, id, cas )
     for i in tree :
        if i.leaf and i.leaf.kind =='IAlgorithm':
           s =  i.depth*3*' ' + i.leaf.name
           print s + (80-len(s))*' ' + str(i.leaf.digest)
-def listProperties( id, algname='',property='',cas = ConfigFileAccessSvc() ) :
+def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     tree = execInSandbox( _getConfigTree, id, cas ) 
     import re
     if algname : 
@@ -382,20 +384,20 @@ def listProperties( id, algname='',property='',cas = ConfigFileAccessSvc() ) :
             print '\n   Requested Properties for ' + i.leaf.fullyQualifiedName
             first = False
           print "      '" + k + "\':" + v
-def orphanScan( cas = ConfigFileAccessSvc() ) :
+def orphanScan( cas = ConfigAccessSvc() ) :
     return execInSandbox(_orphanScan, cas)
 
-def getConfigurations( cas = ConfigFileAccessSvc() ) :
+def getConfigurations( cas = ConfigAccessSvc() ) :
     return execInSandbox( _getConfigurations, cas )
-def getReleases( cas = ConfigFileAccessSvc() ) :
+def getReleases( cas = ConfigAccessSvc() ) :
     return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
-def getHltTypes( release, cas = ConfigFileAccessSvc() ) :
+def getHltTypes( release, cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
     return set( [ i['hlttype']  for i in info.itervalues() if i['release']==release ] )
-def getTCKs( release, hlttype, cas = ConfigFileAccessSvc() ) :
+def getTCKs( release, hlttype, cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
     return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if v['release']==release and v['hlttype']==hlttype] 
-def getRoutingBits( id , cas = ConfigFileAccessSvc() ) :
+def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
     for p in ['RoutingBits','routingBitDefinitions'] :
         try :
@@ -404,10 +406,10 @@ def getRoutingBits( id , cas = ConfigFileAccessSvc() ) :
             continue
     return None
 
-def getHlt1Lines( id , cas = ConfigFileAccessSvc() ) :
+def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(_getProperty(id,'Hlt1','Members',cas))
-def getHlt1Decisions( id , cas = ConfigFileAccessSvc() ) :
+def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     id = tck2id(id,cas)
     table = execInSandbox( _xget, [ id ], cas )[id]
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
@@ -432,19 +434,19 @@ def printReleases( rel ) : pprint(rel)
 def printHltTypes( rt ) : pprint(rt)
 def printTCKs( tcks ) : pprint(tcks)
 
-def listConfigurations( cas = ConfigFileAccessSvc() ) :
+def listConfigurations( cas = ConfigAccessSvc() ) :
     return printConfigurations( getConfigurations(cas) )
-def listReleases( cas = ConfigFileAccessSvc() ) :
+def listReleases( cas = ConfigAccessSvc() ) :
     return printReleases( getReleases() ) 
-def listHltTypes( release, cas = ConfigFileAccessSvc() ) :
+def listHltTypes( release, cas = ConfigAccessSvc() ) :
     return printHltTypes( getHltTypes(release) ) 
-def listTCKs( release, hlttype, cas = ConfigFileAccessSvc() ) :
+def listTCKs( release, hlttype, cas = ConfigAccessSvc() ) :
     return printTCKs( getTCKs(release,hlttype) ) 
-def listRoutingBits( id, cas = ConfigFileAccessSvc() ) :
+def listRoutingBits( id, cas = ConfigAccessSvc() ) :
     print getRoutingBits(id,cas)
-def listHlt1Lines( id, cas = ConfigFileAccessSvc() ) :
+def listHlt1Lines( id, cas = ConfigAccessSvc() ) :
     print getHlt1Lines(id,cas)
-def listHlt1Decisions( id, cas = ConfigFileAccessSvc() ) :
+def listHlt1Decisions( id, cas = ConfigAccessSvc() ) :
     print getHlt1Decisions(id,cas)
 
 
