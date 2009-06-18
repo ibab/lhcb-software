@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.4 2009-06-15 13:52:48 aperezca Exp $
+$Id: release.notes,v 1.5 2009-06-18 07:30:00 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-18 - Johannes Albrecht
+ - initial migration of Inclusive unbiased dimuon lines
 
 ! 2009-06-15 - Antonio Perez-Calero
   - Initial migration of Inclusive Muon and Muon+Track lines.
