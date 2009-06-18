@@ -144,7 +144,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         ++foundRootFilesIt;
       }
       if (histogram->rootHistogram) {
-        if (false == m_mainFrame->isHistoryTrendPlotMode()) {
+        if (false == m_mainFrame->isHistoryTrendPlotMode() || histogram->rootHistogram->GetDimension()>1) {
           (histogram->rootHistogram)->Merge(list);
         } else {
           if(list->GetSize()>0) {
