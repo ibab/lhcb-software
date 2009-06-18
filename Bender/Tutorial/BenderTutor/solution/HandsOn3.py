@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn3.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: HandsOn3.py,v 1.14 2009-06-18 12:46:20 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'Hands-On-3' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,6 +25,15 @@ class MCKaons(AlgoMC) :
     """
     The solution for the third excersize
     """
+    ## constructor
+    def __init__ ( self , name = 'MCKaons' , **args ) :
+        """
+        The constructor
+        """
+        AlgoMC.__init__ ( self , name )
+        for k in args : setattr ( self , k , args[k] )
+        
+    
     ## the main analysus method 
     def analyse( self ) :
         """
@@ -87,12 +96,12 @@ def configure() :
 
     # modify/update the configuration:
     
-    ## 1) create the algorithm
-    alg = MCKaons( 'MCKaons' )
-    
-    ## configure own algorithm 
-    alg.NTupleLUN = 'MCK'
-    alg.PP2MCs = []
+    ## 1) create & configure the algorithm
+    alg = MCKaons(
+        'MCKaons'                  , ## algorithm name 
+        NTupleLUN = 'MCK'          , ## logical file unit for N-tuples  
+        PP2MCs = []                  ## list of MC-truth links
+        )
     
     ## 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms( [alg ])

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.14 2009-05-14 18:03:09 ibelyaev Exp $ 
+# $Id: RCSelect.py,v 1.15 2009-06-18 12:46:20 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'RCselect.py' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.Main import *
@@ -25,6 +25,16 @@ class RCSelect(Algo):
     """
     The simple demo-algorithm
     """
+    
+    ## constructor
+    def __init__ ( self , name = 'RCSelect' , **args ) :
+        """
+        The constructor
+        """
+        Algo.__init__ ( self , name )
+        for k in args : setattr ( self , k , args[k] )
+        
+
     ## the main analysis algorithm 
     def analyse( self ) :
         """
@@ -51,7 +61,7 @@ class RCSelect(Algo):
             if not 0 <= VCHI2( psi ) < 49 : continue
             
             self.plot( M ( psi ) / 1000  ,
-                       " dimuon invariant mass " ,
+                       "dimuon invariant mass" ,
                        2.5 , 3.5 )
 
             if not dmPsi( psi ) : continue
@@ -69,7 +79,7 @@ class RCSelect(Algo):
             if not 0 <= VCHI2( phi ) < 49 : continue
             
             self.plot ( M(phi) / 1000 ,
-                        " dikaon invariant mass " ,
+                        "dikaon invariant mass" ,
                         1.0 , 1.050 )
 
             if not dmPhi( phi ) : continue
@@ -84,7 +94,7 @@ class RCSelect(Algo):
             if not 0 <= VCHI2( B ) <  49 : continue
             
             self.plot ( M(B) / 1000 ,
-                        " psi phi invarinat mass " ,
+                        "psi phi invariant mass" ,
                         5.0 , 6.0 )
             
             if not dmBs ( B ) : continue
@@ -119,17 +129,15 @@ def configure() :
     # modify/update the configuration:
         
     # 1) create the algorithm
-    alg = RCSelect( 'RCSelect' )
+    alg = RCSelect(
+        'RCSelect'  ,
+        InputLocations = [ 'StdTightKaons' , 
+                           'StdTightMuons' ] 
+        )
     
     # 2) add the algorithm to the list of top-level algorithms 
     # gaudi.addAlgorithm( alg ) 
     gaudi.setAlgorithms( [alg] ) 
-    
-    # 3) configure algorithm
-    alg.InputLocations = [
-        'Phys/StdTightKaons' , 
-        'Phys/StdTightMuons'
-        ]
     
     ## redefine input files 
     evtSel = gaudi.evtSel()

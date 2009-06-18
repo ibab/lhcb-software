@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,6 +25,14 @@ class RCKaons(AlgoMC):
     """
     The solution for the fourth exersize
     """
+    ## constructor
+    def __init__ ( self , name = 'RCKaons' , **args ) :
+        """
+        The constructor
+        """
+        AlgoMC.__init__ ( self , name )
+        for k in args : setattr ( self , k , args[k] )
+
     ## the main analysis method 
     def analyse( self ) :
         """
@@ -117,22 +125,18 @@ def configure() :
     
     ## modify/update the configuration:
     
-    ## 1) create the algorithm
-    alg = RCKaons( 'RCKaons' )
+    ## 1) create& configure  the algorithm
+    alg = RCKaons(
+        'RCKaons' , 
+        InputLocations = [ 'StdTightKaons' ,
+                           'StdTightMuons' ] ,      # input particles         
+        PP2MCs = ['Relations/Rec/ProtoP/Charged'] , # only charged 
+        NTupleLUN = 'PHI'
+        )
     
     ## 2) add algorithm to the list of TopLevel algorithms 
     # gaudi.addAlgorithm( alg )
     gaudi.setAlgorithms( [alg] )
-    
-    ## 3) configure algorithm
-    alg.InputLocations = [
-        'Phys/StdTightKaons' ,
-        'Phys/StdTightMuons' 
-        ]
-    
-    ## configure own algorithm 
-    alg.PP2MCs = ['Relations/Rec/ProtoP/Charged'] # only charged 
-    alg.NTupleLUN = 'PHI'
     
     # redefine input files 
     evtSel = gaudi.evtSel()

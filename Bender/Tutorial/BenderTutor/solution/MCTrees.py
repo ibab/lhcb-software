@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: MCTrees.py,v 1.14 2009-06-18 12:46:20 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'MCTrees.py' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,6 +25,14 @@ class MCTrees( AlgoMC ) :
     """
     The algorthmm itself
     """
+    ## constructor
+    def __init__ ( self , name = 'MCTree' , **args ) :
+        """
+        The constructor
+        """
+        AlgoMC.__init__ ( self , name )
+        for k in args : setattr ( self , k , args[k] )
+  
     ## the main analysis method 
     def analyse( self ) :
         """
@@ -93,15 +101,15 @@ def configure() :
     gaudi = appMgr() 
 
     # 1) create the algorithm
-    alg = MCTrees( 'McTree' )
+    alg = MCTrees(
+        'MCTree'         ,
+        NTupleLUN = 'MC' ,
+        PP2MCs    = []
+        )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms ( [ alg ] ) 
 
-    # configure my own algorithm
-    alg.NTupleLUN = 'MC'
-    alg.PP2MCs = []
-    
     ## redefine input files 
     evtSel = gaudi.evtSel()
     import LoKiExample.Bs2Jpsiphi_mm_data as data 
