@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.2 2009-06-18 07:39:54 graven Exp $ 
+# $Id: HltLine.py,v 1.3 2009-06-18 19:54:10 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1125,11 +1125,15 @@ class Hlt2Member ( object ) :
             # adapt bindMembers...
             inputLocations = [ i.outputSelection() if type(i) is bindMembers else i 
                                for i in inputLocations ]
-            # deal with nested lists (one level only), keep order invariant
+            # as outputSelection might be a list, (!)
+            # deal with nested lists (one level only), keeping order invariant
             _x = []
             for i in inputLocations :
                 _x += i if type(i) is list else [ i ]
             inputLocations = _x
+            # deal with Hlt2Members
+            inputLocations = [ '%'+i.subname() if type(i) is Hlt2Member else i
+                               for i in inputLocations ]
             # deal with concrete instances
             from Configurables import FilterDesktop, CombineParticles
             inputLocations = [ i.getName() if type(i) in [ CombineParticles, FilterDesktop ] else i
