@@ -6,7 +6,7 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
     set lbvers=dev
   endif
   if ( $?LBLOGIN_DONE ) then
-    source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --silent
+    source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --silent >& /dev/null
   else
     setenv LB_BANNER `mktemp -t LbLogin_banner.XXXXXXXX`
     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --quiet >! ${LB_BANNER}

@@ -1,3 +1,11 @@
+2009-06-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LHCb.csh: New file. Top wrapper to be inserted in /etc/profile.d. 
+	* scripts/LHCb.sh: New file. see above
+	* scripts/group_shell.csh: ensure to be completely silent in the case of a 
+	new shell creation.
+	* scripts/group_shell.sh: see above 
+
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r1
