@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.354 2009-06-15 09:32:19 pkoppenb Exp $
+! $Id: release.notes,v 1.355 2009-06-18 12:52:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-18 - Patrick Koppenburg
+ - Correct Stripping test
 
 ! 2009-06-15 - Patrick Koppenburg
  - Added MC09 Inclusive J/psi example DST data.
