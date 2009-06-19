@@ -74,6 +74,8 @@ class MainWindow(QMainWindow):
         
         # When created, we have to ensure that everything is grayed out.
         self._setMainViewEnabled(False)
+        self.menuEdit.setEnabled(False)
+        self.menuAdvanced.setEnabled(False)
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -113,6 +115,9 @@ class MainWindow(QMainWindow):
     def _setMainViewEnabled(self, value):
         value = bool(value)
         self.actionRead_Only.setEnabled(value)
+        self.actionSlice.setEnabled(value)
+        self.actionDump_to_files.setEnabled(value)
+        self.actionClose.setEnabled(value)
         self.mainWidget.setEnabled(value)
     
     ## Open the database identified by a connection string or by a nickname.
