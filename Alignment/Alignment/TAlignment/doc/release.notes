@@ -29,6 +29,7 @@ Purpose	: collection of alignment algorithms
  - Added functionality to compute only subset of track-track hit correlations in VertexResidualTool
  - Added constrains for z-bowing
  - Added functionality to align dos at different granularity simultaneously, e.g. C-frames in z and modules in x.
+ - Make AlConfigurable a LHCbConfigurableUser
 
 </PRE><H1><A NAME=v3r7>2008-09-12 TAlignment v3r7</A></H1><PRE>
 
