@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2009-06-19 - Chris Jones
+ - Fixes for runtime differences between 32 and 64 bit
+
 !===================== RichRecAlgorithms v2r16 2009-06-17 ====================
 ! 2009-06-11 - Chris Jones
  - Fix WIN32 compilation warnings

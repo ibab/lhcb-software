@@ -5,7 +5,7 @@
  *  Header file for ENN ring finder
  *
  *  CVS Log :-
- *  $Id: ENNRingFinder.h,v 1.13 2009-06-06 16:58:26 jonrob Exp $
+ *  $Id: ENNRingFinder.h,v 1.14 2009-06-19 22:12:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   22/05/2009
@@ -64,7 +64,11 @@ namespace Rich
         public:
           /// Sorting operator
           inline bool operator < ( const Hit & h ) const
-          { return ( this->x < h.x ); }
+          { 
+            // sort by x then y
+            const double scale = 1e10;
+            return ( scale*this->x + this->y < scale*h.x + h.y );
+          }
         public:
           /// Overloaded output to ostream
           friend inline std::ostream & operator << ( std::ostream & os, 
@@ -77,7 +81,7 @@ namespace Rich
         public:
           double x; ///< x coordinate
           double y; ///< y coordinate
-          int busy; ///< quality of the best ring with this hit
+          unsigned int busy; ///< quality of the best ring with this hit
           // variables for local search:
           double lx, ly, lr2; // local coordinates
           double S0, S1, S2, S3, S4; // coefficients for calculation of E
@@ -137,8 +141,8 @@ namespace Rich
           double chi2; ///< chi2
           Hit::PtnVector Hits; ///< pointers to ring hits
           // variables for the selection procedure:
-          int NHits; ///< number of ring hits
-          int NOwn;  ///< number of its own hits
+          unsigned int NHits; ///< number of ring hits
+          unsigned int NOwn;  ///< number of its own hits
           bool skip; ///< skip the ring during selection
         };
 
@@ -186,7 +190,7 @@ namespace Rich
           }
         public:
           inline double hitSigma()      const { return m_HitSigma; }
-          inline int minRingHits()      const { return m_MinRingHits; }
+          inline unsigned int minRingHits() const { return m_MinRingHits; }
           inline double rMin()          const { return m_RMin; }
           inline double rMax()          const { return m_RMax; }
           inline double rejectionFact() const { return m_RejectionFactor; }
@@ -199,7 +203,7 @@ namespace Rich
           inline double areaSize2()     const { return m_AreaSize2; }
         private:
           double m_HitSigma;          ///< Hit sigma
-          int m_MinRingHits;          ///< Minimum number of hits on a ring
+          unsigned int m_MinRingHits; ///< Minimum number of hits on a ring
           double m_RMin;              ///< Minimum ring radius
           double m_RMax;              ///< Maximum ring radius
           double m_RejectionFactor;   ///< Factor for background rejection

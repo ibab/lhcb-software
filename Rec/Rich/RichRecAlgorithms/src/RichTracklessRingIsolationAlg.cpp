@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.13 2009-06-11 12:50:40 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.14 2009-06-19 22:15:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -39,7 +39,7 @@ TracklessRingIsolationAlg( const std::string& name,
   declareProperty( "SizeSepCut",           m_sizesepcut = list_of (150)(150)(260) );
   declareProperty( "MaxPixSearchWin",        m_pixelWin = list_of (200)(100)(200) );
   declareProperty( "SizeRingWidth",     m_sizeringwidth = list_of (0.01)(0.01)(0.00944) );
-  declareProperty( "MaxFracOutsideRing", m_sizepixelcut = list_of (0.2)(0.2)(0.2) );
+  declareProperty( "MaxFracOutsideRing", m_sizepixelcut = list_of (0.20001)(0.20001)(0.20001) );
   declareProperty( "CKthetaMax",           m_ckThetaMax = list_of (0.24)(0.052)(0.03) );
   declareProperty( "SepGMax",                 m_sepGMax = list_of (342)(75)(130) );
   declareProperty( "NPhiRegions",         m_nPhiRegions = list_of (8)(8)(8)   );
@@ -205,10 +205,11 @@ StatusCode TracklessRingIsolationAlg::execute()
         // x,y differences
         const double diff_x       = RingCentreLocal.x()-PixelLocal.x();
         const double diff_y       = RingCentreLocal.y()-PixelLocal.y();
-        // Estimate Ch Phi for pixel
+
+        // Estimate CK Phi for pixel
         const double CherenkovPhi = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
 
-        // Which Ch phi region
+        // Which CK phi region
         const int region = (int)( m_nPhiRegions[rad] * CherenkovPhi / (M_PI*2.0) );
 
         // count number in each region
@@ -223,7 +224,7 @@ StatusCode TracklessRingIsolationAlg::execute()
     if ( !ringIsIsolated && m_abortEarly ) continue;
 
     const double frachitsout = (double)(hitsinside+hitsoutside) / (double)hittotal;
-    OK = frachitsout < m_sizepixelcut[rad];
+    OK = frachitsout <= m_sizepixelcut[rad];
     ringIsIsolated &= testCut( "Occupancy outside ring annulus too large", rad, OK );
     if ( !ringIsIsolated && m_abortEarly ) continue;
 

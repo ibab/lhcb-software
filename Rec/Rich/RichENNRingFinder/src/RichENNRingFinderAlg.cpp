@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichENNRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.cpp,v 1.12 2009-06-11 15:12:05 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.cpp,v 1.13 2009-06-19 22:12:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -55,8 +55,8 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 85.0;
     m_maxRingRadius    = 150.0;
-    m_maxRingChi2      = 150;
-    m_minRingPurity    = 0.8;
+    m_maxRingChi2      = 150.0;
+    m_minRingPurity    = 0.7999;
     m_rejectionFactor  = 0.5;
   }
   else if ( Rich::Rich1Gas == rad )
@@ -71,8 +71,8 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 8;
     m_minRingRadius    = 40.0;
     m_maxRingRadius    = 85.0;
-    m_maxRingChi2      = 150;
-    m_minRingPurity    = 0.8;
+    m_maxRingChi2      = 150.0;
+    m_minRingPurity    = 0.7999;
     m_rejectionFactor  = 0.5;
   }
   else // Aerogel (Very Experimental .....)
@@ -86,8 +86,8 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
     m_minHitsPerRing   = 5;
     m_minRingRadius    = 200.0;
     m_maxRingRadius    = 400.0;
-    m_maxRingChi2      = 150;
-    m_minRingPurity    = 0.8;
+    m_maxRingChi2      = 150.0;
+    m_minRingPurity    = 0.7999;
     m_rejectionFactor  = 0.5;
   }
   // JOs
@@ -237,7 +237,7 @@ StatusCode AlgBase<FINDER>::saveRings() const
         verbose() << " -> Chi^2 too large -> reject " << endmsg;
       continue;
     }
-    if ( (*iRing).purity() < m_minRingPurity )
+    if ( (*iRing).purity() <= m_minRingPurity )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Purity too small -> reject " << endmsg;

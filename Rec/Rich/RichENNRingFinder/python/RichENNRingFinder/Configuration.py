@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-06-03 08:52:59 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-06-19 22:12:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -28,7 +28,7 @@ class RichENNRingFinderConf(RichConfigurableUser):
        ,"MaxHitsInHPD"        : [ 30,  50,  50  ]
        ,"AssociateToSegments" : True
        ,"Sequencer"           : None # The sequencer to add the RICH ENN ring finder algorithms to
-       ,"OutputLevel"         : INFO
+       ,"OutputLevel"         : INFO # The output level to set all algorithms and tools to use
         }
 
     ## Access the finder for RICH1 top panel Aerogel
