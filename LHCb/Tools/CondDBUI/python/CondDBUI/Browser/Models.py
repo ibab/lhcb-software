@@ -1,6 +1,9 @@
 from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel,
-                          QVariant, QModelIndex, Qt)
+                          QVariant, QModelIndex,
+                          Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import QIcon, QApplication
+
+from PyCool import cool
 
 __all__ = ["CondDBNodesListModel",
            "CondDBStructureModel",
@@ -307,6 +310,8 @@ class CondDBNodesListModel(QAbstractListModel):
 
 ## Model class to retrieve the available tags in a folder.
 class CondDBTagsListModel(QAbstractListModel):
+    __pyqtSignals__ = ("setViewEnabled(bool)")
+    
     def __init__(self, db = None, path = None, parent = None):
         super(CondDBTagsListModel,self).__init__(parent)
         self.db = None
@@ -343,12 +348,20 @@ class CondDBTagsListModel(QAbstractListModel):
         self.reset()
         self._path = path
         if path and self.db.db.existsFolder(path):
-            # invalidate the cache
-            self._tags = None
-            self._alltags = None
+            f = self.db.db.getFolder(path)
+            if f.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                # invalidate the cache
+                self._tags = None
+                self._alltags = None
+                self.emit(SIGNAL("setViewEnabled(bool)"), True)
+            else:
+                # single version folders do not have tags by definition
+                self._tags = self._alltags = []
+                self.emit(SIGNAL("setViewEnabled(bool)"), False)
         else:
             # If no folder is specified or the path is a folderset, use an empty cache
             self._tags = self._alltags = []
+            self.emit(SIGNAL("setViewEnabled(bool)"), False)
     
     def alltags(self):
         if self._alltags is None:

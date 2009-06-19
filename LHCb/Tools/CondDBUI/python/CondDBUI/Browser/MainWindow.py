@@ -62,6 +62,8 @@ class MainWindow(QMainWindow):
         tagsmodel = self.models["tags"]
         QObject.connect(self, SIGNAL("changedPath"), tagsmodel.setPath)
         QObject.connect(self.hideAutoCheckBox, SIGNAL("stateChanged(int)"), tagsmodel.setHideAutoTags)
+        QObject.connect(tagsmodel, SIGNAL("setViewEnabled(bool)"), self.tagComboBox, SLOT("setEnabled(bool)"))
+        QObject.connect(tagsmodel, SIGNAL("setViewEnabled(bool)"), self.hideAutoCheckBox, SLOT("setEnabled(bool)"))
         tagsmodel.setHideAutoTags(self.hideAutoCheckBox.checkState())
 
         # Filter panel
@@ -70,6 +72,8 @@ class MainWindow(QMainWindow):
         self.sinceFilterWidget.setDateTime(QDateTime.currentDateTime().addMonths(-1))
         self.untilFilterWidget.setMaxChecked(True)
         
+        # When created, we have to ensure that everything is grayed out.
+        self._setMainViewEnabled(False)
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -104,6 +108,13 @@ class MainWindow(QMainWindow):
         # Open the database using the connection string in the action
         self.openDatabase(str(sender.data().toString()))        
 
+    ## Commodity function to enable/disable the main widget (i.e. whatever needs
+    #  to be grayed out when there is no database opened.
+    def _setMainViewEnabled(self, value):
+        value = bool(value)
+        self.actionRead_Only.setEnabled(value)
+        self.mainWidget.setEnabled(value)
+    
     ## Open the database identified by a connection string or by a nickname.
     #  If name is an empty string (or None) the result is a disconnection from the
     #  current database.
@@ -115,11 +126,11 @@ class MainWindow(QMainWindow):
             if connString:
                 self.db = CondDB(connString, readOnly = readOnly)
                 title = "%s - %s" % (connString, self.appName)
-                self.actionRead_Only.setEnabled(True)
+                self._setMainViewEnabled(True)
             else:
                 self.db = None
                 title = self.appName
-                self.actionRead_Only.setEnabled(False)
+                self._setMainViewEnabled(False)
             self.setWindowTitle(title)
             # Change the status of the editing menus
             editable = not readOnly
