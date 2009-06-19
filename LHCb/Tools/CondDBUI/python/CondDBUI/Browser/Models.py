@@ -1,6 +1,6 @@
 from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel,
                           QVariant, QModelIndex, Qt)
-from PyQt4.QtGui import QIcon
+from PyQt4.QtGui import QIcon, QApplication
 
 __all__ = ["CondDBNodesListModel",
            "CondDBStructureModel",
@@ -18,6 +18,7 @@ __all__ = ["CondDBNodesListModel",
 
 icons = {}
 
+## Function to set the icons used by the models.
 def setModelsIcons(dict):
     global icons
     icons = dict
@@ -36,6 +37,15 @@ def parentpath(path):
         parent = "/"
     return parent
 
+## Guard-like class to change the cursor icon during operations that may take a
+#  long time.  
+class BusyCursor(object):
+    ## Constructor, sets the application cursor to Qt.WaitCursor.
+    def __init__(self):
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+    ## Destructor, restore the application cursor.
+    def __del__(self):
+        QApplication.restoreOverrideCursor()
 
 ## Class to manage the hierarchy of items in CondDBStructureModel.
 class CondDBStructureItem(object):
@@ -79,6 +89,7 @@ class CondDBStructureItem(object):
             self._children = []
             if self.channel is not None:
                 return self._children # no children for a channel inside a folder
+            _bc = BusyCursor()
             if self.leaf:
                 # If the COOL node is a Folder, the children are the channels.
                 
@@ -341,6 +352,7 @@ class CondDBTagsListModel(QAbstractListModel):
     
     def alltags(self):
         if self._alltags is None:
+            bc = BusyCursor()
             self._alltags = self.db.getTagList(self._path)
         return self._alltags
     
@@ -368,5 +380,3 @@ class CondDBTagsListModel(QAbstractListModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Tag")
         return QVariant()        
-
-
