@@ -475,10 +475,14 @@ namespace Al
       logmessage << "Canonical constraint values: " << std::endl ;
       for (size_t iactive = 0u; iactive < numConstraintDerivatives; ++iactive) {
 	size_t parindex = totalmask.parIndex(iactive) ;
-	logmessage << std::setw(5) 
+	logmessage << std::setw(15) 
+		   << std::setiosflags(std::ios_base::left)
 		   << m_derivatives[parindex/Al::ConstraintDerivatives::NumConstraints]->name(parindex%Al::ConstraintDerivatives::NumConstraints)
 		   << std::setw(12) << x(iactive)
-		   << " +/- " << AlParameters::signedSqrt(V.fast(iactive,iactive)) << std::endl ;
+		   << " +/- " 
+		   << std::setw(12) << AlParameters::signedSqrt(V.fast(iactive,iactive)) 
+		   << " gcc^2: " 
+		   << std::setw(12) << 1 + 1/(V.fast(iactive,iactive) * covlambda.fast(iactive,iactive))  << std::endl ;
       }
       logmessage << "Canonical constraint chisquare: " << chisquare << std::endl ;
         
