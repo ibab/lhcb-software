@@ -156,6 +156,12 @@ class Alignables( list ):
     def IT( self, dofs = "" ) :
         self.__append( self.m_it, dofs )
 
+    def ITStations( self, dofs = "" ) :
+        elements = []
+        for i in self.m_itStations :
+            elements.append( self.m_it + i )
+        self.__append( elements, dofs )
+        
     def ITBoxes( self, dofs = "" ) :
         elements = []
         for i in self.m_itStations :
@@ -249,10 +255,10 @@ class Alignables( list ):
             station = self.m_ot + i
             ## C-side X1 and U
             # elements.append( "Group : " + station + "/(X1|U)" + self.m_otQuarters[0] + "/M." )
-            elements.append( i.strip( '/' ) + "X1UCSide : " + station + "/(X1|U)" + self.m_otQuarters[0] )
+            elements.append( "OT/" + i.strip( '/' ) + "X1UCSide : " + station + "/(X1|U)" + self.m_otQuarters[0] )
             ## C-side V and X2
             # elements.append( "Group : " + station + "/(V|X2)" + self.m_otQuarters[0] + "/M." )
-            elements.append( i.strip( '/' ) + "VX2CSide : " + station + "/(V|X2)" + self.m_otQuarters[0] )
+            elements.append( "OT/" + i.strip( '/' ) + "VX2CSide : " + station + "/(V|X2)" + self.m_otQuarters[0] )
         self.__append( elements, dofs )
 
     def OTCFramesASide( self, dofs = "" ) :
@@ -261,11 +267,16 @@ class Alignables( list ):
             station = self.m_ot + i
             ## A-side X1 and U
             # elements.append( "Group : " + station + "/(X1|U)" + self.m_otQuarters[1] + "/M." )
-            elements.append( i.strip( '/' ) + "X1UASide : " + station + "/(X1|U)" + self.m_otQuarters[1] )
+            elements.append( "OT/" + i.strip( '/' ) + "X1UASide : " + station + "/(X1|U)" + self.m_otQuarters[1] )
             ## A-side V and X2
             # elements.append( "Group : " + station + "/(V|X2)" + self.m_otQuarters[1] + "/M." )
-            elements.append( i.strip( '/' ) + "VX2ASide : " + station + "/(V|X2)" + self.m_otQuarters[1] )
+            elements.append( "OT/" + i.strip( '/' ) + "VX2ASide : " + station + "/(V|X2)" + self.m_otQuarters[1] )
         self.__append( elements, dofs )
+
+    
+    def OTCFrames( self, dofs = "" ) :
+        self.OTCFramesASide( dofs )
+        self.OTCFramesCSide( dofs )
 
     def OTLayersCSide( self, dofs = "" ) :
         elements = []
