@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.20 2009-03-16 16:53:26 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.21 2009-06-19 13:19:27 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -610,8 +610,8 @@ double EvtGenDecay::branching( const EvtId& id ) const {
     }
     
     int index = EvtDecayTable::inChannelList( EvtId( id.getId(), id.getId() ),
-                                           theDecAlias -> getNDaug( ) ,
-                                           daugs_scratch ) ;
+                                              theDecAlias -> getNDaug( ) ,
+                                              daugs_scratch ) ;
     EvtDecayBase * theTrueDecay = 
       EvtDecayTable::getDecay( id.getId() , index ) ;
 
@@ -621,9 +621,7 @@ double EvtGenDecay::branching( const EvtId& id ) const {
       tempBr *= branching( theDecAlias -> getDaugs( )[ j ] ) ;
     }
 
-//    TODO: reintroduce this possibility missing from EvtGen
-//    result += theTrueDecay -> getBranchingFraction( ) /
-//      EvtDecayTable::totalBr( id.getId( ) ) * tempBr ;
+    result += theTrueDecay -> getBranchingFraction( ) * tempBr ;
   }
 
   return result ;

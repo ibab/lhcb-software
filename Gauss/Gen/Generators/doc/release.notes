@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.150 2009-06-15 17:02:45 gcorti Exp $
+! $Id: release.notes,v 1.151 2009-06-19 13:19:27 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-06-19 - Patrick Robbe
+ - EvtGenDecay.cpp: reactivates computing of branching fraction in 
+    DECAY.DEC
 
 ! 2009-06-15 - Gloria CORTI
  - Fix compilation warning of unused variable removing leftover old variable 
