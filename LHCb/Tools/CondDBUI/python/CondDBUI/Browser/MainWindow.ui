@@ -115,6 +115,15 @@
            <string>Filter</string>
           </property>
           <layout class="QFormLayout" name="iovTagFilterLayout" >
+           <property name="fieldGrowthPolicy" >
+            <enum>QFormLayout::ExpandingFieldsGrow</enum>
+           </property>
+           <property name="labelAlignment" >
+            <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+           </property>
+           <property name="formAlignment" >
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
            <item row="0" column="0" >
             <widget class="QLabel" name="sinceLabel" >
              <property name="text" >
@@ -152,7 +161,7 @@
               <string>If checked, the special tags starting with "_auto_" are not displayed.</string>
              </property>
              <property name="text" >
-              <string>Hide _auto_ tags</string>
+              <string>Hide "_auto_" tags</string>
              </property>
              <property name="checked" >
               <bool>true</bool>
@@ -160,73 +169,22 @@
             </widget>
            </item>
            <item row="0" column="1" >
-            <widget class="QDateTimeEdit" name="sinceFilterEdit" >
-             <property name="minimumDate" >
-              <date>
-               <year>1970</year>
-               <month>1</month>
-               <day>1</day>
-              </date>
-             </property>
-             <property name="minimumTime" >
-              <time>
-               <hour>0</hour>
-               <minute>0</minute>
-               <second>0</second>
-              </time>
-             </property>
-             <property name="displayFormat" >
-              <string>dd/MM/yyyy HH:mm</string>
-             </property>
-             <property name="calendarPopup" >
-              <bool>true</bool>
-             </property>
-             <property name="timeSpec" >
-              <enum>Qt::UTC</enum>
+            <widget class="TimePointEdit" native="1" name="sinceFilterWidget" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
            <item row="1" column="1" >
-            <widget class="QDateTimeEdit" name="untilFilterEdit" >
-             <property name="minimumDateTime" >
-              <datetime>
-               <hour>0</hour>
-               <minute>0</minute>
-               <second>0</second>
-               <year>1970</year>
-               <month>1</month>
-               <day>1</day>
-              </datetime>
-             </property>
-             <property name="minimumDate" >
-              <date>
-               <year>1970</year>
-               <month>1</month>
-               <day>1</day>
-              </date>
-             </property>
-             <property name="maximumTime" >
-              <time>
-               <hour>22</hour>
-               <minute>59</minute>
-               <second>59</second>
-              </time>
-             </property>
-             <property name="minimumTime" >
-              <time>
-               <hour>0</hour>
-               <minute>0</minute>
-               <second>0</second>
-              </time>
-             </property>
-             <property name="displayFormat" >
-              <string>dd/MM/yyyy HH:mm</string>
-             </property>
-             <property name="calendarPopup" >
-              <bool>true</bool>
-             </property>
-             <property name="timeSpec" >
-              <enum>Qt::UTC</enum>
+            <widget class="TimePointEdit" native="1" name="untilFilterWidget" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
@@ -244,6 +202,11 @@
           <property name="title" >
            <string>IOV Table</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout" >
+           <item>
+            <widget class="QTableView" name="iovView" />
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -257,6 +220,11 @@
           <property name="title" >
            <string>Payload</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2" >
+           <item>
+            <widget class="QListView" name="payloadView" />
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -415,6 +383,27 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TimePointEdit</class>
+   <extends>QWidget</extends>
+   <header>Widgets.h</header>
+   <container>1</container>
+   <slots>
+    <slot>setMinimumDateTime(QDateTime)</slot>
+    <slot>setMaximumDateTime(QDateTime)</slot>
+    <slot>resetMinimumDateTime()</slot>
+    <slot>resetMaximumDateTime()</slot>
+    <signal>dateTimeChanged(QDateTime)</signal>
+    <signal>dateChanged(QDate)</signal>
+    <signal>timeChanged(QTime)</signal>
+    <signal>maxChanged(bool)</signal>
+    <signal>maxChecked()</signal>
+    <signal>maxUnchecked()</signal>
+    <signal>validityKeyChanged(cool::ValidityKey)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../qt_resources/Resources.qrc" />
  </resources>
@@ -531,6 +520,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>sinceFilterWidget</sender>
+   <signal>dateTimeChanged(QDateTime)</signal>
+   <receiver>untilFilterWidget</receiver>
+   <slot>setMinimumDateTime(QDateTime)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>851</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>851</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>untilFilterWidget</sender>
+   <signal>maxChecked()</signal>
+   <receiver>sinceFilterWidget</receiver>
+   <slot>resetMaximumDateTime()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>851</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>851</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>untilFilterWidget</sender>
+   <signal>dateTimeChanged(QDateTime)</signal>
+   <receiver>sinceFilterWidget</receiver>
+   <slot>setMaximumDateTime(QDateTime)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>851</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>851</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -541,6 +578,8 @@
   <slot>selectedPath(QString)</slot>
   <slot>testSlot()</slot>
   <slot>reopenDatabase(bool)</slot>
+  <slot>sinceChanged(QDateTime)</slot>
+  <slot>untilChanged(QDateTime)</slot>
   <signal>openedDB(P*)</signal>
  </slots>
 </ui>

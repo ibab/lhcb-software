@@ -3,7 +3,9 @@
 #
 #  Definition of the browser MainWindow class.
 
-from PyQt4.QtCore import Qt, QObject, SIGNAL, SLOT, QVariant
+from PyQt4.QtCore import (Qt, QObject,
+                          SIGNAL, SLOT,
+                          QVariant, QDateTime)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
                          QLabel,
                          QAction,
@@ -18,8 +20,6 @@ from Models import *
 import os
 
 ## Class containing the logic of the application.
-#  It should not be instantiated directly but only through the factory function createMainWindow().
-#  @see createMainWindow().
 class MainWindow(QMainWindow):
     ## Constructor.
     #  Initialises the base class, define some internal structures and set the icon of
@@ -63,6 +63,13 @@ class MainWindow(QMainWindow):
         QObject.connect(self, SIGNAL("changedPath"), tagsmodel.setPath)
         QObject.connect(self.hideAutoCheckBox, SIGNAL("stateChanged(int)"), tagsmodel.setHideAutoTags)
         tagsmodel.setHideAutoTags(self.hideAutoCheckBox.checkState())
+
+        # Filter panel
+        # Default startup values for the IOV filter.
+        self.sinceFilterWidget.setMaxEnabled(False)
+        self.sinceFilterWidget.setDateTime(QDateTime.currentDateTime().addMonths(-1))
+        self.untilFilterWidget.setMaxChecked(True)
+        
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
