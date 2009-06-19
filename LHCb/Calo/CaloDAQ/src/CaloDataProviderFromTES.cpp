@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.2 2009-06-18 21:07:26 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.3 2009-06-19 08:35:36 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -228,8 +228,8 @@ CaloVector<LHCb::CaloDigit>& CaloDataProviderFromTES::digits(std::vector<int> so
         m_digits.addEntry( LHCb::CaloDigit( id , digit(id) ) , id);
       }
     }
-    return m_digits;
   }
+  return m_digits;
 }
 bool CaloDataProviderFromTES::checkSrc(int source){  
   bool read = false;
