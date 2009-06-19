@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.142 2009-06-17 18:27:59 odescham Exp $
+! $Id: release.notes,v 1.143 2009-06-19 14:58:26 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-17 O. Deschamps 
+ - CelAutoTaggedCell : resurrect constructor/destructor (without the id argument leading to warnings)
 
 ! 2009-06-17 O. Deschamps for V. Egorychev
  - CaloClusterisationTool : prepare for fast HLT clusterisation

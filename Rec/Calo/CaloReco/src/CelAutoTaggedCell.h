@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/09/22 01:41:23  odescham
+// review clusterization and cluster selection
+//
 // Revision 1.6  2008/06/06 07:52:41  vegorych
 // fixed id warning into CelAutoTaggedCell.h
 //
@@ -50,14 +53,14 @@ public:
 public:
   
   // Constructor
-  /*  CelAutoTaggedCell ( const LHCb::CaloCellID& id = LHCb::CaloCellID()  )
+  CelAutoTaggedCell (  )
     : m_tag      ( DefaultFlag )
     , m_status   ( NotTagged )
     , m_digit    ( 0 )
-    {}*/
+    {}
   
   // Destructor
-  //  ~CelAutoTaggedCell() {}
+  ~CelAutoTaggedCell() {}
   
   // Getters 
   const LHCb::CaloDigit*  digit () const { return m_digit              ; }
