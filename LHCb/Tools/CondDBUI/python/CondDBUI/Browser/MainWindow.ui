@@ -387,7 +387,7 @@
   <customwidget>
    <class>TimePointEdit</class>
    <extends>QWidget</extends>
-   <header>Widgets.h</header>
+   <header>CondDBUI/Browser/Widgets.h</header>
    <container>1</container>
    <slots>
     <slot>setMinimumDateTime(QDateTime)</slot>
