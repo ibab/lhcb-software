@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.55 2009-04-22 09:35:21 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.56 2009-06-19 14:43:04 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -14,14 +14,11 @@
 // from root
 #include "TH1D.h"
 
+// from Event
+#include "Event/TwoProngVertex.h"
+
 // from DetDesc
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/GeometryInfoPlus.h"
-#include "DetDesc/3DTransformationFunctions.h"
-#include "DetDesc/GlobalToLocalDelta.h"
-#include "DetDesc/Condition.h"
-#include "DetDesc/AlignmentCondition.h"
 
 // from Kernel
 #include "Kernel/LHCbID.h"
@@ -71,12 +68,14 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_trackresidualtool("Al::TrackResidualTool"),
     m_vertexresidualtool("Al::VertexResidualTool"),
     m_updatetool("Al::AlignUpdateTool"),
+    m_vertextrackselector("TrackSelector",this),
     m_equations(0),
     m_resetHistos(false)
 {
   declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
   declareProperty("TracksLocation"              , m_tracksLocation               = TrackLocation::Default  );
-  declareProperty("VertexLocation"              , m_vertexLocation               = ""  );
+  declareProperty("VertexLocation"              , m_vertexLocation               = "" );
+  declareProperty("DimuonLocation"              , m_dimuonLocation               = "" );
   declareProperty("ProjectorSelector"           , m_projSelectorName             = "TrackProjectorSelector");
   declareProperty("UseCorrelations"             , m_correlation                  = true                    );
   declareProperty("UpdateInFinalize"            , m_updateInFinalize             = false                   );
@@ -86,6 +85,8 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("UpdateTool",m_updatetool) ;
   declareProperty("TrackResidualTool",m_trackresidualtool) ;
   declareProperty("VertexResidualTool",m_vertexresidualtool) ;
+  declareProperty("MaxTracksPerVertex",m_maxTracksPerVertex = 8 ) ;
+  declareProperty("MinTracksPerVertex",m_minTracksPerVertex = 2 ) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -114,6 +115,9 @@ StatusCode AlignAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;
 
   sc = m_updatetool.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
+  sc = m_vertextrackselector.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
   /// Get range  detector elements
@@ -253,31 +257,57 @@ StatusCode AlignAlgorithm::execute() {
   }
   selectedtracks = nonoverlappingtracks ;
   
-
-  // Now deal with vertices, if there are any.
+  // Now deal with dimuons, vertices, if there are any.
   size_t numusedtracks(0) ;
   size_t numusedvertices(0) ;
+  size_t numuseddimuons(0) ;
+  if( !m_dimuonLocation.empty() ) {
+    const LHCb::TwoProngVertices* vertices = get<LHCb::TwoProngVertices>(m_dimuonLocation);
+    if(vertices ) {
+      for( LHCb::TwoProngVertices::const_iterator ivertex = vertices->begin() ;
+	   ivertex != vertices->end(); ++ivertex ) {
+	// rebuild this vertex from tracks in the selected track list
+	const LHCb::RecVertex* clone = cloneVertex( **ivertex, selectedtracks ) ;
+	if( clone ) {
+	  const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(*clone) ;
+	  if( res && accumulate( *res ) ) {
+	    m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
+	    ++numuseddimuons ;
+	    numusedtracks += res->numTracks() ;
+	    removeVertexTracks( *clone, selectedtracks ) ;
+	  }
+	  delete clone ;
+	}
+      }
+    }
+  }
+  
   if( !m_vertexLocation.empty() ) {
     const LHCb::RecVertices* vertices = get<LHCb::RecVertices>(m_vertexLocation);
     if(vertices ) {
       for( LHCb::RecVertices::const_iterator ivertex = vertices->begin() ;
 	   ivertex != vertices->end(); ++ivertex ) {
-	// used tracks are automatically removed from the output
-	// list. if the vertex is not accepted (e.g. because there are
-	// not enough tracks), then a 0 pointer is returned.
-	const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(**ivertex,selectedtracks) ;
-	if (res && accumulate( *res ) ) {
-	  m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
-	  // need some histogramming here
-	  ++numusedvertices ;
-	  numusedtracks += res->numTracks() ;
-	} 
+	// split this vertex in vertices of the right size
+	VertexContainer splitvertices ;
+	splitVertex( **ivertex, selectedtracks, splitvertices ) ;
+	for( VertexContainer::iterator isubver = splitvertices.begin() ;
+	     isubver != splitvertices.end() ; ++isubver ) {
+	  const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(*isubver) ;
+	  if (res && accumulate( *res ) ) {
+	    m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
+	    ++numusedvertices ;
+	    numusedtracks += res->numTracks() ;
+	    removeVertexTracks( *isubver, selectedtracks ) ;
+	    plot( isubver->tracks().size(), "NumTracksPerPV", -0.5,30.5,31) ;
+	  } 
+	}
       }
     }
   }	
   
   // Loop over the remaining tracks
   if (printVerbose()) verbose() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
+
   for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
        iTrack != selectedtracks.end(); ++iTrack ) {
     
@@ -291,8 +321,8 @@ StatusCode AlignAlgorithm::execute() {
     }
   } 
   
-  m_equations->addEventSummary( numusedtracks, numusedvertices ) ;
-  
+  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons ) ;
+    
   return StatusCode::SUCCESS;
 }
 
@@ -483,4 +513,130 @@ void AlignAlgorithm::handle(const Incident& incident) {
     update();
     reset();
   }
+}
+
+
+namespace {
+
+  struct CompareLHCbIds {
+    bool operator()(const LHCb::LHCbID& lhs, const LHCb::LHCbID& rhs) const {
+      return lhs.lhcbID() < rhs.lhcbID() ;
+    }
+  } ;
+  
+  struct TrackClonePredicate
+  {
+    std::set<LHCb::LHCbID,CompareLHCbIds> ids ;
+    TrackClonePredicate( const LHCb::Track* lhs ) { ids.insert(lhs->lhcbIDs().begin(),lhs->lhcbIDs().end()) ; }
+    bool operator()(const LHCb::Track* rhs) const {
+      // the requirement is that all LHCbIDs of rhs appear in lhs
+      bool foundall(true) ;
+      for( std::vector<LHCb::LHCbID>::const_iterator id=rhs->lhcbIDs().begin() ;
+	   foundall && id != rhs->lhcbIDs().end(); ++id) 
+	foundall = ids.find( *id ) != ids.end() ;
+      return foundall ;
+    }
+  } ;
+  
+  struct CompareTypeAndSide
+  {
+    int direction( const LHCb::Track& track ) const {
+      return track.checkFlag(LHCb::Track::Backward) ? -1 : 1 ;
+    }
+    int side( const LHCb::Track& track ) const {
+      int txside    = track.firstState().tx() > 0 ? 1 : -1 ;
+      return txside * direction(track) ;
+    }
+    bool operator() ( const LHCb::Track* lhs, const LHCb::Track* rhs ) const {
+      return lhs->type() < rhs->type() ||
+	(lhs->type()==rhs->type() && 
+	 (side(*lhs) < side(*rhs) ||
+	  (side(*lhs) == side(*rhs) && direction(*lhs) < direction(*rhs) ) ) );
+    }
+  } ;
+
+  template<class TYPE>
+  struct IsEqual
+  {
+    const TYPE* m_p ;
+    IsEqual( const TYPE& ref) : m_p(&ref) {}
+    bool operator()( const SmartRef<TYPE>& lhs ) { return &(*lhs) == m_p ;}
+  } ;
+}
+
+void AlignAlgorithm::selectVertexTracks( const LHCb::RecVertex& vertex,
+					 const TrackContainer& tracks,
+					 TrackContainer& tracksinvertex) const
+{ 
+  // loop over the list of vertices, collect tracks in the vertex
+  tracksinvertex.reserve( tracks.size() ) ;
+  for( SmartRefVector<LHCb::Track>::const_iterator itrack = vertex.tracks().begin() ;
+       itrack !=  vertex.tracks().end(); ++itrack) {
+    
+    // we'll use the track in the provided list, not the track in the vertex
+    TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
+    if( jtrack != tracks.end() && m_vertextrackselector->accept( **jtrack ) ) 
+      tracksinvertex.push_back( *jtrack ) ;
+  }
+}
+
+void AlignAlgorithm::removeVertexTracks( const LHCb::RecVertex& vertex,
+					 TrackContainer& tracks) const
+{ 
+  TrackContainer unusedtracks ;
+  for( TrackContainer::iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
+    if( std::find_if( vertex.tracks().begin(), vertex.tracks().end(),
+		      IsEqual<LHCb::Track>(**itrack) )==vertex.tracks().end() )
+      unusedtracks.push_back(*itrack) ;
+  tracks = unusedtracks ;
+}
+
+LHCb::RecVertex* AlignAlgorithm::cloneVertex( const LHCb::RecVertex& vertex,
+					      const TrackContainer& selectedtracks ) const
+{
+  LHCb::RecVertex* rc(0) ;
+  TrackContainer tracksinvertex ;
+  selectVertexTracks( vertex, selectedtracks, tracksinvertex ) ;
+  if( tracksinvertex.size() >= 2 ) {
+    rc = vertex.clone() ;
+    rc->clearTracks() ;
+    for( TrackContainer::iterator itrack = tracksinvertex.begin() ;
+	 itrack != tracksinvertex.end(); ++itrack)
+      rc->addToTracks( *itrack ) ;
+  }
+  return rc ;
+}
+
+void AlignAlgorithm::splitVertex( const LHCb::RecVertex& vertex,
+				  const TrackContainer& tracks,
+				  VertexContainer& splitvertices) const
+{
+  //
+  TrackContainer tracksinvertex ;
+  selectVertexTracks ( vertex, tracks, tracksinvertex ) ;
+  if( printVerbose() )
+    verbose() << "Tracks in vertex, selected: "
+	      << vertex.tracks().size() << ", " << tracksinvertex.size() << endreq ;
+  
+  if( tracksinvertex.size() >= m_minTracksPerVertex ) {
+    // sort the tracks by track type, then by side in the velo
+    std::sort( tracksinvertex.begin(), tracksinvertex.end(), CompareTypeAndSide()) ;
+    // the number of vertices after splitting. minimum 2 tracks per vertex.
+    size_t numsplit = 
+      tracksinvertex.size() / m_maxTracksPerVertex +
+      ( (tracksinvertex.size()%m_maxTracksPerVertex)>=m_minTracksPerVertex ? 1 : 0) ;
+    splitvertices.clear() ;    
+    splitvertices.resize(numsplit,LHCb::RecVertex( vertex.position() ) ) ;
+    for( size_t itrack=0; itrack<tracksinvertex.size(); ++itrack)
+      splitvertices[  itrack%numsplit ].addToTracks( tracksinvertex[itrack] ) ;
+  }
+  
+  if( printVerbose() )
+    verbose() << "Divided " << tracksinvertex.size() << " over " 
+	      << splitvertices.size() << " vertices." << endreq ;
+  // for( VertexContainer::const_iterator iver = splitvertices.begin() ;
+  //        iver != splitvertices.end(); ++iver) {
+  //     //std::cout << "    #tracks = " << iver->tracks().size() << std::endl ;
+  //     assert( iver->tracks().size() >= m_minTracksPerVertex ) ;
+  //   }
 }

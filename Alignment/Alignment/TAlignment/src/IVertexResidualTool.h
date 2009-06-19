@@ -22,8 +22,7 @@ namespace Al
     
      // the only method 
     typedef std::vector<const LHCb::Track*> TrackContainer ;
-    virtual const Al::MultiTrackResiduals* get(const LHCb::RecVertex& vertex,
-					       TrackContainer& tracks) const = 0 ;
+    virtual const Al::MultiTrackResiduals* get(const LHCb::RecVertex& vertex) const = 0 ;
   } ;
 }
 

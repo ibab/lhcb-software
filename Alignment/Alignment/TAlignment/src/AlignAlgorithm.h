@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.34 2009-01-21 16:22:48 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.35 2009-06-19 14:43:04 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -26,6 +26,8 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackProjector.h"
+#include "TrackInterfaces/ITrackSelector.h"
+
 
 // from AlignSolvTools
 #include "SolvKernel/AlVec.h"
@@ -101,11 +103,21 @@ public:
 
 protected:
   
-private:
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   bool accumulate( const Al::Residuals& residuals ) ;
   void resetHistos() ;
+  
+  typedef std::vector<LHCb::RecVertex> VertexContainer ;
+  typedef std::vector<const LHCb::Track*> TrackContainer ;
+  void selectVertexTracks( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
+			   TrackContainer& tracksinvertex) const ;
+  void removeVertexTracks( const LHCb::RecVertex& vertex, TrackContainer& tracks) const ;
+  void splitVertex( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
+		    VertexContainer& splitvertices) const  ;
+  LHCb::RecVertex* cloneVertex( const LHCb::RecVertex& vertex, const TrackContainer& selectedtracks ) const ;
+  
+private:
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -114,16 +126,21 @@ private:
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;                ///< Tracks for alignment
   std::string                       m_vertexLocation;                ///< Vertices for alignment
+  std::string                       m_dimuonLocation;                ///< J/psi vertcies for alignment
   std::string                       m_projSelectorName;              ///< Name of projector selector tool
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
   ToolHandle<Al::ITrackResidualTool>   m_trackresidualtool ;
   ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
   ToolHandle<Al::IAlignUpdateTool>  m_updatetool ;
+  ToolHandle<ITrackSelector> m_vertextrackselector ;
+
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
   double                            m_chi2Outlier ;                  ///< Chi2 threshold for outlier rejection
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
+  size_t                            m_minTracksPerVertex ;
+  size_t                            m_maxTracksPerVertex ;
   std::string                       m_outputDataFileName ;
   std::vector<std::string>          m_inputDataFileNames ;
 

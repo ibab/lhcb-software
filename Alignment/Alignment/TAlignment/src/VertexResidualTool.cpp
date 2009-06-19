@@ -34,24 +34,23 @@ namespace Al
     // incident service handle
     void handle( const Incident& incident ) ;
     // used tracks are removed from the list
-    const Al::MultiTrackResiduals* get(const LHCb::RecVertex& vertex,
-				       TrackContainer& tracks) const ;
+    const Al::MultiTrackResiduals* get(const LHCb::RecVertex& vertex) const ;
   private:
     // create a new MultiTrackResiduals
     const Al::MultiTrackResiduals* compute(const TrackResidualContainer& tracks,
-					   const Gaudi::XYZPoint& vertexestimate) const ;
+					   const Gaudi::XYZPoint& vertexestimate,
+					   bool connstraintDiMuonMass ) const ;
     // extrapolate the state in trackresiduals to position z
     StatusCode extrapolate( const Al::TrackResiduals& trackin,
 			    double z, TrackContribution& trackout ) const ;
   private:
     ToolHandle<ITrackResidualTool> m_trackresidualtool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
-    //ToolHandle<ITrackSelector> m_trackselectorhandle ;
-    ITrackSelector* m_trackselector ;
-    std::string m_trackselectorname ;
     double m_chiSquarePerDofCut ;
     bool   m_computeCorrelations ;
     size_t m_maxHitsPerTrackForCorrelations ;
+    double m_muonmass ;
+    double m_jpsimass ;
     typedef std::vector<const Al::MultiTrackResiduals*> ResidualContainer ;
     mutable ResidualContainer m_residuals ;
   } ;
@@ -64,10 +63,14 @@ namespace Al
 #include <algorithm>
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "Event/RecVertex.h"
+#include "Event/TwoProngVertex.h"
 #include "Event/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "ITrackResidualTool.h"
+#include <boost/assign/list_of.hpp> 
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleID.h"
 
 namespace Al
 {
@@ -80,7 +83,6 @@ namespace Al
     : GaudiTool(type,name,parent),
       m_trackresidualtool("Al::TrackResidualTool"), // important: use the toolsvc, because of caching!
       m_extrapolator("TrackMasterExtrapolator"),
-      //m_trackselectorhandle("TrackSelector",this),
       m_chiSquarePerDofCut(10),
       m_maxHitsPerTrackForCorrelations(9999)
   {
@@ -88,8 +90,6 @@ namespace Al
     declareInterface<IVertexResidualTool>(this);
     declareProperty("TrackResidualTool",m_trackresidualtool) ;
     declareProperty("Extrapolator",m_extrapolator) ;
-    // declareProperty("TrackSelectorHandle",m_trackselectorhandle) ;
-    declareProperty("MyTrackSelector",m_trackselectorname="TrackSelector") ;
     declareProperty("MaxHitsPerTrackForCorrelations", m_maxHitsPerTrackForCorrelations) ;
   }
   
@@ -101,9 +101,12 @@ namespace Al
     }
     m_trackresidualtool.retrieve().ignore() ;
     m_extrapolator.retrieve().ignore() ;
-    m_trackselector = tool<ITrackSelector>(m_trackselectorname,this) ;
-    //m_trackselectorhandle.retrieve().ignore() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
+    
+    IParticlePropertySvc* propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+    m_muonmass = propertysvc->find( "mu+" )->mass() ;
+    m_jpsimass = propertysvc->find( "J/psi(1S)" )->mass() ;
+    info() << "muon, psi mass: " << m_muonmass << ", " << m_jpsimass << endreq ;
     return sc ;
   }
 
@@ -123,71 +126,27 @@ namespace Al
     }
   }
   
-  struct CompareLHCbIds {
-    bool operator()(const LHCb::LHCbID& lhs, const LHCb::LHCbID& rhs) const {
-      return lhs.lhcbID() < rhs.lhcbID() ;
-    }
-  } ;
-  
-  struct TrackClonePredicate
-  {
-    std::set<LHCb::LHCbID,CompareLHCbIds> ids ;
-    TrackClonePredicate( const LHCb::Track* lhs ) { ids.insert(lhs->lhcbIDs().begin(),lhs->lhcbIDs().end()) ; }
-    bool operator()(const LHCb::Track* rhs) const {
-      // the requirement is that all LHCbIDs of rhs appear in lhs
-      bool foundall(true) ;
-      for( std::vector<LHCb::LHCbID>::const_iterator id=rhs->lhcbIDs().begin() ;
-	   foundall && id != rhs->lhcbIDs().end(); ++id) 
-	foundall = ids.find( *id ) != ids.end() ;
-      return foundall ;
-    }
-  } ;
-  
-  const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::RecVertex& vertex,
-							 TrackContainer& tracks) const
+  const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::RecVertex& vertex) const
   {
     // loop over the list of vertices, collect tracks in the vertex
     const Al::MultiTrackResiduals* rc(0) ;
-    TrackContainer usedtracks ;
     TrackResidualContainer trackresiduals ;
     for( SmartRefVector<LHCb::Track>::const_iterator itrack = vertex.tracks().begin() ;
 	 itrack !=  vertex.tracks().end(); ++itrack) {
-      // we'll use the track in the provided list, not the track in the vertex
-      TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
-      if( jtrack != tracks.end() /* && ((**jtrack).hasT()||(**jtrack).hasTT() )*/
-	  && m_trackselector->accept( **jtrack ) ) {
-	//assert( (**jtrack).hasT()||(**jtrack).hasTT() ) ;
-	const Al::TrackResiduals* trackres = m_trackresidualtool->get( **jtrack ) ;
-	if(trackres) {
-	  usedtracks.push_back( *jtrack ) ; 
-	  trackresiduals.push_back( trackres ) ;
-	} else {
-	  warning() << "No residuals returned by trackresidualtool!" << endreq ;
-	}
+      const Al::TrackResiduals* trackres = m_trackresidualtool->get( **itrack ) ;
+      if(trackres) {
+	trackresiduals.push_back( trackres ) ;
+      } else {
+	warning() << "No residuals returned by trackresidualtool!" << endreq ;
+	assert(0) ;
       }
     }
-    
-    if(trackresiduals.size()>=2) {
-      debug() << "OK, will compute vertex with  " <<  trackresiduals.size()
-	     << " out of " << vertex.tracks().size() << " tracks in original vertex." << endreq ;
-      rc = compute( trackresiduals, vertex.position() ) ;
-      if(rc) {
-	// tool owns whatever it returns
-	m_residuals.push_back(rc) ;
-	// remove tracks from input list. (should use std::remove)
-	TrackContainer unusedtracks ;
-	for( TrackContainer::const_iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
-	  if( std::find(usedtracks.begin(), usedtracks.end(), *itrack) ==  usedtracks.end() )
-	    unusedtracks.push_back( *itrack ) ; 
-	tracks = unusedtracks ;
-      } 
-    } else {
-      static int count(0) ;
-      if(++count<20)
-	warning() << "Did not find enough tracks in vertex"
-		  << vertex.tracks().size() << " " << tracks.size() << endreq ;
-    }
-    
+      
+    // for now, any twoprong vertex is a jpsi !
+    bool constrainDiMuonMass = dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ;
+    rc = compute( trackresiduals, vertex.position(), constrainDiMuonMass ) ;
+    if(rc) m_residuals.push_back(rc) ;
+
     return rc ;
   }
 
@@ -203,7 +162,8 @@ namespace Al
   } ;
 
   const Al::MultiTrackResiduals* VertexResidualTool::compute(const TrackResidualContainer& tracks,
-							     const Gaudi::XYZPoint& vertexestimate) const
+							     const Gaudi::XYZPoint& vertexestimate,
+							     bool constrainDiMuonMass) const
   {
     Al::MultiTrackResiduals* rc(0) ;
     bool success = true ;
@@ -248,7 +208,24 @@ namespace Al
 	vertex.addTrack( i->inputstate ) ;
 
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
-
+      
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainDiMuonMass ) {
+	assert( nacceptedtracks == 2 ) ;
+	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
+	info() << "mass before psi constraint: "
+	       << vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
+	fitstatus = vertex.constrainMass( masshypos, m_jpsimass ) ;	
+	info() << "mass after psi constraint: "
+	       << vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	
+	info() << "error on qop of first track, original, after vertex fit, after mass fit: "
+	       << std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
+	       << qopbefore << " "
+	       << std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
+	
+      }
+      
       double vchi2 = vertex.chi2() ; // cache it, because I know it is slow
       debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << vertex.nDoF() << endreq ;
       debug() << "Vertex position orig/new="
