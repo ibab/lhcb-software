@@ -176,6 +176,32 @@ void LHCb::STTELL1Error::fillErrorInfo() {
 
 bool LHCb::STTELL1Error::correctPatterns() const
 {
+  if ( ! ((m_word4 & 0xFF) == 0) && (((m_word4 & 0xFF00) / 0x100) == 0x8e) )
+    return false;
+  
+  if ( ! ((m_word4 & 0xFF) == 0) && (((m_word4 & 0xFF00) / 0x100) == 0x8e) )
+    return false;
+
+  if ( ! ((m_word11 & 0xFF) == 2) && (((m_word11 & 0xFF00) / 0x100) == 0x8e) )
+    return false;
+
+  if (hasNZS())
+  {
+    if ( ! ((m_word12 & 0xFF) == 3) && (((m_word12 & 0xFF00) / 0x100) == 0x8e) )
+      return false;
+  }
+  
+
+  if (hasPed())
+  {
+    if ( ! ((m_word13 & 0xFF) == 4) && (((m_word13 & 0xFF00) / 0x100) == 0x8e) )
+      return false;
+  }
+  
+
+  return true;
+    
+  /*
   bool isOK(true);
 
   // testing word4 Error bank
@@ -197,6 +223,7 @@ bool LHCb::STTELL1Error::correctPatterns() const
     isOK *= ((m_word13 & 0xFF) == 4) * (((m_word13 & 0xFF00) / 0x100) == 0x8e);
 
   return isOK;
+  */
 }
 
 

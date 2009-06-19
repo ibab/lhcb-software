@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.32 2009-02-18 14:58:50 cattanem Exp $
+! $Id: release.notes,v 1.33 2009-06-19 06:01:33 jluisier Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2009-06-19 J Luisier
+ - Changes in STTELL1EventInfo and STTELL1Error so that pseudo-compilers used
+	 on pseudo OS donesn't complain.
 
 !======================== STTELL1Event v1r7 2009-02-18 =======================
 ! 2009-02-09 M Needham 

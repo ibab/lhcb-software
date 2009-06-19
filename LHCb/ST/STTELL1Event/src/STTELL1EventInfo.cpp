@@ -63,16 +63,25 @@ bool LHCb::STTELL1EventInfo::pcnConsistency() const
 {
   unsigned int pcnv(pcnVote());
 
-  bool isConsistent(true);
+  if ( pcnv == pcnBeetle0() && pcnv == pcnBeetle1() &&
+       pcnv == pcnBeetle2() && pcnv == pcnBeetle3() &&
+       pcnv == pcnBeetle4() && pcnv == pcnBeetle5() )
+    return true;
+  else
+    return false;
 
-  isConsistent *= (pcnv == pcnBeetle0());
-  isConsistent *= (pcnv == pcnBeetle1());
-  isConsistent *= (pcnv == pcnBeetle2());
-  isConsistent *= (pcnv == pcnBeetle3());
-  isConsistent *= (pcnv == pcnBeetle4());
-  isConsistent *= (pcnv == pcnBeetle5());
+  /*
+    bool isConsistent(true);
 
-  return isConsistent;
+    isConsistent *= (pcnv == pcnBeetle0());
+    isConsistent *= (pcnv == pcnBeetle1());
+    isConsistent *= (pcnv == pcnBeetle2());
+    isConsistent *= (pcnv == pcnBeetle3());
+    isConsistent *= (pcnv == pcnBeetle4());
+    isConsistent *= (pcnv == pcnBeetle5());
+
+    return isConsistent;
+  */
 }
 
 bool LHCb::STTELL1EventInfo::linkEnabled(const unsigned int iLink) const{
