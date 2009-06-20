@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/06/19 14:58:26  odescham
+// fixing FPE
+//
 // Revision 1.7  2008/09/22 01:41:23  odescham
 // review clusterization and cluster selection
 //
@@ -56,8 +59,10 @@ public:
   CelAutoTaggedCell (  )
     : m_tag      ( DefaultFlag )
     , m_status   ( NotTagged )
-    , m_digit    ( 0 )
-    {}
+    , m_digit    ( NULL )
+    {
+      reset();
+    }
   
   // Destructor
   ~CelAutoTaggedCell() {}

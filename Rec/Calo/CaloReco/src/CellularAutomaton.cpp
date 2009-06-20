@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.15 2009-04-16 13:04:03 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.16 2009-06-20 00:40:04 odescham Exp $
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
@@ -246,6 +246,7 @@ StatusCode CellularAutomaton::execute()
   SeqVector taggedCellsSeq                              ;
   typedef std::vector<CelAutoTaggedCell> _Local ;
   _Local local_cells ( hits->size()  , CelAutoTaggedCell() ) ;
+
   
   taggedCellsDirect.reserve ( hits->size() ) ;
   taggedCellsDirect.setSize ( 14000        ) ;
