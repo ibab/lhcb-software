@@ -84,7 +84,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QTextEdit" name="dataTextEdit" >
+      <widget class="QTextEdit" name="dataView" >
        <property name="acceptDrops" >
         <bool>false</bool>
        </property>
@@ -204,7 +204,20 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout" >
            <item>
-            <widget class="QTableView" name="iovView" />
+            <widget class="QTableView" name="iovView" >
+             <property name="enabled" >
+              <bool>true</bool>
+             </property>
+             <property name="editTriggers" >
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionMode" >
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior" >
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -222,7 +235,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2" >
            <item>
-            <widget class="QListView" name="payloadView" />
+            <widget class="QListView" name="fieldsView" />
            </item>
           </layout>
          </widget>
@@ -465,22 +478,6 @@
     <hint type="sourcelabel" >
      <x>-1</x>
      <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>482</x>
-     <y>327</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>hierarchyTreeView</sender>
-   <signal>clicked(QModelIndex)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectedItem(QModelIndex)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>171</x>
-     <y>344</y>
     </hint>
     <hint type="destinationlabel" >
      <x>482</x>

@@ -34,12 +34,12 @@ class MainWindow(QMainWindow):
         self.defaultDatabases = {} # action
         # Icons for the model (property)
         self._icons = None
-        # Current selected path in the database
-        self._path = None
+        # Current selected (path, channel) in the database
+        self._path = (None, None)
         # The database
         self.db = None
         # Current connection string. Needed because the copy in
-        # self.db has the variables expanded.    
+        # self.db has the variables expanded.
         self._connectionString = None
         # Prepare the GUI.
         uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
@@ -48,16 +48,24 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self.appName)
         # Connect the models
         self.models = {
-                       "tree":  CondDBStructureModel(),
+                       "tree": CondDBStructureModel(),
                        "nodes": CondDBNodesListModel(),
-                       "tags":  CondDBTagsListModel(),
+                       "tags": CondDBTagsListModel(),
+                       "iovs": CondDBIoVModel(),
+                       "fields": CondDBPayloadFieldModel(),
                        }
         setModelsIcons(self.icons)
         self.hierarchyTreeView.setModel(self.models["tree"])
         self.pathComboBox.setModel(self.models["nodes"])
         self.tagComboBox.setModel(self.models["tags"])
+        self.iovView.setModel(self.models["iovs"])
+        self.fieldsView.setModel(self.models["fields"])
         for m in self.models.values():
             QObject.connect(self, SIGNAL("openedDB"), m.connectDB)
+            
+        QObject.connect(self.hierarchyTreeView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+                        self.selectedItem)
+        
         # special settings for the tags model
         tagsmodel = self.models["tags"]
         QObject.connect(self, SIGNAL("changedPath"), tagsmodel.setPath)
@@ -65,17 +73,50 @@ class MainWindow(QMainWindow):
         QObject.connect(tagsmodel, SIGNAL("setViewEnabled(bool)"), self.tagComboBox, SLOT("setEnabled(bool)"))
         QObject.connect(tagsmodel, SIGNAL("setViewEnabled(bool)"), self.hideAutoCheckBox, SLOT("setEnabled(bool)"))
         tagsmodel.setHideAutoTags(self.hideAutoCheckBox.checkState())
-
+        # connection for the iovModel
+        iovsmodel = self.models["iovs"]
+        QObject.connect(self, SIGNAL("changedPathChannel"), iovsmodel.setPathChannel)
+        QObject.connect(self.sinceFilterWidget, SIGNAL("validityKeyChange"), iovsmodel.setSince)
+        QObject.connect(self.untilFilterWidget, SIGNAL("validityKeyChange"), iovsmodel.setUntil)
+        QObject.connect(self.tagComboBox, SIGNAL("currentIndexChanged(QString)"), iovsmodel.setTag)
+        QObject.connect(iovsmodel, SIGNAL("setViewEnabled(bool)"), self.iovView, SLOT("setEnabled(bool)"))
+        self.iovView.setEnabled(False)
+        QObject.connect(self.iovView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+                        iovsmodel.selectionChanged)
+        QObject.connect(iovsmodel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
+                        self.iovView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
+        
+        # connection for the fields model
+        fieldsmodel = self.models["fields"]
+        QObject.connect(self, SIGNAL("changedPath"), fieldsmodel.setPath)
+        #QObject.connect(fieldsmodel, SIGNAL("setViewEnabled(bool)"), self.fieldsView, SLOT("setEnabled(bool)"))
+        #self.fieldsView.setEnabled(False)
+        QObject.connect(fieldsmodel, SIGNAL("setViewEnabled(bool)"), self.payloadGroupBox, SLOT("setVisible(bool)"))
+        self.payloadGroupBox.setVisible(False)
+        
+        QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+                        fieldsmodel.selectionChanged)
+        QObject.connect(fieldsmodel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
+                        self.fieldsView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
+        
         # Filter panel
         # Default startup values for the IOV filter.
         self.sinceFilterWidget.setMaxEnabled(False)
         self.sinceFilterWidget.setDateTime(QDateTime.currentDateTime().addMonths(-1))
+        #iovsmodel.setSince(self.sinceFilterWidget.toValidityKey())
         self.untilFilterWidget.setMaxChecked(True)
+        #iovsmodel.setUntil(self.untilFilterWidget.toValidityKey())
         
         # When created, we have to ensure that everything is grayed out.
         self._setMainViewEnabled(False)
         self.menuEdit.setEnabled(False)
         self.menuAdvanced.setEnabled(False)
+        
+        # Triggers for the update of the central panel
+        QObject.connect(self.iovView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+                        self.showData)
+        QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+                        self.showData)
 
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
@@ -108,7 +149,7 @@ class MainWindow(QMainWindow):
                                      "The conditions database '%s' is not in the list of known database." % name)
                 return
         # Open the database using the connection string in the action
-        self.openDatabase(str(sender.data().toString()))        
+        self.openDatabase(str(sender.data().toString()))
 
     ## Commodity function to enable/disable the main widget (i.e. whatever needs
     #  to be grayed out when there is no database opened.
@@ -129,7 +170,14 @@ class MainWindow(QMainWindow):
     def openDatabase(self, connString, readOnly = True):
         try:
             if connString:
-                self.db = CondDB(connString, readOnly = readOnly)
+                try:
+                    self.db = CondDB(connString, readOnly = readOnly)
+                except Exception, x:
+                    msg = x.message
+                    if msg.startswith("Database not found:"):
+                        QMessageBox.critical(self, "Cannot open database", msg)
+                        return
+                    raise
                 title = "%s - %s" % (connString, self.appName)
                 self._setMainViewEnabled(True)
             else:
@@ -137,13 +185,14 @@ class MainWindow(QMainWindow):
                 title = self.appName
                 self._setMainViewEnabled(False)
             self.setWindowTitle(title)
+            self._path = None
             # Change the status of the editing menus
             editable = not readOnly
             self.menuEdit.setEnabled(editable)
             self.menuAdvanced.setEnabled(editable)
             self.actionRead_Only.setChecked(readOnly)
             # remember the used connection string
-            self._connectionString = connString
+            self._connectionString = connString 
             # update the DB instance of the models
             self.emit(SIGNAL("openedDB"), self.db)
         except:
@@ -153,7 +202,7 @@ class MainWindow(QMainWindow):
     #  If the database is already in the correct mode, nothing is done.
     def reopenDatabase(self, readOnly):
         if readOnly != self.db.readOnly:
-            self.openDatabase(self._connectionString, readOnly) 
+            self.openDatabase(self._connectionString, readOnly)
     
     ## Disconnect from the database.
     #  @see: openDatabase()
@@ -181,11 +230,15 @@ class MainWindow(QMainWindow):
     ## Slots to react to a selected item in the structure view
     def selectedItem(self, index):
         item = index.internalPointer()
-        if item.path != self._path:
+        if self._path != (item.path, item.channel):
             try:
                 i = self.models["nodes"].nodes.index(item.path)
-                self._path = item.path
-                self.emit(SIGNAL("changedPath"), self._path)
+                self._path = (item.path, item.channel)
+                self.emit(SIGNAL("changedPath"), item.path)
+                if item.leaf and not item.children:
+                    self.emit(SIGNAL("changedPathChannel"), item.path, item.channel)
+                else:
+                    self.emit(SIGNAL("changedPathChannel"), None, None)
             except ValueError:
                 i = -1
             self.pathComboBox.setCurrentIndex(i)
@@ -193,11 +246,16 @@ class MainWindow(QMainWindow):
     ## Slots to react to a selected entry in the path combo box
     def selectedPath(self, path):
         path = str(path)
-        if path != self._path:
-            index = self.models["tree"].findPath(str(path))
+        if self._path != (path, None):
+            index = self.models["tree"].findPath(path)
             self.hierarchyTreeView.setCurrentIndex(index)
-            self._path = path
-            self.emit(SIGNAL("changedPath"), self._path)
+            self._path = (path, None)
+            item = index.internalPointer()
+            self.emit(SIGNAL("changedPath"), item.path)
+            if item.leaf and not item.children:
+                self.emit(SIGNAL("changedPathChannel"), path, None)
+            else:
+                self.emit(SIGNAL("changedPathChannel"), None, None)
 
     def testSlot(self):
         print "Test slot triggered"
@@ -220,6 +278,16 @@ class MainWindow(QMainWindow):
                 self._icons[iconName] = style.standardIcon(iconId)
         return self._icons
 
+    ## This function gets called if any selection changes and decides if there
+    #  is something to show in the central widget.
+    def showData(self):
+        data = ""
+        payload = self.models["iovs"].getPayload()
+        if payload:
+            field = self.models["fields"].getFieldName()
+            data = payload[field]
+        self.dataView.setPlainText(data)
+
     ## Show a critical dialog with the latest exception traceback.
     #  @param source string representing the function that trapped the exception.
     def exceptionDialog(self, source = None):
@@ -229,4 +297,5 @@ class MainWindow(QMainWindow):
         else:
             msg = ""
         msg += traceback.format_exc()
+        print msg
         QMessageBox.critical(self, "Exception in Python code", msg)

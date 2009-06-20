@@ -1,13 +1,15 @@
-from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel,
+from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTableModel,
                           QVariant, QModelIndex,
                           Qt, SIGNAL, SLOT)
-from PyQt4.QtGui import QIcon, QApplication
+from PyQt4.QtGui import QIcon, QApplication, QItemSelectionModel
 
 from PyCool import cool
 
 __all__ = ["CondDBNodesListModel",
            "CondDBStructureModel",
            "CondDBTagsListModel",
+           "CondDBIoVModel",
+           "CondDBPayloadFieldModel",
            "setModelsIcons"]
 #import logging
 #logging.basicConfig(level=logging.INFO)
@@ -18,6 +20,58 @@ __all__ = ["CondDBNodesListModel",
 #    if index.isValid():
 #        name = index.internalPointer()
 #    return name
+
+# Number of times to indent output
+# A list is used to force access by reference
+__report_indent = [0]
+def report(fn):
+    """Decorator to print information about a function
+    call for use while debugging.
+    Prints function name, arguments, and call number
+    when the function is called. Prints this information
+    again along with the return value when the function
+    returns.
+    """
+    def wrap(*params,**kwargs):
+        call = wrap.callcount = wrap.callcount + 1
+        indent = ' ' * __report_indent[0]
+        fc = "%s(%s)" % (fn.__name__, ', '.join(
+            [a.__repr__() for a in params] +
+            ["%s = %s" % (a, repr(b)) for a,b in kwargs.items()]
+        ))
+        print "%s%s called [#%s]" % (indent, fc, call)
+        __report_indent[0] += 1
+        ret = fn(*params,**kwargs)
+        __report_indent[0] -= 1
+        print "%s%s returned %s [#%s]" % (indent, fc, repr(ret), call)
+        return ret
+    wrap.callcount = 0
+    return wrap
+
+def report_(fn):
+    """Decorator to print information about a function
+    call for use while debugging.
+    Prints function name, arguments, and call number
+    when the function is called. Prints this information
+    again along with the return value when the function
+    returns.
+    """
+    def wrap(*params,**kwargs):
+        #call = wrap.callcount = wrap.callcount + 1
+        #indent = ' ' * __report_indent[0]
+        #fc = "%s(%s)" % (fn.__name__, ', '.join(
+        #    [a.__repr__() for a in params] +
+        #    ["%s = %s" % (a, repr(b)) for a,b in kwargs.items()]
+        #))
+        #print "%s%s called [#%s]" % (indent, fc, call)
+        #__report_indent[0] += 1
+        ret = fn(*params,**kwargs)
+        #__report_indent[0] -= 1
+        #print "%s%s returned %s [#%s]" % (indent, fc, repr(ret), call)
+        return ret
+    #wrap.callcount = 0
+    return wrap
+
 
 icons = {}
 
@@ -41,7 +95,7 @@ def parentpath(path):
     return parent
 
 ## Guard-like class to change the cursor icon during operations that may take a
-#  long time.  
+#  long time.
 class BusyCursor(object):
     ## Constructor, sets the application cursor to Qt.WaitCursor.
     def __init__(self):
@@ -72,7 +126,7 @@ class CondDBStructureItem(object):
         self.index = None
         
     ## Disconnect all the relations between parent and children (needed to allow
-    #  Python to free the memory) 
+    #  Python to free the memory)
     def release(self):
         if self._children:
             for c in self._children:
@@ -148,7 +202,7 @@ class CondDBStructureItem(object):
     def rowCount(self):
         return len(self.children)
     
-    ## Function to extract from the item the information to present 
+    ## Function to extract from the item the information to present
     def data(self, role):
         global icons
         if role == Qt.DisplayRole:
@@ -247,7 +301,7 @@ class CondDBStructureModel(QAbstractItemModel):
             return QVariant("Name")
         return QVariant()
     
-    ## Return the index of the specified path 
+    ## Return the index of the specified path
     def findPath(self, path):
         if len(path) <= 1:
             return self.root.index
@@ -266,7 +320,7 @@ class CondDBStructureModel(QAbstractItemModel):
             except ValueError:
                 # sub-node not found
                 break
-        # At this point item.index is defined 
+        # At this point item.index is defined
         return item.index
 
 
@@ -275,8 +329,8 @@ class CondDBStructureModel(QAbstractItemModel):
 class CondDBNodesListModel(QAbstractListModel):
     def __init__(self, db = None, parent = None):
         super(CondDBNodesListModel,self).__init__(parent)
-        self.db = db
         self._nodes = None
+        self.connectDB(db)
         
     ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
     def connectDB(self, db):
@@ -290,7 +344,7 @@ class CondDBNodesListModel(QAbstractListModel):
             self._nodes = []
     
     ## Python property to cache the list of nodes in the database.
-    #  It doesn't include "/". 
+    #  It doesn't include "/".
     @property
     def nodes(self):
         if self._nodes is None:
@@ -313,7 +367,7 @@ class CondDBNodesListModel(QAbstractListModel):
     def headerData(self, section, orientation ,role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Name")
-        return QVariant()        
+        return QVariant()
 
 
 ## Model class to retrieve the available tags in a folder.
@@ -353,7 +407,7 @@ class CondDBTagsListModel(QAbstractListModel):
     def path(self):
         return self._path
     
-    ## Set the folder for which to get the tags. 
+    ## Set the folder for which to get the tags.
     def setPath(self, path):
         self.reset()
         self._path = path
@@ -409,31 +463,342 @@ class CondDBTagsListModel(QAbstractListModel):
     def headerData(self, section, orientation ,role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Tag")
-        return QVariant()        
-
+        return QVariant()
 
 ## Model class for the list of IOVs
 class CondDBIoVModel(QAbstractTableModel):
+    __pyqtSignals__ = ("setViewEnabled(bool)",
+                       "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)")
+    ## Position of the field in the tuple used internally
+    SINCE = 0
+    ## Position of the field in the tuple used internally
+    UNTIL = 1
+    ## Position of the field in the tuple used internally
+    PAYLOAD = 2
+    ## Position of the field in the tuple used internally
+    INSERTION_TIME = 3
+    ## Definition of the HEAD tag
+    HEAD = "HEAD"
     ## Constructor.
     #  Initializes some internal data.
     def __init__(self, db = None, path = None, channel = None, tag = None, parent = None):
         super(CondDBIoVModel,self).__init__(parent)
-        self.db = None
-        self._folder = None
-        self._channel = None
-        self._channelSelection = None
-        self._tag = None
         
         # "_since" is the value requested by the user,
         # "_actualSince" is the one in the cache
-        # "_sinceIndex" is the index of the element of the cache corresponding to "_since"
         self._since = self._actualSince = cool.ValidityKeyMin
+        self._until = self._actualUntil = cool.ValidityKeyMax
+        
+        # initializes internal members
+        self._reset()
+        
+        self.connectDB(db)
+        self.setPath(path)
+        
+    ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
+    def connectDB(self, db):
+        if self.db:
+            self._reset()
+            # The actual logic for enable is (self.db and self._path)
+            self.emit(SIGNAL("setViewEnabled(bool)"), False)
+        self.db = db
+    
+    ## Reset internal data, cleaning the cache.
+    def _reset(self):
+        self._path = None
+        self._folder = None
+        # default values
+        self._channel = 0
+        self._tag = self.HEAD
+        
+        self.db = None
+        
+        # "_sinceIndex" is the index of the element of the cache corresponding to "_since"
         self._sinceIndex = 0
         # same as for _since*
-        self._until = self._actualUntil = cool.ValidityKeyMax
-        self._untilIndex = 0
-        # cache
+        self._untilIndex = -1
+        
+        self._selectedIndex = 0
+        
+        self._cleanCache()
+        
+    ## Just clean the cache.
+    #  Useful when changing channel id or tag.
+    def _cleanCache(self):
+        # purge cache
         self._allIoVs = None
+    
+    ## Value of the property channel.
+    def channel(self):
+        return self._channel
+    
+    ## Set the channel.
+    def setChannel(self, channel):
+        if not channel:
+            channel = 0
+        if self._channel != channel:
+            self._cleanCache()
+            self._channel = channel
+            self.reset()
+    
+    ## Return the cool::ChannelSelection object corresponding to the set channel.    
+    def channelSelection(self):
+        return cool.ChannelSelection(self._channel)
+    
+    ## Value of the property tag.
+    def tag(self):
+        return self._tag
+    
+    ## Get the current tag.
+    def setTag(self, tag):
+        if not tag:
+            tag = self.HEAD
+        else:
+            tag = str(tag)
+        if self._tag != tag:
+            self._cleanCache()
+            self._tag = tag
+            self.reset()
+    
+    ## Add new IoVs from the folder to the end of the cache.
+    def _appendIoVs(self, newUntil):
+        # cross check, before going to the DB
+        if self._folder and self._actualUntil < newUntil:
+            tag = self.tag()
+            if tag != self.HEAD:
+                tag = self._folder.resolveTag(self.tag())
+            objects = self._folder.browseObjects(self._actualUntil, newUntil,
+                                                 self.channelSelection(),
+                                                 tag)
+            for o in objects:
+                self._allIoVs.append((o.since(), o.until(),
+                                      dict(o.payload()),
+                                      o.insertionTime()))
+            # set actual limits of the content of the cache
+            if self._allIoVs: # we may not have found anything
+                self._actualUntil = self._allIoVs[-1][self.UNTIL]
+                # this is needed when there was no IoV in the cache
+                self._actualSince = self._allIoVs[0][self.SINCE]
+            else:
+                self._actualUntil = newUntil
+        
+    ## Add new IoVs from the folder to the begin of the cache.
+    def _prependIoVs(self, newSince):
+        # cross check, before going to the DB 
+        if self._folder and self._actualSince > newSince:
+            oldSize = len(self._allIoVs)
+            tag = self.tag()
+            if tag != self.HEAD:
+                tag = self._folder.resolveTag(self.tag())
+            # Note: we use "self._actualSince - 1" and not "self._actualSince"
+            # because COOL returns also the object that includes the upper limit,
+            # but we already have it.
+            objects = self._folder.browseObjects(newSince, self._actualSince - 1,
+                                                 self.channelSelection(),
+                                                 tag)
+            tmp = []
+            for o in objects:
+                # FIXME: probably it could be quicker using a temporary list and append
+                tmp.append((o.since(), o.until(),
+                            dict(o.payload()),
+                            o.insertionTime()))
+            self._allIoVs = tmp + self._allIoVs
+            # set actual limits of the content of the cache
+            if self._allIoVs: # we may not have found anything
+                self._actualSince = self._allIoVs[0][self.SINCE]
+                # this is needed when there was no IoV in the cache
+                self._actualUntil = self._allIoVs[-1][self.UNTIL]
+            else:
+                self._actualSince = newSince
+            # Displace the indexes
+            newSize = len(self._allIoVs)
+            if oldSize == 0:
+                if newSize == 0:
+                    deltaSize = 0
+                else:
+                    deltaSize = newSize - 1 # avoid that the indexes go out of bounds
+            else:
+                deltaSize = newSize - oldSize
+            self._sinceIndex += deltaSize
+            self._untilIndex += deltaSize
+            self._selectedIndex += deltaSize
+            #print "prepend",self._sinceIndex,self._untilIndex,self._selectedIndex
+            
+    
+    ## Get all the IoVs in the cache.
+    def allIoVs(self):
+        if self._allIoVs is None:
+            # Initial retrieval
+            self._allIoVs = []
+            if self._folder:
+                # Looks complicated but it is just a way to re-use the _appenIoVs method
+                self._actualUntil = self._since
+                self._appendIoVs(self._until)
+                if self._allIoVs: # we may not have found anything
+                    self._actualSince = self._allIoVs[0][self.SINCE]
+                else:
+                    self._actualSince = self._since
+            # set indexes
+            self._sinceIndex = 0
+            self._untilIndex = len(self._allIoVs) - 1
+            if self._allIoVs:
+                #print "allIoVs", self._untilIndex
+                self.setSelected(self._untilIndex, True)
+        return self._allIoVs
+    
+    ## Update the indexes corresponding to the first and last element of the cache
+    #  for the range (since, until).
+    def _updateIndexes(self):
+        if self._allIoVs:
+            # Make sense only if there is a cache
+            old = (self._sinceIndex, self._untilIndex)
+            oldSelected = self._selectedIndex
+            if self._allIoVs[self._sinceIndex][self.SINCE] >= self._since:
+                while (self._allIoVs[self._sinceIndex][self.SINCE] > self._since) \
+                      and (self._sinceIndex > 0):
+                    self._sinceIndex -= 1
+            else:
+                while (self._allIoVs[self._sinceIndex][self.UNTIL] < self._since) \
+                      and (self._sinceIndex < self._untilIndex):
+                    self._sinceIndex += 1
+            if self._allIoVs[self._untilIndex][self.UNTIL] <= self._until:
+                last = len(self._allIoVs) - 1
+                while (self._allIoVs[self._untilIndex][self.UNTIL] < self._until) \
+                      and (self._untilIndex < last):
+                    self._untilIndex += 1
+            else:
+                while (self._allIoVs[self._untilIndex][self.SINCE] > self._until) \
+                      and (self._untilIndex > self._sinceIndex):
+                    self._untilIndex -= 1
+            if old != (self._sinceIndex, self._untilIndex):
+                # we have to move the selected index to match the displacement
+                self.setSelected(min(self._sinceIndex - old[0] + oldSelected, self._untilIndex))
+                # notify view
+                # FIXME: Should be done better
+                self.reset()
+    
+    ## Value of the property since.
+    def since(self):
+        return self._since
+
+    ## Set the property since updating the cache if needed.
+    def setSince(self, since):
+        if since > self._until:
+            # FIXME: should we exit or set since to the value of until?
+            return
+        self._since = since
+        if self._allIoVs is not None:
+            # Fetch data if needed
+            self._prependIoVs(since)
+            self._updateIndexes()
+
+    ## Value of the property until.
+    def until(self):
+        return self._until
+
+    ## Set the property until updating the cache if needed.
+    def setUntil(self, until):
+        if until < self._since:
+            # FIXME: should we exit or set until to the value of since?
+            return
+        self._until = until
+        if self._allIoVs is not None:
+            # the complex part make sense only if we have something in the cache
+            # Fetch data if needed
+            self._appendIoVs(until)
+            self._updateIndexes()
+
+    ## Get the path of the current folder.
+    def path(self):
+        return self._path
+    
+    ## Set the folder for which to get the tags.
+    def setPath(self, path):
+        if path != self._path:
+            self._cleanCache()
+            self._path = self._folder = None
+            if path and self.db.db.existsFolder(path):
+                self._path = path
+                self._folder = self.db.db.getFolder(path)
+            # Notify the views
+            self.reset()
+            # The actual logic for enable is (self.db and self._path)
+            self.emit(SIGNAL("setViewEnabled(bool)"), bool(self._path))
+    
+    ## Set the path and the channel.
+    def setPathChannel(self, path, channel):
+        self.setPath(path)
+        self.setChannel(channel)
+        
+    ## Number of IOV in the range.
+    def rowCount(self, parent):
+        self.allIoVs() # trigger the filling of the cache
+        return self._untilIndex - self._sinceIndex + 1
+    
+    ## Number of columns in the table. 
+    def columnCount(self, parent):
+        return 2
+    
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            tuple = self.allIoVs()[self._sinceIndex + index.row()]
+            if role == Qt.DisplayRole:
+                s = str(tuple[index.column()])
+                return QVariant(s)
+            elif role == Qt.ToolTipRole:
+                s = str(tuple[self.INSERTION_TIME])
+                return QVariant(s)
+        return QVariant()
+
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return QVariant(("Since", "Until")[section])
+            else:
+                return QVariant(section)
+        return QVariant()
+
+    def setSelectedTime(self, validityKey):
+        if self._allIoVs:
+            idx = self._sinceIndex
+            while idx < self._untilIndex and \
+                  self._allIoVs[idx][self.UNTIL] < validityKey:
+                idx += 1
+            self.setSelected(idx - self._sinceIndex)
+
+    ## Get the row number of the currently selected IoV
+    def selected(self):
+        return self._selectedIndex
+
+    def setSelected(self, index, emit = True):
+        if self._allIoVs:
+            self._selectedIndex = index
+            if emit:
+                self.emit(SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
+                          self.index(self._selectedIndex, 0), QItemSelectionModel.Select)
+
+    def selectionChanged(self, index, oldIndex):
+        self.setSelected(index.row(), False)
+
+    def getPayload(self):
+        if self._allIoVs and self._selectedIndex is not None:
+            return self._allIoVs[self._selectedIndex + self._sinceIndex][self.PAYLOAD]
+        return None
+
+## Model class to retrieve the available fields in a folder.
+class CondDBPayloadFieldModel(QAbstractListModel):
+    __pyqtSignals__ = ("setViewEnabled(bool)",
+                       "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)")
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, db = None, path = None, parent = None):
+        super(CondDBPayloadFieldModel, self).__init__(parent)
+        self.db = None
+        self._path = None
+        self._fields = []
+        self._selected = 0
         
         self.connectDB(db)
         self.setPath(path)
@@ -443,118 +808,58 @@ class CondDBIoVModel(QAbstractTableModel):
         self.setPath(None) # trigger a clean up of the cache
         self.db = db
     
-    def channelSelection(self):
-        if self._channel is None:
-            self._channel = 0
-        return cool.ChannelSelection(self._channel)
-        
-    def tag(self):
-        if self._tag is None:
-            self._tag = ""
-        return self._tag
-    
-    def _appendIoVs(self, newUntil):
-        # cross check, before going to the DB
-        if self._folder and self._actualUntil < newUntil:
-            for o in self._folder.browseObjects(self._actualUntil, newUntil,
-                                                self.channelSelection(),
-                                                self.tag()):
-                self._allIoVs.append((o.since(), o.until(),
-                                      o.payload(),
-                                      o.insertionTime()))
-            # set internal _until to the actual limit
-            self._actualUntil = self._allIoVs[-1][1]
-        
-    def _prependIoVs(self, newSince):
-        # cross check, before going to the DB
-        if self._folder and self._actualSince > newSince:
-            oldSize = len(self._allIoVs)
-            for o in self._folder.browseObjects(newSince, self._actualSince,
-                                                self.channelSelection(),
-                                                self.tag()):
-                # FIXME: probably it could be quicker using a temporary list and append
-                self._allIoVs.insert(0,
-                                     (o.since(), o.until(),
-                                      o.payload(),
-                                      o.insertionTime()))
-            # set internal _since to the actual limit
-            self._actualSince = self._allIoVs[0][0]
-            # Displace the indexes
-            deltaSize = len(self._allIoVs) - oldSize
-            self._sinceIndex += deltaSize
-            self._untilIndex += deltaSize
-        
-    def allIoVs(self):
-        if self._allIoVs is None:
-            # Initial retrieval
-            if self._folder:
-                self._allIoVs = []
-                # Looks complicated but it is just a way to re-use the _appenIoVs method
-                newUntil = self._until
-                self._actualUntil = self._since
-                self._appendIoVs(newUntil)
-                self._actualSince = self._allIoVs[0][0]
-                # set indexes
-                self._sinceIndex = 0
-                self._untilIndex = len(self._allIoVs)
-        return self._allIoVs
-        
-    def since(self):
-        return self._since
-
-    def setSince(self, since):
-        if self._allIoVs is not None:
-            # the complex part make sense only if we have something in the cache
-            if since < self._since:
-                # Fetch data if needed
-                self._prependIoVs(since)
-                # Check if we have to update the index 
-                oldIndex = self._sinceIndex
-                while (self.allIoVs()[self._sinceIndex][0] > since) and (self._sinceIndex > 0):
-                    self._sinceIndex -= 1
-                if oldIndex != self._sinceIndex:
-                    self.sizeUpdate()
-            else:
-                # We only need to move the index
-                pass
-        self._since = since
-
     ## Get the current folder.
     def path(self):
         return self._path
     
-    ## Set the folder for which to get the tags. 
+    ## Set the folder for which to get the tags.
     def setPath(self, path):
         self.reset()
         self._path = path
         if path and self.db.db.existsFolder(path):
-            f = self.db.db.getFolder(path)
-            if f.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
-                # invalidate the cache
-                self._tags = None
-                self._alltags = None
-                self.emit(SIGNAL("setViewEnabled(bool)"), True)
-            else:
-                # single version folders do not have tags by definition
-                self._tags = self._alltags = []
-                self.emit(SIGNAL("setViewEnabled(bool)"), False)
+            self._fields = self.db.getFolderStorageKeys(path)
+            self._fields.sort()
+            viewEnabled = len(self._fields) != 1
+            self.emit(SIGNAL("setViewEnabled(bool)"), viewEnabled)
+            self.setSelectedField(0)
         else:
             # If no folder is specified or the path is a folderset, use an empty cache
-            self._tags = self._alltags = []
+            self._fields = []
             self.emit(SIGNAL("setViewEnabled(bool)"), False)
-
-    def since(self, since):
-        self._since = since
-
-    ## Number of IOV in the cache.
+    
+    ## Number of tags to display.
     def rowCount(self, parent):
-        return len(self.tags())
+        return len(self._fields)
     
     ## Name of the tag at a given index.
     def data(self, index, role):
         if index.isValid():
             if role == Qt.DisplayRole:
-                return QVariant(self.tags()[index.row()])
+                return QVariant(self._fields[index.row()])
         return QVariant()
     
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
+            return QVariant("Name")
+        return QVariant()
+
+    ## Get the name of the currently selected field
+    def selectedField(self):
+        return self._selected
     
+    ## Get the name of the currently selected field
+    def setSelectedField(self, row, emit = True):
+        self._selected = row
+        if emit:
+            self.emit(SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
+                      self.index(self._selected), QItemSelectionModel.Select)
+    
+    ##
+    def selectionChanged(self, index, oldIndex):
+        self.setSelectedField(index.row(), False)
+
+    def getFieldName(self):
+        if self._fields:
+            return self._fields[self._selected]
+        return None

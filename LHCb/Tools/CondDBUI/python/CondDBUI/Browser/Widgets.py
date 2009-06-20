@@ -15,6 +15,7 @@ class TimePointEdit(QtGui.QWidget):
     __pyqtSignals__ = ("timeChanged(QTime)",
                        "dateChanged(QDate)",
                        "dateTimeChanged(QDateTime)",
+                       "validityKeyChange(cool::ValidityKey)",
                        "maxChanged(bool)",
                        "maxChecked()"
                        "maxUnchecked()")
@@ -70,9 +71,9 @@ class TimePointEdit(QtGui.QWidget):
         for signal in ["timeChanged(QTime)",
                        "dateChanged(QDate)",
                        "dateTimeChanged(QDateTime)"]:
-            QObject.connect(self._edit, SIGNAL(signal), self, SIGNAL(signal)) 
+            QObject.connect(self._edit, SIGNAL(signal), self, SIGNAL(signal))
         QObject.connect(self._edit, SIGNAL("dateTimeChanged(QDateTime)"),
-                        self, SLOT("emitValidityKeyChange"))
+                        self.emitValidityKeyChange)
     
     ## Value of the property minDateTime.
     def minimumDateTime(self):
@@ -113,7 +114,7 @@ class TimePointEdit(QtGui.QWidget):
         self._max.setEnabled(enable)
     
     ## Value of the property maxChecked.
-    #  Indicates if the "Max" checkbox is checked or not. 
+    #  Indicates if the "Max" checkbox is checked or not.
     def maxChecked(self):
         return self._max.isChecked()
     
@@ -121,12 +122,11 @@ class TimePointEdit(QtGui.QWidget):
     def setMaxChecked(self, checked):
         self._max.setChecked(checked)
     
-    ## Value of the property maxChecked.
-    #  Indicates if the "Max" checkbox is checked or not. 
+    ## Value of the property dateTime.
     def dateTime(self):
         return self._edit.dateTime()
     
-    ## Set the status of the "Max" checkbox..
+    ## Set the value of the property dateTime.
     def setDateTime(self, dateTime):
         self._edit.setDateTime(dateTime)
     
@@ -138,7 +138,7 @@ class TimePointEdit(QtGui.QWidget):
             spec = Qt.LocalTime
         self._edit.setTimeSpec(spec)
         # FIXME: This seems to be a bit stupid, but it is the only way I found
-        # to trigger a correct re-paint of the displayed date-time. 
+        # to trigger a correct re-paint of the displayed date-time.
         self._edit.setDateTime(self._edit.dateTime())
     
     ## Slot to update internal state when the "Max" checkbox is toggled.
@@ -162,8 +162,8 @@ class TimePointEdit(QtGui.QWidget):
         d = self._edit.dateTime().toLocalTime()
         timeTuple = (d.date().year(), d.date().month(), d.date().day(),
                      d.time().hour(), d.time().minute(), d.time().second(),
-                     0,0,0)
-        return int(time.gmtime(time.mktime(timeTuple)) * 1e9)
+                     0,0,-1)
+        return int(time.mktime(timeTuple) * 1e9)
 
     ## Set the internal QDateTime from a cool::ValidityKey.
     def setValidityKey(self, valKey):
@@ -181,4 +181,5 @@ class TimePointEdit(QtGui.QWidget):
     ## Slot called by a "dateTimeChanged" signal to propagate it as a
     #  cool::ValidityKey.
     def emitValidityKeyChange(self):
-        self.emit(SIGNAL("validityKeyChange(cool::ValidityKey)"),self.toValidityKey())
+        #self.emit(SIGNAL("validityKeyChange(cool::ValidityKey)"),self.toValidityKey())
+        self.emit(SIGNAL("validityKeyChange"),self.toValidityKey())
