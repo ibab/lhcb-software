@@ -100,19 +100,19 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 # I don't necessarily want to do this just with prescalers.
                 , 'IncludeLines'  : {'Hlt2Topo2BodySA'              : True
                                    , 'Hlt2Topo3BodySA'              : True
-                                   , 'Hlt2Topo4BodySA'              : True
+                                   , 'Hlt2Topo4BodySA'              : False
                                    , 'Hlt2TopoTF2BodySA'            : True
                                    , 'Hlt2TopoTF3BodySA'            : True
-                                   , 'Hlt2TopoTF4BodySA'            : True
+                                   , 'Hlt2TopoTF4BodySA'            : False
                                    , 'Hlt2TopoTF2BodyReq2Yes'       : True
                                    , 'Hlt2TopoTF2BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF2BodyReq4Yes'       : True
+                                   , 'Hlt2TopoTF2BodyReq4Yes'       : False
                                    , 'Hlt2TopoTF3BodyReq2Yes'       : True
                                    , 'Hlt2TopoTF3BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF3BodyReq4Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq2Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq4Yes'       : True
+                                   , 'Hlt2TopoTF3BodyReq4Yes'       : False
+                                   , 'Hlt2TopoTF4BodyReq2Yes'       : False
+                                   , 'Hlt2TopoTF4BodyReq3Yes'       : False
+                                   , 'Hlt2TopoTF4BodyReq4Yes'       : False
                                    # Charm lines
                                    , 'Hlt2Topo2BodyCharmSA'         : True
                                    , 'Hlt2TopoTF2BodyCharmSignal'   : True
@@ -120,16 +120,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2Topo3BodyCharmSA'         : True
                                    , 'Hlt2TopoTF3BodyCharmSignal'   : True
                                    , 'Hlt2TopoTF3BodyCharmWideMass' : True
-                                   , 'Hlt2Topo4BodyCharmSA'         : True
-                                   , 'Hlt2TopoTF4BodyCharmSignal'   : True
-                                   , 'Hlt2TopoTF4BodyCharmWideMass' : True
+                                   , 'Hlt2Topo4BodyCharmSA'         : False
+                                   , 'Hlt2TopoTF4BodyCharmSignal'   : False
+                                   , 'Hlt2TopoTF4BodyCharmWideMass' : False
                                    # DX lines.  Here temporarily.
                                    , 'Hlt2DX3BodyCopKsDD'           : True
-                                   , 'Hlt2DX4BodyCopKsDD'           : True
+                                   , 'Hlt2DX4BodyCopKsDD'           : False
                                    , 'Hlt2DX3BodyCopNoKs'           : True
-                                   , 'Hlt2DX4BodyCopNoKs'           : True
-                                   , 'Hlt2DX4BodyLowRobCopKsDD'     : True
-                                   , 'Hlt2DX4BodyLowRobCopNoKs'     : True
+                                   , 'Hlt2DX4BodyCopNoKs'           : False
+                                   , 'Hlt2DX4BodyLowRobCopKsDD'     : False
+                                   , 'Hlt2DX4BodyLowRobCopNoKs'     : False
                                    }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : {'Hlt2Topo2BodySADecision'         : 50700
