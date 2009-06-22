@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2009-06-16 17:39:24 ggiacomo Exp $
+! $Id: release.notes,v 1.45 2009-06-22 09:17:27 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,8 +6,9 @@
 ! or using makedoc script in this folder
 !
 
-! 20090616 v5r4
+! 20090622 v5r4
 - new fields for Analysis: doc and specific message
+- add links to navigate from histogram to page objects
 
 ! 20090609 v5r3 (tested on FEST5)
 - changes to OMAMessage, to allow for DB reconnection to Analysis Tasks

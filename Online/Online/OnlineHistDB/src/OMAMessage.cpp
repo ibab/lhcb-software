@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.13 2009-06-16 17:39:24 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.14 2009-06-22 09:17:27 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -208,10 +208,14 @@ const char* OMAMessage::levelString() {
   case WARNING:
     return "WARNING";
     break;
+  case NOSTAT:
+    return "NOSTAT";
+    break;
   case INFO:
+  default:
     return "INFO";
     break;
-    }
+  }
   return "INFO";
 }
 

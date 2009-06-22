@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.32 2009-06-16 17:39:23 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.33 2009-06-22 09:17:27 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -8,9 +8,12 @@
  *  @date 1/12/2006
  */
 
+
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistTask.h"
 #include "OnlineHistDB/OHDB_ocitypes.h"
+class OnlineHistoOnPage;
+class OnlineHistPage;
 
 class  OnlineHistogram : public OnlineHistDBEnv
 {
@@ -26,6 +29,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
   inline std::string& identifier() {return m_identifier;}
   /// full path name of the page to which this histogram object is attached
   inline std::string& page() {return m_page;}
+  /// associated OnlineHistPage object
+  OnlineHistPage* pageObject();
+  /// link to OnlineHistoOnPage object (if available)
+  inline OnlineHistoOnPage* onpage() {return m_onpage;}
   /// counter (starting from 1) to distinguish several instances of the same histogram on the same page
   inline int instance() const {return m_instance;}
   /// name of the DIM service that is currently publishing the histogram
@@ -89,6 +96,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// been attached to the page through OnlineHistPage::declareHistogram()
   bool setPage(std::string FullPathPageName,
 	       int Instance=1);
+  inline void setOnpage(OnlineHistoOnPage* OnPage) {m_onpage=OnPage;}
   /// unsets page associated to histogram object
   void unsetPage();
   /// sets the DIM service name that is currently publishing the histogram. Returns true on success
@@ -304,6 +312,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool m_isAbort;
   std::string m_identifier;
   std::string m_page;
+  OnlineHistoOnPage* m_onpage;
   int m_instance;
   bool m_page_verified;
   std::string m_hid;

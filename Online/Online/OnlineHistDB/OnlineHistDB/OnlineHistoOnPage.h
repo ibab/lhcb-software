@@ -1,4 +1,4 @@
-// $Id: OnlineHistoOnPage.h,v 1.1 2009-02-16 10:37:42 ggiacomo Exp $
+// $Id: OnlineHistoOnPage.h,v 1.2 2009-06-22 09:17:27 ggiacomo Exp $
 #ifndef ONLINEHISTDB_ONLINEHISTOONPAGE_H 
 #define ONLINEHISTDB_ONLINEHISTOONPAGE_H 1
 
@@ -11,13 +11,16 @@
  *  @date   2009-02-06
  */
 
+class OnlineHistPage;
+
 class OnlineHistoOnPage 
   {
   public:
-    OnlineHistoOnPage(OnlineHistogram* h) :
+    OnlineHistoOnPage(OnlineHistogram* h, OnlineHistPage* Page) :
       histo(h), xmin(0), ymin(0), xmax(1), ymax(1),
-      m_mother(NULL), m_ovIx(0)
-    { instance=h->instance();}
+      m_mother(NULL), m_page(Page), m_ovIx(0)
+      { h->setOnpage(this);
+	instance=h->instance();}
     virtual ~OnlineHistoOnPage() {}
     /// set pad size (min and max x and y coordinates relative to canvas size)
     inline void setPadSize(float x1, float y1, float x2, float y2) {
@@ -47,6 +50,7 @@ class OnlineHistoOnPage
     inline void save(std::string& Page) {
       histo->setPage(Page, instance);
     }
+    inline OnlineHistPage* page() {return m_page;}
 
     OnlineHistogram* histo;
     unsigned int instance;
@@ -56,6 +60,7 @@ class OnlineHistoOnPage
     float ymax;
   private:
     OnlineHistoOnPage* m_mother;  
+    OnlineHistPage* m_page;
     int m_ovIx;
 };
 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.25 2009-03-06 09:26:54 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.26 2009-06-22 09:17:27 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
@@ -82,7 +82,7 @@ void OnlineHistPage::load() {
             histo->setDebug(debug());
             histo->setExcLevel(excLevel());
 
-            OnlineHistoOnPage* newh = new OnlineHistoOnPage(histo);
+            OnlineHistoOnPage* newh = new OnlineHistoOnPage(histo, this);
             m_h.push_back( newh );
             newh->setPadSize(PADMIN_X[j], PADMIN_Y[j], PADMAX_X[j], PADMAX_Y[j]);
 
@@ -140,7 +140,7 @@ OnlineHistogram* OnlineHistPage::mydeclareHistogram(OnlineHistogram* h,
         }
         instance = newinst;
       }
-      ph = new OnlineHistoOnPage(h);
+      ph = new OnlineHistoOnPage(h, this);
       m_h.push_back( ph );
       ph->instance = instance;
 

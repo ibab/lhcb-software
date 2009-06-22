@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.44 2009-06-16 17:39:24 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.45 2009-06-22 09:17:27 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstring>
 #include "OnlineHistDB/OnlineHistogram.h"
+#include "OnlineHistDB/OnlineHistoOnPage.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
 OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
@@ -16,7 +17,7 @@ OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
                                  int Instance) :
   OnlineHistDBEnv(env), Sources(0), SourceSet(0),
   m_isAbort(false), m_identifier(Identifier), 
-  m_page(Page), m_instance(Instance), m_page_verified(false),
+  m_page(Page), m_onpage(NULL), m_instance(Instance), m_page_verified(false),
   m_DOinit(false), m_InitDOmode(NONE), m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0),
   m_dispopt(NULL), m_dispopt_null(NULL), m_fitfun_null(1), 
   m_anadirLoaded(false), m_credirLoaded(false) {
@@ -51,6 +52,10 @@ void OnlineHistogram::checkServiceName() {
     if (debug() > 3) std::cout << "Reloading Histogram " << identifier() << std::endl;
     load();
   }
+}
+
+OnlineHistPage* OnlineHistogram::pageObject() {
+  return (m_onpage ? m_onpage->page() : NULL); 
 }
 
 bool OnlineHistogram::setPage(std::string Page,
