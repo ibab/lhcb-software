@@ -3,6 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v19r2>2009-06-22 Boole v19r2</A></H1><PRE>
+This version uses projects Gaudi v21r1, LHCb v27r2, Lbcom v7r2
+ and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
+
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+ - New packaging:
+   . Move most of SuppressWarnings.opts functionality into Boole() and LHCbApp().
+     Only sub-detector specific suppressions remains in SuppressWarnings.opts
+     (Boole v19r2, GaudiConf v12r5)
+
+ - Changes to monitoring
+   . Cleanups in L0Calo monitoring (L0Calo v9r21)
+   . Fixes to Rich data size monitoring (RichDAQ v3r24)
+
 </PRE><H1><A NAME=v19r1>2009-06-08 Boole v19r1</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r1, Lbcom v7r1
  and SQLDDDB v5r7, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
