@@ -18,6 +18,7 @@ namespace LHCb
   namespace RawEventLocation {
     static const std::string& Default  = "DAQ/RawEvent";
     static const std::string& Emulated = "Emu/RawEvent";
+    static const std::string& Copied   = "pRec/RawEvent";
   }
 
   /** @class LHCb::RawEvent RawEvent.h
