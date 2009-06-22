@@ -5,11 +5,134 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-06-11 - Chris Jones
- - Remove RichLocalPID and RichHLTLocalPID from the release.
+</PRE><H1><A NAME=v7r2>2009-06-22 RecSys v7r2</A></H1><PRE>
+This version uses Gaudi v21r1 and LHCb v27r2.
 
-! 2009-06-04 - Chris Jones
- - Add RichRecTemplateRings to RICH packages
+- Packages added:    Rich/RichRecTemplateRings - Reconstruct Rings for PID
+- Packages removed:  RichLocalPID, RichHLTLocalPID
+- Packages modified: CaloMoniDst v3r8, TrackCheckers v4r6, TrackFitEvent v3r22,
+    TrackFitter v2r34, TrackIdealPR v2r16, TrackMCTools v2r24,
+    TrackMonitors v1r10, TrackSys v4r24, PatAlgorithms v3r22, MuonID v6r3,
+    RichENNRingFinder v1r1, RichGlobalPID v3r10p2, RichMarkovRingFinder v2r8,
+    RichPIDMerge v2r7, RichRecAlgorithms v2r16, RichRecMCAlgorithms v1r3p1,
+    RichRecMCTools v2r22, RichRecMonitors v2r23, RichRecPhotonTools v1r6,
+    RichRecQC v2r30, RichRecStereoTools v1r6, RichRecSys v3r20,
+    RichRecTemplateRings v1r0, RichRecTools v4r9, RichRecTrackTools v1r12, 
+    VeloRecMonitors v1r8, LumiAlgs v2r1
+
+- In CaloMoniDst v3r8
+  . Change _snprintf() to std::string
+
+- In TrackCheckers v4r6
+  . Add check not for MC reconstructible but for track found in best container
+    (needed to validate HLT vs. offline efficiency)
+  . Add switch to check efficiency only for B daughters and for long tracks 
+  . Fill ghost category in plot
+  . Bug fix in MC bAncestor method
+
+- In TrackFitEvent v3r22
+  . Added function for mass constraint to TrackStateVertex for use in alignment
+
+- In TrackFitter v2r34
+  . Bug fix in fast fit configurable
+
+- In TrackIdealPR v2r16
+  . Fixed two inconsequential bugs in IdealTracksCreator
+
+- In TrackMCTools v2r24
+  . Fix bug in LongTrack GhostClassification & add two more categories
+
+- In TrackMonitors v1r10
+  . Add TrackDiMuonMonitor
+
+- In TrackSys v4r24
+  . Require long tracks in efficiency checking of best track container
+  . Use Downstream tracking both in RecoTracking.py and PatChecking.py in case
+    of fieldOff
+
+- In PatAlgorithms v3r22
+  . Fix a doxygen warning
+  . Abort parabola fit in case the distances of hit to reference line gets
+    unreasonably large
+
+- In MuonID v6r3
+  . Remove creation of measurements in MuonID
+  . Add parent track to ancestors in MuonID
+
+- In RichENNRingFinder v1r1
+  . Add the option to refit the rings, to get a better radius value before
+    converting to radians and storing in the output RichRecRing objects.
+  . Various technical improvements to first release.
+
+- In RichMarkovRingFinder v2r8
+  . Synchronise the configurable with the ENN Configurable.
+
+- In RichPIDMerge v2r7
+  . Remove use of RichLocalPIDs (package obsoleted)
+
+- In RichRecAlgorithms v2r16
+  . Abort processing early in trackless ring segment association algorithm in
+    the case no tracks are available.
+  . Yet more improvements to the trackless ring filtering and isolation 
+    algorithms.
+
+- In RichRecMCTools v2r22
+  . Implement new method in MCTruth tool to return MCParticle for a given
+    RichRecRing pointer.
+
+- In RichRecMonitors v2r23
+  . Adapt to new # Bin options in base classes
+
+- In RichRecQC v2r30
+  . Adapt to changes in track selectors
+  . Adapt to new # bin options in base classes
+  . Additional histograms in the track selection efficiency monitor
+  . Do not abort processig when input tracks to RichTrackSelEffMoni are missing.
+    Instead just issue a warning message and carry on.
+  . Add a new monitor, RichRawDataSize, to monitor the size of the L1 banks.
+  . Improvements to the trackless ring monitor
+    o improve histogram limits
+    o handle "Template" rings
+    o better MC truth based monitoring
+
+- In RichRecSys v3r20
+  . Add back Template Ring finder algorithm (FFTW3 now available in the LCG area)
+
+- In RichRecTrackTools v1r12
+  . Improvements to the track selectors. Remove the use of obsolete variables
+    and instead use the 'recommended' cuts.
+
+- In VeloRecMonitors v1r8
+  . VeloClusterMonitor:
+    o changed active chip link plot to more straightforward binning.
+    o appended TAE sample name to number of clusters histogram title.
+    o added occupancy plots in channel order
+    o changed occupancy scale to %
+    o fixed conversion warnings in some calls to plot1D
+    o made the highest bin in number of clusters plot a visible overflow bin.
+  . VeloSamplingMonitor:
+    o added new plots of cluster ADC values vs. TAE separated for top and bottom.
+    o uses the new accessor of DeVeloSensor to determine whether a sensor is top
+      or bottom cabled.
+  . Changed snprintf to strings in VeloExpertClusterMonitor
+
+- In LumiAlgs v2r1
+  . Configuration.py:  when running on DST, different location to pass on
+                       LumiSummary
+  . LumiReadBackFSR:   New algorithm to test integrator tool
+  . ILumiIntegrator.h: Interface for integrator tool
+  . LumiIntegrator:    Integrator tool, holds integrated lumi info. This tool is
+                       meant to be able to apply calibration constants and give
+                       an integrated luminosity at the end of a job
+  . LumiIntegrateFSR:  Algorithm to work with the tool.  Picks up all FSRs at 
+	                     change of run, navigates FileRecords to find all FSRs,
+                       and counts all events on input.  
+  . LumiAccounting:    Follow change to FileRecords
+
+- In RichGlobalPID v3r10p2, RichMarkovRingFinder v2r8, RichRecAlgorithms v2r16,
+     RichRecMCAlgorithms v1r3p1, RichRecMCTools v2r22, RichRecPhotonTools v1r6,
+     RichRecStereoTools v1r6, RichRecTools v4r9
+  . Fixes for WIN32 warnings
 
 </PRE><H1><A NAME=v7r1>2009-06-03 RecSys v7r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r1.
