@@ -7,11 +7,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.12 2009-05-19 15:46:34 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.13 2009-06-22 18:22:14 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.12 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.13 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -30,6 +30,7 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
 # The project are prepended to the list of overriding packages and 
 # the packages are appended to the list of used packages
 auto_override_projects = [("ExtraPackages", []),
+                          ("Compat", ["CompatSys"]),
                           #("LHCbGrid", ["LHCbGridSys"]), # enabled with --use-grid
                           ]
 
@@ -751,7 +752,7 @@ class SetupProject:
         
         self.default_externals = {
                                   'none':[],
-                                  'CERN':['CASTOR'],
+                                  'CERN':[], # ['CASTOR'],
                                  }
         self.parser = self._prepare_parser()
         

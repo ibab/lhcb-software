@@ -1,3 +1,9 @@
+2009-06-22 Marco Clemencic <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py:
+	- Added COMPAT to the list of auto-override projects (like ExtraPackages)
+	- Removed the default inclusion of CASTOR at CERN (should be done with LHCbGrid)
+
 2009-06-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LHCb.csh: New file. Top wrapper to be inserted in /etc/profile.d. 
