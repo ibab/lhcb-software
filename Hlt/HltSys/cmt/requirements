@@ -1,5 +1,5 @@
 package HltSys
-version v6r2
+version v6r3
 
 branches cmt doc 
 
@@ -7,11 +7,11 @@ branches cmt doc
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v3r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v3r1    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLine             v1r1    Hlt   # Vanya Belyaev, Gerhard Raven
 use Hlt1Lines           v1r0    Hlt   # Gerhard Raven
 use HltBase             v6r4p1  Hlt   # Gerhard Raven
-use HltCommon           v5r6    Hlt   # Gerhard Raven
+use HltCommon           v5r7    Hlt   # Gerhard Raven
 
 use HltTracking         v4r0    Hlt   # Jose Angel Hernando-Morata
 
@@ -43,7 +43,7 @@ use Fidel               v1r3p1  Phys  # Sara Furcas
 use HltKshort           v2r0    Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
 
-use HltSelChecker       v8r2    Hlt   # Patrick Koppenburg
+use HltSelChecker       v8r3    Hlt   # Patrick Koppenburg
 
 
 #=============================================================
