@@ -3,14 +3,45 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-06-18 - Marco Cattaneo
- - Update references for addition of TrackDiMuonMonitor
+</PRE><H1><A NAME=v35r2>2009-06-22 Brunel v35r2</A></H1><PRE>
+This version uses projects Gaudi v21r1, LHCb v27r2, Lbcom v7r2, Rec v7r2
+ and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
 
-! 2009-06-12 - Marco Cattaneo
- - Update references for improvements to Rich track selectors
+This is a development version for changes subsequent to the 2009 MC production. 
+Output requires DaVinci v22r1 or greater
 
-! 2009-06-05 - Marco Cattaneo
- - Update reference for Rich tuning and monitoring changes
+ - New tuning:
+   . Cleanup configurable for reprocessing case
+   . Use Downstream tracking both in RecoTracking.py and PatChecking.py in case
+     of fieldOff (TrackSys v4r24)
+   . Remove creation of measurements in MuonID (MuonID v6r3)
+   . Add parent track to ancestors in MuonID (MuonID v6r3)
+   . Improvements to ring finding in Rich
+     (RichENNRingFinder v1r1, RichMarkovRingFinder v2r8, RichRecBase v3r23)
+   . Updates to Rich track selection
+     (RichRecAlgorithms v2r16, RichRecTrackTools v1r12, RichRecBase v3r23)
+
+ - Bug fixes
+   . Update Brunel() for running with ETC input, for FEST stripping use case
+   . Abort parabola fit in case the distances of hit to reference line gets
+     unreasonably large (PatAlgorithms v3r22)
+   . Fix in event sizes reported by Rich decoding tools (RichDAQ v3r24)
+   . More robustness in full cluster decoding (VeloDAQ v4r7)
+   . Fixes to CondDB ConfigurableUser to do with interference between SQLite
+     local copies and CondDBTimeSwitchSvc (DetCond v12r7)
+
+ - Monitoring changes
+   . Efficiency in Best tracks container now measured only for Long tracks
+     (TrackSys v4r24, TrackCheckers v4r6)
+   . Add TrackDiMuonMonitor (TrackMonitors v1r10)
+   . Add RichRawDataSize monitors (RichRecQC v2r30)
+   . Improved Rich MC based trackless ring monitoring plots (RichRecQC v2r30)
+   . Improvements in VeloClusterMonitor (VeloRecMonitors v1r8)
+
+ - Packaging changes
+   . Remove obsolete DefineETC.opts, Brunel never writes an ETC
+   . Improve handling of Brunel().NoWarning functionality
+     (Brunel v35r2, GaudiConf v12r5)
 
 </PRE><H1><A NAME=v35r1>2009-06-05 Brunel v35r1</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r1, Lbcom v7r1, Rec v7r1
