@@ -6,6 +6,44 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r2>2009-06-22 LbcomSys v7r2</A></H1><PRE>
+This version uses Gaudi v21r1 and LHCb v27r2
+
+- Packages modified: L0Calo v9r21, L0MuonMonitor v1r5, RichDAQ v3r24,
+    RichMCMonitors v1r7, STMonitors v1r3, VeloDAQ v4r7
+
+- In L0Calo v9r21
+  . L0CaloCompare: clean code
+  . L0CaloMonit: clean code
+
+- In L0MuonMonitor v1r5
+  . L0MuonPadsHistos, L0MuonCandHistos : 
+    o correct 2D histograms filling (requires a version of L0/L0MuonKernel
+      AFTER v8r6)
+    o add the unweighted option for 2D histos (e.g. for pdm events)
+  . L0MuonMuonComp : add the possibility to write the summary on a file
+
+- In RichDAQ v3r24
+  . Improvements to the Raw Data format tools
+    + Fix bug that causes event sizes to be double counted by 
+      RichRawDataFormatTool, when the tool is called more than once per event.
+    + Add TAE type to event summary printed, when appropriate.
+    + Improve how the tool RichRawBufferToSmartIDsTool calls 
+      RichRawDataFormatTool to avoid it being used more than neccessary.
+
+- In STMonitors v1r3
+  . Added plot of link vs TELL1 in STClusterMonitor
+  . Change binning of number of clusters in STClusterMonitor for TED
+  . Renamed histogram MPV rather Mean cluster adc value in STTAEClusterMonitor
+
+- In VeloDAQ v4r7
+  . More robustness in full cluster decoding. Duplicate channel IDs now only
+    causes a cluster to be dropped, not the entire bank for a source ID.
+  . Made PrepareVeloFullRawBuffer handle missing input container gracefully
+
+- In RichDAQ v3r24, RichMCMonitors v1r7
+  . Fix WIN32 compilation warning
+
 </PRE><H1><A NAME=v7r1>2009-06-02 LbcomSys v7r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r1
 
