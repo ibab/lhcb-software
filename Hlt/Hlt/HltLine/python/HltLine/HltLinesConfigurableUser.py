@@ -3,7 +3,7 @@
 #  @author Gerhard Raven  (Gerhard.Raven@nikhef.nl)
 #  @date   25/03/2009
 
-__version__ = "$Id: HltLinesConfigurableUser.py,v 1.4 2009-06-01 20:34:18 graven Exp $"
+__version__ = "$Id: HltLinesConfigurableUser.py,v 1.5 2009-06-22 12:35:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from LHCbKernel.Configuration import LHCbConfigurableUser
@@ -28,3 +28,11 @@ class HltLinesConfigurableUser(LHCbConfigurableUser):
         return 1
     def postscale(self,line) : return self._scale(line,'Postscale')
     def prescale(self,line)  : return self._scale(line,'Prescale')
+
+    def getProps(self) :
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d
+            
+            

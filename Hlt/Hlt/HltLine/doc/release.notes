@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.7 2009-06-18 19:54:09 graven Exp $
+! $Id: release.notes,v 1.8 2009-06-22 12:35:47 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2009-06-22 - Gerhard Raven
+ - add a 'getProps' method to HltLinesConfigurableUser
+
 ! 2009-06-18 - Gerhard Raven
  - make thresholds at which events are flagged as 'slow' a property,
    change default to 50 ms.
