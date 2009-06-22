@@ -288,7 +288,7 @@ class MainWindow(QMainWindow):
             # It may happen (it actually often does) that the function is
             # called for a change in the field before the IoVs are updated, so
             # it is better to check if the field exists in the payload.
-            if filed in payload:
+            if field in payload:
                 data = payload[field]
         self.dataView.setPlainText(data)
 
