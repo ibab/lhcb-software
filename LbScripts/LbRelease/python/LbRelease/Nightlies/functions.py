@@ -520,7 +520,7 @@ def make(slotName, projectName, minusj):
 
         action function. Starts cmt "make" action (launched from LCG Nightlies "builder").
     """
-    if minusj > 1: minusjcmd = ' -j ' + str(minusj)
+    if minusj > 1: minusjcmd = ' -j' + str(minusj)
     else: minusjcmd = ''
     disableLCG_NIGHTLIES_BUILD()
     setCMTEXTRATAGS(slotName)
@@ -550,20 +550,26 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show uses')
     configuration.system('echo "' + '*'*80 + '"')
-    #-------------------------------------------------------------------------
-    #configuration.system('cmt br - "cmt make all tests"') # it will break on Windows,
+
     if systemType == 'windows':
-        makeCmd = cmtCommand + ' make'
-        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
-            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
-        configuration.system(cmtCommand + ' br - ' + makeCmd + ' all_groups')
+        makeCmd = '%s make' % (cmtCommand)
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # append
+            makeCmd += 'CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+        cmtCmdForBroadcast = '%s all_groups' % (makeCmd,)
+        fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
+        configuration.system(fullCmd)
         install(slotName, projectName)
     else:
-        makeCmd = cmtCommand + ' make' + minusjcmd
-        if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())
-        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
-            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s' % os.environ
-        configuration.system(cmtCommand + ' br - "' + makeCmd + ' all ; ' + makeCmd +' tests"') # it will break on Windows,
+        makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
+        if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
+            makeCmd = 'CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+        cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
+        fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
+        configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
+        configuration.system(fullCmd)
+
+    configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
 
 def test(slotName, projectName):

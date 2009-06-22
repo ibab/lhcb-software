@@ -1,3 +1,9 @@
+2009-06-22  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: cleanup in make procedure,
+	fixing bug with CMTEXTRATAGS and CMTUSERCONTEXT variables (now they
+	are given on the command line: VAR1=value1 VAR2=value2 command)
+
 2009-06-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: CMTEXTRATAGS= does not
