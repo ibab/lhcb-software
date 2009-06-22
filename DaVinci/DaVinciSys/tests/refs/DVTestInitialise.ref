@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/DAVINCI/DAVINCI_v23r1/DaVinciSys/tests/options/DVTestInitialise.py'
-# <-- End of file '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/DAVINCI/DAVINCI_v23r1/DaVinciSys/tests/options/DVTestInitialise.py'
+# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
+# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
 # applying configuration of DaVinci
 # Applying DaVinci configuration
 # /***** User DaVinci/DaVinci ************************************************************************
@@ -27,11 +27,11 @@
 # |-HistogramFile              = ''
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # Set DDDBtag default
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/GaudiConf/options/PreloadUnits.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/GaudiConf/options/PreloadUnits.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/GAUDI/GAUDI_v21r1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -52,16 +52,16 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/GAUDI/GAUDI_v21r1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # Resetting ApplicationMgr
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Calo/CaloReco/options/CaloRecoOnDemand.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
 # DataOnDemandSvc.AlgMap += {     "Raw/Spd/Digits"  : "CaloDigitsFromRaw/SpdFromRaw"   , "Raw/Prs/Digits"  : "CaloDigitsFromRaw/PrsFromRaw"   , "Raw/Ecal/Digits" : "CaloZSupAlg/EcalZSup"   , "Raw/Hcal/Digits" : "CaloZSupAlg/HcalZSup"  };
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts'
 # DataOnDemandSvc.AlgMap += {  "Rec/Calo/EcalClusters"      : "GaudiSequencer/CaloClusterOnDemand" ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"};
 # CaloClusterOnDemand.Members += { "CellularAutomatonAlg/EcalClust",                                 "CaloSharedCellAlg/EcalShare",                                 "CaloClusterCovarianceAlg/EcalCovar",                                 "CaloClusterCorrect3x3Position/EcalPosition"};
 # MergedPi0Rec.CreateSplitClustersOnly = true;
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Calo/CaloReco/options/MergedPi0Rec.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Calo/CaloReco/options/MergedPi0Rec.opts'
 # MergedPi0Rec.TrShOut_nospd={ -0.0060,  2.4956,115.0827,  9.8842,  0.0320,  2.0982,  1.0302,  0.0409,  0.0030, -9.6135 };
 # MergedPi0Rec.TrShMid_nospd={  0.0464,  2.0384, 36.5885,  8.0260,  0.0460,  2.3936,  1.0703,  0.1611,  0.0238, -5.8899 };
 # MergedPi0Rec.TrShInn_nospd={  0.0981,  2.2529, 33.8837,  8.0532,  0.0654,  2.2046,  1.1092,  0.1645,  0.0248, -5.7248 };
@@ -78,11 +78,11 @@
 # MergedPi0Rec.LPar_Be0= {   0.,0.,0. };
 # MergedPi0Rec.LPar_z0 = { 12566. };
 # MergedPi0Rec.EtCut = 2.*GeV;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Calo/CaloReco/options/MergedPi0Rec.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Calo/CaloReco/options/CaloRecoOnDemand.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Calo/CaloReco/options/MergedPi0Rec.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Calo/CaloReco/options/CaloRecoOnDemand.opts'
 # Doing MuonID for DC06 and DST
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Muon/MuonID/options/MuonID.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/REC/REC_v7r1/Muon/MuonID/options/MuonID.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Muon/MuonID/options/MuonID.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/REC/REC_v7r2/Muon/MuonID/options/MuonID.py'
 # WARNING: Redoing MC links enforced with DC06
 # No MainOptions specified. DaVinci() will import no options file!
 # Adding DST sequence
@@ -120,9 +120,11 @@
 # |-DataType   = 'DC06'
 # |-DDDBtag    = 'default'  (default: '')
 # |-SkipEvents = 0  (default: 0)
+# |-Quiet      = False
 # |-EvtMax     = 0  (default: -1)
-# |-Simulation = True
+# |-TimeStamp  = False
 # |-CondDBtag  = 'default'  (default: '')
+# |-Simulation = True
 # |-Monitors   = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DaVinciWriteDst
@@ -142,13 +144,13 @@
 # |-RedoMCLinks = True  (default: False)
 # |-Simulation  = True
 # \----- (End of User AnalysisConf/AnalysisConf) -----------------------------------------------------
-# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Tue/LHCB/LHCB_v27r1/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
+# WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_v27r2/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
 # WARNING: Default tag requested for partition DDDB (using DC06-20081002)
 # WARNING: Default tag requested for partition LHCBCOND (using DC06-20081002)
-ApplicationMgr    SUCCESS 
+ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v23r0
-                                          running on pcnik07 on Tue Jun  2 15:55:51 2009
+                                                   Welcome to DaVinci version v23r1p2
+                                          running on lxplus243.cern.ch on Mon Jun 22 14:21:28 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -161,30 +163,30 @@ Note: (file "(tmpfile)", line 2) File "set" already loaded
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.00 times the speed of a 2.8 GHz Xeon.
-DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      } 
-DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' } 
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.15 times the speed of a 2.8 GHz Xeon.
+DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      }
+DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' }
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 DataOnDemandSvc                                             WARNING The obsolete property 'Algorithms' redefines the action for '/Event/Phys/StdDC06NoPIDsPions/Particles' to be 'GaudiSequencer/StdDC06NoPIDsPionsSeq'
 DataOnDemandSvc                                             WARNING The obsolete property 'Algorithms' redefines the action for '/Event/Phys/StdDC06NoPIDsPions/Vertices' to be 'GaudiSequencer/StdDC06NoPIDsPionsSeq'
-LoKiSvc                                                     SUCCESS 
+LoKiSvc                                                     SUCCESS
 
 
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                        Welcome to LoKi!                                       LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                      (LOops & KInematics)                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi 
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                       Have fun and enjoy!                                     LoKi 
-LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi
+LoKi                                        Welcome to LoKi!                                       LoKi
+LoKi                                                                                               LoKi
+LoKi                                      (LOops & KInematics)                                     LoKi
+LoKi                                                                                               LoKi
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
+LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi
+LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi
+LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi
+LoKi                                                                                               LoKi
+LoKi                                       Have fun and enjoy!                                     LoKi
+LoKi                                                                                               LoKi
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
 
@@ -206,18 +208,15 @@ DDDB                                                           INFO Connected to
 DDDB                                                           INFO Using TAG "DC06-20081002"
 LHCBCOND                                                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND                                                       INFO Using TAG "DC06-20081002"
-MuonID                                                         INFO  MuonID v5r2 
-ToolSvc.OTRawBankDecoder                                       INFO  countsPerBX = 64
-ToolSvc.OTRawBankDecoder                                       INFO  numberOfBX  = 3
-ToolSvc.OTRawBankDecoder                                       INFO  timePerBX = 25
-ToolSvc.OTRawBankDecoder                                       INFO  ForceBankVersion = 255
+MuonID                                                         INFO  MuonID v5r2
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
 AnalysisInitSeq                                                INFO Member list: GaudiSequencer/RedoMCLinks
-RedoMCLinks                                                    INFO Member list: TESCheck/DaVinciEvtCheck, EventNodeKiller/DaVinciEvtNodeKiller, TrackAssociator
+RedoMCLinks                                                    INFO Member list: GaudiSequencer/KillMCLinks, TrackAssociator
+KillMCLinks                                                    INFO Member list: TESCheck/DaVinciEvtCheck, EventNodeKiller/DaVinciEvtNodeKiller, TrackAssociator
 DaVinciMainSequence                                            INFO Member list: GaudiSequencer/DstWriters
-DstWriters                                                     INFO Member list: 
-MonitoringSequence                                             INFO Member list: 
+DstWriters                                                     INFO Member list:
+MonitoringSequence                                             INFO Member list:
 ApplicationMgr                                                 INFO Application Manager Initialized successfully
 ApplicationMgr                                                 INFO Application Manager Started successfully
 ApplicationMgr                                                 INFO Application Manager Stopped successfully
@@ -226,23 +225,23 @@ DaVinciInit                                                 SUCCESS 0 events pro
 DaVinciInit                                                 SUCCESS ==================================================================
 RootHistSvc                                                 WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr                                                   INFO Histograms converted successfully according to request.
-LoKiSvc                                                     SUCCESS 
+LoKiSvc                                                     SUCCESS
 
 
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                       Good Bye from LoKi!                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                      (LOops & KInematics)                                     LoKi 
-LoKi                                                                                               LoKi 
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
-LoKi                                                                                               LoKi 
-LoKi                                                                                               LoKi 
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi 
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi 
-LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi
+LoKi                                       Good Bye from LoKi!                                     LoKi
+LoKi                                                                                               LoKi
+LoKi                                      (LOops & KInematics)                                     LoKi
+LoKi                                                                                               LoKi
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
+LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi
+LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi
+LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi
+LoKi                                                                                               LoKi
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 
@@ -250,10 +249,8 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 DataOnDemandSvc                                                INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ToolSvc                                                        INFO Removing all tools created by ToolSvc
-ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.00 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.15 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -270,9 +267,10 @@ TimingAuditor.TIMER                                            INFO      Charged
 TimingAuditor.TIMER                                            INFO      RichPIDsFromProtos       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   AnalysisInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO    RedoMCLinks                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     DaVinciEvtCheck           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     DaVinciEvtNodeKiller      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     TrackAssociator           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     KillMCLinks               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      DaVinciEvtCheck          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      DaVinciEvtNodeKiller     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO      TrackAssociator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciMainSequence          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   DstWriters                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  MonitoringSequence           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

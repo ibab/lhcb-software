@@ -1,8 +1,8 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-2008.py,v 1.4 2009-06-02 15:13:57 jpalac Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.1 2009-06-22 15:24:11 pkoppenb Exp $
 #
-# Test for Hlt1&2. This should be identical to Hlt12 except for the HltType.
+# Test for Hlt1&2. This should be identical to Hlt1 except for the HltType.
 #
 # The Hlt1 efficiency should be identical to the one in DVTestHlt1-2008.py
 #
@@ -20,7 +20,7 @@ from Configurables import DaVinci
 DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "MC09"                    # Default is "DC06"
 DaVinci().Simulation   = True
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
 ########################################################################
@@ -29,9 +29,10 @@ DaVinci().Simulation   = True
 #
 DaVinci().Hlt2Requires = 'L0'
 DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+#-- GAUDI jobOptions generated on Mon Jun 22 16:57:21 2009
+#-- Contains event types : 
+#--   11144001 - 15 files - 215879 events - 62.23 GBytes
 EventSelector().Input   = [
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-########################################################################
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004875/0000/00004875_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

@@ -3,20 +3,20 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestHlt12-2008.py</text>
+  <text>../options/DVTestHlt12-MC09.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Hlt1Global                                                  SUCCESS Number of counters : 2
+Hlt1Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |         53 |(  53.0000 +- 4.99099  )%|   -------   |   -------   |
+ |*"#accept"                                       |       100 |         74 |(  74.0000 +- 4.38634  )%|   -------   |   -------   |
  | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
-Hlt2Global                                                  SUCCESS Number of counters : 2
+Hlt2Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        79 |         48 |(  60.7595 +- 5.49365  )%|   -------   |   -------   |
- | "#errors"                                       |        79 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |        90 |         69 |(  76.6667 +- 4.45831  )%|   -------   |   -------   |
+ | "#errors"                                       |        90 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
