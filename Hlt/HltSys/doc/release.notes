@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v6r3>2009-06-03 HltSys v6r3</A></H1><PRE>
+ - New package Hlt2nes that will replace HltSelections weventually
+ - 4-body topo switched off by default
+
 </PRE><H1><A NAME=v6r2>2009-06-03 HltSys v6r2</A></H1><PRE>
  - Big reorganisation of Hlt lines, both in Hlt1 and 2.
  - Hlt1 now consistent with Miriam's bandwidth division.
