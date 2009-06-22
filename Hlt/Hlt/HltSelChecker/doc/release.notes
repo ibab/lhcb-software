@@ -19,6 +19,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v8r3 2009-06-22 ===================
+Minor patches
 !========================== HltSelChecker v8r2 2009-06-03 ===================
 ! 2009-05-25 - Georg Krocker
  - Changed input location for FilterTrueTrack to Hlt/Track/Long in FilterTrueTrack.py
