@@ -5,6 +5,133 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v27r2>2009-06-22 LHCbSys v27r2</A></H1><PRE>
+This version uses Gaudi v21r1 and LCG_56a
+
+- Packages modified: GaudiConf v12r5, LHCbKernel v11r5, LHCbMath v3r9,
+    L0MuonKernel v8r6, RichKernel v7r22, DDDB v1r18, DetCond v12r7,
+    DetDesc v18r14, Magnet v5r3, RichDet v11r5p1, VeloDet v13r7, HltEvent v8r18,
+    LumiEvent v2r1, MCEvent v2r15, PhysEvent v11r9, PartProp v1r3,
+    DaVinciKernel v7r7, LHCbAlgs v2r27, LoKiCore v9r2, LoKiGen v8r4, LoKiMC v8r4,
+    LoKiPhys v8r6, MCInterfaces v1r9, RichRecBase v3r23, SimComponents v2r18
+
+- In GaudiConf v12r5
+  . In LHCbExclusions.py: ignore changes in name of latest ONLINE snapshot
+  . In Configuration.py:
+    + add LHCbApp().Quiet option to suppress all except most useful INFO messages
+    + add LHCbApp().TimeStamp option to add a time stamp to all messages
+
+- In LHCbKernel v11r5
+  . Fixed bug in HitPattern for muon hits
+
+- In LHCbMath v3r9
+  . add new classes:
+      Gaudi::Math::ValueWithError
+      Gaudi::Math::Point3DWithError
+      Gaudi::Math::Vector3DWithError
+      Gaudi::Math::LorentzVectorWithError 
+      Gaudi::Math::SVectorWithError
+  . LHCbMath/Kinematics.h
+      sigmamass: use invalid return values for invalid arguments 
+
+- In L0MuonKernel v8r6
+  . MonUtilities : function depending on the quarter to offset coordinate
+                   for 2D histos 
+
+- In RichKernel v7r22
+  . Suppress WIN32 warning 4661 (incomplete explicit templates)
+  . Add properties to all 'Histo' and 'Tuple' classes to set the number 
+    of histogram bins.
+  . Add an undefined setting to the Rich::DAQ::BankVersion enum
+
+- In DDDB v1r18
+  . Update 2009 default tags to latest tags in SQLDDDB v5r8:
+    head-20090617 for DDDB
+
+- In DetCond v12r7
+  . Changes in the CondDB ConfigurableUser:
+    + Fixed a bug causing a failure when using SQLite local copies and
+      CondDBTimeSwitchSvc.
+    + Changed the policy when both UseOracle and SQLiteLocalCopiesDir are active:
+      issue a warning and ignores SQLiteLocalCopiesDir instead of raising an
+      exception.
+
+- In DetDesc v18r14
+  . add missing classes into the dictionary:
+        ILVolume::PVolumes
+        ILVolume::PVolumePath, etc...
+
+- In Magnet v5r3
+  . Added MultipleMagneticFieldSvc. This service takes other magnetic field
+    services as input and calculated the vector sum of the fields when 
+    fieldVector() is called. To be used when MBXW fields are needed.
+
+- In VeloDet v13r7
+  . The velo sensors now know whether they are top or bottom cabled.
+
+- In HltEvent v8r18
+  . Add missing dictionaries for
+      std::pair<std::string, T> 
+      std::vector<std::pair<std::string,T> >
+      LHCb::HltDecReports::Container
+  . Add numericalInfoKeys() method to HltObjectSummary
+
+- In LumiEvent v2r1
+  . LumiFSR        : add + and += operators
+  . LumiIntegral   : new class, holds integrated FSR from different files
+
+- In MCEvent v2r15
+  . Make MCVertex::position4vector() method const
+  . Add two more ghost types in GhostTrackInfo
+
+- In PhysEvent v11r9
+  . Changed xml/Tagger.xml to pass pointer to Particle instead of the object
+
+- In PartProp v1r3
+  . Further polishing of nodes & service 
+
+- In LHCbAlgs v2r27
+  . Reduce functionality of DeterministicPrescaler to the strictly needed
+    in order to speed it up furhter...
+
+- In LoKiCore v9r2
+  . Allow to reduce printout 
+  . Kernel/BiFunctions.h: Fix for win32 platform 
+  . Polishing for trees 
+  . Fix error for gcc4.3 compiler 
+  . Add the default node & default tree properties  
+  . python/LoKiCore/Vectors.py: helper module to simplify operations with
+                                Gaudi::XYZPoint/XYZVector/LorentzVector
+- In LoKiGen v8r4
+  . LoKi::GenDecay: new HepMC-decay finder tool 
+
+- In LoKiMC v8r4
+  . LoKi::MCDecay: new decay finder tool
+
+- In LoKiPhys v8r6
+  . LoKi::Decay: new decay finder tool
+
+- In MCInterfaces v1r9
+  . Add a new method to Rich::Rec::MC::IMCTruthTool to return the associated
+    MCParticle for a given RichRecRing
+
+- In RichRecBase v3r23
+  . Update default value of track GhostProbability to -1
+  . Improvements to the track selector classes for the upcoming track changes.
+  . Add ghost probability variable to RichRecTrack object.
+  . Use vector typedef in RichRecRing
+  . Add reserve calls when filling X and Y vectors in FastRingFitter
+
+- In SimComponents v2r18
+  . MCEventTypeFinder. Added rare Tau decays, as in LHCbNote 2009-001
+
+- In RichDet v11r5p1, DaVinciKernel v7r7
+  . Fix WIN32 warnings
+
+- In Magnet v5r3, MCEvent v2r15
+  . Replace endreq by endmsg
+
+
 </PRE><H1><A NAME=v27r1>2009-06-02 LHCbSys v27r1</A></H1><PRE>
 This version uses Gaudi v21r1 and LCG_56a
 
