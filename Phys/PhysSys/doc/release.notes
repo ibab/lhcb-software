@@ -3,6 +3,21 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r5>2009-06-22 Phys v8r5 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r5                                  #
+###############################################################################
+
+ - Based on LHCb v27r2 and Gaudi v21r1
+  
+  Highlights
+
+  * Bug fix in particleMaker : 
+    . NoPIDsParticles now make only long tracks by default.
+    . The syntax is now the same as for CombinedParticleMaker
+
+
 </PRE><H1><A NAME=v8r4>2009-06-02 Phys v8r4 </A></H1><PRE>
 
 ###############################################################################
@@ -11,7 +26,7 @@ Purpose             : LHCb physics packages
 
  - Based on LHCb v27r1 and Gaudi v21r1
   
-  Hightlights
+  Highlights
 
   * Important fixes in LoKiFitter:
     . Fix bug in evaluation of impact parameter Chi2 in DistanceCalculator 
