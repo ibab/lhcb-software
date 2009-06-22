@@ -6,7 +6,7 @@
  #
  ####################################################
 from Gaudi.Configuration import *
-from Configurables import Z0Checker, HltBackgroundCategory
+from Configurables import Z0Checker
 signal = "Z0"
 #
 # Monitoring
@@ -41,7 +41,7 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().MoniSequence += [ moni, HltBackgroundCategory(), Z0 ]
+DaVinci().MoniSequence += [ moni, Z0 ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Z02MuMu.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 ]

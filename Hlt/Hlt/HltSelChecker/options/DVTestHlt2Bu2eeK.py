@@ -47,7 +47,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
-DaVinci().PrintFreq = 100
+DaVinci().PrintFreq = 1
 DaVinci().SkipEvents = 0
 DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
@@ -58,3 +58,6 @@ DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().RedoMCLinks = True 
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+

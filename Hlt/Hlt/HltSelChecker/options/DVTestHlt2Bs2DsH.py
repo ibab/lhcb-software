@@ -52,5 +52,5 @@ DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2DsK-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2Dspi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+#  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2Dspi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
   ]
