@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.97 2009-06-12 16:06:02 pkoppenb Exp $ 
+! $Id: release.notes,v 1.98 2009-06-22 15:35:27 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+!========================== ParticleMaker v5r1 2009-06-22 ===================
 ! 2009-06-12 - Patrick Koppenburg
  - Remove inactive options UseLongTracks, UseDownstreamTracks ... from
    NoPIDsParticleMaker. Use Track filter provided by ChargedPM base class.
