@@ -1,26 +1,4 @@
-// $Id:
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2009/06/19 14:58:26  odescham
-// fixing FPE
-//
-// Revision 1.7  2008/09/22 01:41:23  odescham
-// review clusterization and cluster selection
-//
-// Revision 1.6  2008/06/06 07:52:41  vegorych
-// fixed id warning into CelAutoTaggedCell.h
-//
-// Revision 1.5  2006/05/30 09:42:06  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.4  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/09/05 20:23:48  ibelyaev
-//  trivial modification to obtain 20-25% CPU gain
-//
+// $Id: CelAutoTaggedCell.h,v 1.10 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 #ifndef CALOCA_CELAUTOTAGGEDCEL_H
 #define CALOCA_CELAUTOTAGGEDCEL_H 1 
@@ -30,7 +8,7 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/CaloCellID.h"
 
-/** @class CelAutoTaggedCell CelAutoTaggedCell.h CaloCA/CelAutoTaggedCell.h
+/** @class CelAutoTaggedCell CelAutoTaggedCell.h
  *
  *  Object Tagged Cell 
  *
@@ -114,7 +92,6 @@ private:
   
   Tag              m_tag      ;
   FlagState        m_status   ;
-  double           m_e        ;
   const LHCb::CaloDigit* m_digit    ;
   
   // Ident.seed(s)  

@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.1 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.2 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -128,7 +128,7 @@ bool CaloSelectNeutralClusterWithTracks::operator()
   ( const LHCb::CaloCluster* cluster   ) const 
 {
   // check the cluster 
-  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
+  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ).ignore() ; return false ; }
   
   if( !exist<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ))return true;
   // locate the table (if needed) 

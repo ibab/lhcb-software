@@ -1,6 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.14 2009-05-10 15:20:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.15 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -117,7 +115,7 @@ CaloSinglePhotonAlg::initialize()
   if ( 0 < m_eTcut ) 
   { Warning ( " Et Cut of " + 
               boost::lexical_cast<std::string>( m_eTcut / Gaudi::Units::GeV )  +
-              " GeV is applied " ) ; }
+              " GeV is applied " ).ignore() ; }
   
   { // locate selector tools
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
@@ -241,7 +239,7 @@ CaloSinglePhotonAlg::execute()
     
     if( sc.isFailure() )
     {
-      Error("Error from Correction Tool, skip the cluster  " , sc ); 
+      Error("Error from Correction Tool, skip the cluster  " , sc ).ignore(); 
       continue ;                                      // CONTINUE  !  
     }
     
@@ -252,7 +250,7 @@ CaloSinglePhotonAlg::execute()
     
     if ( sc.isFailure() )
     {
-      Error("Error from Other Hypo Tool, skip the cluster  " , sc );
+      Error("Error from Other Hypo Tool, skip the cluster  " , sc ).ignore();
       continue  ;                                    // ATTENTION ! 
     }
     
@@ -263,7 +261,7 @@ CaloSinglePhotonAlg::execute()
     
     if ( sc.isFailure() )
     {
-      Error ( "Error from Correction Tool 2 skip the cluster" , sc );  
+      Error ( "Error from Correction Tool 2 skip the cluster" , sc ).ignore();  
       continue ;                                    // CONTINUE  ! 
     }
     
@@ -274,7 +272,7 @@ CaloSinglePhotonAlg::execute()
     
     if ( sc.isFailure() )
     {
-      Error ( "Error from Other Hypo Tool 2, skip the cluster" , sc ); 
+      Error ( "Error from Other Hypo Tool 2, skip the cluster" , sc ).ignore(); 
       continue ;                                    // CONTINUE !
     }
     
@@ -286,7 +284,7 @@ CaloSinglePhotonAlg::execute()
   
   debug() << " # of created Photon  Hypos is  " 
           << hypos->size()  << "/" << clusters->size()
-          << endreq ;
+          << endmsg ;
   
   counter ( "#PhotonHypos" ) += hypos->size() ;
   

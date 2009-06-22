@@ -1,6 +1,4 @@
-// $Id: CaloHypoAlg.cpp,v 1.7 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloHypoAlg.cpp,v 1.8 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 
 // Include files
@@ -123,7 +121,7 @@ StatusCode CaloHypoAlg::execute()
          m_tools.end() != itool && sc.isSuccess() ; ++itool )
     { sc = (**itool)( *hypo ); }
     if( sc.isFailure() ) 
-    { Error("Error from the Tool! skip hypo!",sc) ; continue ; }  
+    { Error("Error from the Tool! skip hypo!",sc).ignore() ; continue ; }  
   }
   
   return StatusCode::SUCCESS ;

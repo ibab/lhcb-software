@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.10 2009-02-12 10:59:37 cattanem Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.11 2009-06-22 13:06:32 cattanem Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -35,8 +35,8 @@ DECLARE_ALGORITHM_FACTORY( CaloClusterCovarianceAlg );
 
 // ============================================================================
 /** Standard constructor
- *  @param   name  algorith name
- *  @param   svc   pointer to Service Locator
+ *  @param   name          algorithm name
+ *  @param   pSVcLocator   pointer to Service Locator
 */
 // ============================================================================
 CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
@@ -166,7 +166,7 @@ StatusCode CaloClusterCovarianceAlg::finalize()
 StatusCode CaloClusterCovarianceAlg::execute() 
 {
 
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
   
   // useful typedefs
   typedef LHCb::CaloClusters        Clusters ;
@@ -200,22 +200,22 @@ StatusCode CaloClusterCovarianceAlg::execute()
     if( 0 == *cluster  ) { continue ; }                // CONTINUE !
     StatusCode sc =   tagger () -> tag    ( *cluster ) ; 
     if( sc.isFailure() ){
-      Error("Error from tagger, skip cluster ", sc ) ; 
-      debug() << *cluster << endreq ;
+      Error("Error from tagger, skip cluster ", sc ).ignore() ; 
+      debug() << *cluster << endmsg ;
       continue ; 
     }
 
     sc = cov    () -> process( *cluster ) ;    
     if( sc.isFailure() ){ 
-      Error("Error from cov,    skip cluster ", sc ) ; 
-      debug() << *cluster << endreq ;
+      Error("Error from cov,    skip cluster ", sc ).ignore() ; 
+      debug() << *cluster << endmsg ;
       continue ; 
     }
 
     sc = spread () -> process( *cluster ) ;
     if( sc.isFailure() ){ 
-      Error("Error from spread, skip cluster ", sc ) ; 
-      debug() << *cluster << endreq ;
+      Error("Error from spread, skip cluster ", sc ).ignore() ; 
+      debug() << *cluster << endmsg ;
       continue ; 
     }
   }

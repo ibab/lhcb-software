@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.24 2009-03-10 12:50:42 cattanem Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.25 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -918,7 +918,7 @@ StatusCode CaloMergedPi0Alg::execute()
           }
         }
         if ( msgLevel ( MSG::DEBUG ) ){ 
-          debug() << "Logging cluster entry " << w1 << "/" << w2 << endreq;
+          debug() << "Logging cluster entry " << w1 << "/" << w2 << endmsg;
         }
         LHCb::CaloClusterEntry entry1( d , s1 , w1 );
         cl1->entries().push_back( entry1 );

@@ -1,6 +1,4 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -66,7 +64,7 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
           sc=prop->getProperty( &noiseIncoherent );
           sc=prop->getProperty( &noiseCoherent   );
           sc=prop->getProperty( &detData         );
-          if(sc.isFailure())warning()<<"Unable to get properties"<<endreq;
+          if(sc.isFailure())warning()<<"Unable to get properties"<<endmsg;
         }
     }
   ///
@@ -110,13 +108,13 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
   m_estimator.setNoiseIn ( m_noiseIn ) ;
   m_estimator.setNoiseCo ( m_noiseCo ) ;
   
-  info()      << " Has initialized with parameters: "              << endreq 
-              << " \t 'Detector'         = '" << m_detData << "'"  << endreq 
-              << " \t 'Resolution'       = '" << m_a       << "'"  << endreq 
-              << " \t 'GainError'        = '" << m_gainErr << "'"  << endreq 
-              << " \t 'NoiseIncoherent'  = '" << m_noiseIn << "'"  << endreq 
-              << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << endreq 
-              << " \t Estimator is          " << m_estimator       << endreq ;
+  info()      << " Has initialized with parameters: "              << endmsg 
+              << " \t 'Detector'         = '" << m_detData << "'"  << endmsg 
+              << " \t 'Resolution'       = '" << m_a       << "'"  << endmsg 
+              << " \t 'GainError'        = '" << m_gainErr << "'"  << endmsg 
+              << " \t 'NoiseIncoherent'  = '" << m_noiseIn << "'"  << endmsg 
+              << " \t 'NoiseCoherent'    = '" << m_noiseCo << "'"  << endmsg 
+              << " \t Estimator is          " << m_estimator       << endmsg ;
   return StatusCode::SUCCESS ;
 };
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.15 2009-04-17 11:44:53 odescham Exp $
+// $Id: CaloExtraDigits.cpp,v 1.16 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -79,7 +79,7 @@ StatusCode CaloExtraDigits::operator() ( LHCb::CaloHypo* hypo  ) const{
       hypo->addToDigits( *id );
       count++;
     }  
-    if ( msgLevel( MSG::DEBUG) )debug() << "Adding " << count << " digits from "<< *idet << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Adding " << count << " digits from "<< *idet << endmsg;
   }
   return StatusCode::SUCCESS ;  
 };

@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.16 2009-06-20 00:40:04 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.17 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
@@ -124,22 +124,14 @@ inline void CellularAutomaton::setEXYCluster( LHCb::CaloCluster* cluster,
     cluster->position().parameters()( LHCb::CaloPosition::X ) = X ;
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
   }else{
-    Error( " E,X and Y of cluster could not be evaluated!",sc); 
+    Error( " E,X and Y of cluster could not be evaluated!",sc).ignore(); 
   }
   ///
 };
-// ============================================================================
 
 // ============================================================================
-/** standard constructor
- *
- *  Algorithm parameters which can be set at run time must be declared here.
- *  @see Algorithm 
- *  @param name        name of the algorithm
- *  @param pSvcLocator pointer to service locator 
- */
-// ============================================================================
 CellularAutomaton::CellularAutomaton
+// ============================================================================
 ( const std::string& name,
   ISvcLocator* pSvcLocator )
   : GaudiAlgorithm      ( name, pSvcLocator )
@@ -395,13 +387,13 @@ StatusCode CellularAutomaton::execute()
   
 
   if ( msgLevel( MSG::DEBUG) ){
-    debug() << "Built " << clustersSeq->size() <<" cellular automaton clusters  with " << pass << " iterations" <<endreq;
-    debug() << " ----------------------- Cluster List : " << endreq;
+    debug() << "Built " << clustersSeq->size() <<" cellular automaton clusters  with " << pass << " iterations" <<endmsg;
+    debug() << " ----------------------- Cluster List : " << endmsg;
     for(LHCb::CaloClusters::iterator ic = clustersSeq->begin();ic!=clustersSeq->end();ic++){
       debug() << " Cluster seed " << (*ic)->seed() 
               << " energy " << (*ic)->e() 
               << " #entries " << (*ic)->entries().size() 
-              << endreq;
+              << endmsg;
     }    
   }
   m_event += 1.;
@@ -427,7 +419,7 @@ StatusCode CellularAutomaton::finalize() {
     aveClus = m_clus/m_event;
   }
   info() << "Built " << aveClus <<" cellular automaton clusters/event  with" 
-         << avePass << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endreq;
+         << avePass << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

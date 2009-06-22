@@ -1,24 +1,5 @@
-// $Id: CaloSelectNeutralClusterWithTracks.h,v 1.1 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.h,v 1.2 2009-06-22 13:06:32 cattanem Exp $
 // ===================================================q=========================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2008/06/30 15:36:33  odescham
-// prepare for HLT processing
-//
-// Revision 1.5  2006/06/14 16:49:22  odescham
-// 2nd step of the migration towards DC06
-//
-// Revision 1.4  2006/05/30 09:42:05  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.3  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/12/10 17:12:29  ibelyaev
-//  steps towards 'Fast' Calo recontruction
-//
-// ============================================================================
 #ifndef CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H 
 #define CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H 1
 // ============================================================================
@@ -138,7 +119,7 @@ private:
   std::string      m_tableLocation ;
   mutable LHCb::Calo2Track::IClusTrTable*  m_table         ;
   
-  double           m_chi2cut       ;
+  float           m_chi2cut       ;
 
 };
 #endif // CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H

@@ -45,10 +45,10 @@ return (*this) ( cluster );
 // ============================================================================
 bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   // check the cluster 
-  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
+  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ).ignore() ; return false ; }
   double e = cluster->e();
   int m = cluster->entries().size();
   if ( msgLevel( MSG::DEBUG) )debug() << "Cluster has " << m << " entries " 
-                                      << " for a total energy of " << e <<  endreq;
+                                      << " for a total energy of " << e <<  endmsg;
   return (e>m_cut) && (m<m_mult);
 };

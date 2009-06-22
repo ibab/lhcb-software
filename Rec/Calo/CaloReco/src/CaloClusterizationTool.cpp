@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.5 2009-06-17 18:24:00 odescham Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.6 2009-06-22 13:06:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -148,7 +148,7 @@ inline void CaloClusterizationTool::setEXYCluster
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
   }
   else 
-  { Error( " E,X and Y of cluster could not be evaluated!",sc); }
+  { Error( " E,X and Y of cluster could not be evaluated!",sc).ignore(); }
   ///
 };
 // ============================================================================

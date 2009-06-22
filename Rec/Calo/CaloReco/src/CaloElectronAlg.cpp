@@ -1,6 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.14 2009-04-16 12:56:08 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloElectronAlg.cpp,v 1.15 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // STD & STL 
@@ -193,7 +191,7 @@ private:
 StatusCode 
 CaloElectronAlg::finalize() 
 {
-  debug()<<"Finalize"<<endreq;
+  debug()<<"Finalize"<<endmsg;
   
   // clear containers
   m_selectors             .clear () ;
@@ -258,7 +256,7 @@ CaloElectronAlg::execute()
       
       if( sc.isFailure() ){
           delete hypo ; hypo = 0  ;                            // ATTENTION !
-          Error("Error from Correction Tool, skip the cluster " , sc ); 
+          Error("Error from Correction Tool, skip the cluster " , sc ).ignore(); 
           continue ;                                           // CONTINUE 
         }
       
@@ -271,7 +269,7 @@ CaloElectronAlg::execute()
       if( sc.isFailure() ){
           delete hypo ;                                // ATTENTION !
           hypo   =  0 ;
-          Error("Error from Other Hypo Tool, skip the cluster " , sc );
+          Error("Error from Other Hypo Tool, skip the cluster " , sc ).ignore();
           continue    ;                                // CONTINUE  !
         }
       
@@ -285,7 +283,7 @@ CaloElectronAlg::execute()
       if( sc.isFailure() ){
           delete hypo ;                                // ATTENTION !
           hypo = 0    ;
-          Error("Error from Correction Tool 2 , skip the cluster " , sc );
+          Error("Error from Correction Tool 2 , skip the cluster " , sc ).ignore();
           continue  ;                                  // CONTINUE 
         }
       
@@ -297,7 +295,7 @@ CaloElectronAlg::execute()
       if( sc.isFailure() ){
           delete hypo ;                                // ATTENTION !
           hypo = 0    ;
-          Error("Error from Other Hypo Tool 2 , skip the cluster " , sc );
+          Error("Error from Other Hypo Tool 2 , skip the cluster " , sc ).ignore();
           continue    ;
         }
 
@@ -312,7 +310,7 @@ CaloElectronAlg::execute()
       
     } // end of the loop over all clusters
   
-  debug () << " # of created Electron Hypos is  " << hypos->size() << endreq ;
+  debug () << " # of created Electron Hypos is  " << hypos->size() << endmsg ;
   
   return StatusCode::SUCCESS;
 };

@@ -1,6 +1,4 @@
-// $Id: CaloLCorrection.cpp,v 1.8 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CaloLCorrection.cpp,v 1.9 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -152,10 +150,10 @@ StatusCode CaloLCorrection::initialize ()
     { return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; }
   
   // debug printout of all allowed hypos 
-  debug() << " List of allowed hypotheses : " << endreq;
+  debug() << " List of allowed hypotheses : " << endmsg;
   for( Hypotheses::const_iterator it = m_hypos.begin() ; 
        m_hypos.end() != it ; ++it ) {
-    debug() << "--> " << *it << endreq ;
+    debug() << "--> " << *it << endmsg ;
   };
 
   return StatusCode::SUCCESS ;
@@ -209,14 +207,14 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
     { return Error("No clusters from '"+m_detData+"' is found!"); }
 
   const LHCb::CaloCluster* GlobalCluster = *iclu ;
-  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endreq; 
+  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endmsg; 
 
   // Look for the splitCluster when PhotonFromMerged
   if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()       
        &&  2 == clusters.size() )iclu++; 
   
   const LHCb::CaloCluster* MainCluster = *iclu ; 
-  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endreq;
+  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endmsg;
 
 
   /*
@@ -295,14 +293,14 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
 
-  debug() << "Hypothesis :" << hypo->hypothesis() << endreq;
+  debug() << "Hypothesis :" << hypo->hypothesis() << endmsg;
   debug()     << " ENE  " << hypo->position ()->e() <<  " "
-              << "xg "   << xg <<  " "<< "yg "   << yg <<  endreq;
+              << "xg "   << xg <<  " "<< "yg "   << yg <<  endmsg;
   debug()     << "zg "   << pos->z() << " " 
               << "z0 "   << z0 <<  " "
               << "DeltaZ "   << dzfps <<  " "
               << "zCor "   << zCor 
-              << endreq ;
+              << endmsg ;
   
 
   /** At the end: 
@@ -312,7 +310,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
   debug() << " ENE  " << hypo->position ()->e() <<  " "
           << "New zg "   << pos->z() <<  " "
-          << endreq ;
+          << endmsg ;
 
   
   return StatusCode::SUCCESS ;

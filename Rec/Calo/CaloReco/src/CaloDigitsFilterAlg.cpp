@@ -1,6 +1,4 @@
-// $Id: CaloDigitsFilterAlg.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloDigitsFilterAlg.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -187,7 +185,7 @@ StatusCode CaloDigitsFilterAlg::execute()
   
   debug () << "'"        << m_inputData << "' : "
            << " Kept  "  << kept        << " digits from " 
-           << all        << endreq ;
+           << all        << endmsg ;
   
   return StatusCode::SUCCESS ;
 };

@@ -47,10 +47,10 @@ return (*this) ( cluster );
 // ============================================================================
 bool CaloSelectClusterWithPrs::operator()( const LHCb::CaloCluster* cluster   ) const{
   // check the cluster 
-  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
+  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ).ignore() ; return false ; }
   double ePrs = m_toPrs->energy( *cluster, "Prs");
   int mPrs = m_toPrs->multiplicity();
   if ( msgLevel( MSG::DEBUG) )debug() << "Found " << mPrs << "Prs hits " 
-                                      << " for a total energy of " << ePrs <<  endreq;
+                                      << " for a total energy of " << ePrs <<  endmsg;
   return (ePrs>m_cut) && (mPrs>m_mult);
 };

@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.4 2009-05-10 15:20:36 ibelyaev Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.5 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -192,13 +192,13 @@ StatusCode CellularAutomatonAlg::execute()
   if ( msgLevel( MSG::DEBUG) )
   {
     debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
-            << m_tool->iterations() << " iterations" <<endreq;
-    debug() << " ----------------------- Cluster List : " << endreq;
+            << m_tool->iterations() << " iterations" <<endmsg;
+    debug() << " ----------------------- Cluster List : " << endmsg;
     for(std::vector<LHCb::CaloCluster*>::iterator ic = clusters.begin();ic!=clusters.end();ic++){
       debug() << " Cluster seed " << (*ic)->seed() 
               << " energy " << (*ic)->e() 
               << " #entries " << (*ic)->entries().size() 
-              << endreq;
+              << endmsg;
     }    
   }
   
@@ -219,7 +219,7 @@ StatusCode CellularAutomatonAlg::finalize()
   }
   info() << "Built " << aveClus 
          <<" cellular automaton clusters/event  with " 
-         << avePass  << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endreq;
+         << avePass  << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

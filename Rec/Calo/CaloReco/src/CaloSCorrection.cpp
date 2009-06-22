@@ -1,6 +1,4 @@
-// $Id: CaloSCorrection.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CaloSCorrection.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -158,10 +156,10 @@ StatusCode CaloSCorrection::initialize ()
     { return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; }
   
   // debug printout of all allowed hypos 
-  debug() << " List of allowed hypotheses : " << endreq;
+  debug() << " List of allowed hypotheses : " << endmsg;
   for( Hypotheses::const_iterator it = m_hypos.begin() ; 
        m_hypos.end() != it ; ++it ) {
-    debug() <<" --> "<< *it << endreq ;
+    debug() <<" --> "<< *it << endmsg ;
   };
 
   return StatusCode::SUCCESS ;
@@ -216,14 +214,14 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const
   
 
   const LHCb::CaloCluster* GlobalCluster = *iclu ;
-  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endreq; 
+  debug() << " -- Global Cluster E = " << (*iclu)->position().e() << endmsg; 
 
   // Look for the splitCluster when PhotonFromMerged
   if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis()       
        &&  2 == clusters.size() )iclu++; 
   
   const LHCb::CaloCluster* MainCluster = *iclu ; 
-  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endreq; 
+  debug() << " ------ Main  cluster E = " << (*iclu)->position().e() << endmsg; 
 
   /*
     Cluster information (e/x/y  and Prs/Spd digit)
@@ -344,12 +342,12 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const
 
   const LHCb::CaloPosition* pos = hypo->position() ;
 
-  debug() << "Hypothesis :" << hypo->hypothesis() << endreq;
-  debug() << "Hypo E :  " << hypo->position ()->e()   <<  " "  <<cellID << endreq;
-  debug() << "xBar/yBar " << xBar  <<  "/" << yBar   <<  endreq;
-  debug() << "xg/yg  "      << pos->x() << "/" << pos->y() <<  endreq;
-  debug() << "xNew/yNew "   << xCor <<  "/" << yCor    <<  endreq;
-  debug() << "xcel/ycel "   << seedPos.x() <<  "/" << seedPos.y() << endreq ;
+  debug() << "Hypothesis :" << hypo->hypothesis() << endmsg;
+  debug() << "Hypo E :  " << hypo->position ()->e()   <<  " "  <<cellID << endmsg;
+  debug() << "xBar/yBar " << xBar  <<  "/" << yBar   <<  endmsg;
+  debug() << "xg/yg  "      << pos->x() << "/" << pos->y() <<  endmsg;
+  debug() << "xNew/yNew "   << xCor <<  "/" << yCor    <<  endmsg;
+  debug() << "xcel/ycel "   << seedPos.x() <<  "/" << seedPos.y() << endmsg ;
   
   
   /** At the end: 

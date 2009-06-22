@@ -46,8 +46,8 @@ return (*this) ( cluster );
 // ============================================================================
 bool CaloSelectNeutralClusterWithSpd::operator()( const LHCb::CaloCluster* cluster   ) const{
   // check the cluster 
-  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
+  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ).ignore() ; return false ; }
   int nSpd = m_toSpd->multiplicity( *cluster, "Spd");
-  if ( msgLevel( MSG::DEBUG) )debug() << "Found " << nSpd << " Spd hits" << endreq;
+  if ( msgLevel( MSG::DEBUG) )debug() << "Found " << nSpd << " Spd hits" << endmsg;
   return (nSpd>m_cut);
 };
