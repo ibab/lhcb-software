@@ -4,10 +4,10 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!=================== Rich/RichENNRingFinder v1r1 2009-06-19 ====================
 ! 2009-06-19 - Chris Jones
  - Fixes for runtime differences between 32 and 64 bit
 
-!=================== Rich/RichENNRingFinder v1r1 2009-06-17 ====================
 ! 2009-06-09 - Chris Jones
  - Add the option to refit the rings, to get a better radius value before
    converting to radians and storing in the output RichRecRing objects.
