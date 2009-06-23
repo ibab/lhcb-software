@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.4 2009-06-23 23:07:32 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -19,8 +19,9 @@ import GaudiKernel.SystemOfUnits as Units
 # Standard Unbiased Phi->KK #
 #############################
 StdUnbiasedPhi2KK = FilterDesktop("StripStdUnbiasedPhi2KK")
-StdUnbiasedPhi2KK.InputLocations = ["StdLooseUnbiasedPhi2KK"]
+StdUnbiasedPhi2KK.InputLocations = ["StdLoosePhi2KK"]
 StdUnbiasedPhi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
+			 "& (MINTREE('K+'==ABSID, PT) > 500.0)"\
                          "& (ADMASS('phi(1020)') < 15.*MeV)" \
                          "& (PT > 1000.*MeV)" \
                          "& (VFASPF(VCHI2/VDOF) < 20.0)"

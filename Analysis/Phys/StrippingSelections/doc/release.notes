@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-06-24 - Greig Cowan
+ - Added an exclusive "presclaed and detached" selection for Bs->JpsiPhi.
+ - Updated Bs2JpsiPhi and Bs2JpsiKstar strippings to use the new Phi and Kstar
+   CommonParticles as have recently been defined. 
+
 !===================== StrippingSelections v1r0p1 2009-06-23 ====================
 ! 2009-06-23 - Patrick Koppenburg
  - Fix DC06 options

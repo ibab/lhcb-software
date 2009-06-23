@@ -24,6 +24,7 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKstar.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKS.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhi.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiK.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhiPrescaledAndDetached.py")
 
 # Topological selections
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingTopo.py")

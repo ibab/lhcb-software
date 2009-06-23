@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.4 2009-06-23 23:07:32 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bd->JpsiK* stripping selection using LoKi::Hybrid and python
@@ -18,16 +18,13 @@ import GaudiKernel.SystemOfUnits as Units
 #######
 # Kst #
 #######
-StdUnbiasedKst2Kpi = CombineParticles("StripStdUnbiasedKst2Kpi")
-StdUnbiasedKst2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-StdUnbiasedKst2Kpi.InputLocations = ["StdLooseKaons",
-                                    "StdLoosePions"]
-StdUnbiasedKst2Kpi.DaughtersCuts = {"K+" :
-                                   "  (MINTREE('K+'==ABSID, (PIDK - PIDp)) >-6.)"\
-                                   "& (MINTREE('K+'==ABSID, PIDK) > -5.)"
-                                   }
-StdUnbiasedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 90.*MeV)"
-StdUnbiasedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF) < 20.) & (PT > 1000.*MeV)"
+StdUnbiasedKst2Kpi = FilterDesktop("StripStdUnbiasedKst2Kpi")
+StdUnbiasedKst2Kpi.InputLocations = ["StdLooseKstar"]
+StdUnbiasedKst2Kpi.Code = "  (MINTREE('K+'==ABSID, (PIDK - PIDp)) > -6.)"\
+                          "& (MINTREE('K+'==ABSID, PIDK) > -5.)"\
+			  "& (ADMASS('K*(892)0') < 90.*MeV)"\
+			  "& (PT > 1000.*MeV)"\
+			  "& (VFASPF(VCHI2/VDOF) < 20.)"
 
 ######
 # Bd #
