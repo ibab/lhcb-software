@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r0p1 2009-06-23 ====================
+! 2009-06-23 - Patrick Koppenburg
+ - Fix DC06 options
+
 !===================== StrippingSelections v1r0 2009-06-03 ====================
 
 ! 2009-06-02 - Anton Poluektov

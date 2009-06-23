@@ -415,7 +415,7 @@ PrintPreselBs2PhiEtac.OutputLevel  = 3 ;
 ApplicationMgr.TopAlg += { "GaudiSequencer/SeqPreselUnbiasedJpsi2ee" } ;
 //In ->DVPreselUnbiasedJpsi2ee->DoPreselUnbiasedJpsi2ee
 SeqPreselUnbiasedJpsi2ee.Members += { "DeterministicPrescaler/PrescaleUnbiasedJpsi2ee", "FilterDesktop/PreselUnbiasedJpsi2ee", "PrintHeader/PrintPreselUnbiasedJpsi2ee" } ;
-PrescaleUnbiasedJpsi2ee.AcceptPattern  = "ARRRR" ;
+PrescaleUnbiasedJpsi2ee.AcceptFraction  = 0.2 ;
 PreselUnbiasedJpsi2ee.InputLocations  = { "Phys/StdDC06LooseJpsi2ee" } ;
 PreselUnbiasedJpsi2ee.DecayDescriptor  = "J/psi(1S) -> e+ e-" ;
 PreselUnbiasedJpsi2ee.Code  = "(ALL)" ;
