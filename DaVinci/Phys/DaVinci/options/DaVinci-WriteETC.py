@@ -1,7 +1,10 @@
-## $Id: DaVinci-WriteETC.py,v 1.5 2009-05-20 14:18:08 pkoppenb Exp $
+## $Id: DaVinci-WriteETC.py,v 1.6 2009-06-23 13:06:35 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ## ============================================================================
+#
+# Example options to create a user-defined ETC
+#
 from Gaudi.Configuration import *
 ######################################################
 # StripETC options
@@ -13,27 +16,19 @@ tag = EventTuple("TagCreator")
 tag.EvtColsProduce = True
 tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
 tag.addTool(TupleToolSelResults )
-tag.TupleToolSelResults.Selections  = [ "StrippingB2DPiPostScaler", "StrippingB2KstarMuMu_10HzPostScaler" ]
+tag.TupleToolSelResults.Selections  = [ "StripBs2JpsiPhi" ]
 ####################################################
-importOptions("$STRIPPINGSELECTIONSROOT/options/Stripping.py")
+importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhi.py")  # import one selection, but don't run whole stripping
+from Configurables import StrippingAlg
+selection = StrippingAlg("StrippingBs2JpsiPhiLine")
 ####################################################
 # main config
 from Configurables import DaVinci
-DaVinci().EvtMax = 5000
+DaVinci().EvtMax = 1000
 DaVinci().PrintFreq  = 100
-DaVinci().DataType = "2008"
+DaVinci().DataType = "MC09"
+DaVinci().UserAlgorithms = [ selection ]
 DaVinci().MoniSequence = [ tag ]
 DaVinci().ETCFile = "DVPresel_ETC2.root"
-#
-# The data that corresponds to 2008-InclJpsiDst.xml :
-#
-DaVinci().Input = [
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
+importOptions( "$DAVINCIROOT/options/MC09-Bs2JpsiPhiDst.py")

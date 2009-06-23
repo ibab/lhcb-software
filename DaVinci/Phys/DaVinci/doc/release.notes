@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.355 2009-06-18 12:52:52 pkoppenb Exp $
+! $Id: release.notes,v 1.356 2009-06-23 13:06:34 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-06-23 - Patrick Koppenburg
+ - Adapt to new stripping framework
+ - Remove 2009 data. New MC09 Bs2JpsiPhi test data
+ - Increment to v23r2
 
 ! 2009-06-18 - Patrick Koppenburg
  - Correct Stripping test

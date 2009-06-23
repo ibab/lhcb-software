@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="B8A50EB2-2D5B-DE11-87E1-0030487CD15A">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000006_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000006_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7460A266-A05B-DE11-B016-0030487CAEA6">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000014_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000014_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2AAF9FC4-455B-DE11-9139-001A64789CE4">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000005_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000005_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E02CA751-415B-DE11-A382-0019B9E4B1A5">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000002_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000002_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A6248D6E-945B-DE11-B02D-00E08178C055">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000012_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000012_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="224F7B43-715B-DE11-9967-0030487F16C1">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000011_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000011_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAC08BD5-A05B-DE11-A517-001D0967D689">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000008_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000008_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7E1B97F0-A25B-DE11-9466-0030487CD994">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000013_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000013_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9E76347A-CF5A-DE11-B552-0030487D8581">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="28523143-F95A-DE11-AD1F-000423D95004">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000003_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000003_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0A063EF0-1C5B-DE11-998B-0030487D8581">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000004_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000004_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E008BA5E-8B5B-DE11-82C8-001EC9D8D48B">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000009_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000009_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="986EE264-A85B-DE11-B277-001CC443B76C">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000010_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000010_1.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE0B8221-325B-DE11-9DC0-0030487F929F">
+     <physical>
+       <pfn filetype="ROOT_All" name="castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&amp;castorVersion=2&amp;path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000007_1.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/MC09/DST/00004879/0000/00004879_00000007_1.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>

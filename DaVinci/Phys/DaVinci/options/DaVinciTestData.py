@@ -1,4 +1,4 @@
-## $Id: DaVinciTestData.py,v 1.2 2009-06-15 09:32:19 pkoppenb Exp $
+## $Id: DaVinciTestData.py,v 1.3 2009-06-23 13:06:35 pkoppenb Exp $
  #
  # This will always contain some data
  #
@@ -15,11 +15,8 @@ dataType = DaVinci().getProp("DataType")
 if ( dataType == "DC06" ):
     importOptions("$DAVINCIROOT/options/DC06_stripped_bbincl_lumi2.py")
 
- #elif ( dataType == "2008" ):
- #    importOptions("$DAVINCIROOT/options/2008-InclJpsiDst.py")
- #
 elif ( dataType == "MC09" ):
-    importOptions("$DAVINCIROOT/options/MC09-InclJpsiDst.py")
+    importOptions("$DAVINCIROOT/options/MC09-Bs2JpsiPhiDst.py")
  
 else :
     print "#**********************************************************************"    

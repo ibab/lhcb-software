@@ -1,23 +1,27 @@
-## $Id: DaVinci-ReadETC.py,v 1.7 2009-06-18 12:52:52 pkoppenb Exp $
+## $Id: DaVinci-ReadETC.py,v 1.8 2009-06-23 13:06:35 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 ## ============================================================================
+#
+# Example options to read a user-defined ETC
+#
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 ####################################################
-importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingBd2KstarMuMu.py")
+importOptions("$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhi.py")  # import selections, but don't run stripping
+from Configurables import StrippingAlg
+selection = StrippingAlg("StrippingBs2JpsiPhiLine")
 ####################################################
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
-DaVinci().DataType = "2008"
-
-# the xml has been generated with the command : dirac-lhcb-generate-catalog LFN:/lhcb/MC/2008/DST/00003401/0000/00003401_0000000{1,2,3,4,5,6,7,9}_5.dst
+DaVinci().DataType = "MC09"
+DaVinci().UserAlgorithms = [ selection ]
 
 DaVinci().Input   = [
-    "COLLECTION='TagCreator/EventTuple' DATAFILE='~/DVPresel_v23r1p1.root' TYP='POOL_ROOT' SEL='(StrippingB2Charged2Body>0) || (StrippingTopo>0)'" ]
-from Configurables import  TagCollectionSvc
+    "COLLECTION='TagCreator/EventTuple' DATAFILE='DVPresel_ETC2.root' TYP='POOL_ROOT' SEL='(StripBs2JpsiPhi>0.5)'" ]
 
+from Configurables import  TagCollectionSvc
 ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
 
-FileCatalog().Catalogs = [ "xmlcatalog_file:options/2008-InclJpsiDst.xml" ]
+FileCatalog().Catalogs = [ "xmlcatalog_file:$DAVINCIROOT/options/MC09-Bs2JpsiPhiDst.xml" ]
