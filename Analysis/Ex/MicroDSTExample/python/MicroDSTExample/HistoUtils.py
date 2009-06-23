@@ -21,12 +21,15 @@ The module contais following public symbols:
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-__all__    = ( 'book' , 'bookProf' , 'getAsAIDA' , 'getAsROOT' , 'fill' )
+__all__    = ( 'book' , 'bookProf' , 'getAsAIDA' , 'getAsROOT' , 'fill', 'HistoFile' )
 # =============================================================================
 
 # import core of Gaudi 
 import GaudiPython as gaudimodule
-
+# Need ROOT.TFile
+from ROOT import TFile
+# get the global namespace to get AIDA and aida2root
+from GaudiPython.Bindings import gbl
 # =============================================================================
 ## Helper private auxillary function to get Aplication Manager 
 def _getAppMgr   ( **kwargs  ) :
@@ -392,8 +395,60 @@ def fill ( histo                   ,   ## histogram
         
     return histo                                           ## RETURN
 
+# =============================================================================
+class HistoFile :
+    """
+    Class to write histograms to a ROOT file.
+    hFile = HistoFile("myFile.root")
+    myHisto = ...
+    hFile.save(myHisto)
+    myHisto0 = ...
+    myHisto1 = ...
+    myHisto2 = ...
+    hFile.save(myHisto0, myHisto1, myHisto2)
+    histoList = [h0, h1, h2, h3]
+    hFile.save(histoList)
+    ...
+    hWriter.close()
+    """
+    __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
-# ==================================================:===========================
+    def __init__(self, fileName) :
+        self.file = TFile(fileName, "RECREATE")
+        self.aida2root = gbl.Gaudi.Utils.Aida2ROOT.aida2root
+        self.aidaTypes = [gbl.AIDA.IHistogram1D,
+                          gbl.AIDA.IHistogram2D,
+                          gbl.AIDA.IHistogram3D,
+                          gbl.AIDA.IProfile1D,
+                          gbl.AIDA.IProfile2D,
+                          gbl.AIDA.IHistogram    ]
+
+    def __convertibleType(self, histo) :
+        histoType = type(histo)
+        for t in self.aidaTypes :
+            if histoType == t : return True
+        return False
+    
+    def save(self, *args) :
+        """
+        This function stores histograms on the file for future saving.
+        It takes an arbitrary number of AIDA or ROOT histograms or
+        a list of them.
+        """
+        if args :
+            if type(args[0])==list :
+                histoList = args[0]
+            else :
+                histoList = args
+            for h in histoList :
+                if self.__convertibleType(h) : h = self.aida2root(h)
+                h.Write()
+            
+    def close(self) :
+        self.file.Write()
+        self.file.Close()
+
+# =============================================================================
 if '__main__' == __name__ :
     import sys 
     print __doc__
