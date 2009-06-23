@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorWithBrunel.py,v 1.1 2009-04-16 07:20:16 pkoppenb Exp $
+# $Id: DVMonitorWithBrunel.py,v 1.2 2009-06-23 09:59:39 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -70,11 +70,11 @@ def configureMoni(expert,withMC):
         importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.py")
 
     if "ST" in moniSeq :
-        from Configurables import STClusterMonitor, GaudiSequencer
-        GaudiSequencer( "MoniSTSeq" ).Members += [ STClusterMonitor("TTClusterMonitor"),
-                                                   STClusterMonitor("ITClusterMonitor")]
-        STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
-        STClusterMonitor("ITClusterMonitor").DetType = "IT" 
+        from Configurables import ST__STClusterMonitor, GaudiSequencer
+        GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
+                                                   ST__STClusterMonitor("ITClusterMonitor")]
+        ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+        ST__STClusterMonitor("ITClusterMonitor").DetType = "IT" 
 
     # Histograms filled only in real data case
     if not withMC:
