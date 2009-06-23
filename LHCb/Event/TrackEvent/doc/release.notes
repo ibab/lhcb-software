@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-06-23 - Wouter Hulsbergen
+ - LHCbIDs on track are now sorted
+ - added State locations for vertex and last measurement
+
 !======================= TrackEvent v4r20 2009-05-06 =========================
 ! 2009-04-01 - David Hutchcroft
  - Added Track AdditionalInfo enums: nPRVeloRZExpected and nPRVelo3DExpected
