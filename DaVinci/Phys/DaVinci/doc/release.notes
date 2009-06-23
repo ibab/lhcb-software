@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.356 2009-06-23 13:06:34 pkoppenb Exp $
+! $Id: release.notes,v 1.357 2009-06-23 15:12:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,6 +9,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v23r2 2009-06-23 =================
 ! 2009-06-23 - Patrick Koppenburg
  - Adapt to new stripping framework
  - Remove 2009 data. New MC09 Bs2JpsiPhi test data
