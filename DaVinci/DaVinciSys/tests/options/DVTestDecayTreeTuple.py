@@ -1,4 +1,5 @@
- ## @file DVTestHltDecayTreeTuple.py
+## @file DVTestHltDecayTreeTuple-DC06.py
+ #
  #
  #  See DecayTreeTuple documentation
  #
@@ -8,6 +9,7 @@
 
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import *
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ########################################################################
 #
 # The Decay Tuple
@@ -26,8 +28,8 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["StdLooseJpsi2MuMu"]
-tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
+tuple.InputLocations = ["Strip_10Hz_Bd2KstarMuMu"]
+tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -48,15 +50,24 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}"
-mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
+mcTuple.Decay = "{[ [B0]nos -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc, [ [B~0]os -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc}"
+mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 #mcTuple.OutputLevel = 1
+#######################################################################
+#
+# Selection
+#
+from StrippingConf.Configuration import StrippingConf
+StrippingConf().ActiveLines = []
+StrippingConf().OutputType = "NONE"
+
+from Configurables import DaVinci
+
 ########################################################################
 #
 # DaVinci
 #
-from Configurables import DaVinci
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 1000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" # Default is "DC06"
 DaVinci().Simulation   = True
@@ -64,16 +75,7 @@ DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().HltType = "Hlt1+Hlt2"
-#-- GAUDI jobOptions generated on Mon Jun 22 17:05:57 2009
+#-- GAUDI jobOptions generated on Tue Jun 23 11:54:57 2009
 #-- Contains event types : 
-#--   24142000 - 8 files - 123545 events - 27.24 GBytes
-
 EventSelector().Input   = [
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000003_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000004_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000006_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000007_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000008_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004831/0000/00004831_00000009_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004871/0000/00004871_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
