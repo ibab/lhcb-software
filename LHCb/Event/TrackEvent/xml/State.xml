@@ -70,7 +70,9 @@
 		 BegHCal,
 		 MidHCal,
 		 EndHCal,
-                 Muon'
+                 Muon,
+	         Vertex,
+	         LastMeasurement'
        access = 'PUBLIC'
        strTypConv = 'TRUE'
        unknownValue = 'LocationUnknown'
