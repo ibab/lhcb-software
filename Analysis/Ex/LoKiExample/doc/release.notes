@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.54 2009-06-11 16:46:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.55 2009-06-23 14:25:30 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.54 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.55 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiExample v8r5 2009-06-23 ===================
 ! 2009-06-11 - Vanya BELYAEV
 
  - src/LoKi_GenDecay.cpp
