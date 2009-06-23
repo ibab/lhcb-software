@@ -86,18 +86,19 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage,
 
 void refreshHisto(DbRootHist* dbHistoOnPage)
 {
+
 	if (false == dbHistoOnPage->isEmptyHisto()) {
 		dbHistoOnPage->fillHistogram();
 		dbHistoOnPage->normalizeReference();
-	} else {
-    dbHistoOnPage->beRegularHisto();
-    dbHistoOnPage->resetRetryInit();
-    dbHistoOnPage->initHistogram();
-		if (false == dbHistoOnPage->isEmptyHisto()) {
-			dbHistoOnPage->fillHistogram();
-		  dbHistoOnPage->setTH1FromDB();
-      dbHistoOnPage->normalizeReference();
-		}
+//	} else {
+//    dbHistoOnPage->beRegularHisto();
+//    dbHistoOnPage->resetRetryInit();
+//    dbHistoOnPage->initHistogram();
+//		if (false == dbHistoOnPage->isEmptyHisto()) {
+//			dbHistoOnPage->fillHistogram();
+//		  dbHistoOnPage->setTH1FromDB();
+//      dbHistoOnPage->normalizeReference();
+//		}
 	}
 }
 
@@ -139,7 +140,13 @@ void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * online
 void ParallelWait::refreshHistograms(std::vector<DbRootHist*> * dbHistosOnPage)
 {	
 //  TThread::Lock();
-  
+
+  std::vector<std::string*>::const_iterator m_tasksNotRunningIt;
+  for (m_tasksNotRunningIt = m_tasksNotRunning.begin();m_tasksNotRunningIt != m_tasksNotRunning.end(); ++m_tasksNotRunningIt) {
+    delete *m_tasksNotRunningIt;
+  }
+  m_tasksNotRunning.clear();  
+    
   boost::thread_group thrds;
   
   std::vector<DbRootHist*>::iterator refresh_dbHistosOnPageIt;
