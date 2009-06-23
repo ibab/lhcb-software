@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.96 2009-06-03 13:09:39 jpalac Exp $
+# $Id: requirements,v 1.97 2009-06-23 14:34:38 pkoppenb Exp $
 package AnalysisSys
-version v3r4
+version v3r5
 
 branches doc cmt
 
@@ -9,31 +9,31 @@ branches doc cmt
 
 use  AnalysisConf               v1r2     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
-use  CommonParticles            v5r2     Phys   # Juan Palacios, WGs
-use  FlavourTagging             v8r4     Phys   # Marco Musy
+use  CommonParticles            v5r3     Phys   # Patrick Koppenburg, WGs
+use  FlavourTagging             v8r5     Phys   # Marco Musy
 use  DaVinciFilter              v6r12    Phys   # Patrick Koppenburg - deprecated
 
-use  DaVinciMonitors            v1r4     Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r5     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r2     Rich   # Chris Jones
 use  DstCalibSel                v1r1     Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r20    Phys   # Juan Palacios
-use  DaVinciAssociators         v9r3p2   Phys   # Vladimir Gligorov
+use  DaVinciMCTools     	v9r20p1  Phys   # Juan Palacios
+use  DaVinciAssociators         v9r3p3   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v1r0     Phys   # Juan Palacios
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r5     Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r6     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v2r3     Phys   # Jeremie Borel
+use  DecayTreeTuple             v2rp2    Phys   # Rob Lambert
 ####################################################################
 #
 # Stripping
 #
-use StrippingConf               v1r0     Phys   # Anton Poluektov
-use StrippingSelections         v1r0     Phys   # Anton Poluektov
+use StrippingConf               v1r1     Phys   # Anton Poluektov
+use StrippingSelections         v1r0p1   Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
@@ -48,7 +48,7 @@ use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r1p1  Tutorial          # P. Koppenburg
-use LoKiExample         	v8r4    Ex                # Vanya Belyaev
+use LoKiExample         	v8r5    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r4    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 

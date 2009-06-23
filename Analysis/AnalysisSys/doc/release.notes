@@ -3,6 +3,14 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r5>2009-06-23 Analysis v3r5 </A></H1><PRE>
+
+ - Based on LHCb v27r2 and Gaudi v21r1
+
+ * Update of stripping for FEST/STEP
+ * Bug fix in CommonParticles NoPIDs
+ * Change of Event Model in FlavourTagging
+
 </PRE><H1><A NAME=v3r4>2009-06-03 Analysis v3r4 </A></H1><PRE>
 
  - Based on LHCb v27r1 and Gaudi v21r1
