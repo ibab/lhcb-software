@@ -1,4 +1,4 @@
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r5p2/options/Gauss/MC09-b5TeV-md100.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Gauss/MC09-b5TeV-md100.py'
 # --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.py'
 # --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
 # --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
@@ -13,7 +13,6 @@
 # MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
 # EventDataSvc.ForceLeaves         = true;
 # EventPersistencySvc.CnvServices  = [];
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/SimDicts.opts'
 # --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
@@ -36,11 +35,354 @@
 # PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident =    1;
 # <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-Gauss-5ev-20090526
-ApplicationMgr    SUCCESS 
+# ApplicationMgr.HistogramPersistency = "NONE";
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
+# ApplicationMgr.TopAlg += { "GaudiSequencer/Gauss" };
+# Gauss.Members         += { "GaudiSequencer/Generator"  };
+# Gauss.Members         += { "GaudiSequencer/Simulation" };
+# Generator.Members         = { "GenInit/GaussGen" };
+# Simulation.Members        = { "SimInit/GaussSim" };
+# GaussGen.FirstEventNumber = 1;
+# GaussGen.RunNumber        = 1;
+# EventClockSvc.FakeEventTime.StartTime = 0;
+# EventClockSvc.FakeEventTime.TimeStep  = 25*ns;
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Generator.opts'
+# Generator.Members += { "Generation" };
+# ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY.DEC";
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Generator.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Simulation.opts'
+# ApplicationMgr.ExtSvc += {  "GiGa"};
+# EventPersistencySvc.CnvServices += { "GiGaKine" };
+# Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
+# GiGaStore.ConversionServices = { "GiGaKine" };
+# Simulation.Members += { "GiGaInputStream/Geo" };
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimGeometry.opts'
+# Geo.ExecuteOnce          = true;
+# Geo.ConversionSvcName    = "GiGaGeo";
+# Geo.DataProviderSvcName  = "DetectorDataSvc";
+# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
+# Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeInMagnet"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/BcmDown"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
+# Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
+# Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
+# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Calo.opts'
+# HistogramDataSvc.Input += {  "GaussCalo DATAFILE='$PARAMFILESROOT/data/gausscalo.root' TYP='ROOT'"};
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Spd.opts'
+# GiGaGeo.Spd.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Spd/Modules/InnCell"  ,  "/dd/Geometry/DownstreamRegion/Spd/Modules/MidCell"  ,  "/dd/Geometry/DownstreamRegion/Spd/Modules/OutCell"};
+# GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/DownstreamRegion/Spd/Installation/Spd";
+# GiGaGeo.Spd.CollectionName =  "SpdHits";
+# GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Spd";
+# GiGaGeo.Spd.zMin           =  12300. * mm;
+# GiGaGeo.Spd.zMax           =  15000. * mm;
+# GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo";
+# GiGaGeo.Spd.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns };
+# GiGaGeo.Spd.Histograms = {  "GaussCalo/SPDTIME/h1",  "GaussCalo/SPDTIME/h2",  "GaussCalo/SPDTIME/h3"};
+# GetSpdHits.MCHitsLocation = "/Event/MC/Spd/Hits";
+# GetSpdHits.CollectionName = "SpdHits";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Spd.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Prs.opts'
+# GiGaGeo.Prs.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Prs/Modules/InnCell"  ,  "/dd/Geometry/DownstreamRegion/Prs/Modules/MidCell"  ,  "/dd/Geometry/DownstreamRegion/Prs/Modules/OutCell"};
+# GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/DownstreamRegion/Prs/Installation/Prs";
+# GiGaGeo.Prs.CollectionName =  "PrsHits";
+# GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Prs";
+# GiGaGeo.Prs.zMin           =  12300. * mm;
+# GiGaGeo.Prs.zMax           =  15000. * mm;
+# GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo";
+# GiGaGeo.Prs.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns };
+# GiGaGeo.Prs.Histograms = {  "GaussCalo/PRSTIME/h1" ,  "GaussCalo/PRSTIME/h2" ,  "GaussCalo/PRSTIME/h3"};
+# GetPrsHits.MCHitsLocation = "/Event/MC/Prs/Hits";
+# GetPrsHits.CollectionName = "PrsHits";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Prs.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Ecal.opts'
+# GiGaGeo.Ecal.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell",  "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell",  "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell"};
+# GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal";
+# GiGaGeo.Ecal.CollectionName =  "EcalHits";
+# GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Ecal";
+# GiGaGeo.Ecal.zMin           =  12300. * mm;
+# GiGaGeo.Ecal.zMax           =  15000. * mm;
+# GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo";
+# GiGaGeo.Ecal.Histograms = {  "GaussCalo/ECALTIME/h1" ,  "GaussCalo/ECALTIME/h2"};
+# GetEcalHits.MCHitsLocation = "/Event/MC/Ecal/Hits";
+# GetEcalHits.CollectionName = "EcalHits";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Ecal.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Hcal.opts'
+# GiGaGeo.Hcal.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile"  ,  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile"      ,  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellScTile"};
+# GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal";
+# GiGaGeo.Hcal.CollectionName =  "HcalHits";
+# GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Hcal";
+# GiGaGeo.Hcal.zMin           =  12300. * mm;
+# GiGaGeo.Hcal.zMax           =  15000. * mm;
+# GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo";
+# GiGaGeo.Hcal.Histograms = {  "GaussCalo/HCALTIME/h1" ,  "GaussCalo/HCALTIME/h2"};
+# GetHcalHits.MCHitsLocation = "/Event/MC/Hcal/Hits";
+# GetHcalHits.CollectionName = "HcalHits";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Hcal.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/CaloSP.opts'
+# GiGaGeo.CaloSP.DetectorPath   =  "/LHCb/Calo";
+# GiGaGeo.CaloSP.CollectionName =  "CaloSPHits";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/CaloSP.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Calo.opts'
+# GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
+# GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
+# GiGaGeo.FieldMgr.Global        = true;
+# GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+# GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimGeometry.opts'
+# Simulation.Members += { "GenerationToSimulation" };
+# GenerationToSimulation.LookForUnknownParticles = true;
+# Simulation.Members += { "GiGaFlushAlgorithm" };
+# Simulation.Members += { "GiGaCheckEventStatus" };
+# Simulation.Members += { "SimulationToMCTruth" };
+# Simulation.Members += { "GaudiSequencer/DetectorsHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };
+# DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };
+# DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };
+# DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };
+# DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };
+# DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };
+# DetectorsHits.Members += { "GaudiSequencer/RichHits" };
+# RichHits.Members      += { "GetMCRichHitsAlg/GetRichHits" };
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussTracker/options/TrackersHits.opts'
+# GetVeloHits.CollectionName = "VeloSDet/Hits";
+# GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
+# GetVeloHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
+# GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
+# GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
+# GetPuVetoHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
+# GetTTHits.CollectionName = "TTSDet/Hits";
+# GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
+# GetTTHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
+# GetITHits.CollectionName = "ITSDet/Hits";
+# GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
+# GetITHits.Detectors      = {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
+# GetOTHits.CollectionName = "OTSDet/Hits";
+# GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
+# GetOTHits.Detectors      = {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
+# GetMuonHits.CollectionName = "MuonSDet/Hits";
+# GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
+# GetMuonHits.Detectors      = {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussTracker/options/TrackersHits.opts'
+# DetectorsHits.MeasureTime = true;
+# GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
+# GiGa.ModularPL.CutForElectron = 10000.0 * m;
+# GiGa.ModularPL.CutForPositron = 5.0 * mm;
+# GiGa.ModularPL.CutForGamma    = 10.0 * mm;
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/PhysList-LHEP.opts'
+# GiGa.ModularPL.PhysicsConstructors = {  "GiGaExtPhysics<G4EmStandardPhysics_option1>/EmOpt1Physics" };
+# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4EmExtraPhysics>/EmExtraPhysics" };
+# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4DecayPhysics>/DecayPhysics" };
+# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4HadronElasticPhysics>/ElasticPhysics" };
+# GiGa.ModularPL.PhysicsConstructors += { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" };
+# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4IonPhysics>/IonPhysics" };
+# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorOp"  };
+# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorHpd" };
+# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysUnknownParticles" };
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/PhysList-LHEP.opts'
+# GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq";
+# GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
+# GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" };
+# GiGa.RunSeq.RunCommand.BeginOfRunCommands  = {  "/tracking/verbose 0",  "/tracking/storeTrajectory  1",  "/process/eLoss/verbose -1"};
+# GiGa.EventAction            =   "GiGaEventActionSequence/EventSeq";
+# GiGa.EventSeq.Members      += { "GaussEventActionHepMC/HepMCEvent" };
+# GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq";
+# GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/Rich.opts'
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator=false;
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel=900;
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+# GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" };
+# GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" };
+# GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" };
+# GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/Rich.opts'
+# GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" };
+# GiGa.TrackSeq.Members      += { "GaussTrackActionHepMC/HepMCTrack" };
+# GiGa.TrackSeq.PostTrack.StoreAll          = false;
+# GiGa.TrackSeq.PostTrack.StorePrimaries    = true;
+# GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
+# GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
+# GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true;
+# GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100.0 * MeV;
+# GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true;
+# GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov", "Decay"};
+# GiGa.TrackSeq.PostTrack.StoreByOwnProcess  = true;
+# GiGa.TrackSeq.PostTrack.StoredOwnProcesses = {"Decay"};
+# GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq";
+# GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" };
+# SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
+# GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
+# GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      };
+# GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/RichExtendedInfo.opts'
+# RichHits.Members += { "GetMCRichOpticalPhotonsAlg/GetRichPhotons",                      "GetMCRichSegmentsAlg/GetRichSegments",                      "GetMCRichTracksAlg/GetRichTracks" };
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichExtendedInfo.opts'
+# GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
+# GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" };
+# GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" };
+# GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
+# GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
+# GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichExtendedInfo.opts'
+# RichHits.Members += { "Rich::MC::MCPartToMCRichTrackAlg/MCPartToMCRichTrack",                      "Rich::MC::MCRichHitToMCRichOpPhotAlg/MCRichHitToMCRichOpPhot" };
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/RichExtendedInfo.opts'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Simulation.opts'
+# Generator.Members       += { "GaudiSequencer/GenMonitor" };
+# Simulation.Members      += { "GaudiSequencer/SimMonitor" };
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Monitor.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/RootHist.opts'
+# ApplicationMgr.HistogramPersistency = "ROOT";
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/RootHist.opts'
+# RootHistCnv.ForceAlphaIds = true;
+# ApplicationMgr.ExtSvc += { "AuditorSvc"};
+# ApplicationMgr.AuditAlgorithms = True;
+# AuditorSvc.Auditors += {"TimingAuditor"};
+# GenMonitor.Members         += {"GenMonitorAlg"};
+# GenMonitorAlg.HistoProduce  = true;
+# SimMonitor.Members   += { "GiGaGetEventAlg" };
+# SimMonitor.Members   += { "MCTruthMonitor" };
+# GiGaGetEventAlg.Vertices = "";
+# SimMonitor.Members   += { "GiGaGetHitsAlg" };
+# SimMonitor.Members   += { "GaudiSequencer/DetectorsMonitor" };
+# DetectorsMonitor.Members += { "VeloGaussMoni" };
+# DetectorsMonitor.Members += { "MCHitMonitor/TTHitMonitor" };
+# TTHitMonitor.mcPathString = "/Event/MC/TT/Hits";
+# TTHitMonitor.zStations    = { 2350.0*mm, 2620.0*mm };
+# TTHitMonitor.xMax         = 150.0*cm;
+# TTHitMonitor.yMax         = 150.0*cm;
+# DetectorsMonitor.Members += { "MCHitMonitor/ITHitMonitor" };
+# ITHitMonitor.mcPathString = "/Event/MC/IT/Hits";
+# ITHitMonitor.zStations    = { 7780.0*mm, 8460.0*mm, 9115.0*mm };
+# ITHitMonitor.xMax         = 100.0*cm;
+# ITHitMonitor.yMax         = 100.0*cm;
+# DetectorsMonitor.Members += { "MCHitMonitor/OTHitMonitor" };
+# OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
+# OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichAnalysis.opts'
+# GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" };
+# GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" };
+# GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0;
+# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
+# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=true;
+# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
+# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
+# GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
+# GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
+# GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
+# GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
+# GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
+# GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" };
+# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
+# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
+# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
+# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichAnalysis.opts'
+# DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
+# DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" };
+# DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
+# DetectorsMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Calo/CaloMoniSim/options/MoniSim.opts'
+# SpdMonitor.Detector="Spd";
+# SpdMonitor.Regions = true;
+# SpdMonitor.MaximumEnergy=10.*MeV;
+# SpdMonitor.Threshold=1.5*MeV;
+# PrsMonitor.Detector="Prs";
+# PrsMonitor.Regions = true;
+# PrsMonitor.MaximumEnergy=10.*MeV;
+# PrsMonitor.Threshold=1.5*MeV;
+# EcalMonitor.Detector="Ecal";
+# EcalMonitor.Regions = true;
+# EcalMonitor.MaximumEnergy=1000.*MeV;
+# EcalMonitor.Threshold=10.*MeV;
+# HcalMonitor.Detector="Hcal";
+# HcalMonitor.Regions = true;
+# HcalMonitor.MaximumEnergy=1000.*MeV;
+# HcalMonitor.Threshold=5.*MeV;
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Calo/CaloMoniSim/options/MoniSim.opts'
+# SpdMonitor.OutputLevel  = 4;
+# PrsMonitor.OutputLevel  = 4;
+# EcalMonitor.OutputLevel = 4;
+# HcalMonitor.OutputLevel = 4;
+# DetectorsMonitor.Members += { "MuonHitChecker" };
+# DetectorsMonitor.Members += { "MuonMultipleScatteringChecker" };
+# MuonHitChecker.FullDetail = true;
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Monitor.opts'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimVeloGeometry.py'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimVeloGeometry.py'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Gauss/MC09-b5TeV-md100.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Conditions/MC09-20090602-vc-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Conditions/MC09-20090602-vc-md100.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r1/options/30000000.opts'
+# Generation.EventType = 30000000;
+# Generation.SampleGenerationTool = "MinimumBias";
+# Generation.MinimumBias.ProductionTool = "PythiaProduction";
+# ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/minbias.dec";
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r1/options/30000000.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-Job.py'
+Gauss-5ev-20090623
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-Job.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-DataType   = '2008'
+# |-DDDBtag    = 'MC09-20090602'  (default: '')
+# |-SkipEvents = 0
+# |-EvtMax     = 5  (default: -1)
+# |-Simulation = True  (default: False)
+# |-CondDBtag  = 'sim-20090402-vc-md100'  (default: '')
+# |-Monitors   = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of DDDBConf
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType   = '2008'
+# |-DbRoot     = 'conddb:/lhcb.xml'
+# |-Simulation = True  (default: False)
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/options/SQLDDDB.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-Tags                      = {}  (default: {})
+# |-Overrides                 = []  (default: [])
+# |-Simulation                = True  (default: False)
+# |-SQLiteLocalCopiesDir      = ''
+# |-UseOracle                 = False
+# |-LogFile                   = ''
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v37r0
-                                          running on lxbuild111.cern.ch on Tue May 26 13:48:10 2009
+                                                   Welcome to Gauss version v37r2
+                                          running on lxplus226.cern.ch on Tue Jun 23 11:14:30 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -72,11 +414,11 @@ GiGa                       INFO Used Physics List Object is GiGaPhysListModular/
 GiGa                       INFO Stacking Action Object is not required to be loaded
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r5/db/DDDB.db/DDDB"
-DDDB                       INFO Using TAG "MC09-20090519"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/db/DDDB.db/DDDB"
+DDDB                       INFO Using TAG "MC09-20090602"
 EventPersistencySvc        INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'GiGaKine' ]
 EventClockSvc.EventTi...   INFO Event times generated from 1000000 with steps of 0
-SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r5/db/SIMCOND.db/SIMCOND"
+SIMCOND                    INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/db/SIMCOND.db/SIMCOND"
 SIMCOND                    INFO Using TAG "sim-20090402-vc-md100"
 DeRichSystem               INFO Update triggered for HPD numbering maps
 DeRichSystem               INFO Built mappings for  7 L1 and 196 HPDs in Rich1
@@ -86,7 +428,7 @@ ParticlePropertySvc        INFO Opened particle properties file : conddb:///para
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090526-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-5ev-20090623-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -97,14 +439,14 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 Gauss                      INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.14 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 5 events
 GaussGen                SUCCESS ==================================================================
-Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity. 
+Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity.
 Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 0.00116
 Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 0.011245
 Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
@@ -113,7 +455,7 @@ Generation.MinimumBias     INFO Generating Minimum Bias events.
 Generation.MinimumBia...SUCCESS ==================================================================
 Generation.MinimumBia...SUCCESS Using as production engine  PythiaProduction
 Generation.MinimumBia...SUCCESS ==================================================================
-Generation.MinimumBia...   INFO Colliding Beam Parameters: 
+Generation.MinimumBia...   INFO Colliding Beam Parameters:
 Generation.MinimumBia...   INFO Beam Momentum (TeV): 5
 Generation.MinimumBia...   INFO Vertical crossing angle (microradian): 0
 Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 329
@@ -121,8 +463,8 @@ Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 329
  Process switched off!
  Warning: requested subprocess 485 has vanishing cross-section.
  Process switched off!
-Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution 
-Generation.BeamSpotSm...   INFO  Z primary = 0 mm 
+Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution
+Generation.BeamSpotSm...   INFO  Z primary = 0 mm
 Generation.BeamSpotSm...   INFO  time of interaction vs T0 of IP is 0 ns
 Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.027 mm, 0.027 mm, 38.2 mm
 Generation              SUCCESS ==================================================================
@@ -141,7 +483,7 @@ GetRichPhotons             INFO Filling MC/Rich/OpticalPhotons from G4 collectio
 GetRichSegments            INFO Filling MC/Rich/Segments from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
 GetRichTracks              INFO Filling MC/Rich/Tracks from G4 collections 'Rich1TopHC' 'Rich1BotHC' 'Rich2LeftHC' 'Rich2RightHC'
 SimMonitor                 INFO Member list: GiGaGetEventAlg, MCTruthMonitor, GiGaGetHitsAlg, GaudiSequencer/DetectorsMonitor
-DetectorsMonitor           INFO Member list: VeloGaussMoni, MCHitMonitor/TTHitMonitor, MCHitMonitor/ITHitMonitor, MCHitMonitor/OTHitMonitor, MCCaloMonitor/SpdMonitor, MCCaloMonitor/PrsMonitor, MCCaloMonitor/EcalMonitor, MCCaloMonitor/HcalMonitor, MuonHitChecker
+DetectorsMonitor           INFO Member list: VeloGaussMoni, MCHitMonitor/TTHitMonitor, MCHitMonitor/ITHitMonitor, MCHitMonitor/OTHitMonitor, MCCaloMonitor/SpdMonitor, MCCaloMonitor/PrsMonitor, MCCaloMonitor/EcalMonitor, MCCaloMonitor/HcalMonitor, MuonHitChecker, MuonMultipleScatteringChecker
 TTHitMonitor.MCPartic...   INFO MCParticle Momentum cut     : 0 GeV/c < P < 1.79769e+308 GeV/c
 TTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
 TTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
@@ -153,17 +495,17 @@ OTHitMonitor.MCPartic...   INFO            Beta * gamma cut : 0 < beta*gamma
 OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090526.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
-EventLoopMgr            WARNING Unable to locate service "EventSelector" 
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-5ev-20090623.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
 GaussSim                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 786365161, 0]
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c1.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c2.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c3.vp.cdf
-MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r2/cdf/field048.c4.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c1.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c2.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c3.vp.cdf
+MagneticFieldSvc.MagT...   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c4.vp.cdf
 MagneticFieldSvc.MagT...   INFO Map scaled by factor 1
 GiGaGeo.FieldMgr           INFO Minimum and Maximum Epsilon Step
 5e-05 0.001
@@ -172,24 +514,23 @@ GiGaGeo                    INFO world():: Global        'G4Field Manager' is set
 GiGaGeo                    INFO world():: Global        'G4MagneticField' is set to be = GiGaMagFieldGlobal
 GiGaGeo                    INFO world():: Global 'G4MagIntegratorStepper' is set to be = G4ClassicalRK4
 GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB  
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB  
-SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB
 RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root" for reading
 GiGa.GiGaMgr               INFO GiGaRunManager::  Geometry will be extracted from GiGaGeo
 RichHpdPhotoElectricEffect UseHpdMagDistortions = 0
@@ -197,13 +538,14 @@ RichHpdPhotoElectricEffect PsfPreDc06Flag       = 0
 RichHpdPhotoElectricEffect UseNominalHpdQE =   0
 RichHpdProperties          INFO Total Number of hpds in Rich1 = 196
 RichHpdProperties          INFO Total Number of hpds in Rich2 = 288
-RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH  
+RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH
 Rich Hpd SiHitEfficiency  BackScatterCorrectedProb 0.85   0.0385953
-GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm 
-GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm 
-GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm 
+GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm
+GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm
+GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm
+SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 
-phot:  Total cross sections from Sandia parametrisation. 
+phot:  Total cross sections from Sandia parametrisation.
       Sampling according PhotoElectric model
 
 compt:  Total cross sections has a good parametrisation from 10 KeV to (100/Z) GeV
@@ -231,7 +573,7 @@ eIoni:   tables are built for  e-
 eBrem:   tables are built for  e-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 eIoni:   tables are built for  e+
@@ -244,7 +586,7 @@ eIoni:   tables are built for  e+
 eBrem:   tables are built for  e+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 annihil:       Sampling according eplus2gg model
@@ -294,36 +636,36 @@ msc:  Model variant of multiple scattering for mu+
 muIoni:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muPairProd:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muIoni:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 muPairProd:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model 
+      Parametrised model
 
 G4UHadronElasticProcess for neutron PDGcode= 2112  Elow(MeV)= 19  Elowest(eV)= 0
 
@@ -348,21 +690,21 @@ hIoni:   tables are built for  pi-
       Parametrisation from Bragg for protons below. NuclearStopping= 1
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	606
-IODataManager              INFO Referring to dataset Gauss-5ev-20090526.sim by its file ID:C4569DF5-EB49-DE11-A78F-00304879EE40
-Gauss-5ev-20090526.sim  SUCCESS Root file version:51800
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	419
+IODataManager              INFO Referring to dataset Gauss-5ev-20090623.sim by its file ID:F4D8DFBE-D65F-DE11-8E3E-000423D94890
+Gauss-5ev-20090623.sim  SUCCESS Root file version:51800
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
 GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	12
 GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 GaussSim                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 1254798016, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	102
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	186
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
 GaussSim                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 479188555, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	653
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	642
 GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
 GaussSim                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 253147997, 0]
-GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	127
+GiGaGetEventAlg            INFO Number of extracted MCParticles 'MC/Particles' 	296
 ApplicationMgr             INFO Application Manager Stopped successfully
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS 5 events processed
@@ -392,7 +734,7 @@ Number of accepted interactions with >= 3c : 0
 Number of accepted interactions with >= prompt C : 0
 Number of accepted interactions with b and c : 0
 
-GenMonitorAlg              INFO 
+GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
 = Number of particles generated: 614
@@ -412,136 +754,136 @@ GenMonitorAlg              INFO
 = Mean charged stable multiplicity in LHCb eta: 7
 =                                                                 =
 ===================================================================
-GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19 
+GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19
 GaussSim                SUCCESS ==================================================================
 GaussSim                SUCCESS 5 events processed
 GaussSim                SUCCESS ==================================================================
 GetRichHits                INFO Av. # Invalid RICH flags              =    0.00 +- 0.00
-GetRichHits                INFO Av. # MCRichHits              : Rich1 =  229.60 +- 6.78 (100.00 +-0.00%) Rich2 =  263.20 +- 7.26 (100.00 +-0.00%)
+GetRichHits                INFO Av. # MCRichHits              : Rich1 =  192.00 +- 6.20 (100.00 +-0.00%) Rich2 =   91.20 +- 4.27 (100.00 +-0.00%)
 GetRichHits                INFO Av. # Invalid radiator hits   : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Signal Hits             : Rich1 =  138.20 +- 5.26 ( 60.19 +-1.44%) Rich2 =  117.00 +- 4.84 ( 44.45 +-1.37%)
-GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =    5.40 +- 1.04 (  2.35 +-0.45%) Rich2 =    6.80 +- 1.17 (  2.58 +-0.44%)
-GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =   70.40 +- 3.75 ( 30.66 +-1.36%) Rich2 =  125.00 +- 5.00 ( 47.49 +-1.38%)
-GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.80 +- 0.40 (  0.35 +-0.17%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # Signal Hits             : Rich1 =  171.20 +- 5.85 ( 89.17 +-1.00%) Rich2 =   83.60 +- 4.09 ( 91.67 +-1.29%)
+GetRichHits                INFO Av. # Gas Quartz CK hits      : Rich1 =    0.80 +- 0.40 (  0.42 +-0.21%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO Av. # HPD Quartz CK hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.20 +- 0.20 (  0.22 +-0.22%)
+GetRichHits                INFO Av. # Nitrogen CK hits        : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Aero Filter CK hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    0.40 +- 0.28 (  0.17 +-0.12%) Rich2 =    2.20 +- 0.66 (  0.84 +-0.25%)
+GetRichHits                INFO Av. # Si back-scattering      : Rich1 =    1.40 +- 0.53 (  0.73 +-0.27%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Charged Track hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   23.60 +- 2.17 ( 10.28 +-0.90%) Rich2 =   73.60 +- 3.84 ( 27.96 +-1.24%)
-GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =   10.60 +- 1.46 (  4.62 +-0.62%) Rich2 =   38.20 +- 2.76 ( 14.51 +-0.97%)
-GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   12.60 +- 1.59 (  5.49 +-0.67%) Rich2 =   36.00 +- 2.68 ( 13.68 +-0.95%)
-GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =    6.20 +- 1.11 (  2.70 +-0.48%) Rich2 =   13.20 +- 1.62 (  5.02 +-0.60%)
+GetRichHits                INFO Av. # All HPD reflection hits : Rich1 =   16.80 +- 1.83 (  8.75 +-0.91%) Rich2 =    7.40 +- 1.22 (  8.11 +-1.28%)
+GetRichHits                INFO   Av. # QW/PC refl. hits      : Rich1 =    5.20 +- 1.02 (  2.71 +-0.52%) Rich2 =    3.00 +- 0.77 (  3.29 +-0.84%)
+GetRichHits                INFO   Av. # Chromium refl. hits   : Rich1 =   12.20 +- 1.56 (  6.35 +-0.79%) Rich2 =    5.80 +- 1.08 (  6.36 +-1.14%)
+GetRichHits                INFO   Av. # Air/QW refl. hits     : Rich1 =    3.80 +- 0.87 (  1.98 +-0.45%) Rich2 =    2.00 +- 0.63 (  2.19 +-0.69%)
 GetRichHits                INFO   Av. # Air/PC refl. hits     : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO   Av. # PC/QW refl. hits      : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
-GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.20 +- 0.20 (  0.09 +-0.09%) Rich2 =    0.20 +- 0.20 (  0.08 +-0.08%)
-GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    0.80 +- 0.40 (  0.35 +-0.17%) Rich2 =    1.00 +- 0.45 (  0.38 +-0.17%)
-GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    2.40 +- 0.69 (  1.05 +-0.30%) Rich2 =    2.40 +- 0.69 (  0.91 +-0.26%)
-GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   24.00 +- 2.19 ( 10.45 +-0.90%) C4F10 =  114.20 +- 4.78 ( 49.74 +-1.48%) CF4 =  117.00 +- 4.84 ( 44.45 +-1.37%)
-GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    1.40 +- 0.53 (  0.61 +-0.23%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Silicon refl. hits    : Rich1 =    0.00 +- 0.00 (  0.00 +-0.00%) Rich2 =    0.00 +- 0.00 (  0.00 +-0.00%)
+GetRichHits                INFO   Av. # Kovar refl. hits      : Rich1 =    0.80 +- 0.40 (  0.42 +-0.21%) Rich2 =    0.20 +- 0.20 (  0.22 +-0.22%)
+GetRichHits                INFO   Av. # Kapton refl. hits     : Rich1 =    1.80 +- 0.60 (  0.94 +-0.31%) Rich2 =    0.20 +- 0.20 (  0.22 +-0.22%)
+GetRichHits                INFO Av. # Signal CK MCRichHits    : Aero  =   28.80 +- 2.40 ( 15.00 +-1.15%) C4F10 =  142.40 +- 5.34 ( 74.17 +-1.41%) CF4 =   83.60 +- 4.09 ( 91.67 +-1.29%)
+GetRichHits                INFO Av. # Rayleigh scattered hits : Aero  =    2.40 +- 0.69 (  1.25 +-0.36%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # MCParticle-less hits    : Aero  =    0.00 +- 0.00 (  0.00 +-0.00%) C4F10 =    0.00 +- 0.00 (  0.00 +-0.00%) CF4 =    0.00 +- 0.00 (  0.00 +-0.00%)
 GetRichHits                INFO Av. # Aero hits per tile     :
 GetRichHits                INFO           tile =  0 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  1 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  2 hits =    6.40 +- 1.13 / event
-GetRichHits                INFO           tile =  3 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile =  4 hits =    1.00 +- 0.45 / event
-GetRichHits                INFO           tile =  5 hits =    1.20 +- 0.49 / event
-GetRichHits                INFO           tile =  6 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  2 hits =   10.20 +- 1.43 / event
+GetRichHits                INFO           tile =  3 hits =    0.20 +- 0.20 / event
+GetRichHits                INFO           tile =  4 hits =    5.00 +- 1.00 / event
+GetRichHits                INFO           tile =  5 hits =    0.00 +- 0.00 / event
+GetRichHits                INFO           tile =  6 hits =    1.80 +- 0.60 / event
 GetRichHits                INFO           tile =  7 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  8 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile =  9 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 10 hits =    7.40 +- 1.22 / event
-GetRichHits                INFO           tile = 11 hits =    3.20 +- 0.80 / event
-GetRichHits                INFO           tile = 12 hits =    8.60 +- 1.31 / event
+GetRichHits                INFO           tile = 10 hits =    8.60 +- 1.31 / event
+GetRichHits                INFO           tile = 11 hits =    1.60 +- 0.57 / event
+GetRichHits                INFO           tile = 12 hits =    6.20 +- 1.11 / event
 GetRichHits                INFO           tile = 13 hits =    0.00 +- 0.00 / event
 GetRichHits                INFO           tile = 14 hits =    0.00 +- 0.00 / event
-GetRichHits                INFO           tile = 15 hits =    0.00 +- 0.00 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    27.80 +-  2.36 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   125.20 +-  5.00 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =   131.40 +-  5.13 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =    12.20 +-  1.56 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =   195.40 +-  6.25 / event
-GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Nitrogen =     0.80 +-  0.40 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =     4.40 +-  0.94 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =     5.40 +-  1.04 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =     6.60 +-  1.15 / event
-GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     1.60 +-  0.57 / event
-GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     1.80 +-  0.60 / event
-GetRichSegments            INFO Av. # MCRichSegments       : Nitrogen =     0.20 +-  0.20 / event
+GetRichHits                INFO           tile = 15 hits =    1.00 +- 0.45 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Aerogel =    34.60 +-  2.63 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich1Gas =   156.60 +-  5.60 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : Rich2Gas =    91.00 +-  4.27 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : GasQuartzWin =     0.80 +-  0.40 / event
+GetRichPhotons             INFO Av. # MCRichOpticalPhotons : HPDQuartzWin =     0.20 +-  0.20 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Aerogel =     5.20 +-  1.02 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich1Gas =     6.20 +-  1.11 / event
+GetRichSegments            INFO Av. # MCRichSegments       : Rich2Gas =     5.40 +-  1.04 / event
+GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin =     0.40 +-  0.28 / event
+GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     0.20 +-  0.20 / event
 GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO                 - VeloGaussMoni table -                 
+VeloGaussMoni              INFO                 - VeloGaussMoni table -
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO | Number of MCHits/Event:       171.2+/-67.5132
-VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 10.2+/-4.21806
+VeloGaussMoni              INFO | Number of MCHits/Event:       175.8+/-70.3411
+VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 10.6+/-4.50422
 VeloGaussMoni              INFO ------------------------------------------------------
 TTHitMonitor               INFO *** Summary ***
-TTHitMonitor               INFO #hits per event: 46
-TTHitMonitor               INFO Mean beta * gamma: 2569.48
-TTHitMonitor               INFO Most Probable deposited charge: 0.14479
-TTHitMonitor               INFO Half Sample width 0.0446402
-TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7 
-TTHitMonitor            SUCCESS Number of counters : 2
+TTHitMonitor               INFO #hits per event: 51.2
+TTHitMonitor               INFO Mean beta * gamma: 381.267
+TTHitMonitor               INFO Most Probable deposited charge: 0.157798
+TTHitMonitor               INFO Half Sample width 0.0592113
+TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
+TTHitMonitor            SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       230 |   590979.4 |     2569.5 |     7337.8 |     0.31229 |      36280. |
- | "numberHits"                                    |         5 |        230 |     46.000 |     48.613 |      0.0000 |      124.00 |
+ | "DeltaRay"                                      |         5 |          5 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "betaGamma"                                     |       256 |   97604.33 |     381.27 |     888.89 |     0.30698 |      4200.1 |
+ | "numberHits"                                    |         5 |        256 |     51.200 |     52.255 |      0.0000 |      136.00 |
 ITHitMonitor               INFO *** Summary ***
-ITHitMonitor               INFO #hits per event: 71.2
-ITHitMonitor               INFO Mean beta * gamma: 2713.8
-ITHitMonitor               INFO Most Probable deposited charge: 0.109473
-ITHitMonitor               INFO Half Sample width 0.0512644
-ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
+ITHitMonitor               INFO #hits per event: 57.6
+ITHitMonitor               INFO Mean beta * gamma: 1730.01
+ITHitMonitor               INFO Most Probable deposited charge: 0.106873
+ITHitMonitor               INFO Half Sample width 0.0420248
+ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 ITHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       356 |   966112.3 |     2713.8 |     7118.6 |   0.0095382 |      36280. |
- | "numberHits"                                    |         5 |        356 |     71.200 |     72.981 |      0.0000 |      173.00 |
+ | "betaGamma"                                     |       288 |   498242.7 |     1730.0 |     3252.2 |     0.14684 |      13654. |
+ | "numberHits"                                    |         5 |        288 |     57.600 |     60.235 |      0.0000 |      155.00 |
 OTHitMonitor               INFO *** Summary ***
-OTHitMonitor               INFO #hits per event: 134.2
-OTHitMonitor               INFO Mean beta * gamma: 1703.61
-OTHitMonitor               INFO Most Probable deposited charge: 0.226606
-OTHitMonitor               INFO Half Sample width 0.0990425
-OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
+OTHitMonitor               INFO #hits per event: 137.4
+OTHitMonitor               INFO Mean beta * gamma: 494.66
+OTHitMonitor               INFO Most Probable deposited charge: 0.23061
+OTHitMonitor               INFO Half Sample width 0.120571
+OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
 OTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "betaGamma"                                     |       671 |    1143121 |     1703.6 |     4143.7 |    0.013214 |      21189. |
- | "numberHits"                                    |         5 |        671 |     134.20 |     152.78 |      0.0000 |      347.00 |
-SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
-PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
-EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19 
-HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16 
+ | "betaGamma"                                     |       687 |   339831.3 |     494.66 |     1504.8 |     0.26224 |      13310. |
+ | "numberHits"                                    |         5 |        687 |     137.40 |     126.34 |      0.0000 |      348.00 |
+SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
+PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
+EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19
+HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO        Muon Monitoring Table 
+MuonHitChecker             INFO        Muon Monitoring Table
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO  M1        M2        M3        M4        M5 
-MuonHitChecker             INFO 6.600  7.200  0.000  0.200  0.000   R1
-MuonHitChecker             INFO 17.800  4.200  0.000  0.000  0.000   R2
-MuonHitChecker             INFO 14.800  0.000  0.000  0.000  0.000   R3
-MuonHitChecker             INFO 14.800  0.400  0.000  0.200  0.000   R4
+MuonHitChecker             INFO  M1        M2        M3        M4        M5
+MuonHitChecker             INFO 17.200  6.000  0.000  0.000  0.000   R1
+MuonHitChecker             INFO 16.400  7.400  0.000  0.000  0.000   R2
+MuonHitChecker             INFO 9.800  2.400  0.800  0.000  0.000   R3
+MuonHitChecker             INFO 16.200  5.200  0.800  1.000  0.000   R4
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO -------    Integrated over regions    ---------------------------
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO 54.000  11.800  0.000  0.400  0.000   allR
+MuonHitChecker             INFO 59.600  21.000  1.600  1.000  0.000   allR
 MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
+MuonMultipleScatterin...SUCCESS Booked 18 Histogram(s) : 2D=18
 GaussTape                  INFO Events output: 5
 EventLoopMgr               INFO Histograms converted successfully according to request.
 ToolSvc                    INFO Removing all tools created by ToolSvc
-GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
-GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
+GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2
+GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.14 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO DetectorsHits                 |     9.399 |     9.558 |    1.829      25.5 |       5 |     0.048 |
-ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     1.200 |     0.766 |    0.071       2.3 |       5 |     0.004 |
-ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.048 |    0.028       0.1 |       5 |     0.000 |
-ToolSvc.SequencerTime...   INFO   GetTTHits                   |     0.600 |     0.607 |    0.026       2.0 |       5 |     0.003 |
-ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.000 |     0.484 |    0.027       1.5 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetOTHits                   |     1.200 |     1.033 |    0.027       3.1 |       5 |     0.005 |
-ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     1.200 |     1.272 |    0.026       3.6 |       5 |     0.006 |
-ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.400 |     0.356 |    0.023       1.2 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.400 |     0.331 |    0.018       0.8 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.000 |     1.051 |    0.017       2.3 |       5 |     0.005 |
-ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.200 |     0.190 |    0.017       0.4 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   RichHits                    |     3.200 |     3.410 |    0.518       8.2 |       5 |     0.017 |
+ToolSvc.SequencerTime...   INFO DetectorsHits                 |     7.999 |     8.135 |    0.864      20.7 |       5 |     0.041 |
+ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     0.800 |     0.572 |    0.037       1.5 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.033 |    0.020       0.1 |       5 |     0.000 |
+ToolSvc.SequencerTime...   INFO   GetTTHits                   |     0.400 |     0.472 |    0.019       1.3 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.200 |     0.368 |    0.019       1.1 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetOTHits                   |     1.200 |     0.760 |    0.019       1.5 |       5 |     0.004 |
+ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     0.800 |     1.175 |    0.020       2.4 |       5 |     0.006 |
+ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.600 |     0.333 |    0.016       0.9 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.200 |     0.350 |    0.013       0.7 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.200 |     1.264 |    0.013       2.3 |       5 |     0.006 |
+ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.400 |     0.302 |    0.013       0.8 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   RichHits                    |     2.200 |     2.498 |    0.404       8.1 |       5 |     0.012 |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -618,98 +960,99 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 53213.711 | 60564.799 |   47.269  278472.4 |       5 |   302.824 |
-TimingAuditor.TIMER        INFO  Gauss                        | 52267.854 | 58530.478 |   43.318  268394.2 |       5 |   292.652 |
-TimingAuditor.TIMER        INFO   Generator                   |    13.198 |    16.427 |    2.208      57.4 |       5 |     0.082 |
-TimingAuditor.TIMER        INFO    GaussGen                   |     1.000 |     0.875 |    0.291       2.8 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO    Generation                 |    11.998 |    15.332 |    1.784      53.9 |       5 |     0.077 |
-TimingAuditor.TIMER        INFO    GenMonitor                 |     0.200 |     0.182 |    0.055       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.200 |     0.176 |    0.050       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO   Simulation                  | 52254.656 | 58514.034 |   41.102  268336.8 |       5 |   292.570 |
-TimingAuditor.TIMER        INFO    GaussSim                   |     0.200 |     0.384 |    0.187       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.006 |    0.004       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 30471.768 | 36046.133 |    0.002  180230.7 |       5 |   180.231 |
-TimingAuditor.TIMER        INFO    GenerationToSimulation     | 12775.258 | 13289.072 |    0.341   66429.3 |       5 |    66.445 |
-TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         |  8987.034 |  9157.712 |   29.480   21614.0 |       5 |    45.789 |
-TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.012 |    0.005       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     1.000 |     1.388 |    0.277       4.4 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO    DetectorsHits              |     9.399 |     9.561 |    1.832      25.5 |       5 |     0.048 |
-TimingAuditor.TIMER        INFO     GetVeloHits               |     1.200 |     0.762 |    0.067       2.3 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.041 |    0.025       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO     GetTTHits                 |     0.600 |     0.602 |    0.024       2.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     GetITHits                 |     0.000 |     0.478 |    0.024       1.5 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GetOTHits                 |     1.200 |     1.025 |    0.023       3.1 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO     GetMuonHits               |     1.200 |     1.262 |    0.023       3.6 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO     GetSpdHits                |     0.200 |     0.348 |    0.020       1.2 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GetPrsHits                |     0.400 |     0.326 |    0.015       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GetEcalHits               |     1.000 |     1.045 |    0.015       2.3 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO     GetHcalHits               |     0.200 |     0.179 |    0.015       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     RichHits                  |     3.200 |     3.406 |    0.517       8.2 |       5 |     0.017 |
-TimingAuditor.TIMER        INFO      GetRichHits              |     1.200 |     1.092 |    0.093       2.3 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      GetRichPhotons           |     0.600 |     0.410 |    0.041       1.1 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      GetRichSegments          |     0.600 |     0.819 |    0.042       2.6 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      GetRichTracks            |     0.600 |     0.400 |    0.024       1.3 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.000 |     0.153 |    0.039       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     0.200 |     0.492 |    0.026       1.7 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    SimMonitor                 |     7.799 |     8.041 |    0.498      27.3 |       5 |     0.040 |
-TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.000 |     0.198 |    0.141       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.600 |     0.196 |    0.034       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.000 |     0.245 |    0.096       0.7 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     DetectorsMonitor          |     7.199 |     7.384 |    0.214      25.8 |       5 |     0.037 |
-TimingAuditor.TIMER        INFO      VeloGaussMoni            |     3.799 |     3.690 |    0.035      14.6 |       5 |     0.018 |
-TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.400 |     0.354 |    0.019       1.4 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.000 |     0.210 |    0.009       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      OTHitMonitor             |     0.400 |     0.365 |    0.009       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      SpdMonitor               |     0.400 |     0.495 |    0.038       1.6 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      PrsMonitor               |     0.800 |     0.705 |    0.020       2.1 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      EcalMonitor              |     0.800 |     0.776 |    0.021       2.2 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO      HcalMonitor              |     0.200 |     0.273 |    0.019       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      MuonHitChecker           |     0.200 |     0.478 |    0.025       1.4 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    PackMCParticle             |     0.800 |     0.518 |    0.053       1.5 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO    PackMCVertex               |     0.400 |     0.282 |    0.027       0.7 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    TestMCVertex               |     0.400 |     0.301 |    0.035       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    TestMCParticle             |     0.400 |     0.260 |    0.032       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    CompareMCParticle          |     0.000 |     0.161 |    0.021       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    CompareMCVertex            |     0.200 |     0.086 |    0.016       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO  GaussTape                    |   945.456 |  2033.915 |    3.846   10077.2 |       5 |    10.170 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 38037.818 | 38388.799 |   33.593  175110.2 |       5 |   191.944 |
+TimingAuditor.TIMER        INFO  Gauss                        | 37413.713 | 37731.423 |   30.211  171888.1 |       5 |   188.657 |
+TimingAuditor.TIMER        INFO   Generator                   |     8.399 |     8.729 |    1.661      25.1 |       5 |     0.044 |
+TimingAuditor.TIMER        INFO    GaussGen                   |     0.200 |     0.670 |    0.340       1.9 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO    Generation                 |     7.999 |     7.898 |    1.266      22.8 |       5 |     0.039 |
+TimingAuditor.TIMER        INFO    GenMonitor                 |     0.200 |     0.138 |    0.037       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.200 |     0.134 |    0.035       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO   Simulation                  | 37405.114 | 37722.682 |   28.544  171862.9 |       5 |   188.613 |
+TimingAuditor.TIMER        INFO    GaussSim                   |     0.000 |     0.331 |    0.197       0.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.004 |    0.003       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 21767.091 | 21962.332 |    0.002  109811.7 |       5 |   109.812 |
+TimingAuditor.TIMER        INFO    GenerationToSimulation     |  9666.530 |  9725.329 |    0.180   48615.5 |       5 |    48.627 |
+TimingAuditor.TIMER        INFO    GiGaFlushAlgorithm         |  5951.496 |  6013.125 |   20.939   13378.9 |       5 |    30.066 |
+TimingAuditor.TIMER        INFO    GiGaCheckEventStatus       |     0.000 |     0.008 |    0.003       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    SimulationToMCTruth        |     0.800 |     1.377 |    0.150       4.2 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO    DetectorsHits              |     7.999 |     8.137 |    0.866      20.7 |       5 |     0.041 |
+TimingAuditor.TIMER        INFO     GetVeloHits               |     0.800 |     0.568 |    0.034       1.5 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO     GetPuVetoHits             |     0.000 |     0.030 |    0.019       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO     GetTTHits                 |     0.400 |     0.468 |    0.017       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GetITHits                 |     0.200 |     0.365 |    0.017       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GetOTHits                 |     1.200 |     0.755 |    0.018       1.5 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO     GetMuonHits               |     0.800 |     1.170 |    0.018       2.3 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO     GetSpdHits                |     0.600 |     0.329 |    0.014       0.9 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GetPrsHits                |     0.200 |     0.346 |    0.011       0.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     GetEcalHits               |     1.200 |     1.260 |    0.011       2.3 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO     GetHcalHits               |     0.400 |     0.294 |    0.011       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     RichHits                  |     2.000 |     2.493 |    0.402       8.1 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO      GetRichHits              |     0.600 |     0.795 |    0.084       2.5 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO      GetRichPhotons           |     0.400 |     0.282 |    0.025       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      GetRichSegments          |     0.400 |     0.558 |    0.029       1.9 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO      GetRichTracks            |     0.400 |     0.438 |    0.018       1.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      MCPartToMCRichTrack      |     0.000 |     0.184 |    0.028       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      MCRichHitToMCRichOpPhot  |     0.200 |     0.210 |    0.021       0.6 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    SimMonitor                 |     9.998 |    10.563 |    0.464      28.4 |       5 |     0.053 |
+TimingAuditor.TIMER        INFO     GiGaGetEventAlg           |     0.000 |     0.237 |    0.063       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     MCTruthMonitor            |     0.200 |     0.217 |    0.026       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GiGaGetHitsAlg            |     0.600 |     0.254 |    0.071       0.9 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     DetectorsMonitor          |     9.199 |     9.841 |    0.167      26.5 |       5 |     0.049 |
+TimingAuditor.TIMER        INFO      VeloGaussMoni            |     3.599 |     4.360 |    0.025      18.5 |       5 |     0.022 |
+TimingAuditor.TIMER        INFO      TTHitMonitor             |     0.200 |     0.286 |    0.013       1.0 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      ITHitMonitor             |     0.200 |     0.145 |    0.006       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      OTHitMonitor             |     0.400 |     0.298 |    0.006       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      SpdMonitor               |     0.400 |     0.420 |    0.026       1.4 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      PrsMonitor               |     0.400 |     0.457 |    0.015       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      EcalMonitor              |     0.600 |     0.538 |    0.014       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO      HcalMonitor              |     0.400 |     0.214 |    0.015       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      MuonHitChecker           |     0.400 |     0.416 |    0.018       1.1 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      MuonMultipleScatteringChe|     2.600 |     2.676 |    0.014      12.9 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO    PackMCParticle             |     0.400 |     0.432 |    0.031       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO    PackMCVertex               |     0.200 |     0.239 |    0.020       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    TestMCVertex               |     0.200 |     0.275 |    0.022       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    TestMCParticle             |     0.200 |     0.251 |    0.022       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    CompareMCParticle          |     0.200 |     0.130 |    0.014       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    CompareMCVertex            |     0.000 |     0.068 |    0.013       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO  GaussTape                    |   624.105 |   657.065 |    3.323    3221.3 |       5 |     3.285 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 2888     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
+GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 1665     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:C4569DF5-EB49-DE11-A78F-00304879EE40[Gauss-5ev-20090526.sim]
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:F4D8DFBE-D65F-DE11-8E3E-000423D94890[Gauss-5ev-20090623.sim]
 XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 44.7  [s] Ave/Min/Max= 8.94(+- 8.25)/ 0.03/   21  [s] #=  5
-ChronoStatSvc              INFO Time User   : Tot=  319  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot= 29.7  [s] Ave/Min/Max= 5.94(+- 5.03)/ 0.02/ 13.1  [s] #=  5
+ChronoStatSvc              INFO Time User   : Tot=  223  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO      Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-******Stat******           INFO  "#VeloPU MCHits |         5 |         51 |     10.200 |     9.4319 |      0.0000 |      25.000 |
-******Stat******           INFO  "#MCRichTracks" |         5 |         78 |     15.600 |     17.602 |      0.0000 |      43.000 |
-******Stat******           INFO  "#MCRichSegment |         5 |        100 |     20.000 |     23.452 |      0.0000 |      58.000 |
-******Stat******           INFO  "#TT MCHits"    |         5 |        230 |     46.000 |     48.613 |      0.0000 |      124.00 |
-******Stat******           INFO  "#Muon MCHits"  |         5 |        331 |     66.200 |     68.537 |      0.0000 |      153.00 |
-******Stat******           INFO  "#IT MCHits"    |         5 |        356 |     71.200 |     72.981 |      0.0000 |      173.00 |
-******Stat******           INFO  "#Hcal MCHits"  |         5 |        433 |     86.600 |     72.243 |      0.0000 |      177.00 |
-******Stat******           INFO  "#OT MCHits"    |         5 |        671 |     134.20 |     152.78 |      0.0000 |      347.00 |
-******Stat******           INFO  "#Velo MCHits"  |         5 |        856 |     171.20 |     150.96 |      0.0000 |      381.00 |
-******Stat******           INFO  "#Rich1 MCHits" |         5 |       1148 |     229.60 |     317.80 |      0.0000 |      834.00 |
-******Stat******           INFO  "#Spd MCHits"   |         5 |       1213 |     242.60 |     271.04 |      0.0000 |      589.00 |
-******Stat******           INFO  "#Rich2 MCHits" |         5 |       1316 |     263.20 |     315.39 |      0.0000 |      804.00 |
-******Stat******           INFO  "#MCParticles"  |         5 |       1500 |     300.00 |     272.15 |      12.000 |      653.00 |
-******Stat******           INFO  "#Prs MCHits"   |         5 |       2434 |     486.80 |     564.14 |      0.0000 |      1337.0 |
-******Stat******           INFO  "#MCRichOpPhoto |         5 |       2464 |     492.80 |     628.31 |      0.0000 |      1638.0 |
-******Stat******           INFO  "#Rich MCHits"  |         5 |       2464 |     492.80 |     628.31 |      0.0000 |      1638.0 |
-******Stat******           INFO  "#Ecal MCHits"  |         5 |       2834 |     566.80 |     537.04 |      0.0000 |      1214.0 |
+******Stat******           INFO  "#VeloPU MCHits |         5 |         53 |     10.600 |     10.072 |      0.0000 |      27.000 |
+******Stat******           INFO  "#MCRichTracks" |         5 |         62 |     12.400 |     10.480 |      0.0000 |      27.000 |
+******Stat******           INFO  "#MCRichSegment |         5 |         87 |     17.400 |     16.488 |      0.0000 |      42.000 |
+******Stat******           INFO  "#TT MCHits"    |         5 |        256 |     51.200 |     52.255 |      0.0000 |      136.00 |
+******Stat******           INFO  "#IT MCHits"    |         5 |        288 |     57.600 |     60.235 |      0.0000 |      155.00 |
+******Stat******           INFO  "#Muon MCHits"  |         5 |        416 |     83.200 |     67.274 |      0.0000 |      146.00 |
+******Stat******           INFO  "#Rich2 MCHits" |         5 |        456 |     91.200 |     92.413 |      0.0000 |      224.00 |
+******Stat******           INFO  "#Hcal MCHits"  |         5 |        477 |     95.400 |     81.794 |      0.0000 |      203.00 |
+******Stat******           INFO  "#OT MCHits"    |         5 |        687 |     137.40 |     126.34 |      0.0000 |      348.00 |
+******Stat******           INFO  "#Velo MCHits"  |         5 |        879 |     175.80 |     157.29 |      0.0000 |      402.00 |
+******Stat******           INFO  "#Rich1 MCHits" |         5 |        960 |     192.00 |     249.88 |      0.0000 |      655.00 |
+******Stat******           INFO  "#Spd MCHits"   |         5 |       1287 |     257.40 |     213.14 |      0.0000 |      507.00 |
+******Stat******           INFO  "#Rich MCHits"  |         5 |       1416 |     283.20 |     272.95 |      0.0000 |      711.00 |
+******Stat******           INFO  "#MCRichOpPhoto |         5 |       1416 |     283.20 |     272.95 |      0.0000 |      711.00 |
+******Stat******           INFO  "#MCParticles"  |         5 |       1555 |     311.00 |     212.83 |      12.000 |      642.00 |
+******Stat******           INFO  "#Prs MCHits"   |         5 |       2079 |     415.80 |     344.52 |      0.0000 |      799.00 |
+******Stat******           INFO  "#Ecal MCHits"  |         5 |       2444 |     488.80 |     387.56 |      0.0000 |      890.00 |
 ******Stat******           INFO ****************************************************************************************************
-ChronoStatSvc.finalize()   INFO  Service finalized succesfully 
+ChronoStatSvc.finalize()   INFO  Service finalized succesfully
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'EcalSensDet/GiGaGeo.Ecal' Counts = 1
