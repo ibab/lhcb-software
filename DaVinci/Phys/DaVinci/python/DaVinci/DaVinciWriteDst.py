@@ -1,7 +1,7 @@
 """
 Dst Writing for DaVinci
 """
-__version__ = "$Id: DaVinciWriteDst.py,v 1.7 2009-06-02 14:28:23 pkoppenb Exp $"
+__version__ = "$Id: DaVinciWriteDst.py,v 1.8 2009-06-23 15:10:27 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -50,6 +50,7 @@ class DaVinciWriteDst(ConfigurableUser):
         Write out a DST using a sequence
         """
         log.info("DaVinciWriteDst::writeDst "+filename)
+        log(self)
         stream = self.streamName(filename)
         from Configurables import ApplicationMgr, InputCopyStream  
         writer = InputCopyStream( stream )
