@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.88 2009-06-04 13:36:05 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.89 2009-06-23 16:37:55 fsoomro Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -31,6 +31,7 @@ from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
+from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
 
 from HltConf.Hlt1             import Hlt1Conf
 from RichRecSys.Configuration import *
@@ -55,7 +56,8 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
                              , Hlt2TopologicalLinesConf
-                             , RichRecSysConf ]
+                             , RichRecSysConf
+                             , Hlt2XGammaLinesConf  ]
     __slots__ = { "L0TCK"                      : ''
                 , "HltType"                    : 'Hlt1+Hlt2'
                 , "DataType"                   : '2009'
@@ -168,7 +170,8 @@ class HltConf(LHCbConfigurableUser):
                 Hlt2InclusiveMuonLinesConf()
                 Hlt2InclusivePhiLinesConf()
                 Hlt2TopologicalLinesConf()
-
+                Hlt2XGammaLinesConf()
+                  
 
 
     def configureRoutingBits(self) :
