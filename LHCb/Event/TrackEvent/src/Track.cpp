@@ -233,10 +233,10 @@ void Track::addToMeasurements( MeasurementContainer& measurements )
 // Remove an LHCbID from the list of LHCbIDs associated to the Track
 //=============================================================================
 void Track::removeFromLhcbIDs( const LHCbID& value )
-{
-  std::vector<LHCbID>::iterator iter =
-    std::remove( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
-  m_lhcbIDs.erase( iter, m_lhcbIDs.end() );
+{ 
+  LHCbIDContainer::iterator pos =
+    std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
+  m_lhcbIDs.erase( pos ) ;
   const Measurement* meas = measurement( value );
   if( meas ) removeFromMeasurements( meas );
 };
@@ -277,13 +277,41 @@ void Track::removeFromNodes( Node* node )
 };
 
 //=============================================================================
+// Add LHCbIDs to track
+//=============================================================================
+bool Track::addToLhcbIDs( const LHCb::LHCbID& value ) 
+{
+  LHCbIDContainer::iterator pos =
+    std::lower_bound( m_lhcbIDs.begin(),m_lhcbIDs.end(),value ) ;
+  bool rc = !( (*pos) == value ) ;
+  if( rc ) m_lhcbIDs.insert( pos, value ) ;
+  return rc ;
+}
+
+//=============================================================================
+// Add LHCbIDs to track
+//=============================================================================
+bool Track::addSortedToLhcbIDs( const LHCbIDContainer& ids ) 
+{
+  LHCbIDContainer result( ids.size() + m_lhcbIDs.size() ) ;
+  std::merge( m_lhcbIDs.begin(),m_lhcbIDs.end(),
+	      ids.begin(), ids.end(), result.begin() ) ;
+  LHCbIDContainer::iterator pos  = std::unique( result.begin(), result.end() ) ;
+  bool rc = pos == result.end() ;
+  result.erase( pos, result.end() ) ;
+  m_lhcbIDs.swap( result ) ;
+  return rc ;
+}  
+
+//=============================================================================
 // Check whether the given LHCbID is on the Track
 //=============================================================================
-bool Track::isOnTrack( const LHCbID& value ) const
+bool Track::isOnTrack( const LHCb::LHCbID& value ) const
 {
-  return ( std::find( m_lhcbIDs.begin(), m_lhcbIDs.end(), value )
-           != m_lhcbIDs.end() );
-};
+  LHCbIDContainer::const_iterator pos =
+    std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
+  return pos != m_lhcbIDs.end() && *pos == value ;
+} ;
 
 //=============================================================================
 // Check whether the given Measurement is on the Track

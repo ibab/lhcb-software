@@ -194,6 +194,13 @@
    />
 
    <typedef
+        type   = "std::vector&lt;LHCb::LHCbID&gt;"
+        def    = "LHCbIDContainer"
+        desc   = "Container for LHCb::LHCbIDs on track"
+        access = "PUBLIC"
+   />
+
+   <typedef
         type   = "std::vector&lt;LHCb::Measurement*&gt;"
         def    = "MeasurementContainer"
         desc   = "Container for LHCb::Measurements on track"
@@ -234,6 +241,7 @@
       setHistory(history);
       setType(trackType);
       setPatRecStatus( patStatus ); 
+      std::sort( m_lhcbIDs.begin(),m_lhcbIDs.end() ) ; 
       </code>
       </constructor>
 
@@ -337,7 +345,7 @@
       <attribute
         type      = 'std::vector&lt;LHCb::LHCbID&gt;'
         name      = 'lhcbIDs'
-        desc      = 'Container of LHCbIDs'
+        desc      = 'Container of (sorted) LHCbIDs'
         access    = 'PROTECTED' />
 
       <attribute
@@ -724,14 +732,53 @@
       </method>
 
      <method
-        name    = 'addToLhcbIDs'
-        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the track'
-        argList = 'LHCb::LHCbID value'>
-        <code>
-  if ( !isOnTrack( value ) ) m_lhcbIDs.push_back( value );
-        </code>
+       name    = 'addToLhcbIDs'
+       desc    = 'Add an LHCbID to the list of LHCbIDs associated to the track. Return true if LHCbID was not yet on track.'
+       type    = 'bool'
+       argList = 'LHCb::LHCbID value'>
       </method>
 
+     <method
+       name    = 'addSortedToLhcbIDs'
+       desc    = 'Add a sorted (!) vector of LHCbID to the list of LHCbIDs associated to the track. Returns true if none of the LHCb ids was on the track.'
+       type    = 'bool'
+       argList = 'LHCbIDContainer value'>
+      </method>
+
+     <method
+       name    = 'addToLhcbIDs'
+       desc    = 'Add an unsorted vector of LHCbID to the list of LHCbIDs associated to the track. The vector will first be sorted, which makes this more expensive than the method above. Returns true if none of the LHCb ids was on the track.'
+       type    = 'bool'
+       argList = 'LHCbIDContainer value'>
+<code>
+  LHCbIDContainer copy(value) ;
+  std::sort( copy.begin(), copy.end() ) ;
+  return addSortedToLhcbIDs( copy ) ;
+</code>
+      </method>
+
+     <method
+       name    = 'containsLhcbIDs'
+       desc    = 'Returns true if the LHCbIDs of track are a subset is the LHCbIDs of this track.'
+       type    = 'bool'
+       argList = 'Track track'>
+<code>
+  return containsLhcbIDs( track.lhcbIDs() ) ;
+</code>
+      </method>
+
+       <method
+       name    = 'containsLhcbIDs'
+       desc    = 'Returns true if LHCbIDs in ids are a subset is the LHCbIDs of this track.'
+       type    = 'bool'
+       argList = 'LHCbIDContainer ids'>
+<code>
+  return std::includes( m_lhcbIDs.begin(),m_lhcbIDs.end(),
+                        ids.begin(),ids.end() ) ;
+</code>
+      </method>
+
+      
      <method
         name    = 'removeFromLhcbIDs'
         desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the track'
