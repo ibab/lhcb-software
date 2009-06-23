@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.133 2009-06-12 16:14:29 pkoppenb Exp $
+!$Id: release.notes,v 1.134 2009-06-23 14:26:37 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v5r3 2009-06-23 ===================
 ! 2009-06-12 - Patrick Koppenburg
  - Adapt NoPIDs options not to use obsolete options UseDownstreamTracks 
    and similar. Requires tag pkoppenb_20090612 of ParticleMaker. 
