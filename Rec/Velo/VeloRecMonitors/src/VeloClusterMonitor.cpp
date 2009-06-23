@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.20 2009-06-07 12:45:07 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.21 2009-06-23 12:49:26 krinnert Exp $
 // Include files 
 // -------------
 
@@ -52,6 +52,7 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
       m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "RSensorNumbersForPlots",   m_rSensorNumbers );
   declareProperty( "PhiSensorNumbersForPlots", m_phiSensorNumbers );
+  declareProperty( "RCorrelationPlots", m_rCorrelationPlots=false );
   declareProperty( "PerSensorPlots", m_perSensorPlots=false );
   declareProperty( "OccupancyPlots", m_occupancyPlots=false );
   declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
@@ -70,6 +71,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
+  // try to find TAE sample name in algo instance name (for histo titles)
   std::string tmpTae = name();
   size_t posPrev = tmpTae.find("Prev");
   size_t posNext = tmpTae.find("Next");
@@ -81,7 +83,79 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
     m_tae = "Default";
   }
 
+  // find the largest sensor number from detector element (to avoid making any assumptions
+  // about the sensor nubmering scheme)
+  unsigned int maxSensNum = 0;
+  for ( std::vector<DeVeloSensor*>::const_reverse_iterator si = m_veloDet->sensorsReverseBegin();
+      si != m_veloDet->sensorsReverseEnd(); ++si ) {
+    if ( (*si)->sensorNumber() > maxSensNum ) {
+      maxSensNum = (*si)->sensorNumber();
+    }
+  }
+  
+  std::string nCluTitle = "Number of VeloClusters per event, " + m_tae;
+  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, -0.5, 20000.5, 2000 );
+  m_hCluSize = book1D( "Cluster size", "Number of strips per cluster", -0.5, 5.5, 6 );
+  m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster", -0.5, 128*4+0.5, 128*4+1 );
+  m_hCluADCR = book1D( "Cluster ADC value (R)", "ADC value per cluster (R)", -0.5, 128*4+0.5, 128*4+1 );
+  m_hCluADCPhi = book1D( "Cluster ADC value (Phi)", "ADC value per cluster (Phi)", -0.5, 128*4+0.5, 128*4+1 );
+  m_hSeedADC = book1D( "ADC value of cluster seed strips", "ADC value of cluster seed strips", -0.5, 128*1+0.5, 128*1+1 );
+  m_hSeedADCR = book1D( "ADC value of cluster seed strips (R)", "ADC value of cluster seed strips (R)", -0.5, 128*1+0.5, 128*1+1 );
+  m_hSeedADCPhi = book1D( "ADC value of cluster seed strips (Phi)", "ADC value of cluster seed strips (Phi)", -0.5, 128*1+0.5, 128*1+1 );
+  m_hIncADC = book1D( "ADC value of cluster include strips", "ADC value of cluster include strips", -0.5, 128*0.5+0.5, 65 );
+  m_hIncADCR = book1D( "ADC value of cluster include strips (R)", "ADC value of cluster include strips (R)", -0.5, 128*0.5+0.5, 65 );
+  m_hIncADCPhi = book1D( "ADC value of cluster include strips (Phi)", "ADC value of cluster include strips (Phi)", -0.5, 128*0.5+0.5, 65 );
+  m_hCluSizeSens = book2D( "Cluster size vs sensor", "Number of strips per cluster versus sensor", -0.5, 131.5, 132, -0.5, 5.5, 6 );
+  m_hCluADCSens = book2D( "Cluster ADC values vs sensor", "Cluster ADC values versus sensor", -0.5, 131.5, 132, 0, 515,  103 );
+  m_hActiveLinkSens = book2D( "Active chip links vs sensor", "Active chip links versus sensor", -0.5, 131.5, 132, -0.5, 63.5, 64 );
+
+  if ( m_rCorrelationPlots ) {
+    for ( unsigned int s=0; s<m_rSensorNumbers.size(); ++s ) {
+      std::string sn = boost::lexical_cast<std::string>( s );
+      std::string hCorrName = "R-Sensors R_s(i+2)-R_s(i+4) vs R_s(i)-R_s(i+2), i=" + sn;
+      m_hRCorr[s] = book2D( hCorrName, hCorrName, -10.5, 10.5, 41, -10.5, 10.5, 41 );
+      sn  = sn + "-" + boost::lexical_cast<std::string>( s+2 );
+      m_hRDiff[s] = book1D( "Sensors R diff. (" + sn + ")", "Sensors R difference (sensors " + sn + ")", -10.5, 10.5, 41 ); 
+    }
+  }
+  
+  if ( m_perSensorPlots ) {
+    m_hNCluSens.resize(maxSensNum+1,0);
+    
+    for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
+        si != m_veloDet->sensorsEnd();
+        ++si ) {
+        unsigned int s = (*si)->sensorNumber();
+        boost::format fmtEvt ( "# clusters sensor %d" ) ;
+        fmtEvt % s ;
+        const std::string hName = fmtEvt.str() ;
+        m_hNCluSens[s] = book1D( hName, hName, -0.5, 200.5, 201 );
+    }
+  }
+  
   if ( m_occupancyPlots ) {
+    m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
+    m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
+
+    for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
+        si != m_veloDet->sensorsEnd();
+        ++si ) {
+        unsigned int s = (*si)->sensorNumber();
+      
+        boost::format fmtName ( "OccPerStripSens%d" ) ;
+        fmtName % s;
+        boost::format fmtTitle ( "Strip Occupancy, Sensor %d, " ) ;
+        fmtTitle % s;
+
+        m_stripOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str()+m_tae, -0.5, 2047.5, 2048)); 
+        
+        boost::format fmtNameCh ( "OccPerChannelSens%d" ) ;
+        fmtNameCh % s;
+        boost::format fmtTitleCh ( "Channel Occupancy, Sensor %d, " ) ;
+        fmtTitleCh % s;
+
+        m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), fmtTitleCh.str()+m_tae, -0.5, 2047.5, 2048)); 
+    }
     m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
     m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
     m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
@@ -104,29 +178,23 @@ StatusCode Velo::VeloClusterMonitor::execute() {
   if ( m_occupancyPlots ) {
     if ( 0 == m_occupancyDenom % m_occupancyResetFreq ) {
       m_occupancyDenom = 1;
-      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_stripOccupancyHistPerSensor.begin();
-          hIt != m_stripOccupancyHistPerSensor.end(); 
-          ++hIt ) {
-        hIt->second->Reset();
-      }
-      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_channelOccupancyHistPerSensor.begin();
-          hIt != m_channelOccupancyHistPerSensor.end(); 
-          ++hIt ) {
-        hIt->second->Reset();
+      for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
+          si != m_veloDet->sensorsEnd();
+          ++si ) {
+        unsigned int s = (*si)->sensorNumber();
+        m_stripOccupancyHistPerSensor[s]->Reset();
+        m_channelOccupancyHistPerSensor[s]->Reset();
       }
       m_histOccSpectAll->Reset();
       m_histOccSpectLow->Reset();
     } else {
       ++m_occupancyDenom;
-      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_stripOccupancyHistPerSensor.begin();
-          hIt != m_stripOccupancyHistPerSensor.end(); 
-          ++hIt ) {
-        hIt->second->Scale((m_occupancyDenom-1.0)/m_occupancyDenom);
-      }
-      for (  std::map< unsigned int,  TH1D* >::iterator hIt = m_channelOccupancyHistPerSensor.begin();
-          hIt != m_channelOccupancyHistPerSensor.end(); 
-          ++hIt ) {
-        hIt->second->Scale((m_occupancyDenom-1.0)/m_occupancyDenom);
+      for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
+          si != m_veloDet->sensorsEnd();
+          ++si ) {
+        unsigned int s = (*si)->sensorNumber();
+        m_stripOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
+        m_channelOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
       }
     }
   }
@@ -185,13 +253,10 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   // ----------------------------
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
-  std::string nCluTitle = "Number of VeloClusters per event, " + m_tae;
   if ( nclus > 0 && nclus < 20000 )
-    plot1D( nclus, "# VELO clusters", nCluTitle,
-        -0.5, 20000.5, 2000 );
+    m_hNCluEvt->fill(nclus);
   else if ( nclus > 0 )
-    plot1D( 20000, "# VELO clusters", nCluTitle,
-        -0.5, 20000.5, 2000 );
+    m_hNCluEvt->fill(20000);
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
@@ -204,10 +269,8 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     unsigned int nstrips = cluster -> size();    
     double adc           = cluster -> totalCharge();
 
-    plot1D( nstrips, "Cluster size", "Number of strips per cluster",
-        -0.5, 5.5, 6 );
-    plot1D( adc, "Cluster ADC value", "ADC value per cluster",
-        -0.5, 128*4+0.5, 128*4+1 );
+    m_hCluSize->fill(nstrips);
+    m_hCluADC->fill(adc);
 
     //find the strip with the highest charge (seed strip)
     unsigned int iseedstrip=0;
@@ -218,13 +281,12 @@ void Velo::VeloClusterMonitor::monitorClusters() {
         adcseedstrip=cluster ->adcValue(j);
       }
     }
-    plot1D( adcseedstrip, "ADC value of cluster seed strips", "ADC value of cluster seed strips",
-        -0.5, 128*1+0.5, 128*1+1 );
+    m_hSeedADC->fill(adcseedstrip);
     if (cluster->isRType()) { 
-      plot1D( adcseedstrip, "ADC value of cluster seed strips (R)", "ADC value of cluster seed strips (R)", -0.5, 128*1+0.5, 128*1+1 );
+      m_hSeedADCR->fill(adcseedstrip);
     }
     if (cluster->isPhiType()) {
-      plot1D( adcseedstrip, "ADC value of cluster seed strips (Phi)", "ADC value of cluster seed strips (Phi)", -0.5, 128*1+0.5, 128*1+1 );
+      m_hSeedADCPhi->fill(adcseedstrip);
     }
 
     //plot the adc values of the include strips
@@ -232,22 +294,22 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     for (unsigned int j=0; j<nstrips; ++j) {
       double adcstrip=cluster -> adcValue(j);
       if (j!=iseedstrip) {
-        plot1D( adcstrip, "ADC value of cluster include strips", "ADC value of cluster include strips", -0.5, 128*0.5+0.5, 65 );
+        m_hIncADC->fill(adcstrip);
         if (cluster->isRType()) {
-          plot1D( adcstrip, "ADC value of cluster include strips (R)", "ADC value of cluster include strips (R)", -0.5, 128*0.5+0.5, 65 );
+          m_hIncADC->fill(adcstrip);
         }
         if (cluster->isPhiType()) { 
-          plot1D( adcstrip, "ADC value of cluster include strips (Phi) ", "ADC value of cluster include strips (Phi)", -0.5, 128*0.5+0.5, 65 );
+          m_hIncADC->fill(adcstrip);
         }
       }
     }
 
     if( cluster -> isRType() ) {
-      plot1D( adc, "Cluster ADC value (R)", "ADC value per cluster (R)", -0.5, 128*4+0.5, 128*4+1 );
+      m_hCluADCR->fill(adc);
     }
 
     if( cluster -> isPhiType() ) {
-      plot1D( adc, "Cluster ADC value (Phi)", "ADC value per cluster (Phi)", -0.5, 128*4+0.5, 128*4+1 );
+      m_hCluADCPhi->fill(adc);
     }
 
     // Number of strips and total charge versus the sensor number
@@ -256,12 +318,8 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
     ++m_nClustersPerSensor[sensorNumber];
 
-    plot2D( sensorNumber, nstrips, "Cluster size vs sensor",
-        "Number of strips per cluster versus sensor",
-        -0.5, 131.5, -0.5, 5.5, 132, 6 );
-    plot2D( sensorNumber, adc, "Cluster ADC values vs sensor",
-        "Cluster ADC values versus sensor",
-        -0.5, 131.5, 0, 515, 132, 103 );
+    m_hCluSizeSens->fill(sensorNumber, nstrips);
+    m_hCluADCSens->fill(sensorNumber, adc);
 
 
     // Active chip links versus sensor number
@@ -271,35 +329,15 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     unsigned int stripNumber   = cluster -> channelID().strip();
     unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
     unsigned int activeLink = chipChannel/32;
-    plot2D( sensorNumber, activeLink, "Active chip links vs sensor",
-        "Active chip links versus sensor",
-        -0.5, 131.5, -0.5, 63.5, 132, 64 );
+    m_hActiveLinkSens->fill(sensorNumber, activeLink);
 
     // Produce occupancy plots
     // -----------------------
     if ( m_occupancyPlots ) {
       TH1D* occHist = 0;
       TH1D* occHistCh = 0;
-      if ( m_stripOccupancyHistPerSensor.end() == m_stripOccupancyHistPerSensor.find(sensorNumber) ) {
-        boost::format fmtName ( "OccPerStripSens%d" ) ;
-        fmtName % sensorNumber;
-        boost::format fmtTitle ( "Strip Occupancy, Sensor %d, " ) ;
-        fmtTitle % sensorNumber;
-
-        occHist = m_stripOccupancyHistPerSensor[sensorNumber] 
-          = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str()+m_tae, -0.5, 2047.5, 2048)); 
-        
-        boost::format fmtNameCh ( "OccPerChannelSens%d" ) ;
-        fmtNameCh % sensorNumber;
-        boost::format fmtTitleCh ( "Channel Occupancy, Sensor %d, " ) ;
-        fmtTitleCh % sensorNumber;
-
-        occHistCh = m_channelOccupancyHistPerSensor[sensorNumber] 
-          = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), fmtTitleCh.str()+m_tae, -0.5, 2047.5, 2048)); 
-      } else {
-        occHist = m_stripOccupancyHistPerSensor[sensorNumber];
-        occHistCh = m_channelOccupancyHistPerSensor[sensorNumber];
-      }
+      occHist = m_stripOccupancyHistPerSensor[sensorNumber];
+      occHistCh = m_channelOccupancyHistPerSensor[sensorNumber];
       double occ = occHist->GetBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom);
       occHist->SetBinContent(stripNumber+1,occ*100.0);
       occHistCh->SetBinContent(chipChannel+1,occ*100.0);
@@ -307,7 +345,7 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
     // Produce the R correlation plots
     // -------------------------------
-    if ( m_rSensorNumbers.end()
+    if ( m_rCorrelationPlots && m_rSensorNumbers.end()
         != std::find( m_rSensorNumbers.begin(), m_rSensorNumbers.end(), sensorNumber )
         && veloSensor -> isR() ) {
 
@@ -324,15 +362,15 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   if ( m_occupancyPlots ) {
     m_histOccSpectAll->Reset();
     m_histOccSpectLow->Reset();
-    for ( std::map<unsigned int, TH1D*>::iterator iH = m_stripOccupancyHistPerSensor.begin();
-        iH != m_stripOccupancyHistPerSensor.end();
-        ++iH ) {
-      TH1D* h = iH->second;
-      for ( unsigned int s=1; s<2049; ++s) {
-        double occ = h->GetBinContent(s);
+    for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
+        si != m_veloDet->sensorsEnd();
+        ++si ) {
+      unsigned int sens = (*si)->sensorNumber();
+      for ( unsigned int strip=1; strip<2049; ++strip) {
+        double occ = m_stripOccupancyHistPerSensor[sens]->GetBinContent(strip); 
         m_histOccSpectAll->Fill(occ);
         if ( occ <= 20.0 ) {
-         m_histOccSpectLow->Fill(occ);
+          m_histOccSpectLow->Fill(occ);
         }
       }
     }
@@ -342,20 +380,16 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   if ( m_perSensorPlots ) {
     for (unsigned int s=0; s<m_nClustersPerSensor.size(); ++s) {
       if ( 0 == m_nClustersPerSensor[s] ) continue;
-
-      boost::format fmtEvt ( "# clusters sensor %d" ) ;
-      fmtEvt % s ;
-      const std::string hName = fmtEvt.str() ;
-      plot1D( m_nClustersPerSensor[s], hName, hName, -0.5, 200.5, 201 );
-
+      m_hNCluSens[s]->fill(m_nClustersPerSensor[s]);
     }
   }
 
   if ( m_occupancyPlots ) {
-    for ( std::map< unsigned int,  TH1D* >::iterator hIt = m_stripOccupancyHistPerSensor.begin();
-        hIt != m_stripOccupancyHistPerSensor.end(); 
-        ++hIt ) {
-      m_histAvrgSensor->SetBinContent(hIt->first + 1, hIt->second->Integral()/hIt->second->GetNbinsX());
+    for ( unsigned int s=0;  s<m_stripOccupancyHistPerSensor.size(); ++s ) {
+      TH1D* h = m_stripOccupancyHistPerSensor[s];
+      if ( 0 != h ) {
+        m_histAvrgSensor->SetBinContent(s + 1, h->Integral()/h->GetNbinsX());
+      }
     }
   }
 
@@ -370,10 +404,6 @@ void Velo::VeloClusterMonitor::rDifferences( unsigned int sensorNumber1,
 
   LHCb::VeloClusters::const_iterator itVC;
 
-  std::string sn  = boost::lexical_cast<std::string>( sensorNumber1 )
-    + "-"
-    + boost::lexical_cast<std::string>( sensorNumber2 );
-
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
 
     unsigned int sensorNumber = (*itVC) -> channelID().sensor();
@@ -385,8 +415,7 @@ void Velo::VeloClusterMonitor::rDifferences( unsigned int sensorNumber1,
       unsigned int stripNumber = (*itVC) -> channelID().strip(); 
       double localR2           = rSensor -> rOfStrip( stripNumber );      
 
-      plot1D( localR1-localR2, "Sensors R diff. (" + sn + ")",
-          "Sensors R difference (sensors " + sn + ")", -10.5, 10.5, 41 );
+      m_hRDiff[sensorNumber1]->fill( localR1-localR2 );
     }
   }
 }
@@ -417,8 +446,6 @@ void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
 
   }
 
-  std::string sn = boost::lexical_cast<std::string>( sensorNumber1 );
-
   std::vector<LHCb::VeloCluster*>::const_iterator it2, it4;
 
   for ( it2 = clusters2.begin(); it2 != clusters2.end(); ++it2 ) {
@@ -434,10 +461,7 @@ void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
       double localR2 = rSensor2 -> rOfStrip( stripNumber2 );
       double localR4 = rSensor4 -> rOfStrip( stripNumber4 );
 
-      plot2D( localR1-localR2, localR2-localR4,
-          "R-Sensors R_s(i+2)-R_s(i+4) vs R_s(i)-R_s(i+2), i=" + sn,
-          "R-Sensors R_s(i+2)-R_s(i+4) versus R_s(i)-R_s(i+2), i=" + sn,
-          -10.5, 10.5, -10.5, 10.5, 41, 41 );
+      m_hRCorr[sensorNumber1]->fill(localR1-localR2, localR2-localR4);
 
     }
 

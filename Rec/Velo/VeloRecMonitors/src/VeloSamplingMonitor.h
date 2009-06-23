@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.h,v 1.5 2009-06-11 13:29:45 krinnert Exp $
+// $Id: VeloSamplingMonitor.h,v 1.6 2009-06-23 12:49:26 krinnert Exp $
 #ifndef VELORECMONITORS_VELOSAMPLINGMONITOR_H 
 #define VELORECMONITORS_VELOSAMPLINGMONITOR_H 1
 
@@ -12,9 +12,10 @@
 // from DigiEvent
 #include "Event/VeloCluster.h"
 
-// from ROOT
 #include "TH1D.h"
 #include "TH2D.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 // local
 #include "VeloMonitorBase.h"
@@ -65,6 +66,22 @@ namespace Velo
     // Data members
     const DeVelo* m_velo;
 
+    AIDA::IHistogram2D* m_hClusADCSampR;   
+    AIDA::IHistogram2D* m_hClusADCSampRC;   
+    AIDA::IHistogram2D* m_hClusADCSampRA;   
+    AIDA::IHistogram2D* m_hClusADCSampPhi;  
+    AIDA::IHistogram2D* m_hClusADCSampPhiC; 
+    AIDA::IHistogram2D* m_hClusADCSampPhiA; 
+    AIDA::IHistogram2D* m_hClusADCSampPU;   
+    AIDA::IHistogram2D* m_hClusADCSampPUC;  
+    AIDA::IHistogram2D* m_hClusADCSampPUA;  
+    AIDA::IHistogram2D* m_hClusADCSampTop;  
+    AIDA::IHistogram2D* m_hClusADCSampTopC; 
+    AIDA::IHistogram2D* m_hClusADCSampTopA; 
+    AIDA::IHistogram2D* m_hClusADCSampBot;  
+    AIDA::IHistogram2D* m_hClusADCSampBotC; 
+    AIDA::IHistogram2D* m_hClusADCSampBotA; 
+    AIDA::IHistogram2D* m_hChanADCSamp; 
     TH2D* m_histClusADCSampAll;
     TH1D* m_histTaeADCDiffNext;
     TH1D* m_histTaeADCDiffPrev;

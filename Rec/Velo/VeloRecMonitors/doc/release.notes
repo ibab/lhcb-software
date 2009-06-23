@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-23 - Kurt Rinnert
+ - all histograms in VeloCluster- and VeloSamplingMonitor are now booked in
+   initialize()
+
 !======================= VeloRecMonitors v1r8 2009-06-17 =====================
 ! 2009-06-11 - Kurt Rinnert
  - the sampling monitor now uses the new accessor of DeVeloSensor to determine

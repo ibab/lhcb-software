@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.7 2009-06-11 13:29:45 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.8 2009-06-23 12:49:26 krinnert Exp $
 // Include files
 // -------------
 
@@ -57,6 +57,25 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );  
 
   unsigned int nxbins = m_samplingLocations.size();
+  std::string histIDBase("ClusADCSamp");
+  std::string histTitleBase("Cluster ADC values versus sampling index ");
+  m_hClusADCSampR = book2D( histIDBase + "R", histTitleBase + "R", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampRC = book2D( histIDBase + "RC", histTitleBase + "R, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampRA = book2D( histIDBase + "RA", histTitleBase + "R, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPhi = book2D( histIDBase + "Phi", histTitleBase + "Phi", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPhiC = book2D( histIDBase + "PhiC", histTitleBase + "Phi, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPhiA = book2D( histIDBase + "PhiA", histTitleBase + "Phi, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPU = book2D( histIDBase + "PU", histTitleBase + "PU", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPUC = book2D( histIDBase + "PUC", histTitleBase + "PU, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampPUA = book2D( histIDBase + "PUA", histTitleBase + "PU, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTop = book2D( histIDBase + "Top", histTitleBase + "Top", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTopC = book2D( histIDBase + "TopC", histTitleBase + "Top, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTopA = book2D( histIDBase + "TopA", histTitleBase + "Top, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBot = book2D( histIDBase + "Bottom", histTitleBase + "Bottom", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBotC = book2D( histIDBase + "BottomC", histTitleBase + "Bottom, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBotA = book2D( histIDBase + "BottomA", histTitleBase + "Bottom, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index", -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
+  
   m_histClusADCSampAll = Gaudi::Utils::Aida2ROOT::aida2root(
       book2D("ClusADCSampAll", "Cluster ADC vs. Sampling Index",-0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51)); 
   m_histTaeADCDiffNext = Gaudi::Utils::Aida2ROOT::aida2root(
@@ -171,88 +190,62 @@ Velo::VeloSamplingMonitor::veloTell1Data( std::string samplingLocation ) {
 void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
                                                  LHCb::VeloClusters* clusters )
 {
-  
-  unsigned int nxbins = m_samplingLocations.size();
-  std::string histIDBase("ClusADCSamp");
-  std::string histTitleBase("Cluster ADC values versus sampling index ");
-  
   // Loop over the VeloClusters
   // ==========================
   LHCb::VeloClusters::const_iterator itVC;
   for ( itVC = clusters -> begin(); itVC != clusters -> end(); ++itVC ) {
     
     LHCb::VeloCluster* cluster = (*itVC);
-    unsigned int sensorNumber = cluster->channelID().sensor();
-
-    // Total charge
-    // ------------
     double adc = cluster -> totalCharge();
+    bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
 
     unsigned int samplingIndex = 999;
-    for( size_t i = 0; i < nxbins; ++i )
+    for( size_t i = 0; i < m_samplingLocations.size(); ++i )
       if ( m_samplingLocations[i] == samplingLocation )
         samplingIndex = i;
 
     m_histClusADCSampAll->Fill(samplingIndex, adc);
 
-    std::string histID;
-    std::string histTitle;
     if ( cluster->isRType() ) {
-      histID    = histIDBase + "R";
-      histTitle = histTitleBase + "R";
+      m_hClusADCSampR->fill(samplingIndex, adc);
+      if ( isCSide ) {
+        m_hClusADCSampRC->fill(samplingIndex, adc);
+      } else {
+        m_hClusADCSampRA->fill(samplingIndex, adc);
+      }
     } else if ( cluster->isPhiType() ) {
-      histID = histIDBase + "Phi";
-      histTitle = histTitleBase + "Phi";
+      m_hClusADCSampPhi->fill(samplingIndex, adc);
+      if ( isCSide ) {
+        m_hClusADCSampPhiC->fill(samplingIndex, adc);
+      } else {
+        m_hClusADCSampPhiA->fill(samplingIndex, adc);
+      }
     } else {
-      histID = histIDBase + "PU";
-      histTitle = histTitleBase + "PU";
+      m_hClusADCSampPU->fill(samplingIndex, adc);
+      if ( isCSide ) {
+        m_hClusADCSampPUC->fill(samplingIndex, adc);
+      } else {
+        m_hClusADCSampPUA->fill(samplingIndex, adc);
+      }
     } 
       
-    plot2D( samplingIndex, adc, histID,
-            histTitle,
-            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
-   
 
-    std::string histIDtb;
-    std::string histTitletb;
     if (m_velo->sensor(sensorNumber)->isTop()) {
-      histIDtb = histIDBase + "T";
-      histTitletb = histTitleBase + "Top";
+      m_hClusADCSampTop->fill(samplingIndex, adc);
+      if ( isCSide ) {
+        m_hClusADCSampTopC->fill(samplingIndex, adc);
+      } else {
+        m_hClusADCSampTopA->fill(samplingIndex, adc);
+      }
     } else {
-      histIDtb = histIDBase + "B";
-      histTitletb = histTitleBase + "Bottom";
+      m_hClusADCSampBot->fill(samplingIndex, adc);
+      if ( isCSide ) {
+        m_hClusADCSampBotC->fill(samplingIndex, adc);
+      } else {
+        m_hClusADCSampBotA->fill(samplingIndex, adc);
+      }
     }
-    
-    plot2D( samplingIndex, adc, histIDtb,
-            histTitletb,
-            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
-   
        
-      
-    
-    
-    // C is right, A is left
-    bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
-    if ( isCSide ) {
-      histID = histID + "C";
-      histTitle = histTitle + ", C-Side";
-      histIDtb = histIDtb + "C";
-      histTitletb = histTitletb + ", C-Side";
-    } else { // A side
-      histID = histID + "A";
-      histTitle = histTitle + ", A-Side";
-      histIDtb = histIDtb + "A";
-      histTitletb = histTitletb + ", A-Side";
-    }
-    
-    plot2D( samplingIndex, adc, histID,
-            histTitle,
-            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
-   
-    plot2D( samplingIndex, adc, histIDtb,
-            histTitletb,
-            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
-   
   }
   
 }
@@ -302,9 +295,6 @@ void Velo::VeloSamplingMonitor::monitorTAEDiff()
 void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
                                                   LHCb::VeloTELL1Datas* tell1Datas ) 
 {
-  
-  unsigned int nxbins = m_samplingLocations.size();
-
   // Loop over the VeloTell1Data
   // ==========================+
   LHCb::VeloTELL1Datas::const_iterator itD;
@@ -323,13 +313,11 @@ void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
             adc != linkADCs.second;
             ++adc ) {
          unsigned int samplingIndex = 999;
-         for( size_t i = 0; i < nxbins; ++i )
+         for( size_t i = 0; i < m_samplingLocations.size(); ++i )
            if ( m_samplingLocations[i] == samplingLocation )
              samplingIndex = i;
 
-         plot2D( samplingIndex, *adc, "ChanADCSamp",
-             "Channel ADC values versus sampling index",
-             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+         m_hChanADCSamp->fill(samplingIndex, *adc);
        }
     }
   }
