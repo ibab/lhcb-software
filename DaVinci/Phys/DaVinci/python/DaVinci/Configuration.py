@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.65 2009-06-11 13:28:54 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.66 2009-06-23 17:18:43 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -257,7 +257,7 @@ class DaVinci(LHCbConfigurableUser) :
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
         # DST unpacking, not for DC06
-        if ( self.getProp("DataType") != "DC06" ):
+        if ( self.getProp("DataType") != "DC06" and self.getProp("InputType") != "MDF" ):
             DstConf().EnableUnpack = True
 
 ################################################################################
