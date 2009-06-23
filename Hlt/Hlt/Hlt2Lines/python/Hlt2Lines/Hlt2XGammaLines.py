@@ -1,0 +1,134 @@
+# Hlt2 Bs->PhiGamma and B->Kstar Gamma selections 06/23/09
+#
+# Fatima Soomro( Fatima.Soomro@cern.ch)
+#
+# 
+
+
+from Gaudi.Configuration import *
+from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+from HltLine.HltLine import Hlt2Line
+from HltLine.HltLine import Hlt2Member
+
+
+class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
+    
+    __slots__ = {  'TrIPchi2Phi'          : 20       # Dimensionless
+                   ,'TrIPchi2Kst'         : 20       # Dimensionless
+                   ,'PhiMassWinL'         : 40       # MeV
+                   ,'PhiMassWinT'         : 30       # MeV
+                   ,'KstMassWinL'         : 150      # MeV
+                   ,'KstMassWinT'         : 120      # MeV
+                   ,'BsMassWin'           : 1000     # MeV
+                   ,'B0MassWin'           : 1000     # MeV
+                   ,'BsDirAngle'          : 0.998    # Dimensionless
+                   ,'B0DirAngle'          : 0.999    # Dimensionless
+                   ,'BsPVIPchi2'          : 25       # Dimensionless
+                   ,'B0PVIPchi2'          : 25       # Dimensionless
+                   ,'photonPT'            : 2600     # MeV
+                   ,'PhiVCHI2'            : 25       # dimensionless
+                   ,'KstVCHI2'            : 16       # dimensionless
+                   
+                   , 'IncludeLines' :['Hlt2KstGamma',
+                                      'Hlt2PhiGamma'
+                                      ]
+                   }
+    
+    
+    def __apply_configuration__(self) :
+        from Configurables import HltANNSvc
+        from Configurables import CombineParticles, PhysDesktop
+        from Configurables import FilterDesktop
+        from Hlt2SharedParticles.GoodParticles import GoodKaons, GoodPions
+
+      
+      
+        ############################################################################
+        #    Make Phi and Kstar candidates
+        ############################################################################
+
+        Hlt2Phi4PhiGamma = Hlt2Member( CombineParticles
+                                       , "Combine"
+                                       , DecayDescriptors =[ "phi(1020) -> K+ K-" ] #decayDesc
+                                       , DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
+                                       , CombinationCut =  "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinL'))+"*MeV)"
+                                       , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('PhiVCHI2'))+")"
+                                       , InputLocations  = [ GoodKaons ]  #.outputSelection()  ???
+                                       
+                                       )
+        
+        
+        Hlt2Kst4KstGamma = Hlt2Member( CombineParticles
+                                       , "Combine"
+                                       , DecayDescriptors =["[K*(892)0 -> K+ pi-]cc"] 
+                                       , DaughtersCuts = { "K+"  : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")",
+                                                           "Pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
+                                       , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
+                                       , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
+                                       , InputLocations  = [ GoodKaons, GoodPions ]  #.outputSelection()  ???
+                                       
+                                       )
+
+     
+
+        ############################################################################
+        #   Bs -> Phi Gamma
+        ############################################################################
+        
+        Hlt2BstoPhiGamma = Hlt2Member(CombineParticles
+                                      , "Combine"
+                                      , DecayDescriptors = ["[B_s0 -> gamma phi(1020)]cc"]
+                                      , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
+                                                          "phi(1020)": "(ADMASS('phi(1020)')<"+str.(self.getProp('PhiMassWinT'))+"*MeV)"}
+                                      , CombinationCut =  "(ADAMASS('Bs_0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
+                                      , MotherCut = "( (BPVDIRA > " + str.(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str.(self.getProp('BsPVchi2'))+")"
+                                      , InputLocations  = [ "Hlt2Phi4PhiGamma" ]
+                                      )
+        
+        
+        
+        ############################################################################
+        #   B0 -> Kstar Gamma
+        ############################################################################
+        
+        Hlt2BtoKstGamma = Hlt2Member(CombineParticles
+                                     , "Combine"
+                                     , DecayDescriptors = ["[B0 -> K*(892)0  gamma]cc"]
+                                     , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
+                                                         "K*(892)0" : "(ADMASS(K*(892)0)<"+str.(self.getProp('KstMassWinT'))+"*MeV) " }
+                                     , CombinationCut =  "(ADAMASS('B0')<"+str(self.getProp('B0MassWin'))+"*MeV)"
+                                     , MotherCut = "( (BPVDIRA > " + str.(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str.(self.getProp('B0PVIPchi2'))+")"
+                                     , InputLocations  = [ "Hlt2Kst4KstGamma" ]
+                                     )
+        
+        
+        ############################################################################
+        #    Bs to Phi Gamma - Hlt2Line
+        ############################################################################
+
+        line = Hlt2Line('Hlt2PhiGamma'
+                        , prescale = 1
+                        , algos = [ GoodKaons, 
+                                    Hlt2Phi4PhiGamma, 
+                                    Hlt2BstoPhiGamma]
+                        , postscale = 1
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PhiGammaDecision" : 70500} )
+
+        
+        ############################################################################
+        #    B0 to Kstar Gamma - Hlt2Line
+        ############################################################################
+
+        line = Hlt2Line('Hlt2KstGamma'
+                        , prescale = 1
+                        , algos = [ GoodKaons,
+                                    GoodPions,
+                                    Hlt2Kst4KstGamma, 
+                                    Hlt2BtoKstGamma]
+                        , postscale = 1
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2KstGammaDecision" : 70510} )
+        
+
+    
