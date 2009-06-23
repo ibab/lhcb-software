@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.266 2009-06-04 14:02:19 pkoppenb Exp $
+! $Id: release.notes,v 1.267 2009-06-23 14:28:32 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+!========================== DaVinciMCTools v9r20p1 2009-06-23 ===================
 ! 2009-06-04 - Patrick Koppenburg
  - Added Hlt locations to P2MCPFromProtoP
  - Increment to v9r20p1
