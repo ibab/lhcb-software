@@ -1,10 +1,14 @@
-!$Id: release.notes,v 1.28 2009-06-11 15:23:53 jpalac Exp $
+!$Id: release.notes,v 1.29 2009-06-23 17:05:57 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
 
+! 2009-06-23 - Juan PALACIOS
+ - python/MicroDSTExample/HistoUtils.py
+  . Add HistoFile,a class for easy writing of ROOT and AIDA histograms
+    to a file. 
 !======================= Ex/MicroDSTExample v2r5 2009-06-11 ==================
 
 ! 2009-06-11 - Juan PALACIOS
