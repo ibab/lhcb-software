@@ -53,8 +53,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                        , DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Phi'))+")" }
                                        , CombinationCut =  "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('PhiVCHI2'))+")"
-                                       , InputLocations  = [ GoodKaons ]  #.outputSelection()  ???
-                                       
+                                       , InputLocations  = [ GoodKaons ]
                                        )
         
         
@@ -65,8 +64,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                                            "Pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
-                                       , InputLocations  = [ GoodKaons, GoodPions ]  #.outputSelection()  ???
-                                       
+                                       , InputLocations  = [ GoodKaons, GoodPions ]
                                        )
 
      
@@ -79,10 +77,10 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , "Combine"
                                       , DecayDescriptors = ["[B_s0 -> gamma phi(1020)]cc"]
                                       , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
-                                                          "phi(1020)": "(ADMASS('phi(1020)')<"+str.(self.getProp('PhiMassWinT'))+"*MeV)"}
+                                                          "phi(1020)": "(ADMASS('phi(1020)')<"+str(self.getProp('PhiMassWinT'))+"*MeV)"}
                                       , CombinationCut =  "(ADAMASS('Bs_0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
-                                      , MotherCut = "( (BPVDIRA > " + str.(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str.(self.getProp('BsPVchi2'))+")"
-                                      , InputLocations  = [ "Hlt2Phi4PhiGamma" ]
+                                      , MotherCut = "( (BPVDIRA > " + str(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+")"
+                                      , InputLocations  = [ Hlt2Phi4PhiGamma ]
                                       )
         
         
@@ -95,10 +93,10 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                      , "Combine"
                                      , DecayDescriptors = ["[B0 -> K*(892)0  gamma]cc"]
                                      , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
-                                                         "K*(892)0" : "(ADMASS(K*(892)0)<"+str.(self.getProp('KstMassWinT'))+"*MeV) " }
+                                                         "K*(892)0" : "(ADMASS(K*(892)0)<"+str(self.getProp('KstMassWinT'))+"*MeV) " }
                                      , CombinationCut =  "(ADAMASS('B0')<"+str(self.getProp('B0MassWin'))+"*MeV)"
-                                     , MotherCut = "( (BPVDIRA > " + str.(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str.(self.getProp('B0PVIPchi2'))+")"
-                                     , InputLocations  = [ "Hlt2Kst4KstGamma" ]
+                                     , MotherCut = "( (BPVDIRA > " + str(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+")"
+                                     , InputLocations  = [ Hlt2Kst4KstGamma ]
                                      )
         
         
@@ -107,13 +105,13 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
         ############################################################################
 
         line = Hlt2Line('Hlt2PhiGamma'
-                        , prescale = 1
+                        , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2Phi4PhiGamma, 
                                     Hlt2BstoPhiGamma]
-                        , postscale = 1
+                        , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PhiGammaDecision" : 70500} )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PhiGammaDecision" : 52500} )
 
         
         ############################################################################
@@ -121,14 +119,11 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
         ############################################################################
 
         line = Hlt2Line('Hlt2KstGamma'
-                        , prescale = 1
+                        , prescale = self.prescale
                         , algos = [ GoodKaons,
                                     GoodPions,
                                     Hlt2Kst4KstGamma, 
                                     Hlt2BtoKstGamma]
-                        , postscale = 1
+                        , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2KstGammaDecision" : 70510} )
-        
-
-    
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2KstGammaDecision" : 52510} )

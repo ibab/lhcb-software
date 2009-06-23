@@ -1,11 +1,14 @@
-$Id: release.notes,v 1.9 2009-06-23 19:26:26 pkoppenb Exp $
+$Id: release.notes,v 1.10 2009-06-23 21:30:02 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
-!========================== Hlt2Lines v1r1 2009-06-22 ===================
+!========================== Hlt2Lines v1r1 2009-06-23 ===================
+! 2009-06-23 Gerhard Raven
+- some corrections to PhiGamma and KstarGamma
+
 ! 2009-06-23 Fatima Soomro
 - adding Hlt2lines for PhiGamma and KstarGamma
 
