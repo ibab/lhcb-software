@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.2 2006-07-21 13:44:35 erodrigu Exp $
+// $Id: lcgDict.h,v 1.3 2009-06-23 07:04:08 wouter Exp $
 #ifndef TRACKFITEVENT_LCGDICT_H
 #define TRACKFITEVENT_LCGDICT_ 1
 
@@ -6,6 +6,10 @@
 
 // begin include files
 #include "Event/StateTraj.h"
+#include "Event/StateZTraj.h"
+#include "Event/TrackTraj.h"
+#include "Event/ZTrajectory.h"
+#include "Event/TrackStateVertex.h"
 #include "Event/FitNode.h"
 
 // end include files
