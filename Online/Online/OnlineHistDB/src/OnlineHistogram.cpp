@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.45 2009-06-22 09:17:27 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.46 2009-06-23 13:32:24 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1168,20 +1168,19 @@ bool OnlineHistogram::setBinLabels(std::vector<std::string> *Xlabels,
 
   m_StmtMethod = "OnlineHistogram::setBinLabels";
   OCIStmt *stmt=NULL;
-  if ( OCI_SUCCESS == prepareOCIStatement
-       (stmt,"BEGIN ONLINEHISTDB.DECLAREBINLABELS(theSet => :set, theHID => :hid, labels => :lab, Nx => :nx);END;") ) {
-    OCITable *ocilabels;
-    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                             OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                             (dvoid **) &ocilabels));
-    stringVectorToVarray(newlabels, ocilabels);
-    
+  std::stringstream command;
+  command << "BEGIN ONLINEHISTDB.DECLAREBINLABELS(theSet => :set, theHID => :hid, labels => parameters(";
+  for (unsigned int il=0;il<newlabels.size();il++) {
+    if (il>0) command << ",";
+    command << "'" << newlabels[il] <<"'";
+  }
+  command << "), Nx => :nx);END;";
+
+  if ( OCI_SUCCESS == prepareOCIStatement(stmt,command.str().c_str()) ) {
     myOCIBindInt   (stmt, ":set", m_hsid);
     myOCIBindString(stmt, ":hid", m_hid);
-    myOCIBindObject(stmt, ":lab", (void **) &ocilabels, OCIparameters);
     myOCIBindInt   (stmt, ":nx" , newXsize);
     out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
-    checkerr(OCIObjectFree (m_envhp, m_errhp, ocilabels, OCI_OBJECTFREE_FORCE) );
     releaseOCIStatement(stmt);
   }
   if (out) {
