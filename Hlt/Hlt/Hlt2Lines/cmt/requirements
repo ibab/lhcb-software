@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.4 2009-06-23 16:22:44 fsoomro Exp $
+# $Id: requirements,v 1.5 2009-06-23 19:26:26 pkoppenb Exp $
 # Created    : 2009/05/19
 # Maintainer : 
 
 package           Hlt2Lines
-version           v1r2
+version           v1r1
 
 # ============================================================================
 # ======= the structure ======================================================
