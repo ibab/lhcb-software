@@ -7,23 +7,25 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Tuple                                                       SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
-Tuple                                                       SUCCESS List of booked N-Tuples in directory "FILE1/Tuple"
-Tuple                                                       SUCCESS  ID=DecayTree     Title="DecayTree"                               #items=146{J_psi_1S_MINIP,J_psi_1S_MINIPCHI2,J_psi_1S_IP,J_psi_1S_IPCHI2,J_psi_1S_ENDVERTEX_}
 Tuple                                                       SUCCESS Number of counters : 2
- |    Counter                                                                                |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                                                                 |       100 |         58 |(  58.0000 +- 4.93559  )%|   -------   |   -------   |
- | "Event"                                                                                   |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |      2000 |          2 |( 0.100000 +- 0.0706753)%|   -------   |   -------   |
+ | "Event"                                         |      2000 |       2000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 EventTuple                                                  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 EventTuple                                                  SUCCESS List of booked N-Tuples in directory "FILE1/EventTuple"
-EventTuple                                                  SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=161{EventInSequence,L0Decision,Hlt1Global,Hlt1BeamGasCrossingDecision,Hlt1BeamGasDeci}
+EventTuple                                                  SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=7  {EventInSequence,runNumber,eventNumber,Collisions,P
+rocessType[1]/V,HeaviestQuark[1}
 EventTuple                                                  SUCCESS Number of counters : 1
- |    Counter                                                                                |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Event"                                                                                   |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Event"                                         |      2000 |       2000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 MCTuple                                                     SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 MCTuple                                                     SUCCESS List of booked N-Tuples in directory "FILE1/MCTuple"
-MCTuple                                                     SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=54 {J_psi_1S_TRUEID,J_psi_1S_TRUEP_E,J_psi_1S_TRUEP_X,J_psi_1S_TRUEP_Y,J_psi_1S_TRUEP}
+MCTuple                                                     SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=141{B0_TRUEP_E,B0_TRUEP_X,B0_TRUEP_Y,B0_TRUEP_Z,B0_TRU
+EPT,B0_TRUEORIGINVERTEX_X,B0_TR}
 MCTuple                                                     SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |      2000 |       1999 |(  99.9500 +- 0.0499875)%|   -------   |   -------   |
+ | "Event"                                         |      2000 |       2000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
