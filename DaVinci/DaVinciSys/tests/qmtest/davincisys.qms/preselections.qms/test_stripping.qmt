@@ -4,14 +4,14 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>../options/DVTestReadETC.py</text>
+  <text>../options/DVTestStripping.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        10 |         10 |(  100.000 +- 10.0000  )%|   -------   |   -------   |
- | "#errors"                                       |        10 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |        85 |         10 |(  11.7647 +- 3.49464  )%|   -------   |   -------   |
+ | "#errors"                                       |        85 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

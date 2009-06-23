@@ -17,8 +17,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from Configurables import DecayTreeTuple
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
-      "TupleToolTrigger"
-    , "TupleToolMCTruth"
+      "TupleToolMCTruth"
     , "TupleToolMCBackgroundInfo"
     , "TupleToolGeometry"
     , "TupleToolKinematic"
@@ -37,8 +36,7 @@ tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #
 from Configurables import EventTuple, TupleToolTrigger
 evtTuple = EventTuple()
-evtTuple.ToolList = [ "TupleToolTrigger",
-                      "TupleToolEventInfo",
+evtTuple.ToolList = [ "TupleToolEventInfo",
                       "TupleToolGeneration" ]
 evtTuple.addTool(TupleToolTrigger())
 evtTuple.TupleToolTrigger.VerboseHlt1 = True 
@@ -67,14 +65,13 @@ from Configurables import DaVinci
 #
 # DaVinci
 #
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 2000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
-DaVinci().ReplaceL0BanksWithEmulated = True
-DaVinci().HltType = "Hlt1+Hlt2"
+# DaVinci().HltType = "Hlt1+Hlt2"
 #-- GAUDI jobOptions generated on Tue Jun 23 11:54:57 2009
 #-- Contains event types : 
 EventSelector().Input   = [
