@@ -2,7 +2,8 @@
 __all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType' )
 
 def SettingsForDataType( x ) :
-    _dataType2Settings = { 'DC06' : Miriam_20090430 }
+    _dataType2Settings = { 'DC06' : Miriam_20090430 ,
+                           'MC09' : Miriam_20090430 }  # temporary
     return _dataType2Settings[x] if x in _dataType2Settings else None
 
 

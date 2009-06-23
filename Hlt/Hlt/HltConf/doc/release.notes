@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.254 2009-06-10 09:45:54 graven Exp $ 
+! $Id: release.notes,v 1.255 2009-06-23 10:14:56 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v3r2 2009-06-23 ===================
+! 2009-06-23 - Patrick Koppenburg
+ - use DC06 tuning for MC09 (temporary)
 
 !========================== HltConf v3r1 2009-06-10 ===================
 ! 2009-06-09 - Chris Jones
