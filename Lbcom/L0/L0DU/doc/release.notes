@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.161 2009-05-25 13:59:19 cattanem Exp $
+! $Id: release.notes,v 1.162 2009-06-23 12:48:33 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-06-23 - Olivier Deschamps
+ - options/ : new options for fast (partial) decoding of L0DU bank (FastDecoding.opts)
 
 !========================== L0DU v8r17 2009-05-25 =========================
 ! 2009-05-20 - Olivier Deschamps

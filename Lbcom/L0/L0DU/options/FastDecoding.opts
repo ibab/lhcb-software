@@ -1,0 +1,10 @@
+// =====
+// Mimimal (fast) L0DU bank decoding 
+// =====
+
+ToolSvc.L0DUFromRawTool.FillDataMap         = false ;
+ToolSvc.L0DUFromRawTool.EncodeProcessorData = false ;
+ToolSvc.L0DUFromRawTool.Emulate             = false ;
+ToolSvc.L0DUFromRawTool.StatusOnTES         = false ;
+L0DUFromRaw.ProcessorDataOnTES  = false;
+L0DUFromRaw.L0DUReportOnTES     = false ;
