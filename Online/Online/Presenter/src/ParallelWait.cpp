@@ -23,7 +23,9 @@ boost::recursive_mutex oraMutex;
 boost::recursive_mutex dimMutex;
 boost::recursive_mutex rootMutex;
 
-void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage)
+void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage,
+              std::vector<DbRootHist*> * dbHistosOnPage,
+              std::vector<std::string*> & m_tasksNotRunning)
 {
 	  DbRootHist* dbRootHist;
 	  if((History == gui->presenterMode()) || (EditorOffline == gui->presenterMode())) { // no need for DIM
@@ -36,24 +38,14 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                NULL,
 	                                oraMutex,
 	                                dimMutex,
+                                  m_tasksNotRunning,
                                   rootMutex);
 	  } else if((Online == gui->presenterMode()) || (EditorOnline == gui->presenterMode())) {
-//	    bool taskNotRunning(false);             
-//	    for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
-//	         m_tasksNotRunningIt != m_tasksNotRunning.end(); m_tasksNotRunningIt++) {
-//	      if (0 == ((*m_tasksNotRunningIt).compare(onlineHistosOnPage->histo->task()))) {
-//	        taskNotRunning = true;            
-//	      }                          
-//	    }
 	    DimBrowser* dimBrowser = NULL;
 	    std::string currentPartition("");
-//	    if (taskNotRunning) {
-//	      dimBrowser = NULL;
-//	      currentPartition = "";
-//	    } else {
-	      dimBrowser = gui->dimBrowser();
-	      currentPartition = gui->currentPartition();
-//	    } 
+
+	    dimBrowser = gui->dimBrowser();
+	    currentPartition = gui->currentPartition();
 	    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
 	                                currentPartition,
 	                                2, onlineHistosOnPage->instance,
@@ -63,6 +55,7 @@ void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, s
 	                                dimBrowser,
 	                                oraMutex,
 	                                dimMutex,
+                                  m_tasksNotRunning,
                                   rootMutex);
 	                            
 //	    if (dbRootHist->isEmptyHisto()) {
@@ -114,8 +107,12 @@ ParallelWait::ParallelWait(PresenterMainFrame* gui):
 }
 ParallelWait::~ParallelWait()
 {
+  std::vector<std::string*>::const_iterator m_tasksNotRunningIt;
+  for (m_tasksNotRunningIt = m_tasksNotRunning.begin();m_tasksNotRunningIt != m_tasksNotRunning.end(); ++m_tasksNotRunningIt) {
+    delete *m_tasksNotRunningIt;
+  }
+  m_tasksNotRunning.clear();  
 }
-
 
 void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * onlineHistosOnPage,
 				      									  std::vector<DbRootHist*> * dbHistosOnPage) {
@@ -131,7 +128,8 @@ void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * online
     thrds.create_thread(boost::bind(&getHisto,
 			    													m_gui,
 			    													*m_onlineHistosOnPageIt,
-			    													dbHistosOnPage));
+			    													dbHistosOnPage,
+                                    m_tasksNotRunning));
 	  m_onlineHistosOnPageIt++;
 	}
   thrds.join_all();	

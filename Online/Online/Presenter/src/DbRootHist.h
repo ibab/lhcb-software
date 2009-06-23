@@ -7,6 +7,10 @@
 #include "dic.hxx"
 #include "presenter.h"
 
+
+#include <boost/thread/recursive_mutex.hpp>
+
+
 #include <TH1.h>
 #include <TPad.h>
 #include <TDatime.h>
@@ -16,10 +20,11 @@ class TImagePalette;
 class TText;
 class DimInfo;
 class DimInfoMonObject;
-//class TPad;
 class TPave;
 //class TPad;
 class DimBrowser;
+class vector;
+
 
 enum ReferenceVisibility {
     Show = 0,
@@ -37,7 +42,11 @@ class DbRootHist : public HistogramIdentifier
                OMAlib* analysisLib,
                OnlineHistogram* onlineHist,
                pres::MsgLevel verbosity,
-               DimBrowser* DimBr);
+               DimBrowser* DimBr,
+               boost::recursive_mutex & oraMutex,
+               boost::recursive_mutex & dimMutex,
+               std::vector<std::string*> & tasksNotRunning,
+               boost::recursive_mutex & rootMutex);
 //TODO: add set drawing mode: image or hist: editor mode vs. viewer
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
@@ -120,7 +129,8 @@ class DbRootHist : public HistogramIdentifier
     void referenceHistogram(ReferenceVisibility visibilty);
     void setReferenceOption(std::string refOption) { m_refOption = refOption; }
     void setHistoryTrendPlotMode(bool mode) { m_historyTrendPlotMode = mode; }
-    bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }  
+    bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }
+    void resetRetryInit() {m_retryInit = 2;}
 
   private:
     TPad* m_drawPattern;
@@ -188,6 +198,11 @@ class DbRootHist : public HistogramIdentifier
     bool m_historyTrendPlotMode; 
 
     bool m_isOverlap;
+
+     boost::recursive_mutex* m_oraMutex;
+     boost::recursive_mutex* m_dimMutex;
+     std::vector<std::string*>* m_tasksNotRunning;
+     boost::recursive_mutex* m_rootMutex;
 
     void cleanAnaSources();
     void loadAnaSources();
