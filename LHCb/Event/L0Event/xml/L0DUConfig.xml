@@ -189,8 +189,8 @@
           std::vector&lt;std::string&gt; list;
           for(LHCb::L0DUTrigger::Map::const_iterator it = m_triggers.begin();it!=m_triggers.end();++it){
           std::string trigName = (*it).first;
-          LHCb::L0DUChannel::Map channels = (*it).second-&gt;channels();
-          for(LHCb::L0DUChannel::Map::iterator ic = channels.begin() ; ic != channels.end() ; ++ic){
+          const LHCb::L0DUChannel::Map&amp; channels = (*it).second-&gt;channels();
+          for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin() ; ic != channels.end() ; ++ic){
           if( (*ic).second->name() == name){
           list.push_back(trigName);
           continue;

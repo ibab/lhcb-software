@@ -132,7 +132,7 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return 0.;
-          LHCb::L0DUElementaryData::Map data=m_configuration->data();
+          const LHCb::L0DUElementaryData::Map&amp; data=m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0.;
           return ((*it).second)->value();
@@ -180,8 +180,8 @@
         <code>
           if(NULL == m_configuration)return;
 
-          LHCb::L0DUChannel::Map channels = m_configuration->channels();
-          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return;
           unsigned int pos = ((*it).second)->id();
           unsigned int index = pos / 32;
@@ -200,8 +200,8 @@
         type   = "void"> 
         <code>
           if(NULL == m_configuration)return;
-          LHCb::L0DUChannel::Map channels= m_configuration->channels();
-          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return;
           unsigned int pos = ((*it).second)->id();
           unsigned int index = pos / 32;
@@ -220,8 +220,8 @@
         type   = "void">
         <code>
           if(NULL == m_configuration)return;
-          LHCb::L0DUElementaryCondition::Map conditions = m_configuration->conditions();
-          LHCb::L0DUElementaryCondition::Map::iterator it = conditions.find( name );
+          const LHCb::L0DUElementaryCondition::Map&amp; conditions = m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return;
           unsigned int pos = ((*it).second)->id();
           unsigned int index = pos / 32;
@@ -242,7 +242,7 @@
         desc="32-bit summary for the channels decision"
         argList="unsigned int index=0, int bx=0"
         const = "TRUE"
-        type="unsigned int">
+        type="const unsigned int">
         <code> 
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
           std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsDecisionSummaries.find( key );
@@ -258,7 +258,7 @@
         desc="32-bit summary for the channels pre-decision"
         argList="unsigned int index=0, int bx=0"
         const = "TRUE"
-        type="unsigned int">
+        type="const unsigned int">
         <code> 
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
           std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsPreDecisionSummaries.find( key );
@@ -272,7 +272,7 @@
         desc="32-bit summary for the elementary conditions"
         argList="unsigned int index=0, int bx=0"
         const = "TRUE"
-        type="unsigned int">
+        type="const unsigned int">
         <code> 
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
           std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_conditionsValueSummaries.find( key );
@@ -344,8 +344,8 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUChannel::Map channels= m_configuration->channels();
-          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return false;
           const unsigned int pos = ((*it).second)->id();
           return channelPreDecision( pos,bx );
@@ -359,8 +359,8 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUChannel::Map channels=m_configuration->channels();
-          LHCb::L0DUChannel::Map::iterator it = channels.find( name );
+          const LHCb::L0DUChannel::Map&amp; channels=m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return false;
           const unsigned int pos = ((*it).second)->id();
           return channelDecision( pos,bx );
@@ -374,8 +374,8 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUElementaryCondition::Map conditions=m_configuration->conditions();
-          LHCb::L0DUElementaryCondition::Map::iterator it = conditions.find( name );
+          const LHCb::L0DUElementaryCondition::Map&amp; conditions=m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return false;
           const unsigned int pos = ((*it).second)->id();
           return conditionValue( pos, bx );
@@ -395,8 +395,8 @@
         <code> 
           std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
           if(NULL == m_configuration)return bad;
-          LHCb::L0DUChannel::Map channels= m_configuration->channels();
-          LHCb::L0DUChannel::Map::iterator it;
+          const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
+          LHCb::L0DUChannel::Map::const_iterator it;
           for(it = channels.begin() ; it != channels.end() ; it++){
            unsigned int id = ((*it).second)->id();
            if( channel == id ) return ((*it).second)->name();
@@ -421,8 +421,8 @@
         <code> 
           std::string bad = &quot;LHCb::L0DUConfig is missing&quot;;
           if(NULL == m_configuration)return bad;
-          LHCb::L0DUElementaryCondition::Map conditions = m_configuration->conditions();
-          LHCb::L0DUElementaryCondition::Map::iterator it;
+          const LHCb::L0DUElementaryCondition::Map&amp; conditions = m_configuration->conditions();
+          LHCb::L0DUElementaryCondition::Map::const_iterator it;
           for(it = conditions.begin() ; it != conditions.end() ; it++){
            unsigned int id = ((*it).second)->id();
            if(   cond == id ) return ((*it).second)->name();          
@@ -446,8 +446,8 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUChannel::Map channels = m_configuration->channels();
-          for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
+          const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
+          for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
            if( channelDecision( channel->id(),bx  ) &amp;&amp; channel->enable() )return true;
           }
@@ -468,8 +468,8 @@
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUTrigger::Map triggers = m_configuration->triggers();
-          LHCb::L0DUTrigger::Map::iterator it = triggers.find( name );
+          const LHCb::L0DUTrigger::Map&amp; triggers = m_configuration->triggers();
+          LHCb::L0DUTrigger::Map::const_iterator it = triggers.find( name );
           if( it == triggers.end()){
             if( "L0" == name){
               return decisionFromSummary( bx );
@@ -477,9 +477,10 @@
               return false;
            }
           }
-          LHCb::L0DUChannel::Map channels = (*it).second-&gt;channels();
-          for(LHCb::L0DUChannel::Map::iterator ic = channels.begin();ic != channels.end();++ic){
-           if( (*ic).second-&gt;enable()  &amp;&amp; channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;
+
+          const LHCb::L0DUChannel::Map&amp; channels = (*it).second-&gt;channels();
+          for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin();ic != channels.end();++ic){
+           if( channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;
           }
           return false;
         </code>
@@ -487,15 +488,15 @@
 
       <method
         name="triggerDecision" 
-        argList="unsigned int index, int bx=0"
+        argList="int index, int bx=0"
         desc="return the L0 decision for any set of channels as defined in the configuration"
         type="bool" 
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return false;
-          LHCb::L0DUTrigger::Map triggers = m_configuration->triggers();
-          for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it != triggers.end();++it){
-           if( index == (*it).second-&gt;id() ) return triggerDecisionByName( (*it).first, bx  );
+          const LHCb::L0DUTrigger::Map&amp; triggers = m_configuration->triggers();
+          for(LHCb::L0DUTrigger::Map::const_iterator it = triggers.begin();it != triggers.end();++it){
+           if( index = (*it).second-&gt;id() )return triggerDecisionByName( (*it).first, bx  );
           }
           return false;
         </code>
