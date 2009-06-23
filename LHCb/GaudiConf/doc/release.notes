@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-06-23 - Marco Cattaneo
+ - In DstConf.py:
+   . Add pRec/RawEvent to RDST (contains copy of HLT and L0 raw banks)
+   . Force RDST to be packed 
+
 !======================== GaudiConf v12r5 2009-06-18 ========================
 ! 2009-06-18 - Marco Cattaneo
  - In LHCbExclusions.py: ignore changes in name of latest ONLINE snapshot

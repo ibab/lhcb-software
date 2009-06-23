@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.12 2009-05-27 15:39:32 jonrob Exp $"
+__version__ = "$Id: DstConf.py,v 1.13 2009-06-23 11:54:10 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -67,6 +67,7 @@ class DstConf(ConfigurableUser):
         
         # Choose whether to write packed or unpacked objects
         if pType == 'NONE':
+            if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
             recDir = "Rec"
         else:
             recDir = "pRec"
@@ -92,8 +93,12 @@ class DstConf(ConfigurableUser):
                  , "/Event/" + recDir + "/Vertex/Primary"    + depth
                  , "/Event/" + recDir + "/Vertex/V0"         + depth ]
 
+        # Copy of HLT results, only on RDST
+        if dType == "RDST":
+            items += [ "/Event/pRec/RawEvent" + depth ]
+
         # Additional objects not on RDST
-        if dType != "RDST":
+        else:
             items += [ "/Event/" + recDir + "/Track/Muon" + depth ]
 
             # Additional objects not packable as MDF
@@ -225,7 +230,13 @@ class DstConf(ConfigurableUser):
                               , PackRecVertex()
                               , PackTwoProngVertex()
                               ]
-        if self.getProp( "DstType" ).upper() != "RDST":
+        if self.getProp( "DstType" ).upper() == "RDST":
+            # Copy the HLT results from RawEvent to put them on the RDST
+            from Configurables import RawEventSelectiveCopy
+            rawEventSelectiveCopy = RawEventSelectiveCopy()
+            rawEventSelectiveCopy.RawBanksToCopy = [ "HltDecReports" , "L0DU" ]
+            packDST.Members += [ rawEventSelectiveCopy ]
+        else:
             packDST.Members += [ PackTrack( name       = "PackMuons",
                                             InputName  = "/Event/Rec/Track/Muon",
                                             OutputName = "/Event/pRec/Track/Muon") ]
