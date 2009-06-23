@@ -3,7 +3,11 @@ from Gaudi.Configuration import *
 
 from HltLine.HltLinesConfigurableUser import *
 
+from Configurables import RichRecSysConf
+
 class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
+
+    __used_configurables__ = [ RichRecSysConf ]
 
     def __apply_configuration__(self) :
 

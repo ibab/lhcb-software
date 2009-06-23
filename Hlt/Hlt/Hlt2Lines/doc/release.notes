@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.6 2009-06-22 16:27:34 pkoppenb Exp $
+$Id: release.notes,v 1.7 2009-06-23 11:34:23 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-23 C Jones
+ - Make Hlt2InclusivePhiLines.py use RichRecSysConf
 
 !========================== Hlt2Lines v1r1 2009-06-22 ===================
 ! 2009-06-18 - Johannes Albrecht
