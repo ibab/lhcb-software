@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.132 2009-06-04 13:59:55 pkoppenb Exp $
+! $Id: release.notes,v 1.133 2009-06-23 14:25:49 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+!========================== DaVinciAssociators v9r3p3 2009-06-23 ===================
 ! 2009-06-04 - Patrick Koppenburg
  - Add Hlt proto location to ChargedPP2MC
 
