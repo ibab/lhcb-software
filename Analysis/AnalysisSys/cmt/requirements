@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.98 2009-06-23 14:37:45 pkoppenb Exp $
+# $Id: requirements,v 1.99 2009-06-23 14:39:10 pkoppenb Exp $
 package AnalysisSys
 version v3r5
 
@@ -47,7 +47,7 @@ use  MicroDSTAlgorithm   	v3r6    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r1p1  Tutorial          # P. Koppenburg
+use Analysis            	v8r2    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r4    Ex                # Juan Palacios
 
