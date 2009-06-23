@@ -277,7 +277,7 @@ namespace DecayTreeFitter
     for(daucontainer::const_iterator it = begin() ; it != end() ; ++it) {
       int daumomindex = (*it)->momIndex() ;
       double e2(0) ;
-      int maxrow = (*it)->hasEnergy() ? 4 : 3 ;
+      int maxrow = (*it)->hasEnergy() && !hasMassConstraint() ? 4 : 3 ;
       for(int irow=1; irow<=maxrow; ++irow) {
 	double px = fitparams->par()(daumomindex+irow) ;
 	e2 += px*px ;

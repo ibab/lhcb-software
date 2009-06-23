@@ -57,11 +57,17 @@ namespace DecayTreeFitter
     // Print the result of the fit
     void print() const ;
 
+    // Print the result of the fit
+    void fillStream() const { print() ; }
+
     // The top level particle that is fitted
     const LHCb::Particle* particle() const { return m_particle ; }
 
     // Currently the only accessor to the actual fitted data
     VtxFitParams fitParams(const LHCb::Particle& cand) const ;
+
+    // Currently the only accessor to the actual fitted data
+    VtxFitParams fitParams() const ;
 
     // Name of a particle in the decay tree
     std::string name(const LHCb::Particle& cand) const ;

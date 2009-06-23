@@ -332,6 +332,12 @@ namespace DecayTreeFitter
     return fitParams(*pb) ;
   }
 
+  VtxFitParams 
+  Fitter::fitParams() const 
+  {
+    return fitParams(*(m_decaychain->cand())) ;
+  }
+
   VtxDoubleErr
   Fitter::decayLengthSum(const LHCb::Particle& candA, const LHCb::Particle& candB) const
   {

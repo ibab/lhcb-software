@@ -4,12 +4,13 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include "Event/Particle.h"
 
-namespace LHCb
-{
-  class Particle ;
-  class ParticleID ;
-}
+//namespace LHCb
+//{
+//  class Particle ;
+//  class ParticleID ;
+//}
 
 namespace DecayTreeFitter
 {
