@@ -3,7 +3,18 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v23r1p1>2009-06-11 DaVinci v23r1p1 STEP09 stripping release</A></H1><PRE>
+</PRE><H1><A NAME=v23r2>2009-06-23 DaVinci v23r2 STEP09 stripping release</A></H1><PRE>
+
+Based on Phys v8r5, Analysis v3r5, Rec v7r2, HLT v6r3, Lbcom v7r2, LHCb v27r2, Gaudi v21r1, LCG 56a
+
+Highlights:
+ * Bug fix in ParticleMaker noPIDsParticles : now does only long tracks by default
+ * Improvements in Stripping needed for FEST tests
+ * 4-body Topo switched off by default, avoids too long events
+ * New Tagging event model
+ * Improvements in DecayTreeTuple, see Rob's talk at software week
+
+</PRE><H1><A NAME=v23r1p1>2009-06-11 DaVinci v23r1p1 bugfix release</A></H1><PRE>
 
 Based on Phys v8r4, Analysis v3r4, Rec v7r1, HLT v6r2, Lbcom v7r1, LHCb v27r1, Gaudi v21r1, LCG 56a
 
