@@ -51,13 +51,19 @@ class importUtils:
   def genIncludes(self):
     s = ''
     for imp in self.include :
-      # workaround for Windows max() macro problem, to be moved to GaudiKernel/boost_allocator.h in Gaudi v21r2
       if imp.find('GaudiKernel/boost_allocator.h') != -1 : 
+        # workaround for Windows max() macro problem, to be moved to GaudiKernel/boost_allocator.h in Gaudi v21r2
         s += '#ifdef _WIN32\n'
         s += '// Avoid conflict of Windows macro with std::max\n'
         s += '  #ifndef NOMINMAX\n'
         s += '    #define NOMINMAX\n'
         s += '  #endif\n'
+        s += '#endif\n'
+      if imp.find('HepMC/GenEvent') != -1 : 
+        # Suppress compiler warning from HepMC/Flow.h included by HepMC/GenEvent.h
+        s += '#ifdef _WIN32\n'
+        s += '// Disable warning C4800 forcing value to bool true or false (performance warning), caused by HepMC/Flow.h\n'
+        s += '  #pragma warning ( disable : 4800 )\n'
         s += '#endif\n'
       if imp.find('.') != -1 : s += '#include "%s"\n' % imp
       else                   : s += '#include "%s.h"\n' % imp

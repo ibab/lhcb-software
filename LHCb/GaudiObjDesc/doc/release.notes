@@ -4,6 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2009-06-23 - Marco Cattaneo
+ - In importUtils.py, disable warning C4800 on Windows when including
+   HepMC/GenEvent.h
+
 !======================== GaudiObjDesc v11r7 2009-05-25 ======================
 ! 2008-09-26 - Marco Cattaneo
  - In importUtils.py, add temporary workaround for windows: define NOMINMAX
