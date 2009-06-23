@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.45 2009-06-22 09:17:27 ggiacomo Exp $
+! $Id: release.notes,v 1.46 2009-06-23 13:33:23 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -9,6 +9,7 @@
 ! 20090622 v5r4
 - new fields for Analysis: doc and specific message
 - add links to navigate from histogram to page objects
+- fix a (erratic) problem with binlabels ordering
 
 ! 20090609 v5r3 (tested on FEST5)
 - changes to OMAMessage, to allow for DB reconnection to Analysis Tasks
