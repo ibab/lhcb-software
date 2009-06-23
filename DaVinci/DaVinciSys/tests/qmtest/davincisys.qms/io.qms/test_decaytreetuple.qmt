@@ -13,15 +13,13 @@ Tuple                                                       SUCCESS Number of co
  | "Event"                                         |      2000 |       2000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 EventTuple                                                  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 EventTuple                                                  SUCCESS List of booked N-Tuples in directory "FILE1/EventTuple"
-EventTuple                                                  SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=7  {EventInSequence,runNumber,eventNumber,Collisions,P
-rocessType[1]/V,HeaviestQuark[1}
+EventTuple                                                  SUCCESS  ID=EventTuple    Title="EventTuple"                              #items=7  {EventInSequence,runNumber,eventNumber,Collisions,ProcessType[1]/V,HeaviestQuark[1}
 EventTuple                                                  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Event"                                         |      2000 |       2000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 MCTuple                                                     SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 MCTuple                                                     SUCCESS List of booked N-Tuples in directory "FILE1/MCTuple"
-MCTuple                                                     SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=141{B0_TRUEP_E,B0_TRUEP_X,B0_TRUEP_Y,B0_TRUEP_Z,B0_TRU
-EPT,B0_TRUEORIGINVERTEX_X,B0_TR}
+MCTuple                                                     SUCCESS  ID=MCDecayTree   Title="MCDecayTree"                             #items=141{B0_TRUEP_E,B0_TRUEP_X,B0_TRUEP_Y,B0_TRUEP_Z,B0_TRUEPT,B0_TRUEORIGINVERTEX_X,B0_TR}
 MCTuple                                                     SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |      2000 |       1999 |(  99.9500 +- 0.0499875)%|   -------   |   -------   |
