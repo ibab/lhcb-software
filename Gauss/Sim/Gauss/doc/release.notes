@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-06-23 - Silvia Miglioranzi
+ - Update of QMTests gauss-mc09.qmt and gauss-gen-mc09.qmt (and corresponding  
+   ref files). Introduction of new gen-only QMtests for the following event 
+   types:
+   - 10000000
+   - 14103000
+   - 22112000
+   - 42112000
+   and corresponding ref files for the different platforms.
+   Removal of the ref files of the obsolete gauss-2008.qmt (already removed).
+
 !======================== Gauss v37r2 2009-06-03 =============================
 ! 2009-06-03 - Gloria CORTI
  - Remove gauss-2008.qmt as the options that it was using have been removed
