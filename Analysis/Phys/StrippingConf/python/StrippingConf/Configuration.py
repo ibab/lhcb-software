@@ -124,7 +124,7 @@ class StrippingConf( LHCbConfigurableUser ):
 		seq.ModeOR = 1    # Event is selected if at least one selection in the stream is True
 		for line in lines : 
 		    if line.stream() == i :
-			seq.Members += [ line.configurable() ] 
+			seq.Members += [ line.configurable() ]
 		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq
 
 	if output == "NONE" : 

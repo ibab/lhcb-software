@@ -304,7 +304,7 @@ class StrippingLine(object):
         __mdict = deepcopy ( mdict ) 
 
         self._configurable = StrippingAlg ( self.name() , **__mdict )
-        print 'created Stripping Line configurable for ' + name
+        print '# created Stripping Line configurable for', name, '\n'
         print self._configurable
 
         # register into the local storage of all created Lines
