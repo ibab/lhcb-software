@@ -5,8 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-24 - Silvia Miglioranzi
- - Update of QMTest gausssys.qmt (and corresponding reference files). 
-   Introduction of new gen-only QMtests for the following event types:
+ - Introduction of new gen-only QMtests for the following event types:
    - 14143011 (use of BcVegPy instead of Pythia) 
    - 60001008 (use of Hijing instead of Pythia)
    and corresponding ref files for the different platforms.
