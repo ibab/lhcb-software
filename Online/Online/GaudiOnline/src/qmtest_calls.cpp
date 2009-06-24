@@ -201,7 +201,7 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
   pg.add(p[10]=new Process("Prod2_0",command(),aprod2,out.c_str()));
   pg.add(p[11]=new Process("Prod3_0",command(),aprod3,out.c_str()));
   pg.start();
-  ::lib_rtl_sleep(15000);
+  ::lib_rtl_sleep(30000);
   cout << "Producer finished work.. " << endl;
   return collect_summary(sizeof(p)/sizeof(p[0]),p);
 }
