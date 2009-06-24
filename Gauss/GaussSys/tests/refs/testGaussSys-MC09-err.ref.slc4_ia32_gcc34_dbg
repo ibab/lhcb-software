@@ -4,13 +4,19 @@ Particle anti_xi_b0 has a strange PDGEncoding
 Particle xi_b0 has a strange PDGEncoding 
 WARNING - G4Navigator::ComputeStep()
           Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-214.4809855,463.9227669,895)
-          direction: (-0.1789043105,0.4400364176,0.8799779536).
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (387.6382955,383.7386469,895)
+          direction: (0.4677562372,0.4448847155,0.7637288082).
           Potential geometry or navigation problem !
           Trying pushing it of 9e-10 mm ...
 WARNING - G4Navigator::ComputeStep()
           Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (344.0947346,-272.6443861,895)
-          direction: (0.3313067247,-0.260851172,0.9067483224).
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-241.8754443,439.2252051,895)
+          direction: (-0.2287466916,0.3985465527,0.888164172).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (337.4979098,-263.97809,895)
+          direction: (0.3255997872,-0.2523134429,0.9112204481).
           Potential geometry or navigation problem !
           Trying pushing it of 9e-10 mm ...

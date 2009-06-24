@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py</text>
-    <text>$APPCONFIGOPTS/Conditions/MC09-20090519-vc-md100.py</text>
+    <text>$APPCONFIGOPTS/Conditions/MC09-20090602-vc-md100.py</text>
     <text>$DECFILESROOT/options/30000000.opts</text>
     <text>$LBPYTHIAROOT/options/Pythia.opts</text> 
     <text>$GAUSSSYSROOT/tests/options/testGaussSys-defaults.py</text>
