@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.256 2009-06-24 09:53:35 gcowan Exp $ 
+! $Id: release.notes,v 1.257 2009-06-24 11:20:23 mlieng Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
   - Added the prescaled and detached exclusive Bs->JpsiPhi to Configuration.py
 
 !========================== HltConf v3r2 2009-06-23 ===================
+! 2009-06-24 - Magnus Lieng
+ - Changes in Hlt2TrackFitForIncPhi.py
+   . Changed alg name from HltIncPhiRichPIDsKaons to Hlt2IncPhiRichPIDsKaons
+   . Loosened Hlt2IncPhiRichPIDsKaons PID
+
 ! 2009-06-23 - Patrick Koppenburg
  - use DC06 tuning for MC09 (temporary)
 

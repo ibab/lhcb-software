@@ -131,12 +131,12 @@ Hlt2IncPhiRichChargedProtoPAlg.UseVeloPID = 0
 ######################################################################
 # Rich Charged Particles
 ######################################################################
-HltIncPhiRichPIDsKaons = CombinedParticleMaker('HltIncPhiRichPIDsKaons')
-Hlt2IncPhiRichParticlesSeq.Members += [ HltIncPhiRichPIDsKaons ]
+Hlt2IncPhiRichPIDsKaons = CombinedParticleMaker('Hlt2IncPhiRichPIDsKaons')
+Hlt2IncPhiRichParticlesSeq.Members += [ Hlt2IncPhiRichPIDsKaons ]
 
-HltIncPhiRichPIDsKaons.Input = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
-HltIncPhiRichPIDsKaons.Particle = "kaon"
-HltIncPhiRichPIDsKaons.addTool(TrackSelector())
-HltIncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
-HltIncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
-HltIncPhiRichPIDsKaons.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-1.0'"]
+Hlt2IncPhiRichPIDsKaons.Input = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
+Hlt2IncPhiRichPIDsKaons.Particle = "kaon"
+Hlt2IncPhiRichPIDsKaons.addTool(TrackSelector())
+Hlt2IncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
+Hlt2IncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
+Hlt2IncPhiRichPIDsKaons.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-10.0'"]
