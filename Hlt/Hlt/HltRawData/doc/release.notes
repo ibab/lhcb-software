@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.40 2009-06-03 10:27:36 pkoppenb Exp $
+!$Id: release.notes,v 1.41 2009-06-24 16:00:39 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
-! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
+! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-06-23 - Tomasz Skwarnicki
+ - migrate most of the code (Writers, Readers->Decoders) to 
+   new Hlt/HltDAQ which will be in LbCom project.
+   Delete xml,options directories. Clean up requirements.
 
 !========================== HltRawData v1r11 2009-06-03 ===================
 ! 2009-05-31 - Gerhard Raven
