@@ -52,7 +52,7 @@ double EvtBToKStarllDurham07::_poleSize = 0;
 double EvtBToKStarllDurham07::_lowq2Cut = 0.5;
 double EvtBToKStarllDurham07::_highq2Cut = 18;
 bdkszmm::PARAMETERIZATIONS EvtBToKStarllDurham07::_ffModel = bdkszmm::BALL07PRIVATE;
-bool EvtBToKStarllDurham07::_calcAFBZero = false;
+bool EvtBToKStarllDurham07::_calcConstraints = false;
 
 EvtBToKStarllDurham07::EvtBToKStarllDurham07():
 	EvtDecayAmp::EvtDecayAmp()
@@ -197,8 +197,6 @@ void EvtBToKStarllDurham07::initProbMax(){
 		const int maxq2Iter = 25;
 		for (i=0; i < maxq2Iter; i++) {
 			//sample in 25 bins over q2 spectrum
-			//TODO: Understand why whole spectrum is required vs low q2 region
-
 			q2 =  q2low + ((i*(q2max-q2low))/26.0);
 
 			erho = (m*m + mass[0]*mass[0] - q2 )/(2.0*m);
@@ -423,12 +421,12 @@ void EvtBToKStarllDurham07::handleCommand(const std::string& key, const std::str
 		//set the form factor model to use
 		_ffModel = static_cast<bdkszmm::PARAMETERIZATIONS>(val);
 
-	} else if (key == "calcAFBZero") {
-		//allow AFB to be calculated
+	} else if (key == "calcConstraints") {
+		//allow AFB zero and other constraints to be calculated
 		bool val = false;
 		std::istringstream in(value);
 		in >> val;
-		_calcAFBZero = val;
+		_calcConstraints = val;
 
 	}else if (key == qcd::GenericModel::modelCommand) {
 		//the model parameters are set in the main command method
@@ -521,7 +519,7 @@ void EvtBToKStarllDurham07::init(){
 	}
 	report(INFO,"EvtGen") << "formFactorModel is " << _ffModel << "." << std::endl;
 	if(!_calculator){
-		_calculator = new QCDFactorisation(*_model,_ffModel,_calcAFBZero);
+		_calculator = new QCDFactorisation(*_model,_ffModel,_calcConstraints);
 	}
 
 }

@@ -10,27 +10,30 @@
 #include <sstream>
 
 const std::string qcd::GenericModel::modelCommand = "wilsonCoefficients";
-qcd::WCPtr qcd::GenericModel::getLeftWilsonCoefficientsMW() const{
-	//start with the SM
-	qcd::SMPhysicsModel* model = new qcd::SMPhysicsModel;
-	qcd::WCPtr C = model->getLeftWilsonCoefficientsMW();
-	qcd::WCPtr CR = model->getRightWilsonCoefficientsMW();
-	delete model;
+qcd::WCPtr qcd::GenericModel::getLeftNewPhysicsDeltasMW() const{
+	//start with an empty list
+	qcd::WCPtr C = getZeroWCs();
+	qcd::WCPtr CR = getZeroWCs();
 	parseCommand(C.get(),CR.get());
 	return C;
 }
+
 qcd::WCPtr qcd::GenericModel::getRightWilsonCoefficientsMW() const{
-	//start with the SM
-	qcd::SMPhysicsModel* model = new qcd::SMPhysicsModel;
-	qcd::WCPtr C = model->getLeftWilsonCoefficientsMW();
-	qcd::WCPtr CR = model->getRightWilsonCoefficientsMW();
-	delete model;
+	//start with an empty list
+	qcd::WCPtr C = getZeroWCs();
+	qcd::WCPtr CR = getZeroWCs();
 	parseCommand(C.get(),CR.get());
 	return CR;
 }
 void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 		const WilsonCoefficients<WilsonType>* CR) const{
-	
+
+	//start with the SM
+	qcd::SMPhysicsModel* model = new qcd::SMPhysicsModel;
+	qcd::WCPtr C_SM = model->getLeftWilsonCoefficientsMW();
+	qcd::WCPtr CR_SM = model->getRightWilsonCoefficientsMW();
+	delete model;
+
 	//nasty and unreliable command parser
 	std::ostringstream valueString;
 	unsigned int coefficientNumber = 0;
@@ -42,7 +45,7 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 	 * The following parser allows for the setting or modification
 	 * of arbitrary wilson coefficients. The syntax is as follows:
 	 * 
-	 * wilsonCoefficients(L1=0.16:L2=0.05:R10*0.95:)
+	 * wilsonCoefficients(L1=0.16:L2=0.05:R10*=0.95:)
 	 * 
 	 * So the individual values can either be set directly, or the SM
 	 * values modified by a factor. In each case, the statement must
@@ -64,8 +67,7 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 						in >> value;
 						//choose C or C' here
 						if(!isRight){
-							//const WilsonType smValue = (*C)(coefficientNumber);
-							const WilsonType smValue = 1.0;
+							const WilsonType smValue = (*C_SM)(coefficientNumber);
 							//do we apply an operator?
 							WilsonType set;
 							if(op == '='){
@@ -86,10 +88,10 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 									break;
 								};
 							}
-							(*C)(coefficientNumber) = set;
-							report(NOTICE, "EvtGen") << "L(" << coefficientNumber << ") = " << set << std::endl;
+							(*C)(coefficientNumber) = set - smValue;
+							report(INFO, "EvtGen") << "L(" << coefficientNumber << ") = " << (*C)(coefficientNumber) << std::endl;
 						}else{
-							const WilsonType smValue = (*CR)(coefficientNumber);
+							const WilsonType smValue = (*CR_SM)(coefficientNumber);
 							//do we apply an operator?
 							WilsonType set;
 							if(op == '='){
@@ -110,8 +112,8 @@ void qcd::GenericModel::parseCommand(const WilsonCoefficients<WilsonType>* C,
 									break;
 								};
 							}
-							(*CR)(coefficientNumber) = set;
-							report(NOTICE, "EvtGen") << "R(" << coefficientNumber << ") = " << set << std::endl;
+							(*CR)(coefficientNumber) = set - smValue;
+							report(INFO, "EvtGen") << "R(" << coefficientNumber << ") = " << (*CR)(coefficientNumber) << std::endl;
 						}
 					}
 					valueString.str("");

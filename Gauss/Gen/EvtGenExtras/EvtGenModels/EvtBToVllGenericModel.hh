@@ -16,7 +16,10 @@ public:
 	void setCommand(const std::string& _cmd){
 		command = _cmd;
 	}
-	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
+	bool hasRightHandedCurrents() const{
+		return true;
+	}
+	qcd::WCPtr getLeftNewPhysicsDeltasMW() const;
 	qcd::WCPtr getRightWilsonCoefficientsMW() const;
 private:
 	std::string command;

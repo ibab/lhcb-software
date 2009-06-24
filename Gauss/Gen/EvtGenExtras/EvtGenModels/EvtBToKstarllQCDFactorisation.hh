@@ -97,7 +97,7 @@ class QCDFactorisation
 	
 public:
 	
-	QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcAFBZero = false);
+	QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcConstraints = false);
 	virtual ~QCDFactorisation();
 	
 	virtual  void getTnAmplitudes(const double q2, const double MB, const double mK, std::vector<EvtComplex>* tensors) const;
@@ -128,7 +128,7 @@ private:
 	const qcd::IPhysicsModel& model;
 	const std::auto_ptr<bdkszmm::FFCalc> ffModel;
 	
-	const bool calcAFBZero;
+	const bool calcConstraints;
 
 protected:
 	

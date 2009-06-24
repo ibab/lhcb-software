@@ -46,7 +46,7 @@ private:
 	static double _lowq2Cut;
 	static double _highq2Cut;
 	static bdkszmm::PARAMETERIZATIONS _ffModel;
-	static bool _calcAFBZero;
+	static bool _calcConstraints;
 	
 protected:
 	

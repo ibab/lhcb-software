@@ -74,8 +74,8 @@ std::string EvtBToVllParameters::flavourString() const{
 }
 
 
-QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcAFBZero):
-	model(_model),ffModel(bdkszmm::getFFModel(_ffModel)),calcAFBZero(_calcAFBZero)
+QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdkszmm::PARAMETERIZATIONS _ffModel, bool _calcConstraints):
+	model(_model),ffModel(bdkszmm::getFFModel(_ffModel)),calcConstraints(_calcConstraints)
 {
 	if(!parameters){
 		init();
@@ -84,7 +84,7 @@ QCDFactorisation::QCDFactorisation(const qcd::IPhysicsModel& _model, const bdksz
 
 void QCDFactorisation::init(){
 	
-	//report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
+	report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
 
 	//find the WCs at mu = mb
 	qcd::WCPtr  C_mw = model.getLeftWilsonCoefficientsMW();
@@ -105,21 +105,23 @@ void QCDFactorisation::init(){
 	
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb()->getOperatorBasis());
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
-#if 0	
-	std::cout << "Using physics model: " << model.getModelName() << std::endl;
-	std::cout << "Meson: " << parameters->flavourString() << std::endl;
-	std::cout << "Left-handed Wilson coefficients are: " << std::endl;
-	std::cout << "\t(m_W): " << (*C_mw) <<std::endl;
-	std::cout << "\t(m_b): " << *(parameters->getC_mb()) <<std::endl;
-	std::cout << "\t(m_h): " << *(parameters->getC_mb3()) <<std::endl;
+
+	report(INFO,"EvtGen") << "Using physics model: " << model.getModelName() << std::endl;
+	report(INFO,"EvtGen") << "Meson: " << parameters->flavourString() << std::endl;
+	report(INFO,"EvtGen") << "Left-handed Wilson coefficients are: " << std::endl;
+	report(INFO,"EvtGen") << "\t(m_W): " << (*C_mw) <<std::endl;
+	report(INFO,"EvtGen") << "\t(m_W_NP): " << *(parameters->getCNP_mw()) <<std::endl;
+	report(INFO,"EvtGen") << "\t(m_b): " << *(parameters->getC_mb()) <<std::endl;
+	report(INFO,"EvtGen") << "\t(m_h): " << *(parameters->getC_mb3()) <<std::endl;
 	
-	std::cout << "Right-handed Wilson coefficients are: " << std::endl;
-	std::cout << "\t(m_W): " << *(parameters->getCR_mw()) <<std::endl;
-	std::cout << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
-	std::cout << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
-#endif
+	report(INFO,"EvtGen") << "Right-handed Wilson coefficients are: " << std::endl;
+	report(INFO,"EvtGen") << "\t(m_W): " << *(parameters->getCR_mw()) <<std::endl;
+	report(INFO,"EvtGen") << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
+	report(INFO,"EvtGen") << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
+	report(INFO,"EvtGen") << "Model includes right handed currents: " << parameters->includeRHC << std::endl;
+
 	EvtBToVllConstraints constrain(*this);
-	if(calcAFBZero){
+	if(calcConstraints){
 		const double brBsToMuMu = constrain.getBrBsToMuMu();
 		std::cout << "BR(B_s->\\mu\\mu) is: " << brBsToMuMu <<std::endl;
 		const double brBToXsGamma = constrain.getBrBToXsGamma();
