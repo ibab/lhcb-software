@@ -1,0 +1,230 @@
+#!/usr/bin/env python
+import os, sys, shutil, getopt
+
+def usage():
+    print "dirac2AFS.py <options>"
+    print "  Installs DIRAC in $LHCb_release_area"
+    print "  Options:"
+    print "    -v, --version <version>: Manadatory, version to be installed"
+    print "    -p, --platform <CMTCONFIG>: platform, default to $CMTCONFIG"
+    print "    -t, --test <name>: name of the installed version for tests"
+    print "    -d, --directory <dir>: directory where to install"
+    print "    -D, --dev: install in $LHCBDEV"
+    print "    -P, --python <version>: installs for the specified version of python"
+    print "    -f, --full: install for all platforms and all python versions"
+    print "    -c, --clear: clear the existing release first"
+    print "    -b, --build: build from source"
+
+def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
+    os.chdir(baseDir)
+        
+    tmpdir = os.path.join(baseDir,"tmp")
+    if os.path.exists(tmpdir):
+        shutil.rmtree(tmpdir)
+    os.makedirs(tmpdir)
+    os.chdir(tmpdir)
+    keeptmp = True
+    if pyVers:
+        print "Installing DIRAC in", baseDir+", platform:",cmtconfig,", python:",pyVers,"\n"
+        pythonoption = "-i " + pyVers
+    else:
+        print "Installing DIRAC in", baseDir+", platform:",cmtconfig,"\n"
+        pythonoption = ""
+
+    # install DIRAC using Ricardo's tool
+    shutil.copy( os.path.join(os.environ["LHCBHOME"], "distribution/DIRAC3/scripts/dirac-install"), "dirac-install")
+    command =  "./dirac-install -v %s -p %s %s" % (version,diracconfig, pythonoption)
+    if build: command += " --build"
+    print "Executing:",command
+    rc = os.system(command)
+    if rc:
+        print "Error while installing DIRAC..."
+        sys.exit(rc)
+
+    # Delete unnecessary files and directories
+    content = os.listdir(".")
+    pythonVersions = []
+
+    for c in content:
+        if c.find(".csh") >= 0: os.remove(c)
+        if c.find(".sh") >= 0: os.remove(c)
+        if c.find("slc") == 0 and os.path.isdir(c): shutil.rmtree(c)
+        if c == "DIRAC.old": shutil.rmtree(c)
+        if c.find("Linux") == 0:
+            #        ex = os.path.join(c,"bin","lcg-cp")
+            #        if os.path.exists(ex):
+            #            print "DIRAC contains the following versions of lcg_utils and gfal:"
+            #            os.system(ex+" --version")
+            #        else:
+            #            print "DIRAC doesn't contain lcg-cp"
+            # slim the platform dependent directory
+            dirs = ["bin", "include", "man", "share"]
+            for d in dirs:
+                d = os.path.join(c,d)
+                if os.path.exists(d): shutil.rmtree(d)
+            d = os.path.join(c,"lib")
+            libs = os.listdir(d)
+            for f in libs:
+                l = os.path.join(d,f)
+                if not os.path.isdir(l):
+                    # print "Remove file", l
+                    os.remove(l)
+                else:
+                    if f.find("python") != 0:
+                        # print "Remove tree",l
+                        shutil.rmtree(l)
+                    else:
+                        pythonVersions.append(f)
+                        pfiles = os.listdir(l)
+                        for p in pfiles:
+                            if p != "site-packages":
+                                p = os.path.join(l,p)
+                                # print "Remove",p
+                                if os.path.isdir(p): shutil.rmtree(p)
+                                else: os.remove(p)
+                            else:
+                                p = os.path.join(l,p)
+                                sfiles = os.listdir(p)
+                                for s in sfiles:
+                                    if s != "GSI":
+                                        s = os.path.join(p,s)
+                                        # print "Remove", s
+                                        if os.path.isdir(s): shutil.rmtree(s)
+                                        else: os.remove(s)
+                        if "site-packages" in pfiles:
+                            # We have found the place where GSI is
+                            dest = os.path.join( baseDir, d)
+                            if os.path.exists(dest):
+                                print "Moving",l,"to",dest
+                                shutil.move( l, os.path.join(dest,f))
+                                keeptmp = False
+
+    if keeptmp:
+        content = os.listdir(".")
+        for c in content:
+            cc = os.path.join( baseDir,c)
+            if not os.path.exists(cc): shutil.move( c, cc)
+        shutil.rmtree(tmpdir)
+    else:
+        shutil.rmtree(tmpdir)
+    os.chdir( baseDir)
+
+    pyDir = os.path.join("InstallArea",cmtconfig)
+    if not os.path.exists(pyDir):
+        os.makedirs(pyDir)
+    if not os.path.exists("InstallArea/scripts"):
+        os.symlink("../scripts","InstallArea/scripts")
+    if not os.path.exists("InstallArea/python"):
+        os.symlink("..","InstallArea/python")
+    for pyVers in pythonVersions:
+        gsiDir = os.path.join(pyDir, pyVers)
+        if not os.path.exists(gsiDir):
+            os.mkdir(gsiDir)
+        gsiDir = os.path.join( gsiDir, "GSI")
+        try:
+            os.remove(gsiDir)
+        except:
+            pass
+        os.symlink("../../../"+diracconfig+"/lib/"+pyVers+"/site-packages/GSI/", gsiDir)
+
+#========================================== Main ==========================
+cmtconfig = os.environ["CMTCONFIG"]
+version = None
+mysiteroot = None
+altroot = None
+pyVers = None
+diracConfigs = { "slc4_ia32_gcc34" : "Linux_i686_glibc-2.3.4",
+                 "slc4_amd64_gcc34": "Linux_x86_64_glibc-2.3.4",
+                 "x86_64-slc5-gcc43-opt" : "Linux_x86_64_glibc-2.5"}
+cmtConfigs = diracConfigs.keys()
+pythonVersions = ["24","25"]
+full = False
+clear = False
+build = False
+
+opts, args = getopt.getopt( sys.argv[1:], \
+                            "hbv:p:t:d:DP:fc", \
+                            ["help","build", "version=","platform=","test=","directory=","dev","python=","full","clear"])
+for o,a in opts:
+    if o in ("-h", "--help"):
+        usage()
+        sys.exit(0)
+    if o in ("-v", "--version"):
+        version = a
+        dirVersion = version
+    if o in ("-p", "--platform"):
+        cmtconfig = a
+    if o in ("-t", "--test"):
+        dirVersion = a
+    if o in ("-d", "--directory"):
+        altroot = a
+    if o in ("-D", "--dev"):
+        mysiteroot = "LHCBDEV"
+    if o in ("-P", "--python"):
+        print a
+        if not a.isdigit():
+            a = a.split('.')
+        if not len(a) >= 2:
+            print "Invalid python version:",a
+            sys.exit(1)
+        pyVers = a[0] + a[1]
+    if o in ("-f", "--full"):
+        full = True
+    if o in ("-c", "--clear"):
+        clear = True
+    if o in ("-b", "--build"):
+        build = True
+
+if not version:
+    print "Please enter a version number..."
+    usage()
+    sys.exit(1)
+
+if full:
+    clear = True
+else:
+    if not diracConfigs.has_key(cmtconfig):
+        print cmtconfig,"is not a supported platform"
+        sys.exit(1)
+    else:
+        cmtConfigs = [cmtconfig]
+    if pyVers:
+        pythonVersions = [pyVers]
+    else:
+        pythonVersions = [None]
+
+if altroot and not mysiteroot:
+    baseDir = altroot
+else:
+    if not mysiteroot: mysiteroot = "LHCb_release_area"
+    if not os.environ.has_key(mysiteroot):
+        print mysiteroot,"not defined..."
+        sys.exit(1)
+    baseDir = os.path.join( os.environ[mysiteroot], "DIRAC", "DIRAC_"+dirVersion)
+baseDir = os.path.realpath(baseDir)
+if clear and os.path.exists(baseDir):
+    content = os.listdir(baseDir)
+    for c in content:
+        c = os.path.join(baseDir, c)
+        if os.path.isdir(c): shutil.rmtree(c)
+        else: os.remove(c)
+if not os.path.exists(baseDir):
+    os.makedirs(baseDir)
+
+print cmtConfigs, pythonVersions
+for cmtconfig in cmtConfigs:
+    diracconfig = diracConfigs[cmtconfig]
+    for pyVers in pythonVersions:
+        installDirac( baseDir, cmtconfig, diracconfig, pyVers, build)
+
+os.chdir(baseDir)
+walk = os.walk(".")
+for dir,dirs,files in walk:
+    # remove the web stuff...
+    if os.path.basename(dir) == "Interfaces":
+        if "Web" in dirs:
+            shutil.rmtree(os.path.join(dir,"Web"))
+    # remove the .pyc files
+    for f in files:
+        e = os.path.splitext(f)[1]
+        if e == ".pyc": os.remove(os.path.join(dir,f))
