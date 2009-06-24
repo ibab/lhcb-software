@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.5 2009-01-21 14:17:53 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.6 2009-06-24 10:11:57 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -58,10 +58,16 @@ StatusCode UnpackTrack::execute() {
     track->setChi2PerDoF( pack.fltPacked( src.chi2PerDoF ) );
     track->setNDoF(       src.nDoF );
     track->setFlags(      src.flags );
-    for ( int kId = src.firstId; src.lastId > kId; ++kId ) {
+    LHCb::Track::LHCbIDContainer lhcbids(  src.lastId - src.firstId  ) ;
+    LHCb::Track::LHCbIDContainer::iterator lhcbit = lhcbids.begin() ;
+    for ( int kId = src.firstId; src.lastId > kId; ++kId, ++lhcbit ) {
       unsigned int id = *(dst->beginIds()+kId);
-      track->addToLhcbIDs( LHCb::LHCbID( id ) );
+      *lhcbit = LHCb::LHCbID( id ) ;
     }
+    // schema change: sorting no longer needed when we write DSTs with sorted lhcbids
+    std::sort( lhcbids.begin(), lhcbids.end() ) ;
+    track->addSortedToLhcbIDs( lhcbids ) ;
+
     for ( int kSt = src.firstState; src.lastState > kSt; ++kSt ) {
       LHCb::PackedState pSta = *(dst->beginState()+kSt);
       convertState( pSta, track );
