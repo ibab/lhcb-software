@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.6 2009-06-24 10:11:57 wouter Exp $
+// $Id: UnpackTrack.cpp,v 1.7 2009-06-24 11:45:36 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,8 @@ StatusCode UnpackTrack::execute() {
       *lhcbit = LHCb::LHCbID( id ) ;
     }
     // schema change: sorting no longer needed when we write DSTs with sorted lhcbids
-    std::sort( lhcbids.begin(), lhcbids.end() ) ;
+    if( dst->version() <= 1 )
+      std::sort( lhcbids.begin(), lhcbids.end() ) ;
     track->addSortedToLhcbIDs( lhcbids ) ;
 
     for ( int kSt = src.firstState; src.lastState > kSt; ++kSt ) {
