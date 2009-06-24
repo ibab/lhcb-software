@@ -1,4 +1,4 @@
-// $Id: WritePackedDst.cpp,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: WritePackedDst.cpp,v 1.2 2009-06-24 13:58:58 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -189,12 +189,31 @@ StatusCode WritePackedDst::execute() {
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
     } else if ( LHCb::CLID_ODIN == myClID ) {  
+
       //== Get the ODIN from raw data, and copy it!
       const std::vector<LHCb::RawBank*>& odinBanks = evt->banks(LHCb::RawBank::ODIN);
       if ( odinBanks.size() ) {
         LHCb::RawBank* odin = *odinBanks.begin();
         m_dst->addBank( odin );
       }
+
+    } else if ( LHCb::CLID_RawEvent == myClID ) {  
+
+      //== For RawEvent data, copy all banks to the output RawEvent, keep track of the banks
+      LHCb::RawEvent* in = get<LHCb::RawEvent>( *itC );
+      PackedBank bank( in );      
+      for ( unsigned int bnkTyp = LHCb::RawBank::L0Calo;
+            LHCb::RawBank::LastType != bnkTyp; ++bnkTyp ) {
+        const std::vector<LHCb::RawBank*>& banks = in->banks( (LHCb::RawBank::BankType)bnkTyp );
+        for ( std::vector<LHCb::RawBank*>::const_iterator itB = banks.begin(); banks.end() != itB; ++itB ) {
+          bank.storeInt( bnkTyp );
+          bank.storeInt( (*itB)->sourceID() );
+          debug() << "Added bank type " << bnkTyp << " source " << (*itB)->sourceID() << endmsg;
+          m_dst->addBank( *itB );
+        }
+      }
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+      
     } else {
       warning() << "--- Unknown class ID " <<  myClID 
                 << " for container " << *itC << " --" << endreq;

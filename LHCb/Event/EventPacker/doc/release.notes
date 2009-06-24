@@ -4,6 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-06-24 - Olivier Callot
+ - Add the packing of RawEvent in WriteDst: All banks are copied from the input
+   RawEvent to the output one, and the list of added banks kept in the output.
+ - Add the reading of banks from a RawEvent object in ReadPackedDst
+ - Fix the coding of the momentum error in PackedTracks in case of saturation.
+ - Make Wouter's changes in UnpackTrack.cpp conformant to LHCb coding standards
+
 ! 2009-06-24 - Wouter Hulsbergen
  - Collect all LHCbIDs before adding them to track (slightly faster than adding them one-by-one)
  - Schema version update for PackedTrack: from version 2 onward, LHCb ids on track are sorted.

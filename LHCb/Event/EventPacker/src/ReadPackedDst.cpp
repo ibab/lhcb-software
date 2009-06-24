@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.6 2009-02-24 15:15:22 ocallot Exp $
+// $Id: ReadPackedDst.cpp,v 1.7 2009-06-24 13:58:58 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -44,6 +44,9 @@ StatusCode ReadPackedDst::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
 
+  // Pass the input RawEvent to the tool
+  sc = Gaudi::Utils::setProperty(&(*m_odinDecoder), "RawEventLocation", m_inputLocation );
+  if (sc.isFailure()) return sc;
   // Pass the Postfix property to the tool
   return Gaudi::Utils::setProperty(&(*m_odinDecoder), "ODINLocation", LHCb::ODINLocation::Default + m_postfix);
 }
@@ -170,6 +173,22 @@ StatusCode ReadPackedDst::execute() {
       std::string temp;
       for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) {
         procStatus->addAlgorithmStatus( stringFromData(), nextInt() );
+      }
+
+    } else if ( LHCb::CLID_RawEvent == classID ) {
+      LHCb::RawEvent* rawEvent = new LHCb::RawEvent();
+      put( rawEvent, name + m_postfix );
+      processLinks( rawEvent, version );
+      while ( 0 < m_size ) {
+        int type     = nextInt();
+        int sourceID = nextInt();
+        debug() << "Read bank " << type << " source " << sourceID << " and add to " << name + m_postfix << endmsg;
+        const std::vector<LHCb::RawBank*>& myBanks = dstEvent->banks( (LHCb::RawBank::BankType)type );
+        for (std::vector<LHCb::RawBank*>::const_iterator itBnk = myBanks.begin(); myBanks.end() != itBnk; ++itBnk ) {
+          if ( (*itBnk)->sourceID() == sourceID ) {
+            rawEvent->addBank( *itBnk );
+          }
+        }
       }
 
     } else {
