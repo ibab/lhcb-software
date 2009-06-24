@@ -6,6 +6,7 @@
 
 ! 2009-06-24 - Wouter Hulsbergen
  - Collect all LHCbIDs before adding them to track (slightly faster than adding them one-by-one)
+ - Schema version update for PackedTrack: from version 2 onward, LHCb ids on track are sorted.
 
 !============================ EventPacker v1r4 2009-03-09 ====================
 ! 2009-02-24 - Olivier Callot
