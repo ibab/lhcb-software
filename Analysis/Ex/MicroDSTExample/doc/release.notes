@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.29 2009-06-23 17:05:57 jpalac Exp $
+!$Id: release.notes,v 1.30 2009-06-24 08:04:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-06-24 - Juan PALACIOS
+ - scripts/MicroDSTReadingExample.py
+  . Write histograms to a file
 
 ! 2009-06-23 - Juan PALACIOS
  - python/MicroDSTExample/HistoUtils.py
