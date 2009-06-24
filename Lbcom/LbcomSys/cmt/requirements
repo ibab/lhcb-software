@@ -21,6 +21,9 @@ use L0Muon            v8r5    L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
 
+# HLT
+use HltDAQ            v1r0    Hlt       # Tomasz Skwarnicki
+
 # Muon
 use MuonAssociators   v3r2    Muon      # Alessia Satta
 
