@@ -494,9 +494,9 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	tensors->at(B) = tensB;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.12
-	const EvtComplex tensC = (1./(1 - (mk*mk)))*(((1 - mk)*(Ceff1_9 + Ceff1_9p)*ffA2) + 
-			(2*(constants::mb/MB)*((*(parameters->getC_mb()))(7)+(*(parameters->getCR_mb()))(7))*(ffT3 + (((MB*MB) - (mK*mK))/q2)*ffT2)) + 
-			((C9[1]+C9p[1])*xi[1]) - ((C9[2]+C9p[2])*xi[2]));
+	const EvtComplex tensC = (1./(1 - (mk*mk)))*(((1 - mk)*(Ceff1_9 - Ceff1_9p)*ffA2) + 
+			(2*(constants::mb/MB)*((*(parameters->getC_mb()))(7)-(*(parameters->getCR_mb()))(7))*(ffT3 + (((MB*MB) - (mK*mK))/q2)*ffT2)) + 
+			((C9[1]-C9p[1])*xi[1]) - ((C9[2]-C9p[2])*xi[2]));
 	DEBUGPRINT("tensC: ", tensC);//V
 	tensors->at(C) = tensC;//will throw runtime exception if the vector is not correct
 		
