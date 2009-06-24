@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.255 2009-06-23 10:14:56 pkoppenb Exp $ 
+! $Id: release.notes,v 1.256 2009-06-24 09:53:35 gcowan Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-24 - Greig Cowan
+  - Added the prescaled and detached exclusive Bs->JpsiPhi to Configuration.py
 
 !========================== HltConf v3r2 2009-06-23 ===================
 ! 2009-06-23 - Patrick Koppenburg

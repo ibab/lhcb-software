@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.89 2009-06-23 16:37:55 fsoomro Exp $"
+__version__ = "$Id: Configuration.py,v 1.90 2009-06-24 09:53:35 gcowan Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -27,6 +27,7 @@ from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
 from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
 from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
+from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf 
 from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
@@ -52,7 +53,8 @@ class HltConf(LHCbConfigurableUser):
                              # Hlt2 Lines
                              , Hlt2B2DXLinesConf
                              , Hlt2B2JpsiXLinesConf
-                             , Hlt2InclusiveDiMuonLinesConf
+          		     , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
+	                     , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
                              , Hlt2TopologicalLinesConf
@@ -165,7 +167,8 @@ class HltConf(LHCbConfigurableUser):
                         if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
                 # add some Hlt2Lines from configurables
                 Hlt2B2DXLinesConf()
-                Hlt2B2JpsiXLinesConf()
+                Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf()
+		Hlt2B2JpsiXLinesConf()
                 Hlt2InclusiveDiMuonLinesConf()
                 Hlt2InclusiveMuonLinesConf()
                 Hlt2InclusivePhiLinesConf()
