@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.8 2009-06-23 12:49:26 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.9 2009-06-24 08:54:31 krinnert Exp $
 // Include files
 // -------------
 
@@ -197,7 +197,8 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
     
     LHCb::VeloCluster* cluster = (*itVC);
     double adc = cluster -> totalCharge();
-    bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
+    unsigned int sensorNumber = cluster->channelID().sensor();
+    bool isCSide = m_velo->sensor(sensorNumber)->isRight(); 
 
     unsigned int samplingIndex = 999;
     for( size_t i = 0; i < m_samplingLocations.size(); ++i )

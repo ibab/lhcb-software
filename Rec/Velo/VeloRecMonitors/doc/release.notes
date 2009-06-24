@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-24 - Kurt Rinnert
+ - bug fix in VeloSampligMonitor: a line was accidently deleted before the
+   last committ.
+
 ! 2009-06-23 - Kurt Rinnert
  - all histograms in VeloCluster- and VeloSamplingMonitor are now booked in
    initialize()
