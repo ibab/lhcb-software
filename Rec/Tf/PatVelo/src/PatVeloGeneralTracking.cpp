@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.17 2009-04-01 09:54:20 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.18 2009-06-24 18:04:34 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -41,6 +41,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "MaxChiSqDof"      ,   m_chiSqDofMax      = 4.0       );
   declareProperty( "UseAllCoords"     ,   m_allCoords        = false     );
   declareProperty( "stepError"        ,   m_stepError        = 0.002     );
+  declareProperty( "FullErrorPoints"  ,   m_fullErrorPoints  = 5         );
   declareProperty( "forwardStepError" ,   m_forwardStepError = 0.00035   );
   declareProperty( "MaxExtrapStations" ,   m_maxExtrapStat    = 3        );
 
@@ -636,7 +637,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
     // set R on phi hits
     m_PatVeloTrackTool->setPhiCoords(*iTr);
     // fit the track trajectory
-    (*iTr)->fitSpaceTrack( m_stepError );
+    (*iTr)->fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
 
     // check if probably a backward particle 
     // if closest approach to beam line is at +z from average of measurements

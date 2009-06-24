@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.16 2009-04-01 08:11:45 ocallot Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.17 2009-06-24 18:04:34 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -52,6 +52,8 @@ namespace Tf {
       declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );
       declareProperty( "PhiHitManagerName" , m_phiHitManagerName  = "PatVeloPhiHitManager" );
       declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
+      declareProperty( "FullErrorPoints", m_fullErrorPoints = 5 );
+
 
     }
   //=============================================================================
@@ -84,6 +86,7 @@ namespace Tf {
       << "NMissedFirst         = " << m_NMissedFirst        << endreq
       << "MaxChiSqDof          = " << m_chiSqDofMax         << endreq
       << "StepError            = " << m_stepError           << endreq
+      << "FullErrorPoints      = " << m_fullErrorPoints     << endreq
       << "ForwardStepError     = " << m_forwardStepError    << endreq
       << "======================================"           << endreq;
 
@@ -115,7 +118,7 @@ namespace Tf {
       if(!(*iTr)->valid()) continue; // if fails skip to next track
 
       // fit the track trajectory
-      (*iTr)->fitSpaceTrack( m_stepError );
+      (*iTr)->fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
 
       // check if spillover
       if (m_trackTool->isSpilloverTrack(*iTr) == true) {
@@ -126,8 +129,9 @@ namespace Tf {
       if( m_cleanOverlaps ){
         // if the track has R hits on both sides but phi hits out of the
         // overlap region delete the R hits
-        bool cleaned = m_trackTool->cleanNonOverlapTracks(*iTr,
-            m_stepError);
+        bool cleaned = 
+	  m_trackTool->cleanNonOverlapTracks(*iTr, m_stepError, 
+					     m_fullErrorPoints);
         if(!(*iTr)->valid()) {
           if (isVerbose) verbose()
             << "Non-overlap track has overlap R clusters removed" 

@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.h,v 1.5 2009-04-24 10:08:55 dhcroft Exp $
+// $Id: PatVeloTrackTool.h,v 1.6 2009-06-24 18:04:35 dhcroft Exp $
 #ifndef TF_PATVELOTRACKTOOL_H 
 #define TF_PATVELOTRACKTOOL_H 1
 
@@ -46,7 +46,8 @@ namespace Tf {
     /// also clean R hits in corner cutouts
     /// stepErr is MS error per velo station assumed in fit errors
     bool cleanNonOverlapTracks(PatVeloSpaceTrack *tr,
-			       double stepErr) const;
+			       double stepErr,
+			       unsigned int fullErrorPoints = 0) const;
 
     /// Set (or reset) the phi coordinates to match the RZ track fit
     void setPhiCoords(PatVeloSpaceTrack* track) const;

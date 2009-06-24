@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.11 2009-04-01 08:11:45 ocallot Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.12 2009-06-24 18:04:35 dhcroft Exp $
 // Include files 
 
 // local
@@ -108,7 +108,8 @@ namespace Tf {
   // Fit the track, computes point, direction and covariance matrix.
   //========================================================================
   void PatVeloSpaceTrack::fitSpaceTrack ( double stepError, 
-					  bool inwardFit, bool beamState ) {
+					  bool inwardFit, bool beamState,
+					  unsigned int fullErrorPoints) {
     // Note: defaults to inwardFit = true
 
     // if fitting toward z = 0 (inward fit) and forward track
@@ -173,7 +174,7 @@ namespace Tf {
       w = dCos * dCos / (variance + MSError);
       v.increment(w,lv,z);
 
-      MSError += stepError;
+      if( fullErrorPoints < itC - m_phiCoord.rbegin() ) MSError += stepError;
     }
 
     //== R coordinate: Use it mainly for U, radial measure
@@ -200,7 +201,7 @@ namespace Tf {
       w = dSin * dSin / (variance + MSError);
       v.increment(w,lv,z);
 
-      MSError += stepError;
+      if( fullErrorPoints < itC - m_rCoord.rbegin() ) MSError += stepError;
     }
 
     // fit the two frames
@@ -294,7 +295,7 @@ namespace Tf {
       chi2 += w * dSin * dSin * du * du ;
       chi2 += w * dCos * dCos * dv * dv ;
 
-      MSError += stepError;
+      if( fullErrorPoints < itC - m_phiCoord.rbegin() ) MSError += stepError;
     }
 
     //== R coordinate:
@@ -319,7 +320,7 @@ namespace Tf {
       chi2 += w * dCos * dCos * du * du ;
       chi2 += w * dSin * dSin * dv * dv ;
 
-      MSError += stepError;
+      if( fullErrorPoints < itC - m_rCoord.rbegin() ) MSError += stepError;
     }
 
     // number of degrees of freedom for the fit

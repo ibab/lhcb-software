@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.11 2009-04-24 10:08:55 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.12 2009-06-24 18:04:35 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -65,10 +65,11 @@ namespace Tf {
     return StatusCode::SUCCESS;
   }
 
-  // if the track has R hits on both sides but phi hits out of the overlap region
-  // delete the R hits
+  // if the track has R hits on both sides but phi hits out of the overlap 
+  // region delete the R hits
   bool PatVeloTrackTool::cleanNonOverlapTracks(PatVeloSpaceTrack *tr, 
-      double stepErr ) const {
+			double stepErr, 
+			unsigned int fullErrorPoints ) const {
     bool isVerbose = msgLevel( MSG::VERBOSE );
 
     if(isVerbose) verbose() << "Cleaning R overlap hits from track" <<endreq;
@@ -115,7 +116,7 @@ namespace Tf {
       }
       // reset phi coords
       this->setPhiCoords(tr);
-      tr->fitSpaceTrack( stepErr );
+      tr->fitSpaceTrack( stepErr, true, true, fullErrorPoints );
       return true;
     }else{
       return false;

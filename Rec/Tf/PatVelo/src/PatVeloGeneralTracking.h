@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.8 2008-11-19 13:23:00 cattanem Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.9 2009-06-24 18:04:34 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -209,6 +209,8 @@ namespace Tf {
       /// MS error between two Velo points
       /// when fitting toward z=0 to  minimise position error on vertex
       double m_stepError;        
+      /// Number of measurements to take with a full error
+      unsigned int m_fullErrorPoints; 
       /// MS error between two Velo points
       /// when fitting away from z=0 to minimise error on slopes at Velo exit
       double m_forwardStepError;

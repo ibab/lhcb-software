@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.h,v 1.5 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloSpaceTool.h,v 1.6 2009-06-24 18:04:34 dhcroft Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
 
@@ -110,6 +110,7 @@ namespace Tf {
       /// Remove otherside R clusters from non-overlap tracks
       bool m_cleanOverlaps;                   
     
+      unsigned int m_fullErrorPoints; ///< Number of measurements to take with a full error
 
       DeVelo * m_velo; ///< Ponter to DeVelo object to get sensor numbers
 
