@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-06-24 - Wouter Hulsbergen
+ - Collect all LHCbIDs before adding them to track (slightly faster than adding them one-by-one)
+
 !============================ EventPacker v1r4 2009-03-09 ====================
 ! 2009-02-24 - Olivier Callot
  - Fix the hack in ReadPackedDst.cpp : Use a std::vector as temporary
