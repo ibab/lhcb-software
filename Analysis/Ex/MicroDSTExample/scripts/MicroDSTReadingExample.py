@@ -5,7 +5,7 @@ from MicroDSTExample import Helpers, Functors, Debug
 from Gaudi.Configuration import EventSelector
 from GaudiPython.Bindings   import AppMgr
 from GaudiPython.Bindings import gbl, AppMgr, Helper
-from MicroDSTExample.HistoUtils import book, fill
+from MicroDSTExample.HistoUtils import book, fill, HistoFile
 from ROOT import TCanvas, TH1D, Double
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from Configurables import MCMatchObjP2MCRelator
@@ -37,7 +37,7 @@ def printHelp():
 locationRoot = '/Event/microDST'
 selection = 'DC06selBs2JpsiPhi_unbiased'
 microDSTFile = ['']
-
+histoFile = HistoFile(selection+"_mDST.root")
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
 for o, a in opts:
@@ -238,3 +238,19 @@ print "massResPlots.keys() = ", massResPlots.keys()
 print "omegaPlots.keys() = ", omegaPlots.keys()
 print "propTimeResPlot: ", propTimeResPlot
 print "reFitPropTimeResPlot: ", refitPropTimeResPlot
+
+print "Saving histograms"
+for pid in interestingParticles :
+    histoFile.save(massPlots[pid],
+                   massResPlots[pid],
+                   ptPlots[pid])
+    
+histoFile.save(propTimePlot,
+               propTimeResPlot,
+               refitPropTimePlot,
+               refitPropTimeResPlot,
+               vertexZ,
+               bestVertexZ,
+               nPVPlot)
+
+histoFile.close()
