@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.10 2009-06-23 21:30:02 graven Exp $
+$Id: release.notes,v 1.11 2009-06-24 09:11:22 mlieng Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,6 +6,9 @@ $Id: release.notes,v 1.10 2009-06-23 21:30:02 graven Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v1r1 2009-06-23 ===================
+! 2009-06-23 Magnus Lieng
+- Migration of Hlt2InclusivePhiLines.py
+
 ! 2009-06-23 Gerhard Raven
 - some corrections to PhiGamma and KstarGamma
 
