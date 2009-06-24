@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.11 2009-06-24 09:11:22 mlieng Exp $
+$Id: release.notes,v 1.12 2009-06-24 09:36:52 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-24 - Greig Cowan
+  - Added "prescaled and detached" exclusive Bs->JpsiPhi selection to
+    Hlt2B2JpsiX.py.
 
 !========================== Hlt2Lines v1r1 2009-06-23 ===================
 ! 2009-06-23 Magnus Lieng
