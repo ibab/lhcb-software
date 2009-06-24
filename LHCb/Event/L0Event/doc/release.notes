@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.120 2009-06-23 12:45:02 odescham Exp $
+! $Id: release.notes,v 1.121 2009-06-24 09:38:31 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2009-06-23 - Olivier Deschamps
+ - L0DUReport.xml : fix gcc43 warnings
 
 ! 2009-06-23 - Olivier Deschamps
  - L0DUReport.xml/L0DUConfig.xml : map assignation const referenced
