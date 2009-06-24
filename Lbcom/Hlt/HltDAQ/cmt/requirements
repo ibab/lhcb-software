@@ -1,0 +1,49 @@
+#============================================================================
+# Created    : 2009-06-23
+# Maintainer : Tomasz Skwarnicki
+#============================================================================
+package           HltDAQ
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src xml
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+use GaudiKernel         v*    
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+
+
+use GaudiAlg            v*
+use HltInterfaces       v*    Kernel
+use HltEvent            v*    Event
+use DAQEvent            v*    Event
+use LoKiHlt             v*    Phys
+
+# include_path      none
+#============================================================================
+# Produce Header-Files from XML description
+#============================================================================
+apply_pattern god_headers files=../xml/*.xml
+
+macro HltDAQObj2Doth_GODflags " -s ../src/ " \
+      WIN32                   " -s ..\src\ " 
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltDAQ    ../src/*.cpp -import=AIDA 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltDAQ
+
+
+

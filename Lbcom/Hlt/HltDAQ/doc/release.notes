@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltDAQ
+! Responsible : Tomasz Skwarnicki
+! Purpose     : Hlt RawBanks writers/decoders/monitors
+!-----------------------------------------------------------------------------
+
+! 2009-06-23 - Tomasz Skwarnicki
+ - initial version. Move Readers from HltRawData and rename them to Decoders.
+   They need to be in LBCOM library like this one. Also move all Writers here.
+
+ 
