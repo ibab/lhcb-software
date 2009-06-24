@@ -54,24 +54,24 @@ double EvtBToKStarllDurham07::_highq2Cut = 18;
 bdkszmm::PARAMETERIZATIONS EvtBToKStarllDurham07::_ffModel = bdkszmm::BALL07PRIVATE;
 bool EvtBToKStarllDurham07::_calcConstraints = false;
 
+//strings to be parsed from the decay file
+const std::string EvtBToKStarllDurham07::constraintsCommand = "calcConstraints";
+const std::string EvtBToKStarllDurham07::formFactorCommand = "formFactorModel";
+const std::string EvtBToKStarllDurham07::highq2CutCommand = "highq2Cut";
+const std::string EvtBToKStarllDurham07::lowq2CutCommand = "lowq2Cut";
+const std::string EvtBToKStarllDurham07::modelCommand = "physicsModel";
+
 EvtBToKStarllDurham07::EvtBToKStarllDurham07():
 	EvtDecayAmp::EvtDecayAmp()
 {
 }
 
 EvtDecayBase* EvtBToKStarllDurham07::clone(){
-	//TODO: Implement copy constructor so scaling is only done *once*
 	return new EvtBToKStarllDurham07;
 }
 
 EvtBToKStarllDurham07::~EvtBToKStarllDurham07(){
 }
-
-void EvtBToKStarllDurham07::printTime(const std::string& msg){
-	time_t tm = time(NULL);
-	std::cout << msg << ": " << ctime(&tm);
-}
-
 void EvtBToKStarllDurham07::decay( EvtParticle *parent ){
 	/**
 	 * set the MC weight and decay the particle
@@ -88,8 +88,6 @@ void EvtBToKStarllDurham07::initProbMax(){
 		//only set the polesize once
 		return;
 	}
-	
-	//printTime("Beginning of initProbMax");
 
 	const EvtId parent = getParentId();
 	const EvtId meson = getDaug(0);
@@ -169,8 +167,6 @@ void EvtBToKStarllDurham07::initProbMax(){
 	report(INFO, "EvtGen")	<< "Initialising the decay model with lowq2Cut(" << _lowq2Cut << "),highq2Cut("
 							<< _highq2Cut << ")" << std::endl; 
 	
-	std::vector<std::pair<double,double> > q2values;
-
 	for (massiter=0; massiter<3; massiter++) {
 
 		mass[0] = EvtPDL::getMeanMass(meson);
@@ -271,8 +267,6 @@ void EvtBToKStarllDurham07::initProbMax(){
 				}
 
 			}
-			//std::cout << "q2 : " << q2 << " Prob: " << prob << std::endl;
-			q2values.push_back(std::make_pair(q2, prob));
 
 			if (i==0) {
 				maxpole=prob;
@@ -297,14 +291,6 @@ void EvtBToKStarllDurham07::initProbMax(){
 	root_part->deleteTree();
 
 	poleSize=0.04*(maxpole/maxfoundprob)*4*(mass[1]*mass[1]);
-
-	std::ofstream outputdata("q2values.dat");
-	for (std::vector<std::pair<double,double> >::iterator it = q2values.begin(); it
-			!= q2values.end(); ++it) {
-		outputdata << it->first << "\t" << it->second << std::endl;
-	}
-	outputdata.close();
-
 	maxfoundprob *=1.15;
 	
 	report(INFO,"EvtGen") << "maximum probability : " << maxfoundprob << "minimum probability : " << minfoundprob << std::endl;
@@ -312,11 +298,8 @@ void EvtBToKStarllDurham07::initProbMax(){
 		report(WARNING,"EvtGen") << "The ratio between the maximum and minimum probabilities is large. Generation will not be efficient. " <<
 		"Consider setting lowq2Cut and highq2Cut in your decay file." << std::endl;
 	}
-	
 	setProbMax(maxfoundprob);
 	setPoleSize(poleSize);
-	
-	//printTime("End of initProbMax");
 }
 
 /** Set up the physics model to use */
@@ -397,23 +380,23 @@ void EvtBToKStarllDurham07::getOptions(const std::string& cmd, std::map<std::str
 
 void EvtBToKStarllDurham07::handleCommand(const std::string& key, const std::string& value){
 	
-	if (key == "physicsModel") {
+	if (key == modelCommand) {
 		handleModelCommand(value);
-	} else if (key == "lowq2Cut") {
+	} else if (key == lowq2CutCommand) {
 
 		double val = _lowq2Cut;
 		std::istringstream in(value);
 		in >> val;
 		_lowq2Cut = val;
 
-	} else if (key == "highq2Cut") {
+	} else if (key == highq2CutCommand) {
 
 		double val = _highq2Cut;
 		std::istringstream in(value);
 		in >> val;
 		_highq2Cut = val;
 
-	} else if (key == "formFactorModel") {
+	} else if (key == formFactorCommand) {
 
 		int val = 0;
 		std::istringstream in(value);
@@ -421,7 +404,7 @@ void EvtBToKStarllDurham07::handleCommand(const std::string& key, const std::str
 		//set the form factor model to use
 		_ffModel = static_cast<bdkszmm::PARAMETERIZATIONS>(val);
 
-	} else if (key == "calcConstraints") {
+	} else if (key == constraintsCommand) {
 		//allow AFB zero and other constraints to be calculated
 		bool val = false;
 		std::istringstream in(value);

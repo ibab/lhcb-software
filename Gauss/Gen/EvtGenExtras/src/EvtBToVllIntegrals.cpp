@@ -220,7 +220,6 @@ double Integrate::integralFunction1(double u, void* p) {
 	} else {
 		result = imag(cResult);
 	}
-	//std::cout << "Result for u = " << u << " is " << result << std::endl;
 	return result;
 }
 
