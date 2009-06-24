@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2009-06-24 - Tomasz Skwarnicki
+ - move HltDiffHltDecReports to Hlt/HltDAQ
+
 !========================== HltCommon v5r7 2009-06-11 ===================
 ! 2009-06-11 - Gerhard Raven
  - enter configured TCK in HltDecReports
