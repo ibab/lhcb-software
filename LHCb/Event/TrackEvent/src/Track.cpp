@@ -283,7 +283,7 @@ bool Track::addToLhcbIDs( const LHCb::LHCbID& value )
 {
   LHCbIDContainer::iterator pos =
     std::lower_bound( m_lhcbIDs.begin(),m_lhcbIDs.end(),value ) ;
-  bool rc = !( (*pos) == value ) ;
+  bool rc = (pos == m_lhcbIDs.end()) || !( (*pos) == value ) ;
   if( rc ) m_lhcbIDs.insert( pos, value ) ;
   return rc ;
 }

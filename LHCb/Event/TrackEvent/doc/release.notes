@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-06-24 - Wouter Hulsbergen
+ - bug fix in Track::addToLhcbIDs
+
 ! 2009-06-23 - Wouter Hulsbergen
  - LHCbIDs on track are now sorted
  - added State locations for vertex and last measurement
