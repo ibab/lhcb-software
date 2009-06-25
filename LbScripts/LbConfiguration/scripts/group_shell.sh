@@ -8,7 +8,7 @@ if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
   if [ -n "$LBLOGIN_DONE" ]; then
     . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --silent >& /dev/null
   else
-    export LB_BANNER=`mktemp -t LbLogin_banner.XXXXXXXX`
+    export LB_BANNER=`mktemp`
     . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --quiet >> ${LB_BANNER}
   fi
   unset lbvers

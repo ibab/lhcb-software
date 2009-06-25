@@ -1,3 +1,8 @@
+2009-06-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/group_shell.(c)sh: removed the explicit template for mktemp. It should still
+	work on the slc4 linuxes and also on the CERNVM machine.
+
 2009-06-22 Marco Clemencic <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py:
