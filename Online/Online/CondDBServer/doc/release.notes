@@ -4,6 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!================ Online/CondDBServer v1r2 2009-06-25 ========================
+
 ! 2009-02-16 - Maria Del Carmen Barandela Pazos
  - Moved the PRIVATE partition to LHCBONR_COOL.
  - Speed up of the start up of the server.

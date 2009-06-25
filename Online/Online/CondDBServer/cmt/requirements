@@ -3,7 +3,7 @@
 # Maintainer : Maria del Carmen Barandela
 #============================================================================
 package           CondDBServer
-version           v1r1
+version           v1r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -48,6 +48,9 @@ apply_pattern    application_path
 
 apply_pattern install_scripts
 
+# Avoid possible conflicts with other projects
+private
+
 # PIT-specific
 #set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
 
@@ -77,3 +80,5 @@ set DIM_DNS_NODE ecs01.lbdaq.cern.ch
 
 action startServer 'condDBServer.exe $(CONDDBSERVERROOT)/cmt/partitions.txt'
 macro_remove cmt_actions_constituents 'startServer'
+
+apply_pattern disable_package_on platform=WIN32
