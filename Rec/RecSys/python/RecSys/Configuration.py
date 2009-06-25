@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2009-03-11 21:31:31 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-06-25 14:02:33 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,8 +37,9 @@ class RecSysConf(LHCbConfigurableUser):
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData for all options
        ,"ExpertHistos":  False   # set to True to write out expert histos
        ,"Context":     "Offline" # The context within which to run the reco sequences
-       ,"OutputType": "" # some sequences are different for RDST
-       ,"DataType": "" # Type of data, propagated from application
+       ,"OutputType": ""         # some sequences are different for RDST
+       ,"DataType": ""           # Type of data, propagated from application
+       ,"OutputLevel" : INFO     # The printout level to use
         }
 
     ## Apply the configuration
@@ -85,7 +86,7 @@ class RecSysConf(LHCbConfigurableUser):
         # RICH
         if "RICH" in recoSeq:
             richConf = RichRecSysConf()
-            self.setOtherProps(richConf,["SpecialData","Context"])
+            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel"])
             richConf.RecoSequencer = GaudiSequencer("RecoRICHSeq")
             
         # CALO
@@ -104,5 +105,5 @@ class RecSysConf(LHCbConfigurableUser):
 
         # PROTO
         if "PROTO" in recoSeq:
-            self.setOtherProps(GlobalRecoConf(),["SpecialData","Context"])
+            self.setOtherProps(GlobalRecoConf(),["SpecialData","Context","OutputLevel"])
             GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")
