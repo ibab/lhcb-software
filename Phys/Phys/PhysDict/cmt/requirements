@@ -3,7 +3,7 @@
 # Maintainer : Juan PALACIOS juan.palacios@cern.ch
 # =============================================================================
 package Phys/PhysDict
-version v4r0p1
+version v4r0p2
 # =============== structure ===================================================
 branches         cmt doc dict
 # =============== dependencies ================================================
@@ -16,3 +16,6 @@ apply_pattern     reflex_dictionary                            \
                   selectionfile=$(PHYSDICTROOT)/dict/PhysDict.xml \
                   options="-U__MINGW32__"
 
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
