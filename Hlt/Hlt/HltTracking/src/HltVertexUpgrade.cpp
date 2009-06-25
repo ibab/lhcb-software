@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.16 2008-12-29 16:19:29 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.17 2009-06-25 21:40:55 aperezca Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -71,6 +71,8 @@ StatusCode HltVertexUpgrade::execute() {
     getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
   m_tool->beginExecute();
 
+  verbose()<<"Trying vertex upgrade "<<m_recoName<<endreq;
+
   Hlt::VertexSelection *input = m_selections.input<1>();
   for (Hlt::VertexSelection::iterator it=input->begin(); it!=input->end(); ++it) {
     RecVertex& vseed = *(*it);
@@ -83,8 +85,10 @@ StatusCode HltVertexUpgrade::execute() {
       printInfo(" seed2 ", seed2);
     }
     std::vector<LHCb::Track*> tracks1, tracks2;
+    debug() << " calling update for track1" << endreq;
     sc = m_tool->iupgrade(seed1,tracks1);
     if (sc.isFailure()) return sc;
+    debug() << " calling update for track2" << endreq;
     sc = m_tool->iupgrade(seed2,tracks2);
     if (sc.isFailure()) return sc;
     if (tracks1.empty() || tracks2.empty() ) continue;
@@ -108,6 +112,8 @@ StatusCode HltVertexUpgrade::execute() {
       }
     }
   }
+
+  debug()<<"Upgrade vertices succesful"<<endreq;
 
   return sc;
 }

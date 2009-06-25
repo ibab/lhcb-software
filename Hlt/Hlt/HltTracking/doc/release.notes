@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.77 2009-06-03 10:21:07 pkoppenb Exp $
+!$Id: release.notes,v 1.78 2009-06-25 21:40:55 aperezca Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2009-06-25 - Antonio Perez-Calero
+ - Modified HltTrackUpgradeTool logic so that a vertex can now be formed from one track 
+ (e.g. a muon) which may be forward and fitted, and velo tracks, and this vertex can
+ be later upgraded forward and fitted. This now allows reco algos to change order for
+ timing studies.
+ - Also in HltTrackUpgradeTool extra info is now passed from the seed to daughters, 
+ but keeping info originally stored. 
 
 !========================== HltTracking v4r0 2009-06-03 ===================
 ! 2009-05-29 - Gerhard Raven

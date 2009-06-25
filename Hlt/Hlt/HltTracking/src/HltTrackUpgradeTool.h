@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.15 2009-05-30 11:29:00 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.16 2009-06-25 21:40:55 aperezca Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -84,7 +84,9 @@ private:
 
   void toolConfigure();
 
-  bool isReco(const LHCb::Track& seed);
+  bool isReco(const LHCb::Track& track);
+
+  bool isOutput(const LHCb::Track& track);
   
   size_t find(const LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
   
@@ -109,7 +111,8 @@ private:
   
   int m_recoID;
   bool m_owner;
-  int m_trackType;
+  int m_ItrackType;
+  int m_OtrackType;
 
   bool m_transferExtraInfo;
   bool m_transferIDs;
