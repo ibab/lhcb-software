@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID_.py,v 1.4 2009-04-23 14:38:50 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID_.py,v 1.5 2009-06-25 10:19:09 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -13,6 +13,7 @@ from Configurables import ( GaudiSequencer,
                             Rich__Rec__GlobalPID__DigitSel,
                             Rich__Rec__GlobalPID__TrackSel,
                             Rich__Rec__PixelBackgroundAlg,
+                            Rich__Rec__GlobalPID__TrackCreator,
                             Rich__Rec__GlobalPID__Likelihood,
                             Rich__Rec__GlobalPID__LikelihoodTool,
                             Rich__Rec__GlobalPID__Finalize,
@@ -41,7 +42,14 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "MaxTrackChangesPerIt": None,
         "MinSignalForNoLLCalc": None
        ,"PidSequencer" : None     # The sequencer to add the RICH reconstruction algorithms to
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
+
+    ## Make an instance of an algortithm
+    def makeRichAlg(self,type,name):
+        alg = type(name)
+        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
+        return alg 
 
     ## Initialize 
     def initialize(self):
@@ -84,29 +92,35 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         cont = self.getProp("Context")
 
         # Initialisation
-        initSeq = GaudiSequencer("Rich"+cont+"GPIDInitSeq")
+        initSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDInitSeq")
         initSeq.MeasureTime = True
         sequence.Members += [ initSeq ]
-        gInit   = Rich__Rec__GlobalPID__Initialize("Rich"+cont+"GPIDInit")
-        gPixSel = Rich__Rec__GlobalPID__DigitSel("Rich"+cont+"GPIDDigSel")
+        gInit   = self.makeRichAlg(Rich__Rec__GlobalPID__Initialize,"Rich"+cont+"GPIDInit")
+        gPixSel = self.makeRichAlg(Rich__Rec__GlobalPID__DigitSel,"Rich"+cont+"GPIDDigSel")
         gPixSel.MaxUsedPixels = self.getProp("MaxUsedPixels")
-        gTrkSel = Rich__Rec__GlobalPID__TrackSel("Rich"+cont+"GPIDTrSel")
+        gTrkSel = self.makeRichAlg(Rich__Rec__GlobalPID__TrackSel,"Rich"+cont+"GPIDTrSel")
         initSeq.Members += [ gInit, gPixSel, gTrkSel ]
 
+        # track creator tool
+        tool = self.makeRichAlg(Rich__Rec__GlobalPID__TrackCreator,"ToolSvc."+cont+"_GPIDTrackCreator")
+        tool.Context = cont
+
         # Likelihood minimisation
-        likSeq = GaudiSequencer("Rich"+cont+"GPIDLLSeq")
+        likSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDLLSeq")
         likSeq.MeasureTime = True
         sequence.Members += [ likSeq ]
         for it in range(0,self.getProp("NIterations")):
 
             # background estimation
-            bckEsti = Rich__Rec__PixelBackgroundAlg( "Rich"+cont+"BckEstIt" + `it` )
+            bckEsti = self.makeRichAlg( Rich__Rec__PixelBackgroundAlg,
+                                        "Rich"+cont+"BckEstIt" + `it` )
 
             # Likelihood minimisation
-            lik = Rich__Rec__GlobalPID__Likelihood( "Rich"+cont+"GPIDLLIt" + `it` )
+            lik = self.makeRichAlg( Rich__Rec__GlobalPID__Likelihood,
+                                    "Rich"+cont+"GPIDLLIt" + `it` )
 
             # configure the likelihood minimisation
-            pidTool = Rich__Rec__GlobalPID__LikelihoodTool("GPIDLikelihoodTool")
+            pidTool = self.makeRichAlg(Rich__Rec__GlobalPID__LikelihoodTool,"GPIDLikelihoodTool")
             pidTool.TrackFreezeOutDLL    = self.getProp("TrackFreezeOutDLL")[it]
             pidTool.FinalDLLCheck        = self.getProp("FinalDLLCheck")[it]
             pidTool.TrackForceChangeDLL  = self.getProp("TrackForceChangeDLL")[it]
@@ -121,7 +135,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
             likSeq.Members += [ bckEsti, lik ]
 
         # Finalise Global PID results
-        sequence.Members += [ Rich__Rec__GlobalPID__Finalize("Rich"+cont+"GPIDFin") ]
+        sequence.Members += [ self.makeRichAlg(Rich__Rec__GlobalPID__Finalize,"Rich"+cont+"GPIDFin") ]
 
     ## @brief Configure the tools
     #  @return The Configurable for the PID tool
@@ -131,7 +145,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         cont = self.getProp("Context")
 
         # PID tool
-        tool = Rich__Rec__GlobalPID__MultiStepTool("ToolSvc.Rich"+cont+"PIDTool")
+        tool = self.makeRichAlg(Rich__Rec__GlobalPID__MultiStepTool,"ToolSvc.Rich"+cont+"PIDTool")
         tool.Context = cont
         tool.NSteps  = self.getProp("NIterations")
 
@@ -139,7 +153,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         for it in range(0,tool.NSteps):
 
             # configure the likelihood minimisation
-            pidTool = Rich__Rec__GlobalPID__LikelihoodTool( "Likelihood" + `it` )
+            pidTool = self.makeRichAlg(Rich__Rec__GlobalPID__LikelihoodTool, "Likelihood" + `it` )
             pidTool.TrackFreezeOutDLL    = self.getProp("TrackFreezeOutDLL")[it]
             pidTool.FinalDLLCheck        = self.getProp("FinalDLLCheck")[it]
             pidTool.TrackForceChangeDLL  = self.getProp("TrackForceChangeDLL")[it]

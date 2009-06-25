@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-06-25 - Chris Jones
+ - Add OutputLevel property to RichRecSysConf Configurable that can be used
+   to global set the output level for all reconstruction components.
+
 !====================== RichRecSys v3r20 2009-06-17 ==========================
 ! 2009-06-11 - Chris Jones
  - Remove RichLocalPID and RichHLTLocalPID from the release.

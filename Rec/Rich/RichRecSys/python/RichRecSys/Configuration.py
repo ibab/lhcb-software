@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.23 2009-06-11 14:23:04 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2009-06-25 10:19:09 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -60,7 +60,14 @@ class RichRecSysConf(RichConfigurableUser):
        ,"HpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
        ,"SpecialData"  : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
+
+    ## Make an instance of an algortithm
+    def makeRichAlg(self,type,name):
+        alg = type(name)
+        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
+        return alg  
 
     ## Initialize 
     def initialize(self):
@@ -111,9 +118,10 @@ class RichRecSysConf(RichConfigurableUser):
         # Check configuration is sane
         self.checkConfiguration()
 
-        # Tool mapping
-        self.setOtherProp(RichTools(),"Context")
+        # Tools
+        self.setOtherProps(RichTools(),["Context","OutputLevel"])
 
+        # Do the configuration
         if self.getProp("ConfigureTools") : self.configTools()
         if self.getProp("ConfigureAlgs")  : self.configAlgorithms(recoSequencer)
         
@@ -134,27 +142,30 @@ class RichRecSysConf(RichConfigurableUser):
         #-----------------------------------------------------------------------------
         if self.getProp("PreloadRawEvent"):
             from Configurables import Rich__DAQ__LoadRawEvent
-            sequence.Members += [ Rich__DAQ__LoadRawEvent("LoadRawRichEvent"+cont) ]
+            raw = self.makeRichAlg( Rich__DAQ__LoadRawEvent, "LoadRawRichEvent"+cont )
+            sequence.Members += [ raw ]
         if self.getProp("PreloadTracks"):
-            sequence.Members += [ Rich__Rec__Initialise("LoadRawTracks"+cont) ]
+            trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
+            sequence.Members += [ trackInit ]
 
         #-----------------------------------------------------------------------------
         # Initialisation
         #-----------------------------------------------------------------------------
-        initSeq = GaudiSequencer("RichRecInit"+cont+"Seq")
+        initSeq = self.makeRichAlg(GaudiSequencer,"RichRecInit"+cont+"Seq")
         initSeq.MeasureTime = True
         sequence.Members += [ initSeq ]
 
         if self.getProp("CheckProcStatus") :
-            initSeq.Members += [ Rich__Rec__Initialise("CheckProc"+cont+"Status") ]
+            procStat = self.makeRichAlg( Rich__Rec__Initialise, "CheckProc"+cont+"Status" )
+            initSeq.Members += [ procStat ]
 
         if self.getProp("InitPixels") :
             # Make a pixel sequence
-            pixelSeq = GaudiSequencer("Rich"+cont+"PixelsSeq")
+            pixelSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PixelsSeq")
             pixelSeq.MeasureTime = True
             initSeq.Members += [ pixelSeq ]
             # Raw decoding algorithm
-            decodeRich = Rich__DAQ__RawBufferToRichDigitsAlg("DecodeRawRich"+cont)
+            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, "DecodeRawRich"+cont )
             decodeRich.DecodeBufferOnly = True
             pixelSeq.Members += [ decodeRich ]
             # Add random background ?
@@ -162,13 +173,13 @@ class RichRecSysConf(RichConfigurableUser):
             if pixBackPercent > 0 :
                 from Configurables import ( Rich__AddBackground,
                                             Rich__RandomPixelBackgroundTool )
-                bkgAlg  = Rich__AddBackground("AddRichBackgrounds")
+                bkgAlg  = self.makeRichAlg( Rich__AddBackground, "AddRichBackgrounds" )
                 bkgTool = Rich__RandomPixelBackgroundTool("RichAddBackground")
                 bkgTool.PixelBackgroundProb = pixBackPercent
                 bkgAlg.addTool(bkgTool)
                 pixelSeq.Members += [ bkgAlg ]
             # Make RichRecPixels
-            recoPixs = Rich__Rec__Initialise("Create"+cont+"Pixels")
+            recoPixs = self.makeRichAlg( Rich__Rec__Initialise, "Create"+cont+"Pixels" )
             recoPixs.CheckProcStatus   = False
             recoPixs.CreatePixels      = True
             # Add algs to sequence
@@ -176,31 +187,31 @@ class RichRecSysConf(RichConfigurableUser):
 
         if self.getProp("InitTracks") :
             # Make a track sequence
-            trackSeq = GaudiSequencer("Rich"+cont+"TracksSeq")
+            trackSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TracksSeq")
             trackSeq.MeasureTime = True
             initSeq.Members += [ trackSeq ]
             
             # Calo tracks
             if self.getProp("UseCaloMomentumTracks") :
                 from Configurables import TrackUseCaloMomentumAlg
-                caloTrackAlg = TrackUseCaloMomentumAlg(cont+"TracksWithCALOP")
+                caloTrackAlg = self.makeRichAlg( TrackUseCaloMomentumAlg, cont+"TracksWithCALOP" )
                 caloTrackAlg.OutputTracks = "Rec/Track/BestWithCALOInfo"
                 trackSeq.Members += [ caloTrackAlg ]
 
             # Make RichRecTracks
-            recoTracks = Rich__Rec__Initialise("Create"+cont+"Tracks")
+            recoTracks = self.makeRichAlg(Rich__Rec__Initialise,"Create"+cont+"Tracks")
             recoTracks.CheckProcStatus   = False
             recoTracks.CreateTracks      = True
             trackSeq.Members += [ recoTracks ]
 
         if self.getProp("InitPhotons") :
             # Make a photon sequence
-            photonSeq = GaudiSequencer("Rich"+cont+"PhotonsSeq")
+            photonSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PhotonsSeq")
             photonSeq.MeasureTime = True
             initSeq.Members += [ photonSeq ]
 
              # Make RichRecPhotons
-            recoPhotons = Rich__Rec__Initialise("Create"+cont+"Photons")
+            recoPhotons = self.makeRichAlg(Rich__Rec__Initialise,"Create"+cont+"Photons")
             recoPhotons.CheckProcStatus   = False
             recoPhotons.CreatePhotons     = True
             photonSeq.Members += [ recoPhotons ]
@@ -211,24 +222,24 @@ class RichRecSysConf(RichConfigurableUser):
         ringalgs = self.getProp("TracklessRingAlgs")
 
         if "Markov" in ringalgs :
-            mfinderSeq                           = GaudiSequencer("Rich"+cont+"MarkovRingFinderSeq")
+            mfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"MarkovRingFinderSeq")
             mfinderSeq.MeasureTime               = True
             sequence.Members                    += [ mfinderSeq ]
-            self.setOtherProp(RichMarkovRingFinderConf(),"Context")
+            self.setOtherProps(RichMarkovRingFinderConf(),["Context","OutputLevel"])
             RichMarkovRingFinderConf().setProp("Sequencer",mfinderSeq)
 
         if "ENN" in ringalgs :
-            ennfinderSeq                           = GaudiSequencer("Rich"+cont+"ENNRingFinderSeq")
+            ennfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"ENNRingFinderSeq")
             ennfinderSeq.MeasureTime               = True
             sequence.Members                      += [ ennfinderSeq ]
-            self.setOtherProp(RichENNRingFinderConf(),"Context")
+            self.setOtherProps(RichENNRingFinderConf(),["Context","OutputLevel"])
             RichENNRingFinderConf().setProp("Sequencer",ennfinderSeq)
             
         if "Template" in ringalgs :
-            tfinderSeq = GaudiSequencer("Rich"+cont+"TemplateRingFinderSeq")
+            tfinderSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"TemplateRingFinderSeq")
             tfinderSeq.MeasureTime               = True
             sequence.Members                    += [ tfinderSeq ]
-            self.setOtherProp(RichTemplateRingFinderConf(),"Context")
+            self.setOtherProps(RichTemplateRingFinderConf(),["Context","OutputLevel"])
             RichTemplateRingFinderConf().setProp("Sequencer",tfinderSeq)
            
         #-----------------------------------------------------------------------------
@@ -237,34 +248,36 @@ class RichRecSysConf(RichConfigurableUser):
         pidMode = self.getProp("PidConfig")
         if pidMode != "None" :
 
-            pidSeq = GaudiSequencer("Rich"+cont+"PIDSeq")
+            pidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PIDSeq")
             pidSeq.MeasureTime = True
             sequence.Members += [ pidSeq ]
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
                 pidConf = RichGlobalPIDConfig()
                 if pidMode == "FastGlobal": pidConf.Mode = "Fast"
-                gpidSeq = GaudiSequencer("Rich"+cont+"GPIDSeq")
+                gpidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDSeq")
                 gpidSeq.MeasureTime = True
                 pidSeq.Members += [ gpidSeq ]
                 pidConf.PidSequencer = gpidSeq
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
-            self.setOtherProp(pidConf,"Context")
+            self.setOtherProps(pidConf,["Context","OutputLevel"])
 
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
             #-------------------------------------------------------------------------
             from Configurables import Rich__Rec__HierarchicalPIDMerge
-            pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
+            pidMerge = self.makeRichAlg(Rich__Rec__HierarchicalPIDMerge,"Merge"+cont+"RichPIDs")
+            pidSeq.Members += [pidMerge]
         
         #-----------------------------------------------------------------------------
         # Summary objects
         #-----------------------------------------------------------------------------
         if self.getProp("MakeSummaryObjects"):
             from Configurables import Rich__Rec__SummaryAlg
-            sequence.Members += [Rich__Rec__SummaryAlg("RichRec"+cont+"Summary")]
+            summary = self.makeRichAlg(Rich__Rec__SummaryAlg,"RichRec"+cont+"Summary")
+            sequence.Members += [summary]
         
     ## @brief Configure the RICH tools
     #
@@ -284,40 +297,70 @@ class RichRecSysConf(RichConfigurableUser):
         # Tracks and segments
         tkConf = RichTrackCreatorConfig()
         tkConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["Context","SpecialData","UseCaloMomentumTracks"])
+        self.setOtherProps(tkConf,["OutputLevel","Context","SpecialData","UseCaloMomentumTracks"])
 
         # Pixels
         pixConf = RichPixelCreatorConfig()
         pixConf.setProp("Detectors",self.usedDetectors())
-        self.setOtherProps(pixConf,["Context"])
+        self.setOtherProps(pixConf,["OutputLevel","Context"])
  
         # Photons
         photConf = RichPhotonCreatorConfig()
         photConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["Context"])
+        self.setOtherProps(photConf,["OutputLevel","Context"])
 
         #--------------------------------------------------------------------
 
         # Misc. items
+
+        # NB : Need to inscanciate the configurables, even if we do nothing with
+        #    : them in order to get properties (like output levels) set correctly.
         
         # geometrical efficiency
         RichTools().geomEff()
 
         # CK theta resolution
         ckResConf = CKThetaResolutionConfig()
-        self.setOtherProp(ckResConf,"Context")
+        self.setOtherProps(ckResConf,["OutputLevel","Context"])
 
         # Particle Types
         from Configurables import Rich__ParticleProperties
-        partProps = Rich__ParticleProperties("ToolSvc."+context+"_RichParticleProperties")
+        partProps = self.makeRichAlg(Rich__ParticleProperties,
+                                     "ToolSvc."+context+"_RichParticleProperties")
         partProps.ParticleTypes = self.getProp("Particles")
 
         # clustering
         from Configurables import Rich__DAQ__HPDPixelClusteringTool
-        self.toolRegistry().Tools += [Rich__DAQ__HPDPixelClusteringTool("BackgroundClustering")]
+        self.toolRegistry().Tools += [self.makeRichAlg(Rich__DAQ__HPDPixelClusteringTool,
+                                                       "BackgroundClustering")]
 
         # Signal detection eff.
         RichTools().sigDetEff()
-  
+
+        # Ray tracing
+        RichTools().rayTracing()
+
+        # Tool registory
+        RichTools().toolRegistry()
+        RichTools().toolRegistry(common=True)
+
+        # Decoding
+        RichTools().smartIDTool()
+
+        # Messages from RichDet
+        msgSvc = getConfigurable("MessageSvc")
+        if self.isPropertySet("OutputLevel") :
+            dets = [ "DeRichSystem" ]
+            if self.getProp("OutputLevel") == WARNING :
+                msgSvc.setWarning += dets
+            elif self.getProp("OutputLevel") == ERROR :
+                msgSvc.setError += dets
+            elif self.getProp("OutputLevel") == FATAL :
+                msgSvc.setFatal += dets
+            elif self.getProp("OutputLevel") == DEBUG :
+                msgSvc.setDebug += dets
+            elif self.getProp("OutputLevel") == VERBOSE :
+                msgSvc.setVerbose += dets
+                
         #--------------------------------------------------------------------
 
