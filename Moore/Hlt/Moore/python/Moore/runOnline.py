@@ -1,19 +1,19 @@
 #!/usr/bin/env gaudirun.py
-
-print '---------------------------Moore.runOnline-----------------------'
-from Moore.Configuration import Moore
-import Gaudi,GaudiKernel.ProcessJobOptions
-from Gaudi.Configuration import importOptions
-GaudiKernel.ProcessJobOptions.printing_level=999
+from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
+import logging
+PrintOff(999)
+InstallRootLoggingHandler(level = logging.CRITICAL)
 
 
 def start() :
+    from Moore.Configuration import Moore
 
     Moore().RunOnline = True
-    print Moore()
     
-    import OnlineEnv as Online
+    # Forward all attributes of 'OnlineEnv' to the job options service...
+    import OnlineEnv 
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
-    ConfigurableGeneric("OnlineEnv").AcceptRate = Online.AcceptRate
+    c = ConfigurableGeneric("OnlineEnv")
+    for k,v in OnlineEnv.__dict__.iteritems() : setattr(c,k,v)
 
     Online.end_config(False)
