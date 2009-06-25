@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-06-25 - Chris Jones
+ - Add OutputLevel property to RichRecQCConf Configurable that can be used
+   to global set the output level for all monitoring components.
+
 !======================= RichRecQC v2r30 2009-06-17 ==========================
 ! 2009-06-10 - Chris Jones
  - Adapt to changes in track selectors

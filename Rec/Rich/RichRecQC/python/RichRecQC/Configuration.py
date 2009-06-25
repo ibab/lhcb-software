@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.35 2009-06-13 15:27:16 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.36 2009-06-25 10:09:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -56,6 +56,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"NTupleProduce" : True
        ,"HistoProduce"  : True
        ,"WithMC"        : False # set to True to use MC truth
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
 
     ## Set the histogram and ntuple producing options
@@ -69,6 +70,7 @@ class RichRecQCConf(RichConfigurableUser):
     def createMonitor(self,type,name,trackType=None,typeSelOnly=False):
         mon = type(name)
         self.setHistosTupleOpts(mon)
+        if self.isPropertySet("OutputLevel") : mon.OutputLevel = self.getProp("OutputLevel")
         if trackType != None :
             mon.addTool( RichTools().trackSelector(nickname="TrackSelector",private=True) )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
@@ -93,6 +95,7 @@ class RichRecQCConf(RichConfigurableUser):
     def newSeq(self,sequence,name):
         seq = GaudiSequencer(name)
         seq.MeasureTime = True
+        if self.isPropertySet("OutputLevel") : seq.OutputLevel = self.getProp("OutputLevel")
         sequence.Members += [seq]
         return seq
 
@@ -114,8 +117,9 @@ class RichRecQCConf(RichConfigurableUser):
         sequence.Context = self.getProp("Context")
 
         # Suppress errors from Linker
-        getConfigurable("MessageSvc").setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
-                                                    "LinkedTo::MC/Particles2MCRichTracks" ]
+        msgSvc = getConfigurable("MessageSvc")
+        msgSvc.setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
+                             "LinkedTo::MC/Particles2MCRichTracks" ]
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
