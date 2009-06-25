@@ -4,6 +4,12 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+!========================== PhysDict v4r0p2 2009-06-25 =====================
+
+! 2009-06-25 - Juan PALACIOS
+ - cmt/requirements
+  . Add magic line for windows compilation
+
 !========================== PhysDict v4r0p1 2009-06-11 =====================
 
 ! 2009-06-11 - Juan PALACIOS
