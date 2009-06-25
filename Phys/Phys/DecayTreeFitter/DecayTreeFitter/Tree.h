@@ -6,12 +6,6 @@
 #include <memory>
 #include "Event/Particle.h"
 
-//namespace LHCb
-//{
-//  class Particle ;
-//  class ParticleID ;
-//}
-
 namespace DecayTreeFitter
 {
   class Tree

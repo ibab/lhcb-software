@@ -6,6 +6,12 @@ I don't know what is possible. I don't know what is helpful.
 
 - ownership of the vertex. I cannot think of any reason why the particle doesn't just own the endVertex.
 
+- can we store the decay length and the 8 additional entries to get the full covariance matrix
+
+- can we rename the position-momentum covariance? the name is
+  'posMomCovMatrix' while te actual things has momentum for the rows and
+  position for the columns.
+
 - ownership of daughters. How about the following. We add to Particle
 a member m_mother. We then use the following rules for ownership of a duaghter 'reference':
  - if parent is set, the parent container holds ownership
@@ -17,6 +23,7 @@ a member m_mother. We then use the following rules for ownership of a duaghter '
 http://babar-hn.slac.stanford.edu:5090/cgi-bin/internal/cvsweb.cgi/~checkout~/CommonUtils/BbrReferencer.hh?rev=1.3;content-type=text%2Fplain
 
 http://babar-hn.slac.stanford.edu:5090/cgi-bin/internal/cvsweb.cgi/~checkout~/CommonUtils/BbrRefCounted.hh?rev=1.4;content-type=text%2Fplain
+
 
 
 - fast clone comparison. We add to particle a member 'uniqueId' which
