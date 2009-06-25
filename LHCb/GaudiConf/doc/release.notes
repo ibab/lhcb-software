@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-06-25 - Chris Jones
+ - Replace "Quiet" property with OutputLevel
+
 ! 2009-06-23 - Marco Cattaneo
  - In DstConf.py:
    . Add pRec/RawEvent to RDST (contains copy of HLT and L0 raw banks)

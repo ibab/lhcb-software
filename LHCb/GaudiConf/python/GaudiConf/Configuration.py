@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.20 2009-06-16 14:34:39 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2009-06-25 15:16:34 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -11,27 +11,27 @@ from Configurables import ( DDDBConf )
 
 class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
-        "EvtMax"     : -1
-       ,"SkipEvents" : 0
-       ,"DataType"   : "2008"
-       ,"DDDBtag"    : ""
-       ,"CondDBtag"  : ""
-       ,"Simulation" : False
-       ,"Monitors"   : []
-       ,"Quiet"      : False
-       ,"TimeStamp"  : False
+        "EvtMax"      : -1
+       ,"SkipEvents"  : 0
+       ,"DataType"    : "2008"
+       ,"DDDBtag"     : ""
+       ,"CondDBtag"   : ""
+       ,"Simulation"  : False
+       ,"Monitors"    : []
+       ,"OutputLevel" : INFO 
+       ,"TimeStamp"   : False
         }
 
     _propertyDocDct = { 
-        'EvtMax'     : """ Maximum number of events to process """
-       ,'SkipEvents' : """ Number of events to skip """
-       ,'DataType'   : """ Data type, can be ['DC06','2008']. Default '2008' """
-       ,'DDDBtag'    : """ Tag for DDDB. Default as set in DDDBConf for DataType """
-       ,'CondDBtag'  : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       ,'Simulation' : """ Flag to indicate usage of simulation conditions """
-       ,'Monitors'   : """ List of monitors to execute """
-       ,'Quiet'      : """ Flag to suppress most MSG::INFO (default False) """
-       ,'TimeStamp'  : """ Flag to add a time stamp to messages (default False) """
+        'EvtMax'      : """ Maximum number of events to process """
+       ,'SkipEvents'  : """ Number of events to skip """
+       ,'DataType'    : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DDDBtag'     : """ Tag for DDDB. Default as set in DDDBConf for DataType """
+       ,'CondDBtag'   : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+       ,'Simulation'  : """ Flag to indicate usage of simulation conditions """
+       ,'Monitors'    : """ List of monitors to execute """
+       ,'OutputLevel' : """ The printout level to use (default INFO) """
+       ,'TimeStamp'   : """ Flag to add a time stamp to messages (default False) """
        }
 
     __used_configurables__ = [ DDDBConf ]
@@ -106,13 +106,15 @@ class LHCbApp(LHCbConfigurableUser):
             importOptions( "$STDOPTS/FPEAudit.opts" )
 
     def defineOutput(self):
-        # Modify printout defaults
+        # Message service
         msgSvc = getConfigurable("MessageSvc")
-
-        if self.getProp( "Quiet" ):
-            # Suppress info and below
-            msgSvc.OutputLevel = WARNING
-            getConfigurable("ToolSvc").OutputLevel = WARNING
+        
+        # Modify printout defaults
+        if self.isPropertySet("OutputLevel"):
+            level = self.getProp("OutputLevel")
+            # Set the level
+            msgSvc.OutputLevel                     = level
+            getConfigurable("ToolSvc").OutputLevel = level
             # Information to be kept
             getConfigurable("EventSelector").OutputLevel = INFO
             getConfigurable("TimingAuditor").OutputLevel = INFO
