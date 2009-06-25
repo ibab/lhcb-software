@@ -24,7 +24,7 @@ boost::recursive_mutex dimMutex;
 boost::recursive_mutex rootMutex;
 
 
-DbRootHist* getHistogram(PresenterMainFrame * /* gui*/, 
+DbRootHist* getHistogram(PresenterMainFrame * gui, 
                          const std::string & identifier,
                          const std::string & currentPartition,
                          int refreshTime,
@@ -35,8 +35,8 @@ DbRootHist* getHistogram(PresenterMainFrame * /* gui*/,
                          pres::MsgLevel verbosity,
                          DimBrowser* dimBrowser)
 {
-    std::vector<std::string*> tasksNotRunning;
-    DbRootHist* dbRootHist = new DbRootHist(identifier,
+  std::vector<std::string*> tasksNotRunning;
+  DbRootHist* dbRootHist = new DbRootHist(identifier,
                                 currentPartition,
                                 refreshTime, instance,
                                 histogramDB, analysisLib,
@@ -46,6 +46,16 @@ DbRootHist* getHistogram(PresenterMainFrame * /* gui*/,
                                 dimMutex,
                                 tasksNotRunning,
                                 rootMutex);
+  
+    if (0 != gui &&
+        0 != gui->archive() &&
+        ((History == gui->presenterMode()) ||
+         (EditorOffline == gui->presenterMode() && gui->canWriteToHistogramDB()))) {
+      gui->archive()->fillHistogram(dbRootHist,
+                               gui->rw_timePoint,
+                               gui->rw_pastDuration);
+   }
+                      
   std::vector<std::string*>::const_iterator tasksNotRunningIt;
   for (tasksNotRunningIt = tasksNotRunning.begin();tasksNotRunningIt != tasksNotRunning.end(); ++tasksNotRunningIt) {
     delete *tasksNotRunningIt;
