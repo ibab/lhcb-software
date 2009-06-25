@@ -22,7 +22,7 @@ def argChecker():
     arguments = sys.argv[1:]
     if len(sys.argv) == 1:
         return
-    
+
     try:
         keys, values = getopt.getopt(arguments,'vr',
                                      ['verbose','remove'])
@@ -63,14 +63,14 @@ def findAllProjects( releaseArea ):
         os.chdir( cmtdir )
         project = file.split(os.sep)[1]
         if project.find('_') == -1:
-            print 'Skipping ', file  
+            print 'Skipping ', file
         else:
-            if printAll: print 'Processing ', project 
+            if printAll: print 'Processing ', project
             if project not in allProjects: allProjects.append(project)
             for line in os.popen('cmt show projects').readlines():
                 if line.find('(current)') == -1 and line.split()[1].find('_') != -1:
                     uses = line.split()[1]
-                    if printAll: print '-->  uses ', uses 
+                    if printAll: print '-->  uses ', uses
                     if uses in usedProjects:
                         usedBy = usedProjects[uses]
                         if project not in usedBy:
@@ -92,13 +92,13 @@ def processOldProjects( releaseArea ):
         cmtdir = os.environ.get(releaseArea) + os.sep + xxEnv
         os.chdir( cmtdir )
         project = xxEnv.split('Env')[0].upper() + '_' + xxEnv.split(os.sep)[1]
-        if printAll: print 'Processing ', project 
+        if printAll: print 'Processing ', project
         if project not in allProjects: allProjects.append(project)
         for line in os.popen('cmt show uses').readlines():
             if line.find('#') != 0 and line.find('CMT') == -1:
                 yyEnv = line.split('use ')[1].split(' (')[0]
                 uses = yyEnv.split()[0].split('Env')[0].upper() + '_' + yyEnv.split()[1]
-                if printAll: print '-->  uses ', uses 
+                if printAll: print '-->  uses ', uses
                 if uses in usedProjects:
                     usedBy = usedProjects[uses]
                     if project not in usedBy:
@@ -136,7 +136,7 @@ def printProjects():
     for pName in unusedProjects:
       print pName, ' versions: ', unusedProjectVersions[pName]
       if removeAll:
-        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC']:
+        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC','BENDER','LHCBGRID']:
           for toberemove in unusedProjectVersions[pName]:
             print 'remove ',pName,' version ',toberemove
             os.popen('cd $MYSITEROOT ; `which install_project` -p '+pName+' -v '+toberemove+' -r')
@@ -149,7 +149,7 @@ def findAllDatabases( distArea ):
     os.chdir( os.environ.get( distArea ) )
     print 'Processing all databases in ', os.getcwd()
 
-    # Find all databases 
+    # Find all databases
     for line in open('html/distribution.htm', 'r' ).readlines():
         # One line per tar file in the distribution area
         if line.find('<H3>') !=-1 :
@@ -158,14 +158,14 @@ def findAllDatabases( distArea ):
                 dbase   = (line.split(' version ')[0]).split('>')[1].strip() \
                         + '_' \
                         + (line.split(' version ')[1]).split('<')[0].strip()
-                if printAll: print 'Processing ', dbase 
+                if printAll: print 'Processing ', dbase
                 if dbase not in allDbases: allDbases.append(dbase)
 
     # Check if dbase is used by any project
     for line in open('html/distribution.htm', 'r' ).readlines():
         if line.find('HREF') != -1 and line.find('NAME') == -1 :
             for dbase in allDbases :
-                if line.find(dbase) != -1 : 
+                if line.find(dbase) != -1 :
                     if dbase not in usedDbases: usedDbases.append(dbase)
 
     for dbase in allDbases :
