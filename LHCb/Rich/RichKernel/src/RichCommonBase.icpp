@@ -5,12 +5,15 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.12 2009-06-11 15:51:43 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.13 2009-06-25 10:01:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
  */
 //-----------------------------------------------------------------------------
+
+// STL
+#include <sstream>
 
 // local
 #include "RichKernel/RichCommonBase.h"
@@ -81,51 +84,101 @@ IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
 template <class PBASE>
 StatusCode Rich::CommonBase<PBASE>::setContext( const std::string & name ) const
 {
+  const std::string property = "Context";
+  return this -> my_setToolProperty<StringProperty> ( name , property );
+}
+//=============================================================================
+
+//=============================================================================
+// Sets Output Level
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::CommonBase<PBASE>::setOutputLevel( const std::string & name ) const
+{
+  const std::string property = "OutputLevel";
+  return this -> my_setToolProperty<StringProperty> ( name , property );
+}
+//=============================================================================
+
+//=============================================================================
+// set properties
+//=============================================================================
+template < class PBASE        >
+template < class PROPERTYTYPE >
+StatusCode Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
+                                                        const std::string & property ) const
+{
   StatusCode sc = StatusCode::SUCCESS;
 
-  // Tool registry context
-  const std::string newContext = toolRegistry()->getContext();
-  if ( !newContext.empty() )
+  // Tool registry OutputLevel
+  const PROPERTYTYPE * ts_sp = my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
+  if ( ts_sp)
   {
+    if ( this -> msgLevel(MSG::DEBUG) )
+    { this->debug() << "Found " << this->toolRegistry()->name() << " " << *ts_sp << endmsg; }
 
     // full tool name
     const std::string fullname = "ToolSvc." + name;
 
     // get properties for this name
-    bool found = false;
-    const std::vector<const Property*> * properties = joSvc()->getProperties( fullname );
-    if ( properties )
-    {
-      for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-            itProp != properties->end(); ++itProp )
-      {
-        const StringProperty * sp = dynamic_cast<const StringProperty*>(*itProp);
-        if ( 0 != sp )
-        {
-          if ( "Context" == (*itProp)->name() )
-          {
-            if ( this -> msgLevel(MSG::DEBUG) )
-            { this -> debug() << "Found Context " << *sp << " for " << fullname << endreq; }
-            found = true;
-            break;
-          }
-        }
-      }
-    }
+    const PROPERTYTYPE * test_sp = my_getProperty<PROPERTYTYPE>( fullname, property );
 
     // If Context not set, set it
-    if ( !found )
+    if ( !test_sp )
     {
+      const PROPERTYTYPE & p( *ts_sp );
       if ( this -> msgLevel(MSG::DEBUG) )
-      { this -> debug() << "Setting Context '"
-                        << newContext << "' for " << fullname << endreq; }
-      StringProperty p(  "Context", '"'+ newContext +'"' );
+      { this -> debug() << "Setting " << p << " for " << fullname << endreq; }
       sc = joSvc()->addPropertyToCatalogue( fullname, p );
-      if ( sc.isFailure() ) { this -> Error( "Error setting context for " + fullname ); }
+      if ( sc.isFailure() ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
     }
 
+  }
+  else
+  {
+    this -> debug() << this->toolRegistry()->name() << " has no " << property << endmsg;
   }
 
   return sc;
 }
+
 //=============================================================================
+// get properties
+//=============================================================================
+template < class PBASE        >
+template < class PROPERTYTYPE >
+const PROPERTYTYPE *
+Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
+                                         const std::string & property ) const
+{
+  // get properties for this name
+  const PROPERTYTYPE * sp = NULL;
+  const std::vector<const Property*> * properties = this -> joSvc()->getProperties( name );
+  if ( properties )
+  {
+    for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
+          itProp != properties->end(); ++itProp )
+    {
+      if ( property == (*itProp)->name() )
+      {
+        sp = dynamic_cast<const PROPERTYTYPE*>(*itProp);
+        if ( NULL != sp )
+        {
+          if ( this -> msgLevel(MSG::DEBUG) )
+          { this -> debug() << "Found " << property << " " << *sp << " for " << name << endreq; }
+          break;
+        }
+        else
+        {
+          std::ostringstream mess;
+          mess << "Property " + property + " has wrong type : Expected "
+               << System::typeinfoName( typeid(PROPERTYTYPE) )
+               << " Found "
+               << System::typeinfoName( typeid(**itProp) );
+          this -> Error( mess.str() ).ignore();
+        }
+      }
+    }
+  }
+  return sp;
+}

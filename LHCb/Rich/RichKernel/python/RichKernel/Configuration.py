@@ -4,11 +4,10 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2009-03-27 14:06:43 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-06-25 10:01:08 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-from Configurables import ( Rich__ToolRegistry )
 
 # ----------------------------------------------------------------------------------
 
@@ -26,11 +25,9 @@ class RichConfigurableUser(LHCbConfigurableUser):
 
     ## @brief Returns the Rich Tool registry configuration object for the current context
     #  @return The tool registry configuration object
-    def toolRegistry(self):
-        context = self.getProp("Context")
-        reg = Rich__ToolRegistry(context+"_RichToolRegistry")
-        reg.Context = context
-        return reg
+    def toolRegistry(self) :
+        from Configurables import RichTools
+        return RichTools().toolRegistry()
 
     ## @brief Checks in a given property is properly configured for all three RICH radiators
     #  @param option The option name to check
@@ -94,8 +91,15 @@ class RichTools(RichConfigurableUser):
         "TrSegMakerType"       : None,
         "GeomEffType"          : None,
         "CkResType"            : None,
-        "SignalDetEffType"     : None
+        "SignalDetEffType"     : None,
+        "OutputLevel"          : INFO
         }
+
+    ## Set the output level for the given component
+    def setOutputLevel(self,component):
+        if self.isPropertySet("OutputLevel") :
+            #print "Setting OutputLevel", self.getProp("OutputLevel"), "for", component.name()
+            component.OutputLevel = self.getProp("OutputLevel")
 
     ## Initialize 
     def initialize(self):
@@ -110,7 +114,7 @@ class RichTools(RichConfigurableUser):
         self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",   "HLT" : "CKMassRing" } )
         self.setRichDefaults( "CkResType",           { "Offline" : "Binned",       "HLT" : "Binned" } )
         self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",    "HLT" : "NominalTabulated" } )
-
+               
     ## @brief Make an instance of the given configurable and configure this
     #         tool in the RichToolRegistry
     #  @param tooltype The tool type to instanciate
@@ -124,7 +128,28 @@ class RichTools(RichConfigurableUser):
             context = self.getProp("Context")
             tool = tooltype("ToolSvc."+context+"_"+nickname)
         self.toolRegistry().Tools += [tool.getType()+"/"+nickname]
-        #print "RICH tool", tool.getType(), tool.name()
+        self.setOutputLevel(tool)
+        return tool
+
+    ## @brief Returns the Rich Tool registry configuration object for the current context
+    #  @return The tool registry configuration object
+    def toolRegistry(self,common=False):
+        from Configurables import Rich__ToolRegistry
+        if common :
+            reg = Rich__ToolRegistry("RichToolRegistry")
+        else :
+            context = self.getProp("Context")
+            reg = Rich__ToolRegistry(context+"_RichToolRegistry")
+            reg.Context = context
+        self.setOutputLevel(reg)
+        return reg
+    
+    ## @brief Returns the appropriate ray tracing tool
+    #  @param nickname The tool nickname
+    #  @return The tool configurable
+    def rayTracing(self,nickname="RichRayTracing",private=False) :
+        from Configurables import Rich__RayTracing
+        tool = self.__makeRichTool( Rich__RayTracing, nickname, private )
         return tool
     
     ## @brief Returns the appropriate Cherenkov resolution tool
@@ -312,6 +337,7 @@ class RichTools(RichConfigurableUser):
                                     Rich__DAQ__RawBufferToSmartIDsTool )
         smarts  = Rich__DAQ__RawBufferToSmartIDsTool("ToolSvc.RichSmartIDDecoder")
         decoder = Rich__DAQ__RawDataFormatTool("RawDecoder")
+        self.setOutputLevel(smarts)
         smarts.addTool(decoder)
         return smarts
 

@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.221 2009-06-16 10:07:04 cattanem Exp $
+! $Id: release.notes,v 1.222 2009-06-25 10:01:08 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-06-25 - Chris Jones
+ - Update tool handling to base classes to propagate OutputLevel to
+   public tools that do not explicitly have it set. Uses the value as
+   set in the tool registry that 'owns' that tool.
+ - Update python Configuration to set OutputLevel of all tools when set.
 
 !====================== RichKernel v7r22 2009-06-16 ====================
 ! 2009-06-11 - Chris Jones
