@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.98 2009-06-22 15:35:27 pkoppenb Exp $ 
+! $Id: release.notes,v 1.99 2009-06-25 11:32:20 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2009-06-25 - Patrick Koppenburg for Neil Gueissaz
+ - New BestParticlemaker that re-implements the lost functionality
+   ExclusiveSelection = true of the CombinedParticleMaker.
+   Do not use for B physics. Useful for jets. 
+ - Increment to v5r2
 
 !========================== ParticleMaker v5r1 2009-06-22 ===================
 ! 2009-06-12 - Patrick Koppenburg

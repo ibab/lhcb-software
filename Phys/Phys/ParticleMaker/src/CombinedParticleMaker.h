@@ -4,7 +4,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.19 2009-04-23 10:39:31 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.h,v 1.20 2009-06-25 11:32:21 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -57,7 +57,7 @@ public:
   /// Standard finalization of algorithm
   virtual StatusCode finalize();
 
-private:
+protected:
 
   /** Fill Particle Parameters from ProtoParticle given a ParticleProperty
    *  @param proto     Pointer to ProtoParticle
@@ -65,21 +65,19 @@ private:
    *  @param particle  Pointer to Particle
    *  @return StatusCode
    */
-  StatusCode fillParticle
-  ( const LHCb::ProtoParticle    * proto,
-    const LHCb::ParticleProperty * pprop,
-    LHCb::Particle               * particle ) const;
+  virtual StatusCode fillParticle
+    ( const LHCb::ProtoParticle    * proto,
+      const LHCb::ParticleProperty * pprop,
+      LHCb::Particle               * particle ) const;
   
   /// Set the Particle confidence level
-  void setConfLevel
+  virtual void setConfLevel
   ( const LHCb::ProtoParticle*    proto,
     const LHCb::ParticleProperty* pprop,
     LHCb::Particle*               particle ) const;
 
   /// Test the PID information consistency
-  void checkPIDInfo( const LHCb::ProtoParticle * proto ) const;
-
-private:
+  virtual void checkPIDInfo( const LHCb::ProtoParticle * proto ) const;
 
   std::string m_elProtoFilter; ///< The tool type to use for electron selection
   std::string m_muProtoFilter; ///< The tool type to use for muon selection
