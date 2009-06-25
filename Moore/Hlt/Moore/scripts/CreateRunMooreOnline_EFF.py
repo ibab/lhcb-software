@@ -48,6 +48,14 @@ exec -a ${UTGID} ${CLASS1_TASK} -opt=command="import Moore.runOnline; Moore.runO
 
 """%({'setup': setup,'moore':moore}) )
 
+
 from stat import *
+orig = os.stat(sys.argv[1])[0]
 rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
-os.chmod(sys.argv[1],rwxrwxrx )
+if orig|rwxrwxrx != orig :
+    print '%s has permissions %d -- want %d instead' % (sys.argv[1],orig,orig|rwxrwxrx)
+    try :
+        os.chmod(sys.argv[1],rwxrwxrx)
+        print 'updated permission of %s'%(sys.argv[1])
+    except :
+        print 'WARNING: could not update permissions of %s -- please make sure it is executable!' % sys.argv[1]

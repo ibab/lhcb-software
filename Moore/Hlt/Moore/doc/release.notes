@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-06-25 - Gerhard Raven
+ - only update permissions of runMooreOnline_EFF.sh if needed
+
 ! 2009-06-10 - Gerhard Raven
  - updates to configurable to support online python task
  - use HltTCK for manifest
