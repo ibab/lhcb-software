@@ -12,7 +12,7 @@
 #include "ParallelWait.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "DbRootHist.h"
-#include "TThread.h"
+// #include "TThread.h"
 
 using namespace pres;
 using namespace std;
@@ -23,7 +23,38 @@ boost::recursive_mutex oraMutex;
 boost::recursive_mutex dimMutex;
 boost::recursive_mutex rootMutex;
 
-void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage,
+
+DbRootHist* getHistogram(PresenterMainFrame * gui, 
+                         const std::string & identifier,
+                         const std::string & currentPartition,
+                         int refreshTime,
+                         int instance,
+                         OnlineHistDB* histogramDB,
+                         OMAlib* analysisLib,
+                         OnlineHistogram* onlineHist,
+                         pres::MsgLevel verbosity,
+                         DimBrowser* dimBrowser)
+{
+    std::vector<std::string*> tasksNotRunning;
+    DbRootHist* dbRootHist = new DbRootHist(identifier,
+                                currentPartition,
+                                refreshTime, instance,
+                                histogramDB, analysisLib,
+                                onlineHist,
+                                verbosity,
+                                dimBrowser,oraMutex,
+                                dimMutex,
+                                tasksNotRunning,
+                                rootMutex);
+  std::vector<std::string*>::const_iterator tasksNotRunningIt;
+  for (tasksNotRunningIt = tasksNotRunning.begin();tasksNotRunningIt != tasksNotRunning.end(); ++tasksNotRunningIt) {
+    delete *tasksNotRunningIt;
+  }
+  tasksNotRunning.clear();                                  
+  return dbRootHist;
+}
+
+void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage,
               std::vector<DbRootHist*> * dbHistosOnPage,
               std::vector<std::string*> & m_tasksNotRunning)
 {
@@ -126,7 +157,7 @@ void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * online
 //	m_tasksNotRunning.clear();
 	while (m_onlineHistosOnPageIt != onlineHistosOnPage->end()) {
 //            startBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
-    thrds.create_thread(boost::bind(&getHisto,
+    thrds.create_thread(boost::bind(&getHistogramsFromLists,
 			    													m_gui,
 			    													*m_onlineHistosOnPageIt,
 			    													dbHistosOnPage,
@@ -145,7 +176,7 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*> * dbHistosOnPage)
   for (m_tasksNotRunningIt = m_tasksNotRunning.begin();m_tasksNotRunningIt != m_tasksNotRunning.end(); ++m_tasksNotRunningIt) {
     delete *m_tasksNotRunningIt;
   }
-  m_tasksNotRunning.clear();  
+  m_tasksNotRunning.clear();
     
   boost::thread_group thrds;
   

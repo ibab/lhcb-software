@@ -1,16 +1,26 @@
 #ifndef PARALLELWAIT_H_
 #define PARALLELWAIT_H_
 
-#include <boost/thread.hpp>
+// #include <boost/thread.hpp>
+// class mutex;
 
-class mutex;
 class vector;
 class DbRootHist;
 class OnlineHistoOnPage;
 class dbHistosOnPage;
 class PresenterMainFrame;
 
-void getHisto(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage);
+DbRootHist* getHistogram(PresenterMainFrame * gui, 
+                         const std::string & identifier,
+                         const std::string & dimServiceName,
+                         int refreshTime,
+                         int instance,
+                         OnlineHistDB* histogramDB,
+                         OMAlib* analysisLib,
+                         OnlineHistogram* onlineHist,
+                         pres::MsgLevel verbosity,
+                         DimBrowser* dimBrowser);
+void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage);
 
 class ParallelWait
 {
