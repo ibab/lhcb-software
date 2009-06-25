@@ -28,3 +28,6 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhiPrescaledAnd
 
 # Topological selections
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingTopo.py")
+
+# Andrew Powell's RICH calibration selection
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingDstarNoPID.py")
