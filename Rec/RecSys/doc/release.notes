@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-06-25 - Chris Jones
+ - Add OutputLevel property to provide overall control of the printout levels
+
 </PRE><H1><A NAME=v7r2>2009-06-22 RecSys v7r2</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r2.
 
