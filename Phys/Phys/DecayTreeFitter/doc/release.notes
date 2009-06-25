@@ -6,9 +6,10 @@
 ! See also: http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeFitter v1r3 2009-06-25 =====================
+
 ! 2009-06-23 Wouter Hulsbergen
 - added some classes to dictionary for use in python
-
 
 !======================= DecayTreeFitter v1r2 2009-05-26 =====================
 
