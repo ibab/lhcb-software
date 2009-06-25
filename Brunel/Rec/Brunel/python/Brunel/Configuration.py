@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.82 2009-06-17 15:39:03 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.83 2009-06-25 14:03:03 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -54,6 +54,7 @@ class Brunel(LHCbConfigurableUser):
        ,"WriteFSR"        : True
        ,"Histograms"      : "Default"
        ,"NoWarnings"      : False
+       ,"OutputLevel"     : INFO 
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
@@ -83,7 +84,8 @@ class Brunel(LHCbConfigurableUser):
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'Histograms'   : """ Type of histograms. Can be one of ['None','Default','Expert'] """
-       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
+       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
+       ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
@@ -255,13 +257,21 @@ class Brunel(LHCbConfigurableUser):
 
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
+        
         # Modify printout defaults
-        if self.getProp( "NoWarnings" ):
-            LHCbApp().setProp( "Quiet",     True )
-            LHCbApp().setProp( "TimeStamp", True )
-            # Suppress known warnings
-            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
-            if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
+        if self.getProp( "NoWarnings" ) :
+            log.warning("Brunel().NoWarnings=True property is obsolete. Please use Brunel().OutputLevel=ERROR instead")
+            self.OutputLevel = ERROR
+
+        if self.isPropertySet( "OutputLevel" ) :
+            level = self.getProp("OutputLevel")
+            if level == ERROR or level == WARNING :
+                # CRJ : Maybe LHCbApp() should have its own OutputLevel property ?
+                LHCbApp().setProp( "Quiet",     True )
+                LHCbApp().setProp( "TimeStamp", True )
+                # Suppress known warnings
+                importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
+                if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
 
 
     def configureInput(self, inputType):
@@ -439,7 +449,7 @@ class Brunel(LHCbConfigurableUser):
         if not withMC:
             if "RICH" in moniSeq :
                 from Configurables import GaudiSequencer
-                self.setOtherProps(RichRecQCConf(), ["Context","DataType","WithMC"])
+                self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","WithMC"])
                 RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
 
         # Expert histograms
@@ -485,7 +495,7 @@ class Brunel(LHCbConfigurableUser):
 
         if "RICH" in checkSeq :
             from Configurables import GaudiSequencer
-            self.setOtherProps(RichRecQCConf(), ["Context","DataType","WithMC"])
+            self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","WithMC"])
             RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
         if expert:
@@ -544,7 +554,8 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType","DataType"])
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context",
+                                         "OutputType","DataType","OutputLevel"])
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
