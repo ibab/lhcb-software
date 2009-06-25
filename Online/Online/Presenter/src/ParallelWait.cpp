@@ -24,7 +24,7 @@ boost::recursive_mutex dimMutex;
 boost::recursive_mutex rootMutex;
 
 
-DbRootHist* getHistogram(PresenterMainFrame * gui, 
+DbRootHist* getHistogram(PresenterMainFrame * /* gui*/, 
                          const std::string & identifier,
                          const std::string & currentPartition,
                          int refreshTime,
