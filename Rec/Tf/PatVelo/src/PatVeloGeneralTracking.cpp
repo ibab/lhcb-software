@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.18 2009-06-24 18:04:34 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.19 2009-06-25 11:06:09 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -38,7 +38,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "ErrorExtrapScale" ,   m_ErrExtrapScale   = 1.5       );  
   declareProperty( "PhiAngularTol"    ,   m_phiAngularTol    = 0.005     );
   declareProperty( "MaxMissedSensors" ,   m_MaxMissedSensor  = 4         );
-  declareProperty( "MaxChiSqDof"      ,   m_chiSqDofMax      = 4.0       );
+  declareProperty( "MaxChiSqDof"      ,   m_chiSqDofMax      = 6.0       );
   declareProperty( "UseAllCoords"     ,   m_allCoords        = false     );
   declareProperty( "stepError"        ,   m_stepError        = 0.002     );
   declareProperty( "FullErrorPoints"  ,   m_fullErrorPoints  = 5         );

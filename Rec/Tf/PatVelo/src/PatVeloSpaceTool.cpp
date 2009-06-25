@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.17 2009-06-24 18:04:34 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.18 2009-06-25 11:06:09 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,7 @@ namespace Tf {
       declareProperty( "FractionPhiMerge", m_fractionPhiMerge = 0.5       );
       declareProperty( "stepError"       , m_stepError        = 0.002     );
       declareProperty( "forwardStepError", m_forwardStepError = 0.00035   );
-      declareProperty( "MaxChiSqDof"     , m_chiSqDofMax      = 4.0       );
+      declareProperty( "MaxChiSqDof"     , m_chiSqDofMax      = 6.0       );
       declareProperty( "CleanOverlaps"   , m_cleanOverlaps    = true      );
       declareProperty( "NMissedFirst"    , m_NMissedFirst     = 4         );
       declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );

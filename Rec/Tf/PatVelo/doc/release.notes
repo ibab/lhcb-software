@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-06-25 - David Hutchcroft
+ - Added change to the chi2 cut which is necessary for the fit change.
+
 ! 2009-06-24 - David Hutchcroft
  - Tweaked how tracks are fitted internally for a few microns gain in resolution
 
