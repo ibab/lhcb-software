@@ -16,4 +16,4 @@ def start() :
     c = ConfigurableGeneric("OnlineEnv")
     for k,v in OnlineEnv.__dict__.iteritems() : setattr(c,k,v)
 
-    Online.end_config(False)
+    OnlineEnv.end_config(False)
