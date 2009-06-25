@@ -36,7 +36,6 @@
 #include "Gaucho/MonH1D.h"
 #include "Gaucho/MonH2D.h"
 
-
 using namespace pres;
 
 DbRootHist::DbRootHist(const std::string & identifier,
@@ -47,7 +46,11 @@ DbRootHist::DbRootHist(const std::string & identifier,
                        OMAlib* analysisLib,
                        OnlineHistogram* onlineHist,
                        pres::MsgLevel verbosity,
-                       DimBrowser* DimBr)
+                       DimBrowser* DimBr,
+                       boost::recursive_mutex & oraMutex,
+                       boost::recursive_mutex & dimMutex,
+                       std::vector<std::string*> & tasksNotRunning,
+                       boost::recursive_mutex & rootMutex)
 : HistogramIdentifier(dimServiceName),
   rootHistogram(NULL),
   hostingPad(NULL),
@@ -90,7 +93,11 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_titpave(NULL),
   m_statpave(NULL),
   m_historyTrendPlotMode(false),
-  m_isOverlap(false)
+  m_isOverlap(false),
+  m_oraMutex(&oraMutex),
+  m_dimMutex(&dimMutex),
+  m_tasksNotRunning(&tasksNotRunning),
+  m_rootMutex(&rootMutex)
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
@@ -126,8 +133,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   } else {
     beEmptyHisto(); 
   }
-
-  setTH1FromDB();
+      setTH1FromDB();
 }
 DbRootHist::~DbRootHist()
 {
@@ -156,7 +162,8 @@ void DbRootHist::cleanAnaSources()
 }
 void DbRootHist::loadAnaSources()
 {
-  if (onlineHistogram()) {
+  boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
+  if (oraLock && onlineHistogram()) {
     m_isAnaHist=onlineHistogram()->isAnaHist();
     if (m_isAnaHist && !m_anaLoaded) {
       onlineHistogram()->getCreationDirections(m_creationAlgorithm,
@@ -175,7 +182,11 @@ void DbRootHist::loadAnaSources()
                                               m_analysisLib,
                                               histo,
                                               m_verbosity,
-                                              m_dimBrowser));
+                                              m_dimBrowser,
+                                              *m_oraMutex,
+                                              *m_dimMutex,
+                                              *m_tasksNotRunning,
+                                              *m_rootMutex));
         if (NULL == m_anaSources[i]->rootHistogram) { sourcesOK = false; }
       }
       m_anaLoaded = true;
@@ -310,9 +321,12 @@ void DbRootHist::initHistogram()
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;
       }      
-            
+// TODO: Reset Partition member from main GUI?
+// append empty partitions too, w/o _...            
+    HistogramIdentifier histogramIdentifier1(m_dimServiceName);
+    std::string histType(histogramIdentifier1.histogramType());
       m_dimServiceName.erase(0, m_dimServiceName.find(s_underscore));
-      m_dimServiceName = m_partition + m_dimServiceName;
+      m_dimServiceName = histType + s_slash + m_partition + m_dimServiceName;
       
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName w partition: " << m_dimServiceName << std::endl;
@@ -469,7 +483,7 @@ void DbRootHist::initHistogram()
                                             monTH1D->histTitle().c_str()));
               monTH1D->createObject(histoRootName.Data());
               monTH1D->hist()->SetTitle(histoRootTitle);
-              if (m_verbosity >= Verbose) { monTH1D->print(); }
+              if (m_verbosity >= Debug) { monTH1D->print(); }
               rootHistogram = monTH1D->hist();
             }
           } else if (s_pfixMonH2D == m_histogramType){
@@ -482,7 +496,7 @@ void DbRootHist::initHistogram()
                                             monTH2D->histTitle().c_str()));
               monTH2D->createObject(histoRootName.Data());
               monTH2D->hist()->SetTitle(histoRootTitle);
-              if (m_verbosity >= Verbose) { monTH2D->print(); }
+              if (m_verbosity >= Debug) { monTH2D->print(); }
               rootHistogram = monTH2D->hist();
             }
           } else if (s_pfixMonProfile == m_histogramType){
@@ -495,7 +509,7 @@ void DbRootHist::initHistogram()
                                             monProfile->profileTitle().c_str()));
               monProfile->createObject(histoRootName.Data());
               monProfile->profile()->SetTitle(histoRootTitle);
-              if (m_verbosity >= Verbose) { monProfile->print(); }
+              if (m_verbosity >= Debug) { monProfile->print(); }
               rootHistogram = monProfile->profile();
             }
           } else {
@@ -714,8 +728,9 @@ void DbRootHist::fillHistogram()
       }
 //    m_toRefresh = false;
    } else if (s_CNT == m_histogramType) {
+    boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
     int dimContent = 0;
-     if (m_dimInfo) {
+     if (rootLock && m_dimInfo) {
        // wait until data has arrived
        int m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
        while (m_serviceSize <= 0) {
@@ -821,6 +836,7 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
       newOnlineHistogram->warningMessage("provided OnlineHistogram object is not compatible");
     }
   }
+
   loadAnaSources();
   return out;
 }
@@ -849,7 +865,9 @@ bool DbRootHist::connectToDB(OnlineHistDB* onlineHistDbSession,
 }
 void DbRootHist::setTH1FromDB()
 {
-  if (m_onlineHistogram && rootHistogram) {
+  if (m_historyTrendPlotMode) return;
+  boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
+  if (oraLock && m_onlineHistogram && rootHistogram) {
     //m_onlineHistogram->dump(); //DEBUG
     int iopt = 0;
     float fopt = 0.0;
@@ -977,16 +995,16 @@ void DbRootHist::setTH1FromDB()
     if (0 != rootHistogram->GetXaxis()) {
       if (m_onlineHistogram->nXbinlabels() > 0) {
         for (unsigned int il = 0; il < m_onlineHistogram->nXbinlabels(); il++) {
-        	sopt = m_onlineHistogram->binlabel(il,0);
-        	rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
+          sopt = m_onlineHistogram->binlabel(il,0);
+          rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
         }
       }
     }
     if (0 != rootHistogram->GetYaxis()) {
       if (m_onlineHistogram->nYbinlabels() > 0) {
         for (unsigned int il = 0; il < m_onlineHistogram->nYbinlabels(); il++) {
-        	sopt = m_onlineHistogram->binlabel(il,1);
-        	rootHistogram->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
+          sopt = m_onlineHistogram->binlabel(il,1);
+          rootHistogram->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
         }
       }
     }
@@ -1027,111 +1045,126 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
     // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat
     // doesn't resize the Pave.. thus it's better to set the global stat options also 
     // before drawing
-    m_onlineHistogram->getDisplayOption("STATS", &iopt);
     
-    if (0 != iopt) {
-       TPaveStats* stats = (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
-       if (stats) {
-         stats->SetOptStat(iopt);
-         double x1=stats->GetX1NDC();
-         double x2=stats->GetX2NDC();
-         double y1=stats->GetY1NDC();
-         double y2=stats->GetY2NDC();
-         if (m_onlineHistogram->getDisplayOption("STAT_X_OFFS", &fopt)) {
-           x1 = fopt;
-         }
-         if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) {
-           x2 = x1 + fopt;
-         }
-         if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) {
-           y1 = fopt;
-         }
-         if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) {
-           y2 = y1 + fopt;
-         }
-         stats->SetX1NDC(x1);
-         stats->SetX2NDC(x2);
-         stats->SetY1NDC(y1);
-         stats->SetY2NDC(y2);
-         // save it to check if was changed at saving time
-         if (m_statpave) { delete m_statpave; m_statpave = 0; }
-         m_statpave = (TPave*)stats->Clone();
-       }
-    } else {
-      rootHistogram->SetStats(false);
-    }
-    // title pave
-    TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
-    if (titpave) {
-      double x1=titpave->GetX1NDC();
-      double x2=titpave->GetX2NDC();
-      double y1=titpave->GetY1NDC();
-      double y2=titpave->GetY2NDC();
-      if (m_onlineHistogram->getDisplayOption("HTIT_X_OFFS", &fopt)) {
-        x1 = fopt;
-      }
-      if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) {
-        x2 = x1 + fopt;
-      }
-      if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) {
-        y1 = fopt;
-      }
-      if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) {
-        y2 = y1 + fopt;
-      }
-      titpave->SetX1NDC(x1);
-      titpave->SetX2NDC(x2);
-      titpave->SetY1NDC(y1);
-      titpave->SetY2NDC(y2);
-      // save it to check if was changed at saving time
-      if (m_titpave) { delete m_titpave; m_titpave = 0; }
-      m_titpave = (TPave*)titpave->Clone();
-    }
+    TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
 
-    if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt) ) {
-      if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
-      rootHistogram->SetDrawOption(sopt.c_str());
-    }
-    if (m_onlineHistogram->getDisplayOption("LOGX", &iopt)) {
-      pad->SetLogx(1);
-    }
-    if (m_onlineHistogram->getDisplayOption("LOGY", &iopt)) {
-      pad->SetLogy(1);
-    }
-    int gridx = gStyle->GetPadGridX();
-    int gridy = gStyle->GetPadGridY();
-    if (m_onlineHistogram->getDisplayOption("GRIDX", &iopt)) { gridx=iopt; }
-    if (m_onlineHistogram->getDisplayOption("GRIDY", &iopt)) { gridy=iopt; }
-    pad->SetGrid(gridx, gridy);
-    if (m_onlineHistogram->dimension() > 1) {
-      if (m_onlineHistogram->getDisplayOption("LOGZ", &iopt)) {
-        pad->SetLogz(1);
+    if (m_historyTrendPlotMode) { // special settings for trend mode
+      rootHistogram->SetDrawOption("E1");
+      rootHistogram->SetStats(0);
+      if (stats) stats->Delete();
+      pad->SetLogx(0);
+      pad->SetLogy(0);
+      rootHistogram->SetXTitle ("Saveset");
+      std::string ylab="Average";
+      if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) {
+        ylab = ylab + " (" + sopt + ")";
       }
-      if (m_onlineHistogram->getDisplayOption("THETA", &fopt)) {
-        pad->SetTheta(fopt);
+      rootHistogram->SetYTitle (ylab.data());
+    }
+    else { // normal case
+      m_onlineHistogram->getDisplayOption("STATS", &iopt);
+      if (0 != iopt) {
+        if (stats) {
+          stats->SetOptStat(iopt);
+          double x1=stats->GetX1NDC();
+          double x2=stats->GetX2NDC();
+          double y1=stats->GetY1NDC();
+          double y2=stats->GetY2NDC();
+          if (m_onlineHistogram->getDisplayOption("STAT_X_OFFS", &fopt)) {
+            x1 = fopt;
+          }
+          if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) {
+            x2 = x1 + fopt;
+          }
+          if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) {
+            y1 = fopt;
+          }
+          if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) {
+            y2 = y1 + fopt;
+          }
+          stats->SetX1NDC(x1);
+          stats->SetX2NDC(x2);
+          stats->SetY1NDC(y1);
+          stats->SetY2NDC(y2);
+          // save it to check if was changed at saving time
+          if (m_statpave) { delete m_statpave; m_statpave = 0; }
+          m_statpave = (TPave*)stats->Clone(); // memleak?
+        }
+      } else {
+        rootHistogram->SetStats(false);
       }
-      if (m_onlineHistogram->getDisplayOption("PHI", &fopt)) {
-        pad->SetPhi(fopt);
+      // title pave
+      TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
+      if (titpave) {
+        double x1=titpave->GetX1NDC();
+        double x2=titpave->GetX2NDC();
+        double y1=titpave->GetY1NDC();
+        double y2=titpave->GetY2NDC();
+        if (m_onlineHistogram->getDisplayOption("HTIT_X_OFFS", &fopt)) {
+          x1 = fopt;
+        }
+        if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) {
+          x2 = x1 + fopt;
+        }
+        if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) {
+          y1 = fopt;
+        }
+        if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) {
+          y2 = y1 + fopt;
+        }
+        titpave->SetX1NDC(x1);
+        titpave->SetX2NDC(x2);
+        titpave->SetY1NDC(y1);
+        titpave->SetY2NDC(y2);
+        // save it to check if was changed at saving time
+        if (m_titpave) { delete m_titpave; m_titpave = 0; }
+        m_titpave = (TPave*)titpave->Clone();
+      }
+      
+      if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt) ) {
+        if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
+        rootHistogram->SetDrawOption(sopt.c_str());
+      }
+      if (m_onlineHistogram->getDisplayOption("LOGX", &iopt)) {
+        pad->SetLogx(1);
+      }
+      if (m_onlineHistogram->getDisplayOption("LOGY", &iopt)) {
+        if(rootHistogram->GetEntries()>0) pad->SetLogy(1);
+      }
+      int gridx = gStyle->GetPadGridX();
+      int gridy = gStyle->GetPadGridY();
+      if (m_onlineHistogram->getDisplayOption("GRIDX", &iopt)) { gridx=iopt; }
+      if (m_onlineHistogram->getDisplayOption("GRIDY", &iopt)) { gridy=iopt; }
+      pad->SetGrid(gridx, gridy);
+      if (rootHistogram->GetDimension() > 1) {
+        if (m_onlineHistogram->getDisplayOption("LOGZ", &iopt)) {
+          pad->SetLogz(1);
+        }
+        if (m_onlineHistogram->getDisplayOption("THETA", &fopt)) {
+          pad->SetTheta(fopt);
+        }
+        if (m_onlineHistogram->getDisplayOption("PHI", &fopt)) {
+          pad->SetPhi(fopt);
+        }
+      }
+      if (m_onlineHistogram->hasFitFunction()) {
+        gStyle->SetOptFit(1111111);
+        std::string Name;
+        std::vector<float> initValues;
+        m_onlineHistogram->getFitFunction(Name,&initValues);
+        m_analysisLib->getFitFunction(Name)->fit(rootHistogram, &initValues);
+      }
+      
+      if(m_onlineHistogram->getDisplayOption("TICK_X", &iopt)) {
+        pad->SetTickx(iopt);
+      }
+      if(m_onlineHistogram->getDisplayOption("TICK_Y", &iopt)) {
+        pad->SetTicky(iopt);
+      }
+      if(m_onlineHistogram->getDisplayOption("PADCOLOR", &iopt)) {
+        pad->SetFillColor(iopt);
       }
     }
-    if (m_onlineHistogram->hasFitFunction()) {
-      gStyle->SetOptFit(1111111);
-      std::string Name;
-      std::vector<float> initValues;
-      m_onlineHistogram->getFitFunction(Name,&initValues);
-      m_analysisLib->getFitFunction(Name)->fit(rootHistogram, &initValues);
-    }
-
-    if(m_onlineHistogram->getDisplayOption("TICK_X", &iopt)) {
-      pad->SetTickx(iopt);
-    }
-    if(m_onlineHistogram->getDisplayOption("TICK_Y", &iopt)) {
-      pad->SetTicky(iopt);
-    }
-    if(m_onlineHistogram->getDisplayOption("PADCOLOR", &iopt)) {
-      pad->SetFillColor(iopt);
-    }
-
   }
 //  gStyle->SetOptStat(curStat);
 }
@@ -1388,7 +1421,6 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
       std::string opt =  m_isOverlap ? "SAME" : "";
       rootHistogram->Draw(opt.c_str());      
     }
-    if (m_historyTrendPlotMode) { rootHistogram->SetDrawOption("E1"); }
   }
 //  gStyle->SetOptStat(curStat);
   setDrawOptionsFromDB(pad);
@@ -1398,7 +1430,8 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 
  if (NULL != m_session) {
   std::string sopt("");
-  if (0 != m_onlineHistogram  &&
+  boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+  if (rootLock && 0 != m_onlineHistogram  &&
       m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt) &&
       false == m_isOverlap) {
 
@@ -1477,7 +1510,8 @@ void DbRootHist::normalizeReference()
 }
 void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
-  if (rootHistogram &&
+  boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+  if (rootLock && rootHistogram &&
       s_H2D != m_histogramType &&
       s_pfixMonH2D != m_histogramType) {
     if (0 == m_reference &&
@@ -1524,23 +1558,52 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   } else {
     dimServiceNameQueryBegining = dimServiceType + s_slash + "*";    
   }
-
-  m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
-  while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
-    std::string dimServiceCandidate(dimService);
-       
-    TString dimServiceTS(dimServiceCandidate);
-     
-    if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
-      HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
-      if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
-        dimServiceName = dimServiceCandidate;
-        break;
+  boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
+  boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
+  if (dimLock && oraLock && m_onlineHistogram &&  m_session) {
+    bool botherDimBrowser(true);
+    std::string taskName(m_onlineHistogram->task()); 
+    std::vector<std::string*>::iterator lookForTasksNotRunningIt;
+    if (0 < m_tasksNotRunning->size()) {
+      for (lookForTasksNotRunningIt = m_tasksNotRunning->begin();
+           lookForTasksNotRunningIt != m_tasksNotRunning->end();
+           ++lookForTasksNotRunningIt) {
+        if (((**lookForTasksNotRunningIt) == taskName)) {
+          botherDimBrowser = false;
+        if (m_verbosity >= Verbose) {
+          std::cout << "Skipping dead task: " << taskName << std::endl;
+          }
+          break;
+        }
+        }
+    }
+      if (botherDimBrowser) {
+        int numberOfServices = m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
+        while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
+          std::string dimServiceCandidate(dimService);
+          TString dimServiceTS(dimServiceCandidate);
+           
+          if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
+            HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
+            if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
+              dimServiceName = dimServiceCandidate;
+              break;
+            } else {
+          std::string* deadTaskName = new std::string(taskName); // memleak?
+          m_tasksNotRunning->push_back(deadTaskName);
+          if (m_verbosity >= Verbose) {
+            std::cout << std::endl << "NOT found: " << dimService << std::endl;
+            }
+          }
+        }
       }
-    } else {
-      if (m_verbosity >= Verbose) {
-        std::cout << std::endl << "NOT found: " << dimService << std::endl;
-      }
+      if (0 == numberOfServices) {
+          std::string* deadTaskName = new std::string(taskName);
+          m_tasksNotRunning->push_back(deadTaskName);
+          if (m_verbosity >= Verbose) {
+            std::cout << std::endl << "No partition for: " << dimService << std::endl;
+          }
+      }      
     }
   }
   return dimServiceName;
@@ -1579,8 +1642,10 @@ if (0 != m_onlineHistogram) {
                 << dimServiceName << std::endl << std::endl;
     }  
     setIdentifiersFromDim(dimServiceName);
-//      
-    if (m_onlineHistogram &&  m_session) {
+
+
+    boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);  
+    if (oraLock && m_onlineHistogram &&  m_session) {
       m_onlineHistogram->setDimServiceName(dimServiceName);
       m_onlineHistogram->checkServiceName();
       m_session->commit();
