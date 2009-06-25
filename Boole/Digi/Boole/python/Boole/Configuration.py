@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.51 2009-06-17 14:55:23 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.52 2009-06-25 15:54:18 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -37,6 +37,7 @@ class Boole(LHCbConfigurableUser):
        ,"DigiType"       : "Default"
        ,"Histograms"     : "Default"
        ,"NoWarnings"     : False
+       ,"OutputLevel"    : INFO 
        ,"DatasetName"    : "Boole"
        ,"DataType"       : "2008"
        ,"DDDBtag"        : ""
@@ -61,7 +62,8 @@ class Boole(LHCbConfigurableUser):
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
        ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default',Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
-       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
+       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
+       ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DataType'     : """ Data type. Default '2008' """
        ,'DDDBtag'      : """ Tag for DDDB """
@@ -130,16 +132,21 @@ class Boole(LHCbConfigurableUser):
         ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
         GaudiSequencer("InitBooleSeq").Members += [ "BooleInit" ]
 
-        # Modify printout defaults
-        if self.getProp( "NoWarnings" ):
-            LHCbApp().setProp( "Quiet",     True )
+        # Better name for this would be "DiracMode"
+        if self.getProp( "NoWarnings" ) :
+            log.warning("Boole().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Boole().OutputLevel=ERROR instead")
+            self.OutputLevel = ERROR
             LHCbApp().setProp( "TimeStamp", True )
-            # Additional information to be kept
-            getConfigurable("BooleInit").OutputLevel  = INFO
-            # Suppress known warnings
-            importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
-        else:
-            getConfigurable("MessageSvc").OutputLevel = INFO
+
+        # OutputLevel
+        self.setOtherProp(LHCbApp(),"OutputLevel")
+        if self.isPropertySet( "OutputLevel" ) :
+            level = self.getProp("OutputLevel")
+            if level == ERROR or level == WARNING :
+                # Suppress known warnings
+                importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
+                # Additional information to be kept
+                getConfigurable("BooleInit").OutputLevel  = INFO
             
         # Do not print event number at every event (done already by BooleInit)
         EventSelector().PrintFreq = -1
