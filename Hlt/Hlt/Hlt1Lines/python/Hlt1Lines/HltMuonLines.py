@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
+# $Id: HltMuonLines.py,v 1.4 2009-06-25 20:51:55 aperezca Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 
@@ -114,7 +114,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 
         ### Matching Confirmed T Tracks with VELO
         from Configurables import PatMatchTool
-        TMatchV = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
+        TMatchV = [ Member ('TU', 'TConf' , RecoName = 'TMuonConf')
+                    #Member ('TU', 'TConf' , RecoName = 'TConf' )
                   , Member ('TF', 'DeltaP' 
                            , FilterDescriptor = ['DeltaP,>,'+str(self.getProp('Muon_DeltaPCut')) ])
                   , RZVelo
@@ -556,10 +557,8 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         
         MuTrack= Line( 'MuTrack'
                        , prescale = self.prescale
-                       #, L0DU = str(self.getProp('MuTrackL0DU'))
                        , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
                        , algos =
-                       #[ SingleMuonPrep
                        [ MuonPrep
                          , Member( 'TF','MuonPt' # // Select Muons with pT
                                    , HistogramUpdatePeriod = 0
@@ -641,7 +640,107 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                        ]
                        , postscale = self.postscale
                        )
+
+        setupHltFastTrackFit('Hlt1MuTrackVUVTrackFit')
         
+        #------------------------- TESTING FOR IMPROVED TIMING------------------------------------------
+        
+        MuTrackFitMu= Line( 'MuTrackFitMu'
+                            , prescale = self.prescale
+                            , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                            , algos =
+                            [ MuonPrep
+                              , Member( 'TF','MuonPt' # // Select Muons with pT
+                                        , HistogramUpdatePeriod = 0
+                                        , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt'))]
+                                        , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400)}
+                                        )
+                              , PV2D.ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
+                              , Member( 'TF','MuonIP' # // Select Muons with IP
+                                        , HistogramUpdatePeriod = 0
+                                        , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
+                                        , HistoDescriptor = {'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400)}
+                                        )
+                         
+                              , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack')
+                              , Member ( 'TF', 'MuonChi2' , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2'))])
+                              , Member ( 'TF', 'MuonFitIPpT' , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
+                                                                                   'PT,>,'+str(self.getProp('MuTrackMuPt'))
+                                                                                   ]
+                                         )
+                              
+                              , Velo  # Velo Reco-> Can this be improved filtering 2d tracks before full 3D?
+                              , Member( 'TF', 'VeloCompDOCA' #  Select Velo tracks with good DOCA to Muon
+                                        , HistogramUpdatePeriod = 0
+                                        , FilterDescriptor = ['DOCA_%TFMuonFitIPpT,<,'+str(self.getProp('MuTrackDoca')) ]
+                                        , HistoDescriptor = { 'DOCA': ( 'DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
+                                        )
+                              , Member( 'TF', 'VeloCompIP' # // Select Velo tracks with an IP 
+                                        , HistogramUpdatePeriod = 0
+                                        , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP'))]
+                                        , HistoDescriptor = { 'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400)}
+                                        )
+                              , Member( 'VM2', 'VeloVertex' # // Make vertices with muon and VELO companion tracks, filtered by doca again
+                                        , InputSelection1  = '%TFMuonFitIPpT'
+                                        , InputSelection2  = '%TFVeloCompIP'
+                                        , FilterDescriptor = ['DOCA,<,'+str(self.getProp('MuTrackDoca')) ]
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = {  'DOCA': ('DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
+                                        )
+                              , Member( 'VF', 'VeloVertex' # // Filter velo vertices in DZ. Angle cut only here to fill extra info!
+                                        , FilterDescriptor = ['VertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
+                                                              'VertexAngle,>,0.']
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = { 'VertexDz': ( 'VertexDz',-10.,50.,100), 'VertexDzBest': ( 'VertexDzBest',-10.,50.,100) }
+                                        )
+                              , Member( 'VU', 'VForward' # // Make forward the companion velo track
+                                        , RecoName = 'Forward'
+                                        )
+                              , Member( 'VF', 'VertexPt' # // Select vertices if Pt
+                                        , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
+                                                              'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
+                                        )
+                              , Member( 'VF', 'VertexMass' # // Select vertices if Mass
+                                        , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass'))]
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = {'VertexDimuonMass': ('DiMuonMass',0.,10000,200)}
+                                        )
+                              , Member( 'VF', 'VertexPoint' # // Select vertices if Pt, pointing, and distance
+                                        , FilterDescriptor = ['VertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))]
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = { 'VertexPointing': ( 'VertexPointing',0.,1.,100), 'VertexPointingBest': ( 'VertexPointingBest',0.,1.,100)}
+                                        )
+                              , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
+                                         , RecoName = 'FitTrack'
+                                         )
+                              , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
+                                         , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2')),
+                                                               'FitVertexTrack2Chi2OverNdf,<,'+str(self.getProp('MuTrackTrChi2'))]
+                                         #, HistogramUpdatePeriod = 0
+                                         #, HistoDescriptor = { 'FitVertexMaxChi2OverNdf': ( 'FitVertexMaxChi2OverNdf',0.,100.,100),
+                                         #                      'FitVertexMaxChi2OverNdfBest': ( 'FitVertexMaxChi2OverNdfBest',0.,100.,100)}
+                                         )
+                              , Member ( 'VF', 'Decision' # // Final filter, redo all cuts with improved tracking
+                                         , OutputSelection = '%Decision'
+                                         , FilterDescriptor = ['FitVertexTrack1IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
+                                                               'FitVertexTrack2IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP')),
+                                                               'FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca')),
+                                                               'FitVertexAngle,>,0.',
+                                                               'FitVertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
+                                                               'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
+                                                               'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt')),
+                                                               'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
+                                                               'FitVertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))
+                                                               ]
+                                         )
+                              ]
+                            , postscale = self.postscale
+                            )
+
+        setupHltFastTrackFit('Hlt1MuTrackFitMuTUMuonFit')
+        setupHltFastTrackFit('Hlt1MuTrackFitMuVUVTrackFit')
+        
+        #------------------------- Muon + Track for JPsi lifetime unbiased ---------------------------------------
 
         MuTrack4JPsi= Line( 'MuTrack4JPsi'
                             , prescale = self.prescale
@@ -711,5 +810,83 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                               ]
                             , postscale = self.postscale
                             )
-        setupHltFastTrackFit('Hlt1MuTrackVUVTrackFit')
+        
         setupHltFastTrackFit('Hlt1MuTrack4JPsiVUVTrackFit')
+
+        
+        #------------------------- TESTING FOR IMPROVED TIMING------------------------------------------
+        
+##         MuTrack4JPsi= Line( 'MuTrackFitMu4JPsi'
+##                             , prescale = self.prescale
+##                             , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+##                             , algos =
+##                             [ MuonPrep
+##                               , Member( 'TF','Muon' # // Select Muons with pT
+##                                         , HistogramUpdatePeriod = 0
+##                                         , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt4JPsi'))]
+##                                         , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400)}
+##                                         )
+
+##                               , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack')
+##                               , Member ( 'TF', 'MuonChi2' , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi'))])
+
+##                               , Velo
+##                               , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with good DOCA to Muon
+##                                         , HistogramUpdatePeriod = 0
+##                                         , FilterDescriptor = ['DOCA_%TFMuonChi2,<,'+str(self.getProp('MuTrackDoca4JPsi')) ]
+##                                         , HistoDescriptor = {'DOCA': ( 'DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
+##                                         )
+##                               , Member( 'VM2', 'VeloVertex' # // Make vertices with muon and VELO companion tracks, filtered by doca again
+##                                         , InputSelection1  = '%TFMuonChi2'
+##                                         , InputSelection2  = '%TFCompanionVelo'
+##                                         , FilterDescriptor = ['DOCA,<,'+str(self.getProp('MuTrackDoca4JPsi')) ]
+##                                         , HistogramUpdatePeriod = 0
+##                                         , HistoDescriptor = {  'DOCA': ('DOCA',0.,2.,400), 'DOCABest': ( 'DOCABest',0.,1.,400)}
+##                                         )
+                              
+##                               , Member( 'VF', 'VeloVertex' # // Filter velo vertices in angle
+##                                         , FilterDescriptor = ['VertexAngle,>,'+str(self.getProp('MuTrackAngle4JPsiLow')),
+##                                                               'VertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsiHigh'))]
+##                                         , HistogramUpdatePeriod = 0
+##                                         )
+##                               , Member( 'VU', 'Vertex' # // Make forward the companion velo track
+##                                         , RecoName = 'Forward'
+##                                         )
+##                               , Member( 'VF', 'VertexPt' # // Select vertices if Pt
+##                                         , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
+##                                                               'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi'))]
+##                                         #, HistogramUpdatePeriod = 0
+##                                         #, HistoDescriptor = { 'VertexMinPT': ('PT',0.,6000.,100), 'VertexMinPTBest': ('PTBest',0.,6000.,100)}
+##                                         )
+##                               , Member( 'VF', 'VertexMass' # // Select vertices if mass
+##                                         , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),
+##                                                               'VertexDimuonMass,<,'+str(self.getProp('MuTrackDimuMass4JPsiHigh'))
+##                                                               ]
+##                                         , HistogramUpdatePeriod = 0
+##                                         , HistoDescriptor = {'VertexDimuonMass': ('DiMuonMass',0.,10000,200)}
+##                                         )
+##                               , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
+##                                          , RecoName = 'FitTrack'
+##                                          )
+##                               , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
+##                                          , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi')),
+##                                                                'FitVertexTrack2Chi2OverNdf,<,'+str(self.getProp('MuTrackTrChi24JPsi'))]
+##                                          )
+##                               , Member ( 'VF', 'Decision' # // Final filter redo cuts
+##                                          , OutputSelection = '%Decision'
+##                                          , FilterDescriptor = ['FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca4JPsi')),
+##                                                                'FitVertexAngle,>,'+str(self.getProp('MuTrackAngle4JPsiLow')),
+##                                                                'FitVertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsiHigh')),
+##                                                                'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
+##                                                                'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi')),
+##                                                                'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),
+##                                                                'FitVertexDimuonMass,<,'+str(self.getProp('MuTrackDimuMass4JPsiHigh'))
+##                                                                ]
+##                                          )
+##                               ]
+##                             , postscale = self.postscale
+##                             )        
+        
+##         setupHltFastTrackFit('Hlt1MuTrackFitMu4JPsiTUMuonFit')
+##         setupHltFastTrackFit('Hlt1MuTrackFitMu4JPsiVUVTrackFit')
+        
