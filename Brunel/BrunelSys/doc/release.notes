@@ -3,6 +3,11 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-06-25 Marco Cattaneo
+ - update reference for:
+   . changes to PatVelo
+   . additional histos in VeloClusterMonitor
+
 </PRE><H1><A NAME=v35r2>2009-06-22 Brunel v35r2</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r2, Lbcom v7r2, Rec v7r2
  and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
