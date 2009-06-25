@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::IToolRegistry
  *
  *  CVS Log :-
- *  $Id: IRichToolRegistry.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichToolRegistry.h,v 1.9 2009-06-25 11:56:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,9 +61,6 @@ namespace Rich
      *  @return The instance name of the tool associated to the given "nickname"
      */
     virtual const std::string toolName( const std::string & nickname ) const = 0;
-
-    /// Returns the context for the tool registry
-    virtual const std::string getContext() const = 0;
 
   };
 

@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.10 2009-06-25 10:01:07 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.11 2009-06-25 11:56:45 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -214,10 +214,12 @@ namespace Rich
   private: // private methods
 
     /** Finds the propert object of a given name, for the given component name
-    *   @param name Component name
-    *   @param property Property name
-    *   @return Pointer to the Property object if it exists
-    */
+     *
+     *   @param name Component name
+     *   @param property Property name
+     *
+     *   @return Pointer to the Property object if it exists
+     */
     template < class PROPERTYTYPE >
     const PROPERTYTYPE * my_getProperty( const std::string & name,
                                          const std::string & property ) const;
@@ -228,6 +230,7 @@ namespace Rich
      *  have it set. Uses the same settings as for the tool registry.
      *
      *  @param name Tool name
+     *  @param property The property name
      *
      *  @return Status Code indicating if setting was successful or not
      */

@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.3 2009-04-24 16:07:35 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.4 2009-06-25 11:56:45 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -157,9 +157,4 @@ void Rich::ToolRegistry::addEntry( const std::string & nickname,
             << "' maps to type '" << type << "'" << endreq;
   }
   m_myTools[nickname] = type;
-}
-
-const std::string Rich::ToolRegistry::getContext() const
-{
-  return context();
 }

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::ToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.1 2008-11-17 12:55:53 cattanem Exp $
+ *  $Id: RichToolRegistry.h,v 1.2 2009-06-25 11:56:45 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -71,9 +71,6 @@ namespace Rich
 
     // Converts a tool "nickname" into a particular instance name
     const std::string toolName( const std::string & nickname ) const;
-
-    // Returns the context for the tool registry
-    const std::string getContext() const;
 
   private: // methods
 
