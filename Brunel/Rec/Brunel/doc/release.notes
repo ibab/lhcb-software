@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-25 - Chris Jones
+ - Add new OutputLevel property to Brunel configurable to allow 
+   overall control of the printout levels. This property is propagated
+   to other Configurables.
+   This (partly) obsoletes the NoWarnings property, but it is still 
+   needed for backwards compatibility with Dirac.
+
 ! 2009-06-23 - Marco Cattaneo
  - Change testBrunelMdfRdst.ref for new RawEventSelectiveCopy algorithm
  - Increment version to v35r3

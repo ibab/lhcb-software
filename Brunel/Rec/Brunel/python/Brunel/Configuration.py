@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.83 2009-06-25 14:03:03 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.84 2009-06-25 15:07:12 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -258,17 +258,17 @@ class Brunel(LHCbConfigurableUser):
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
         
-        # Modify printout defaults
+        # Better name for this would be "DiracMode"
         if self.getProp( "NoWarnings" ) :
-            log.warning("Brunel().NoWarnings=True property is obsolete. Please use Brunel().OutputLevel=ERROR instead")
+            log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().OutputLevel=ERROR instead")
             self.OutputLevel = ERROR
+            LHCbApp().setProp( "TimeStamp", True )
 
+        # OutputLevel
+        self.setOtherProp(LHCbApp(),"OutputLevel")
         if self.isPropertySet( "OutputLevel" ) :
             level = self.getProp("OutputLevel")
             if level == ERROR or level == WARNING :
-                # CRJ : Maybe LHCbApp() should have its own OutputLevel property ?
-                LHCbApp().setProp( "Quiet",     True )
-                LHCbApp().setProp( "TimeStamp", True )
                 # Suppress known warnings
                 importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
                 if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
