@@ -758,9 +758,19 @@
       </method>
 
      <method
+       name    = 'setSortedLhcbIDs'
+       desc    = 'Sets the list of LHCbIDs associated to this track. The input vector must be sorted.'
+       argList = 'LHCbIDContainer value'>
+<code>
+  m_lhcbIDs = value ;
+</code>
+      </method>
+
+     <method
        name    = 'containsLhcbIDs'
        desc    = 'Returns true if the LHCbIDs of track are a subset is the LHCbIDs of this track.'
        type    = 'bool'
+       const   = 'TRUE'
        argList = 'Track track'>
 <code>
   return containsLhcbIDs( track.lhcbIDs() ) ;
@@ -769,8 +779,9 @@
 
        <method
        name    = 'containsLhcbIDs'
-       desc    = 'Returns true if LHCbIDs in ids are a subset is the LHCbIDs of this track.'
+       desc    = 'Returns true if LHCbIDs in ids are a subset of the LHCbIDs of this track.'
        type    = 'bool'
+       const   = 'TRUE'
        argList = 'LHCbIDContainer ids'>
 <code>
   return std::includes( m_lhcbIDs.begin(),m_lhcbIDs.end(),
@@ -778,6 +789,13 @@
 </code>
       </method>
 
+       <method
+       name    = 'nCommonLhcbIDs'
+       desc    = 'Returns the number of common LHCbIDs.'
+       type    = 'size_t'
+       const   = 'TRUE'
+       argList = 'Track track'>
+      </method>
       
      <method
         name    = 'removeFromLhcbIDs'

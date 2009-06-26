@@ -294,14 +294,40 @@ bool Track::addToLhcbIDs( const LHCb::LHCbID& value )
 bool Track::addSortedToLhcbIDs( const LHCbIDContainer& ids ) 
 {
   LHCbIDContainer result( ids.size() + m_lhcbIDs.size() ) ;
-  std::merge( m_lhcbIDs.begin(),m_lhcbIDs.end(),
-	      ids.begin(), ids.end(), result.begin() ) ;
-  LHCbIDContainer::iterator pos  = std::unique( result.begin(), result.end() ) ;
+  LHCbIDContainer::iterator pos =
+    std::set_union( ids.begin(), ids.end(),
+		    m_lhcbIDs.begin(), m_lhcbIDs.end(),
+		    result.begin()) ;
   bool rc = pos == result.end() ;
   result.erase( pos, result.end() ) ;
   m_lhcbIDs.swap( result ) ;
   return rc ;
 }  
+
+
+//=============================================================================
+// Compute the number of LHCbIDs that two tracks have in common
+//=============================================================================
+size_t Track::nCommonLhcbIDs(const Track& rhs) const
+{
+  // adapted from std::set_intersection
+  size_t rc(0) ;
+  LHCbIDContainer::const_iterator first1 = m_lhcbIDs.begin() ;
+  LHCbIDContainer::const_iterator last1  = m_lhcbIDs.end() ;
+  LHCbIDContainer::const_iterator first2 = rhs.m_lhcbIDs.begin() ;
+  LHCbIDContainer::const_iterator last2  = rhs.m_lhcbIDs.end() ;
+  while (first1 != last1 && first2 != last2)
+    if (*first1 < *first2)
+      ++first1;
+    else if (*first2 < *first1)
+      ++first2;
+    else {
+      ++first1;
+      ++first2;
+      ++rc ;
+    }
+  return rc ;
+}
 
 //=============================================================================
 // Check whether the given LHCbID is on the Track
