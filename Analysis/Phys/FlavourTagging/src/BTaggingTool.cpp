@@ -175,6 +175,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts->begin(); ip != parts->end(); ip++ ){
 
+      debug() <<"part p="<<(*ip)->p()/GeV
+	     <<"  pt="<<(*ip)->pt()/GeV
+	     <<"  typ="<<(*ip)->proto()->track()->type()
+	     <<endreq;
+
       if( (*ip)->p()/GeV < 2.0 ) continue;               
       if( (*ip)->momentum().theta() < m_thetaMin ) continue;
       if( (*ip)->charge() == 0 ) continue;               
@@ -186,12 +191,15 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       if( (*ip)->pt()/GeV >  10 ) continue;
       if( isinTree( *ip, axdaugh, distphi ) )  continue ;//exclude signal
       if( distphi < m_distphi_cut ) continue;
+      debug() <<" DISTPHI="<<distphi<<endreq;
 
       //calculate the min IP wrt all pileup vtxs
+
       double ippu, ippuerr;
       m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
       //eliminate from vtags all parts coming from a pileup vtx
       if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
+      debug() <<" IPPU="<<ippu/ippuerr<<endreq;
 
       //////////////////////////////////
       vtags.push_back(*ip);          // store tagger candidate
@@ -217,11 +225,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
 
-  info()<<" entering taggerKaon..  "<<endreq;
-
-  if(m_EnableKaonOS)        m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
-
-  info()<<" end of taggerKaon..  "<<endreq;
+  if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
 
   if(m_EnableKaonSS) if(isBs)  
                        kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);

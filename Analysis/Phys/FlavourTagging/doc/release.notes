@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.134 2009-06-23 14:27:12 pkoppenb Exp $
+! $Id: release.notes,v 1.135 2009-06-26 12:13:56 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-06-26 - Marco Musy
+ - some bug fix to BTaggingTool.cpp
+ - added missing pions in the particle maker (S.Poss)
+
 
 !========================== FlavourTagging v8r5 2009-06-23 ===================
 ! 2009-04-24 - Marco Musy

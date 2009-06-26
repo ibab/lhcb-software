@@ -1,0 +1,26 @@
+/** @file
+ *  Configuration options for the execution of the selection of
+ *  B_s0 -> D_s-(KKPi) Pi+
+ *
+ *  @author Vladimir Gligorov
+ *  @date 2008-12-02
+ */
+//#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+ApplicationMgr.TopAlg+={"GaudiSequencer/SeqDC06SelBs2DsPi"};
+SeqDC06SelBs2DsPi.IgnoreFilterPassed = false ;  // act as real sequencer
+SeqDC06SelBs2DsPi.MeasureTime = true ;
+
+SeqDC06SelBs2DsPi.Members += {"CombineParticles/DC06SelDsForBs2DsPi"}; //Now the B
+DC06SelDsForBs2DsPi.PhysDesktop.InputLocations = {"Phys/StdDC06TightPions","Phys/StdDC06TightKaons"};
+DC06SelDsForBs2DsPi.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+DC06SelDsForBs2DsPi.DaughtersCuts = {"pi+" : "((PT > 300*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 9.))" , "K+" :  "((PT > 300*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 9.) & ((PIDK - PIDp) > -10))"};
+DC06SelDsForBs2DsPi.CombinationCut = "((ADAMASS('D_s-') < 50*MeV)&(APT > 2*GeV))";
+DC06SelDsForBs2DsPi.MotherCut = "((VFASPF(VCHI2/VDOF) < 15) & (BPVVDCHI2 > 100) & (MIPCHI2DV(PRIMARY) > 9.))";
+
+SeqDC06SelBs2DsPi.Members += {"CombineParticles/DC06SelBs2DsPi"}; //Now the B
+DC06SelBs2DsPi.PhysDesktop.InputLocations = {"Phys/StdDC06LoosePions","Phys/DC06SelDsForBs2DsPi"};
+DC06SelBs2DsPi.DecayDescriptor = "[B_s0 -> D_s- pi+]cc";
+DC06SelBs2DsPi.DaughtersCuts = { "D_s+" : "(ADMASS('D_s+') < 21*MeV)", "pi+" : "((PT > 500*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 9.))"};
+DC06SelBs2DsPi.CombinationCut = "(ADAMASS('B_s0')<50*MeV)";
+DC06SelBs2DsPi.MotherCut = "((VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2() < 16) & (BPVVDCHI2 > 6.25) & (BPVDIRA > 0.9999))";

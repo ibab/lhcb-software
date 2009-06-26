@@ -21,7 +21,7 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
+  declareProperty( "NeuralNetName", m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.6 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.5 );
@@ -135,17 +135,13 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   tkaon.setOmega( 1-pn );
   tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
   tkaon.setType( Tagger::OS_Kaon ); 
-
-  info()<<"storing k pointer"<<endreq;
   tkaon.addTaggerPart(ikaon);
 
-  info()<<"tagger kaon returning now. Pointer stored="<<ikaon<<endreq;
   return tkaon;
 }
 
 //==========================================================================
 StatusCode TaggerKaonOppositeTool::finalize() { 
-  info()<<"finalizing "<<endreq;
   return StatusCode::SUCCESS; 
 }
 
