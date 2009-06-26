@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.15 2009-06-26 09:14:59 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.16 2009-06-26 09:56:15 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -113,8 +113,8 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
     const PROPERTYTYPE * ts_sp = my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
     if ( ts_sp )
     {
-      if ( this -> msgLevel(MSG::DEBUG) )
-      { this -> debug() << "Setting " << *ts_sp << " for " << fullname << endreq; }
+      if ( this -> msgLevel(MSG::VERBOSE) )
+      { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endreq; }
       sc = joSvc()->addPropertyToCatalogue(fullname,*ts_sp).isSuccess();
       if ( !sc ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
     }
@@ -142,16 +142,20 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
   const std::vector<const Property*> * properties = this -> joSvc()->getProperties( name );
   if ( properties )
   {
-    for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-          itProp != properties->end(); ++itProp )
+    if ( this -> msgLevel(MSG::VERBOSE) )
+    { this -> verbose() << "Found " << properties->size() << " Properties for " << name << endmsg; }
+    for ( std::vector<const Property*>::const_reverse_iterator itProp = properties->rbegin();
+          itProp != properties->rend(); ++itProp )
     {
+      if ( this -> msgLevel(MSG::VERBOSE) )
+      { this->verbose() << " -> " << **itProp << endmsg; }
       if ( property == (*itProp)->name() )
       {
         sp = dynamic_cast<const PROPERTYTYPE*>(*itProp);
         if ( NULL != sp )
         {
-          if ( this -> msgLevel(MSG::DEBUG) )
-          { this -> debug() << "Found " << property << " " << *sp << " for " << name << endreq; }
+          if ( this -> msgLevel(MSG::VERBOSE) )
+          { this -> verbose() << "  -> Found requested property" << *sp << " for " << name << endreq; }
           break;
         }
         else
