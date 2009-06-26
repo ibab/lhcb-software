@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.13 2009-06-26 12:39:56 gligorov Exp $
+$Id: release.notes,v 1.14 2009-06-26 13:07:42 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,7 +6,7 @@ $Id: release.notes,v 1.13 2009-06-26 12:39:56 gligorov Exp $
 !-----------------------------------------------------------------------------
 
 ! 2009-06-26 - V. Gligorov
-  - Fixed silly bug in XGamma lines, changing Bs_0 into B_s0.
+  - Fixed a number of silly bugs in XGamma lines.
 
 ! 2009-06-24 - Greig Cowan
   - Added "prescaled and detached" exclusive Bs->JpsiPhi selection to

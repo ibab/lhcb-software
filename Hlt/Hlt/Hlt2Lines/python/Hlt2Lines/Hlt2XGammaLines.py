@@ -62,7 +62,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                        , "CombineKstar"
                                        , DecayDescriptors =["[K*(892)0 -> K+ pi-]cc"] 
                                        , DaughtersCuts = { "K+"  : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")",
-                                                           "Pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
+                                                           "pi-" : "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TrIPchi2Kst'))+")"}
                                        , CombinationCut =  "(ADAMASS('K*(892)0')<"+str(self.getProp('KstMassWinL'))+"*MeV)"
                                        , MotherCut = "( VFASPF(VCHI2) < "+str(self.getProp('KstVCHI2'))+")"
                                        , InputLocations  = [ GoodKaons, GoodPions ]
@@ -80,7 +80,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
                                                           "phi(1020)": "(ADMASS('phi(1020)')<"+str(self.getProp('PhiMassWinT'))+"*MeV)"}
                                       , CombinationCut =  "(ADAMASS('B_s0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
-                                      , MotherCut = "( (BPVDIRA > " + str(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+")"
+                                      , MotherCut = "( (BPVDIRA > " + str(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+"))"
                                       , InputLocations  = [ Hlt2Phi4PhiGamma, Photons ]
                                       )
         
@@ -94,9 +94,9 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                      , "CombineBs"
                                      , DecayDescriptors = ["[B0 -> K*(892)0  gamma]cc"]
                                      , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
-                                                         "K*(892)0" : "(ADMASS(K*(892)0)<"+str(self.getProp('KstMassWinT'))+"*MeV) " }
+                                                         "K*(892)0" : "(ADMASS('K*(892)0')<"+str(self.getProp('KstMassWinT'))+"*MeV) " }
                                      , CombinationCut =  "(ADAMASS('B0')<"+str(self.getProp('B0MassWin'))+"*MeV)"
-                                     , MotherCut = "( (BPVDIRA > " + str(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+")"
+                                     , MotherCut = "( (BPVDIRA > " + str(self.getProp('B0DirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+"))"
                                      , InputLocations  = [ Hlt2Kst4KstGamma, Photons ]
                                      )
         
