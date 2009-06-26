@@ -579,12 +579,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a list of bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def charmTFFilter(name, inputSeq, masswin) :
+        def charmTFFilter(name, inputSeq, extracode) :
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
             filter = Hlt2Member( FilterDesktop
                             , 'TFFilter'
                             , InputLocations = inputSeq
-                            , Code = masswin + "&" + str_point
+                            , Code = extracode + "&" + str_point
                                )
             filterSeq = bindMembers( name, inputSeq + [ filter ] )
             return filterSeq
@@ -640,7 +640,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo2BodySeq = charmTFFilter('CharmPostTF2Body'
                                      , [topoTF2Body]
-                                     , masswin = '(M>1839*MeV) & (M<1889*MeV)')
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
 
         makeLine('TopoTF2BodyCharmSignal'
                  , algos = [ charmRobustTopo2BodySeq, charmTFTopo2BodySeq ])
@@ -650,7 +650,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo3BodySeq = charmTFFilter('CharmPostTF3Body'
                                      , [topoTF3Body]
-                                     , masswin = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
 
         makeLine('TopoTF3BodyCharmSignal'
                  , algos = [ charmRobustTopo3BodySeq, charmTFTopo3BodySeq ])
@@ -665,7 +665,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                  )
         charmTFTopo4BodySeq = charmTFFilter('CharmPostTF4Body'
                                      , [charmTF4Body]
-                                     , masswin = '(M>1839*MeV) & (M<1889*MeV)')
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
 
         makeLine('TopoTF4BodyCharmSignal'
                  , algos = [ charmRobustTopo4BodySeq, charmTFTopo4BodySeq])
@@ -681,7 +681,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo2BodySBSeq = charmTFFilter('CharmPostTF2BodyWideMass'
                                      , [topoTF2Body]
-                                     , masswin = '(M>1700*MeV) & (M<2100*MeV)')
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
         makeLine('TopoTF2BodyCharmWideMass'
                  , algos = [ charmRobustTopo2BodySeq, charmTFTopo2BodySBSeq ])
@@ -691,7 +691,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo3BodySBSeq = charmTFFilter('CharmPostTF3BodyWideMass'
                                      , [topoTF3Body]
-                                     , masswin = '(M>1700*MeV) & (M<2100*MeV)')
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
         makeLine('TopoTF3BodyCharmWideMass'
                  , algos = [ charmRobustTopo3BodySeq, charmTFTopo3BodySBSeq ])
@@ -706,7 +706,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                  )
         charmTFTopo4BodySBSeq = charmTFFilter('CharmPostTF4BodyWideMass'
                                      , [charmTF4BodySB]
-                                     , masswin = '(M>1700*MeV) & (M<2100*MeV)')
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
 
         makeLine('TopoTF4BodyCharmWideMass'
                  , algos = [ charmRobustTopo4BodySeq, charmTFTopo4BodySBSeq])
