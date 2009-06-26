@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.54 2008-10-28 14:51:39 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.55 2009-06-26 10:21:53 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -194,28 +194,6 @@ public:
                  LHCb::RichSmartID& smartID,
                  const LHCb::RichTraceMode mode ) const;
 
-  /** @brief Converts a global position to the coordinate system of the
-   *  photodetector panel.
-   *
-   *  The local coordinate system is shifted to allow placing panels side by side
-   *  @param[in] globalPoint The point in global coordinates
-   *  @return Local (panel) point
-   */
-  //  Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
-
-
-  /**
-   * Returns the global position given a local position and panel number.
-   * Assumes a shifted panel as previous method
-   *
-   * @param localPoint The point in local coordinates
-   * @param side The detector side
-   *
-   * @return Global point.
-   */
-  Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
-                                  const Rich::Side side ) const;
-
   /**
    * Adds to the given vector all the available readout channels in this HPD panel
    *
@@ -251,6 +229,21 @@ public:
    */
   const DeRichHPD * deHPD( const LHCb::RichSmartID hpdID ) const;
 
+  /** Get the global to local (PD panel) transform. The local frame is defined with an offset
+   *  to accommodate both detector panels in one histogram and the x=0 in Rich1 and y=0 in
+   *  Rich2 are aligned with the global x=0 and y=0.
+   */
+  inline const Gaudi::Transform3D& globalToPDPanelMatrix() const
+  {
+    return m_globalToPDPanelTransform;
+  }
+
+  /// Get the transform from the local to global frame. See comments at the globalToPDPanelMatrix method
+  inline const Gaudi::Transform3D& PDPanelToGlobalMatrix() const
+  {
+    return m_PDPanelToGlobalTransform;
+  }
+
 private: // methods
 
   /** Finds the HPD row and column that corresponds to the x,y coordinates
@@ -275,6 +268,9 @@ private: // methods
 
   /// Check HPD panel acceptance
   LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;
+
+  /// generate the transforms from the global frame to the local photodetector frame
+  StatusCode generateGlobalToPDPanelTransforms();
 
 private: // data
 
@@ -317,6 +313,9 @@ private: // data
   double m_panelStartColPosOdd;    ///< Bottom/Start point of the odd HPD columns
   double m_panelStartColPos;       ///< abs max of even and odd start points used as the edge across columns
   double m_localOffset;            ///< offset applied in the global to panel coordinate transformation
+
+  Gaudi::Transform3D m_globalToPDPanelTransform;  ///< global to PD plane (local) transform
+  Gaudi::Transform3D m_PDPanelToGlobalTransform;  ///< local (PD plane) to global transform
 
   DeRichSystem* m_deRichS;         ///< Pointer to the overall RICH system object
 
