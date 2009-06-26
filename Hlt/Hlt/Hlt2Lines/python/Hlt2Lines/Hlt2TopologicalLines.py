@@ -297,14 +297,17 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a list of bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def robustFilter(name, inputSeq) :
+        def robustFilter(name, inputSeq, extracode = None) :
             # Build a cut string from the configuration variables.
             str_mass = "(M > 4*GeV)"
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('RobustPointingUL') + ")"
+            codestr = str_mass + "&" + str_point
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'RobustFilter'
                             , InputLocations = inputSeq
-                            , Code = str_mass + "&" + str_point
+                            , Code = codestr
                                )
             filterSeq = bindMembers( name, inputSeq + [ filter ] )
             return filterSeq
@@ -389,13 +392,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a list of bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def tfFilter(name, inputSeq) :
+        def tfFilter(name, inputSeq, extracode = None) :
             str_mass = "(M > 4*GeV)"
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('TFPointUL') + ")"
+            codestr = str_mass + "&" + str_point
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'TFFilter'
                             , InputLocations = inputSeq
-                            , Code = str_mass + "&" + str_point
+                            , Code = codestr
                                )
             filterSeq = bindMembers( name, inputSeq + [ filter ] )
             return filterSeq
@@ -562,11 +568,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def charmRobustFilter(name, inputSeq) :
+        def charmRobustFilter(name, inputSeq, extracode = None) :
+            codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'CharmRobustFilter'
                             , InputLocations = inputSeq
-                            , Code = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
+                            , Code = codestr
                                )
             filterSeq = bindMembers( name, inputSeq + [ filter ] )
             return filterSeq
@@ -579,12 +588,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a list of bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def charmTFFilter(name, inputSeq, extracode) :
-            str_point = "(BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
+        def charmTFFilter(name, inputSeq, extracode = None) :
+            codestr = "(BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'TFFilter'
                             , InputLocations = inputSeq
-                            , Code = extracode + "&" + str_point
+                            , Code = codestr
                                )
             filterSeq = bindMembers( name, inputSeq + [ filter ] )
             return filterSeq
@@ -729,11 +740,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def dxRobustFilter(name, inputSeq) :
+        def dxRobustFilter(name, inputSeq, extracode = None) :
+            codestr = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'DXRobustFilter'
                             , InputLocations = inputSeq
-                            , Code = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
+                            , Code = codestr
                                )
             filterSeq = bindMembers(name, inputSeq + [ filter ])
             return filterSeq
@@ -746,13 +760,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # The argument inputSeq should be a bindMember sequences that
         #   produces the particles to filter.
         ###################################################################
-        def dxTFFilter(name, inputSeq) :
+        def dxTFFilter(name, inputSeq, extracode = None) :
             str_mass = "(M>2500*MeV) & (M<6000*MeV)"
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('DXTFPointUL') + ")"
+            codestr = str_mass + '&' + str_point
+            if extracode :
+              codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'DXTFFilter'
                             , InputLocations = inputSeq
-                            , Code = str_mass + "&" + str_point
+                            , Code = codestr
                                )
             filterSeq = bindMembers(name, inputSeq + [ filter ])
             return filterSeq
