@@ -1,4 +1,4 @@
-// $Id: ITrackCloneFinder.h,v 1.6 2008-05-06 09:34:37 aperiean Exp $
+// $Id: ITrackCloneFinder.h,v 1.7 2009-06-26 12:49:19 wouter Exp $
 #ifndef TRACKINTERFACES_ITRACKCLONEFINDER_H 
 #define TRACKINTERFACES_ITRACKCLONEFINDER_H 1
 
@@ -31,18 +31,30 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackCloneFinder; }
 
-  /** Compares two input Tracks and finds whether one is a clone
+  /** Compare two input Tracks and find whether one is a clone
    *  of the other based on some "overlap criteria".
-   *  The corresponding flag may be set accordingly (NOT DONE BY DEFAULT)
-   *  depending on the value of the "setFlag" argument.
+   *  Note: the method ignores whether the Tracks themselves have been
+   *        previously flagged as clones! It merely does a comparison.
    *  @param  track1 input 1st track
    *  @param  track2 input 2nd track
    *  @param  setFlag input parameter indicates whether the clone track
    *          is to be set as such (default = false)
    */
-  virtual void areClones( LHCb::Track& track1,
-                          LHCb::Track& track2,
-                          bool setFlag = false) const = 0;
+  virtual bool areClones( const LHCb::Track& track1,
+                          const LHCb::Track& track2 ) const = 0 ;
 
+  /** Compare two input Tracks and find whether one is a clone
+   *  of the other based on some "overlap criteria".
+   *  The corresponding flag may be set accordingly (NOT DONE BY DEFAULT)
+   *  depending on the value of the "setFlag" argument.
+   *  Note: the method ignores whether the Tracks themselves have been
+   *        previously flagged as clones! It merely does a comparison.
+   *  @param  track1 input 1st track
+   *  @param  track2 input 2nd track
+   *  @param  setFlag input parameter indicates whether the clone track
+   *          is to be set as such (default = false)
+   */
+  virtual bool flagClones( LHCb::Track& track1,
+			   LHCb::Track& track2 ) const = 0 ;
 };
 #endif // TRACKINTERFACES_ITRACKCLONEFINDER_H

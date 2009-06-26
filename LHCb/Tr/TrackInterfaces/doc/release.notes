@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-06-26 - Wouter Hulsbergen
+ - Fix interface of ITrackCloneFinder
+
 !====================== TrackInterfaces v4r3p1 2009-05-28 ====================
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
