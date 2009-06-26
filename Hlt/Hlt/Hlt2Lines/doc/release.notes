@@ -1,9 +1,18 @@
-$Id: release.notes,v 1.14 2009-06-26 13:07:42 gligorov Exp $
+$Id: release.notes,v 1.15 2009-06-26 14:59:46 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-26 - V. Gligorov & P. Spradlin
+  - Add GEC machinery for the Hlt2Topological lines. It is now possible to
+    cut on the number of tracks in an event and reject events which have too many
+    tracks. Off by default -- switch on by setting ComRobUseGEC to true. Set
+    ComRobGEC to adjust the cut value (default 120 tracks).
+  - Add cut on the charge of the final 2,3, and 4 body candidates of the charm lines.
+    The 2,4 body are required to have charge zero, the 3 body charge +-1. 
+  - Other minor changes to improve code usability.
 
 ! 2009-06-26 - V. Gligorov
   - Fixed a number of silly bugs in XGamma lines.

@@ -65,6 +65,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
                 , 'ComRobVtxPVDispLL'       : 2          # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
+                , 'ComRobUseGEC'            : False       # do or do not 
+                , 'ComRobGEC'               : 120        # max number of tracks
                 , 'ComTFAllTrkPtLL'         : 300        # in MeV
                 , 'ComTFAllTrkPLL'          : 2000       # in MeV
                 , 'ComTFAllTrkPVIPChi2LL'   : 9          # unitless
@@ -214,6 +216,21 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # This needs to be cleaned up.
         ###################################################################
         ###################################################################
+        # Start with a GEC on all events with more than 120 tracks
+        #  
+        # This is a temporary fix only and will be removed once proper
+        # GEC lines are implemented
+        ###################################################################
+        from Configurables import LoKi__VoidFilter as VoidFilter
+	from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+	modules =  CoreFactory('CoreFactory').Modules
+	for i in [ 'LoKiTrigger.decorators' ] :
+	    if i not in modules : modules.append(i)
+
+	Hlt2KillTooManyTopoIP = VoidFilter('Hlt2KillTooManyTopoIP'
+                                  , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < " + _cut('ComRobGEC')  + " )"
+                                  )
+        ###################################################################
         # Construct a combined sequence for the input particles to the robust
         #   stage.
         ###################################################################
@@ -232,8 +249,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                             , InputLocations = [GoodPions, GoodKaons]
                             , Code = daugcuts
                            )
-        lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
-
+        if self.getProp('ComRobUseGEC') :
+        	lclInputParticles = bindMembers( 'TopoInputParticles', [ Hlt2KillTooManyTopoIP, orInput, filter ] )
+	else :
+		lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
 
         ###################################################################
         # Function to configure common particle combinations used by inclusive
@@ -604,11 +623,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Construct a bindMember for the charm topo robust 2-body decision
         ###################################################################
-        charmRobustTopo2BodySeq = charmRobustFilter('CharmRobustTopo2Body', [topo2Body])
+        charmRobustTopo2BodySeq = charmRobustFilter('CharmRobustTopo2Body', [topo2Body], extracode = '(SUMQ == 0)')
 
         # Construct a bindMember for the charm topo robust 3-body decision
         ###################################################################
-        charmRobustTopo3BodySeq = charmRobustFilter('CharmRobustTopo3Body', [topo3Body])
+        charmRobustTopo3BodySeq = charmRobustFilter('CharmRobustTopo3Body', [topo3Body], extracode = '((SUMQ == 1) | (SUMQ == -1))')
 
         # Construct a bindMember for the charm topo robust 4-body decision
         # CombineParticles for the 4-body combinations.
@@ -619,7 +638,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
-                                                , 'MotherCut'     : hackRobustParentCut() }
+                                                , 'MotherCut'     : hackRobustParentCut() + '&(SUMQ == 0)'}
                                   )
         charmRobustTopo4BodySeq = charmRobustFilter('CharmRobustTopo4Body', [charmRob4Body])
 
@@ -651,7 +670,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo2BodySeq = charmTFFilter('CharmPostTF2Body'
                                      , [topoTF2Body]
-                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0)')
 
         makeLine('TopoTF2BodyCharmSignal'
                  , algos = [ charmRobustTopo2BodySeq, charmTFTopo2BodySeq ])
@@ -661,7 +680,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charmTFTopo3BodySeq = charmTFFilter('CharmPostTF3Body'
                                      , [topoTF3Body]
-                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)))')
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)) & ((SUMQ == -1) |(SUMQ == 1)))')
 
         makeLine('TopoTF3BodyCharmSignal'
                  , algos = [ charmRobustTopo3BodySeq, charmTFTopo3BodySeq ])
@@ -672,7 +691,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmTF4Body = tfCombine(  name = 'CharmTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)' }
+                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)',
+                                                'MotherCut' : '(SUMQ == 0)' }
                                  )
         charmTFTopo4BodySeq = charmTFFilter('CharmPostTF4Body'
                                      , [charmTF4Body]
