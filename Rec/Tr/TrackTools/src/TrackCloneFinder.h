@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.9 2009-05-08 15:43:18 gkrocker Exp $
+// $Id: TrackCloneFinder.h,v 1.10 2009-06-26 13:01:05 wouter Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -42,6 +42,18 @@ public:
 
   /** Compare two input Tracks and find whether one is a clone
    *  of the other based on some "overlap criteria".
+   *  Note: the method ignores whether the Tracks themselves have been
+   *        previously flagged as clones! It merely does a comparison.
+   *  @param  track1 input 1st track
+   *  @param  track2 input 2nd track
+   *  @param  setFlag input parameter indicates whether the clone track
+   *          is to be set as such (default = false)
+   */
+  virtual bool areClones( const LHCb::Track& track1,
+                          const LHCb::Track& track2 ) const;
+
+  /** Compare two input Tracks and find whether one is a clone
+   *  of the other based on some "overlap criteria".
    *  The corresponding flag may be set accordingly (NOT DONE BY DEFAULT)
    *  depending on the value of the "setFlag" argument.
    *  Note: the method ignores whether the Tracks themselves have been
@@ -51,24 +63,12 @@ public:
    *  @param  setFlag input parameter indicates whether the clone track
    *          is to be set as such (default = false)
    */
-  virtual void areClones( LHCb::Track& track1,
-                          LHCb::Track& track2,
-                          bool setFlag = false ) const;
+  virtual bool flagClones( LHCb::Track& track1,
+			   LHCb::Track& track2 ) const;
 
 protected:
 
 private:
-  /** Compare two input Tracks and find whether one is a clone
-   *  of the other based on some "overlap criteria".
-   *  Note: the method ignores whether the Tracks themselves have been
-   *        previously flagged as clones! It merely does a comparison.
-   *  @return bool: True if one Track was set as a clone of the other.
-   *                False otherwise.
-   *  @param  track1 input 1st track
-   *  @param  track2 input 2nd track
-   */
-  bool clones( const LHCb::Track& track1, const LHCb::Track& track2 ) const;
-  
   /** Calculate the number of common hits of a given LHCb type
    *  between two input Tracks.
    *  Note: hits can here mean either Measurements or LHCbIDs,
@@ -84,17 +84,8 @@ private:
    *  @param[in]  track2      input 2nd track
    *  @param[out] nCommonHits number of shared hits
    */
-  void getCommonHits( const LHCb::Track& track1,
-		      const LHCb::Track& track2,
-		      unsigned int& nCommonHits) const;
-
   bool areTracksClose(const LHCb::Track& track1,
                                    const LHCb::Track& track2) const;
- 
-
-  bool areSettingsConsistent( const LHCb::Track& track1,
-                              const LHCb::Track& track2 ) const;
-
 private:
   bool m_debugLevel;
   
@@ -105,12 +96,7 @@ private:
   double m_matchingFraction;
   double m_matchingFractionT;
   bool   m_compareLDT;
-  /* compare the hits based on the list of LHCbIDs only instead of
-   * comparing on the list of Measurements
-   * (the difference comes from the possible outliers removed by
-   * the track fit!) */
-  bool m_compareAtLHCbIDsLevel;
-  bool m_restrictedSearch;
+  bool   m_restrictedSearch;
   double m_xseparationV;
   double m_yseparationV;
   double m_txseparationV;

@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.13 2009-05-08 15:43:18 gkrocker Exp $
+// $Id: TrackCloneFinder.cpp,v 1.14 2009-06-26 13:01:05 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -34,7 +34,6 @@ TrackCloneFinder::TrackCloneFinder( const std::string& type,
  
   declareProperty( "MatchingFraction",      m_matchingFraction      = 0.7   );
   declareProperty( "MatchingFractionT",     m_matchingFractionT     = 0.50);
-  declareProperty( "CompareAtLHCbIDsLevel", m_compareAtLHCbIDsLevel = false);
   declareProperty( "CompareLDT",            m_compareLDT            = false);
   //In some cases, such as HLT we want to search for clones only if the tracks
   //are close. To do so, set RestrictedSearch to true
@@ -73,9 +72,41 @@ StatusCode TrackCloneFinder::initialize() {
 // of the other based on some "overlap criteria".
 // The corresponding flags are set accordingly.
 //=============================================================================
-void TrackCloneFinder::areClones( LHCb::Track& track1,
-                                  LHCb::Track& track2,
-                                  bool setFlag) const
+bool TrackCloneFinder::flagClones( LHCb::Track& track1,
+				   LHCb::Track& track2 ) const
+{
+  bool theyAreClones = TrackCloneFinder::areClones( track1, track2 ) ;
+  if ( theyAreClones ) {  
+    size_t n1 = track1.nLHCbIDs();
+    size_t n2 = track2.nLHCbIDs();
+    if ( n1 > n2 ) {
+      track2.setFlag( LHCb::Track::Clone, true );
+    } else if (n2 > n1) {
+      track1.setFlag( LHCb::Track::Clone, true );
+      // In some cases the tracks might not be fitted so we can not use the chi2 as
+      // criterion. So, check if the track is fitted..
+    } else if(track1.fitStatus() == LHCb::Track::Fitted &&
+	      track2.fitStatus() == LHCb::Track::Fitted){
+      const double chi1 = track1.chi2PerDoF();
+      const double chi2 = track2.chi2PerDoF();
+      chi1 < chi2 ? track2.setFlag( LHCb::Track::Clone, true ) :
+	track1.setFlag( LHCb::Track::Clone, true );
+    } else {
+      if ( m_debugLevel) 
+	debug () << "At least one of your tracks is not fitted!" << endreq;
+    }
+  }
+  return theyAreClones ;
+}
+    
+
+//=============================================================================
+// Compare two input Tracks and find whether one is a clone
+// of the other based on some "overlap criteria".
+// The corresponding flags are set accordingly.
+//=============================================================================
+bool TrackCloneFinder::areClones( const LHCb::Track& track1,
+                                  const LHCb::Track& track2 ) const
 {
   if ( m_debugLevel ) {
     debug() << "Looking at tracks " << track1.key() << " in "
@@ -83,147 +114,35 @@ void TrackCloneFinder::areClones( LHCb::Track& track1,
             << track2.key() << " in "
             << track2.parent() -> name() << endreq;
   }
-
+  
   //If we want to speed up the time for clonesearch we can look only on clones
   //which are physcially close
-  bool theyAreClose=true;
-  if(m_restrictedSearch) theyAreClose = areTracksClose( track1, track2);
-
-  if(!m_restrictedSearch || theyAreClose) { 
-      
-      bool theyAreClones = clones( track1, track2 );
-      unsigned int n1, n2 = 0;
-      if ( ! m_compareAtLHCbIDsLevel ) {
-	  n1 = track1.nMeasurements();
-	  n2 = track2.nMeasurements();
-      } else {
-	  n1 = track1.nLHCbIDs();
-	  n2 = track2.nLHCbIDs();
-      }
-
-      if ( setFlag && theyAreClones ) {
-	  if ( n1 > n2 ) {
-	      track2.setFlag( LHCb::Track::Clone, true );
-	  } else if (n2 > n1) {
-	      track1.setFlag( LHCb::Track::Clone, true );
-// In some cases the tracks might not be fitted so we can not use the chi2 as
-// criterion. So, check if the track is fitted..
-	  } else if(track1.fitStatus() == LHCb::Track::Fitted &&
-		  track2.fitStatus() == LHCb::Track::Fitted){
-	      const double chi1 = track1.chi2PerDoF();
-	      const double chi2 = track2.chi2PerDoF();
-	      chi1 < chi2 ? track2.setFlag( LHCb::Track::Clone, true ) :
-		  track1.setFlag( LHCb::Track::Clone, true );
-	  } else {
-	      if ( m_debugLevel) 
-		 debug () << "At least one of your tracks is not fitted!" << endreq;
-	  }
-      }
-
-      if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endreq;
-  }      
-}
-
-//=============================================================================
-// Compare two input Tracks and find whether one is a clone
-// of the other based on some "overlap criteria".
-//=============================================================================
-bool TrackCloneFinder::clones( const LHCb::Track& track1,
-	const LHCb::Track& track2 ) const
-{
-    if ( ! areSettingsConsistent( track1, track2 ) ) return false;
-
-    unsigned int nHitsCommon     = 0;
-    getCommonHits( track1, track2, nHitsCommon);
-
-    unsigned int ntrack1= 0;
-    unsigned int ntrack2 = 0;
-    if( !m_compareAtLHCbIDsLevel){
-	ntrack1 = track1.nMeasurements();
-	ntrack2 = track2.nMeasurements();
-    }else{
-	ntrack1 = track1.nLHCbIDs();
-	ntrack2 = track2.nLHCbIDs();
-    }
-  unsigned int nTrackMin = GSL_MIN( ntrack1, ntrack2);
-
-  bool are_clones = false;
-  if( nHitsCommon > m_matchingFraction*nTrackMin){
-    are_clones = true;
-  }
-  
-  if( !are_clones && m_compareLDT){
-    if( (track1.type() == LHCb::Track::Long) &&
-	(track2.type()    == LHCb::Track::Downstream ||
-	 track2.type()    == LHCb::Track::Ttrack)){
-      if( nHitsCommon > m_matchingFractionT*nTrackMin){
-	are_clones = true;
-      }
-    }
-  }
- 
-  
-  return are_clones;
-}
-//=============================================================================
-//Calculate the number of common hits between two input Tracks.
-//=============================================================================
-void TrackCloneFinder::getCommonHits( const LHCb::Track& track1,
-				      const LHCb::Track& track2,
-				      unsigned int& nCommonHits) const
-{
-  if( !m_compareAtLHCbIDsLevel){
-    const std::vector<LHCb::Measurement*>& hits1 = track1.measurements();
-    const std::vector<LHCb::Measurement*>& hits2 = track2.measurements();
-
-    // Calculate the number of common LHCbIDs
-    for( unsigned int i1 = 0; i1 < hits1.size(); ++i1){
-      // if second track is VeloTT(Upstream) skip the IT&OT hits
-      if( track2.type() == LHCb::Track::Upstream &&
-	  ( hits1[i1]->type() ==  LHCb::Measurement::IT||
-	    hits1[i1]->type() ==  LHCb::Measurement::OT)) break;
-      // if second track is Tsa || Downstream skip the VeloR&VeloPhi hits
-      if( ( track2.type() == LHCb::Track::Downstream || 
-	    track2.type() == LHCb::Track::Ttrack) &&
-	  ( hits1[i1]->type() ==  LHCb::Measurement::VeloR ||
-	    hits1[i1]->type() ==  LHCb::Measurement::VeloPhi ||
-	    hits1[i1]->type() ==  LHCb::Measurement::VeloLiteR ||
-	    hits1[i1]->type() ==  LHCb::Measurement::VeloLitePhi ) )continue;
-      for( unsigned int i2 = 0; i2 < hits2.size(); ++i2){
-	if( hits1[i1]->lhcbID() == hits2[i2]->lhcbID()){
-	  ++nCommonHits;
-	  break;
-	}
-      }
-    }  
-  }else{
-    const std::vector<LHCb::LHCbID>& ids1 = track1.lhcbIDs();
-    const std::vector<LHCb::LHCbID>& ids2 = track2.lhcbIDs();
+  bool theyAreClones(false) ;
+  if(!m_restrictedSearch || areTracksClose( track1, track2)) { 
     
-    // Calculate the number of common LHCbIDs
-    for( unsigned int i1 = 0; i1 < ids1.size(); ++i1){
-      // if second track is VeloTT(Upstream) skip the IT&OT hits
-      if( track2.type() == LHCb::Track::Upstream &&
-	  ( ids1[i1].isIT() || ids1[i1].isOT())) break;
-      // if second track is Tsa || Downstream skip the VeloR&VeloPhi hits
-      if( ( track2.type() == LHCb::Track::Downstream || 
-	    track2.type() == LHCb::Track::Ttrack) &&
-	  ids1[i1].isVelo() )continue;
-      
-      for( unsigned int i2 = 0; i2 < ids2.size(); ++i2){
-	if( ids1[i1].channelID() == ids2[i2].channelID()){
-	  ++nCommonHits;
-	  break;
-	}
-      }
-    }  
+    size_t nHitsCommon = track1.nCommonLhcbIDs( track2 ) ;
+    size_t n1 = track1.nLHCbIDs();
+    size_t n2 = track2.nLHCbIDs();
+    size_t nTrackMin = std::min(n1,n2);
+    theyAreClones = nHitsCommon > m_matchingFraction*nTrackMin ;
+    
+    if( !theyAreClones && m_compareLDT &&
+	(track1.type() == LHCb::Track::Long) &&
+	(track2.type()    == LHCb::Track::Downstream ||
+	 track2.type()    == LHCb::Track::Ttrack) )  {
+      theyAreClones = nHitsCommon > m_matchingFractionT*nTrackMin ;
+    }
+    
+    if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endreq;
   }
+  return theyAreClones ;
 }
+
 //=============================================================================
 //Look if two tracks are really close to each other 
 //=============================================================================
 bool TrackCloneFinder::areTracksClose(const LHCb::Track& tr1, 
-	const LHCb::Track& tr2) const
+				      const LHCb::Track& tr2) const
 {
     //We only check wheter the tracks are close in the velo or not so far
     //before we check if they are ghosts, just to save some time
@@ -259,26 +178,6 @@ bool TrackCloneFinder::areTracksClose(const LHCb::Track& tr1,
 
     //ok, they are really close so they can be clones
     return true;
-}
-//=============================================================================
-// 
-//=============================================================================
-bool TrackCloneFinder::areSettingsConsistent( const LHCb::Track& track1,
-                                              const LHCb::Track& track2 ) const
-{
-  if ( m_compareAtLHCbIDsLevel ) return true;
-
-  bool yesNo = true;
-
-  if ( track1.checkPatRecStatus( LHCb::Track::PatRecIDs ) ) yesNo = false;
-  
-  if ( track2.checkPatRecStatus( LHCb::Track::PatRecIDs ) ) yesNo = false;
-  
-  if ( ! yesNo )
-    error() << "Settings are not consistent. Check what you are doing!"
-            << endreq;
-
-  return yesNo;
 }
 
 //=============================================================================
