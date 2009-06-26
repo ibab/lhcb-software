@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.6 2009-06-26 13:04:51 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.7 2009-06-26 13:24:50 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -24,7 +24,7 @@ class IRelatedPVFinder;
  *  <b>Properties</b>
  *
  *  <b>ParticleInputLocation</b> : TES location of input LHCb::Particles. 
- *  Default: "". Must be set by user.
+ *  Default: "". Must be set by user unless <b>P2PVRelationsInputLocation<b> is set
  *
  *  <b>PrimaryVertexInputLocation</b> : TES location of input LHCb::RecVertices. 
  *  Default: LHCb::RecVertexLocation::Primary
@@ -36,10 +36,10 @@ class IRelatedPVFinder;
  *  Particle2Vertex::Table with the newly sorted relations. Default "".
  *  Must be set by user.
  *
- *  Besides the properties that <b>must</b> be set, there is one extra 
- *  condition: <b>PrimaryVertexInputLocation<b> and <b>P2PVRelationsInputLocation<b> 
- *  cannot both be set. This will result in the initalize() method returning a 
- *  StatusCode::FAILURE.
+ *  Besides the properties that <b>must</b> be set, there are two extra 
+ *  conditions: neither <b>ParticleInputLocation</b> nor <b>PrimaryVertexInputLocation<b> 
+ *  can be set if <b>P2PVRelationsInputLocation<b> is set. This will result in 
+ *  the initalize() method returning a StatusCode::FAILURE.
  *
  *  <b>Example</b>: Create a Particle2Vertex::Table relating LHCb::Particles from
  *  "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to default primary vertices and 
