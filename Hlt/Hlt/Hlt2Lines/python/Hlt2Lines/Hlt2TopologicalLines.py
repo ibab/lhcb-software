@@ -303,7 +303,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('RobustPointingUL') + ")"
             codestr = str_mass + "&" + str_point
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'RobustFilter'
                             , InputLocations = inputSeq
@@ -397,7 +397,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('TFPointUL') + ")"
             codestr = str_mass + "&" + str_point
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'TFFilter'
                             , InputLocations = inputSeq
@@ -571,7 +571,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         def charmRobustFilter(name, inputSeq, extracode = None) :
             codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'CharmRobustFilter'
                             , InputLocations = inputSeq
@@ -591,7 +591,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         def charmTFFilter(name, inputSeq, extracode = None) :
             codestr = "(BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'TFFilter'
                             , InputLocations = inputSeq
@@ -743,7 +743,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         def dxRobustFilter(name, inputSeq, extracode = None) :
             codestr = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'DXRobustFilter'
                             , InputLocations = inputSeq
@@ -765,7 +765,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             str_point = "(BPVTRGPOINTINGWPT<" + _cut('DXTFPointUL') + ")"
             codestr = str_mass + '&' + str_point
             if extracode :
-              codestr + '&' + extracode
+              codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                             , 'DXTFFilter'
                             , InputLocations = inputSeq
