@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.4 2009-06-11 16:59:46 marcocle Exp $
+# $Id: GetPack.py,v 1.5 2009-06-26 18:11:30 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 ## Class to select valid version tags according to LHCb policy
 class LHCbVersionFilter(object):
-    def __init__(self, regexp = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?|(?:\w+_([0-9]{4})([0-9]{2})([0-9]{2})[a-z]?)'):
+    def __init__(self, regexp = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?(?:-pre([0-9]+))?|(?:\w+_([0-9]{4})([0-9]{2})([0-9]{2})[a-z]?)'):
         self.regexp = re.compile(regexp)
     def __call__(self, version):
         m = self.regexp.match(version)
@@ -99,7 +99,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.4 2009-06-11 16:59:46 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.5 2009-06-26 18:11:30 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -163,10 +163,14 @@ class GetPack(Script):
         self.parser.add_option("--user-cvs", action = "append",
                                metavar = "CVSROOT",
                                help = "add a custom CVS repository to the known ones")
+        self.parser.add_option("--no-pre", action = "store_true",
+                               help = "ignore the pre-release tags (those ending in '-pre[0-9]+')")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
-                                 user_cvs = [])
+                                 user_cvs = [],
+                                 no_pre = False,
+                                 )
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
 
@@ -285,11 +289,24 @@ class GetPack(Script):
                 self.log.warning("No version found for package '%s', using 'head'" % package)
                 version = "head"
                 versions = ["head"] # this is to pass the next check
-            if (not version) or (version not in versions):
-                if version:
-                    self.log.warning("Version '%s' not found for package '%s'" % (version, package))
-                else:
-                    self.log.warning("Version not specified for package '%s'" % package)
+            if version:
+                if version not in versions:
+                    vers = None # temporary variable
+                    if not self.options.no_pre:
+                        # look for "-pre" tags
+                        pre_v = version + "-pre"
+                        for v in versions:
+                            if v.startswith(pre_v):
+                                vers = v
+                                break
+                    if vers: # this is Flase if the -pre version was not wanted or not found
+                        self.log.warning("Version '%s' not found for package '%s', using '%s'" % (version, package, vers))
+                        version = vers
+                    else:
+                        self.log.warning("Version '%s' not found for package '%s'" % (version, package))
+                        version = self._askVersion(versions)
+            else:
+                self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions)
         # Fix the case of the special version "head"
         if version.lower() == "head":
@@ -322,12 +339,27 @@ class GetPack(Script):
             versions = rep.listVersions(project, isProject = True)
             if not versions:
                 raise RuntimeError("No version found for project '%s'" % project)
-            if (not version) or (version not in versions):
-                if version:
-                    self.log.warning("Version '%s' not found for project '%s'" % (version, project))
-                else:
-                    self.log.warning("Version not specified for project '%s'" % project)
+            
+            if version:
+                if version not in versions:
+                    vers = None # temporary variable
+                    if not self.options.no_pre:
+                        # look for "-pre" tags
+                        pre_v = version + "-pre"
+                        for v in versions:
+                            if v.startswith(pre_v):
+                                vers = v
+                                break
+                    if vers: # this is Flase if the -pre version was not wanted or not found
+                        self.log.warning("Version '%s' not found for project '%s', using '%s'" % (version, project, vers))
+                        version = vers
+                    else:
+                        self.log.warning("Version '%s' not found for project '%s'" % (version, project))
+                        version = self._askVersion(versions)
+            else:
+                self.log.warning("Version not specified for project '%s'" % package)
                 version = self._askVersion(versions)
+
         # Fix the case of the special version "HEAD"
         if version.lower() == "head":
             version = version.upper()

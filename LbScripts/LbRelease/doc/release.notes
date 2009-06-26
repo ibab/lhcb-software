@@ -1,3 +1,11 @@
+2008-06-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: Added the support for -pre tags.
+	If a requested tag is not present, but equivalent '-pre' tags are available,
+	take the latest of them.
+	The feature can be disabled with the command line option --no-pre, to be
+	used when releasing.
+
 2009-06-22  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: cleanup in make procedure,
@@ -13,7 +21,7 @@
 
 2008-06-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
-	* python/LbRelease/GetPack.py: Added the a command line option to add a
+	* python/LbRelease/GetPack.py: Added a command line option to add a
 	repository URL on the fly (useful for the transition to SVN).
 	When the --recursive-head option is specified, the default version of the
 	package or project is "head", so it is not asked if not specified.
