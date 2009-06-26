@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name = "DecayTreeFitter::Fitter" />
+  <class name = "LHCb::VtxFitParams" />
+  <class name = "LHCb::LorentzVectorErr" />
+</lcgdict>
