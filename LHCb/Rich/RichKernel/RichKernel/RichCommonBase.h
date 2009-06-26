@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.11 2009-06-25 11:56:45 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.12 2009-06-26 08:58:00 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -124,8 +124,9 @@ namespace Rich
       // If not private tool - Check Context and OutputLevel option
       if ( !parent )
       {
-        if ( !setContext    ( toolRegistry()->toolName(iName) ) ) { return NULL; }
-        if ( !setOutputLevel( toolRegistry()->toolName(iName) ) ) { return NULL; }
+        if ( !setContext    ( toolRegistry()->toolName(iName) ) ||
+             !setOutputLevel( toolRegistry()->toolName(iName) )  ) 
+        { return NULL; }
       }
 
       // get tool
@@ -229,14 +230,16 @@ namespace Rich
      *  Set the Property for public tools that do not explicitly 
      *  have it set. Uses the same settings as for the tool registry.
      *
-     *  @param name Tool name
+     *  @param name     Tool name
      *  @param property The property name
      *
-     *  @return Status Code indicating if setting was successful or not
+     *  @return Boolean indicating if setting was successful or not
+     *  @retval TRUE  Setting was successful
+     *  @retval FALSE Setting failed
      */
     template < class PROPERTYTYPE >
-    StatusCode my_setToolProperty( const std::string & name,
-                                   const std::string & property ) const;
+    bool my_setToolProperty( const std::string & name,
+                             const std::string & property ) const;
     
     /** @brief Set the Context option for given public tool
      *
@@ -246,9 +249,11 @@ namespace Rich
      *
      *  @param name Tool name
      *
-     *  @return Status Code indicating if setting was successful or not
+     *  @return Boolean indicating if setting was successful or not
+     *  @retval TRUE  Setting was successful
+     *  @retval FALSE Setting failed
      */
-    StatusCode setContext( const std::string & name ) const;
+    bool setContext( const std::string & name ) const;
 
     /** @brief Set the Context option for given public tool
      *
@@ -257,9 +262,11 @@ namespace Rich
      *
      *  @param name Tool name
      *
-     *  @return Status Code indicating if setting was successful or not
+     *  @return Boolean indicating if setting was successful or not
+     *  @retval TRUE  Setting was successful
+     *  @retval FALSE Setting failed
      */
-    StatusCode setOutputLevel( const std::string & name ) const;
+    bool setOutputLevel( const std::string & name ) const;
     
   private: // data
 
