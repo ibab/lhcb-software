@@ -1,4 +1,4 @@
-// $Id: HltCopySelection.cpp,v 1.1 2009-03-31 11:37:17 graven Exp $
+// $Id: HltCopySelection.cpp,v 1.2 2009-06-26 18:09:04 spradlin Exp $
 // Include files 
 #include <algorithm>
 #include <iterator>
@@ -70,7 +70,8 @@ HltCopySelection<T>::execute() {
   std::copy( m_selection.template input<1>()->begin(), 
              m_selection.template input<1>()->end(), 
              std::back_inserter(*m_selection.output()) );
-  counter("#accept") += !m_selection.output()->empty();
+  //Counter is iterated in parent class.  See HltAlgorithm::setDecision().
+  //counter("#accept") += !m_selection.output()->empty();
   counter("#candidated accepted") +=  m_selection.output()->size();
   setFilterPassed( !m_selection.output()->empty() );
   return StatusCode::SUCCESS;

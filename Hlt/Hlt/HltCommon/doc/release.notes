@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-06-26 - Patrick Spradlin
+ - src/HltCopySelection.cpp
+   Fixed a double increment of the '#accept' counter.
+
 ! 2009-06-24 - Tomasz Skwarnicki
  - move HltDiffHltDecReports to Hlt/HltDAQ
 
