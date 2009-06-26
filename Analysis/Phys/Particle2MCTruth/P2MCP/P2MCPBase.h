@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.6 2009-05-07 10:29:31 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.7 2009-06-26 12:13:44 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -9,7 +9,7 @@
 #include "P2MCP/IP2MCP.h"            // Interface
 
 
-/** @class P2MCPBase P2MCPBase.h
+/** @class P2MCPBase P2MCPBase.h P2MCP/P2MCPBase.h
  *  
  *  Common implementation for descendants of IParticle2MCAssociator.
  *  Mainly inline helper methods for common implementation of host of 

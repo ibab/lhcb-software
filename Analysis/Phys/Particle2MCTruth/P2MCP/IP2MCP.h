@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.5 2009-04-06 20:15:00 jpalac Exp $
+// $Id: IP2MCP.h,v 1.6 2009-06-26 12:13:44 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -20,7 +20,7 @@ namespace LHCb
   class Particle;
 }
 
-/** @class IP2MCP IP2MCP.h Kernel/IP2MCP.h
+/** @class IP2MCP IP2MCP.h P2MCP/IP2MCP.h
  *  
  *  Tool interface to generate weighted associations between one or many 
  *  LHCb::Particles and return them to the user in different formats. The
