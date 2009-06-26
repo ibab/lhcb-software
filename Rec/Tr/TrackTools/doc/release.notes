@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-06-26 - Wouter Hulsbergen
+- cleanup and speedup of TrackCloneFinder. fix interface. for details, see cvs log.
+
 !======================== TrackTools v3r17 2009-05-08 ========================
 ! 2009-05-08 - Georg Krocker
 - add the possibility of a restricted search to TrackCloneFinder tool. Possible

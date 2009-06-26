@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-06-26 - Wouter Hulsbergen
+- adapt to fix in ITrackCloneFider interface
+
 !========================== TrackUtils v1r26 2009-05-11 ======================
 ! 2009-05-10 - Georg Krocker
 - small bug in TrackEventCloneKiller fixed
