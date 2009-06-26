@@ -17,6 +17,7 @@ use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 
 use Camera            v1r4     Online
+use CondDBServer      v1r2     Online
 use DIM               v18r4p2  Online
 use ExampleGaucho     v3r1     Online
 # Does not work on WIN32
