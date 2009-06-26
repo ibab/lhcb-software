@@ -79,7 +79,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , DecayDescriptors = ["[B_s0 -> gamma phi(1020)]cc"]
                                       , DaughtersCuts = { "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
                                                           "phi(1020)": "(ADMASS('phi(1020)')<"+str(self.getProp('PhiMassWinT'))+"*MeV)"}
-                                      , CombinationCut =  "(ADAMASS('Bs_0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
+                                      , CombinationCut =  "(ADAMASS('B_s0')<"+str(self.getProp('BsMassWin'))+"*MeV)"
                                       , MotherCut = "( (BPVDIRA > " + str(self.getProp('BsDirAngle'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+")"
                                       , InputLocations  = [ Hlt2Phi4PhiGamma, Photons ]
                                       )
