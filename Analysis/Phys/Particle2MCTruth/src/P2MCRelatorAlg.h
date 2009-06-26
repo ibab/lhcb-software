@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.h,v 1.2 2009-04-17 20:54:12 jpalac Exp $
+// $Id: P2MCRelatorAlg.h,v 1.3 2009-06-26 13:28:22 jpalac Exp $
 #ifndef P2MCRELATORALG_H 
 #define P2MCRELATORALG_H 1
 
@@ -16,6 +16,7 @@
  *  an IP2MCP to create a Particle2MCParticle::Table of associations between
  *  Particles and MCParticles that pass IP2MCP::isMatched.
  *  The relations table is written to the parent of ParticleLocation + "P2MCPRelations".
+ *
  *  <b> Properties</b>
  *
  *  ParticleLocation: TES location of input LHCb::Particles
