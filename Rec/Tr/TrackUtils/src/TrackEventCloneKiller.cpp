@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.14 2009-05-10 21:12:04 gkrocker Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.15 2009-06-26 13:04:06 wouter Exp $
 // Include files 
 // -------------
 // from STD
@@ -151,8 +151,7 @@ StatusCode TrackEventCloneKiller::execute() {
       }
       
       // clones are flagged by the tool
-      m_cloneFinder->areClones( *allTracks[i1], *allTracks[i2],
-				true);
+      m_cloneFinder->flagClones( *allTracks[i1], *allTracks[i2] ) ;
     } // loop i2 over tracks
   } // loop i1 over tracks
 
