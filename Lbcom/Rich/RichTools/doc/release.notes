@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2009-06-26 - Antonis Papanestis
+ - Changed the way the global to/from photodetector panel frame conversion is 
+   made. A 3D tranform is calculated in the DeRichHPDPanel and used by the 
+   SmartIDTool.
+
 !=========================== RichTools v2r26 2009-05-08 ======================
 ! 2009-04-17 - Chris Jones
  - Downgrade some messages about refractive index changes to debug()

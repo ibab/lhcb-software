@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.39 2008-06-06 16:04:04 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.40 2009-06-26 10:56:07 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -159,7 +159,7 @@ Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
                                     const Rich::DetectorType rich,
                                     const Rich::Side side ) const
 {
-  return m_photoDetPanels[rich][side]->globalPosition(localPoint,side) ;
+  return m_photoDetPanels[rich][side]->PDPanelToGlobalMatrix()*localPoint;
 }
 
 //=============================================================================
@@ -232,8 +232,7 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
 }
 
 //=============================================================================
-// Returns the SmartID for a given global position
-// z coord is not valid
+// Converts a point from the global frame to the detector panel frame
 //=============================================================================
 Gaudi::XYZPoint
 Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
@@ -244,18 +243,12 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.y() > 0.0)
     {
       // top side
-      const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->geometry()->toLocal(globalPoint) );
-      return Gaudi::XYZPoint( tempPoint.x(),
-                              tempPoint.y() + m_photoDetPanels[Rich::Rich1][Rich::top]->localOffset(),
-                              tempPoint.z() - m_photoDetPanels[Rich::Rich1][Rich::top]->detectPlaneZcoord() );
+      return m_photoDetPanels[Rich::Rich1][Rich::top]->globalToPDPanelMatrix()*globalPoint;
     }
     else
     {
       // bottom side
-      const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->geometry()->toLocal( globalPoint ) );
-      return Gaudi::XYZPoint( tempPoint.x(),
-                              tempPoint.y() - m_photoDetPanels[Rich::Rich1][Rich::bottom]->localOffset(),
-                              tempPoint.z() - m_photoDetPanels[Rich::Rich1][Rich::bottom]->detectPlaneZcoord() );
+      return m_photoDetPanels[Rich::Rich1][Rich::bottom]->globalToPDPanelMatrix()*globalPoint;
     }
   }
   else   // Rich2
@@ -263,18 +256,12 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.x() > 0.0)
     {
       // left side
-      const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->geometry()->toLocal(globalPoint) );
-      return Gaudi::XYZPoint( tempPoint.x() + m_photoDetPanels[Rich::Rich2][Rich::left]->localOffset(),
-                              tempPoint.y(),
-                              tempPoint.z() - m_photoDetPanels[Rich::Rich2][Rich::left]->detectPlaneZcoord());
+      return m_photoDetPanels[Rich::Rich2][Rich::left]->globalToPDPanelMatrix()*globalPoint;
     }
     else
     {
       // right side
-      const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->geometry()->toLocal(globalPoint) );
-      return Gaudi::XYZPoint( tempPoint.x() - m_photoDetPanels[Rich::Rich2][Rich::right]->localOffset(),
-                              tempPoint.y(),
-                              tempPoint.z() - m_photoDetPanels[Rich::Rich2][Rich::right]->detectPlaneZcoord() );
+      return m_photoDetPanels[Rich::Rich2][Rich::right]->globalToPDPanelMatrix()*globalPoint;
     }
   }
 
