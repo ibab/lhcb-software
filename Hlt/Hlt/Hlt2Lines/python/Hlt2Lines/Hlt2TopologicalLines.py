@@ -245,9 +245,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #     name      : string name
         #     inputSeq  : list of input particle sequences
         #     decayDesc : list of string decay descriptors
-        #     masswin   : cut string compatible with CombinationCut that
-        #                   defines a mass window,
-        #                   e.g. '(M > 1839*MeV) & (M < 1889*MeV)'
+        #     extracuts : dictionary of extra cuts to be applied.
+        #                 Can include cuts at the CombinationCut or at
+        #                 the MotherCut level.
         ###################################################################
 	# There seems to be a lot of CPUT consumed in managing the large number
 	#   of 4-body candidates.  The list needs to be as small as possible.
@@ -258,7 +258,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 	    hackCut = '(' + str_topoCut + '|' + str_charmCut + '|' + str_dxCut + ')'
 	    return hackCut
 
-        def robustCombine(name, inputSeq, decayDesc, masswin = None) :
+        def robustCombine(name, inputSeq, decayDesc, extracuts = None) :
             # Construct a cut string for the combination.
             str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComRobPairMaxDocaUL') + ")"
             # Special case for the 2-body.  Use tighter doca requirement.
@@ -267,16 +267,16 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
             # Special case for the 4-body.  Use a mass lower limit to reduce
             #    combinatorics.  Must be at or below any client mass LL.
-            if masswin :
-                combcuts = combcuts + '&' + masswin
+            if extracuts and extracuts.has_key('CombinationCut') :
+                combcuts = combcuts + '&' + extracuts['CombinationCut']
 
             # Construct a cut string for the vertexed combination.
             str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComRobTrkMaxPtLL') + "*MeV)"
             str_pardisp = "(BPVVD>" + _cut('ComRobVtxPVDispLL') + ")"
             str_parrdisp = "(BPVVDR>" + _cut('ComRobVtxPVRDispLL') + ")"
             parentcuts = str_parpt + '&' + str_pardisp + '&' + str_parrdisp
-            if (name.find('4Body') <> -1) :
-	        parentcuts = parentcuts  + '&' + hackRobustParentCut()
+            if extracuts and extracuts.has_key('MotherCut') :
+                parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
             combineTopoNBody = Hlt2Member( CombineParticles
                                         , 'Combine'
@@ -345,11 +345,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #     name      : string name
         #     inputSeq  : list of input particle sequences
         #     decayDesc : list of string decay descriptors
-        #     masswin   : cut string compatible with CombinationCut that
-        #                   defines a mass window,
-        #                   e.g. '(M > 1839*MeV) & (M < 1889*MeV)'
+        #     extracuts : dictionary of extra cuts to be applied.
+        #                 Can include cuts at the CombinationCut or at
+        #                 the MotherCut level.
+        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
+        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
         ###################################################################
-        def tfCombine(name, inputSeq, decayDesc, masswin = None) :
+        def tfCombine(name, inputSeq, decayDesc, extracuts = None) :
             # Construct a cut string for the combination.
             str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComTFPairMaxDocaUL') + ")"
             # Special case for the 2-body.  Use tighter doca requirement.
@@ -358,13 +360,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
             # Special case for the 4-body.  Use a mass lower limit to reduce
             #    combinatorics.  Must be at or below any client mass LL.
-            if masswin :
-                combcuts = combcuts + '&' + masswin
+            if extracuts and extracuts.has_key('CombinationCut') :
+                combcuts = combcuts + '&' + extracuts['CombinationCut']
 
             # Construct a cut string for the vertexed combination.
             str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComTFTrkMaxPtLL') + "*MeV)"
             str_pardisp = "(BPVVDCHI2>" + _cut('ComTFVtxPVDispChi2LL') + ")"
             parentcuts = str_parpt + "&" + str_pardisp
+            if extracuts and extracuts.has_key('MotherCut') :
+                parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
             combineTopoNBody = Hlt2Member( CombineParticles
                                         , 'Combine'
@@ -422,7 +426,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         topo4Body = robustCombine(  name = 'Topo4Body'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , masswin = '(AM>4*GeV)'
+                                  , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
+                                                , 'MotherCut'      : hackRobustParentCut() }
                                   )
 
 
@@ -471,7 +476,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         topoTF4Body = tfCombine(  name = 'TopoTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , masswin = '(AM>4*GeV)'
+                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)' }
                                )
 
 
@@ -602,7 +607,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmRob4Body = robustCombine(  name = 'CharmRobust4Body'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , masswin = '(AM>1700*MeV) & (AM<2100*MeV)'
+                                  , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
+                                                , 'MotherCut'     : hackRobustParentCut() }
                                   )
         charmRobustTopo4BodySeq = charmRobustFilter('CharmRobustTopo4Body', [charmRob4Body])
 
@@ -655,7 +661,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmTF4Body = tfCombine(  name = 'CharmTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , masswin = '(AM>1839*MeV) & (AM<1889*MeV)'
+                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)' }
                                  )
         charmTFTopo4BodySeq = charmTFFilter('CharmPostTF4Body'
                                      , [charmTF4Body]
@@ -696,7 +702,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmTF4BodySB = tfCombine(  name = 'CharmWMTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , masswin = '(AM>1700*MeV) & (AM<2100*MeV)'
+                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' }
                                  )
         charmTFTopo4BodySBSeq = charmTFFilter('CharmPostTF4BodyWideMass'
                                      , [charmTF4BodySB]
@@ -781,7 +787,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         dx4BodyLow = robustCombine(  name = 'DXRobust4BodyLow'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , masswin = '(AM>2000*MeV) & (AM<4000*MeV)'
+                                  , extracuts = {'CombinationCut' : '(AM>2000*MeV) & (AM<4000*MeV)'
+                                                , 'MotherCut'      : hackRobustParentCut() }
                                   )
         dxRobust4BodyLowSeq = dxRobustFilter('DXRobust4BodyLowCop', [dx4BodyLow])
 
@@ -819,7 +826,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         dxTF4BodyKsDD = tfCombine(  name = 'TmpDXTF4BodyKsDD'
                                   , inputSeq = [ lclTFInputParticles, dxTF3BodyKsDD ]
                                   , decayDesc = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+","B0 -> K- D*(2010)+","B0 -> K+ D*(2010)+"]
-                                  , masswin = "(AM>2500*MeV) & (AM<6000*MeV)"
+                                  , extracuts = { 'CombinationCut' : "(AM>2500*MeV) & (AM<6000*MeV)" }
                                  )
 
 
