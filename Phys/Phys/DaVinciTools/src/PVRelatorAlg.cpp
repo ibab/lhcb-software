@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.7 2009-06-03 09:37:59 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.8 2009-06-26 13:25:39 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,10 @@ StatusCode PVRelatorAlg::initialize() {
          m_PVInputLocation!=LHCb::RecVertexLocation::Primary) ) {
     return Error("You have set P2PVRelationsLocation and one of ParticleInputLocation and PrimaryVertexInputLocation.",
                  StatusCode::FAILURE);    
+  } else {
+    if (""==m_particleInputLocation) return Error("ParticleInputLocation not set");
   }
+  
 
   if (""==m_P2PVOutputLocation) return Error("P2PVRelationsOutputLocation not set");
   
