@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-06-26 - Antonis Papanestis
+ - New transform from the global frame to the photodetector panel frame that 
+   can cope better with misalignments. Method globalPosition removed from
+   DeRichHPDPanel.
+
 !======================== RichDet v11r5p1 2009-06-16 =========================
 ! 2009-06-11 - Chris Jones
  - Fix WIN32 warnings

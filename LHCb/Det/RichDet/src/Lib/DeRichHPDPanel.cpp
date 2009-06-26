@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.69 2008-10-28 14:51:39 cattanem Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.70 2009-06-26 10:55:48 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -19,6 +19,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // local
 #include "RichDet/DeRichHPDPanel.h"
@@ -32,8 +33,6 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
 #include "DetDesc/TabulatedProperty.h"
-
-#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -282,6 +281,12 @@ StatusCode DeRichHPDPanel::initialize()
 
   msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
 
+  // update localy cashed geometry info
+  updMgrSvc()->registerCondition( this, geometry(),
+                                  &DeRichHPDPanel::generateGlobalToPDPanelTransforms );
+  StatusCode update = updMgrSvc()->update(this);
+  if ( !update ) return update;
+
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -353,7 +358,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
 }
 
 //=========================================================================
-//  find an intersection with the inside of the HPD window
+//  find an intersection with the HPD window
 //=========================================================================
 LHCb::RichTraceMode::RayTraceResult
 DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
@@ -604,33 +609,6 @@ bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
 }
 
 //=========================================================================
-// convert a point from the panel to the global coodinate system
-//=========================================================================
-Gaudi::XYZPoint
-DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
-                                const Rich::Side side ) const
-{
-  const double z = localPoint.z() + m_detPlaneZ;
-  double x( 0.0 );
-  double y( 0.0 );
-
-  if ( rich() == Rich::Rich1 )
-  {
-    const int sign = ( side == Rich::top ? -1 : 1 );
-    x = localPoint.x();
-    y = localPoint.y()+sign*localOffset();
-  }
-  else
-  {
-    const int sign = ( side == Rich::left ? -1 : 1 );
-    x = localPoint.x()+sign*localOffset();
-    y = localPoint.y();
-  }
-
-  return ( geometry()->toGlobal(Gaudi::XYZPoint(x,y,z)) );
-}
-
-//=========================================================================
 // sensitiveVolumeID
 //=========================================================================
 int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
@@ -660,4 +638,32 @@ const DeRichHPD* DeRichHPDPanel::DeHPD( const unsigned int HPDNumber ) const
     throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
   }
   return deHPD;
+}
+
+//=========================================================================
+//  generate the transfroms for global <-> local frames
+//=========================================================================
+StatusCode DeRichHPDPanel::generateGlobalToPDPanelTransforms ( ) {
+
+  // find the x and y offset of the local frame
+  Gaudi::XYZPoint zeroInGlobal( geometry()->toGlobal( Gaudi::XYZPoint( 0.0, 0.0, 0.0 ) ) );
+
+  // create a transform with an offset to accommodate both detector panels in one histogram
+  // and correct the x=0 (Rich1) and y=0 (Rich2) to match (more or less) the global coordinates
+  ROOT::Math::Translation3D localTranslation;
+  if ( rich() == Rich::Rich1 )
+  {
+    const int sign = ( side() == Rich::top ? 1 : -1 );
+    localTranslation =  ROOT::Math::Translation3D( zeroInGlobal.x(), sign*localOffset(), -detectPlaneZcoord() );
+  }
+  else
+  {
+    const int sign = ( side() == Rich::left ? 1 : -1 );
+    localTranslation = ROOT::Math::Translation3D( sign*localOffset(), zeroInGlobal.y(), -detectPlaneZcoord() );
+  }
+
+  m_globalToPDPanelTransform = localTranslation*geometry()->toLocalMatrix();
+  m_PDPanelToGlobalTransform = m_globalToPDPanelTransform.Inverse();
+
+  return StatusCode::SUCCESS;
 }
