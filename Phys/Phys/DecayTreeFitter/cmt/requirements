@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           DecayTreeFitter
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -39,3 +39,9 @@ apply_pattern reflex_dictionary                                       \
               selectionfile=$(DECAYTREEFITTERROOT)/dict/DecayTreeFitterDict.xml \
               options="-U__MINGW32__"
 # ================= end =======================================================
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
+
+

@@ -3,8 +3,16 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Implements TreeFitter, ported (and improved) from BaBar
 ! 
-! See also: http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
+! See also: 
+! https://twiki.cern.ch/twiki/bin/view/LHCb/DecayTreeFitter
+! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
+
+!======================= DecayTreeFitter v1r4 2009-06-25 =====================
+
+! 2009-06-24 Wouter Hulsbergen
+- added missing dictionary files
+- added hack in requirement file for dictionary generation in windows
 
 !======================= DecayTreeFitter v1r3 2009-06-25 =====================
 
