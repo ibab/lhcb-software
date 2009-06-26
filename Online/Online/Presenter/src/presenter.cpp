@@ -74,7 +74,6 @@ int main(int argc, char* argv[])
   
   int windowWidth(1000);
   int windowHeight(600);
-  int titleFontSize(0);
 
   std::string histdir("./");
   
@@ -134,9 +133,11 @@ int main(int argc, char* argv[])
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
       ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
       ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
+      ("databases,DB", value<std::string>()->default_value(s_histdb),"known databases")
+      ("database-credentials,DBC", value<std::string>()->default_value(s_histReaderPair),"database credentials")
+      ("logbook-settings,L", value<std::string>(), "logbook configuration")
+      ("hide-alarm-list,A", value<bool>(), "hide alarm list")
       ("config-file,C", value<std::string>(), "configuration file")
-      ("title-font-size,F", value<int>(&titleFontSize),
-       "title font size for plots")      
     ;
 
     // program argument -> histo list
@@ -145,7 +146,7 @@ int main(int argc, char* argv[])
      ("startup-histograms,D", value< std::vector<std::string> >(),
       "startup histograms")
     ;
-
+      
     options_description cmdline_options;
     cmdline_options.add(cliOptions).add(config).add(hidden);
 
@@ -243,6 +244,10 @@ int main(int argc, char* argv[])
     } else {
       presenterMainFrame.setVerbosity(Silent);
     }
+    
+    presenterMainFrame.setKnownDatabases(startupSettings["databases"].as<std::string>(),
+                                         startupSettings["database-credentials"].as<std::string>());
+                                             
     if (startupSettings.count("login")) {
       if ("no" == startupSettings["login"].as<std::string>()) {
         presenterMainFrame.setDatabaseMode(LoggedOut);
@@ -273,11 +278,16 @@ int main(int argc, char* argv[])
     } else {
       presenterMainFrame.setPresenterMode(Online);
     }
+    
+    if (startupSettings.count("logbook-settings")) {
+      presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());
+    }
 
+    if (startupSettings.count("hide-alarm-list") &&
+        (true == startupSettings["hide-alarm-list"].as<bool>())) {
+        presenterMainFrame.toggleShowAlarmList();
+    }
 
-    if (startupSettings.count("title-font-size")) {
-      presenterMainFrame.setTitleFontSize(startupSettings["title-font-size"].as<int>());
-    }    
     if (startupSettings.count("startup-histograms")) {
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
     }

@@ -12,8 +12,15 @@
 
 void setSystemEnvironment(const char* environmentVariable, const char* value);
 
-static const std::string s_presenterVersion("v0r19");
+static const std::string s_presenterVersion("v0r20");
 // environment variable for archive mount point (i.e. prefix to paths)
+static const std::string s_configToken(";");
+
+static const std::string s_histdb("HISTDB");
+static const std::string s_histReader("HIST_READER");
+static const std::string s_histWriter("HIST_WRITER");
+static const std::string s_histReaderPair("HIST_READER:reader");
+
 static const std::string s_histdir("HISTDIR");
 static const std::string s_referencePath("HISTREFPATH");
 static const std::string s_savesetPath("HISTSAVESETSPATH");
@@ -185,15 +192,6 @@ namespace pres
   static const int s_maxWindowWidth = 32767;
   static const int s_maxWindowHeight = 32767;
 
-  static const TString s_histReader("HIST_READER");
-  static const std::string s_histReaderPw("reader");
-  static const TString s_histWriter("HIST_WRITER");
-  static const std::string s_histWriterPw("histeggia194");  
-  static const TString s_lhcbMonGiacomo("LHCB_MON_GIACOMO");
-
-  static const TString s_oradev10("devdb10");
-  static const TString s_histdb("HISTDB");
-  static const TString s_shistdb("SHISTDB");
   static const TString s_lhcbPartionName("LHCb");
 
   static const std::string s_rootFileExtension(".root");

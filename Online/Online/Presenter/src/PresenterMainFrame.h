@@ -4,25 +4,27 @@
 #include <TGFrame.h>
 #include <TGListTree.h>
 #include <TColor.h>
-#include <vector>
+//#include <vector>
 
 #include <iostream>
+#include <vector>
+#include <map>
 
 
 #include "LoginDialog.h"
 #include "presenter.h"
 
+
+class ParallelWait;
 class TObject;
 class TGDockableFrame;
 class TString;
 class TGButton;
 class TGPictureButton;
-class TGSplitButton;
 class TGFrame;
 class TGPopupMenu;
 class TGMenuBar;
 class TGToolBar;
-//struct ToolBarData_t;
 class TGStatusBar;
 class TGTextView;
 class TGPicture;
@@ -36,7 +38,7 @@ class TList;
 class TGListTree;
 class TGListTreeItem;
 class TGVSplitter;
-class TObjArray; // for ROOT 5.17
+class TObjArray;
 
 class DbRootHist;
 class TDirectory;
@@ -79,6 +81,7 @@ class PresenterMainFrame : public TGMainFrame
       CLEAR_PAGE_COMMAND,
       SAVE_PAGE_TO_FILE_COMMAND,
       SAVE_PAGE_TO_DB_COMMAND,
+      REPORT_COMMAND,
       REMOVE_HISTO_FROM_CANVAS_COMMAND,
       CLEAR_HISTOS_COMMAND,
       EDIT_HISTO_COMMAND,
@@ -93,6 +96,7 @@ class PresenterMainFrame : public TGMainFrame
       HISTORY_PLOTS_COMMAND,
       OVERLAY_REFERENCE_HISTO_COMMAND,
       FAST_HITMAP_DRAW_COMMAND,
+      SHOW_ALARM_LIST_COMMAND,
       PICK_REFERENCE_HISTO_COMMAND,
       SAVE_AS_REFERENCE_HISTO_COMMAND,
       HELP_CONTENTS_COMMAND,
@@ -127,7 +131,7 @@ class PresenterMainFrame : public TGMainFrame
       M_Last_Interval,
       M_IntervalPicker,
       M_UtgidPicker,
-      M_RefreshKnownPartitions,
+      M_PartitionList,
       M_Previous_Interval,
       M_Next_Interval
     };
@@ -159,12 +163,14 @@ class PresenterMainFrame : public TGMainFrame
     void CloseWindow();
 
     void setPresenterMode(const pres::PresenterMode & presenterMode);
+    pres::PresenterMode presenterMode() { return m_presenterMode; }
     void setDatabaseMode(const pres::DatabaseMode & databaseMode);
+//    void setResumeRefreshAfterLoading(bool refreshAfterLoading);
     void setHistoryMode(bool mode) { m_historyMode = mode; }
     pres::DatabaseMode databaseMode() { return m_databaseMode; }
     std::string currentPartition() { return m_currentPartition; }
     void setVerbosity(const pres::MsgLevel & verbosity);
-    void setTitleFontSize(int fontSize);
+    void setLogbookConfig(const std::string & logBookConfig);
     pres::MsgLevel verbosity() const { return m_verbosity; }
     Archive* archive() const { return m_archive; }
     IntervalPicker* intervalPicker() const { return m_intervalPicker; }
@@ -172,12 +178,17 @@ class PresenterMainFrame : public TGMainFrame
     void setReferencePath(const std::string & referencePath);
     void setSavesetPath(const std::string & savesetPath);
 
+    void setKnownDatabases(const std::string & databasesCfg,
+                           const std::string & dbCredentials);
+
+
     void setStartupHistograms(const std::vector<std::string> & histogramList);
 
     void dockAllFrames();
     void handleCommand(Command id = X_ENIGMA_COMMAND);
     void savePageToFile();
     void savePageToHistogramDB();
+    void reportToLog();
     void autoCanvasLayout();
     void loginToHistogramDB();
     bool connectToHistogramDB(const std::string & dbPassword,
@@ -185,6 +196,7 @@ class PresenterMainFrame : public TGMainFrame
                               const std::string & dbName);
     OMAlib* analysisLib();
     OnlineHistDB* histogramDB();
+    DimBrowser* dimBrowser();
     void logoutFromHistogramDB();
     void startPageRefresh();
     void stopPageRefresh();
@@ -248,7 +260,7 @@ class PresenterMainFrame : public TGMainFrame
                                 std::vector<std::string> & histogramTypes,
                                 std::string& taskName,
                                 pres::SavesetType savesetType);
-    void refreshPartitionSelectorPopupMenu();
+    void partitionSelectorComboBoxHandler(int partitionNumber = 0);
     void hideDBTools();
     void showDBTools(pres::DatabaseMode databasePermissions);
     void reconfigureGUI();
@@ -310,6 +322,7 @@ class PresenterMainFrame : public TGMainFrame
     void pickReferenceHistogram();
     void saveSelectedHistogramAsReference();
     void toggleReferenceOverlay();
+    void toggleShowAlarmList();
     void toggleFastHitMapDraw();
     void toggleHistoryPlots();
     void paintHist(DbRootHist* histogram, TPad* overlayOnPad);
@@ -332,13 +345,18 @@ class PresenterMainFrame : public TGMainFrame
     std::vector<DbRootHist*>  dbHistosOnPage;
 //    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
 
+    std::string rw_timePoint;
+    std::string rw_pastDuration;
+
   private:
 
     static const bool s_previousPageToHistory = false;
     static const bool s_noPageHistory = true;
-
     pres::MsgLevel    m_verbosity;
+    std::string       m_logBookConfig;
     bool              m_historyMode;
+    bool 					    m_resumePageRefreshAfterLoading;
+    bool              m_loadingPage;
     std::string       m_currentPartition;
     std::string       m_currentPageName;
     std::string       m_referencePath;
@@ -362,6 +380,9 @@ class PresenterMainFrame : public TGMainFrame
     int               m_msgBoxReturnCode;
     std::string       m_dbName;
     std::string       m_message;
+    
+    std::vector<std::string*> m_knownDatabases;
+    std::map<std::string*, std::string*> m_knownDbCredentials;
 
     TGDockableFrame*  m_menuDock;
     TGDockableFrame*  m_toolBarDock;
@@ -378,6 +399,8 @@ class PresenterMainFrame : public TGMainFrame
     TGStatusBar*      m_mainStatusBar;
     TGStatusBar*      m_statusBarTop;
     TGHorizontalFrame* m_intervalPickerFrame;
+    
+    TGVerticalFrame* m_leftDatabaseAlarmFrame;
 
     std::string  m_currentPageHistogramHelp;
     TGTextView*  m_pageDescriptionView;
@@ -411,6 +434,7 @@ class PresenterMainFrame : public TGMainFrame
       TGHotString*  m_viewToggleHistoryPlotsText;
       TGHotString*  m_viewToggleReferenceOverlayText;
       TGHotString*  m_viewToggleFastHitMapDrawText;
+      TGHotString*  m_viewAlarmListText;
       TGHotString*  m_viewInspectHistoText;
       TGHotString*  m_viewHistogramDescriptionText;
       TGHotString*  m_viewInspectPageText;
@@ -439,6 +463,7 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_loginButton;
     TGPictureButton*  m_logoutButton;
     TGPictureButton*  m_savePageToDatabaseButton;
+    TGPictureButton*  m_reportButton;
     TGPictureButton*  m_printSaveButton;
     TGPictureButton*  m_previousPageSaveButton;
     TGPictureButton*  m_nextPageButton;
@@ -456,12 +481,9 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_overlayReferenceHistoButton;
     TGPictureButton*  m_historyPlotsButton;
     TGPictureButton*  m_pickReferenceHistoButton;
-    TGSplitButton*    m_historyIntervalQuickButton;
-    TGPopupMenu*      m_presetTimePopupMenu;
-    TGSplitButton*    m_partitionSelectorQuickButton;
-    TGPopupMenu*      m_partitionSelectorPopupMenu;
-
-
+    TGComboBox*       m_historyIntervalComboBox;
+    TGComboBox*       m_partitionSelectorComboBox;    
+    
     //  TGButton*         m_quitButton;
     //  TGPicturePool*    m_picturePool;
     const TGPicture*  m_openedFolderIcon;
@@ -505,9 +527,6 @@ class PresenterMainFrame : public TGMainFrame
 
     std::vector<std::string>      m_histogramTypes;
     std::vector<std::string>::const_iterator m_histogramType;
-
-    std::vector<std::string>      m_tasksNotRunning;
-    std::vector<std::string>::const_iterator m_tasksNotRunningIt;
 
     TGListTreeItem* m_treeNode;
     TGListTreeItem* m_taskNode;
