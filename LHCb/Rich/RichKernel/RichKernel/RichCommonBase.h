@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.12 2009-06-26 08:58:00 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.13 2009-06-26 09:14:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -113,7 +113,7 @@ namespace Rich
       // Check consistency
       if ( parent && commonTool )
       {
-        this -> Error( "Tool " + nickName + " cannot be common and private !" );
+        this -> Error( "Tool " + nickName + " cannot be common and private !" ).ignore();
         return NULL;
       }
 
@@ -124,9 +124,7 @@ namespace Rich
       // If not private tool - Check Context and OutputLevel option
       if ( !parent )
       {
-        if ( !setContext    ( toolRegistry()->toolName(iName) ) ||
-             !setOutputLevel( toolRegistry()->toolName(iName) )  ) 
-        { return NULL; }
+        if ( ! this -> setProperties(toolRegistry()->toolName(iName)) ) { return NULL; }
       }
 
       // get tool
@@ -241,24 +239,11 @@ namespace Rich
     bool my_setToolProperty( const std::string & name,
                              const std::string & property ) const;
     
-    /** @brief Set the Context option for given public tool
+    /** @brief Set the properties for given public tool
      *
-     *  Private solution to the problem that "Context" is not set for public tools
-     *  This solution uses the context as defined by the Tool registry to set the
-     *  Context for all public tools.
-     *
-     *  @param name Tool name
-     *
-     *  @return Boolean indicating if setting was successful or not
-     *  @retval TRUE  Setting was successful
-     *  @retval FALSE Setting failed
-     */
-    bool setContext( const std::string & name ) const;
-
-    /** @brief Set the Context option for given public tool
-     *
-     *  Set the output level for public tools that do not explicitly 
-     *  have it set. Uses the same settings as for the tool registry.
+     *  Private solution to the problem that properties like "Context" 
+     *  are not set for public tools. This solution uses the properties as 
+     *  defined by the Tool registry to set them for all public tools.
      *
      *  @param name Tool name
      *
@@ -266,7 +251,7 @@ namespace Rich
      *  @retval TRUE  Setting was successful
      *  @retval FALSE Setting failed
      */
-    bool setOutputLevel( const std::string & name ) const;
+    bool setProperties( const std::string & name ) const;
     
   private: // data
 

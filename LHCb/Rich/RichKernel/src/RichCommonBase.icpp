@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.14 2009-06-26 08:58:00 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.15 2009-06-26 09:14:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -79,24 +79,13 @@ IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
 //=============================================================================
 
 //=============================================================================
-// Sets context
+// Sets Properties
 //=============================================================================
 template <class PBASE>
-bool Rich::CommonBase<PBASE>::setContext( const std::string & name ) const
+bool Rich::CommonBase<PBASE>::setProperties( const std::string & name ) const
 {
-  const std::string property = "Context";
-  return this -> my_setToolProperty<StringProperty> ( name , property );
-}
-//=============================================================================
-
-//=============================================================================
-// Sets Output Level
-//=============================================================================
-template <class PBASE>
-bool Rich::CommonBase<PBASE>::setOutputLevel( const std::string & name ) const
-{
-  const std::string property = "OutputLevel";
-  return this -> my_setToolProperty<StringProperty> ( name , property );
+  return ( my_setToolProperty<StringProperty> ( name , "Context"     ) &&
+           my_setToolProperty<StringProperty> ( name , "OutputLevel" ) );
 }
 //=============================================================================
 
