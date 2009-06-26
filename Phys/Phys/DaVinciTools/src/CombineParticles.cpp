@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.29 2009-05-05 12:10:53 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.30 2009-06-26 09:22:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -119,7 +119,12 @@ namespace
  *    - <c>"DaughtersPlotsPath"</c>:    the path for Daughters Plots 
  *    - <c>"CombinationPlotsPath"</c>:  the path for Combination Plots 
  *    - <c>"MotherPlotsPath"</c>:       the path for Mother Plots 
- *  
+ *    - <c>"MaxCombinations"</c>: the maximal number of combinations (per channel) to be processes (0:no limit)
+ *    - <c>"MaxCandidates"</c>: the maximal number of candidates (per channel) to be processes (0:no limit)
+ *    - <c>"StopAtMaxCombinations"</c>: stop or warn when the maximal number of combinations (per channel) is reached
+ *    - <c>"StopAtMaxCandidates"</c>: stop or warn when the maximal number of candidates (per channel) is reached
+ *    - <c>"StopIncident"</c>: the incident type to be fired in the case of stop processing
+ *
  *  Few counters are produced:
  *    - "# <PID>" for each daughter 'PID': number of corresponding daugter particles 
  *    - "# <DECAY>" for each <decay>: number of selected decay candidates 
@@ -181,9 +186,11 @@ class CombineParticles
 public:
   // ==========================================================================
   /// the standard initialization of the algorithm 
-  virtual StatusCode initialize () ; // standard initialization 
+  virtual StatusCode initialize () ;                 // standard initialization 
   /// the standard execution      of the algorithm 
-  virtual StatusCode execute    () ; // standard execution 
+  virtual StatusCode execute    () ;                 //      standard execution 
+  /// the standard finalization of the algorithm 
+  virtual StatusCode finalize   () ;                 //  standard  finalization 
   // ==========================================================================
 public:
   // ==========================================================================
@@ -330,6 +337,19 @@ private:   // properties
   /// "MotherPlots" path 
   std::string  m_motherPlotsPath      ; // the path for "Mother Plots" tool
   // ==========================================================================
+private: // try to be efficient
+  // ==========================================================================
+  /// the maximal number of combinations (per decay)
+  unsigned long m_maxComb ;        // the maximal number of combinations (per decay)
+  /// stop the processing after maximal number of combinations reached?
+  bool     m_maxCombStop ;
+  // the maximal number of candidates   (per decay)  
+  unsigned long m_maxCand ;        // the maximal number of candidates   (per decay)  
+  /// stop the processing after maximal number of candidates reached?
+  bool     m_maxCandStop ;
+  /// incident name
+  std::string  m_stopIncidentName ;                            // incident name
+  // ==========================================================================
 private:   // local stuff
   // ==========================================================================
   /// The actual list of decays 
@@ -361,6 +381,20 @@ private: // internal
   bool m_to_be_updated1 ; // the flag to indicate the nesessity of the self-update
   bool m_to_be_updated2 ; // the flag to indicate the nesessity of the self-update
   // ==========================================================================
+protected:
+  // ==========================================================================
+  IIncidentSvc* incSvc() const 
+  {
+    if ( 0 != m_incSvc ) { return m_incSvc ; }
+    m_incSvc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+    return m_incSvc ;
+  }
+  // ==========================================================================
+private:
+  // ==========================================================================
+  /// the incident service 
+  mutable IIncidentSvc* m_incSvc ;                      // the incident service 
+  // ==========================================================================
 } ;
 // ============================================================================
 using namespace LoKi ;
@@ -391,6 +425,12 @@ CombineParticles::CombineParticles
   , m_daughtersPlotsPath   ( ""  )
   , m_combinationPlotsPath ( ""  )
   , m_motherPlotsPath      ( ""  )
+  // 
+  , m_maxComb      ( 0     ) 
+  , m_maxCombStop  ( false )
+  , m_maxCand      ( 0     ) 
+  , m_maxCandStop  ( false )
+  , m_stopIncidentName ()
   //
   // locals
   //
@@ -412,6 +452,8 @@ CombineParticles::CombineParticles
   // update:
   , m_to_be_updated1 ( true )
   , m_to_be_updated2 ( true )
+  //
+  , m_incSvc ( 0 ) 
 {
   //
   //
@@ -487,6 +529,27 @@ CombineParticles::CombineParticles
     { p -> declareUpdateHandler ( &CombineParticles::propertyHandler2 , this ) ; }
   }
   //
+  declareProperty 
+    ( "MaxCombinations" , 
+      m_maxComb         , 
+      "The maximal number of combinations (per channel) to be processed" ) ;
+  declareProperty 
+    ( "StopAtMaxCombinations" , 
+      m_maxCombStop, 
+      "Stop at the maximal number of combinations (per channel) " ) ;
+  declareProperty 
+    ( "MaxCandidates"   , 
+      m_maxCand         , 
+      "The maximal number of candidates   (per channel) to be processed" ) ;
+  declareProperty 
+    ( "StopAtMaxCandidates" , 
+      m_maxCandStop, 
+      "Stop at the maximal number of candidates (per channel) " ) ;
+  declareProperty 
+    ( "StopIncidentType" , 
+      m_stopIncidentName , 
+      "The type of incident to be fired for problematic processing" ) ;
+  //
 }
 // ============================================================================
 // decode all cuts 
@@ -547,11 +610,10 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   // check for LoKi service 
   svc<IService> ( "LoKiSvc" , true ) ;
   
-  {
-    // subscribe the incident
-    IIncidentSvc* inc = svc<IIncidentSvc> ( "IncidentSvc" , true );
-    inc -> addListener ( this , IncidentType::BeginEvent ) ;
-  }
+  
+  // subscribe the incident
+  incSvc() -> addListener ( this , IncidentType::BeginEvent ) ;
+  
 
   // the actual tuning/decoding 
   sc = updateMajor () ;
@@ -639,7 +701,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   // the counter of recontructed/selected decays:
   size_t nTotal = 0 ;
-
+  
+  bool problem = false ;
   
   // the actual type of relation table 
   typedef Particle2Vertex::LightTable Table ;
@@ -663,11 +726,27 @@ StatusCode CombineParticles::execute    ()  // standard execution
     // fill it with the input data:
     const Decays::Decay::Items& items = idecay->children() ;
     for ( Decays::Decay::Items::const_iterator child = items.begin() ;
-          items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; } 
+          items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; }
+    
+    // check for max
+    if ( msgLevel( MSG::DEBUG ) || 0 < m_maxComb )
+    { counter ( "# max size" + idecay->toString() ) += loop.size() ; }
+    if ( 0 < m_maxComb && m_maxComb <= loop.size() ) 
+    {
+      Warning ( "Combiner size exceeds the limit for " + idecay->toString() ) ;
+      if ( m_maxCombStop ) { problem = true ; continue ; }             // CONTINUE
+    }
     
     // here we can start the actual looping
     for ( ; loop.valid() ; loop.next() )  // we are in the loop!
     {
+      
+      if ( 0 < m_maxCand && m_maxCand <= nGood )  
+      {
+        Warning ( "Too many saved candidates for " + idecay->toString() ) ;
+        if ( m_maxCandStop ) {  problem = true ; break ; }          //  BREAK
+      }
+      
       if ( !loop.unique ( compare ) ) { continue ; }                // CONTINUE 
       
       // get the actual('current') combination:
@@ -731,6 +810,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
 
       // increment number of good decays 
       ++nGood       ;
+      
     } // the loop over combinations
     
     // some statistics
@@ -747,10 +827,17 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   StatusCode sc =  desktop()->saveDesktop() ;
   if (!sc) { return sc ; }
-
+  
   // the final decision 
   setFilterPassed ( 0 < nTotal ) ;
   
+  if ( problem ) 
+  {
+    Warning ( "The problem with combinatorics has been occured" ) ; 
+    if ( !m_stopIncidentName.empty() ) 
+    { incSvc()->fireIncident   ( Incident( name() , m_stopIncidentName ) ) ; }
+  }
+
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -935,6 +1022,15 @@ StatusCode CombineParticles::updateHistos ()
   m_to_be_updated2 = false ;
   //
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// the standard finalization of the algorithm 
+// ============================================================================
+StatusCode CombineParticles::finalize   ()           //  standard  finalization 
+{
+  m_incSvc = 0 ;
+  /// finalize the base class
+  return DVAlgorithm::finalize () ;                 // finalize the base class 
 }
 // ============================================================================
 /// The factory (needed for the proper instantiation)

@@ -1,8 +1,40 @@
-! $Id: release.notes,v 1.433 2009-06-03 09:38:11 jpalac Exp $
+! $Id: release.notes,v 1.434 2009-06-26 09:22:33 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-06-26 - Vanya Belyaev
+
+ - src/CombineParticles.cpp
+
+  some tricks to treat very busy events
+ 
+  The default behaviour is THE SAME...
+
+  One have two handles  (each of them "per decay" basis)
+
+    - the quick estimate of the overall (maxima) number of combinations (per decay channel) BEFORE loop
+    - the number of SAVED/good candidates (per decay channel)
+
+  The thresholds are set through the properties: 
+
+     "MaxCombinations" and "MaxCandidates",  the value 0 (the default) means "no cut".
+
+  The action is under the control of boolean properties: 
+
+     "StopAtMaxCombinations" and "StopAtMaxCandidates"   (the default is "false")
+
+  If the corresponding threshold is set and the property is activated, the futher procession 
+    for the given decay channel breaks.   (go to next channel)
+
+  If this "stop/break" condition occurs *and* if the property "StopIncidentType" is not 
+  empty the incident is fired at the end of execution.
+
+ - cmt/requirements
+   
+    version increment to v18r6 
+
 
 !========================== DaVinciTools v18r5p1 2009-06-02 =================
 
