@@ -5,7 +5,7 @@
  *  Header file for ENN Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichENNRingFinderAlg.h,v 1.8 2009-06-10 13:20:15 jonrob Exp $
+ *  $Id: RichENNRingFinderAlg.h,v 1.9 2009-06-27 09:12:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -207,7 +207,7 @@ namespace Rich
       };
 
       /**
-       * @class  Rich1Aerogel BottomPanel RichENNRingFinderAlg.h
+       * @class  Rich1AerogelBottomPanel RichENNRingFinderAlg.h
        * @brief  Standalone ring finder for RICH1 Aerogel bottom panel using an ENN
        *
        * @author Chris Jones   Christopher.Rob.Jones@cern.ch
