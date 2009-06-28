@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.15 2009-06-26 14:59:46 gligorov Exp $
+$Id: release.notes,v 1.16 2009-06-28 10:02:05 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-28 - Gerhard Raven
+  - move some import statements in Hlt2B2JpsiX to avoid 'premature' import
 
 ! 2009-06-26 - V. Gligorov & P. Spradlin
   - Add GEC machinery for the Hlt2Topological lines. It is now possible to

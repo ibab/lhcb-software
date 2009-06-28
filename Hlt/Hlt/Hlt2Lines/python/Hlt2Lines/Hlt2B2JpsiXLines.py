@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.2 2009-06-24 09:36:52 gcowan Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.3 2009-06-28 10:02:05 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -73,9 +73,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 __author__ = "Tristan du Pree and Greig Cowan"
 __date__ = "2009-06-18"
 
-from HltLine.HltLine import Hlt2Line, Hlt2Member
-from Hlt2SharedParticles.BasicParticles import Muons, NoCutsKaons
-from Configurables import CombineParticles
 
 class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
     '''
@@ -90,7 +87,10 @@ class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
                  }
 
     def __apply_configuration__(self) :
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
+        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsKaons
+        from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
 
