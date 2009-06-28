@@ -1,17 +1,17 @@
 ##!/usr/bin/env python
 # =============================================================================
-# $Id: StdLoosePhi.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: StdLoosePhi.py,v 1.4 2009-06-28 12:02:54 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoosePhi2KK.py
 #  configuration file for 'Standard Loose ' 
-#  @author Patrick Koppenburg
-#  @date 2009-02-18
+#  @author Greig Cowan 
+#  @date 2009-06-23
 # =============================================================================
 """
 Configuration file for 'Standard Loose Phi2KK'
 """
-__author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__author__  = "Greig Cowan"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdLoosePhi2KK' ,
@@ -19,37 +19,19 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles
+from Configurables import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
-StdLoosePhi2KK = CombineParticles ( 'StdLoosePhi2KK' )
-StdLoosePhi2KK.InputLocations = [ "StdLooseKaons" ]
+StdLoosePhi2KK = CombineParticles("StdLoosePhi2KK")
+StdLoosePhi2KK.InputLocations = ["StdLooseKaons"]
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
-StdLoosePhi2KK.DaughtersCuts = { "K+" : "(MIPCHI2DV(PRIMARY)>4)"} 
-StdLoosePhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<50*MeV)"
-StdLoosePhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV)"
+StdLoosePhi2KK.MotherCut = "ALL"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLoosePhi2KK )
-###############################################################################
-#
-#  Phi for Bs -> Phi Phi selection
-#
-#  @author N.Styles n.a.styles@ed.ac.uk
-#  @date 2008-10-09
-#
-##
-StdLooseUnbiasedPhi2KK = CombineParticles("StdLooseUnbiasedPhi2KK")
-StdLooseUnbiasedPhi2KK.InputLocations = [ "StdLooseKaons" ]
-StdLooseUnbiasedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
-StdLooseUnbiasedPhi2KK.DaughtersCuts = { "K+" : "(PT>500)" } 
-StdLooseUnbiasedPhi2KK.CombinationCut = "(ADAMASS('phi(1020)')<20*MeV)"
-StdLooseUnbiasedPhi2KK.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
-
-## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseUnbiasedPhi2KK )
 
 ## ============================================================================
 if '__main__' == __name__ :
@@ -58,7 +40,3 @@ if '__main__' == __name__ :
     print __author__
     print __version__
     print locationsDoD ( locations ) 
-
-# =============================================================================
-# The END 
-# =============================================================================

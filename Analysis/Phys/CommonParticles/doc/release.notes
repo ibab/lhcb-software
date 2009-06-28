@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.134 2009-06-23 14:26:37 pkoppenb Exp $
+!$Id: release.notes,v 1.135 2009-06-28 12:02:54 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-06-28 - Greig Cowan
+ - Removed StdLooseUnbiasedPhi2KK. Added StdLooseDetachedPhi with K IP cut. New 
+   StdLoosePhi2KK only has upper mass window on the phi. New StdLooseJpsi2MuMu 
+   only has mass window. StdLooseKstar added to be compatible with beta_s
+   roadmap Bd2JspiKstar selection. Appropriate stripping and ccbar selections
+   have been updated to use these particles and have been successfully tested.
 
 !========================== CommonParticles v5r3 2009-06-23 ===================
 ! 2009-06-12 - Patrick Koppenburg

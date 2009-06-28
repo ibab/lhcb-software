@@ -1,37 +1,38 @@
-#!/usr/bin/env python
+##!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseJpsi2MuMu.py,v 1.7 2009-06-28 12:02:54 gcowan Exp $ 
+# $Id: StdLooseDetachedPhi.py,v 1.1 2009-06-28 12:02:54 gcowan Exp $ 
 # =============================================================================
-## @file  CommonParticles/StdLooseJpsi2MuMu.py
-#  configuration file for 'Standard Loose Jpsi2MuMu' 
+## @file  CommonParticles/StdLooseDetachedPhi2KK.py
+#  configuration file for 'Standard Loose Detached' 
 #  @author Greig Cowan
 #  @date 2009-06-23
 # =============================================================================
 """
-Configuration file for 'Standard Loose Jpsi2MuMu'
+Configuration file for 'Standard Loose Detached (i.e., cut on K IP) Phi2KK'
 """
 __author__  = "Greig Cowan"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
 # =============================================================================
 __all__ = (
-    'StdLooseJpsi2MuMu' ,
+    'StdLooseDetachedPhi2KK' ,
     'locations'
     )
 # =============================================================================
-from Gaudi.Configuration   import *
-from Configurables         import CombineParticles 
+from Gaudi.Configuration import *
+from Configurables import CombineParticles
 from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm 
-StdLooseJpsi2MuMu = CombineParticles ("StdLooseJpsi2MuMu")
-StdLooseJpsi2MuMu.InputLocations = ["StdLooseMuons"]
-StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
-StdLooseJpsi2MuMu.CombinationCut = "ADAMASS('J/psi(1S)')<100*MeV"
-StdLooseJpsi2MuMu.MotherCut = "ALL"
+StdLooseDetachedPhi2KK = CombineParticles ("StdLooseDetachedPhi2KK")
+StdLooseDetachedPhi2KK.InputLocations = ["StdLooseKaons"]
+StdLooseDetachedPhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
+StdLooseDetachedPhi2KK.DaughtersCuts = {"K+": "(MIPCHI2DV(PRIMARY) > 4.)"} 
+StdLooseDetachedPhi2KK.CombinationCut = "(AM < 1100.*MeV)"
+StdLooseDetachedPhi2KK.MotherCut = "ALL"
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseJpsi2MuMu    )
+locations = updateDoD ( StdLooseDetachedPhi2KK )
 
 ## ============================================================================
 if '__main__' == __name__ :
