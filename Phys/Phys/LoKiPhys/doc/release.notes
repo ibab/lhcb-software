@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.106 2009-06-16 10:05:46 cattanem Exp $ 
+! $Id: release.notes,v 1.107 2009-06-28 16:47:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-28 - Vanya Belyaev
+ - improvement for decay finder 
+ - cmt/requirements 
+    version increment to v8r7 
+
 
 ! ========================== LoKiPhys v8r6 2009-06-16 =========================
 ! 2009-06-02 - Vanya BELYAEV
