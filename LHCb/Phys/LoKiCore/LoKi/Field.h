@@ -1,4 +1,4 @@
-// $Id: Field.h,v 1.2 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Field.h,v 1.3 2009-06-28 13:26:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FIELD_H 
 #define LOKI_FIELD_H 1
@@ -8,6 +8,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Reference.h"
+#include "LoKi/ConstReference.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -20,22 +21,55 @@ namespace LoKi
   template <class TYPE>
   struct Field
   {
-    // in general case it is a "reference"
-    typedef LoKi::Reference<TYPE> Type ; ///< in general case it is a "reference"
+    // ========================================================================
+    /// in general case it is a "reference"
+    typedef LoKi::Reference<TYPE> Type ; // in general case it is a "reference"
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <class TYPE>
+  struct Field<const TYPE>
+  {
+    // ========================================================================
+    /// for const-type it is a const-reference 
+    typedef LoKi::ConstReference<TYPE> Type ; //                const-reference 
+    // ========================================================================
   };
   // ==========================================================================
   template <class TYPE>
   struct Field<TYPE*>
   {
-    // in case of pointers it is a bare pointer 
-    typedef TYPE* Type ; ///< in case of pointers it is a bare pointer 
+    // ========================================================================
+    /// in case of pointers it is a bare pointer 
+    typedef TYPE* Type ;            // in case of pointers it is a bare pointer 
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <class TYPE>
+  struct Field<TYPE* const>
+  {
+    // ========================================================================
+    /// skip the constness of pointer 
+    typedef typename LoKi::Field<TYPE*>::Type Type ;
+    // ========================================================================
   };
   // ==========================================================================
   template <class TYPE>
   struct Field<TYPE&>
   {
-    // skip the reference 
-    typedef typename Field<TYPE>::Type Type ;     // skip the reference
+    // ========================================================================
+    /// skip the reference 
+    typedef typename Field<TYPE>::Type Type ;             // skip the reference
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <class TYPE>
+  struct Field<const TYPE&>
+  {
+    // ========================================================================
+    /// skip the reference 
+    typedef typename Field<const TYPE>::Type Type ;       // skip the reference
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi

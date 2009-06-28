@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.148 2009-06-16 10:02:20 cattanem Exp $ 
+! $Id: release.notes,v 1.149 2009-06-28 13:26:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,20 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-28 - Vanya Belyaev
+
+ - add the patch to #bug 48914 
+ 
+    LoKi/ConstReference.h  : new concept of "const-reference" 
+                                (instead of Reference<const TYPE>)
+ 
+    LoKi/Field.h  : make proper disptach to ConstReference 
+
+ - cmt/requirement
+ 
+    version increment to v9r3 
+
 
 ! =========================== LoKiCore v9r2 2009-06-16 ========================
 ! 2009-06-13 - Gerhard Raven
