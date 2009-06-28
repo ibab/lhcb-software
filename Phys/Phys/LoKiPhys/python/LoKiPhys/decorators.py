@@ -39,6 +39,7 @@ fs = femtosecond
 
 from   LoKiPhys.functions  import *
 from   LoKiCore.functions  import  equal_to 
+import LoKiPhys.Phys
 
 _name = __name__ 
 # =============================================================================

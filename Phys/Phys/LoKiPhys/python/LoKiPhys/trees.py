@@ -57,6 +57,12 @@ Exclusive = Decays.Trees.Exclusive
 Inclusive = Decays.Trees.Inclusive
 Optional  = Decays.Trees.Optional
 
+IDecay = Decays.IDecay
+Finder = _LoKiCore.decorateFinder (
+    IDecay.Finder               ,
+    LoKi.Dicts.FinderDicts_(_RCP)
+    ) 
+
 
 
 # =============================================================================
