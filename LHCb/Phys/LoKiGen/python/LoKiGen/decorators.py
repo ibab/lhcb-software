@@ -29,8 +29,8 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiGen.functions   import *
-from   LoKiGen.HepMC       import *
 from   LoKiGen.trees       import *
+import LoKiGen.HepMC
 
 _name = __name__ 
 # =============================================================================

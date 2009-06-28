@@ -63,6 +63,11 @@ MCPhotosOptional    = Decays.Trees.PhotosOptional
 Photos              = Decays.Trees.Photos
 PhotosOptional      = Decays.Trees.PhotosOptional
 
+IMCDecay = Decays.IMCDecay
+MCFinder = _LoKiCore.decorateFinder (
+    IMCDecay.Finder               ,
+    LoKi.Dicts.FinderDicts_(_MCP)
+    ) 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -63,6 +63,11 @@ GenPhotos          = Decays.Trees.GenPhotos
 GenPhotosOptional  = Decays.Trees.GenPhotosOptional
 
 
+IGenDecay = Decays.IGenDecay
+GenFinder = _LoKiCore.decorateFinder (
+    IGenDecay.Finder               ,
+    LoKi.Dicts.FinderDicts_(_GP)
+    ) 
 
 # =============================================================================
 if '__main__' == __name__ :

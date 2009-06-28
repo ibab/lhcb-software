@@ -29,10 +29,9 @@ A.Golutvin, P.Koppenburg have been used in the design.
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 # =============================================================================
 
-from   LoKiMC.functions   import *
+from   LoKiMC.functions import *
+from   LoKiMC.trees     import *   
 import LoKiMC.MC
-
-if not 'Bender' in dir() : Bender =  LoKi.Dicts
 
 # =============================================================================
 ## decorate MC-finder object:

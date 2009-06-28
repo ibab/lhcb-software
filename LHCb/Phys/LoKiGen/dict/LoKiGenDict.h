@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.13 2009-06-28 16:45:41 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.14 2009-06-28 18:23:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -27,6 +27,7 @@
 #include "LoKi/GenDecays.h"
 // ============================================================================
 #include "LoKi/IGenDecay.h"
+#include "LoKi/FinderDict.h"
 // ============================================================================
 #include "LoKi/IGenHybridTool.h"
 #include "LoKi/GenHybridEngine.h"
@@ -238,6 +239,135 @@ namespace LoKi
   // ==========================================================================
 }
 // ============================================================================
+namespace LoKi
+{
+  // ==========================================================================
+  namespace Dicts
+  {
+    // ========================================================================
+    template <>
+    struct FinderDicts_<const HepMC::GenParticle*>
+    {
+      // ======================================================================
+      /// get the actual "stripped" type 
+      typedef const HepMC::GenParticle* TYPE ;
+      typedef const HepMC::GenParticle* Type ;
+      typedef std::vector<const HepMC::GenParticle*> ConstVector ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      static bool __hasDecay__
+      ( const Decays::Finder_<TYPE>&      finder , 
+        const ConstVector&                input  ) 
+      { 
+        return finder.hasDecay  ( input.begin() , input.end() ) ; 
+      }
+      // ======================================================================
+      static bool __hasDecay__
+      ( const Decays::Finder_<TYPE>&      finder , 
+        const HepMC::GenEvent*            event  ) 
+      {
+        if ( 0 == event ) { return false ; }
+        return finder.hasDecay  ( event->particles_begin() , 
+                                  event->particles_end  () ) ; 
+      }
+      // ======================================================================
+      static bool __hasDecay__
+      ( const Decays::Finder_<TYPE>&   finder , 
+        const LHCb::HepMCEvent*        event  )
+      {
+        if ( 0 == event ) { return false ; }
+        return __hasDecay__ ( finder , event->pGenEvt() ) ;
+      }
+      // ======================================================================
+      static bool __hasDecay__
+      ( const Decays::Finder_<TYPE>&        finder , 
+        const LHCb::HepMCEvent::Container*  events )
+      {
+        if ( 0 == events ) { return false ; }
+        for (  LHCb::HepMCEvent::Container::const_iterator ievent = 
+                 events->begin() ; events->end() != ievent ; ++ievent ) 
+        {
+          const LHCb::HepMCEvent*  event = *ievent ;
+          if ( 0 == event ) { continue ; }
+          if ( __hasDecay__ ( finder , event ) ) { return true ; }    // RETURN
+        }
+        return false ;
+      }
+      // ======================================================================
+      static bool __hasDecay__
+      ( const Decays::Finder_<TYPE>&   finder , 
+        const HepMC::GenVertex*        vertex , 
+        HepMC::IteratorRange           range  )
+      {
+        if ( 0 == vertex ) { return false ; }
+        HepMC::GenVertex* _vx = const_cast<HepMC::GenVertex*>( vertex ) ;
+        return finder.hasDecay ( _vx->particles_begin( range ) , 
+                                 _vx->particles_end  ( range ) ) ;
+      }
+      // ======================================================================
+    public:
+      // ======================================================================
+      static size_t __findDecay__
+      ( const Decays::Finder_<TYPE>& finder , 
+        const ConstVector&           input  , 
+        ConstVector&                 output ) 
+      { return finder.findDecay  ( input.begin() , input.end() , output ) ; }
+      // ======================================================================
+      static size_t __findDecay__
+      ( const Decays::Finder_<TYPE>& finder , 
+        const HepMC::GenEvent*       event  , 
+        ConstVector&                 output ) 
+      {
+        if ( 0 == event ) { return 0 ; }
+        return finder.findDecay ( event->particles_begin () , 
+                                  event->particles_end   () , output ) ;                         
+      }
+      // ======================================================================
+      static size_t __findDecay__
+      ( const Decays::Finder_<TYPE>& finder , 
+        const LHCb::HepMCEvent*      event  , 
+        ConstVector&                 output ) 
+      {
+        if ( 0 == event ) { return 0 ; }
+        return __findDecay__ ( finder , event->pGenEvt() , output ) ;
+      }
+      // ======================================================================
+      static size_t __findDecay__
+      ( const Decays::Finder_<TYPE>&       finder , 
+        const LHCb::HepMCEvent::Container* events , 
+        ConstVector&                       output ) 
+      {
+        if ( 0 == events ) { return 0 ; }
+        size_t found = 0 ;
+        for (  LHCb::HepMCEvent::Container::const_iterator ievent = 
+                 events->begin() ; events->end() != ievent ; ++ievent ) 
+        {
+          const LHCb::HepMCEvent*  event = *ievent ;
+          if ( 0 == event ) { continue ; }
+          found += __findDecay__ ( finder , event , output ) ;
+        }
+        return found ;
+      } 
+      // ======================================================================
+      static size_t __findDecay__
+      ( const Decays::Finder_<TYPE>& finder , 
+        const HepMC::GenVertex*      vertex , 
+        HepMC::IteratorRange         range  ,
+        ConstVector&                 output ) 
+      {
+        if ( 0 == vertex ) { return false ; }
+        HepMC::GenVertex* _vx = const_cast<HepMC::GenVertex*>( vertex ) ;
+        return finder.findDecay ( _vx->particles_begin( range ) , 
+                                  _vx->particles_end  ( range ) , output ) ;
+      }
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                             end of namespace LoKi::Dicts
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
+// ============================================================================
 namespace
 {
   // ==========================================================================
@@ -307,6 +437,7 @@ namespace
     // ========================================================================
     Decays::IGenDecay::Finder m_finder ;
     Decays::IGenDecay::Tree   m_tree   ;
+    LoKi::Dicts::FinderDicts_<const HepMC::GenParticle*> m_finderDicts  ;
     // ========================================================================
   } ;  
   // ==========================================================================

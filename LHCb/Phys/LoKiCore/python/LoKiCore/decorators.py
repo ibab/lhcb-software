@@ -1584,6 +1584,60 @@ def decorateTrees ( trees , opers ) :
 
 
 # =============================================================================
+## Decorate the decay finder 
+def decorateFinder ( finder , opers ) :
+
+    _hasDecay_ = None 
+    if hasattr ( opers , '__hasDecay__' ) :
+        def _hasDecay_ ( self , container ) :
+            """
+            Check the presence of certain decay in the particle container
+            
+            >>> finder    = ...  ## the decay finder 
+            >>> container = ...  ## the container of particles
+            >>> print finder.hasDecay ( container )
+            
+            """
+            return opers.__hasDecay__ ( self , container )
+        # documentation:
+        _hasDecay_.__doc__ += opers.__hasDecay__.__doc__ 
+        
+        
+    _findDecay_ = None 
+    if hasattr ( opers , '__findDecay__' ) :
+        def _findDecay_ ( self , input , output  ) :
+            """
+            Check the presence of certain decay in the particle container
+            
+            >>> finder = ...  ## the decay finder 
+            >>> input  = ...  ## the input  container of particles
+            >>> output = ...  ## the output container of 'good' decays
+            >>> num = finder.findDecay ( input , output )
+            >>> print ' # decays found: ', num
+            >>> for p in output : print p.decay() 
+            
+            """
+            return opers.__findDecay__ ( self , input , output )        
+        # documentation:
+        _findDecay_.__doc__ += opers.__findDecay__.__doc__ 
+
+    
+    if _hasDecay_ and not hasattr ( finder , '__hasDecay__' ) :
+        finder.__hasDecay__   = _hasDecay_
+        finder.  hasDecay     = _hasDecay_
+    if _hasDecay_ and not hasattr ( finder , '__hasDecays__' ) :
+        finder.__hasDecays__  = _hasDecay_
+        finder.  hasDecays    = _hasDecay_
+    if _findDecay_ and not hasattr ( finder , '__findDecay__' ) :
+        finder.__findDecay__  = _findDecay_
+        finder.  findDecay    = _findDecay_
+    if _findDecay_ and not hasattr ( finder , '__findDecays__' ) :
+        finder.__findDecays__ = _findDecay_
+        finder.  findDecays   = _findDecay_
+
+    return finder 
+
+# =============================================================================
 ## import all dependent functions 
 # =============================================================================
 from LoKiCore.functions import * 
