@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.21 2009-05-24 15:33:22 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.22 2009-06-28 16:45:41 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -86,6 +86,10 @@
   <class name = "Decays::Trees::_Tree_<const HepMC::GenParticle*>"     />
   <class name = "Decays::TreeList_<const HepMC::GenParticle*>"         />
   <class name = "Decays::TreeList_<const HepMC::GenParticle*>::Trees_" />
+
+  <class name = "Decays::IGenDecay"         />
+  <class name = "Decays::IGenDecay::Finder" />
+  <class name = "Decays::IGenDecay::Tree"   />
 
   
   <exclusion>

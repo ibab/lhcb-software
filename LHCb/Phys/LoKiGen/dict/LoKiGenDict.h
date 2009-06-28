@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.12 2009-05-09 19:21:38 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.13 2009-06-28 16:45:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -25,6 +25,8 @@
 #include "LoKi/GenAlgsDicts.h"
 #include "LoKi/GenMoniDicts.h"
 #include "LoKi/GenDecays.h"
+// ============================================================================
+#include "LoKi/IGenDecay.h"
 // ============================================================================
 #include "LoKi/IGenHybridTool.h"
 #include "LoKi/GenHybridEngine.h"
@@ -242,6 +244,9 @@ namespace
   struct _Instantiations 
   {    
     // ========================================================================
+    /// fictive constructor 
+    _Instantiations () ;
+    // ========================================================================
     // the basic types
     LoKi::Types::GRange                                    m_r1 ;
     LoKi::Types::GVRange                                   m_r2 ;
@@ -297,8 +302,11 @@ namespace
     Decays::Tree_<const HepMC::GenParticle*>           m_tree1 ;
     Decays::Trees::Any_<const HepMC::GenParticle*>     m_tree3 ;
     LoKi::Dicts::TreeOps<const HepMC::GenParticle*>   m_trops ;
-    /// fictive constructor 
-    _Instantiations () ;
+    // ========================================================================
+    // Decay Finder 
+    // ========================================================================
+    Decays::IGenDecay::Finder m_finder ;
+    Decays::IGenDecay::Tree   m_tree   ;
     // ========================================================================
   } ;  
   // ==========================================================================

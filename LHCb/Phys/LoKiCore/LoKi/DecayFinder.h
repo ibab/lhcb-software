@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.1 2009-06-02 16:47:33 ibelyaev Exp $
+// $Id: DecayFinder.h,v 1.2 2009-06-28 16:41:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDER_H 
 #define LOKI_DECAYFINDER_H 
@@ -67,6 +67,13 @@ namespace Decays
       return last != std::find_if ( first , last , m_tree ) ; 
     }
     // ======================================================================== 
+    bool hasDecay ( const std::vector<PARTICLE>& particles ) const 
+    {
+      return this->hasDecay ( particles.begin() , particles.end() ) ; 
+    }
+    // ========================================================================
+  public:
+    // ======================================================================== 
     /** find the specified decay in the input sequence
      *
      *  @code
@@ -99,6 +106,13 @@ namespace Decays
       const size_t old_size = output.size() ;
       (*this)( first , last , std::back_inserter( output ) ) ;
       return output.size() - old_size ;
+    }
+    // ========================================================================
+    size_t findDecay 
+    ( const std::vector<PARTICLE>& input , 
+      std::vector<PARTICLE>&       output ) const 
+    { 
+      return this->findDecay ( input.begin() , input.end() , output ) ; 
     }
     // ========================================================================
   public:
