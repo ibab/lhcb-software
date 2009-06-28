@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.21 2009-06-11 15:29:47 ibelyaev Exp $ 
+# $Id: requirements,v 1.22 2009-06-28 13:28:12 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiTrigger
-version           v9r3
+version           v9r4
 
 # =============================================================================
 branches          cmt doc src dict python LoKi 
