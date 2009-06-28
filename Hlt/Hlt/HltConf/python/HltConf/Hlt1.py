@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.14 2009-06-04 13:36:05 graven Exp $
+# $Id: Hlt1.py,v 1.15 2009-06-28 19:58:00 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,21 +14,11 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-from Configurables       import GaudiSequencer as Sequence
-from Configurables       import HltSelReportsMaker, HltSelReportsWriter
-from Configurables       import HltDecReportsWriter
-from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
-from Configurables       import HltRoutingBitsWriter
-from Configurables       import HltLumiWriter
-from Configurables       import HltGlobalMonitor
-from Configurables       import bankKiller
-from Configurables       import LoKi__HDRFilter   as HltFilter
-from Configurables       import DeterministicPrescaler as Prescale
 from HltLine.HltLine     import addHlt1Prop
 
 
@@ -43,6 +33,16 @@ class Hlt1Conf(LHCbConfigurableUser):
                }
 
    def __apply_configuration__(self):
+        from Configurables       import GaudiSequencer as Sequence
+        from Configurables       import HltGlobalMonitor
+        from Configurables       import bankKiller
+        from Configurables       import LoKi__HDRFilter   as HltFilter
+        from Configurables       import HltSelReportsMaker, HltSelReportsWriter
+        from Configurables       import HltDecReportsWriter
+        from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
+        from Configurables       import HltRoutingBitsWriter
+        from Configurables       import HltLumiWriter
+        from Configurables       import DeterministicPrescaler as Prescale
         # add a few thing to our printout
         addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
                     , 'Code', 'InputLocations'

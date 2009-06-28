@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.257 2009-06-24 11:20:23 mlieng Exp $ 
+! $Id: release.notes,v 1.258 2009-06-28 19:58:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-06-28 - Gerhard Raven
+ - move some imports to avoid premature import during genConf
 
 ! 2009-06-24 - Greig Cowan
   - Added the prescaled and detached exclusive Bs->JpsiPhi to Configuration.py
