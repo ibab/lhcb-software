@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.187 2009-06-26 13:30:15 jpalac Exp $
+#$Id: requirements,v 1.188 2009-06-29 09:24:28 jpalac Exp $
 package PhysSys
 version v8r6
 
@@ -14,7 +14,7 @@ use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios
 use  ParticleMaker      	v5r1     Phys   # Chris Jones
 use  VertexFit			v5r6p1   Phys   # Yuehong Xie
 use  LoKiFitters                v2r1p1   Phys   # Vanya Belyaev
-use  ParticleTreeFitter         v1r4     Phys   # Wouter Hulsbergen
+use  DecayTreeFitter         v1r4     Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r0p2   Phys   # Juan Palacios
 
 # Allow the generation of QMTest summary 
