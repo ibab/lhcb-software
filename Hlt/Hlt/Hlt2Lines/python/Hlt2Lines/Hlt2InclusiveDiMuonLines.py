@@ -1,4 +1,4 @@
-### @file
+## @file
 #
 #  Hlt2 dimuon selections
 #
@@ -23,21 +23,36 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon' :  0.05 }
+    __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon'     :  0.05 }
+                                                 #, 'Hlt2BiasedDiMuonRobust' :  0.01 } 
+                                                 #, 'Hlt2BiasedDiMuonRefined':  0.01 }
                    ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
                    ,'UnbiasedDiMuonPt'        : 1000      # MeV
-                   ,'UnbiasedDiMuonMuPt'      : 500       #MeV
-                   ,'UnbiasedDiMuonVertexChi2':  20
-                   ,'UnbiasedJPsiMassWindow'  : 120       # MeV
+                   ,'UnbiasedDiMuonMuPt'      :  500      # MeV
+                   ,'UnbiasedDiMuonVertexChi2':   20
+                   ,'UnbiasedJPsiMassWindow'  :  120      # MeV
                    ,'UnbiasedJPsiPt'          : 1000      # MeV
-                   ,'UnbiasedJPsiMuPt'        : 500      # MeV
-                   ,'UnbiasedJPsiVertexChi2'  :  20
-                   ,'UnbiasedPsi2SMassWindow' : 120       # MeV
+                   ,'UnbiasedJPsiMuPt'        :  500      # MeV
+                   ,'UnbiasedJPsiVertexChi2'  :   20
+                   ,'UnbiasedPsi2SMassWindow' :  120      # MeV
                    ,'UnbiasedPsi2SPt'         : 1000      # MeV
-                   ,'UnbiasedPsi2SMuPt'       : 500      # MeV
-                   ,'UnbiasedPsi2SVertexChi2' :  20
+                   ,'UnbiasedPsi2SMuPt'       :  500      # MeV
+                   ,'UnbiasedPsi2SVertexChi2' :   20
                    ,'UnbiasedBmmMinMass'      : 5000      # MeV
-                   ,'UnbiasedBmmVertexChi2'   :  20
+                   ,'UnbiasedBmmVertexChi2'   :   20
+
+                   ,'BiasedSingleMuonPt'      :  700      # MeV
+                   ,'BiasedMass'              :  500      # MeV
+                   ,'BiasedLMass'             : 1000      # MeV
+                   ,'BiasedTMass'             : 2900      # MeV
+                   ,'BiasedSingleMuonIP'      :     .02   # mm 
+                   ,'BiasedSingleMuonTIP'     :     .12   # mm 
+                   ,'BiasedLTime'             :     .1    # ps 
+                   ,'BiasedSingleIPChi2'      :   10     
+                   ,'BiasedSingleIPTChi2'     :   25     
+                   ,'BiasedVertexChi2'        :    5
+                   ,'BiasedPVDistanceChi2'    :   10
+                   ,'BiasedPVDistanceTChi2'   :  125
                    }
 
 
@@ -105,10 +120,80 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedBmmVertexChi2'))+")"}
                     )
 
-        
-        ###
-        #    ID 50040 - biased dimuon 
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBiasedDiMuon.py")
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonDecision" : 50040 } )
+        '''
+        Biased DiMuon Lines
+               Leandro de Paula - leandro.de.paula@cern.ch
+ 
+        There are in total 4 biased selections:
+
+        Two selections try to reduce the rate without significan drop in signal efficiency.
+        At nominal conditions they should be prescaled:
+
+        5) Robust Biased DiMuon: do not cut on variable errors  
+        6) Refined Biased DiMuon: use all variables
+
+        and
+
+        7) High Mass Biased DiMuon selection 
+        8) Biased DiMuon selection with high IP cuts
+        '''
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonRobustDecision"  : 50040 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonRefinedDecision" : 50041 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonMassDecision"    : 50042 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonIPDecision"      : 50043 } )
+        '''
+           cut definitions for biased DiMuon Lines
+        '''
+        MuPtCut = "( MAXTREE(ABSID=='mu+',PT)>"+str(self.getProp('BiasedSingleMuonPt'))+"*MeV)"
+        MassCut = "(MM>"+str(self.getProp('BiasedMass'))+"*MeV)"
+        MassLCut = "(MM>"+str(self.getProp('BiasedLMass'))+"*MeV)"
+        MassTCut = "(MM>"+str(self.getProp('BiasedTMass'))+"*MeV)"
+        MuIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonIP'))+"*mm)))"
+        MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonTIP'))+"*mm)))"
+        LTimeCut= "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTime'))+"*ps)"
+        IPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPChi2'))+")"
+        TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPTChi2'))+")"
+        VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('BiasedVertexChi2'))+")"
+        PVDistChi2Cut = "(BPVVDCHI2>"+str(self.getProp('BiasedPVDistanceChi2'))+")"
+        PVDistTChi2Cut = "(BPVVDCHI2>"+str(self.getProp('BiasedPVDistanceTChi2'))+")"
+        '''
+           sequence definitions for biased DiMuon Lines
+        '''
+        RobustDiMuon = Hlt2Member( FilterDesktop
+                                   , "RobustDiMuon"          
+                                   , InputLocations = [ DiMuon ]
+                                   , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
+                                 )
+        RefinedDiMuon = Hlt2Member( FilterDesktop
+                                    , "RefinedDiMuon"          
+                                    , InputLocations = [ RobustDiMuon ]
+                                    , Code = IPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistChi2Cut
+                                  )
+        '''
+            robust biased DiMuon 
+        '''
+        line = Hlt2Line('BiasedDiMuonRobust'
+                        , prescale = self.prescale 
+                        , algos = [ DiMuon, RobustDiMuon ])
+        '''
+            refined biased DiMuon
+        '''
+        line = Hlt2Line('BiasedDiMuonRefined'
+                        , prescale = self.prescale 
+                        , algos = [ DiMuon, RobustDiMuon, RefinedDiMuon ])
+        '''
+            high mass biased DiMuon
+        '''
+        line.clone( 'BiasedDiMuonMass'
+                    , prescale = self.prescale 
+                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeCut }
+                  )
+        '''
+            biased DiMuon with tigh IP cuts
+        '''
+        line.clone( 'BiasedDiMuonIP'
+                    , prescale = self.prescale 
+                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
+                    , RefinedDiMuon = {"Code" : TIPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistTChi2Cut }
+                  )

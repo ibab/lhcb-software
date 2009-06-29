@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.16 2009-06-28 10:02:05 graven Exp $
+$Id: release.notes,v 1.17 2009-06-29 15:15:30 leandrop Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-28 - Leandro de Paula
+  - migration of Biased DiMuon lines 
 
 ! 2009-06-28 - Gerhard Raven
   - move some import statements in Hlt2B2JpsiX to avoid 'premature' import
