@@ -8,10 +8,10 @@
 2009-06-16
 + create entry to logbook
 + test // loading of histograms
-+ new config file, DB login changed!
-issues:
-- only works with db pages, no Editor
-
++ new config file, DB login mechanism has changed!
+  automatic login attempt using first DB entries
++ View->Hide Alarm list, also from cfg file
+o hopefully fixed history mode file browser issues
 
 !============ Presenter v0r19 2009-06-01 =============
 2009-06-01
