@@ -65,7 +65,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
                 , 'ComRobVtxPVDispLL'       : 2          # in mm
                 , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
-                , 'ComRobUseGEC'            : False       # do or do not 
+                , 'ComRobUseGEC'            : True       # do or do not 
                 , 'ComRobGEC'               : 120        # max number of tracks
                 , 'ComTFAllTrkPtLL'         : 300        # in MeV
                 , 'ComTFAllTrkPLL'          : 2000       # in MeV
@@ -501,7 +501,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         topoTF4Body = tfCombine(  name = 'TopoTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)' }
+                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
+#                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT<{TFPointUL})".format(self.getProps())
+                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(TFPointUL)s)" % self.getProps()
+                                              }
                                )
 
 
@@ -691,8 +694,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmTF4Body = tfCombine(  name = 'CharmTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)',
-                                                'MotherCut' : '(SUMQ == 0)' }
+                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
+#                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT<{CharmTFPointUL})'.format(self.getProps())
+                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT< %(CharmTFPointUL)s )' % self.getProps()
+                                              }
                                  )
         charmTFTopo4BodySeq = charmTFFilter('CharmPostTF4Body'
                                      , [charmTF4Body]
@@ -733,7 +738,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         charmTF4BodySB = tfCombine(  name = 'CharmWMTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' }
+                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
+#                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT<{CharmTFPointUL})'.format(self.getProps())
+                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(CharmTFPointUL)s )' % self.getProps()
+                                              }
                                  )
         charmTFTopo4BodySBSeq = charmTFFilter('CharmPostTF4BodyWideMass'
                                      , [charmTF4BodySB]
@@ -863,7 +871,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         dxTF4BodyKsDD = tfCombine(  name = 'TmpDXTF4BodyKsDD'
                                   , inputSeq = [ lclTFInputParticles, dxTF3BodyKsDD ]
                                   , decayDesc = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+","B0 -> K- D*(2010)+","B0 -> K+ D*(2010)+"]
-                                  , extracuts = { 'CombinationCut' : "(AM>2500*MeV) & (AM<6000*MeV)" }
+                                  , extracuts = { 'CombinationCut' : "(AM>2500*MeV) & (AM<6000*MeV)"
+#                                                , 'MotherCut' : "(BPVTRGPOINTINGWPT<{DXTFPointUL})".format(self.getProps())
+                                                , 'MotherCut' : "(BPVTRGPOINTINGWPT< %(DXTFPointUL)s )" % self.getProps()
+                                                }
                                  )
 
 
