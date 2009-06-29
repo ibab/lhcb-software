@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.222 2009-06-25 10:01:08 jonrob Exp $
+! $Id: release.notes,v 1.223 2009-06-29 11:19:44 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r22 2009-06-29 ====================
 ! 2009-06-25 - Chris Jones
  - Update tool handling to base classes to propagate OutputLevel to
    public tools that do not explicitly have it set. Uses the value as
