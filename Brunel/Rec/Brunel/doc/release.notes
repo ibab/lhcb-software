@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-29 - Marco Cattaneo
+ - Update references for changes to PatVelo
+
 ! 2009-06-25 - Chris Jones
  - Add new OutputLevel property to Brunel configurable to allow 
    overall control of the printout levels. This property is propagated
