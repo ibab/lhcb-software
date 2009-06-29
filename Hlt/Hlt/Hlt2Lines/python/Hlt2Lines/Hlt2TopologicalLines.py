@@ -102,19 +102,19 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 # I don't necessarily want to do this just with prescalers.
                 , 'IncludeLines'  : {'Hlt2Topo2BodySA'              : True
                                    , 'Hlt2Topo3BodySA'              : True
-                                   , 'Hlt2Topo4BodySA'              : False
+                                   , 'Hlt2Topo4BodySA'              : True
                                    , 'Hlt2TopoTF2BodySA'            : True
                                    , 'Hlt2TopoTF3BodySA'            : True
-                                   , 'Hlt2TopoTF4BodySA'            : False
+                                   , 'Hlt2TopoTF4BodySA'            : True
                                    , 'Hlt2TopoTF2BodyReq2Yes'       : True
                                    , 'Hlt2TopoTF2BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF2BodyReq4Yes'       : False
+                                   , 'Hlt2TopoTF2BodyReq4Yes'       : True
                                    , 'Hlt2TopoTF3BodyReq2Yes'       : True
                                    , 'Hlt2TopoTF3BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF3BodyReq4Yes'       : False
-                                   , 'Hlt2TopoTF4BodyReq2Yes'       : False
-                                   , 'Hlt2TopoTF4BodyReq3Yes'       : False
-                                   , 'Hlt2TopoTF4BodyReq4Yes'       : False
+                                   , 'Hlt2TopoTF3BodyReq4Yes'       : True
+                                   , 'Hlt2TopoTF4BodyReq2Yes'       : True
+                                   , 'Hlt2TopoTF4BodyReq3Yes'       : True
+                                   , 'Hlt2TopoTF4BodyReq4Yes'       : True
                                    # Charm lines
                                    , 'Hlt2Topo2BodyCharmSA'         : True
                                    , 'Hlt2TopoTF2BodyCharmSignal'   : True
@@ -122,9 +122,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2Topo3BodyCharmSA'         : True
                                    , 'Hlt2TopoTF3BodyCharmSignal'   : True
                                    , 'Hlt2TopoTF3BodyCharmWideMass' : True
-                                   , 'Hlt2Topo4BodyCharmSA'         : False
-                                   , 'Hlt2TopoTF4BodyCharmSignal'   : False
-                                   , 'Hlt2TopoTF4BodyCharmWideMass' : False
+                                   , 'Hlt2Topo4BodyCharmSA'         : True
+                                   , 'Hlt2TopoTF4BodyCharmSignal'   : True
+                                   , 'Hlt2TopoTF4BodyCharmWideMass' : True
                                    # DX lines.  Here temporarily.
                                    , 'Hlt2DX3BodyCopKsDD'           : True
                                    , 'Hlt2DX4BodyCopKsDD'           : False
@@ -191,9 +191,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
 
 
-        ## alias to get the slot associated to a name
-        _cut = lambda x: str(self.getProp(x))
-
 
         ###################################################################
         # Wrapper for line construction that checks if it is to be included,
@@ -222,13 +219,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # GEC lines are implemented
         ###################################################################
         from Configurables import LoKi__VoidFilter as VoidFilter
-	from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-	modules =  CoreFactory('CoreFactory').Modules
-	for i in [ 'LoKiTrigger.decorators' ] :
-	    if i not in modules : modules.append(i)
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
 
-	Hlt2KillTooManyTopoIP = VoidFilter('Hlt2KillTooManyTopoIP'
-                                  , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < " + _cut('ComRobGEC')  + " )"
+        Hlt2KillTooManyTopoIP = VoidFilter('Hlt2KillTooManyTopoIP'
+                                  , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                   )
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
@@ -240,19 +237,18 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                          , ShortCircuit = False
                          )
 
-        str_allpt = "(PT>" + _cut('ComRobAllTrkPtLL') + "*MeV)"
-        str_allp  = "(P>" + _cut('ComRobAllTrkPLL') + "*MeV)"
-        str_allip = "(MIPDV(PRIMARY)>" + _cut('ComRobAllTrkPVIPLL') + ")"
-        daugcuts = str_allpt + "&" + str_allp + "&" + str_allip
+        daugcuts = """(PT> %(ComRobAllTrkPtLL)s *MeV)
+                      & (P> %(ComRobAllTrkPLL)s *MeV)
+                      & (MIPDV(PRIMARY)> %(ComRobAllTrkPVIPLL)s )""" % self.getProps()
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
                             , InputLocations = [GoodPions, GoodKaons]
                             , Code = daugcuts
                            )
         if self.getProp('ComRobUseGEC') :
-        	lclInputParticles = bindMembers( 'TopoInputParticles', [ Hlt2KillTooManyTopoIP, orInput, filter ] )
-	else :
-		lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
+            lclInputParticles = bindMembers( 'TopoInputParticles', [ Hlt2KillTooManyTopoIP, orInput, filter ] )
+        else :
+            lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
 
         ###################################################################
         # Function to configure common particle combinations used by inclusive
@@ -267,33 +263,24 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #     extracuts : dictionary of extra cuts to be applied.
         #                 Can include cuts at the CombinationCut or at
         #                 the MotherCut level.
+        #                 e.g. : { 'CombinationCut' : '(AM>4*GeV)'
+        #                        , 'MotherCut'      : '(BPVDIRA>0.5)' }
         ###################################################################
-	# There seems to be a lot of CPUT consumed in managing the large number
-	#   of 4-body candidates.  The list needs to be as small as possible.
-	def hackRobustParentCut() :
-            str_topoCut = "(BPVTRGPOINTINGWPT<" + _cut('RobustPointingUL') + ")"
-            str_charmCut = "(BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
-	    str_dxCut = "(BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
-	    hackCut = '(' + str_topoCut + '|' + str_charmCut + '|' + str_dxCut + ')'
-	    return hackCut
-
         def robustCombine(name, inputSeq, decayDesc, extracuts = None) :
             # Construct a cut string for the combination.
-            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComRobPairMaxDocaUL') + ")"
-            # Special case for the 2-body.  Use tighter doca requirement.
-            if (name.find('Topo2Body') <> -1) :
-                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComRobPairMinDocaUL') + ")"
-            combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
-            # Special case for the 4-body.  Use a mass lower limit to reduce
-            #    combinatorics.  Must be at or below any client mass LL.
+            combcuts = "(AMAXDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMaxDocaUL)s ) & (AALLSAMEBPV)" % self.getProps()
+
+            # extracuts allows additional cuts to be applied for special
+            #   cases, including the tight doca requirement of the 2-body and
+            #   the additional cuts to reduce stored combinations in the 4-body.
             if extracuts and extracuts.has_key('CombinationCut') :
                 combcuts = combcuts + '&' + extracuts['CombinationCut']
 
             # Construct a cut string for the vertexed combination.
-            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComRobTrkMaxPtLL') + "*MeV)"
-            str_pardisp = "(BPVVD>" + _cut('ComRobVtxPVDispLL') + ")"
-            str_parrdisp = "(BPVVDR>" + _cut('ComRobVtxPVRDispLL') + ")"
-            parentcuts = str_parpt + '&' + str_pardisp + '&' + str_parrdisp
+            parentcuts = """
+                (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(ComRobTrkMaxPtLL)s *MeV)
+                & (BPVVD> %(ComRobVtxPVDispLL)s )
+                & (BPVVDR> %(ComRobVtxPVRDispLL)s )""" % self.getProps()
             if extracuts and extracuts.has_key('MotherCut') :
                 parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
@@ -318,9 +305,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         def robustFilter(name, inputSeq, extracode = None) :
             # Build a cut string from the configuration variables.
-            str_mass = "(M > 4*GeV)"
-            str_point = "(BPVTRGPOINTINGWPT<" + _cut('RobustPointingUL') + ")"
-            codestr = str_mass + "&" + str_point
+            codestr = "(M > 4*GeV) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -343,11 +328,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Filter for the post-track-fit input particles
         ###################################################################
-        str_allpt = "(PT>" + _cut('ComTFAllTrkPtLL') + "*MeV)"
-        str_allp  = "(P>" + _cut('ComTFAllTrkPLL') + "*MeV)"
-        str_allipchi2 = "(MIPCHI2DV(PRIMARY)>" + _cut('ComTFAllTrkPVIPChi2LL') + ")"
-        str_alltrkchi2 = "(TRCHI2DOF<" + _cut('ComTFAllTrkChi2UL') + ")"
-        incuts = str_allpt + "&" + str_allp + "&" + str_allipchi2 + "&" + str_alltrkchi2
+        incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
+                    & (P> %(ComTFAllTrkPLL)s *MeV)
+                    & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
+                    & (TRCHI2DOF< %(ComTFAllTrkChi2UL)s )""" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -375,20 +359,18 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         def tfCombine(name, inputSeq, decayDesc, extracuts = None) :
             # Construct a cut string for the combination.
-            str_cmbdoca = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComTFPairMaxDocaUL') + ")"
-            # Special case for the 2-body.  Use tighter doca requirement.
-            if (name.find('TopoTF2Body') <> -1) :
-                str_cmbdoca = "(AMINDOCA('LoKi::TrgDistanceCalculator')<" + _cut('ComTFPairMinDocaUL') + ")"
-            combcuts = str_cmbdoca + "&(AALLSAMEBPV)"
-            # Special case for the 4-body.  Use a mass lower limit to reduce
-            #    combinatorics.  Must be at or below any client mass LL.
+            combcuts = "(AMAXDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMaxDocaUL)s ) & (AALLSAMEBPV)" % self.getProps()
+
+            # extracuts allows additional cuts to be applied for special
+            #   cases, including the tight doca requirement of the 2-body and
+            #   the additional cuts to reduce stored combinations in the 4-body.
             if extracuts and extracuts.has_key('CombinationCut') :
                 combcuts = combcuts + '&' + extracuts['CombinationCut']
 
             # Construct a cut string for the vertexed combination.
-            str_parpt = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>" + _cut('ComTFTrkMaxPtLL') + "*MeV)"
-            str_pardisp = "(BPVVDCHI2>" + _cut('ComTFVtxPVDispChi2LL') + ")"
-            parentcuts = str_parpt + "&" + str_pardisp
+            parentcuts = """(BPVVDCHI2> %(ComTFVtxPVDispChi2LL)s )
+                & (MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)> %(ComTFTrkMaxPtLL)s *MeV)""" % self.getProps()
+
             if extracuts and extracuts.has_key('MotherCut') :
                 parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
@@ -412,9 +394,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   produces the particles to filter.
         ###################################################################
         def tfFilter(name, inputSeq, extracode = None) :
-            str_mass = "(M > 4*GeV)"
-            str_point = "(BPVTRGPOINTINGWPT<" + _cut('TFPointUL') + ")"
-            codestr = str_mass + "&" + str_point
+            codestr = "(BPVTRGPOINTINGWPT< %(TFPointUL)s ) & (M>4*GeV)" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -435,7 +415,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         topo2Body = robustCombine(  name = 'TmpTopo2Body'
                                   , inputSeq = [ lclInputParticles ]
-                                  , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"])
+                                  , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
+                                  , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
+                                  )
 
         # CombineParticles for the robust 3-body combinations.
         ###################################################################
@@ -448,11 +430,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # This will not usable in the charm, and will only cover part of
         #   the mass range for the DX robust stage.
         ###################################################################
+        # There seems to be a lot of CPUT consumed in managing the large number
+        #   of 4-body candidates.  The list needs to be as small as possible.
+        hackCut = """((BPVTRGPOINTINGWPT< %(RobustPointingUL)s )
+                     | (BPVDVDOCA()< %(DXRobustCoplanUL)s ))""" % self.getProps()
         topo4Body = robustCombine(  name = 'Topo4Body'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
-                                                , 'MotherCut'      : hackRobustParentCut() }
+                                                , 'MotherCut'      : hackCut }
                                   )
 
 
@@ -484,7 +470,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         topoTF2Body = tfCombine(  name = 'TmpTopoTF2Body'
                                 , inputSeq = [ lclTFInputParticles ]
-                                , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-","K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"])
+                                , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-","K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
+                                , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMinDocaUL)s )" % self.getProps() }
+                               )
 
         # post-track-fit 3-body combinations
         ###################################################################
@@ -502,7 +490,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
-#                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT<{TFPointUL})".format(self.getProps())
                                               , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(TFPointUL)s)" % self.getProps()
                                               }
                                )
@@ -591,7 +578,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   produces the particles to filter.
         ###################################################################
         def charmRobustFilter(name, inputSeq, extracode = None) :
-            codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT<" + _cut('CharmRobustPointUL') + ")"
+            codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT< %(CharmRobustPointUL)s )" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -611,7 +598,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   produces the particles to filter.
         ###################################################################
         def charmTFFilter(name, inputSeq, extracode = None) :
-            codestr = "(BPVTRGPOINTINGWPT<" + _cut('CharmTFPointUL') + ")"
+            codestr = "(BPVTRGPOINTINGWPT< %(CharmTFPointUL)s )" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -626,11 +613,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # Construct a bindMember for the charm topo robust 2-body decision
         ###################################################################
-        charmRobustTopo2BodySeq = charmRobustFilter('CharmRobustTopo2Body', [topo2Body], extracode = '(SUMQ == 0)')
+        charmRobustTopo2BodySeq = charmRobustFilter('CharmRobustTopo2Body', [topo2Body], extracode = '(SUMQ==0)')
 
         # Construct a bindMember for the charm topo robust 3-body decision
         ###################################################################
-        charmRobustTopo3BodySeq = charmRobustFilter('CharmRobustTopo3Body', [topo3Body], extracode = '((SUMQ == 1) | (SUMQ == -1))')
+        charmRobustTopo3BodySeq = charmRobustFilter('CharmRobustTopo3Body', [topo3Body], extracode = '((SUMQ==1) | (SUMQ == -1))')
 
         # Construct a bindMember for the charm topo robust 4-body decision
         # CombineParticles for the 4-body combinations.
@@ -641,7 +628,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
-                                                , 'MotherCut'     : hackRobustParentCut() + '&(SUMQ == 0)'}
+                                                , 'MotherCut'     : "(SUMQ == 0) & (BPVTRGPOINTINGWPT< %(CharmRobustPointUL)s )" % self.getProps()
+                                                }
                                   )
         charmRobustTopo4BodySeq = charmRobustFilter('CharmRobustTopo4Body', [charmRob4Body])
 
@@ -695,7 +683,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
-#                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT<{CharmTFPointUL})'.format(self.getProps())
                                               , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT< %(CharmTFPointUL)s )' % self.getProps()
                                               }
                                  )
@@ -739,7 +726,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
-#                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT<{CharmTFPointUL})'.format(self.getProps())
                                               , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(CharmTFPointUL)s )' % self.getProps()
                                               }
                                  )
@@ -769,7 +755,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   produces the particles to filter.
         ###################################################################
         def dxRobustFilter(name, inputSeq, extracode = None) :
-            codestr = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()<" + _cut('DXRobustCoplanUL') + ")"
+            codestr = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()< %(DXRobustCoplanUL)s )" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -789,9 +775,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   produces the particles to filter.
         ###################################################################
         def dxTFFilter(name, inputSeq, extracode = None) :
-            str_mass = "(M>2500*MeV) & (M<6000*MeV)"
-            str_point = "(BPVTRGPOINTINGWPT<" + _cut('DXTFPointUL') + ")"
-            codestr = str_mass + '&' + str_point
+            codestr = "(M>2500*MeV) & (M<6000*MeV) & (BPVTRGPOINTINGWPT< %(DXTFPointUL)s )" % self.getProps()
             if extracode :
               codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -833,7 +817,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = {'CombinationCut' : '(AM>2000*MeV) & (AM<4000*MeV)'
-                                                , 'MotherCut'      : hackRobustParentCut() }
+                                                , 'MotherCut'     : "(BPVDVDOCA()< %(DXRobustCoplanUL)s )" % self.getProps()
+                                                }
                                   )
         dxRobust4BodyLowSeq = dxRobustFilter('DXRobust4BodyLowCop', [dx4BodyLow])
 
@@ -872,7 +857,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                   , inputSeq = [ lclTFInputParticles, dxTF3BodyKsDD ]
                                   , decayDesc = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+","B0 -> K- D*(2010)+","B0 -> K+ D*(2010)+"]
                                   , extracuts = { 'CombinationCut' : "(AM>2500*MeV) & (AM<6000*MeV)"
-#                                                , 'MotherCut' : "(BPVTRGPOINTINGWPT<{DXTFPointUL})".format(self.getProps())
                                                 , 'MotherCut' : "(BPVTRGPOINTINGWPT< %(DXTFPointUL)s )" % self.getProps()
                                                 }
                                  )

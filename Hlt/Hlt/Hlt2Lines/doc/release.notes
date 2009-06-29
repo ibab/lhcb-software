@@ -1,9 +1,20 @@
-$Id: release.notes,v 1.18 2009-06-29 16:41:44 leandrop Exp $
+$Id: release.notes,v 1.19 2009-06-29 17:35:09 spradlin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-06-29 - Patrick Spradlin
+  - Several changes to python/Hlt2Lines/Hlt2TopologicalLines.py
+    * Changed default behavior of the 'GEC' limit on the number of tracks in
+      an event.  It is now ON by default.
+    * Rearranged some cuts to reduce the number of 4-body combinations
+      transferred to the TES.
+    * Turned the 4-body topological and charm lines back ON by default.
+      For the moment, the 4-body DX line remains OFF by default.
+    * Changed the way cut strings are built to use python's sprintf-style
+      line formatting rather than string concatenation.
 
 ! 2009-06-28 - Leandro de Paula
   - migration of Biased DiMuon lines (4 lines)
