@@ -1,7 +1,7 @@
 project LHCB
 
 
-use GAUDI	GAUDI_v21r1
+use GAUDI	GAUDI_v21r2
 use DBASE
 use PARAM
 
