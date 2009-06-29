@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.150 2009-06-28 16:41:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.151 2009-06-29 11:16:47 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,9 +15,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r3 2009-06-29 ========================
 ! 2009-06-28 - Vanya Belyaev
 
- - imporvement for DecayFinder 
+ - improvement for DecayFinder 
 
 
 ! 2009-06-28 - Vanya Belyaev
