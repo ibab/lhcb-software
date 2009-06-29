@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r20
+version v4r24
 
 branches cmt doc
  
@@ -37,7 +37,7 @@ use OnlineHistDB      v5r2     Online
 use OnlineBase        v1r0     Online
 use OnlineKernel      v2r0     Online
 use OnlineTools       v1r1     Online
-use OnlineTasks       v1r23    Online
+use OnlineTasks       v1r24    Online
 use Presenter         v0r19    Online
 use PyDIM             v2r7     Online
 use RawBankSizes      v1r5     Online
