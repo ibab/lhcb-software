@@ -489,10 +489,6 @@ namespace LHCb
     for( size_t index = 0 ; index<dim ; ++index)
       matrixH[index] = dM2dP4 * dP4dMom[index] ;
     
-    //std::cout << "delta mass: " << p4sum.M() - constrainedmass << std::endl ;
-    //std::cout << "covariance in M2: " << R(0,0) << std::endl ;
-    std::cout << "error in M: " << std::sqrt( R(0,0) ) / (2 * p4sum.M() ) << std::endl ;
-    
     // first compute the total p4 and store all the
     // jacobians. together with the jacobian from p4 to mass2, this
     // gives all matrices H in the equation above.
