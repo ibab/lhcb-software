@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r27 2009-06-29 ======================
 ! 2009-06-26 - Antonis Papanestis
  - Changed the way the global to/from photodetector panel frame conversion is 
    made. A 3D tranform is calculated in the DeRichHPDPanel and used by the 
