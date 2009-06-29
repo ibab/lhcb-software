@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.70 2009-06-28 16:43:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.71 2009-06-29 11:17:47 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v8r5 2009-06-29 ============================
 ! 2009-06-28 - Vanya Belyaev
 
  - improvement for decay finder 
