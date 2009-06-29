@@ -4,7 +4,15 @@ Math = GaudiPython.gbl.ROOT.Math
 # seems to work since Transform3D isn't a templated class.
 Transform3D = Math.Transform3D
 Plane3D     = Math.Plane3D
-#
+Rotation3D  = Math.Rotation3D
+RotationZYX = Math.RotationZYX
+RotationX   = Math.RotationX
+RotationY   = Math.RotationY
+RotationZ   = Math.RotationZ
+Quaternion  = Math.Quaternion
+EulerAngles = Math.EulerAngles
+AxisAngle   = Math.AxisAngle
+# 3D vectors and points (double precision)
 XYZVector        = Math.XYZVector
 XYZPoint         = Math.XYZPoint
 Polar3DVector    = Math.Polar3DVector
@@ -13,7 +21,7 @@ RhoEtaPhiVector  = Math.RhoEtaPhiVector
 RhoEtaPhiPoint   = Math.RhoEtaPhiPoint
 RhoZPhiVector    = Math.RhoZPhiVector
 RhoZPhiPoint     = Math.RhoZPhiPoint
-#
+# 3D vectors and points (float)
 XYZVectorF        = Math.XYZVectorF
 XYZPointF         = Math.XYZPointF
 Polar3DVectorF    = Math.Polar3DVectorF
@@ -22,6 +30,14 @@ RhoEtaPhiVectorF  = Math.RhoEtaPhiVectorF
 RhoEtaPhiPointF   = Math.RhoEtaPhiPointF
 RhoZPhiVectorF    = Math.RhoZPhiVectorF
 RhoZPhiPointF     = Math.RhoZPhiPointF
+# Lorentz vectors
+XYZTVector       = Math.XYZTVector      # LorentzVector<PxPyPzE4D<double> >
+PxPyPzEVector    = Math.PxPyPzEVector   # LorentzVector<PxPyPzE4D<double> >
+PxPyPzMVector    = Math.PxPyPzMVector   # LorentzVector<PxPyPzM4D<double> >
+PtEtaPhiEVector  = Math.PtEtaPhiEVector # LorentzVector<PtEtaPhiE4D<double> >
+PtEtaPhiMVector  = Math.PtEtaPhiMVector # LorentzVector<PtEtaPhiM4D<double> >
+# Lorentz vectors (float)
+XYZTVectorF       = Math.XYZTVectorF    # LorentzVector<PxPyPzE4D<float> >
 #
 Line = GaudiPython.gbl.Gaudi.Math.Line
 XYZLine        = Line(XYZPoint, XYZVector)
