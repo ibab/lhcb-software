@@ -13,8 +13,8 @@ branches cmt doc
 #=======================================================
 #use confDB            v1r6     Online
 #use confDBpython      v1r7     Online
-use $(CCPCHist_use)
-macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
+#macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
+#use $(CCPCHist_use)
 
 use Camera            v1r4     Online
 use CondDBServer      v1r2     Online
