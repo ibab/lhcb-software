@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r8 2009-06-29 ======================
 ! 2009-06-23 - Marco Cattaneo
  - In importUtils.py, disable warning C4800 on Windows when including
    HepMC/GenEvent.h
