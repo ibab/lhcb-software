@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.4 2009-06-23 23:07:32 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.5 2009-06-29 07:39:51 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bd->JpsiK* stripping selection using LoKi::Hybrid and python
@@ -19,7 +19,7 @@ import GaudiKernel.SystemOfUnits as Units
 # Kst #
 #######
 StdUnbiasedKst2Kpi = FilterDesktop("StripStdUnbiasedKst2Kpi")
-StdUnbiasedKst2Kpi.InputLocations = ["StdLooseKstar"]
+StdUnbiasedKst2Kpi.InputLocations = ["StdLooseKstar2Kpi"]
 StdUnbiasedKst2Kpi.Code = "  (MINTREE('K+'==ABSID, (PIDK - PIDp)) > -6.)"\
                           "& (MINTREE('K+'==ABSID, PIDK) > -5.)"\
 			  "& (ADMASS('K*(892)0') < 90.*MeV)"\
