@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r6 2009-06-29 ========================
 ! 2009-06-25 - Chris Jones
  - Replace "Quiet" property with OutputLevel
 
