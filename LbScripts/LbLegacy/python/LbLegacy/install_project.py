@@ -327,17 +327,17 @@ def help() :
 _postinstall_commands = {}
 
 
-def registerPostInstallCommand(project, command, dir=None):
+def registerPostInstallCommand(project, command, dirname=None):
     global _postinstall_commands
     log = logging.getLogger()
     if _postinstall_commands.has_key(project) :
         cmdlist = _postinstall_commands[project]
     else :
         cmdlist = []
-    cmdlist.append((command,dir))
+    cmdlist.append((command,dirname))
     _postinstall_commands[project] = cmdlist
-    if dir :
-        log.debug("Registered PostInstall for %s: \"%s\" in %s" % (project, command, dir) )
+    if dirname :
+        log.debug("Registered PostInstall for %s: \"%s\" in %s" % (project, command, dirname) )
     else :
         log.debug("Registered PostInstall for %s: \"%s\"" % (project, command) )
 
@@ -1180,6 +1180,26 @@ def getProjectTar(tar_list, already_present_list=None):
             callPostInstallCommand(prj)
 
     os.chdir(here)
+    
+# Autoupdate myself
+def getMySelf():
+    log = logging.getLogger()
+    log.info("script version : %s" % script_version)
+    new_install = 'latest_install_project.py'
+    getFile(url_dist,'install_project.py')
+    changePermissions('latest_install_project.py', recursive=False)
+    latest_line = readString(new_install,'script_version')
+    latest_version = latest_line.split("'")[1]
+    if script_version < latest_version :
+        log.warning("You are running an old version of this script - latest version: %s" % latest_version)
+        log.warning("Restarting with the latest one")
+        if os.path.exists("install_project.py.old") :
+            log.debug("Removing install_project.py.old")
+            os.remove("install_project.py.old")
+        shutil.copy("install_project.py", "install_project.py.old")
+        shutil.copy("latest_install_project.py", "install_project.py")
+        os.execv(sys.executable, [sys.executable] + sys.argv)    
+
 #
 # download necessary scripts ==============================================
 #
@@ -1188,6 +1208,7 @@ def getBootScripts():
     global LbConfiguration
     log = logging.getLogger()
     here = os.getcwd()
+    getMySelf()
     cleanBootScripts()
     scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
     if isInstalled(scripttar) :

@@ -1,5 +1,8 @@
 2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: readded the missing autoupdate feature (it
+	was forgotten in the previours release). Restarts itself automatically with the new 
+	version. 
 	* scripts/tbroadcast: fixed typo in the name of the argument for the Scheduler 
 	constructor.
 
