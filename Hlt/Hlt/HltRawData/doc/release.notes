@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.41 2009-06-24 16:00:39 tskwarni Exp $
+!$Id: release.notes,v 1.42 2009-06-29 12:26:39 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-06-29 - Tomasz Skwarnicki
+ - add HltRawData_dll.cpp
 
 ! 2009-06-23 - Tomasz Skwarnicki
  - migrate most of the code (Writers, Readers->Decoders) to 
