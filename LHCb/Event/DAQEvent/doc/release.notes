@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r21 2009-06-29 ===========================
 ! 2009-06-22 - Tomasz Skwarnicki
  - add src/component/RawEventSelectiveCopy for copying selected RawBanks
    add RawEventLocation::Copied in Event/RawEvent.h
