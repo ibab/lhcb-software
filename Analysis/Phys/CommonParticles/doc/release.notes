@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.135 2009-06-28 12:02:54 gcowan Exp $
+!$Id: release.notes,v 1.136 2009-06-29 08:55:51 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-06-29 - Greig Cowan
+ - Added vertex chi2 cut to StdLooseJpsi2MuMu and StdLoosePhi2KK.
 
 ! 2009-06-28 - Greig Cowan
  - Removed StdLooseUnbiasedPhi2KK. Added StdLooseDetachedPhi with K IP cut. New 
