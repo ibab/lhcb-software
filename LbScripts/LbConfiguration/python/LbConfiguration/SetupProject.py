@@ -7,11 +7,11 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.13 2009-06-22 18:22:14 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.14 2009-06-29 17:19:26 hmdegaud Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.13 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.14 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -327,11 +327,11 @@ def LatestVersion(versions):
     return SortVersions([ v[1] for v in versions ])[-1]
 
 def VersionMatch(version, pattern):
-	"""Compare a version string with a pattern. The pattern can be
-	the exact match, a glob pattern or None (in which case matches an None version).
-	"""
-	return version == pattern or \
-	    ((pattern is not None) and (version is not None) and fnmatch(version, pattern))
+    """Compare a version string with a pattern. The pattern can be
+    the exact match, a glob pattern or None (in which case matches an None version).
+    """
+    return version == pattern or \
+        ((pattern is not None) and (version is not None) and fnmatch(version, pattern))
 
 def _GetVersionTuple(pattern, versions):
     """Extract the version tuple corresponding to version 'pattern'.
@@ -1478,7 +1478,7 @@ class SetupProject:
             found = False
             pattern = self.args[0]
             for v in versions:
-            	if VersionMatch(v[1], pattern):
+                if VersionMatch(v[1], pattern):
                     found = True
                     break
             if found:

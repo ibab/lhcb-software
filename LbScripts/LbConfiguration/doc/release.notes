@@ -1,5 +1,6 @@
 2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/SetupProject.py: fixed tab symbol. Replaced them with 4 spaces.
 	* scripts/generateLogin: added the automatic generation of the group_login, group_shell,
 	and LHCb wrappers.
 
