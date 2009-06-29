@@ -1,3 +1,8 @@
+2008-06-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: Use "svn switch" if the destination directory
+	looks like a SVN working copy (behavior similar to CVS).
+
 2009-06-29  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: switching off distcc for slc5

@@ -470,8 +470,15 @@ class SubversionCmd(RevisionControlSystem):
         if project: # projects in SVN _are_ the content of the "cmt" directory
             dst = os.path.join(dst, "cmt")
 
-        _svn("checkout", src, dst, stdout = None, stderr = None)
-
+        if os.path.isdir(os.path.join(dst,".svn")): # looks like a SVN working copy
+            # try with "switch"
+            sub_cmd = "switch"
+        else:
+            # normal case
+            sub_cmd = "checkout"
+        
+        _svn(sub_cmd, src, dst, stdout = None, stderr = None)
+        
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
