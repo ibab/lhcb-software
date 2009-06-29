@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2009-06-29 Wouter Hulsbergen
+ - remove forgotten std::cout from TrackStateVertex
+
 ! 2009-06-23 Wouter Hulsbergen
  - added some more classes to dictionary
 
