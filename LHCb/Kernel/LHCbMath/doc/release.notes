@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-06-29 - Juan PALACIOS
+ - python/LHCbMath.py
+  . Add some LorentzVectors and 3D rotation types.
+
 !========================= LHCbMath v3r9 2009-06-16 ==========================
 ! 2009-06-13 - Vanya BELYAEV 
  - add new class: SVectorWithError
