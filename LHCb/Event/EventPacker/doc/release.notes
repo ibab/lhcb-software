@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r5 2009-06-29 ====================
 ! 2009-06-24 - Olivier Callot
  - Add the packing of RawEvent in WriteDst: All banks are copied from the input
    RawEvent to the output one, and the list of added banks kept in the output.
