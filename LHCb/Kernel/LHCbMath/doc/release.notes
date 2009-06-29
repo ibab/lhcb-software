@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r10 2009-06-29 =========================
 ! 2009-06-29 - Juan PALACIOS
  - python/LHCbMath.py
   . Add some LorentzVectors and 3D rotation types.
