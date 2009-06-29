@@ -59,8 +59,9 @@ use VeloEvent             v16r7p1 Event   # Tomasz Szumlak, Chris Parkes
 use STTELL1Event          v1r7    ST      # Matt Needham
 use PartProp              v1r3    Kernel  # Vanya Belyaev 
 
-use GaudiConf             v12r6           # Marco Cattaneo
-use GaudiObjDesc          v11r8           # Marco Cattaneo, Stefan Roiser
+# Packages without Hat, cannot have comment field. Maintainer Marco Cattaneo
+use GaudiConf             v12r6
+use GaudiObjDesc          v11r8
 
 use L0MuonKernel          v8r6p1  L0      # Andrei Tsaregorodtsev, Julien Cogan
 
