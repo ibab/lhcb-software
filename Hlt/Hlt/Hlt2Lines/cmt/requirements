@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.6 2009-06-29 15:15:30 leandrop Exp $
+# $Id: requirements,v 1.7 2009-06-29 16:41:44 leandrop Exp $
 # Created    : 2009/05/19
 # Maintainer : 
 
 package           Hlt2Lines
-version           v1r2
+version           v1r3
 
 # ============================================================================
 # ======= the structure ======================================================

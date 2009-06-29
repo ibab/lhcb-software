@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.17 2009-06-29 15:15:30 leandrop Exp $
+$Id: release.notes,v 1.18 2009-06-29 16:41:44 leandrop Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,7 +6,7 @@ $Id: release.notes,v 1.17 2009-06-29 15:15:30 leandrop Exp $
 !-----------------------------------------------------------------------------
 
 ! 2009-06-28 - Leandro de Paula
-  - migration of Biased DiMuon lines 
+  - migration of Biased DiMuon lines (4 lines)
 
 ! 2009-06-28 - Gerhard Raven
   - move some import statements in Hlt2B2JpsiX to avoid 'premature' import

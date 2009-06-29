@@ -23,9 +23,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon'     :  0.05 }
-                                                 #, 'Hlt2BiasedDiMuonRobust' :  0.01 } 
-                                                 #, 'Hlt2BiasedDiMuonRefined':  0.01 }
+    __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon'     :  0.05 
+                                                 , 'Hlt2BiasedDiMuonRobust' :  0.01  
+                                                 , 'Hlt2BiasedDiMuonRefined':  0.01 }
                    ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
                    ,'UnbiasedDiMuonPt'        : 1000      # MeV
                    ,'UnbiasedDiMuonMuPt'      :  500      # MeV
