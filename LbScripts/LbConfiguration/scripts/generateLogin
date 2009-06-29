@@ -333,17 +333,152 @@ set LbLogin_tmpfile=
     if not withoutcache :
         generateLoginCache(mysiteroot, shell, version, targetlocation, building, withoutpython)
 
-def generateLogins(version, targetlocation=None, scripts=None, mysiteroot=None, building=False, 
-                   withoutpython=False, withoutcache=False):
+def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, building=False):
+    script = os.path.join(_scripts_dir, "group_login.%s" % shell)
+    f = open(script, "w")
+    content = ""
+    if shell == "sh" :
+        content += """
+if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
+  lbvers=prod
+  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+    lbvers=dev
+  fi
+  if [ -n "$LB_BANNER" ]; then
+    cat ${LB_BANNER}
+    rm -f ${LB_BANNER}
+    unset LB_BANNER
+  else
+    . %s/scripts/LbLogin.sh --quiet
+  fi
+  export LBLOGIN_DONE=yes
+  unset lbvers
+fi
+
+""" % targetlocation
+    elif shell == "csh" :
+        content += """
+if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
+  set lbvers=prod
+  if ( -e ${HOME}/.devLHCBLoginscript ) then
+    set lbvers=dev
+  endif
+  if ( $?LB_BANNER ) then
+    cat ${LB_BANNER}
+    rm -f ${LB_BANNER}
+    unsetenv LB_BANNER
+  else
+    source %s/scripts/LbLogin.csh --quiet
+  endif
+  setenv LBLOGIN_DONE yes
+  unset lbvers
+endif 
+
+""" % targetlocation
+    elif shell == "bat" :
+        content += "call %s\scripts\LbLogin.bat --quiet" % targetlocation
+        
+    f.write(content)
+    f.close()
+    
+    
+def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, building=False):
+    script = os.path.join(_scripts_dir,"group_shell.%s" % shell)
+    f = open(script, "w")
+    content = ""
+    if shell == "sh" :
+        content += """
+if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
+  lbvers=prod
+  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+    lbvers=dev
+  fi
+  if [ -n "$LBLOGIN_DONE" ]; then
+    . %s/InstallArea/scripts/LbLogin.sh --silent >& /dev/null
+  else
+    export LB_BANNER=`mktemp`
+    . %s/scripts/LbLogin.sh --quiet >> ${LB_BANNER}
+  fi
+  unset lbvers
+fi 
+             
+""" % (targetlocation, targetlocation)
+    
+    elif shell == "csh" :
+        content += """
+if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
+  set lbvers=prod
+  if ( -e ${HOME}/.devLHCBLoginscript ) then
+    set lbvers=dev
+  endif
+  if ( $?LBLOGIN_DONE ) then
+    source %s/scripts/LbLogin.csh --silent >& /dev/null
+  else
+    setenv LB_BANNER `mktemp`
+    source %s/scripts/LbLogin.csh --quiet >! ${LB_BANNER}
+  endif
+  unset lbvers
+endif 
+
+""" % (targetlocation, targetlocation )
+    elif shell == "bat" :
+        content += "call %s\scripts\LbLogin.bat --silent" % targetlocation
+    f.write(content)
+    f.close()
+
+def generateGroupWrappers(targetlocation, shell, version="", mysiteroot=None, building=False):
+    generateGroupLogin(targetlocation, shell, version, mysiteroot, building)
+    generateGroupShell(targetlocation, shell, version, mysiteroot, building)
+
+def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, building=False):
+    script = os.path.join(_scripts_dir, "LHCb.%s" % shell)
+    f = open(script, "w")
+    content = ""
+    if shell == "sh" :
+        content += """
+if [[ -e ${HOME}/.useLHCBLoginscript ]]; then
+   . %s/scripts/group_shell.sh
+   if [[ -o login || -n "$LB_BANNER" ]] ; then
+      . %s/scripts/group_login.sh
+   fi
+fi
+
+""" % (targetlocation, targetlocation)
+    elif shell == "csh" :
+        content += """
+if (  -e ${HOME}/.useLHCBLoginscript ) then
+   source %s/scripts/group_shell.csh
+   if ($?loginsh  || $?LB_BANNER) then
+      source %s/scripts/group_login.csh
+   endif
+endif     
+        
+""" % (targetlocation, targetlocation)
+    elif shell == "bat" :
+        content += "call %s\scripts\group_login.bat" % targetlocation
+    f.write(content)
+    f.close()
+
+
+def generateLogins(version, targetlocation=None, scripts=None, 
+                   mysiteroot=None, building=False, 
+                   withoutpython=False, withoutcache=False, 
+                   withoutgwrap=False, withoutmwrap=False):
+    shells = ["csh", "sh", "bat"]
     if not targetlocation : 
         targetlocation = os.path.realpath(_base_dir)
     if not scripts :
         scripts = []
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.csh"))
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
-        scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
+        for u in shells :
+            scripts.append(os.path.join(_scripts_dir, "LbLogin.%s" % u ))
     for s in scripts :
         generateLogin(targetlocation, s, version, mysiteroot, building, withoutpython, withoutcache)
+    if not withoutgwrap :
+        for u in shells :
+            generateGroupWrappers(targetlocation, u , version, mysiteroot, building)
+    if not withoutmwrap :
+        for u in shells :
+            generateMainWrapper(targetlocation, u, version, mysiteroot, building)
 
 
 if __name__ == '__main__':
@@ -364,6 +499,15 @@ if __name__ == '__main__':
     parser.set_defaults(withoutcache=False)
     parser.add_option("--no-cache", dest="withoutcache", action="store_true",
                       help="prevents the generation of the cache")
+    
+    parser.set_defaults(withoutgroupwrapper=False)
+    parser.add_option("--no-group-wrapper", dest="withoutgroupwrapper", action="store_true",
+                      help="prevents the generation of the group wrapper scripts")
+
+
+    parser.set_defaults(withoutmainwrapper=False)
+    parser.add_option("--no-main-wrapper", dest="withoutmainwrapper", action="store_true",
+                      help="prevents the generation of the main wrapper script")
 
     opts, args = parser.parse_args()
 
@@ -385,6 +529,7 @@ if __name__ == '__main__':
         scripts = args[2:]
         
     generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
-                   opts.withoutpython, opts.withoutcache)
+                   opts.withoutpython, opts.withoutcache,
+                   opts.withoutgroupwrapper, opts.withoutmainwrapper)
 
 
