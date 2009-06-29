@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v12r0 2009-06-29 ===========================
 ! 2009-06-26 - Antonis Papanestis
  - New transform from the global frame to the photodetector panel frame that 
    can cope better with misalignments. Method globalPosition removed from
