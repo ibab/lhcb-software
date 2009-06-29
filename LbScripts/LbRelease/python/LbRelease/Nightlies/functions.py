@@ -367,13 +367,13 @@ def generateBuilders(destPath, projectNames, minusj):
             shutil.rmtree(os.path.join(destPath, pdir), ignore_errors=True)
             os.makedirs(os.path.join(destPath, pdir, 'cmt') )
             f = file(os.path.join(destPath, pdir, 'cmt', 'requirements'), 'w')
-            f.write('package ' + pdir + os.linesep)
-            f.write('macro packageName "' + p + '"' + os.linesep)
-            f.write('use LbScriptsSys' + os.linesep)
-            f.write('use Python v* LCG_Interfaces' + os.linesep)
+            f.write('package %s\n' % pdir)
+            f.write('macro packageName "%s"\n' % p)
+            f.write('use LbScriptsSys\n')
+            f.write('use Python v* LCG_Interfaces\n')
             lines = """
 action pkg_get "cmt show tags ; mkdir -p logs ; %(launcher)s get %(packageName)s 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log" \
-       WIN32 " if not exist logs mkdir logs & %(launcher)s get %(packageName)s "
+       WIN32 " ( if not exist logs mkdir logs ) && %(launcher)s get %(packageName)s "
 action pkg_config " %(launcher)s config %(packageName)s 2>&1" \
        WIN32 " %(launcher)s config %(packageName)s"
 action pkg_make "  %(launcher)s make %(packageName)s %(processes)d 2>&1 ; exit 0" \
@@ -528,6 +528,12 @@ def make(slotName, projectName, minusj):
     setCmtProjectPath(slot)
     configuration.system('echo "################# START OF MAKE #######################"')
     changeEnvVariables()
+
+    #hack: no distcc for SLC5
+    if os.environ.get("CMTCONFIG","").upper().find("SLC5")>=0 and os.environ.get("CMTEXTRATAGS","").upper().find("DISTCC")>=0:
+        os.environ["CMTEXTRATAGS"] = ""
+    #end
+
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "LCG Nightlies:    '+os.path.dirname(configuration.__file__)+'"')
