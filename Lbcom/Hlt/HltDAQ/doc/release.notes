@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-06-29 - Tomasz Skwarnicki
+ - add HltDAQ_dll.cpp
+
+!========================== HltDAQ v1r0 2009-06-24 ===================
 ! 2009-06-23 - Tomasz Skwarnicki
  - initial version. Move Readers from HltRawData and rename them to Decoders.
    They need to be in LBCOM library like this one. Also move all Writers here.
