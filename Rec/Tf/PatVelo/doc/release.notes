@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-25 - David Hutchcroft
+ - Improved the chi2 cut value for the new fit
+ - Explicitly converted (it-it) value to unsigned int 
+   to suppress a warning on the 32bit debug compiler only
+
+! 2009-06-25 - David Hutchcroft
  - Added change to the chi2 cut which is necessary for the fit change.
 
 ! 2009-06-24 - David Hutchcroft

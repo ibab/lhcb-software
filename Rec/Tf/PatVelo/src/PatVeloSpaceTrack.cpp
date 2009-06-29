@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.12 2009-06-24 18:04:35 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.13 2009-06-29 09:17:46 dhcroft Exp $
 // Include files 
 
 // local
@@ -174,7 +174,10 @@ namespace Tf {
       w = dCos * dCos / (variance + MSError);
       v.increment(w,lv,z);
 
-      if( fullErrorPoints < itC - m_phiCoord.rbegin() ) MSError += stepError;
+      if( fullErrorPoints < 
+	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ){
+	MSError += stepError;
+      }
     }
 
     //== R coordinate: Use it mainly for U, radial measure
@@ -201,7 +204,10 @@ namespace Tf {
       w = dSin * dSin / (variance + MSError);
       v.increment(w,lv,z);
 
-      if( fullErrorPoints < itC - m_rCoord.rbegin() ) MSError += stepError;
+      if( fullErrorPoints < 
+	  static_cast<unsigned int>(itC - m_rCoord.rbegin()) ) {
+	MSError += stepError;
+      }
     }
 
     // fit the two frames
@@ -295,7 +301,10 @@ namespace Tf {
       chi2 += w * dSin * dSin * du * du ;
       chi2 += w * dCos * dCos * dv * dv ;
 
-      if( fullErrorPoints < itC - m_phiCoord.rbegin() ) MSError += stepError;
+      if( fullErrorPoints < 
+	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ) {
+	MSError += stepError;
+      }
     }
 
     //== R coordinate:
@@ -320,7 +329,10 @@ namespace Tf {
       chi2 += w * dCos * dCos * du * du ;
       chi2 += w * dSin * dSin * dv * dv ;
 
-      if( fullErrorPoints < itC - m_rCoord.rbegin() ) MSError += stepError;
+      if( fullErrorPoints < 
+	  static_cast<unsigned int>(itC - m_rCoord.rbegin()) ) {
+	MSError += stepError;
+      }
     }
 
     // number of degrees of freedom for the fit
