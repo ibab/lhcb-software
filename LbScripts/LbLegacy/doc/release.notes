@@ -1,3 +1,8 @@
+2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/tbroadcast: fixed typo in the name of the argument for the Scheduler 
+	constructor.
+
 2009-06-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r1

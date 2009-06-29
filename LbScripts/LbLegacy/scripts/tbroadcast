@@ -107,7 +107,7 @@ if __name__ == '__main__':
              else:
                   command.append(arg)
 
-    master = Scheduler (num_workers=num_worker, file=file, ignore_cycles=ignore_cycles, 
+    master = Scheduler (num_workers=num_worker, filename=file, ignore_cycles=ignore_cycles, 
                         local=local, output=output, error=error, silent=silent, perf=perf, 
                         keep_going=keep_going)
     command = " ".join(command)
