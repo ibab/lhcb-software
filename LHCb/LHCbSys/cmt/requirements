@@ -88,10 +88,10 @@ use LoKiArrayFunctors     v8r4    Phys    # Ivan Belyaev
 use LoKiCore              v9r3    Phys    # Ivan Belyaev
 use LoKiGen               v8r5    Phys    # Ivan Belyaev
 use LoKiGenMC             v8r1   Phys    # Ivan Belyaev
-use LoKiHlt               v2r2   Phys    # Ivan Belyaev
+use LoKiHlt               v2r3   Phys    # Ivan Belyaev
 use LoKiMC                v8r5    Phys    # Ivan Belyaev
 use LoKiNumbers           v8r2    Phys    # Ivan Belyaev
-use LoKiPhys              v8r6    Phys    # Ivan Belyaev
+use LoKiPhys              v8r7    Phys    # Ivan Belyaev
 use LoKiPhysMC            v8r3    Phys    # Ivan Belyaev
 use L0Interfaces          v1r4p1  L0      # Olivier Deschamps
 use MCInterfaces          v1r9    Kernel  # Marco Cattaneo et al.
