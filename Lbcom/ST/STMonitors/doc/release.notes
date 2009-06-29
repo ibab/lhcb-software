@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v1r4 2009-06-29 ==========================
 ! 2009-06-17 - Jeroen Van Tilburg
  - Modified binning in TT Cluster map to give a better picture.
 
