@@ -26,27 +26,29 @@ from HltLine.HltLine import bindMembers
 
 class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
     
-    __slots__ = { 'SingleMuonPt'         : 2800      # MeV
+    __slots__ = { 'SingleMuonPt'         : 3600      # MeV
                   ,'SingleMuonIP'        : 0.220     # mm
+
                   ,'MuTrackMuPt'         : 1000      # MeV
-                  ,'MuTrackTrPt'         : 600       # MeV
-                  ,'MuTrackMuIP'         : 0.080     # mm
-                  ,'MuTrackTrIP'         : 0.100     # mm
+                  ,'MuTrackTrPt'         : 800       # MeV
+                  ,'MuTrackMuIP'         : 0.100     # mm
+                  ,'MuTrackTrIP'         : 0.125     # mm
                   ,'MuTrackPoint'        : 0.4       # dimensionless
+
                   ,'MuTrack4JpsiMuPt'    : 1200      # MeV
                   ,'MuTrack4JpsiTrPt'    : 600       # MeV
                   
-                  , 'IncludeLines' :['SingleMuon',
-                                     #'SingleMuonMid',
-                                     #'SingleMuonLow',
-                                     'SingleHighPTMuon',
-                                     'IncMuTrack',
-                                     #'IncMuTrackMid',
-                                     #'IncMuTrackLow',
-                                     #'IncMuTrackLowMass',
-                                     #'IncMuTrackLowMassMid',
-                                     #'IncMuTrackLowMassLow',
-                                     'IncMuTrack4Jpsi'
+                  , 'IncludeLines' :['SingleMuonMid'
+                                     ,'SingleHighPTMuon'
+                                     ,'IncMuTrackMid'
+                                     #,'SingleMuon'
+                                     #,'SingleMuonLow',
+                                     #,'IncMuTrack',
+                                     #,'IncMuTrackLow',
+                                     #,'IncMuTrackLowMass',
+                                     #,'IncMuTrackLowMassMid',
+                                     #,'IncMuTrackLowMassLow',
+                                     #,'IncMuTrack4Jpsi'
                                      ]
                   }
     
@@ -61,7 +63,6 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         decayDescB2MuTrack = ["[B0 -> mu+ pi-]cc","[B0 -> mu+ pi+]cc"]
         Doca = "(AMAXDOCA('')<0.150)"
         Dz = "(BPVVDZ>1.0)"
-        #Dz = "(BPVVDZ>-99999.)"
         Mass = "(AM>2.2*GeV) & (AM<6.*GeV)"
         LowMass = "(AM>0.5*GeV) & (AM<6.*GeV)"
         
@@ -77,7 +78,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleMuon = Hlt2Member( FilterDesktop
                                         , "Filter"
                                         , InputLocations  = [Muons]
-                                        , Code = "((PT>"+str(self.getProp('SingleMuonPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('SingleMuonIP'))+"))"
+                                        , Code = "((PT>2.8*GeV) & (MIPDV(PRIMARY)>0.220))"
                                         )
         if 'SingleMuon' in self.getProp('IncludeLines'):
             Hlt2Line('SingleMuon'
@@ -91,7 +92,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Hlt2SelSingleMuonMid = Hlt2Member( FilterDesktop
                                            , "FilterMid"
                                            , InputLocations  = [Muons]
-                                           , Code = "((PT>3.6*GeV) & (MIPDV(PRIMARY)>0.220))"
+                                           , Code = "((PT>"+str(self.getProp('SingleMuonPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('SingleMuonIP'))+"))"
                                            )
         if 'SingleMuonMid' in self.getProp('IncludeLines'):
             Hlt2Line('SingleMuonMid'
@@ -138,10 +139,10 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         combine = Hlt2Member( CombineParticles
                               , "CombineB"
                               , DecayDescriptors = decayDescB2MuTrack
-                              , DaughtersCuts = { "mu+" : "(PT>"+str(self.getProp('MuTrackMuPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackMuIP'))+")",     # ip, pt and chi2 per dof
-                                                  "pi+" : "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackTrIP'))+")"}
+                              , DaughtersCuts = { "mu+" : "(PT>1000*MeV) & (MIPDV(PRIMARY)>0.080)",     # ip, pt and chi2 per dof
+                                                  "pi+" : "(PT>600*MeV)  & (MIPDV(PRIMARY)>0.100)"}
                               , CombinationCut =  Doca+" & "+Mass  #doca and combined mass
-                              , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<"+str(self.getProp('MuTrackPoint'))+")" # DZ and pointing of two particles
+                              , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.40)" # DZ and pointing of two particles
                               , InputLocations  = [ Muons , NoCutsPions ]
                               )
         if 'IncMuTrack' in self.getProp('IncludeLines'):
@@ -151,15 +152,15 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                             , postscale = 1
                             )
             HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackDecision" : 50400 } )
-        
+            
         #---------------------------------------------------------------------------------------
         combine_mid = Hlt2Member( CombineParticles
                                   , "CombineBMid"
                                   , DecayDescriptors = decayDescB2MuTrack
-                                  , DaughtersCuts = { "mu+" : "(PT>1000*MeV) & (MIPDV(PRIMARY)>0.100)",     # ip, pt and chi2 per dof
-                                                      "pi+" : "(PT>800*MeV)  & (MIPDV(PRIMARY)>0.125)"}
+                                  , DaughtersCuts = { "mu+" : "(PT>"+str(self.getProp('MuTrackMuPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackMuIP'))+")",
+                                                      "pi+" : "(PT>"+str(self.getProp('MuTrackTrPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('MuTrackTrIP'))+")"}
                                   , CombinationCut =  Doca+" & "+Mass #doca, dz and combined mass
-                                  , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.40)" # DZ and pointing of two particles
+                                  , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<"+str(self.getProp('MuTrackPoint'))+")" # DZ and pointing of two particles
                                   , InputLocations  = [ Muons , NoCutsPions ]
                                   )
         if 'IncMuTrackMid' in self.getProp('IncludeLines'):
@@ -178,7 +179,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                   , DaughtersCuts = { "mu+" : "(PT>1200*MeV) & (MIPDV(PRIMARY)>0.120)",     # ip, pt and chi2 per dof
                                                       "pi+" : "(PT>800*MeV)  & (MIPDV(PRIMARY)>0.150)"}
                                   , CombinationCut =  Doca+" & "+Mass #doca, dz and combined mass
-                                  , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.28)" # DZ and pointing of two particles
+                                  , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.30)" # DZ and pointing of two particles
                                   , InputLocations  = [ Muons , NoCutsPions ]
                                   )
         if 'IncMuTrackLow' in self.getProp('IncludeLines'):
@@ -280,3 +281,4 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
             #, CombinationCut = "(AMAXDOCA('')<0.1) & (WM('mu+','mu-')>3.050*GeV) & (WM('mu+','mu-')<3.150*GeV)"  #doca and combined mass
             #, MotherCut = "(BPVTRGPOINTINGWPT<0.40)" # DZ and pointing of two particles
             #, MotherCut = "(BPVTRGPOINTINGWPT<0.28)" # DZ and pointing of two particles
+            #  Dz = "(BPVVDZ>-99999.)"
