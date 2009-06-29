@@ -10,7 +10,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
-from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer )
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
@@ -28,11 +28,12 @@ class TAlignment( LHCbConfigurableUser ):
         , "UseLocalFrame"                : True                        # Use local frame?
         , "NumIterations"                : 1                           # Number of iterations
         , "VertexLocation"               : ""                          # Location of input vertex list
+        , "DimuonLocation"               : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
         , "ApplyMS"                      : True                        # Multiple Scattering
         , "Constraints"                  : []                          # Specify which constrains to use with strategy 1  
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
-        , "MinNumberOfHits"              : 1                           # Min number of hits per element
+        , "MinNumberOfHits"              : 100                         # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
         , "UsePreconditioning"           : True                        # Pre-conditioning
         , "SolvTool"                     : "DiagSolvTool"              # Solver to use
@@ -51,8 +52,6 @@ class TAlignment( LHCbConfigurableUser ):
         , "UpdateInFinalize"             : True
         }
 
-    __used_configurables__ = [ AlignTrTools ]
-    
     def __apply_configuration__(self):
         print "******* calling ", self.name()
         mainseq = self.getProp("Sequencer")
@@ -149,13 +148,15 @@ class TAlignment( LHCbConfigurableUser ):
             writeSequencer.Members.append ( self.writeAlg( 'Velo','Modules', [2] ) )
             writeSequencer.Members.append ( self.writeAlg( 'Velo','Detectors', [4] ) )
         if 'TT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'TT','Detectors', [0,1,2,3] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'TT','Detectors', [0,1,2] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'TT','Modules', [3] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'TT','Sensors', [4,5] ) )
         if 'IT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'IT','Detectors', [0,1,2,3] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'IT','Detectors', [] ) )
         if 'OT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'OT','Detectors', [0,1,2,3,4] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'OT','Elements', [] ) )
         if 'Muon' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [0,1,2,3] ) )
+            writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [] ) )
         return writeSequencer
 
     def alignmentSeq( self, outputLevel = INFO ) :
@@ -166,13 +167,14 @@ class TAlignment( LHCbConfigurableUser ):
             alignSequencer.MeasureTime = True
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
-                                        gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool,
+                                        gslSVDsolver, CLHEPSolver, SparseSolver, DiagSolvTool,
                                         Al__AlignConstraintTool, Al__AlignUpdateTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
             alignAlg.TracksLocation               = self.getProp( "TrackLocation" )
             alignAlg.VertexLocation               = self.getProp( "VertexLocation" )
+            alignAlg.DimuonLocation               = self.getProp( "DimuonLocation" )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations" )
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier" )
             alignAlg.HistoPrint                   = False
