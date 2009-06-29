@@ -1,3 +1,7 @@
+2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/GetPack.py: fixed wrong variable name in checkOutProject.
+
 2008-06-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: Use "svn switch" if the destination directory

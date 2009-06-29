@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.5 2009-06-26 18:11:30 marcocle Exp $
+# $Id: GetPack.py,v 1.6 2009-06-29 15:39:24 hmdegaud Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -99,7 +99,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.5 2009-06-26 18:11:30 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.6 2009-06-29 15:39:24 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -357,7 +357,7 @@ class GetPack(Script):
                         self.log.warning("Version '%s' not found for project '%s'" % (version, project))
                         version = self._askVersion(versions)
             else:
-                self.log.warning("Version not specified for project '%s'" % package)
+                self.log.warning("Version not specified for project '%s'" % project)
                 version = self._askVersion(versions)
 
         # Fix the case of the special version "HEAD"
