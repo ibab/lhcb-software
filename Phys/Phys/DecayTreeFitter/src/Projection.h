@@ -4,6 +4,7 @@
 #include <CLHEP/Matrix/Vector.h>
 #include <CLHEP/Matrix/SymMatrix.h>
 #include <CLHEP/Matrix/Matrix.h>
+#include <string.h> // for memset
 
 namespace DecayTreeFitter
 {
