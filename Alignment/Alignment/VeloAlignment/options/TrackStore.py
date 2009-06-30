@@ -6,10 +6,10 @@ from Configurables import (TrackStore)
 # (see TrackStore.cpp for meaning)
 #
 
-TrackStore("TrackStoreTool").ACDC          = True
-TrackStore("TrackStoreTool").NonzerMin     = 4   # 4 for Closed Velo, 3 for Open
-TrackStore("TrackStoreTool").NonzerOverlap = 1
-TrackStore("TrackStoreTool").XOverlapCut	 = 15. 
-TrackStore("TrackStoreTool").MissedHits    = True
-TrackStore("TrackStoreTool").TakeOverlap   = True
-TrackStore("TrackStoreTool").OutputLevel   = 3
+TrackStore("TrackStore").ACDC          = True
+TrackStore("TrackStore").NonzerMin     = 4   # 4 for Closed Velo, 3 for Open
+TrackStore("TrackStore").NonzerOverlap = 1
+TrackStore("TrackStore").XOverlapCut   = 15. 
+TrackStore("TrackStore").MissedHits    = True
+TrackStore("TrackStore").TakeOverlap   = True
+TrackStore("TrackStore").OutputLevel   = 3
