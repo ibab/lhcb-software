@@ -74,7 +74,6 @@ use SiDAQ                 v2r1    Si      # Matt Needham
 # Other stuff
 use CaloUtils             v8r5    Calo    # Olivier Deschamps
 use CondDBEntityResolver  v5r1   Tools   # Marco Clemencic
-use CondDBUI              v2r18   Tools   # Marco Clemencic
 use DaVinciKernel         v7r7    Phys    # Juan Palacios
 use DaVinciMCKernel       v3r3    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
@@ -104,6 +103,7 @@ use RichRecBase           v3r23   Rich    # Chris Jones
 use SimComponents         v2r18  Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r14   ST      # Matt Needham
 use STTELL1Event          v1r8    ST      # Matt Needham
+use CondDBUI              v2r19   Tools   # Marco Clemencic
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
 use TfKernel              v2r11p1 Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v4r4    Tr      # Matt Needham
