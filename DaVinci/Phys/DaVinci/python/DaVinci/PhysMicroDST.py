@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.11 2009-06-11 15:02:01 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.12 2009-06-30 16:26:25 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -13,7 +13,7 @@ from Configurables import LHCbConfigurableUser
 class PhysMicroDST(LHCbConfigurableUser) :
 
     __slots__ = {
-        "MicroDSTFile"           : "MicroDST.dst"
+        "MicroDSTFile"           : "MicroDST.mdst"
         , "MicroDSTSelectionAlg" : ""
         , "OutputPrefix"         : "microDST"
         , "CopyParticles"        : True
