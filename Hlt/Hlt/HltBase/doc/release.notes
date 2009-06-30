@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-06-30 - Gerhard Raven
+ - reduce IConfigTreeEditor interface (some functionality made obsolete 
+   by TCKUtils python code)
 
 !========================== HltBase v6r4p1 2009-06-03 ===================
 ! 2009-05-30 - Gerhard Raven

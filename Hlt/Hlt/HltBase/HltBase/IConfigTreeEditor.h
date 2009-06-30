@@ -1,4 +1,4 @@
-// $Id: IConfigTreeEditor.h,v 1.2 2008-08-05 12:01:06 graven Exp $
+// $Id: IConfigTreeEditor.h,v 1.3 2009-06-30 14:36:53 graven Exp $
 #ifndef ICONFIGTREEEDITOR_H 
 #define ICONFIGTREEEDITOR_H 1
 
@@ -31,22 +31,6 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID();
   virtual ~IConfigTreeEditor();
-
-
-  // given a configuration tree identified by 'in', print the
-  // (hierarchical) list of Algorithms present in this tree
-  virtual void printAlgorithms(const ConfigTreeNode::digest_type& in) const = 0;
-
-  // given a configuration tree identified by 'in', print the
-  // list of Services present in this tree
-  virtual void printServices(const ConfigTreeNode::digest_type& in) const = 0;
-
-  // given a configuration tree identified by 'in', print the
-  // list of Tools present in this tree
-  virtual void printTools(const ConfigTreeNode::digest_type& in) const = 0;
-
-  virtual void printProperties(const ConfigTreeNode::digest_type& in, const std::string& comps,
-                                                                      const std::string& props) const = 0;
 
   // given a configuration tree identified by 'in', apply the changes 
   // defined by 'updates' (which is a multimap of 'component' -> 'key','value'),
