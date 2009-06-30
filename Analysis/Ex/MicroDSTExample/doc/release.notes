@@ -1,9 +1,22 @@
-!$Id: release.notes,v 1.31 2009-06-24 08:05:59 jpalac Exp $
+!$Id: release.notes,v 1.32 2009-06-30 15:48:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-06-30 - Juan PALACIOS
+ - python/MicroDSTExample/HistoUtils.py
+  . synchronise with version in GaudiPython
+ - python/MicroDSTExample/Helpers.py
+  . Remove a bunch of stuff and move some classes to Functors.py
+ - python/MicroDSTExample/Functors.py
+  . Clean up. unify getting "best" To from a relations table. Add simple and
+    recursive container loop classes.
+ - scripts/MicroDSTReadingExample.py
+  . Clean up, remove all explicit loops and use stuff from MicroDSTExample.Functors.
+ - cmt/requirements
+  . Increase version to v2r7
 
 !======================= Ex/MicroDSTExample v2r6 2009-06-24 ==================
 
@@ -14,7 +27,7 @@
 ! 2009-06-23 - Juan PALACIOS
  - python/MicroDSTExample/HistoUtils.py
   . Add HistoFile,a class for easy writing of ROOT and AIDA histograms
-    to a file. 
+    to a file.
 !======================= Ex/MicroDSTExample v2r5 2009-06-11 ==================
 
 ! 2009-06-11 - Juan PALACIOS
