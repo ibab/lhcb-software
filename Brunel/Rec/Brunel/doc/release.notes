@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-06-30 - Marco Cattaneo
+ - Update dc06 references for change in DDDB
+
 ! 2009-06-29 - Marco Cattaneo
  - Update references for changes to PatVelo
 
