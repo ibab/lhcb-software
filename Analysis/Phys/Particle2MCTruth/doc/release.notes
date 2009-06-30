@@ -1,10 +1,37 @@
-! $Id: release.notes,v 1.12 2009-06-26 12:15:38 jpalac Exp $
+! $Id: release.notes,v 1.13 2009-06-30 08:50:11 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Particle2MCTruth
 ! Responsible : Juan PALACIOS
 ! Purpose     : Collection of implementations of IP2MCP and
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
+
+! 2009-06-30 - Juan PALACIOS
+
+ - Add new class DecayLines (P2MCP/DecayLines.h)
+  . Wrapper around vector of vectors of const LHCb::MCParticle*. It splits and
+    sorts an input single vector on construction. The sorting and splitting is 
+    according to position in decay tree. There is no write access to the 
+    internal data structure, so the particles are guaranteed to be sorted and
+    split on construction of an instance of P2MCP::DecayLines.
+
+ - P2MCP/IP2MCP.h
+  . Return P2MCP::DecayLines instead of P2MCP::Types::FlatTrees.
+
+ - P2MCP/P2MCPBase,h, src/Lib/P2MCPBase.cpp
+  . Adapt to interface changes. 
+  . No sort methods needed any more since DecayLines is self-sorted. Derived 
+    classes only have to implement the isMatched method.
+
+ - src/MCMatchObjP2MCRelator{.cpp, .h}
+  . Remove sort methods. Class now only needs to take care od deciding if an
+    MCParticle is matched to a Particle.
+
+ - dict/Particle2MCTruthDict.xml
+  . Add dict for P2MCP::DecayLines and remove FlatTrees dicts.
+
+ - cmt/requirements
+  . Increase version to v2r0
 
 ! 2009-06-25 - Juan PALACIOS
  - P2MCP/P2MCPBase.h, P2MCP/IP2MCP.h
