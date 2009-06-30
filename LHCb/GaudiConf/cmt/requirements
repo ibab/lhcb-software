@@ -5,7 +5,8 @@ branches doc cmt options python src
 include_path none
 
 use GaudiPolicy v*
-use LHCbKernel v* Kernel # for LHCbConfigurableUser inheritance
+use LHCbKernel  v* Kernel # for LHCbConfigurableUser inheritance
+use DDDB        v* Det    # needed by configurable
 
 ignore_pattern package_stamps
 
