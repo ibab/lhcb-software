@@ -165,8 +165,9 @@ assocCounter = Debug.AssocTreeDebugger(MCAssocTool, particleNameFunc)
 # further down inside the event loop.
 ptPlotter = Functors.HistoPlotter(ptPlots, gbl.LHCb.Particle.pt, Helpers.pid)
 massPlotter = Functors.HistoPlotter(massPlots, Functors.Mass(), Helpers.pid)
+MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
+massResPlotter = Functors.HistoPlotter(massResPlots, MCAssocFun, Helpers.pid)
 # set the functor in the event loop
-massResPlotter = Functors.HistoPlotter(massResPlots, None, Helpers.pid)
 tauPlotter = Functors.HistoPlotter(propTimePlot, functor = None)
 refitTauPlotter = Functors.HistoPlotter(refitPropTimePlot, functor = None)
 tauResPlotter = Functors.HistoPlotter(propTimeResPlot, functor = None)
@@ -205,9 +206,6 @@ while ( nextEvent() ) :
         nParticles += particles.size()
         bestVertexFun = Functors.BestTo(evtSvc[stdVertexAssocPath])
         refitBestVertexFun = Functors.BestTo(evtSvc[refitVertexAssocPath])
-        MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
-
-        massResPlotter.functor = Functors.MassRes(MCAssocFun)
 
         # iterative looping over particles and their descentants and their
         # descendants descendants and their .....
