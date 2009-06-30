@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.6 2009-06-26 12:13:44 jpalac Exp $
+// $Id: IP2MCP.h,v 1.7 2009-06-30 08:45:48 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -13,7 +13,7 @@
 // from DaVinciMCKernel
 #include "Kernel/IParticle2MCAssociator.h"
 // from Particle2MCTruth
-#include "P2MCP/P2MCPTypes.h"
+#include "P2MCP/DecayLines.h"
 
 namespace LHCb
 {
@@ -49,7 +49,7 @@ public:
    * @date   2009-02-02
    *
    **/
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle) const = 0;
 
   /**
@@ -65,7 +65,7 @@ public:
    * @date   2009-02-02
    *
    **/
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const std::string& mcParticleLocation) const = 0;
 
@@ -83,7 +83,7 @@ public:
    * @date   2009-02-02
    *
    **/ 
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
@@ -100,7 +100,7 @@ public:
    * @date   2009-02-02
    *
    **/ 
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::Container& mcParticles) const = 0;
 
