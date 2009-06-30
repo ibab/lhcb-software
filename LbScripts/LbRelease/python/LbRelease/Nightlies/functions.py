@@ -121,7 +121,7 @@ def run(slotName, minusj=None, platforms=None):
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x]))
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.lower()]))
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.upper()]))
-        generateBuilders(slot.buildersDir(), buildersToGenerate, minusj)
+        generateBuilders(slot, buildersToGenerate, minusj)
         releasePath = slot.releaseDir()
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):
             shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), os.path.join(releasePath,'configuration.xml'))
@@ -160,7 +160,7 @@ def runparallel(slotName, minusj=None):
     generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
     slot = configuration.findSlot(slotName, slotList)
     if slot != None:
-        generateBuilders(slot.buildersDir(), listOfProjectNames, minusj)
+        generateBuilders(slot, listOfProjectNames, minusj)
         runningPlatformList = []
         for p in slot.getPlatforms():
             current = runThread(slotName, p)
@@ -355,13 +355,19 @@ def changedPackageName(c):
     else: cha = cha[1]
     return cha
 
-def generateBuilders(destPath, projectNames, minusj):
+def generateBuilders(slot, projectNames, minusj):
     """ generateBuilders(destinationPath, projectNames, minusj)
 
         Creates a set of files and directory structure to act as LCG Nightlies "builders" for each of the project given in the <projectNames> list.
         <minusj> parameter sets the value of "-j" for compiler.
     """
-    destPath = os.path.abspath(destPath)
+    destPath = os.path.abspath(slot.buildersDir())
+    lbLinux = ''
+    lbWin = ''
+    if slot.getLbLogin(configuration.PLATFORM_LINUX) is not None:
+        lbLinux = "%s ; " % slot.getLbLogin(configuration.PLATFORM_LINUX)
+    if slot.getLbLogin(configuration.PLATFORM_WIN32) is not None:
+        lbWin = " %s && " % slot.getLbLogin(configuration.PLATFORM_WIN32)
     for p in projectNames:
         for pdir in [ p, p.lower(), p.upper() ]:
             shutil.rmtree(os.path.join(destPath, pdir), ignore_errors=True)
@@ -376,15 +382,17 @@ action pkg_get "cmt show tags ; mkdir -p logs ; %(launcher)s get %(packageName)s
        WIN32 " ( if not exist logs mkdir logs ) && %(launcher)s get %(packageName)s "
 action pkg_config " %(launcher)s config %(packageName)s 2>&1" \
        WIN32 " %(launcher)s config %(packageName)s"
-action pkg_make "  %(launcher)s make %(packageName)s %(processes)d 2>&1 ; exit 0" \
-       WIN32 " call D:\\local\\lib\\LbLogin.bat && %(launcher)s make %(packageName)s %(processes)d 2>&1 "
+action pkg_make " %(lbLinux)s %(launcher)s make %(packageName)s %(processes)d 2>&1 ; exit 0" \
+       WIN32 " %(lbWin)s %(launcher)s make %(packageName)s %(processes)d 2>&1 "
 action pkg_install " %(launcher)s install %(packageName)s 2>&1" \
        WIN32 " %(launcher)s install %(packageName)s 2>&1 "
 action pkg_test " %(launcher)s test %(packageName)s 2>&1" \
-       WIN32 " %(launcher)s test %(packageName)s 2>&1 "
+       WIN32 " "
     """ % { "launcher" : "runpy LbRelease.Nightlies.actionLauncher",
             "packageName" : p,
-            "processes": max(0,minusj) }
+            "processes": max(0,minusj),
+            "lbLinux" : lbLinux,
+            "lbWin" : lbWin }
             f.write(lines)
             f.close()
     shutil.rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
@@ -508,7 +516,8 @@ def install(slotName, projectName):
         #instead of the previous isDone file copying:
         isDoneFrom = os.path.join(slot.buildDir(), 'isDone-'+os.environ['CMTCONFIG'])
         isDoneTo = os.path.join(slot.releaseDir(), 'isDone-'+os.environ['CMTCONFIG'])
-        if os.path.exists(isDoneFrom): shutil.copy2(isDoneFrom, isDoneTo)
+        if os.path.exists(isDoneFrom):
+            shutil.copy2(isDoneFrom, isDoneTo)
         isStartedTo = os.path.join(slot.releaseDir(), 'isStarted-'+os.environ['CMTCONFIG'])
         if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
         if os.path.exists(isDoneTo) and os.path.exists(isStartedTo): os.remove(isStartedTo)
@@ -540,6 +549,7 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'"')
     configuration.system('echo "SITEROOT:         '+os.environ.get('SITEROOT','')+'"')
+    configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
     configuration.system('echo "CMTPROJECTPATH:   '+os.environ.get('CMTPROJECTPATH','')+'"')
     configuration.system('echo "CMTCONFIG:        '+os.environ.get('CMTCONFIG','')+'"')
     configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
@@ -707,7 +717,11 @@ def get(slotName, projectName):
     #requirementsFilesList = os.popen('find . -type f -name requirements | grep -v "^./' + projectName + 'Sys/cmt/requirements"').readlines()
     requirementsFilesList = []
     for x in sysPackageRF.keys():
-        requirementsFilesList.append(os.path.join(x.replace('/', os.sep), 'cmt', 'requirements'))
+        fileNameTmp = os.path.join(x.replace('/', os.sep), 'cmt', 'requirements')
+        if os.path.exists(fileNameTmp):
+            requirementsFilesList.append(fileNameTmp)
+        else:
+            os.system('echo "ERROR: file not found: ' + fileNameTmp + '"')
 
     for f in requirementsFilesList:
         f = f.replace('\n','')
