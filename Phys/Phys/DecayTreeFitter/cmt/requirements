@@ -22,7 +22,7 @@ use   RecEvent		v*	Event
 use   TrackEvent       	v*	Event
 use   PartProp          v*      Kernel
 use   LoKi              v*      Phys
-use   TrackFitEvent     v*      Tr
+#use   TrackFitEvent     v*      Tr
 
 apply_pattern install_more_includes more=DecayTreeFitter
 
