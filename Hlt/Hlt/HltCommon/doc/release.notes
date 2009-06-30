@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-06-30 - Gerhard Raven
+ - remove obsolete HltRawBankFilter, use FilterByBankType in LHCbAlgs instead
+
 ! 2009-06-26 - Patrick Spradlin
  - src/HltCopySelection.cpp
    Fixed a double increment of the '#accept' counter.
