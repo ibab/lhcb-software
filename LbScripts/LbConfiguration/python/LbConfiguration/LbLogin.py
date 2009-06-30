@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.42 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.43 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -236,6 +236,15 @@ class LbLoginScript(Script):
                           dest="no_compat",
                           action="store_true",
                           help="prevent the usage detection of the compat libraries [default: %default]")
+        parser.set_defaults(strip_path=True)
+        parser.add_option("--no-strip-path",
+                          dest="strip_path",
+                          action="store_false",
+                          help="prevent the cleanup of invalid entries in pathes")
+        parser.add_option("--strip-path",
+                          dest="strip_path",
+                          action="store_true",
+                          help="activate the cleanup of invalid entries in pathes [default: %default]")
 
 #-----------------------------------------------------------------------------------
 
@@ -247,6 +256,15 @@ class LbLoginScript(Script):
                     ev["PATH"] = ev["SAVEPATH"]
                 else :
                     ev["SAVEPATH"] = ev["PATH"]
+        opts = self.options
+        log = logging.getLogger()
+        if not opts.strip_path :
+            log.debug("Disabling the path stripping")
+            ev["LB_NO_STRIP_PATH"] = "1"
+        else :
+            if ev.has_key("LB_NO_STRIP_PATH") :
+                log.debug("Reenabling the path stripping")
+                del ev["LB_NO_STRIP_PATH"]
 
     def setCVSEnv(self):
         """ CVS base setup """
