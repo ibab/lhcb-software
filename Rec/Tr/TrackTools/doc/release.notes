@@ -6,7 +6,18 @@
 
 !======================== TrackTools v3r18 2009-06-30 ========================
 ! 2009-06-26 - Wouter Hulsbergen
-- cleanup and speedup of TrackCloneFinder. fix interface. for details, see cvs log.
+- In TrackCloneFinder:
+  . Clean up all code related to testing for clones by comparing measurements.
+    The original reason to use measurements was that you can skip outliers in the
+    comparison. Unfortunately, that has been broken for a long timee since we do
+    not explicitely delete the measurement for outliers anymore. If this needs to
+    be reintroduced in the future, then one should use the nodes instead and
+    check the outlier flag.
+  . Use new functionliaty in Track to compare LHCbIDs. This is much faster
+  . Fix the interface: the 'areClones' call had a flag to set the track clones
+    flag. If the flag was set to false it would still do all the work, but simply
+    not return anything. Replaced this by two calls: one that simply returns a
+    boolean if tracks are clones and another one that sets the flags.
 
 !======================== TrackTools v3r17 2009-05-08 ========================
 ! 2009-05-08 - Georg Krocker
