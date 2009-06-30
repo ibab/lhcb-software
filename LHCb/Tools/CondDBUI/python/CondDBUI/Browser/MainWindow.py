@@ -7,6 +7,7 @@ from PyQt4.QtCore import (Qt, QObject,
                           SIGNAL, SLOT,
                           QVariant, QDateTime)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
+                         QHeaderView,
                          QLabel,
                          QAction,
                          QIcon,
@@ -81,10 +82,15 @@ class MainWindow(QMainWindow):
         QObject.connect(self.tagComboBox, SIGNAL("currentIndexChanged(QString)"), iovsmodel.setTag)
         QObject.connect(iovsmodel, SIGNAL("setViewEnabled(bool)"), self.iovView, SLOT("setEnabled(bool)"))
         self.iovView.setEnabled(False)
+        self.iovView.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
         QObject.connect(self.iovView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         iovsmodel.selectionChanged)
         QObject.connect(iovsmodel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
                         self.iovView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
+        QObject.connect(self.iovUTCCheckBox, SIGNAL("stateChanged(int)"), iovsmodel.setShowUTC)
+        iovsmodel.setShowUTC(self.iovUTCCheckBox.checkState())
+        # Use a consistent dysplayFormat 
+        iovsmodel.setDisplayFormat(self.sinceFilterWidget.displayFormat())
         
         # connection for the fields model
         fieldsmodel = self.models["fields"]

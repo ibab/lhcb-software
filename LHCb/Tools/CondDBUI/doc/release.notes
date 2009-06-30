@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.113 2009-06-30 15:03:29 cattanem Exp $
+! $Id: release.notes,v 1.114 2009-06-30 16:47:16 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-06-30 - Marco Clemencic
+ - Improvements to the new CondDBBrowser:
+   - better look of the list of IoVs
+   - cache the tags of the already viewed folder to improve responsiveness
 
 !===================== Tools/CondDBUI v2r19 2009-06-30 ========================
 ! 2009-06-30 - Marco Clemencic

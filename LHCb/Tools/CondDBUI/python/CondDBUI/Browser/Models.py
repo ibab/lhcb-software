@@ -1,9 +1,12 @@
 from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTableModel,
                           QVariant, QModelIndex,
+                          QDateTime, QDate, QTime,
                           Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import QIcon, QApplication, QItemSelectionModel
 
 from PyCool import cool
+
+import time
 
 __all__ = ["CondDBNodesListModel",
            "CondDBStructureModel",
@@ -379,7 +382,7 @@ class CondDBTagsListModel(QAbstractListModel):
         super(CondDBTagsListModel,self).__init__(parent)
         self.db = None
         self._path = None
-        self._alltags = None
+        self._alltags = {}
         self._tags = None
         self._hideAutoTags = True
         
@@ -388,6 +391,7 @@ class CondDBTagsListModel(QAbstractListModel):
     
     ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
     def connectDB(self, db):
+        self._alltags = {}
         self.setPath(None) # trigger a clean up of the cache
         self.db = db
         
@@ -416,23 +420,25 @@ class CondDBTagsListModel(QAbstractListModel):
             if f.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                 # invalidate the cache
                 self._tags = None
-                self._alltags = None
+                if path not in self._alltags:
+                    # Initialize the all-tag list (the already retrieved ones are not touched)
+                    self._alltags[path] = None
                 self.emit(SIGNAL("setViewEnabled(bool)"), True)
             else:
                 # single version folders do not have tags by definition
-                self._tags = self._alltags = []
+                self._tags = self._alltags[path] = []
                 self.emit(SIGNAL("setViewEnabled(bool)"), False)
         else:
             # If no folder is specified or the path is a folderset, use an empty cache
-            self._tags = self._alltags = []
+            self._tags = self._alltags[path] = []
             self.emit(SIGNAL("setViewEnabled(bool)"), False)
     
     ## Function returning the (cached) list of all tags.
     def alltags(self):
-        if self._alltags is None:
+        if self._alltags[self._path] is None:
             bc = BusyCursor()
-            self._alltags = self.db.getTagList(self._path)
-        return self._alltags
+            self._alltags[self._path] = self.db.getTagList(self._path)
+        return self._alltags[self._path]
     
     ## Expanded list of tags.
     #  If the hideAutoTags property is set to True, the tags starting with
@@ -465,10 +471,21 @@ class CondDBTagsListModel(QAbstractListModel):
             return QVariant("Tag")
         return QVariant()
 
+
+## Helper function to convert a cool::ValidityKey to a QDateTime (UTC).
+def _valKeyToDateTime(valkey):
+    # Cannot use setTime_t because of the limited range.
+    timeTuple = time.gmtime(valkey / 1e9)
+    d = apply(QDate, timeTuple[0:3])
+    t = apply(QTime, timeTuple[3:6])
+    return QDateTime(d, t, Qt.UTC)
+    
 ## Model class for the list of IOVs
 class CondDBIoVModel(QAbstractTableModel):
     __pyqtSignals__ = ("setViewEnabled(bool)",
-                       "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)")
+                       "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)",
+                       #"dataChanged(const QModelIndex&,const QModelIndex&)"
+                       )
     ## Position of the field in the tuple used internally
     SINCE = 0
     ## Position of the field in the tuple used internally
@@ -483,6 +500,9 @@ class CondDBIoVModel(QAbstractTableModel):
     #  Initializes some internal data.
     def __init__(self, db = None, path = None, channel = None, tag = None, parent = None):
         super(CondDBIoVModel,self).__init__(parent)
+        
+        # Property ShowUTC
+        self._showUTC = True
         
         # "_since" is the value requested by the user,
         # "_actualSince" is the one in the cache
@@ -731,23 +751,30 @@ class CondDBIoVModel(QAbstractTableModel):
         self.setChannel(channel)
         
     ## Number of IOV in the range.
-    def rowCount(self, parent):
+    def rowCount(self, parent = None):
         self.allIoVs() # trigger the filling of the cache
         return self._untilIndex - self._sinceIndex + 1
     
     ## Number of columns in the table. 
-    def columnCount(self, parent):
+    def columnCount(self, parent = None):
         return 2
     
     ## Name of the tag at a given index.
     def data(self, index, role):
         if index.isValid():
-            tuple = self.allIoVs()[self._sinceIndex + index.row()]
+            data = self.allIoVs()[self._sinceIndex + index.row()]
             if role == Qt.DisplayRole:
-                s = str(tuple[index.column()])
+                valkey = data[index.column()]
+                if valkey == cool.ValidityKeyMax:
+                    s = "Max"
+                else:
+                    dt = _valKeyToDateTime(valkey)
+                    if not self.showUTC():
+                        dt = dt.toLocalTime()
+                    s = dt.toString(self.displayFormat())
                 return QVariant(s)
             elif role == Qt.ToolTipRole:
-                s = str(tuple[self.INSERTION_TIME])
+                s = "Insertion time: %s" % data[self.INSERTION_TIME]
                 return QVariant(s)
         return QVariant()
 
@@ -772,20 +799,50 @@ class CondDBIoVModel(QAbstractTableModel):
     def selected(self):
         return self._selectedIndex
 
+    ## Set the current selection.
+    #  Emit the setCurrentIndex signal if the parameter "emit" is set to True.
     def setSelected(self, index, emit = True):
         if self._allIoVs:
             self._selectedIndex = index
             if emit:
                 self.emit(SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
-                          self.index(self._selectedIndex, 0), QItemSelectionModel.Select)
+                          self.index(self._selectedIndex, 0),
+                          QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows)
 
+    ## Slot used to notify the model that the selection in the view has changed. 
     def selectionChanged(self, index, oldIndex):
         self.setSelected(index.row(), False)
-
+    
+    ## Get the payload of the currently selected IoV.
     def getPayload(self):
         if self._allIoVs and self._selectedIndex is not None:
             return self._allIoVs[self._selectedIndex + self._sinceIndex][self.PAYLOAD]
         return None
+    
+    ## Value of the property ShowUTC.
+    #  If set to True, the string returned for as data for the IoV table is UTC. 
+    def showUTC(self):
+        return self._showUTC
+    
+    ## Set the property ShowUTC.
+    #  If set to True, the string returned for as data for the IoV table is UTC. 
+    def setShowUTC(self, value):
+        if self._showUTC != value:
+            rows, cols = self.rowCount(), self.columnCount()
+            if rows and cols:
+                # Notify the view that the data has changed.
+                self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                          self.index(0,0),
+                          self.index(rows-1, cols-1))
+        self._showUTC = value
+
+    ## Format to use to display the IoV limits in the table.
+    def displayFormat(self):
+        return self._format
+    
+    ## Set the format to use to display the IoV limits in the table.
+    def setDisplayFormat(self, format):
+        self._format = format
 
 ## Model class to retrieve the available fields in a folder.
 class CondDBPayloadFieldModel(QAbstractListModel):
@@ -843,22 +900,20 @@ class CondDBPayloadFieldModel(QAbstractListModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
             return QVariant("Name")
         return QVariant()
-
-    ## Get the name of the currently selected field
-    def selectedField(self):
-        return self._selected
     
-    ## Get the name of the currently selected field
+    ## Set the current selection.
+    #  Emit the setCurrentIndex signal if the parameter "emit" is set to True.
     def setSelectedField(self, row, emit = True):
         self._selected = row
         if emit:
             self.emit(SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
-                      self.index(self._selected), QItemSelectionModel.Select)
+                      self.index(self._selected), QItemSelectionModel.ClearAndSelect)
     
-    ##
+    ## Slot used to notify the model that the selection in the view has changed. 
     def selectionChanged(self, index, oldIndex):
         self.setSelectedField(index.row(), False)
 
+    ## Get the name of the currently selected field.
     def getFieldName(self):
         if self._fields:
             return self._fields[self._selected]

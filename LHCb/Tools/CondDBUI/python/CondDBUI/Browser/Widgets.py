@@ -130,6 +130,16 @@ class TimePointEdit(QtGui.QWidget):
     def setDateTime(self, dateTime):
         self._edit.setDateTime(dateTime)
     
+    ## Format used to display the QDateTime value.
+    #  @see QDateTimeEdit::displayFormat()
+    def displayFormat(self):
+        return self._edit.displayFormat()
+    
+    ## Set the format used to display the QDateTime value.
+    #  @see QDateTimeEdit::setDisplayFormat()
+    def setDisplayFormat(self, format):
+        self._edit.setDisplayFormat(format)
+    
     ## Slot to update internal state when the "UTC" checkbox is toggled.
     def on_utc_toggled(self, checked):
         if checked:
