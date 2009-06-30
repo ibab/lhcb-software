@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r14 2009-06-30 =========================
 ! 2009-06-25 - David Hutchcroft
  - Improved the chi2 cut value for the new fit
  - Explicitly converted (it-it) value to unsigned int 
