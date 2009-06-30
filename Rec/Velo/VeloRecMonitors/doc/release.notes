@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-06-30 - Michael Alexander
+ - Added VeloIPResolutionMonitor algorithm to src
+ - Added VeloIPResolutionMonitor algorithm to BrunelMoni_Velo.py
+
 !======================= VeloRecMonitors v1r9 2009-06-30 =====================
 ! 2009-06-24 - Kurt Rinnert
  - bug fix in VeloSampligMonitor: a line was accidently deleted before the
