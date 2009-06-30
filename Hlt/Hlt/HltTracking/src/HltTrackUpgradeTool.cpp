@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.33 2009-06-25 21:40:55 aperezca Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.34 2009-06-30 20:34:58 aperezca Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -47,13 +47,13 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   std::string info = "InfoID";
 
-//   Generic tool not used anymore?
+//   //Generic tool not used, use especific instead
 //   m_recoConf.add("TConf/Tool",std::string("L0ConfirmWithT"));
 //   m_recoConf.add("TConf/Owner",true);
 //   m_recoConf.add("TConf/View",true);
 //   m_recoConf.add("TConf/TransferIDs",true);
 //   m_recoConf.add("TConf/TransferAncestor",true);
-//   m_recoConf.add("TConf/ITrackType", (int) LHCb::Track::Muon);  
+//   m_recoConf.add("TConf/ITrackType", (int) LHCb::Track::TypeUnknown);  
 //   m_recoConf.add("TConf/OTrackType", (int) LHCb::Track::Ttrack);
 //   m_recoConf.add("TConf/TESOutput",std::string("Hlt1/Track/TConf"));
 
@@ -71,7 +71,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("THadronConf/View",true);
   m_recoConf.add("THadronConf/TransferIDs",true);
   m_recoConf.add("THadronConf/TransferAncestor",true);
-  m_recoConf.add("THadronConf/ITrackType", (int) LHCb::Track::Calo);
+  m_recoConf.add("THadronConf/ITrackType", (int) LHCb::Track::TypeUnknown);
   m_recoConf.add("THadronConf/OTrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("THadronConf/TESOutput",std::string("Hlt1/Track/THadronConf"));
 
@@ -80,7 +80,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("TEleConf/View",true);
   m_recoConf.add("TEleConf/TransferIDs",true);
   m_recoConf.add("TEleConf/TransferAncestor",true);
-  m_recoConf.add("TEleConf/ITrackType", (int) LHCb::Track::Calo);
+  m_recoConf.add("TEleConf/ITrackType", (int) LHCb::Track::TypeUnknown);
   m_recoConf.add("TEleConf/OTrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("TEleConf/TESOutput",std::string("Hlt1/Track/TEleConf"));  
 
@@ -366,7 +366,7 @@ bool HltTrackUpgradeTool::isOutput(const Track& track) {
 
 void HltTrackUpgradeTool::recoDone(Track& seed, std::vector<Track*>& tracks) {
   double key = (double) seed.key();
-  const GaudiUtils::VectorMap<int,double>& info = seed.extraInfo();
+  // const GaudiUtils::VectorMap<int,double>& info = seed.extraInfo();
   for (std::vector<Track*>::iterator it = tracks.begin();
        it != tracks.end(); ++it) {
     Track& track = *(*it);
@@ -375,9 +375,10 @@ void HltTrackUpgradeTool::recoDone(Track& seed, std::vector<Track*>& tracks) {
     if (m_transferIDs) addIDs(seed,track);
     track.addInfo(m_recoID,key);
     if (m_transferExtraInfo) {
-      GaudiUtils::VectorMap<int,double>::const_iterator info_it = info.begin();
-      for (; info_it != info.end(); ++info_it) track.addInfo(info_it->first,info_it->second);
-      //track.setExtraInfo(seed.extraInfo()); Now merge!
+      Hlt::MergeInfo(seed,track);
+        // GaudiUtils::VectorMap<int,double>::const_iterator info_it = info.begin();
+        //      for (; info_it != info.end(); ++info_it) track.addInfo(info_it->first,info_it->second);
+      // track.setExtraInfo(seed.extraInfo()); Now merge!
     }
   }
   seed.addInfo(m_recoID, (double) tracks.size());

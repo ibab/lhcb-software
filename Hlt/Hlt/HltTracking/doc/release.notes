@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.78 2009-06-25 21:40:55 aperezca Exp $
+!$Id: release.notes,v 1.79 2009-06-30 20:34:58 aperezca Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2009-06-30 - Antonio Perez-Calero
+ -Fixed bug in input track type for confirmation with T. From Calo->TypeUnknown
 
 ! 2009-06-25 - Antonio Perez-Calero
  - Modified HltTrackUpgradeTool logic so that a vertex can now be formed from one track 
