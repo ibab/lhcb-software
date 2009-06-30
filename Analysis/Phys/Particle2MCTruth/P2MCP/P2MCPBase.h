@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.7 2009-06-26 12:13:44 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.8 2009-06-30 08:46:13 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -15,14 +15,11 @@
  *  Mainly inline helper methods for common implementation of host of 
  *  similar methods in the interface.
  *  Set of methods is self-consistent. Derived classes only need to implement
- *  methods
+ *  method
  *  @code 
  *  bool isMatched(const LHCb::Particle*, const LHCb::MCParticle)
  *  @endcode
  *  and
- *  @code
- *  LHCb::MCParticle::ConstVector sort(const LHCb::MCParticle::Container* mcParticles) const
- *  @code
  *
  *  @author Juan PALACIOS
  *  @date   2009-01-30
@@ -65,18 +62,18 @@ public:
   relatedMCP(const LHCb::Particle* particle,
              const LHCb::MCParticle::Container& mcParticles) const ;
 
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle) const ;
 
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const std::string& mcParticleLocation) const ;
   
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-  virtual P2MCP::Types::FlatTrees
+  virtual P2MCP::DecayLines
   relatedMCPs(const LHCb::Particle* particle,
               const LHCb::MCParticle::Container& mcParticles) const ;
 
@@ -99,14 +96,14 @@ private:
             Iter begin,
             Iter end ) const 
   {
-    P2MCP::Types::FlatTrees trees = i_relatedMCPs(particle, begin, end);
+    P2MCP::DecayLines trees = i_relatedMCPs(particle, begin, end);
     return (trees.empty() ) ? 0 : trees[0].back();
 
   }
   
 
   template <typename Iter> 
-  P2MCP::Types::FlatTrees 
+  P2MCP::DecayLines
   i_relatedMCPs(const LHCb::Particle* particle,
                 Iter begin,
                 Iter end     ) const
@@ -117,28 +114,11 @@ private:
         const bool match = isMatched(particle, *iMCP);
         if ( match ) mcps.push_back(*iMCP);
       }
-      return sort( mcps );
+      return P2MCP::DecayLines( mcps );
     } else {
       Warning("No particle!").ignore();
-      P2MCP::Types::FlatTrees trees(0);
-      return trees;
+      return P2MCP::DecayLines();
     }
-  }
-
-private :
-
-  virtual 
-  P2MCP::Types::FlatTrees 
-  sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
-
-  virtual 
-  P2MCP::Types::FlatTrees 
-  sort(const LHCb::MCParticle::Container& mcParticles) const;
-
-  template <typename Iter> 
-  P2MCP::Types::FlatTrees i_sort(const Iter begin, const Iter end) const
-  {
-    return P2MCP::Types::FlatTrees(1,P2MCP::Types::FlatTree(begin, end));
   }
 
 private:
