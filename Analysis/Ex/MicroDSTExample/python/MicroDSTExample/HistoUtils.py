@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 # =============================================================================
-##  This module contains set of simple and useful utilitied for booking and  
-#   manipulations with Gaudi-AIDA histograms, inspired by Thomas' requiest
+##  This module contains set of simple and useful utilities for booking and  
+#   manipulations with Gaudi-AIDA histograms, inspired by Thomas' request
 #   @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #   @date 2007-08-03
 # =============================================================================
 """
-This module contains set of simple and useful utilitied for booking and
-manipulations with Gaudi-AIDA histograms, inspired by Thomas' requiest
+This module contains set of simple and useful utilities for booking and
+manipulations with Gaudi-AIDA histograms, inspired by Thomas' request
 
-The module contais following public symbols:
+The module contains following public symbols:
 
   - book       for booking of various 1D,2D&3D-histograms 
   - bookProf   for booking of various 1D&2D-profiles 
-  - getAsAIDA  for retrival of histigrams/profiles from HTS in AIDA format
-  - getAsROOT  for retrival of histograms/profiles from HTS in ROOT format 
+  - getAsAIDA  for retrieval of histograms/profiles from HTS in AIDA format
+  - getAsROOT  for retrieval of histograms/profiles from HTS in ROOT format 
   - fill       for smart filling of 1D-histogram (AIDA or ROOT)
-  
+  - HistoFile  class for storing histograms to a file  
 """
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
@@ -31,19 +31,19 @@ from ROOT import TFile
 # get the global namespace to get AIDA and aida2root
 from GaudiPython.Bindings import gbl
 # =============================================================================
-## Helper private auxillary function to get Aplication Manager 
+## Helper private auxiliary function to get Application Manager 
 def _getAppMgr   ( **kwargs  ) :
-    """ Helper private auxillary function to get Aplication Manager """
+    """ Helper private auxiliary function to get Application Manager """
     gaudi = kwargs.get ( 'gaudi' , None )
-#    if not gaudi : gaudi = gaudimodule.gaudi()
+    if not gaudi : gaudi = gaudimodule.gaudi
     if not gaudi : gaudi = gaudimodule.AppMgr() 
     if not gaudi : raise RuntimeError, 'Unable to get valid ApplicationMgr'
     return gaudi                                               ## RETURN
 
 # =============================================================================    
-## Helper private auxillary function to get iHistogramSvs 
+## Helper private auxiliary function to get iHistogramSvs 
 def _getHistoSvc ( **kwargs ) :
-    """ Helper private auxillary function to get iHistogramSvs """ 
+    """ Helper private auxiliary function to get iHistogramSvs """ 
     svc = kwargs.get ( 'service' , None )
     if not svc : svc = kwargs.get ( 'svc' , None )
     else       : return svc                                    ## RETURN 
@@ -51,9 +51,9 @@ def _getHistoSvc ( **kwargs ) :
     return gaudi.histsvc ()                                    ## RETURN
 
 # =============================================================================
-## Helper private auxillary function to get iDataSvs 
+## Helper private auxiliary function to get iDataSvs 
 def _getEvtSvc ( **kwargs ) :
-    """ Helper private auxillary function to get iDataSvs """ 
+    """ Helper private auxiliary function to get iDataSvs """ 
     svc = kwargs.get ( 'service' , None )
     if not svc : svc = kwargs.get ( 'svc' , None )
     else       : return svc                                    ## RETURN 
@@ -77,16 +77,16 @@ def book ( *args , **kwargs ) :
     (2) book the trivial 1D histogram with directory path and string ID :
     
     >>> h1D = book ( 'path/to/directory'      , ## the path to directory in HTS
-                     'H1'                     , ## string histogrsm identifier
+                     'H1'                     , ## string histogram identifier
                      'cosine of decay angle ' , ## histogram title 
                       100                     , ## number of bins 
                       -1                      , ## low edge
                       100                     ) ## high edge                     
                           
-    (3) book the trivial 1D histogram with directoty path and integer ID :
+    (3) book the trivial 1D histogram with directory path and integer ID :
     
     >>> h1D = book ( 'path/to/directory'      , ## the path to directory in HTS
-                     124                      , ## integer histogrsm identifier
+                     124                      , ## integer histogram identifier
                      'cosine of decay angle ' , ## histogram title 
                       100                     , ## number of bins 
                       -1                      , ## low edge
@@ -171,7 +171,7 @@ def book ( *args , **kwargs ) :
                       -1.0                    , ## low Z-edge
                       1.0                     ) ## high Z-edge
 
-    Many other booking methods are avilable,
+    Many other booking methods are available,
     e.g. for the histograms with non-equidistant bins, see IHistogamSvc::book
     
     """
@@ -192,7 +192,7 @@ def bookProf ( *args , **kwargs ) :
     
     The trivial function to book 1D&2D profile histograms:
 
-    (1) book 1D-profile histogram with full path in Historam Transient Store:
+    (1) book 1D-profile histogram with full path in Histogram Transient Store:
     >>> histo = bookProf ( 'path/to/my/profile'  , ## path in Histogram Transient Store
                            'Energy Correction'   , ## the histogram title
                            100                   , ## number of X-bins
@@ -215,7 +215,7 @@ def bookProf ( *args , **kwargs ) :
                            0.0                   , ## low X-edge
                            100                   ) ## high X-edge
 
-    (4) book 2D-profile histogram with full path in Historam Transient Store:
+    (4) book 2D-profile histogram with full path in Histogram Transient Store:
     >>> histo = bookProf ( 'path/to/my/profile'  , ## path in Histogram Transient Store
                            'Energy Correction'   , ## the histogram title
                            50                    , ## number of X-bins
@@ -247,7 +247,7 @@ def bookProf ( *args , **kwargs ) :
                            0.0                   , ## low Y-edge
                            100                   ) ## high Y-edge
     
-    Many other booking methods are avilable,
+    Many other booking methods are available,
     e.g. for the histograms with non-equidistant bins, see IHistogamSvc::book
     
     """
@@ -268,7 +268,7 @@ def getAsAIDA ( path , **kwargs ) :
     """
     
     The most trivial function to retrieve the histogram from Histogram Transient Store
-    The historgam is returned by reference to its AIDA-representation (if possible)
+    The histogram is returned by reference to its AIDA-representation (if possible)
 
     >>> h = getAsAIDA ( 'some/path/to/my/histogram' )
     
@@ -289,7 +289,7 @@ def getAsROOT ( path , **kwargs ) :
     """
     
     The most trivial function to retrieve the histogram from Histogram Transient Store
-    The historgam is returned by reference to its underlying native ROOT-representation (if possible)
+    The histogram is returned by reference to its underlying native ROOT-representation (if possible)
     
     >>> h = getAsROOT ( 'some/path/to/my/histogram' )
     
@@ -356,14 +356,14 @@ def fill ( histo                   ,   ## histogram
     >>> fill ( histo , tracks , myfun , mycut )
         
     The 'data' could be the address in TES, in this case the object
-    is retrieevd from TES and the method is applied to the objects,
+    is retrieved from TES and the method is applied to the objects,
     retrieved from TES:
     >>> fill (  histo             , ## the reference to the histogram 
                'Rec/Track/Best'   , ## the location of objects in TES
                 lambda t : t.pt() ) ## function to be used for histogram fill
     >>> fill (  histo             , ## the reference to the histogram
                'Rec/Track/Best'   , ## the address of objects in TES
-                lambda t : t.pt() , ## the functuon to be used for histogram fill
+                lambda t : t.pt() , ## the function to be used for histogram fill
                 lambda t : t.charge()>0 ) ## the criteria to select tracks 
     
     The arguments 'fun' and 'cut' could be strings, in this case
@@ -395,6 +395,8 @@ def fill ( histo                   ,   ## histogram
         
     return histo                                           ## RETURN
 
+
+# =============================================================================
 # =============================================================================
 class HistoFile :
     """
