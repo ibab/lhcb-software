@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2009-06-30 - Marco Clemencic
+ - Set initial event time for DC06 data (to avoid problems with ONLINE snapshots)
+
 !========================== DDDB v1r18 2009-06-18 ============================
 ! 2009-06-18 - Marco Clemencic
  - Update 2009 default tags to latest tags in SQLDDDB v5r8:

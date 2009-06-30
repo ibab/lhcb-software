@@ -155,7 +155,12 @@ class DDDBConf(ConfigurableUser):
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc(Polarity = -1,
                          OutputLevel = ERROR)
-
+        
+        # Set initial event time to something close to 0 to avoid to use the current
+        # time (causes failures when the ONLINE snapshots are updated).
+        from Configurables import EventClockSvc
+        EventClockSvc(InitialTime = 1)
+        
         # Backward compatibility Dll to read HepMC 1 record
         ApplicationMgr().Dlls += [ "HepMCBack" ]
     
