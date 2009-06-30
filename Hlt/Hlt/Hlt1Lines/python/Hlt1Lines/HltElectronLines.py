@@ -35,10 +35,11 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         ##### common bodies IP
         IP_CUT = str(self.getProp('Ele_IPCut'))
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
+                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
+                                             tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
                                   #, Member ( 'TU', 'TConf', RecoName = 'TConf',
-                                  #              tools = [ Tool( HltTrackUpgradeTool,
-                                  #              tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
-                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf')
+                                  #           tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
+                                  
                                   , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
@@ -47,21 +48,22 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                                   ]
 
         companionTrackWithIP  = [ Velo
-                                , Member ( 'TF', 'CompanionVelo',
-                                           FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
-                                , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
-                                , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
-                                , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
-                                           FilterDescriptor = ['DOCA,<,0.2'])
-                                ]
-
+                                  , Member ( 'TF', 'CompanionVelo',
+                                             FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
+                                  , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
+                                  , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
+                                  , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
+                                             FilterDescriptor = ['DOCA,<,0.2'])
+                                  ]
+        
         ##### common bodies no IP
         IP_CUT = "0.0"
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
-                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf')
+                                  , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
+                                             tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
                                   #, Member ( 'TU', 'TConf', RecoName = 'TConf',
-                                  #           tools = [ Tool( HltTrackUpgradeTool,
-                                  #                           tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
+                                  #           tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] )])
+                                  
                                   , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )

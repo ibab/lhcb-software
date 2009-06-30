@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.5 2009-06-25 20:51:55 aperezca Exp $
+! $Id: release.notes,v 1.6 2009-06-30 20:42:07 aperezca Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-06-30 - Antonio Perez-Calero
+ - minor fix for electron lines in TEleConf.
 
 ! 2009-06-25 - Antonio Perez-Calero
  - Substitute 'TConf' reco for 'TMuonConf' in muon lines and 'TEleConf' in electron 
