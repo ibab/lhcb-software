@@ -1,12 +1,7 @@
 from MicroDSTExample import Helpers
 from GaudiKernel import SystemOfUnits
+from GaudiPython import gbl, Helper, InterfaceCast
 from ROOT import Double
-#==============================================================================
-class AssocMCPFromTable :
-    def __init__(self, table) :
-        self.table = table
-    def __call__(self, particle) :
-        return Helpers.assocMCP(particle, self.table)
 #==============================================================================
 class MCAssociator :
     def __init__(self, MCAssociatorTool, verbose = False ) :
@@ -26,6 +21,16 @@ class MassRes:
         if (mcp != None) :
             return particle.momentum().mass()-mcp.momentum().mass()
 #==============================================================================
+class TauRes:
+    def __init__(self, tauFunc, mcTauFunc, assocFun) :
+        self.assocFun = assocFun
+        self.tauFunc = tauFunc
+        self.mcTauFunc = mcTauFunc
+    def __call__(self, particle) :
+        mcp = self.assocFun(particle)
+        if (mcp != None) :
+            return self.tauFunc(particle) - self.mcTauFunc(mcp)
+#==============================================================================
 class Mass:
     def __call__(self, particle) :
         return particle.momentum().mass()
@@ -34,7 +39,7 @@ class PIDMass:
     def __init__(self, partProp) :
         self.partProp = partProp
     def __call__(self, particle) :
-        pid = Helpers.particleID(particle)
+        pid = particle.particleID()
         return self.partProp( pid ).mass()
 #==============================================================================
 class ParticleName:
@@ -44,12 +49,6 @@ class ParticleName:
         pid = particle.particleID()
         pProp=self.partProp( pid )
         return pProp.particle()
-#==============================================================================
-class DefaultName:
-    def __init__(self, name):
-        self.name = name
-    def __call__(self, p) :
-        return self.name
 #==============================================================================
 class PropTime:
     def __init__(self, bestVertex, fitter) :
@@ -64,52 +63,72 @@ class PropTime:
             self.fitter.fit(vertex, particle, tau, error, chi2)
             return tau/SystemOfUnits.picosecond
 #==============================================================================
-class BestVertex:
+class BestTo:
     def __init__(self, table) :
         self.table = table
-    def __call__(self, particle) :
+    def __call__(self, frm) :
         if (self.table !=None) :
-            PVRange = self.table.relations(particle)
-            if ( not PVRange.empty()) :
-                return PVRange.back().to()
+            range = self.table.relations(frm)
+            if ( not range.empty()) :
+                return range.back().to()
 #==============================================================================
 class HistoPlotter :
-    def __init__(self, histos, keyGetter, func) :
+    def __init__(self, histos, functor, keyGetter = None) :
         self.histos = histos
+        self.functor = functor
         self.key = keyGetter
-        self.func = func
     def __call__(self, obj) :
         if obj != None :
-            value = self.func(obj)
+            value = self.functor(obj)
             if value != None :
-                self.histos[self.key(obj)].fill(value)
+                if type(self.histos) == list or type(self.histos) == dict :
+                    self.histos[self.key(obj)].fill(value)
+                else :
+                    self.histos.fill(value)
+
 #==============================================================================
-class GenericPlotter:
-    def __init__(self,
-                 plots,
-                 valueFunc,
-                 keyFunc,
-                 nameFunc,
-                 plotAttributes,
-                 tag):
-        self.plots = plots
-        self.valueFunc  = valueFunc
-        self.keyFunc = keyFunc
-        self.nameFunc = nameFunc
-        self.plotAtt = plotAttributes 
-        self.tag   = tag
-    def __call__(self, obj) :
-        value = self.valueFunc(obj)
-        key = self.keyFunc(obj)
-        xMin = self.plotAtt.low(obj)
-        xMax = self.plotAtt.high(obj)
-        if (value != None) :
-            s0 = self.nameFunc(obj) + " " + self.tag
-            self.plots.bookAndPlot(key,
-                                   s0,
-                                   s0,
-                                   self.plotAtt.nBins,
-                                   xMin,
-                                   xMax,
-                                   value)
+class NextEvent:
+    def __init__(self, am ) :
+        self.appMgr = am
+    def __call__(self) :
+        self.appMgr.run(1)
+        return  self.appMgr.evtSvc()['/Event'] != None
+#==============================================================================
+class PartPropSvc:
+    def __init__(self, am) :
+        self.appMgr = am
+        _svc = Helper.service(self.appMgr._svcloc, 'LHCb::ParticlePropertySvc')
+        self.Svc = InterfaceCast(gbl.LHCb.IParticlePropertySvc)(_svc)
+    def __call__(self, pid) :
+        pidx = gbl.LHCb.ParticleID(pid)
+        return self.Svc.find( pidx )
+#==============================================================================
+class TESContainerLoop:
+    def __init__(self, evt, fun ) :
+        self.evt = evt
+        self.fun = fun
+    def __call__(self, location) :
+        container = self.evt[location]
+        for item in container :
+            self.fun(item)
+        return container.size()
+#==============================================================================
+class ContainerLoop :
+    def __init__(self, functor):
+        self.functor = functor
+    def __call__(self, container) :
+        for obj in container:
+            obj = Helpers.deSmartRef(obj)
+            self.functor(obj)
+#==============================================================================
+class ContainerRecursiveLoop :
+    def __init__(self, functor, recursion):
+        self.functor = functor
+        self.recursor = recursion
+    def __call__(self, container) :
+        for obj in container:
+            obj = Helpers.deSmartRef(obj)
+            self.functor(obj)
+            daughters = self.recursor(obj)
+            self.__call__(daughters)
 #==============================================================================
