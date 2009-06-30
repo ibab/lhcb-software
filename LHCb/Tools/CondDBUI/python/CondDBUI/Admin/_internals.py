@@ -3,7 +3,7 @@
 Internal common functions/utilities. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: _internals.py,v 1.3 2008-09-25 22:56:16 marcocle Exp $"
+__version__ = "$Id: _internals.py,v 1.4 2009-06-30 14:55:08 marcocle Exp $"
 
 # Set up the logger 
 import logging
@@ -258,3 +258,161 @@ def timeToValKey(tstring, default):
             t += int(d)
         return t
     return default
+
+## --- Imported from dump_db_to_files.py 
+def _make_relative(cwd,dst):
+    """
+    Generate a relative path that appended to cwd will point to dst.
+    E.g.: cwd = '/my/source/path', dst = '/my/dest/path'
+          ==> '../../dest/path'
+    """
+    cwdlist = cwd.split('/')
+    dstlist = dst.split('/')
+    # count common directories
+    i = 0
+    while ( i < len(cwdlist) ) and ( i < len(dstlist) ) and (cwdlist[i] == dstlist[i]):
+        i += 1
+    reslist = ['..']*(len(cwdlist)-i) # parent levels before a common point
+    reslist += dstlist[i:] # remainig dst levels from the common point
+    return '/'.join(reslist)
+
+def _fixate_string(src,re,callback):
+    # find first occurrence of regular expression
+    m = re.search(src)
+    while m != None:
+        pos = m.start()
+        newsubs = callback(m) # convert the string
+        if newsubs != m.group(0):
+            src = src[0:m.start()] + newsubs + src[m.end():]
+        # find next occurrence of regular expression
+        m = re.search(src,pos+len(newsubs))
+    return src
+
+class _relativize_url:
+    def __init__(self,node,key,base):
+        self.node = node
+        self.key = key
+        self.base = base
+        self.log = logging.getLogger("_relativize_url")
+    def __call__(self,match):
+        src = match.group(0)
+        s = match.start(1)-match.start(0)+1
+        e = match.end(1)-match.start(0)-1
+        subs = src[s:e]
+        self.log.debug("matched '%s' -> '%s'",src,subs)
+        if subs.startswith("conddb:"):
+            path = subs[7:]
+            if path[0] != "/": # Work-around for cases like "conddb:DTD/structure.dtd"
+                path = "/" + path
+            newsubs = _make_relative(self.base,path)
+            self.log.debug("replacing '%s' -> '%s'",subs,newsubs)
+            # replace the conddb url with a relative path
+            return src[:s] + newsubs + src[e:]
+        else:
+            self.log.warning("ignoring non conddb URL in '%s[%s]': '%s'",
+                             self.node, self.key, subs)
+        return src
+
+## Dump the content of the database at a given time and tag to XML files.
+def DumpToFiles(connString, time=0, tag="HEAD", srcs=['/'],
+                destroot='DDDB', force=False, addext=False):
+    log = logging.getLogger("CondDBUI.Admin.DumpToFiles")
+    log.debug("called with arguments: %s",repr((connString,time,tag,srcs,
+                                                destroot,force,addext)))
+    
+    from CondDBUI import CondDB
+    import os, re
+    
+    # Connect to the database
+    db = CondDB(connString, defaultTag = tag)
+    log.debug("connected to database")
+    
+    # @note: This piece of code is needed if we want to allow only global tags
+    # # Check the validity of the tag
+    # if not db.isTagReady(tag):
+    #     raise RuntimeError("Tag '%s' is not a valid global tag."%tag)
+    
+    # Collect the list of folders we are going to use.
+    nodes = []
+    for s in srcs:
+        if db.db.existsFolder(s):
+            nodes.append(s)
+        elif db.db.existsFolderSet(s):
+            nodes += db.getAllChildNodes(s)
+        else:
+            log.warning("Node '%s' does not exist. Ignored",s)
+    nodes.sort()
+    nodes = set(nodes)
+
+    # matching: SYSTEM "blah"
+    sysIdRE = re.compile('SYSTEM[^>"\']*("[^">]*"|'+"'[^'>]*')")
+    # matching: href "conddb:blah"
+    hrefRE = re.compile('href *= *("conddb:[^">]*"|'+"'conddb:[^'>]*')")
+    
+    for node in ( n for n in nodes if db.db.existsFolder(n) ):
+        log.debug("retrieve data from '%s'",node)
+        f = db.getCOOLNode(node)
+        channels = [ i for i in f.listChannels() ]
+        if len(channels) > 1:
+            log.debug("processing %d channels",len(channels))
+        for ch in channels:
+            try:
+                
+                data = db.getPayload(node, time, channelID = ch, tag = tag)
+                
+                nodesplit = node.split('/')
+                nodebase = '/'.join(nodesplit[:-1])
+                nodename = nodesplit[-1]
+                
+                if '/' != os.sep:
+                    tmppath = nodebase.replace('/',os.sep)
+                else:
+                    tmppath = nodebase
+                if tmppath and (tmppath[0] == os.sep):
+                    tmppath = tmppath[1:]
+                dirname = os.path.join(destroot,tmppath)
+                
+                if not os.path.isdir(dirname):
+                    log.debug("create directory '%s'",dirname)
+                    os.makedirs(dirname)
+                
+                log.debug("looping over data keys")
+                for key,xml in data.items():
+                    
+                    log.debug("key: '%s'",key)
+                    filename = nodename
+                    if key != 'data':
+                        filename = '%s@%s'%(key,nodename)
+                    # Let's assume that if there is more than 1 channel also the "0" is used explicitely
+                    if ch != 0 or len(channels) > 1:
+                        filename += ':%d'%ch
+                    tmppath = os.path.join(dirname,filename)
+                    
+                    if not force and os.path.exists(tmppath):
+                        log.warning("file '%s' already exists: skipping",tmppath)
+                        continue
+                    
+                    log.debug("fixating XML")
+                    
+                    # fix system IDs
+                    xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
+                    # fix hrefs pointing to absolute conddb urls
+                    xml = _fixate_string(xml, hrefRE, _relativize_url(node,key,nodebase))
+                    if tmppath.endswith(os.path.join("Conditions","MainCatalog.xml")):
+                        # make the href to Online point to the DB
+                        xml = xml.replace('"Online"', '"conddb:/Conditions/Online"')
+                    
+                    log.debug("write '%s'",tmppath)
+                    open(tmppath,'w').write(xml)
+                
+            except RuntimeError, x:
+                desc = str(x)
+                if "Object not found" in desc:
+                    log.info("no data in %s", node)
+                elif "No child tag" in desc:
+                    log.info("tag not found in %s", node)
+                elif "not a child of" in desc:
+                    # tag exists in a foldeset not containing the current one
+                    log.info("tag not found in %s", node)
+                else:
+                    raise

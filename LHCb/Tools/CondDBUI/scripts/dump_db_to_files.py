@@ -1,166 +1,13 @@
 #!/usr/bin/env python
-# $Id: dump_db_to_files.py,v 1.5 2009-02-09 14:56:09 marcocle Exp $
+# $Id: dump_db_to_files.py,v 1.6 2009-06-30 14:55:08 marcocle Exp $
 
 # @todo: Add support for channel IDs
 
 import logging
 logging.basicConfig()
 
-def _make_relative(cwd,dst):
-    """
-    Generate a relative path that appended to cwd will point to dst.
-    E.g.: cwd = '/my/source/path', dst = '/my/dest/path'
-          ==> '../../dest/path'
-    """
-    cwdlist = cwd.split('/')
-    dstlist = dst.split('/')
-    # count common directories
-    i = 0
-    while ( i < len(cwdlist) ) and ( i < len(dstlist) ) and (cwdlist[i] == dstlist[i]):
-        i += 1
-    reslist = ['..']*(len(cwdlist)-i) # parent levels before a common point
-    reslist += dstlist[i:] # remainig dst levels from the common point
-    return '/'.join(reslist)
+from CondDBUI.Admin import DumpToFiles
 
-def _fixate_string(src,re,callback):
-    # find first occurrence of regular expression
-    m = re.search(src)
-    while m != None:
-        pos = m.start()
-        newsubs = callback(m) # convert the string
-        if newsubs != m.group(0):
-            src = src[0:m.start()] + newsubs + src[m.end():]
-        # find next occurrence of regular expression
-        m = re.search(src,pos+len(newsubs))
-    return src
-
-class _relativize_url:
-    def __init__(self,node,key,base):
-        self.node = node
-        self.key = key
-        self.base = base
-        self.log = logging.getLogger("_relativize_url")
-    def __call__(self,match):
-        src = match.group(0)
-        s = match.start(1)-match.start(0)+1
-        e = match.end(1)-match.start(0)-1
-        subs = src[s:e]
-        self.log.debug("matched '%s' -> '%s'",src,subs)
-        if subs.startswith("conddb:"):
-            path = subs[7:]
-            if path[0] != "/": # Work-around for cases like "conddb:DTD/structure.dtd"
-                path = "/" + path
-            newsubs = _make_relative(self.base,path)
-            self.log.debug("replacing '%s' -> '%s'",subs,newsubs)
-            # replace the conddb url with a relative path
-            return src[:s] + newsubs + src[e:]
-        else:
-            self.log.warning("ignoring non conddb URL in '%s[%s]': '%s'",
-                             self.node, self.key, subs)
-        return src
-
-def copy_to_files(connString,time=0,tag="HEAD",srcs=['/'],
-                  destroot='DDDB',force=False,addext=False):
-    log = logging.getLogger("copy_to_files")
-    log.debug("called with arguments: %s",repr((connString,time,tag,srcs,
-                                                destroot,force,addext)))
-    
-    from CondDBUI import CondDB
-    import os, re
-    
-    # Connect to the database
-    db = CondDB(connString, defaultTag = tag)
-    log.info("connected to database")
-    
-    # @note: This piece of code is needed if we want to allow only global tags
-    # # Check the validity of the tag
-    # if not db.isTagReady(tag):
-    #     raise RuntimeError("Tag '%s' is not a valid global tag."%tag)
-    
-    # Collect the list of folders we are going to use.
-    nodes = []
-    for s in srcs:
-        if db.db.existsFolder(s):
-            nodes.append(s)
-        elif db.db.existsFolderSet(s):
-            nodes += db.getAllChildNodes(s)
-        else:
-            log.warning("Node '%s' does not exist. Ignored",s)
-    nodes.sort()
-    nodes = set(nodes)
-
-    # matching: SYSTEM "blah"
-    sysIdRE = re.compile('SYSTEM[^>"\']*("[^">]*"|'+"'[^'>]*')")
-    # matching: href "conddb:blah"
-    hrefRE = re.compile('href *= *("conddb:[^">]*"|'+"'conddb:[^'>]*')")
-    
-    for node in ( n for n in nodes if db.db.existsFolder(n) ):
-        log.info("retrieve data from '%s'",node)
-        f = db.getCOOLNode(node)
-        channels = [ i for i in f.listChannels() ]
-        if len(channels) > 1:
-            log.info("processing %d channels",len(channels))
-        for ch in channels:
-            try:
-                
-                data = db.getPayload(node, time, channelID = ch, tag = tag)
-                
-                nodesplit = node.split('/')
-                nodebase = '/'.join(nodesplit[:-1])
-                nodename = nodesplit[-1]
-                
-                if '/' != os.sep:
-                    tmppath = nodebase.replace('/',os.sep)
-                else:
-                    tmppath = nodebase
-                if tmppath and (tmppath[0] == os.sep):
-                    tmppath = tmppath[1:]
-                dirname = os.path.join(destroot,tmppath)
-                
-                if not os.path.isdir(dirname):
-                    log.info("create directory '%s'",dirname)
-                    os.makedirs(dirname)
-                
-                log.debug("looping over data keys")
-                for key,xml in data.items():
-                    
-                    log.debug("key: '%s'",key)
-                    filename = nodename
-                    if key != 'data':
-                        filename = '%s@%s'%(key,nodename)
-                    # Let's assume that if there is more than 1 channel also the "0" is used explicitely
-                    if ch != 0 or len(channels) > 1:
-                        filename += ':%d'%ch
-                    tmppath = os.path.join(dirname,filename)
-                    
-                    if not force and os.path.exists(tmppath):
-                        log.warning("file '%s' already exists: skipping",tmppath)
-                        continue
-                    
-                    log.debug("fixating XML")
-                    
-                    # fix system IDs
-                    xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
-                    # fix hrefs pointing to absolute conddb urls
-                    xml = _fixate_string(xml, hrefRE, _relativize_url(node,key,nodebase))
-                    if tmppath.endswith(os.path.join("Conditions","MainCatalog.xml")):
-                        # make the href to Online point to the DB
-                        xml = xml.replace('"Online"', '"conddb:/Conditions/Online"')
-                    
-                    log.info("write '%s'",tmppath)
-                    open(tmppath,'w').write(xml)
-                
-            except RuntimeError, x:
-                desc = str(x)
-                if "Object not found" in desc:
-                    log.info("no data")
-                elif "No child tag" in desc:
-                    log.info("no tag")
-                elif "not a child of" in desc:
-                    # tag exists in a foldeset not containing the current one
-                    log.info("no tag")
-                else:
-                    raise
 def main():
     from optparse import OptionParser
     parser = OptionParser()
@@ -232,15 +79,15 @@ def main():
         log.setLevel(logging.INFO)
         log.info("Copying DDDB from %s with tag %s"%(db["ConnectionString"],db.get("DefaultTAG","HEAD")))
         log.setLevel(l)
-        copy_to_files(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
-                      ["/"],options.dest,options.force)
+        DumpToFiles(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
+                    ["/"],options.dest,options.force)
         db = conf["LHCBCOND"]
         l = log.getEffectiveLevel()
         log.setLevel(logging.INFO)
         log.info("Copying LHCBCOND from %s with tag %s"%(db["ConnectionString"],db.get("DefaultTAG","HEAD")))
         log.setLevel(l)
-        copy_to_files(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
-                      ["/"],options.dest,options.force)
+        DumpToFiles(db["ConnectionString"],t,db.get("DefaultTAG","HEAD"),
+                    ["/"],options.dest,options.force)
     else:
         srcs = [ options.source ]
         if options.filelist:
@@ -248,8 +95,8 @@ def main():
         
         t = int(options.time)
             
-        copy_to_files(options.connectString,t,options.tag,srcs,
-                      options.dest,options.force)
+        DumpToFiles(options.connectString,t,options.tag,srcs,
+                    options.dest,options.force)
 
 if __name__ == "__main__":
     main()

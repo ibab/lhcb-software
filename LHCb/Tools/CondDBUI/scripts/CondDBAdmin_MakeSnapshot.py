@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.8 2009-06-16 09:00:14 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.9 2009-06-30 14:55:08 marcocle Exp $"
 
 import os, sys
 
@@ -67,27 +67,35 @@ connection string. 'destination' must be a connection string.""")
                       help = "Tag to use for the snapshot. [default = %default]"
                       )
     parser.add_option("--options", type = "string", action = "append",
-                      help = "Options files to use to guess the mapping from the" +
-                      " partition name to the actual connection string." +
-                      " [default = %s]" % default_options_file)
+                      help = "Options files to use to guess the mapping from the "
+                             "partition name to the actual connection string. "
+                             "[default = %s]" % default_options_file)
     parser.add_option("-s", "--since", type = "string",
-                      help = "Start of the interesting Interval Of Validity (local time)." + 
-                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
+                      help = "Start of the interesting Interval Of Validity (local time). " 
+                             "Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("-u", "--until", type = "string",
-                      help = "End of the interesting Interval Of Validity (local time)"+ 
-                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
+                      help = "End of the interesting Interval Of Validity (local time) " 
+                             "Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("--merge", action = "store_true",
                       help = "Whether to merge the data into an existing DB")
+    parser.add_option("-F", "--to-files", action = "store_true",
+                      help = "Write the snapshot to XML files instead of a database. "
+                             "When this option is enabled, the option '--since' is used "
+                             "to define the event time at which the snapshot has to be "
+                             "valid and <destination> is interpreted as the directory "
+                             "where to create the files. If no '--since' is specified, "
+                             "the current time is used.")
     parser.add_option("-v", "--verbose", action = "store_true",
                       help = "Print more messages")
     #parser.add_option("-n","--dry-run", action = "store_true",
     #                  help = "Do not create the output file."
     #                  )
-    parser.set_default("tags", [])
-    parser.set_default("options", [])
-    parser.set_default("merge", False)
-    parser.set_default("verbose", False)
-        
+    parser.set_defaults(tags = [],
+                        options = [],
+                        merge = False,
+                        verbose = False,
+                        to_files = False)
+    
     # parse command line
     options, args = parser.parse_args(args = argv[1:])
     
@@ -109,39 +117,66 @@ connection string. 'destination' must be a connection string.""")
     source = os.path.expandvars(guessConnectionString(args[0], options.options))
     dest = os.path.expandvars(args[1])
     
+    # Import the heavy modules
     from PyCool import cool
     from CondDBUI.Admin import timeToValKey
-    since = timeToValKey(options.since, cool.ValidityKeyMin)
-    until = timeToValKey(options.until, cool.ValidityKeyMax)
+    from time import time, ctime, asctime, gmtime
     
-    from time import ctime, asctime, gmtime
-    log.info("Cloning %s to %s" % (source, dest))
-    log.info("IoV(loc): %s to %s" % (ctime(since/1e9), ctime(until/1e9)))
-    log.info("IoV(UTC): %s to %s" % (asctime(gmtime(since/1e9)),
-                                     asctime(gmtime(until/1e9))))
-    log.info("Tags: %s" % options.tags)
-    
-    # perform the copy
-    from PyCoolCopy import Selection, PyCoolCopy, log as pcc_log
-    # Avoid multiple handlers 
-    pcc_log.handlers = []
-    if not options.verbose:
-        pcc_log.setLevel(logging.WARNING)
-    else:
-        pcc_log.setLevel(logging.INFO)
-    
-    log.info("Copying, please wait...")
     try:
-        from CondDBUI import CondDB
-        # Connect to source database (PyCoolCopy do not support CORAL LFCReplicaService)
-        sourceDb = CondDB(source).db
-        selection = Selection( since = since, until = until, tags = options.tags )
-        if options.merge:
-            log.info("Warning: merge works only on folders that do not exist on the target")
-            PyCoolCopy(sourceDb).append(dest, selection)
+        if options.to_files:
+            # special checks on options for --to-files
+            if options.until:
+                parser.error("conflicting options '--until' and '--to-files'. Try with --help.")
+                
+            if not options.tags:
+                tag = "HEAD"
+            else:
+                # If many tags are give, use only the last one
+                tag = options.tags[-1]
+            
+            since = timeToValKey(options.since, int(time() * 1e9))
+            
+            log.info("Dumping %s to %s" % (source, dest))
+            log.info("Event Time (loc): %s" % ctime(since/1e9))
+            log.info("Event Time (UTC): %s" % asctime(gmtime(since/1e9)))
+            log.info("Tag: %s" % tag)
+            
+            log.info("Copying, please wait...")
+            
+            from CondDBUI.Admin import DumpToFiles
+            DumpToFiles(connString = source, time = since, tag = tag,
+                        destroot = dest, force = False)
+            
         else:
-            PyCoolCopy(sourceDb).copy(dest, selection)
-        log.info("Copy completed.")
+            since = timeToValKey(options.since, cool.ValidityKeyMin)
+            until = timeToValKey(options.until, cool.ValidityKeyMax)
+    
+            log.info("Cloning %s to %s" % (source, dest))
+            log.info("IoV(loc): %s to %s" % (ctime(since/1e9), ctime(until/1e9)))
+            log.info("IoV(UTC): %s to %s" % (asctime(gmtime(since/1e9)),
+                                             asctime(gmtime(until/1e9))))
+            log.info("Tags: %s" % options.tags)
+            
+            log.info("Copying, please wait...")
+    
+            from PyCoolCopy import Selection, PyCoolCopy, log as pcc_log
+            # Avoid multiple logging handlers 
+            pcc_log.handlers = []
+            if not options.verbose:
+                pcc_log.setLevel(logging.WARNING)
+            else:
+                pcc_log.setLevel(logging.INFO)
+        
+            from CondDBUI import CondDB
+            # Connect to source database (PyCoolCopy do not support CORAL LFCReplicaService)
+            sourceDb = CondDB(source).db
+            selection = Selection( since = since, until = until, tags = options.tags )
+            if options.merge:
+                log.info("Warning: merge works only on folders that do not exist on the target")
+                PyCoolCopy(sourceDb).append(dest, selection)
+            else:
+                PyCoolCopy(sourceDb).copy(dest, selection)
+            log.info("Copy completed.")
     except Exception, details:
         log.error('Copy failed with error: %s' % str(details))
     

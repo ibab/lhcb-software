@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.111 2009-06-30 09:57:06 marcocle Exp $
+! $Id: release.notes,v 1.112 2009-06-30 14:55:08 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-06-30 - Marco Clemencic
+ - Merged (some of) the functionalities fo dump_db_to_files.py into
+   CondDBAdmin_MakeSnapshot.py, for a simpler user interface. The old script is
+   kept until the merge will be completed (if it will be completed). 
 
 ! 2009-06-30 - Wouter Hulsbergen
  - Modified copy_files_to_db.py to be able to specify an interval of validity for
