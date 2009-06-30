@@ -150,7 +150,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
       LHCb::VeloChannelID VeloChannel = channel.veloID();
       LHCb::VeloCluster* VeloClus = m_veloClusters->object(VeloChannel);
       verbose() << VeloClus <<" Cluster channel " << VeloChannel << endmsg;
-      ///if (!VeloClus) continue;
+      if (!VeloClus) continue;
       
       station  = VeloChannel.sensor();
 
@@ -290,6 +290,8 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
 
   if (!m_OverlapCut && nonzer_right != 0 && nonzer_left != 0) // Overlap track
   {
+    debug()<< "overlap track"<<endmsg;
+    
     atrack.setNIsGood(false); // Missed hits
     return StatusCode::SUCCESS; // Reject overlap tracks if requested
   }
@@ -300,7 +302,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
   
   if (nonzer_right != 0 && nonzer_left == 0) // Right track
   {
-    if (nonzer_right < m_NonzerCut || (nonzer_right != nonzer_right_max && !m_MissedHits))
+    if (nonzer_right < m_NonzerCut || (nonzer_right > nonzer_right_max && !m_MissedHits))
     {
       atrack.setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
       return StatusCode::SUCCESS; 
@@ -312,7 +314,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
   }
   else if (nonzer_right == 0 && nonzer_left != 0) // Left track
   {
-    if (nonzer_left < m_NonzerCut || (nonzer_left != nonzer_left_max && !m_MissedHits))
+    if (nonzer_left < m_NonzerCut || (nonzer_left > nonzer_left_max && !m_MissedHits))
     {
       atrack.setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
       return StatusCode::SUCCESS; 
