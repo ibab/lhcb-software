@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.110 2009-06-20 22:12:08 marcocle Exp $
+! $Id: release.notes,v 1.111 2009-06-30 09:57:06 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-06-30 - Wouter Hulsbergen
+ - Modified copy_files_to_db.py to be able to specify an interval of validity for
+   the new data.
 
 ! 2009-06-20 - Marco Clemencic
  - Essentially completed the "browsing" part of the CondDBBrowser.

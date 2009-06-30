@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: copy_files_to_db.py,v 1.2 2008-07-10 10:49:32 marcocle Exp $
+# $Id: copy_files_to_db.py,v 1.3 2009-06-30 09:57:06 marcocle Exp $
 import sys
 
 import CondDBUI
@@ -44,6 +44,14 @@ def main():
                       dest="includeFile", type="string",
                       metavar="INCFILE",
                       help="store only the files included in the INCFILE")
+    parser.add_option("-S", "--since",
+                      type="int",
+                      help="begin of interval of validity [default: cool.ValidityKeyMin]",
+                      default=None)
+    parser.add_option("-U", "--until",
+                      type="int",
+                      help="end of interval of validity [default: cool.ValidityKeyMax]",
+                      default=None)
 #    parser.add_option("-k", "--keep-db",
 #                      action="store_false", dest="drop",
 #                      help="keep the existing database and merge with the new files (default)")
@@ -62,7 +70,9 @@ def main():
         
     CondDBUI.Admin.MakeDBFromFiles(options.source, db,
                                    includes = includes, excludes = [],
-                                   verbose = True)
+                                   verbose = True,
+                                   since = options.since, until = options.until
+                                   )
     
 if __name__ == '__main__':
     main()
