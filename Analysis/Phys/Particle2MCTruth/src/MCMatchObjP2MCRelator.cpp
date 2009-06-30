@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.9 2009-04-28 11:55:09 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.10 2009-06-30 08:46:46 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,6 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
                                               const IInterface* parent )
   : 
   P2MCPBase( type, name , parent ),
-  m_treeSorter(),
   m_reporter(0),
   m_matcher(0),
   m_tables()
@@ -96,18 +95,6 @@ LoKi::MCMatch MCMatchObjP2MCRelator::matcher() const
   addTables(m_matcher);
   
   return  LoKi::MCMatch( m_matcher ) ;
-}
-//=============================================================================
-P2MCP::Types::FlatTrees
-MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::ConstVector& mcParticles) const 
-{
-   return m_treeSorter(mcParticles);
-}
-//=============================================================================
-P2MCP::Types::FlatTrees
-MCMatchObjP2MCRelator::sort(const LHCb::MCParticle::Container& mcParticles) const 
-{
-  return m_treeSorter(mcParticles);
 }
 //=============================================================================
 void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const 

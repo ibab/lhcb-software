@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.10 2009-05-11 13:34:28 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.11 2009-06-30 08:46:46 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -40,16 +40,9 @@ public:
 
 private:
 
-  virtual P2MCP::Types::FlatTrees sort(const LHCb::MCParticle::ConstVector& mcParticles) const;
-  
-  virtual P2MCP::Types::FlatTrees sort(const LHCb::MCParticle::Container& mcParticles) const;
-
   LoKi::MCMatch matcher() const;
 
   void addTables(LoKi::MCMatchObj* matcher) const;
-
-
-  
   
   void printMCPIDs(const LHCb::MCParticle::ConstVector& mcps) const
   {
@@ -63,8 +56,6 @@ private:
 
 private:
 
-  P2MCP::Functors::SortIntoTrees<P2MCP::Functors::InTree, 
-                                 P2MCP::Functors::SortInTrees > m_treeSorter;
   LoKi::IReporter* m_reporter;
   mutable LoKi::MCMatchObj* m_matcher;
   typedef std::vector<std::string> Addresses ;
