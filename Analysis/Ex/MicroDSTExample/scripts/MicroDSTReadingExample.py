@@ -5,7 +5,8 @@ from MicroDSTExample import Helpers, Functors, Debug
 from Gaudi.Configuration import EventSelector
 from GaudiPython.Bindings   import AppMgr
 from GaudiPython.Bindings import gbl, AppMgr, Helper
-from MicroDSTExample.HistoUtils import book, fill, HistoFile
+#from GaudiPython.HistoUtils import HistoFile
+from MicroDSTExample.HistoUtils import book, fill , HistoFile
 from ROOT import TCanvas, TH1D, Double
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from Configurables import MCMatchObjP2MCRelator
@@ -15,14 +16,7 @@ import PartProp.Service
 #==============================================================================
 def safeFill(histo, value) :
     if value != None : fill(histo, value)
-#==============================================================================
-def EventDataPlots(data, plotter) :
-    if (data != None):
-        for d in data:
-            plotter(d)
-        return 1
-    else :
-        return 0
+
 #==============================================================================
 def printHelp():
     print "Usage: python -i MicroDSTReadingExample [options]"
@@ -37,7 +31,7 @@ def printHelp():
 locationRoot = '/Event/microDST'
 selection = 'DC06selBs2JpsiPhi_unbiased'
 microDSTFile = ['']
-histoFile = HistoFile(selection+"_mDST.root")
+histoFile = HistoFile(selection+"_mDST_3.root")
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
 for o, a in opts:
@@ -84,8 +78,8 @@ appMgr.HistogramPersistency = "ROOT"
 evtSvc = appMgr.evtSvc()
 toolSvc = appMgr.toolsvc()
 evtSel = appMgr.evtSel()
-nextEvent = Helpers.NextEvent(appMgr)
-pp = Helpers.PartPropSvc(appMgr)
+nextEvent = Functors.NextEvent(appMgr)
+pp = Functors.PartPropSvc(appMgr)
 ppSvc = pp
 
 # get an instance of PropertimeFitter
@@ -170,9 +164,27 @@ assocCounter = Debug.AssocTreeDebugger(MCAssocTool, particleNameFunc)
 # the relevant information
 # the mass resolution plotter requires an MC associator so has to be defined
 # further down inside the event loop.
-ptPlotter = Functors.HistoPlotter(ptPlots, Helpers.pid, gbl.LHCb.Particle.pt)
-massPlotter = Functors.HistoPlotter(massPlots, Helpers.pid, Functors.Mass())
+ptPlotter = Functors.HistoPlotter(ptPlots, gbl.LHCb.Particle.pt, Helpers.pid)
+massPlotter = Functors.HistoPlotter(massPlots, Functors.Mass(), Helpers.pid)
+# set the functor in the event loop
+massResPlotter = Functors.HistoPlotter(massResPlots, None, Helpers.pid)
+tauPlotter = Functors.HistoPlotter(propTimePlot, functor = None)
+refitTauPlotter = Functors.HistoPlotter(refitPropTimePlot, functor = None)
+tauResPlotter = Functors.HistoPlotter(propTimeResPlot, functor = None)
+refitTauResPlotter = Functors.HistoPlotter(refitPropTimeResPlot, functor = None)
 
+# create some recursive container loopers that use Particle.daughters() to get
+# a container from an element in a container
+recursionFunc = gbl.LHCb.Particle.daughters
+ptRecursiveLoop = Functors.ContainerRecursiveLoop(ptPlotter, recursionFunc)
+massRecursiveLoop = Functors.ContainerRecursiveLoop(massPlotter, recursionFunc)
+massResRecursiveLoop = Functors.ContainerRecursiveLoop(massResPlotter,
+                                                       recursionFunc)
+
+propTimeLoop = Functors.ContainerLoop( tauPlotter )
+refitPropTimeLoop = Functors.ContainerLoop( refitTauPlotter )
+propTimeResLoop = Functors.ContainerLoop( tauResPlotter )
+refitPropTimeResLoop = Functors.ContainerLoop( refitTauResPlotter )
 
 while ( nextEvent() ) :
     nEvents+=1
@@ -192,41 +204,43 @@ while ( nextEvent() ) :
     if (particles!=None):
         nRecEvents+=1
         nParticles += particles.size()
-        stdBestVertexAssoc = evtSvc[stdVertexAssocPath]
-        bestVertexFun = Functors.BestVertex(stdBestVertexAssoc)
-        refitBestVertexAssoc = evtSvc[refitVertexAssocPath]
-        refitBestVertexFun = Functors.BestVertex(refitBestVertexAssoc)
-        p2MCPTable = evtSvc[particle2mcPath]
+        bestVertexFun = Functors.BestTo(evtSvc[stdVertexAssocPath])
+        refitBestVertexFun = Functors.BestTo(evtSvc[refitVertexAssocPath])
         MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
-#        MCAssocFun = Functors.AssocMCPFromTable(p2MCPTable)
-        massResFunc = Functors.MassRes(MCAssocFun)
-        massResPlotter = Functors.HistoPlotter(massResPlots, Helpers.pid, massResFunc)
+
+        massResPlotter.functor = Functors.MassRes(MCAssocFun)
+
         # iterative looping over particles and their descentants and their
         # descendants descendants and their .....
-        Helpers.particleTreeLoop(particles, ptPlotter)
-        Helpers.particleTreeLoop(particles, massPlotter)
-        Helpers.particleTreeLoop(particles, massResPlotter)
-#        Helpers.particleTreeLoop(particles, assocCounter)
 
+        ptRecursiveLoop(particles)
+        massRecursiveLoop(particles)
+        massResRecursiveLoop(particles)
+
+        # functors to get rec and MC proper time for standard and re-fitted
+        # primary vertices
         tauFunc = Functors.PropTime(bestVertexFun, properTimeFitter)
         refitTauFunc = Functors.PropTime(refitBestVertexFun, properTimeFitter)
+        mcTauFunc = Helpers.properTimeMC
 
-        for p in particles:
-            stdVertex = bestVertexFun(p)
-            if stdVertex!=None : safeFill(bestVertexZ, stdVertex.position().z() )
-            stdPropTime = tauFunc(p)
-            safeFill(propTimePlot, stdPropTime)
-            refitPropTime = refitTauFunc(p)
-            safeFill(refitPropTimePlot, refitPropTime)
-            assocMCPart = MCAssocFun(p)
-            if (assocMCPart != None) :
-                MCPropTime = Helpers.properTimeMC(assocMCPart)
-                stdPropTimeRes = stdPropTime-MCPropTime
-                safeFill(propTimeResPlot, stdPropTimeRes)
-                if refitPropTime != None and MCPropTime != None :
-                    refitPropTimeRes = refitPropTime-MCPropTime
-                    safeFill(refitPropTimeResPlot, refitPropTimeRes)
+        # functors to get proper time resolution for standard and re-fitted
+        # primary vertices
+        tauResFunc = Functors.TauRes(tauFunc, mcTauFunc, MCAssocFun)
+        refitTauResFunc = Functors.TauRes(refitTauFunc, mcTauFunc, MCAssocFun)
 
+        # set the plotter's functors
+        tauPlotter.functor = tauFunc
+        refitTauPlotter.functor = refitTauFunc
+        tauResPlotter.functor = tauResFunc
+        refitTauResPlotter.functor = refitTauResFunc
+
+        # perform simple loops on particle containers, filling histograms for
+        # each particle
+        propTimeLoop(particles)
+        refitPropTimeLoop(particles)
+
+        propTimeResLoop(particles)
+        refitPropTimeResLoop(particles)
     
 print "Found MC info in ", nMCEvents, "/", nEvents, " events"
 print "Found Reco info in ", nRecEvents, "/", nEvents, "events"
