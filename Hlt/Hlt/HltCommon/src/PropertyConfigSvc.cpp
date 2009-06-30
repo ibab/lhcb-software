@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.21 2009-05-16 11:36:31 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.22 2009-06-30 13:40:49 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -9,10 +9,6 @@
 #include "boost/filesystem/convenience.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
-
-//// temporary to support both boost 1.37 (and later) and 1.36 (and earlier)
-#include "boost/version.hpp"
-
 
 // from Gaudi
 #include "GaudiKernel/System.h"
@@ -355,14 +351,8 @@ PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef)
                 resolvePropertyConfig(*i);
          }
          return validateConfig( nodeRef );
-
      } catch ( const boost::filesystem::basic_filesystem_error<boost::filesystem::path>& x )  {
-#if BOOST_VERSION < 103700
-         error() << boost::filesystem::what( x )  << endmsg;
-#else
-         // error() << boost::filesystem::basic_filesystem_error<boost::filesystem::path>>::what( x )  << endmsg;
          error() << x.what() << endmsg;
-#endif
          throw x;
      }
      return StatusCode::FAILURE;

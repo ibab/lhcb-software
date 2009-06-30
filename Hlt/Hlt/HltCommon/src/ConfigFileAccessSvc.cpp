@@ -70,11 +70,7 @@ bool ConfigFileAccessSvc::create_directories( fs::path dir ) const {
         return fs::create_directories(dir);
    } 
    catch ( const fs::basic_filesystem_error<fs::path>& x )  {
-#if BOOST_VERSION < 103700
-        error() << fs::what( x )  << endmsg;
-#else
         error() << x.what() << endmsg;
-#endif
    }
    return false;
 }
