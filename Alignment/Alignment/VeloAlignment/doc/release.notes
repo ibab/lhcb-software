@@ -1,8 +1,16 @@
 ! Package     : VeloAlignment
-! Responsible : Marco Gersabeck
+! Responsible : Silvia Borghi, Marco Gersabeck
 
+!=============================================================================
+! 30/06/2009 - Silvia Borghi  
+  - VAlign.cpp, VAlign.h: fixes, add default for properties, add debugs"
+  - TrackStore.cpp: fix a bug in comparison of maximum number of points
+                    add a check for VeloCluster
+  - Fix the python option for TrackStore
+
+!=============================================================================
 ! 14/05/2009 - Wouter Hulsbergen
-  - tiny fix to remove compilor warning
+  - VAlign.cpp: tiny fix to remove compilor warning
 
 !=============================================================================
 ! 30/04/2009 - Silvia Borghi  ** v4r5 **
