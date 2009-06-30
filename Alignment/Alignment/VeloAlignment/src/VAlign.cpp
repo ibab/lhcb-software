@@ -8,6 +8,7 @@
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
 
+#include <boost/assign/list_of.hpp> // for 'vector_list_of()'
 
 
 // local
@@ -40,24 +41,29 @@ VAlign::VAlign( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_vertexer("TrackVertexer")
-  // The following variables will be set via a joboptions files
+// The following variables will be set via a joboptions files
 {
   declareProperty("Internal_Alignment"        , m_step1 = true);
-  declareProperty("Internal_Mod_Left"         , m_VELOmap_l= [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);
-  declareProperty("Internal_Mod_Right"        , m_VELOmap_r=  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);
-  declareProperty("Internal_DOF"              , m_align = [1,1,1,1,1,1] );
-  declareProperty("Internal_PTerms"           , m_sigma =[0.01,0.01,0.005,0.0005,0.0005,0.0002]);
-  declareProperty("Internal_EQs"              , m_constrain =[1,1,1,1,1,1,1,1,1] );
-  declareProperty("Internal_Residual_Cut"     , m_residual_cut =[0.3,0.06]);
-  declareProperty("Box_Alignment"             , m_step2 = 1);
+  declareProperty("Internal_Mod_Left"         , m_VELOmap_l = boost::assign::list_of(1)(1)(1)(1)(1)(1)
+                  (1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1));
+  declareProperty("Internal_Mod_Right"        , m_VELOmap_r =  boost::assign::list_of(1)(1)(1)(1)(1)(1)
+                  (1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1));
+  declareProperty("Internal_DOF"              , m_align = boost::assign::list_of(1)(1)(1)(1)(1)(1));
+  declareProperty("Internal_PTerms"           , m_sigma  =  boost::assign::list_of(0.01)(0.01)(0.005)
+                  (0.0005)(0.0005)(0.0002));
+  declareProperty("Internal_EQs"              , m_constrain  =  boost::assign::list_of(1)(1)(1)(1)(1)
+                  (1)(1)(1)(1));
+  declareProperty("Internal_Residual_Cut"     , m_residual_cut = boost::assign::list_of(0.3)(0.06));
+  declareProperty("Box_Alignment"             , m_step2 = true);
   declareProperty("Box_VELOopen"              , m_VELOopen = false);
-  declareProperty("Box_DOF"                   , m_alignb = [1,1,1,1,1,1]);
-  declareProperty("Box_PTerms"                , m_sigmab= [10.0,10.0,10.0,0.03,0.03,0.03]);
-  declareProperty("Box_EQs"                   , m_constrainb =[1,1,1,1,1,0]);
-  declareProperty("Box_Residual_Cut"          , m_residual_cutb =[0.5,0.4]);
+  declareProperty("Box_DOF"                   , m_alignb = boost::assign::list_of(1)(1)(1)(1)(1)(1));
+  declareProperty("Box_PTerms"                , m_sigmab = boost::assign::list_of(10.0)(10.0)(10.0)
+                  (0.03)(0.03)(0.03));
+  declareProperty("Box_EQs"                   , m_constrainb =boost::assign::list_of(1)(1)(1)(1)(1)(0));
+  declareProperty("Box_Residual_Cut"          , m_residual_cutb = boost::assign::list_of(0.5)(0.4)); 
   declareProperty("Box_MinTracks_perPV"       , m_PV_trackmin =10);
   declareProperty("General_Startfactor"       , m_starfactr= 100.0 );
-  declareProperty("General_Maxtracks"         , m_maxtrack= 100.0 );
+  declareProperty("General_Maxtracks"         , m_maxtrack= 100 );
   declareProperty("Monitor_Constants"         , m_moni_constants = false);   
   declareProperty("Monitor_PV"                , m_moni_PV = false);  
   declareProperty("Monitor_Overlaps"          , m_moni_overlaps = false);  
@@ -66,7 +72,7 @@ VAlign::VAlign( const std::string& name,
   declareProperty("Monitor_Events"            , m_moni_events = false);  
   declareProperty("TrackStoreTool"            , my_TrackStore = "TrackStore");
   declareProperty("MillepedeTool"             , my_Millepede  = "Millepede");
-  declareProperty( "TrackContainer"           , m_trackContainerName = LHCb::TrackLocation::Velo );
+  declareProperty( "TrackContainer"           , m_trackContainerName = LHCb::TrackLocation::Velo );  
 
 }
 //=============================================================================
