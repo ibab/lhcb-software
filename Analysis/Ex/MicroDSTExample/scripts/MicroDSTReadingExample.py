@@ -31,7 +31,8 @@ def printHelp():
 locationRoot = '/Event/microDST'
 selection = 'DC06selBs2JpsiPhi_unbiased'
 microDSTFile = ['']
-histoFile = HistoFile(selection+"_mDST_3.root")
+histoFileName = selection+"_mDST.root"
+histoFile = HistoFile(histoFileName)
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
 for o, a in opts:
@@ -68,9 +69,7 @@ lhcbApp.DDDBtag = 'default'
 lhcbApp.CondDBtag = 'default'
 
 appMgr = AppMgr(outputlevel=4)
-appMgr.config( files = ['$STDOPTS/LHCbApplication.opts',
-                        '$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts',
-                        '$DDDBROOT/options/DC06.opts'])
+appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
 appMgr.initialize()
 appMgr.ExtSvc += ['LHCb::ParticlePropertySvc']
 appMgr.HistogramPersistency = "ROOT"
@@ -253,7 +252,8 @@ print "omegaPlots.keys() = ", omegaPlots.keys()
 print "propTimeResPlot: ", propTimeResPlot
 print "reFitPropTimeResPlot: ", refitPropTimeResPlot
 
-print "Saving histograms"
+print "Saving histograms to file ", histoFileName
+
 for pid in interestingParticles :
     histoFile.save(massPlots[pid],
                    massResPlots[pid],
