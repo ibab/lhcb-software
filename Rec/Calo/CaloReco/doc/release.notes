@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.144 2009-06-22 13:06:32 cattanem Exp $
+! $Id: release.notes,v 1.145 2009-06-30 07:42:44 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v4r20 2009-06-30 =======================
 ! 2009-06-22 - Marco Cattaneo
  - Remove unused m_e member from CaloAutoTaggedCell. It was not initialised and
    was causing FPE on slc4_ia32_gcc34_dbg
