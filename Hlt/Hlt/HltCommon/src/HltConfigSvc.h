@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.12 2009-06-11 08:11:30 graven Exp $
+// $Id: HltConfigSvc.h,v 1.13 2009-06-30 14:32:25 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -8,9 +8,7 @@
 #include <vector>
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
-#include "boost/format.hpp"
-#include "boost/operators.hpp"
-
+#include "TCKrep.h"
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
@@ -37,31 +35,6 @@ public:
   virtual StatusCode finalize();      ///< Service finalization
   virtual void handle(const Incident&);
 
-   //TODO: move in dedicated class in HltBase...
-  class TCKrep : public boost::equality_comparable<TCKrep> {
-      public:
-        TCKrep() : m_unsigned(0) {}
-        explicit TCKrep(unsigned int i) : m_unsigned(i) { set(i); }
-        explicit TCKrep(const std::string& s) : m_unsigned(0) { set(s); }
-        bool operator<(const TCKrep& rhs) const { return m_unsigned  < rhs.m_unsigned; } 
-        bool operator==(const TCKrep& rhs) const { return m_unsigned == rhs.m_unsigned; } 
-        bool operator==(unsigned int rhs) const { return m_unsigned == rhs; } 
-        bool operator!=(unsigned int rhs) const { return !operator==(rhs); }
-        TCKrep& operator&=(unsigned int rhs) { return set( uint() & rhs ); }
-        TCKrep& operator++() { return set( ++m_unsigned ); }
-        const std::string&  str() const { return m_stringRep; }
-        unsigned int uint() const { return m_unsigned;  }
-        TCKrep& set(const std::string& s);
-        TCKrep& set(unsigned i)           { 
-                m_unsigned = i;
-                m_stringRep = boost::str( boost::format("0x%08x")%i ) ;
-                return *this;
-        }
-        bool valid() const { return m_unsigned != 0 ; }
-      private:
-        std::string m_stringRep;
-        unsigned int m_unsigned;
-  };
 private:
   void dummyCheckOdin();
   void checkOdin();
@@ -86,8 +59,11 @@ private:
   TCKrep                       m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
+  // IGenericTool                *m_decodeOdin;
+  bool                         m_decodeOdinOnDemand;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
+  unsigned int                 m_taskNumber;
 
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(TCKrep tck) const;

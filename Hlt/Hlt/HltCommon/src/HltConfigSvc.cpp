@@ -1,12 +1,10 @@
-// $Id: HltConfigSvc.cpp,v 1.29 2009-06-11 08:12:29 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.30 2009-06-30 14:32:25 graven Exp $
 // Include files 
 
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
-#include "boost/regex.hpp"
 #include "boost/foreach.hpp"
-#include "boost/algorithm/string/case_conv.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 namespace bl=boost::lambda;
@@ -26,41 +24,6 @@ namespace bl=boost::lambda;
 using namespace std;
 using boost::lexical_cast;
 
-namespace {
-    unsigned char unhex(unsigned char C) {
-        unsigned char c=tolower(C);
-        boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
-                           ( c >= 'a' && c <='f'  ? 10+(c-'a') : 255 ) );
-        if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
-        return x;
-    };
-    unsigned int unhex(const std::string& val) {
-        assert( val.substr(0,2)=="0x" );
-        assert( val.size()==10 );
-        unsigned int i = 0;
-        const char *x = val.c_str()+2;
-        while (*x) i = ( i<<4 | unhex(*x++) );
-        return i;
-    };
-}
-
-HltConfigSvc::TCKrep& HltConfigSvc::TCKrep::set(const std::string& s) {
-        boost::regex e("^(0x[0-9a-fA-F]{8})$");
-        boost::smatch what;
-        if(!boost::regex_match(s, what, e)) {
-            throw GaudiException("Invalid TCK format",s,StatusCode::FAILURE);
-            return *this;
-        }
-        m_unsigned = unhex(what[1]);
-        m_stringRep = s;
-        // canonical rep is lower case...
-        boost::algorithm::to_lower(m_stringRep);
-        return *this;
-}
-
-
-std::ostream& operator<<(std::ostream& os, const HltConfigSvc::TCKrep& tck) { return os << tck.str(); }
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltConfigSvc
@@ -79,6 +42,8 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_configuredTCK(0)
   , m_evtSvc(0)
   , m_incidentSvc(0)
+  // , m_decodeOdin(0)
+  , m_taskNumber(~0u)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
   //TODO: Already done -- called propertyhandler...[:w
@@ -86,6 +51,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("initialTCK", m_initialTCK_ )->declareUpdateHandler( &HltConfigSvc::updateInitial, this); 
   declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
+  // declareProperty("decodeOdinOnDemand", m_decodeOdinOnDemand = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
   //declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
   m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default ;
@@ -124,10 +90,28 @@ StatusCode HltConfigSvc::finalize() {
 // Initialization
 //=============================================================================
 StatusCode HltConfigSvc::initialize() {
+  // see if we're running online... HLTXYY_ZZZZ_#
+  std::string taskName( System::argv()[0] );
+#if 0
+  if (match) { 
+    m_taskNumber = ...;
+#if linux
+    stuct hostent* host = gethostent()
+
+    m_host = gethostent()
+#endif
+#endif
+  
+
+
   StatusCode status = PropertyConfigSvc::initialize();
   if ( !status.isSuccess() ) return status;
 
   if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
+
+  //if (m_decodeOdinOnDemand) {
+  //  m_decodeOdin = tool<IGenericTool>( ... );
+  //}
 
 
   if (m_checkOdin) {
@@ -175,7 +159,7 @@ StatusCode HltConfigSvc::initialize() {
   for (std::vector<ConfigTreeNodeAlias>::const_iterator i = sameTypes.begin(); i!=sameTypes.end(); ++i ) {
      debug() << " considering " << i->alias().str() << endmsg; 
      if ( i->alias().str().substr(0,pos) != initTop->alias().str().substr(0,pos) ) continue;
-     info() << " loading config " << i->alias().str() << " -> " << i->ref() << endmsg; 
+     debug() << " loading config " << i->alias().str() << " -> " << i->ref() << endmsg; 
      if ( !loadConfig( i->ref() ) ) {
         error() << " failed to load config " << *i << endmsg; 
         return StatusCode::FAILURE;
@@ -254,6 +238,10 @@ void HltConfigSvc::dummyCheckOdin() {
 void HltConfigSvc::checkOdin() {
 
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
+    //if (!odin && m_decodeOdinOnDemand ) {
+        // TODO: invoke ODINDecodeTool if configured to do so..
+    //    m_decodeOdin->execute()
+    //}
     if (!odin) {
         error() << " Could not locate ODIN... " << endmsg;
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
@@ -292,6 +280,7 @@ void HltConfigSvc::checkOdin() {
     //TODO: put HltDecReports into event with current TCK...
     std::auto_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
     hdr->setConfiguredTCK(m_configuredTCK.uint());
+    // hdr->setTaskNumber(...);
     m_evtSvc->registerObject(m_outputContainerName,hdr.release());
 }
 

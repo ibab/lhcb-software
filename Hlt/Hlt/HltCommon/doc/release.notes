@@ -9,6 +9,7 @@
  - remove obsolete HltRawBankFilter, use FilterByBankType in LHCbAlgs instead
  - remove functionality in TreeEditor which is surpassed by the python TCKUtils
  - fix compilation warnings on gcc43 dbg
+ - add Distpatching ANNSvc implementation -- dispatches based on TCK
 
 ! 2009-06-26 - Patrick Spradlin
  - src/HltCopySelection.cpp

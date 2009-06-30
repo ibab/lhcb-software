@@ -8,9 +8,9 @@ public:
     HltANNSvc( const std::string& name, ISvcLocator *svcLocator )
     :ANNSvc(name, svcLocator, 
             boost::assign::list_of( std::string("Hlt1SelectionID") )
-                                  ( std::string("Hlt2SelectionID")   )
-                                  ( std::string("InfoID")      )
-                                  ( std::string("RoutingBits")      )
+                                  ( std::string("Hlt2SelectionID") )
+                                  ( std::string("InfoID")          )
+                                  ( std::string("RoutingBits")     )
            ) 
     {
         declareProperty("allowUndefined",m_allowUndefined=true,"do we allow undefined, on-demand generated, key/value pairs?");
