@@ -1,3 +1,7 @@
+"""
+Configuration file for Standard Loose Kstar2Kpi
+"""
+
 __author__ = 'Diego Martinez Santos'
 __date__ = '29/06/2009'
 
