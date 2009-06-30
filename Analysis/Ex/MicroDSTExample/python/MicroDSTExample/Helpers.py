@@ -4,32 +4,6 @@ from math import sqrt, fabs
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from LHCbMath import XYZVector, XYZPoint
 #==============================================================================
-class NextEvent:
-    def __init__(self, am ) :
-        self.appMgr = am
-    def __call__(self) :
-        self.appMgr.run(1)
-        return  self.appMgr.evtSvc()['/Event'] != None
-#==============================================================================
-class PartPropSvc:
-    def __init__(self, am) :
-        self.appMgr = am
-        _svc = Helper.service(self.appMgr._svcloc, 'LHCb::ParticlePropertySvc')
-        self.Svc = InterfaceCast(gbl.LHCb.IParticlePropertySvc)(_svc)
-    def __call__(self, pid) :
-        pidx = gbl.LHCb.ParticleID(pid)
-        return self.Svc.find( pidx )
-#==============================================================================
-class TESContainerLoop:
-    def __init__(self, evt, fun ) :
-        self.evt = evt
-        self.fun = fun
-    def __call__(self, location) :
-        container = self.evt[location]
-        for item in container :
-            self.fun(item)
-        return container.size()
-#==============================================================================
 class Plots :
     def __init__(self, name="Plots") :
         self.name = name
@@ -100,12 +74,6 @@ def particleID(particle) :
 def pid(particle) :
     return particle.particleID().pid()
 #==============================================================================
-def omega(tag) :
-    return tag.omega()
-#==============================================================================
-def category(tag) :
-    return tag.category()
-#==============================================================================
 def properTimeMC(particle) :
     tau = -99999.
     if ( particle == None or pid(particle) == -99000000 ) : return tau
@@ -129,27 +97,6 @@ def decayVertex(particle) :
     iCount=0
     for v in vertices :
         return deSmartRef(v)
-#==============================================================================
-def assocMCP(particle, table) :
-    if (table != None) :
-        assocRange = table.relations(particle)
-        if (assocRange.size() > 0) :
-            return assocRange[0].to()
-    else :
-        print "No table found!"
-#==============================================================================
-def bestVertex(particle, table) :
-    if (table !=None) :
-        PVRange = table.relations(particle)
-        if ( not PVRange.empty()) :
-#            print "Found ", PVRange.size(), " vertices at ", table.name(), " :"
-#            for rel in PVRange :
-#                print "\tPV ", printPos(rel.to().position())
-            return PVRange.back().to()
-    else :
-        print "Found no particle->PV associations"
-        return
-
 #==============================================================================
 def particleTreeLoop(particles, functor):
     for p in particles:
