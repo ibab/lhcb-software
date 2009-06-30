@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r22 2009-06-30 ======================
 ! 2009-06-25 - Chris Jones
  - Add OutputLevel property to Configurable to allow the printout level of all
    ProtoParticle algorithms to be controlled.
