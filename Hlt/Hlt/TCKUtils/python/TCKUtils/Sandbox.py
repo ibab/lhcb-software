@@ -1,3 +1,5 @@
+### TODO: replace by GaudiPython.Parallel.
+### TODO: see http://indico.cern.ch/getFile.py/access?contribId=47&sessionId=9&resId=1&materialId=slides&confId=59139
 import sys, os, pickle, traceback
 
 

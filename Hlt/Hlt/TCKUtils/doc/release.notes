@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-06-30 - Gerhard Raven
+ - add a comment reminding to rewrite sandbox using processing module...
+
 !========================== TCKUtils v1r1 2009-06-22 ===================
 ! 2009-06-18 - Gerhard Raven
  - make ConfigTarFileAccessSvc the default (used to be ConfigFileAccessSvc)
