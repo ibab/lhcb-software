@@ -1,5 +1,5 @@
 package Presenter
-version v0r20
+version v0r19
 
 branches cmt doc src test
 
@@ -17,7 +17,6 @@ use  Boost        v*  LCG_Interfaces
 # Go for the latest and greatest ROOT
 #macro ROOT_config_version "5.19.04"
 #macro ROOT_config_version "5.21.02"
-macro Boost_config_version "1.39.0"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
@@ -44,17 +43,18 @@ macro_append Boost_linkopts $(Boost_linkopts_program_options)
 macro_append Boost_linkopts " "
 macro_append Boost_linkopts $(Boost_linkopts_serialization)
 macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_thread)
-macro_append Boost_linkopts " "
 #macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34 " \
-macro_append Boost_linkopts "" WIN32 " boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib boost_thread-vc71-mt1_39.lib"
+macro_append Boost_linkopts "" WIN32 "boost_system-vc71-mt-1_39.lib boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib "
+
+
+
 
 # Setup cppflags
 #macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
 
 # RegexpFrame.cpp
 
-application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
                                      ReferencePicker.cpp IntervalPicker.cpp \
                                      LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
