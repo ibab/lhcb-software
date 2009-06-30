@@ -5,7 +5,9 @@
 !----------------------------------------------------------------------------
 
 ! 2009-06-30 - Gerhard Raven
+ - remove code supporting both pre- and post 1.37 version of Boost
  - remove obsolete HltRawBankFilter, use FilterByBankType in LHCbAlgs instead
+ - remove functionality in TreeEditor which is surpassed by the python TCKUtils
 
 ! 2009-06-26 - Patrick Spradlin
  - src/HltCopySelection.cpp

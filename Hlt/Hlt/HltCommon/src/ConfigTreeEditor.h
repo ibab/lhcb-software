@@ -1,4 +1,4 @@
-// $Id: ConfigTreeEditor.h,v 1.4 2008-08-05 11:59:35 graven Exp $
+// $Id: ConfigTreeEditor.h,v 1.5 2009-06-30 13:41:41 graven Exp $
 #ifndef CONFIGTREEEDITOR_H 
 #define CONFIGTREEEDITOR_H 1
 #include "GaudiAlg/GaudiTool.h"
@@ -30,14 +30,7 @@ public:
    ~ConfigTreeEditor();
 
    StatusCode initialize();
-   StatusCode finalize();
 
-   void  printAlgorithms(const ConfigTreeNode::digest_type& in) const;
-   void  printServices(const ConfigTreeNode::digest_type& in) const;
-   void  printTools(const ConfigTreeNode::digest_type& in) const;
-   void  printProperties(const ConfigTreeNode::digest_type& top, const std::string& component,
-                                                                 const std::string& prop) const;
-  
    // multimap of 'component' -> 'key','value'
    ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
                                               const std::multimap<std::string,

@@ -245,7 +245,6 @@ private:
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( ConfigTreeEditor );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -275,13 +274,6 @@ StatusCode ConfigTreeEditor::initialize() {
   m_configAccessSvc = svc<IConfigAccessSvc>(s_configAccessSvc);
   m_propertyConfigSvc = svc<IPropertyConfigSvc>(s_propertyConfigSvc);
   return StatusCode::SUCCESS;
-}
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode ConfigTreeEditor::finalize() {
-  info() << "Finalize" << endmsg;
-  return GaudiTool::finalize();
 }
 
 
@@ -321,132 +313,3 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
    }
    return updateAndWrite( in, mm, label );
 }
-
-
-
-
-
-
-class TreePrinter : public ConfigTree::Visitor {
-public:
-   TreePrinter(std::ostream& os,bool algs, bool svcs, bool tools) 
-     : m_os(os)
-     , m_doAlgs(algs)
-     , m_doSvcs(svcs)
-     , m_doTools(tools) 
-     , m_depth(0)
-   {}
-
-   void pre(const ConfigTree& node) { 
-      if (match(node)) m_os << std::string(1+3*m_depth,' ') 
-                            << node.leaf()->name() << endl;
-   }
-
-   bool descend(const ConfigTree&) { ++m_depth; return true; }
-
-   void post(const ConfigTree&) { assert(m_depth>0); --m_depth; }
-
-private:
-   bool match(const ConfigTree& node) const {
-       const PropertyConfig* leaf = node.leaf();
-       return leaf != 0 && (
-                (leaf->kind() == "IAlgorithm" && m_doAlgs) 
-              ||(leaf->kind() == "IService" && m_doSvcs)
-              ||(leaf->kind() == "IAlgTool" && m_doTools) ) ;
-   }
-   std::ostream&  m_os;
-   bool           m_doAlgs;
-   bool           m_doSvcs;
-   bool           m_doTools;
-   int            m_depth;
-};
-
-
-void
-ConfigTreeEditor::printAlgorithms(const ConfigTreeNode::digest_type& in) const
-{
-   TreePrinter x(cout, true,false,false);
-   ConfigTree( in, *m_propertyConfigSvc ).visit( x );
-}
-
-void
-ConfigTreeEditor::printServices(const ConfigTreeNode::digest_type& in) const
-{
-   TreePrinter x(cout, false,true,false);
-   ConfigTree( in, *m_propertyConfigSvc ).visit( x );
-}
-
-void
-ConfigTreeEditor::printTools(const ConfigTreeNode::digest_type& in) const
-{
-   TreePrinter x(cout, false,false,true);
-   ConfigTree( in, *m_propertyConfigSvc ).visit( x );
-}
-
-
-class PropPrinter : public ConfigTree::Visitor {
-public:
-   PropPrinter(std::ostream& os,const std::string& comp, const std::string& prop) 
-     : m_os(os)
-     , m_comp(comp.empty()? ".*" : comp)
-     , m_prop(prop.empty()? ".*" : prop)
-   {}
-
-   void pre(const ConfigTree& node) { 
-      if (!match(node)) return;
-      bool first=true;
-      const PropertyConfig::Properties& props = node.leaf()->properties();
-      for (PropertyConfig::Properties::const_iterator i = props.begin();
-           i!=props.end();++i) {
-             if (!match(i->first)) continue;
-             if (first) {
-                    m_os << "\n    Requested Properties for " 
-                         << node.leaf()->fullyQualifiedName() << "\n";
-                    first = false;
-             }
-             m_os << "     \'" << i->first << "\': " << i->second << endl;
-      }
-   }
-
-   bool descend(const ConfigTree&) { return true; }
-
-   void post(const ConfigTree&) { }
-
-private:
-   bool match(const ConfigTree& node) const {
-       const PropertyConfig* leaf = node.leaf();
-       boost::smatch what;
-       return leaf != 0 && ( boost::regex_match(leaf->name(),what,m_comp) );
-   }
-   bool match(const string& key) const {
-       boost::smatch what;
-       return boost::regex_match(key,what,m_prop);
-   }
-
-   std::ostream&  m_os;
-   boost::regex   m_comp,m_prop;
-};
-
-void
-ConfigTreeEditor::printProperties(const ConfigTreeNode::digest_type& in, const std::string& comp,
-                                                                         const std::string& prop) const
-{
-   PropPrinter x(cout, comp, prop );
-   ConfigTree( in, *m_propertyConfigSvc ).visit( x );
-}
-
-
-
-
-class DiffFinder : public ConfigTree::Visitor {
-public:
-   DiffFinder(ConfigTree* referenceTree); 
-
-   void pre(const ConfigTree& ) { }
-
-   bool descend(const ConfigTree&) { return true;}
-
-   void post(const ConfigTree&) { }
-
-private:
-};
