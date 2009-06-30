@@ -7,7 +7,7 @@ MySelection = GaudiSequencer("SeqDC06selBs2JpsiPhi")
 
 conf = PhysMicroDST()
 conf.OutputPrefix = "MicroDST"
-conf.MicroDSTFile = "MyTestMDST_MC_newConf.dst"
+conf.MicroDSTFile = "MyTestMDST_MC_newConf.mdst"
 conf.MicroDSTSelectionAlg = "DC06selBs2JpsiPhi_unbiased"
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
