@@ -42,28 +42,28 @@ VAlign::VAlign( const std::string& name,
     m_vertexer("TrackVertexer")
   // The following variables will be set via a joboptions files
 {
-  declareProperty("Internal_Alignment"        , m_step1);
-  declareProperty("Internal_Mod_Left"         , m_VELOmap_l);
-  declareProperty("Internal_Mod_Right"        , m_VELOmap_r);
-  declareProperty("Internal_DOF"              , m_align);
-  declareProperty("Internal_PTerms"           , m_sigma);
-  declareProperty("Internal_EQs"              , m_constrain);
-  declareProperty("Internal_Residual_Cut"     , m_residual_cut);
-  declareProperty("Box_Alignment"             , m_step2);
-  declareProperty("Box_VELOopen"              , m_VELOopen);
-  declareProperty("Box_DOF"                   , m_alignb);
-  declareProperty("Box_PTerms"                , m_sigmab);
-  declareProperty("Box_EQs"                   , m_constrainb);
-  declareProperty("Box_Residual_Cut"          , m_residual_cutb);
-  declareProperty("Box_MinTracks_perPV"       , m_PV_trackmin);
-  declareProperty("General_Startfactor"       , m_starfactr);
-  declareProperty("General_Maxtracks"         , m_maxtrack);
-  declareProperty("Monitor_Constants"         , m_moni_constants);   
-  declareProperty("Monitor_PV"                , m_moni_PV);  
-  declareProperty("Monitor_Overlaps"          , m_moni_overlaps);  
-  declareProperty("Monitor_Tracks"            , m_moni_tracks);  
-  declareProperty("Monitor_Tracks_num"        , m_nTrackSample);  
-  declareProperty("Monitor_Events"            , m_moni_events);  
+  declareProperty("Internal_Alignment"        , m_step1 = true);
+  declareProperty("Internal_Mod_Left"         , m_VELOmap_l= [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);
+  declareProperty("Internal_Mod_Right"        , m_VELOmap_r=  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]);
+  declareProperty("Internal_DOF"              , m_align = [1,1,1,1,1,1] );
+  declareProperty("Internal_PTerms"           , m_sigma =[0.01,0.01,0.005,0.0005,0.0005,0.0002]);
+  declareProperty("Internal_EQs"              , m_constrain =[1,1,1,1,1,1,1,1,1] );
+  declareProperty("Internal_Residual_Cut"     , m_residual_cut =[0.3,0.06]);
+  declareProperty("Box_Alignment"             , m_step2 = 1);
+  declareProperty("Box_VELOopen"              , m_VELOopen = false);
+  declareProperty("Box_DOF"                   , m_alignb = [1,1,1,1,1,1]);
+  declareProperty("Box_PTerms"                , m_sigmab= [10.0,10.0,10.0,0.03,0.03,0.03]);
+  declareProperty("Box_EQs"                   , m_constrainb =[1,1,1,1,1,0]);
+  declareProperty("Box_Residual_Cut"          , m_residual_cutb =[0.5,0.4]);
+  declareProperty("Box_MinTracks_perPV"       , m_PV_trackmin =10);
+  declareProperty("General_Startfactor"       , m_starfactr= 100.0 );
+  declareProperty("General_Maxtracks"         , m_maxtrack= 100.0 );
+  declareProperty("Monitor_Constants"         , m_moni_constants = false);   
+  declareProperty("Monitor_PV"                , m_moni_PV = false);  
+  declareProperty("Monitor_Overlaps"          , m_moni_overlaps = false);  
+  declareProperty("Monitor_Tracks"            , m_moni_tracks = false);  
+  declareProperty("Monitor_Tracks_num"        , m_nTrackSample = 50);  
+  declareProperty("Monitor_Events"            , m_moni_events = false);  
   declareProperty("TrackStoreTool"            , my_TrackStore = "TrackStore");
   declareProperty("MillepedeTool"             , my_Millepede  = "Millepede");
   declareProperty( "TrackContainer"           , m_trackContainerName = LHCb::TrackLocation::Velo );
@@ -150,6 +150,8 @@ StatusCode VAlign::initialize() {
 
   sc = m_vertexer.retrieve() ;
 
+  ntotaleTracks = 0;
+  ntotaleTracks2 = 0;
   return sc;
   
   
@@ -169,12 +171,21 @@ StatusCode VAlign::execute() {
   //LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Velo );
   //LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Default );
   debug() << "Retrieved Tracks       : " << tracks->size() << endmsg;
-  
-  //silvia 1 line
-  if (!exist<LHCb::RecVertices>( LHCb::RecVertexLocation::Primary )) 
-    return Warning( "LHCb::RecVertexLocation::Primary not found", StatusCode::SUCCESS, 0);
-  const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( LHCb::RecVertexLocation::Primary ) ;
-  debug() << "Retrieved Vertex       : " << pvcontainer->size() << endmsg;
+  ntotaleTracks +=tracks->size();
+  // Get event number from the ODIN bank
+
+  if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
+    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    debug() << "Run "     << odin->runNumber()
+           << ", Event " << odin->eventNumber() << endmsg;
+    m_runodin=odin->runNumber();
+    m_eventodin= odin->eventNumber();
+    
+  } else {
+    Warning("No ODIN Header").ignore();
+    m_runodin=0;
+    m_eventodin=0;
+  }
   
   int tracknumperev=tracks->size();
 //   LHCb::VeloClusters* m_veloClusters;
@@ -182,9 +193,6 @@ StatusCode VAlign::execute() {
 //   int hitnumperevent=m_veloClusters->size();
 //   debug() << "Retrieved clusters       : " << hitnumperevent << endmsg;
   int hitnumperevent=0;
-  
-  
-
      
   if ( tracks->size() == 0 || tracks->size() >= m_maxtrack ){
     debug() << "Event skipped (busy or no tracks)" << endmsg;
@@ -201,9 +209,12 @@ StatusCode VAlign::execute() {
 
   for (iTrack = tracks->begin(); iTrack != tracks->end(); ++iTrack ){    
     ++nTracks;
+    debug() <<nTracks<<" track"<<endmsg;
     LHCb::Track* my_fitted_track = *iTrack ;          // retrieve track
     int nExpectedHits = m_expectTool->nExpected(*my_fitted_track);
     int nVeloHits =0;
+    debug() <<"Number of expected hits "<< nExpectedHits <<endmsg;
+
     /////trackvector.push_back(*iTrack);
     
     
@@ -214,10 +225,12 @@ StatusCode VAlign::execute() {
       
     //   Select the track according to the cuts defined in $VELOALIGNOPTS/TrackStore.opts	  
     //   and the geometry defined in $VELOALIGNOPTS/VeloAlign.opts  
+    debug() <<"Transform track into VeloTrack for Align " <<endmsg;
     my_tracks->TransformTrack(my_fitted_track,my_align_track,&VELOmap[0]); 
+    debug() <<"Check type of track " <<endmsg;
 
 
-//     //test silvia
+     //test silvia
     if (my_align_track.nType() == 0)
       lefttracks.push_back(*iTrack);   
     if (my_align_track.nType() == 1)
@@ -226,21 +239,25 @@ StatusCode VAlign::execute() {
       trackvector.push_back(*iTrack);
 
 
+    if (m_moni_tracks){
+      VAlign::fill_trackmoni(my_align_track,0);
+      VAlign::fill_params2(my_align_track,0);
+      VAlign::fill_params3(my_align_track,0,nExpectedHits,nVeloHits);
+      ntotaleTracks2 +=1;
+    }
+      
     if (my_align_track.nIsGood())  
     {
-      if (m_moni_tracks){
-        VAlign::fill_trackmoni(my_align_track,0);
-        VAlign::fill_params2(my_align_track,0);
-        VAlign::fill_params3(my_align_track,0,nExpectedHits,nVeloHits);
-      }
-      
+      debug() <<"Good track"<<endmsg;
       if (my_align_track.nType() == 0 || my_align_track.nType() == 1)
       {
+        debug() <<"Right or Left track"<<endmsg;
         if (m_moni_tracks && (nTrackSample < m_nTrackSample)) // Request control sample
         {
           nTrackSample++;
           control_tracks.push_back(my_align_track); 	    
           VAlign::fill_params(my_align_track,0);	 
+          debug() <<"Moni of control tracks"<<endmsg;
         }
         else
         {
@@ -256,24 +273,26 @@ StatusCode VAlign::execute() {
 
           selected_tracks.push_back(my_align_track);
           tralignnumperevent+=1;
+          debug() <<"Add new track for alignment"<<endmsg;
         }
       }
-      
         
       if (my_align_track.nType() == 2 && m_step2) // Overlap tracks (monitored by default)
       {
+        debug() <<"Overlap track"<<endmsg;
         if (m_moni_overlaps) VAlign::fill_overlaps(my_align_track,0);	  
         overlap_tracks.push_back(my_align_track);
         troverlapnumperevent+=1;
       }
       //         trackvector.push_back(*iTrack);
-      //         if (my_align_track.nType() == 0) lefttracks.push_back(*iTrack); 
-      //         if (my_align_track.nType() == 1) righttracks.push_back(*iTrack);
-      
+      //         if (my_align_track.nType() == 0) lefttracks.push_back(*iTrack);
+      //         if (my_align_track.nType() == 1) righttracks.push_back(*iTrack);      
     }
-    
+    else
+        debug() <<"No good track"<<endmsg;
   } // End of loop on event tracks
   
+  debug() <<"Event Monitor"<<endmsg;
   if (m_moni_events)  VAlign::fill_infoevent( nEvents, tracknumperev,hitnumperevent,
                                              tralignnumperevent, troverlapnumperevent);
   
@@ -705,6 +724,9 @@ StatusCode VAlign::finalize() {
   }   
   
   VAlign::updateConditions( misal_left, misal_right, misal_box, error_left, error_right );
+  
+  info() << "Total Number of retrieved tracks " << ntotaleTracks <<endmsg;
+  info() << "Total Number of ALIGN GOOD tracks " << ntotaleTracks2 <<endmsg;
   
   info() << " Num. of R tracks= " << nRight_tracks <<" Num. of L tracks= " << nLeft_tracks << endmsg;
   info() << " Num. of overlap tracks= " << overlap_tracks.size() << endmsg;
@@ -1192,7 +1214,7 @@ StatusCode VAlign::GetAlignmentConstants()
 StatusCode VAlign::fill_params(VeloTrack& my_track, int my_step) 
 {
 
-  debug() << "Control track on event : " << my_track.nEvent() << endmsg;
+  debug() << my_step <<" Control track on event : " << my_track.nEvent() << endmsg;
 
   Tuple tuple=nTuple("TrackClinfo", "Test sample");
   
@@ -1220,7 +1242,8 @@ StatusCode VAlign::fill_params(VeloTrack& my_track, int my_step)
   
     double n_resX = n_X-(slx*n_stationB+x0);
     double n_resY = n_Y-(sly*n_stationB+y0);
-
+    tuple->column( "run",m_runodin);
+    tuple->column( "evt",m_eventodin);
     tuple->column( "step",    my_step);
     tuple->column( "side",    n_side);
     tuple->column( "vx",      slx*(-(slx*x0+sly*y0)/(slx*slx+sly*sly))+x0);
@@ -1241,7 +1264,7 @@ StatusCode VAlign::fill_params(VeloTrack& my_track, int my_step)
 StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step) 
 {
 
-  debug() << "Control track on event : " << my_track.nEvent() << endmsg;
+  debug() << my_step << " Track Cluster Moni on event : " << my_track.nEvent() << endmsg;
 
   Tuple tuple=nTuple("ClusterMoni", "Full sample");
   
@@ -1279,6 +1302,8 @@ StatusCode VAlign::fill_params2(VeloTrack& my_track, int my_step)
      //double n_resP = atan2((n_Y+(sly*n_stationB+y0)),(n_X+(slx*n_stationB+x0)))-
                           //atan2(n_Y,n_X);
     
+    tuple->column( "run",m_runodin);
+    tuple->column( "evt",m_eventodin);
     tuple->column( "step",    my_step);
     tuple->column( "side",    n_side);
     tuple->column( "slx",     slx);
@@ -1313,7 +1338,7 @@ StatusCode VAlign::fill_params3(VeloTrack& my_track, int my_step,
                                 int nExpectedHits,int nVeloHits) 
 {
 
-  debug() << "Control track on event : " << my_track.nEvent() << endmsg;
+  debug() << my_step <<" Track Moni on event : " << my_track.nEvent() << endmsg;
   
   double slx, sly, x0, y0;
   int n_side = 0;
@@ -1331,6 +1356,8 @@ StatusCode VAlign::fill_params3(VeloTrack& my_track, int my_step,
   debug() << "Control track on event : " << my_track.nEvent() << endmsg;
 
   Tuple tuple=nTuple("Trackmoni", "Full sample");
+  tuple->column( "run",m_runodin);
+  tuple->column( "evt",m_eventodin);
   tuple->column( "ncoord", Ncoords);
   tuple->column( "nexpecthits", nExpectedHits);
   tuple->column( "nhits", nVeloHits);
@@ -1357,6 +1384,8 @@ StatusCode VAlign::fill_infoevent(int event, int tracknumperev,int hitnumpereven
   Tuple tuple=nTuple("EvInfo", "Event info");
 
   tuple->column( "event",   event);
+  tuple->column( "run",m_runodin);
+  tuple->column( "evt",m_eventodin);
   tuple->column( "trnum",  tracknumperev);
   tuple->column( "aligntrnum",tralignnumperevent );
   tuple->column( "overlaptrnum",  troverlapnumperevent );   
@@ -1370,12 +1399,14 @@ StatusCode VAlign::fill_infoevent(int event, int tracknumperev,int hitnumpereven
 StatusCode VAlign::fill_overlaps(VeloTrack& my_track, int my_step)
 {
 
-  debug() << "Overlap track on event : " << my_track.nEvent() << endmsg;
+  debug() << my_step <<" Overlap track point on event : " << my_track.nEvent() << endmsg;
 
   Tuple tuple=nTuple("Overlaps", "Overlap track info");
 
   for (unsigned int j=0; j<my_track.Coords().size(); j++)
   {
+    tuple->column( "run",m_runodin);
+    tuple->column( "evt",m_eventodin);
     tuple->column( "event",   my_track.nEvent());
     tuple->column( "track",   my_track.nTrack());
     tuple->column( "type",    my_track.nType()+my_step);
@@ -1405,7 +1436,8 @@ StatusCode VAlign::fill_officialPV_Lin(int nt_ev,int nt_pvn,
   debug() << "Official and Linear PV on event : " << nt_ev << endmsg;
 
   Tuple tuple=nTuple("OfficialPVLin", "Official and Linear PV info");
-
+  tuple->column( "run",m_runodin);
+  tuple->column( "evt",m_eventodin);
   tuple->column( "event", nt_ev);
   tuple->column( "pvn", nt_pvn);
 //   tuple->column( "trn", nt_trn);
@@ -1447,12 +1479,14 @@ StatusCode VAlign::fill_officialPV_Lin(int nt_ev,int nt_pvn,
 StatusCode VAlign::fill_trackmoni(VeloTrack& my_track, int my_step)
 {
 
-  debug() << "Overlap track on event : " << my_track.nEvent() << endmsg;
+  debug() << my_step  <<" Overlap track on event : " << my_track.nEvent() << endmsg;
 
   Tuple tuple=nTuple("FirstCoordMoni", "All used Track info");
 
   for (unsigned int j=0; j<my_track.Coords().size(); j++)
   {
+    tuple->column( "run",m_runodin);
+    tuple->column( "evt",m_eventodin);
     tuple->column( "event",   my_track.nEvent());
     tuple->column( "track",   my_track.nTrack());
     tuple->column( "type",    my_track.nType()+my_step);

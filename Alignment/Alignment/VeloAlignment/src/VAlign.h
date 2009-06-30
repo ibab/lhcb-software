@@ -13,6 +13,8 @@
 // Event
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/ODIN.h"
+
 #include "Event/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
@@ -109,7 +111,9 @@ private:
   ToolHandle<ITrackVertexer> m_vertexer ;
   IVeloExpectation* m_expectTool;
   
-
+  int m_runodin;
+  int m_eventodin;
+  
   VeloTracks    selected_tracks;   // Used for step one
   VeloTracks    control_tracks;    // Used for the control sample
   VeloTracks    overlap_tracks;    // Used for the overlap tracks
@@ -203,5 +207,7 @@ private:
 
   int nLeft_tracks;
   int nRight_tracks;
+  int ntotaleTracks;
+  int ntotaleTracks2;
 };
 #endif // VELOALIGNMENT_ALIGN_H
