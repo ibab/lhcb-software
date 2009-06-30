@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r21 2009-06-30 ==========================
 ! 2009-06-25 - Chris Jones
  - Add OutputLevel property to RichRecSysConf Configurable that can be used
    to global set the output level for all reconstruction components.
