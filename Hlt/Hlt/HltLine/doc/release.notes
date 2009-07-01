@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.10 2009-06-30 14:34:29 graven Exp $
+! $Id: release.notes,v 1.11 2009-07-01 08:54:30 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,8 +6,14 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2009-07-01 - Gerhard Raven
+ - allow to give a list of incidents which HltLine will listen for
+   during processing, and, if any of them occur, will result in a 
+   (single!) bit to be set in the HltDecReport
+
 ! 2009-06-30 - Gerhard Raven
  - minor streamlining figuring out inputs
+
 
 !========================== HltLine v1r1 2009-06-22 ===================
 ! 2009-06-22 - Gerhard Raven

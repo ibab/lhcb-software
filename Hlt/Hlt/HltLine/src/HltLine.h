@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.3 2009-06-18 09:19:01 graven Exp $
+// $Id: HltLine.h,v 1.4 2009-07-01 08:54:30 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IHltDataSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "boost/array.hpp"
 
@@ -22,7 +23,10 @@ class IAlgManager;
  *  @author Gerhard Raven
  *  @date   2008-09-13
  */
-class HltLine : public GaudiHistoAlg{
+class HltLine : public GaudiHistoAlg
+              , virtual public IIncidentListener
+
+{
 public:
   /// Standard constructor
   HltLine( const std::string& name, ISvcLocator* pSvcLocator );
@@ -32,6 +36,7 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+  void handle(const Incident&);
 
   void resetExecuted();         ///< Called before an event processing
 
@@ -139,11 +144,13 @@ private:
   Hlt::Selection* m_selection;
   std::string m_outputContainerName;
   std::string m_decision;
+  std::vector<std::string> m_incidents;  ///< Incidents to be flagged in HltDecReport if they occurs during processing
   bool m_ignoreFilter;                   ///< True if one continues always.
   bool m_isInitialized;                  ///< Indicate that we are ready
   bool m_measureTime;                    ///< Flag to measure time
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   bool m_acceptOnError;                  ///< Forces accept if error
+  bool m_caughtIncident;                 
   int  m_timer;                          ///< Timer number for the sequencer
   unsigned m_slowThreshold;
   double m_errorRate;                    ///< TODO: why double?

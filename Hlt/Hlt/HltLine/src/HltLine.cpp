@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.4 2009-06-18 09:19:01 graven Exp $
+// $Id: HltLine.cpp,v 1.5 2009-07-01 08:54:30 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -23,6 +23,7 @@
 #include "GaudiKernel/ListItem.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // ============================================================================
 // GaudiAlg
@@ -174,6 +175,7 @@ HltLine::HltLine( const std::string& name,
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
   declareProperty( "FlagAsSlowThreshold"  , m_slowThreshold  = 500000, "microseconds"  );
+  declareProperty( "IncidentsToBeFlagged" , m_incidents);
 
 }
 //=============================================================================
@@ -198,6 +200,13 @@ StatusCode HltLine::initialize() {
   debug() << "==> Initialize" << endreq;
   m_jos    = svc<IJobOptionsSvc>( "JobOptionsSvc"  );
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
+
+  // register for incidents...
+  IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
+  BOOST_FOREACH( const std::string& s, m_incidents ) {
+    bool rethrow = false; bool oneShot = false; long priority = 0;
+    incidentSvc->addListener(this,s,priority,rethrow,oneShot);
+  }
 
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
   if ( m_timerTool->globalTiming() ) m_measureTime = true;
@@ -301,10 +310,15 @@ StatusCode HltLine::execute() {
     warning() << " DecisionName=" << key->first << " has invalid intDecisionID=" << key->second << endmsg;
   } 
   bool accept = !m_stages.empty();
+  m_caughtIncident = false; // only interested in incidents during stages->execute...
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
+     if (m_caughtIncident) {
+        report.setErrorBits(report.errorBits() | 0x02);
+        m_caughtIncident = false;
+     }
      if (result.isFailure()) {
-        report.setErrorBits(1);   //TODO: different value depending on error type..
+        report.setErrorBits(report.errorBits() | 0x01);
         accept = m_acceptOnError; //TODO: don't allow infinite # of accepts on error...
         break;
      }
@@ -316,7 +330,7 @@ StatusCode HltLine::execute() {
   double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
   fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
 
-  if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x2 );
+  if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
 
   report.setDecision(accept ? 1u : 0u);
   report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
@@ -327,14 +341,11 @@ StatusCode HltLine::execute() {
   reports->insert( key->first , report );
 
   // update monitoring
-  assert(m_acceptCounter);
   *m_acceptCounter += accept;
   if (accept) ++m_acceptRate;
   // don't flag slow events as error, so mask the bit
-  assert(m_errorCounter);
-  *m_errorCounter += ( (report.errorBits()&~0x2)!=0) ;
-  assert(m_slowCounter);
-  *m_slowCounter += ( report.errorBits() & 0x2 !=0 );
+  *m_errorCounter += ( (report.errorBits()&~0x4)!=0) ;
+  *m_slowCounter += ( (report.errorBits() & 0x4)!=0 );
 
   fill( m_errorHisto, report.errorBits(),1.0);
   // make stair plot
@@ -366,6 +377,13 @@ void HltLine::resetExecuted ( ) {
   BOOST_FOREACH( HltStage* i, m_stages) i->resetExecuted();
 }
 
+
+//=========================================================================
+// listen for incident during processing...
+//=========================================================================
+void HltLine::handle( const Incident& ) {
+    m_caughtIncident = true;
+}
 //=========================================================================
 //  Obtain pointer to an instance of the requested algorithm.
 //=========================================================================
