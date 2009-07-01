@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.9 2008-12-05 15:45:43 jpalac Exp $
+# $Id: DaVinci-MC09.py,v 1.1 2009-07-01 12:16:53 pkoppenb Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -15,7 +15,7 @@ from Configurables import DaVinci
 ##############################################################################
 DaVinci().EvtMax = 500
 # DaVinci().SkipEvents = 0
-DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().DataType = "MC09" # Default is "DC06"
 # DaVinci().Simulation   = False
 # DaVinci().Input = []
 # DaVinci().UserAlgorithms = []

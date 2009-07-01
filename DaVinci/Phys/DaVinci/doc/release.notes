@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.358 2009-06-23 17:18:42 pkoppenb Exp $
+! $Id: release.notes,v 1.359 2009-07-01 12:16:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-07-01 - Patrick Koppenburg
+ - Renamed DaVinci-2008 into DaVinci-MC09
 
 !========================== DaVinci v23r2 2009-06-23 =================
 ! 2009-06-23 - Patrick Koppenburg
