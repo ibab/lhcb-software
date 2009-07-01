@@ -5,6 +5,104 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v27r3>2009-07-01 LHCbSys v27r3</A></H1><PRE>
+This version uses Gaudi v21r2 and LCG_56b
+
+- Packages modified: CaloDAQ v4r12, CaloInterfaces v7r12, DDDB v1r19,
+    RichDet v12r0, DAQEvent v7r21, EventPacker v1r5, L0Event v17r6,
+    TrackEvent v4r21, GaudiConf v12r6, GaudiObjDesc v11r8, LHCbMath v3r10,
+    L0MuonKernel v8r6p1, LoKiCore v9r3, LoKiGen v8r5, LoKiHlt v2r3, LoKiMC v8r5,
+    LoKiPhys v8r7, RichKernel v7r23, STTELL1Event v1r8, CondDBUI v2r19,
+    TrackInterfaces v4r4
+
+- In CaloDAQ v4r12
+  . (I)Calo(L0)DataProvider(FromTES) :
+    new method for partial CaloBank decoding from a vector of sourceIDs
+
+- In CaloInterfaces v7r12
+  . ICaloClusterisation tool new virtual method
+
+- In DDDB v1r19
+  . Set initial event time for DC06 data (avoids problems with ONLINE snapshots)
+
+- In RichDet v12r0
+  . New transform from the global frame to the photodetector panel frame that 
+    can cope better with misalignments. Method globalPosition removed from
+    DeRichHPDPanel.
+
+- In DAQEvent v7r21
+  . Add src/component/RawEventSelectiveCopy for copying selected RawBanks
+  . Add RawEventLocation::Copied in Event/RawEvent.h
+
+- In EventPacker v1r5
+  . Add the packing of RawEvent in WriteDst: All banks are copied from the input
+    RawEvent to the output one, and the list of added banks kept in the output.
+  . Add the reading of banks from a RawEvent object in ReadPackedDst
+  . Fix the coding of the momentum error in PackedTracks in case of saturation.
+  . Schema version update for PackedTrack: from version 2 onward, LHCb ids on 
+    track are sorted.
+  . In UnpackTrack.cpp, collect all LHCbIDs before adding them to track
+    (slightly faster than adding them one-by-one)
+
+- In L0Event v17r6
+  . L0DUReport.xml/L0DUConfig.xml : map assignation const referenced
+
+- In TrackEvent v4r21
+  . Added method to set all LHCbIDs on track at once
+  . Added method to compute overlap in sets of LHCbIDs
+  . LHCbIDs on track are now sorted
+  . Added State locations for vertex and last measurement
+
+- In GaudiConf v12r6
+  . Replace LHCbApp().Quiet property with LHCbApp().OutputLevel
+  . In DstConf.py:
+    o Add pRec/RawEvent to RDST (contains copy of HLT and L0 raw banks)
+    o Force RDST to be packed 
+
+- In GaudiObjDesc v11r8
+  . In importUtils.py, disable warning C4800 on Windows when including
+    HepMC/GenEvent.h
+
+- In LHCbMath v3r10
+  . In python/LHCbMath.py, add some LorentzVectors and 3D rotation types.
+
+- In LoKiCore v9r3
+  . add the patch to #bug 48914 
+  . LoKi/ConstReference.h  : new concept of "const-reference" 
+                             (instead of Reference<const TYPE>)
+  . LoKi/Field.h  : make proper disptach to ConstReference 
+
+- In LoKiCore v9r3, LoKiGen v8r5, LoKiMC v8r5, LoKiPhys v8r7
+  . Improvements for DecayFinder 
+
+- In LoKiHlt v2r3
+  . Add many "re&re-like" functors 
+
+- In RichKernel v7r23
+  . Update tool handling to base classes to propagate OutputLevel to
+    public tools that do not explicitly have it set. Uses the value as
+    set in the tool registry that 'owns' that tool.
+  . Update python Configuration to set OutputLevel of all tools when set.
+
+- In L0MuonKernel v8r6p1, STTELL1Event v1r8
+  . Fix compilation warnings for Windows
+
+- In CondDBUI v2r19
+  . Merged (some of) the functionalities fo dump_db_to_files.py into
+    CondDBAdmin_MakeSnapshot.py, for a simpler user interface.
+  . Modified copy_files_to_db.py to be able to specify an interval of validity
+    for the new data.
+  . Essentially completed the "browsing" part of the CondDBBrowser.
+  . Fixed a problem with user specified options in CondDBAdmin_MakeSnapshot.py
+  . Changes in the prototype for the new CondDBBrowser:
+    o Added a CMT fragment to generate PyQt resource modules
+    o Moved the resources to a dedicated directory and added a .qrc file
+    o Re-implemented the CondDBStructureModel to take into account channels
+
+- In TrackInterfaces v4r4
+  . Fix interface of ITrackCloneFinder
+
+
 </PRE><H1><A NAME=v27r2>2009-06-22 LHCbSys v27r2</A></H1><PRE>
 This version uses Gaudi v21r1 and LCG_56a
 
