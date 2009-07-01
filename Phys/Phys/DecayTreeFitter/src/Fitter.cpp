@@ -495,9 +495,11 @@ namespace DecayTreeFitter
   Fitter::updateTree(LHCb::Particle& p) const
   {
     bool rc ;
-    if ( (rc = updateCand(p) ) )
-      BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters() ) 
+    if ( (rc = updateCand(p) ) ) {
+      BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters() ) {
 	updateTree( const_cast<LHCb::Particle&>(*daughter) ) ;
+      }
+    }
     return rc ;
   }
   

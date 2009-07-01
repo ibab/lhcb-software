@@ -145,7 +145,7 @@ namespace DecayTreeFitter
 								     state1.slopes()) ;
 	  Gaudi::Math::Line<Gaudi::XYZPoint, Gaudi::XYZVector> line2(state2.position(),
 								     state2.slopes()) ;
-	  double mu1,mu2 ;
+	  double mu1(0),mu2(0) ;
 	  Gaudi::Math::closestPointParams(line1,line2,mu1,mu2) ;
 	  Gaudi::XYZPoint p1 = line1.position(mu1) ;
 	  Gaudi::XYZPoint p2 = line2.position(mu2) ;
