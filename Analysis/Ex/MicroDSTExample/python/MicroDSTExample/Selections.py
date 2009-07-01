@@ -1,8 +1,8 @@
 from SelectionSummary import Selection
 
-Bs2JpsiPhiSel = Selection('SeqDC06selBs2JpsiPhi',
-                          'DC06selBs2JpsiPhi_unbiased',
-                          '$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts',
+Bs2JpsiPhiSel = Selection('SeqBs2Jpsi2MuMuPhi2KK',
+                          'Bs2Jpsi2MuMuPhi2KK',
+                          '$MICRODSTEXAMPLEROOT/options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts',
                           '$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py')
 
 Jpsi2MuMuSel = Bs2JpsiPhiSel.clone()
