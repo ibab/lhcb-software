@@ -1,0 +1,23 @@
+// Put algo in main Sequence:
+SeqBs2Jpsi2MuMuPhi2KK.Members += { "OldFilterDesktop/Jpsi2MuMu" };
+// Input particles
+Jpsi2MuMu.InputLocations = {"Phys/StdDC06UnbiasedJpsi2MuMu"};
+
+// Define filters:
+Jpsi2MuMu.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
+Jpsi2MuMu.Filter.Selections = {"mu+ : KinFilterCriterion/muPt, KinFilterCriterion/muP, TrackQualityFilterCriterion/muTrackChi2, PVIPFilterCriterion/muIPS, DLLFilterCriterion/muDLLmu",
+"J/psi(1S): VtxFilterCriterion/jpsiVtx, MassFilterCriterion/jpsiMass, KinFilterCriterion/jpsiPt"};
+
+Jpsi2MuMu.Filter.FilterByDescendents = true ;
+
+// Cuts for Daughters:
+Jpsi2MuMu.Filter.muPt.MinPt = 500. * MeV ;
+Jpsi2MuMu.Filter.muP.MinMomentum = 0. * MeV;
+Jpsi2MuMu.Filter.muTrackChi2.Chi2Max = 5.0;
+Jpsi2MuMu.Filter.muIPS.MinIPsignif = 0.0; 
+Jpsi2MuMu.Filter.muDLLmu.PPFilter.Selection={"CombDLL(mu-pi)>'-5.0'"};
+
+//Cuts for Mother:
+Jpsi2MuMu.Filter.jpsiVtx.MaxChi2 = 6. ;
+Jpsi2MuMu.Filter.jpsiMass.Window = 42.*MeV;
+Jpsi2MuMu.Filter.jpsiPt.MinPt = 1000.*MeV ; 

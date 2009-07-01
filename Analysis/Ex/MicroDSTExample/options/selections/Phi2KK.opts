@@ -1,0 +1,23 @@
+// put algo in main Sequence:
+SeqBs2Jpsi2MuMuPhi2KK.Members += { "MakeResonances/Phi2KK" };
+
+// Input locations:
+Phi2KK.InputLocations =  { "Phys/StdDC06TightKaons" };
+Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-";
+
+// Cuts for daughters:
+Phi2KK.DaughterFilter.Selections = {"K+ : KinFilterCriterion/kaonPt, KinFilterCriterion/kaonP, PVIPFilterCriterion/kaonIPS, TrackQualityFilterCriterion/kaonTrackChi2"};
+
+Phi2KK.DaughterFilter.kaonPt.MinPt = 0.0 * MeV; 
+Phi2KK.DaughterFilter.kaonP.MinMomentum =  2000.0 * MeV; 
+Phi2KK.DaughterFilter.kaonIPS.MinIPsignif = 0.0; 
+Phi2KK.DaughterFilter.kaonTrackChi2.Chi2Max = 10.0;
+Phi2KK.KillOverlap = true;
+
+Phi2KK.MotherFilter.Selections = { "phi(1020) : VtxFilterCriterion/phiVtx,
+                                                                           MassFilterCriterion/phiMass,
+                                                                           KinFilterCriterion/phiPt" };
+
+Phi2KK.MotherFilter.phiVtx.MaxChi2 = 20.0; // new, to be consistent with Ks
+Phi2KK.MotherFilter.phiMass.Window = 12. * MeV ;  // new cut
+Phi2KK.MotherFilter.phiPt.MinPt = 1000. * MeV ;  // new cut
