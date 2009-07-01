@@ -1,9 +1,36 @@
-!$Id: release.notes,v 1.32 2009-06-30 15:48:31 jpalac Exp $
+!$Id: release.notes,v 1.33 2009-07-01 15:11:15 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-07-01 - Juan PALACIOS
+ - added options/selections directory with .opts for Bs->J/Psi Phi selection
+   to be used in examples. This way, package requires no getpacks of selecitons
+   in order to run write and read examples. Files added:
+
+   . Bs2Jpsi2MuMuPhi2KK.opts
+   . Jpsi2MuMu.opts
+   . Phi2KK.opts
+   . SeqBs2Jpsi2MuMuPhi2KK.opts
+
+ - options/TestMicroDSTMake.py
+  . Fix problem with CopyParticle's tool configurables and put some explanatory
+    text in the code.
+
+ - options/TestMicroDSTMakeNewConf.py
+  . Use new local selections.
+
+ - python/MicroDSTExample/HistoUtils.py
+  . Comment out line that was stopping execution
+
+ - python/MicroDSTExample/Selections.py
+  . Use new local Bs->J/Psi Phi selection
+
+ - scripts/MicroDSTReadingExample.py
+  . Use main location for new local selection by default
+  . Add safety for when flavour tags are not there.
 
 ! 2009-06-30 - Juan PALACIOS
  - python/MicroDSTExample/HistoUtils.py
