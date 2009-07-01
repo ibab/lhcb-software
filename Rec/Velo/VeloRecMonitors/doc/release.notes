@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-06-30 - Michael Alexander
+ - Removed warnings from VeloIPResolutionMonitor
+ - Removed VeloIPResolutionMonitor from BrunelMoni_Velo.py
+
+! 2009-06-30 - Michael Alexander
  - Added VeloIPResolutionMonitor algorithm to src
  - Added VeloIPResolutionMonitor algorithm to BrunelMoni_Velo.py
 
