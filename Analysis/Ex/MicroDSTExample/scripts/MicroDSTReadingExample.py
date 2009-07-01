@@ -29,7 +29,7 @@ def printHelp():
     print "                  Default 'Event/microDST'"
     
 locationRoot = '/Event/microDST'
-selection = 'DC06selBs2JpsiPhi_unbiased'
+selection = 'Bs2Jpsi2MuMuPhi2KK'
 microDSTFile = ['']
 histoFileName = selection+"_mDST.root"
 histoFile = HistoFile(histoFileName)
@@ -198,8 +198,9 @@ while ( nextEvent() ) :
     
     particles = evtSvc[particlePath]
     flavTags = evtSvc[flavTagPath]
-    for tag in flavTags :
-        safeFill( omegaPlots[tag.category()], tag.omega() )
+    if flavTags != None :
+        for tag in flavTags :
+            safeFill( omegaPlots[tag.category()], tag.omega() )
 
     if (particles!=None):
         nRecEvents+=1
