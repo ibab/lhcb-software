@@ -1186,6 +1186,8 @@ def getMySelf():
     log = logging.getLogger()
     log.info("script version : %s" % script_version)
     new_install = 'latest_install_project.py'
+    if os.path.exists("latest_install_project.py") :
+        os.remove("latest_install_project.py")
     getFile(url_dist,'install_project.py')
     changePermissions('latest_install_project.py', recursive=False)
     latest_line = readString(new_install,'script_version')

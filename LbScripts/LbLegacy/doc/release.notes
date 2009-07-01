@@ -1,3 +1,8 @@
+2009-07-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed downloading of latest_install_project.py. 
+	It has to be removed first from the local installation. 
+
 2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: readded the missing autoupdate feature (it
