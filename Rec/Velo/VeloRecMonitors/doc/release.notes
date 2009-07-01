@@ -4,7 +4,7 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
-! 2009-06-30 - Michael Alexander
+! 2009-07-01 - Michael Alexander
  - Removed warnings from VeloIPResolutionMonitor
  - Removed VeloIPResolutionMonitor from BrunelMoni_Velo.py
 
