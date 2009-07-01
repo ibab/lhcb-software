@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v35r3>2009-07-02 Brunel v35r3</A></H1><PRE>
 
  - Changes to Configurable:
+   . Configure MuonPIDChecker using configurable (E. Polycarpo)
    . Add Brunel().OutputLevel property to allow overall control of the printout
      levels. This property is propagated to other Configurables and (partly)
      obsoletes the NoWarnings property, but it is still needed for backwards
