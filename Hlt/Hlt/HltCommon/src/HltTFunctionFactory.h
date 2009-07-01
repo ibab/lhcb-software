@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.6 2009-01-17 23:27:25 jonrob Exp $
+// $Id: HltTFunctionFactory.h,v 1.7 2009-07-01 21:51:18 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -145,7 +145,7 @@ protected:
   template <class INTERFACE>
   void declare(const std::string& name, const std::string& toolname) {
     INTERFACE* it = tool<INTERFACE>(toolname,this);
-    declare(name, new Hlt::FunctionCreator<T>(Hlt::FunctionTool<T,INTERFACE>(*it),this));
+    declare(name, new Hlt::FunctionCreator<T>(Hlt::FunctionTool<T,INTERFACE>(it),this));
   }
   
   
@@ -153,8 +153,8 @@ protected:
   void declare(const std::string& name, const std::string& toolname) {
     INTERFACE* it = tool<INTERFACE>(toolname,this);
     typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
-    declare(name,       new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(*it),COMPARATOR()));
-    declare(name+"Key", new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(*it),COMPARATOR(),true));
+    declare(name,       new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(it),COMPARATOR()));
+    declare(name+"Key", new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(it),COMPARATOR(),true));
   }
   
   

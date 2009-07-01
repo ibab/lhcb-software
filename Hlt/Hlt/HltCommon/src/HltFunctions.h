@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.17 2009-04-01 09:57:31 dhcroft Exp $
+// $Id: HltFunctions.h,v 1.18 2009-07-01 21:51:18 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -17,6 +17,7 @@
 #include "TrackInterfaces/IFunctionTool.h"
 #include "HltBase/IBiFunctionTool.h"
 #include "Event/Node.h"
+#include "GaudiAlg/GaudiTool.h"
 
 namespace Hlt {  
 
@@ -279,32 +280,37 @@ namespace Hlt {
   template <class T, class ITOOL>
   class FunctionTool : public zen::function<T> {
   public:
-    explicit FunctionTool() {_tool = 0;}
-    explicit FunctionTool(ITOOL& tool) {_tool = &tool;}
+    FunctionTool(const std::string& toolname, GaudiTool *parent) 
+           : _tool( parent->tool<ITOOL>(toolname) )
+    { }
+    explicit FunctionTool(ITOOL* tool) : _tool(tool) 
+    { if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE ); }
     double operator() (const T& t1) const {
-      if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
       return _tool->function(t1);
     }
     zen::function<T>* clone() const {
-      if (_tool) return new Hlt::FunctionTool<T,ITOOL>(*_tool);
-      return new Hlt::FunctionTool<T,ITOOL>();
+      return new Hlt::FunctionTool<T,ITOOL>(_tool);
     }
+  private:
     ITOOL* _tool;
   };
 
   template <class T, class T2, class ITOOL>
   class BiFunctionTool : public zen::bifunction<T,T2> {
   public:
-    explicit BiFunctionTool() {_tool = 0;}
-    explicit BiFunctionTool(ITOOL& tool) {_tool = &tool;}
-    double operator() (const T& t1, const T2& t2) const {
+    BiFunctionTool(const std::string& toolname, GaudiTool *parent) 
+           : _tool( parent->tool<ITOOL>(toolname) )
+    { }
+    explicit BiFunctionTool(ITOOL* tool) :_tool(tool) {
       if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
+    }
+    double operator() (const T& t1, const T2& t2) const {
       double value = _tool->function(t1,t2);return value;
     }
     zen::bifunction<T,T2>* clone() const {
-      if (_tool) return new Hlt::BiFunctionTool<T,T2,ITOOL>(*_tool);
-      return new Hlt::BiFunctionTool<T,T2,ITOOL>();
+      return new Hlt::BiFunctionTool<T,T2,ITOOL>(_tool);
     }
+  private:
     ITOOL* _tool;
   };  
 
