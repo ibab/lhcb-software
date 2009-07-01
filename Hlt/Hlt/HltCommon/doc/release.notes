@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-07-01 - Gerhard Raven
+ - remove unused typedef
+
 ! 2009-06-30 - Gerhard Raven
  - remove code supporting both pre- and post 1.37 version of Boost
  - remove obsolete HltRawBankFilter, use FilterByBankType in LHCbAlgs instead

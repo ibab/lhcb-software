@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.h,v 1.2 2008-06-02 19:57:57 graven Exp $
+// $Id: HltFunctionFactories.h,v 1.3 2009-07-01 21:00:38 graven Exp $
 #ifndef HLTFUNCTIONFACTORIES_H 
 #define HLTFUNCTIONFACTORIES_H 1
 
@@ -16,11 +16,6 @@
  */
 class HltTrackFunctionFactory : public HltTFunctionFactory<LHCb::Track> {
 public: 
-
-  typedef Hlt::FunctionCreator<LHCb::Track>                   TCreator;
-  typedef Hlt::TFunctionCreator<LHCb::Track,LHCb::Track>     TTCreator;
-  typedef Hlt::TFunctionCreator<LHCb::Track,LHCb::RecVertex> TVCreator;
-  
 
   /// Standard constructor
   HltTrackFunctionFactory( const std::string& type, 
@@ -42,11 +37,6 @@ public:
  */
 class HltVertexFunctionFactory : public HltTFunctionFactory<LHCb::RecVertex>{
 public: 
-
-  typedef Hlt::FunctionCreator<LHCb::RecVertex>                   VCreator;
-  typedef Hlt::TFunctionCreator<LHCb::RecVertex,LHCb::Track>     VTCreator;
-  typedef Hlt::TFunctionCreator<LHCb::RecVertex,LHCb::RecVertex> VVCreator;
-  
 
   /// Standard constructor
   HltVertexFunctionFactory( const std::string& type, 
