@@ -29,7 +29,10 @@ class TauRes:
     def __call__(self, particle) :
         mcp = self.assocFun(particle)
         if (mcp != None) :
-            return self.tauFunc(particle) - self.mcTauFunc(mcp)
+            tau = self.tauFunc(particle)
+            mcTau = self.mcTauFunc(mcp)
+            if tau != None and mcTau != None :
+                return tau-mcTau
 #==============================================================================
 class Mass:
     def __call__(self, particle) :
@@ -130,5 +133,6 @@ class ContainerRecursiveLoop :
             obj = Helpers.deSmartRef(obj)
             self.functor(obj)
             daughters = self.recursor(obj)
-            self.__call__(daughters)
+            if daughters != None and not daughters.empty() :
+                self.__call__(daughters)
 #==============================================================================
