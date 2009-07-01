@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.20 2009-07-01 15:04:56 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.21 2009-07-01 15:20:52 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -107,23 +107,23 @@ MySelection.Members += [CopyODIN()]
 if (keepTrueDecays) :
     filterMCDecays = MCParticleArrayFilterAlg('FilterMCDecays')
     filterMCDecays.OutputLocation = 'MC/Decays'
-    filterMCDecays.addTool( FilterMCParticleArrayByDecay(), name = 'IMCParticleArrayFilter' )
-    filterMCDecays.IMCParticleArrayFilter.addTool( MCDecayFinder(), name = 'MCDecayFinder' )
+    filterMCDecays.addTool( FilterMCParticleArrayByDecay, name = 'IMCParticleArrayFilter' )
+    filterMCDecays.IMCParticleArrayFilter.addTool( MCDecayFinder, name = 'MCDecayFinder' )
     filterMCDecays.IMCParticleArrayFilter.MCDecayFinder.Decay = '[B_s0 -> (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) (phi(1020) -> K+ K-)]cc'
     filterMCDecays.OutputLevel = 4;
-
-    CopyMCParticles().InputLocation = "MC/Decays"
-    CopyMCParticles().addTool( MCParticleCloner )
-    CopyMCParticles().MCParticleCloner.addTool( MCVertexCloner(),
-                                                name = 'ICloneMCVertex' )
-    CopyMCParticles().OutputLevel=4
+    copyMC = CopyMCParticles()
+    copyMC.InputLocation = "MC/Decays"
+    copyMC.addTool( MCParticleCloner, name = 'ClonerType' )
+    copyMC.ClonerType.addTool( MCVertexCloner,
+                               name = 'ICloneMCVertex' )
+    copyM.OutputLevel=4
 
     if (allEventInfo) :
         AllEvents.Members += [filterMCDecays]
-        AllEvents.Members += [CopyMCParticles()]
+        AllEvents.Members += [copyMC]
     else :
         MySelection.Members += [filterMCDecays]
-        MySelection.Members += [CopyMCParticles()]
+        MySelection.Members += [copyMC]
 #==============================================================================
 # Copy selected particles, daughters, and decay vertices
 copyParticles = CopyParticles('CopyParticles')
