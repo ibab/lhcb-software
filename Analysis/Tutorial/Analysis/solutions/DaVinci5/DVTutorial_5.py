@@ -1,5 +1,5 @@
 6########################################################################
-# $Id: DVTutorial_5.py,v 1.8 2009-06-11 16:22:29 rlambert Exp $
+# $Id: DVTutorial_5.py,v 1.9 2009-07-01 12:14:16 pkoppenb Exp $
 #
 # Options for exercise 5
 #
@@ -9,6 +9,7 @@
 ########################################################################
 from Gaudi.Configuration import *
 #######################################################################
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
 #
 # Load the sequencer from Ex 4 and catch it
@@ -22,8 +23,8 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
 tree = PrintDecayTree("PrintFoundBs")
 tree.InputLocations = [ "Bs2JpsiPhi" ]
-tree.addTool( PrintDecayTreeTool )
-tree.PrintDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
+tree.addTool( PrintDecayTreeTool("PrintDecay") )
+tree.PrintDecay.Information = "Name M P Px Py Pz Pt chi2" 
 tutorialseq.Members += [ tree ]
 #######################################################################
 #
