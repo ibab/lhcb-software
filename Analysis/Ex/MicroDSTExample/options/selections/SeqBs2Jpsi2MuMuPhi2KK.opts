@@ -13,9 +13,10 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/SeqBs2Jpsi2MuMuPhi2KK"} ;
 #pragma print off
 // Jpsi -> Mu Mu selection:
 #include "$MICRODSTEXAMPLEROOT/options/selections/Jpsi2MuMu.opts"
-SeqBs2Jpsi2MuMuPhi2KK.Members += { "OldFilterDesktop/Jpsi2MuMu" };	
+	
 // Phi->K K selection
 #include "$MICRODSTEXAMPLEROOT/options/selections/Phi2KK.opts"
+
 // Bs->Jpsi Phi
 #include "$MICRODSTEXAMPLEROOT/options/selections/Bs2Jpsi2MuMuPhi2KK.opts"
 
