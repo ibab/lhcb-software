@@ -5,8 +5,62 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-06-25 - Chris Jones
- - Add OutputLevel property to provide overall control of the printout levels
+</PRE><H1><A NAME=v7r3>2009-07-01 RecSys v7r3</A></H1><PRE>
+This version uses Gaudi v21r2 and LHCb v27r3.
+
+- Packages modified: CaloReco v4r20, GlobalReco v6r22, TrackFitEvent v3r23,
+    TrackTools v3r18, TrackUtils v1r27, PatVelo v3r14, RichRecQC v2r31,
+    RichRecSys v3r21, VeloRecMonitors v1r9
+
+- In RecSys v7r3
+  . Add RecSys().OutputLevel property for overall control of the printout levels
+
+- In CaloReco v4r20
+  . CaloClusterisationTool : prepare for fast HLT clusterisation
+  . CelAutoTaggedCell: 
+    o Resurrect constructor/destructor (without id argument leading to warnings)
+    o Remove unused m_e member. It was not initialised and was causing FPE on
+      slc4_ia32_gcc34_dbg
+  . Fix WIN32 warning about type conversion
+  . Replace all endreq by endmsg
+  . Fix untested StatusCodes when calling Warning() and Error()
+
+- In GlobalReco v6r22
+  . Add OutputLevel property to Configurable to control the printout level of all
+    ProtoParticle algorithms.
+
+- In TrackFitEvent v3r23
+  . Remove forgotten std::cout from TrackStateVertex
+  . Added some more classes to dictionary
+
+- In TrackTools v3r18
+  . TrackCloneFinder:
+    o Remove all code related to testing for clones by comparing measurements.
+    o Use instead new functionality in Track to compare LHCbIDs.
+    o Fix the interface: the 'areClones' call had a flag to set the track clones
+      flag. If the flag was set to false it would still do all the work, but 
+      simply not return anything. Replaced this by two calls: one that simply
+      returns a boolean if tracks are clones and another one that sets the flags.
+
+- In TrackUtils v1r27
+  . Adapt to fix in ITrackCloneFinder interface
+
+- In PatVelo v3r14
+  . Tweaked how tracks are fitted internally for a few microns gain in resolution
+    and improved ghost rate
+
+- In RichRecQC v2r31
+  . Add OutputLevel property to RichRecQCConf Configurable that can be used
+    to global set the output level for all monitoring components.
+
+- In RichRecSys v3r21
+  . Add OutputLevel property to RichRecSysConf Configurable that can be used
+    to global set the output level for all Rich reconstruction components.
+
+- In VeloRecMonitors v1r9
+  . All histograms in VeloCluster- and VeloSamplingMonitor are now booked in
+    initialize()
+
 
 </PRE><H1><A NAME=v7r2>2009-06-22 RecSys v7r2</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r2.
