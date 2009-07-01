@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.1 2009-06-16 11:50:24 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.2 2009-07-01 11:06:51 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -167,7 +167,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   // book the histograms of fit results against 1/PT using the defined bins
   const double* bins = &m_bins[0];
 
-  m_h_InversePTVsGaussWidth_X = Aida2ROOT::aida2root( book( "InversePTVsGaussWidth_X", 
+  m_h_InversePTVsGaussWidth_X = Aida2ROOT::aida2root( book( "GaussWidth_IP_X_Vs_InversePT", 
                                                             "Width of Gaussian fit to IP_X resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
@@ -175,7 +175,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   m_h_InversePTVsGaussWidth_X->SetYTitle("Width of Gaussian (mm)");
   m_h_InversePTVsGaussWidth_X->SetBins( (int)m_bins.size() - 1, bins );
 
-  m_h_InversePTVsGaussWidth_Y = Aida2ROOT::aida2root( book( "InversePTVsGaussWidth_Y", 
+  m_h_InversePTVsGaussWidth_Y = Aida2ROOT::aida2root( book( "GaussWidth_IP_Y_Vs_InversePT", 
                                                             "Width of Gaussian fit to IP_Y resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
@@ -183,7 +183,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   m_h_InversePTVsGaussWidth_Y->SetYTitle("Width of Gaussian (mm)");
   m_h_InversePTVsGaussWidth_Y->SetBins( (int)m_bins.size() - 1, bins );
   
-  m_h_InversePTVsGaussWidth_Z = Aida2ROOT::aida2root( book( "InversePTVsGaussWidth_Z", 
+  m_h_InversePTVsGaussWidth_Z = Aida2ROOT::aida2root( book( "GaussWidth_IP_Z_Vs_InversePT", 
                                                             "Width of Gaussian fit to IP_Z resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
@@ -191,8 +191,8 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   m_h_InversePTVsGaussWidth_Z->SetYTitle("Width of Gaussian (mm)");
   m_h_InversePTVsGaussWidth_Z->SetBins( (int)m_bins.size() - 1, bins );
 
-  m_h_InversePTVsMPVofLandau_abs = Aida2ROOT::aida2root( book( "InversePTVsMPVofLandau_abs", 
-                                                               "1/PT Vs MPV of Landau fit to absolute IP resolution", 
+  m_h_InversePTVsMPVofLandau_abs = Aida2ROOT::aida2root( book( "MPVofLandau_abs3DIP_Vs_InversePT", 
+                                                               "1/PT Vs MPV of Landau fit to absolute 3D IP resolution", 
                                                                m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                                (int)m_bins.size() - 1 ) );
   m_h_InversePTVsMPVofLandau_abs->SetXTitle("1/PT (GeV^-1)");
@@ -203,7 +203,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   m_h_TrackMultiplicity = Aida2ROOT::aida2root( book( "TrackMultiplicity", "PV Track Multiplicity", 0.0, 150.0, 100 ));
   m_h_TrackMultiplicity->SetXTitle("Number of tracks");
 
-  m_h_InversePTVsNTracks = Aida2ROOT::aida2root( book( "InversePTVsNTracks", "Number of tracks found in each bin of 1/PT", 
+  m_h_InversePTVsNTracks = Aida2ROOT::aida2root( book( "NTracks_Vs_InversePT", "Number of tracks found in each bin of 1/PT", 
                                                        m_bins[0], m_bins[ (int)m_bins.size() - 1 ], (int)m_bins.size() -1 ));
   m_h_InversePTVsNTracks->SetXTitle("1/PT (GeV^-1)");
   m_h_InversePTVsNTracks->SetYTitle("Number of tracks");
@@ -225,7 +225,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
   }
   else if( m_requireL0 ) {
-    Warning( "Could not find L0DU report!" );
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Could not find L0DU report!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -304,8 +304,8 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
     // against 1/PT, if the fit fails, the result is not plotted
     Gauss->SetParameters( m_IPres_X_histos[i]->GetMaximum(), m_IPres_X_histos[i]->GetMean(), m_IPres_X_histos[i]->GetRMS() );
     fitResult = m_IPres_X_histos[i]->Fit( Gauss, "QN" );
-    if( fitResult!=0 )
-      Warning( "Fit to IP_X failed for bin "+m_histoTitles[i] ).ignore();
+    if( fitResult!=0 ){
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fit to IP_X failed for bin "+m_histoTitles[i] << endmsg;} 
     else{
       m_h_InversePTVsGaussWidth_X->SetBinContent( i+1, Gauss->GetParameter(2) );
       m_h_InversePTVsGaussWidth_X->SetBinError( i+1, Gauss->GetParError(2) );
@@ -314,8 +314,8 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
     // do the same for IP Y resolution
     Gauss->SetParameters( m_IPres_Y_histos[i]->GetMaximum(), m_IPres_Y_histos[i]->GetMean(), m_IPres_Y_histos[i]->GetRMS() );
     fitResult = m_IPres_Y_histos[i]->Fit( Gauss, "QN" );
-    if( fitResult!=0 )
-      Warning( "Fit to IP_Y failed for bin "+m_histoTitles[i] ).ignore();
+    if( fitResult!=0 ){
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fit to IP_Y failed for bin "+m_histoTitles[i] << endmsg;}
     else{
       m_h_InversePTVsGaussWidth_Y->SetBinContent( i+1, Gauss->GetParameter(2) );
       m_h_InversePTVsGaussWidth_Y->SetBinError( i+1, Gauss->GetParError(2) );
@@ -324,8 +324,8 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
     // do the same for IP Z resolution
     Gauss->SetParameters( m_IPres_Z_histos[i]->GetMaximum(), m_IPres_Z_histos[i]->GetMean(), m_IPres_Z_histos[i]->GetRMS() );
     fitResult = m_IPres_Z_histos[i]->Fit( Gauss, "QN" );
-    if( fitResult!=0 )
-      Warning( "Fit to IP_Z failed for bin "+m_histoTitles[i] ).ignore();
+    if( fitResult!=0 ){
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fit to IP_Z failed for bin "+m_histoTitles[i] << endmsg;} 
     else{
       m_h_InversePTVsGaussWidth_Z->SetBinContent( i+1, Gauss->GetParameter(2) );
       m_h_InversePTVsGaussWidth_Z->SetBinError( i+1, Gauss->GetParError(2) );
@@ -336,8 +336,8 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
     Landau->SetParameters( m_IPres_abs_histos[i]->GetMaximum(), m_IPres_abs_histos[i]->GetMean(), 
                            m_IPres_abs_histos[i]->GetRMS() );
     fitResult = m_IPres_abs_histos[i]->Fit( Landau, "QN" );
-    if( fitResult != 0 )
-      Warning( "Fit to abs. IP failed for bin "+m_histoTitles[i] ).ignore();
+    if( fitResult != 0 ){
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fit to abs. IP failed for bin "+m_histoTitles[i] << endmsg;}
     else{
       m_h_InversePTVsMPVofLandau_abs->SetBinContent( i+1, Landau->GetParameter(1) );
       m_h_InversePTVsMPVofLandau_abs->SetBinError( i+1, Landau->GetParError(1) );

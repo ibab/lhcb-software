@@ -8,13 +8,11 @@ from Configurables import GaudiSequencer
 
 from Configurables import Velo__VeloClusterMonitor
 from Configurables import Velo__VeloTrackMonitor
-from Configurables import Velo__VeloIPResolutionMonitor
 
 GaudiSequencer( 'MoniVELOSeq' ).Members +=\
                 [   Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
                     , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
-                    , Velo__VeloIPResolutionMonitor( 'VeloIPResolutionMonitor' )
-                  ]
+                    ]
 
 Velo__VeloClusterMonitor( 'VeloClusterMonitor' ).PropertiesPrint = False
 Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   ).PropertiesPrint = False
