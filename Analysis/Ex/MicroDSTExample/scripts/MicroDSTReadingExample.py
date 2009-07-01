@@ -31,7 +31,7 @@ def printHelp():
 locationRoot = '/Event/microDST'
 selection = 'Bs2Jpsi2MuMuPhi2KK'
 microDSTFile = ['']
-histoFileName = selection+"_mDST.root"
+histoFileName = selection+"_mDST_newSel.root"
 histoFile = HistoFile(histoFileName)
 opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
 
@@ -166,7 +166,9 @@ assocCounter = Debug.AssocTreeDebugger(MCAssocTool, particleNameFunc)
 ptPlotter = Functors.HistoPlotter(ptPlots, gbl.LHCb.Particle.pt, Helpers.pid)
 massPlotter = Functors.HistoPlotter(massPlots, Functors.Mass(), Helpers.pid)
 MCAssocFun = Functors.MCAssociator(MCAssocTool, verbose=False)
-massResPlotter = Functors.HistoPlotter(massResPlots, MCAssocFun, Helpers.pid)
+massResPlotter = Functors.HistoPlotter(massResPlots,
+                                       Functors.MassRes(MCAssocFun),
+                                       Helpers.pid)
 # set the functor in the event loop
 tauPlotter = Functors.HistoPlotter(propTimePlot, functor = None)
 refitTauPlotter = Functors.HistoPlotter(refitPropTimePlot, functor = None)
