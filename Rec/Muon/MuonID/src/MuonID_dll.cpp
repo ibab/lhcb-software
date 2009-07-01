@@ -6,7 +6,8 @@
 // ============================================================================
 #include "GaudiKernel/LoadFactoryEntries.h"
 
-LOAD_FACTORY_ENTRIES(MuonID) ;
+LOAD_FACTORY_ENTRIES(MuonIDAlg) ;
+LOAD_FACTORY_ENTRIES(MakeMuonMeasurements) ;
 
 // ============================================================================
 // The End 

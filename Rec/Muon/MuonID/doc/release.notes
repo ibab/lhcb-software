@@ -2,6 +2,59 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+!======================== MuonID v7r0 2009-06-20 =====================
+! 2009-06-20 - E. Polycarpo 
+ - protect FOI from tracks with p>1TeV (keep only constant factor)
+
+! 2009-06-20 - G. Lanfranchi, S. Furcas. 
+ - Introduce new method calcMuonLL_dist to use the distance built with the closest hit 
+  in order to make a hypothesis test for muons and  non-muons; 
+  The distance distributions are binned in p-bins and muon detector regions;
+  the integral of the distributions is used to evaluate the compatibility of a given track 
+  with the muon (Probmu) /non-muon (Prob non-mu) hypotheses. 
+
+ - Introduce DLL_flag (to input the old DLL or the binned-integrated DLL to MuonPIDs)
+             Parameters of the Landaus for Muons and non-Muons for the binned DLL.
+
+! 2009-06-20 - Xabier Cid Vidal, G. Lanfranchi, S. Furcas. 
+ - Introduce property Weight_flag to include arrival probability
+     in IsMuon/IsMuonLoose and in Dist2
+
+! 2009-06-20 - Xabier Cid Vidal, Jose Angel Hernando Morata, Erica Polycarpo
+ - Changes in MuonID(Alg).cpp:
+     . Input IsMuonLoose in addition to IsMuon in MuonPID objects
+     . MuonPID info made also available in MuonTracks (PreSelMom, InAcceptance,
+          IsMuon...)
+     . New property FindQuality. Adds 'quality' info to tracks. This quality
+       can be chi2 from a fit with hits in FOI and a state from seed. 
+       chi2PernDOF is set in MuonTrack in the TES even if this track
+       is not the result of the track fit
+     . New property AllMuonTracks. Build muonTracks with all info for all seeds 
+       even if they are not Muon Candidates.  
+
+- New set of tools, classes and algorithms for alternative MuonID analysis:
+     . Interpolator : class transforming a histogram into a continuous 
+                   function linearly interpolating between bins
+     . CLTool      : tool to return the CL of a variable from a given 
+		value and a set of histograms with its distributions 
+		in momentum bins.  
+     . GetArrival  : tool to find out probability or CL of a seed to be
+                a muon according to the number of stations where it
+                has a hit and which are these.
+     . IsMuonCandidateC : tool to find out if a seed is a MuonCandidate. Can be
+                set to IsMuon,IsMuonLoose...
+     . chi2MuIDTool: tool to provide alternative dll from chi2's CL and 
+		getarrival CL 
+     . distMuIDTool: tool to provide alternative dll from distance's CL 
+		and getarrival CL
+     . SmartMuonMeasProvider : class thought to find hits in MuonChambers from a
+		seed state once a window of n sigmas is open.
+     . MakeMuonMeasurements  : algorithm to fill SmartMuonMeasProvider and put it
+                in TES
+		
+- New python Configurator (ConfiguredMuonIDs) module to configure tools and 
+	algorithms in package. MuonID.cpp(h) is renamed as MuonIDAlg.cpp(h) 
+
 !======================== MuonID v6r3 2009-06-17 =====================
 ! 2009-06-15 - Wouter Hulsbergen
  - remove creation of measurements in MuonID
