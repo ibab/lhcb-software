@@ -1,8 +1,34 @@
 from Configurables import GaudiSequencer,MuonPIDChecker
 monitor = MuonPIDChecker( "MuonPIDMonitor",
                            HistoTopDir = "Muon/",
-                           DLLCut = -1.0,
-                           NSHCut = 1.,
                            RunningMC = False,
-                           HistoDir = "MuonPID/Monitor" )
+                           IsMuonFlag  = 0,  
+                           DLLFlag   = 1,  
+                           DLLCut = 1.20,
+                           ProbCut1 = 0.90,
+                           ProbCut2 = 0.80,
+			   DLLlower = -1.0,
+			   DLLupper = 6.0,
+			   DLLnbins = 35,
+                           NSHCut = 1.,
+			   MuonTrackLocation = 'Rec/Track/Muon',
+                           HistoDir = "MuonPID/Monitor",
+                           RefEff1IM   = [6.24, 98.95, 64.2, 2.68, 0.0, 4.34 ],
+                           RefEff1IML  = [6.24, 98.95, 64.2, 2.68, 0.0, 4.34 ],
+                           RefEff1DLL  = [2.04, 93.00, 37.1, 0.52, 0.0, 1.51 ], 
+                           RefEff1NSH  = [2.39, 95.50, 47.9, 0.85, 0.0, 2.12 ], 
+                           RefdEff1IM  = [0.03,  0.06,  0.2, 0.01, 0.0, 0.01 ],
+                           RefdEff1IML = [0.03,  0.06,  0.2, 0.01, 0.0, 0.01 ],
+                           RefdEff1DLL = [0.01,  0.10,  0.2, 0.01, 0.0, 0.01 ],
+                           RefdEff1NSH = [0.02,  0.10,  0.2, 0.01, 0.0, 0.01 ],
+                           RefEff2IM   = [6.10, 97.60, 65.8, 2.85, 0.0, 4.64],
+                           RefEff2IML  = [6.10, 97.60, 65.8, 2.85, 0.0, 4.64],
+                           RefEff2DLL  = [1.60, 88.00, 39.4, 0.47, 0.0, 1.57],
+                           RefEff2NSH  = [2.24, 91.00, 49.2, 1.15, 0.0, 2.51],
+                           RefdEff2IM  = [0.02,  0.20,  0.2, 0.01, 0.0, 0.01],
+                           RefdEff2IML = [0.02,  0.20,  0.2, 0.01, 0.0, 0.01],
+                           RefdEff2DLL = [0.01,  0.30,  0.2, 0.01, 0.0, 0.01],
+                           RefdEff2NSH = [0.01,  0.20,  0.1, 0.01, 0.0, 0.01]  )
 GaudiSequencer("MoniMUONSeq").Members += [monitor]
+                           
+                           

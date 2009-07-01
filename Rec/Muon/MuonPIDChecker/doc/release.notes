@@ -1,6 +1,32 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
+!====================== MuonPIDChecker v4r0 2009-06-20 ======================
+!2009-06-29 - Miriam Gandelman, Jose Angel Hernando Morata
+ - Checker and Monitor now run with configurables. The options are no longer used.
+ - The possible DataTypes so far are: DC06,2008,MC09,2009
+ - The running options and the reference values vary according to the DataType chosen
+
+! 2009-06-20 - Erica Polycarpo   
+ - Add histograms of Eff,Misid vs DLL Cut
+ - Add new histos to monitor multiplicity as a function of Track x,y and region 
+
+! 2009-06-20 - G. Lanfranchi, S. Furcas:
+ - Added Properties:
+     ---> "IsMuonFlag":  =0 (monitor IsMuonLoose Objects), =1 (monitor IsMuon Objects)
+     ---> "DLLFlag": =0 (monitor DLL old), =1 (monitor DLL binned-integrated), =2 (monitor Prob(mu) alone)
+ - Added Histograms:
+     - hDLL_dist_[0,1,2,3,4]  (DLL binned for ghost, muons, decays in flight, hadrons, data )
+     - hProbMu_[0,1,2,3,4]  (ProbMu for ghost, muons, decays in flight, hadrons, data)
+     - hProbNMu_[0,1,2,3,4]  (ProbNMu for ghost, muons, decays in flight, hadrons, data)
+
+! 2009-06-20 - Erica Polycarpo   
+ - Separate monitoring of MuonPIDs from monitoring of Muon tracks in 
+   methods getTrInfo and getMuTrInfo
+ - Pass linker as argument in order to use it only in getTrType if RunningMC
+ - Add new histos to monitor quantities introduced in the new MuonID v7r0
+ - Put reference values as properties so that they can be changed more easily
+
 !====================== MuonPIDChecker v3r2 2009-05-22 ======================
 ! 2009-05-22 - Miriam Gandelman 
  - Bug fix on some array sizes
