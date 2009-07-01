@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.h,v 1.1 2009-04-01 08:11:45 ocallot Exp $
+// $Id: NewVeloSpaceTool.h,v 1.2 2009-07-01 14:35:52 ocallot Exp $
 #ifndef NEWVELOSPACETOOL_H
 #define NEWVELOSPACETOOL_H 1
 
@@ -103,7 +103,9 @@ private:
   double      m_phiMatchZone;         /// Size of the zone in phi for candidate search
   double      m_phiMatchZoneSlope;    /// Dependance in dz of the matchzone value.
   double      m_fractionFound;        /// Minimal fraction of Phi hits in tested sensors
+  double      m_stepError;            /// Multiple scattering weight
   double      m_forwardStepError;     /// Multiple scattering weight in forward fit
+  int         m_fullErrorPoints;      /// Number of points after wich MS is used
   double      m_maxChi2PerHit;        /// Maximum chi2 per hit
   double      m_fractionForMerge;     /// Fraction of shared hits to detect clones.
 

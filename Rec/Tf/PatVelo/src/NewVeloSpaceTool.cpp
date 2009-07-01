@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.cpp,v 1.3 2009-04-15 07:24:26 cattanem Exp $
+// $Id: NewVeloSpaceTool.cpp,v 1.4 2009-07-01 14:35:52 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -38,6 +38,10 @@ NewVeloSpaceTool::NewVeloSpaceTool( const std::string& type,
   declareProperty( "ForwardStepError",   m_forwardStepError   = 0.009  );
   declareProperty( "MaxChi2PerHit",      m_maxChi2PerHit      = 16.    );
   declareProperty( "FractionForMerge",   m_fractionForMerge   = 0.70   );
+
+  declareProperty( "StepError"         , m_stepError          = 0.002     );
+  declareProperty( "ForwardStepError",   m_forwardStepError   = 0.00035   );
+  declareProperty( "FullErrorPoints",    m_fullErrorPoints    = 5 );
 
   declareProperty( "DebugToolName" ,     m_debugToolName      = ""     );
   declareProperty( "DebugTrackToolName", m_debugTrackToolName = ""     );
@@ -226,7 +230,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   itH1 = allHits.begin();
   itH2 = itH1 + minExpected - 1;
   prevItH2 = itH1;
-  double tolPhi = m_phiMatchZone + m_phiMatchZoneSlope * (zMax - zMin );  // add 0.01 for 100 mm
+  double tolPhi = m_phiMatchZone + m_phiMatchZoneSlope * (zMax - zMin );  // incrase toleranec for long ranges
 
   if ( allHits.size() < nbStationTried +3 ) tolPhi = 2* tolPhi;
 
@@ -372,7 +376,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     }
 
     // fit the track trajectory
-    tempTrack.fitSpaceTrack( m_forwardStepError );
+    tempTrack.fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
     if ( m_isDebug ) info() << "Found track with chi^2/ndf " << tempTrack.chi2Dof( ) << endmsg;
 
     tempTrack.tagClustersAsUsed( Tf::HitBase::UsedByVeloSpace );
