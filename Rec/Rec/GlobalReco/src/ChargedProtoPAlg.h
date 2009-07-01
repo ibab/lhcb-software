@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.28 2007-08-15 11:04:51 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.29 2009-07-01 18:34:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -17,7 +17,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/HashMap.h"
-#include "GaudiAlg/ISequencerTimerTool.h"
 
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
@@ -33,12 +32,19 @@
 #include "Relations/IRelation.h"
 #include "Relations/IRelationWeighted2D.h"
 
+// RichKernel
+#include "RichKernel/RichPoissonEffFunctor.h"
+#include "RichKernel/RichStatDivFunctor.h"
+
 // Event
 #include "Event/Track.h"
 #include "Event/RichPID.h"
 #include "Event/MuonPID.h"
 #include "Event/CaloHypo.h"
 #include "Event/ProtoParticle.h"
+
+// boost
+#include "boost/format.hpp"
 
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoPAlg ChargedProtoPAlg.h
@@ -52,6 +58,33 @@
 
 class ChargedProtoPAlg : public GaudiAlgorithm
 {
+
+private: // classes
+
+  /// Simple utility tally class
+  class TrackTally
+  {
+  public:
+    /// Default constructor
+    TrackTally() : totTracks(0), selTracks(0),
+                   ecalTracks(0), bremTracks(0), spdTracks(0), prsTracks(0), hcalTracks(0),
+                   richTracks(0), muonTracks(0), velodEdxTracks(0) { }
+    unsigned long totTracks;      ///< Number of considered tracks
+    unsigned long selTracks;      ///< Number of tracks selected to creaste a ProtoParticle from
+    unsigned long ecalTracks;     ///< Number of ProtoParticles created with CALO ECAL info
+    unsigned long bremTracks;     ///< Number of ProtoParticles created with CALO BREM info
+    unsigned long spdTracks;      ///< Number of ProtoParticles created with CALO SPD info
+    unsigned long prsTracks;      ///< Number of ProtoParticles created with CALO PRS info
+    unsigned long hcalTracks;     ///< Number of ProtoParticles created with CALO HCAL info
+    unsigned long richTracks;     ///< Number of ProtoParticles created with RICH info
+    unsigned long muonTracks;     ///< Number of ProtoParticles created with MUON info
+    unsigned long velodEdxTracks; ///< Number of ProtoParticles created with VELO dE/dx info
+  };
+
+private: // definitions
+
+  /// Map type containing tally for various track types
+  typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;
 
 public:
 
@@ -128,7 +161,7 @@ private: // methods
     {
       table = NULL;
       Warning("No CALO "+System::typeinfoName(typeid(TYPE))+
-              " table at '"+location+"'", StatusCode::SUCCESS );
+              " table at '"+location+"'", StatusCode::SUCCESS ).ignore();
     }
     else
     {
@@ -136,6 +169,9 @@ private: // methods
     }
     return ok;
   }
+
+  /// Print statistics
+  void printStats( const MSG::Level level = MSG::INFO ) const;
 
 private: // data
 
@@ -148,7 +184,7 @@ private: // data
 
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
 
-  /// Track selector tool
+  /// Track selector tools
   ITrackSelector * m_trSel;
 
   /// Velo dE/dx charge tool
@@ -195,37 +231,8 @@ private: // data
   /// Event count
   unsigned long m_nEvts;
 
-private:
-
-  /// Simple utility tally class
-  class TrackTally
-  {
-  public:
-    /// Default constructor
-    TrackTally() : totTracks(0), selTracks(0),
-                   ecalTracks(0), bremTracks(0), spdTracks(0), prsTracks(0), hcalTracks(0),
-                   richTracks(0), muonTracks(0), velodEdxTracks(0) { }
-    unsigned long totTracks;      ///< Number of considered tracks
-    unsigned long selTracks;      ///< Number of tracks selected to creaste a ProtoParticle from
-    unsigned long ecalTracks;     ///< Number of ProtoParticles created with CALO ECAL info
-    unsigned long bremTracks;     ///< Number of ProtoParticles created with CALO BREM info
-    unsigned long spdTracks;      ///< Number of ProtoParticles created with CALO SPD info
-    unsigned long prsTracks;      ///< Number of ProtoParticles created with CALO PRS info
-    unsigned long hcalTracks;     ///< Number of ProtoParticles created with CALO HCAL info
-    unsigned long richTracks;     ///< Number of ProtoParticles created with RICH info
-    unsigned long muonTracks;     ///< Number of ProtoParticles created with MUON info
-    unsigned long velodEdxTracks; ///< Number of ProtoParticles created with VELO dE/dx info
-  };
-
-private:
-
-  /// Map type containing tally for various track types
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;
-
-  ISequencerTimerTool* m_timer ;
-  int m_timerIndex ; ///< index for timer
   
 };
 

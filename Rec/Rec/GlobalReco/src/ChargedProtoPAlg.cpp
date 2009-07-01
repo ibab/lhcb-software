@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.66 2008-06-30 15:39:27 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.67 2009-07-01 18:34:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -52,16 +52,14 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_InEcalTable ( NULL ),
     m_InHcalTable ( NULL ),
     m_InBremTable ( NULL ),
-    m_SpdETable ( NULL ),
-    m_PrsETable ( NULL ),
+    m_SpdETable  ( NULL ),
+    m_PrsETable  ( NULL ),
     m_HcalETable ( NULL ),
     m_EcalETable ( NULL ),
     m_ClusChi2Table ( NULL ),
     m_BremChi2Table ( NULL ),
     m_EcalChi2Table ( NULL ),
-    m_nEvts        ( 0    ),
-    m_timer(NULL),
-    m_timerIndex(0)
+    m_nEvts         ( 0    )
 {
   // context specific locations
   if      ( context() == "Offline" )
@@ -76,7 +74,6 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_tracksPath = LHCb::TrackLocation::HltForward;
     m_muonPath   = LHCb::MuonPIDLocation::Hlt;
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
-    
   }
 
   // Input data
@@ -113,7 +110,7 @@ StatusCode ChargedProtoPAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
+  m_trSel = tool<ITrackSelector>( "DelegatingTrackSelector", "TrackSelector", this );
 
   // Velo dE/dx tool
   if ( m_veloPID) 
@@ -139,13 +136,6 @@ StatusCode ChargedProtoPAlg::initialize()
   if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable VELO warnings
   if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
-
-  // timing in debug mode only
-  if (msgLevel(MSG::DEBUG)) 
-  {
-    m_timer      = tool<ISequencerTimerTool>( "SequencerTimerTool" );
-    m_timerIndex = m_timer->addTimer(name()+"::execute") ;
-  }
   
   return sc;
 }
@@ -154,9 +144,7 @@ StatusCode ChargedProtoPAlg::initialize()
 // Main execution
 //=============================================================================
 StatusCode ChargedProtoPAlg::execute()
-{
-  if ( msgLevel(MSG::DEBUG) ) m_timer->start(m_timerIndex) ;
-  
+{  
   // Load the Track objects (manditory - should be there for each event)
   if ( !exist<Tracks>(m_tracksPath) )
   {
@@ -239,7 +227,8 @@ StatusCode ChargedProtoPAlg::execute()
 
     // flag signifying if any PID info has been added for this track
     bool hasRICHInfo(false), hasMUONInfo(false);
-    bool hasECALInfo(false), hasBREMInfo(false), hasSPDInfo(false), hasPRSInfo(false), hasHCALInfo(false);
+    bool hasECALInfo(false), hasBREMInfo(false), hasSPDInfo(false);
+    bool hasPRSInfo(false), hasHCALInfo(false);
 
     // Add RICH info
     if ( richSc && addRich(proto) )
@@ -319,13 +308,6 @@ StatusCode ChargedProtoPAlg::execute()
   // update tallies
   ++m_nEvts;
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    m_timer->stop(m_timerIndex) ;
-    debug() << "  USER TIME: " << m_timer->lastTime(m_timerIndex)
-             << " Tracks " << tracks->size() << endmsg ;
-  }
-  
   // return
   return StatusCode::SUCCESS;
 }
@@ -835,7 +817,8 @@ bool ChargedProtoPAlg::getEcalData()
   bool sc7=false;
   bool sc8=false;
   
-  if("HLT"==context() || "Hlt" == context()){
+  if("HLT"==context() || "Hlt" == context())
+  {
     sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcalHlt);
     sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatchHlt);
     sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatchHlt);
@@ -845,7 +828,8 @@ bool ChargedProtoPAlg::getEcalData()
     sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDeHlt);
     sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmuHlt);
   }
-  else{
+  else
+  {
     sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcal);
     sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatch);
     sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatch);
@@ -855,9 +839,7 @@ bool ChargedProtoPAlg::getEcalData()
     sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
     sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
   }
-  
-
-
+ 
   const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
   if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endreq;
 
@@ -940,7 +922,6 @@ bool ChargedProtoPAlg::getPrsData()
     sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
   }
   
-
   const bool sc  = sc1 && sc2 && sc3;
 
   if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endreq;
@@ -1019,43 +1000,43 @@ double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
 StatusCode ChargedProtoPAlg::finalize()
 {
   // summary printout
-
-  info() << "Number of events processed = " << m_nEvts << endreq;
-  for ( TrackMap::const_iterator iT = m_nTracks.begin();
-        iT != m_nTracks.end(); ++iT )
-  {
-    info() << "Track Type = '" << (*iT).first << "' :-" << endreq;
-    const TrackTally & tally = (*iT).second;
-
-    const double tkSel = 100 * ( tally.totTracks>0 ? (double)tally.selTracks/(double)tally.totTracks : 0 );
-    const double protos = ( m_nEvts>0 ? (double)tally.selTracks/(double)m_nEvts : 0 );
-
-    const double protoRICH = 100 * ( tally.selTracks>0 ? (double)tally.richTracks/(double)tally.selTracks : 0 );
-
-    const double protoECAL = 100 * ( tally.selTracks>0 ? (double)tally.ecalTracks/(double)tally.selTracks : 0 );
-    const double protoBREM = 100 * ( tally.selTracks>0 ? (double)tally.bremTracks/(double)tally.selTracks : 0 );
-    const double protoSPD  = 100 * ( tally.selTracks>0 ? (double)tally.spdTracks/(double)tally.selTracks : 0 );
-    const double protoPRS  = 100 * ( tally.selTracks>0 ? (double)tally.prsTracks/(double)tally.selTracks : 0 );
-    const double protoHCAL = 100 * ( tally.selTracks>0 ? (double)tally.hcalTracks/(double)tally.selTracks : 0 );
-
-    const double protoMUON = 100 * ( tally.selTracks>0 ? (double)tally.muonTracks/(double)tally.selTracks : 0 );
-
-    const double protoVELO = 100 * ( tally.selTracks>0 ? (double)tally.velodEdxTracks/(double)tally.selTracks : 0 );
-
-    info() << " -> Created. = " << protos << " ProtoParticles/event : Track Sel. Eff. "
-           << tkSel << "%" << endreq;
-    info() << "  -> " << protoRICH << "% with RichPID information" << endreq;
-    info() << "  -> " << protoMUON << "% with MuonPID information" << endreq;
-    info() << "  -> " << protoECAL << "% with CaloPID ECAL information" << endreq;
-    info() << "  -> " << protoBREM << "% with CaloPID BREM information" << endreq;
-    info() << "  -> " << protoSPD  << "% with CaloPID SPD information" << endreq;
-    info() << "  -> " << protoPRS  << "% with CaloPID PRS information" << endreq;
-    info() << "  -> " << protoHCAL << "% with CaloPID HCAL information" << endreq;
-    info() << "  -> " << protoVELO << "% with Velo dE/dx charge information" << endreq;
-  }
+  printStats(MSG::INFO);
 
   // execute base class finalise and return
   return GaudiAlgorithm::finalize();
+}
+
+void ChargedProtoPAlg::printStats( const MSG::Level level ) const
+{
+  MsgStream & msg = msgStream(level);
+
+  // Statistical tools
+  const Rich::PoissonEffFunctor eff("%5.1f +-%4.1f");
+
+  const std::string lines(133,'-');
+  const std::string LINES(133,'=');
+
+  msg << LINES << endmsg;
+  msg << " Type        |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
+  msg << lines << endmsg;
+  for ( TrackMap::const_iterator iT = m_nTracks.begin();
+        iT != m_nTracks.end(); ++iT )
+  {
+    const TrackTally & tally = (*iT).second;
+    msg << boost::format(" %|-12|") % (*iT).first;
+    msg << "| " << eff(tally.selTracks,tally.totTracks) << " |";
+    msg << eff(tally.richTracks,tally.selTracks) << " ";
+    msg << eff(tally.muonTracks,tally.selTracks) << " ";
+    msg << eff(tally.ecalTracks,tally.selTracks) << " ";
+    msg << eff(tally.bremTracks,tally.selTracks) << " ";
+    msg << eff(tally.spdTracks,tally.selTracks)  << " ";
+    msg << eff(tally.prsTracks,tally.selTracks)  << " ";
+    msg << eff(tally.hcalTracks,tally.selTracks) << " ";
+    msg << eff(tally.velodEdxTracks,tally.selTracks);
+    msg << endmsg;
+  }
+  msg << LINES << endmsg;
+
 }
 
 //=============================================================================
