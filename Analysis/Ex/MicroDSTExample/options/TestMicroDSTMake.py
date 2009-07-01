@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.19 2009-06-30 15:57:51 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.20 2009-07-01 15:04:56 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -32,7 +32,7 @@ from MicroDSTExample import Selections
 # Some steering options
 #
 # number of events to process
-nEvents = 500
+nEvents = 5000
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
@@ -42,7 +42,7 @@ storeMCInfo = True
 # B tagging?
 BTaggingInfo = True
 # re-fit PV?
-PVRefit = True
+PVRefit = False
 # L0DUReport?
 L0DUInfo = False
 # HltDecReports?
@@ -71,7 +71,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt_OldReFitPVsSorted.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
@@ -128,9 +128,15 @@ if (keepTrueDecays) :
 # Copy selected particles, daughters, and decay vertices
 copyParticles = CopyParticles('CopyParticles')
 copyParticles.InputLocation = mainLocation+"/Particles"
+copyParticles.addTool(ParticleCloner, name='ClonerType')
+# ParticleCloner is already used by CopyParticles, but need to add configurable
+# if we want to modify its configuration, including adding some tools.
 #copyParticles.addTool(ParticleCloner, name='ClonerType')
-#copyParticles.ParticleCloner.addTool(VertexCloner, name='IClonerVertex')
-#copyParticles.ParticleCloner.addTool(ProtoParticleCloner, name='ICloneProtoParticle')
+#copyParticles.ClonerType.addTool(ProtoParticleCloner, name='ICloneProtoParticle')
+# Vertex cloner is already used by ParticleCloner, but need to add it if we
+# want to modify its configuration
+#copyParticles.ClonerType.addTool(VertexCloner, name='IClonerVertex')
+
 copyParticles.OutputLevel=4
 MySelection.Members += [copyParticles]
 #==============================================================================
