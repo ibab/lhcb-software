@@ -35,7 +35,7 @@ from GaudiPython.Bindings import gbl
 def _getAppMgr   ( **kwargs  ) :
     """ Helper private auxiliary function to get Application Manager """
     gaudi = kwargs.get ( 'gaudi' , None )
-    if not gaudi : gaudi = gaudimodule.gaudi
+#    if not gaudi : gaudi = gaudimodule.gaudi
     if not gaudi : gaudi = gaudimodule.AppMgr() 
     if not gaudi : raise RuntimeError, 'Unable to get valid ApplicationMgr'
     return gaudi                                               ## RETURN
