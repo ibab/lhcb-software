@@ -5,7 +5,11 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+- In RecSys v   
+  . Change configurable to configure MuonID using new configurable (E. Polycarpo)
+
 </PRE><H1><A NAME=v7r3>2009-07-01 RecSys v7r3</A></H1><PRE>
+
 This version uses Gaudi v21r2 and LHCb v27r3.
 
 - Packages modified: CaloReco v4r20, GlobalReco v6r22, TrackFitEvent v3r23,
