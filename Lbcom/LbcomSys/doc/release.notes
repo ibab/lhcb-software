@@ -6,6 +6,20 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r3>2009-07-01 LbcomSys v7r3</A></H1><PRE>
+This version uses Gaudi v21r2 and LHCb v27r3
+
+- Packages added:    Hlt/HltDAQ v1r0 - Hlt RawBanks writers/decoders/monitors
+- Packages modified: RichTools v2r27, STMonitors v1r4
+
+- In RichTools v2r27
+  . Changed the way the global to/from photodetector panel frame conversion is 
+    made. A 3D tranform is calculated in the DeRichHPDPanel and used by the 
+    SmartIDTool.
+
+- In STMonitors v1r4
+  . Modified binning in TT Cluster map to give a better picture.
+
 </PRE><H1><A NAME=v7r2>2009-06-22 LbcomSys v7r2</A></H1><PRE>
 This version uses Gaudi v21r1 and LHCb v27r2
 
