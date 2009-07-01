@@ -10,7 +10,7 @@
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |     10000 |       4039 |(  40.3900 +- 0.490678 )%|   -------   |   -------   |
+ |*"#accept"                                       |     10000 |       4042 |(  40.4200 +- 0.490737 )%|   -------   |   -------   |
  | "#errors"                                       |     10000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""

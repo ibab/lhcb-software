@@ -1,6 +1,6 @@
-## $Id: DVTestReadETC.py,v 1.1 2009-06-23 13:41:38 pkoppenb Exp $
+## $Id: DVTestReadETC.py,v 1.2 2009-07-01 08:23:16 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 ## ============================================================================
 #
 # Example options to read a user-defined ETC
@@ -11,7 +11,7 @@ from StrippingConf.StrippingLine import StrippingLine, strippingLines
 from StrippingConf.Configuration import StrippingConf
 StrippingConf().ActiveLines = []
 StrippingConf().OutputType = "NONE"                    # Can be either "ETC" or "DST"
-StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/StrippingSelections.py"
+StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py"
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
