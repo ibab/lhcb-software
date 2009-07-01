@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsProtons.py,v 1.4 2009-06-12 16:14:29 pkoppenb Exp $ 
+# $Id: StdNoPIDsProtons.py,v 1.5 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsProtons.py
 #  configuration file for 'Standard NoPIDs Protons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Protons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsProtons' ,
@@ -29,7 +29,6 @@ algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsProtons'  ,
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 
-selector.TrackTypes = [ 'Long' ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

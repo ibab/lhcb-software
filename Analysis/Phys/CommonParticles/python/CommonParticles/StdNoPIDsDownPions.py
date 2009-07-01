@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsDownPions.py,v 1.3 2009-06-12 16:14:29 pkoppenb Exp $ 
+# $Id: StdNoPIDsDownPions.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsDownPions.py
 #  configuration file for 'Standard NoPIDs Downstream Pions' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard NoPIDs Downstream Pions'
 """
 __author__  = "Alessio Sarti <Alessio.Sarti@lnf.infn.it>"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsDownPions' ,
@@ -29,8 +29,7 @@ algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownPions'          ,
                                 Particle = 'pion' )
 
 # configure the track selector
-selector = trackSelector ( algorithm ) 
-selector.TrackTypes = [ 'Downstream' ]
+selector = trackSelector ( algorithm, trackTypes = ['Downstream'] )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

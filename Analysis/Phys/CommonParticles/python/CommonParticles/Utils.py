@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Utils.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
+# $Id: Utils.py,v 1.3 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/Utils.py
 #  helper file for configuration of "standard particles"
@@ -11,7 +11,7 @@
 Helper file for configuration of 'standard particles'
 """
 author  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     # general:
@@ -34,7 +34,7 @@ _particles = {}
 ## Return the locations known for data-on-demand service 
 def particles () :
     """
-    Return the locations knonw for data-oon-demand service 
+    Return the locations known for data-oon-demand service 
     """
     return _particles
 
@@ -55,13 +55,32 @@ def updateDoD ( alg , hat = 'Phys/' ) :
         )
     return _parts 
 
+
 ## get the track selector 
-def trackSelector ( alg , tracks = TrackSelector ) :
+def trackSelector ( alg ,
+                    tracks     = TrackSelector,
+                    trackTypes = ["Long"],
+                    cuts       = {  "Chi2Cut"       : [0,10]
+                                   ,"LikelihoodCut" : [-100,9e40]
+                                   ,"CloneDistCut"  : [-1e10,9e40]
+                                   ,"GhostProbCut"  : [-1,0.99]
+                                   }
+                    ) :
     """
     Get the track selector for maker 
     """
     alg.addTool ( tracks )
-    return getattr ( alg , tracks.getType() ) 
+
+    selector = getattr ( alg , tracks.getType() )
+
+    # selection cuts
+    selector.TrackTypes = trackTypes
+    
+    for name,cut in cuts.iteritems() :
+        selector.setProp("Min"+name,cut[0])
+        selector.setProp("Max"+name,cut[1])
+
+    return selector
 
 ## get the protoparticle filter
 def protoFilter ( alg , fltr , name ) :

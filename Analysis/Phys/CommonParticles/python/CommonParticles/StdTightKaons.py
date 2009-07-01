@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightKaons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
+# $Id: StdTightKaons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdTightKaons.py
 #  configuration file for 'Standard Tight Kaons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Tight Kaons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdTightKaons' ,
@@ -30,7 +30,6 @@ algorithm =  CombinedParticleMaker ( 'StdTightKaons',
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 
-selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Kaon' )

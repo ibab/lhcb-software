@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseKaons.py,v 1.3 2009-04-23 14:50:13 pkoppenb Exp $ 
+# $Id: StdLooseKaons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseKaons.py
 #  configuration file for 'Standard Loose Kaons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Kaons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdLooseKaons' ,
@@ -24,11 +24,10 @@ from Configurables       import ProtoParticleCALOFilter, CombinedParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker('StdLooseKaons',  Particle =  'kaon' )
+algorithm = CombinedParticleMaker('StdLooseKaons',  Particle = 'kaon' )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 
-selector.TrackTypes = [ 'Long' ]
 
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Kaon' )
