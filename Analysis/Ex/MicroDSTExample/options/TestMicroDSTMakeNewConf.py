@@ -2,13 +2,13 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci, PhysMicroDST
 
 importOptions("$STDOPTS/PreloadUnits.opts")
-importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts")
-MySelection = GaudiSequencer("SeqDC06selBs2JpsiPhi")
+importOptions( "$MICRODSTEXAMPLEROOT/options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts")
+MySelection = GaudiSequencer("SelBs2Jpsi2MuMuPhi2KK")
 
 conf = PhysMicroDST()
 conf.OutputPrefix = "MicroDST"
 conf.MicroDSTFile = "MyTestMDST_MC_newConf.mdst"
-conf.MicroDSTSelectionAlg = "DC06selBs2JpsiPhi_unbiased"
+conf.MicroDSTSelectionAlg = "Bs2Jpsi2MuMuPhi2KK"
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
