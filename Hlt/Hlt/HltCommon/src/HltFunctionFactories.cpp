@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.28 2009-03-19 09:28:20 dhcroft Exp $
+// $Id: HltFunctionFactories.cpp,v 1.29 2009-07-01 21:01:54 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -56,35 +56,22 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::FitChi2OverNdf>("FitChi2OverNdf");
   declare<Hlt::FitMuChi2>("FitMuChi2");
   declare<Hlt::FitCleanedChi2OverNdf>("FitCleanedChi2OverNdf");
-  
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
-    ("Calo2DChi2","HltRZVeloTCaloMatch");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
-    ("Calo3DChi2","HltVeloTCaloMatch");
-
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
-    ("RZVeloTMatch","HltMatchTVeloTracks");
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Calo2DChi2","HltRZVeloTCaloMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Calo3DChi2","HltVeloTCaloMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("RZVeloTMatch","HltMatchTVeloTracks");
 
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
-
   declare<ITrackFunctionTool>("DeltaP","HltDeltaPTool");
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
   declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf");
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
-    ("Ecal2DChi2","HltRZVeloEcalMatch");
-
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
-    ("Ecal3DChi2","HltVeloEcalMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal2DChi2","HltRZVeloEcalMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
 
   declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
-
   return sc;
 }
-
-
-
 //=============================================================================
 
 
@@ -102,7 +89,7 @@ HltVertexFunctionFactory::~HltVertexFunctionFactory() {
 StatusCode HltVertexFunctionFactory::initialize() {
 
   StatusCode sc = HltTFunctionFactory<LHCb::RecVertex>::initialize();
-  
+
   declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("VertexDz");
   declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("FitVertexDz");
   declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
@@ -142,11 +129,7 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexNumberOfCSideTracks>("VertexNumberOfCSideTracks");
 
   declare<IRecVertexFunctionTool>("VertexDiElectronMass","VertexDiElectronMassTool");
-
   return sc;
 }
 
-
-
 //=============================================================================
-
