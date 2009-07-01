@@ -3,22 +3,18 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-06-30 - Marco Cattaneo
- - Update dc06 references for change in DDDB
+</PRE><H1><A NAME=v35r3>2009-07-02 Brunel v35r3</A></H1><PRE>
 
-! 2009-06-29 - Marco Cattaneo
- - Update references for changes to PatVelo
+ - Changes to Configurable:
+   . Add Brunel().OutputLevel property to allow overall control of the printout
+     levels. This property is propagated to other Configurables and (partly)
+     obsoletes the NoWarnings property, but it is still needed for backwards
+     compatibility with Dirac.
 
-! 2009-06-25 - Chris Jones
- - Add new OutputLevel property to Brunel configurable to allow 
-   overall control of the printout levels. This property is propagated
-   to other Configurables.
-   This (partly) obsoletes the NoWarnings property, but it is still 
-   needed for backwards compatibility with Dirac.
-
-! 2009-06-23 - Marco Cattaneo
- - Change testBrunelMdfRdst.ref for new RawEventSelectiveCopy algorithm
- - Increment version to v35r3
+ - Changes to references to reflect changes in Brunel v35r3 output:
+   . New RawEventSelectiveCopy algorithm
+   . New tuning of PatVelo internal fit
+   . New handling of ONLINE database snapshot for DC06
 
 </PRE><H1><A NAME=v35r2>2009-06-18 Brunel v35r2</A></H1><PRE>
 
