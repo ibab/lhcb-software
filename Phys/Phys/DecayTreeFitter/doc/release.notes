@@ -8,6 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2009-07-01 Wouter Hulsbergen
+- fix compilation warnings
+- fix bug in RecoPhoton
+
 !======================= DecayTreeFitter v1r4 2009-06-25 =====================
 
 ! 2009-06-24 Wouter Hulsbergen
