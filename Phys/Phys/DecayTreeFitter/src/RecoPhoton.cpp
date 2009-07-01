@@ -27,7 +27,7 @@ namespace DecayTreeFitter
     double l = dx.r() ;
 
     // get the energy
-    double energy = m_m(3) ;
+    double energy = m_m(2) ;
     
     // assign the momentum
     int momindex = momIndex() ;
