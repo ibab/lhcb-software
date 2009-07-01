@@ -538,11 +538,6 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "################# START OF MAKE #######################"')
     changeEnvVariables()
 
-    #hack: no distcc for SLC5
-    if os.environ.get("CMTCONFIG","").upper().find("SLC5")>=0 and os.environ.get("CMTEXTRATAGS","").upper().find("DISTCC")>=0:
-        os.environ["CMTEXTRATAGS"] = ""
-    #end
-
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "LCG Nightlies:    '+os.path.dirname(configuration.__file__)+'"')
