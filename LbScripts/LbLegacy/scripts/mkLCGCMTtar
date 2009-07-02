@@ -184,6 +184,12 @@ def get_native_versions(native_version,binary):
         packages_versions[pack] = vers
 
     os.system(rmcmd+natives)
+    
+    for pak in packages_versions.keys() :
+        if not packages_versions[pak] :
+            print "%s has no version. Removing it from the list" % pak
+            del packages_versions[pak]
+    
     return packages_versions
 
 #

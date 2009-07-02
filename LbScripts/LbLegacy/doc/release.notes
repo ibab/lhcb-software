@@ -1,3 +1,7 @@
+2009-07-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/MkLCGCMTtar: remove the externals which do not have a version.
+
 2009-07-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed downloading of latest_install_project.py. 
