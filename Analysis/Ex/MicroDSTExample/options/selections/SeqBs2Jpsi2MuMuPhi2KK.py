@@ -1,8 +1,8 @@
-# $Id: SeqBs2Jpsi2MuMuPhi2KK.py,v 1.1 2009-07-02 06:01:15 jpalac Exp $
+# $Id: SeqBs2Jpsi2MuMuPhi2KK.py,v 1.2 2009-07-02 12:05:06 jpalac Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = 'April 2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 The roadmap Bs->JpsiPhi selection using LoKi::Hybrid and python
@@ -32,16 +32,15 @@ SeqBs2Jpsi2MuMuPhi2KK = GaudiSequencer('SeqBs2Jpsi2MuMuPhi2KK')
 # can use exactly the same file containing the Jpsi selection code.
 
 importOptions( '$MICRODSTEXAMPLEROOT/options/selections/Phi2KK.py' )
-Phi2KK = FilterDesktop('Phi2KK')
+Phi2KK = getConfigurable('Phi2KK')
 
 importOptions('$MICRODSTEXAMPLEROOT/options/selections/Jpsi2MuMu.py')
-Jpsi2MuMu = FilterDesktop('Jpsi2MuMu')
+Jpsi2MuMu = getConfigurable('Jpsi2MuMu')
 
 SeqBs2Jpsi2MuMuPhi2KK.Members = [Jpsi2MuMu, Phi2KK]
 
 importOptions('$MICRODSTEXAMPLEROOT/options/selections/Bs2Jpsi2MuMuPhi2KK.py')
-
-Bs2Jpsi2MuMuPhi2KK = CombineParticles('Bs2Jpsi2MuMuPhi2KK')
+Bs2Jpsi2MuMuPhi2KK = getConfigurable('Bs2Jpsi2MuMuPhi2KK')
 
 SeqBs2Jpsi2MuMuPhi2KK.Members += [Bs2Jpsi2MuMuPhi2KK]
 
