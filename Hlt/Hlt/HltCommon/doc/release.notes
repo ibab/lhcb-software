@@ -6,9 +6,10 @@
 
 ! 2009-07-02 - Gerhard Raven
  - avoid creating tools which are never used
-   note: out of the two pieces of code that causes this happens,
-   only one has been fixed, as the other case causes results
-   to change, which should NOT (have) happen(ed)
+   note: there is one instance involving HltAntiEleTool which 
+   has NOT been updated, as it causes results to change, which
+   should NOT (have) happen(ed) -- this is a BUG that needs to
+   be understood.
 
 ! 2009-07-01 - Gerhard Raven
  - remove unused typedef

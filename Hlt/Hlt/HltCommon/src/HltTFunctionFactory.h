@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.8 2009-07-02 08:55:46 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.9 2009-07-02 09:46:39 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -148,12 +148,16 @@ protected:
     declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),id) ,this));  
   }
   template <typename INTERFACE>
-  void declare(const std::string& name, const std::string& toolname) {
+  void declare(const std::string& name, const std::string& toolname, bool delay=true) {
     typedef Hlt::FunctionTool<T,INTERFACE> FUNCTION;
-    // always()<< "would have called tool for " << this->name()<< "." << toolname << endmsg;
-    INTERFACE* it = tool<INTERFACE>(toolname,this);
-    declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),it) ,this));
-    //declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),toolname,this) ,this));
+    if (delay) {
+       debug()<< " delaying tool creation: " << this->name()<< "." << toolname << endmsg;
+       declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),toolname,this) ,this));
+    } else {
+       debug()<< " creating tool: " << this->name()<< "." << toolname << endmsg;
+       INTERFACE* it = tool<INTERFACE>(toolname,this);
+       declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),it) ,this));
+    }
   }
   
   
@@ -166,7 +170,6 @@ protected:
   
   template <class INTERFACE,class COMPARATOR,class T2Selection>
   void declare(const std::string& name, const std::string& toolname) {
-    // always()<< "would have called tool for " << this->name()<< "." << toolname << endmsg;
     typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
     declare(name,       Hlt::TFunctionCreator<T,T2Selection,COMPARATOR>(bind(constructor<Hlt::BiFunctionTool<T,T2,INTERFACE> >(),toolname,this)));
     declare(name+"Key", Hlt::TFunctionCreator<T,T2Selection,COMPARATOR>(bind(constructor<Hlt::BiFunctionTool<T,T2,INTERFACE> >(),toolname,this),true));
