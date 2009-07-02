@@ -3,6 +3,30 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r6>2009-07-02 Phys v8r6 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r6                                  #
+###############################################################################
+
+ - Based on LHCb v27r3 and Gaudi v21r2
+
+  Highlights:
+
+  * CombineParticles(Vanya): 
+    New properties to allow to deal with busy events.
+    The default behaviour is the same as in the previous release.
+    Properties: "MaxCombinations" and "MaxCandidates", default value 0 = no cut
+                "StopAtMaxCombinations" and "StopAtMaxCandidates" default false
+
+  * New ParticleMaker "BestParticleMaker" (Patrick K.): 
+    Re-implements the lost functionality ExclusiveSelection = true of the 
+    CombinedParticleMaker. Do not use for B physics. Useful for jets. 
+
+  * New package Phys/DecayTreeFitter (Wouter Hulsbergen):
+    Implements TreeFitter, ported (and improved) from BaBar
+    see  https://twiki.cern.ch/twiki/bin/view/LHCb/DecayTreeFitter
+
 </PRE><H1><A NAME=v8r5>2009-06-22 Phys v8r5 </A></H1><PRE>
 
 ###############################################################################
