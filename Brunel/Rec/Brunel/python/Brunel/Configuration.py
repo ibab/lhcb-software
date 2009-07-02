@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.85 2009-07-01 19:10:05 polye Exp $"
+__version__ = "$Id: Configuration.py,v 1.86 2009-07-02 11:07:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -437,7 +437,6 @@ class Brunel(LHCbConfigurableUser):
 
         if "MUON" in moniSeq :
             from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
-            withMC = self.getProp("WithMC")
             mydata =  self.getProp("DataType")
             mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
             if not withMC : 
@@ -499,10 +498,9 @@ class Brunel(LHCbConfigurableUser):
 
         if "MUON" in checkSeq :
             from MuonPIDChecker import ConfigureMuonPIDChecker as cmuon
-            withMC = self.getProp("WithMC")
             mydata =  self.getProp("DataType")
             mycheckconf = cmuon.ConfigureMuonPIDChecker(data = mydata)
-            mycheckconf.configure(mc = withMC)
+            mycheckconf.configure(mc = True)
 
         if "RICH" in checkSeq :
             from Configurables import GaudiSequencer
