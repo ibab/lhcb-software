@@ -18,32 +18,36 @@ cmtpath_pattern \
 #--------------------------------------------
 
 cmtpath_pattern \
-   macro <project>_install_python "" \
+    path_remove  PYTHONPATH "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "/<project>/"\
+         <project>_with_installarea&WIN32 "\<project>\" ; \
+    path_prepend PYTHONPATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/python"\
-         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\python" ; \
-    path_remove  PYTHONPATH ${<project>_install_python} ; \ 
-    path_prepend PYTHONPATH ${<project>_install_python}
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\python"
 
 pattern install_python_modules \
-    macro <package>_install_python "" \
+    path_remove  PYTHONPATH "" \
+         <project>_without_installarea&Unix "/<package>/python" \
+         <project>_without_installarea&WIN32 "\<package>\python" ; \
+    path_prepend PYTHONPATH "" \
          <project>_without_installarea&Unix "$(<package>_root)/python" \
          <project>_without_installarea&WIN32 "$(<package>_root)\python" ; \
-    path_remove  PYTHONPATH ${<package>_install_python} ; \ 
-    path_prepend PYTHONPATH ${<package>_install_python} ; \
     document install_python <package>_python ; \
     apply_pattern install_python_init ; \
-    macro_append <package>_python_init_dependencies " <package>_python " ;
+    macro_append <package>_python_init_dependencies " <package>_python "
     
 pattern install_custom_python_modules \
-    macro <package>_install_python "" \
+    path_remove  PYTHONPATH "" \
+         <project>_without_installarea&Unix "/<package>/<source>" \
+         <project>_without_installarea&WIN32 "\<package>\<source>" ; \ 
+    path_prepend PYTHONPATH "" \
          <project>_without_installarea&Unix "$(<package>_root)/<source>" \
          <project>_without_installarea&WIN32 "$(<package>_root)\<source>" ; \
-    path_remove  PYTHONPATH ${<package>_install_python} ; \ 
-    path_prepend PYTHONPATH ${<package>_install_python} ; \
     document install_python <package>_<source>_<offset>_python source=<source> offset=<offset> ; \
     apply_pattern install_python_init ; \
-    macro_append <package>_python_init_dependencies " <package>_<source>_<offset>_python " ;
+    macro_append <package>_python_init_dependencies " <package>_<source>_<offset>_python "
 
 make_fragment install_python -header=install_python_header
 
@@ -103,37 +107,43 @@ macro_remove cmt_actions_constituentsclean "ShowAliasclean "
 #--------------------------------------------
 
 cmtpath_pattern \
-   macro <project>_install_scripts "" \
+    path_remove  PATH "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "/<project>/" \
+         <project>_with_installarea&WIN32 "\<project>\" ; \
+    path_prepend PATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/scripts" \
-         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\scripts" ; \
-    path_remove  PATH ${<project>_install_scripts} ; \ 
-    path_prepend PATH ${<project>_install_scripts}
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\scripts"
 
 pattern install_scripts \
-    macro <package>_install_scripts "" \
+    path_remove  PATH "" \
+          <project>_without_installarea&Unix "/<package>/scripts" \
+          <project>_without_installarea&WIN32 "\<package>\scripts" ; \ 
+    path_prepend PATH "" \
           <project>_without_installarea&Unix "$(<package>_root)/scripts" \
           <project>_without_installarea&WIN32 "$(<package>_root)\scripts" ; \
-    path_remove  PATH ${<package>_install_scripts} ; \ 
-    path_prepend PATH ${<package>_install_scripts} ; \
     document install_scripts install_scripts 
     
 make_fragment install_scripts -header=install_scripts_header
 
 cmtpath_pattern \
-   macro <project>_install_script_doc "" \
+    path_remove  HPATH "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "/<project>/" \
+         <project>_with_installarea&WIN32 "\<project>\" ; \
+    path_prepend HPATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/doc/help" \
-         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\doc\help" ; \
-    path_remove  HPATH ${<project>_install_script_doc} ; \ 
-    path_prepend HPATH ${<project>_install_script_doc}
+         <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\doc\help"
 
 pattern install_script_doc \
-    macro <package>_install_script_doc "" \
+    path_remove  HPATH "" \
+          <project>_without_installarea&Unix "/<package>/doc/help" \
+          <project>_without_installarea&WIN32 "\<package>\doc\help" ; \
+    path_prepend HPATH "" \
           <project>_without_installarea&Unix "$(<package>_root)/doc/help" \
           <project>_without_installarea&WIN32 "$(<package>_root)\doc\help" ; \
-    path_remove  HPATH ${<package>_install_script_doc} ; \ 
-    path_prepend HPATH ${<package>_install_script_doc} ; \
     macro_append install_excludes " -xhtml " ; \
     document install_doc install_doc
     

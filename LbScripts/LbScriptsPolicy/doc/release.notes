@@ -1,3 +1,8 @@
+2009-07-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: changed the PATHs massaging in order to be able to remove older
+	versions.
+
 2009-06-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/StripPath.{csh,sh,bat}: don't cleanup the path if the LB_NO_STRIP_PATH
