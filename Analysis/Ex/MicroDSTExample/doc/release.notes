@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.34 2009-07-02 06:15:45 jpalac Exp $
+!$Id: release.notes,v 1.35 2009-07-02 13:50:03 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r7 2009-07-02 ==================
 
 ! 2009-07-01 - Juan PALACIOS
  - Added python Bs -> J/Psi (MuMu), Phi (KK) based on Greig Cowan's unbiased
