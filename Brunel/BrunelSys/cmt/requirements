@@ -1,5 +1,5 @@
 package BrunelSys
-version v35r3
+version v35r4
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v35r3 Rec
+use Brunel v35r4 Rec
 
 # Add here any component libraries to be added as patches
 
