@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-02 - Patrick Koppenburg
+ - Update C code to make wiki pages. Now an executable.
+
 ! 2009-07-01 - Patrick Koppenburg
  - Update scripts 
 
