@@ -1,8 +1,10 @@
-// $Id: VeloTrackMonitor.cpp,v 1.16 2009-03-05 16:11:00 erodrigu Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.17 2009-07-02 15:12:56 siborghi Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
+
 /*
  *  Implementation file for class : Velo::VeloTrackMonitor
  *
@@ -47,7 +49,8 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitor );
 Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator ),
-    
+    //  : GaudiTupleAlg( name , pSvcLocator ),
+
     m_veloDet(0),
     m_event(0),
     m_resetProfile(1000)
@@ -154,10 +157,11 @@ StatusCode Velo::VeloTrackMonitor::finalize() {
   
   if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
   m_event = 0;
+
   return VeloMonitorBase::finalize();  // must be called after all other actions
 }
 //=========================================================================
-// Retrieve the VeloClusters 
+// Retrieve the VeloClusters
 //=========================================================================
 StatusCode Velo::VeloTrackMonitor::getVeloClusters ( ) {
   if ( m_debugLevel )
@@ -170,8 +174,11 @@ StatusCode Velo::VeloTrackMonitor::getVeloClusters ( ) {
   }
   else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
+
+    m_rawClusters = get<LHCb::VeloClusters>( m_clusterCont );
+
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
-                                << m_clusters->size() <<endmsg;
+                                << m_clusters->size()<<endmsg;
   }
  
   return StatusCode::SUCCESS; 
@@ -190,7 +197,7 @@ StatusCode Velo::VeloTrackMonitor::getVeloTracks ( ) {
   else {
     m_tracks = get<LHCb::Tracks>( m_trackCont );
     if ( m_debugLevel ) debug() << "  -> number of tracks found in TES: "
-                                << m_tracks->size() <<endmsg;
+                                << m_tracks->size() <<endmsg;    
   }
 
   return StatusCode::SUCCESS;  
@@ -221,35 +228,60 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   const GaudiAlg::HistoID sensors = "Sensors_vs_BiasedResiduals" ; 
   AIDA::IProfile1D* prof_sensors = bookProfile1D
     (sensors, "Sensors vs BiasedResiduals" , -0.5, 139.5, 140) ;
-  if ( m_event == m_resetProfile ) { prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
 
       
   //book profile for momentum of +ve tracks vs biasedResiduals
   const GaudiAlg::HistoID pos_momentum = "PosMomentum_vs_BiasedResiduals" ; 
   AIDA::IProfile1D* prof_pos_mom_res = bookProfile1D
     (pos_momentum, "PosTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
-  if ( m_event == m_resetProfile ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
 
   //book profile for momentum of -ve tracks vs biasedResiduals 
   const GaudiAlg::HistoID neg_momentum = "NegMomentum_vs_BiasedResiduals" ; 
   AIDA::IProfile1D* prof_neg_mom_res = bookProfile1D
     (neg_momentum, "NegTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
-  if ( m_event == m_resetProfile ) { prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
   
   
   //book profile for polarAngle vs RClusters
   const GaudiAlg::HistoID thetaR = "RClusters_per_Track_vs_Theta" ; 
   AIDA::IProfile1D* prof_thetaR = bookProfile1D
     (thetaR, " Clusters vs Theta(degree) " , -0.5, 30.5, 31) ;
-  if ( m_event == m_resetProfile ) { prof_thetaR -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_thetaR -> reset() ; } // RESET AFTER CERTAIN EVENTS
   
   //book profile for polarAngle vs TotClusters
   const GaudiAlg::HistoID thetaTot = "TotClusters_per_Track_vs_Theta" ; 
   AIDA::IProfile1D* prof_thetaTot = bookProfile1D
-    (thetaTot, "TotClusters vs Theta(degree)" , -0.5, 30.5, 31) ;
-  if ( m_event == m_resetProfile ) { prof_thetaTot -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  
-  //Loop over track container
+    (thetaTot, "Number of measurements vs #theta(degree)" , -0.5, 30.5, 31) ;
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_thetaTot -> reset() ; } // RESET AFTER CERTAIN EVENTS
+
+ //book profile for polarAngle vs Measurements
+  const GaudiAlg::HistoID thetaMeas = "Measurements_per_Track_vs_Theta" ; 
+  AIDA::IProfile1D* prof_thetaMeas = bookProfile1D
+    (thetaMeas, "Number of measurements vs #theta(degree)" , -0.5, 30.5, 31) ;
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_thetaMeas -> reset() ; } // RESET AFTER CERTAIN EVENTS
+
+
+//book profile for Pseudoefficiency_sensor vs sensor
+  const GaudiAlg::HistoID pseudoEffsens = "Pseudoefficiency_per_sensor_vs_sensorID";
+  AIDA::IProfile1D* prof_pseudoEffsens = bookProfile1D
+    (pseudoEffsens, "Pseudoefficiency vs sensorID",-0.5, 110.5, 111);
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pseudoEffsens -> reset() ; } // RESET AFTER CERTAIN EVENTS
+
+
+    std::vector<float> N_exp;    
+    std::vector<float> N_rec;
+    std::vector<double> pseudoEfficiency_sens;
+
+      for(int i=0; i<105; i++){
+
+        N_rec.push_back(0.);
+        N_exp.push_back(0.);
+        pseudoEfficiency_sens.push_back(0.);
+      }
+    
+//Loop over track container
   LHCb::Tracks::const_iterator itTrk;
   
   for(itTrk=m_tracks->begin();itTrk!=m_tracks->end();itTrk++){
@@ -295,7 +327,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       //---
       plot1D(track->pseudoRapidity(), "eta", 0.95, 6.05, 51);
 
-      //psudo-efficiency: Using Velo expectation Tool
+      //pseudo-efficiency: Using Velo expectation Tool
       //--------------------------------------------
       int nExpectedHits = m_expectTool->nExpected(*track);
       
@@ -304,7 +336,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       const int nVeloHits = std::count_if(id.begin(), id.end(),bind(&LHCbID::isVelo,_1));
       if(nExpectedHits != 0){
         double pseudoEfficiency = double(nVeloHits)/double(nExpectedHits);
-        plot1D(pseudoEfficiency, "pseudoEfficiency", "pseudoEfficiency", -0.05, 1.55, 16);
+        plot1D(pseudoEfficiency, "pseudoEfficiency", "PseudoEfficiency", -0.05, 1.55, 16);
       }
 
       //Unbiased Residuals
@@ -338,22 +370,36 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       x_glob.assign(42,0);
       y_glob.assign(42,0);
       z_glob.assign(42,0);
+       
+       //Loop over sensors
+         for(int j=0; j<=105; j++){
+           if(j>=0 && j<=41 || j>=64 && j<=105){
+             debug()<<"sensor number "<<j<<endmsg;
+             bool nExpectedHits_sensor = m_expectTool -> isInside(*track, j);
+             if(nExpectedHits_sensor == true) {
+               N_exp[j]+=1;
+             }
+             debug()<<"==> N_exp"<<N_exp[j]<<endmsg;
+          }
+       }//end of loop over sensors
+      
 
-    //Loop over measurements
+//Loop over measurements
     const std::vector<LHCb::Measurement*>& measures = track->measurements(); 
     std::vector<LHCb::Measurement*>::const_iterator it = measures.begin();
     unsigned int n_measurements = measures.size();
     int charge = track->charge();  
     
-    if(charge == 0)
-      plot1D( n_measurements, "NMeasurements", "Number of measurements on Velo", 0, 100, 100 );
+    //if(charge == 0)
+      plot1D( n_measurements, "NMeasurements", "Number of measurements associated to a track", 0, 45, 45 );
    
-    else if(charge == 1){
-      plot1D( n_measurements, "NPosMeasurements", "Number of measurements by positive tracks", 0, 100, 100 );
-    }
-    else if(charge == -1){
-      plot1D( n_measurements, "NNegMeasurements", "Number of measurements by negative tracks", 0, 100, 100 );
-    }
+      // else if(charge == 1){
+      // plot1D( n_measurements, "NPosMeasurements", "Number of measurements by positive tracks", 0, 100, 100 );
+      // }
+      // else if(charge == -1){
+      // plot1D( n_measurements, "NNegMeasurements", "Number of measurements by negative tracks", 0, 100, 100 );
+      // }
+      
     
     for ( ; it != measures.end(); ++it ) {
  
@@ -366,8 +412,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       unsigned int stripID = vcID.strip();
       const DeVeloSensor* sensor = m_veloDet->sensor(sensorID); 
 
+      N_rec[sensorID]+=1;
+
+      debug()<<"N_rec "<<N_rec[sensorID]<<endmsg;
+
+
       //UsedSensor plot
-      //---------------
+       //---------------
       if ( sensor->isR() || sensor->isPhi() ) {
         plot1D(sensorID,"UsedSensors","Number of times a sensor was used in the tracking vs Sensors",-0.5, 110.5, 111);
       }
@@ -474,12 +525,21 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       }
       
     
-    }//end of for loop over measurements
+    }//end of loop over measurements
+
+
+
+     //Cluster associated to a track
+    StatusCode sc4 = fill_clusteradcsum (m_tracks);
+    if ( !( sc4.isSuccess() ) ) {
+      debug() << "fill_clusteradcsum method" << endmsg;
+      return StatusCode::SUCCESS;
+    }     
     
     //Loop over module
     //----------------------------------------------------------
     for (int i=0;i<=41;i++) {
-      if((matchedSensors[i] == 1 || matchedSensors[i] == 10)&& matchedSensors[i] != 11){
+      if((matchedSensors[i] == 1 || matchedSensors[i] == 10) && matchedSensors[i] != 11){
         plot1D(i,"ModuleMismatch","Tracks with one used sensor from a module vs Module number"
                ,-0.5, 43.5, 44);
       }
@@ -534,13 +594,35 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     //------------------------------------
     prof_thetaR -> fill (theta/degree, nRClus);
     prof_thetaTot -> fill (theta/degree, nSumClus);
+
+    prof_thetaMeas -> fill (theta/degree, n_measurements);
+    
     
     nRClusEvent += nRClus;
     nPhiClusEvent += nPhiClus;
     
   }//End of loop over track container
-  
-  if(m_EventClusterInfo){
+
+    //Pseudoefficiency for each sensor
+    //--------------------------------
+
+      for(int i=0; i<=105; i++){
+        if(i>=0 && i<=41 || i>=64 && i<=105){
+
+          debug()<<"N_rec "<<N_rec[i]<<endmsg;
+          debug()<<"N_exp "<<N_exp[i]<<endmsg;
+
+          if(N_exp[i]>0){
+            pseudoEfficiency_sens[i] = N_rec[i] / N_exp[i];
+            debug()<<"==> pseudoefficiency "<<pseudoEfficiency_sens[i]<<endmsg;
+            plot2D(i, pseudoEfficiency_sens[i], "Pseudoefficiency vs sensorID", "Pseudoefficiency vs sensorID", 
+                 -0.5, 110.5, -0.05, 1.55, 111, 16);
+            prof_pseudoEffsens -> fill(i, pseudoEfficiency_sens[i]);
+          }
+        }
+      }
+    
+if(m_EventClusterInfo){
     
     nSumClusEvent =  nRClusEvent + nPhiClusEvent;
     
@@ -618,25 +700,25 @@ Gaudi::XYZPoint Velo::VeloTrackMonitor::extrapolateToZ(LHCb::Track *track, doubl
 StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track ) 
 {
   if(track->checkFitHistory(Track::BiKalman) == true){
-    
+      debug() << "Start Unbiased Residual method" << endmsg;    
     //book profile for sensors vs unbiasedResiduals
     
-    const GaudiAlg::HistoID sensors = "Sensors_vs_UnbiasedResiduals" ; 
-    AIDA::IProfile1D* prof_sensors = bookProfile1D
-      (sensors, "Sensors vs UnbiasedResiduals" , -0.5, 139.5, 140) ;
-    if ( m_event ==  m_resetProfile ) { prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
+    const GaudiAlg::HistoID unsensors = "Sensors_vs_UnbiasedResiduals" ; 
+    AIDA::IProfile1D* prof_unsensors = bookProfile1D
+      (unsensors, "Sensors vs UnbiasedResiduals" , -0.5, 139.5, 140) ;
+    if ( m_event ==  m_resetProfile ) { prof_unsensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
     
     //book profile for momentum of +ve tracks vs biasedResiduals
     const GaudiAlg::HistoID pos_momentum = "PosMomentum_vs_UnBiasedResiduals" ; 
     AIDA::IProfile1D* prof_pos_mom_res = bookProfile1D
       (pos_momentum, "PosTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
-    if ( m_event == m_resetProfile ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
     
     //book profile for momentum of -ve tracks vs biasedResiduals 
     const GaudiAlg::HistoID neg_momentum = "NegMomentum_vs_UnBiasedResiduals" ; 
     AIDA::IProfile1D* prof_neg_mom_res = bookProfile1D
       (neg_momentum, "NegTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
-    if ( m_event == m_resetProfile ) { prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
     
     //Loop over nodes
     const std::vector<LHCb::Node*>& nodes = track->nodes();
@@ -692,7 +774,7 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
 
       if ( 0 != pitch ) {
         //Sensors vs Unbiased Residuals
-        prof_sensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );
+        prof_unsensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );
         
         //Momentum vs UnBiased Residuals profiles for +ve and -ve charges for Velo part of Forward tracks        
         if(m_trackCont == LHCb::TrackLocation::Forward && track->charge()  == 1)
@@ -722,6 +804,40 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+// ADCsum for cluster associated to a track
+//=========================================================================
+StatusCode Velo::VeloTrackMonitor::fill_clusteradcsum(LHCb::Tracks* tracks)
+{
 
+  debug() << "Ntuple on event : " << endmsg;
 
+  LHCb::Tracks::const_iterator itTrg;
+  for(itTrg=tracks->begin();itTrg!=tracks->end();itTrg++){
 
+    LHCb::Track* track = (*itTrg);
+
+   const std::vector< LHCb::LHCbID >& trackIDs = track->lhcbIDs();
+    std::vector< LHCb::LHCbID >::const_iterator it;
+
+    for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
+      LHCb::VeloCluster *cluster;
+      cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (it)->channelID() );
+      double sumadc = cluster ->totalCharge();
+      plot1D(sumadc, "adcsum", "adcsum", 0 ,100 , 20);
+        
+      if(cluster->isRType()){
+        double Radc = cluster ->totalCharge();
+        plot1D(Radc, "Radc", "ADC for R clusters associated to a track", 0 ,100 , 100);
+      }  
+      if(cluster->isPhiType()){
+        double Phiadc = cluster ->totalCharge();
+        plot1D(Phiadc, "Phiadc", "ADC for Phi clusters associated to a track", 0 ,100 , 100);
+      }
+    }	
+    
+  }
+  
+  return StatusCode::SUCCESS;
+
+}	  

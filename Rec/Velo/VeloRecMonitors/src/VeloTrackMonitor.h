@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.6 2009-02-10 15:35:17 gersabec Exp $
+// $Id: VeloTrackMonitor.h,v 1.7 2009-07-02 15:12:56 siborghi Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -22,6 +22,7 @@
 
 //from Gaudi
 #include "GaudiAlg/IHistoTool.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 
 // local
 #include "VeloMonitorBase.h"
@@ -58,12 +59,14 @@ namespace Velo
     StatusCode MCInfo();
     StatusCode monitorTracks();
     StatusCode unbiasedResiduals(LHCb::Track *track);
+    StatusCode fill_clusteradcsum(LHCb::Tracks* tracks);
     Gaudi::XYZPoint extrapolateToZ(LHCb::Track *track, double toZ);
     DeVelo* m_veloDet;
     
     // Data members
     LHCb::Tracks* m_tracks;
     LHCb::VeloClusters* m_clusters;
+    LHCb::VeloClusters*m_rawClusters;
    
     IMeasurementProvider* m_measurementprovider;
     IVeloClusterPosition* m_clusterTool;
