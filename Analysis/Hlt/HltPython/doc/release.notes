@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2009-07-01- Antonio Perez-Calero
+ - added some more particles to pidtools dictionary
+
 !========================== HltPython v1r15 2009-06-03 ===================
 ! 2009-05-30- Gerhard Raven
  - do not change GaudiPython location in PYTHONPATH

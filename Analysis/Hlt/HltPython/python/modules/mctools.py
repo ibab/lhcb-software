@@ -82,7 +82,7 @@ def decayName(pars):
     decay = PTranslate(pid)+ "->"
     for par in pars[1:]:
         pid = par.particleID().pid()
-        decay += PTranslate(pid)
+        decay += ' '+PTranslate(pid)
     if (DEBUG): print " decay: ", decay
     return decay
     
