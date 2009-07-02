@@ -3,6 +3,33 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v19r3>2009-07-02 Boole v19r3</A></H1><PRE>
+This version uses projects Gaudi v21r2, LHCb v27r3, Lbcom v7r3
+ and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
+
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+- New tuning
+  . gaudirun.py has new -T (or --tcmalloc) option, switches on tcmalloc as memory
+    allocator (Gaudi v21r2)
+
+- Changes to configurables
+  . Add new Boole().OutputLevel property to Boole allow overall control of the
+    printout levels. This property is propagated to other Configurables.
+    This (partly) obsoletes the NoWarnings property, but it is still
+    needed for backwards compatibility with Dirac. (Boole v19r3, GaudiConf v12r6)
+
+- Changes to build configuration
+  . Optimised libraries now built without -s option, to give meaningful stack
+    trace information in case of crashes (Gaudi v21r2)
+  . New make option "QUICK=2" to skip dependency calculation (Gaudi v21r2)
+  . <component>_dll.cpp files no longer needed (Gaudi v21r2)
+
+- Bug fixes
+  . Set initial event time for DC06 data (avoids problems with ONLINE snapshots)
+    (DDDB v1r19)
+
 </PRE><H1><A NAME=v19r2>2009-06-22 Boole v19r2</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r2, Lbcom v7r2
  and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
