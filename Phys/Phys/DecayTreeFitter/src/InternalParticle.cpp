@@ -406,7 +406,7 @@ namespace DecayTreeFitter
   }
   
   ErrCode
-  InternalParticle::projectConstraint(const Constraint::Type type,
+  InternalParticle::projectConstraint(Constraint::Type type,
 				      const FitParams& fitparams, 
 				      Projection& p) const 
   {
