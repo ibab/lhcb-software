@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.4 2007-11-07 17:28:40 mschille Exp $
+// $Id: TsaOTXSearch.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -31,12 +31,12 @@ OTXSearch::OTXSearch(const std::string& type,
   declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");
 
-  declareProperty("sxCut", m_sxCut = 0.8);
+  declareProperty("sxCut", m_sxCut = 0.85);
   declareProperty("xsCut", m_xsCut = 0.7);
   declareProperty("x0Cut", m_x0Cut = 4500.);
   declareProperty("sx2Cut",m_sx2Cut = 0.8);
   declareProperty("dthCut", m_dthCut = 0.7);
-  declareProperty("tdCut",m_tdCut = 0.8);
+  declareProperty("tdCut",m_tdCut = 0.75);
   declareProperty("win", m_win = 10.0);
   declareProperty("win2",m_win2 = 6.0);
   declareProperty("nWin",m_nWin = 5);
@@ -44,8 +44,8 @@ OTXSearch::OTXSearch(const std::string& type,
   declareProperty("nxCut",m_nxCut = 6);
   declareProperty("nT2",m_nT2Conf = 1);
 
-  declareProperty("maxDriftRadius", m_maxDriftRadius = 2.7*Gaudi::Units::mm);
-  declareProperty("deltaX", m_deltaX = 1.0*Gaudi::Units::mm);
+  declareProperty("maxDriftRadius", m_maxDriftRadius = 2.9*Gaudi::Units::mm);
+  declareProperty("deltaX", m_deltaX = 0.75*Gaudi::Units::mm);
   declareProperty("collectPolicy", m_collectPolicy = "Curved");
 };
 

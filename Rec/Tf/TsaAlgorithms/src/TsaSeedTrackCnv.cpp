@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.4 2007-11-02 14:59:33 albrecht Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -18,7 +18,7 @@ SeedTrackCnv::SeedTrackCnv(const std::string& name,
   BaseAlg(name, pSvcLocator)
 {
   // constructor
-  declareProperty("LikCut", m_likCut = -30.);
+  declareProperty("LikCut", m_likCut = -32.);
   declareProperty("inputLocation", m_inputLocation = SeedTrackLocation::Default);
   declareProperty("outputLocation", m_outputLocation = LHCb::TrackLocation::Tsa );
 }

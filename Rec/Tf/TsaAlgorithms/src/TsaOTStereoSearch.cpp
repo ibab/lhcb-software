@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.6 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.7 2009-07-02 10:43:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -28,14 +28,14 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
   declareProperty("otDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("otDataSvcName", m_dataSvcName = "TsaDataManager");
 
-  declareProperty( "syCut" , m_syCut = 0.10);
+  declareProperty( "syCut" , m_syCut = 0.07);
   declareProperty( "win" , m_win = 100.0);
   declareProperty( "nWin" , m_nWin = 6);
   declareProperty( "yTol", m_yTol = 20.0);
-  declareProperty( "yTol2", m_yTol2 = 10.0);
+  declareProperty( "yTol2", m_yTol2 = 8.3);
   declareProperty("nHit", m_nHit = 15);
   declareProperty( "nY", m_nY = 4);
-  declareProperty("maxDriftRadius", m_maxDriftRadius = 2.7);
+  declareProperty("maxDriftRadius", m_maxDriftRadius = 2.9);
 
   m_scth = 1.0/TsaConstants::sth;
 

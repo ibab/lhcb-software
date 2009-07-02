@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.7 2007-11-07 17:28:39 mschille Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.8 2009-07-02 10:43:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -28,10 +28,10 @@ ITStereoSearch::ITStereoSearch(const std::string& type,
   declareProperty("itDataSvcType", m_dataSvcType = "Tf::Tsa::TStationHitManager");
   declareProperty("itDataSvcName", m_dataSvcName = "TsaDataManager");
 
-  declareProperty( "syCut" , m_syCut = 0.01);
+  declareProperty( "syCut" , m_syCut = 0.007);
   declareProperty( "win" , m_win = 4.0);
   declareProperty( "nWin" , m_nWin = 2);
-  declareProperty( "yTol", m_yTol = 1.0);
+  declareProperty( "yTol", m_yTol = 0.9);
   declareProperty( "nY", m_nY = 4);
 
   // constructer

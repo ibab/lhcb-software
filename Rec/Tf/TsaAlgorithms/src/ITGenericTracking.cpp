@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.10 2009-05-07 07:02:23 lnicolas Exp $
+// $Id: ITGenericTracking.cpp,v 1.11 2009-07-02 10:43:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -35,6 +35,7 @@
 #include "Event/StateParameters.h"
 
 #include <boost/foreach.hpp>
+#include <boost/assign/list_of.hpp>
 
 using namespace LHCb;
 

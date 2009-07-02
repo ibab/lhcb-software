@@ -1,5 +1,5 @@
 
-// $Id: TsaITXSearch.cpp,v 1.5 2007-11-07 17:28:39 mschille Exp $
+// $Id: TsaITXSearch.cpp,v 1.6 2009-07-02 10:43:03 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -44,7 +44,7 @@ ITXSearch::ITXSearch(const std::string& type,
   declareProperty("dthCut", m_dthCut = 0.4); // was 0.3
   declareProperty("tdCut",m_tdCut = 0.2); // was 0.2
   declareProperty("win", m_win = 0.8);
-  declareProperty("win2",m_win2 = 5.0);
+  declareProperty("win2",m_win2 = 3.0);
   declareProperty("nWin",m_nWin = 3);
   declareProperty("nWin2",m_nWin2 = 4);
   declareProperty("nxCut",m_nxCut = 4);

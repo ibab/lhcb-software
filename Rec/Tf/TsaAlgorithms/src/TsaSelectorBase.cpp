@@ -1,4 +1,4 @@
-// $Id: TsaSelectorBase.cpp,v 1.4 2007-10-10 18:48:10 smenzeme Exp $
+// $Id: TsaSelectorBase.cpp,v 1.5 2009-07-02 10:43:04 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -41,18 +41,13 @@ StatusCode SelectorBase::select(std::vector<SeedTrack*>& seeds)
   //-------------------------------------------------------------------------
 
   std::vector<SeedTrack*>::iterator iter = seeds.begin();
-  verbose() << "Found " << seeds.size() << " SeedTracks" << endreq;
   for ( ; iter != seeds.end(); ++iter)
   {
-    verbose() << " SeedTrack " << **iter << endreq;
-    if ( (*iter)->live() == false || (*iter)->select() == true )
-    { verbose() << " -> Fails live and select test" << endreq; continue; }
+    if ( (*iter)->live() == false || (*iter)->select() == true ) continue;
 
     std::vector<SeedPnt> clusVector = (*iter)->usedPnts();
     const double fracUsed = (double)std::count_if(clusVector.begin(),clusVector.end(),
                                                   bind(&SeedPnt::onTrack,_1))/(double)clusVector.size();
-    verbose() << "  -> fracUsed = " << fracUsed << endreq;
-
     if (fracUsed < m_fracUsed) {
       (*iter)->setSelect(true);
       std::for_each(clusVector.begin(),clusVector.end(), bind(&SeedPnt::setOnTrack,_1,true));

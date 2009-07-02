@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.4 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaLikelihood.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,12 +34,12 @@ Likelihood::Likelihood(const std::string& type,
   m_parabolaFit(0)
 {
 
-  declareProperty("LikCut", m_likCut = -30.0);
-  declareProperty("ITEff", m_itEff = 0.99);
-  declareProperty("OTEff", m_otEff = 0.9);
+  declareProperty("LikCut", m_likCut = -32.0);
+  declareProperty("ITEff", m_itEff = 0.995);
+  declareProperty("OTEff", m_otEff = 0.91);
   declareProperty("f1Par", m_f1Par = list_of(5.335)(0.005433)(7.551)(0.04098));
   declareProperty("f2Par", m_f2Par = list_of(6.884)(35.49)(5.62)(6.928));
-  declareProperty("weights", m_weights = list_of(1.0)(1.0)(1./3.)(1./3.)(1.0)(1.0)(1.0));
+  declareProperty("weights", m_weights = list_of(1.0)(1.0)(1./2.)(1./2.)(1.0)(1.0)(1.0));
   declareProperty("outlierCut", m_outlierCut = 3.1);
 
   declareInterface<ITsaSeedStep>(this);
@@ -137,12 +137,9 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
     double csth = sqrt(1.0 + sx*sx);
     // if the fit fails or we dont have enough measurements stop
     const int fitResult = m_parabolaFit->refit(seed,csth);
-    verbose() << " -> fitResult=" << fitResult <<
-	    " chi^2(x)=" << seed->xChi2() << " nx=" << seed->nx() <<
-	    " chi^2(y)=" << seed->yChi2() << " ny=" << seed->ny() << endreq;
-    if ( fitResult < 1 || seed->nx() < 4 || seed->ny() < 3)
+      if ( fitResult < 1 || seed->nx() < 4 || seed->ny() < 3)
     {
-      verbose() << "  -> FAILED parabola fit or not enough measurements" << endreq;
+ 
       seed->setLive( false );
       continue;
     }
@@ -176,8 +173,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
 
     const bool reject = ( nxExp < 4 || nyExp < 4 ||
                           ( double(nxFound) / nxExp < 0.5 && double(nyFound) / nyExp < 0.5) );
-    verbose() << " -> nxExp=" << nxExp << " nyExp=" << nyExp << " nxFound=" << nxFound
-              << " nyFound=" << nyFound << " reject=" << reject << endreq;
+   
     if ( reject ) {
       seed->setLive( false );
     } else {
@@ -216,7 +212,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
       seed->setLik( lik );
     }
 
-    verbose() << "  -> Final Likelihood = " << seed->lik() << endreq;
+   
   }
 
   return StatusCode::SUCCESS;

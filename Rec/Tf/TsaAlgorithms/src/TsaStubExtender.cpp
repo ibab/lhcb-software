@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.4 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaStubExtender.cpp,v 1.5 2009-07-02 10:43:04 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,15 +29,15 @@ StubExtender::StubExtender(const std::string& type,
   declareProperty("seachTol", m_searchTol = 100.);
   declareProperty("nxCut", m_nxCut = 4);
   declareProperty("nyCut", m_nyCut = 4);
-  declareProperty("txCut", m_txCut = 0.6);
+  declareProperty("txCut", m_txCut = 0.5);
   declareProperty("tyCut", m_tyCut = 0.04);
   declareProperty("yTol", m_yTol = 20.0);
   declareProperty("nTotalCut1", m_nTotalCut1 = 9);
   declareProperty("nTotalCut2", m_nTotalCut2 = 11);
   declareProperty("y0Cut1", m_y0Cut1 = 400);
   declareProperty("y0Cut2", m_y0Cut2 = 100);
-  declareProperty("dxCut", m_dxCut = 1.0);
-  declareProperty("dyCut", m_dyCut = 40.0);
+  declareProperty("dxCut", m_dxCut = 0.80);
+  declareProperty("dyCut", m_dyCut = 30.0);
 
   declareProperty("outlierCutLine", m_outlierCutLine = 3.5);
   declareProperty("outlierCutParabola", m_outlierCutParabola = 3.1);

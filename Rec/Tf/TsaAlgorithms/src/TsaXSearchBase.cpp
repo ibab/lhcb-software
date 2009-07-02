@@ -1,4 +1,4 @@
-// $Id: TsaXSearchBase.cpp,v 1.3 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaXSearchBase.cpp,v 1.4 2009-07-02 10:43:04 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -23,7 +23,7 @@ XSearchBase::XSearchBase(const std::string& type,
   declareProperty("seedHitLocation",  m_seedHitLocation = SeedHitLocation::Default);
   declareProperty("sector", m_sector = 0);
   declareProperty("nSigmaTx", m_nSigmaTx = 5.0 );
-  declareProperty("outlierCut", m_outlierCut = 3.1 );
+  declareProperty("outlierCut", m_outlierCut = 3.2);
 
   declareInterface<ITsaSeedStep>(this);
 }

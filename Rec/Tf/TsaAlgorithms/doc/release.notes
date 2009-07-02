@@ -4,7 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-!======================= TsaAlgorithms v3r10 2009-05-08 =====================
+! 2009-07-02 M Needham
+
+ - Tune tuning for MC09. Ghost rate reduced by ~1 % for few per mille loss
+   in efficiency. See talk in tracking workshop on July 10 
+
+======================= TsaAlgorithms v3r10 2009-05-08 =====================
 ! 2009-05-07 - Louis Nicolas
  - Add "assumedMomentum" property to ITGenericTracking
 
