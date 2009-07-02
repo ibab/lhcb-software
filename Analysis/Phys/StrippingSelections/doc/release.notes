@@ -4,16 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-<<<<<<< release.notes
+!===================== StrippingSelections v1r1 2009-07-02 ====================
+
 ! 2009-06-29 - Greig Cowan
  - Updated the InputLocations for Bd2JpsiKstar.
 
-=======
 ! 2009-June-25 - Patrick Spradlin and Andrew Powell
  - Added a stripping selection for D*+ -> D0(K pi) pi without PID information
    for RICH calibration.
 
->>>>>>> 1.15
 ! 2009-06-24 - Greig Cowan
  - Added an exclusive "presclaed and detached" selection for Bs->JpsiPhi.
  - Updated Bs2JpsiPhi and Bd2JpsiKstar strippings to use the new Phi and Kstar
