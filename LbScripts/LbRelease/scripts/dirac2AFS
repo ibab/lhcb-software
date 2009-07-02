@@ -17,7 +17,7 @@ def usage():
 
 def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
     os.chdir(baseDir)
-        
+
     tmpdir = os.path.join(baseDir,"tmp")
     if os.path.exists(tmpdir):
         shutil.rmtree(tmpdir)
@@ -33,7 +33,7 @@ def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
 
     # install DIRAC using Ricardo's tool
     shutil.copy( os.path.join(os.environ["LHCBHOME"], "distribution/DIRAC3/scripts/dirac-install"), "dirac-install")
-    command =  "./dirac-install -v %s -p %s %s" % (version,diracconfig, pythonoption)
+    command =  "./dirac-install -n %s -P %s -v %s -p %s %s" % (sitename,baseDir,version,diracconfig, pythonoption)
     if build: command += " --build"
     print "Executing:",command
     rc = os.system(command)
@@ -131,6 +131,7 @@ def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
 cmtconfig = os.environ["CMTCONFIG"]
 version = None
 mysiteroot = None
+sitename = 'LCG.CERN.ch'
 altroot = None
 pyVers = None
 diracConfigs = { "slc4_ia32_gcc34" : "Linux_i686_glibc-2.3.4",
