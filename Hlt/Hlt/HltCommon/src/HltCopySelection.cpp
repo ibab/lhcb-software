@@ -1,4 +1,4 @@
-// $Id: HltCopySelection.cpp,v 1.2 2009-06-26 18:09:04 spradlin Exp $
+// $Id: HltCopySelection.cpp,v 1.3 2009-07-02 11:54:07 graven Exp $
 // Include files 
 #include <algorithm>
 #include <iterator>
@@ -52,10 +52,7 @@ HltCopySelection<T>::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   m_selection.retrieveSelections();
   m_selection.registerSelection();
-  // force creation of counters, and declare them to monitoring...
-  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
   declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
-  declareInfo("#candidated accepted","",&counter("#candidated accepted"),0,std::string("Candidates accepted by ") + name());
   return sc;
 }
 
@@ -70,9 +67,6 @@ HltCopySelection<T>::execute() {
   std::copy( m_selection.template input<1>()->begin(), 
              m_selection.template input<1>()->end(), 
              std::back_inserter(*m_selection.output()) );
-  //Counter is iterated in parent class.  See HltAlgorithm::setDecision().
-  //counter("#accept") += !m_selection.output()->empty();
-  counter("#candidated accepted") +=  m_selection.output()->size();
   setFilterPassed( !m_selection.output()->empty() );
   return StatusCode::SUCCESS;
 }
