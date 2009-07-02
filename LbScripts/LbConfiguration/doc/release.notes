@@ -1,3 +1,9 @@
+2009-07-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: 
+	- factored out the common part in getNativeBin and setCMTSystem. 
+    - remove the unused test with the "fs" command.
+
 2009-07-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: when invoked with --build-env,

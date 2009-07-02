@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.43 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.44 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -385,9 +385,16 @@ class LbLoginScript(Script):
 
     def getNativeBin(self):
         if sys.platform != "win32" :
-            m1 = os.popen("uname").read()[:-1]
-            m2 = os.popen("uname -m").read()[:-1].strip()
-            natbin = "%s-%s" % (m1, m2)
+            ev = self._env
+            if ev.has_key("UNAME") :
+                m1 = ev["UNAME"]
+            else :
+                m1 = os.popen("uname").read()[:-1]
+            if m1 == "Linux" or m1 == "LynxOS" :
+                m2 = os.popen("uname -m").read()[:-1].strip()
+                natbin = "%s-%s" % (m1, m2)
+            elif m1 == "Darwin" or m1.startswith("CYGWIN") :
+                natbin = m1
         else : 
             natbin = "VisualC"        
         return natbin
@@ -397,44 +404,22 @@ class LbLoginScript(Script):
         ev["CMTBIN"] = self.getNativeBin()
         
     def hasCommand(self, cmd):
-        hasafs = False
+        hascmd = False
         f = os.popen("which %s >& /dev/null" % cmd)
         f.read()
         if f.close() is None :
-            hasafs = True
-        return hasafs
+            hascmd = True
+        return hascmd
 
     def setCMTSystem(self):
         ev = self._env
         if sys.platform != "win32" :
-            if ev.has_key("UNAME") :
-                uname = ev["UNAME"]
-            else :
-                uname = os.popen("uname").read()[:-1]
-            may_use_afs = True
-            if uname == "Darwin" :
-                may_use_afs = False
-            if uname == "Linux" or uname == "LynxOS" :
-                uname2 = os.popen("uname -m").read()[:-1].strip()
-                system = "%s-%s" % (uname, uname2)
-            elif uname == "Darwin" or uname.startswith("CYGWIN") :
-                system = uname
-            if may_use_afs and self.hasCommand("fs"):
-                f = os.popen("fs sysname")
-                a = f.read()
-                if f.close() is None :
-                    a = a.replace(" ","")
-                    a = a.replace(":","")
-                    a = a.replace("'","")
-                    a = a.replace("Currentsysnameis","")
-                    a = a.replace("Currentsysnamelistis","")
-                    system = a.split()[0]
+            system = self.getNativeBin()
         else :
             if ev.has_key("CMTCONFIG") :
                 system = ev["CMTCONFIG"]
             else :
                 system = ev["CMTBIN"]
-
         return system
 
     def setCMTInternals(self):
