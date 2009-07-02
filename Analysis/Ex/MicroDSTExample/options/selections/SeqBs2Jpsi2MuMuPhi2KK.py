@@ -1,8 +1,8 @@
-# $Id: SeqBs2Jpsi2MuMuPhi2KK.py,v 1.2 2009-07-02 12:05:06 jpalac Exp $
+# $Id: SeqBs2Jpsi2MuMuPhi2KK.py,v 1.3 2009-07-02 13:48:55 jpalac Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = 'April 2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 The roadmap Bs->JpsiPhi selection using LoKi::Hybrid and python
@@ -17,19 +17,6 @@ from Configurables import CombineParticles, FilterDesktop, OfflineVertexFitter
 # The Main sequence to build up the B #
 #######################################
 SeqBs2Jpsi2MuMuPhi2KK = GaudiSequencer('SeqBs2Jpsi2MuMuPhi2KK')
-
-#################
-# Make the Jpsi #
-#################
-# The Jpsi is made elsewhere and to get it you need to 
-# make sure that you have these lines in your main options file:
-#
-# importOptions( '$CCBARROOT/options/DoSelJpsi2MuMu.py')
-# SeqJpsi2MuMu = GaudiSequencer('SeqStdUnbiasedJpsi2MuMu')
-# DaVinci().UserAlgorithms += [SeqJpsi2MuMu]
-#
-# This approach means that all the Jpsi channels for beta_s 
-# can use exactly the same file containing the Jpsi selection code.
 
 importOptions( '$MICRODSTEXAMPLEROOT/options/selections/Phi2KK.py' )
 Phi2KK = getConfigurable('Phi2KK')
