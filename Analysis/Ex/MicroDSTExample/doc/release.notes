@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.33 2009-07-01 15:11:15 jpalac Exp $
+!$Id: release.notes,v 1.34 2009-07-02 06:15:45 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-07-01 - Juan PALACIOS
+ - Added python Bs -> J/Psi (MuMu), Phi (KK) based on Greig Cowan's unbiased
+   selection. Files added:
+
+   . Bs2Jpsi2MuMuPhi2KK.py
+   . Jpsi2MuMu.py
+   . Phi2KK.py
+   . SeqBs2Jpsi2MuMuPhi2KK.py
 
 ! 2009-07-01 - Juan PALACIOS
  - added options/selections directory with .opts for Bs->J/Psi Phi selection
