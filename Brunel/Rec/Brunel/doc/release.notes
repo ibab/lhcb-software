@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 ! 2009-07-02 - Marco Cattaneo
  - Cleanup previous changes
+ - Update references for changes to MuonID, MuonPIDChecker, ChargedProtoPAlg
 
 ! 2009-07-02 - E. Polycarpo
  - Configure MuonPIDChecker using configurable

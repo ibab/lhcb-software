@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-07-02 - Marco Cattaneo
+ - Update reference for changes to MuonID, MuonPIDChecker, ChargedProtoPAlg
+
 </PRE><H1><A NAME=v35r3>2009-07-02 Brunel v35r3</A></H1><PRE>
 This version uses projects Gaudi v21r2, LHCb v27r3, Lbcom v7r3, Rec v7r3
  and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
