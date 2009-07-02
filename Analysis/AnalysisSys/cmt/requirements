@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.103 2009-07-02 07:16:56 jpalac Exp $
+# $Id: requirements,v 1.104 2009-07-02 14:03:22 jpalac Exp $
 package AnalysisSys
-version v3r5
+version v3r6
 
 branches doc cmt
 
@@ -33,7 +33,7 @@ use  DecayTreeTuple             v2r3p2   Phys   # Rob Lambert
 # Stripping
 #
 use StrippingConf               v1r1     Phys   # Anton Poluektov
-use StrippingSelections         v1r0p1   Phys   # Anton Poluektov
+use StrippingSelections         v1r1     Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
@@ -47,9 +47,9 @@ use  MicroDSTAlgorithm   	v3r6    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r2    Tutorial          # P. Koppenburg
+use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r6    Ex                # Juan Palacios
+use MicroDSTExample             v2r7    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

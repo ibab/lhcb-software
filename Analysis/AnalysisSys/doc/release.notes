@@ -3,6 +3,21 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r6>2009-07-02 Analysis v3r6 </A></H1><PRE>
+
+ - Based on LHCb v27r3 and Gaudi v21r2
+
+  * Changes to CommonParticles for beta_s roadmap (G. Cowan)
+  * ParticleMCTruth MC matching: New class P2MCP::DecayLines to return
+    MCParticles associated to a Particle in IP2MCP interface. (J. Palacios)
+  * StrippingSlections: 
+    New D*+ -> D0(K pi) pi without PID (P. Spradlin, A. Powell)
+    New "presclaed and detached" selection for Bs->JpsiPhi, updates to
+    Bs2JpsiPhi and Bd2JpsiKstar to use  new Phi and Kstar CommonParticles 
+    (G. Cowan)
+  * Updates and bug fixes to Ex/MicroDSTExample (J. Palacios) and
+    Tutorial/Analysis (P. Koppenburg)
+ 
 </PRE><H1><A NAME=v3r5>2009-06-23 Analysis v3r5 </A></H1><PRE>
 
  - Based on LHCb v27r2 and Gaudi v21r1
