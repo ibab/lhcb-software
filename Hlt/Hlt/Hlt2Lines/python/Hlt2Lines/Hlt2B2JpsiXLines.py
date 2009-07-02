@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.3 2009-06-28 10:02:05 graven Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.4 2009-07-02 09:13:29 pkoppenb Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -57,16 +57,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         ##
         importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineB2JpsiX_MuMu.py")
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2JpsiX_MuMuDecision" : 50050 } )
-        ###
-        #    ID 50250 -  selection for Bs -> J/psi eta
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBs2JpsiEta.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiEtaDecision" : 50250 } )
-        ###
-        #    ID 50260 -  selection for Bs -> J/psi eta_prime
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBs2JpsiEtap.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiEtapDecision" : 50260 } )
 
 
 #####################################################################################
