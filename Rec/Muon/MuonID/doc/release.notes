@@ -2,16 +2,19 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
-!======================== MuonID v7r0 2009-06-20 =====================
+! 2009-07-02 - Marco Cattaneo
+ - Add missing apply_pattern install_python_modules in requirements
+ - In ConfiguredMuonIDs.py give "MuonIDSeq" name to the sequencer
+
 ! 2009-06-20 - E. Polycarpo 
  - protect FOI from tracks with p>1TeV (keep only constant factor)
 
 ! 2009-06-20 - G. Lanfranchi, S. Furcas. 
- - Introduce new method calcMuonLL_dist to use the distance built with the closest hit 
-  in order to make a hypothesis test for muons and  non-muons; 
-  The distance distributions are binned in p-bins and muon detector regions;
-  the integral of the distributions is used to evaluate the compatibility of a given track 
-  with the muon (Probmu) /non-muon (Prob non-mu) hypotheses. 
+ - Introduce new method calcMuonLL_dist to use the distance built with the
+   closest hit in order to make a hypothesis test for muons and  non-muons; 
+   The distance distributions are binned in p-bins and muon detector regions;
+   the integral of the distributions is used to evaluate the compatibility of a
+   given track with the muon (Probmu) /non-muon (Prob non-mu) hypotheses. 
 
  - Introduce DLL_flag (to input the old DLL or the binned-integrated DLL to MuonPIDs)
              Parameters of the Landaus for Muons and non-Muons for the binned DLL.

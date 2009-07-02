@@ -1,5 +1,5 @@
 package MuonID
-version v6r3
+version v7r0
 
 branches src cmt doc options
 
@@ -17,3 +17,5 @@ use ROOT               v* LCG_Interfaces
 library MuonID ../src/*.cpp
 
 apply_pattern component_library library=MuonID
+apply_pattern install_python_modules
+

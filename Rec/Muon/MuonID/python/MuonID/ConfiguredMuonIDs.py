@@ -280,7 +280,7 @@ class ConfiguredMuonIDs():
 
     if self.debug: print "APPLYING GENERAL MUONID CONFIGURATION"
     ## create output gaudi sequencer
-    myg = GaudiSequencer()
+    myg = GaudiSequencer("MuonIDSeq")
     ## create and configure MuonIDAlg instance
     muid = MuonIDAlg()
     self.configureMuonIDAlg(muid)
