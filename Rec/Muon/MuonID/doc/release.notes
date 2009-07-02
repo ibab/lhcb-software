@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-02 - Miriam Gandelman
+ - Small fixes to make it compile on Windows (and -> && and or -> ||)
+
 ! 2009-07-02 - Marco Cattaneo
  - Add missing apply_pattern install_python_modules in requirements
  - In ConfiguredMuonIDs.py give "MuonIDSeq" name to the sequencer

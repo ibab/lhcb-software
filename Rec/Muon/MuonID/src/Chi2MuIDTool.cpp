@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.2 2009-07-02 18:09:25 miriamg Exp $
 // Include files 
 
 // from Gaudi
@@ -188,7 +188,7 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   {
     debug()<< "No new track built"<<endreq;
     if (sc.getCode()==203) isMuonCandidate=false;
-    else if ((sc.getCode()!=204) and (m_applyIsMuon))  warning()<< "No available info about IsMuon"<<endreq;
+    else if ((sc.getCode()!=204) && (m_applyIsMuon))  warning()<< "No available info about IsMuon"<<endreq;
     if (del_muonprov) delete m_muonProvider;
     return sc;
   }
@@ -347,18 +347,18 @@ bool Chi2MuIDTool::isTrackInsideStation(const int& istation)
   
   //get conditions: is track inside station?
   const Gaudi::XYZPoint& pos = muStateC.position();
-  const bool xcond=((fabs(pos.x()) > m_mudet->getInnerX(istation)) and (fabs(pos.x())<m_mudet->getOuterX(istation)));
-  const bool ycond=((fabs(pos.y()) > m_mudet->getInnerY(istation)) and (fabs(pos.y())<m_mudet->getOuterY(istation)));
+  const bool xcond=((fabs(pos.x()) > m_mudet->getInnerX(istation)) && (fabs(pos.x())<m_mudet->getOuterX(istation)));
+  const bool ycond=((fabs(pos.y()) > m_mudet->getInnerY(istation)) && (fabs(pos.y())<m_mudet->getOuterY(istation)));
   
   debug()<<"st="<<istation<<",xcond="<<xcond<<",ycond="<<ycond<<endreq;
   
   bool outcond=false;
   
-  if (xcond and ycond) outcond=true;
+  if (xcond && ycond) outcond=true;
   else
   {
-    if (xcond and (fabs(pos.y())<m_mudet->getOuterY(istation))) outcond=true;
-    if (ycond and (fabs(pos.x())<m_mudet->getOuterX(istation))) outcond=true;
+    if (xcond && (fabs(pos.y())<m_mudet->getOuterY(istation))) outcond=true;
+    if (ycond && (fabs(pos.x())<m_mudet->getOuterX(istation))) outcond=true;
   }
 
   return outcond;
@@ -460,14 +460,14 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
       debug()<<"ids0 station="<<ist<<endreq;
       debug()<<"ids0 channelID="<<ids[0].channelID()<<endreq;
       // if mom below m_2hits, check if hit is in stations 4 or 5
-      if (mom<m_2hits and (ist==3 or ist==4) and m_arrivalCuts) 
+      if ((mom<m_2hits) && (ist==3 || ist==4) && m_arrivalCuts) 
       {
         continue;
         debug()<<"skiped spurius hit in station"<<ist<<endreq;
       }
       
       // if mom below m_2hits, check if hit is in station 5
-      if (mom<m_3hits and ist==4 and m_arrivalCuts)
+      if ((mom<m_3hits) && (ist==4) && m_arrivalCuts)
       {
         continue;
         debug()<<"skiped spurius hit in station"<<ist<<endreq;
