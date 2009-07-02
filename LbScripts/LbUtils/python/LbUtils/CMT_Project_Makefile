@@ -1,0 +1,69 @@
+# $Id: CMT_Project_Makefile,v 1.1 2009-07-02 12:37:30 marcocle Exp $
+################################################################################
+#
+# Generic Makefile for CMT projects.
+#
+# copied to the top-level directory of a project (even user project), it can be
+# used to start a build of the whole project with just a call to "make".
+# It is equivalent to a "cmt broadcast make", or, if invoked with "-j" to a
+# "tbroadcast make -j", but better. 
+#
+# Author: Marco Clemencic
+#
+################################################################################
+
+# --- List of Packages in the current directory
+packages := $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements))
+
+# --- Utility functions 
+escape_slash = $(subst /,_slash_,$(1))
+unescape_slash = $(subst _slash_,/,$(1))
+
+# --- Declare the variables that have to be exported
+export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS
+
+# --- Main targets
+all: $(packages:=_build)
+
+clean: $(packages:=_clean)
+	rm -rf InstallArea
+
+purge: clean
+	rm -rf .*.pack.d $(packages:=/cmt/Makefile)
+
+
+# --- Add rules to build packages (e.g. "make MyHat/MyPackage")
+$(foreach pack,$(packages),$(eval $(pack): $(pack)_build; .PHONY: $(pack)))
+
+# --- Actual rules
+%/cmt/Makefile:
+	@echo Configuring package $*
+	@cd $*/cmt && cmt config
+
+%_build: %/cmt/Makefile
+	@echo Building package $*
+	($(MAKE) -C $*/cmt all 2>&1) | tee $*/cmt/build.$(CMTCONFIG).log
+	($(MAKE) -C $*/cmt all_groups 2>&1) | tee --append $*/cmt/build.$(CMTCONFIG).log 2>&1
+
+%_clean:
+	@echo Cleaning package $*
+	-$(MAKE) -j1 -C $*/cmt clean binclean
+
+
+## --- Dependencies between packages
+MKDEPCMD := cmt show uses | tr " " "\t" | awk -F"\t" '/^\#\tuse/{if($$5){print $$5"/"$$3}else{print $$3}}'
+.%.pack.d: pack=$(call unescape_slash,$*)
+.%.pack.d:
+	@echo Computing dependencies for $(pack)
+	@echo $(pack)_build: $(patsubst %,%_build,$(filter $(packages),$(shell cd $(pack)/cmt; $(MKDEPCMD)))) > $@
+	@echo $@: $(pack)/cmt/requirements >> $@
+	
+ifneq ($(MAKECMDGOALS),purge)
+-include $(patsubst %,.%.pack.d,$(call escape_slash, $(packages)))
+endif
+
+# --- List of phony targets
+.PHONY: all clean purge
+# This makes the package targets PHONY (.PHONY does not work with implicit rules)
+$(foreach pack,$(packages),$(eval $(pack)_config $(pack)_build $(pack)_clean: FORCE))
+FORCE:

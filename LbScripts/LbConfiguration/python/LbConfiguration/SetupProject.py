@@ -7,13 +7,15 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.14 2009-06-29 17:19:26 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.15 2009-07-02 12:37:30 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.14 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.15 $")
 except ImportError :
     __version__ = _cvs_id
+
+from LbUtils import createProjectMakefile
 
 ########################################################################
 # Useful constants
@@ -1637,12 +1639,15 @@ class SetupProject:
                             messages.append('Created user project in %s' % user_proj_dir)
                         else:
                             messages.append('Cannot create user project in %s' % user_proj_dir)
-                        
+                    # Check if a Makefile is present in the user-project (Unix only)
+                    if not sys.platform.startswith("win"):
+                        # Create a project Makefile
+                        createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
+                    
                     if os.path.isdir(user_proj_dir):
                         # Let's enter the user project directory
                         script += "cd %s\n" % user_proj_dir
                         messages.append("Current directory is '%s'." % user_proj_dir)
-                
             if 'CMTPROJECTPATH' in env:
                 messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
             else:

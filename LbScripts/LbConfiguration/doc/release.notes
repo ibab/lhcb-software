@@ -1,3 +1,8 @@
+2009-07-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: when invoked with --build-env,
+	creates a top-level Makefile for the user project.
+
 2009-06-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the --strip-path (default) and 
@@ -273,6 +278,7 @@
 
 	* cmt/requirements: don't set the mkpublic and mkprivate if we are not at CERN.
 
+>>>>>>> 1.132
 2009-02-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r5
