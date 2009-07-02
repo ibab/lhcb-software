@@ -3,10 +3,54 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-06-25 Marco Cattaneo
- - update reference for:
-   . changes to PatVelo
-   . additional histos in VeloClusterMonitor
+</PRE><H1><A NAME=v35r3>2009-07-02 Brunel v35r3</A></H1><PRE>
+This version uses projects Gaudi v21r2, LHCb v27r3, Lbcom v7r3, Rec v7r3
+ and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
+
+This is a development version for changes subsequent to the 2009 MC production. 
+Output requires DaVinci v22r3 or greater
+
+- Persistency changes
+  . When reading real data and producing rdst, L0 and HLT raw banks are copied to
+    a RawEvent in RawEventLocation::Copied and stored on rdst
+    (DAQEvent v7r21, GaudiConf v12r6)
+  . Add support for RawEvent in packed DST (EventPacker v1r5, GaudiConf v12r6)
+  . RDST is always packed (GaudiConf v12r6)
+  . LHCbIDs on track are now sorted (TrackEvent v4r21, EventPacker v1r5)
+    (see <a href="http://indico.cern.ch/getFile.py/access?contribId=0&resId=0&materialId=slides&confId=48016">presentation</a> at T-Rec on 2009-06-29)
+
+- New tuning
+  . gaudirun.py has new -T (or --tcmalloc) option, switches on tcmalloc as memory
+    allocator (Gaudi v21r2)
+  . Take advantage of sorted LHCbIDs on track in TrackCloneFinder
+    (TrackTools v3r18, TrackUtils v1r27, TrackInterfaces v4r4)
+    (see <a href="http://indico.cern.ch/getFile.py/access?contribId=0&resId=0&materialId=slides&confId=48016">presentation</a> at T-Rec on 2009-06-29)
+  . Tweaked how tracks are fitted internally for a few microns gain in resolution
+    and improved ghost rate (PatVelo v3r14)
+    (see <a href="http://indico.cern.ch/getFile.py/access?contribId=3&materialId=slides&confId=48016">presentation</a> at T-Rec on 2009-06-29)
+
+- Changes to configurables
+  . Add new Brunel().OutputLevel property to Brunel allow overall control of the
+    printout levels. This property is propagated to other Configurables.
+    This (partly) obsoletes the NoWarnings property, but it is still
+    needed for backwards compatibility with Dirac 
+    (Brunel v35r3, GaudiConf v12r6, RichKernel v7r23, RecSys v7r3, 
+     GlobalReco v6r22, RichRecQC v2r31, RichRecSys v3r21)
+
+- Changes to build configuration
+  . Optimised libraries now built without -s option, to give meaningful stack
+    trace information in case of crashes (Gaudi v21r2)
+  . New make option "QUICK=2" to skip dependency calculation (Gaudi v21r2)
+  . <component>_dll.cpp files no longer needed (Gaudi v21r2)
+
+- Bug fixes
+  . Set initial event time for DC06 data (avoids problems with ONLINE snapshots)
+    (DDDB v1r19)
+  . Fix floating point exception in CelAutoTaggedCell (CaloReco v4r20)
+
+- Changes to monitoring
+  . All histograms in VeloClusterMonitor are now booked in initialize()
+    (VeloRecMonitors v1r9)
 
 </PRE><H1><A NAME=v35r2>2009-06-22 Brunel v35r2</A></H1><PRE>
 This version uses projects Gaudi v21r1, LHCb v27r2, Lbcom v7r2, Rec v7r2
