@@ -445,7 +445,7 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	const EvtComplex _A0L = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
 	const EvtComplex _A0R = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2));
 	
-	const EvtComplex _AT = scaleFactor * -(sqrt(2)*aL*constants::mB*N);
+	const EvtComplex _AT = scaleFactor * 2*N*mB2*Sqrt(lambda/q2)*Cb1_10*ffA0;
 	const EvtComplex _AS = scaleFactor * -(CQ1*ffA0*N*sqrt(lambda));
 	
 	DEBUGPRINT("ATL: ", _ATL);
