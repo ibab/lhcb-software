@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.7 2009-01-19 11:22:58 dhcroft Exp $
+// $Id: TrackLikelihood.cpp,v 1.8 2009-07-02 10:43:49 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -54,14 +54,14 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
   declareProperty("veloREff", m_veloREff = 0.965);
   declareProperty("veloPhiEff", m_veloPhiEff = 0.94);
 
-  declareProperty("itEff", m_itEff = 0.99);
-  declareProperty("otEff", m_otEff = 0.94);
-  declareProperty("ttEff", m_ttEff = 0.98);
+  declareProperty("itEff", m_itEff = 0.995);
+  declareProperty("otEff", m_otEff = 0.93);
+  declareProperty("ttEff", m_ttEff = 0.99);
 
   declareProperty("itHighEff", m_itHighEff = 0.94);
   declareProperty("veloHighEff1", m_veloHighEff1 = 0.99);
   declareProperty("veloHighEff2", m_veloHighEff2 = 0.995);
-  declareProperty("ttHighEff", m_ttHighEff = 0.91);
+  declareProperty("ttHighEff", m_ttHighEff = 0.896);
 
   declareProperty("useVelo", m_useVelo = true);
   declareProperty("useTT", m_useTT = true);
@@ -184,8 +184,8 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   }
 
   // add term to lik
-  double prob1 = log(gsl_ran_binomial_pdf(nHigh, 0.99, veloRHits.size() + veloPhiHits.size()));
-  double prob2 = log(gsl_ran_binomial_pdf(nHigh, 0.99, veloRHits.size() + veloPhiHits.size()));
+  double prob1 = log(gsl_ran_binomial_pdf(nHigh, m_veloHighEff1, veloRHits.size() + veloPhiHits.size()));
+  double prob2 = log(gsl_ran_binomial_pdf(nHigh, m_veloHighEff2, veloRHits.size() + veloPhiHits.size()));
   lik += gsl_max(prob1,prob2);
 
   if (m_addExpectedFlags == true) aTrack.addInfo(LHCb::Track::nExpectedVelo, expectedVelo.nR + expectedVelo.nPhi);
