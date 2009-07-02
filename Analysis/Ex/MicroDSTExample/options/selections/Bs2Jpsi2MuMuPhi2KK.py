@@ -1,8 +1,8 @@
-# $Id: Bs2Jpsi2MuMuPhi2KK.py,v 1.1 2009-07-02 06:01:14 jpalac Exp $
+# $Id: Bs2Jpsi2MuMuPhi2KK.py,v 1.2 2009-07-02 12:06:36 jpalac Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = 'April 2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 The roadmap Bs->JpsiPhi selection using LoKi::Hybrid and python
@@ -18,8 +18,7 @@ from Configurables import CombineParticles, OfflineVertexFitter
 ######
 Bs2Jpsi2MuMuPhi2KK = CombineParticles('Bs2Jpsi2MuMuPhi2KK')
 Bs2Jpsi2MuMuPhi2KK.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-Bs2Jpsi2MuMuPhi2KK.InputLocations = ["Jpsi2MuMu",
-                             "Phi2KK"]
+Bs2Jpsi2MuMuPhi2KK.InputLocations = ["Jpsi2MuMu", "Phi2KK"]
 # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Phi
 Bs2Jpsi2MuMuPhi2KK.addTool( OfflineVertexFitter() )
 Bs2Jpsi2MuMuPhi2KK.VertexFitters.update( { "" : "OfflineVertexFitter"} )
