@@ -3,12 +3,19 @@
 ! Responsible : Patrick Koppenburg & the WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+!
+! Use $DAVINCISYSROOT/tests/options/DVTestDecayTreeTuple.py for tests
+!
+!----------------------------------------------------------------------------
 
 !========================== DecayTreeTuple v2r3p3 2009-07-03 ================
+! 2009-07-03 - Patrick Koppenburg
+ - Remove test file. Use $DAVINCISYSROOT/tests/options/DVTestDecayTreeTuple.py  
+   for tests.
 
 ! 2009-07-03 - Juan Palacios
  - cmt/requirements
-  . Use DevFiles v18r*
+  . Use DecFiles v18r*
 
 !========================== DecayTreeTuple v2r3p2 2009-06-23 ================
 ! 2009-06-18 - Patrick Koppenburg
