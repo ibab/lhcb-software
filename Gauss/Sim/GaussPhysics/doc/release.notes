@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-07-03 - Patrick Robbe for Neal Gueissaz
+ - Add Neutralino2 definition (G4Neutralino2.cpp, G4Neutralino2.h)
+ - Add Neutralino2 to GiGaPhysUnknownParticles list
+
 !====================== GaussPhysics v6r2 2009-01-14 =========================
 ! 2009-01-07 - Patrick Robbe
   - Add Xi_b0 and Xi*_cc+ to the list of Geant4 particles
