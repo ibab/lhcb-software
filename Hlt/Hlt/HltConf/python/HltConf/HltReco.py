@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.10 2009-07-03 10:13:45 graven Exp $
+# $Id: HltReco.py,v 1.11 2009-07-03 21:12:11 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -184,10 +184,10 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
 # Define the reconstruction sequence 
 #############################################################################################
 
+from HltConf.HltDecodeRaw import DecodeVELO
 # first define sequencers for velo tracking
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
-                                         #, Members = [ decodeVeloLite, patVeloR ] )
-                                         , Members = [ patVeloR ] )
+                                         , Members = DecodeVELO.members() +  [ patVeloR ] )
 
 recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
                                  , Members = [ patPV2D ] )
@@ -273,7 +273,6 @@ GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') 
 
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
-from HltConf.HltDecodeRaw import DecodeVELO
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward , prepareForward ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
 RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )

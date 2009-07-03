@@ -32,7 +32,7 @@ DecodePRS =  _convert( _map.pop("Raw/Prs/Digits") )
 DecodeHCAL =  _convert( _map.pop("Raw/Hcal/Digits") )
 
 # disable everything
-for i in _map.keys() : _map.pop(i)
+#for i in _map.keys() : _map.pop(i)
 
 #and export explicit (configured!) decoders:
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
