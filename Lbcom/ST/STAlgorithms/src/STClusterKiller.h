@@ -1,4 +1,4 @@
-// $Id: STClusterKiller.h,v 1.3 2009-02-10 09:44:15 mneedham Exp $
+// $Id: STClusterKiller.h,v 1.4 2009-07-03 13:43:54 mneedham Exp $
 #ifndef STCLUSTERKILLER_H
 #define STCLUSTERKILLER_H 1
 
@@ -41,6 +41,7 @@ private:
    // smart interface to generator
 
   std::string m_selectorType;
+  std::string m_selectorName;
   ISTClusterSelector* m_clusterSelector;
 
   std::string m_inputLocation;

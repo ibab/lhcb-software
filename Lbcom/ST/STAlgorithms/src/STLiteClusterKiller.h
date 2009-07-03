@@ -1,4 +1,4 @@
-// $Id: STLiteClusterKiller.h,v 1.1 2009-03-14 09:18:49 mneedham Exp $
+// $Id: STLiteClusterKiller.h,v 1.2 2009-07-03 13:43:54 mneedham Exp $
 #ifndef STCLUSTERKILLER_H
 #define STCLUSTERKILLER_H 1
 
@@ -40,6 +40,7 @@ private:
 
    // smart interface to generator
 
+  std::string m_selectorName;
   std::string m_selectorType;
   ISTChannelIDSelector* m_clusterSelector;
 

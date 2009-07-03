@@ -1,38 +1,40 @@
 
 // selecting by detector element
 STClusterKiller.DetType = "IT";
-ToolSvc.ITKiller.SelectorType = "STSelectChannelIDByElement";
+ToolSvc.ITKiller.SelectorType = "STSelectClustersByChannel";
+ToolSvc.ITKiller.Selector.SelectorName  = "STSelectChannelIDByElement";
 ToolSvc.ITKiller.Selector.elementNames = {"IT1CSideLayerX1", "IT1ASideLayerX2", "IT2ASide", "IT2CSide", "IT2Top", "IT2Bottom"};
 ToolSvc.ITKiller.Selector.DetType = "IT";
+ToolSvc.ITKiller.DetType = "IT";
 
-// selecting by channel status
-STClusterKiller.DetType = "IT";
-ToolSvc.ITKiller.SelectorType = "STSelectChannelIDByStatus";
-ToolSvc.ITKiller.Selector.allowedStatus = {"Open", "Short","NotBonded", "ReadoutProblems", "Dead"};
-ToolSvc.ITKiller.Selector.DetType = "IT";
 
 // select by Tell1 board
 STClusterKiller.DetType = "IT";
 ToolSvc.ITKiller.Selector.DetType = "IT";
+ToolSvc.ITKiller.SelectorType = "STSelectClustersByChannel";
 ToolSvc.ITKiller.SelectorType = "STSelectChannelIDByBoard";
 ToolSvc.ITKiller.Selector.Boards = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
+ToolSvc.ITKiller.DetType = "IT";
 
-// higher OR example, Rndm + range in charge
-STClusterKiller.DetType = "IT";
-STClusterKiller.Selector = "STClusterSelectorOR";
-ToolSvc.ITKiller.SelectorTools = {"STSelectClustersByChannel/SelectAtRndm", "STSelectByCharge/SelectByCharge"};
-ToolSvc.SelectAtRndm.Selector.FractionToReject = 0.10 ;
-ToolSvc.SelectByCharge.minCharge = 10.0;
-ToolSvc.SelectByCharge.maxCharge = 50.0;
+
+ITKillerAlg.DetType = "IT";
+ITKillerAlg.SelectorType = "STClusterSelectorOR";
+ToolSvc.ITKiller.SelectorTools = {"STSelectClustersByChannel/ITSelectChannelByStatus", "STSelectByCharge/ITSelectByCharge"};
+ToolSvc.ITSelectByCharge.minCharge = 0.0;
+ToolSvc.ITSelectByCharge.maxCharge = 10.0;
+ToolSvc.ITSelectChannelByStatus.DetType = "IT";
+ToolSvc.ITSelectChannelByStatus.Selector.DetType = "IT";
+ToolSvc.ITSelectChannelByStatus.SelectorType = "STSelectChannelIDByStatus";
+ToolSvc.ITSelectChannelByStatus.Selector.allowedStatus = {"Open", "Short","NotBonded", "ReadoutProblems", "Dead"};
 
 
 // lite killer example
 STLiteClusterKiller.DetType = "IT";
-STLiteClusterKiller.Selector = "STSelectChannelIDByServiceBox";
+STLiteClusterKiller.SelectorType = "STSelectChannelIDByServiceBox";
 ToolSvc.ITLiteKiller.serviceBoxes = {"IT1A1", "IT2C1"};
 
 // killing spillover
 STLiteClusterKiller.DetType = "TT";
-STLiteClusterKiller.Selector = "STSelectChannelIDByTruth";
+STLiteClusterKiller.SelectorType = "STSelectChannelIDByTruth";
 ToolSvc.TTLiteKiller.Types = {0};
 

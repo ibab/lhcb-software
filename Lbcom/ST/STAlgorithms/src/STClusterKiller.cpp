@@ -1,4 +1,4 @@
-// $Id: STClusterKiller.cpp,v 1.5 2009-03-14 09:18:49 mneedham Exp $
+// $Id: STClusterKiller.cpp,v 1.6 2009-07-03 13:43:54 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,8 +20,9 @@ STClusterKiller::STClusterKiller( const std::string& name,
   m_clusterSelector(0)
  {
 
-  declareProperty("Selector", m_selectorType = "STSelectClustersByChannel");
+  declareProperty("SelectorType", m_selectorType = "STSelectClustersByChannel");
   declareSTConfigProperty("InputLocation",m_inputLocation, STClusterLocation::TTClusters); 
+  declareSTConfigProperty("SelectorName", m_selectorName, detType()+"Killer");
 }
 
 STClusterKiller::~STClusterKiller()
@@ -34,7 +35,7 @@ StatusCode STClusterKiller::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_clusterSelector = tool<ISTClusterSelector>(m_selectorType, detType()+"Killer");
+  m_clusterSelector = tool<ISTClusterSelector>(m_selectorType, m_selectorName);
 
   return StatusCode::SUCCESS;
 }

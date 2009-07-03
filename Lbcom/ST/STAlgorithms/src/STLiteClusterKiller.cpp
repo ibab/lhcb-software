@@ -1,4 +1,4 @@
-// $Id: STLiteClusterKiller.cpp,v 1.1 2009-03-14 09:18:49 mneedham Exp $
+// $Id: STLiteClusterKiller.cpp,v 1.2 2009-07-03 13:43:54 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -23,8 +23,9 @@ STLiteClusterKiller::STLiteClusterKiller( const std::string& name,
   m_clusterSelector(0)
  {
 
-  declareProperty("Selector", m_selectorType = "STRndmChannelIDSelector");
+  declareProperty("SelectorType", m_selectorType = "STRndmChannelIDSelector");
   declareSTConfigProperty("InputLocation",m_inputLocation, STLiteClusterLocation::TTClusters); 
+  declareSTConfigProperty("SelectorName",m_selectorName , detType() + "LiteKiller");
 }
 
 STLiteClusterKiller::~STLiteClusterKiller()
@@ -37,7 +38,7 @@ StatusCode STLiteClusterKiller::initialize()
   StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_clusterSelector = tool<ISTChannelIDSelector>(m_selectorType, detType()+"LiteKiller");
+  m_clusterSelector = tool<ISTChannelIDSelector>(m_selectorType, m_selectorName);
 
   return StatusCode::SUCCESS;
 }
