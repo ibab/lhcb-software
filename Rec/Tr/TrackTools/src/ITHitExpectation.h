@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.h,v 1.3 2008-12-17 16:06:44 cattanem Exp $
+// $Id: ITHitExpectation.h,v 1.4 2009-07-03 13:31:03 mneedham Exp $
 #ifndef _ITHitExpectation_H
 #define _ITHitExpectation_H
 
@@ -13,14 +13,18 @@
 
 
 #include "THitExpectation.h"
-
+#include "Kernel/ISTChannelIDSelector.h"
 #include <string>
+
+
 
 namespace LHCb{
   class Track;
+  class STChannelID;
 }
 
 class DeSTDetector;
+
 
 namespace Tf {
   namespace Tsa {
@@ -62,11 +66,21 @@ public:
                                                                            
 private:
 
+  bool select(const LHCb::STChannelID& chan) const;
 
   DeSTDetector* m_itDet;
   Tf::Tsa::IITExpectedHits* m_expectedITHits;
-
+  std::string m_selectorType;
+  std::string m_selectorName;
+  ISTChannelIDSelector* m_selector;
+  
+ 
 };
+
+
+inline bool ITHitExpectation::select(const LHCb::STChannelID& chan) const{
+  return m_selector == 0 ? true : m_selector->select(chan); 
+}
 
 
 #endif

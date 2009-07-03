@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.5 2008-10-18 10:35:02 mneedham Exp $
+// $Id: TTHitExpectation.h,v 1.6 2009-07-03 13:31:03 mneedham Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -17,6 +17,7 @@
 #include "LHCbMath/GeomFun.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include <string>
+#include "Kernel/ISTChannelIDSelector.h"
 
 namespace LHCb{
   class Track;
@@ -28,6 +29,7 @@ namespace LHCb{
 class DeSTDetector;
 class DeSTSensor;
 class ITrackExtrapolator;
+
 
 class TTHitExpectation: public GaudiTool,
                        virtual public IHitExpectation  {
@@ -79,13 +81,18 @@ private:
                   const unsigned int lastStrip) const;
 
 
+  bool select(const LHCb::STChannelID& chan) const;
+
   std::string m_extrapolatorName; 
   ITrackExtrapolator* m_extrapolator;
   DeSTDetector* m_ttDet;
   double m_zTTa;
   double m_zTTb;
 
-  IHitExpectation* m_expectedHits;
+  std::string m_selectorType;
+  std::string m_selectorName;
+  ISTChannelIDSelector* m_selector;
+
 
 };
 
@@ -102,6 +109,12 @@ inline bool TTHitExpectation::insideSensor(const DeSTSensor* sensor,
     isIn = sensor->globalInActive(point);
   }
   return isIn;
+}
+
+
+
+inline bool TTHitExpectation::select(const LHCb::STChannelID& chan) const{
+  return m_selector == 0 ? true : m_selector->select(chan); 
 }
 
 

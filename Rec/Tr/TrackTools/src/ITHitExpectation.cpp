@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.cpp,v 1.4 2008-07-14 10:24:08 mneedham Exp $
+// $Id: ITHitExpectation.cpp,v 1.5 2009-07-03 13:31:03 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -7,6 +7,8 @@
 // Event
 #include "Event/Track.h"
 #include "Event/State.h"
+
+#include "Kernel/ISTChannelIDSelector.h"
 
 // Tsa
 #include "TsaKernel/Line.h"
@@ -45,9 +47,13 @@ DECLARE_TOOL_FACTORY( ITHitExpectation );
 ITHitExpectation::ITHitExpectation(const std::string& type,
                                          const std::string& name,
                                          const IInterface* parent):
-  THitExpectation(type, name, parent)
+  THitExpectation(type, name, parent),
+  m_selector(0)
 { 
   // constructer
+  declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
+  declareProperty( "SelectorName", m_selectorName = "ALL" );
+
 };
 
 //=============================================================================
@@ -73,6 +79,11 @@ StatusCode ITHitExpectation::initialize()
   // need to know the z of T stations....
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::location("IT"));
 
+  // (selector
+  if (m_selectorName != "ALL"){
+    info() << "Selector name " << m_selectorName << endmsg;
+    m_selector  = tool< ISTChannelIDSelector >( m_selectorType,m_selectorName );
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -99,6 +110,10 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
 
 
     STChannelID chan = (*iterL)->elementID();
+
+    // check we want this layer
+    //    if (m_selector->select(chan) == false) continue;
+    
     aParab = xParabola(aTrack,(*iterL)->globalCentre().z());
     aLine = yLine(aTrack,(*iterL)->globalCentre().z());
 
@@ -126,9 +141,11 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
     for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter ){ 
       if ( int(iter->second) != old) {
         old = int(iter->second);
-        ++(info.nExpected);
-        std::vector<LHCb::LHCbID>::iterator itIter = std::find(itHits.begin(), itHits.end(), iter->first); 
-        if (itIter != itHits.end() ) ++(info.nFound);
+        if (select(iter->first)) {
+           ++(info.nExpected);
+           std::vector<LHCb::LHCbID>::iterator itIter = std::find(itHits.begin(), itHits.end(), iter->first); 
+           if (itIter != itHits.end() ) ++(info.nFound);
+	}
       }
     }  // pairs      
   } //layer

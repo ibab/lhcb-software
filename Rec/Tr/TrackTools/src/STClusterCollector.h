@@ -1,4 +1,4 @@
-// $Id: STClusterCollector.h,v 1.1 2009-04-06 07:55:39 mneedham Exp $
+// $Id: STClusterCollector.h,v 1.2 2009-07-03 13:31:03 mneedham Exp $
 #ifndef _STClusterCollector_H
 #define _STClusterCollector_H 1
 
@@ -22,12 +22,18 @@
 
 #include "Event/STCluster.h"
 
+// for std::auto_ptr
+#include <boost/shared_ptr.hpp>
+
+
 namespace LHCb{
   class Track;
+  class STChannelID;
 }
 
 class ITrackExtrapolator;
 class ITrajPoca;
+class ISTChannelIDSelector;
 
 class STClusterCollector: public ST::ToolBase, 
                                 virtual public ISTClusterCollector,
@@ -59,18 +65,33 @@ class STClusterCollector: public ST::ToolBase,
   */
   virtual void handle( const Incident& incident );
 
+  
+  typedef std::pair<LHCb::STCluster*, boost::shared_ptr<LHCb::Trajectory> >
+    STClusterTrajectory;
+  typedef std::vector<STClusterTrajectory> STClusterTrajectories;
+
+ 
  private:
+
+  void initEvent() const;
+
+  bool select(const LHCb::STChannelID& chan) const;
  
   double m_xTol;
   double m_yTol;
   double m_refZ;
   double m_windowSize; 
   std::string m_dataLocation;
-  mutable LHCb::STClusters*  m_dataCont;
+  mutable STClusterTrajectories  m_dataCont;
   mutable bool m_configured;
+  bool m_ignoreHitsOnTrack;
 
   std::string m_extrapolatorName;
   ITrackExtrapolator* m_extrapolator;
+
+  ISTChannelIDSelector* m_selector;
+  std::string m_selectorType;
+  std::string m_selectorName;
 
   ITrajPoca * m_trajPoca;
 

@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.5 2008-10-18 10:35:02 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.6 2009-07-03 13:31:03 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,11 +29,15 @@ DECLARE_TOOL_FACTORY( TTHitExpectation );
 TTHitExpectation::TTHitExpectation(const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent):
-  GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_selector(0)
 { 
   // constructer
 
   declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
+  declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
+  declareProperty( "SelectorName", m_selectorName = "TTLiteKiller" ); 
+
   declareInterface<IHitExpectation>(this);
 };
 
@@ -66,7 +70,11 @@ StatusCode TTHitExpectation::initialize()
   const DeSTDetector::Stations& ttStations = m_ttDet->stations();
   m_zTTa = ttStations[0]->globalCentre().z();
   m_zTTb = ttStations[1]->globalCentre().z();
- 
+
+  // (selector
+  if (m_selectorName != "ALL")
+    m_selector  = tool< ISTChannelIDSelector >( m_selectorType,m_selectorName );
+
   return StatusCode::SUCCESS;
 }
 
@@ -115,7 +123,7 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
       DeSTSector::Sensors::const_iterator iter = tsensors.begin();
       for (; iter != tsensors.end(); ++iter){
         Tf::Tsa::Line3D aLine3D(stateVec.position(), stateVec.slopes());
-        if (insideSensor(*iter, aLine3D) == true){
+        if (m_selector->select((*iterS)->elementID()) && insideSensor(*iter, aLine3D) == true){
 
 	  // get the list of strips that could be in the cluster
           Gaudi::XYZPoint globalEntry = intersection(aLine3D,(*iter)->entryPlane());

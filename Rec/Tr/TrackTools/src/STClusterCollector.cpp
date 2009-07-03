@@ -1,4 +1,4 @@
-// $Id: STClusterCollector.cpp,v 1.1 2009-04-06 07:55:38 mneedham Exp $
+// $Id: STClusterCollector.cpp,v 1.2 2009-07-03 13:31:03 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -24,6 +24,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
+#include "Kernel/ISTChannelIDSelector.h"
 #include "STClusterCollector.h"
 
 #include "GaudiKernel/GenericVectorTypes.h"
@@ -54,14 +55,17 @@ STClusterCollector::STClusterCollector(const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent ) :
   ST::ToolBase(type, name, parent),
-  m_configured(false)
+  m_configured(false),
+  m_selector(0)
 {
   declareSTConfigProperty("dataLocation" , m_dataLocation , LHCb::STClusterLocation::TTClusters);
   declareProperty("xTol", m_xTol = 20.0 * Gaudi::Units::mm);
   declareProperty("yTol", m_yTol = 10.0 * Gaudi::Units::mm);
   declareProperty("window", m_windowSize = 20.0 *Gaudi::Units::mm);
-
+  declareProperty("ignoreHitsOnTrack", m_ignoreHitsOnTrack = true);
   declareProperty("extrapolatorName", m_extrapolatorName = "TrackMasterExtrapolator") ;
+  declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
+  declareProperty( "SelectorName", m_selectorName = "ALL" );
 
   declareInterface<ISTClusterCollector>(this);
 }
@@ -76,6 +80,7 @@ StatusCode STClusterCollector::initialize() {
 
   m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName, "Extrapolator", this);
   m_trajPoca = tool<ITrajPoca>("TrajPoca");
+  if (m_selectorName != "ALL") m_selector  = tool< ISTChannelIDSelector >( m_selectorType,m_selectorName );
 
   detType() == "IT" ? m_refZ = 750.0 *Gaudi::Units::cm : m_refZ = 250.0 *Gaudi::Units::cm ; 
 
@@ -94,12 +99,33 @@ void STClusterCollector::handle ( const Incident& incident )
   }
 }
 
+void STClusterCollector::initEvent() const{
+
+  // retrieve clusters
+  const LHCb::STClusters* clusterCont = get<LHCb::STClusters>(m_dataLocation);
+  m_dataCont.clear();
+  m_dataCont.reserve(clusterCont->size());
+
+  // Loop over the clusters and make a trajectory for each cluster
+  // TODO: maybe put this functionality in STMeasurement and use projectors
+  LHCb::STClusters::const_iterator iClus = clusterCont -> begin();
+  for ( ; iClus != clusterCont->end(); ++iClus ) {
+     STClusterTrajectory thisClusTraj;    
+     thisClusTraj.first  = *iClus ;
+     const DeSTSector* aSector = tracker()->findSector((*iClus)->channelID());
+     thisClusTraj.second.reset(
+       aSector->trajectory((*iClus)->channelID() , (*iClus)->interStripFraction()).release());     
+     m_dataCont.push_back( thisClusTraj ) ;
+  }
+
+}
+
 StatusCode STClusterCollector::execute(const LHCb::Track& track, 
                                        ISTClusterCollector::Hits& outputCont) const{
 
   if (m_configured == false){
     m_configured = true;
-    m_dataCont = get<LHCb::STClusters>(m_dataLocation);
+    initEvent();
   }  
   
   LHCb::State aState;
@@ -117,16 +143,20 @@ StatusCode STClusterCollector::execute(const LHCb::Track& track,
   Tf::Tsa::Line yLine = Tf::Tsa::Line(stateVec.ty(), stateVec.y(), stateVec.z());
   Tf::Tsa::Line xLine = Tf::Tsa::Line(stateVec.tx(), stateVec.x(), stateVec.z());
 
-  for (LHCb::STClusters::const_iterator iter = m_dataCont->begin();
-      iter != m_dataCont->end() ; ++iter){
-
+  for (STClusterTrajectories::const_iterator iter = m_dataCont.begin();
+      iter != m_dataCont.end() ; ++iter){
+   
       // check its not on the track
-      if (track.isOnTrack(LHCb::LHCbID((*iter)->channelID())) == true) continue;
+      if (m_ignoreHitsOnTrack == true && track.isOnTrack(LHCb::LHCbID((iter->first)->channelID()))) continue;
 
-      const DeSTSector* aSector = findSector((*iter)->channelID());
-      std::auto_ptr<LHCb::Trajectory> tmpTraj = 
-      aSector->trajectory((*iter)->channelID() , (*iter)->interStripFraction() );
-      
+      const DeSTSector* aSector = findSector((iter->first)->channelID());
+
+      // check we want this sector
+      if (select(aSector->elementID()) == false) continue;
+
+      // get the traj
+      LHCb::Trajectory* tmpTraj = ((*iter).second).get();
+    
       // check that y is consistant....
       double yMin = tmpTraj->beginPoint().y();
       double yMax = tmpTraj->endPoint().y();
@@ -156,7 +186,7 @@ StatusCode STClusterCollector::execute(const LHCb::Track& track,
 
   
      if (fabs(residual) < m_windowSize) {
-       ISTClusterCollector::Hit hitPair; hitPair.cluster = *iter; hitPair.residual = residual;
+       ISTClusterCollector::Hit hitPair; hitPair.cluster = iter->first; hitPair.residual = residual;
        outputCont.push_back(hitPair);
      }
   } // iter
@@ -164,3 +194,6 @@ StatusCode STClusterCollector::execute(const LHCb::Track& track,
   return StatusCode::SUCCESS;
 }
   
+bool STClusterCollector::select(const LHCb::STChannelID& chan) const{
+  return m_selector == 0 ? true : m_selector->select(chan); 
+}
