@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.4 2009-07-03 10:14:42 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -23,8 +23,7 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt1Physics'  : 1
                               , 'Hlt1Random'   : 0.000001 # @OnlineEnv.AcceptRate
-                              , 'Hlt1L0Forced' : 0 
-                              , 'Hlt1RawBankConversion' : 0.000001
+                              , 'Hlt1Tell1Error' : 0
                               }
                }
    def __apply_configuration__(self):
@@ -40,10 +39,14 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
         #    , prescale = self.prescale
         #    , postscale = self.postscale
         #    )
-        from Configurables import HltTriggerRawConversion
-        Line('RawBankConversion'
-            , ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
-            , algos = [ HltTriggerRawConversion() ]
+        from Configurables import FilterByBankType
+        Line('Tell1Error'
+            , ODIN='ODIN_ALL'
+            , algos = [ FilterByBankType('AcceptTell1Error' 
+                                        , PassSelectedEvents = True
+                                        , BankNames = [ ".*Error" ] 
+                                        )
+                      ]
             , prescale = self.prescale
             , postscale = self.postscale
             )

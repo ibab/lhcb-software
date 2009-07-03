@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.1.1.1 2009-05-28 15:37:38 graven Exp $
+# $Id: HltL0Candidates.py,v 1.2 2009-07-03 10:14:42 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -38,6 +38,7 @@
 import re
 from Gaudi.Configuration import *
 from GaudiKernel.Configurable import ConfigurableGeneric
+from HltLine.HltLine import bindMembers
 
 # utilities to pack and unpack L0 conditions into Condition property...
 # given the 'Conditions' property of an L0DUCOnfig tool instance, 
@@ -57,12 +58,15 @@ def _name(i) :
     return 'Hlt1L0'+i+'Candidates' if i.startswith('All') else 'Hlt1L0'+i+'Decision'
 
 def _muon( channel ) :
-    from Configurables import HltL0MuonCandidates
+    from HltConf.HltDecodeRaw import DecodeL0MUON
+    from Configurables import HltL0MuonCandidates,L0MuonCandidatesFromRaw
     name = _name(channel)
     #note: explicitly set the OutputSelection so we can pick it up downstream...
-    return { channel : HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name) }
+    # return { channel : HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name) }
+    return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
 
 def _calo( channel ) :
+    from HltConf.HltDecodeRaw import DecodeL0CALO
     from Configurables import HltL0CaloCandidates
     from Configurables import HadronSeedTool, ElectronSeedTool
     name = _name(channel)
@@ -74,7 +78,8 @@ def _calo( channel ) :
                  ,  'LocalPi0'    : ElectronSeedTool
                  }
     #note: explicitly set the OutputSelection so we can pick it up downstream...
-    x = { channel: HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) }
+    # x = { channel:                               HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) }
+    x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
     c = channel.lstrip('All')
     if c in _calomaker :
         HltL0CaloCandidates(name).addTool(_calomaker[c],name='CaloMakerTool')

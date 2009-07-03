@@ -25,6 +25,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
         from HltConf.HltReco import RZVelo, Velo, PV2D
+        from HltConf.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         
         COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))
         SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))
@@ -35,14 +36,13 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         ##### common bodies IP
         IP_CUT = str(self.getProp('Ele_IPCut'))
         prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
+                                  , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
-                                  #, Member ( 'TU', 'TConf', RecoName = 'TConf',
-                                  #           tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] ) ] )
-                                  
                                   , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
+                                  , DecodeVELO, DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
                                   , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
                                   ]
@@ -59,14 +59,13 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         ##### common bodies no IP
         IP_CUT = "0.0"
         prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
+                                  , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
-                                  #, Member ( 'TU', 'TConf', RecoName = 'TConf',
-                                  #           tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,  particleType = 2 ) ] )])
-                                  
                                   , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
+                                  , DecodeVELO, DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
                                   , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
                                   ]
@@ -140,6 +139,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                      + [ Member ( 'VF', 'VertexCut'
                                 , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                 )
+                       , DecodeECAL
                        , Member ( 'VF', 'MassCut'
                                 , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
                                 , OutputSelection = '%Decision'
@@ -155,6 +155,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                      + [ Member ( 'VF', 'VertexCut'
                                 , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                 )
+                       , DecodeECAL
                        , Member ( 'VF', 'MassCut'
                                 , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
                                 , OutputSelection = '%Decision'

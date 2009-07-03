@@ -6,7 +6,7 @@ from HltLine.HltLine import Hlt1Line as Line
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
-                               , 'Hlt1VeloAlign' : 0.000001 
+                               , 'Hlt1VeloAlign' : 0.0 #  0.000001 
                                }
                 } 
 
@@ -26,10 +26,6 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
             )
 
 
-        #Line( 'VeloAlignTracks' 
-        #    , algos = [ PatVeloAlignTrackFilter( 'AlignTrackFilter' ) ] )
-        #
-        #
         #Line( 'VeloOverlapTracks' 
         #    ,  algos = [ PatVeloAlignTrackFilter( 'OverlapAlignTrackFilter', Overlap = True ) ] )
         #

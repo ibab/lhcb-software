@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
+# $Id: HltVeloLines.py,v 1.4 2009-07-03 10:14:42 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 #
@@ -28,6 +28,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                }
 
    def __apply_configuration__(self):
+        # from Configurables import DecodeVeloRawBuffer
         from Configurables import VeloClusterFilter
         from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager
         from Configurables import Tf__DefaultVeloPhiHitManager as DefaultVeloPhiHitManager
@@ -83,11 +84,12 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
+            from HltConf.HltDecodeRaw import DecodeVELO
             Line( 'Velo' + side
                 , ODIN = self.getProp('ODIN')
                 , prescale = self.prescale
                 , algos =
-                [ cf, rt, st, gt, pv3D
+                [ DecodeVELO, cf, rt, st, gt, pv3D
                 , Member( 'VF' , 'Decision'
                         , OutputSelection = '%Decision'
                         , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'

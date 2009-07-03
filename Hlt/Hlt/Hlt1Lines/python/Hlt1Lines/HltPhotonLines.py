@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
+# $Id: HltPhotonLines.py,v 1.4 2009-07-03 10:14:42 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $'
 # =============================================================================
 
 
@@ -42,6 +42,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
         from Configurables import L0ConfirmWithT
         from Configurables import PatConfirmTool
         from HltConf.HltReco import RZVelo, Velo, PV2D
+        from HltConf.HltDecodeRaw import DecodeIT, DecodeECAL
 
         TRACK_PT_CUT = str(self.getProp('Track_PtCut'))
         TRACK_IP_CUT = str(self.getProp('Track_IPCut3D'))
@@ -49,12 +50,14 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
         L0ET_CUT     = str(self.getProp('Pho_EtCut'))
 
         commonSeq =   [ Member ('TF', 'L0ET' , FilterDescriptor = ['L0ET,>,'+L0ET_CUT]) 
+                      , DecodeIT
                       , Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
                                , tools = [ Tool( HltTrackFunctionFactory,
                                  tools = [ Tool( HltAntiEleConf, 
                                  tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
                                  tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
                                )
+                      , DecodeECAL
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON])
                       , RZVelo, PV2D.ignoreOutputSelection()
                       , Member ('TF', 'RZVelo'
