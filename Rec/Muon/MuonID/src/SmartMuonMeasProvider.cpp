@@ -1,4 +1,4 @@
-// $Id: SmartMuonMeasProvider.cpp,v 1.1 2009-07-01 18:27:12 polye Exp $
+// $Id: SmartMuonMeasProvider.cpp,v 1.2 2009-07-03 19:54:55 polye Exp $
 // Include files
 // local
 //#include "MuonID/MuonMeasurementProvider.h"
@@ -86,7 +86,7 @@ std::vector<LHCb::LHCbID>  SmartMuonMeasProvider::idsInRange(LHCb::State& state,
     double uncert_y=uncy(meas,state);
     
     //if condition fulfilled for this measure, add to list LHCbID and val to sort out
-    if ((difx <= nsigmas*uncert_x) and (dify <=nsigmas*uncert_y)) {
+    if ((difx <= nsigmas*uncert_x) && (dify <=nsigmas*uncert_y)) {
       //std:cout<<"\nsmmp xmeas1="<<meas.first;
       //std:cout<<"\nsmmp &ID1="<<&(meas.first->lhcbID());
       //std:cout<<"\nsmmp channelID1="<<meas.first->lhcbID().channelID();

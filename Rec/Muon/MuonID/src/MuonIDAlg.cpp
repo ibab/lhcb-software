@@ -282,7 +282,7 @@ StatusCode MuonIDAlg::initialize() {
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion
       ){
-    err() << "OPTIONS initialising MuonID are missing"
+    err() << "MuonIDAlg:: OPTIONS initialising MuonID are missing"
           << " or wrong size for " << m_NStation << " stations and "
           << m_NRegion << " regions"
           << endreq;
@@ -291,13 +291,13 @@ StatusCode MuonIDAlg::initialize() {
   
   if( m_MomentumCuts.size() != 2 ){
     err()
-      << "OPTIONS are wrong:"
+      << "MuonIDAlg:: OPTIONS are wrong:"
       << " size of MomentumCuts vector is not correct"
       << endreq;
     return StatusCode::FAILURE;
   }
   
-  debug()  << " Momentum bins are (MeV/c) " <<endreq;
+  debug()  << "MuonIDAlg::  Momentum bins are (MeV/c) " <<endreq;
   debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endreq;
 
   std::vector<double>::const_iterator iMom;
@@ -306,7 +306,7 @@ StatusCode MuonIDAlg::initialize() {
   }
 
   if( m_distPion.size() != 9 || m_distMuon.size() != 9){
-    err() << "OPTIONS are wrong:"
+    err() << "MuonIDAlg:: OPTIONS are wrong:"
           <<" size of m_distPion or m_distMuon vector is not correct"
           << endreq;
     return StatusCode::FAILURE;
@@ -469,9 +469,9 @@ StatusCode MuonIDAlg::execute() {
   }  // loop over tracks
 
   // Debug : muon identification event summary
-  debug()  << "Number of MuonPID objects created: " << pMuids->size()
+  debug()  << "MuonIDAlg:: Number of MuonPID objects created: " << pMuids->size()
            << endreq;
-  debug()  << "Number of tracks with IsMuonLoose = True : " << m_nmu
+  debug()  << "MuonIDAlg:: Number of tracks with IsMuonLoose = True : " << m_nmu
            << endreq;
   m_ntotmu += m_nmu;
 
@@ -745,21 +745,21 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
   debug()<<"pr3="<<pr3<<endreq;
   debug()<<"IsMuon p="<<mom<<endreq;
   
-  if (mom>pr1 and mom<pr2)
+  if (mom>pr1 && mom<pr2)
   {
-    if (stInStations(1,stations) and stInStations(2,stations)&& w[1] && w[2]) return true;
+    if (stInStations(1,stations) && stInStations(2,stations)&& w[1] && w[2]) return true;
   }
   
-  else if (mom>pr2 and mom<pr3)
+  else if (mom>pr2 && mom<pr3)
   {
-    if (stInStations(1,stations) and stInStations(2,stations) and 
-        (stInStations(3,stations) or stInStations(4,stations)) && 
+    if (stInStations(1,stations) && stInStations(2,stations) && 
+        (stInStations(3,stations) || stInStations(4,stations)) && 
         (w[1]&&w[2]&&(w[3]||w[4]))) return true;
   }
   else if (mom>pr3)
   {   
-    if (stInStations(1,stations) and stInStations(2,stations) 
-        and stInStations(3,stations) and stInStations(4, stations) &&(w[1]&&w[2]&&w[3] &&w[4])) return true;
+    if (stInStations(1,stations) && stInStations(2,stations) 
+        && stInStations(3,stations) && stInStations(4, stations) &&(w[1]&&w[2]&&w[3] &&w[4])) return true;
   }         
     
   return false;
@@ -791,7 +791,7 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
 
   P_weights(mom,w);
 
-  if (mom>pr1 and mom<pr2)
+  if (mom>pr1 && mom<pr2)
   {
     int j=0;
     for (std::vector<int>::const_iterator it = stations.begin();
@@ -1367,7 +1367,7 @@ int MuonIDAlg::findTrackRegion(const int sta){
 //=====================================================================
   int chnum = -1;
   int regnum = -1;  
-  m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum);  
+  m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum).ignore();  
   return regnum;
   
 }

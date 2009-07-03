@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.2 2009-07-02 18:09:25 miriamg Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.3 2009-07-03 19:54:55 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -208,10 +208,10 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
 
   StatusCode sc;
   
-  if (muTrack.states().size()>1) warning()<<"MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endreq;
+  if (muTrack.states().size()>1) warning()<<"muonQuality:: MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endreq;
   else if (muTrack.states().size()<1) 
   {
-    error()<<"MUTRACK WITHOUT ANY SEED STATE ON IT"<<endreq;
+    error()<<"muonQuality:: MUTRACK WITHOUT ANY SEED STATE ON IT"<<endreq;
     sc.setCode(301);
     Quality=0;
     return sc;
@@ -219,7 +219,7 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   
   if (muTrack.lhcbIDs().size()<1) 
   {
-    error()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endreq;
+    error()<<"muonQuality:: NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endreq;
     sc.setCode(302);
     Quality=0;
     return sc;

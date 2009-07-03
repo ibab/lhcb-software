@@ -1,4 +1,4 @@
-// $Id: CLTool.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: CLTool.cpp,v 1.2 2009-07-03 19:54:55 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -118,12 +118,12 @@ StatusCode CLTool::initialize() {
   for (int i=1;i<=m_nrangeNmuons;i++) m_mombinsCenterNmuons.push_back((m_rangeNmuons[i]+m_rangeNmuons[i-1])/2);
   m_mombinsCenterNmuons[m_nrangeNmuons-1]=m_lbinCenterNmuons;
   
-  debug()<<"NMUONSINFO"<<endreq;
-  debug()<<"m_rangeNmuons="<<m_rangeNmuons<<endreq;
-  debug()<<"m_mombinsCenterNmuons="<<m_mombinsCenterNmuons<<endreq;
+  debug()<<"CLTool:: NMUONSINFO"<<endreq;
+  debug()<<"CLTool:: m_rangeNmuons="<<m_rangeNmuons<<endreq;
+  debug()<<"CLTool:: m_mombinsCenterNmuons="<<m_mombinsCenterNmuons<<endreq;
   
   if (m_bkg.size()%m_nrangeNmuons!=0){
-    error() << "INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS"<<endreq;
+    error() << "CLTool:: INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS"<<endreq;
     m_init.setCode(0);
     return m_init;
   }
@@ -133,21 +133,21 @@ StatusCode CLTool::initialize() {
 
   //check number of elements per momentum bin is the same for signal and bkg
   if (m_nvals!=nvalsNmuons){
-    error() << "DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL"<<endreq;
+    error() << "CLTool:: DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL"<<endreq;
     m_init.setCode(0);
     return m_init;
   }
   
   //find yvals (same for signal and bkg): y points in cl functions
   for (int i=0;i<m_nvals;i++) m_yvals.push_back(i*1./(m_nvals-1));
-  debug() << " recorded "<<m_nrange<<" momentum bins "
+  debug() << "CLTool:: recorded "<<m_nrange<<" momentum bins "
          << "with "<< m_yvals.size() << " vals each" << endreq;
   
   //build uniformer functions for both signal and bkg
   StatusCode stc1=getClValues("sig");
   StatusCode stc2=getClValues("bkg");
   
-  if  (stc1.isFailure() or stc2.isFailure())
+  if  (stc1.isFailure() || stc2.isFailure())
     {
       m_init.setCode(0);
       return m_init;
@@ -291,7 +291,7 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
     int ind1,ind2;
     
     //is mom in first half of bin (not being this first)?
-    if (mom<(*my_mombinsCenter)[p_r] and p_r>0) 
+    if (mom<(*my_mombinsCenter)[p_r] &&  p_r>0) 
     {
       ind1=p_r-1;
       ind2=p_r;
@@ -303,7 +303,7 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
       ind2=p_r+1; 
     }
     //is mom in second half of bin (not being this last)?
-    else if (mom>(*my_mombinsCenter)[p_r] and p_r<my_nrange-1)
+    else if (mom>(*my_mombinsCenter)[p_r] && p_r<my_nrange-1)
     {
       ind1=p_r;
       ind2=p_r+1;
@@ -330,8 +330,8 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
     else rel_val2=left_val2;
 
     // if second half and last momentum bin, decide wether to apply interpolation
-    debug()<<"single_case="<<single_case<<endreq;
-    if (single_case and not m_applyLast) return rel_val2;    
+    debug()<<"CLTool:: single_case="<<single_case<<endreq;
+    if (single_case &&  !m_applyLast) return rel_val2;    
 
     double bcen1=(*my_mombinsCenter)[ind1];
     double bcen2=(*my_mombinsCenter)[ind2];
@@ -408,7 +408,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
   debug()<<"CLB="<<clb<<endreq;
   
   //compute ratio
-  if (clb!=0 and cls!=0) clr=cls/clb;
+  if (clb!=0 && cls!=0) clr=cls/clb;
   else 
   {
     if (clb==0) 
@@ -416,7 +416,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
       if (cls==0) clr=1e-6;
       else 
       {
-        warning()<<"DIVISION BY 0!"<<endreq;
+        warning()<<"CLTool: DIVISION BY 0!"<<endreq;
         sc.setCode(505);
         return sc;
       }

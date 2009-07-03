@@ -1,4 +1,4 @@
-// $Id: IsMuonCandidateC.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: IsMuonCandidateC.cpp,v 1.2 2009-07-03 19:54:55 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -113,20 +113,20 @@ bool IsMuonCandidateC::IsMuon(const std::vector<int>& stations,const double& p)
   
   
   double mom=p/Gaudi::Units::GeV;
-  if (mom>pr1 and mom<pr2)
+  if (mom>pr1 && mom<pr2)
   {
-    if (stInStations(1,stations) and stInStations(2,stations)) return true;
+    if (stInStations(1,stations) && stInStations(2,stations)) return true;
   }
   
-  else if (mom>pr2 and mom<pr3)
+  else if (mom>pr2 && mom<pr3)
   {
-    if (stInStations(1,stations) and stInStations(2,stations) and 
-        (stInStations(3,stations) or stInStations(4,stations))) return true;
+    if (stInStations(1,stations) && stInStations(2,stations) && 
+        (stInStations(3,stations) || stInStations(4,stations))) return true;
   }
   else if (mom>pr3)
   {   
-    if (stInStations(1,stations) and stInStations(2,stations) 
-        and stInStations(3,stations) and stInStations(4, stations)) return true;
+    if (stInStations(1,stations) && stInStations(2,stations) 
+        && stInStations(3,stations) && stInStations(4, stations)) return true;
   }         
   
   return false;
@@ -144,7 +144,7 @@ bool IsMuonCandidateC::IsMuonLoose(const std::vector<int>& stations,const double
   const double pr2=m_MomRangeIsMuon[1];
   //  const double pr3=m_MomRangeIsMuon[2];
   
-  if (mom>pr1 and mom<pr2)
+  if (mom>pr1 && mom<pr2)
   {
     int j=0;
     for (std::vector<int>::const_iterator it = stations.begin();
