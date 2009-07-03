@@ -346,7 +346,8 @@
         type      = 'std::vector&lt;LHCb::LHCbID&gt;'
         name      = 'lhcbIDs'
         desc      = 'Container of (sorted) LHCbIDs'
-        access    = 'PROTECTED' />
+        access    = 'PROTECTED'
+        setMeth   = 'FALSE' />
 
       <attribute
         type      = 'std::vector&lt;LHCb::State*&gt;'
@@ -754,6 +755,16 @@
   LHCbIDContainer copy(value) ;
   std::sort( copy.begin(), copy.end() ) ;
   return addSortedToLhcbIDs( copy ) ;
+</code>
+      </method>
+
+     <method
+       name    = 'setLhcbIDs'
+       desc    = 'Sets the list of LHCbIDs associated to this track. The input vector will be sorted.'
+       argList = 'LHCbIDContainer value'>
+<code>
+  m_lhcbIDs = value ;
+  std::sort( m_lhcbIDs.begin(), m_lhcbIDs.end() ) ;
 </code>
       </method>
 
