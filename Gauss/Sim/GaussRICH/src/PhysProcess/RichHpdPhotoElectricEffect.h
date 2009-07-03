@@ -23,8 +23,9 @@ class RichHpdPhotoElectricEffect : public G4VDiscreteProcess {
 
 public:
 
-  RichHpdPhotoElectricEffect(const GiGaBase*, const G4String&, 
+    RichHpdPhotoElectricEffect(const GiGaBase*, const G4String&, 
                           G4ProcessType   aType = fOptical);
+  // RichHpdPhotoElectricEffect(const G4String&,G4ProcessType   aType = fOptical);
 
   virtual ~RichHpdPhotoElectricEffect();
 
@@ -71,7 +72,8 @@ public:
   // axis of hpd.
 
   std::vector<double> getCurrentHpdPSFXY ( int hpdnumb, int richdetnumb);
-  std::vector<double> getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb, double photRadPos, double PhotEn );
+  //  std::vector<double> getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb, double photRadPos, double PhotEn );
+  std::vector<double> getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb );
   std::vector<double> GetPSFXYForASigma(double aPSFSigma) ;
 
   std::vector<double> getCurrentHpdDemag(const int hpdnumber,

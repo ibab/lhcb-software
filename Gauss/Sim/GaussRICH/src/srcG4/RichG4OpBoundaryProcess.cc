@@ -390,7 +390,8 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 		  }
 	  }
 	  else {
-		  DielectricDielectric(aTrack, aStep);
+      //		  DielectricDielectric(aTrack, aStep);
+		  DielectricDielectric(aTrack);
 	  }
 	}
 	else {
@@ -566,8 +567,9 @@ void RichG4OpBoundaryProcess::DielectricMetal()
 	} while (NewMomentum * theGlobalNormal < 0.0);
 }
 
-void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack,
-				       const G4Step&  aStep)
+//void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack,
+//				       const G4Step&  aStep)
+void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
 {
 	G4bool Inside = false;
 	G4bool Swap = false;

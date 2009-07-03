@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.14 2009-03-06 10:53:44 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.15 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 
@@ -811,7 +811,7 @@ bool RichG4EventHitCount::Rich2TrajTraverse
   if(atrajectoryContainer){n_trajectories=atrajectoryContainer->entries();
   }
 
-  bool Rich2AgelMomHigh=false;
+  // bool Rich2AgelMomHigh=false;
   bool Rich2GasMomHigh = false;
   bool TrackDirInRich2Acceptance=false;
   bool TrackChAndId = false;
@@ -1544,7 +1544,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
             G4int aRadiatorNum=  aHit->GetRadiatorNumber();
             // Momentum of charged track in MeV
             G4double aChTrackTotMom =  aHit->ChTrackTotMom() ;
-            G4double CkvTheta=      aHit->  ThetaCkvAtProd();
+            // G4double CkvTheta=      aHit->  ThetaCkvAtProd();
             G4int ChtkId =  aHit-> GetChTrackID();
             G4double ChTkPDGMass =  aHit->RichChTrackMass();
 

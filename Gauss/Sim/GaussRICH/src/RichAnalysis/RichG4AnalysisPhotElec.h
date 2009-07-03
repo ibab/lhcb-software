@@ -1,4 +1,4 @@
-// $Id: RichG4AnalysisPhotElec.h,v 1.2 2004-02-10 14:24:07 jonesc Exp $
+// $Id: RichG4AnalysisPhotElec.h,v 1.3 2009-07-03 11:59:49 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4ANALYSISPHOTELEC_H
 #define RICHANALYSIS_RICHG4ANALYSISPHOTELEC_H 1
 
@@ -7,13 +7,18 @@
 #include "G4Step.hh"
 
 
+//extern void RichG4AnalysisPhotElecA ( const G4Step& aStep,
+//                                      G4int currentRichDetNumber,
+//                                      G4int currentHpdNumber, G4double PhotonEnergy);
+
+//extern void RichG4AnalysisPhotElecB ( const G4Step& aStep,
+//                                      G4int currentRichDetNumber,
+//                                      G4int currentHpdNumber, G4double PhotonEnergy);
+
 extern void RichG4AnalysisPhotElecA ( const G4Step& aStep,
-                                      G4int currentRichDetNumber,
-                                      G4int currentHpdNumber, G4double PhotonEnergy);
+                                      G4int currentRichDetNumber);
 
 extern void RichG4AnalysisPhotElecB ( const G4Step& aStep,
-                                      G4int currentRichDetNumber,
-                                      G4int currentHpdNumber, G4double PhotonEnergy);
-
+                                      G4int currentRichDetNumber);
 
 #endif // RICHANALYSIS_RICHG4ANALYSISPHOTELEC_H

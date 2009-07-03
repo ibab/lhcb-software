@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.6 2008-01-21 16:53:44 seaso Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.7 2009-07-03 11:59:49 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -166,8 +166,9 @@ private:
 				     const G4ThreeVector&  Normal) const;
 
 	void DielectricMetal();
-	void DielectricDielectric(const G4Track& aTrack,
-				       const G4Step&  aStep);
+  //	void DielectricDielectric(const G4Track& aTrack,
+  //				       const G4Step&  aStep);
+	void DielectricDielectric(const G4Track& aTrack);
 
 	void ChooseReflection();
 	void DoAbsorption();

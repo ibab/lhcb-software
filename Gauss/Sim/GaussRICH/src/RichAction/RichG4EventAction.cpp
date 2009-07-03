@@ -1,4 +1,4 @@
-// $Id: RichG4EventAction.cpp,v 1.16 2008-01-21 16:56:27 seaso Exp $
+// $Id: RichG4EventAction.cpp,v 1.17 2009-07-03 11:59:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -304,8 +304,10 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
   if( m_RichEventActionHistoFillActivateSet3) {
 
     //Now for the histo ids which are filled in this class.
-    m_RichG4HistoFillSet3->FillRichG4HistoSet3(anEvent,
-                                               m_NumRichColl,m_RichG4CollectionID);
+    m_RichG4HistoFillSet3->FillRichG4HistoSet3( );
+
+    //  m_RichG4HistoFillSet3->FillRichG4HistoSet3( anEvent,
+    //                                           m_NumRichColl,m_RichG4CollectionID);
 
   }
 

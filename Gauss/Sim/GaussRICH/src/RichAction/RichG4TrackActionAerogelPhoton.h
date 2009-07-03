@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionAerogelPhoton.h,v 1.2 2007-01-12 15:32:06 ranjard Exp $
+// $Id: RichG4TrackActionAerogelPhoton.h,v 1.3 2009-07-03 11:59:49 seaso Exp $
 #ifndef RICHACTION_RICHG4TRACKACTIONAEROGELPHOTON_H 
 #define RICHACTION_RICHG4TRACKACTIONAEROGELPHOTON_H 1
 
@@ -43,7 +43,7 @@ public:
 
   virtual void PreUserTrackingAction  ( const G4Track* ) ;
 
-  virtual void PostUserTrackingAction ( const G4Track* ) ;
+  //  virtual void PostUserTrackingAction ( const G4Track* ) ;
 
   bool ActivateAerogelFilter() 
   {  return m_ActivateAerogelFilter;}

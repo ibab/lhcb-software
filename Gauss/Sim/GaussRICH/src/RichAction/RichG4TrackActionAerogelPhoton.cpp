@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.2 2007-01-12 15:32:05 ranjard Exp $// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.2 2007-01-12 15:32:05 ranjard Exp $
+// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.3 2009-07-03 11:59:49 seaso Exp $// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.3 2009-07-03 11:59:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -101,8 +101,8 @@ void  RichG4TrackActionAerogelPhoton::PreUserTrackingAction
   const G4DynamicParticle * aParticle = aTrack->GetDynamicParticle();
   if(aParticle->GetDefinition() == G4OpticalPhoton::OpticalPhoton() ) {
 
-        RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
-                          RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+    // RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
+    //                      RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
 
         G4VUserTrackInformation* aUserTrackInfo=aTrack->GetUserInformation();
         GaussTrackInformation* aRichPhotTrackInfo
@@ -134,9 +134,9 @@ void  RichG4TrackActionAerogelPhoton::PreUserTrackingAction
 //=============================================================================
 // PostUserTrackingAction (Geant4)
 //=============================================================================
-void RichG4TrackActionAerogelPhoton::PostUserTrackingAction
-   ( const G4Track* aTrack )
-{ }
+//void RichG4TrackActionAerogelPhoton::PostUserTrackingAction
+//   ( const G4Track* aTrack )
+//{ }
 
 //=============================================================================
 

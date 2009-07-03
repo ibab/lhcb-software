@@ -1,4 +1,4 @@
-// $Id: RichG4AnalysisPhotElec.cpp,v 1.3 2006-02-10 17:36:00 seaso Exp $
+// $Id: RichG4AnalysisPhotElec.cpp,v 1.4 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 
@@ -43,11 +43,9 @@
 // 2003-06-08 : Sajan EASO
 //-----------------------------------------------------------------------------
 void RichG4AnalysisPhotElecA ( const G4Step& aStep,
-                               G4int currentRichDetNumber,
-                               G4int currentHpdNumber, 
-                               G4double PhotonEnergy )
+                               G4int currentRichDetNumber)
 {
-  // Histogram and analysis from befor the QE.
+  // Histogram and analysis from before the QE.
 
 
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
@@ -75,7 +73,7 @@ void RichG4AnalysisPhotElecA ( const G4Step& aStep,
                     aRichTypeInfo-> RichPhotInformation();
          if( aRichPhotInfo ) {
            
-	   G4int aRadiatorNum = aRichPhotInfo->PhotProdRadiatorNum() ;
+	         aRadiatorNumber = aRichPhotInfo->PhotProdRadiatorNum() ;
            if(  aRichCounter ) {
 
               if(    aRadiatorNumber == 1 ) {
@@ -91,9 +89,7 @@ void RichG4AnalysisPhotElecA ( const G4Step& aStep,
 }
 
 void RichG4AnalysisPhotElecB ( const G4Step& aStep,
-                               G4int currentRichDetNumber,
-                               G4int currentHpdNumber, 
-                               G4double PhotonEnergy )
+                               G4int currentRichDetNumber)
 {
   // Histogram and analysis from after the QE.
 
@@ -125,7 +121,7 @@ void RichG4AnalysisPhotElecB ( const G4Step& aStep,
                     aRichTypeInfo-> RichPhotInformation();
          if( aRichPhotInfo ) {
            
-	   G4int aRadiatorNum = aRichPhotInfo->PhotProdRadiatorNum() ;
+	         aRadiatorNumber = aRichPhotInfo->PhotProdRadiatorNum() ;
            if(  aRichCounter ) {
 
               if(    aRadiatorNumber == 1 ) {

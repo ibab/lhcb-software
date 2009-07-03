@@ -337,8 +337,8 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
           G4double RandYposition =  G4UniformRand() -0.5;
           //new rand # to ensure incoherant effects
 
-          G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
-          G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
+          //G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
+          //G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
  
 
           G4ThreeVector LocalElectronDirection( 0,0 ,-1 );

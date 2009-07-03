@@ -14,7 +14,7 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   // the test on photon origin is commented out for now. It
   // can be revived in the future.
 
-  G4double CurPhotonOrigZcoord= aPhotonTk.GetVertexPosition().z();
+  // G4double CurPhotonOrigZcoord= aPhotonTk.GetVertexPosition().z();
   //    if(( CurPhotonOrigZcoord >= ZUpsRich1Analysis &&
   //     CurPhotonOrigZcoord <= ZDnsRich1Analysis) ||
   //     ( CurPhotonOrigZcoord >= ZUpsRich2Analysis &&

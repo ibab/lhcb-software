@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet1.cpp,v 1.6 2007-01-12 15:32:10 ranjard Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.7 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 // local
@@ -123,12 +123,12 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
         G4int nHitHCa = RHCA->entries();
         for (G4int iha=0; iha<nHitHCa; iha++ ) {
           RichG4Hit* aHit = (*RHCA)[iha];
-          G4double aHitGlobalX=aHit->GetGlobalPos().x();
-          G4double aHitGlobalY=aHit->GetGlobalPos().y();
-          G4double aHitGlobalZ=aHit->GetGlobalPos().z();
+          // G4double aHitGlobalX=aHit->GetGlobalPos().x();
+          // G4double aHitGlobalY=aHit->GetGlobalPos().y();
+          //G4double aHitGlobalZ=aHit->GetGlobalPos().z();
           G4double aHitGlobalPEOriginX=aHit->GetGlobalPEOriginPos().x();
           G4double aHitGlobalPEOriginY=aHit->GetGlobalPEOriginPos().y();
-          G4double aHitGlobalPEOriginZ=aHit->GetGlobalPEOriginPos().z();
+          // G4double aHitGlobalPEOriginZ=aHit->GetGlobalPEOriginPos().z();
           if(hGlobalPEOriginXY)hGlobalPEOriginXY->
                                  fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
 

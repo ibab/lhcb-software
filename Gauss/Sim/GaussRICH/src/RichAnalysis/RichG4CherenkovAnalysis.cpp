@@ -35,7 +35,7 @@
 #include <math.h>
 
 void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
-                              G4double SinThCkv, G4double PhotProdCkvKE , 
+                              G4double PhotProdCkvKE , 
                               const G4ThreeVector & PhotProdPosition,
                               G4double RefInd, G4double BetaInvChPart ) {
 
@@ -135,7 +135,7 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
   G4StepPoint* cPreStepPoint = cStep.GetPreStepPoint();
   G4StepPoint* cPostStepPoint = cStep.GetPostStepPoint();
   const G4ThreeVector & cprePos = cPreStepPoint->GetPosition();
-  const G4ThreeVector & cpostPos = cPostStepPoint->GetPosition();
+  // const G4ThreeVector & cpostPos = cPostStepPoint->GetPosition();
 
   if(cprePos.z()>ZUpsRich1Analysis || cprePos.z() <ZDnsRich1Analysis ){
     G4Track* cTrack = cStep.GetTrack();
@@ -155,8 +155,9 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
           G4double CurPhotWaveLen= PhotMomCnv/((cParticleKE/MeV)*MeVtoeV);
           const G4double PhotOriginZ= cTrack->GetVertexPosition().z();
 
-          const G4ThreeVector & PhotOriginDir=
-            cTrack->GetVertexMomentumDirection();
+          //          const G4ThreeVector & PhotOriginDir=
+          //          cTrack->GetVertexMomentumDirection();
+
           const G4ThreeVector & PhotCurDir=
             cTrack->GetMomentumDirection();
 
@@ -265,9 +266,9 @@ void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
        ( aRadiatorNum ==  Rich1GasQWindowCkvRadiatorNum)  ||
       ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) ) {
     const G4ThreeVector& aChTrackProdPos = aChTrack.GetVertexPosition();
-    const G4ThreeVector& aMomAtProd = aChTrack.GetVertexMomentumDirection();
+    //  const G4ThreeVector& aMomAtProd = aChTrack.GetVertexMomentumDirection();
     G4String aParticleName = aChTrackParticle->GetDefinition()->GetParticleName();
-    G4double aParticleEnergy = aChTrack.GetTotalEnergy() ;
+    // G4double aParticleEnergy = aChTrack.GetTotalEnergy() ;
     
      if( aCurPos.z() < ZDnsRich1Analysis ) {
        if(hHpdQwOrigXZR1) hHpdQwOrigXZR1->fill(aChTrackProdPos.z(),aChTrackProdPos.x(),1.0);

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.13 2008-04-20 16:15:13 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.14 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 #include "G4Track.hh"
@@ -139,8 +139,8 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
         const G4String & aPreVolName=
           aPreStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
 
-        const G4String & prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
-          GetLogicalVolume()->GetMaterial()->GetName();
+        // const G4String & prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
+        //  GetLogicalVolume()->GetMaterial()->GetName();
 	// test of rad length.
         //  G4double RadLenPre= aPreStepPoint->GetPhysicalVolume()->
         //    GetLogicalVolume()->GetMaterial()-> GetRadlen();

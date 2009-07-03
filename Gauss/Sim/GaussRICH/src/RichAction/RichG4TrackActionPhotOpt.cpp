@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.6 2008-03-31 13:22:44 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.7 2009-07-03 11:59:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -193,9 +193,9 @@ void RichG4TrackActionPhotOpt::PreUserTrackingAction
 //=============================================================================
 // PostUserTrackingAction (Geant4)
 //=============================================================================
-void RichG4TrackActionPhotOpt::PostUserTrackingAction 
-   ( const G4Track* aTrack ) 
-{ } 
+//void RichG4TrackActionPhotOpt::PostUserTrackingAction 
+//   ( const G4Track* aTrack ) 
+//{ } 
 
 //=============================================================================
 

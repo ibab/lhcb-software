@@ -1,4 +1,4 @@
-// $Id: RichG4HitRecon.cpp,v 1.11 2008-04-25 11:55:08 seaso Exp $
+// $Id: RichG4HitRecon.cpp,v 1.12 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 // local
@@ -147,7 +147,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 	  if(  aRichDetNum == 1 ) { anHpdNum -= aNumHpdInRich[0] ;  }
           
 
-          G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
+          //G4int aPrimaryMirrCopyInfo = aHit->Mirror1PhotonDetectorCopyNum();
           G4int aSecMirrCopyInfo = aHit->Mirror2PhotonDetectorCopyNum();
 	        //    G4cout<<" RichHitrecon hit info: richdet PrimMirrCopyInfo  SecMirrorcopyinfo "<< aRichDetNum<<" "
           //	<<aPrimaryMirrCopyInfo<<"  " <<  aSecMirrCopyInfo<<G4endl;
@@ -179,7 +179,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
           const G4ThreeVector & aChTrackPreStepPos = aHit->ChTrackCkvPreStepPos();
           const G4ThreeVector & aChTrackPostStepPos = aHit->ChTrackCkvPostStepPos();
           G4int aPhotRayleighFlag=  aHit->OptPhotRayleighFlag();
-          const G4ThreeVector & LocalPhcathCoord = aHit -> GetLocalPEOriginPos();
+          //const G4ThreeVector & LocalPhcathCoord = aHit -> GetLocalPEOriginPos();
           const G4ThreeVector & PhotonAerogelExitPosition =
             aHit ->OptPhotAgelExitPos();
 
@@ -364,8 +364,8 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
             double emisptReconZ=
               (aChTrackPreStepPos.z()+aChTrackPostStepPos.z())*.5;
 
-              double testmidx = (aChTrackPreStepPos.x()+aChTrackPostStepPos.x())*.5;
-              double testmidy = (aChTrackPreStepPos.y()+aChTrackPostStepPos.y())*.5;
+            // double testmidx = (aChTrackPreStepPos.x()+aChTrackPostStepPos.x())*.5;
+            //  double testmidy = (aChTrackPreStepPos.y()+aChTrackPostStepPos.y())*.5;
             // now to get the mid point xy of the radiator.
 
 

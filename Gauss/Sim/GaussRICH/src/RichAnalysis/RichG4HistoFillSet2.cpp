@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.10 2008-01-21 16:55:33 seaso Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.11 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 // local
@@ -48,8 +48,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                                                 const std::vector<int> & RichG4CollectionID )
 {
 
-  FillRichG4HistoSet2A( anEvent,NumRichColl, RichG4CollectionID );
-  FillRichG4HistoSet2B( anEvent,NumRichColl, RichG4CollectionID );
+  FillRichG4HistoSet2A();
+
+  FillRichG4HistoSet2B();
 
   //  IHistogramSvc* CurrentHistoSvc;
   IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
@@ -399,9 +400,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
 }
 
-void RichG4HistoFillSet2:: FillRichG4HistoSet2A( const G4Event* anEvent,
-                                                 int NumRichColl,  
-                                                 const std::vector<int> & RichG4CollectionID )
+void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
 {
 
   //  IHistogramSvc* CurrentHistoSvc;
@@ -514,9 +513,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A( const G4Event* anEvent,
   //=============================================================================
 }
 
-void RichG4HistoFillSet2:: FillRichG4HistoSet2B( const G4Event* anEvent,
-                                                 int NumRichColl,  
-                                                 const std::vector<int> & RichG4CollectionID )
+void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
 {
 
   //  IHistogramSvc* CurrentHistoSvc;

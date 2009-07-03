@@ -228,9 +228,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
   // Now for histogram Analysis stuff
 
-  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber,
-                           currentHpdNumber, PhotonEnergy);
-
+  //  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber,
+  //                         currentHpdNumber, PhotonEnergy);
+  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber);
+ 
   // End of histogram Analysis stuff
   double CurPhCathodeQE = getCurrentHpdQE(currentHpdNumber, currentRichDetNumber,
                                           PhotonEnergy);
@@ -249,8 +250,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     //Now for histogram Analysis stuff.
 
-    RichG4AnalysisPhotElecB (aStep, currentRichDetNumber,
-                             currentHpdNumber, PhotonEnergy);
+    //    RichG4AnalysisPhotElecB (aStep, currentRichDetNumber,
+    //                         currentHpdNumber, PhotonEnergy);
+    RichG4AnalysisPhotElecB (aStep, currentRichDetNumber);
 
     // End of histogram Analysis stuff.
     //  G4double aPhotonTime= aParticleChange.GetProperTimeChange();
@@ -431,11 +433,11 @@ std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFXY ( int hpdnumb
   
   return GetPSFXYForASigma( PsfStdSigma);
 }
-std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb, 
-                                                                              double photRadPos, double PhotEn ) {
+std::vector<double> RichHpdPhotoElectricEffect::getCurrentHpdPSFFullParamXY ( int hpdnumb, int richdetnumb) {
 
   // this gets in the future the full value, which is a function of photon energy and radial pos
   // by interpolation.
+  
   double PsfStdSigma =  HpdProperty()->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunctionVectSingleValue(0);
 
   return GetPSFXYForASigma( PsfStdSigma);

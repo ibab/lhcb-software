@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.11 2008-06-24 15:56:35 jonrob Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.12 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 #include "GaudiKernel/Kernel.h"
@@ -116,8 +116,8 @@ RichG4ReconHpd::RichG4ReconHpd():
     //   m_HpdPixelXNumRow=
     //  Rich1DE->userParameterAsInt("RichHpdNumPixelRow" );
 
-    double PhCathodeCoCZ=
-      Rich1DE->param<double>("RichHpdPhCathodeCoCZ");
+    //double PhCathodeCoCZ=
+    //  Rich1DE->param<double>("RichHpdPhCathodeCoCZ");
 
     //    double PhCathodeCoCZ=
     //  Rich1DE->userParameterAsDouble("RichHpdPhCathodeCoCZ");
@@ -263,7 +263,7 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
 
   double ysi = aLocalHitCoord.y();
 
-  double zsi = aLocalHitCoord.z();
+  // double zsi = aLocalHitCoord.z();
   double rsi =0.0;
   double xph =0.0;
   double yph =0.0;

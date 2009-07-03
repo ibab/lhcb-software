@@ -1,4 +1,4 @@
-// $Id: RichG4RunAction.cpp,v 1.9 2007-01-12 15:32:04 ranjard Exp $
+// $Id: RichG4RunAction.cpp,v 1.10 2009-07-03 11:59:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -101,7 +101,7 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
 
     // Also set the radiatormaterial numbers
     
-    RichG4MatRadIdentifier* aRichG4MatRadIdentifier = RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+    //  RichG4MatRadIdentifier* aRichG4MatRadIdentifier = RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
 
   if(m_defineRichG4HistoSet1) {
 
@@ -129,8 +129,8 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
   }
 
   // Now to create the RichCounters.
-
-  RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
+  // done in Event action.
+  // RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
 
   m_FirstTimeOfBeginRichRun= false;
   }

@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.h,v 1.4 2008-03-31 13:22:44 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.h,v 1.5 2009-07-03 11:59:49 seaso Exp $
 #ifndef RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 
 #define RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 1
 
@@ -47,7 +47,7 @@ public:
 
   virtual void PreUserTrackingAction  ( const G4Track* ) ;
 
-  virtual void PostUserTrackingAction ( const G4Track* ) ;
+  //  virtual void PostUserTrackingAction ( const G4Track* ) ;
 
 private:
 

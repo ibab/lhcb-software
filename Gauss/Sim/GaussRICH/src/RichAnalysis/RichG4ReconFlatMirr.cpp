@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.12 2008-05-30 13:43:23 gcorti Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.13 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 
@@ -353,11 +353,12 @@ Gaudi::XYZPoint RichG4ReconFlatMirr::FlatMirrorIntersection( const Gaudi::XYZPoi
 
 
   const SolidSphere* aSphereSolid= getCurMirrorSolid (aRichDetNum,aFlatMirrorNum);
-  const unsigned int sphTicksSize = aSphereSolid->
-          intersectionTicks(aLocalPoint1, aVect, sphTicks);     
+   const unsigned int sphTicksSize = aSphereSolid->
+          intersectionTicks(aLocalPoint1, aVect, sphTicks);
+
   
-  const Gaudi::XYZPoint & aLocalIntersectionPoint = aLocalPoint1+ sphTicks[0] * aVect;
-  
+   const Gaudi::XYZPoint & aLocalIntersectionPoint = (sphTicksSize > 0 ) ? aLocalPoint1+ sphTicks[0] * aVect: aLocalPoint1;
+
   const Gaudi::XYZPoint & aGlobalIntersectionPoint = ConvertToGlobal(aLocalIntersectionPoint,
                                                                      aRichDetNum,aFlatMirrorNum );
   return aGlobalIntersectionPoint;

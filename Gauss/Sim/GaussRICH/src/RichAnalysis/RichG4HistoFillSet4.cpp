@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet4.cpp,v 1.5 2008-04-25 11:55:08 seaso Exp $
+// $Id: RichG4HistoFillSet4.cpp,v 1.6 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 
@@ -148,8 +148,8 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   double aCkvRecD1E1 = aReconResult-> ckvAngleD1E1();
   double aCkvRecD2E1 = aReconResult-> ckvAngleD2E1();
   double aCkvRecD3E1 = aReconResult-> ckvAngleD3E1();
-  double aCkvRecD3E2 = aReconResult-> ckvAngleD3E2();
-  double aCkvRecD1E2 = aReconResult-> ckvAngleD1E2();
+  //  double aCkvRecD3E2 = aReconResult-> ckvAngleD3E2();
+  //double aCkvRecD1E2 = aReconResult-> ckvAngleD1E2();
   double aCkvRecD3E4 = aReconResult-> ckvAngleD3E4();
   double aCkvRecD1E4 = aReconResult-> ckvAngleD1E4();
 

@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet3.cpp,v 1.7 2008-01-21 16:55:34 seaso Exp $
+// $Id: RichG4HistoFillSet3.cpp,v 1.8 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
 
@@ -43,9 +43,7 @@ RichG4HistoFillSet3::RichG4HistoFillSet3(  ) {
 RichG4HistoFillSet3::~RichG4HistoFillSet3(  ) {
 }
 
-void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
-                                                int NumRichColl,  
-                                                const std::vector<int> & RichG4CollectionID )
+void RichG4HistoFillSet3:: FillRichG4HistoSet3()
 {
 
 
