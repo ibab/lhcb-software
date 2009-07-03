@@ -33,7 +33,7 @@ def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
 
     # install DIRAC using Ricardo's tool
     shutil.copy( os.path.join(os.environ["LHCBHOME"], "distribution/DIRAC3/scripts/dirac-install"), "dirac-install")
-    command =  "./dirac-install -n %s -P %s -v %s -p %s %s" % (sitename,baseDir,version,diracconfig, pythonoption)
+    command =  "./dirac-install -n %s -v %s -p %s %s" % (sitename,version,diracconfig, pythonoption)
     if build: command += " --build"
     print "Executing:",command
     rc = os.system(command)
@@ -229,3 +229,12 @@ for dir,dirs,files in walk:
     for f in files:
         e = os.path.splitext(f)[1]
         if e == ".pyc": os.remove(os.path.join(dir,f))
+
+for line in fileinput.input(baseDir+"/etc/dirac.cfg",inplace=1):
+    if line.strip().find('Root =') != -1:
+        line='  Root = '+baseDir
+        print line
+    else:
+        print line.replace('\n','')
+
+fileinput.close()
