@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-07-03 - Wouter Hulsbergen
+ - bug fix: sort lhcbids in Track::setLhcbIDs
+
 !======================= TrackEvent v4r21 2009-06-29 =========================
 ! 2009-06-26 - Wouter Hulsbergen
  - added method to set all LHCbIDs on track at once
