@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2009-07-03 10:14:42 graven Exp $
+! $Id: release.notes,v 1.8 2009-07-03 11:45:48 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== Hlt1Lines v1r1 2009-07-03 ===================
 ! 2009-07-03 - Gerhard Raven
  - put in explicit rawbank decoding to avoid data-on-demand svc
  (needs corresponding version of HltConf)
