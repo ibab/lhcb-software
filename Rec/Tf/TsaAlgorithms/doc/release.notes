@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-07-03 M Needham
+ - Faster better generic tracking
+
 ! 2009-07-02 M Needham
 
  - Tune tuning for MC09. Ghost rate reduced by ~1 % for few per mille loss

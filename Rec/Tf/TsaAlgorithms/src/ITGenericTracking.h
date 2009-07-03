@@ -1,11 +1,10 @@
-// $Id: ITGenericTracking.h,v 1.11 2009-05-07 07:02:23 lnicolas Exp $
+// $Id: ITGenericTracking.h,v 1.12 2009-07-03 13:34:28 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
 #include "Kernel/STHistoAlgBase.h"
 #include "TfKernel/STHit.h"
 #include "TsaKernel/Line.h"
-#include "Event/STCluster.h"
 
 
 class ISTSignalToNoiseTool;
@@ -77,8 +76,7 @@ private:
   bool allowedLastStation(const Tf::STHit* hit) const;
   bool sameBox(const Tf::STHit* hit1, const Tf::STHit* hit2) const;
 
-  unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<yInfo>& yhits, 
-                         const LHCb::STClusters* clusterCont) const;
+  unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<yInfo>& yhits) const;
 
 
   unsigned int countSectors(const std::vector<Tf::STHit*>& xhits) const;
@@ -108,7 +106,17 @@ private:
   bool newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
                           const CandidateHits& tracks) const;
 
-  void portOccupancy( const LHCb::STClusters* clusters ,std::map<std::string, unsigned int>& occMap ) const;
+
+  template <class TYPE>
+  class compByX_LB: public std::binary_function<const TYPE, const double, bool>{
+    double testVal;
+  public:
+  inline bool operator() (const TYPE& obj,const double& testVal) const{
+     return ((!obj) ? false : testVal > obj->xMid());
+    }
+  };
+
+ 
 
   IHitExpectation* m_hitExpectation;
  
@@ -121,6 +129,7 @@ private:
 
   bool m_requireFirstAndLast;
  
+  double m_T2Z;
   double m_xWindow1;
   double m_xWindow2;
   double m_yWindow;
@@ -143,8 +152,6 @@ private:
   unsigned int m_minHits;
   unsigned int m_minXHitsToConfirm;
   bool m_requireSameBox; 
-  unsigned int m_maxClusterSize;
-  double m_minCharge;
   bool m_confirm2;
   bool m_selectBestY;
 
