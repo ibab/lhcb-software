@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.67 2009-07-01 18:34:06 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.68 2009-07-03 09:17:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -1012,17 +1012,19 @@ void ChargedProtoPAlg::printStats( const MSG::Level level ) const
 
   // Statistical tools
   const Rich::PoissonEffFunctor eff("%5.1f +-%4.1f");
+  const Rich::StatDivFunctor    occ("%6.2f +-%5.2f");
 
-  const std::string lines(133,'-');
-  const std::string LINES(133,'=');
+  const std::string lines(148,'-');
+  const std::string LINES(148,'=');
 
   msg << LINES << endmsg;
-  msg << " Type        |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
+  msg << " # Tracks Per Event         |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
   msg << lines << endmsg;
   for ( TrackMap::const_iterator iT = m_nTracks.begin();
         iT != m_nTracks.end(); ++iT )
   {
     const TrackTally & tally = (*iT).second;
+    msg << " " << occ(tally.selTracks,m_nEvts);
     msg << boost::format(" %|-12|") % (*iT).first;
     msg << "| " << eff(tally.selTracks,tally.totTracks) << " |";
     msg << eff(tally.richTracks,tally.selTracks) << " ";

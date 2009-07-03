@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-07-01 18:34:06 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-07-03 09:17:46 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,6 +27,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                               ,"Upstream"   : [0,50]
                                               ,"Downstream" : [0,50]
                                               ,"Ttrack"     : [0,50]
+                                              ,"Velo"       : [0,50]
                                               }
                   ,"TrackLikelihoodCuts"  : {
                                               #"Long"        : [-100,9e40]
