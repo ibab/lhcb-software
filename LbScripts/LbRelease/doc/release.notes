@@ -1,3 +1,8 @@
+2009-07-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: remove read-only flag
+	from all files and directories before using shutil.rmtree (Windows)
+
 2009-07-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: when invoked with --project, creates a

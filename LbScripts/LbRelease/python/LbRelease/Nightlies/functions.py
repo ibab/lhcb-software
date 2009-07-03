@@ -2,6 +2,7 @@ import os, sys, shutil, re, time, pickle, string
 from pprint import pformat
 from LbUtils.Lock import Lock
 from threading import Thread
+from stat import S_IWRITE
 from setup import *
 
 sys.path = [os.path.abspath(os.environ['LCG_NIGHTLIES_SCRIPTDIR'])] + sys.path
@@ -26,6 +27,13 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
         return default
     else:
         return it.result
+
+def rmtree(path, ignore_errors=False, onerror=None):
+    """ remove read-only flag form all files and directories and call shutil.rmtree """
+    for root, dirs, files in os.walk(path):
+        for x in dirs+files:
+            os.chmod(os.sep.join([root, x]), S_IWRITE)
+    shutil.rmtree(path, ignore_errors, onerror)
 
 def copyLocal(sourceDir, targetDir):
     """ tar-pipe copying with locking from <sourceDir> to <targetDir>. Target directory is created if necessary.
@@ -178,7 +186,7 @@ def cleanAFSSpace(slotName):
         pathToRemoveFiles = os.path.join(slot.releaseDir())
         if os.path.exists(pathToRemoveFiles):
             for x in os.listdir(pathToRemoveFiles):
-                if os.path.isdir(os.path.join(pathToRemoveFiles, x)): shutil.rmtree(os.path.join(pathToRemoveFiles, x), ignore_errors=True)
+                if os.path.isdir(os.path.join(pathToRemoveFiles, x)): rmtree(os.path.join(pathToRemoveFiles, x), ignore_errors=True)
                 else: os.remove(os.path.join(pathToRemoveFiles, x))
     #clear logs from web
     if slot is not None:
@@ -370,7 +378,7 @@ def generateBuilders(slot, projectNames, minusj):
         lbWin = " %s && " % slot.getLbLogin(configuration.PLATFORM_WIN32)
     for p in projectNames:
         for pdir in [ p, p.lower(), p.upper() ]:
-            shutil.rmtree(os.path.join(destPath, pdir), ignore_errors=True)
+            rmtree(os.path.join(destPath, pdir), ignore_errors=True)
             os.makedirs(os.path.join(destPath, pdir, 'cmt') )
             f = file(os.path.join(destPath, pdir, 'cmt', 'requirements'), 'w')
             f.write('package %s\n' % pdir)
@@ -395,7 +403,7 @@ action pkg_test " %(launcher)s test %(packageName)s 2>&1" \
             "lbWin" : lbWin }
             f.write(lines)
             f.close()
-    shutil.rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
+    rmtree(os.path.join(destPath, 'cmt'), ignore_errors=True)
     os.makedirs(os.path.join(destPath, 'cmt'))
     f = file(os.path.join(destPath, 'cmt', 'project.cmt'), 'w')
     f.write("project builders\nuse LCGCMT LCGCMT*\nuse LBSCRIPTS LBSCRIPTS_*\n")
@@ -487,10 +495,10 @@ def clean(slotName):
     disableLCG_NIGHTLIES_BUILD()
     setCMTEXTRATAGS(slotName)
     #remove contents of build directory:
-    shutil.rmtree(slot.buildDir(), ignore_errors=True)
+    rmtree(slot.buildDir(), ignore_errors=True)
     os.makedirs(slot.buildDir())
     #remove contents of builders directory:
-    shutil.rmtree(slot.buildersDir(), ignore_errors=True)
+    rmtree(slot.buildersDir(), ignore_errors=True)
 
 def install(slotName, projectName):
     """ install(slotName, projectName)
