@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.104 2009-07-02 14:03:22 jpalac Exp $
+# $Id: requirements,v 1.105 2009-07-03 07:32:03 jpalac Exp $
 package AnalysisSys
 version v3r6
 
@@ -27,7 +27,7 @@ use  FlavourTaggingChecker      v3r6     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v2r3p2   Phys   # Rob Lambert
+use  DecayTreeTuple             v2r3p3   Phys   # Rob Lambert
 ####################################################################
 #
 # Stripping
