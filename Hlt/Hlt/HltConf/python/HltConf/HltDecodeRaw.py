@@ -27,9 +27,14 @@ DecodeOT   =  _convert( _map.pop("Raw/OT/Times") )
 #decodeMUON = _map.pop("Raw/Muon/Coords")
 #decodeRICH = _map.pop("Raw/Rich/Digits")
 DecodeECAL =  _convert( _map.pop("Raw/Ecal/Digits") )
+DecodeSPD =  _convert( _map.pop("Raw/Spd/Digits") )
+DecodePRS =  _convert( _map.pop("Raw/Prs/Digits") )
+DecodeHCAL =  _convert( _map.pop("Raw/Hcal/Digits") )
 
 # disable everything
 for i in _map.keys() : _map.pop(i)
 
 #and export explicit (configured!) decoders:
-__all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO', 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT', 'DecodeECAL' )
+__all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
+          , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
+          , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL' )
