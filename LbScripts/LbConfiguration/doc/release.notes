@@ -1,7 +1,12 @@
+2009-07-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: dummy implementation of
+	createProjectMakefile for when we do not have LbScripts in the path yet.
+
 2009-07-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
-	- factored out the common part in getNativeBin and setCMTSystem. 
+	* python/LbConfiguration/LbLogin.py:
+	- factored out the common part in getNativeBin and setCMTSystem.
     - remove the unused test with the "fs" command.
 
 2009-07-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
@@ -11,17 +16,17 @@
 
 2009-06-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the --strip-path (default) and 
-	--no-strip-path to the login procedure. This enables and disables the cleanup of 
+	* python/LbConfiguration/LbLogin.py: added the --strip-path (default) and
+	--no-strip-path to the login procedure. This enables and disables the cleanup of
 	the different paths (PATH, LD_LIBRARY_PATH, PYTHONPATH, ...).
 
 2009-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed tab symbol. Replaced them with 4 spaces.
-	* scripts/generateLogin: 
+	* scripts/generateLogin:
 	- added the automatic generation of the group_login, group_shell, and LHCb wrappers.
 	- detects automatically if the prod link should be used in the wrappers.
-	
+
 
 2009-06-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -36,11 +41,11 @@
 
 2009-06-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/LHCb.csh: New file. Top wrapper to be inserted in /etc/profile.d. 
+	* scripts/LHCb.csh: New file. Top wrapper to be inserted in /etc/profile.d.
 	* scripts/LHCb.sh: New file. see above
-	* scripts/group_shell.csh: ensure to be completely silent in the case of a 
+	* scripts/group_shell.csh: ensure to be completely silent in the case of a
 	new shell creation.
-	* scripts/group_shell.sh: see above 
+	* scripts/group_shell.sh: see above
 
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -48,7 +53,7 @@
 
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: rely on the default python which is found in the 
+	* python/LbConfiguration/LbLogin.py: rely on the default python which is found in the
 	LCG externals.
 
 2009-05-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -58,15 +63,15 @@
 
 2009-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
-	- added a special procedure for the file to locate itself. By default, it uses 
+	* python/LbConfiguration/LbLogin.py:
+	- added a special procedure for the file to locate itself. By default, it uses
 	the "__file__" but it is not always defined, for example when using pdb.
 	- fixed the addition of the User_release_area to the CMTPROJECTPATH which was not working
 	on windows
 
 2009-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
+	* python/LbConfiguration/LbLogin.py:
 	- added the "--no-touch-logfile" option to the call to SetupProject for LbScripts
 	- added the "--nightlies-dir" option with the fall back on the LHCBNIGHTLIES env
 	variable.
@@ -86,9 +91,9 @@
 
 2009-05-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/group_login.csh: 
-	* scripts/group_login.sh: 
-	* scripts/group_shell.csh: 
+	* scripts/group_login.csh:
+	* scripts/group_login.sh:
+	* scripts/group_shell.csh:
 	* scripts/group_shell.sh: updated these example files to cope with the "dev" option.
 
 2009-05-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -108,15 +113,15 @@
 
 2009-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: 
-	- set the default compiler on slc5 to gcc 4.3. then it tries gcc 3.4 
+	* python/LbConfiguration/LbLogin.py:
+	- set the default compiler on slc5 to gcc 4.3. then it tries gcc 3.4
 	if it is not installed. If both of them are not installed, it
 	falls back on the system one (gcc 4.1).
 	- disabled the cache if the compat libraries are needed.
 
 2009-05-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the compat library setup. The compat 
+	* python/LbConfiguration/LbLogin.py: added the compat library setup. The compat
 	libraries are located in PARAM/Compat/v*/${CMTOPT}/lib. The is also a new option to
 	prevent this compatibility setup ("--no-compat")
 
@@ -131,7 +136,7 @@
 
 2009-05-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the setupSystem method in order to 
+	* python/LbConfiguration/LbLogin.py: added the setupSystem method in order to
 	append the $MYSITEROOT/$CMTOPT/lib directory to the LD_LIBRARY_PATH on Linux
 
 2009-05-05 Marco Clemencic <Marco.Clemencic@cern.ch>
@@ -159,16 +164,16 @@
 
 2009-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/group_login.csh: 
-	* scripts/group_login.sh: 
-	* scripts/group_shell.csh: 
+	* scripts/group_login.csh:
+	* scripts/group_login.sh:
+	* scripts/group_shell.csh:
 	* scripts/group_shell.sh: reverted the logic: if $HOME/.oldLHCBLoginscript is
-	not present, use the new login procedure. 
-	* python/LbConfiguration/LbLogin.py: 
+	not present, use the new login procedure.
+	* python/LbConfiguration/LbLogin.py:
 	  - restored the MYSITEROOT variable. Usefull for many installation.
 	  - added the "-no-python" option to prevent python setup.
-	  - added the "GangaEnv" alias for CERN/lxplus usage. 
-	
+	  - added the "GangaEnv" alias for CERN/lxplus usage.
+
 
 2009-04-03  Joel Closier <Joel.Closier@cern.ch>
 

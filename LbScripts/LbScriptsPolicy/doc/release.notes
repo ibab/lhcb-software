@@ -1,3 +1,7 @@
+2009-07-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/StripPath.bat: fixing the logic of LB_NO_STRIP_PATH
+
 2009-07-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: changed the PATHs massaging in order to be able to remove older
@@ -41,7 +45,7 @@
 
 2009-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* cmt/requirements: 
+	* cmt/requirements:
 	* scripts/StripPath.bat: added the "call" to runpy
 
 2009-02-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
@@ -76,7 +80,7 @@
 
 	* python/LbScriptsPolicy/__init__.py: New file.
 	* python/LbScriptsPolicy/PathStripper.py: New file.
-	* scripts/SourceShellAlias.csh: 
+	* scripts/SourceShellAlias.csh:
 	* scripts/SourceShellAlias.sh: converted the source shell scripts. Now they are calling
 	their python internal script with "python -m" and the python scripts have been moved to
 	the python directory
@@ -85,18 +89,18 @@
 	* scripts/ShellAlias.sh: Removed. Removed the extension to the plain shell script and
 	the ShellAlias pattern now obsolete.
 	* scripts/PathStripper.py: Removed.
-	* scripts/PathStripper: New file. 
-	* cmt/fragments/nmake/python_alias_header: 
-	* cmt/fragments/python_alias_header: 
-	* cmt/requirements: 
-	
-	* scripts/StripPath.bat: 
-	
-	* scripts/StripPath.csh: 
-	
+	* scripts/PathStripper: New file.
+	* cmt/fragments/nmake/python_alias_header:
+	* cmt/fragments/python_alias_header:
+	* cmt/requirements:
+
+	* scripts/StripPath.bat:
+
+	* scripts/StripPath.csh:
+
 	* scripts/StripPath.sh: Removed the extension from the python scripts.
 	Modified the fragments for this.
-	
+
 
 2008-12-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

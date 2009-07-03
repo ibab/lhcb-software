@@ -7,15 +7,18 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.15 2009-07-02 12:37:30 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.16 2009-07-03 08:51:59 kkruzele Exp $"
 
 try:
+    from LbUtils import createProjectMakefile
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.15 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
 except ImportError :
+    # dummy implementation for when we do not have LbScripts in the path yet.
+    def createProjectMakefile(path, force):
+        pass
     __version__ = _cvs_id
 
-from LbUtils import createProjectMakefile
 
 ########################################################################
 # Useful constants
@@ -23,13 +26,13 @@ from LbUtils import createProjectMakefile
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
 # TODO: Copied from LbConfiguration.Project
-project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
+project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Curie", "LCGCMT"]
 
 # List of pairs (project,[packages]) to automatically select for override
-# The project are prepended to the list of overriding packages and 
+# The project are prepended to the list of overriding packages and
 # the packages are appended to the list of used packages
 auto_override_projects = [("ExtraPackages", []),
                           ("Compat", ["CompatSys"]),
@@ -91,7 +94,7 @@ class TemporaryEnvironment:
         self.old_values = {}
         self.env = orig
         self._keep_same = keep_same
-        
+
     def __setitem__(self,key,value):
         """
         Set an environment variable recording the previous value.
@@ -103,14 +106,14 @@ class TemporaryEnvironment:
             else:
                 self.old_values[key] = None
         self.env[key] = value
-        
+
     def __getitem__(self,key):
         """
         Get an environment variable.
         Needed to provide the same interface as os.environ.
         """
         return self.env[key]
-    
+
     def __delitem__(self,key):
         """
         Unset an environment variable.
@@ -131,27 +134,27 @@ class TemporaryEnvironment:
         Needed to provide the same interface as os.environ.
         """
         return self.env.keys()
-    
+
     def has_key(self,key):
         """
         return True if the key is present
         """
         return (key in self.env.keys())
-    
+
     def items(self):
         """
         Return the list of (name,value) pairs for the defined environment variables.
         Needed to provide the same interface as os.environ.
         """
         return self.env.items()
-    
+
     def __contains__(self,key):
         """
         Operator 'in'.
         Needed to provide the same interface as os.environ.
         """
         return key in self.env
-    
+
     def restore(self):
         """
         Revert all the changes done to the original environment.
@@ -162,28 +165,28 @@ class TemporaryEnvironment:
             else:
                 self.env[key] = value
         self.old_values = {}
-        
+
     def __del__(self):
         """
         Revert the changes on destruction.
         """
         #print "Restoring the environment"
         self.restore()
-        
+
     def get(self, key, default = None):
         """
         Implementation of the standard get method of a dictionary: return the
         value associated to "key" if present, otherwise return the default.
         """
         return self.env.get(key,default)
-    
+
     def commit(self):
         """
         Forget the old values for the changes done so far (avoids that the
-        changes are rolled-back when the instance goes out of scope). 
+        changes are rolled-back when the instance goes out of scope).
         """
         self.old_values = {}
-    
+
     def gen_script(self,shell_type):
         """
         Generate a shell script to reproduce the changes in the environment.
@@ -215,10 +218,10 @@ class TempDir:
     def __init__(self, keep = False):
         self.name = mkdtemp()
         self._keep = keep
-        
+
     def __str__(self):
         return self.name
-    
+
     def __del__(self):
         if self.name:
             # This is needed because globals are not found when invoked with "python -m"
@@ -228,7 +231,7 @@ class TempDir:
                 log.always("KEEPTEMPDIR set: I do not remove the temporary directory '%s'" % self.name)
                 return
             removeall(self.name)
-    
+
     def __getattr__(self,attr):
         return getattr(self.name,attr)
 
@@ -236,14 +239,14 @@ def isProject(path):
     return os.path.isfile(os.path.join(path,'cmt','project.cmt'))
 
 def _extract_version(project, version):
-    # By default, the version is the name of the version directory 
+    # By default, the version is the name of the version directory
     v = version
     # if the version directory starts with the project name, we use the
-    # exceeding part (GAUDI_v20r0 -> v20r0) 
+    # exceeding part (GAUDI_v20r0 -> v20r0)
     if version.startswith(project):
         if len(version) > len(project): # the version directory could be == project
             v = version[len(project):].lstrip("_")
-            if not v: # handle the case "Gaudi_" considering '_' as version 
+            if not v: # handle the case "Gaudi_" considering '_' as version
                 v = version[len(project):]
     return v
 
@@ -252,14 +255,14 @@ def FindProjectVersions(project, search_path, user_area = None):
     the provided user_area and the the search_path (a list of directories).
     Returns a list of tuples with (name, version, realname, basepath). If there
     is no version the middle entry is None.
-    """ 
+    """
     env = os.environ
     versions = [] # container of the results
     # Look into user_area for projects (without version directory)
     if user_area and os.path.isdir(user_area):
         # look for projects with names starting with <project>
         candidates = [d for d in os.listdir(user_area)
-                        if isProject(os.path.join(user_area,d)) and 
+                        if isProject(os.path.join(user_area,d)) and
                            d.startswith(project)]
         # extract 'fake' version informations
         for c in candidates:
@@ -268,13 +271,13 @@ def FindProjectVersions(project, search_path, user_area = None):
             else:
                 v = _extract_version(project,c)
             versions.append((project, v, c, user_area))
-    
+
     candidates = []
     # find all project directories in the searchpath
     PROJECT = project.upper()
     # search_path = os.environ["CMTPROJECTPATH"].split(os.path.pathsep)
     for d in search_path:
-        p = os.path.join(d,PROJECT) 
+        p = os.path.join(d,PROJECT)
         if os.path.isdir(p):
             if isProject(p):
                 # project without version
@@ -316,7 +319,7 @@ def SortVersions(versions, reverse = False):
                     sortable_list.append( ((10000,0,0), v) )
                 else:
                     sortable_list.append( ((0,0,v), v) )
-    ## @FIXME: in Python 2.3 the "reverse" argument is not available 
+    ## @FIXME: in Python 2.3 the "reverse" argument is not available
     # sortable_list.sort(reverse = reverse)
     sortable_list.sort()
     if reverse: sortable_list.reverse()
@@ -353,7 +356,7 @@ def _GetVersionTuple(pattern, versions):
             break # exit the loop at the first match
     if not found and pattern is None: # fall back solution
         match = version_strings[0] # latest version
-    
+
     # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
         if match == vers_tuple[1]:
@@ -373,7 +376,7 @@ class ProjectInfo:
         self.realName = realName
         self.path = path
         self.project_dir = os.path.join(self.path, self.realName)
-        
+
         # discover project policy
         if self.version:
             self._projectenv_cmt_dir = os.path.join(self.path,"%sEnv"%self.name,self.version,'cmt')
@@ -386,13 +389,13 @@ class ProjectInfo:
             # Projects without version must be considered "new" style
             self._projectenv_cmt_dir = None
             self.policy = 'new'
-        
+
         self.sys = self._projectsys()
         if self.version and self.sys:
             self.syscmtfullpath = os.path.join(self.project_dir,self.sys,self.version,'cmt')
         else:
             self.syscmtfullpath = None
-        
+
     def _projectsys(self):
         """
         Return the name of the package referencing all the packages belonging to a project.
@@ -452,7 +455,7 @@ class CMT:
             return None
         else:
             return self.show(["macro_value",k]).strip()
-        
+
 class GetNightlyCMTPROJECTPATH(ContentHandler):
     """SAX content handler to extract the CMTPROJECTPATH from lcg nightly build
     configuration for a given slot/day.
@@ -516,7 +519,7 @@ def getNightlyCMTPROJECTPATH(path, slot, day):
     parse(path, getter)
     return getter.dirs()
 
-    
+
 def smartExpandVarsPath(path, env = None):
     """
     Expand the environment variables in a path. If the variable in the entry of
@@ -539,7 +542,7 @@ def smartExpandVarsPath(path, env = None):
         else:
             match = var_re.search(e)
             if match:
-                name = match.group(1) or match.group(2) 
+                name = match.group(1) or match.group(2)
                 if name.startswith('{') and name.endswith('}'):
                     name = name[1:-1]
                 if name not in env:
@@ -598,17 +601,17 @@ def _get_cmt_user_context():
         # This function needs CMTPATH, which means that it does not work with CMTPROJECTPATH
         log.writeln(log.DEBUG,"----- get_cmt_user_context(): no CMTPATH -----")
         return None # For the moment we ignore the CMTUSERCONTEXT
-    
+
     # check if we can use CMTUSERCONTEXT
     context_path = None
     context_validity = None
     current_lcgcmt = None
-    
+
     # Find the context validity
     if os.environ['LHCb_release_area']:
         context_path = os.path.join(os.environ['LHCb_release_area'],'context')
         context_file = os.path.join(context_path,'requirements')
-        
+
         if os.access(context_file,os.F_OK | os.R_OK):
             # find the magic comment
             for l in open(context_file).xreadlines():
@@ -616,13 +619,13 @@ def _get_cmt_user_context():
                 if m :
                     context_validity = m.groups()
                     break
-                
+
     if not context_validity:
         log.writeln(log.DEBUG,"----- get_cmt_user_context(): context not found -----")
         return None
     else:
         log.writeln(log.DEBUG,"----- get_cmt_user_context(): context if from LCGCMT %s -----"%(context_validity[0]))
-        
+
     # we have to compare the version with the current one
     for l in os.environ['CMTPATH'].split(os.pathsep):
         m = re.match("^.*LCGCMT_(([0-9]+)([a-z]?)|HEAD)", l)
@@ -631,7 +634,7 @@ def _get_cmt_user_context():
             break
     if current_lcgcmt:
         log.writeln(log.DEBUG,"----- get_cmt_user_context(): Default LCGCMT is version %s -----"%(current_lcgcmt[0]))
-    
+
     if not current_lcgcmt:
         # for no lcgcmt in the path, assume we need the context
         log.writeln(log.DEBUG,"----- get_cmt_user_context(): LCGCMT not found, use %s -----"%context_path)
@@ -736,28 +739,28 @@ class SetupProject:
     def __init__(self):
         self._logger = Logger()
         self.cmt = CMT()
-        
+
         self.opts = None
         self.args = None
-        
+
         self.project_name = None
         self.project_version = None
         self.project_info = None
-        
+
         self.context_path = None
-        
+
         self.output_file = sys.stdout
         self.tmp_root = None
-        
+
         if not self.check_environment():
             raise RuntimeError("Environment sanity check failed")
-        
+
         self.default_externals = {
                                   'none':[],
                                   'CERN':[], # ['CASTOR'],
                                  }
         self.parser = self._prepare_parser()
-        
+
     def __getattr__(self,attr):
         """
         Shortcut to retrieve the options
@@ -766,7 +769,7 @@ class SetupProject:
             return getattr(self.opts,attr)
         raise AttributeError("'%s' object has no attribute '%s'"%
                              (self.__class__.__name__,attr))
-    
+
     def _log(self,lvl,msg):
         self._logger.writeln(lvl,msg)
     def _always(self,msg):
@@ -781,7 +784,7 @@ class SetupProject:
         self._log(self._logger.VERBOSE, msg)
     def _debug(self,msg):
         self._log(self._logger.DEBUG, msg)
-    
+
     def check_environment(self):
         """
         Check that the current environment is usable.
@@ -795,7 +798,7 @@ class SetupProject:
             self._error("You do not have CMTCONFIG set")
             return False
         return True
-    
+
     def set_build_env(self, env):
         self._debug("----- set_build_env() -----")
         if not self.project_info:
@@ -845,12 +848,12 @@ class SetupProject:
         else:
             env['CMTPROJECTPATH'] = os.pathsep.join(self.search_path)
             self._debug("----- CMTPROJECTPATH set to '%s' -----"%env['CMTPROJECTPATH'])
-            
+
             # unset CMTPATH if present
             if 'CMTPATH' in env:
                 self._debug("----- unsetenv CMTPATH -----")
                 del env['CMTPATH']
-        
+
     def _write_script(self,data):
         close_output = False
         if self.output:
@@ -870,7 +873,7 @@ class SetupProject:
         self.output_file.write(data)
         self.output_file.write("\n") # @todo: this may be avoided
         if close_output: self.output_file.close()
-    
+
     def _prepare_parser(self):
         if sys.version_info < (2,3,0,0,0):
             # optparse is not available before Python 2.3
@@ -900,13 +903,13 @@ class SetupProject:
                              IndentedHelpFormatter as BasicHelpFormatter,\
                              Option, \
                              OptionValueError
-        
+
         class MyHelpFormatter(BasicHelpFormatter):
             def format_option(self,option):
                 if option.help and option.help.find("(internal)") != -1:
                     return ""
                 return BasicHelpFormatter.format_option(self,option)
-            
+
             def format_option_strings (self, option):
                 """Return a comma-separated list of option strings & metavariables."""
                 if option.takes_value():
@@ -916,12 +919,12 @@ class SetupProject:
                 else:
                     short_opts = option._short_opts
                     long_opts = option._long_opts
-        
+
                 if self.short_first:
                     opts = short_opts + long_opts
                 else:
                     opts = long_opts + short_opts
-        
+
                 return ", ".join(opts)
 
 #        class MyOption(Option):
@@ -935,13 +938,13 @@ class SetupProject:
 #                    #parser.exit() # this is python 2.4
 #                    sys.exit(0)
 #                return Option.take_action(self, action, dest, opt, value, values, parser)
-#        
+#
 #        parser = OptionParser(usage = "%prog [options] <project_name> [version|--ask] [options] [externals]",
 #                              formatter = MyHelpFormatter(),
 #                              option_class = MyOption,
 #                              add_help_option=False)
 #        parser.version = _cvs_id
-#                              
+#
 #        parser.add_option(MyOption("-h", "--help",
 #                                   action="help",
 #                                   help="show this help message and exit"))
@@ -958,11 +961,11 @@ class SetupProject:
                 if file is None:
                     file = sys.stderr
                 return OptionParser.print_version(self,file)
-        
+
         parser = MyOptionParser(usage = "%prog [options] <project_name> [version|--ask] [options] [externals]",
                                 version = __version__,
                                 formatter = MyHelpFormatter())
-        
+
         def check_output_options_cb(option, opt_str, value, parser):
             if opt_str == "--mktemp":
                 if parser.values.output:
@@ -973,7 +976,7 @@ class SetupProject:
                     raise OptionValueError("--mktemp cannot be used at the same time as --output or --append")
                 parser.values.output = value
                 parser.values.append = (opt_str == "--append")
-        
+
         # internal options
         parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
                           choices = ['csh','sh','bat'],
@@ -987,10 +990,10 @@ class SetupProject:
         parser.add_option("--mktemp", action="callback",
                           callback = check_output_options_cb,
                           help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
-        
+
         def default_externals_cb(option, opt_str, value, parser):
             parser.values.site_externals = self.default_externals[value]
-       
+
         # public options
         parser.add_option("--site", action="callback", type="choice", metavar="SITE",
                           choices=self.default_externals.keys(),
@@ -1005,10 +1008,10 @@ class SetupProject:
         parser.add_option("--use", action="append",
                           help="add a CMT use statement")
         parser.add_option("--verbose", action="store_const",
-                          dest="loglevel", const=2, 
+                          dest="loglevel", const=2,
                           help="be a bit more verbose")
         parser.add_option("--debug", action="store_const",
-                          dest="loglevel", const=1, 
+                          dest="loglevel", const=1,
                           help="output useful for debugging")
         parser.add_option("--ignore-missing", action="store_true",
                           help="do not fail if some externals are missing, just complain")
@@ -1020,7 +1023,7 @@ class SetupProject:
                           help="sets only the build time environment for the project")
         parser.add_option("--external-only", action="store_true",
                           help="sets only the environment for the externals (the project is used only to select the version of LCG)")
-        
+
         def dev_dir_cb(option, opt_str, value, parser):
             if value is None:
                 if "LHCBDEV" in os.environ:
@@ -1034,24 +1037,24 @@ class SetupProject:
                                "Note: the directories are searched in the "+
                                "order specified on the command line.")
         parser.add_option("--dev-dir", action="callback", metavar="DEVDIR",
-                          type = "string", callback = dev_dir_cb,                
+                          type = "string", callback = dev_dir_cb,
                           help="prepend DEVDIR to the search path. " +
                                "Note: the directories are searched in the "+
                                "order specified on the command line.")
-    
+
         def external_version_option(option, opt_str, value, parser):
             if len(parser.largs) < 2:
                 raise OptionValueError("%s must be preceded by the name of the external"%opt_str)
             parser.values.ext_versions[parser.largs.pop()] = value
-            
+
         parser.add_option("-v", action="callback", metavar="VERSION",
                           type="string", callback=external_version_option,
                           help="must be used after the name of an external to specify a non default version for it")
-    
+
         parser.add_option("--set-CMTPATH", action="store_true",
                           help="Set CMTPATH to the value used internally by CMT (DANGEROUS)")
 
-        
+
         def runtime_project_option(option, opt_str, value, parser):
             if len(parser.rargs) < 1:
                 raise OptionValueError("%s must be followed by the project name and optionally by the version"%opt_str)
@@ -1061,13 +1064,13 @@ class SetupProject:
             else:
                 v = None
             parser.values.runtime_projects.append( (p_name,v) )
-            
+
         parser.add_option("--runtime-project", action="callback",
                           metavar = "PROJECT [VERSION]", type="string",
                           callback=runtime_project_option,
                           nargs = 0,
                           help="Add a project to the runtime environment")
-        
+
         def overriding_project_option(option, opt_str, value, parser):
             if len(parser.rargs) < 1:
                 raise OptionValueError("%s must be followed by the project name and optionally by the version"%opt_str)
@@ -1077,26 +1080,26 @@ class SetupProject:
             else:
                 v = None
             parser.values.overriding_projects.append( (p_name,v) )
-            
+
         parser.add_option("--overriding-project", action="callback",
                           metavar = "PROJECT [VERSION]", type="string",
                           callback=overriding_project_option,
                           nargs = 0,
                           help="Add a project to override packages")
-        
+
         parser.add_option("--no-auto-override", action="store_false",
                           dest = "auto_override",
                           help = "Do not automatically prepend the projects %s" % auto_override_projects)
-        
+
         parser.add_option("--use-grid", action="store_true",
                           help = "Enable auto selection of LHCbGrid project")
-        
+
         parser.add_option("-q", "--silent", action="store_true",
                           help = "Removes message printout during setup")
-        
+
         parser.add_option("--keep-CMTPROJECTPATH", action="store_true",
                           help = "Do not override the value of the environment variable CMTPROJECTPATH")
-        
+
         def nightly_option(option, opt_str, value, parser):
             parser.values.dev = True
             if len(parser.rargs) < 1:
@@ -1134,7 +1137,7 @@ class SetupProject:
                 extraCMTPROJECTPATH = getNightlyCMTPROJECTPATH(config_file, slot, day)
             if extraCMTPROJECTPATH:
                 parser.values.dev_dirs += extraCMTPROJECTPATH
-        
+
         parser.add_option("--nightly", action="callback",
                           metavar = "SLOT [DAY]",  type="string",
                           callback = nightly_option,
@@ -1145,14 +1148,14 @@ class SetupProject:
                                  "by default the current day. Special settings "+
                                  "of the CMTPROJECTPATH needed for the "+
                                  "nightly build slot are taken into account.")
-        
+
         parser.add_option("--no-user-area", action="store_true",
                           help = "Ignore the user release area when looking for projects.")
-        
+
         parser.add_option("--no-touch-logfile", action="store_false",
                           dest="touch_logfile", default=True,
                           help="Avoid touching the logfiles used to identify active projects.")
-        
+
         parser.set_defaults(output=None,
                             mktemp=False,
                             append=False,
@@ -1171,15 +1174,15 @@ class SetupProject:
                             keep_CMTPROJECTPATH=False,
                             no_user_area=False,
                             )
-        
+
         if 'CMTSITE' in os.environ and \
             os.environ["CMTSITE"] in self.default_externals:
             parser.set_defaults(site_externals = self.default_externals[os.environ["CMTSITE"]])
         else:
             parser.set_defaults(site_externals = self.default_externals['none'])
-        
+
         return parser
-    
+
     def _print_versions(self, versions):
         output = ''
         vers_locs = {}
@@ -1217,7 +1220,7 @@ class SetupProject:
             if ans == 'None' and None in versions:
                 ans = None
         return ans
-    
+
     def _touch_project_logfiles(self):
         touchline = ""
         self._debug("----- _touch_project_logfiles() -----")
@@ -1237,19 +1240,19 @@ class SetupProject:
     def _prepare_tmp_local_project(self):
         # prepare temporary local project directory
         self.tmp_root = TempDir()
-        
+
         tmp_dir = os.path.join(self.tmp_root,"v23") # add a fake version directory to please CMT
         os.mkdir(tmp_dir)
-        
+
         self._debug("Using temporary directory '%s'"%tmp_dir)
-        
+
         # prepare temporary requirements file
         req = open(os.path.join(tmp_dir,"requirements"),"w")
         if not self.external_only and self.project_info.sys:
             # if we were not asked only for external and the Sys package exists,
             # we use it
             req.write("use %s *\n" % self.project_info.sys)
-        
+
         # add user specified tags
         for t in self.tag_add:
             req.write("apply_tag %s\n"%t)
@@ -1260,7 +1263,7 @@ class SetupProject:
             # @todo:I do not like too much this few lines
             if e != 'CASTOR' or not self.disable_CASTOR: # skip CASTOR
                 req.write("use %s v* LCG_Interfaces\n"%e)
-        
+
         # prepare use statementes for user packages
         use_hats = { 'XmlDDDB':'Det',
                      'XmlConditions':'Det',
@@ -1281,7 +1284,7 @@ class SetupProject:
                 req.write("use %s %s %s\n"%(pack,ver,hat))
             else: # for any other case, just use the provided string
                 req.write("use %s\n"%u)
-        
+
         # set config versions
         # (the override of the versions have to be done after the package:
         #  some packages may change the default version, but the command line
@@ -1304,15 +1307,15 @@ class SetupProject:
             prj.write("use %s\n" % p.realName.replace(os.sep," "))
         prj.flush()
         del prj
-        
+
         if self._logger.level <= 2 :
             self._verbose("########## requirements ##########")
             self._verbose(open(os.path.join(tmp_dir,"requirements")).read())
             self._verbose("########## project.cmt ##########")
             self._verbose(open(os.path.join(tmp_dir,"cmt","project.cmt")).read())
-        
+
         return tmp_dir
-        
+
     def _gen_setup(self, root_dir, env = os.environ):
         """
         Generate the setup script.
@@ -1320,38 +1323,38 @@ class SetupProject:
         If script is empty, you should find the reason in error.
         """
         self._debug("----- gen_setup() -----")
-        
+
         if 'CMTPATH' not in os.environ and 'CMTPROJECTPATH' not in os.environ :
             # it does not make sense to go on if the CMTPATH is not set
             raise SetupProjectError('neither CMTPATH nor CMTPROJECTPATH are set')
-        
+
         orig_dir = os.getcwd()
-        
+
         if self.context_path:
             env['CMTUSERCONTEXT'] = self.context_path
-        
+
         os.chdir(root_dir)
-        
+
         # check CMT
         out = self.cmt.version()
         if "command not found" in out:
             raise SetupProjectError('cmt is not in your PATH')
         else:
             self._debug("----- using CMT %s -----" % out.strip())
-        
+
         # check if the project works
         out = self.cmt.check("configuration")
         if out and not self.ignore_missing: # non empty output means error
             raise SetupProjectError(out)
-        
+
         script = self.cmt.setup("-" + self.shell)
         os.chdir(orig_dir)
-            
+
         #parse the output
         new_env = TemporaryEnvironment(env)
         # this sets the environment end return the line it cannot understand
         script = ShellParser[self.shell](script, new_env)
-        
+
         # remove the temporary directory from the paths
         root_dir_local = root_dir
         if self.opts.shell == "bat":
@@ -1362,24 +1365,24 @@ class SetupProject:
                                                for d in new_env[v].split(os.pathsep)
                                                if root_dir_local not in d ])
         # FIXME: I should look for all the variables pointing to the temporary directory
-        
+
         # remove the variables that have the temporary directory in the name
         tmp_base_name = os.path.basename(self.tmp_root)
         for k in [ k
                    for k in new_env.keys()[:] # I need a copy of the keys
                    if tmp_base_name in k ]:
             del new_env[k]
-        
+
         # remove CMTPATH if not explicitely requested
         if not self.set_CMTPATH and "CMTPATH" in new_env:
             del new_env["CMTPATH"]
-        
+
         if self.context_path:
             if not self.opts.silent :
                 output_lines.append("echo Using CMTUSERCONTEXT = '%s'"%self.context_path)
             # unset CMTUSERCONTEXT in case of future calls
             del new_env['CMTUSERCONTEXT']
-        
+
         lines = []
         errors = []
         for l in script.splitlines():
@@ -1388,7 +1391,7 @@ class SetupProject:
             else:
                 lines.append(l)
         if lines: lines.append("")
-        
+
         if (errors):
             self._debug("----- gen_setup(): errors != [] -----")
         # Do not forget changes in the environment
@@ -1397,7 +1400,7 @@ class SetupProject:
 
     def parse_args(self,args = sys.argv[1:]):
         self.opts,self.args = self.parser.parse_args(args=args)
-    
+
     def prepare(self,args = sys.argv[1:]):
         """
         Collect all the informations needed to set up the environment, like
@@ -1405,41 +1408,41 @@ class SetupProject:
         """
         # Process commmand line options
         self.parse_args(args=args)
-        
+
         # set level of log messages
         if not self.opts.silent :
             self._logger.level = self.loglevel
         else :
             self._logger.level = self._logger.ERROR
         log.level = self.loglevel
-        
+
         self._debug("----- main() -----")
-        
+
         self._verbose("SetupProject %s"%self.parser.get_version())
-        
+
         #------------- get project name
         if len(self.args) < 1:
             self._error("You have to specify a project")
             return 1
         else:
             self.project_name = self.args.pop(0)
-        
+
 
         # Force the use of GaudiPoolDb in LHCb to simplify the merging of datasets
         if self.project_name == "LHCb":
             self.opts.use.append("GaudiPoolDb")
-        
+
         #------------- sanity check: the shell type has to be specified
         if not self.shell:
             self._error("Internal error: shell type not specified")
             return 1
-        
+
         #------------- set user area
         if self.opts.no_user_area:
             self.user_area = None
         else:
             self.user_area = os.environ.get('User_release_area', None)
-        
+
         #------------- prepare search_path
         self.search_path = []
         # user area
@@ -1455,20 +1458,20 @@ class SetupProject:
         for v in projpathvars:
             if v in os.environ:
                 self.search_path += os.environ[v].split(os.pathsep)
-        
+
         # remove duplicates
         self.search_path = uniq(self.search_path)
-        
+
         #------------- discover all project versions
         # debug printout: print project, search path and, optionally, user area
         self._debug("Look for all versions of '%s' in %s" % (self.project_name, self.search_path)
                     + ((self.user_area and (" with user area in '%s'" % self.user_area)) or ""))
         versions = FindProjectVersions(self.project_name, self.search_path, self.user_area)
-        
+
         if not versions:
             self._error("Cannot find project '%s'" % self.project_name)
             return 1
-        
+
         # Now I can print the version if I was asked to do it
         if self.list_versions:
             self._print_versions(versions)
@@ -1488,7 +1491,7 @@ class SetupProject:
             elif re.match('v[0-9]*r[0-9p]*|HEAD',self.args[0]):
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
                 return 1
-        
+
         #------------- Prompt for a version to use
         # Ask if --ask or with --build-env and no version specified
         if self.ask or (self.build_env and not self.project_version):
@@ -1497,7 +1500,7 @@ class SetupProject:
                 self._always("Quit")
                 return 1
             self.project_version = v
-        
+
         #------------- Initialize the ProjectInfo objects
         # Main project
         self.project_info = makeProjectInfo(version = self.project_version,
@@ -1506,7 +1509,7 @@ class SetupProject:
             # we should never get here
             self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_version, self.project_name))
             return 1
-        
+
         # runtime projects
         self.runtime_projects = []
         for p,v in self.opts.runtime_projects:
@@ -1518,9 +1521,9 @@ class SetupProject:
                                  versions = vv)
             if not pi:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
-                return 1                
+                return 1
             self.runtime_projects.append(pi)
-        
+
         # overriding projects
         self.overriding_projects = []
         for p,v in self.opts.overriding_projects:
@@ -1532,13 +1535,13 @@ class SetupProject:
                                  versions = vv)
             if not pi:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
-                return 1                
+                return 1
             self.overriding_projects.append(pi)
-        
+
         # use LHCbGrid
         if self.use_grid:
             auto_override_projects.append( ("LHCbGrid", ["LHCbGridSys"]) )
-        
+
         # auto-override projects
         if self.auto_override:
             for p, pkgs  in auto_override_projects:
@@ -1546,28 +1549,28 @@ class SetupProject:
                 if vv:
                     self.overriding_projects.insert(0, makeProjectInfo(versions = vv))
                     self.use += pkgs
-        
+
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
             self._verbose("Project %s %s uses %s policy"%(p.name,
                                                           p.version,
                                                           p.policy))
         return 0
-        
+
     def main(self,args = sys.argv[1:]):
         # Initialization from arguments
         rc = self.prepare(args)
         if rc or self.list_versions: # No need to go on if --list-versions or error
             return rc
-        
+
         # Temporary enviroment
         env = TemporaryEnvironment()
-        
+
         # Prepare the build-time environment
         self.set_build_env(env)
         # We usually unset CMTPATH, but we need to remember it for old style
         # projects
         CMTPATH = env.get("CMTPATH","")
-        
+
         script = "" # things we need to append to the setup script (like aliases)
         messages = [] # lines to print (feedback)
         if not self.build_env: # this part is needed only if we do not ask for build only env
@@ -1595,7 +1598,7 @@ class SetupProject:
             tmps = self.project_info.name
             if self.project_info.version: tmps += " %s" % self.project_info.version
             messages.append('Environment for %s ready.' % tmps)
-            
+
             # collect project infos descriptions
             lines = []
             for pi in self.overriding_projects:
@@ -1609,7 +1612,7 @@ class SetupProject:
             else:
                 lines[0] = '(%s)' % lines[0]
             messages += lines
-            
+
             # FIXME: Hack to hide the fact that old projects were not setting the PATH for the executable
             if self.project_info.policy == 'old':
                 varname = self.project_info.name.upper() + "ROOT"
@@ -1619,7 +1622,7 @@ class SetupProject:
                         # it make sense to add it only if it exists
                         messages.append('Appending %s to the path.' % exedir)
                         env["PATH"] = os.pathsep.join([env["PATH"], exedir])
-                
+
         else:
             tmps = self.project_info.name
             if self.project_info.version: tmps += " %s" % self.project_info.version
@@ -1643,7 +1646,7 @@ class SetupProject:
                     if not sys.platform.startswith("win"):
                         # Create a project Makefile
                         createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
-                    
+
                     if os.path.isdir(user_proj_dir):
                         # Let's enter the user project directory
                         script += "cd %s\n" % user_proj_dir
@@ -1652,7 +1655,7 @@ class SetupProject:
                 messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
             else:
                 messages.append("Using CMTPATH = '%s'" % CMTPATH)
-            
+
         # normalize relative path introduced for the location the externals relatively
         # to the LCGCMT project
         path2normalize = ["PYTHONPATH", "PATH", "LD_LIBRARY_PATH", "ROOTSYS"]
@@ -1664,10 +1667,10 @@ class SetupProject:
                     newpath = os.path.normpath(l)
                     if os.path.exists(newpath) and l.find("..") != -1 :
                         newlist.append(newpath)
-                    else : 
+                    else :
                         newlist.append(l)
                 env[p] = os.pathsep.join(newlist)
-                
+
         output_script = env.gen_script(self.shell)
         output_script += script
         if not self.opts.silent :
@@ -1676,12 +1679,12 @@ class SetupProject:
         if self.opts.touch_logfile:
             #I have to touch a file to tell the release manager which version of the project I'm using
             output_script += self._touch_project_logfiles()
-        
+
         self._verbose("########## done ##########")
-        
+
         # as very last step, generate the output script to be sourced by the wrapper
         self._write_script(output_script)
-    
+
         ### completed successfully
         return 0
 
