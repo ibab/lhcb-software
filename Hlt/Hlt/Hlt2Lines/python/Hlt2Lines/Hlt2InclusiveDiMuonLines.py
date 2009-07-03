@@ -8,7 +8,7 @@
 #   1) - 4) unbiased dimuon selections, i.e. dimuon selections without
 #           cuts correlated to the Bs lifetime
 #
-#  5) biased dimuon
+#   5) - 8) biased dimuon (Leandro de Paula)
 #
 ##
 from Gaudi.Configuration import *
@@ -25,7 +25,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  'Prescale'                  : { 'Hlt2UnbiasedDiMuon'     :  0.05 
                                                  , 'Hlt2BiasedDiMuonRobust' :  0.01  
-                                                 , 'Hlt2BiasedDiMuonRefined':  0.01 }
+                                                 , 'Hlt2BiasedDiMuonRefined':  0.01 
+                                                 }
                    ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
                    ,'UnbiasedDiMuonPt'        : 1000      # MeV
                    ,'UnbiasedDiMuonMuPt'      :  500      # MeV
@@ -43,16 +44,20 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
                    ,'BiasedSingleMuonPt'      :  700      # MeV
                    ,'BiasedMass'              :  500      # MeV
-                   ,'BiasedLMass'             : 1000      # MeV
+                   ,'BiasedLMass'             : 1200      # MeV
                    ,'BiasedTMass'             : 2900      # MeV
                    ,'BiasedSingleMuonIP'      :     .02   # mm 
-                   ,'BiasedSingleMuonTIP'     :     .12   # mm 
+                   ,'BiasedSingleMuonTIP'     :     .05   # mm 
                    ,'BiasedLTime'             :     .1    # ps 
+                   ,'BiasedLTimeT'            :     .10   # ps 
                    ,'BiasedSingleIPChi2'      :   10     
-                   ,'BiasedSingleIPTChi2'     :   25     
+                   ,'BiasedSingleIPTChi2'     :   50     
                    ,'BiasedVertexChi2'        :    5
                    ,'BiasedPVDistanceChi2'    :   10
-                   ,'BiasedPVDistanceTChi2'   :  125
+                   ,'BiasedPVDistanceTChi2'   :  150
+                   , 'IncludeLines'           : ['BiasedDiMuonMass',
+                                                 'BiasedDiMuonIP'
+                                                ]
                    }
 
 
@@ -151,7 +156,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         MassTCut = "(MM>"+str(self.getProp('BiasedTMass'))+"*MeV)"
         MuIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonIP'))+"*mm)))"
         MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonTIP'))+"*mm)))"
-        LTimeCut= "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTime'))+"*ps)"
+        LTimeCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTime'))+"*ps)"
+        LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTimeT'))+"*ps)"
         IPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPChi2'))+")"
         TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPTChi2'))+")"
         VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('BiasedVertexChi2'))+")"
@@ -185,15 +191,17 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
             high mass biased DiMuon
         '''
-        line.clone( 'BiasedDiMuonMass'
-                    , prescale = self.prescale 
-                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeCut }
-                  )
+        if 'BiasedDiMuonMass' in self.getProp('IncludeLines'):
+            line.clone( 'BiasedDiMuonMass'
+                        , prescale = self.prescale 
+                        , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
+                      )
         '''
             biased DiMuon with tigh IP cuts
         '''
-        line.clone( 'BiasedDiMuonIP'
-                    , prescale = self.prescale 
-                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
-                    , RefinedDiMuon = {"Code" : TIPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistTChi2Cut }
-                  )
+        if 'BiasedDiMuonIP' in self.getProp('IncludeLines'):
+            line.clone( 'BiasedDiMuonIP'
+                        , prescale = self.prescale 
+                        , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
+                        , RefinedDiMuon = {"Code" : TIPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistTChi2Cut }
+                      )
