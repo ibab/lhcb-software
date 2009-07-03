@@ -1,0 +1,7 @@
+/LHCb/RunInfo/general/partID
+/LHCb/RunInfo/general/runType
+/LHCb/RunInfo/HLTFarm/nSubFarms
+/a/b
+/a/c
+/a/d
+/a/e

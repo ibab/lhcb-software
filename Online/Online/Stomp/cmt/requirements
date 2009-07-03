@@ -1,0 +1,20 @@
+package Stomp
+version v1r0
+
+branches  cmt doc src
+use GaudiPolicy v*
+use OnlineBase  v* Online
+use DIM         v* Online
+
+apply_pattern install_more_includes more=Stomp
+
+library Stomp       ../src/*.cpp
+
+apply_pattern ld_library_path
+apply_pattern linker_library          library=Stomp
+
+private
+macro_append  Stomp_cppflags ' -DAPR_DECLARE_EXPORT '
+macro_append  use_includes ' $(ppcmd)"C:\Program Files\Apache Software Foundation\Apache2.2\include" '
+macro_append  Stomp_shlibflags ' -lpthread -lrt ' WIN32 ' mswsock.lib '
+macro_append  Stomp_shlibflags ' /libpath:"C:\Program Files\Apache Software Foundation\Apache2.2\lib" apr-1.lib '
