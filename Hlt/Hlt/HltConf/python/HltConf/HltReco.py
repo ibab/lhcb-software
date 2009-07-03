@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.9 2009-05-28 12:44:31 graven Exp $
+# $Id: HltReco.py,v 1.10 2009-07-03 10:13:45 graven Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -67,6 +67,11 @@ from Configurables import TrackEventCloneKiller, TrackCloneFinder
 #############################################################################################
 # Configure pattern recognition algorithms
 #############################################################################################
+
+####TODO: split into Hlt1 specific part,
+####      and in the stuff which runs at the Hlt1/Hlt2 boundary,
+####      and the Hlt2 specific part...
+
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
@@ -181,6 +186,7 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
 
 # first define sequencers for velo tracking
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
+                                         #, Members = [ decodeVeloLite, patVeloR ] )
                                          , Members = [ patVeloR ] )
 
 recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
@@ -204,11 +210,12 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
 
 #if only Forward is run, we can write directly to Hlt/Track/Long
 # Otherwise we just have to add our stuff
+from HltConf.HltDecodeRaw import DecodeTT, DecodeIT
 if not RunSeeding:
                     recoCopy.InputLocations = ["Hlt/Track/Forward"]
-                    trackRecoSequence.Members += [ recoForward , recoCopy]
+                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoCopy]
 else:
-                    trackRecoSequence.Members += [ recoForward , recoSeeding , recoMatch , recoCopy]
+                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoSeeding , recoMatch , recoCopy]
 
 #### now we add the fit 
 if RunFastFit    :  trackRecoSequence.Members += [ fastKalman]
@@ -266,9 +273,13 @@ GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') 
 
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
-Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )
-PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
-RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
+from HltConf.HltDecodeRaw import DecodeVELO
+#Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward , prepareForward ] )
+PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
+RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
+#Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )
+#PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
+#RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
@@ -278,4 +289,3 @@ SeedKF   = bindMembers( None, [ Seed, FitSeeding ] )
 
 HltSeedSequence = GaudiSequencer("HltSeedSequence", MeasureTime = True, Members = Seed.members() )
 HltRecoSequence = recoSeq
-# HltRecoVeloSequence = GaudiSequencer('HltRecoVeloSequence', Members = [ patVeloR, recoVelo ] )

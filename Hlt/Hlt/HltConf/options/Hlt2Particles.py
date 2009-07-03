@@ -60,6 +60,9 @@ SeqHlt2Particles.Members += [ GaudiSequencer('HltRecoCALOSeq') ]
 
 ## Options for Calo reconstruction
 importOptions("$CALORECOROOT/options/HltCaloSeq.opts")
+from HltConf.HltDecodeRaw import DecodeECAL, DecodeSPD, DecodePRS, DecodeHCAL
+_m = GaudiSequencer('HltRecoCALOSeq').Members
+GaudiSequencer('HltRecoCALOSeq').Members = DecodeECAL.members() + DecodeSPD.members() + DecodePRS.members() + DecodeHCAL.members() + _m 
 
 ##/ @todo temporary : redefine HLT track location to "Hlt/Track/LongCleaned"
 InSpdAcceptanceAlg('HltInSPD').Inputs   =  [ "Hlt/Track/Long" ]
