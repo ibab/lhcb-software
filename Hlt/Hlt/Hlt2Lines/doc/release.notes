@@ -1,12 +1,13 @@
-$Id: release.notes,v 1.21 2009-07-02 09:13:29 pkoppenb Exp $
+$Id: release.notes,v 1.22 2009-07-03 11:36:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v1r3 2009-07-03 ===================
 ! 2009-07-02 - Patrick Koppenburg
- - Remove obsolete selections
+ - Remove obsolete selections (see HltSelections package)
 
 ! 2009-06-29 - Antonio Perez-Calero
   - update in Inclusive Muon and Muon+Track lines: 
