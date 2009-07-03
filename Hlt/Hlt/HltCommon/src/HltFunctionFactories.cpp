@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.30 2009-07-02 09:46:39 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.31 2009-07-03 14:44:59 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackFunctionTool>("DeltaP","HltDeltaPTool");
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
-  declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf",false); //BAD!!
+  declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf"); //TODO/FIXME: BAD!!
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal2DChi2","HltRZVeloEcalMatch");
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
 
