@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.18 2009-07-01 21:51:18 graven Exp $
+// $Id: HltFunctions.h,v 1.19 2009-07-03 14:44:59 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -260,8 +260,7 @@ namespace Hlt {
     explicit VertexTrack1Chi2OverNdf(){}
     double operator() (const LHCb::RecVertex& v) const 
     {
-      double chi2 = (v.tracks()[0])->chi2PerDoF();
-      return chi2;
+      return v.tracks()[0]->chi2PerDoF();
     }
     Hlt::VertexFunction* clone() const {return new VertexTrack1Chi2OverNdf();}
   };
@@ -271,8 +270,7 @@ namespace Hlt {
     explicit VertexTrack2Chi2OverNdf(){}
     double operator() (const LHCb::RecVertex& v) const 
     {
-      double chi2 = (v.tracks()[1])->chi2PerDoF();
-      return chi2;
+      return v.tracks()[1]->chi2PerDoF();
     }
     Hlt::VertexFunction* clone() const {return new VertexTrack2Chi2OverNdf();}
   };
@@ -281,7 +279,7 @@ namespace Hlt {
   class FunctionTool : public zen::function<T> {
   public:
     FunctionTool(const std::string& toolname, GaudiTool *parent) 
-           : _tool( parent->tool<ITOOL>(toolname) )
+           : _tool( parent->tool<ITOOL>(toolname,parent) ) 
     { }
     explicit FunctionTool(ITOOL* tool) : _tool(tool) 
     { if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE ); }
@@ -299,7 +297,7 @@ namespace Hlt {
   class BiFunctionTool : public zen::bifunction<T,T2> {
   public:
     BiFunctionTool(const std::string& toolname, GaudiTool *parent) 
-           : _tool( parent->tool<ITOOL>(toolname) )
+           : _tool( parent->tool<ITOOL>(toolname,parent) )
     { }
     explicit BiFunctionTool(ITOOL* tool) :_tool(tool) {
       if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
