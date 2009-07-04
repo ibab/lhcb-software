@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.8 2009-07-01 03:33:37 polye Exp $
+// $Id: MuonPIDChecker.h,v 1.9 2009-07-04 21:57:54 polye Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -101,6 +101,7 @@ private:
   double m_ProbCut2; ///< cut on Prob_mu value used to define efficiency      
   double m_NSHCut; ///< cut on  nShared value used to define efficiency      
   bool   m_RunningMC; ///< swap between running on data and MC
+  bool   m_ExpertChk; ///< turn 2D and more detailed histos on and off
 
   // Efficiency and Eff. Error used as reference (for two samples)
   std::vector< double > m_refEff1IM ,m_refdEff1IM ;

@@ -68,6 +68,8 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
 
   // Swap between real and MC data   
   declareProperty( "RunningMC", m_RunningMC = false );
+  // Turn expert histos on and off
+  declareProperty( "ExpertCheck", m_ExpertChk = false );
 
   // Reference values for efficiency and misid
   // B->jpsi ks reference numbers
@@ -423,18 +425,20 @@ StatusCode MuonPIDChecker::getMuTrPIDInfo(LinkedTo<LHCb::MCParticle, LHCb::Track
       debug()<< " muTrchi2= " << m_TrChi2;
       sprintf ( hname, "hchi2_%d", m_TrType);
       plot1D(m_TrChi2, hname ,"Chi2 per nDoF", 0., 200., 100);
-      debug()<< " muTrquality= " << m_Trquality;
-      sprintf ( hname, "hquality_%d", m_TrType);
-      plot1D(m_Trquality, hname ,"Track Quality", 0., 200., 100);
       debug()<< " muTrDist= " << m_TrDist2;
       sprintf ( hname, "hDist2_%d", m_TrType);
       plot1D(m_TrDist2, hname ,"Average Square Distance", 0., 600., 100);
-      debug()<< " muClQUal= " << m_TrCLquality;
-      sprintf ( hname, "hCLQual_%d", m_TrType);
-      plot1D(m_TrCLquality, hname,"Chi2 CL", 0., 1., 50);
-      debug()<< " muClArrival= " << m_TrCLarrival;
-      sprintf ( hname, "hCLArrival_%d", m_TrType);
-      plot1D(m_TrCLarrival, hname ,"Arrival CL", 0., 1., 50);
+      if (m_ExpertChk){
+	debug()<< " muTrquality= " << m_Trquality;
+	sprintf ( hname, "hquality_%d", m_TrType);
+	plot1D(m_Trquality, hname ,"Track Quality", 0., 200., 100);
+	debug()<< " muClQUal= " << m_TrCLquality;
+	sprintf ( hname, "hCLQual_%d", m_TrType);
+	plot1D(m_TrCLquality, hname,"Chi2 CL", 0., 1., 50);
+	debug()<< " muClArrival= " << m_TrCLarrival;
+	sprintf ( hname, "hCLArrival_%d", m_TrType);
+	plot1D(m_TrCLarrival, hname ,"Arrival CL", 0., 1., 50);
+      }
     }
     // Look at track multiplicities
     std::vector<LHCb::LHCbID> mucoords = (*imuTrack) -> lhcbIDs();
@@ -466,41 +470,45 @@ StatusCode MuonPIDChecker::getMuTrPIDInfo(LinkedTo<LHCb::MCParticle, LHCb::Track
       }
     }
     // Fill hit multiplicity histos for each station
-    for (unsigned int i=0; i<m_NStation; i++){
-       
-      debug()<< "getMuTrPIDInfo:: M" <<i<<" Track Region and nhitsfoiS  " << TrackRegion[i] <<" "<< nhitsfoiS[i]<< endreq;
-      
-      // Hit Multiplicity (within FOI) as a function of the Muon regions
-      char hmult[15];
-      sprintf (hmult,"hNhitsFOIReg_%d",m_TrType);
-      plot2D(nhitsfoiS[i],i*m_NRegion+TrackRegion[i],
-	  hmult, "Hits in FOI per region (per track)", -0.5, 9.5,
-	  -0.5, m_NRegion*m_NStation-0.5, 10, m_NRegion*m_NStation); 
-      sprintf (hmult,"hPNhitsFOIReg_%d",m_TrType);
-      profile1D ( i*m_NRegion+TrackRegion[i], nhitsfoiS[i], hmult, "Hits in FOI per region (per track)",
-	  -0.5, m_NRegion*m_NStation-0.5, m_NRegion*m_NStation); 
+    if ( m_ExpertChk) {
+      for (unsigned int i=0; i<m_NStation; i++){
 	 
-      // Hit Multiplicity (within FOI) as a function of Track X,Y 
-      char hname[15]; 
-      sprintf ( hname, "hNhitsFOIvsX_M%d_%d", i+1, m_TrType);
-      plot2D(nhitsfoiS[i],m_trackX[i],
-	  hname, "Hits in FOI vs X (per track)", -0.5, 9.5, -5500, 5500, 10, 100);
-      sprintf ( hname, "hNhitsFOIvsY_M%d_%d", i+1, m_TrType);
-      plot2D(nhitsfoiS[i],m_trackY[i],
-	  hname, "Hits in FOI vs Y (per track)", -0.5, 9.5, -5000, 5000, 10, 100);
-      sprintf ( hname, "PNhitsFOIvsX_M%d_%d", i+1, m_TrType);
-      profile1D( m_trackX[i], nhitsfoiS[i], hname, "Hits in FOI vs X (per track)", -5500, 5500, 100); 
-      sprintf ( hname, "PNhitsFOIvsY_M%d_%d", i+1, m_TrType);
-      profile1D( m_trackY[i], nhitsfoiS[i], hname, "Hits in FOI vs Y (per track)", -5500, 5500, 100); 
+	debug()<< "getMuTrPIDInfo:: M" <<i<<" Track Region and nhitsfoiS  " << TrackRegion[i] <<" "<< nhitsfoiS[i]<< endreq;
+	
+	// Hit Multiplicity (within FOI) as a function of the Muon regions
+	char hmult[15];
+	sprintf (hmult,"hNhitsFOIReg_%d",m_TrType);
+	plot2D(nhitsfoiS[i],i*m_NRegion+TrackRegion[i],
+	    hmult, "Hits in FOI per region (per track)", -0.5, 9.5,
+	      -0.5, m_NRegion*m_NStation-0.5, 10, m_NRegion*m_NStation); 
+	sprintf (hmult,"hPNhitsFOIReg_%d",m_TrType);
+	profile1D ( i*m_NRegion+TrackRegion[i], nhitsfoiS[i], hmult, "Hits in FOI per region (per track)",
+	    -0.5, m_NRegion*m_NStation-0.5, m_NRegion*m_NStation); 
+	   
+	// Hit Multiplicity (within FOI) as a function of Track X,Y 
+	char hname[15]; 
+	sprintf ( hname, "hNhitsFOIvsX_M%d_%d", i+1, m_TrType);
+	plot2D(nhitsfoiS[i],m_trackX[i],
+	    hname, "Hits in FOI vs X (per track)", -0.5, 9.5, -5500, 5500, 10, 100);
+	sprintf ( hname, "hNhitsFOIvsY_M%d_%d", i+1, m_TrType);
+	plot2D(nhitsfoiS[i],m_trackY[i],
+	    hname, "Hits in FOI vs Y (per track)", -0.5, 9.5, -5000, 5000, 10, 100);
+	sprintf ( hname, "PNhitsFOIvsX_M%d_%d", i+1, m_TrType);
+	profile1D( m_trackX[i], nhitsfoiS[i], hname, "Hits in FOI vs X (per track)", -5500, 5500, 100); 
+	sprintf ( hname, "PNhitsFOIvsY_M%d_%d", i+1, m_TrType);
+	profile1D( m_trackY[i], nhitsfoiS[i], hname, "Hits in FOI vs Y (per track)", -5500, 5500, 100); 
+      }
     }
 
   } //end of muTrack loop
 
   // Histos to be compared to the ones filled with MuonPID info
-  plot1D(nTr,   "hNMutracks", "Muon Track multiplicity", -0.5, 199.5, 200);
-  plot1D(nPSTr, "hNPSMutracks","Pre-selected Muon Track multiplicity", -0.5, 199.5, 200);
-  plot1D(nIMLTr, "hNIMLMutracks","IsMuonLoose=1 Muon Track multiplicity", -0.5, 19.5, 20);
-  plot1D(nIMTr, "hNIMMutracks","IsMuon=1 Muon Track multiplicity", -0.5, 19.5, 20);
+  if (m_ExpertChk){
+    plot1D(nTr,   "hNMutracks", "Muon Track multiplicity", -0.5, 199.5, 200);
+    plot1D(nPSTr, "hNPSMutracks","Pre-selected Muon Track multiplicity", -0.5, 199.5, 200);
+    plot1D(nIMLTr, "hNIMLMutracks","IsMuonLoose=1 Muon Track multiplicity", -0.5, 19.5, 20);
+    plot1D(nIMTr, "hNIMMutracks","IsMuon=1 Muon Track multiplicity", -0.5, 19.5, 20);
+  }
    // number of muon hits used for identified muons (can have double counting due to hit sharing)
   for (unsigned int i=0; i<m_NRegion*m_NStation; i++){
     profile1D ( i, assocHits[i], "hNhitsAssReg", "Hits in FOI per region",
@@ -967,7 +975,7 @@ int MuonPIDChecker::findTrackRegion(const int sta){
 //=====================================================================
     int chnum = -1;
       int regnum = -1;
-        m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum);
+        m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum).ignore();
 	  return regnum;
 
 }

@@ -44,7 +44,7 @@ class ConfigureMuonPIDChecker():
     self.info.DEBUG = debug
     self.initializeAll = True 
    
-  def configure(self,name="MuonPID",mc=True):
+  def configure(self,name="MuonPID",mc=True,expertck=True):
     """
     configure the MuonPIDchecker algorithm
     """
@@ -67,6 +67,7 @@ class ConfigureMuonPIDChecker():
     myalg.DLLnbins = 35 
     myalg.NSHCut = 1
     myalg.RunningMC = mc
+    myalg.ExpertCheck = expertck
     myalg.MuonTrackLocation = 'Rec/Track/Muon'
     myalg.HistoDir = name+"/"+ext
     myalg.RefEff1IM   = self.info.RefEff1IM

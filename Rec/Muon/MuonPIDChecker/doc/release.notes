@@ -1,6 +1,11 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
+!====================== MuonPIDChecker v4r1 2009-07-03 ======================
+!2009-07-03 - Erica Polycarpo 
+ - add expert flag to select histos
+ - fix untested StatusCode
+
 !====================== MuonPIDChecker v4r0 2009-06-20 ======================
 !2009-06-29 - Miriam Gandelman, Jose Angel Hernando Morata
  - Checker and Monitor now run with configurables. The options are no longer used.
