@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-07-04 - Erica Polycarpo 
+ - Configure expert flag for histos in MuonPIDChecker
+ - Cleanup MuonPIDMonitor configuration 
+
 ! 2009-07-02 - Marco Cattaneo
  - Cleanup previous changes
  - Update references for changes to MuonID, MuonPIDChecker, ChargedProtoPAlg
