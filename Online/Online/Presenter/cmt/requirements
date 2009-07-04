@@ -17,7 +17,7 @@ use  Boost        v*  LCG_Interfaces
 # Go for the latest and greatest ROOT
 #macro ROOT_config_version "5.19.04"
 #macro ROOT_config_version "5.21.02"
-macro ROOT_config_version "5.24.00"
+#macro ROOT_config_version "5.24.00"
 
 macro Boost_config_version "1.39.0"
 
