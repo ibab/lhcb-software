@@ -26,7 +26,6 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_util(0),
   m_vtxtool(0),
   m_descend(0),
-  m_hltSummaryTool(0),
   m_TriggerTisTosTool(0),
   m_linkLinks(0) 
 {
@@ -60,11 +59,6 @@ StatusCode BTaggingAnalysis::initialize() {
     return StatusCode::FAILURE;
   }
   if(m_requireTrigger){
-    m_hltSummaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
-    if(!m_hltSummaryTool){
-      err() << " Unable to retrieve HltSummaryTool" << endreq;
-      return StatusCode::FAILURE;
-    }
     m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
     if ( !m_TriggerTisTosTool ) {   
       fatal() << "TriggerTisTosTool could not be found" << endreq;
@@ -266,7 +260,12 @@ StatusCode BTaggingAnalysis::execute() {
     }
     L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
     L0Decision  = l0->decision();
-    HLTDecision = m_hltSummaryTool->decision();
+    if( exist<HltDecReports>( HltDecReportsLocation::Default ) ){ 
+      const HltDecReports* decReports = 
+	get<HltDecReports>( HltDecReportsLocation::Default );
+      HLTDecision = decReports->decReport("HltGlobal") ? 
+	decReports->decReport("HltGlobal")->decision() : 0 ;
+    }
   } 
   m_trigger = HLTDecision*10 + L0Decision;
   
@@ -333,7 +332,6 @@ StatusCode BTaggingAnalysis::execute() {
   bool isBu = false;
   double BSmass= 0, BSthe= 0, BSphi= 0;
   Gaudi::LorentzVector ptotBS(0.0,0.0,0.0,0.0);
-
   Particle::ConstVector axdaugh = m_descend->descendants(AXBS);
   axdaugh.push_back(AXBS);
   if( AXBS->particleID().hasDown() )    isBd = true;
@@ -630,6 +628,10 @@ StatusCode BTaggingAnalysis::execute() {
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
     //eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
+
+    Particle::ConstVector::const_iterator ik;
+    for ( ik = vtags.begin(); ik != vtags.end(); ik++)
+      if((*ik)->proto() == (*ip)->proto() ) continue;//kill duplicates
 
     ///////////////////////////////////////
     vtags.push_back(*ip);               // Fill container of candidates

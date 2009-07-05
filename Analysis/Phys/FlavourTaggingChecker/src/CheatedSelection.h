@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.8 2008-02-14 08:21:40 pkoppenb Exp $
+// $Id: CheatedSelection.h,v 1.9 2009-07-05 21:21:55 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -10,10 +10,12 @@
 #include "Kernel/DVAlgorithm.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
+#include "Kernel/IPhysDesktop.h"
+
 
 // from Associators
 #include "Kernel/Particle2MCLinker.h"
-
+ 
 // from local
 
 /** @class CheatedSelection CheatedSelection.h 
@@ -47,11 +49,13 @@ class CheatedSelection : public DVAlgorithm {
 
   IForcedBDecayTool* m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
-
+  
+  std::string m_outputLocation, m_inputLocation;
+  IPhysDesktop *m_physd;
   std::vector<std::string> m_setInputData;
 
   //properties
-  double m_BMassWindow;
+  double m_GenBMassWindow, m_RecBMassWindow, m_tolerance;
 
 };
 //===========================================================================//

@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.16 2009-02-23 21:04:14 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.17 2009-07-05 21:21:55 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -10,8 +10,8 @@
 #include "Event/GenHeader.h"
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"
-#include "Event/HltSummary.h"
-
+#include "Event/HltDecReports.h"
+#
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
@@ -22,7 +22,6 @@
 
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IHltSummaryTool.h"
 #include "Kernel/ITriggerTisTos.h"
 
 #include "MCInterfaces/IForcedBDecayTool.h"
@@ -60,7 +59,6 @@ class BTaggingAnalysis : public DVAlgorithm {
   ITaggingUtilsChecker* m_util;
   ISecondaryVertexTool* m_vtxtool;
   IParticleDescendants* m_descend;
-  IHltSummaryTool*      m_hltSummaryTool;
   ITriggerTisTos*       m_TriggerTisTosTool;
   Particle2MCLinker*    m_linkLinks; 
  
