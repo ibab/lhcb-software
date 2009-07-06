@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.6 2009-05-05 11:49:24 mtobin Exp $
+ *  $Id: STCommonBase.h,v 1.7 2009-07-06 17:27:35 mtobin Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -80,9 +80,6 @@ namespace ST
    /** get the readout tool */
    ISTReadoutTool* readoutTool() const;
  
-   /** Add the mapping of source ID to board number for IT and TT */
-   const  std::map<unsigned int, unsigned int>& SourceIDToTELLNumberMap() const; 
-   
    /** force init of base class tool */
    void setForcedInit();
 

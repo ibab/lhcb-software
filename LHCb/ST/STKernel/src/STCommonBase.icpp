@@ -4,7 +4,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.10 2009-05-05 11:49:24 mtobin Exp $
+ *  $Id: STCommonBase.icpp,v 1.11 2009-07-06 17:27:35 mtobin Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -122,12 +122,6 @@ template <class PBASE>
 inline ISTReadoutTool* ST::CommonBase<PBASE>::getReadoutTool() const {
   m_readoutTool = this -> template tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
   return m_readoutTool;
-}
-
-#include "Kernel/STBoardMapping.h"
-template <class PBASE> 
-inline const STBoardMapping::Map& ST::CommonBase<PBASE>::SourceIDToTELLNumberMap() const{
-  return (detType() == "IT" ? STBoardMapping::ITSourceIDToNumberMap() : STBoardMapping::TTSourceIDToNumberMap());
 }
 
 template <class PBASE>

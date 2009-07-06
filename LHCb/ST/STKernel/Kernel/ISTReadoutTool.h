@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.6 2008-08-15 08:01:06 mneedham Exp $
+// $Id: ISTReadoutTool.h,v 1.7 2009-07-06 17:27:35 mtobin Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -90,6 +90,12 @@ public:
  /// list of service boxes
  virtual const std::vector<std::string>& serviceBoxes() const = 0;
  
+  /// Add the mapping of source ID to TELL1 board number
+  virtual const  std::map<unsigned int, unsigned int>& SourceIDToTELLNumberMap() const = 0; 
+
+  /// Add the mapping of source ID to TELL1 board number
+  virtual const unsigned int SourceIDToTELLNumber(unsigned int sourceID) const = 0; 
+
 };
 
 
