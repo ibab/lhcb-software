@@ -18,7 +18,7 @@
       
       <location name= "Default" place="FST/Alignment/SummaryData" />
       
-      <import name='SolvKernel/AlEquations'/>
+      <import name='AlignKernel/AlEquations'/>
 
       <constructor
 	desc     = "constructor from AlEquations object"
