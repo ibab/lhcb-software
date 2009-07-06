@@ -103,7 +103,7 @@ StatusCode DeTTSector::initialize() {
     {
       m_hybridType = "L";
     }
-    else if (sensors.size() == 3)
+    else if (sensors.size() == 1)
       m_hybridType = "K";
     else
       m_hybridType = "M";
