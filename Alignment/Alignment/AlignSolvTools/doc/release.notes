@@ -2,6 +2,10 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+!=========================== AlignSolvTools v3r0 2009-07-06 ==================
+
+! 2009-07-06 - Wouter Hulsbergen
+- Migrated from SolvKernel to AlignKernel
 
 !=========================== AlignSolvTools v2r5 2008-06-17 ==================
 - J. Blouw: new tag for this package; some undocumented updates have been performed such that
