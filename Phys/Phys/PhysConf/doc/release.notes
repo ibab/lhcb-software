@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.15 2009-03-04 13:22:01 jpalac Exp $
+!$Id: release.notes,v 1.16 2009-07-06 15:31:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2009-07-06 - Patrick Koppenburg
+ - Default DataType now MC09
+ - Bug fix : do not run MuonID on rDST
+ - increment to v1r2
 
 !========================== PhysConf v1r1p1 2009-03-04 =======================
 
