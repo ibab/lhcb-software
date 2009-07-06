@@ -1,4 +1,4 @@
-// $Id: STPedestalDecoding.cpp,v 1.1 2009-03-02 16:27:44 mtobin Exp $
+// $Id: STPedestalDecoding.cpp,v 1.2 2009-07-06 16:50:37 akeune Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -119,9 +119,9 @@ StatusCode STPedestalDecoding::execute()
     const unsigned int* w=p->begin<unsigned int>(); 
     for( ; w != p->end<unsigned int>(); ++w ) {
  			
-      if(cntWD % 192 == 0){	// Each 192 words we have a new PP-FPGA
+      if(cntWD == 192){	// Each 192 words we have a new PP-FPGA
         cntWD = 0;        
-        cntPP = cntWD/192;
+        ++cntPP;
         if (msgLevel(MSG::DEBUG)) {	
           debug() << "#######  Parsing now data from PP " << cntPP 
                   << " ##################" << endmsg; 
