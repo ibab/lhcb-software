@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.6 2009-07-03 13:31:03 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.7 2009-07-06 09:53:21 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -123,7 +123,7 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
       DeSTSector::Sensors::const_iterator iter = tsensors.begin();
       for (; iter != tsensors.end(); ++iter){
         Tf::Tsa::Line3D aLine3D(stateVec.position(), stateVec.slopes());
-        if (m_selector->select((*iterS)->elementID()) && insideSensor(*iter, aLine3D) == true){
+        if (select((*iterS)->elementID()) && insideSensor(*iter, aLine3D) == true){
 
 	  // get the list of strips that could be in the cluster
           Gaudi::XYZPoint globalEntry = intersection(aLine3D,(*iter)->entryPlane());

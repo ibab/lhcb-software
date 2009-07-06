@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-07-03 M Needham
+ - Minor change in TTHitExpectation to get required behaviour  
+
+! 2009-07-03 M Needham
  - Add isolated track selector for IT (ITIsolatedTrackSelector)
  - Add possibility to select parts of IT or TT to IT/TTHitExpectation
  - Add possiblity to select part of IT or TT to STClusterCollector + speed up code
