@@ -1,6 +1,6 @@
-// $Id: StandardDC06D0.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// $Id: StandardDC06D0.opts,v 1.2 2009-07-06 15:41:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 
 // ============================================================================
 
@@ -60,7 +60,7 @@ StdDC06LooseD02KPiPiPiCASeq.MeasureTime = true;
 /*************************************************************************
  *  StandardDC06 Loose D0->KPi
  */
-StdDC06LooseD02KPi.PhysDesktop.InputLocations = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" };
+StdDC06LooseD02KPi.InputLocations = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" };
 // Cuts for daughters
 StdDC06LooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc";
 StdDC06LooseD02KPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",
@@ -78,7 +78,7 @@ StdDC06LooseD02KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel
 /*************************************************************************
  *  StandardDC06 Loose D0->PiPi
  */
-StdDC06LooseD02PiPi.PhysDesktop.InputLocations = { "Phys/StdDC06LoosePions" };
+StdDC06LooseD02PiPi.InputLocations = { "Phys/StdDC06LoosePions" };
 StdDC06LooseD02PiPi.DecayDescriptor = "[D0 -> pi+ pi-]cc"; // cc needed or D* gets confused
 // Cuts for daughters
 StdDC06LooseD02PiPi.DaughterFilter.Selections = {"pi+ : KinFilterCriterion, PVIPFilterCriterion"};
@@ -95,7 +95,7 @@ StdDC06LooseD02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt prese
 /*************************************************************************
  *  StandardDC06 Loose D0->KK
  */
-StdDC06LooseD02KK.PhysDesktop.InputLocations = { "Phys/StdDC06LooseKaons" };
+StdDC06LooseD02KK.InputLocations = { "Phys/StdDC06LooseKaons" };
 StdDC06LooseD02KK.DecayDescriptor = "[D0 -> K+ K-]cc"; // cc needed or D* gets confused
 // Cuts for daughters
 StdDC06LooseD02KK.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion"};
@@ -113,8 +113,8 @@ StdDC06LooseD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel:
  *  StandardDC06 Loose D0->KsPiPi
  *  @author C. Lazzeroni
  */
-StdDC06LooseD02KsPiPi.PhysDesktop.InputLocations = {"Phys/StdDC06LoosePions"};
-StdDC06LooseD02KsPiPi.PhysDesktop.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
+StdDC06LooseD02KsPiPi.InputLocations = {"Phys/StdDC06LoosePions"};
+StdDC06LooseD02KsPiPi.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
 StdDC06LooseD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc" ; // or D* gets confused
 StdDC06LooseD02KsPiPi.DaughterFilter.Selections = {"pi+ :     KinFilterCriterion/PiKin",
                                                "KS0 :     KinFilterCriterion/KS0Kin"};
@@ -136,8 +136,8 @@ StdDC06LooseD02KsPiPi.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8
  *  StandardDC06 Loose D0->KsKK
  *  @author C. Lazzeroni
  */
-StdDC06LooseD02KsKK.PhysDesktop.InputLocations = {"Phys/StdDC06LooseKaons"};
-StdDC06LooseD02KsKK.PhysDesktop.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
+StdDC06LooseD02KsKK.InputLocations = {"Phys/StdDC06LooseKaons"};
+StdDC06LooseD02KsKK.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
 StdDC06LooseD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc"; // or D* gets confused
 StdDC06LooseD02KsKK.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
                                              "KS0 :     KinFilterCriterion/KS0Kin"};
@@ -159,8 +159,8 @@ StdDC06LooseD02KsKK.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*m
  *  StandardDC06 Loose D0->KsKPi
  *  @author J. Libby
  */
-StdDC06LooseD02KsKPi.PhysDesktop.InputLocations = {"Phys/StdDC06LooseKaons","Phys/StdDC06LoosePions"};
-StdDC06LooseD02KsKPi.PhysDesktop.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
+StdDC06LooseD02KsKPi.InputLocations = {"Phys/StdDC06LooseKaons","Phys/StdDC06LoosePions"};
+StdDC06LooseD02KsKPi.InputLocations += {"Phys/StdDC06LooseKsLL","Phys/StdDC06LooseKsDD"};
 StdDC06LooseD02KsKPi.DecayDescriptor = "[D0 -> KS0 K+ pi-]cc"; // or D* gets confused
 StdDC06LooseD02KsKPi.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
                                               "pi+ :    KinFilterCriterion/PiKin",  
@@ -187,7 +187,7 @@ StdDC06LooseD02KsKPi.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*
  *
  *  would be so much nicer in python...
  */
-StdDC06LooseD02KKPiPiNoCC.PhysDesktop.InputLocations = {"Phys/StdDC06LoosePions", "Phys/StdDC06LooseKaons"};
+StdDC06LooseD02KKPiPiNoCC.InputLocations = {"Phys/StdDC06LoosePions", "Phys/StdDC06LooseKaons"};
 // Cuts for Daughters
 StdDC06LooseD02KKPiPiNoCC.DecayDescriptor = "D0 -> K+ K- pi+ pi-";
 StdDC06LooseD02KKPiPiNoCC.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
@@ -217,7 +217,7 @@ StdDC06LooseD02KKPiPiNoCC.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 4
  *  StandardDC06 Loose D0->K3pions (Cabibbo Allowed)
  *  @author A.Powell
  */
-StdDC06LooseD02KPiPiPiCA.PhysDesktop.InputLocations = {"Phys/StdDC06LoosePions", "Phys/StdDC06LooseKaons"};
+StdDC06LooseD02KPiPiPiCA.InputLocations = {"Phys/StdDC06LoosePions", "Phys/StdDC06LooseKaons"};
 // Cuts for Daughters
 StdDC06LooseD02KPiPiPiCA.DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc";
 StdDC06LooseD02KPiPiPiCA.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",

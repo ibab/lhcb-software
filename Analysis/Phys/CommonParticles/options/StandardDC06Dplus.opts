@@ -1,6 +1,6 @@
-// $Id: StandardDC06Dplus.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// $Id: StandardDC06Dplus.opts,v 1.2 2009-07-06 15:41:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file
@@ -27,7 +27,7 @@ StdDC06LooseD2KPiPiSeq.MeasureTime = true;
 /*************************************************************************
  *  StandardDC06 Loose D+ -> KPiPi
  */
-StdDC06LooseD2KPiPi.PhysDesktop.InputLocations = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" };
+StdDC06LooseD2KPiPi.InputLocations = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" };
 // Cuts for daughters
 StdDC06LooseD2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
 StdDC06LooseD2KPiPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",
@@ -48,7 +48,7 @@ StdDC06TightD2KPiPiSeq.MeasureTime = true;
 /*************************************************************************
  *  StandardDC06 Tight D+ -> KPiPi
  */
-StdDC06TightD2KPiPi.PhysDesktop.InputLocations = { "Phys/StdDC06TightKaons", "Phys/StdDC06TightPions" };
+StdDC06TightD2KPiPi.InputLocations = { "Phys/StdDC06TightKaons", "Phys/StdDC06TightPions" };
 // Cuts for daughters
 StdDC06TightD2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
 StdDC06TightD2KPiPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",

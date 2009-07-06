@@ -1,6 +1,6 @@
-// $Id: StandardDC06Rho0.opts,v 1.1 2008-07-11 15:58:39 pkoppenb Exp $
+// $Id: StandardDC06Rho0.opts,v 1.2 2009-07-06 15:41:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -23,7 +23,7 @@ StdDC06LooseRho02PiPiSeq.MeasureTime = true;
 /*************************************************************************
 *  StandardDC06 Loose rho(770)0 -> pi+ pi-
 */
-StdDC06LooseRho02PiPi.PhysDesktop.InputLocations = { "Phys/StdDC06LoosePions" };
+StdDC06LooseRho02PiPi.InputLocations = { "Phys/StdDC06LoosePions" };
 StdDC06LooseRho02PiPi.DecayDescriptor = "rho(770)0 -> pi+ pi-";
 // Cuts for daughters
 StdDC06LooseRho02PiPi.DaughterFilter.Selections = 

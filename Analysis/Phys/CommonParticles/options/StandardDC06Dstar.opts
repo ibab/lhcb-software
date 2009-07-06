@@ -1,6 +1,6 @@
-// $Id: StandardDC06Dstar.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// $Id: StandardDC06Dstar.opts,v 1.2 2009-07-06 15:41:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file
@@ -38,7 +38,7 @@ StdDC06LooseDstarWithD02KKSeq.MeasureTime = true;
 /*************************************************************************
  *  StandardDC06 Loose D* with D0->KPi
  */
-StdDC06LooseDstarWithD02KPi.PhysDesktop.InputLocations = { "Phys/StdDC06LooseD02KPi", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
+StdDC06LooseDstarWithD02KPi.InputLocations = { "Phys/StdDC06LooseD02KPi", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
 StdDC06LooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdDC06LooseDstarWithD02KPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
@@ -57,7 +57,7 @@ StdDC06LooseDstarWithD02KPi.MotherFilter.MassDifferenceFilterCriterion.MotherNam
 /*************************************************************************
  *  StandardDC06 Loose D* with D0->PiPi
  */
-StdDC06LooseDstarWithD02PiPi.PhysDesktop.InputLocations = { "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
+StdDC06LooseDstarWithD02PiPi.InputLocations = { "Phys/StdDC06LooseD02PiPi", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
 StdDC06LooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdDC06LooseDstarWithD02PiPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
@@ -76,7 +76,7 @@ StdDC06LooseDstarWithD02PiPi.MotherFilter.MassDifferenceFilterCriterion.MotherNa
 /*************************************************************************
  *  StandardDC06 Loose D* with D0->KK
  */
-StdDC06LooseDstarWithD02KK.PhysDesktop.InputLocations = { "Phys/StdDC06LooseD02KK", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
+StdDC06LooseDstarWithD02KK.InputLocations = { "Phys/StdDC06LooseD02KK", "Phys/StdDC06LoosePions", "Phys/StdDC06LooseVTTPions" };
 StdDC06LooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdDC06LooseDstarWithD02KK.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};

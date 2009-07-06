@@ -1,6 +1,6 @@
-// $Id: StandardDC06Phi.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// $Id: StandardDC06Phi.opts,v 1.2 2009-07-06 15:41:10 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -23,7 +23,7 @@ StdDC06LoosePhi2KKSeq.MeasureTime = true;
 /*************************************************************************
 *  StandardDC06 Loose Phi->KK
 */
-StdDC06LoosePhi2KK.PhysDesktop.InputLocations = 
+StdDC06LoosePhi2KK.InputLocations = 
   { "Phys/StdDC06LooseKaons" };
 StdDC06LoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-";
 // Cuts for daughters
