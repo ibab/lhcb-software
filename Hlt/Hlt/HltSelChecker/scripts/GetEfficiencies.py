@@ -95,6 +95,7 @@ if ( mainhead == "<unset>" ):
 else :
     head = mainhead
 files = sorted(glob.glob(head+'-*'))
+print "\n\n---++ Signal efficiencies\n"
 print "| *Signal*  | *Trigger* | *L0* | *Hlt* | *Hlt1* | *Hlt2* | *Hlt2/1* | *Tk* | *Best Sel* | *2nd Sel* | *3rd Sel* | *4th Sel* |"    
 for f in files :
     s = f.split('-')[1]

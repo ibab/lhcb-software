@@ -31,6 +31,7 @@ moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 # Decay Tree Tuple
 #

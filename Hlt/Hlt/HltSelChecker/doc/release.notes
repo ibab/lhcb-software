@@ -19,6 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-06 - Patrick Koppenburg
+ - Save EventTuple for all signals
+ - Remove HiddenValley. Too slow.
+ - Increment to v8r5
+
 !========================== HltSelChecker v8r4 2009-07-03 ===================
 ! 2009-07-02 - Patrick Koppenburg
  - Update C code to make wiki pages. Now an executable.

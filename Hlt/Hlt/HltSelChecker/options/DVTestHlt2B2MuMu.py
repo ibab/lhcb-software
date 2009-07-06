@@ -16,6 +16,7 @@ moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 # True filter criterion
 #

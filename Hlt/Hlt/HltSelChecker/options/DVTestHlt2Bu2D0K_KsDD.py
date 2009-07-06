@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.11 2009-06-02 08:07:33 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.12 2009-07-06 13:43:45 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -32,6 +32,7 @@ moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple
 ###

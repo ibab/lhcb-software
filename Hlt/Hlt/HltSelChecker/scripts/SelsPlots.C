@@ -103,9 +103,9 @@ void wiki_footer(bool showHlt1){
 void wiki_printName(TString cat, TString ss){
   cout << "| " ;
   if ( cat == "" ) cout << "  |  ";
-  if (ss=="" || ss.Contains("Global")) cout << "%BLUE% ";
+  if (ss=="" || ss=="Hlt1Global" || ss=="Hlt2Global" ) cout << "%BLUE% *";
   cout << "<nox>" << cat ;
-  if (ss=="" || ss.Contains("Global")) cout << " %ENDCOLOR% ";
+  if (ss=="" || ss.Contains("Global")) cout << "* %ENDCOLOR% ";
   cout << " | <nox>" << ss  ; 
   cout << "  |  " ;
   return ;
@@ -207,8 +207,10 @@ void SelsPlots(TChain* MB12){
   int L0events = MB12->GetEntries("L0Decision==1");
   int Hlt1events = MB12->GetEntries("Hlt1Global==1");
   double Hlt1eff = 1.0*Hlt1events/L0events ;
-  double normalisation = 1000000./L0events  ;
   bool showHlt1 = true ;
+  double L0rate = 1000000. ;
+  double Hlt1rate = 36800 ; // says Hans on 6/7/09
+
   vector<TString> sels ;
   if ( Hlt1eff < 0.5 ) sels.push_back( "L0Decision" );
   sels.push_back( "Hlt1Global" );
@@ -227,9 +229,12 @@ void SelsPlots(TChain* MB12){
   }
 
   cout << endl << endl << endl ;
+  cout << "---++ Hlt1 and 2 rates" << endl << endl ;
+  
+  double normalisation = L0rate/L0events  ;
   if ( Hlt1eff > 0.5 ){
-    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is already applied at " << 40000.*Hlt1eff << " kHz\n" << endl ;
-    normalisation = 40000.*Hlt1eff/MB12->GetEntries("Hlt1Global==1")  ;
+    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is already applied at " << Hlt1rate*Hlt1eff << " kHz\n" << endl ;
+    normalisation = Hlt1rate*Hlt1eff/MB12->GetEntries("Hlt1Global==1")  ;
     showHlt1 = false ;
   } else {
     cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is not already applied." << endl ;
