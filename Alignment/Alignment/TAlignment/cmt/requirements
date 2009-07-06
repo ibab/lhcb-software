@@ -8,7 +8,7 @@ version           v4r1
 # Structure, i.e. directories to process. 
 #============================================================================
 #branches          cmt doc dict src options TAlignment
-branches          cmt doc src python
+branches          cmt doc src python dict
 include_path      none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -21,6 +21,8 @@ use   	GaudiAlg          	v*
 use     AlignSolvTools          v*      Alignment
 use 	AlignmentInterfaces	v*	Alignment
 use 	AlignTrTools		v*	Alignment
+use     AlignKernel             v*      Alignment
+use     AlignEvent              v*      Alignment
 use 	DigiEvent		v*	Event
 use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
@@ -41,7 +43,19 @@ library		TAlignment	../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library	library=TAlignment
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                       \
+              dictionary=TAlignment                                   \
+              headerfiles=$(TALIGNMENTROOT)/dict/TAlignmentDict.h     \
+              selectionfile=$(TALIGNMENTROOT)/dict/TAlignmentDict.xml \
+              options="-U__MINGW32__" \
+	      imports="Python -import=GaudiPython"
+
+# ================= end =======================================================
+
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
 #============================================================================
+
+macro TAlignmentDict_use_linkopts $(use_linkopts)
 

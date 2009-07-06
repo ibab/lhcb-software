@@ -2,7 +2,10 @@ import os, sys, re
 
 path = '/afs/cern.ch/user/j/janos/Al/Alignment_v3r1/Alignment/TAlignment/python/'
 #log    = path + 'AlignLayersWithCosmicsNoITHitsNoConstraints.log'
-log       = path +  'AlignLayersWithCosmicsNoITHitsUseNominalConstraints.log' #'AlignLayersAsModulesWithCosmicsNoITHitsConstraintTxTySzxSzyRun5Iterations.log' #'AlignLayersWithCosmicsNoITHitsConstrainTrxTryTrtxTrtyRun5Iterations.log' #'AlignLayersWithCosmicsNoITHitsConstrainFirst2andLast2LayersRun5Iterations' #'AlignLayersWithCosmicsNoITHitsNoConstraints.log'
+log  = path +  'AlignLayersWithCosmicsNoITHitsUseNominalConstraints.log'
+log  = 'alignoutput.txt'
+
+#'AlignLayersAsModulesWithCosmicsNoITHitsConstraintTxTySzxSzyRun5Iterations.log' #'AlignLayersWithCosmicsNoITHitsConstrainTrxTryTrtxTrtyRun5Iterations.log' #'AlignLayersWithCosmicsNoITHitsConstrainFirst2andLast2LayersRun5Iterations' #'AlignLayersWithCosmicsNoITHitsNoConstraints.log'
 job       = 'ConstrainToNominal'
 extension = 'pdf' 
 
@@ -147,9 +150,9 @@ for i in range( nElements ) :
    nHits = []
    for e in range( len( elements) ) :
       nHits.append( elements[ str( e ) ][ i ][ 'hits' ] )
-   if i%4 is 0 : c = colour.next()
+   #if i%4 is 0 : c = colour.next()
    graph = RootWrappers.TGraph( iterations, nHits, title='Layer %s'%( str( i ) ), 
-                                mstyle=20+i%4, msize=1, mcolour=c ).Clone()
+                                mstyle=20+i%4, msize=1, mcolour=i+1 ).Clone()
    if i is 0 :    
       graph.Draw( 'AP' )
       graph.SetMinimum( 900.0 )

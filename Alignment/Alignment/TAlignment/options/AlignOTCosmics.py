@@ -1,7 +1,7 @@
 
 from Gaudi.Configuration import *
 
-nIter               = 3
+nIter               = 5
 nEvents             = 100000
 minNumHits          = 10
 eigenvalueThreshold = 0
@@ -9,7 +9,7 @@ maxNumOutliers      = 0
 useDriftTime        = True
 granularity         = 'halflayers'
 granularity         = 'modules'
-granularity         = 'cframes'
+#granularity         = 'cframes'
 #granularity         = 'layers'
 #granularity         = 'modulesAndCFrames'
 preloadalignment    = False
@@ -21,7 +21,7 @@ mergeOTBX           = True
 loadnewgeometry     = True
 uselocalframe       = True
 chisqconstraints    = []
-caloMatching = True
+caloMatching = False
 
 # configure for half-layers
 from TAlignment.Alignables import *
@@ -267,17 +267,6 @@ alignment.WriteCondSubDetList          = [ "OT","IT" ]
 alignment.Chi2Outlier = 10000
 alignment.SimplifiedGeom = True
 
-if preloadalignment:
-   from Configurables import ( CondDBAccessSvc,CondDB )
-   AlignmentCondition = CondDBAccessSvc("AlignmentCondition")
-   AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTHalfLayers.db/LHCBCOND"
-   AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyRz.db/LHCBCOND"
-#   AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyRzMisalignmentTest.db/LHCBCOND"
-   CondDB().addLayer(AlignmentCondition)
-   ITAlignmentCondition = CondDBAccessSvc("ITAlignmentCondition")
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerWRTOTSlice.db/LHCBCOND"
-   CondDB().addLayer(ITAlignmentCondition)
-
 if loadnewgeometry:
    from Configurables import ( CondDB, CondDBAccessSvc )
    #otGeom = CondDBAccessSvc( 'OTGeom' )
@@ -291,8 +280,14 @@ if loadnewgeometry:
    CondDB().addLayer( otGeom )
    otCond = CondDBAccessSvc( 'OTCond' )
    otCond.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/LHCBCOND_changes.db/LHCBCOND'
+   otCond.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyTzRz.db/LHCBCOND"
    CondDB().addLayer( otCond )
 
+if preloadalignment:
+   from Configurables import ( CondDBAccessSvc,CondDB )
+   AlignmentCondition = CondDBAccessSvc("AlignmentCondition")
+   AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTHalfLayers.db/LHCBCOND"
+   CondDB().addLayer( AlignmentCondition )
 
 ## create a reconstruction sequence
    
@@ -300,7 +295,7 @@ patseq = GaudiSequencer("PatSeq")
 patseq.Members = []
 
 from Configurables import (PatSeeding, PatSeedingTool, TrackRemoveOddOTClusters,
-                           TrackMonitor,TrackContainerCopy)
+                           TrackMonitor,TrackOTTimeMonitor,TrackContainerCopy)
 PatSeeding = PatSeeding("PatSeeding")
 if TrackSys().getProp("fieldOff"):
    PatSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
@@ -517,13 +512,17 @@ if muonMatching :
   preMonitorSeq.Members.append( muonMonitor )
   preMonitorSeq.Members.append( tmuonMonitor )
 
-preMonitorSeq.Members.append(TrackMonitor(name = "SelectedSeedPreMonitor",
+preMonitorSeq.Members += [TrackMonitor(name = "SelectedSeedPreMonitor",
                                           TracksInContainer = 'Rec/Track/SelectedSeed',
-                                          FullDetail = True))
-                          
-postMonitorSeq.Members.append(TrackMonitor(name = "SeedPostMonitor",
-                                           TracksInContainer = 'Rec/Track/Seed',
-                                           FullDetail = True))
+                                          FullDetail = True),
+                          TrackOTTimeMonitor(name="PreOTTimeMonitor",
+                                             TrackLocation = 'Rec/Track/SelectedSeed') ]
+
+postMonitorSeq.Members += [TrackMonitor(name = "SeedPostMonitor",
+                                        TracksInContainer = 'Rec/Track/Seed',
+                                        FullDetail = True),
+                           TrackOTTimeMonitor(name="PostOTTimeMonitor",
+                                              TrackLocation = 'Rec/Track/SelectedSeed') ]
 
 if caloMatching:
    from Configurables import (CaloCosmicsTrackAlg, TrackCaloCosmicsMonitor)

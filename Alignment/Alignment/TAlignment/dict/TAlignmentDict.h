@@ -3,5 +3,6 @@
 #include <vector>
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/Vector3DTypes.h"
-#include "TAlignment/GAlign.h"
+#include "../src/IAlignUpdateTool.h"
+
 #endif // TALIGNMENT_DICT

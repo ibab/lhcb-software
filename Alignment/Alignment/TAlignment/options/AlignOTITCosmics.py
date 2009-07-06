@@ -7,53 +7,31 @@ eigenvalueThreshold = 50
 useDriftTime        = True
 granularity         = 'halflayers'
 preloadalignment    = True
-simplifiedGeometry  = True
-granularity = 'cframes'
-ignoreIT = False
+# if this is true, IT will not actually move: we'll only have some histograms fromm robust alignment
+ignoreIT            = False
+#temporrary (until OT geometry is fixed in db)
+loadnewgeometry     = True
+eigenvaluecut       = -1
 
 # configure for half-layers
 from Alignables import *
 elements           = Alignables()
-constraints = []
-if granularity=='halflayers':
-   elements.OTLayersCSide("Tx")
-   elements.OTLayersASide("Tx")
-   constraints = [
-      "T1X1C : /.*?/OT/T1/X1layer/Quarter(0|2)/.*? : Tx",
-      "T1UC  : /.*?/OT/T1/Ulayer/Quarter(0|2)/.*?  : Tx",
-      "T1X1A : /.*?/OT/T1/X1layer/Quarter(1|3)/.*? : Tx",
-      "T1UA  : /.*?/OT/T1/Ulayer/Quarter(1|3)/.*?  : Tx",
-      "T3X2C : /.*?/OT/T3/X2layer/Quarter(0|2)/.*? : Tx",
-      "T3UC  : /.*?/OT/T3/Vlayer/Quarter(0|2)/.*?  : Tx",
-      "T3X2A : /.*?/OT/T3/X2layer/Quarter(1|3)/.*? : Tx",
-      "T3UA  : /.*?/OT/T3/Vlayer/Quarter(1|3)/.*?  : Tx",
-      ]
-elif granularity=='crames':
-   elements.OTCFramesASide("TxTy")
-   elements.OTCFramesCSide("TxTy")
-   
-constraints = []
-
-#elements.ITLayers("Tx")
-#elements.ITBoxes("TxTyRz")
-
+elements.OTCFramesASide("TxTyTzRz")
+elements.OTCFramesCSide("TxTyTzRz")
+constraints = [
+   "T1X1C : /.*?/OT/T1/X1layer/Quarter(0|2)/.*? : Tx Ty Tz Rx Ry Rz",
+   "T1X1A : /.*?/OT/T1/X1layer/Quarter(1|3)/.*? : Tx Ty Tz Rx Ry Rz",
+   "T3X1C : /.*?/OT/T3/X1layer/Quarter(0|2)/.*? : Tx Ty Tz Rx Ry Rz",
+   "T3X1A : /.*?/OT/T3/X1layer/Quarter(1|3)/.*? : Tx Ty Tz Rx Ry Rz",
+   ]
+elements.ITBoxes("TxTyTz")
 print elements
 
 # configure some tracking opts
 from TrackSys.Configuration import *
 #TrackSys().fieldOff = True
 TrackSys().SpecialData += [ 'fieldOff' ]
-TrackSys().ExpertTracking += ['noDrifttimes','kalmanSmoother' ]
-
-if simplifiedGeometry : TrackSys().ExpertTracking += [ 'simplifiedGeometry' ]
-
-EventDataSvc().ForceLeaves        = True
-EventDataSvc().EnableFaultHandler = True
-EventDataSvc().RootCLID           =    1
-
-#from DDDB.Configuration import *
-from Configurables import DDDBConf
-DDDBConf().DataType = '2008'
+TrackSys().ExpertTracking += ['noDrifttimes','kalmanSmoother','simplifiedGeometry' ]
 
 from Configurables import MagneticFieldSvc
 MagneticFieldSvc().UseConstantField = True
@@ -75,28 +53,14 @@ importOptions('$STDOPTS/DecodeRawEvent.py')
 
 ## Open Files; Also initialises Application Manager
 ## Specify the data
+# add some of my OT cosmics data. this will probably mean that we'll
+# have most IT tracks double, but okay, we need something to fix the OT
 data = [
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085567.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085568.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085569.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085570.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085572.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085574.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085559.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085560.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085561.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085562.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085563.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085564.raw'
-   ]
-
-data = [
-   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34083.dst',
-   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst',
    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
    ]
 
-data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.raw',
+#Matt's data
+data += ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.raw',
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_20_21_sept.raw',
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run30636.dst',
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run30639.dst',
@@ -159,7 +123,7 @@ data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.r
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run32432.dst',
         'PFN:/afs/cern.ch/lhcb/group/tracking/vol5/mneedham/cosmics_run34116.raw']
 
-data += [ 'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst' ]
+#data += [ 'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst' ]
 
 
 #data = ['PFN:/afs/cern.ch/lhcb/group/tracking/vol4/mneedham/cosmics_19_20_sept.raw',
@@ -177,42 +141,39 @@ GaudiKernel.ProcessJobOptions.PrintOff()
 from AlConfigurable import *
 
 alignment = AlConfigurable()
-## AlternativeDB
-#alignment.AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
-#alignment.AlternativeCondDBTag        = "DC06-20080407"
-#alignment.AlternativeCondDBTag       = "MisA-OTL-1"
-#alignment.AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
-
-## Patttern Recognition?
-#alignment.CondDBTag                    = "2008-default"
-alignment.Pat                          = True
-alignment.OutputLevel                  = INFO
-alignment.ElementsToAlign              = list(elements)
-alignment.NumIterations                = nIter
-alignment.AlignInputTrackCont          = "Alignment/AlignmentTracks"
-alignment.UseCorrelations              = True
-alignment.Constraints                  = constraints
-alignment.UseWeightedAverageConstraint = False
-alignment.MinNumberOfHits              = minNumHits
-alignment.UsePreconditioning           = True
-alignment.SolvTool                     = "DiagSolvTool"
-alignment.WriteCondToXML               = True
-alignment.CondFileName                 = "Elements.xml"
-alignment.CondDepths                   = [0,1,2,3,4,5,6]
-alignment.SimplifiedGeom               = True
-alignment.WriteCondSubDetList          = [ "OT","IT" ]
-alignment.Chi2Outlier = 10000
+alignment.DataType             = '2008'
+alignment.Pat                  = True
+alignment.OutputLevel          = INFO
+alignment.ElementsToAlign      = list(elements)
+alignment.NumIterations        = nIter
+alignment.AlignInputTrackCont  = 'Rec/Track/SelectedSeed'
+alignment.Constraints          = constraints
+alignment.MinNumberOfHits      = minNumHits
+alignment.SolvTool             = "DiagSolvTool"
+alignment.EigenValueThreshold  = eigenvaluecut
+alignment.WriteCondSubDetList  = [ "OT","IT" ]
+alignment.UseLocalFrame        = False
+alignment.Chi2Outlier          = 10000
 
 if preloadalignment:
    from Configurables import ( CondDBAccessSvc,CondDB )
-   #AlignmentCondition = CondDBAccessSvc("AlignmentCondition")
-   #AlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTHalfLayers.db/LHCBCOND"
-   #CondDB().addLayer(AlignmentCondition)
+   from Configurables import ( CondDBAccessSvc,CondDB )
+   OTAlignmentCondition = CondDBAccessSvc("OTAlignmentCondition")
+   OTAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/OTCFramesTxTyRz.db/LHCBCOND"
+   #CondDB().addLayer(OTAlignmentCondition)
    ITAlignmentCondition = CondDBAccessSvc("ITAlignmentCondition")
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
-   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerWRTOTSlice.db/LHCBCOND"
+   #ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerSlice.db/LHCBCOND"
+   #ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/AlignedMattNewTxTyRzITLayerTxTyWRTOTCFramesSlice.db/LHCBCOND"
+   ITAlignmentCondition.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/MattsITLayerSlice.db/LHCBCOND"
    CondDB().addLayer(ITAlignmentCondition)
-      
+   
+if loadnewgeometry:
+   from Configurables import ( CondDB, CondDBAccessSvc )
+   otGeom = CondDBAccessSvc( 'OTGeom' )
+   otGeom.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/DDDB-FixModules.db/DDDB'
+   CondDB().addLayer( otGeom )
+
+
 ## create a reconstruction sequence
 patseq = GaudiSequencer("PatSeq")
 patseq.Members = []
@@ -320,32 +281,8 @@ from Configurables import TrackMonitor
 
 patseq.Members += [ seedselectoralg ]
 
-   
-# add the alignment. this is a bit tricky, but for now I just want the histograms
-from Configurables import (AlignAlgorithm, GetElementsToBeAligned,Al__AlignConstraintTool,
-                          Al__AlignUpdateTool,gslSVDsolver,DiagSolvTool,AlRobustAlignAlg )
-
-# First apply everything that was set before
-alignment.alignmentSeq()
-alignAlg = AlignAlgorithm( 'Alignment' )
-
-alignAlg.TracksLocation  = 'Rec/Track/SelectedSeed'
-alignAlg.UseCorrelations = True
-#alignAlg.UpdateInFinalize = True
-updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
-#solver = gslSVDsolver("MatrixSolverTool")
-#solver.EigenValueThreshold = 100
-#updatetool.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
-#DiagSolvTool().EigenValueThreshold = eigenvalueThreshold
-#DiagSolvTool().WriteMonNTuple = True
-#updatetool.addTool( solver, name = "MatrixSolverTool" )
-#updatetool.MatrixSolverTool.EigenValueThreshold = 100
-#updatetool.MatrixSolverTool.WriteMonNTuple = True
-elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
-elementtool.UseLocalFrame = False
-
 ## introduce some monitoring for first and last iteration
-from Configurables import TrackOTTimeMonitor
+from Configurables import AlRobustAlignAlg
 preMonitorSeq = GaudiSequencer("PreMonitorSeq") ;
 postMonitorSeq = GaudiSequencer("PostMonitorSeq") ;
 patseq.Members += [preMonitorSeq,postMonitorSeq]
@@ -369,10 +306,6 @@ from GaudiPython import *
 from GaudiPython import gbl
 
 EventPersistencySvc().CnvServices.append( "LHCb::RawDataCnvSvc" )
-# POOL Persistency
-importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-#import Gaudi.CommonGaudiConfigurables
-
 
 # Hack to overide default EvtSel open
 from GaudiPython.Bindings import iEventSelector
