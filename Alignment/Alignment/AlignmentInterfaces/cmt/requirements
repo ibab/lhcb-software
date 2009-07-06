@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           AlignmentInterfaces
-version           v2r8
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,7 +12,6 @@ branches          cmt dict doc AlignmentInterfaces
 # =============== dependencies ==============================================
 use GaudiKernel       v*
 use AlignKernel	      v*    Alignment
-
 
 # =============== include directories =======================================
 apply_pattern	install_more_includes	more=AlignmentInterfaces
