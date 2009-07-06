@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include "SolvKernel/AlVec.h"
-#include "SolvKernel/AlSymMat.h"
+#include "AlignKernel/AlVec.h"
+#include "AlignKernel/AlSymMat.h"
 #include "AlDofMask.h"
 #include "Math/Transform3D.h"
 #include "Math/SMatrix.h"

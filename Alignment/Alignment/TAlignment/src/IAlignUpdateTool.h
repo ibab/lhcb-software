@@ -2,7 +2,7 @@
 #define TALIGNMENT_IALIGNUPDATETOOL_H
 
 #include "GaudiKernel/IAlgTool.h"
-#include "SolvKernel/AlEquations.h"
+#include "AlignKernel/AlEquations.h"
 
 namespace Al
 {

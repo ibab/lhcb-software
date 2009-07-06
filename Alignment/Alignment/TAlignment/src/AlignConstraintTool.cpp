@@ -1,7 +1,7 @@
 #include "IAlignConstraintTool.h"
 #include "IGetElementsToBeAligned.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "SolvKernel/AlMat.h"
+#include "AlignKernel/AlMat.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
 #include "boost/tokenizer.hpp"

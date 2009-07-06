@@ -1,6 +1,6 @@
 #include "IAlignUpdateTool.h"
 #include "GaudiAlg/GaudiHistoTool.h"
-#include "SolvKernel/AlMat.h"
+#include "AlignKernel/AlMat.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
 #include "IGetElementsToBeAligned.h"
@@ -31,6 +31,8 @@ namespace Al
     StatusCode initialize() ;
     StatusCode finalize() ;
     StatusCode process( const Al::Equations& equations, size_t iter, size_t maxiter ) const ;
+    StatusCode queryInterface(const InterfaceID& riid, void** ppvi ) ;
+
   private:
     bool printDebug()   const {return msgLevel(MSG::DEBUG);};
     bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
@@ -569,4 +571,20 @@ namespace Al
 	  alignConstants.insert(alignConstants.end(), rotations.begin()   , rotations.end()   );
     }
   }
+
+  StatusCode AlignUpdateTool::queryInterface(const InterfaceID& id, void** ppI) {
+    // check the placeholder:
+    if (0 == ppI) return StatusCode::FAILURE;
+    // check ID of the interface
+    if( IAlignUpdateTool::interfaceID() == id ) {
+      *ppI = static_cast<IAlignUpdateTool*>(this);
+      addRef();
+    } else {
+      return AlgTool::queryInterface(id, ppI);
+    }
+    return StatusCode::SUCCESS;
+  }
+  
+  
+
 }

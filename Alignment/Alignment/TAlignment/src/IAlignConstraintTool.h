@@ -3,9 +3,9 @@
 
 #include "GaudiKernel/IAlgTool.h"
 #include "IGetElementsToBeAligned.h"
-#include "SolvKernel/AlEquations.h"
-#include "SolvKernel/AlVec.h"
-#include "SolvKernel/AlSymMat.h"
+#include "AlignKernel/AlEquations.h"
+#include "AlignKernel/AlVec.h"
+#include "AlignKernel/AlSymMat.h"
 
 
 namespace Al
