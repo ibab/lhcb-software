@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.20 2009-06-09 17:31:22 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.21 2009-07-06 16:01:17 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -25,6 +25,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string passwd,
     // initialize Oracle session and log in
     m_StmtMethod = "OnlineHistDB::OnlineHistDB";
     m_ownEnv = true;
+    if (m_debug > 2) std::cout<< "creating new OCI session "<<std::endl;
     checkerr( OCIEnvCreate ((OCIEnv **)&m_envhp, (ub4)OCI_OBJECT , (dvoid *)0,
                             (dvoid * (*) (dvoid *, size_t))0, (dvoid * (*)(dvoid *, dvoid *, size_t))0,
                             (void (*)(dvoid *, dvoid *))0, (size_t)0, (dvoid **)0 ),
@@ -109,6 +110,7 @@ OnlineHistDBEnv::~OnlineHistDBEnv() {
     if(m_refRoot) delete m_refRoot;
     if(m_savesetsRoot) delete m_savesetsRoot;
     OCICacheFree ( m_envhp, m_errhp, m_svchp);
+    OCILogoff ( m_svchp, m_errhp);
     if (m_envhp)
       OCIHandleFree((dvoid *) m_envhp, OCI_HTYPE_ENV);
   }
