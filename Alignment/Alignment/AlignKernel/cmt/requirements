@@ -1,0 +1,45 @@
+# =============================================================================
+# Created    : 10/05/2007
+# Maintainer : Adlene Hicheur en Wouter Hulsbergen (Adlene.Hicheur@cern.ch
+# =============================================================================
+package             AlignKernel
+version             v2r0
+
+# ================= structure =================================================
+branches            cmt doc src xml AlignKernel
+
+# ================= dependencies ==============================================
+
+use GSL            v*  LCG_Interfaces 
+use GaudiKernel    v*
+use GaudiAlg       v*
+use GaudiGSL       v*
+use lapack         v* LCG_Interfaces 
+#use blas           v* LCG_Interfaces 
+
+macro lapack_linkopts " -L$(lapack_home)/lib -llapack3" \
+                WIN32 " -L$(lapack_home)/lib lapack3.lib"
+
+macro_append lapack_linkopts "" \
+        target-gcc4 " -lgfortran " \
+        target-gcc3 " -lg2c "
+
+#macro blas_linkopts " -L$(blas_home)/lib -lblas -lgfortran" \ 
+#                    WIN32 " -L$(blas_home)/lib blas.lib"
+
+# ================= own includes ==============================================
+apply_pattern   install_more_includes   more=AlignKernel
+
+# ================= constituens: linker library ===============================
+library             AlignKernel    *.cpp
+
+# ================= patterns ==================================================
+apply_pattern       linker_library library=AlignKernel
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                       \
+              dictionary=AlignKernel                                   \
+              headerfiles=$(ALIGNKERNELROOT)/dict/AlignKernelDict.h     \
+              selectionfile=$(ALIGNKERNELROOT)/dict/AlignKernelDict.xml \
+              options="-U__MINGW32__"
+# ================= end =======================================================

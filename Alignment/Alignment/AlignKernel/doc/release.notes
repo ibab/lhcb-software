@@ -1,0 +1,51 @@
+! $Id: release.notes,v 1.1 2009-07-06 12:40:02 wouter Exp $
+! Package     : SolvKernel
+! Responsible : Adlene Hicheur en Wouter Hulsbergen
+!-------------------------------------------------------------------------------
+
+! 2009-07-06 Wouter Hulsbergen
+ - Renamed package to AlignKernel
+
+! 2009-04-22 Wouter Hulsbergen
+ - added derivatives to primary vertex
+
+! 2009-04-15 Wouter Hulsbergen
+ - added missing class to dictionary
+
+!=========================== AlignSolvTools v2r0 2009-02-21 ====================
+! 2009-02-21 Johan Blouw
+ - release v2r0 on account of pythonization of Escher
+
+! 2009-01-21 Wouter Hulsbergen
+ - Changes in Al::ElementData
+   - Separate 2nd derivative diagonal from off-diagonal
+   - Rename data members such that I know what they mean
+   - added method to transform to a different frame
+
+! 2008-10-23 Adlene Hicheur
+ - Add dictionnaries for Alignment objects (for python use)
+
+!=========================== AlignSolvTools v1r3 2008-05-19 ====================
+! 2008-05-19 Johan Blouw: tagged package as v1r3. Version v1r2 does for whatever reason
+                          not exist in cvs.
+
+! 2008-04-10 Wouter Hulsbergen
+ - Added MA27 and AlSparseSymMatrix
+ - added operator(row,col) for all matrices
+
+! 2008-02-05 Wouter Hulsbergen
+ - bug fix in resize methods: didn't work if current size was 0
+
+!=========================== AlignSolvTools v1r2 2008-01-18 ====================
+! 2008-01-18 - Adlene Hicheur
+ - Add methods to remove irrelevant Dofs
+ - Add insert methods to fill blocks from SMatrix objects
+ - generalize reSize methods to allocate space for already declared object
+
+!=========================== AlignSolvTools v1r1 2007-05-15 ====================
+! 2007-05-14 - Marco Cattaneo
+ - Clean up requirements
+
+! 2007-05-10 - Adlene Hicheur
+ - SolvKernel package creation, copy matrix and algebra classes from AlignSolvTools
+
