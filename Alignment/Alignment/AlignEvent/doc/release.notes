@@ -1,0 +1,680 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/TrackEvent
+! Responsible : M.Needham, W.Hulsbergen
+! Purpose     : Package for the tracking event model classes
+!-----------------------------------------------------------------------------
+
+! 2008-12-02 Wouter Hulsbergen
+ - Track::stateAt and Track::measurement(id) now return pointers
+
+!======================= TrackEvent v4r16 2008-11-17 =========================
+! 2008-11-05 M Needham
+ - add lite measurement types to enum
+
+! 2008-10-24 M Needham
+  - enable string to enum conversion in State, Node and Measurement
+  - Add constructors to track
+
+! 2008-10-21 Wouter Hulsbergen
+  - fix method that computes number of outliers
+	
+! 2008-10-15 Wouter Hulsbergen
+  - protect Track::probchi2 against ndof=0
+
+!======================= TrackEvent v4r15 2008-09-30 =========================
+! 2008-10-06 - Wouter Hulsbergen
+ - fix uninitialized data members in Measurement constructor
+
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+ - make computation of probChi2 of track safe for FPE
+
+! 2008-09-11 - Gerhard Raven
+ - enable string <-> enum conversion in Track.xml
+
+!======================= TrackEvent v4r14 2008-06-02 =========================
+! 2008-07-10 - Wouter Hulsbergen
+ - use god to generate Measurement::detectorElement 
+
+!======================= TrackEvent v4r13 2008-06-02 =========================
+! 2008-06-02 - Olivier Deschamps
+ - Add flags and enum values for Calo cosmics reconstruction 
+
+!======================= TrackEvent v4r12 2008-04-17 =========================
+! 2008-04-17 - Wouter Hulsbergen
+ - fixed bug in State::posMomCovariance found by Cedric Potterat
+
+!======================= TrackEvent v4r11 2008-02-20 =========================
+! 2008-02-20 - Vanya BELYAEV
+ - dict/lcgDict.h
+    add explicitly the dictionary for std::vector<LHCb::Track*>
+
+! 2008-02-06 - Marco Cattaneo
+ - Cleanup includes, using forward declaration possibility in GaudiObjDesc v11r2
+
+! 2008-02-04 - Wouter Hulsbergen
+ - Added pointer to detector element to Measurement class
+
+!======================= TrackEvent v4r10 2008-01-10 =========================
+! 2008-01-10 - Marco Cattaneo
+ - Make the Track(int key) constructor explicit
+
+!======================= TrackEvent v4r9 2007-12-04 ==========================
+!2007-12-04 - Wouter Hulsbergen
+ - Changed 'Measurement::setTrajectory' method such that it compiles on windows
+
+!2007-11-30 Wouter Hulsbergen
+ - added method to add list of states to track
+ - moved reference vector from Measurement to Node
+
+!2007-11-29 - Stephanie Hansmann-Menzemer
+ - change name of state: ZAtT -> ZEndT
+
+!2007-11-27 - Wouter Hulsbergen
+ - Added method to remove all measurements or nodes from a track
+
+!2007-11-26 - Wouter Hulsbergen
+ - Fixed 'Track::copy' method to work also for track with muon measurements
+ - Added method to efficiently add set of measurements to Track
+ - Added method to set StateVector to Measurement
+
+!2007-11-20 - Wouter Hulsbergen
+ - Corrected z-position for begin of T-station range in StateParameters
+
+!======================= TrackEvent v4r8 2007-11-09 ==========================
+! 2007-11-09 - Marco Cattaneo
+ - Remove an obsolete dependency
+
+! 2007-10-30 - Stephanie Hansmann-Menzemer
+ - Add additional z position in TStation in StateParameters.h
+
+! 2007-10-22 - Olivier Callot
+ - Replace 'KsTrack' by 'Downstream' in track locations
+ - Add history for PatSeeding, PatMatch and PatDowsntream algorithms
+
+! 2007-10-19 - Marco Cattaneo
+ - Add generation of a custom dictionary, and generate dictionary for
+   std::vector<const LHCb::Track*> 
+
+!======================= TrackEvent v4r7 2007-10-08 ==========================
+!2007-10-08 - Stephanie Hansmann-Menzemer (for Adrian Perieanu)
+ - Add Cand2ndQPat, NCandCommonHits, Cand2ndChi2Mat, GhosProbability flag to
+   extra Info
+
+! 2007-10-05 - Wouter Hulsbergen
+ - fixed bug in Track::copy
+ - added zpos for beginning of T-region to StateParameters.h
+
+! 2007-09-27 - Eduardo Rodrigues
+ - more improvements to fillStream method
+ - re-corrected a bug re-introduced with latest additions to fillStream method
+
+! 2007-09-28 M. Needham
+ - Add TsaLikelihood flag to extraInfo  
+
+!======================= TrackEvent v4r6 2007-09-17 ==========================
+! 2007-09-17 - Chris Jones
+ - Improve fillstream method to printout more info (ExtraInfo etc.)
+ - Make a few good inline-candidate methods inline
+ - Reduced the three clone extraInfo enums to one
+
+! 2007-09-17 - Marco Cattaneo
+ - Remove some unneccessary includes from .cpp files
+
+! 2007-09-14 - Chris Jones
+ - Add to extraInfo enum enters for KL Clone variables at the vertex, Rich1 
+   and Rich2
+
+! 2007-09-11 M Needham
+ - Add number of expected hits in VELO, TT, OT, IT to track extraInfo
+
+! 2007-09-06 M Needham
+ - Ensure no comparisions with != == between floats
+ 
+! 2007-09-05 - Wouter Hulsbergen
+ - Add 'propagationTolerance' to TrackParameters
+
+! 2007-09-05 - M. Needham 
+ - Ensure state flags is initialized
+
+! 2007-09-04 - Wouter Hulsbergen
+ - Added 'extra-info' fields in track enum for information from track fit.
+
+! 2007-08-16 - Eduardo Rodrigues
+ - fillStream method of Track:
+   - corrected the latest modifications: it was assuming a track always has
+     a state (problem if printing a default-constructed track e.g. in Python)
+   - added more info to the printout
+
+!======================= TrackEvent v4r5 2007-07-10 ==========================
+! 2007-07-10 M. Needham
+ - Remove VeloMissed from track enum
+
+! 2007-07-04 - David Hutchcroft
+ - Added 4 more history types to Track.xml for the various PatVelo algorithms
+
+! 2007-06-22 - Edwin Bos
+ - Removed kappa. Consistently use c_light in extrapolators and StateTraj.
+
+!======================= TrackEvent v4r4 2007-06-14 ==========================
+! 2007-06-14 - Edwin Bos
+ - Replaced the wrong correction by the correct value for kappa.
+
+! 2007-06-14 - M. Needham
+ - Change units of kappa to what is correct !
+
+! 2007-06-09 - M. Needham
+ - Add hasT, hasVelo and hasTT functions to Track
+
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
+! 2007-05-21 - Wouter Hulsbergen
+ - Add class StateVector
+
+!======================= TrackEvent v4r3 2007-05-08 ==========================
+! 2007-05-16 M. Needham
+ - Modify fillstream --> request of T Ruf
+
+! 2007-05-06 M. Needham
+ - Add functionality to track 
+   * Function to return phi
+   * Function to return pseudoRapidity()
+   * Function to return probChi2()
+
+!======================= TrackEvent v4r2 2007-04-20 ==========================
+! 2007-04-20 - Erica Polycarpo
+ - add Muon Track type and location 
+
+! 2007-04-17 - Gerhard Raven
+ - add stdVectorTypeDef="TRUE" to Measurement.xml
+
+!======================= TrackEvent v4r1 2007-03-20 ==========================
+! 2007-03-20 - Marco Cattaneo
+ - Use GaudiObjDesc to document enums in the generated header file
+ - Clarify documentation of Track::addInfo method
+ - Fix some doxygen warnings
+
+! 2007-03-20 - Stephanie Hansmann-Menzemer 
+ - Add PatQuality value to Track::AdditionalInfo enum
+
+!======================= TrackEvent v4r0p1 2007-02-02 ========================
+! 2007-02-02 - Marco Cattaneo
+ - Remove unneccessary rootmap for dictionary
+
+!======================= TrackEvent v4r0 2006-12-15 ==========================
+! 2006-12-15 - Marco Cattaneo
+ - Add Event/TrackTypes.h, moved from LHCbDefinitions
+ - Remove all other dependencies on LHCbDefinitions
+
+! 2006-11-12 - Gerhard Raven
+  - move Measurement::checkType from cpp to xml, and remove Measurement.cpp
+    as it is empty
+  - Use Measurement::Type instead of unsigned int in Measurement::type and 
+    Measurement::checkType
+
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
+
+!========================= TrackEvent v3r5 2006-10-23 ========================
+! 2006-11-23 - Marco Cattaneo
+ - Undo TrackUnitsConverters change, declare the functions a inline instead
+   in the header file
+ - Remove unneccessary LHCbMath include from State.cpp
+
+! 2006-11-16 - Jeroen VAN TILBURG
+ - Added TrackUnitsConverter.cpp and moved implementation from header file to
+   source file to prevect multiple declarations of the global functions.
+
+! 2006-11-06 - Jeroen VAN TILBURG
+ - Correction of typo in #define of header class TrackUnitConverters.h
+
+!========================= TrackEvent v3r4 2006-10-20 ========================
+! 2006-10-20 - Jeroen VAN TILBURG
+ - Added setChi2AndDoF method to Track class.
+
+! 2006-10-03 - Eduardo Rodrigues
+ - 2 new track flags introduced for the HLT needs
+ - clean-up and improvements to the doxygen documentation
+ - obsolete files TrackStreamer.* removed
+
+!========================= TrackEvent v3r3 2006-08-22 ========================
+! 2006-09-21 M. Needham
+ - Add extraInfo to reset
+ - Minor tidy up of copy contructors in Node and State
+
+!========================= TrackEvent v3r2 2006-08-21 ========================
+! 2006-08-14 - Eduardo Rodrigues
+ - non-const accessor to ancestor tracks
+
+!========================= TrackEvent v3r1 2006-08-03 ========================
+! 2006-08-03 -Ph. Charpentier, Eduardo Rodrigues
+ - re-re-re Fix in computation of the position and momentum covariance matrix
+
+! 2006-08-03 - J. Palacios
+ - Bug re-fix in State method to compute position/momentum covariance
+
+! 2006-08-03 - M. Needham
+ - Bug fixs in State method to compute position/momentum covariance
+
+! 2006-08-02 Eduardo Rodrigues
+ - added new file StateParameters.h. For now it contains some pre-defined
+   z-positions of states refering to certain state locations
+
+! 2006-08-01 Eduardo Rodrigues
+ - additions to Track class:
+   - added checkFitStatus and setExtraInfo methods
+   - bug fix: clone method now copies the ExtraInfo to the cloned track
+
+!========================= TrackEvent v3r0 2006-07-20 ========================
+! 2006-07-20 Eduardo Rodrigues
+ - Track class: set the appropriate flag is case the last measurement
+   is removed
+
+! 2006-07-20 M Needham
+ - Modify expection thrown if state not found to give location and type
+
+! 2006-07-19 - Marco Cattaneo
+ - Remove TrackVertex class, replaced by RecVertex (in RecEvent)
+
+! 2006-07-19 M Needham
+ - Add ExtraInfo map to track 
+
+!========================= TrackEvent v2r7 2006-06-30 ========================
+! 2006-06-29 - Jeroen van Tilburg
+ - Changed closestState methods in Track.cpp to loop over the node when they
+   exist.
+ - Added the position method to Node.xml.
+
+! 2006-06-29 - Edwin Bos
+ - Fixed definition of kappa in TrackParameters.h
+
+! 2006-06-27 - M Needham
+ - fix bug in unit interconversion
+
+! 2006-06-21 - M Needham
+ - clean up track enums
+
+!========================= TrackEvent v2r6 2006-06-20 ========================
+! 2006-06-20 Eduardo Rodrigues
+ - changes in Track class:
+   - Status enum split into PatRecStatus and FitStatus, to allow a correct
+     set of flags for tracks written to DST
+   - HistoryFit renamed to FitHistory
+   - propagation of changes to TrackUse and TrackStreamer
+   - introduced extra track flags for bi-directional Kalman fitting
+ - fixed bug introduced just now "fixing" the memory leak
+
+! 2006-06-20 M Needham
+ - Hope to fix memory leak in clearStates method 
+
+! 2006-06-19 - Marco Cattaneo
+ - Add TrackVertexlocation::Primary
+
+! 2006-06-15 - Gerhard Raven
+ - Change the type of the projection Matrix in Node from TrackVector to 
+   TrackProjectionMatrix as defined in Kernel/LHCbDefinitions/Kernel/TrackTypes.h
+
+! 2006-06-14 - Olivier Deschamps
+ - bugs fix in TrackUse.cpp property pattern
+
+! 2006-06-13 - Marco Cattaneo
+ - Add TrackUse helper class, previously in CaloUtils
+
+! 2006-06-13 Matt Needham
+ - fix memory leak in Node
+
+! 2006-06-02 - Eduardo Rodrigues
+ - fixed bug in TrackFunctor.h
+
+! 2006-06-02 - Marco Clemencic
+ - Disabled the boost allocator for LHCb::Node because it was causing a huge
+   memory leak in Brunel. Anyway, it is not needed for that class because it is
+   never instantiated. The used one is its specialization LHCb::FitNode.
+
+! 2006-06-01 - Marco Cattaneo
+ - Adapt to move of MatrixManip.h to LHCbMath
+
+! 2006-05-19 - Eduardo Rodrigues
+ - removed redundant update method in Measurement
+ - Track enum AlreadyUsed renamed to Used
+
+!========================= TrackEvent v2r5 2006-05-16 ========================
+! 2006-05-16 Juan Palacios, Marco Cattaneo
+ - Migrate public header files to explicit use of Gaudi::Units 
+
+! 2006-05-09 - Marco Cattaneo
+ - Add Boost dependency, needed for Boost allocators in event model
+ - Put back history enums for converted tracks, needed until CaloUtils is
+   migrated to compile without them
+
+! 2006-05-05 - Eduardo Rodrigues
+ - transient attribute removed for LHCbIDs and States on Tracks
+ - removed tracks history enums related to converted tracks (obsolete)
+
+!========================= TrackEvent v2r4 2006-05-02 ========================
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - Track::Unique flag renamed to Track::Clone
+
+! 2006-04-24 - Eduardo Rodrigues
+ - bug fix in checkType method of Measurement
+
+!========================= TrackEvent v2r3 2006-04-20 ========================
+! 2006-04-18 - Eduardo Rodrigues
+ - State location bitfield defined with explicit enum type
+ - State enums now visible in Python
+ - corresponding changes propagated to Track class
+ - added fillStream methods for Track and State
+   (printOut method to Gaudi message stream)
+
+!========================= TrackEvent v2r2 2006-04-06 ========================
+! 2006-04-06 - Jeroen van Tilburg
+ - Added errMeasure data member to Node. This is needed by the track fit.
+
+! 2006-04-05 - Edwin Bos
+ - created copy constructor in Measurement.xml
+ - updated to auto_ptr
+
+! 2006-04-03 - Juan Palacios
+ - Remove many unnecessary calls to MatrixManip::Standardize and fix filling
+   and retrieving of submatrices to and from matrices, both symmetric and
+   non-symmetric. Changes only possible with bug-fixes in ROOT 5.10.c
+
+! 2006-03-31 - Jeroen van Tilburg
+ - Changed resolution method in Measurement.xml. Now it takes two arguments:
+   the point on the track of closest approach and the corresponding direction.
+
+! 2006-03-31 - Eduardo Rodrigues
+ - added Hlt track locations names
+ - SMatrix hack file Shacks.h file removed
+ - last temporary SMatrix hacks use MatrixManip.h from Kernel/LHCbDefinitions
+
+! 2006-03-26 - Eduardo Rodrigues
+ - adaptations to new SMatrix-5.10.00b and higher
+   (needed some temporary changes because of missing/buggy SMatrix functionality)
+ - additions to track locations names
+
+!========================= TrackEvent v2r1 2006-03-23 ========================
+! 2006-03-23 M Needham
+ - Add constructor to state
+
+! 2006-03-17 - Eduardo Rodrigues
+ - kappa const added to TrackParameters
+
+!========================= TrackEvent v2r0 2006-03-03 ========================
+! 2006-03-03 - Eduardo Rodrigues
+ - added check in removeFromNodes method in Track (a node may exist without
+   a measurement)
+ - chi2 of a node without measurement correctly handled
+
+! 2006-02-28 - Jeroen van Tilburg
+ - Measurement.xml: A reference to the Trajectory is returned (was a pointer).
+
+! 2006-02-27 - Jeroen van Tilburg
+ - Introduced the reference vector to the Measurement base class.
+ - Introduced the Trajectory to the Measurement base class.
+
+! 2006-02-10 - Eduardo Rodrigues
+ - added new symmetrize method to SHacks.h
+ - added new file TrackUnitsConverters.h to provide easy units conversions
+   needed for safer matrix invertions
+
+! 2006-02-09 - Eduardo Rodrigues
+ - re-introduced non-const accessor to vector of Nodes in Track
+
+! 2006-02-06 - Eduardo Rodrigues
+ - added new similarity method to SHacks.h
+ - added setErrQOverP2 method in Track
+
+! 2006-02-01 - Eduardo Rodrigues
+ - changes to Track class:
+   - new methods added (copy, measurement, isMeasurementOnTrack)
+   - fixes and improvements to several methods
+     (some had inconsistencies with the TEM design choices)
+   - addToLhcbIDs now checks whether LHCbID not already present in the track
+ - changes to State class:
+   - re-introduced non-const accessors for stateVector and covariance
+   - corrected errSlopes method in State class
+ - minor changes to TrackFunctor
+
+! 2006-01-27 M.Needham
+ - no spare bits  
+ - new clearStates method, remove const accessors
+ - Add typedefs
+
+! 2006-01-13 - Eduardo Rodrigues
+ - re-corrected "bug fix" in error on p calculation
+ - added the 7 pre-defined state locations for the calorimeter 
+
+! 2006-01-11 M.Needham
+  - Track states vector needs non-const version
+  - bug fix in SHacks.h
+  - Bug fix in positionCovariance matrix calculation
+
+! 2006-01-10 M Needham
+  - New version that is compatible with LHCb v20r0 - and nothing else !
+  - Changes:
+      * Move to SMatrix /Add SHack header to provide similarity functionality
+      * Use LHCb/Gaudi namespaces
+      * Proper definition of clone operator as pure virtual fn
+      * Make update pure virtual function
+      * Bugs fixed in error on p calculation
+      * Make safe test on equality of doubles 
+
+! 2005-12-13 - Eduardo Rodrigues
+ - Measurement type ST split into TT and IT
+
+! 2005-12-12 - Eduardo Rodrigues
+ - additions to Track class:
+   - PatKShort history flag
+   - checkStatus method
+   - new method to retrieve the number of outliers removed by the fit
+ - Follow track location removed from Track
+
+!========================= TrackEvent v1r6 2005-12-05 ========================
+! 2005-12-08 - Eduardo Rodrigues
+ - corrected problem with check methods in Track
+
+! 2005-12-05 - Marco Cattaneo
+ - Remove the trajectory classes because they break the POOL dictionary
+   (dictionary cannot be loaded)
+
+! 2005-12-02 - Eduardo Rodrigues
+ - all templated methods removed from Track class (to follow GOD rules)
+   and put in TrackFunctor.h
+
+! 2005-11-30 - Eduardo Rodrigues
+ - added constructor in LineTraj class from beginning and end point
+
+! 2005-11-30 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First versions of basic trajectory classes:
+   - Trajectory: base class
+   - LineTraj  : line trajectory
+   - StateTraj : trajectory for a State
+
+!========================= TrackEvent v1r5 2005-11-28 ========================
+! 2005-11-22 - Eduardo Rodrigues
+ - fix from M. Cattaneo for platform dependent dictionaries with Gaudi 
+   v17r2 and above
+
+! 2005-11-21 - Jeroen van Tilburg
+ - src/State.cpp: Copy also the State::Location in the clone method.
+ - xml/Measurement.xml: Added method resolution(). This is equivalent to 
+   the method errMeasure(), except for the implementation of 
+   VeloPhiMeasurement.
+ - xml/Node.xml: 
+   - Always make a new state when constructor is called.
+   - New methods: hasMeasurement(), removeMeasurement() and z(). Reason: a 
+     node does not require a measurement (e.g. it can be seen as an 
+     outlier by the fit, or be a dummy node useful for the predefined 
+     states).
+   - Corrected bug: residual can be negative!
+
+! 2005-11-09 - Eduardo Rodrigues
+ - Flag enum item "AlreadyUsed" introduced in Track.h
+
+! 2005-11-08 - Eduardo Rodrigues
+ - use enums types in methods interfaces instead of unsigned int
+
+! 2005-11-07 - Eduardo Rodrigues
+ - templated nMeasurements(predicate) method moved from TrackFunctor.h
+   to Track class
+ - templated nLHCbIDs(predicate) method added to Track class
+ - use functors in closestState methods (suggestion from G. Raven)
+   Note that the templated method is protected for the moment - need
+   next version of Gaudi for public templated methods.
+ - methods names modifications in TrackFunctor.h
+
+! 2005-10-27 - Eduardo Rodrigues
+ - new methods introduced in Track class
+ - it++ replaced by ++it
+
+! 2005-10-20 - Eduardo Rodrigues
+ - minor change to TrackFunctor.h
+
+!========================= TrackEvent v1r4 2005-10-14 ========================
+! 2005-10-13 - Eduardo Rodrigues
+ - TrackKeys.h and StateKeys.h files removed. Enumerations now produced
+   in Track.xml and State.xml
+
+! 2005-10-12 - Eduardo Rodrigues
+ - changes to tracks enums in TrackKeys.h
+ - sizes in the tracks bitfield adjusted as needed
+
+! 2005-10-04 - Eduardo Rodrigues
+ - improvements in documentation
+ - new history enums added for converted tracks (from Chris Jones)
+
+! 2005-10-03 - Eduardo Rodrigues
+ - closestState methods (in Track.cpp) corrected
+ - closestToZ and closestToPlane methods (in TrackFunctor.h) corrected
+
+! 2005-09-27 - Eduardo Rodrigues, Jose A. Hernando
+ - Node chi2 calculation corrected
+ - added method to update measurements parameters (useful for Kalman fit)
+
+!========================= TrackEvent v1r3 2005-07-20 ========================
+! 2005-07-14 - Jose A. Hernando
+ - improving the streamer of Track
+ - fix bug in ordering adding the states to track
+
+! 2005-06-28 - Eduardo Rodrigues
+ - added Track clone method with key
+
+!========================= TrackEvent v1r2 2005-06-21 ========================
+! 2005-06-15 - Eduardo Rodrigues
+ - changes to enums in TrackKeys.h, for clarity
+ - TrackVertex.xml made to comply with conventions
+
+!========================= TrackEvent v1r1 2005-06-02 ========================
+! 2005-05-31 - Jose A. Hernando
+ - Track: removing bug in addToStates and addToMeasurements:
+   we were adding them twice!
+
+! 2005-05-25 - Jose A. Hernando
+ - State: when clone location it set to unknown
+ - Track: ancestors are contained in SmartRefVec
+   nMeasurements(Pred) method is in TrackFunctor waiting for new GOD/Gaudi
+   version and proper work done with templates for python-dictionaries
+
+!========================= TrackEvent v1r0 2005-05-24 ========================
+! 2005-05-24 - Olivier Callot
+ - Add the new class TrackVertex.xml to hold the trigger vertices, made of 
+   Tracks. This is a copy of TrgVertex from Event/TrgEvent package.
+
+! 2005-05-20 - Jose A. Hernando
+	- in Track.xml, Track.cpp and TrackFunctor.h
+ 	methods returning unused StatusCode return now void
+  using internally algorithms and functions objects to loop and operate vectors
+	function objects added to TrackFunctor.h
+
+! 2005-05-16 - Eduardo Rodrigues
+ - Measurement class: inheritance from KeyedObject<int> removed
+ - changes to State class:
+   - no more "type" attribute
+     (StateKeys.h and related methods modified/removed)
+   - m_state attribute renamed to m_stateVector
+   - reset method removed
+ - changes to Node class:
+   - introduced explicit constructor from a State and a Measurement
+     (GOD still produces a default constructor - not yet possible
+      to avoid it!!!)
+   - inheritance from KeyedObject<int> removed
+   - setMeasurement method removed
+
+! 2005-05-12 - Jose Hernando, Eduardo Rodrigues
+ - States/Measurements ordered when added to the Track
+ - TrackFunctor added
+ - State momentum-related methods return a HUGE_VAL (from math.h)
+   for linear states
+ - minor changes to usage of GaudiObjectDesc syntax
+ - "physics state" data member removed
+ - constructor with key completed
+ - minor add-ons to Node
+
+!========================= TrackEvent v0r1 2005-04-19 ========================
+! 2005-04-19 - Marco Cattaneo
+ - Fix a Windows compilation warning
+
+! 2005-04-15 - Jose A. Hernando
+ - Track: flags,history,etc.. are not set by an unsigned int
+          the list of enums with the possible unsigned int values are now in TrackKeys.h
+
+! 2005-04-15 - Jose A. Hernando
+ - Track: destructor, reset and clone revisited, to handle properly the memory
+		      set of vector of States, Measurements and Nodes not allow to handle the memory
+          setting the flag at ones allowed.
+ 
+ - Measurement: set the errMeasure2()	method
+ - Node: destructor and set State revisited to handle the memory
+         remove type as it can use the Measurement one
+         return errResidual2() 
+
+! 2005-04-15 - Eduardo Rodrigues
+ - attributes in Node made protected (for inheritance)
+
+! 2005-04-13 - Jose A. Hernando
+ - incorporating 'keys' for Tracks (Event/TrackKeys.h and src/TrackKeys.cpp)	
+ - keys are static vectors of strings that substitutes the enums in Track.h
+ 		. user can add their own key = string to the vector and can be use and set into the bitfield without changing the header file of Trach.h 
+    . kyes in Track are: History (Pattern recognition algorithm), HistoryFit (fit algorithm), Types (types of tracks), Status (status of track i.e 'PatRec' or 'fitted'), and Flags.
+ - TODO: all the destructor need to be 'virtual'!!
+
+! 2005-04-13 - Eduardo Rodrigues
+ - extra functionality in FitTrack was imported to Track
+ - Track now contains measurements and nodes
+ - vector of tracks ancestors added to Track
+ - minor add-ons to State and Measurement
+
+! 2005-04-07 - Eduardo Rodrigues
+ - Track::nMeasurements method added
+ - z-related methods added to Measurement
+
+! 2005-04-04 - Eduardo Rodrigues
+ - no id attribute for Measurement and Node classes
+
+! 2005-03-31 - Eduardo Rodrigues
+ - added methods to update the state/measurement in a Node
+
+! 2005-03-31 - Eduardo Rodrigues
+ - attributes in Track and State made protected (for inheritance)
+
+! 2005-03-30 - Eduardo Rodrigues
+ - copy constructor with assigned key
+ - using the latest bitfields functionality as in GaudiObjDesc v7r4
+   or later
+
+! 2005-03-15 - Jose Hernando, Eduardo Rodrigues
+ - introduction of the Measurement and Node base classes
+ - replacing TrGeneral by TrackParameters
+
+! 2005-02-23 - Jose Hernando, Eduardo Rodrigues
+ - position-momentum covariance matrix implemented in State.cpp
+
+! 2005-02-11 - Jose Hernando, Eduardo Rodrigues
+ - adding flags IPSelected and MUSelected in Track
+
+! 2005-02-10 - Jose Hernando, Eduardo Rodrigues
+ - creation of the package. It contains for now the Track and State
+   base classes

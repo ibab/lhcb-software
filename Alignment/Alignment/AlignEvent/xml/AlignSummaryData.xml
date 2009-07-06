@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='AlignEvent'>
+
+<!-- ==================== class definition ==================== -->
+
+    <class
+      name        = 'AlignSummaryData'
+      author      = ''
+      desc        = ''
+      id          = '10213'
+      serializers = 'TRUE'
+      allocator   = 'NO' >
+      
+      <base name="DataObject"/>
+      &DataObject;
+      
+      <location name= "Default" place="FST/Alignment/SummaryData" />
+      
+      <import name='SolvKernel/AlEquations'/>
+
+      <constructor
+	desc     = "constructor from AlEquations object"
+	argList  = "Al::Equations eq" 
+	initList = "m_equations(eq)">
+      </constructor>
+
+      <constructor
+	desc     = "constructor"
+	argList  = "size_t size" 
+	initList = "m_equations(size)">
+      </constructor>
+
+      <attribute 
+	desc = "" 
+	init = ""
+	nonconstaccessor = "TRUE"
+	name = "equations" 
+	type = "Al::Equations"
+        />  
+
+      <method
+	desc = ""
+	name = "add"
+	type = "void"
+	argList = "AlignSummaryData rhs"
+	const = "FALSE"
+	/>  
+
+      <method
+	desc = "needs also function with capital because GaudyPthon.Parallel uses that"
+	name = "Add"
+	type = "void"
+	const = "FALSE" > 
+	<arg type = 'const AlignSummaryData' name='rhs' />
+	<code>
+     add(rhs) ;
+      </code>
+      </method>  
+      
+      <method
+        name      = "fillStream"
+        desc      = "printOut method to Gaudi message stream"
+        type      = "std::ostream&amp;"
+        virtual   = "TRUE"
+        const     = "TRUE" >
+        <arg name = "os" type = "std::ostream" inout = "BOTH"/>
+      </method>
+
+    </class>
+    
+  </package>
+</gdd>
