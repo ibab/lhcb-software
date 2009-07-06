@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file DelegatingTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : DelegatingTrackSelector
+ *  Header file for reconstruction tool : DelegatingTrackSelector
  *
  *  CVS Log :-
- *  $Id: DelegatingTrackSelector.h,v 1.1 2009-07-01 18:28:07 jonrob Exp $
+ *  $Id: DelegatingTrackSelector.h,v 1.2 2009-07-06 15:50:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/06/2009
@@ -31,21 +31,10 @@
 // STL
 #include <sstream>
 
-// Interface
-#include "TrackInterfaces/ITrackSelector.h"
+// base class
+#include "TrackSelectorBase.h"
 
-// Gaudi
-#include "GaudiKernel/HashMap.h"
-#include "GaudiAlg/GaudiTool.h"
-
-// Event model
-#include "Event/Track.h"
-
-// boost
-#include "boost/assign/list_of.hpp"
-
-class DelegatingTrackSelector : public GaudiTool,
-                                virtual public ITrackSelector
+class DelegatingTrackSelector : public TrackSelectorBase
 {
 
 private: // definitions
@@ -61,9 +50,6 @@ public:
                            const IInterface* parent );
 
   virtual ~DelegatingTrackSelector();
-
-  /// Tool initialization
-  virtual StatusCode initialize();
 
   /** Returns if the given track is selected or not
    *
@@ -81,14 +67,6 @@ private:
   ITrackSelector * trackSelector( const LHCb::Track& aTrack ) const;
 
 private: // data
-
-  /// Track types to accept
-  typedef std::vector<std::string> TrackTypes;
-  TrackTypes m_trTypes; ///< List of track types to select
-
-  /// Mapping type linking track types to selection boolean
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, bool > SelTypes;
-  SelTypes m_selTypes;  ///< Mapping linking track types to selection boolean
 
   /// Track selector for each track type
   mutable TrackSelectors m_trSels;

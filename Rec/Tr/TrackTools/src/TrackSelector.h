@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file TrackSelector.h
  *
- *  Header file for RICH reconstruction tool : TrackSelector
+ *  Header file for reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.10 2009-07-01 18:28:07 jonrob Exp $
+ *  $Id: TrackSelector.h,v 1.11 2009-07-06 15:50:02 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -30,22 +30,17 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/ITrackSelector.h"
+// STL
 #include <string>
 
-// GaudiKernel
-#include "GaudiKernel/HashMap.h"
-
-#include "Event/Track.h"
+// base class
+#include "TrackSelectorBase.h"
 
 // boost
-#include "boost/assign/list_of.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 
-class TrackSelector : public GaudiTool,
-                      virtual public ITrackSelector
+class TrackSelector : public TrackSelectorBase
 {
 
 public:
@@ -56,9 +51,6 @@ public:
                  const IInterface* parent );
 
   virtual ~TrackSelector();
-
-  /// Tool initialization
-  virtual StatusCode initialize();
 
   /** Returns if the given track is selected or not
    *
@@ -115,14 +107,6 @@ private:
   int m_minNVeloRHits ;    ///< Minimum number of velo R hits
   int m_minNVeloPhiHits ;  ///< Minimum number of velo phi hits
   int m_minNOTHits ;       ///< Minimum number of OT hits
-
-  /// Track types to accept
-  typedef std::vector<std::string> TrackTypes;
-  TrackTypes m_trTypes; ///< List of track types to select
-
-  /// Mapping type linking track types to selection boolean
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, bool > SelTypes;
-  SelTypes m_selTypes;  ///< Mapping linking track types to selection boolean
 
 };
 

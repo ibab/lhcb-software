@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-07-06 - Chris Jones
+ - Add new base class "TrackSelectorBase" for all track selectors that implements
+   common functionality.
 
 ! 2009-07-03 M Needham
  - Minor change in TTHitExpectation to get required behaviour, again
