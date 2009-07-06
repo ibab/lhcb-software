@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-07-06 - Marco Cattaneo
+ - Update references for:
+   . additional VekiTrackMonitor histos
+   . Change tuning for Tsa and Match
+   . Print B daughters, Ks, Lambda in TrackChecker
+
 ! 2009-07-04 - Erica Polycarpo 
  - Configure expert flag for histos in MuonPIDChecker
  - Cleanup MuonPIDMonitor configuration 
