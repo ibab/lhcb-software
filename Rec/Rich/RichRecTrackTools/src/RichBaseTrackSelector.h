@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.4 2009-06-10 16:12:58 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.5 2009-07-06 12:28:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -138,8 +138,8 @@ namespace Rich
 
       bool m_acceptClones; ///< Accept or reject clone tracks
 
-      double m_minCloneCut;   ///< Clone rejection cut
-      double m_maxCloneCut;   ///< Clone rejection cut
+      double m_minCloneCut;   ///< Minimum clone rejection cut
+      double m_maxCloneCut;   ///< Maximum clone rejection cut
 
       double m_minGhostProb; ///< minimum ghost probability cut
       double m_maxGhostProb; ///< maximum ghost probability cut
