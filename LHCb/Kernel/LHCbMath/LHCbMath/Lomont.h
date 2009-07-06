@@ -1,4 +1,4 @@
-// $Id: Lomont.h,v 1.1 2008-11-08 15:03:38 ibelyaev Exp $
+// $Id: Lomont.h,v 1.2 2009-07-06 08:57:16 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_LOMONT_H 
 #define LHCBMATH_LOMONT_H 1
@@ -41,7 +41,7 @@ namespace LHCb
      *  
      *  @param  af the first number 
      *  @param  bf the second number 
-     *  @param  maxULPS the maximal metric deciation in the terms of 
+     *  @param  maxULPs the maximal metric deciation in the terms of 
      *                 maximal number of units in the last place
      *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-08
@@ -72,7 +72,7 @@ namespace LHCb
      *  
      *  @param  af the first number 
      *  @param  bf the second number 
-     *  @param  maxULPS the maximal metric deciation in the terms of 
+     *  @param  maxULPs the maximal metric deciation in the terms of 
      *                 maximal number of units in the last place
      *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-08

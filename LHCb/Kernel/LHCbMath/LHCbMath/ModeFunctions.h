@@ -57,7 +57,7 @@ namespace ModeFunctions{
   /** <a href = "http://en.wikipedia.org/wiki/Harmonic_mean" > Generalized Mean </a>
    * @param start beginning of sequence 
    * @param stop  end of sequence
-   * @param power 
+   * @param p     power 
    * @return double LMS
    */
    template <typename TYPE>

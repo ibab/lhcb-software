@@ -1,4 +1,4 @@
-// $Id: Digit.h,v 1.5 2009-04-08 16:19:00 ibelyaev Exp $
+// $Id: Digit.h,v 1.6 2009-07-06 08:57:16 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_DIGIT_H 
 #define LHCBMATH_DIGIT_H 1
@@ -335,7 +335,7 @@ namespace Gaudi
      *
      *  @attention the least significat decimal digit is numbered as #0
      *
-     *  @author Vanya BELYAEV Ivan/BElyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-31 
      */
     template <class TYPE, unsigned int N>
@@ -364,7 +364,7 @@ namespace Gaudi
      *
      *  @attention the least significat decimal digit is numbered as #0
      *
-     *  @author Vanya BELYAEV Ivan/BElyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-07-31 
      */
     template <class        TYPE , 
@@ -394,7 +394,7 @@ namespace Gaudi
      *  @attention the least significat decimal digit is numbered as #0
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-07-09
+     *  @date 2008-07-09
      */
     template <class TYPE>
     inline TYPE digit ( const TYPE value , const unsigned int N  ) 
@@ -437,7 +437,7 @@ namespace Gaudi
      *  @attention the least significat decimal digit is numbered as #0
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @daet 2008-07-09
+     *  @date 2008-07-09
      */
     template <class TYPE>
     inline TYPE digits ( const TYPE         value , 

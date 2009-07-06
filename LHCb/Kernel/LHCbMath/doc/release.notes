@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-07-06 - Marco Cattaneo
+ - Bit.h: Fix a compilation warning on windows
+ - Fix some doxygen warnings
+
 !========================= LHCbMath v3r10 2009-06-29 =========================
 ! 2009-06-29 - Juan PALACIOS
  - python/LHCbMath.py

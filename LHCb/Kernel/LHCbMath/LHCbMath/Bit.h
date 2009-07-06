@@ -1,4 +1,4 @@
-// $Id: Bit.h,v 1.3 2008-08-02 10:14:05 ibelyaev Exp $
+// $Id: Bit.h,v 1.4 2009-07-06 08:57:16 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_BIT_H 
 #define LHCBMATH_BIT_H 1
@@ -154,7 +154,7 @@ namespace Gaudi
         inline bool operator() ( const TYPE value ) const
         {
           static const TYPE s_mask = static_cast<TYPE> ( 1 ) << N  ;
-          return value & s_mask ;
+          return ( (value & s_mask) == 0 ? false:true );
         } 
         // ====================================================================
       };
@@ -205,7 +205,7 @@ namespace Gaudi
      *  const bool bit2 = Gaudi::Math::IBit<111,2>::value ;
      *  const bool bit3 = Gaudi::Math::IBit<111,3>::value ;
      *
-     *  @code 
+     *  @endcode 
      *
      *  @attention the least significant bit is numbered as bit#0 
      *
@@ -270,7 +270,7 @@ namespace Gaudi
      *  Gaudi::Math::Bit<TYPE,10> bit ; 
      *  const bool bit10 = bit ( value ) ; // check bit #10 
      *
-     *  @code 
+     *  @endcode 
      *
      *  @attention the least significant bit is numbered as bit#0 
      *
@@ -329,7 +329,7 @@ namespace Gaudi
      * 
      *  const bool bit10 = Gaudi::Math::bit ( value , 10 ) ; // check bit #10 
      *
-     *  @code 
+     *  @endcode 
      *
      *  @attention the least significant bit is numbered as bit#0 
      *

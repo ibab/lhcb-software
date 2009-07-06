@@ -4,7 +4,7 @@
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.7 2008-10-01 13:49:56 ibelyaev Exp $
+ *  $Id: LHCbMath.h,v 1.8 2009-07-06 08:57:16 cattanem Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -290,7 +290,8 @@ namespace LHCb
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the unsigned integer 
      *  @param ref the reference unsigned integer number 
-     *  @param eps the absolute precision 
+     *  @param eps1 the absolute precision
+     *  @param eps2 the relative precision
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
