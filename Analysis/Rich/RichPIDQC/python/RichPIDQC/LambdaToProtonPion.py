@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: LambdaToProtonPion.py,v 1.4 2009-05-05 15:28:48 jonrob Exp $"
+__version__ = "$Id: LambdaToProtonPion.py,v 1.5 2009-07-06 16:02:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -29,7 +29,7 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
 
-        from Configurables import ( GaudiSequencer, PhysDesktop,
+        from Configurables import ( GaudiSequencer,
                                     CombineParticles, FilterDesktop )
         
         if not self.isPropertySet("Sequencer") :
@@ -39,22 +39,19 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
         # Filter Pi Tracks
         pionfilterName = "RichLambdaSelPiFilter"
         pionfilter = FilterDesktop(pionfilterName)
-        pionfilter.addTool( PhysDesktop )
-        pionfilter.PhysDesktop.InputLocations = [ "StdNoPIDsPions" ]
+        pionfilter.InputLocations = [ "StdNoPIDsPions" ]
         pionfilter.Code = "(PT > 0.1*GeV) & (MIPCHI2DV(PRIMARY) > 9) & (TRCHI2DOF < 3) & (ISLONG)"
 
         # Filter Proton Tracks
         protonfilterName = "RichLambdaSelPrFilter"
         protonfilter = FilterDesktop(protonfilterName)
-        protonfilter.addTool( PhysDesktop )
-        protonfilter.PhysDesktop.InputLocations = [ "StdNoPIDsProtons" ]
+        protonfilter.InputLocations = [ "StdNoPIDsProtons" ]
         protonfilter.Code = "(PT > 0.4*GeV) & (MIPCHI2DV(PRIMARY) > 9) & (TRCHI2DOF < 3) & (ISLONG)"
 
         # Make the Lambda
         lambda2ppiName = "RichLambdaToPrPiSel"
         lambda2ppi = CombineParticles(lambda2ppiName)
-        lambda2ppi.addTool(PhysDesktop)
-        lambda2ppi.PhysDesktop.InputLocations = [ protonfilterName, pionfilterName ]
+        lambda2ppi.InputLocations = [ protonfilterName, pionfilterName ]
         lambda2ppi.DecayDescriptor = "[ Lambda0 -> p+ pi- ]cc"
         lambda2ppi.CombinationCut = "(ADAMASS('Lambda0') < 100*MeV) & (AMAXDOCA('') < 0.2*mm)"
         lambda2ppi.MotherCut = "(ADMASS('Lambda0') < 50.0*MeV) & (PT > 0.5*GeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (MIPDV(PRIMARY) < 0.5) & (BPVVDCHI2 > 750) & (MIPCHI2DV(PRIMARY) < 200) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 15*MeV ) & (LV01 < 0.98) & (LV02 < 0.98) & (LV01 > -0.98) & (LV02 > -0.98)"
@@ -65,8 +62,7 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
         plotter = ParticleMonitor(lambda2ppiName+"Plots")
-        plotter.addTool(PhysDesktop)
-        plotter.PhysDesktop.InputLocations = [ "Phys/"+lambda2ppiName ]
+        plotter.InputLocations = [ "Phys/"+lambda2ppiName ]
         plotter.PeakCut     = "(ADMASS('Lambda0')<2*MeV)"
         plotter.SideBandCut = "(ADMASS('Lambda0')>2*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
@@ -79,8 +75,7 @@ class LambdaToProtonPionConf(LHCbConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(lambda2ppiName+"MCPerf")
-            mcPerf.addTool( PhysDesktop )
-            mcPerf.PhysDesktop.InputLocations = ["Phys/"+lambda2ppiName]
+            mcPerf.InputLocations = ["Phys/"+lambda2ppiName]
             seq.Members += [mcPerf]
                     
         # Ntuple ?

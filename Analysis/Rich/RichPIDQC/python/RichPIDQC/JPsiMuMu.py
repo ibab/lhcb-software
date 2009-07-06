@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.10 2009-05-22 10:54:55 nmangiaf Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.11 2009-07-06 16:02:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -29,7 +29,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
     ## Configure Jpsi -> Mu Mu selection
     def __apply_configuration__(self) :
 
-        from Configurables import ( GaudiSequencer, PhysDesktop,
+        from Configurables import ( GaudiSequencer,
                                     CombineParticles )
         
         if not self.isPropertySet("Sequencer") :
@@ -40,8 +40,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         JPsiMuMuName                        = "RichJPsiMuMu"
         JPsiMuMu                            = CombineParticles(JPsiMuMuName)
         JPsiMuMu.DecayDescriptor            = "J/psi(1S) -> mu+ mu- "
-        JPsiMuMu.addTool( PhysDesktop )
-        JPsiMuMu.PhysDesktop.InputLocations = ["Phys/StdLooseMuons"]
+        JPsiMuMu.InputLocations             = ["Phys/StdLooseMuons"]
         JPsiMuMu.CombinationCut             = "(ADAMASS('J/psi(1S)') < 150*MeV)"
         JPsiMuMu.MotherCut                  = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF)<6)"
         JPsiMuMu.DaughtersCuts              = {"mu+"     :    "(PT>1000*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & (PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10) & (TINFO( LHCb.Track.GhostProbability,-1000,-1000)<0.6)",
@@ -52,8 +51,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
         # Particle Monitoring plots
         from Configurables import ( ParticleMonitor )
         plotter =  ParticleMonitor(JPsiMuMuName+"Plots")
-        plotter.addTool(PhysDesktop)
-        plotter.PhysDesktop.InputLocations = [ "Phys/"+JPsiMuMuName ]
+        plotter.InputLocations = [ "Phys/"+JPsiMuMuName ]
         plotter.PeakCut     = "(ADMASS('J/psi(1S)')<30*MeV)" # CRJ : Guess
         plotter.SideBandCut = "(ADMASS('J/psi(1S)')>30*MeV)" # CRJ : Guess
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
@@ -66,8 +64,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(JPsiMuMuName+"MCPerf")
-            mcPerf.addTool( PhysDesktop )
-            mcPerf.PhysDesktop.InputLocations = ["Phys/"+JPsiMuMuName]
+            mcPerf.InputLocations = ["Phys/"+JPsiMuMuName]
             seq.Members += [mcPerf]
 
         # Ntuple ?
@@ -85,8 +82,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                             )
                 
                 JPsiMuMuTree = DecayTreeTuple( JPsiMuMuName + 'Tuple')
-                JPsiMuMuTree.addTool( PhysDesktop )
-                JPsiMuMuTree.PhysDesktop.InputLocations = [ 'Phys/'+JPsiMuMuName]
+                JPsiMuMuTree.InputLocations = [ 'Phys/'+JPsiMuMuName]
                 JPsiMuMuTree.Decay = 'J/psi(1S) ->  ^mu+ ^mu- '
                 
                 # set some names for ntuple branchs

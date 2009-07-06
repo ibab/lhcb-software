@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.7 2009-05-08 19:17:04 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.8 2009-07-06 16:02:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -29,7 +29,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
 
-        from Configurables import ( GaudiSequencer, PhysDesktop,
+        from Configurables import ( GaudiSequencer,
                                     CombineParticles, OfflineVertexFitter )
 
         seq = self.getProp("Sequencer")
@@ -39,8 +39,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         Phi2KKName = "RichPhi2KK"
         Phi2KK = CombineParticles(Phi2KKName)
         Phi2KK.DecayDescriptor = "phi(1020) -> K+ K-"
-        Phi2KK.addTool( PhysDesktop )
-        Phi2KK.PhysDesktop.InputLocations = ["Phys/StdNoPIDsKaons"]
+        Phi2KK.InputLocations = ["Phys/StdNoPIDsKaons"]
         Phi2KK.CombinationCut = "(ADAMASS('phi(1020)')<75*MeV)"
         Phi2KK.MotherCut = "(ADMASS('phi(1020)')<50*MeV) & (BPVVDCHI2>60) & (MIPDV(PRIMARY)<0.5) & (VFASPF(VCHI2) < 20)"
         Phi2KK.DaughtersCuts = {"K+"     :    "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) < 0.5) &  (BPVIPCHI2() > 20)",
@@ -50,11 +49,10 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         Ds2piPhiName = "RichDs2PiPhi"
         Ds2piPhi = CombineParticles(Ds2piPhiName)
         Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
-        Ds2piPhi.addTool( PhysDesktop )
-        Ds2piPhi.addTool( OfflineVertexFitter() )
+        Ds2piPhi.addTool( OfflineVertexFitter )
         Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
         Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
-        Ds2piPhi.PhysDesktop.InputLocations = ["Phys/"+Phi2KKName,"Phys/StdNoPIDsPions"]
+        Ds2piPhi.InputLocations = ["Phys/"+Phi2KKName,"Phys/StdNoPIDsPions"]
         Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
         Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
         Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
@@ -65,8 +63,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
         # Particle Monitoring plots
         from Configurables import ParticleMonitor
         plotter =  ParticleMonitor(Ds2piPhiName+"Plots")
-        plotter.addTool(PhysDesktop)
-        plotter.PhysDesktop.InputLocations = [ "Phys/"+Ds2piPhiName ]
+        plotter.InputLocations = [ "Phys/"+Ds2piPhiName ]
         plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
         plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
         plotter.PlotTools = [ "MassPlotTool","MomentumPlotTool",
@@ -80,8 +77,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             from Configurables import ParticleEffPurMoni
 
             mcPerf = ParticleEffPurMoni(Ds2piPhiName+"MCPerf")
-            mcPerf.addTool( PhysDesktop )
-            mcPerf.PhysDesktop.InputLocations = ["Phys/"+Ds2piPhiName]
+            mcPerf.InputLocations = ["Phys/"+Ds2piPhiName]
             seq.Members += [mcPerf]
                     
         # Ntuple ?
@@ -97,8 +93,7 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
                                         TupleToolVtxIsoln, LoKi__Hybrid__TupleTool )
 
             Tuple = DecayTreeTuple(Ds2piPhiName+"Tuple")
-            Tuple.addTool( PhysDesktop )
-            Tuple.PhysDesktop.InputLocations = ["Phys/"+Ds2piPhiName]
+            Tuple.InputLocations = ["Phys/"+Ds2piPhiName]
             Tuple.Decay = "[D_s+ -> ^pi+ (^phi(1020) => ^K+ ^K-)]cc";
             Tuple.Branches = {
                 "pion"        : "[D_s+ -> ^pi+ (phi(1020) => K+ K-)]cc"

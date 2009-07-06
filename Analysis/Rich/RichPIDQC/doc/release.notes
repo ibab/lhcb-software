@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.10 2009-06-03 10:35:15 jpalac Exp $
+!$Id: release.notes,v 1.11 2009-07-06 16:02:19 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+! 2009-07-06 - Chris Jones
+ - Adapt to removal of PhysDesktop.InputLocations 
 
 !========================== RichPIDQC v1r2 2009-06-03 ========================
 
