@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-07-03 09:17:46 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-07-06 15:54:52 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -22,31 +22,11 @@ class GlobalRecoConf(LHCbConfigurableUser):
                   ,"Context":    "Offline"   # The context within which to run
                   ,"RecoSequencer" : None    # The sequencer to add the ProtoParticle reconstruction algorithms to
                   ,"OutputLevel" : INFO      # The printout level to use
-                  ,"TrackChi2PDOFCuts"    : {
-                                              "Long"        : [0,50]
-                                              ,"Upstream"   : [0,50]
-                                              ,"Downstream" : [0,50]
-                                              ,"Ttrack"     : [0,50]
-                                              ,"Velo"       : [0,50]
-                                              }
-                  ,"TrackLikelihoodCuts"  : {
-                                              #"Long"        : [-100,9e40]
-                                              #,"Upstream"   : [-100,9e40]
-                                              #,"Downstream" : [-100,9e40]
-                                              #,"Ttrack"     : [-100,9e40]
-                                              }
-                  ,"GhostProbabilityCuts" : {
-                                              #"Long"        : [0,0.99]
-                                              #,"Upstream"   : [0,0.99]
-                                              #,"Downstream" : [0,0.99]
-                                              #,"Ttrack"     : [0,0.99]
-                                              }
-                  ,"CloneDistCuts"        : {
-                                              #"Long"        : [-1e10,9e40]
-                                              #,"Upstream"   : [-1e10,9e40]
-                                              #,"Downstream" : [-1e10,9e40]
-                                              #,"Ttrack"     : [-1e10,9e40]
-                                              }
+                  ,"TrackTypes"  : [ "Long", "Upstream", "Downstream" ]
+                  ,"TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,50] }
+                                     ,"Upstream"   : { "Chi2Cut" : [0,50] }
+                                     ,"Downstream" : { "Chi2Cut" : [0,50] }
+                                   }
                   }
 
     ## Configure a track selector with the given name
@@ -56,22 +36,11 @@ class GlobalRecoConf(LHCbConfigurableUser):
         ts = getattr(selector,tsname)
         # Set Cuts
         ts.TrackTypes = [tsname]
-        likCuts = self.getProp("TrackLikelihoodCuts")
-        if tsname in likCuts :
-            ts.MinLikelihoodCut = likCuts[tsname][0]
-            ts.MaxLikelihoodCut = likCuts[tsname][1]
-        ghostCuts = self.getProp("GhostProbabilityCuts")
-        if tsname in ghostCuts :
-            ts.MinGhostProbCut = ghostCuts[tsname][0]
-            ts.MaxGhostProbCut = ghostCuts[tsname][1]
-        chiCuts = self.getProp("TrackChi2PDOFCuts")
-        if tsname in chiCuts :
-            ts.MinChi2Cut = chiCuts[tsname][0]
-            ts.MaxChi2Cut = chiCuts[tsname][1]
-        cloneCuts = self.getProp("CloneDistCuts")
-        if tsname in cloneCuts :
-            ts.MinCloneDistCut = cloneCuts[tsname][0]
-            ts.MaxCloneDistCut = cloneCuts[tsname][1]
+        cuts = self.getProp("TrackCuts")
+        if tsname in cuts :
+            for name,cut in cuts[tsname].iteritems() :
+                ts.setProp("Min"+name,cut[0])
+                ts.setProp("Max"+name,cut[1])
         
     ## Apply the configuration to the given sequence
     def applyConf(self):
@@ -88,13 +57,13 @@ class GlobalRecoConf(LHCbConfigurableUser):
         # Charged Proto particles
         charged = ChargedProtoPAlg()
         charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
-        self.setupTypeTrackSelector( "Long",       charged.TrackSelector )
-        self.setupTypeTrackSelector( "Upstream",   charged.TrackSelector )
-        self.setupTypeTrackSelector( "Downstream", charged.TrackSelector )
-        self.setupTypeTrackSelector( "Ttrack",     charged.TrackSelector )
+        tracktypes = self.getProp("TrackTypes")
+        charged.TrackSelector.TrackTypes = tracktypes
+        for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
         
         # Fill the Combined DLL information in the charged protoparticles
         combine = ChargedProtoCombineDLLsAlg()
+        
         # Neutrals
         neutral = NeutralProtoPAlg()
 

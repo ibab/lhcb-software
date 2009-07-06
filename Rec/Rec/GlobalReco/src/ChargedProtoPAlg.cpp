@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.68 2009-07-03 09:17:46 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.69 2009-07-06 15:54:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -64,7 +64,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   // context specific locations
   if      ( context() == "Offline" )
   {
-    m_richPath   = LHCb::RichPIDLocation::Offline; 
+    m_richPath   = LHCb::RichPIDLocation::Offline;
     m_muonPath   = LHCb::MuonPIDLocation::Offline;
     m_protoPath  = LHCb::ProtoParticleLocation::Charged;
   }
@@ -113,17 +113,17 @@ StatusCode ChargedProtoPAlg::initialize()
   m_trSel = tool<ITrackSelector>( "DelegatingTrackSelector", "TrackSelector", this );
 
   // Velo dE/dx tool
-  if ( m_veloPID) 
+  if ( m_veloPID)
   {
     m_velodEdx = tool<ITrackVelodEdxCharge>( "TrackVelodEdxCharge", "VeloCharge", this );
   }
-  
+
   // CaloElectron tool
   if (m_EcalPID)
   {
     m_electron = tool<ICaloElectron>("CaloElectron","CaloElectron",this);
   }
-  
+
   // disabled CALO warnings
   if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS ).ignore();
   if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS ).ignore();
@@ -136,7 +136,7 @@ StatusCode ChargedProtoPAlg::initialize()
   if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable VELO warnings
   if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
-  
+
   return sc;
 }
 
@@ -144,7 +144,7 @@ StatusCode ChargedProtoPAlg::initialize()
 // Main execution
 //=============================================================================
 StatusCode ChargedProtoPAlg::execute()
-{  
+{
   // Load the Track objects (manditory - should be there for each event)
   if ( !exist<Tracks>(m_tracksPath) )
   {
@@ -175,7 +175,7 @@ StatusCode ChargedProtoPAlg::execute()
   if ( exist<ProtoParticles>(m_protoPath) )
   {
     // get existing container, clear, and reuse
-    Warning( "Existing ProtoParticle container at " + m_protoPath + 
+    Warning( "Existing ProtoParticle container at " + m_protoPath +
              " found -> Will replace", StatusCode::SUCCESS ).ignore();
     m_protos = get<ProtoParticles>(m_protoPath);
     m_protos->clear();
@@ -194,6 +194,8 @@ StatusCode ChargedProtoPAlg::execute()
 
     // track tally
     TrackTally & tally = m_nTracks[ (*iTrack)->type() ];
+
+    // count all tracks
     ++tally.totTracks;
 
     // Select tracks
@@ -208,7 +210,7 @@ StatusCode ChargedProtoPAlg::execute()
       verbose() << " -> Track charge " << (*iTrack)->charge() << endreq;
     }
 
-    // Count selectedtracks
+    // Count selected tracks
     ++tally.selTracks;
 
     // Make a proto-particle
@@ -286,7 +288,7 @@ StatusCode ChargedProtoPAlg::execute()
     }
 
     // has any PID info been added ?
-    if ( !( hasRICHInfo || hasMUONInfo || 
+    if ( !( hasRICHInfo || hasMUONInfo ||
             hasECALInfo || hasBREMInfo || hasSPDInfo || hasPRSInfo || hasHCALInfo ) )
     {
       // NO PID was added, so add a flag confirming this to the proto
@@ -298,11 +300,11 @@ StatusCode ChargedProtoPAlg::execute()
       verbose() << " -> Created ProtoParticle : " << *proto << endreq;
     }
     if ( msgLevel(MSG::DEBUG) ){
-      debug() << " Created protoparticle with MuonID " 
-              << proto->info( LHCb::ProtoParticle::MuonPIDStatus, -1.) 
+      debug() << " Created protoparticle with MuonID "
+              << proto->info( LHCb::ProtoParticle::MuonPIDStatus, -1.)
               << " RICH ID " << proto->info( LHCb::ProtoParticle::RichPIDStatus, -1.) << endmsg ;
     }
-    
+
   }
 
   // update tallies
@@ -422,7 +424,7 @@ bool ChargedProtoPAlg::addEcal( LHCb::ProtoParticle * proto ) const
           // CaloElectron->caloTrajectory must be after addToCalo
           if ( m_electron->set(proto) )
           {
-            proto->addInfo( ProtoParticle::CaloTrajectoryL, 
+            proto->addInfo( ProtoParticle::CaloTrajectoryL,
                             m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
           }
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
@@ -570,8 +572,8 @@ bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
   bool hasHcalPID = false;
   if (m_HcalPID)
   {
-   aRange = m_InHcalTable -> relations ( proto->track() ) ;
-    if ( !aRange.empty() ) 
+    aRange = m_InHcalTable -> relations ( proto->track() ) ;
+    if ( !aRange.empty() )
     {
       hasHcalPID = aRange.front().to();
       if( hasHcalPID )
@@ -628,7 +630,7 @@ bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
   if (m_PrsPID)
   {
     aRange = m_InPrsTable -> relations ( proto->track() ) ;
-    if( !aRange.empty() ) 
+    if( !aRange.empty() )
     {
       hasPrsPID = aRange.front().to();
       if( hasPrsPID )
@@ -681,7 +683,7 @@ bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
   if (m_SpdPID)
   {
     aRange = m_InSpdTable -> relations ( proto->track() ) ;
-    if ( !aRange.empty() ) 
+    if ( !aRange.empty() )
     {
       hasSpdPID = aRange.front().to();
       if( hasSpdPID )
@@ -807,7 +809,7 @@ bool ChargedProtoPAlg::getMuonData()
 bool ChargedProtoPAlg::getEcalData()
 {
   using namespace LHCb::Calo2Track;
-  
+
   bool sc1=false;
   bool sc2=false;
   bool sc3=false;
@@ -816,7 +818,7 @@ bool ChargedProtoPAlg::getEcalData()
   bool sc6=false;
   bool sc7=false;
   bool sc8=false;
-  
+
   if("HLT"==context() || "Hlt" == context())
   {
     sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcalHlt);
@@ -839,7 +841,7 @@ bool ChargedProtoPAlg::getEcalData()
     sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
     sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
   }
- 
+
   const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
   if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endreq;
 
@@ -863,7 +865,7 @@ bool ChargedProtoPAlg::getBremData()
     sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2Hlt);
     sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDeHlt);
   }
-  else{ 
+  else{
     sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBrem);
     sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatch);
     sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2);
@@ -893,7 +895,7 @@ bool ChargedProtoPAlg::getSpdData()
     sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpd);
     sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdE);
   }
-  
+
   const bool sc  = sc1 && sc2;
 
   if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endreq;
@@ -921,7 +923,7 @@ bool ChargedProtoPAlg::getPrsData()
     sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsE);
     sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
   }
-  
+
   const bool sc  = sc1 && sc2 && sc3;
 
   if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endreq;
@@ -952,7 +954,7 @@ bool ChargedProtoPAlg::getHcalData()
     sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDe);
     sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmu);
   }
-  
+
 
   const bool sc  = sc1 && sc2 && sc3 && sc4;
 
@@ -1006,6 +1008,9 @@ StatusCode ChargedProtoPAlg::finalize()
   return GaudiAlgorithm::finalize();
 }
 
+//=============================================================================
+// Print Stats
+//=============================================================================
 void ChargedProtoPAlg::printStats( const MSG::Level level ) const
 {
   MsgStream & msg = msgStream(level);
