@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.15 2009-01-23 11:21:05 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.16 2009-07-06 14:18:38 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -15,9 +15,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/NTuple.h"
 //
-#include "SolvKernel/AlSymMat.h"
-#include "SolvKernel/AlMat.h"
-#include "SolvKernel/AlVec.h"
+#include "AlignKernel/AlSymMat.h"
+#include "AlignKernel/AlMat.h"
+#include "AlignKernel/AlVec.h"
  
 // local
 #include "DiagSolvTool.h"

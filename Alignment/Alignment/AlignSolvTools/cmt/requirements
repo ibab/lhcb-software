@@ -4,13 +4,14 @@ package AlignSolvTools
 version           v2r5
 
 branches src cmt doc
+
 include_path none
 
 # add "use" statements
 use GaudiKernel    v*
 use GaudiAlg       v*
 use GaudiGSL       v*
-use SolvKernel     v* Alignment
+use AlignKernel     v* Alignment
 use AlignmentInterfaces   v* Alignment
 use ROOT        v* LCG_Interfaces
 
@@ -32,5 +33,3 @@ macro_append  GSL_linkopts " -Wl,--as-needed "
 end_private
 
 #===============================================================
-
-

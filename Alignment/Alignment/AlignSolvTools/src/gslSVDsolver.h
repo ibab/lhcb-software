@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.h,v 1.4 2008-08-29 13:09:11 wouter Exp $
+// $Id: gslSVDsolver.h,v 1.5 2009-07-06 14:18:38 wouter Exp $
 #ifndef GSLSVDSOLVER_H 
 #define GSLSVDSOLVER_H 1
 
@@ -30,7 +30,12 @@ public:
   virtual ~gslSVDsolver( ); ///< Destructor
 
   /// Solves Ax = b using gsl_linalg_SV_decomp (gsl_matrix * A, gsl_matrix * V, gsl_vector * S, gsl_vector * work)
-  bool compute(AlSymMat& symMatrix, AlVec& vector) const;
+  bool compute(AlSymMat& symMatrix, AlVec& vector, AlVec& evvector) const;
+
+  bool compute(AlSymMat& symMatrix, AlVec& vector) const {
+    AlVec dummy(vector.size()) ;
+    compute( symMatrix, vector,dummy) ;
+  }
   
 protected:
 

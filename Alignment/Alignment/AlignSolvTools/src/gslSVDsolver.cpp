@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.cpp,v 1.7 2008-08-29 13:09:11 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.8 2009-07-06 14:18:38 wouter Exp $
 // Include files 
 
 #include <cmath>
@@ -40,7 +40,8 @@ gslSVDsolver::gslSVDsolver( const std::string& type,
 gslSVDsolver::~gslSVDsolver() {} 
 
 
-bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
+bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector,
+			   AlVec& evvector) const {
   
   size_t size = symMatrix.size();
 
@@ -105,6 +106,8 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
       logmessage << eigenvalues[ipar] << ", " ;
     logmessage << "]" ;
     info() << logmessage.str() << endmsg ;
+    for(size_t ipar = 0; ipar<size; ++ipar) 
+      evvector(ipar) = eigenvalues[ipar] ;
   }
   
   /// Regularise by zeroing singular values below threshold
