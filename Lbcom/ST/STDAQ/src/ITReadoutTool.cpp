@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.13 2008-09-05 14:12:13 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.14 2009-07-06 17:28:33 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,6 +7,7 @@
 #include "ITReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
+#include "Kernel/STBoardMapping.h"
 
 // IT
 #include "Kernel/STChannelID.h"
@@ -62,6 +63,11 @@ StatusCode ITReadoutTool::initialize() {
 unsigned int ITReadoutTool::region(const STChannelID aChan) const{
   // convert channel to region
   return (aChan.station()-m_firstStation);
+}
+
+// Add the mapping of source ID to board number
+const  std::map<unsigned int, unsigned int>& ITReadoutTool::SourceIDToTELLNumberMap() const {
+  return STBoardMapping::ITSourceIDToNumberMap(); 
 }
 
 StatusCode ITReadoutTool::createBoards() {

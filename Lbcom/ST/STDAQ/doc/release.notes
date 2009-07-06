@@ -4,12 +4,15 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-!=============================== STDAQ v3r18 2009-05-25 ======================
-! 2009-05-16 - Mark Tobin
- - Added options files for decoding TAE events in online monitoring.
+! 2006-07-06 - Mark Tobin
+ - Added method to get TELL1 number from source ID to readout tool.
 
 ! 2006-07-06 - Anne Keune
  - Fixed a bug in the STPedestalDecoding.cpp
+
+!=============================== STDAQ v3r18 2009-05-25 ======================
+! 2009-05-16 - Mark Tobin
+ - Added options files for decoding TAE events in online monitoring.
 
 !=============================== STDAQ v3r17 2009-05-08 ======================
 ! 2009-03-17 - Jeroen Van Tilburg

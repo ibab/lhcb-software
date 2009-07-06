@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.15 2008-09-05 14:12:13 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.16 2009-07-06 17:28:34 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,6 +7,7 @@
 #include "TTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
+#include "Kernel/STBoardMapping.h"
 
 // IT
 #include "Kernel/STChannelID.h"
@@ -62,6 +63,11 @@ unsigned int TTReadoutTool::region(const STChannelID aChan) const{
   return (aChan.station() == 1 ?  aChan.layer() - 1 : m_nRegionA + aChan.layer() - 1 );
 }
 
+// Add the mapping of source ID to TELL1 board number
+const  std::map<unsigned int, unsigned int>& TTReadoutTool::SourceIDToTELLNumberMap() const {
+  return STBoardMapping::TTSourceIDToNumberMap();
+}
+
 StatusCode TTReadoutTool::createBoards() {
 
   clear();
@@ -86,7 +92,7 @@ StatusCode TTReadoutTool::createBoards() {
    const std::vector<int>& tMap = rInfo->param<std::vector<int> >(layers[iReg]);
    std::string orLoc = layers[iReg]+"HybridOrientation";
    const std::vector<int>& orientation = rInfo->param<std::vector<int> >(orLoc);
-  const std::vector<std::string>& serviceBoxes = rInfo->param<std::vector<std::string> >(layers[iReg]+"ServiceBox");
+   const std::vector<std::string>& serviceBoxes = rInfo->param<std::vector<std::string> >(layers[iReg]+"ServiceBox");
 
 
    unsigned int vecLoc = 0;

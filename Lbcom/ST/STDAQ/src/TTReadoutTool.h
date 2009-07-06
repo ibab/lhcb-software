@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.h,v 1.2 2007-03-23 14:36:53 cattanem Exp $
+// $Id: TTReadoutTool.h,v 1.3 2009-07-06 17:28:34 mtobin Exp $
 #ifndef _TTReadoutTool_H
 #define _TTReadoutTool_H
 
@@ -31,6 +31,9 @@ public:
 
   /// get region
   virtual unsigned int region(const LHCb::STChannelID aChan) const;
+
+  /** Add the mapping of source ID to board number for IT and TT */
+  virtual const  std::map<unsigned int, unsigned int>& SourceIDToTELLNumberMap() const; 
 
 private:
 
