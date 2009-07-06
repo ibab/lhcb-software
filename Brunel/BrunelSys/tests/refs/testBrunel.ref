@@ -59,7 +59,7 @@ MuonID WARNING: new DLL parameters not tuned for DATA=2008,VERSION=def. Loading 
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r3
-                                          running on lxbuild120.cern.ch on Thu Jul  2 14:48:55 2009
+                                          running on lxbuild120.cern.ch on Mon Jul  6 16:04:15 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -71,7 +71,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -790,10 +790,10 @@ FitVelo           SUCCESS Number of counters : 1
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 EcalClust            INFO Built 0 cellular automaton clusters/event  with 0 iterations (min,max)=(999999,0) on average
 MuonIDAlg            INFO ==> Total number of tracks with IsMuon=1 failing likelihood (p<0): 0
-ChargedProtoPAlg     INFO =====================================================================================================================================
-ChargedProtoPAlg     INFO  Type        |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)
-ChargedProtoPAlg     INFO -------------------------------------------------------------------------------------------------------------------------------------
-ChargedProtoPAlg     INFO =====================================================================================================================================
+ChargedProtoPAlg     INFO ====================================================================================================================================================
+ChargedProtoPAlg     INFO  # Tracks Per Event         |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)
+ChargedProtoPAlg     INFO ----------------------------------------------------------------------------------------------------------------------------------------------------
+ChargedProtoPAlg     INFO ====================================================================================================================================================
 NeutralProtoPAlg     INFO  0 event processed ==> 0 Neutral ProtoParticle produced !
 EcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
 HcalDigitMon      SUCCESS Booked 5 Histogram(s) : 1D=3 2D=2
@@ -819,47 +819,47 @@ MuonPIDMonitor       INFO                              :        J/PsiKs        -
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 MuonPIDMonitor       INFO ---------------------            IsMuonLoose           ---------------------
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  9.40 +-  0.01)     :   (  9.40 +-  0.01)
+MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 13.62 +-  0.02)     :   (  9.40 +-  0.01)
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 MuonPIDMonitor       INFO --------------------               IsMuon               --------------------
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  5.76 +-  0.01)     :   (  5.76 +-  0.01)
+MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 10.19 +-  0.02)     :   (  5.76 +-  0.01)
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 MuonPIDMonitor       INFO ----------------   DLL performance for DLLCut= 1.2   --------------
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  3.33 +-  0.01)     :   (  3.33 +-  0.01)
+MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  7.99 +-  0.02)     :   (  3.33 +-  0.01)
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 MuonPIDMonitor       INFO ------------------------      nShared performance    -----------------------
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  3.79 +-  0.01)     :   (  3.79 +-  0.01)
+MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 TrackVertexMonitorSUCCESS Booked 11 Histogram(s) : 1D=5 1DProf=6
 TrackResChecker      INFO      ************************************
 VeloRZ               INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-VeloRZ               INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-VeloRZ               INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+VeloRZ               INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+VeloRZ               INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 Velo                 INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-Velo                 INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-Velo                 INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+Velo                 INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+Velo                 INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 VeloTT               INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-VeloTT               INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-VeloTT               INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+VeloTT               INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+VeloTT               INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 Forward              INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-Forward              INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-Forward              INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+Forward              INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+Forward              INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 TTrack               INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-TTrack               INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-TTrack               INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+TTrack               INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+TTrack               INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 Match                INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-Match                INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-Match                INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+Match                INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+Match                INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 Downstream           INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-Downstream           INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-Downstream           INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+Downstream           INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+Downstream           INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 BestTracks           INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
-BestTracks           INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
-BestTracks           INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+BestTracks           INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
+BestTracks           INFO      long, p > 5 GeV            :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 PVOfflineCheck       INFO  ============================================
 PVOfflineCheck       INFO  Efficiencies for reconstructible MC vertices:
 PVOfflineCheck       INFO  ============================================
@@ -940,39 +940,39 @@ MuonPIDChecker       INFO                              :        J/PsiKs        -
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 MuonPIDChecker       INFO ---------------------            IsMuonLoose           ---------------------
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
-MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 98.78 +-  0.06)     :   ( 98.78 +-  0.06)
-MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 69.83 +-  0.14)     :   ( 69.83 +-  0.14)
-MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  5.92 +-  0.01)     :   (  5.92 +-  0.01)
-MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  7.70 +-  0.01)     :   (  7.70 +-  0.01)
-MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   ( 10.59 +-  0.02)     :   ( 10.59 +-  0.02)
-MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  9.40 +-  0.01)     :   (  9.40 +-  0.01)
+MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 99.50 +-  0.02)     :   ( 98.78 +-  0.06)
+MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 68.07 +-  0.11)     :   ( 69.83 +-  0.14)
+MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  5.86 +-  0.02)     :   (  5.92 +-  0.01)
+MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  7.53 +-  0.02)     :   (  7.70 +-  0.01)
+MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   ( 10.84 +-  0.04)     :   ( 10.59 +-  0.02)
+MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 13.62 +-  0.02)     :   (  9.40 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 MuonPIDChecker       INFO --------------------               IsMuon               --------------------
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
-MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 97.77 +-  0.08)     :   ( 97.77 +-  0.08)
-MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 66.18 +-  0.14)     :   ( 66.18 +-  0.14)
-MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  2.85 +-  0.01)     :   (  2.85 +-  0.01)
-MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  4.61 +-  0.01)     :   (  4.61 +-  0.01)
-MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  6.08 +-  0.01)     :   (  6.08 +-  0.01)
-MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  5.76 +-  0.01)     :   (  5.76 +-  0.01)
+MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 98.95 +-  0.03)     :   ( 97.77 +-  0.08)
+MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 64.02 +-  0.23)     :   ( 66.18 +-  0.14)
+MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  2.70 +-  0.01)     :   (  2.85 +-  0.01)
+MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  4.34 +-  0.02)     :   (  4.61 +-  0.01)
+MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  6.30 +-  0.03)     :   (  6.08 +-  0.01)
+MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 10.19 +-  0.02)     :   (  5.76 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 MuonPIDChecker       INFO ----------------   DLL performance for DLLCut= 1.2   --------------
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
-MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 91.69 +-  0.14)     :   ( 91.69 +-  0.14)
-MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 48.08 +-  0.15)     :   ( 48.08 +-  0.15)
-MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  1.33 +-  0.01)     :   (  1.33 +-  0.01)
-MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  2.63 +-  0.01)     :   (  2.63 +-  0.01)
-MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.05 +-  0.01)     :   (  3.05 +-  0.01)
-MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  3.33 +-  0.01)     :   (  3.33 +-  0.01)
+MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 94.89 +-  0.06)     :   ( 91.69 +-  0.14)
+MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 45.57 +-  0.24)     :   ( 48.08 +-  0.15)
+MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  1.37 +-  0.01)     :   (  1.33 +-  0.01)
+MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  2.55 +-  0.01)     :   (  2.63 +-  0.01)
+MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.59 +-  0.02)     :   (  3.05 +-  0.01)
+MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  7.99 +-  0.02)     :   (  3.33 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 MuonPIDChecker       INFO ------------------------      nShared performance    -----------------------
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
-MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 91.06 +-  0.14)     :   ( 91.06 +-  0.14)
-MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 49.08 +-  0.15)     :   ( 49.08 +-  0.15)
-MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  2.14 +-  0.01)     :   (  2.14 +-  0.01)
-MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  3.45 +-  0.01)     :   (  3.45 +-  0.01)
-MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.01 +-  0.01)     :   (  3.01 +-  0.01)
-MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  3.79 +-  0.01)     :   (  3.79 +-  0.01)
+MuonPIDChecker       INFO  Muons      :   (  0.00 +-  0.00)     :   ( 95.71 +-  0.05)     :   ( 91.06 +-  0.14)
+MuonPIDChecker       INFO  Decays     :   (  0.00 +-  0.00)     :   ( 48.32 +-  0.24)     :   ( 49.08 +-  0.15)
+MuonPIDChecker       INFO  Non-muons  :   (  0.00 +-  0.00)     :   (  1.79 +-  0.01)     :   (  2.14 +-  0.01)
+MuonPIDChecker       INFO  MC MisID   :   ( -1.00 +- -1.00)     :   (  3.04 +-  0.01)     :   (  3.45 +-  0.01)
+MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.21 +-  0.02)     :   (  3.01 +-  0.01)
+MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 FSRWriter            INFO Set up File Summary Record
 RootDBase.open    SUCCESS Brunel.dst File version:52200
@@ -996,7 +996,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
