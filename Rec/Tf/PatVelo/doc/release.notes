@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-07-06 - David Hutchcroft
+ - Added PatVeloTraversingTracking cpp and h which adds an algorithm that makes
+   tracks that cross between detector halves even if the exact openning distace is
+   not known. 
+ - Removed double definition of the option for ForwardStepError from NewVeloSpaceTool
+
 ! 2009-07-01 - Olivier Callot
  - Copy David's tuning of the track fit in NewVeloSpaceTool.
  - Produce two fitted states in NewVeloSpaceTool to get the best Match performance

@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.cpp,v 1.4 2009-07-01 14:35:52 ocallot Exp $
+// $Id: NewVeloSpaceTool.cpp,v 1.5 2009-07-06 15:42:07 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -35,7 +35,6 @@ NewVeloSpaceTool::NewVeloSpaceTool( const std::string& type,
   declareProperty( "PhiMatchZone",       m_phiMatchZone       = 0.0008 );
   declareProperty( "PhiMatchZoneSlope",  m_phiMatchZoneSlope  = 0.00014);
   declareProperty( "FractionFound",      m_fractionFound      = 0.70   );
-  declareProperty( "ForwardStepError",   m_forwardStepError   = 0.009  );
   declareProperty( "MaxChi2PerHit",      m_maxChi2PerHit      = 16.    );
   declareProperty( "FractionForMerge",   m_fractionForMerge   = 0.70   );
 
