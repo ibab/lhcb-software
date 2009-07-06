@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.87 2009-07-04 21:53:57 polye Exp $"
+__version__ = "$Id: Configuration.py,v 1.88 2009-07-06 11:45:59 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -439,8 +439,7 @@ class Brunel(LHCbConfigurableUser):
             from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
             mydata =  self.getProp("DataType")
             mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
-            mymonitconf.configure(mc = False)
-            mymonitconf.configure(expertck = expert)
+            mymonitconf.configure(mc = False, expertck = expert)
 
         if "ST" in moniSeq :
             from Configurables import ST__STClusterMonitor, GaudiSequencer
@@ -498,8 +497,7 @@ class Brunel(LHCbConfigurableUser):
             from MuonPIDChecker import ConfigureMuonPIDChecker as cmuon
             mydata =  self.getProp("DataType")
             mycheckconf = cmuon.ConfigureMuonPIDChecker(data = mydata)
-            mycheckconf.configure(mc = True)
-            mycheckconf.configure(expertck = expert)
+            mycheckconf.configure(mc = True, expertck = expert)
 
         if "RICH" in checkSeq :
             from Configurables import GaudiSequencer
