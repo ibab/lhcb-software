@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.35 2009-04-22 09:19:51 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.36 2009-07-06 15:25:35 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -299,7 +299,6 @@ private: // data
     counter(mess)++;
     return ;
   }
-  bool m_inputLocationsSet ; ///< have the input locations been set?
 
 };
 

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.436 2009-07-02 09:54:21 jpalac Exp $
+! $Id: release.notes,v 1.437 2009-07-06 15:25:35 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-07-06 - Patrick Koppenburg
+ - PhysDesktop : Remove PhysDesktop.InputLocations property. Please 
+   access this via DVAlgorithm.
+ - Increment to v19r0
 
 !========================== DaVinciTools v18r6 2009-07-02 ===================
 
