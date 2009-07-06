@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file VeloExpectation.cpp
  *
- *  Implementation file for RICH reconstruction tool : VeloExpectation
+ *  Implementation file for reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.6 2008-07-11 14:16:56 dhcroft Exp $
+ *  $Id: VeloExpectation.cpp,v 1.7 2009-07-06 18:29:28 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007

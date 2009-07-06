@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file TrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : TrackSelector
+ *  Implementation file for reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.23 2009-07-06 15:50:02 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.24 2009-07-06 18:29:28 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch

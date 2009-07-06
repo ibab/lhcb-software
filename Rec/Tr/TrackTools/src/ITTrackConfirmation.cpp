@@ -2,13 +2,12 @@
 //-----------------------------------------------------------------------------
 /** @file ITTrackConfirmation.cpp
  *
- *  Implementation file for RICH reconstruction tool : ITTrackConfirmation
+ *  Implementation file for reconstruction tool : ITTrackConfirmation
  *
  *  CVS Log :-
- *  $Id: ITTrackConfirmation.cpp,v 1.1 2008-10-24 13:45:06 mneedham Exp $
+ *  $Id: ITTrackConfirmation.cpp,v 1.2 2009-07-06 18:29:28 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/12/2005
  */
 //-----------------------------------------------------------------------------

@@ -2,13 +2,12 @@
 //-----------------------------------------------------------------------------
 /** @file ITIsolatedTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : ITIsolatedTrackSelector
+ *  Header file for reconstruction tool : ITIsolatedTrackSelector
  *
  *  CVS Log :-
- *  $Id: ITIsolatedTrackSelector.h,v 1.1 2009-07-03 13:31:03 mneedham Exp $
+ *  $Id: ITIsolatedTrackSelector.h,v 1.2 2009-07-06 18:29:28 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/12/2005
  */
 //-----------------------------------------------------------------------------
@@ -19,12 +18,8 @@
 //-----------------------------------------------------------------------------
 /** @class ITIsolatedTrackSelector ITIsolatedTrackSelector.h
  *
- *  General track Selection tool
- *
- *  Cuts can be applied on p, hits, chi^2, pt, and track type.
  *
  *  @author M.Needham Matt.Needham@cern.ch
- *  @author C. Jones  Christopher.Rob.Jones@cern.ch
  *
  *  @date   30/12/2005
  */

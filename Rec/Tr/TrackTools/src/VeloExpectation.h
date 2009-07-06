@@ -1,4 +1,4 @@
-//  $Id: VeloExpectation.h,v 1.5 2008-07-11 14:16:56 dhcroft Exp $
+//  $Id: VeloExpectation.h,v 1.6 2009-07-06 18:29:28 jonrob Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
@@ -24,15 +24,15 @@ class DeVelo;
 class DeVeloSensor;
 
 class VeloExpectation : public GaudiTool,
-                      virtual public IVeloExpectation
+                        virtual public IVeloExpectation
 {
 
 public:
 
   /// constructer
   VeloExpectation( const std::string& type,
-                 const std::string& name,
-                 const IInterface* parent );
+                   const std::string& name,
+                   const IInterface* parent );
 
   virtual ~VeloExpectation();
 
@@ -53,7 +53,7 @@ public:
    *  @param aTrack Reference to the Track to test
    *
    *  @return number of hits expected
-  */
+   */
   virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack ) const;
 
   /** Returns number of hits expected, from zStart to zStop
@@ -79,7 +79,7 @@ public:
    *  @param aTrack Reference to the Track to test
    *
    *  @return number of hits missed before first hit
-  */
+   */
   virtual int nMissed( const LHCb::Track& aTrack ) const;
 
 
@@ -89,27 +89,27 @@ public:
    *  @param z --> z to start from
    *
    *  @return number of hits missed before first hit
-  */
+   */
   virtual int nMissed( const LHCb::Track& aTrack, const double z ) const;
 
 
   /** Returns true if track passses through a working strip in the sensor
-   * 
+   *
    *
    *  @param aTrack Reference to the Track to test
-   *  @param sensorNum ---> sensor number 
+   *  @param sensorNum ---> sensor number
    *
    *  @return true if crosses a working strip
-  */
-  bool isInside(const LHCb::Track& aTrack, 
-		const unsigned int sensorNum) const;
+   */
+  bool isInside(const LHCb::Track& aTrack,
+                const unsigned int sensorNum) const;
 
 private:
 
-  IVeloExpectation::Info scan(const LHCb::Track& aTrack, 
+  IVeloExpectation::Info scan(const LHCb::Track& aTrack,
                               const double zStart, const double zStop) const;
 
-  bool isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine, 
+  bool isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine,
                 const Tf::Tsa::Line& yLine, const double z) const;
 
   double zMin(const LHCb::Track& aTrack) const;
@@ -119,11 +119,11 @@ private:
   int nFound(const LHCb::Track& aTrack,
              const double zStart, const double zStop) const;
 
-  void param(const LHCb::Track& aTrack, const double z, 
+  void param(const LHCb::Track& aTrack, const double z,
              Tf::Tsa::Line& xLine, Tf::Tsa::Line& yLine) const;
 
   double zBeamLine(const LHCb::Track& aTrack) const;
- 
+
   DeVelo* m_veloDet;
 
 };
