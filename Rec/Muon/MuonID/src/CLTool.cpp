@@ -1,4 +1,4 @@
-// $Id: CLTool.cpp,v 1.2 2009-07-03 19:54:55 polye Exp $
+// $Id: CLTool.cpp,v 1.3 2009-07-06 08:13:40 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode CLTool::initialize() {
   {
     if ((*it)==-1) 
     {
-      debug() << "CLTOOL NOT INITIALIZED"<<endreq;
+      debug() << "CLTOOL NOT INITIALIZED"<<endmsg;
       m_init.setCode(0);      
       return StatusCode::SUCCESS;
     }
@@ -71,18 +71,17 @@ StatusCode CLTool::initialize() {
 
   // from m_signal and m_range fill the m_vsignal
   m_nrange = m_range.size()-1;
-  debug() << " range: " << m_range << endreq;
+  debug() << " range: " << m_range << endmsg;
   
   //build array with bins center for signal
   for (int i=1;i<=m_nrange;i++) m_mombinsCenter.push_back((m_range[i]+m_range[i-1])/2);
   m_mombinsCenter[m_nrange-1]=m_lbinCenter;
   
   if (m_signal.size()%m_nrange!=0){
-    error() << "INPUT VALUES, WRONG SIZE PER MOM BIN FOR MUONS"<<endreq;
     m_init.setCode(0);
-    return StatusCode::FAILURE;
+    return Error( "INPUT VALUES, WRONG SIZE PER MOM BIN FOR MUONS" );
   }
-  debug()<<"m_rangeNmuons_init="<<m_rangeNmuons<<endreq;
+  debug()<<"m_rangeNmuons_init="<<m_rangeNmuons<<endmsg;
   
   //if range for background was not initialized, make it same as signal's 
   bool cond=false;
@@ -91,12 +90,12 @@ StatusCode CLTool::initialize() {
   {
     if ((*it)==-1) cond=true;
   }
-  debug()<<"cond="<<cond<<endreq;
+  debug()<<"cond="<<cond<<endmsg;
   
   if (cond)
   {
     m_rangeNmuons.clear();
-    debug()<<"m_rangeNmuons.size() after clear is"<<m_rangeNmuons.size()<<endreq;
+    debug()<<"m_rangeNmuons.size() after clear is"<<m_rangeNmuons.size()<<endmsg;
     for (int i=0;i<=m_nrange;i++) m_rangeNmuons.push_back(m_range[i]);
     m_lbinCenterNmuons=m_lbinCenter;
   }
@@ -105,27 +104,24 @@ StatusCode CLTool::initialize() {
   // check min momentum and initialize
   if (m_range[0]!=m_rangeNmuons[0])
   {
-    error() << "ERROR, MIN MOM NOT THE SAME FOR MUONS AND NOT MUONS!"<<endreq;
     m_init.setCode(0);
-    return m_init;
-    
+    return Error( "MIN MOM NOT THE SAME FOR MUONS AND NOT MUONS!", m_init);
   }
   
   m_minMomentum=m_range[0];
-  debug() << " min mom=" << m_minMomentum << endreq;
+  debug() << " min mom=" << m_minMomentum << endmsg;
 
   //build array with bins center for background
   for (int i=1;i<=m_nrangeNmuons;i++) m_mombinsCenterNmuons.push_back((m_rangeNmuons[i]+m_rangeNmuons[i-1])/2);
   m_mombinsCenterNmuons[m_nrangeNmuons-1]=m_lbinCenterNmuons;
   
-  debug()<<"CLTool:: NMUONSINFO"<<endreq;
-  debug()<<"CLTool:: m_rangeNmuons="<<m_rangeNmuons<<endreq;
-  debug()<<"CLTool:: m_mombinsCenterNmuons="<<m_mombinsCenterNmuons<<endreq;
+  debug()<<"CLTool:: NMUONSINFO"<<endmsg;
+  debug()<<"CLTool:: m_rangeNmuons="<<m_rangeNmuons<<endmsg;
+  debug()<<"CLTool:: m_mombinsCenterNmuons="<<m_mombinsCenterNmuons<<endmsg;
   
   if (m_bkg.size()%m_nrangeNmuons!=0){
-    error() << "CLTool:: INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS"<<endreq;
     m_init.setCode(0);
-    return m_init;
+    return Error( "CLTool:: INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS", m_init);
   }
 
   m_nvals=m_signal.size()/m_nrange;
@@ -133,15 +129,14 @@ StatusCode CLTool::initialize() {
 
   //check number of elements per momentum bin is the same for signal and bkg
   if (m_nvals!=nvalsNmuons){
-    error() << "CLTool:: DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL"<<endreq;
     m_init.setCode(0);
-    return m_init;
+    return Error( "CLTool:: DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL", m_init);
   }
   
   //find yvals (same for signal and bkg): y points in cl functions
   for (int i=0;i<m_nvals;i++) m_yvals.push_back(i*1./(m_nvals-1));
   debug() << "CLTool:: recorded "<<m_nrange<<" momentum bins "
-         << "with "<< m_yvals.size() << " vals each" << endreq;
+         << "with "<< m_yvals.size() << " vals each" << endmsg;
   
   //build uniformer functions for both signal and bkg
   StatusCode stc1=getClValues("sig");
@@ -184,8 +179,7 @@ StatusCode CLTool::getClValues(std::string sig_bkg)
   
   else
   {
-    error()<<"Wrong opt for this function"<<endreq;
-    return StatusCode::FAILURE;
+    return Error("Wrong opt for this function");
   }
   
 
@@ -194,7 +188,7 @@ StatusCode CLTool::getClValues(std::string sig_bkg)
   //build xinput for uniformers (x values corresponding to cl's) for each momentum bin. Will build one uniformer per mom bin
   for (int i=0;i<my_nrange;i++) {
     
-    debug()<<"P range="<<i<<endreq;
+    debug()<<"P range="<<i<<endmsg;
     (*my_v).push_back(std::vector<double>());
     
     for (int j=0;j<m_nvals;j++)
@@ -206,7 +200,7 @@ StatusCode CLTool::getClValues(std::string sig_bkg)
     std::string label;
     if (sig_bkg=="sig") label=labels[0];
     else label=labels[1];
-    //debug() << label<< i << my_v[i]<<endreq;
+    //debug() << label<< i << my_v[i]<<endmsg;
     (*my_unif).push_back(Uniformer((*my_v)[i],m_yvals));
     
   }
@@ -236,8 +230,7 @@ StatusCode CLTool::findMomRange(const double& mom,int& p_r,std::string sig_bkg)
   
   else
   {
-    error()<<"Wrong opt for this function"<<endreq;
-    return StatusCode::FAILURE;
+    return Error("Wrong opt for this function");
   }
 
   // loop over momentum bins edges and return
@@ -245,13 +238,13 @@ StatusCode CLTool::findMomRange(const double& mom,int& p_r,std::string sig_bkg)
     if ((*my_range)[i-1]<=mom && (*my_range)[i]>mom) 
     {
       p_r = i-1;
-      debug() << "MOM RANGE IS " << p_r<<endreq;
+      debug() << "MOM RANGE IS " << p_r<<endmsg;
       return StatusCode::SUCCESS;
     }
     
   }
   p_r=-1;
-  debug() << "MOM OUT OF RANGE" <<endreq; 
+  debug() << "MOM OUT OF RANGE" <<endmsg; 
   return StatusCode::FAILURE;
 }
 
@@ -315,10 +308,10 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
       ind1=p_r-1;
       ind2=p_r;
     }
-    debug()<<"OVERLAPINFO"<<endreq;
-    debug()<<"p_r="<<p_r<<endreq;
-    debug()<<"binCenter="<<(*my_mombinsCenter)[p_r]<<endreq;
-    debug()<<"ind1="<<ind1<<",ind2="<<ind2<<endreq;
+    debug()<<"OVERLAPINFO"<<endmsg;
+    debug()<<"p_r="<<p_r<<endmsg;
+    debug()<<"binCenter="<<(*my_mombinsCenter)[p_r]<<endmsg;
+    debug()<<"ind1="<<ind1<<",ind2="<<ind2<<endmsg;
     
     //get y values corresponding to val to interpolate in momentum. If integrating to right, use 1-left_value
     left_val1=(*unifrel)[ind1].getYvalue(value);
@@ -330,20 +323,20 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
     else rel_val2=left_val2;
 
     // if second half and last momentum bin, decide wether to apply interpolation
-    debug()<<"CLTool:: single_case="<<single_case<<endreq;
+    debug()<<"CLTool:: single_case="<<single_case<<endmsg;
     if (single_case &&  !m_applyLast) return rel_val2;    
 
     double bcen1=(*my_mombinsCenter)[ind1];
     double bcen2=(*my_mombinsCenter)[ind2];
 
-    debug()<<"bcen1="<<bcen1<<endreq;
-    debug()<<"bcen2="<<bcen2<<endreq;
-    debug()<<"cl1="<<rel_val1<<endreq;
-    debug()<<"cl2="<<rel_val2<<endreq;
+    debug()<<"bcen1="<<bcen1<<endmsg;
+    debug()<<"bcen2="<<bcen2<<endmsg;
+    debug()<<"cl1="<<rel_val1<<endmsg;
+    debug()<<"cl2="<<rel_val2<<endmsg;
 
     // calculate final value interpolating between mom bins
     ret_val=rel_val1*(mom-bcen2)/(bcen1-bcen2)+rel_val2*(1-(mom-bcen2)/(bcen1-bcen2));
-    debug()<<"ret_val="<<ret_val<<endreq;
+    debug()<<"ret_val="<<ret_val<<endmsg;
   }
   
 
@@ -365,8 +358,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
   if (m_init.isFailure())
   {
     sc.setCode(501);
-    error()<<"TOOL NOT INITIALIZED"<<endreq;
-    return sc;    
+    return Error("TOOL NOT INITIALIZED", sc);
   }
   
 
@@ -374,8 +366,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
   if (value<=0.0)
   {
     sc.setCode(502);
-    error()<<"NOT A VALID VALUE FOR QUANTITY"<<endreq;
-    return sc;
+    return Error("NOT A VALID VALUE FOR QUANTITY", sc);
   }
 
 
@@ -388,11 +379,11 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
     return sc;
 
   }
-  debug() << "Region=  "<< region << endreq;  
+  debug() << "Region=  "<< region << endmsg;  
 
   // from ibin-range compute CLs
   cls = valFromUnif(value,mom,p_r,"sig");
-  debug()<<"CLS="<<cls<<endreq;
+  debug()<<"CLS="<<cls<<endmsg;
 
   // from range compute i bin for bkg
   int p_r_nmuons;
@@ -405,7 +396,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
 
   // from ibin-range compute CLb
   clb=valFromUnif(value,mom,p_r_nmuons,"bkg");
-  debug()<<"CLB="<<clb<<endreq;
+  debug()<<"CLB="<<clb<<endmsg;
   
   //compute ratio
   if (clb!=0 && cls!=0) clr=cls/clb;
@@ -416,7 +407,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
       if (cls==0) clr=1e-6;
       else 
       {
-        warning()<<"CLTool: DIVISION BY 0!"<<endreq;
+        warning()<<"CLTool: DIVISION BY 0!"<<endmsg;
         sc.setCode(505);
         return sc;
       }

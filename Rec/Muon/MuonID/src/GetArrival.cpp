@@ -1,4 +1,4 @@
-// $Id: GetArrival.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: GetArrival.cpp,v 1.2 2009-07-06 08:13:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -35,31 +35,31 @@ GetArrival::GetArrival( const std::string& type,
 
   //remove smallest amongst all probabilities for 4 stations
   declareProperty("removeSmallest", m_removeSmallest=false);
-  debug()<< "removeSmallest="<<m_removeSmallest<<endreq;
+  debug()<< "removeSmallest="<<m_removeSmallest<<endmsg;
 
   declareProperty("useFunct", m_useFunct=false);
   //use fitted functions instead of histograms
-  debug()<< "useFunct="<<m_useFunct<<endreq;
+  debug()<< "useFunct="<<m_useFunct<<endmsg;
     
   //moms for all 4 stations
   declareProperty("moms", m_moms = boost::assign::list_of (-1.));
-  debug()<< "moms="<<m_moms<<endreq;
+  debug()<< "moms="<<m_moms<<endmsg;
 
   //probs corresponding to those moms in each station
   declareProperty("probs", m_probs);
-  debug()<< "probs="<<m_probs<<endreq;
+  debug()<< "probs="<<m_probs<<endmsg;
   
   //parameter alpha in fitted curves
   declareProperty("alpha", m_alpha = boost::assign::list_of (-1.));
-  debug()<< "alpha="<<m_alpha<<endreq;
+  debug()<< "alpha="<<m_alpha<<endmsg;
   
   ////parameter beta in fitted curves
   declareProperty("beta", m_beta = boost::assign::list_of (-1.));
-  debug()<< "beta="<<m_beta<<endreq;
+  debug()<< "beta="<<m_beta<<endmsg;
 
   ////eff of muon chambers
   declareProperty("eff", m_eff=.99);
-  debug()<< "eff="<<m_eff<<endreq;
+  debug()<< "eff="<<m_eff<<endmsg;
 
   ////number of min hits for cls arr
   declareProperty("MinHits",m_minhits=2);
@@ -76,17 +76,15 @@ StatusCode GetArrival::initialize() {
     for (std::vector<double>::const_iterator it=m_beta.begin();
          it!=m_beta.end();++it) {
       if ((*it)==-1) {
-        error() << "BETAS NOT INITIALIZED"<<endreq;
         m_init.setCode(401);
-        return m_init;  
+        return Error( "BETAS NOT INITIALIZED", m_init);
       }
     }
     for (std::vector<double>::const_iterator it=m_alpha.begin();
          it!=m_alpha.end();++it) {
       if ((*it)==-1) {
-        error() << "ALPHAS NOT INITIALIZED"<<endreq;
         m_init.setCode(401);
-        return m_init;  
+        return Error( "ALPHAS NOT INITIALIZED", m_init);
       }
     }
   }
@@ -98,7 +96,7 @@ StatusCode GetArrival::initialize() {
     {
       if ((*it)==-1) 
       {
-        debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endreq;
+        debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endmsg;
         m_init.setCode(401);
         return StatusCode::SUCCESS;
       }
@@ -108,11 +106,10 @@ StatusCode GetArrival::initialize() {
     
     //number of points per each station
     m_npoints = m_moms.size();
-    debug() << " npoints: " << m_npoints << endreq;
+    debug() << " npoints: " << m_npoints << endmsg;
     if ((m_probs.size()%m_npoints)!=0){
-      error() << "INPUT VALUES WRONG SIZE PER STATION"<<endreq;
       m_init.setCode(402);
-      return m_init;
+      return Error( "INPUT VALUES WRONG SIZE PER STATION", m_init);
     }
     
     //build vector for each station. For station 0, initialization to 0
@@ -126,7 +123,7 @@ StatusCode GetArrival::initialize() {
         continue;
       }
       
-      debug()<<"ST="<<i<<endreq;
+      debug()<<"ST="<<i<<endmsg;
       
       for (int j=0;j<m_npoints;j++){
         //int g_ind=i*m_npoints+j;
@@ -135,7 +132,7 @@ StatusCode GetArrival::initialize() {
       }
       
       //from vector build uniformer to interpolate between different moms.
-      debug() << " m_vprobs "<< i << m_vprobs[i]<<endreq;
+      debug() << " m_vprobs "<< i << m_vprobs[i]<<endmsg;
       m_functprobs.push_back(Uniformer(m_moms,m_vprobs[i]));
       
     }
@@ -167,7 +164,7 @@ StatusCode GetArrival::initialize() {
     if (countArray(type_st,4,1)>=m_minhits) m_types_st.push_back(type_st);  
   }
 
-  debug()<<"m_types_st="<<m_types_st<<endreq;
+  debug()<<"m_types_st="<<m_types_st<<endmsg;
   
   return StatusCode::SUCCESS;
   
@@ -202,18 +199,18 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
     double prob_st=findProbStation(st,mom);
     if (!(binary_search(sts.begin(),sts.end(),st))) prob_st=1-prob_st;    
 
-    debug()<<"ST="<<st<<",prob="<<prob_st<<endreq;
+    debug()<<"ST="<<st<<",prob="<<prob_st<<endmsg;
     all_probs.push_back(prob_st);
   }
 
   //sort all probs according to value
   sort(all_probs.begin(),all_probs.end());
-  debug()<<"all_probs sorted="<<all_probs<<endreq;
+  debug()<<"all_probs sorted="<<all_probs<<endmsg;
 
   //if removeSmallest, remove smallest
   if (m_removeSmallest) all_probs.erase(all_probs.begin());
   
-  debug()<<"after removal (if removeSmallest)"<<all_probs<<endreq;
+  debug()<<"after removal (if removeSmallest)"<<all_probs<<endmsg;
 
   //calculate prod for all stored values
   for (std::vector<double>::const_iterator it=all_probs.begin();
@@ -223,7 +220,7 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
          prob*=p; 
       }
   
-  debug()<<"all_prob="<<prob<<endreq;
+  debug()<<"all_prob="<<prob<<endmsg;
   if (prob==0) return 1e-6; 
 
   return prob;
@@ -253,7 +250,7 @@ StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vec
   {                        
     if (!it->isMuon()) continue;
     int st=(*it).muonID().station();
-    debug()<<"added station "<<st<<endreq;
+    debug()<<"added station "<<st<<endmsg;
     if (!stInStations(st,sts_init)) sts_init.push_back(st);
   }
   
@@ -281,7 +278,7 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
   StatusCode sc;
   if (mutrack.lhcbIDs().size()<1) 
   {
-    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endreq;
+    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endmsg;
     parr=0.;
     sc.setCode(410);
     return sc;
@@ -292,16 +289,16 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
   sc = getStationsFromTrack(mutrack,type_st);
   if (sc.isFailure())
   {
-    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endreq;
+    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endmsg;
     sc.setCode(411);
     return sc;
   }
 
 
 
-  debug()<<"sts="<<type_st<<endreq;
+  debug()<<"sts="<<type_st<<endmsg;
   parr= probTypeSt(mutrack.p(),type_st);
-  debug()<<"prob="<<endreq;
+  debug()<<"prob="<<endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -331,7 +328,7 @@ double GetArrival::probTypeSt(const double p, const std::vector<int>& type_st) {
   
   double pp = p4 + p3 + p2 + p1 + p0;
   
-  debug()<< "@probTypeSt: "<<type_st<<","<<p4<<","<<p3<<","<<p2<<","<<p1<<","<<p0<<","<<pp<<endreq;
+  debug()<< "@probTypeSt: "<<type_st<<","<<p4<<","<<p3<<","<<p2<<","<<p1<<","<<p0<<","<<pp<<endmsg;
   return pp;
 }
 
@@ -380,7 +377,7 @@ double GetArrival::probTypeStStation(const double p, const std::vector<int>& typ
     <<"@probTypeStStation: "<<p<<","<<type_st<<","<<station
     <<" \np4, p3, p2, p1, pp ="<<P4<<","<<P3<<","<<P2<<","<<P1<<","<<PP
     <<" \neff, (1-eff) "<<","<<pow(m_eff,m-nholes)<<","<<pow((1-m_eff),nholes)
-    <<" \nval "<<val<<endreq;
+    <<" \nval "<<val<<endmsg;
   return val;
   
 }
@@ -398,7 +395,7 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
   StatusCode sc;
   if (muTrack.lhcbIDs().size()<1) 
   {
-    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE CL"<<endreq;
+    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE CL"<<endmsg;
     clarr=0.;
     sc.setCode(410);
     return sc;
@@ -410,7 +407,7 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
   if (sc.isFailure())
   {
     clarr=0.;
-    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endreq;
+    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endmsg;
     sc.setCode(411);
     return sc;
   }
@@ -429,7 +426,7 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
   sc.setCode(412);
   
   if (countArray(type_st,4,1)<m_minhits) {
-    debug()<<"number of hits less than min"<<endreq;
+    debug()<<"number of hits less than min"<<endmsg;
     return sc;
   }
   
@@ -452,17 +449,17 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
   }
   if (tot > ((double) 0.)) clarr = stot/tot;
   else {
-    debug()<<"tot=0, division by 0"<<endreq;
+    debug()<<"tot=0, division by 0"<<endmsg;
     return sc;
   }
   
   for (unsigned int i=0; i<m_types_st.size();i++){
-    debug() << " probTypeSt " << m_types_st[i]<<","<<vals[i]<<endreq;
+    debug() << " probTypeSt " << m_types_st[i]<<","<<vals[i]<<endmsg;
   }
   
   debug()
     << " currenttype_st "<<type_st<<","<<sval
-    << " tot,stot,cls "<<tot<<","<<stot<<","<<clarr<<endreq;
+    << " tot,stot,cls "<<tot<<","<<stot<<","<<clarr<<endmsg;
   
   return StatusCode::SUCCESS;
 }
