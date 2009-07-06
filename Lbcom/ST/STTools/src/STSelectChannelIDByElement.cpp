@@ -1,4 +1,4 @@
-// $Id: STSelectChannelIDByElement.cpp,v 1.2 2009-07-03 13:39:08 mneedham Exp $
+// $Id: STSelectChannelIDByElement.cpp,v 1.3 2009-07-06 12:40:17 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -31,10 +31,6 @@ StatusCode STSelectChannelIDByElement::initialize() {
   StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  if (m_elementNames.size() == 0){
-    info() << name() << "Empy list given: default to selecting all " << endmsg;
-  }
-
   BOOST_FOREACH(std::string name, m_elementNames) {
     DeSTBaseElement* detElement = tracker()->findTopLevelElement(name);
     if (detElement == 0){
@@ -60,7 +56,6 @@ bool STSelectChannelIDByElement::select( const LHCb::STChannelID& id ) const{
   
 bool STSelectChannelIDByElement::operator()( const LHCb::STChannelID& id ) const{
 
-  if (m_elementNames.size() == 0u) return true;
 
   std::vector<DeSTBaseElement*>::const_iterator iterElem = m_detElements.begin();
   for ( ; iterElem != m_detElements.end() ; ++iterElem){

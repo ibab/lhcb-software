@@ -2,7 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-
+! 2009-06-03 M Needham
+ - Don't default to all in case of empty list
+   
 ! 2009-07-03 M Needham
  - Add printout to  STSelectChannelIDByElement
 
