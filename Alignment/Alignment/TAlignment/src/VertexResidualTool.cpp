@@ -212,17 +212,16 @@ namespace Al
       if(fitstatus == LHCb::TrackStateVertex::FitSuccess && constrainDiMuonMass ) {
 	assert( nacceptedtracks == 2 ) ;
 	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
-	info() << "mass before psi constraint: "
-	       << vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	debug() << "mass before psi constraint: "
+		<< vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
 	fitstatus = vertex.constrainMass( masshypos, m_jpsimass ) ;	
-	info() << "mass after psi constraint: "
-	       << vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
-	
-	info() << "error on qop of first track, original, after vertex fit, after mass fit: "
-	       << std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
-	       << qopbefore << " "
-	       << std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
+	debug() << "mass after psi constraint: "
+		<< vertex.mass(masshypos) << " +/- " << vertex.massErr(masshypos) << endreq ;
+	debug() << "error on qop of first track, original, after vertex fit, after mass fit: "
+		<< std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
+		<< qopbefore << " "
+		<< std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
 	
       }
       
