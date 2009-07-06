@@ -1,4 +1,4 @@
-// $Id: STPedestalDecoding.cpp,v 1.2 2009-07-06 16:50:37 akeune Exp $
+// $Id: STPedestalDecoding.cpp,v 1.3 2009-07-06 17:40:52 akeune Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -121,11 +121,12 @@ StatusCode STPedestalDecoding::execute()
  			
       if(cntWD == 192){	// Each 192 words we have a new PP-FPGA
         cntWD = 0;        
-        ++cntPP;
-        if (msgLevel(MSG::DEBUG)) {	
-          debug() << "#######  Parsing now data from PP " << cntPP 
-                  << " ##################" << endmsg; 
-        }
+        ++cntPP;     
+      }
+
+      if (cntWD==0&&msgLevel(MSG::DEBUG)) {	
+        debug() << "#######  Parsing now data from PP " << cntPP 
+                << " ##################" << endmsg; 
       }
       
       // Unpack the 32-bit word into 8-bit chunks
