@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.35 2009-06-19 14:43:04 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.36 2009-07-06 14:52:08 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -30,8 +30,8 @@
 
 
 // from AlignSolvTools
-#include "SolvKernel/AlVec.h"
-#include "SolvKernel/AlSymMat.h"
+#include "AlignKernel/AlVec.h"
+#include "AlignKernel/AlSymMat.h"
 
 // from AlignmentInterfaces
 #include "AlignmentInterfaces/IAlignSolvTool.h"

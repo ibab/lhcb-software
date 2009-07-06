@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.56 2009-06-19 14:43:04 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.57 2009-07-06 14:52:08 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -32,7 +32,9 @@
 // local
 #include "AlignAlgorithm.h"
 #include "AlParameters.h"
-#include "SolvKernel/AlEquations.h"
+#include "AlignKernel/AlEquations.h"
+#include "Event/AlignSummaryData.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
@@ -72,16 +74,16 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_equations(0),
     m_resetHistos(false)
 {
-  declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
-  declareProperty("TracksLocation"              , m_tracksLocation               = TrackLocation::Default  );
-  declareProperty("VertexLocation"              , m_vertexLocation               = "" );
-  declareProperty("DimuonLocation"              , m_dimuonLocation               = "" );
-  declareProperty("ProjectorSelector"           , m_projSelectorName             = "TrackProjectorSelector");
-  declareProperty("UseCorrelations"             , m_correlation                  = true                    );
-  declareProperty("UpdateInFinalize"            , m_updateInFinalize             = false                   );
-  declareProperty("OutputDataFile"              , m_outputDataFileName           = "alignderivatives.dat" ) ;
+  declareProperty("NumberOfIterations"          , m_nIterations        = 10u                     );
+  declareProperty("TracksLocation"              , m_tracksLocation     = TrackLocation::Default  );
+  declareProperty("VertexLocation"              , m_vertexLocation     = "" );
+  declareProperty("DimuonLocation"              , m_dimuonLocation     = "" );
+  declareProperty("ProjectorSelector"           , m_projSelectorName   = "TrackProjectorSelector");
+  declareProperty("UseCorrelations"             , m_correlation        = true                    );
+  declareProperty("UpdateInFinalize"            , m_updateInFinalize   = false                   );
+  declareProperty("OutputDataFile"              , m_outputDataFileName = "alignderivatives.dat" ) ;
   declareProperty("InputDataFiles"              , m_inputDataFileNames ) ;
-  declareProperty("Chi2Outlier"                 , m_chi2Outlier                  = 10000 ) ;
+  declareProperty("Chi2Outlier"                 , m_chi2Outlier        = 10000 ) ;
   declareProperty("UpdateTool",m_updatetool) ;
   declareProperty("TrackResidualTool",m_trackresidualtool) ;
   declareProperty("VertexResidualTool",m_vertexresidualtool) ;
@@ -137,7 +139,15 @@ StatusCode AlignAlgorithm::initialize() {
     }
   }
   
-  m_equations = new Al::Equations(elements.size());
+  LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(elements.size()) ;
+  IDataProviderSvc* detsvc = detSvc() ;
+  sc = detsvc->registerObject("AlignDerivativeData",m_summaryData) ;
+  if( !sc.isSuccess() ) {
+    error() << "cannot register object. statuscode = "
+            << sc << endreq ;
+  }
+
+  m_equations = &(m_summaryData->equations()) ;
   m_equations->clear() ;
   assert( elements.size() == m_equations->nElem() ) ;
   for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
@@ -236,7 +246,8 @@ StatusCode AlignAlgorithm::execute() {
 	 iid != (*itr)->lhcbIDs().end(); ++iid) ids.insert( iid->lhcbID() ) ;
     //std::set<LHCb::LHCbID> ids( (*itr)->lhcbIDs().begin(), (*itr)->lhcbIDs().end() ) ;
     if( ids.size() != (*itr)->lhcbIDs().size() ) {
-      warning() << "Skipping track with non-unique LHCbIds" << endreq ;
+      warning() << "Skipping track with non-unique LHCbIds. Type= " 
+		<< (*itr)->type() << " " << (*itr)->history() << endreq ;
     } else {
       std::set<unsigned int> allids = selectedlhcbids ;
       allids.insert( ids.begin(), ids.end() ) ;
