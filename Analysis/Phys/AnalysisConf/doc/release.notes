@@ -4,6 +4,10 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2009-07-06 - Patrick Koppenburg
+ - Default DataType now MC09
+ - Increment to v1r3
+
 !========================== AnalysisConf v1r2 2009-05-1 =====================
 
 ! 2009-06-04 - Patrick Koppenburg

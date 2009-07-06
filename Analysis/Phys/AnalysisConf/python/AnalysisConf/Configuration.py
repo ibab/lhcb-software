@@ -1,7 +1,7 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.17 2009-06-04 12:36:04 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-07-06 15:32:40 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -12,7 +12,7 @@ import GaudiKernel.ProcessJobOptions
 class AnalysisConf(LHCbConfigurableUser) :
     
     __slots__ = {
-          "DataType"        : 'DC06'                             # Data type, can be ['DC06','2008']
+          "DataType"        : 'MC09'                             # Data type, can be ['DC06','2008','2009','MC09']
         , "Simulation"      : True                               # set to True to use SimCond
         , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
