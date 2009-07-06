@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.6 2009-03-10 13:46:58 wouter Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.7 2009-07-06 14:27:05 wouter Exp $
 
 // std
 #include <fcntl.h>
@@ -100,7 +100,14 @@ void WriteAlignmentConditions::createDirectory( const std::string& dirname ) con
 
 StatusCode WriteAlignmentConditions::finalize()
 {
-  info() << "Writing alignment conditions to file" << endreq;
+  StatusCode sc = write(m_outputFileName) ;
+  if( sc.isSuccess() ) sc = GaudiAlgorithm::finalize() ;
+  return sc ;
+}
+
+StatusCode WriteAlignmentConditions::write(const std::string& filename)
+{
+  info() << "Writing alignment conditions to file: " << filename << endreq;
   // Print out the full tree
   info() << "Trying for top element " << m_topElement << endreq;
 
@@ -125,7 +132,8 @@ StatusCode WriteAlignmentConditions::finalize()
   else {
     warning() << "head has no condition " << endreq;
   }
-  return GaudiAlgorithm::finalize();
+  info() << "Written alignment condition" << endreq ;
+  return StatusCode::SUCCESS ;
 }
 
 std::string WriteAlignmentConditions::footer() const{

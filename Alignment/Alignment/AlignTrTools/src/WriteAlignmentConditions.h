@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.h,v 1.5 2009-03-10 13:46:58 wouter Exp $
+// $Id: WriteAlignmentConditions.h,v 1.6 2009-07-06 14:27:05 wouter Exp $
 #ifndef WriteAlignmentConditions_H
 #define WriteAlignmentConditions_H 1
 
@@ -35,6 +35,9 @@ public:
 
   // finalize
   StatusCode finalize();
+
+  // write to file with name name
+  StatusCode write(const std::string& filename) ;
 
 private:
 
