@@ -3,17 +3,17 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v23r3>2009-07-03 DaVinci v23r3 STEP09 stripping release</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2009-07-03 DaVinci v23r3 MC09 development release</A></H1><PRE>
 
 Based on Phys v8r6, Analysis v3r6, Rec v7r3, HLT v6r4, Lbcom v7r3, LHCb v27r3, Gaudi v21r2, LCG 56b
 
 Highlights:
- * CombineParticles(Vanya): 
+  * CombineParticles (Vanya): 
     New properties to allow to deal with busy events.
     The default behaviour is the same as in the previous release.
     Properties: "MaxCombinations" and "MaxCandidates", default value 0 = no cut
                 "StopAtMaxCombinations" and "StopAtMaxCandidates" default false
-  * New ParticleMaker "BestParticleMaker" (Patrick K.): 
+  * New ParticleMaker "BestParticleMaker" (Neil Gueissaz): 
     Re-implements the lost functionality ExclusiveSelection = true of the 
     CombinedParticleMaker. Do not use for B physics. Useful for jets. 
   * New package Phys/DecayTreeFitter (Wouter Hulsbergen):
@@ -29,7 +29,11 @@ Highlights:
     (G. Cowan)
   * Updates and bug fixes to Ex/MicroDSTExample (J. Palacios) and
     Tutorial/Analysis (P. Koppenburg)
-
+  * Updates of Hlt2 (same as in DaVinci v23r2p1)
+  * Updates of Hlt1 tracking tools (Antonio).
+    Improvements in PatVelo (David) 
+    Hlt1 efficiency on DC06 data affected by these changes
+    -> bandwicth division to be redone
 
 </PRE><H1><A NAME=v23r2>2009-06-23 DaVinci v23r2 STEP09 stripping release</A></H1><PRE>
 
