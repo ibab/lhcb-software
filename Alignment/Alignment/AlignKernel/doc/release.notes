@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.1 2009-07-06 12:40:02 wouter Exp $
-! Package     : SolvKernel
+! $Id: release.notes,v 1.2 2009-07-06 13:52:14 wouter Exp $
+! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+!=========================== AlignKernel v3r0 2009-07-06 ====================
 
 ! 2009-07-06 Wouter Hulsbergen
  - Renamed package to AlignKernel
