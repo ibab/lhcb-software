@@ -1,4 +1,4 @@
-// $Id: IAlignSolvTool.h,v 1.6 2009-07-06 12:51:53 wouter Exp $
+// $Id: IAlignSolvTool.h,v 1.7 2009-07-06 14:06:44 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 1
 
@@ -14,7 +14,7 @@
 #include "AlignKernel/AlSymMat.h"
 #include "AlignKernel/AlMat.h"
 
-static const InterfaceID IID_IAlignAlignTool ( "IAlignAlignTool", 1, 0 );
+static const InterfaceID IID_IAlignSolvTool ( "IAlignSolvTool", 1, 0 );
 
 /** @class IAlignAlignTool IAlignAlignTool.h Kernel/IAlignAlignTool.h
  *  
@@ -23,11 +23,11 @@ static const InterfaceID IID_IAlignAlignTool ( "IAlignAlignTool", 1, 0 );
  *  @date   2006-09-20
  */
 
-class IAlignAlignTool : virtual public IAlgTool {
+class IAlignSolvTool : virtual public IAlgTool {
 public: 
 
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IAlignAlignTool; }
+  static const InterfaceID& interfaceID() { return IID_IAlignSolvTool; }
   
   // Solves the system Ax=b for x. Returns A=A^{-1} and b=x.
   virtual bool compute(AlSymMat& A, AlVec&b) const = 0;
