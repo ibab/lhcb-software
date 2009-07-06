@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.6 2009-05-05 11:59:04 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.7 2009-07-06 17:30:58 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,6 +6,7 @@
 // LHCbKernel
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STBoardMapping.h"
+#include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
 // STTELL1Event
@@ -87,7 +88,7 @@ StatusCode STNZSMonitor::execute()
 
     // Create a name for the tell1
     int tellID = m_useSourceID ? sourceID :
-      (SourceIDToTELLNumberMap().find(sourceID))->second;
+      (this->readoutTool())->SourceIDToTELLNumber(sourceID);
 
     // Reset the maps for each tell1
     if ( m_meanMap.find(tellID) == m_meanMap.end() ) {

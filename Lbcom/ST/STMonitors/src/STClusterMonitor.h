@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.3 2009-06-03 09:16:49 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.4 2009-07-06 17:30:58 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -56,7 +56,7 @@ namespace ST
     bool m_plot2D; ///< Toggle 2D plots on/off
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
-    bool m_plotByLink; ///< Plot number of clusters/tell1 by vs link
+    bool m_plotByPort; ///< Plot number of clusters/tell1 by vs port
     bool m_hitMaps; ///< True if cluster maps are to be shown
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose
@@ -66,6 +66,28 @@ namespace ST
 
     /// Store number of clusters/TELL1 (48 Tell1s, 1->48)
     std::vector<unsigned int> m_nClustersPerTELL1;
+
+  private:
+
+    /// Book histograms
+    void bookHistograms();
+
+    // filled in monitor clusters
+    AIDA::IHistogram1D* m_1d_nClusters;///< Number of clusters
+    AIDA::IHistogram1D* m_1d_nClusters_gt_100;///< Number of clusters (N > 100)
+    AIDA::IHistogram2D* m_2d_nClustersVsTELL1;///< Number of clusters per TELL1
+
+    // filled in fillHistograms
+    AIDA::IHistogram2D* m_2d_ClusterSizeVsTELL1;///< Cluster Size vs TELL1
+    AIDA::IHistogram2D* m_2d_STNVsTELL1;///< Signal to Noise vs TELL1
+    AIDA::IHistogram2D* m_2d_ChargeVsTELL1;///< Cluster Charge vs TELL1
+    AIDA::IHistogram2D* m_2d_ClustersPerPortVsTELL1;///< Clusters per port vs TELL1
+
+    AIDA::IHistogram1D* m_1d_totalCharge;
+    // Plots by service box
+    std::map<std::string, AIDA::IHistogram1D*> m_1ds_chargeByServiceBox;
+    // Plots by detector region
+    std::map<std::string, AIDA::IHistogram1D*> m_1ds_chargeByDetRegion;
 
   };
 } // End of ST namespace

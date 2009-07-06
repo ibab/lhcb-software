@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.5 2009-06-03 09:16:49 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.6 2009-07-06 17:30:58 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,11 @@
 
 // from Boost
 #include <boost/assign/list_of.hpp>
+
+// AIDA histograms
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STTAEClusterMonitor
@@ -108,10 +113,59 @@ StatusCode ST::STTAEClusterMonitor::initialize() {
     STDetSwitch::flip(detType(), (*itCL));
     if(m_debug) debug() << "Cluster Locations: " << (*itCL) << endmsg;
   }
-  
+
+  bookHistograms();
+
   return StatusCode::SUCCESS;
 }
-
+//==============================================================================
+// Book histograms
+//==============================================================================
+void ST::STTAEClusterMonitor::bookHistograms() {
+  m_prof_clustersVsSample = bookProfile1D("Number of clusters vs sampling points",-m_maxSample, m_maxSample, m_nSamples);
+  m_2d_ADCsVsSample = book2D("Cluster ADC values vs sampling point",-m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+  if(detType() == "TT" || m_plotBySvcBox) {
+    /// list of service boxes  
+    std::vector<std::string>::const_iterator itSvcBoxes=(this->readoutTool())->serviceBoxes().begin();
+    for(;itSvcBoxes != (this->readoutTool())->serviceBoxes().end(); ++itSvcBoxes) {
+      std::string svcBox=(*itSvcBoxes);
+      if(detType() == "TT") {
+        std::string quadrant = svcBox.substr(0,2);
+        if(m_2ds_ADCsVsSampleByServiceBox[quadrant] == 0) {
+          m_2ds_ADCsVsSampleByServiceBox[quadrant] = book2D("Cluster ADC values vs sampling point "+quadrant,
+                                                            -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+        }
+        if(m_profs_ADCsVsSampleByServiceBox[quadrant] == 0) {
+          m_profs_ADCsVsSampleByServiceBox[quadrant] = bookProfile1D("ADC MPV vs sampling point"+quadrant,
+                                                                     -m_maxSample, m_maxSample, m_nSamples);
+        }
+      } // End of TT condition
+      if(m_plotBySvcBox) {
+        m_2ds_ADCsVsSampleByServiceBox[svcBox] = book2D("Cluster ADC values vs sampling point "+svcBox,
+                                                        -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+        m_profs_ADCsVsSampleByServiceBox[svcBox] = bookProfile1D("ADC MPV vs sampling point "+svcBox,
+                                                                 -m_maxSample, m_maxSample, m_nSamples);
+      }
+    } // End of service box loop
+  } // End of service box condition
+  if(m_plotByDetRegion) {
+    std::vector<std::string> names;
+    if(detType() == "TT"){
+      names = LHCb::TTNames().allDetRegions();
+    } else if(detType() == "IT"){
+      names = LHCb::ITNames().allBoxes();
+    }
+    std::vector<std::string>::iterator itNames = names.begin();
+    for( ; itNames != names.end(); ++itNames ){
+      std::cout << (*itNames) << std::endl;
+      std::string region = (*itNames);
+      m_2ds_ADCsVsSampleByDetRegion[region] = book2D("Cluster ADC values vs sampling point "+region,
+                                                     -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+      m_profs_ADCsVsSampleByDetRegion[region] = bookProfile1D("ADC MPV vs sampling point "+region,
+                                                              -m_maxSample, m_maxSample, m_nSamples);
+    };
+  }
+}
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -154,8 +208,7 @@ void ST::STTAEClusterMonitor::monitorClusters() {
         debug() << "Number of clusters in " << (*itCL) << " is " << (clusters->size()) << endreq;
       }
       int sample = static_cast<int>(iSample-(m_nSamples-1)/2);
-      profile1D(sample, clusters->size(),"Number of clusters vs sampling points",
-                "Number of clusters vs sampling points",-m_maxSample, m_maxSample, m_nSamples);
+      m_prof_clustersVsSample->fill(sample, clusters->size());
       for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
         const LHCb::STCluster* cluster = (*itClus);
         const unsigned int clusterSize = cluster->size();
@@ -167,31 +220,21 @@ void ST::STTAEClusterMonitor::monitorClusters() {
 
           // ADC values vs spill
           const double totalCharge = cluster->totalCharge();
-
-          std::string id2DADCBase = "Cluster ADC values vs sampling point";
-          std::string idprofADCBase =  "ADC MPV vs sampling point";// PREMPTIVE - CURRENTLY THIS IS THE MEAN VALUE
-          plot2D(sample, totalCharge, id2DADCBase, id2DADCBase, -m_maxSample, m_maxSample, -2., 202., m_nSamples, 51);
+          m_2d_ADCsVsSample->fill(sample, totalCharge);
           // Always fill histograms per readout quadrant for TT
           if(detType() == "TT") {
             std::string quadrant = svcBox.substr(0,2);
-            std::string id2DADC = id2DADCBase+" "+quadrant;
-            plot2D(sample, totalCharge, id2DADC, id2DADC, -m_maxSample, m_maxSample, -2., 202., m_nSamples, 51);
+            m_2ds_ADCsVsSampleByServiceBox[quadrant]->fill(sample, totalCharge);
           }
-          if(m_plotBySvcBox || m_plotByDetRegion) {
-            if(m_plotBySvcBox) {
-              std::string idSvcBox = " "+svcBox;
-              id2DADCBase += idSvcBox;
-              plot2D(sample, totalCharge, id2DADCBase, id2DADCBase, -m_maxSample, m_maxSample, -2., 202., m_nSamples, 51);
-              idprofADCBase += idSvcBox;
-              profile1D(sample, totalCharge, idprofADCBase, idprofADCBase, -m_maxSample, m_maxSample, m_nSamples);
-            }
-            if(m_plotByDetRegion) {
-              std::string idDetRegion = " "+cluster->detRegionName();
-              id2DADCBase += idDetRegion;
-              plot2D(sample, totalCharge, id2DADCBase, id2DADCBase, -m_maxSample, m_maxSample, -2., 202., m_nSamples, 51);
-              idprofADCBase += idDetRegion;
-              profile1D(sample, totalCharge, idprofADCBase, idprofADCBase, -m_maxSample, m_maxSample, m_nSamples);
-            }
+          if(m_plotBySvcBox) {
+            m_2ds_ADCsVsSampleByServiceBox[svcBox]->fill(sample, totalCharge);
+            m_profs_ADCsVsSampleByServiceBox[svcBox]->fill(sample, totalCharge);
+          }
+          if(m_plotByDetRegion) {
+            std::string region = cluster->detRegionName();
+            m_2ds_ADCsVsSampleByServiceBox[region]->fill(sample, totalCharge);
+            m_profs_ADCsVsSampleByServiceBox[region]->fill(sample, totalCharge);
+
           }
         } // End of cluster condition
       }// End of cluster iterator

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.4 2009-05-05 11:59:04 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.5 2009-07-06 17:30:58 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 // from STKernel
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STBoardMapping.h"
+#include "Kernel/ISTReadoutTool.h"
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -52,7 +53,7 @@ StatusCode STErrorMonitor::initialize()
   if (sc.isFailure()) return sc;
 
   // Get the maximum number of Tell1s to determine number of histogram bin
-  m_maxTell1s = SourceIDToTELLNumberMap().size();
+  m_maxTell1s = (this->readoutTool())->SourceIDToTELLNumberMap().size();
 
   return StatusCode::SUCCESS;
 }
@@ -78,7 +79,7 @@ StatusCode STErrorMonitor::execute()
 
     // Get the number of the tell1
     unsigned int sourceID = (*iterBank)->Tell1ID();
-    unsigned int tellNum = (SourceIDToTELLNumberMap().find(sourceID))->second;
+    unsigned int tellNum = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
     
     // Plot the number of error banks versus sequential tell number
     plot1D(tellNum, "Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);

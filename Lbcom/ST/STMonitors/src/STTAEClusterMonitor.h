@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.h,v 1.1 2009-05-16 21:31:12 mtobin Exp $
+// $Id: STTAEClusterMonitor.h,v 1.2 2009-07-06 17:30:58 mtobin Exp $
 #ifndef STTAECLUSTERMONITOR_H 
 #define STTAECLUSTERMONITOR_H 1
 
@@ -42,6 +42,7 @@ namespace ST
   protected:
 
   private:
+    /// Book histograms
 
     /// This is the algorithm which plots cluster ADCs vs Sampling time
     void monitorClusters();
@@ -56,6 +57,15 @@ namespace ST
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose
 
+
+  private: // Booking histograms
+    void bookHistograms();
+    AIDA::IProfile1D* m_prof_clustersVsSample;
+    AIDA::IHistogram2D* m_2d_ADCsVsSample;
+    std::map<std::string, AIDA::IHistogram2D*> m_2ds_ADCsVsSampleByServiceBox;
+    std::map<std::string, AIDA::IProfile1D*> m_profs_ADCsVsSampleByServiceBox;
+    std::map<std::string, AIDA::IHistogram2D*> m_2ds_ADCsVsSampleByDetRegion;
+    std::map<std::string, AIDA::IProfile1D*> m_profs_ADCsVsSampleByDetRegion;
   };
 } // End of ST namespace
 #endif // STTAECLUSTERMONITOR_H

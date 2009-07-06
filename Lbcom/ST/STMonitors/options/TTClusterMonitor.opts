@@ -26,7 +26,7 @@ TTClusterMonitorCentral.ClusterLocation = "Raw/TT/Clusters";
 TTClusterMonitorCentral.HitMaps = false;
 TTClusterMonitorCentral.ByDetectorRegion = false;
 TTClusterMonitorCentral.ByServiceBox = true;
-TTClusterMonitorCentral.ByLink = true;
+TTClusterMonitorCentral.ByPort = true;
 TTClusterMonitorCentral.FullDetail = false;
 TTClusterMonitorCentral.OutputLevel = 3;
 
@@ -35,7 +35,7 @@ TTClusterMonitorPrev7.ClusterLocation = "Prev7/Raw/TT/Clusters";
 TTClusterMonitorPrev7.HitMaps = false;
 TTClusterMonitorPrev7.ByDetectorRegion = false;
 TTClusterMonitorPrev7.ByServiceBox = true;
-TTClusterMonitorPrev7.ByLink = true;
+TTClusterMonitorPrev7.ByPort = true;
 TTClusterMonitorPrev7.FullDetail = false;
 TTClusterMonitorPrev7.OutputLevel = 3;
 
@@ -44,7 +44,7 @@ TTClusterMonitorPrev6.ClusterLocation = "Prev6/Raw/TT/Clusters";
 TTClusterMonitorPrev6.HitMaps = false;
 TTClusterMonitorPrev6.ByDetectorRegion = false;
 TTClusterMonitorPrev6.ByServiceBox = true;
-TTClusterMonitorPrev6.ByLink = true;
+TTClusterMonitorPrev6.ByPort = true;
 TTClusterMonitorPrev6.FullDetail = false;
 TTClusterMonitorPrev6.OutputLevel = 3;
 
@@ -53,7 +53,7 @@ TTClusterMonitorPrev5.ClusterLocation = "Prev5/Raw/TT/Clusters";
 TTClusterMonitorPrev5.HitMaps = false;
 TTClusterMonitorPrev5.ByDetectorRegion = false;
 TTClusterMonitorPrev5.ByServiceBox = true;
-TTClusterMonitorPrev5.ByLink = true;
+TTClusterMonitorPrev5.ByPort = true;
 TTClusterMonitorPrev5.FullDetail = false;
 TTClusterMonitorPrev5.OutputLevel = 3;
 
@@ -62,7 +62,7 @@ TTClusterMonitorPrev4.ClusterLocation = "Prev4/Raw/TT/Clusters";
 TTClusterMonitorPrev4.HitMaps = false;
 TTClusterMonitorPrev4.ByDetectorRegion = false;
 TTClusterMonitorPrev4.ByServiceBox = true;
-TTClusterMonitorPrev4.ByLink = true;
+TTClusterMonitorPrev4.ByPort = true;
 TTClusterMonitorPrev4.FullDetail = false;
 TTClusterMonitorPrev4.OutputLevel = 3;
 
@@ -71,7 +71,7 @@ TTClusterMonitorPrev3.ClusterLocation = "Prev3/Raw/TT/Clusters";
 TTClusterMonitorPrev3.HitMaps = false;
 TTClusterMonitorPrev3.ByDetectorRegion = false;
 TTClusterMonitorPrev3.ByServiceBox = true;
-TTClusterMonitorPrev3.ByLink = true;
+TTClusterMonitorPrev3.ByPort = true;
 TTClusterMonitorPrev3.FullDetail = false;
 TTClusterMonitorPrev3.OutputLevel = 3;
 
@@ -80,7 +80,7 @@ TTClusterMonitorPrev2.ClusterLocation = "Prev2/Raw/TT/Clusters";
 TTClusterMonitorPrev2.HitMaps = false;
 TTClusterMonitorPrev2.ByDetectorRegion = false;
 TTClusterMonitorPrev2.ByServiceBox = true;
-TTClusterMonitorPrev2.ByLink = true;
+TTClusterMonitorPrev2.ByPort = true;
 TTClusterMonitorPrev2.FullDetail = false;
 TTClusterMonitorPrev2.OutputLevel = 3;
 
@@ -89,7 +89,7 @@ TTClusterMonitorPrev1.ClusterLocation = "Prev1/Raw/TT/Clusters";
 TTClusterMonitorPrev1.HitMaps = false;
 TTClusterMonitorPrev1.ByDetectorRegion = false;
 TTClusterMonitorPrev1.ByServiceBox = true;
-TTClusterMonitorPrev1.ByLink = true;
+TTClusterMonitorPrev1.ByPort = true;
 TTClusterMonitorPrev1.FullDetail = false;
 TTClusterMonitorPrev1.OutputLevel = 3;
 
@@ -98,7 +98,7 @@ TTClusterMonitorNext1.ClusterLocation = "Next1/Raw/TT/Clusters";
 TTClusterMonitorNext1.HitMaps = false;
 TTClusterMonitorNext1.ByDetectorRegion = false;
 TTClusterMonitorNext1.ByServiceBox = true;
-TTClusterMonitorNext1.ByLink = true;
+TTClusterMonitorNext1.ByPort = true;
 TTClusterMonitorNext1.FullDetail = false;
 TTClusterMonitorNext1.OutputLevel = 3;
 
@@ -107,7 +107,7 @@ TTClusterMonitorNext2.ClusterLocation = "Next2/Raw/TT/Clusters";
 TTClusterMonitorNext2.HitMaps = false;
 TTClusterMonitorNext2.ByDetectorRegion = false;
 TTClusterMonitorNext2.ByServiceBox = true;
-TTClusterMonitorNext2.ByLink = true;
+TTClusterMonitorNext2.ByPort = true;
 TTClusterMonitorNext2.FullDetail = false;
 TTClusterMonitorNext2.OutputLevel = 3;
 
@@ -116,7 +116,7 @@ TTClusterMonitorNext3.ClusterLocation = "Next3/Raw/TT/Clusters";
 TTClusterMonitorNext3.HitMaps = false;
 TTClusterMonitorNext3.ByDetectorRegion = false;
 TTClusterMonitorNext3.ByServiceBox = true;
-TTClusterMonitorNext3.ByLink = true;
+TTClusterMonitorNext3.ByPort = true;
 TTClusterMonitorNext3.FullDetail = false;
 TTClusterMonitorNext3.OutputLevel = 3;
 
@@ -125,7 +125,7 @@ TTClusterMonitorNext4.ClusterLocation = "Next4/Raw/TT/Clusters";
 TTClusterMonitorNext4.HitMaps = false;
 TTClusterMonitorNext4.ByDetectorRegion = false;
 TTClusterMonitorNext4.ByServiceBox = true;
-TTClusterMonitorNext4.ByLink = true;
+TTClusterMonitorNext4.ByPort = true;
 TTClusterMonitorNext4.FullDetail = false;
 TTClusterMonitorNext4.OutputLevel = 3;
 
@@ -134,7 +134,7 @@ TTClusterMonitorNext5.ClusterLocation = "Next5/Raw/TT/Clusters";
 TTClusterMonitorNext5.HitMaps = false;
 TTClusterMonitorNext5.ByDetectorRegion = false;
 TTClusterMonitorNext5.ByServiceBox = true;
-TTClusterMonitorNext5.ByLink = true;
+TTClusterMonitorNext5.ByPort = true;
 TTClusterMonitorNext5.FullDetail = false;
 TTClusterMonitorNext5.OutputLevel = 3;
 
@@ -143,7 +143,7 @@ TTClusterMonitorNext6.ClusterLocation = "Next6/Raw/TT/Clusters";
 TTClusterMonitorNext6.HitMaps = false;
 TTClusterMonitorNext6.ByDetectorRegion = false;
 TTClusterMonitorNext6.ByServiceBox = true;
-TTClusterMonitorNext6.ByLink = true;
+TTClusterMonitorNext6.ByPort = true;
 TTClusterMonitorNext6.FullDetail = false;
 TTClusterMonitorNext6.OutputLevel = 3;
 
@@ -152,7 +152,7 @@ TTClusterMonitorNext7.ClusterLocation = "Next7/Raw/TT/Clusters";
 TTClusterMonitorNext7.HitMaps = false;
 TTClusterMonitorNext7.ByDetectorRegion = false;
 TTClusterMonitorNext7.ByServiceBox = true;
-TTClusterMonitorNext7.ByLink = true;
+TTClusterMonitorNext7.ByPort = true;
 TTClusterMonitorNext7.FullDetail = false;
 TTClusterMonitorNext7.OutputLevel = 3;
 
