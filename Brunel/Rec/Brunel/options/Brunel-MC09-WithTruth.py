@@ -10,6 +10,7 @@ from Configurables import Brunel
 
 Brunel().InputType = "DIGI" # implies also Brunel().Simulation = True
 Brunel().WithMC    = True   # implies also Brunel().Simulation = True
+Brunel().DataType  = "MC09"
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in MC09-Files.py

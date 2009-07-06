@@ -4,6 +4,8 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2009-07-06 - Marco Cattaneo
+ - Fix DataTpe in Brunel-MC09-*.py, was using default value, not "MC09"
+ - Change default DataType in Brunel() to "2009"
  - Update references for:
    . additional VekiTrackMonitor histos
    . Change tuning for Tsa and Match
