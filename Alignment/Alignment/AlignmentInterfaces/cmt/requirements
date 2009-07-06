@@ -11,7 +11,7 @@ branches          cmt dict doc AlignmentInterfaces
 
 # =============== dependencies ==============================================
 use GaudiKernel       v*
-use SolvKernel	      v*    Alignment
+use AlignKernel	      v*    Alignment
 
 
 # =============== include directories =======================================
