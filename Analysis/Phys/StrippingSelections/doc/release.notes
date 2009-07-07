@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-07 - Anton Poluektov
+ - Modified tests/StrippingSTEP09.py to demonstrate the new StreamFile option
+   in StrippingConf
+
 ! 2009-07-07 - Rob Lambert
  - Updated the StrippingBd2KstarMuMu
     - Added the 1Hz, "NoChi2" selection

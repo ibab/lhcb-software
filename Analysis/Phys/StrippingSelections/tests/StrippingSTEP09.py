@@ -23,9 +23,12 @@ StrippingConf().ActiveLines = []
 #StrippingConf().ActiveStreams = ["BExclusive"]        # Specify the active streams. Only selections from 
                                                       # these streams will run. If empty, all streams are active
 
-StrippingConf().OutputType = "ETC"                    # Can be either "ETC" or "DST"
+StrippingConf().OutputType = "DST"                    # Can be either "ETC" or "DST"
 
 StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/StrippingSelections.py"
+
+StrippingConf().StreamFile["BExclusive"] = "Common.dst"
+StrippingConf().StreamFile["Topological"] = "Common.dst"
 
 #
 # Configure DaVinci
