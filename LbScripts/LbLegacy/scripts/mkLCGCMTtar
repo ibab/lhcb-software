@@ -131,7 +131,7 @@ def get_lcg_version(cmtpath):
 #----------------------------------------------------------------------------
 #  get native versions ==============================================
 #----------------------------------------------------------------------------
-def get_native_versions(native_version,binary):
+def get_native_versions(native_version, binary):
     if debug_flag == 1: print 'get_native_versions',native_version,binary
     here = os.getcwd()
 
@@ -486,6 +486,7 @@ if __name__ == "__main__":
             help()
         if key in ('-b', '--binary'):
             binary = value
+            os.environ["CMTCONFIG"] = binary
         if key in ('-n', '--native'):
             native_version = value
         if key in ('-o', '--output'):
