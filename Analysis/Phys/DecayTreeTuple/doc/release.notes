@@ -8,6 +8,16 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-07-07 - Rob Lambert
+ - BugFix: TupleToolGeneration, savannah bug 52751
+ - To clarify situation wrt MC Association, association is performed by:
+		- TupleToolMCTruth
+			Most tools will use the associates found here
+		- TupleToolBackgroundInfo
+			It would be nice if there was no duplication here
+		- TupleToolPi0Info 
+			Necessary as the Pi0 assosciation is different
+
 !========================== DecayTreeTuple v2r3p3 2009-07-03 ================
 ! 2009-07-03 - Patrick Koppenburg
  - Remove test file. Use $DAVINCISYSROOT/tests/options/DVTestDecayTreeTuple.py  

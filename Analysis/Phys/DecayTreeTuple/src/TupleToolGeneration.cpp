@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.cpp,v 1.4 2009-05-01 08:08:35 pkoppenb Exp $
+// $Id: TupleToolGeneration.cpp,v 1.5 2009-07-07 10:48:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -67,7 +67,7 @@ StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
         ic != mch->collisions().end() ; ++ic){
     if (0==*ic) Exception("Null collision pointer");
     const LHCb::HepMCEvent* gene = (*ic)->event() ;
-    if (0==*ic) Exception("Null event pointer");
+    if (!gene) Exception("Null event pointer");
     processType.push_back((*ic)->processType());
     unsigned int hq = 2 ;
     for ( HepMC::GenEvent::particle_const_iterator p = gene->pGenEvt()->particles_begin();
