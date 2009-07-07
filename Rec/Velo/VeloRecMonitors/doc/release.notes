@@ -4,6 +4,19 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-07-07 - Silvia Borghi
+	-VeloTrackMonitor: 
+     - fixes for warning in compilation;
+     - remove one 2d histogram
+     - uncomment histograms for measurement number for pos. and neg. tracks
+
+! 2009-07-02 - Marianna Fontana
+	-VeloTrackMonitor: 
+     - added new histograms Pseudoefficiency vs sensorID;
+     - added new histograms for adc distributions for r and 
+       phi clusters associated to the tracks;
+		 - bug fix in number of measurements per tracks
+
 ! 2009-07-01 - Michael Alexander
  - Removed warnings from VeloIPResolutionMonitor
  - Removed VeloIPResolutionMonitor from BrunelMoni_Velo.py
