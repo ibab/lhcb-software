@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-07-07 Mark Tobin
+ - Fix gcc43 compilation warnings 
+
 ! 2006-07-06 - Mark Tobin
  - Added method to get TELL1 number from source ID to readout tool.
 

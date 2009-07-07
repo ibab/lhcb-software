@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.13 2009-07-06 17:28:33 mtobin Exp $
+// $Id: STReadoutTool.cpp,v 1.14 2009-07-07 10:27:42 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -219,7 +219,7 @@ void STReadoutTool::printMapping() const{
 }
 
 /// Add the mapping of source ID to TELL1 board number
-const unsigned int STReadoutTool::SourceIDToTELLNumber(unsigned int sourceID) const {
+unsigned int STReadoutTool::SourceIDToTELLNumber(unsigned int sourceID) const {
   return (this->SourceIDToTELLNumberMap().find(sourceID))->second;
 }
 

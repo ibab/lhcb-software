@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.9 2009-07-06 17:28:34 mtobin Exp $
+// $Id: STReadoutTool.h,v 1.10 2009-07-07 10:27:42 mtobin Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -89,7 +89,7 @@ public:
   virtual const std::vector<std::string>& serviceBoxes() const;
 
   /// Add the mapping of source ID to TELL1 board number
-  virtual const unsigned int SourceIDToTELLNumber(unsigned int sourceID) const; 
+  virtual unsigned int SourceIDToTELLNumber(unsigned int sourceID) const; 
 
   /// print mapping
   void printMapping() const;
