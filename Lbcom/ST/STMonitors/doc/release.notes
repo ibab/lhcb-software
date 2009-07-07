@@ -4,6 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-07-07 - Marco Cattaneo
+ - Remove std::cout left from previous change
+ - Replace endreq by endmsg
+
 ! 2009-07-06 - Mark Tobin
  - Modified algorithms to get TELL1 number from SourceID using readout tool.
  - Modified STClusterMonitor and STTAEClusterMonitor to book histograms at

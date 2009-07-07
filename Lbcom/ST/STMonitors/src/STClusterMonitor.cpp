@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.7 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.8 2009-07-07 06:44:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -146,7 +146,7 @@ void ST::STClusterMonitor::monitorClusters() {
     LHCb::STClusters::const_iterator itClus;
     // Loop over clusters
     const unsigned int nClusters = clusters->size();
-    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endreq;
+    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endmsg;
 
     m_1d_nClusters->fill(nClusters);
     if(100  < nClusters) {
@@ -163,7 +163,7 @@ void ST::STClusterMonitor::monitorClusters() {
     std::vector<unsigned int>::const_iterator itClPerTELL1;
     unsigned int TELL1=1;
     for(itClPerTELL1 = m_nClustersPerTELL1.begin(); itClPerTELL1 != m_nClustersPerTELL1.end(); ++itClPerTELL1, ++TELL1) {
-      if(m_verbose) verbose() << "TELL1: " << TELL1 << ",clusters: " << (*itClPerTELL1) << endreq;
+      if(m_verbose) verbose() << "TELL1: " << TELL1 << ",clusters: " << (*itClPerTELL1) << endmsg;
       unsigned int nClusters = (*itClPerTELL1);
       if(0 < nClusters) 
         m_2d_nClustersVsTELL1->fill(TELL1, nClusters);
@@ -216,7 +216,7 @@ void ST::STClusterMonitor::bookHistograms() {
     }
     std::vector<std::string>::iterator itNames = names.begin();
     for( ; itNames != names.end(); ++itNames ){
-      std::cout << (*itNames) << std::endl;
+      //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
       m_1ds_chargeByDetRegion[region] = book1D("Cluster ADC Values "+region, -1.5, 301.5, 101);
     };

@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.6 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.7 2009-07-07 06:44:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,7 @@ void ST::STTAEClusterMonitor::bookHistograms() {
     }
     std::vector<std::string>::iterator itNames = names.begin();
     for( ; itNames != names.end(); ++itNames ){
-      std::cout << (*itNames) << std::endl;
+      //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
       m_2ds_ADCsVsSampleByDetRegion[region] = book2D("Cluster ADC values vs sampling point "+region,
                                                      -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
@@ -174,7 +174,7 @@ StatusCode ST::STTAEClusterMonitor::execute() {
   debug() << "==> Execute" << endmsg;
   counter("Number of events") += 1; 
 
-  debug() << counter("Number of events") << endreq;
+  debug() << counter("Number of events") << endmsg;
   // code goes here  
   monitorClusters();
 
@@ -205,7 +205,7 @@ void ST::STTAEClusterMonitor::monitorClusters() {
       LHCb::STClusters::const_iterator itClus;
       // Loop over clusters
       if(m_debug) {
-        debug() << "Number of clusters in " << (*itCL) << " is " << (clusters->size()) << endreq;
+        debug() << "Number of clusters in " << (*itCL) << " is " << (clusters->size()) << endmsg;
       }
       int sample = static_cast<int>(iSample-(m_nSamples-1)/2);
       m_prof_clustersVsSample->fill(sample, clusters->size());
