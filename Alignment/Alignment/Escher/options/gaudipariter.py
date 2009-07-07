@@ -39,4 +39,5 @@ for i in range( opts.numiter ) :
     os.chdir(rundir)
 
 # create a single alignlog file
-os.system('cat Iter?/alignlog.txt > ! alignlog.txt')
+os.system('rm -f alignlog.txt')
+os.system('cat Iter?/alignlog.txt > alignlog.txt')
