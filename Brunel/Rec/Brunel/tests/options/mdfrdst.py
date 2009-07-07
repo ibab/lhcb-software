@@ -5,6 +5,4 @@ Brunel().OutputType = 'RDST'
 Brunel().PackType   = 'MDF'
 
 Brunel().EvtMax = 0
-Brunel().DDDBtag   = "default"
-Brunel().CondDBtag = "default"
 Brunel().Monitors  = ["FPE","SC"]

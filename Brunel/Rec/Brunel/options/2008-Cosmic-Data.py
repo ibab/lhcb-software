@@ -9,9 +9,8 @@ from Configurables import Brunel, LHCbApp
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
-#-- Use latest database tags for real data
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+#-- Use latest 2008 database tags for real data
+Brunel().DataType = "2008"
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 datasetName = "035537_0000088110"
