@@ -21,7 +21,7 @@ StdLooseDetachedKst2Kpi.InputLocations = ["StdNoPIDsKaons","StdNoPIDsPions"]
 StdLooseDetachedKst2Kpi.DaughtersCuts = {"K+" :"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)",
                                   "pi-":"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)"}
 StdLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV)"
-StdLooseDetachedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)<36)&(MIPCHI2DV(PRIMARY)> 2.25)"
+StdLooseDetachedKst2Kpi.MotherCut = "(VFASPF(VCHI2/VDOF)<64)&(MIPCHI2DV(PRIMARY)> 2.25)"
 locations = updateDoD(StdLooseDetachedKst2Kpi)
 
 
