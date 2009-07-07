@@ -38,7 +38,7 @@ MomentumCuts = [ 6000. , 10000. ]
 
 FOIfactor = 1.2
 
-print "MuonID WARNING: FOI tuning not ready for DATA=%s,VERSION=%s. Loading FOIfactor=%f" %(DATA,VERSION,FOIfactor)
+print "# MuonID WARNING: FOI tuning not ready for DATA=%s,VERSION=%s. Loading FOIfactor=%f" %(DATA,VERSION,FOIfactor)
 XFOIParameter1 = [5.5, 4.0, 3.3, 2.8,
                   5.2, 3.6, 2.4, 2.4,
                   5.7, 4.4, 2.8, 2.3,
@@ -80,9 +80,9 @@ YFOIParameter3 = [0.03, 0.02, 0.00, 0.09,
 #// Parameters of the Landau functions for old DLL
 #//-----------------------------------------------------------------
 if DLL_flag == 0 :
-    print "MuonID WARNING: old DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
+    print "# MuonID WARNING: old DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
 else :
-    print "MuonID WARNING: new DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
+    print "# MuonID WARNING: new DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
 distMuon  = [0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.64]
 distPion  = [11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.]
 

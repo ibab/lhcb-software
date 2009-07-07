@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-07 - Marco Cattaneo
+ - Add "#" at start of warning strings printed from python configuration files
+
 ! 2009-07-06 - Marco Cattaneo
  - Fix one more compilation error for Windows
  - Replace all endreq by endmsg
