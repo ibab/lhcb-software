@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichCommonBase.h
  *
- *  Header file for RICH base class : RichCommonBase
+ *  Header file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.13 2009-06-26 09:14:59 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.14 2009-07-07 16:24:53 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -19,8 +19,10 @@
 #include "RichKernel/IRichToolRegistry.h"
 
 // Gaudi
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SerializeSTL.h"
+#include "GaudiKernel/DataObject.h"
 
 // Forward declarations
 class IJobOptionsSvc;
@@ -53,6 +55,11 @@ namespace Rich
     CommonBase( const std::string& type,
                 const std::string& name,
                 const IInterface* parent );
+
+    /// Standard Converter-like Constructor
+    CommonBase( long storage_type, 
+                const CLID &class_type, 
+                ISvcLocator *svc = NULL );
 
     /// Destructor
     virtual ~CommonBase( );

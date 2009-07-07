@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.223 2009-06-29 11:19:44 cattanem Exp $
+! $Id: release.notes,v 1.224 2009-07-07 16:24:53 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!====================== RichKernel v7r22 2009-06-29 ====================
+! 2009-07-07 - Chris Jones
+ - Add new Rich::Converter base class that extends the basic Converter
+   class adding various additional RICH functionality as implemented in
+   Rich::CommonBase. Needed to eventually remove code duplication in 
+   various Panoramix packages.
+
+!====================== RichKernel v7r23 2009-06-29 ====================
 ! 2009-06-25 - Chris Jones
  - Update tool handling to base classes to propagate OutputLevel to
    public tools that do not explicitly have it set. Uses the value as

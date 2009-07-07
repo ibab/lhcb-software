@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : Rich::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.12 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichAlgBase.h,v 1.13 2009-07-07 16:24:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,16 +37,16 @@ namespace Rich
 
   class AlgBase : public Rich::CommonBase<GaudiAlgorithm>
   {
-
+    
   public:
-
+    
     /// Standard constructor
     AlgBase( const std::string& name,
              ISvcLocator* pSvcLocator )
       : Rich::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
-
+    
   };
-
+  
 }
 
 /** For backwards compatibility

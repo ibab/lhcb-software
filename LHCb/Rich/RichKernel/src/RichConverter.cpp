@@ -1,22 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichAlgBase.cpp
+/** @file RichConverter.cpp
  *
- *  Implementation file for class : Rich::AlgBase
+ *  Implementation file for class : Rich::Converter
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.cpp,v 1.8 2009-07-07 16:24:53 jonrob Exp $
+ *  $Id: RichConverter.cpp,v 1.1 2009-07-07 16:24:53 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @date   2009-07-07
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichAlgBase.h"
+#include "RichKernel/RichConverter.h"
 
 // ============================================================================
 // Force creation of templated classes
 #include "RichCommonBase.icpp"
-template class Rich::CommonBase<GaudiAlgorithm> ;
+template class Rich::CommonBase< Rich::Converter_Imp > ;
 // ============================================================================

@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.16 2009-06-26 09:56:15 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.17 2009-07-07 16:24:53 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -84,8 +84,8 @@ IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
 template <class PBASE>
 bool Rich::CommonBase<PBASE>::setProperties( const std::string & name ) const
 {
-  return ( my_setToolProperty<StringProperty> ( name , "Context"     ) &&
-           my_setToolProperty<StringProperty> ( name , "OutputLevel" ) );
+  return ( this->my_setToolProperty<StringProperty> ( name , "Context"     ) &&
+           this->my_setToolProperty<StringProperty> ( name , "OutputLevel" ) );
 }
 //=============================================================================
 
@@ -103,14 +103,15 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
   const std::string fullname = "ToolSvc." + name;
 
   // get properties for this tool name
-  const PROPERTYTYPE * test_sp = my_getProperty<PROPERTYTYPE>( fullname, property );
+  const PROPERTYTYPE * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
 
   // If Context not set, set it
   if ( !test_sp )
   {
 
     // get Tool registry OutputLevel
-    const PROPERTYTYPE * ts_sp = my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
+    const PROPERTYTYPE * ts_sp 
+      = this->my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
     if ( ts_sp )
     {
       if ( this -> msgLevel(MSG::VERBOSE) )
@@ -165,7 +166,7 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
                << System::typeinfoName( typeid(PROPERTYTYPE) )
                << " Found "
                << System::typeinfoName( typeid(**itProp) );
-          this -> Error( mess.str() ).ignore();
+          this -> Exception( mess.str() );
         }
       }
     }

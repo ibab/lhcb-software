@@ -1,0 +1,233 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichConverter_Imp.h
+ *
+ *  Implementation file for class : Rich::Converter_Imp
+ *
+ *  CVS Log :-
+ *  $Id: RichConverter_Imp.h,v 1.1 2009-07-07 16:24:53 jonrob Exp $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2009-07-07
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef RICHKERNEL_RICHCONVERTERIMP_H
+#define RICHKERNEL_RICHCONVERTERIMP_H 1
+
+// Gaudi
+#include "GaudiKernel/Converter.h"
+#include "GaudiKernel/IToolSvc.h"
+
+class IDataProviderSvc;
+class IChronoStatSvc;
+
+namespace Rich
+{
+
+  /** @class Converter_Imp RichKernel/RichConverter.h
+   *
+   *  Extends ::Converter class with GaudiAlg like methods
+   *
+   *  @author Chris Jones
+   *  @date   2009-07-07
+   */
+  class Converter_Imp : public ::Converter
+  {
+
+  public:
+
+    /// Standard constructor
+    Converter_Imp ( long storage_type,
+                    const CLID &class_type,
+                    ISvcLocator *svc = NULL )
+      : ::Converter ( storage_type, class_type, svc ),
+      m_context     ( "Offline" ),
+      m_msgStream   ( NULL ),
+      m_toolSvc     ( NULL ),
+      m_detSvc      ( NULL ),
+      m_chronoSvc   ( NULL )
+    {
+      /// @todo make this work
+      //declareProperty( "Context", m_context );
+    }
+
+    /// Destructor
+    virtual ~Converter_Imp() { resetMsgStream(); }
+
+    /// standard initialization method
+    virtual StatusCode initialize();
+    
+    /// standard finalization  method
+    virtual StatusCode finalize  ();
+
+  public:
+
+    /// name of this converter
+    virtual const std::string & name() const { return m_name; }
+
+  public: // tools and services
+
+    /// accessor to ToolSvc
+    IToolSvc * toolSvc() const;
+
+    /// accessor to Detector Data Svc
+    IDataProviderSvc* detSvc() const;
+
+    /// accessor to Chrono & Stat service
+    IChronoStatSvc* chronoSvc() const;
+
+    // Useful method for the easy location of tools.
+    template < class TOOL >
+    TOOL* tool ( const std::string& type           ,
+                 const std::string& name    = ""   ,
+                 const IInterface*  parent  = 0    ,
+                 bool               create  = true ) const
+    {
+      TOOL* Tool = 0 ;
+      if ( name.empty() )
+      { 
+        this->toolSvc()->retrieveTool( type, Tool, parent, create );
+      }
+      else
+      {
+        this->toolSvc()->retrieveTool( type, name, Tool, parent, create );
+      }
+      return Tool;
+    }
+
+    template < class SERVICE >
+    inline SmartIF<SERVICE> svc( const std::string& name   ,
+                                 const bool         create = true ) const
+    {
+      SmartIF<IService>& baseSvc = this->serviceLocator()->service(name, create);
+      // Try to get the requested interface
+      SmartIF<SERVICE> s;
+      s = baseSvc;
+      // check the results
+      if ( !baseSvc.isValid() || !s.isValid() ) 
+      {
+        this->Exception ("svc():: Could not retrieve Svc '" + name + "'", StatusCode::FAILURE);
+      }
+      // return *VALID* located service
+      return s;
+    }
+
+  public: // messaging
+
+    /** @brief Test the output level
+     *  @param level The message level to test against
+     *  @return boolean Indicating if messages at given level will be printed
+     *  @retval true Messages at level "level" will be printed
+     *  @retval true Messages at level "level" will NOT be printed
+     */
+    inline bool msgLevel( const MSG::Level /* level */ ) const
+    {
+      // return msgLevel() <= level ;
+      /// @todo Implement properly
+      return false;
+    }
+
+    /** Predefined configurable message stream for the efficient printouts
+     *
+     *  @code
+     *
+     *  if ( a < 0 ) { msgStream( MSG::ERROR ) << "a = " << endmsg ; }
+     *
+     *  @endcode
+     *
+     *  @return Reference to the predefined stream
+     */
+    inline MsgStream&
+    msgStream ( const MSG::Level level ) const
+    {
+      if ( !m_msgStream )
+      { m_msgStream = new MsgStream ( this->msgSvc() , this->name() ) ; }
+      return *m_msgStream << level ;
+    }
+
+    /// Delete the current messaging object
+    inline void resetMsgStream() const
+    {
+      if ( 0 != m_msgStream ) { delete m_msgStream; m_msgStream = 0; }
+    }
+
+    /// shortcut for the method msgStream ( MSG::ALWAYS )
+    inline MsgStream&  always () const { return msgStream ( MSG::ALWAYS ) ; }
+    /// shortcut for the method msgStream ( MSG::FATAL   )
+    inline MsgStream&   fatal () const { return msgStream ( MSG::FATAL ) ; }
+    /// shortcut for the method msgStream ( MSG::ERROR   )
+    inline MsgStream&     err () const { return msgStream ( MSG::ERROR ) ; }
+    /// shortcut for the method msgStream ( MSG::ERROR   )
+    inline MsgStream&   error () const { return msgStream ( MSG::ERROR ) ; }
+    /// shortcut for the method msgStream ( MSG::WARNING )
+    inline MsgStream& warning () const { return msgStream ( MSG::WARNING ) ; }
+    /// shortcut for the method msgStream ( MSG::INFO    )
+    inline MsgStream&    info () const { return msgStream ( MSG::INFO ) ; }
+    /// shortcut for the method msgStream ( MSG::DEBUG   )
+    inline MsgStream&   debug () const { return msgStream ( MSG::DEBUG ) ; }
+    /// shortcut for the method msgStream ( MSG::VERBOSE )
+    inline MsgStream& verbose () const { return msgStream ( MSG::VERBOSE ) ; }
+    /// shortcut for the method msgStream ( MSG::INFO    )
+    inline MsgStream&     msg () const { return msgStream ( MSG::INFO ) ; }
+
+    /// print error message
+    StatusCode Error     ( const std::string    & Message ,
+                           const StatusCode     & sc  = StatusCode::FAILURE ) const;
+
+    /// print warning  message
+    StatusCode Warning   ( const std::string    & msg                       ,
+                           const StatusCode     & sc  = StatusCode::FAILURE ) const;
+
+    /// print the message
+    StatusCode Print     ( const std::string    & msg                       ,
+                           const MSG::Level     & lvl = MSG::INFO           ,
+                           const StatusCode     & sc  = StatusCode::FAILURE ) const;
+
+    /// Throw an exception
+    StatusCode Exception
+    ( const std::string    & msg,
+      const StatusCode       sc  = StatusCode(StatusCode::FAILURE,true) ) const 
+    {
+      throw GaudiException( this->name() + ":: " + msg , "",  sc );
+      return sc;
+    }
+
+  public:
+
+    /// access context
+    inline const std::string & context() const { return m_context; }
+
+  protected:
+
+    /// set new converter name
+    inline void setName ( const std::string& newName )
+    {
+      m_name = newName;
+    }
+
+  private:
+
+    /// name of this converter
+    std::string m_name;
+
+    /// Context like string
+    std::string m_context;
+
+    /// The predefined message stream
+    mutable MsgStream* m_msgStream;
+
+    /// Tool service
+    mutable IToolSvc * m_toolSvc;
+
+    /// detector data service
+    mutable IDataProviderSvc* m_detSvc;
+
+    /// Chrono & Stat service
+    mutable IChronoStatSvc* m_chronoSvc;
+
+  };
+
+}
+
+#endif // RICHKERNEL_RICHCONVERTERIMP_H
