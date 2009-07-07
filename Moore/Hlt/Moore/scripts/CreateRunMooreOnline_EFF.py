@@ -6,18 +6,32 @@ import sys
 import subprocess
 import string
 from os import pathsep, listdir 
-from os.path import exists, isdir, realpath
+from os.path import exists, isdir, realpath, islink
+import fnmatch
 
 
-def StripPath(path):
+def StripPath(path,predicate=None):
     collected = []
     for p in path.split(pathsep):
         rp = realpath(p)
         if exists(rp) and isdir(rp):
-            if len(listdir(rp))!=0 and p not in collected and not re.search('Hlt/HltPython/python',p):
+            if len(listdir(rp))!=0 and p not in collected and ( not predicate or predicate(p) ): 
                 collected.append(p)
     return pathsep.join(collected)
+#
+def ContainsFNmatch(dir,matches) :
+    for root,dirs,files in os.walk( dir ) :
+        for m in matches :
+            if fnmatch.filter(files,m)  : return True
+        dirs.extend([ f for f in files if islink(f) and isdir(f)])
+    return False
 
+
+# link all files found in path to 'target' dir, checking
+# that entry does not already exist
+# return path to target
+def AmalgatePath(path,target):
+    return None
 #
 cmt = subprocess.Popen(['cmt','show','version'],stdout=subprocess.PIPE)
 version = string.strip(cmt.communicate()[0],'\n')
@@ -46,9 +60,14 @@ if len(sys.argv)>2:
         m = re.match('export ([^=]+)="([^"]+)"',line)
         if m :
             (name,value) = m.groups()
-            if name in [ 'PYTHONPATH' ,'LD_LIBRARY_PATH' ]:
-                line = 'export %s="%s"'%(name,StripPath(value))
-        if input!=line : f.write('#CLEANED;ORIG:# %s\n'%input)
+            if name == 'LD_LIBRARY_PATH':
+                value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
+                value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
+            if name == 'PYTHONPATH' : 
+                value = StripPath(value,lambda x: not re.search('Hlt/HltPython/python',x))
+                value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
+            line = 'export %s="%s"'%(name,value)
+        if input!=line : f.write('#ORIG:# %s\n'%input)
         f.write(line+'\n')        
     f.close()
 
