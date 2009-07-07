@@ -24,7 +24,7 @@
 # |-Simulation      = True  (default: False)
 # |-MCLinksSequence = ['L0', 'Unpack', 'Tr']  (default: ['L0', 'Unpack', 'Tr'])
 # |-InitSequence    = ['Reproc', 'Brunel', 'Calo']  (default: [])
-# |-DataType        = '2008'
+# |-DataType        = '2009'
 # |-NoWarnings      = False
 # |-WriteFSR        = True
 # |-RecL0Only       = False
@@ -33,7 +33,7 @@
 # \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
 # |-ExpertHistos = False
-# |-DataType     = '2008'
+# |-DataType     = '2009'
 # |-OutputLevel  = 3
 # |-OutputType   = 'DST'
 # |-Context      = 'Offline'
@@ -51,15 +51,15 @@
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # DstWriter.ItemList=['/Event/DAQ/ODIN#1', '/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/pSim/MCVertices#1', '/Event/Link/Rec/Track/Best#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCParticles#1', '/Event/MC/DigiHeader#1', '/Event/MC/TrackInfo#1', '/Event/MC/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/Link/Trig/L0/FullCalo#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1', '/Event/Prev/MC/Header#1', '/Event/PrevPrev/MC/Header#1', '/Event/Next/MC/Header#1', '/Event/Link/Raw/Hcal/Digits#1']
-MuonID WARNING: FOI tuning not ready for DATA=2008,VERSION=def. Loading FOIfactor=1.200000
-MuonID WARNING: new DLL parameters not tuned for DATA=2008,VERSION=def. Loading values for DC06
-# WARNING: Default tag requested for partition DDDB (using head-20090330)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20090402)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20090212)
+# MuonID WARNING: FOI tuning not ready for DATA=2009,VERSION=def. Loading FOIfactor=1.200000
+# MuonID WARNING: new DLL parameters not tuned for DATA=2009,VERSION=def. Loading values for DC06
+# WARNING: Default tag requested for partition DDDB (using head-20090617)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20090508)
+# WARNING: Default tag requested for partition SIMCOND (using sim-20090508-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r3
-                                          running on lxbuild120.cern.ch on Mon Jul  6 16:04:15 2009
+                                          running on lxbuild120.cern.ch on Tue Jul  7 10:57:06 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -71,7 +71,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -93,9 +93,9 @@ PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delet
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20090330"
+DDDB                 INFO Using TAG "head-20090617"
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
-SIMCOND              INFO Using TAG "sim-20090212"
+SIMCOND              INFO Using TAG "sim-20090508-vc-md100"
 PrsSpdFillRawBu...   INFO Data coding type 2
 RemovePrsPacked...   INFO bankKiller : all banks of type 'PrsPacked' will be removed.
 EcalBanksHandler     INFO Member list: CheckCaloBank/EcalCheckBanks, CaloZSupAlg/EcalADCs, CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw, CaloFillRawBuffer/EcalFillRawBuffer, bankKiller/RemoveEcalPackedBanks, with context 'Offline'
@@ -835,6 +835,8 @@ MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 TrackVertexMonitorSUCCESS Booked 11 Histogram(s) : 1D=5 1DProf=6
+TTClusterMonitor  SUCCESS Booked 10 Histogram(s) : 1D=7 2D=3
+ITClusterMonitor  SUCCESS Booked 6 Histogram(s) : 1D=3 2D=3
 TrackResChecker      INFO      ************************************
 VeloRZ               INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
 VeloRZ               INFO      all  long                  :            0 from        0 [  nan %];   0.0 % clones;   0.0 % hit purity
@@ -996,7 +998,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.79 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
