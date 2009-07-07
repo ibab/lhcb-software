@@ -1,4 +1,4 @@
-// $Id: CountingPrescaler.cpp,v 1.1 2009-07-06 15:31:41 wouter Exp $
+// $Id: CountingPrescaler.cpp,v 1.2 2009-07-07 12:30:41 wouter Exp $
 
 
 
@@ -23,6 +23,7 @@ public:
 private:
   size_t m_interval ;
   size_t m_offset ;
+  size_t m_printfreq ;
   size_t m_counter ;
 };
 
@@ -35,6 +36,7 @@ CountingPrescaler::CountingPrescaler(const std::string& name,
 {
   declareProperty("Interval",m_interval = 1 ) ;
   declareProperty("Offset",m_offset = 0 ) ;
+  declareProperty("PrintFreq",m_printfreq = 0 ) ;
 } ;
 
 StatusCode CountingPrescaler::initialize()
@@ -46,10 +48,16 @@ StatusCode CountingPrescaler::initialize()
 
 StatusCode CountingPrescaler::execute()
 {
-  if( m_counter < m_offset )
-    setFilterPassed (false ) ;
-  else
-    setFilterPassed( ((m_counter - m_offset)%m_interval) == 0 ) ;
+  bool passed =  (m_counter >= m_offset) && ((m_counter - m_offset)%m_interval == 0 ) ;
+  setFilterPassed ( passed ) ;
+  
+  if( passed &&
+      m_printfreq > 0 &&
+      (((m_counter - m_offset)/m_interval)%m_printfreq ==0 ) ) 
+    info() << "Interval=" << m_interval 
+	   << " Offset=" << m_offset 
+	   << " Accepting event : " << m_counter << endreq ;
+  
   ++m_counter ;
   return StatusCode::SUCCESS ;
 }
