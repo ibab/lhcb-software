@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.1 2009-07-07 16:24:53 jonrob Exp $
+ *  $Id: RichConverter_Imp.cpp,v 1.2 2009-07-07 17:27:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -15,6 +15,7 @@
 // gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IAlgTool.h"
 
 // local
 #include "RichKernel/RichConverter_Imp.h"
@@ -88,3 +89,72 @@ StatusCode Rich::Converter_Imp::finalize()
   // try to finalize the base class
   return ::Converter::finalize();
 }
+
+// ============================================================================
+// manual forced (and 'safe') release of the active tool or service
+// ============================================================================
+StatusCode Rich::Converter_Imp::release ( const IInterface* interface ) const
+{
+  if ( 0 == interface )
+  { return Error ( "release(IInterface):: IInterface* points to NULL!" ) ; }
+  // dispatch between tools and services
+  const IAlgTool* algTool = dynamic_cast<const IAlgTool*>( interface )  ;
+  // perform the actual release
+  return 0 != algTool ? releaseTool( algTool ) : releaseSvc( interface ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// manual forced (and 'save') release of the tool
+// ============================================================================
+StatusCode Rich::Converter_Imp::releaseTool ( const IAlgTool* algTool ) const
+{
+  if( 0 == algTool   )
+  { return Error ( "releaseTool(IAlgTool):: IAlgTool* points to NULL!" ) ; }
+  if( this->toolSvc() == 0 )
+  { return Error ( "releaseTool(IAlgTool):: IToolSvc* points to NULL!" ) ; }
+  // find a tool in the list of active tools
+  AlgTools::reverse_iterator it =
+    std::find( m_tools.rbegin() , m_tools.rend() , algTool ) ;
+  if(  m_tools.rend() == it )
+  { return Warning("releaseTool(IAlgTool):: IAlgTool* is not active"   ) ; }
+  // get the tool
+  IAlgTool* t = *it ;
+  // cache name
+  const std::string name = t->name();
+  if ( msgLevel(MSG::DEBUG) )
+  { debug() << "Releasing tool '" << name << "'" << endmsg; }
+  // remove the tool from the lists
+  m_tools.erase( --it.base() ) ;
+  // release tool
+  const StatusCode sc = this->toolSvc()->releaseTool( t ) ;
+  if ( sc.isFailure() )
+  { return Warning ( "releaseTool(IAlgTool):: error from IToolSvc whilst releasing "+name , sc ) ; }
+  // return final status code
+  return sc ;
+}
+// ============================================================================
+
+// ============================================================================
+// manual forced (and 'safe') release of the service
+// ============================================================================
+StatusCode Rich::Converter_Imp::releaseSvc ( const IInterface* Svc  ) const
+{
+  if( 0 == Svc ) {
+    return Error ( "releaseSvc(IInterface):: IInterface* points to NULL!" ) ;
+  }
+  SmartIF<IService> svc(const_cast<IInterface*>(Svc));
+  if (svc.isValid()) {
+    Services::iterator it = m_services.find(svc->name());
+    if (it == m_services.end()) {
+      return Warning( "releaseSvc(IInterface):: IInterface* is not active" );
+    }
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Releasing service '" << it->first << "'" << endmsg;
+    }
+    m_services.erase(it);
+    return StatusCode::SUCCESS;
+  }
+  return Warning( "releaseSvc(IInterface):: IInterface* is not a service" );
+}
+// ============================================================================

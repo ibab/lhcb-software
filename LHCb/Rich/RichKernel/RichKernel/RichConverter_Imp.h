@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.h,v 1.1 2009-07-07 16:24:53 jonrob Exp $
+ *  $Id: RichConverter_Imp.h,v 1.2 2009-07-07 17:27:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -18,6 +18,8 @@
 // Gaudi
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/StatEntity.h"
 
 class IDataProviderSvc;
 class IChronoStatSvc;
@@ -57,7 +59,7 @@ namespace Rich
 
     /// standard initialization method
     virtual StatusCode initialize();
-    
+
     /// standard finalization  method
     virtual StatusCode finalize  ();
 
@@ -65,6 +67,17 @@ namespace Rich
 
     /// name of this converter
     virtual const std::string & name() const { return m_name; }
+
+  protected: // few actual data types
+
+    /// the actual type of general counters
+    typedef std::map<std::string,StatEntity>   Statistics ;
+    /// the actual type error/warning counter
+    typedef std::map<std::string,unsigned int> Counter      ;
+    /// storage for active tools
+    typedef std::vector<IAlgTool*>             AlgTools     ;
+    /// storage for active services
+    typedef GaudiUtils::HashMap<std::string, SmartIF<IService> > Services;
 
   public: // tools and services
 
@@ -86,13 +99,15 @@ namespace Rich
     {
       TOOL* Tool = 0 ;
       if ( name.empty() )
-      { 
+      {
         this->toolSvc()->retrieveTool( type, Tool, parent, create );
       }
       else
       {
         this->toolSvc()->retrieveTool( type, name, Tool, parent, create );
       }
+      // add the tool into list of known tools to be properly released
+      addToToolList( Tool );
       return Tool;
     }
 
@@ -105,13 +120,46 @@ namespace Rich
       SmartIF<SERVICE> s;
       s = baseSvc;
       // check the results
-      if ( !baseSvc.isValid() || !s.isValid() ) 
+      if ( !baseSvc.isValid() || !s.isValid() )
       {
         this->Exception ("svc():: Could not retrieve Svc '" + name + "'", StatusCode::FAILURE);
       }
+      // add the tool into list of known tools, to be properly released
+      addToServiceList(baseSvc);
       // return *VALID* located service
       return s;
     }
+
+    /// Release tools and services
+    StatusCode release ( const IInterface* interface ) const;
+
+    // ============================================================================
+    // Add the given tool to the list of active tools
+    // ============================================================================
+    inline void addToToolList( IAlgTool * tool ) const
+    {
+      m_tools.push_back( tool ) ;
+    }
+    // ============================================================================
+
+    // ============================================================================
+    // Add the given service to the list of active services
+    // ============================================================================
+    inline void addToServiceList( const SmartIF<IService>& svc ) const
+    {
+      if (svc.isValid()) {
+        m_services[svc->name()] = svc;
+      }
+    }
+    // ============================================================================
+
+  protected:
+
+    /// manual forced (and 'safe') release of the tool
+    StatusCode releaseTool ( const IAlgTool*   tool ) const ;
+
+    /// manual forced (and 'safe') release of the service
+    StatusCode releaseSvc  ( const IInterface* svc  ) const ;
 
   public: // messaging
 
@@ -187,7 +235,7 @@ namespace Rich
     /// Throw an exception
     StatusCode Exception
     ( const std::string    & msg,
-      const StatusCode       sc  = StatusCode(StatusCode::FAILURE,true) ) const 
+      const StatusCode       sc  = StatusCode(StatusCode::FAILURE,true) ) const
     {
       throw GaudiException( this->name() + ":: " + msg , "",  sc );
       return sc;
@@ -225,6 +273,12 @@ namespace Rich
 
     /// Chrono & Stat service
     mutable IChronoStatSvc* m_chronoSvc;
+
+    /// List of active  tools
+    mutable AlgTools   m_tools       ;
+
+    /// List of active  services
+    mutable Services   m_services    ;
 
   };
 
