@@ -30,7 +30,8 @@ class StrippingConf( LHCbConfigurableUser ):
 		    "ActiveStreams"     : [],    # list of active streams
 		    "OutputType"	: "ETC", # Output type. Can be either "ETC" or "DST"
 		    "DSTPrefix"		: "",    # Prefix for DST streams
-		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py" # Main options file to import
+		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py", # Main options file to import
+		    "StreamFile"	: {}
                 }
 
 #
@@ -117,15 +118,33 @@ class StrippingConf( LHCbConfigurableUser ):
 
 	    streams = self.activeStreams()
 	    dstPrefix = self.getProp("DSTPrefix")
+	    streamFile = self.getProp("StreamFile")
 	    
 	    log.info(streams)
 	    for i in streams : 
+	    
+		if i not in streamFile : 
+		    log.info("Output file for stream "+i+" not defined. Using default. ")
+		    dstName = dstPrefix + i + ".dst"
+		else :
+		    dstName = dstPrefix + streamFile[i]
+
 		seq = GaudiSequencer("StreamSequencer"+i)
-		seq.ModeOR = 1    # Event is selected if at least one selection in the stream is True
+		
+		# Check if the file is already assigned to another stream
+		if dstName in DaVinciWriteDst().DstFiles : 
+		    log.info("Stream "+i+" will be written to already existing file "+dstName)
+		    seq = DaVinciWriteDst().DstFiles[ dstName ]    # Use already defined sequencer
+
+		else :
+
+		    log.info("Stream "+i+" will be written to the new file "+dstName)
+		    seq.ModeOR = 1    # Event is selected if at least one selection in the stream is True
+		    DaVinciWriteDst().DstFiles[ dstName ] = seq
+
 		for line in lines : 
 		    if line.stream() == i :
 			seq.Members += [ line.configurable() ]
-		DaVinciWriteDst().DstFiles[ dstPrefix + i + ".dst" ] = seq
 
 	if output == "NONE" : 
 
