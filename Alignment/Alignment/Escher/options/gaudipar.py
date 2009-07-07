@@ -36,6 +36,10 @@ if opts.aligndb:
    alignCond = CondDBAccessSvc( 'AlignCond' )
    alignCond.ConnectionString = 'sqlite_file:' + opts.aligndb + '/LHCBCOND'
    CondDB().addLayer( alignCond )
+   
+# turn off the printfreq
+from Configurables import EventSelector
+EventSelector().PrintFreq = -1
 
 #from Gaudi.Configuration import *
 
@@ -81,7 +85,7 @@ class AlignmentTask(Task):
      # update the geometry
      # updatetool = appMgr.toolsvc().create( typ = "Al::AlignUpdateTool", name = "ToolSvc.AlignUpdateTool", interface = "IAlignUpdateTool" )
      updatetool = appMgr.toolsvc().create( "Al::AlignUpdateTool", interface = "Al::IAlignUpdateTool" )
-     updatetool.process(  self.output['derivatives'].equations(), 1, opts.iter)
+     updatetool.process(  self.output['derivatives'].equations(), opts.iter, 1)
      # now call finalize to write the conditions. there must be a better way.
      appMgr.finalize()
      # finally create a database layer
