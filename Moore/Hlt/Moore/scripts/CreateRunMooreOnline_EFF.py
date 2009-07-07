@@ -1,9 +1,22 @@
 #!/usr/bin/env python
 
 import os, os.path
+import re
 import sys
 import subprocess
 import string
+from os import pathsep, listdir 
+from os.path import exists, isdir, realpath
+
+
+def StripPath(path):
+    collected = []
+    for p in path.split(pathsep):
+        rp = realpath(p)
+        if exists(rp) and isdir(rp):
+            if len(listdir(rp))!=0 and p not in collected and not re.search('Hlt/HltPython/python',p):
+                collected.append(p)
+    return pathsep.join(collected)
 
 #
 cmt = subprocess.Popen(['cmt','show','version'],stdout=subprocess.PIPE)
@@ -25,9 +38,18 @@ if len(sys.argv)>2:
     f = open(setup, 'r')
     txt = f.read()
     f.close()
+    print txt
     f = open(setup, 'w')
-    import re
-    f.write(re.sub('test -f [^ ]*StripPath.sh','false', txt))
+    for input in txt.splitlines():
+        line = input
+        line = re.sub('test -f [^ ]*StripPath.sh','false', line)
+        m = re.match('export ([^=]+)="([^"]+)"',line)
+        if m :
+            (name,value) = m.groups()
+            if name in [ 'PYTHONPATH' ,'LD_LIBRARY_PATH' ]:
+                line = 'export %s="%s"'%(name,StripPath(value))
+        if input!=line : f.write('#CLEANED;ORIG:# %s\n'%input)
+        f.write(line+'\n')        
     f.close()
 
 

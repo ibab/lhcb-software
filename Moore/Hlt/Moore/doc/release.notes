@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-07-07 - Gerhard Raven
+ - strip PYTHONPATH in SetupMoore_vXXX.sh
+
 ! 2009-06-25 - Gerhard Raven
  - only update permissions of runMooreOnline_EFF.sh if needed
 
