@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.21 2009-06-25 15:16:34 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2009-07-07 08:58:39 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -13,7 +13,7 @@ class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax"      : -1
        ,"SkipEvents"  : 0
-       ,"DataType"    : "2008"
+       ,"DataType"    : "2009"
        ,"DDDBtag"     : ""
        ,"CondDBtag"   : ""
        ,"Simulation"  : False
@@ -25,7 +25,7 @@ class LHCbApp(LHCbConfigurableUser):
     _propertyDocDct = { 
         'EvtMax'      : """ Maximum number of events to process """
        ,'SkipEvents'  : """ Number of events to skip """
-       ,'DataType'    : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DataType'    : """ Data type, see DDDBConf for allowed values. Default '2009' """
        ,'DDDBtag'     : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        ,'CondDBtag'   : """ Tag for CondDB. Default as set in DDDBConf for DataType """
        ,'Simulation'  : """ Flag to indicate usage of simulation conditions """
@@ -45,21 +45,13 @@ class LHCbApp(LHCbConfigurableUser):
     def defineDB(self):
         # Delegate handling of properties to DDDBConf
         self.setOtherProps( DDDBConf(), ["Simulation", "DataType" ] )
-        # CondDB tags must be set
+        # Set CondDB tags if given, otherwise use default defined in DDDBConf
         from Configurables import CondDB
-        tagsOK = True
         if hasattr( self, "DDDBtag" ):
             CondDB().Tags [ "DDDB" ] = self.getProp("DDDBtag")
-        else:
-            log.error( "DDDBtag property has not been set in the options" )
-            tagsOK = False
         if hasattr( self, "CondDBtag" ):
             CondDB().Tags [ "LHCBCOND" ] = self.getProp("CondDBtag")
             CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBtag")
-        else:
-            log.error( "CondDBtag property has not been set in the options" )
-            tagsOK = False
-        if not tagsOK : sys.exit(1)
             
     def defineEvents(self):
         # Set up transient store and data on demand service

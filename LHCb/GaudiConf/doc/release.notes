@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-07-07 - Marco Cattaneo
+ - In Configurable:
+   . Change default DataType to 2009
+   . If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
+     (previously setting of DDDBtag and CondDBtag was compulsory)
+
 !======================== GaudiConf v12r6 2009-06-30 ========================
 ! 2009-06-30 - Marco Cattaneo
  - Add dependency on Det/DDDB, needed by Configurable
