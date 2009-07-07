@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.17 2009-07-02 15:12:56 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.18 2009-07-07 08:31:43 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -373,7 +373,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
        
        //Loop over sensors
          for(int j=0; j<=105; j++){
-           if(j>=0 && j<=41 || j>=64 && j<=105){
+           if((j>=0 && j<=41) || (j>=64 && j<=105)){
              debug()<<"sensor number "<<j<<endmsg;
              bool nExpectedHits_sensor = m_expectTool -> isInside(*track, j);
              if(nExpectedHits_sensor == true) {
@@ -390,15 +390,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     unsigned int n_measurements = measures.size();
     int charge = track->charge();  
     
-    //if(charge == 0)
-      plot1D( n_measurements, "NMeasurements", "Number of measurements associated to a track", 0, 45, 45 );
+    plot1D( n_measurements, "NMeasurements", "Number of measurements associated to a track", 0, 45, 45 );
    
-      // else if(charge == 1){
-      // plot1D( n_measurements, "NPosMeasurements", "Number of measurements by positive tracks", 0, 100, 100 );
-      // }
-      // else if(charge == -1){
-      // plot1D( n_measurements, "NNegMeasurements", "Number of measurements by negative tracks", 0, 100, 100 );
-      // }
+    if(charge == 1)
+      plot1D( n_measurements, "NPosMeasurements", "Number of measurements by positive tracks", 0, 100, 100 );
+    else if(charge == -1)
+      plot1D( n_measurements, "NNegMeasurements", "Number of measurements by negative tracks", 0, 100, 100 );
+      
       
     
     for ( ; it != measures.end(); ++it ) {
@@ -607,17 +605,16 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     //--------------------------------
 
       for(int i=0; i<=105; i++){
-        if(i>=0 && i<=41 || i>=64 && i<=105){
+        if((i>=0 && i<=41) || (i>=64 && i<=105)){
 
           debug()<<"N_rec "<<N_rec[i]<<endmsg;
           debug()<<"N_exp "<<N_exp[i]<<endmsg;
 
-          if(N_exp[i]>0){
+          if(N_exp[i]>=1){
             pseudoEfficiency_sens[i] = N_rec[i] / N_exp[i];
             debug()<<"==> pseudoefficiency "<<pseudoEfficiency_sens[i]<<endmsg;
-            plot2D(i, pseudoEfficiency_sens[i], "Pseudoefficiency vs sensorID", "Pseudoefficiency vs sensorID", 
-                 -0.5, 110.5, -0.05, 1.55, 111, 16);
-            prof_pseudoEffsens -> fill(i, pseudoEfficiency_sens[i]);
+            if (pseudoEfficiency_sens[i] >=0 && pseudoEfficiency_sens[i] <=2) 
+              prof_pseudoEffsens -> fill(i, pseudoEfficiency_sens[i]);
           }
         }
       }
