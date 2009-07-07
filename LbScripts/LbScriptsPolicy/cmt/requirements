@@ -23,10 +23,10 @@ cmtpath_pattern \
 #--------------------------------------------
 
 cmtpath_pattern \
-    path_remove  PYTHONPATH "" \
+    path_remove_regexp  PYTHONPATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "/<project>/"\
-         <project>_with_installarea&WIN32 "\<project>\" ; \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/python"\
+         <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\python" ; \
     path_prepend PYTHONPATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/python"\
@@ -112,14 +112,26 @@ macro_remove cmt_actions_constituentsclean "ShowAliasclean "
 #--------------------------------------------
 
 cmtpath_pattern \
-    path_remove  PATH "" \
+    path_remove_regexp  PATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "/<project>/" \
-         <project>_with_installarea&WIN32 "\<project>\" ; \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/scripts" \
+         <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\scripts" ; \
+    path_remove_regexp  PATH "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/.*/bin" \
+         <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\.*\bin" ; \
+    path_remove_regexp  PATH "" \
+         <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\.*\lib" ; \
     path_prepend PATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/scripts" \
          <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\scripts"
+
+cmtpath_pattern \
+    path_remove_regexp LD_LIBRARY_PATH "" \
+         <project>_without_installarea "" \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/.*/lib" \
+    
 
 pattern install_scripts \
     path_remove  PATH "" \
@@ -133,10 +145,10 @@ pattern install_scripts \
 make_fragment install_scripts -header=install_scripts_header
 
 cmtpath_pattern \
-    path_remove  HPATH "" \
+    path_remove_regexp  HPATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "/<project>/" \
-         <project>_with_installarea&WIN32 "\<project>\" ; \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/doc/help" \
+         <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\doc\help" ; \
     path_prepend HPATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/doc/help" \
