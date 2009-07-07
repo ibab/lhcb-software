@@ -4,6 +4,7 @@
 	- increased the visibility of the printed messages
 	- force the use of bash (required because of the special variable PIPESTATUS)
 	- ensure that the version.cmt files are present when using CMT v1r20p20090520
+	- add fix for the list separators used by Eclipse
 
 2009-07-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
