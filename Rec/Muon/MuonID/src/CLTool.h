@@ -1,4 +1,4 @@
-// $Id: CLTool.h,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: CLTool.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef CLTOOL_H 
 #define CLTOOL_H 1
 
@@ -22,7 +22,7 @@ public:
           const std::string& name,
           const IInterface* parent);
 
-  virtual ~CLTool( ) {}; ///< Destructor
+  virtual ~CLTool( ); ///< Destructor
 
   StatusCode initialize();
   
@@ -38,7 +38,7 @@ public:
   
   double valFromUnif(double value, double mom, int p_r, std::string sig_bkg);
 
-  virtual StatusCode finalize() {return StatusCode::SUCCESS;} //tool finalization
+  StatusCode finalize() {m_init.ignore(); return StatusCode::SUCCESS;} //tool finalization
 
 protected:
 

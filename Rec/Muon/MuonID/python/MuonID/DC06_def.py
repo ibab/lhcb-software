@@ -11,9 +11,9 @@ FILENAMEDEF0 = PYMUONIDROOT+DATA+"_def"
 FILENAMEDEF1 = PYMUONIDROOT+"DC06_def"
 
 if DEBUG:
-    print "LOADING FROM"
-    print "DATA=",DATA
-    print "VERSION=",VERSION
+    print "# LOADING FROM"
+    print "# DATA=",DATA
+    print "# VERSION=",VERSION
 
 ###############################################################
 ####################### OFFICIAL MUONID #######################
@@ -127,13 +127,13 @@ bname=FILENAME+"_chi2b"
 
 if os.path.exists(sname): chi2Signal=extpick.pickleLoad(sname)
 else:
-    print "WARNING: chi2 signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    print "# WARNING: chi2 signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     if os.path.exists(FILENAMEDEF0+"_chi2s"): chi2Signal=extpick.pickleLoad(FILENAMEDEF0+"_chi2s")
     else: chi2Signal=extpick.pickleLoad(FILENAMEDEF1+"_chi2s")
 
 if os.path.exists(bname): chi2Bkg=extpick.pickleLoad(bname)
 else:
-    print "WARNING: chi2 bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    print "# WARNING: chi2 bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     if os.path.exists(FILENAMEDEF0+"_chi2b"): chi2Bkg=extpick.pickleLoad(FILENAMEDEF0+"_chi2b")
     else: chi2Bkg=extpick.pickleLoad(FILENAMEDEF1+"_chi2b")
 
@@ -149,7 +149,7 @@ bname=FILENAME+"_distb"
 
 if os.path.exists(sname): distSignal=extpick.pickleLoad(sname)
 else:
-    if DEBUG: print "WARNING: dist signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if DEBUG: print "# WARNING: dist signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     if os.path.exists(FILENAMEDEF0+"_dists"): distSignal=extpick.pickleLoad(FILENAMEDEF0+"_dists")
     else: distSignal=extpick.pickleLoad(FILENAMEDEF1+"_dists")
 
@@ -157,7 +157,7 @@ else:
 
 if os.path.exists(bname): distBkg=extpick.pickleLoad(bname)
 else:
-    if DEBUG: print "WARNING: dist bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if DEBUG: print "# WARNING: dist bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     if os.path.exists(FILENAMEDEF0+"_distb"): distBkg=extpick.pickleLoad(FILENAMEDEF0+"_distb")
     else: distBkg=extpick.pickleLoad(FILENAMEDEF1+"_distb")
 
@@ -171,13 +171,13 @@ pname=FILENAME+"_gaprobs"
 
 if os.path.exists(mname): gamoms=extpick.pickleLoad(mname)
 else:
-    if DEBUG: print "WARNING: get arrival moms not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if DEBUG: print "# WARNING: get arrival moms not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     gamoms=extpick.pickleLoad(FILENAMEDEF+"_gamoms")
 
 
 if os.path.exists(pname): gaprobs=extpick.pickleLoad(pname)
 else:
-    if DEBUG: print "WARNING: get arrival probs not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if DEBUG: print "# WARNING: get arrival probs not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
     gaprobs=extpick.pickleLoad(FILENAMEDEF+"_gaprobs")
 
 

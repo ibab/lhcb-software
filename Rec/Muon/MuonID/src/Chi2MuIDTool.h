@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.h,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: Chi2MuIDTool.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef CHI2MUIDTOOL_H 
 #define CHI2MUIDTOOL_H 1
 
@@ -75,7 +75,7 @@ public:
   
   StatusCode search(const LHCb::Track& seed, LHCb::Track& muTrack);
 
-  virtual StatusCode finalize() {return StatusCode::SUCCESS;} //tool finalization
+  StatusCode finalize();
 
   
 protected:

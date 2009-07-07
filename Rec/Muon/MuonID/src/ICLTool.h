@@ -1,4 +1,4 @@
-// $Id: ICLTool.h,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: ICLTool.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef ICLTOOL_H 
 #define ICLTOOL_H 1
 
@@ -23,6 +23,8 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICLTool; }
+
+  // virtual ~ICLTool() {};
 
   virtual double minRange() = 0;
 

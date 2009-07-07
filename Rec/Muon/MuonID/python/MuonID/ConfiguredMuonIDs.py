@@ -22,7 +22,7 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "INITIALIZING CONFIGUREDMUONIDs"
+    if self.debug: print "# INITIALIZING CONFIGUREDMUONIDs"
 
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
     mod=[data+"_"+version,data+"_def","DC06_def"]
@@ -32,12 +32,12 @@ class ConfiguredMuonIDs():
     pname=[]
     for m in mod: pname.append(PYMUONIDROOT+m+".py")
 
-    if self.debug: print "\tpname -> ",pname
+    if self.debug: print "# \tpname -> ",pname
 
     ## check if modules exist and load them
     if os.path.exists(pname[0]): exec("from MuonID import "+mod[0]+" as info")
     else:
-      if debug: print "WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
+      if debug: print "# WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
       if os.path.exists(pname[1]): exec("from MuonID import "+mod[1]+" as info")
       else:  exec("from MuonID import "+mod[2]+" as info")
 
@@ -51,7 +51,7 @@ class ConfiguredMuonIDs():
     configure fitter to be used inside MuonID chi2 calculation
     """
 
-    if self.debug: print "CONFIGURING FITTER"
+    if self.debug: print "# CONFIGURING FITTER"
     ## check if input is already an instance or this must be created
     if isinstance(fitter,TrackMasterFitter): myfitter=fitter
     else: myfitter=TrackMasterFitter(str(fitter))
@@ -68,7 +68,7 @@ class ConfiguredMuonIDs():
     """
     configure ismuoncandidatec tool. select ismuon type
     """
-    if self.debug: print "CONFIGURING ISMUONCANDIDATEC"
+    if self.debug: print "# CONFIGURING ISMUONCANDIDATEC"
 
     ## check if input is already an instance or this must be created
     if isinstance(ismc,IsMuonCandidateC): myismc=ismc
@@ -83,7 +83,7 @@ class ConfiguredMuonIDs():
     """
     configure getarrival tool. set histograms for arrival prob and clarr
     """
-    if self.debug: print "CONFIGURING GETARRIVAL"
+    if self.debug: print "# CONFIGURING GETARRIVAL"
     ## check if input is already an instance or this must be created
     if isinstance(geta,GetArrival): mygeta=geta
     else: mygeta=GetArrival(str(geta))
@@ -103,7 +103,7 @@ class ConfiguredMuonIDs():
     Use of chi2 or dist histos as input.
     """
 
-    if self.debug: print "CONFIGURING CLTOOL"
+    if self.debug: print "# CONFIGURING CLTOOL"
     ## check if input is already an instance or this must be created
     if isinstance(cltool,CLTool): mycltool=cltool
     else: mycltool=CLTool(str(cltool))
@@ -119,11 +119,11 @@ class ConfiguredMuonIDs():
 
     ## depending on use_dist or no load histograms from dist or chi2
     if use_dist:
-      if self.debug: print "\tCONFIGURING CLTOOL: use_dist=True"
+      if self.debug: print "# \tCONFIGURING CLTOOL: use_dist=True"
       mycltool.Signal = self.info.distSignal
       mycltool.Bkg = self.info.distBkg
     else:
-      if self.debug: print "\tCONFIGURING CLTOOL: use_dist=False"
+      if self.debug: print "# \tCONFIGURING CLTOOL: use_dist=False"
       mycltool.Signal = self.info.chi2Signal
       mycltool.Bkg = self.info.chi2Bkg
 
@@ -136,7 +136,7 @@ class ConfiguredMuonIDs():
     If not, use_dist will either set chi2 or dist tools.
     """
 
-    if self.debug: print "CONFIGURING MUIDTOOL"
+    if self.debug: print "# CONFIGURING MUIDTOOL"
 
     ## check if input is already an instance or this must be created.
     ## also set use_dist1, to be used when configuring CLQuality tool
@@ -149,7 +149,7 @@ class ConfiguredMuonIDs():
       if use_dist: mymuidtool=DistMuIDTool(str(muidtool))
       else: mymuidtool=Chi2MuIDTool(str(muidtool))
 
-    if self.debug: print "\tCONFIGURING MUIDTOOL: use_dist1 = ",use_dist1
+    if self.debug: print "# \tCONFIGURING MUIDTOOL: use_dist1 = ",use_dist1
 
     ## general muid tool options
     mymuidtool.NSigmas = self.info.NSigmas
@@ -159,13 +159,13 @@ class ConfiguredMuonIDs():
     mymuidtool.MinMomSt4 = self.info.MinMomSt4
 
     ## add and configure fitter to be used for finding chi2
-    if self.debug: print "\tCONFIGURING MUIDTOOL: adding tools"
+    if self.debug: print "# \tCONFIGURING MUIDTOOL: adding tools"
     mymuidtool.addTool(TrackMasterFitter(), name='fitter') 
     self.configureFitter(mymuidtool.fitter)
 
     ## for MuonIDAlg, can stop here (no use or extra subtools)
     if self.initializeAll:
-      if self.debug: print "\tCONFIGURING MUIDTOOL: initializeAll=True"
+      if self.debug: print "# \tCONFIGURING MUIDTOOL: initializeAll=True"
       ## add and configure ismuoncandidatec tool
       mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
       self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
@@ -187,7 +187,7 @@ class ConfiguredMuonIDs():
     Default chi2.
     """
 
-    if self.debug: print "CONFIGURING MUONIDALG"
+    if self.debug: print "# CONFIGURING MUONIDALG"
 
     ## check if input is already an instance or this must be created
     if isinstance(muonid,MuonIDAlg): mymuid=muonid
@@ -278,7 +278,7 @@ class ConfiguredMuonIDs():
     Finally puts it in gaudi sequencer.
     """
 
-    if self.debug: print "APPLYING GENERAL MUONID CONFIGURATION"
+    if self.debug: print "# APPLYING GENERAL MUONID CONFIGURATION"
     ## create output gaudi sequencer
     myg = GaudiSequencer("MuonIDSeq")
     ## create and configure MuonIDAlg instance

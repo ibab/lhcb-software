@@ -1,4 +1,4 @@
-// $Id: GetArrival.cpp,v 1.2 2009-07-06 08:13:41 cattanem Exp $
+// $Id: GetArrival.cpp,v 1.3 2009-07-07 22:02:41 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -69,22 +69,26 @@ GetArrival::GetArrival( const std::string& type,
 
 // from m_probs and m_moms fill the m_vprobs
 StatusCode GetArrival::initialize() {
-  
-  m_init.setCode(1);
+  StatusCode sc = StatusCode::SUCCESS;
+
+  m_init = StatusCode::SUCCESS;
+
   if (m_useFunct) {
     
     for (std::vector<double>::const_iterator it=m_beta.begin();
          it!=m_beta.end();++it) {
       if ((*it)==-1) {
         m_init.setCode(401);
-        return Error( "BETAS NOT INITIALIZED", m_init);
+        return sc;        
+        // return Error( "BETAS NOT INITIALIZED", m_init);
       }
     }
     for (std::vector<double>::const_iterator it=m_alpha.begin();
          it!=m_alpha.end();++it) {
       if ((*it)==-1) {
         m_init.setCode(401);
-        return Error( "ALPHAS NOT INITIALIZED", m_init);
+        return sc;
+        // return Error( "ALPHAS NOT INITIALIZED", m_init);
       }
     }
   }
@@ -96,9 +100,11 @@ StatusCode GetArrival::initialize() {
     {
       if ((*it)==-1) 
       {
-        debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endmsg;
+        //TODO: sure?
         m_init.setCode(401);
-        return StatusCode::SUCCESS;
+        debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endmsg;
+        // m_init.setChecked();
+        return sc;
       }
       
     }
@@ -109,7 +115,8 @@ StatusCode GetArrival::initialize() {
     debug() << " npoints: " << m_npoints << endmsg;
     if ((m_probs.size()%m_npoints)!=0){
       m_init.setCode(402);
-      return Error( "INPUT VALUES WRONG SIZE PER STATION", m_init);
+      return sc;
+      // return Error( "INPUT VALUES WRONG SIZE PER STATION", m_init);
     }
     
     //build vector for each station. For station 0, initialization to 0
@@ -165,8 +172,9 @@ StatusCode GetArrival::initialize() {
   }
 
   debug()<<"m_types_st="<<m_types_st<<endmsg;
-  
-  return StatusCode::SUCCESS;
+
+  m_init.ignore();
+  return sc;
   
 }
  
@@ -243,6 +251,7 @@ bool GetArrival::stInStations(const int myst,const std::vector<int>& stations)
 //get array with stations from track's lhcbIDs
 StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vector<int>& sts, const bool opt)
 {
+  StatusCode sc = StatusCode::SUCCESS;
   std::vector<int> sts_init;
   std::vector< LHCb::LHCbID > lhcbids = mutrack.lhcbIDs();
   for (std::vector<LHCb::LHCbID>::const_iterator it=lhcbids.begin();
@@ -262,36 +271,33 @@ StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vec
   }
   else sts=sts_init;
   
-  if (sts.size()<1) return StatusCode::FAILURE;
-  return StatusCode::SUCCESS;
+  if (sts.size()<1) sc = StatusCode::FAILURE;
+  return sc;
 }
 
 
 //get array prob directly from track
 StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& parr)
 {
+  parr = 0.;
+  StatusCode sc = StatusCode::SUCCESS;
   if (m_init.isFailure()){
-    parr=0.;
     return m_init;  
   }
 
-  StatusCode sc;
   if (mutrack.lhcbIDs().size()<1) 
   {
-    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endmsg;
-    parr=0.;
     sc.setCode(410);
-    return sc;
+    return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY",sc);
+    parr=0.;
   }
-
   
   std::vector<int> type_st;
   sc = getStationsFromTrack(mutrack,type_st);
   if (sc.isFailure())
   {
-    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endmsg;
     sc.setCode(411);
-    return sc;
+    return Error("COULD NOT RETRIEVE STS FROM LHCbIDs",sc);
   }
 
 
@@ -299,7 +305,7 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
   debug()<<"sts="<<type_st<<endmsg;
   parr= probTypeSt(mutrack.p(),type_st);
   debug()<<"prob="<<endmsg;
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -385,20 +391,18 @@ double GetArrival::probTypeStStation(const double p, const std::vector<int>& typ
 
 
 StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
+  StatusCode sc = StatusCode::SUCCESS;
   
   if (m_init.isFailure()) 
   {
     clarr=0.;
     return m_init;
   }
-  
-  StatusCode sc;
+
   if (muTrack.lhcbIDs().size()<1) 
   {
-    debug()<<"NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE CL"<<endmsg;
-    clarr=0.;
     sc.setCode(410);
-    return sc;
+    return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE CL",sc);
   }
   
   
@@ -407,9 +411,8 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
   if (sc.isFailure())
   {
     clarr=0.;
-    debug()<<"COULD NOT RETRIEVE STS FROM LHCbIDs"<<endmsg;
     sc.setCode(411);
-    return sc;
+    return Error("COULD NOT RETRIEVE STS FROM LHCbIDs",sc);
   }
   
   double p = muTrack.p();
@@ -422,10 +425,10 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
 StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st, double& clarr)
 {
   
-  StatusCode sc;
-  sc.setCode(412);
+  StatusCode sc = StatusCode::SUCCESS;
   
   if (countArray(type_st,4,1)<m_minhits) {
+    sc.setCode(412);
     debug()<<"number of hits less than min"<<endmsg;
     return sc;
   }
@@ -461,5 +464,8 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
     << " currenttype_st "<<type_st<<","<<sval
     << " tot,stot,cls "<<tot<<","<<stot<<","<<clarr<<endmsg;
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
+
+GetArrival::~GetArrival() 
+{}

@@ -310,12 +310,8 @@ StatusCode MuonIDAlg::initialize() {
           << endmsg;
     return StatusCode::FAILURE;
   }
-
-
-
-
+  
   //  Load MeasurementProvider Tool
-  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider");
   m_Chi2MuIDTool  = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
 
   // GL&SF: Check that Landaus parameters are properly uploaded:
@@ -609,7 +605,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    
    // First do a preselection:
    // track is in acceptance? Track has minimum momentum?
-   bool passed;
+   bool passed = true;
    StatusCode sc = preSelection( pMuid,passed );
    if(sc.isFailure()){
      warning() <<" preSelection failed to MuonPID object" << pMuid << endmsg;
@@ -1927,53 +1923,46 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
     mtrack->addToLhcbIDs(id);
     mtrack->setType(LHCb::Track::Muon);
     mtrack->setHistory(LHCb::Track::MuonID);
-    LHCb::Measurement* muMeas= m_measProvider->measurement(id);
-    mtrack->addToMeasurements( *muMeas );
-    delete muMeas;
+    // LHCb::Measurement* muMeas= m_measProvider->measurement(id);
+    //  mtrack->addToMeasurements( *muMeas );
+    // delete muMeas;
     
     ids_init.push_back(id);
   }
   
   debug()<<"ids ready to get chi2"<<endmsg;
   
-  
-  double Quality=0;
-  StatusCode sc = StatusCode::FAILURE;
-  
+  double Quality=-1;
   if (m_FindQuality) {  
-    // get chi2 value
-    
+    // get chi2 value    
     LHCb::Track mtrack_partial;
     bool isMuonCandidate=false;
-  
     debug()<<"m_Chi2MuIDTool="<<m_Chi2MuIDTool<<endmsg;
-    
-    if (ids_init.size()>0) sc = m_Chi2MuIDTool-> muonCandidate(*mother, mtrack_partial,isMuonCandidate,ids_init);
-    else sc=StatusCode::FAILURE;
-    
-    if (!sc.isFailure()) {
-      std::vector<LHCb::LHCbID>::const_iterator id;
-      for(id = mtrack_partial.lhcbIDs().begin() ; id !=  mtrack_partial.lhcbIDs().end() ; id++){
-        debug()<< "id is muon? "<<id->isMuon()<<endmsg;
-        if (id->isMuon()) debug()<< "id station  "<< id->muonID().station()<<endmsg;
-        debug()<< "id channelID="<< id->channelID()<<endmsg;
+    if (!ids_init.empty()) {      
+      StatusCode sc = m_Chi2MuIDTool-> muonCandidate(*mother, mtrack_partial,
+                                                     isMuonCandidate,ids_init);
+      if (!sc.isFailure()) {
+        std::vector<LHCb::LHCbID>::const_iterator id;
+        for(id = mtrack_partial.lhcbIDs().begin() ; 
+            id !=  mtrack_partial.lhcbIDs().end() ; id++){
+          debug()<< "id is muon? "<<id->isMuon()<<endmsg;
+          if (id->isMuon()) debug()<< "id station  " 
+                                   << id->muonID().station()<<endmsg;
+          debug()<< "id channelID="<< id->channelID()<<endmsg;
+        }
+        
+        StatusCode sc2 = m_Chi2MuIDTool->muonQuality(mtrack_partial,Quality);
+        if (!sc2.isFailure()) {
+          debug()<<"\t Quality="<< Quality<<endmsg;
+          mtrack->addInfo(300,Quality);
+          mtrack->setChi2PerDoF(Quality);
+        }
+        else debug()<<"Error when preparing track to fit"<<endmsg;
       }
-      
-      sc = m_Chi2MuIDTool->muonQuality(mtrack_partial,Quality);
     }
-    
-    else debug()<<"Error when preparing track to fit"<<endmsg;
-    
   }
-  
-  
-  if (!(sc.isFailure())) {
-    debug()<<"\t Quality="<< Quality<<endmsg;
-    mtrack->addInfo(300,Quality);
-    mtrack->setChi2PerDoF(Quality);
-  }
-  else mtrack->addInfo(300,-1.);
-  
+
+  mtrack->addInfo(300,Quality);  
   mtrack->addInfo(301,mupid.PreSelMomentum());
   mtrack->addInfo(302,mupid.InAcceptance());
   mtrack->addInfo(303,mupid.IsMuonLoose());

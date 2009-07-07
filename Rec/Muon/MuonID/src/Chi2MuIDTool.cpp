@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.4 2009-07-06 08:13:41 cattanem Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.5 2009-07-07 22:02:41 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -53,6 +53,8 @@ Chi2MuIDTool::Chi2MuIDTool( const std::string& type,
 
 
 StatusCode Chi2MuIDTool::initialize() {
+  StatusCode sc = StatusCode::SUCCESS;
+
   m_fitter = tool<ITrackFitter>("TrackMasterFitter","fitter",this); 
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
   m_measProvider = tool<IMeasurementProvider>("MeasurementProvider",this);  
@@ -81,7 +83,7 @@ StatusCode Chi2MuIDTool::initialize() {
   m_stations_acceptance.push_back(0);
   m_stations_acceptance.push_back(4);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -90,24 +92,21 @@ StatusCode Chi2MuIDTool::initialize() {
 StatusCode Chi2MuIDTool::isGoodSeed(const LHCb::Track& seed)
 {
   
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   //track below min momentum
   if (seed.p()<m_minmom)
   {
-    debug()<< "Track mom below momentum threshold of "<<m_minmom<<endmsg;
-    sc.setCode(101);
-    return sc;
+    debug() << "Track mom below momentum threshold of "<<m_minmom<<endmsg;
+    sc.setCode(101); return sc;
   }
-  
   
   //track not in acceptance (standard definition)
   if (!(isTrackInAcceptance(seed)))
   {
     debug()<< "Track not in MuonChambers acceptance"<<endmsg;
-    sc.setCode(102);
-    return sc;
+    sc.setCode(102); return sc;
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -116,7 +115,7 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
                                        bool isMuonCandidate,
                                        const std::vector<LHCb::LHCbID> ids_init)
 {
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   m_arrivalCuts=true;
   m_applyIsMuon=true;
   debug()<<"ids_init.size()="<<ids_init.size()<<endmsg;
@@ -129,9 +128,8 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
     m_nsigmasUsed=m_nsigmas;
     if (m_muonProvider==NULL) 
     {
-      error()<<"SmartMuonMeasProvider not in TES, please load"<<endmsg;
       sc.setCode(201);
-      return sc;
+      return Error("SmartMuonMeasProvider not in TES, please load",sc);
     }    
   }
   
@@ -198,7 +196,7 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   muTrack.addToAncestors(seed) ;
 
   if (del_muonprov) delete m_muonProvider;
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -206,38 +204,36 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
 StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
 {
 
-  StatusCode sc;
+  Quality=0;
+  StatusCode sc = StatusCode::SUCCESS;
   
-  if (muTrack.states().size()>1) warning()<<"muonQuality:: MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endmsg;
+  if (muTrack.states().size()>1) 
+    warning()<<"muonQuality:: MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endmsg;
   else if (muTrack.states().size()<1) 
   {
-    error()<<"muonQuality:: MUTRACK WITHOUT ANY SEED STATE ON IT"<<endmsg;
     sc.setCode(301);
-    Quality=0;
-    return sc;
+    return Error("muonQuality:: MUTRACK WITHOUT ANY SEED STATE ON IT",sc);
   }
   
   if (muTrack.lhcbIDs().size()<1) 
   {
-    error()<<"muonQuality:: NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY"<<endmsg;
     sc.setCode(302);
-    Quality=0;
-    return sc;
+    return Error("muonQuality:: NO LHCbIDs ON TRACK!",sc);
+
   }
   
   // load these measurements into a track and perform fit
   // m_measProvider->load(muTrack);  
   StatusCode sc2 = m_fitter->fit(muTrack);
+
   debug()<<"BACK in muonQuality"<<endmsg;
   debug()<<"sc2"<<sc2.getCode()<<endmsg;
   debug()<<"sc2.isFailure()"<<sc2.isFailure()<<endmsg;
   
   if (sc2.isFailure())
   {
-      debug()<< "WRONG FIT PERFORMED"<<endmsg;
-      sc.setCode(303);
-      Quality=0;
-      return sc;
+    sc.setCode(303);
+    return Error("WRONG FIT PERFORMED",sc);
   }
   
   
@@ -245,7 +241,8 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   debug()<<"ids size="<<muTrack.lhcbIDs().size()<<endmsg;
   debug()<<"chi2="<<muTrack.chi2()<<endmsg;
   Quality=muTrack.chi2()/(2.*muTrack.lhcbIDs().size());
-  return StatusCode::SUCCESS;
+
+  return sc;
 }
 
 
@@ -253,6 +250,7 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
 StatusCode Chi2MuIDTool::muonArrival(LHCb::Track& muTrack, double& Arrival)
 {
   //compute arrival probability
+  Arrival = 0;
   StatusCode sc=m_GetArrival->getArrivalFromTrack(muTrack,Arrival);
   debug()<<"Arrival="<<Arrival<<endmsg;
   if (sc.isFailure()) Arrival=0;
@@ -265,7 +263,7 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
                                  const double& Arrival, double& CLArrival, double& DLL)
   
 {
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   //get clquality from cltool
   
   double qualityCLs=0;
@@ -274,15 +272,12 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
 
   debug()<<"Arrival="<<Arrival<<endmsg;
   debug()<<"Qualty ="<<Quality<<endmsg;
-  
 
   
   sc=m_CLQuality->cl(Quality,qualityCLs,qualityCLb,qualityCLR,muTrack.p());
   if (sc.isFailure())
-  {
-    
-    debug()<< "WRONG CLQUALITY VALUE"<<endmsg;
-    return sc;
+  {    
+    return Error("WRONG CLQUALITY VALUE",sc);
   }
   
   
@@ -294,19 +289,18 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
     CLQuality=qualityCLs;
   }
 
+
   sc=m_GetArrival->clArrival(muTrack,CLArrival);
   if (sc.isFailure())
   {
-    debug()<< "WRONG CLARRIVAL VALUE"<<endmsg;
     CLArrival=0.0;
-    return sc;
+    Warning("WRONG CLARRIVAL VALUE");
   }
   if (CLArrival==0.0) CLArrival=1e-6;
   
   DLL = log(CLQuality*CLArrival);
   
-  return StatusCode::SUCCESS;
-  
+  return sc;
 }
 
 StatusCode Chi2MuIDTool::muonID(const LHCb::Track& seed,LHCb::Track& muTrack, 
@@ -316,24 +310,24 @@ StatusCode Chi2MuIDTool::muonID(const LHCb::Track& seed,LHCb::Track& muTrack,
                                 double& DLL,
                                 const std::vector<LHCb::LHCbID> ids_init)
 {
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   
   sc=isGoodSeed(seed);
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail good seed",sc);
 
   sc=muonCandidate(seed,muTrack,isMuonCandidate,ids_init);
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon candidate",sc);
   
   sc=muonQuality(muTrack,Quality);
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon quality",sc);
   
   sc=muonArrival(muTrack, Arrival);
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon arrival",sc);
 
   sc=muonDLL(muTrack, Quality, CLQuality, Arrival, CLArrival, DLL);
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon DLL",sc);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -388,10 +382,12 @@ bool Chi2MuIDTool::isTrackInAcceptance(const LHCb::Track& seed)
 // Function makeStates: build extrapolated states for each station from seed
 StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
 
+  StatusCode sc = StatusCode::SUCCESS;
+
   const std::vector<LHCb::State*> & muStates = seed.states();
   if (muStates.size()==0) {
-    debug()<<"MAKE STATES ERROR: NO AVAILABLE STATES IN SEED"<<endmsg;
-    return StatusCode::FAILURE;
+    sc.setCode(200);
+    return Error("MAKE STATES ERROR: NO AVAILABLE STATES IN SEED");
   }
   
   LHCb::State* muState = (LHCb::State*)&(seed.closestState(9450.));
@@ -405,7 +401,7 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
   debug()<<muState<<endmsg;
   debug()<<"x="<<muState->x()<<",y="<<muState->y()<<",z="<<muState->z()<<endmsg;
 
-  if (m_mySeedState==muState) return StatusCode::SUCCESS;
+  if (m_mySeedState==muState) return sc;
   else m_mySeedState=muState;
   
   
@@ -427,14 +423,13 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
     debug() << " makeState: state at " << z << " = " << muStateC << endmsg;
     if (code.isFailure()) 
       {
-        debug()<<"EXTRAPOLATION OF STATES FAILED AT STATION"<<ist<<endmsg;
-        return StatusCode::FAILURE;
+        return Error("EXTRAPOLATION OF STATES FAILED AT STATION",sc);
       }
     m_states.push_back(muStateC);
     ist++;
   }
   debug() << " makeStates: number of states " << m_states.size() << endmsg;
-  return StatusCode::SUCCESS;
+  return sc;
   
 }
 
@@ -485,12 +480,12 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
 //build states and search for hits. With this, calculate isMuon
 StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
   
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   StatusCode sc1=makeStates(seed);
   if (sc1.isFailure())
   {
     sc.setCode(202);
-    return sc;
+    return Error("search: make states",sc);
   }
   
 
@@ -504,20 +499,17 @@ StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
   addLHCbIDsToMuTrack(muTrack,seed.p());
   // apply isMuon
   if (!m_applyIsMuon){
-    if (muTrack.lhcbIDs().size()>0) return StatusCode::SUCCESS;
+    if (muTrack.lhcbIDs().size()>0) return sc;
     else 
     {
-      sc.setCode(204);
-      return sc;
+      sc.setCode(204); return sc;
     }
   }
-  
   
   bool ism = m_IsMuonTool->IsMuonCandidate(muTrack);
   if (!ism)
   {
-    sc.setCode(203);
-    return sc;
+    sc.setCode(203); return sc;
   }
   
   
@@ -530,5 +522,17 @@ StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
 //=============================================================================
 Chi2MuIDTool::~Chi2MuIDTool() {} 
 
-//=============================================================================
+//============================================================================
+
+StatusCode Chi2MuIDTool::finalize() {
+
+  StatusCode sc = m_CLQuality->finalize();
+  if (sc.isFailure()) return sc;
+
+  sc = m_GetArrival->finalize();
+  if (sc.isFailure()) return sc;
+
+  return StatusCode::SUCCESS;
+  
+}
 

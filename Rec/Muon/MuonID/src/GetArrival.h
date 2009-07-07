@@ -1,4 +1,4 @@
-// $Id: GetArrival.h,v 1.1 2009-07-01 18:27:11 polye Exp $
+// $Id: GetArrival.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef GETARRIVAL_H 
 #define GETARRIVAL_H 1
 
@@ -24,7 +24,7 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  virtual ~GetArrival( ) {}; ///< Destructor
+  virtual ~GetArrival( ); ///< Destructor
 
   StatusCode initialize();
   
@@ -47,9 +47,10 @@ public:
   double probTypeStStation(const double p,const std::vector<int>& type_st,const int station);
   
   StatusCode clArrival(const LHCb::Track& muTrack, double& clarr);
+
   StatusCode clArrival(const double p,const std::vector<int>& type_st, double& clarr);
 
-  virtual StatusCode finalize() {return StatusCode::SUCCESS;} //tool finalization
+  StatusCode finalize() {m_init.ignore(); return StatusCode::SUCCESS;} //tool finalization
 
 protected:
 

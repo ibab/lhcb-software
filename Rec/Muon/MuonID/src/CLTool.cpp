@@ -1,4 +1,4 @@
-// $Id: CLTool.cpp,v 1.3 2009-07-06 08:13:40 cattanem Exp $
+// $Id: CLTool.cpp,v 1.4 2009-07-07 22:02:41 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -55,20 +55,20 @@ CLTool::CLTool( const std::string& type,
 
 StatusCode CLTool::initialize() {
 
-  m_init.setCode(1);  
+  StatusCode sc = StatusCode::SUCCESS;
+  m_init = StatusCode::SUCCESS;
   //check if tool has to be initialized
   for (std::vector<double>::const_iterator it=m_rangeNmuons.begin();
        it!=m_rangeNmuons.end();++it)
   {
-    if ((*it)==-1) 
-    {
-      debug() << "CLTOOL NOT INITIALIZED"<<endmsg;
-      m_init.setCode(0);      
-      return StatusCode::SUCCESS;
+    if ((*it)==-1) {
+      m_init.setCode(500);
+      // return Error("CLTOOL: NOT INITIALIZED!",m_init);
+      return sc;
     }
-  }  
+  }
   
-
+  
   // from m_signal and m_range fill the m_vsignal
   m_nrange = m_range.size()-1;
   debug() << " range: " << m_range << endmsg;
@@ -78,8 +78,9 @@ StatusCode CLTool::initialize() {
   m_mombinsCenter[m_nrange-1]=m_lbinCenter;
   
   if (m_signal.size()%m_nrange!=0){
-    m_init.setCode(0);
-    return Error( "INPUT VALUES, WRONG SIZE PER MOM BIN FOR MUONS" );
+    m_init.setCode(501);
+    // return Error( "CLTOOL: INPUT VALUES, WRONG SIZE PER MOM BIN FOR MUONS",m_init );
+    return sc;
   }
   debug()<<"m_rangeNmuons_init="<<m_rangeNmuons<<endmsg;
   
@@ -104,8 +105,9 @@ StatusCode CLTool::initialize() {
   // check min momentum and initialize
   if (m_range[0]!=m_rangeNmuons[0])
   {
-    m_init.setCode(0);
-    return Error( "MIN MOM NOT THE SAME FOR MUONS AND NOT MUONS!", m_init);
+    m_init.setCode(502);
+    // return Error( "CLTOOL: MIN MOM NOT THE SAME FOR MUONS AND NOT MUONS!", m_init);
+    return sc;
   }
   
   m_minMomentum=m_range[0];
@@ -120,8 +122,11 @@ StatusCode CLTool::initialize() {
   debug()<<"CLTool:: m_mombinsCenterNmuons="<<m_mombinsCenterNmuons<<endmsg;
   
   if (m_bkg.size()%m_nrangeNmuons!=0){
-    m_init.setCode(0);
-    return Error( "CLTool:: INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS", m_init);
+    m_init.setCode(503);
+    // m_init.setChecked();
+    // return m_init;
+    // return Error( "CLTOOL: INPUT VALUES, WRONG SIZE PER MOMENTUM BIN FOR NON MUONS", m_init);
+    return sc;
   }
 
   m_nvals=m_signal.size()/m_nrange;
@@ -129,8 +134,11 @@ StatusCode CLTool::initialize() {
 
   //check number of elements per momentum bin is the same for signal and bkg
   if (m_nvals!=nvalsNmuons){
-    m_init.setCode(0);
-    return Error( "CLTool:: DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL", m_init);
+    m_init.setCode(504);
+    // m_init.setChecked();
+    // return m_init;
+    // return Error( "CLTOOL: DIFFERENT SIZE FOR MUONS AND NON MUONS FOR CL", m_init);
+    return sc;
   }
   
   //find yvals (same for signal and bkg): y points in cl functions
@@ -143,12 +151,14 @@ StatusCode CLTool::initialize() {
   StatusCode stc2=getClValues("bkg");
   
   if  (stc1.isFailure() || stc2.isFailure())
-    {
-      m_init.setCode(0);
-      return m_init;
+  {
+      m_init.setCode(505);
+      // return Error("CLTOOL: UNIFORMED FUNCTIONS FOR SIGNAL,BKG FAIL!",m_init);
+      return sc;
     }
-
-  return StatusCode::SUCCESS;
+  
+  m_init.setChecked();
+  return sc;
 }
 
 //build uniformer per each momentum bin
@@ -244,8 +254,7 @@ StatusCode CLTool::findMomRange(const double& mom,int& p_r,std::string sig_bkg)
     
   }
   p_r=-1;
-  debug() << "MOM OUT OF RANGE" <<endmsg; 
-  return StatusCode::FAILURE;
+  return Error("MOM OUT OF RANGE");
 }
 
 
@@ -311,7 +320,7 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
     debug()<<"OVERLAPINFO"<<endmsg;
     debug()<<"p_r="<<p_r<<endmsg;
     debug()<<"binCenter="<<(*my_mombinsCenter)[p_r]<<endmsg;
-    debug()<<"ind1="<<ind1<<",ind2="<<ind2<<endmsg;
+    // debug()<<"ind1="<<ind1<<",ind2="<<ind2<<endmsg;
     
     //get y values corresponding to val to interpolate in momentum. If integrating to right, use 1-left_value
     left_val1=(*unifrel)[ind1].getYvalue(value);
@@ -354,21 +363,17 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
 
 StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr, double mom, int region) {
   
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
   if (m_init.isFailure())
   {
     sc.setCode(501);
-    return Error("TOOL NOT INITIALIZED", sc);
-  }
-  
-
-    
+    return Error("CLTool: TOOL NOT INITIALIZED",sc);
+  } 
   if (value<=0.0)
   {
     sc.setCode(502);
-    return Error("NOT A VALID VALUE FOR QUANTITY", sc);
+    return Error("CLTool: NOT A VALID VALUE FOR QUANTITY", sc);
   }
-
 
   // from range compute i bin for signal
   int p_r;
@@ -376,8 +381,7 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
   if (sc1.isFailure()) 
   {
     sc.setCode(503);
-    return sc;
-
+    return Error("CLTOOL: NOT VALID RANGE OF P SIGNAL",sc);
   }
   debug() << "Region=  "<< region << endmsg;  
 
@@ -391,9 +395,9 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
   if (sc2.isFailure()) 
   {
     sc.setCode(504);
-    return sc;
+    return Error("CLTOOL: NOT VALID RANGE OF P BKG",sc);
   }
-
+  
   // from ibin-range compute CLb
   clb=valFromUnif(value,mom,p_r_nmuons,"bkg");
   debug()<<"CLB="<<clb<<endmsg;
@@ -407,14 +411,15 @@ StatusCode CLTool::cl(const double value, double& cls, double& clb, double& clr,
       if (cls==0) clr=1e-6;
       else 
       {
-        warning()<<"CLTool: DIVISION BY 0!"<<endmsg;
-        sc.setCode(505);
-        return sc;
+        return Warning("CLTool: DIVISION BY 0!",sc);
       }
       
     }
     else clr=1e-6;
   }
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
+
+
+CLTool::~CLTool() {}
