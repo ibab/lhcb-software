@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v19r4 output:
+   . Reduced number of STClusterMonitor histograms
+
 </PRE><H1><A NAME=v19r3>2009-07-02 Boole v19r3</A></H1><PRE>
  - Changes to Configurable:
    . Add new Boole().OutputLevel property to Boole allow overall control of the
