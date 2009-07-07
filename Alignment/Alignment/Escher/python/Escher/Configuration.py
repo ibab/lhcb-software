@@ -3,13 +3,14 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2009-04-22 09:42:39 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-07-07 14:44:34 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment )
+                            ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment,
+                            CountingPrescaler )
 
 from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
 
@@ -20,10 +21,12 @@ from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
 class Escher(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
+    #__used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
 
+    __used_configurables__ = [ TrackSys, RecSysConf, LHCbApp, DstConf, TAlignment ]
     ## Default main sequences for real and simulated data
-    DefaultSequence = [   "ProcessPhase/Init"
+    DefaultSequence = [ CountingPrescaler("EscherPrescaler")
+                        ,  "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
                         , ConfiguredTrackMonitorSequence()
 			, GaudiSequencer("AlignSequence") ]
@@ -258,6 +261,7 @@ class Escher(LHCbConfigurableUser):
 
         # Do not print event number at every event (done already by Brunel)
         #EventSelector().PrintFreq = -1
+        CountingPrescaler("EscherPrescaler").PrintFreq = self.getProp( "PrintFreq" )
         # Modify printout defaults
         if self.getProp( "NoWarnings" ):
             importOptions( "$ESCHEROPTS/SuppressWarnings.opts" )
@@ -306,6 +310,14 @@ class Escher(LHCbConfigurableUser):
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
+
+        # Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+        from Configurables import (ApplicationMgr,AuditorSvc,SequencerTimerTool)
+        ApplicationMgr().ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
+        ApplicationMgr().AuditAlgorithms = True
+        AuditorSvc().Auditors += [ 'TimingAuditor' ] 
+        SequencerTimerTool().OutputLevel = 4
+
         log.info( self )
         log.info( LHCbApp() )
         log.info( RecSysConf() )
@@ -314,4 +326,4 @@ class Escher(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
 
         from GaudiKernel.Configurable import appendPostConfigAction
-        appendPostConfigAction(self.printFlow)
+        #appendPostConfigAction(self.printFlow)
