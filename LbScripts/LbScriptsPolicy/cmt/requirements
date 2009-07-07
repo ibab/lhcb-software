@@ -12,6 +12,11 @@ cmtpath_pattern \
    macro <project>_home "<path>" ; \
    set <project>_HOME "$(<project>_home)"
 
+# Remove "make" from the actions triggered by a "make all_groups"
+cmtpath_pattern \
+    macro_remove cmt_actions_constituents "make" ; \
+    macro_remove cmt_actions_constituentsclean "makeclean"
+
 #--------------------------------------------
 # Patterns for specifically declaring and installing python files in the
 # current installation area
