@@ -133,12 +133,13 @@ class TAlignment( LHCbConfigurableUser ):
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
+        xmlfile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
         return WriteAlignmentConditions( 'Write' + subdet + condname + 'ToXML',
                                          OutputLevel = outputLevel,
                                          topElement = self.getProp( subdet + 'TopLevelElement' ),
                                          precision = self.getProp( "Precision" ),
                                          depths = depths,
-                                         outputFile = self.getProp('CondFilePrefix') + subdet + '/' +condname + '.xml' )
+                                         outputFile = xmlfile )
 
     def writeSeq( self, listOfCondToWrite ) :
         writeSequencer = GaudiSequencer( "WriteCondSeq" )
