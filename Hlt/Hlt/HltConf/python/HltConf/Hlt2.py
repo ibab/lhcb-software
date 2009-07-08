@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -96,15 +96,12 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         protoparticles 
         """
-        from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, TrackSelector, DelegatingTrackSelector
+        from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, TrackSelector
         Hlt2ChargedProtoPAlg = ChargedProtoPAlg('Hlt2ChargedProtoPAlg')
         Hlt2ChargedProtoPAlg.InputTrackLocation = self.getProp("Hlt2Tracks")
         Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged"
-        Hlt2ChargedProtoPAlg.addTool( DelegatingTrackSelector, name="TrackSelector")
-        Hlt2ChargedProtoPAlg.TrackSelector.TrackTypes = ["Long"]
-        Hlt2ChargedProtoPAlg.TrackSelector.addTool( TrackSelector, name="Long")
-        Hlt2ChargedProtoPAlg.TrackSelector.Long.AcceptClones = False
-        Hlt2ChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+        Hlt2ChargedProtoPAlg.addTool( TrackSelector, name="TrackSelector")
+        Hlt2ChargedProtoPAlg.TrackSelector.AcceptClones = False
         Hlt2ChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
         ## Calo PID
         Hlt2ChargedProtoPAlg.UseCaloSpdPID = True 

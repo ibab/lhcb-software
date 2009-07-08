@@ -101,7 +101,7 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
 #---------------------------------------------------------------------
 # ChargedProtoPAlg
 #---------------------------------------------------------------------
-from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector, DelegatingTrackSelector
+from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
 Hlt2TFChargedForTopoProtoPAlg = ChargedProtoPAlg('Hlt2TFChargedForTopoProtoPAlg')
 Hlt2TFChargedForTopoProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedForTopoProtoCombDLL')
 SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
@@ -110,10 +110,8 @@ SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
 Hlt2TFChargedForTopoProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForTopo"
 Hlt2TFChargedForTopoProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 # Clones will not be accepted
-Hlt2TFChargedForTopoProtoPAlg.addTool(DelegatingTrackSelector, name = 'TrackSelector')
-Hlt2TFChargedForTopoProtoPAlg.TrackSelector.TrackTypes = ["Long"]
-Hlt2TFChargedForTopoProtoPAlg.TrackSelector.addTool( TrackSelector, name="Long")
-Hlt2TFChargedForTopoProtoPAlg.TrackSelector.Long.AcceptClones = False
+Hlt2TFChargedForTopoProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
+Hlt2TFChargedForTopoProtoPAlg.TrackSelector.AcceptClones = False
 
 Hlt2TFChargedForTopoProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 
