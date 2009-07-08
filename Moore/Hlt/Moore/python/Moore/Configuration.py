@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.60 2009-07-08 15:49:30 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.61 2009-07-08 19:07:14 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -150,10 +150,10 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().TopAlg.append(SendSequence)
 
     def _configureOnlineDB(self):
-        ### TODO: what about FEST? Probably needs a dedicated snapshot...
+        ### TODO: make sure there is a FEST specific snapshot...
         from Configurables import CondDB, RunChangeHandlerSvc
 
-        tag = { "DDDB":     self.getProp('DDDB')      # "head-20090112",
+        tag = { "DDDB":     self.getProp('DDDBtag')   # "head-20090112",
               , "LHCBCOND": self.getProp('CondDBtag') # "head-20090112" 
               }
         for (k,v) in tag.iteritems() :
@@ -174,7 +174,9 @@ class Moore(LHCbConfigurableUser):
                                                                                                        "tag":  "fake"}
 
         # Set the location of the Online conditions
+        from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
+        from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
         rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : baseloc + "/%d/online.xml",
                            "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
