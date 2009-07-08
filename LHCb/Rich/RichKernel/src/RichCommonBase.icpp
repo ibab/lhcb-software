@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.17 2009-07-07 16:24:53 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.18 2009-07-08 13:28:46 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -99,32 +99,53 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
 {
   bool sc = true;
 
-  // full tool name
-  const std::string fullname = "ToolSvc." + name;
-
-  // get properties for this tool name
-  const PROPERTYTYPE * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
-
-  // If Context not set, set it
-  if ( !test_sp )
+  if ( ! this->joSvc() )
+  {
+    this -> Error( "Null Job Options Service !!" ).ignore();
+    sc = false;
+  }
+  else
   {
 
-    // get Tool registry OutputLevel
-    const PROPERTYTYPE * ts_sp 
-      = this->my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
-    if ( ts_sp )
-    {
-      if ( this -> msgLevel(MSG::VERBOSE) )
-      { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endreq; }
-      sc = joSvc()->addPropertyToCatalogue(fullname,*ts_sp).isSuccess();
-      if ( !sc ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
-    }
-    else if ( this -> msgLevel(MSG::DEBUG) )
-    {
-      this -> debug() << this->toolRegistry()->name() << " has no " << property << endmsg;
-    }
+    // full tool name
+    const std::string fullname = "ToolSvc." + name;
 
-  } // tool already has property
+    // get properties for this tool name
+    const PROPERTYTYPE * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
+
+    // If Context not set, set it
+    if ( !test_sp )
+    {
+
+      // do we have a tool registry ?
+      if ( ! this->toolRegistry() )
+      {
+        this -> Error( "Null RichToolRegistry !!" ).ignore();
+        sc = false;
+      }
+      else
+      {
+
+        // get Tool registry OutputLevel
+        const PROPERTYTYPE * ts_sp
+          = this->my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
+        if ( ts_sp )
+        {
+          if ( this -> msgLevel(MSG::VERBOSE) )
+          { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endreq; }
+          sc = this->joSvc()->addPropertyToCatalogue(fullname,*ts_sp).isSuccess();
+          if ( !sc ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
+        }
+        else if ( this -> msgLevel(MSG::DEBUG) )
+        {
+          this -> debug() << this->toolRegistry()->name() << " has no " << property << endmsg;
+        }
+
+      } // tool registry OK
+
+    } // tool already has property
+
+  } // JO service OK
 
   return sc;
 }
