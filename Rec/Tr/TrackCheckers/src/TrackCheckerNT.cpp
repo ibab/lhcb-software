@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.9 2008-10-11 16:09:39 cattanem Exp $
+// $Id: TrackCheckerNT.cpp,v 1.10 2009-07-08 15:24:23 wouter Exp $
 // Include files 
 
 // local
@@ -24,7 +24,6 @@
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
-#include "Event/StateTraj.h"
 
 // Detector stuff
 #include <OTDet/DeOTDetector.h>

@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.10 2008-12-04 09:59:10 cattanem Exp $
+// $Id: TrackResChecker.cpp,v 1.11 2009-07-08 15:24:23 wouter Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -7,7 +7,6 @@
 #include "Event/State.h"
 #include "Event/StateVector.h"
 #include "Event/StateParameters.h"
-#include "Event/StateTraj.h"
 #include "Event/OTTime.h"
 #include "Event/OTMeasurement.h"
 #include "Kernel/LHCbID.h"

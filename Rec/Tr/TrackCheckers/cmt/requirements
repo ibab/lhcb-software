@@ -3,7 +3,7 @@
 # Maintainer : Edwin Bos
 #============================================================================
 package           TrackCheckers
-version           v4r6
+version           v4r7
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,7 +20,6 @@ use   MCEvent		v*	Event
 use   RecEvent		v*	Event
 use   TrackEvent       	v*	Event
 use   LinkerEvent	v*	Event
-
 use   TrackFitEvent   	v*	Tr
 use   TrackInterfaces 	v*	Tr
 use   MCInterfaces      v*      Kernel

@@ -3,6 +3,10 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+
+! 2009-07-08 Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 ! 2009-06-03 - Stephanie Hansmann-Menzemer
  - add efficiency on ks and lambda daughters + B daughters to default output
 
