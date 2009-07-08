@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.65 2009-07-08 21:22:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.66 2009-07-08 22:21:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -105,6 +105,8 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
         HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False
+        from Configurables import RootHistCnv__PersSvc
+        RootHistCnv__PersSvc().OutputEnabled = False
 
         # set up the event selector
         app=ApplicationMgr()
