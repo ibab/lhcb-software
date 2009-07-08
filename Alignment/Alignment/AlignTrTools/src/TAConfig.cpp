@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.24 2009-05-12 19:55:01 wouter Exp $
+ *  $Id: TAConfig.cpp,v 1.25 2009-07-08 09:06:53 wouter Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -702,7 +702,7 @@ StatusCode TAConfig::ConfigMillepede() {
  * rs: size of detector map
  ************************************/
 //StatusCode TAConfig::ConstrainPositions( std::vector<std::string> &description, std::string &type ) {
-StatusCode TAConfig::ConstrainPositions( std::vector<std::string> &description, char *ty ) {
+StatusCode TAConfig::ConstrainPositions( std::vector<std::string> &description, const char *ty ) {
   const unsigned int alipar = m_DETmap.size(); //nof params to align
   const unsigned int size = description.size();
   std::vector<int> cons(size,0);

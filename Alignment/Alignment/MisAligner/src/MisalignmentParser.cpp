@@ -1,4 +1,4 @@
-// $Id: MisalignmentParser.cpp,v 1.2 2009-04-03 12:10:38 jblouw Exp $
+// $Id: MisalignmentParser.cpp,v 1.3 2009-07-08 09:09:22 wouter Exp $
 
 #include "MisalignmentParser.h"
 
@@ -72,7 +72,7 @@ MisalignmentParser::Misalignment::Misalignment(const std::string& str) :
   m_rnd(0)
 {
   // set everything to no misalignment
-  for (int i = 6; i--; m_types[i] = none, m_hi[i] = m_lo[i] = 0.);
+  for (int i = 6; i--; m_types[i] = none, m_hi[i] = m_lo[i] = 0.) {} ;
   // make copy for our own processing
   std::string mystr(str);
   // turn to upper case, remove whitespace

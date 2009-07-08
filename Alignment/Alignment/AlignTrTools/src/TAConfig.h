@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.17 2009-05-12 19:55:01 wouter Exp $
+ *  $Id: TAConfig.h,v 1.18 2009-07-08 09:06:53 wouter Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -188,7 +188,7 @@ private:
    void CreateMap( int &, IDetectorElement*, double & );
    StatusCode RetrieveAPars( const std::string & );
    StatusCode ConfigMillepede();
-   StatusCode ConstrainPositions( std::vector<std::string> &, char* );
+   StatusCode ConstrainPositions( std::vector<std::string> &, const char* );
    double Measurement( const LHCb::Measurement *,
 		       const LHCb::Track &,
 		       const LHCb::Trajectory *,
