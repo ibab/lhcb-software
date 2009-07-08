@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 !======================= TrackExtrapolators v2r21 2009-03-10 =================
 ! 2009-03-08 - Stephanie Hansmann-Menzemer
  - add switches to configure the fitter/extrapolator/locator to choose
