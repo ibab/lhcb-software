@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.129 2009-05-06 15:13:37 cattanem Exp $
+! $Id: release.notes,v 1.130 2009-07-08 12:42:48 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2009-07-08 - Marco Cattaneo
+ - Fix Windows compilation warning in MuonTsMap.h
 
 !========================= MuonDet v8r5 2009-05-06 ==========================
 ! 2009-04-30 - Alessia Satta

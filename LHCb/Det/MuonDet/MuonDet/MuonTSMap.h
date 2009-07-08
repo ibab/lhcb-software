@@ -1,4 +1,4 @@
-// $Id: MuonTSMap.h,v 1.2 2008-04-02 11:47:48 asatta Exp $
+// $Id: MuonTSMap.h,v 1.3 2009-07-08 12:42:47 cattanem Exp $
 #ifndef MUONDET_MUONTSMAP_H 
 #define MUONDET_MUONTSMAP_H 1
 #include <vector>
@@ -37,7 +37,7 @@ public:
   inline long gridXOutputChannel(int i){return m_OutputGridXSequence[i];};
   inline long gridYOutputChannel(int i){return m_OutputGridYSequence[i];};
   inline long synchChSize(){return m_OutputSynchSequence.size();};
-  inline bool synchChUsed(int i){return m_OutputSynchSequence[i];};
+  inline bool synchChUsed(int i){return m_OutputSynchSequence[i]==0?false:true;};
   inline long numberOfPad(){return m_pad;};
 
 protected:
