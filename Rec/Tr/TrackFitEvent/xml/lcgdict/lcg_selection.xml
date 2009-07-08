@@ -1,8 +1,3 @@
 <lcgdict>
-  <class name="LHCb::StateTraj"/>
-  <class name="LHCb::StateZTraj"/>
   <class name="LHCb::FitNode"/>
-  <class name="LHCb::TrackTraj"/>
-  <class name="LHCb::ZTrajectory"/>
-  <class name="LHCb::TrackStateVertex"/>
 </lcgdict>

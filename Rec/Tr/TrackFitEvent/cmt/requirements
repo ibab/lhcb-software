@@ -3,12 +3,12 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v3r23
+version           v4r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict Event xml
+branches          cmt doc src Event xml
 
 #============================================================================
 # Used packages.
