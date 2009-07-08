@@ -15,7 +15,7 @@ from Configurables       import HltSelReportsMaker
 #Moore().generateConfig = True
 #Moore().configLabel = 'PA accept=1'
 
-Moore().HltType = 'PA'
+Moore().HltType = 'PA+Hlt1'
 Moore().Verbose = True
 
 # FEST specific options...
@@ -33,9 +33,9 @@ HltConf().LumiBankKillerAcceptFraction = 0.9999
 HltConf().HistogrammingLevel = 'Line'
 
 Moore().Simulation = True
-Moore().DataType   = '2008'
-#Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
-Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
+Moore().DataType   = '2009'
+Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
+#Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
 #Moore().outputFile = '/tmp/foo.mdf'
 
 EventSelector().PrintFreq = 100

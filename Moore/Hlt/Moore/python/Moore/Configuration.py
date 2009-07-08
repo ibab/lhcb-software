@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.64 2009-07-08 20:04:58 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.65 2009-07-08 21:22:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -49,7 +49,7 @@ class Moore(LHCbConfigurableUser):
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
         , "Simulation":        True # True implies use SimCond
-        , "DataType":          '2008' # Data type, can be [ 'DC06','2008' ]
+        , "DataType":          '2009' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "outputFile" :       '' # output filename
@@ -60,8 +60,8 @@ class Moore(LHCbConfigurableUser):
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "CheckOdin"  :       False  # use TCK from ODIN
-        , "InitialTCK" :'0x804a0000'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v7r1'  # which configurations to prefetch.
+        , "InitialTCK" :'0xxxxxxxxx'  # which configuration to use during initialize
+        , "prefetchConfigDir" :'MOORE_v7r2'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
@@ -89,6 +89,8 @@ class Moore(LHCbConfigurableUser):
             importOptions('$STDOPTS/DecodeRawEvent.py')
 
     def _configureOnline(self) :
+
+
         import OnlineEnv as Online
         self.setProp('UseTCK', True)
         self._enableDataOnDemand()
@@ -139,6 +141,8 @@ class Moore(LHCbConfigurableUser):
         msg.fifoPath = os.environ['LOGFIFO']
         msg.OutputLevel = Online.OutputLevel
         msg.doPrintAlways = False
+        msg.setError += ['LoKiSvc'];
+
 
     def _configureOnlineSendSeq(self):
         # define the send sequence
@@ -288,7 +292,6 @@ class Moore(LHCbConfigurableUser):
     def _config_with_hltconf(self):
         hltConf = HltConf()
         self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
-        log.info( hltConf )
 
     def _config_with_tck(self):
         if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')

@@ -1,8 +1,12 @@
-#!/usr/bin/env gaudirun.py
+#!/usr/bin/env python
+import sys
+# never search for anything from current directory...
+if sys.path[0]=='' : sys.path.pop(0)
 from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
 import logging
 PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
+
 
 def start() :
     from Moore.Configuration import Moore
