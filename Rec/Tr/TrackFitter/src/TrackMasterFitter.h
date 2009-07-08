@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.21 2009-04-03 14:36:22 hernando Exp $
+// $Id: TrackMasterFitter.h,v 1.22 2009-07-08 14:26:17 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -6,6 +6,9 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
+// interface base class
+#include "TrackInterfaces/ITrackFitter.h"
 
 // Forward declarations
 class ITrackManipulator ;
@@ -82,7 +85,7 @@ private:
 private:
 
   ITrackExtrapolator* m_extrapolator; ///< extrapolator
-  ITrackFitter* m_trackNodeFitter;    ///< elegate to actual track fitter (which fits from nodes)
+  ITrackKalmanFilter* m_trackNodeFitter;    ///< delegate to actual track fitter (which fits from nodes)
   IMeasurementProvider* m_measProvider;
   IMaterialLocator*     m_materialLocator ;
   std::string           m_materialLocatorName ;

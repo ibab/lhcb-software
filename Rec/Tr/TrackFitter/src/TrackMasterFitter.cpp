@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.66 2009-04-03 14:36:22 hernando Exp $
+// $Id: TrackMasterFitter.cpp,v 1.67 2009-07-08 14:26:17 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -12,16 +12,16 @@
 #include "TrackInterfaces/ITrackManipulator.h"
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"            
-#include "TrackInterfaces/ITrackFitter.h"
+#include "TrackInterfaces/ITrackKalmanFilter.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
-#include "Event/TrackTraj.h"
 #include "Event/Track.h"
 #include "Event/FitNode.h"
 #include "Event/State.h"
+#include "TrackKernel/TrackTraj.h"
 
 // local
 #include "TrackMasterFitter.h"
@@ -122,7 +122,7 @@ StatusCode TrackMasterFitter::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
-  m_trackNodeFitter   = tool<ITrackFitter>( "TrackKalmanFilter", "NodeFitter", this ) ;
+  m_trackNodeFitter   = tool<ITrackKalmanFilter>( "TrackKalmanFilter", "NodeFitter", this ) ;
   m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
   m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
   
@@ -290,7 +290,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 
   // make sure to declare the track successful
   track.setFitStatus( Track::Fitted );
-  
+
   return sc;
 }
 
