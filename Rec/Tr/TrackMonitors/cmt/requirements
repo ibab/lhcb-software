@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackMonitors
-version           v1r10
+version           v1r11
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,6 +20,7 @@ use   RecEvent		v*	Event
 use   TrackEvent       	v*	Event
 use   TrackFitEvent     v*	Tr
 use   TrackInterfaces 	v*	Tr
+use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
 use   PartProp          v*      Kernel
 

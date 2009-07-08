@@ -6,7 +6,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "gsl/gsl_cdf.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "Event/TrackTraj.h"
+#include "TrackKernel/TrackTraj.h"
 #include "Kernel/ITrajPoca.h"
 #include "TrackInterfaces/ITrackVertexer.h"
 

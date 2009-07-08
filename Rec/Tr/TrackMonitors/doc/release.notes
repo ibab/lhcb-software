@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 !============================ TrackMonitors v1r10 2009-06-18 =================
 ! 2009-05-06 Wouter Hulsbergen
  - Add TrackDiMuonMonitor
