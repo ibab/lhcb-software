@@ -40,7 +40,7 @@ fitter.ZPositions = [ 990., 9450.]
 Hlt2IncPhiTFMakeProtoSeq = GaudiSequencer("Hlt2IncPhiTFMakeProtoSeq")
 Hlt2IncPhiTFParticlesSeq.Members += [ Hlt2IncPhiTFMakeProtoSeq ]
 
-from Configurables import ChargedProtoPAlg, TrackSelector #, ChargedProtoCombineDLLsAlg
+from Configurables import ChargedProtoPAlg, TrackSelector, DelegatingTrackSelector #, ChargedProtoCombineDLLsAlg
 Hlt2IncPhiTFChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiTFChargedProtoPAlg')
 #Hlt2IncPhiTFChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiTFChargedProtoCombDLL')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
@@ -50,8 +50,11 @@ Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
 Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForIncPhi"
 # Clones will not be accepted
-Hlt2IncPhiTFChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
-Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.AcceptClones = False
+Hlt2IncPhiTFChargedProtoPAlg.addTool(DelegatingTrackSelector, name = 'TrackSelector')
+Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.TrackTypes = ["Long"]
+Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.addTool( TrackSelector, name="Long")
+Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.Long.AcceptClones = False
+
 #Hlt2IncPhiTFChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/IncPhiTFCharged"
 
 ######################################################################
@@ -109,9 +112,10 @@ Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPh
 Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
 # Clones will not be accepted
-Hlt2IncPhiRichChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
-Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.AcceptClones = False
-
+Hlt2IncPhiRichChargedProtoPAlg.addTool(DelegatingTrackSelector, name = 'TrackSelector')
+Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.TrackTypes = ["Long"]
+Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.addTool( TrackSelector, name="Long")
+Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.Long.AcceptClones = False
 
 Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
 

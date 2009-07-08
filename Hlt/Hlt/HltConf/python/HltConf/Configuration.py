@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.91 2009-07-08 08:12:53 acarbone Exp $"
+__version__ = "$Id: Configuration.py,v 1.92 2009-07-08 18:24:13 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -25,17 +25,9 @@ from Hlt1Lines.HltElectronLines import HltElectronLinesConf
 from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
 from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
 from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
-from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf 
-from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
-from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
-from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
-from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
-from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
-from Hlt2Lines.Hlt2B2HHLines          import Hlt2B2HHLinesConf
 
 from HltConf.Hlt1             import Hlt1Conf
+from HltConf.Hlt2             import Hlt2Conf
 from RichRecSys.Configuration import *
 
 class HltConf(LHCbConfigurableUser):
@@ -51,17 +43,8 @@ class HltConf(LHCbConfigurableUser):
                              , HltElectronLinesConf
                              , HltPhotonLinesConf
                              , HltExpressLinesConf
-                             # Hlt2 Lines
-                             , Hlt2B2DXLinesConf
-                             , Hlt2B2JpsiXLinesConf
-          		     , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
-	                     , Hlt2InclusiveDiMuonLinesConf
-                             , Hlt2InclusiveMuonLinesConf
-                             , Hlt2InclusivePhiLinesConf
-                             , Hlt2TopologicalLinesConf
-                             , RichRecSysConf
-                             , Hlt2XGammaLinesConf
-                             , Hlt2B2HHLinesConf ]
+                               # Hlt2
+                             , Hlt2Conf ]
     __slots__ = { "L0TCK"                      : ''
                 , "HltType"                    : 'Hlt1+Hlt2'
                 , "DataType"                   : '2009'
@@ -153,31 +136,13 @@ class HltConf(LHCbConfigurableUser):
                 Hlt1Conf().EnableHltVtxReports = False
                 Hlt1Conf().EnableLumiEventWriting = False
                 self.setProp('ActiveHlt1Lines',[ 'Hlt1Physics','Hlt1Random'] )
-            if hlttype.find('Hlt2') != -1 :   
-                importOptions('$HLTCONFROOT/options/Hlt2.py')
-                # TODO: this next one should become a property of the Hlt2 configurable, and we
-                #       just forward to it...
-                Sequence("Hlt2Requirements").Members = [ ]
-                reqs = self.getProp('Hlt2Requires')
-                if reqs.upper != "NONE" :
-                    from Configurables import LoKi__HDRFilter   as HltFilter
-                    from Configurables import LoKi__L0Filter    as L0Filter
-                    hlt2requires = { 'L0'   : L0Filter( 'L0Pass',          Code = "L0_DECISION"            )
-                                   , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
-                                   }
-                    for i in reqs.split('+') :
-                        if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
-                # add some Hlt2Lines from configurables
-                Hlt2B2DXLinesConf()
-                Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf()
-		Hlt2B2JpsiXLinesConf()
-                Hlt2InclusiveDiMuonLinesConf()
-                Hlt2InclusiveMuonLinesConf()
-                Hlt2InclusivePhiLinesConf()
-                Hlt2TopologicalLinesConf()
-                Hlt2XGammaLinesConf()
-                Hlt2B2HHLinesConf()
-                  
+            #
+            # Hlt2
+            #
+            if hlttype.find('Hlt2') != -1 :                
+                self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires", "ActiveHlt2Lines",
+                                               "HistogrammingLevel", "ThresholdSettings"])
+                
 
 
     def configureRoutingBits(self) :
