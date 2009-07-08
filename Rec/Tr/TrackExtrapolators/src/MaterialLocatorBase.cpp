@@ -1,5 +1,5 @@
 #include "MaterialLocatorBase.h"
-#include "Event/CubicStateVectorInterpolationTraj.h"
+#include "TrackKernel/CubicStateVectorInterpolationTraj.h"
 #include "Event/TrackParameters.h"
 #include "Event/StateParameters.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -197,7 +197,15 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
     Gaudi::XYZPoint p1 = nodes.front().position() ;
     for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
       Gaudi::XYZPoint p2 = nextnode->position() ;
-      MaterialLocatorBase::intersect(p1,p2-p1,tmpintersepts) ;
+      try {
+	MaterialLocatorBase::intersect(p1,p2-p1,tmpintersepts) ;
+      }
+      catch (GaudiException& exception) {
+	error() << "propagating pos1, pos2: "
+		<< p1 << " " << p2 << " "
+		<< traj.beginPoint() << " " << traj.endPoint() << endreq ;
+	throw exception ;
+      }
       intersepts.insert(intersepts.end(),tmpintersepts.begin(),tmpintersepts.end()) ;
       p1 = p2 ;
     }
