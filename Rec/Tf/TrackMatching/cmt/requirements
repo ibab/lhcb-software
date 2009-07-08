@@ -26,6 +26,7 @@ use   STDet            v*      Det
 use   DigiEvent        v*      Event
 use   TrackEvent       v*      Event
 use   TrackFitEvent    v*      Tr
+use   TrackKernel      v*      Tr
 use   TrackInterfaces  v*      Tr
 
 #============================================================================
