@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.28 2008-07-24 20:49:38 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.29 2009-07-08 14:25:30 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -9,7 +9,7 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjectorSelector.h"
-#include "TrackInterfaces/ITrackFitter.h"
+#include "TrackInterfaces/ITrackKalmanFilter.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -29,7 +29,7 @@
  */
 
 class TrackKalmanFilter : public GaudiTool,
-                          virtual public ITrackFitter {
+                          virtual public ITrackKalmanFilter {
 public: 
   /// Standard constructor
   TrackKalmanFilter( const std::string& type, 
@@ -42,7 +42,7 @@ public:
   StatusCode initialize();
 
   //! fit a track
-  StatusCode fit( LHCb::Track& track,  LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
+  StatusCode fit( LHCb::Track& track ) const ;
 
 protected:
   typedef std::vector<LHCb::Node*> NodeContainer ;

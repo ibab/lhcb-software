@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.68 2008-10-23 12:31:06 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.69 2009-07-08 14:25:30 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -44,7 +44,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
                                       const IInterface* parent) :
   GaudiTool( type, name, parent)
 {
-  declareInterface<ITrackFitter>( this );
+  declareInterface<ITrackKalmanFilter>( this );
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "Smooth", m_smooth = true ) ;
@@ -82,7 +82,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
   
   // First node must have a seed state
   // Set the initial state. The vector comes from the first node in
-  // the list. The seed covariance from the first node on the tr ack.
+  // the list. The seed covariance from the first node on the track.
   NodeRange::iterator iNode = nodes.begin();
   State state = (*iNode)->state() ;
   state.setCovariance(seedCov) ;
@@ -231,7 +231,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 //=========================================================================
 // Fit the track
 //=========================================================================
-StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID ) 
+StatusCode TrackKalmanFilter::fit( Track& track ) const
 {
   StatusCode sc(StatusCode::SUCCESS, true); 
   
@@ -481,6 +481,9 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // transport
   const TrackMatrix& F = nextNode.transportMatrix();
   
+  // smoother gain matrix
+  TrackMatrix A ;
+
   bool nonZeroNoise = nextNode.noiseMatrix()(2,2)>0 ||nextNode.noiseMatrix()(3,3)>0||nextNode.noiseMatrix()(4,4) > 0 ;
   if(nonZeroNoise) {
 
@@ -490,28 +493,28 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
       return Warning("Unable to invert matrix in smoother",StatusCode::FAILURE,0) ;
     
     // calculate gain matrix A
-    TrackMatrix A = thisNodeC * Transpose( F ) * invNextNodeC;
-    thisNode.setSmootherGainMatrix(A) ;
-    
+    A = thisNodeC * Transpose( F ) * invNextNodeC;
+       
     // smooth covariance  matrix
     TrackSymMatrix covUpDate = 
       Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
       (A ,  nextNodeSmoothedC - nextNodeC );
     thisNodeC += covUpDate;
-
-    TrackSymMatrix dCov = nextNodeC - nextNodeSmoothedC ;
   } else {
     // if there is no noise, the gain matrix is just the inverse of
     // the transport matrix
-    TrackMatrix A = F ;
+    A = F ;
     A.Invert() ;
-    thisNode.setSmootherGainMatrix(A) ;
     // the update of the covariance matrix becomes a lot simpler
     thisNodeC = Similarity( A, nextNodeSmoothedC ) ;
   }
 
   // smooth the state
-  thisNodeX += thisNode.smootherGainMatrix() * (nextNodeSmoothedX - nextNodeX );
+  thisNodeX += A * (nextNodeSmoothedX - nextNodeX );
+
+  // copy the smoother gain matrix back to the node (for use in alignment)
+  thisNode.setSmootherGainMatrix(A) ;
+
 
   // check that the cov matrix is positive
   if ( !isPositiveMatrix(thisNodeC) ) {
