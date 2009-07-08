@@ -52,7 +52,6 @@ if len(sys.argv)>2:
     f = open(setup, 'r')
     txt = f.read()
     f.close()
-    print txt
     f = open(setup, 'w')
     for input in txt.splitlines():
         line = input
