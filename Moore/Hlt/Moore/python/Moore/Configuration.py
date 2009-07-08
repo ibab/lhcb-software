@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.59 2009-07-08 11:34:58 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.60 2009-07-08 15:49:30 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -22,11 +22,13 @@ from  ctypes import c_uint
 
 ## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 
-def _ext(name) : return path.splitext(name)[-1].lstrip('.')
+def _ext(name) : 
+    x =  path.splitext(name)[-1].lstrip('.')
+    if x == 'MDF' : x = 'RAW'
+    return x
 
 def _datafmt(pfn) : 
         fmt = { 'RAW' : "DATAFILE='PFN:%s' SVC='LHCb::MDFSelector'"
-              , 'MDF' : "DATAFILE='PFN:%s' SVC='LHCb::MDFSelector'"
               , 'DST' : "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='READ'" 
               }
         return fmt[ _ext(pfn).upper() ] % pfn
@@ -67,75 +69,131 @@ class Moore(LHCbConfigurableUser):
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
+        , "EnableDataOnDemand": True
+        , "EnableTimer" :       True
         , "Verbose" :          True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , "RunOnline" : False
         }   
                 
+
+    def _enableDataOnDemand(self) :
+        if not self.getProp("EnableDataOnDemand") :
+            if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc : 
+                ApplicationMgr().ExtSvc.pop('DataOnDemandSvc')
+        else: 
+            from Configurables import DataOnDemandSvc
+            dod = DataOnDemandSvc()
+            if dod not in ApplicationMgr().ExtSvc :
+                ApplicationMgr().ExtSvc.append( dod ) 
+            importOptions('$STDOPTS/DecodeRawEvent.py')
+        print ApplicationMgr().ExtSvc
+
     def _configureOnline(self) :
         import OnlineEnv as Online
-        # log.warning('overruling settings with online values')
         self.setProp('UseTCK', True)
+        self._enableDataOnDemand()
+
         from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
         EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
-        from Configurables import DataOnDemandSvc
-        ApplicationMgr().ExtSvc.append( DataOnDemandSvc() ) 
-        importOptions('$STDOPTS/DecodeRawEvent.py')
-        ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
-        #MagneticFieldSvc().UseSetCurrent = True
-        HistogramPersistencySvc().OutputFile = ''
-        HistogramPersistencySvc().Warnings = False
         EventLoopMgr().Warnings = False
-        app=ApplicationMgr()
+
+        # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
-        ### TODO: if FEST partition, change DB setup???
-        #mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['Events','SEND'],True)
+        ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
+        HistogramPersistencySvc().OutputFile = ''
+        HistogramPersistencySvc().Warnings = False
+
+        # set up the event selector
+        app=ApplicationMgr()
         mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],False)
         app.Runable = Online.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
         evtMerger = Online.evtMerger(name='Output',buffer='SEND',datatype=Online.MDF_NONE,routing=1)
         evtMerger.DataType = Online.MDF_BANKS
-        # append evtMerger to SendSequence, after Hlt1Global...
-        #SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
         eventSelector = Online.mbmSelector(input='EVENT',TAE=( Online.TAE != 0 ))
         app.ExtSvc.append(eventSelector)
         Online.evtDataSvc()
+
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
-        app.MessageSvcType = 'LHCb::FmcMessageSvc'
+        self._configureOnlineMessageSvc()
+        self._configureOnlineSendSeq()
+        self._configureOnlineDB()
 
-        del allConfigurables['MessageSvc']
-        app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
+    def _configureOnlineMessageSvc(self):
+        # setup the message service
         from Configurables import LHCb__FmcMessageSvc as MessageSvc
+        if 'MessageSvc' in allConfigurables :
+            del allConfigurables['MessageSvc']
         msg=MessageSvc('MessageSvc')
+        app.MessageSvcType = msg.getType()
+        app.SvcOptMapping.append( msg.getFullName() )
         msg.LoggerOnly = True
         if 'LOGFIFO' not in os.environ :
             os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
-            print '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO']
+            log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
         msg.fifoPath = os.environ['LOGFIFO']
         msg.OutputLevel = Online.OutputLevel
         msg.doPrintAlways = False
+
+    def _configureOnlineSendSeq(self):
+        # define the send sequence
         SendSequence =  GaudiSequencer('SendSequence')
+        SendSequence.OutputLevel = Online.OutputLevel
         from Configurables import HltLine
         SendSequence.Members = [ HltLine('Hlt1Global'), evtMerger ]
         ApplicationMgr().TopAlg.append(SendSequence)
 
+    def _configureOnlineDB(self):
+        ### TODO: what about FEST? Probably needs a dedicated snapshot...
+        from Configurables import CondDB, RunChangeHandlerSvc
+
+        tag = { "DDDB":     self.getProp('DDDB')      # "head-20090112",
+              , "LHCBCOND": self.getProp('CondDBtag') # "head-20090112" 
+              }
+        for (k,v) in tag.iteritems() :
+            if v is 'default' : raise keyError('must specify an explicit %s tag'%k)
+
+        baseloc = "/group/online/hlt/conditions"
+
+        conddb = CondDB()
+        # Set alternative connection strings and tags
+        for part in [ "DDDB", "LHCBCOND" ]:
+            conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
+                                                                                                           "part": part,
+                                                                                                           "tag":  tag[part]}
+            conddb.Tags[part] = tag[part]
+        part = "ONLINE"
+        conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
+                                                                                                       "part": part,
+                                                                                                       "tag":  "fake"}
+
+        # Set the location of the Online conditions
+        MagneticFieldSvc().UseSetCurrent = True
+        rch = RunChangeHandlerSvc()
+        rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : baseloc + "/%d/online.xml",
+                           "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
+                           }
+        ApplicationMgr().ExtSvc.append(rch)
+
     def _configureInput(self):
         files = self.getProp('inputFiles')
-        if files : importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
+        if 'DST' in [ _ext(f) for f in files ] :
+            importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
+        #if 'RAW' in [ _ext(f) for f in files ] :
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-        ApplicationMgr().ExtSvc.append( 'DataOnDemandSvc' ) 
-        importOptions('$STDOPTS/DecodeRawEvent.py')
+        self._enableDataOnDemand()
         EventSelector().Input = [ _datafmt(f) for f in files ]
 
     def _configureOutput(self):
         fname = self.getProp('outputFile')
         if not fname : return
-        if _ext(fname).upper() not in [ 'MDF','RAW' ] : raise NameError('unsupported filetype for file "%s"'%fname)
+        if _ext(fname).upper() != 'RAW'  : raise NameError('unsupported filetype for file "%s"'%fname)
         writer = MDFWriter( 'MDFWriter'
                           , Compress = 0
                           , ChecksumType = 1
@@ -169,7 +227,9 @@ class Moore(LHCbConfigurableUser):
             return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
 
     def addAuditor(self,x) :
-        AuditorSvc().Auditors.append( x.name() )
+        if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
+            ApplicationMgr().ExtSvc.append( 'AuditorSvc' ) 
+        AuditorSvc().Auditors.append( x )
         x.Enable = True
 
     def _outputLevel(self) :
@@ -182,12 +242,14 @@ class Moore(LHCbConfigurableUser):
         SequencerTimerTool().OutputLevel          = WARNING
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
-        if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
-            ApplicationMgr().ExtSvc.append( 'AuditorSvc' ) 
-        AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
-        for i in self.getProp('EnableAuditor') : self.addAuditor( i )
+        auditors = self.getProp('EnableAuditor')
+        if self.getProp('EnableTimer') : 
+            from Configurables import TimingAuditor
+            auditors = [ TimingAuditor('TIMER') ] + auditors
+        for i in auditors : self.addAuditor( i )
 
     def _generateConfig(self) :
         importOptions('$L0TCKROOT/options/L0DUConfig.opts')
@@ -250,20 +312,27 @@ class Moore(LHCbConfigurableUser):
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv as Online
+            self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
             self.setProp('DataType','2009' )
+            ### TODO: see if 'Online' has InitialTCK attibute. If so, set it
+            ## in case of LHCb or FEST, _REQUIRE_ it exists...
+            if hasattr(Online,'InitialTCK') :
+                self.setProp('InitialTCK',Online.InitialTCK)
+                self.setProp('CheckOdin',True)
             # determine the partition we run in, and adapt settings accordingly...
             if Online.PartitionName == 'FEST' or Online.PartitionName == 'LHCb' :
                 self.setProp('InitialTCK', Online.InitialTCK )
                 self.setProp('CheckOdin',True)
             if Online.PartitionName == 'FEST' :
-		# This is a bad hack which is probably incompatible with the use of snapshots...
+                # This is a bad hack which is probably incompatible with the use of snapshots...
                 self.setProp('Simulation',True)
 
 
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
         # forward some settings... 
+        # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
         app = LHCbApp()
         self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' ] )
         # this is a hack. Why does setOtherProps not work?
@@ -275,7 +344,6 @@ class Moore(LHCbConfigurableUser):
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()
-        self._profile()
         if self.getProp('UseTCK') :
             self._config_with_tck()
         else:
@@ -284,6 +352,7 @@ class Moore(LHCbConfigurableUser):
         if self.getProp("RunOnline") :
             self._configureOnline()
         else :
+            self._profile()
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
