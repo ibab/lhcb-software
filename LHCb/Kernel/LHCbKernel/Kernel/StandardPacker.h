@@ -1,4 +1,4 @@
-// $Id: StandardPacker.h,v 1.4 2008-12-09 08:08:27 ocallot Exp $
+// $Id: StandardPacker.h,v 1.5 2009-07-08 13:29:32 cattanem Exp $
 #ifndef KERNEL_STANDARDPACKER_H 
 #define KERNEL_STANDARDPACKER_H 1
 
@@ -51,7 +51,7 @@ public:
   /** returns an int containing the float value of the double */
   int fltPacked( double x  ) { 
     union fltInt { int i; float f; } convert;
-    convert.f = x;
+    convert.f = (float)x;
     return convert.i;
   }
 

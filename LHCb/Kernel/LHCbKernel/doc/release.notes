@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-07-08 - Marco Cattaneo
+ - Fix a Windows compilation warning in StandardPacker.h
+
 !===================== LHCbKernel v11r5 2009-06-16 ========================
 ! 2009-06-04 - Wouter Hulsbergen
  - Fixed bug in HitPattern for muon hits
