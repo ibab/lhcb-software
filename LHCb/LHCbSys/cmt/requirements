@@ -107,6 +107,7 @@ use CondDBUI              v2r19   Tools   # Marco Clemencic
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
 use TfKernel              v2r11p1 Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v4r4    Tr      # Matt Needham
+use TrackKernel           v1r0    Tr      # Wouter Hulsbergen
 use TsaKernel             v3r5p1  Tf      # Matt Needham
 # LHCb  Examples
 use DetCondExample        v11r8   Ex      # Marco Clemencic
