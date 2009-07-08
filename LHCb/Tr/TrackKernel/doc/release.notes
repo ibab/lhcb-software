@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackKernel
+! Responsible : Wouter Hulsbergen
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2009-07-08 Wouter Hulsbergen
+ - imported classes from TrackFitEvent
