@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.63 2009-07-08 19:55:54 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.64 2009-07-08 20:04:58 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -24,7 +24,7 @@ from  ctypes import c_uint
 
 def _ext(name) : 
     x =  path.splitext(name)[-1].lstrip('.')
-    if x == 'MDF' : x = 'RAW'
+    if x.upper() == 'MDF' : x = 'RAW'
     return x
 
 def _datafmt(pfn) : 
