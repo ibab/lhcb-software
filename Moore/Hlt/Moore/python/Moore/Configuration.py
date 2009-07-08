@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.62 2009-07-08 19:50:23 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.63 2009-07-08 19:55:54 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -254,6 +254,9 @@ class Moore(LHCbConfigurableUser):
 
     def _generateConfig(self) :
         importOptions('$L0TCKROOT/options/L0DUConfig.opts')
+        # cannot write (yet) to a tarfile...
+        if self.getProp('TCKpersistency').lower() == 'tarfile' :
+            self.setProp('TCKpersistency','file')
         # make sure we load as many L0 TCKs as possible...
         L0DUMultiConfigProvider('L0DUConfig').Preload = True
         svcs = self.getProp("configServices")
