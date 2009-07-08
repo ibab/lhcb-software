@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.16 2009-07-06 15:31:23 pkoppenb Exp $
+!$Id: release.notes,v 1.17 2009-07-08 13:34:21 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2009-07-08 - Patrick Koppenburg
+ - Adapt MuonID rediong to new MuonID.
 
 ! 2009-07-06 - Patrick Koppenburg
  - Default DataType now MC09

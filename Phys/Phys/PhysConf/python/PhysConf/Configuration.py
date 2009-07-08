@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.14 2009-07-06 15:31:23 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-07-08 13:34:21 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -58,12 +58,12 @@ class PhysConf(LHCbConfigurableUser) :
         inputtype =  self.getProp('InputType').upper()
         if ( inputtype != 'RDST' ) :
             log.info('Doing MuonID for '+self.getProp( "DataType" )+' and '+inputtype)
-            from Configurables import (MuonRec)
-            from Configurables import (MuonID)
-            importOptions("$MUONIDROOT/options/MuonID.py")
-            from Configurables import (UpdateMuonPIDInProtoP)
-            from Configurables import (ChargedProtoCombineDLLsAlg)
-            recalib.Members += [ MuonRec(), MuonID(), UpdateMuonPIDInProtoP(), ChargedProtoCombineDLLsAlg() ]
+            from MuonID import ConfiguredMuonIDs
+            from Configurables import MuonRec, UpdateMuonPIDInProtoP, ChargedProtoCombineDLLsAlg
+            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+            MuonIDSeq=cm.getMuonIDSeq()
+            recalib.Members += [ MuonRec(), MuonIDSeq,
+                                 UpdateMuonPIDInProtoP(), ChargedProtoCombineDLLsAlg() ]
         else:
             # @todo Should use DoD Svc, but there are some problems
             from Configurables import (MuonPIDsFromProtoParticlesAlg)
