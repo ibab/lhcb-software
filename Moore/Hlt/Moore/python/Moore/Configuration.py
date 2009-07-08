@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.61 2009-07-08 19:07:14 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.62 2009-07-08 19:50:23 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -69,9 +69,9 @@ class Moore(LHCbConfigurableUser):
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
-        , "EnableDataOnDemand": True
+        , "EnableDataOnDemand": False
         , "EnableTimer" :       True
-        , "Verbose" :          True # whether or not to print Hlt sequence
+        , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , "RunOnline" : False
         }   
@@ -87,7 +87,6 @@ class Moore(LHCbConfigurableUser):
             if dod not in ApplicationMgr().ExtSvc :
                 ApplicationMgr().ExtSvc.append( dod ) 
             importOptions('$STDOPTS/DecodeRawEvent.py')
-        print ApplicationMgr().ExtSvc
 
     def _configureOnline(self) :
         import OnlineEnv as Online
