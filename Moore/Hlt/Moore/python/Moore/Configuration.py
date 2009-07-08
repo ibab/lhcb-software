@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.58 2009-06-14 21:31:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.59 2009-07-08 11:34:58 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -74,7 +74,7 @@ class Moore(LHCbConfigurableUser):
                 
     def _configureOnline(self) :
         import OnlineEnv as Online
-        log.warning('overruling settings with online values')
+        # log.warning('overruling settings with online values')
         self.setProp('UseTCK', True)
         from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
         EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
@@ -222,7 +222,6 @@ class Moore(LHCbConfigurableUser):
     def _config_with_hltconf(self):
         hltConf = HltConf()
         self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
-        print hltConf
         log.info( hltConf )
 
     def _config_with_tck(self):
@@ -270,7 +269,6 @@ class Moore(LHCbConfigurableUser):
         # this is a hack. Why does setOtherProps not work?
         app.CondDBtag = self.getProp('CondDBtag')
         app.DDDBtag   = self.getProp('DDDBtag')
-        print app
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current

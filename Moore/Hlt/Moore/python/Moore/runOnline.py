@@ -4,7 +4,6 @@ import logging
 PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
 
-
 def start() :
     from Moore.Configuration import Moore
 
