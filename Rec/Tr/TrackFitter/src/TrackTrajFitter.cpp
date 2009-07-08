@@ -1,4 +1,4 @@
-// $Id: TrackTrajFitter.cpp,v 1.3 2009-01-19 10:12:35 dhcroft Exp $
+// $Id: TrackTrajFitter.cpp,v 1.4 2009-07-08 14:25:50 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -7,8 +7,8 @@
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/Measurement.h"
-// from TrackFitEvent
-#include "Event/LineDifTraj.h"
+// from TrackKernel
+#include "TrackKernel/LineDifTraj.h"
 
 
 // from std
