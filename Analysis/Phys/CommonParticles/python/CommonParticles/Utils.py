@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Utils.py,v 1.3 2009-07-01 18:42:29 jonrob Exp $ 
+# $Id: Utils.py,v 1.4 2009-07-08 16:40:28 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/Utils.py
 #  helper file for configuration of "standard particles"
@@ -11,7 +11,7 @@
 Helper file for configuration of 'standard particles'
 """
 author  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     # general:
@@ -19,16 +19,30 @@ __all__ = (
     'locationsDoD'  , ## print locations, known for data-on-demand service 
     'particles'     , ## locations, known for data-on-demand service
     'trackSelector' , ## get the track selector
-    'protoFilter'     ## filter for (charged) protoparticles 
+    'protoFilter'   , ## filter for (charged) protoparticles
     )
 # =============================================================================
 
-from Gaudi.Configuration import *
-from Configurables       import DataOnDemandSvc
-from Configurables       import TrackSelector
+from Gaudi.Configuration      import *
+from Configurables            import DataOnDemandSvc
+from Configurables            import TrackSelector
+from LHCbKernel.Configuration import *
 
 # local storage of data-on-demand actions 
-_particles = {} 
+_particles = {}
+
+# =============================================================================
+## @class DefaultTrackingCuts
+#  Little class to hold default track selection criteria
+class DefaultTrackingCuts(LHCbConfigurableUser) :
+    __slots__ = { "Cuts" :  {  "Chi2Cut"       : [  0,    10    ]
+                              ,"LikelihoodCut" : [ -100,  9e40  ]
+                              ,"CloneDistCut"  : [ -1e10, 9e40  ]
+                              ,"GhostProbCut"  : [ -1,    0.99  ]
+                              },
+                  "Types" :  ["Long"]
+                  }
+
 
 # =============================================================================
 ## Return the locations known for data-on-demand service 
@@ -54,17 +68,12 @@ def updateDoD ( alg , hat = 'Phys/' ) :
           hat + alg.name() + '/Vertices'  : alg.getFullName() }
         )
     return _parts 
-
-
+    
 ## get the track selector 
 def trackSelector ( alg ,
                     tracks     = TrackSelector,
-                    trackTypes = ["Long"],
-                    cuts       = {  "Chi2Cut"       : [0,10]
-                                   ,"LikelihoodCut" : [-100,9e40]
-                                   ,"CloneDistCut"  : [-1e10,9e40]
-                                   ,"GhostProbCut"  : [-1,0.99]
-                                   }
+                    trackTypes = [],
+                    cuts       = {}
                     ) :
     """
     Get the track selector for maker 
@@ -74,8 +83,12 @@ def trackSelector ( alg ,
     selector = getattr ( alg , tracks.getType() )
 
     # selection cuts
+    # Ugly but works ...
+    if 0 == len(trackTypes) :
+        trackTypes = DefaultTrackingCuts().Types
+    if 0 == len(cuts) :
+        cuts       = DefaultTrackingCuts().Cuts
     selector.TrackTypes = trackTypes
-    
     for name,cut in cuts.iteritems() :
         selector.setProp("Min"+name,cut[0])
         selector.setProp("Max"+name,cut[1])
