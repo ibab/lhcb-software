@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-08 - Patrick Koppenburg
+ - Remove obsolete MuonID.py
+
 ! 2009-07-07 - Jose Angel Hernando Morata, Erica Polycarpo
  - Add more "#" at start of warning strings printed from python configuration files
  - Fix more untested StatusCodes
