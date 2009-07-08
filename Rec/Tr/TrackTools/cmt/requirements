@@ -24,6 +24,7 @@ use   STKernel        v*     ST
 use   TsaKernel       v*     Tf
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
+use   TrackKernel     v*     Tr
 use   Relations       v*     Kernel
 
 use   STDet           v*     Det
