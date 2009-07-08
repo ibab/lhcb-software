@@ -9,6 +9,8 @@
 !-----------------------------------------------------------------------------
 
 !======================= DecayTreeFitter v1r4p1 2009-07-02 ===================
+! 2009-07-08 - Patrick Koppenburg
+ - Do not build on windows
 
 ! 2009-07-06 - Patrick Koppenburg
  - Add _dll.cpp file.
