@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.119 2009-05-06 15:42:32 cattanem Exp $
+! $Id: release.notes,v 1.120 2009-07-08 12:28:27 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2009-07-08 - Marco Cattaneo
+ - Fix Windows compilation warnings in MuonCoord.h
 
 !========================= RecEvent v2r20 2009-05-06 =========================
 ! 2009-04-03 J.A. Hernando

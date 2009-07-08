@@ -33,16 +33,16 @@
 	name   = "AverageTime"
 	type   = "float"
 	access = "PUBLIC" >
-	<code> if(uncrossed()){return digitTDC1() ;}else{
-	  return (digitTDC1()+digitTDC2())/2.0;} </code>
+	<code> if(uncrossed()){return (float)digitTDC1() ;}else{
+	  return (float)(digitTDC1()+digitTDC2())/2.0f;} </code>
       </method>
       <method
 	desc   = "Average Time of the coord in ns "
 	name   = "AverageTime_ns"
 	type   = "float"
 	access = "PUBLIC" >
-	<code> if(uncrossed()){return 25.0/16*digitTDC1() ;}else{
-	  return 25.0/16.0*(digitTDC1()+digitTDC2())/2.0;} </code>
+	<code> if(uncrossed()){return 25.0f/16.0f*digitTDC1() ;}else{
+	  return 25.0f/16.0f*(float)(digitTDC1()+digitTDC2())/2.0f;} </code>
       </method>
       <method
 	desc   = "Time spread of the coord in TDC bit unit "
@@ -50,7 +50,7 @@
 	type   = "float"
 	access = "PUBLIC" >
 	<code> if(uncrossed()){return 0 ;}else{
-	  return ((digitTDC1()-digitTDC2())/2.0);} </code>
+	  return (float)((digitTDC1()-digitTDC2())/2.0f);} </code>
       </method>
       <method
 	desc   = "Time spread of the coord in ns "
@@ -58,7 +58,7 @@
 	type   = "float"
 	access = "PUBLIC" >
 	<code> if(uncrossed()){return 0 ;}else{
-	  return (25.0/16.0*(digitTDC1()-digitTDC2())/2.0);} </code>
+	  return (25.0f/16.0f*(float)(digitTDC1()-digitTDC2())/2.0f);} </code>
       </method>
 
 
