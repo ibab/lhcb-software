@@ -14,8 +14,7 @@ def start() :
     import OnlineEnv 
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
     c = ConfigurableGeneric("OnlineEnv")
-    # need to avoid things OnlineEnv inherits...
-    #for k,v in OnlineEnv.__dict__.iteritems() : setattr(c,k,v)
+    #[ setattr(c,k,v) for (k,v) in OnlineEnv.__dict__.items() if k not in OnlineConfig.__dict__ ]
     c.AcceptRate = OnlineEnv.AcceptRate
 
     OnlineEnv.end_config(False)
