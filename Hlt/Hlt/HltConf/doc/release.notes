@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.265 2009-07-08 18:37:11 pkoppenb Exp $ 
+! $Id: release.notes,v 1.266 2009-07-08 21:50:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-08 - Gerhard Raven
+ - set default prescale for TELL1 error line to 0 for FEST
 
 ! 2009-07-08 - Patrick Koppenburg
  - Pre-empt changes by Chris about TrackSelector. Let's see if nightlies build.

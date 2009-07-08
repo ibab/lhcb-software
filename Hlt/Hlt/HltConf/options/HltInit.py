@@ -20,6 +20,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0LocalPi0Decision"                :   19,
     # Misc...
     "Hlt1IncidentDecision"                  :   30,
+    "Hlt1Tell1ErrorDecision"                :   31,
     # LU
     "Hlt1LumiDecision"                      :   40, 
     "Hlt1IgnoringLumiDecision"              :   41,
@@ -40,7 +41,6 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1RandomDecision"                    :   70,
     "Hlt1PhysicsDecision"                   :   71,
     "Hlt1L0ForcedDecision"                  :   72,
-    "Hlt1RawBankConversionDecision"         :   73,
     # XP
     "Hlt1XPressDecision"                    :   80,
     "Hlt1VeloAlignDecision"                 :   81,

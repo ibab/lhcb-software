@@ -51,8 +51,9 @@ FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
               , 'XP' : { 'Prescale' : { 'Hlt1XPress'    : 0.0025
                                       , 'Hlt1VeloAlign' : 1 } 
                                       }
-              , 'PA' : { 'Prescale' : { 'Hlt1Physics'   : 1 
-                                      , 'Hlt1Random'    : 1 # @OnlineEnv.AcceptRate
+              , 'PA' : { 'Prescale' : { 'Hlt1Physics'    : 1 
+                                      , 'Hlt1Random'     : 1 # @OnlineEnv.AcceptRate
+                                      , 'Hlt1Tell1Error' : 0
                                       }
                        }
               }
