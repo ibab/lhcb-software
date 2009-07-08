@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.69 2009-07-06 15:54:52 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.70 2009-07-08 18:28:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -67,6 +67,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_richPath   = LHCb::RichPIDLocation::Offline;
     m_muonPath   = LHCb::MuonPIDLocation::Offline;
     m_protoPath  = LHCb::ProtoParticleLocation::Charged;
+    m_trSelType  = "DelegatingTrackSelector";
   }
   else if ( context() == "HLT" || context() == "Hlt" )
   {
@@ -74,7 +75,11 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_tracksPath = LHCb::TrackLocation::HltForward;
     m_muonPath   = LHCb::MuonPIDLocation::Hlt;
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+    m_trSelType  = "TrackSelector";
   }
+
+  // track selector type
+  declareProperty( "TrackSelectorType", m_trSelType );
 
   // Input data
   declareProperty( "InputTrackLocation", m_tracksPath );
@@ -110,7 +115,7 @@ StatusCode ChargedProtoPAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( "DelegatingTrackSelector", "TrackSelector", this );
+  m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );
 
   // Velo dE/dx tool
   if ( m_veloPID)

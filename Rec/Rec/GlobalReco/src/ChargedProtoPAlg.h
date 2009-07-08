@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.29 2009-07-01 18:34:06 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.30 2009-07-08 18:28:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -183,6 +183,9 @@ private: // data
   bool m_richPID, m_muonPID, m_veloPID;///< PIDs
 
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
+
+  /// Track selector type
+  std::string m_trSelType;
 
   /// Track selector tools
   ITrackSelector * m_trSel;

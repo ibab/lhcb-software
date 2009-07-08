@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - C. Jones
+ - Add an option to ChargedProtoPAlg to allow the track selector type to 
+   be controlled.
+
 ! 2009-07-06 - Chris Jones
  - Improve how the track selection cuts are implemented in the python 
    Configurable.
