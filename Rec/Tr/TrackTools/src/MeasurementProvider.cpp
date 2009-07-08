@@ -1,11 +1,11 @@
-// $Id: MeasurementProvider.cpp,v 1.39 2009-02-09 15:13:53 albrecht Exp $
+// $Id: MeasurementProvider.cpp,v 1.40 2009-07-08 14:14:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // Event model
-#include "Event/TrackTraj.h"
+#include "TrackKernel/TrackTraj.h"
 
 // local
 #include "MeasurementProvider.h"

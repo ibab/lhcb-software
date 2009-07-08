@@ -1,11 +1,11 @@
-// $Id: TrajectoryProvider.cpp,v 1.12 2007-03-13 14:32:31 cattanem Exp $
+// $Id: TrajectoryProvider.cpp,v 1.13 2009-07-08 14:14:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from TrackEvent
-#include "Event/StateTraj.h"
+// from TrackKernel
+#include "TrackKernel/StateTraj.h"
 
 // from TrackFitEvent
 #include "Event/VeloRMeasurement.h"

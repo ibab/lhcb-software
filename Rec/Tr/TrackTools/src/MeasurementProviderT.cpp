@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.17 2009-01-19 11:22:58 dhcroft Exp $
+// $Id: MeasurementProviderT.cpp,v 1.18 2009-07-08 14:14:52 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -66,7 +66,7 @@ private:
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/StateVector.h"
 #include "Event/Measurement.h"
-#include "Event/ZTrajectory.h"
+#include "TrackKernel/ZTrajectory.h"
 
 //using namespace LHCb;
 

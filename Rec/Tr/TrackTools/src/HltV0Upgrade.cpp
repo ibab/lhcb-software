@@ -4,7 +4,7 @@
 #include "Kernel/ITrajPoca.h"
 #include "Event/TwoProngVertex.h"
 #include "Event/Track.h"
-#include "Event/TrackTraj.h"
+#include "TrackKernel/TrackTraj.h"
 #include <boost/assign/list_of.hpp>
 #include "GaudiKernel/ToolFactory.h"
 #include "HltV0Upgrade.h"

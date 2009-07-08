@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Wouter Hulsbergen
+ - Adapted to migration of track classes to TrackKernel
+
 ! 2009-07-06 - Chris Jones
  - Add new base class "TrackSelectorBase" for all track selectors that implements
    common functionality.

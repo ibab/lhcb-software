@@ -1,4 +1,4 @@
-// $Id: OTMeasurementProvider.cpp,v 1.5 2009-01-07 08:37:59 mneedham Exp $
+// $Id: OTMeasurementProvider.cpp,v 1.6 2009-07-08 14:14:52 wouter Exp $
 
 /** @class OTMeasurementProvider OTMeasurementProvider.cpp
  *
@@ -20,8 +20,7 @@
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
-
-#include "Event/TrackTraj.h"
+#include "TrackKernel/TrackTraj.h"
 
 class OTMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider
 {

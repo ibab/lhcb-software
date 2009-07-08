@@ -13,7 +13,6 @@
 #include "Kernel/ITrajPoca.h"
 #include "Event/TwoProngVertex.h"
 #include "Event/Track.h"
-#include "Event/TrackTraj.h"
 
 /** @class HltV0Upgrade HltV0Upgrade.h
  *  

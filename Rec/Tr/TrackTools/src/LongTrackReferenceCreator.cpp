@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.20 2008-12-02 14:48:54 wouter Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.21 2009-07-08 14:14:52 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -8,8 +8,8 @@
 // Event
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "Event/StateTraj.h"
 #include "Event/StateParameters.h"
+#include "TrackKernel/StateTraj.h"
 
 // track tools
 #include "TrackInterfaces/ITrackExtrapolator.h"

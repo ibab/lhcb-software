@@ -1,4 +1,4 @@
- // $Id: TrackVertexer.cpp,v 1.4 2008-09-18 08:19:20 wouter Exp $
+ // $Id: TrackVertexer.cpp,v 1.5 2009-07-08 14:14:52 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -9,8 +9,8 @@
 
 // from Event
 #include "Event/TwoProngVertex.h"
-#include "Event/TrackStateVertex.h"
 #include "Event/RecVertex.h"
+#include "TrackKernel/TrackStateVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackVertexer
@@ -52,8 +52,22 @@ TrackVertexer::fit(const LHCb::State& stateA, const LHCb::State& stateB) const
   states.front() = &stateA ;
   states.back() = &stateB ;
   LHCb::TrackStateVertex vertex( states, m_maxDChisq, m_maxNumIter ) ;
-  if( vertex.fitStatus() == LHCb::TrackStateVertex::FitSuccess || !m_discardFailedFits) 
-    rc = vertex.createTwoProngVertex(m_computeMomCov) ;
+  if( vertex.fitStatus() == LHCb::TrackStateVertex::FitSuccess || !m_discardFailedFits) {
+    // create a two prong vertex
+    LHCb::TwoProngVertex* rc = new LHCb::TwoProngVertex(vertex.position()) ;
+    rc->setChi2(vertex.chi2()) ;
+    rc->setCovMatrix( vertex.covMatrix() ) ;
+    rc->setNDoF(vertex.nDoF()) ;
+    rc->momA() = vertex.mom(0) ;
+    rc->momB() = vertex.mom(1) ;
+    if( m_computeMomCov ) {
+      rc->momcovA()    = vertex.momCovMatrix(0) ;
+      rc->momposcovA() = vertex.momPosCovMatrix(0) ;
+      rc->momcovB()    = vertex.momCovMatrix(1) ;
+      rc->momposcovB() = vertex.momPosCovMatrix(1) ;
+      rc->mommomcov()  = vertex.momMomCovMatrix(0,1) ;
+    }
+  }
   return rc ;
 }
 

@@ -19,10 +19,10 @@
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
-#include "Event/TrackTraj.h"
 #include "Event/Track.h"
 #include "Event/FitNode.h"
 #include "Event/State.h"
+#include "TrackKernel/TrackTraj.h"
 
 // gsl
 #include "gsl/gsl_math.h"
