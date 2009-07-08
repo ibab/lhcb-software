@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Wouter Hulsbergen
+ - Added ITrackKalmanFilter
+
 !====================== TrackInterfaces v4r4 2009-06-29 ======================
 ! 2009-06-26 - Wouter Hulsbergen
  - Fix interface of ITrackCloneFinder

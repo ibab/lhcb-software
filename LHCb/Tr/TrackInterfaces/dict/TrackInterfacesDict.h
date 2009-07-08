@@ -24,6 +24,7 @@
 #include "TrackInterfaces/ITrackExtraSelector.h"
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackInterpolator.h"
+#include "TrackInterfaces/ITrackKalmanFilter.h"
 #include "TrackInterfaces/ITrackManipulator.h"
 #include "TrackInterfaces/ITrackMatch.h"
 #include "TrackInterfaces/ITrackMomentumEstimate.h"

@@ -23,6 +23,7 @@
   <class name    = "ITrackFitter"            />
   <class name    = "ITrackFunctionTool"      />
   <class name    = "ITrackInterpolator"      />
+  <class name    = "ITrackKalmanFilter"      />
   <class name    = "ITrackManipulator"       />
   <class name    = "ITrackMatch"             /> 
   <class name    = "ITrackMomentumEstimate"  />
