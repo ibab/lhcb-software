@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.262 2009-07-08 08:13:57 acarbone Exp $ 
+! $Id: release.notes,v 1.263 2009-07-08 17:51:08 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-07-08 - Patrick Koppenburg
+ - New configurable Hlt2. Remove obsolete:
+
+
+!========================== HltConf v3r3p1 2009-07-08 ===================
 ! 2009-07-08 - Angelo Carbone
  - add hlt2 B->hh exclusive selection
-
 
 !========================== HltConf v3r3 2009-07-03 ===================
 ! 2009-07-03 - Gerhard Raven
