@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackIdealPR
-version           v2r16
+version           v2r17
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -19,7 +19,6 @@ use   GaudiKernel       v*
 use   RecEvent          v*    Event
 use   MCEvent           v*    Event
 use   TrackEvent        v*    Event
-use   TrackFitEvent     v*    Tr
 use   LinkerEvent       v*    Event
 
 use   MCInterfaces      v*    Kernel

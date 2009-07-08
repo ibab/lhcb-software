@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.43 2009-06-03 20:23:12 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.44 2009-07-08 15:28:21 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -11,8 +11,7 @@
 // from MCEvent
 #include "Event/MCHit.h"
 
-// from TrackFitEvent
-#include "Event/StateTraj.h"
+// from TrackEvent
 #include "Event/StateParameters.h"
 #include "Event/StateVector.h"
 
