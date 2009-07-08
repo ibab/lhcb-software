@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.10 2009-03-06 17:19:42 cattanem Exp $
+// $Id: TrackV0Finder.cpp,v 1.11 2009-07-08 15:13:15 wouter Exp $
 // Include files 
 
 
@@ -86,7 +86,7 @@ private:
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
-#include "Event/TrackTraj.h"
+#include "TrackKernel/TrackTraj.h"
 
 #include "Kernel/ITrajPoca.h"
 #include "TrackInterfaces/ITrackVertexer.h"

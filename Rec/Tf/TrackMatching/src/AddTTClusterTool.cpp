@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.2 2007-12-01 07:13:55 wouter Exp $
+// $Id: AddTTClusterTool.cpp,v 1.3 2009-07-08 15:15:03 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -21,7 +21,7 @@
 
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
-#include "Event/StateTraj.h"
+#include "TrackKernel/StateTraj.h"
 
 // local
 #include "AddTTClusterTool.h"

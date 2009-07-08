@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 ! 2009-07-02 M Needham
  - Tune for MC09. See talk in tracking workshop on July 10
 

@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackUtils
-version           v1r27
+version           v1r28
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -18,7 +18,7 @@ use   GaudiAlg           v*
 
 use   LinkerEvent        v*    Event
 use   TrackEvent         v*    Event
-use   TrackFitEvent      v*    Tr
+use   TrackKernel        v*    Tr
 use   TrackInterfaces    v*    Tr
 use   LHCbMath           v*    Kernel
 use   PartProp           v*    Kernel

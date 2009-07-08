@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 !========================== TrackUtils v1r27 2009-06-29 ======================
 ! 2009-06-26 - Wouter Hulsbergen
 - adapt to fix in ITrackCloneFider interface
