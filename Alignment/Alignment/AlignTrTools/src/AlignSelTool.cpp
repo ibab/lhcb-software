@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.18 2009-05-12 19:55:01 wouter Exp $
+// $Id: AlignSelTool.cpp,v 1.19 2009-07-08 09:24:31 wouter Exp $
 // Include files 
 
 // local
@@ -13,10 +13,6 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-using namespace boost::lambda;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignSelTool
@@ -239,11 +235,13 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   m_nSharedTHits = 0;
 
   // Do we want to fill the nodes vector even if we don't cut on anything?
-  if ( (c_maxNHoles < abs(defValue)) ||
+  if ( (c_maxNHoles < std::abs(defValue)) ||
        c_trackType.compare( "ALL" ) ) {
     const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-    nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isIT,_1));
-    nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isOT,_1));
+    for( std::vector<LHCb::LHCbID>::const_iterator id = ids.begin() ; 
+	 id != ids.end(); ++id) 
+      if(      id->isIT() ) ++nITHits ;
+      else if( id->isOT() ) ++nOTHits ;
   }
 
   // Selecting only tracks of defined track type
