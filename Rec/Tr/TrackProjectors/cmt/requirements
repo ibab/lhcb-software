@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackProjectors
-version           v2r22
+version           v2r23
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,6 +21,7 @@ use   GSL             v*     LCG_Interfaces
 use   TrackEvent      v*     Event
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
+use   TrackKernel     v*     Tr
 
 use   RecEvent	      v*     Event
 

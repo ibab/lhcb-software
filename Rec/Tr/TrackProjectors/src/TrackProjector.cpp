@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.17 2008-10-03 13:58:22 wouter Exp $
+// $Id: TrackProjector.cpp,v 1.18 2009-07-08 14:44:46 wouter Exp $
 // Include files 
 
 // local
@@ -11,7 +11,6 @@
 #include "Event/FitNode.h"
 #include "Event/State.h"
 #include "Event/Measurement.h"
-#include "Event/StateZTraj.h"
 #include "Event/StateVector.h"
 
 // from TrackInterfaces
@@ -19,6 +18,9 @@
 
 // from LHCbKernel
 #include "Kernel/AlignTraj.h"
+
+// from TrackKernel
+#include "TrackKernel/StateZTraj.h"
 
 using namespace Gaudi;
 using namespace LHCb;

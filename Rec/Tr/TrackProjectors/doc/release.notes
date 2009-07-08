@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Wouter Hulsbergen
+ - adapted to migration of track classes to TrackKernel
+
 !====================== TrackProjectors v2r22 2009-02-20 =====================
 ! 2009-01-19 David Hutchcroft
  - Added the VeloLite projectors

@@ -13,7 +13,9 @@
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
 #include "Event/StateVector.h"
-#include "Event/StateZTraj.h"
+
+// from TrackKernel
+#include "TrackKernel/StateZTraj.h"
 
 // from TrackInterfaces
 #include "Kernel/ITrajPoca.h"
