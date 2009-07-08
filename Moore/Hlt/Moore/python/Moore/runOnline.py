@@ -16,6 +16,6 @@ def start() :
     c = ConfigurableGeneric("OnlineEnv")
     # need to avoid things OnlineEnv inherits...
     #for k,v in OnlineEnv.__dict__.iteritems() : setattr(c,k,v)
-    c.AcceptRate = Online.AcceptRate
+    c.AcceptRate = OnlineEnv.AcceptRate
 
     OnlineEnv.end_config(False)
