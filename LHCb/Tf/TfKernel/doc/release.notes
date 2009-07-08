@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Marco Cattaneo
+ - Remove hack for windows and Gaudi v21r1
+ - Fix Windows compilation warnings in LineHit.h
+
 !============================ TfKernel v2r11p1 2009-05-28 ====================
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 

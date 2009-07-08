@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.8 2008-09-25 15:11:11 smenzeme Exp $
+ *  $Id: LineHit.h,v 1.9 2009-07-08 12:58:58 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -73,13 +73,13 @@ namespace Tf
     inline double xT()   const { return coord() ; }
 
     /** x coordinate of the line as function of y */
-    inline double x(const double globalY = 0) const { return m_xAtYEq0 + globalY*m_dxdy ; }
+    inline double x(const double globalY = 0.) const { return m_xAtYEq0 + globalY*m_dxdy ; }
 
     /** z coordinate of the line as function of y */
-    inline double z(const double globalY = 0) const { return m_zAtYEq0 + globalY*m_dzdy ; }
+    inline double z(const double globalY = 0.) const { return m_zAtYEq0 + globalY*m_dzdy ; }
 
     /** y coordinate in middle of the line */
-    inline double y() const { return (double)0.5*(yBegin()+yEnd()); }
+    inline double y() const { return 0.5*(yBegin()+yEnd()); }
 
     /** tan of stereo angle */
     inline double tanT() const { return -m_dxdy ; }
@@ -110,7 +110,7 @@ namespace Tf
     inline double xMax() const { return std::max(x(yBegin()),x(yEnd())) ; }
 
     /** y coordinate of line mid point */
-    inline double yMid() const { return (double)0.5*(yBegin()+yEnd()) ; }
+    inline double yMid() const { return 0.5*(yBegin()+yEnd()) ; }
 
     /** x coordinate of line mid point */
     inline double xMid() const { return x(yMid()) ; }
@@ -130,13 +130,13 @@ namespace Tf
         line. However, it is what is needed to make the
         intersection calls efficient 
     */
-    inline Point beginPoint() const { return Point(m_xAtYEq0,0,m_zAtYEq0) ; }
+    inline Point beginPoint() const { return Point((float)m_xAtYEq0,0.f,(float)m_zAtYEq0) ; }
 
     /** direction, normalized to its y coordinate */
-    inline Vector direction() const { return Vector(m_dxdy,1,m_dzdy) ; }
+    inline Vector direction() const { return Vector((float)m_dxdy,1.f,(float)m_dzdy) ; }
 
     /** position for any value of y */
-    inline Point position(const double globalY) const { return Point(x(globalY),globalY,z(globalY)) ; }
+    inline Point position(const double globalY) const { return Point((float)x(globalY),(float)globalY,(float)z(globalY)) ; }
 
     /** length of the line */
     inline double length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
