@@ -95,7 +95,7 @@ private:
   bool IsMuonLoose(const std::vector<int>& stations,const double& p, bool *w);
 
   // Calculates MuProb based on DeltaSx (slope difference)
-  float calcMuProb(LHCb::MuonPID * pMuid);
+  double calcMuProb(LHCb::MuonPID * pMuid);
 
   /// return the FOI in x in a station and region for momentum (in MeV/c)
   double foiX(const int &station, const int &region, const double &p, const double &dx);
@@ -150,7 +150,7 @@ private:
   /// GL&SF: Calculate closest distance
   double calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double *closest_region);
   /// GL&SF: Find parameters for hypothesis test
-  StatusCode find_LandauParam(const double& p, int *trackRegion, double *parMu, double *parNonMu);
+  StatusCode find_LandauParam(const double& p, const std::vector<int>& trackRegion, double *parMu, double *parNonMu);
   /// GL&SF: Calculate the compatibility with the Muon hypothesis
   double calc_ProbMu(const double& dist, const double *parMu);
   /// GL&SF: Calculate the compatibility with the Non-Muon hypothesis
@@ -210,8 +210,8 @@ private:
   std::vector< double >     m_NonMuLanParR4;
 
   
-  float m_x; // x-width for the integral
-  float m_nMax;// number of steps
+  double m_x; // x-width for the integral
+  int m_nMax;// number of steps
   
 
   //want to find quality?

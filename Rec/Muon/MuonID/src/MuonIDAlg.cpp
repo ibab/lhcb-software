@@ -373,7 +373,7 @@ StatusCode MuonIDAlg::initialize() {
   }
   
   // GL&SF: Check that parameters of the integral are fine
-  if ((m_x*m_nMax) !=800.) {
+  if ((int)(m_x*m_nMax) !=800) {
     err() << "DLL integral cannot be calculated, parameters are wrong: x, N "<<m_x <<","<< m_nMax << endmsg;
     return StatusCode::FAILURE;
   }
@@ -539,7 +539,7 @@ StatusCode MuonIDAlg::fillCoordVectors(){
 // G. Lanfranchi & S. Furcas
 // 23-5-2009
 //=====================================
-StatusCode MuonIDAlg::find_LandauParam(const double& p, int *trackRegion, double *parMu, double *parNonMu){
+StatusCode MuonIDAlg::find_LandauParam(const double& p,const std::vector<int>& trackRegion, double *parMu, double *parNonMu){
 
   // Regions are defined in M2 (projective geometry).
   if (trackRegion[1]==0){//Region 1
@@ -665,7 +665,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    pMuid->setIsMuonLoose(myIsMuonLoose);
    
    // calculate MuProb
-   float MuProb = calcMuProb( pMuid );
+   double MuProb = calcMuProb( pMuid );
    debug()  << "MuProb= " << MuProb <<endmsg;
    
    // calculate Muon DLL
@@ -673,13 +673,13 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
      sc = calcMuonLL( pMuid );
      if(sc.isFailure()){
        warning() << " calcMuonLL failed (P<0) to MuonPID object " << pMuid << endmsg;
-       if (myIsMuonLoose>0) m_mullfail++; 
+       if (myIsMuonLoose) m_mullfail++; 
      }
    }  else {             // DLL with distance+integral:
      sc = calcMuonLL_dist(pMuid,m_MomentumPre); 
      if(sc.isFailure()){
        warning() << " calcMuonLL(binned) failed (P<0) to MuonPID object " << pMuid << endmsg;
-       if (myIsMuonLoose>0) m_mullfail++; 
+       if (myIsMuonLoose) m_mullfail++; 
      }
    }
 
@@ -835,7 +835,7 @@ void MuonIDAlg::P_weights(const double& p, bool *w){
   Prob[3]=0;
   Prob[4]=0;
 
-  Double_t a,t;  
+  double a,t;  
   //Prob to reach M4 station: 
   if (p>3500) {
     t = p-3500.;
@@ -870,7 +870,7 @@ void MuonIDAlg::P_weights(const double& p, bool *w){
 // calculate MuProb
 //=============================================================================
 // if found a muon make a probability from the DxDz matching
-float MuonIDAlg::calcMuProb(LHCb::MuonPID * pMuid){
+double MuonIDAlg::calcMuProb(LHCb::MuonPID * pMuid){
 
   if(pMuid->IsMuonLoose()){
     // slope calculated in M2 and M3
@@ -921,9 +921,7 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   double parNonMu[3];
   for(int i=0;i<6;i++){parMu[i]=0;}
   for(int i=0;i<3;i++){parNonMu[i]=0;}
-  int trackRegion[m_NStation];
-  for(int i=0;i<m_NStation;i++){trackRegion[i]=-1;}
-  
+  std::vector<int> trackRegion(m_NStation,-1); 
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
@@ -1468,16 +1466,16 @@ double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
 // date:    10/5/09
 //=====================================================================
   
-  float x = m_x;     // x-width for the integral
-  float nMax = m_nMax;   // number of steps
+  double x = m_x;     // x-width for the integral
+  int nMax = m_nMax;   // number of steps
   
-  Double_t landau1 = 0;
-  Double_t landau2 = 0;
-  Double_t landau = 0;
-  Double_t ProbMu=0;
+  double landau1 = 0;
+  double landau2 = 0;
+  double landau = 0;
+  double ProbMu=0;
 
   for (Int_t i=0;i<nMax;i++){ 
-    Double_t dist = x*Float_t(i);
+    double dist = x*Float_t(i);
     if (dist<dist0){
       landau1 = TMath::Landau(dist,parMu[0],parMu[1]);
       landau2 = TMath::Landau(dist,parMu[2],parMu[3]);  
@@ -1503,12 +1501,12 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
 //=====================================================================
 
   float x = m_x;     // x-width for the integral
-  float nMax = m_nMax;   // number of steps  
-  Double_t landau = 0;
-  Double_t Prob=0;
+  int nMax = m_nMax;   // number of steps  
+  double landau = 0;
+  double Prob=0;
 
   for (Int_t i=0;i<nMax;i++){ 
-    Double_t dist = x*Float_t(i);
+    double dist = x*Float_t(i);
     if (dist<dist0){
       landau = TMath::Landau(dist,parNonMu[0],parNonMu[1]);
       Prob = Prob+x*landau;
@@ -1776,14 +1774,14 @@ double MuonIDAlg::calcNorm(double *par){
 // date:    10/5/09
 //=====================================================================
 
-  Double_t Norm = 0.;
-  Double_t landau1 = 0;
-  Double_t landau2 = 0;
-  Double_t landau = 0;
+  double Norm = 0.;
+  double landau1 = 0;
+  double landau2 = 0;
+  double landau = 0;
 
   
   for (Int_t i=0;i<m_nMax;i++){ 
-    Double_t dist = m_x*Float_t(i);
+    double dist = m_x*(double)i;
     landau1 = TMath::Landau(dist,par[0],par[1]);
     landau2 = TMath::Landau(dist,par[2],par[3]);  
     landau = (landau1 + par[4]*landau2);
@@ -1800,11 +1798,11 @@ double MuonIDAlg::calcNorm_nmu(double *par){
 // date:    10/5/09
 //=====================================================================
 
-  Double_t Norm = 0.;
-  Double_t landau = 0;
+  double Norm = 0.;
+  double landau = 0;
   
   for (Int_t i=0;i<m_nMax;i++){ 
-    Double_t dist = m_x*Float_t(i);
+    double dist = m_x*Float_t(i);
     landau = TMath::Landau(dist,par[0],par[1]);
     Norm = Norm+m_x*landau;
   }

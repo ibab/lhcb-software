@@ -2,6 +2,12 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-08 - Erica Polycarpo
+ - Replace Double_t by double
+ - Replace array with variable size by std::vector (break on windows)
+ - Fix new DLL initialization (break on slc4_ia32)
+ - Set FindQuality=0 for DataType="2008" to disable Muon Track fit
+
 ! 2009-07-08 - Patrick Koppenburg
  - Remove obsolete MuonID.py
 

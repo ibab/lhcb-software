@@ -22,7 +22,8 @@ if DEBUG:
 # Fill container with all PS Muon Tracks
 AllMuonTracks = False   
 ## Calculate chi2 or set it default to 0
-FindQuality = True 
+FindQuality = False
+print "# MuonID WARNING: MuonTrack Fit disabled for DataType=%s" %(DATA)
 ## Set which DLL is input to MuonPID
 DLL_flag = 1  #0=old; 1=DLL new;
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
