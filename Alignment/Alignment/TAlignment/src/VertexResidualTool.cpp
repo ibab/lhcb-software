@@ -64,7 +64,7 @@ namespace Al
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Event/TwoProngVertex.h"
-#include "Event/TrackStateVertex.h"
+#include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "ITrackResidualTool.h"
 #include <boost/assign/list_of.hpp> 

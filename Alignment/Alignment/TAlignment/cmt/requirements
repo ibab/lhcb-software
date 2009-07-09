@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           TAlignment
-version           v4r2
+version           v4r3
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -28,6 +28,7 @@ use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
 use 	TrackFitEvent		v*	Tr
 use   	TrackInterfaces   	v*      Tr
+use   	TrackKernel	   	v*      Tr
 use 	STDet			v*	Det
 use     MuonDet                 v*      Det
 use     LHCbKernel              v*      Kernel
