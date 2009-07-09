@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.66 2009-07-08 22:21:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.67 2009-07-09 08:37:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -89,7 +89,8 @@ class Moore(LHCbConfigurableUser):
             importOptions('$STDOPTS/DecodeRawEvent.py')
 
     def _configureOnline(self) :
-
+        from Configurables import LoKiSvc
+        LoKiSvc().Welcome = False
 
         import OnlineEnv as Online
         self.setProp('UseTCK', True)
