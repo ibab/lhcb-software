@@ -1,4 +1,4 @@
-// $Id: Line.h,v 1.8 2008-06-24 12:24:27 jpalac Exp $
+// $Id: Line.h,v 1.9 2009-07-09 08:02:11 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_LINE_H 
 #define LHCBMATH_LINE_H 1
@@ -57,14 +57,14 @@ namespace Gaudi
        *      \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
        */
       aPoint position ( const double mu ) const 
-      { return beginPoint() + direction() * mu ; }
+      { return beginPoint() + direction() * (float)mu ; }
       /** Return a point on the line tick direction vectors away
        *  from point of origin:
        *  \f$ \vec{\mathbf{P}}\left(\mu\right) = 
        *      \vec{\mathbf{P}}_0 + \mu\vec{\mathbf{V}} \f$ 
        */    
       aPoint operator() ( const double mu ) const 
-      { return beginPoint() + direction() * mu ; }
+      { return beginPoint() + direction() * (float)mu ; }
     public:
       inline std::ostream& fillStream ( std::ostream& os ) const 
       {

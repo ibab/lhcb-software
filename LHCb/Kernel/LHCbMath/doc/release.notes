@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 - Marco Cattaneo
+ - Line.h: Fix a compilation warning on windows
+
 ! 2009-07-06 - Marco Cattaneo
  - Bit.h: Fix a compilation warning on windows
  - Fix some doxygen warnings
