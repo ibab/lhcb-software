@@ -4,6 +4,8 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/TwoProngVertex.h"
+#include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -186,9 +188,6 @@ struct TrackChisqPredicate
   TrackChisqPredicate(double maxChisqPerDof) : m_maxchisq(maxChisqPerDof) {}
   bool operator()(const LHCb::Track* track) const { return track->chi2PerDoF() < m_maxchisq  ; }
 } ;
-
-#include "Event/TrackStateVertex.h"
-#include "Event/TwoProngVertex.h"
 
 StatusCode TrackVertexMonitor::execute()
 { 

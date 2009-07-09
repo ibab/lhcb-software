@@ -176,7 +176,7 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
       else
 	warning() << "problem with covc: "
 		  << irow << " " << covc << " " << cov(irow,irow) << " "
-		  << ROOT::Math::Dot(subcor,tmp) << endreq ;
+		  << ROOT::Math::Dot(subcor,tmp) << endmsg ;
     }
   } else {
     int map[4] = {2,3,0,1} ;
