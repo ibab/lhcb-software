@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.1 2009-06-16 11:50:24 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.2 2009-07-09 12:09:08 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -41,12 +41,16 @@ namespace Velo
 
     StatusCode plotInBin(Gaudi::XYZVector, Gaudi::XYZVector, double, int );
 
+    StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
+    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
+
   protected:
 
   private:
     bool m_requireL0;
     
     bool m_useVariableBins;
+    bool m_useLogScale;
     std::vector<double> m_bins;
     double m_InversePTMin;
     double m_InversePTMax;
@@ -59,11 +63,15 @@ namespace Velo
     std::vector< TH1D* > m_IPres_X_histos;
     std::vector< TH1D* > m_IPres_Y_histos;
     std::vector< TH1D* > m_IPres_Z_histos;
-    std::vector< TH1D* > m_IPres_abs_histos;
-    TH1D* m_h_InversePTVsGaussWidth_X;
-    TH1D* m_h_InversePTVsGaussWidth_Y;
-    TH1D* m_h_InversePTVsGaussWidth_Z;
-    TH1D* m_h_InversePTVsMPVofLandau_abs;
+    std::vector< TH1D* > m_IPres_unsigned3D_histos;
+    std::vector< TH1D* > m_IPres_signed3D_histos;
+    std::vector< TH1D* > m_IPres_signed3DPhSpCorrect_histos;
+    TH1D* m_h_GaussWidthVsInversePT_X;
+    TH1D* m_h_GaussWidthVsInversePT_Y;
+    TH1D* m_h_GaussWidthVsInversePT_Z;
+    TH1D* m_h_MPVofLandauVsInversePT_unsigned3D;
+    TH1D* m_h_GaussWidthVsInversePT_signed3D;
+    TH1D* m_h_GaussWidthVsInversePT_signed3DPhSpCorrect;
     TH1D* m_h_TrackMultiplicity;
     TH1D* m_h_InversePTVsNTracks;
   

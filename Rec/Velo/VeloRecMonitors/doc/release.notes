@@ -4,6 +4,13 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 - Michael Alexander
+  -VeloIPResolutionMonitor:
+		 - bug fix in IP_Z resolution calculation
+		 - added histos of signed 3D and signed 3D with phase space correction
+			 IP resolutions
+		 - added option to use a log scale on x axis
+
 ! 2009-07-07 - Silvia Borghi
 	-VeloTrackMonitor: 
      - fixes for warning in compilation;
