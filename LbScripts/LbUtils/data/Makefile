@@ -1,4 +1,4 @@
-# $Id: CMT_Project_Makefile,v 1.10 2009-07-08 14:55:24 marcocle Exp $
+# $Id: Makefile,v 1.1 2009-07-09 16:53:56 hmdegaud Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.

@@ -9,8 +9,6 @@ except ImportError:
 import sys
 sys.modules["subprocess"] = subprocess
 sys.modules["optparse"] = optparse
-import subprocess
-import optparse
 del sys
 
 
@@ -28,11 +26,7 @@ import Tar
 #  @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
 def createProjectMakefile(dest, overwrite = False):
     import os
-    # Directory of the module
-    basedir = os.path.dirname(__file__)
-    # path to the source file
-    src = os.path.join(basedir, "CMT_Project_Makefile")
     if overwrite or not os.path.exists(dest):
-        # copy the content of
-        from shutil import copyfile
-        copyfile(src, dest)
+        f = open(dest, "w")
+        f.write("include ${LBUTILSROOT}/data/Makefile\n")
+        f.close()
