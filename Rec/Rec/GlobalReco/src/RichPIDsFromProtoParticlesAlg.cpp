@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.8 2007-07-13 15:24:58 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.9 2009-07-09 11:19:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -112,11 +112,11 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
       pid->setTrack( track );
 
       // DLLs
-      pid->setParticleDeltaLL(Rich::Electron,(*iP)->info(ProtoParticle::RichDLLe, -999));
-      pid->setParticleDeltaLL(Rich::Muon,    (*iP)->info(ProtoParticle::RichDLLmu,-999));
-      pid->setParticleDeltaLL(Rich::Pion,    (*iP)->info(ProtoParticle::RichDLLpi,-999));
-      pid->setParticleDeltaLL(Rich::Kaon,    (*iP)->info(ProtoParticle::RichDLLk, -999));
-      pid->setParticleDeltaLL(Rich::Proton,  (*iP)->info(ProtoParticle::RichDLLp, -999));
+      pid->setParticleDeltaLL(Rich::Electron,(float)(*iP)->info(ProtoParticle::RichDLLe, -999));
+      pid->setParticleDeltaLL(Rich::Muon,    (float)(*iP)->info(ProtoParticle::RichDLLmu,-999));
+      pid->setParticleDeltaLL(Rich::Pion,    (float)(*iP)->info(ProtoParticle::RichDLLpi,-999));
+      pid->setParticleDeltaLL(Rich::Kaon,    (float)(*iP)->info(ProtoParticle::RichDLLk, -999));
+      pid->setParticleDeltaLL(Rich::Proton,  (float)(*iP)->info(ProtoParticle::RichDLLp, -999));
 
     } // has rich info
 
