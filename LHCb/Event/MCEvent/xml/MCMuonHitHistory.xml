@@ -184,7 +184,7 @@ name="isHitOriginatedInPrevPrevPrevPrevEvent" type="bool"  >
 	desc="is the hit in dialog deadtime ?" 
 name="isHitInDialogDeadtime" type="bool"  >
 	<code> return							
-	  Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskDialogDeadtimeHitHistory,PackMCMuonDigitHistory::shiftDialogDeadtimeHitHistory); </code>
+	  Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskDialogDeadtimeHitHistory,PackMCMuonDigitHistory::shiftDialogDeadtimeHitHistory) !=0; </code>
       </method>      
       <method  
 	desc="set the killed by dilaog deadtime flag in the hitHistory word"

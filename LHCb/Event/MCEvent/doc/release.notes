@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.118 2009-06-16 06:51:06 cattanem Exp $
+! $Id: release.notes,v 1.119 2009-07-09 16:08:16 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2009-07-09 - Marco Cattaneo
+ - Fix a Windows compilation warning in MCMuonHitHistory.h
 
 !======================== MCEvent v2r15 2009-06-16 ===========================
 ! 2009-06-09 - Marco Cattaneo
