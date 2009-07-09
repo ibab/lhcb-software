@@ -1,3 +1,19 @@
+2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v4r2
+	- default CMT version moved to v1r20p2009 (LbLogin have options to
+	switch back to an older release of CMT)
+	- "SetupProject --build-env" and "getpack" create a top level Makefile
+	for the projects (Marco Cl.).
+	- LbLogin gets a "--no-strip-path" option to avoid the removal of 
+	invalid directories.
+	- group_login, group_shell and LHCb wrappers are now generated with the
+	correct path.
+	- install_projects now auto-updates itself.
+	- new features and bug fixes for the nightlies scripts (Karol)
+	- getpack support now the "pre" tags feature. It can be disabled with the
+	"--no-pre" option (Marco Cl.)
+
 2009-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r1
