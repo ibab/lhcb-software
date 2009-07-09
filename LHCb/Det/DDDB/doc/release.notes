@@ -4,6 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2009-07-08 - Marco Clemencic
+ - Changed default tags for 2009 data:
+   . head-20090708         for DDDB
+   . head-20090707         for LHCBCOND
+   . sim-20090707-vc-md100 for SIMCOND
+
 !========================== DDDB v1r19 2009-06-30 ============================
 ! 2009-06-30 - Marco Clemencic
  - Set initial event time for DC06 data (to avoid problems with ONLINE snapshots)
