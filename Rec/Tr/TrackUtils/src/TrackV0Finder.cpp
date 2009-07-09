@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.11 2009-07-08 15:13:15 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.12 2009-07-09 09:55:36 wouter Exp $
 // Include files 
 
 
@@ -350,9 +350,10 @@ StatusCode TrackV0Finder::execute()
 	      
 	      // finally, create the vertex and cut on the significance
 	      LHCb::TwoProngVertex* vertex = m_vertexer->fit(posstate,negstate ) ;
-	      
-	      if( vertex->chi2() < m_maxChi2V0Vertex 
-		  && hasV0Topology( *vertex, *pvcontainer ) ) {
+	      if( vertex == 0 ) {
+		Warning("TrackVertexer Failure", StatusCode::SUCCESS, 0 ).ignore() ;
+	      } else if( vertex->chi2() < m_maxChi2V0Vertex 
+			 && hasV0Topology( *vertex, *pvcontainer ) ) {
 		// one last check: test that there are no hits upstream of the vertex on either track
 		const LHCb::State* mstatepos = (*ipos)->stateAt(LHCb::State::FirstMeasurement ) ;
 		const LHCb::State* mstateneg = (*ineg)->stateAt(LHCb::State::FirstMeasurement ) ;

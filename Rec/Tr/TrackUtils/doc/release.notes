@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 Wouter Hulsbergen
+ - added test of vertex pointer returned by TrackVertexer in TrackV0Finder
+
 ! 2009-07-08 Wouter Hulsbergen
  - adapted to migration of track classes to TrackKernel
 
