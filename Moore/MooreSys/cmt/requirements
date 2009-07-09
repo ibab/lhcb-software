@@ -15,6 +15,7 @@ use  TCKData                v2r0    Hlt
 use HltConf                 v3r3    Hlt
 use TCKUtils                v1r0p1    Hlt
 use GaudiOnline             v2r30   Online
+use HltTCK                  v1r2    TCK
 
 
 
