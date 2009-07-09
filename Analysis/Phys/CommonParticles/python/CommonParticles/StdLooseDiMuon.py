@@ -22,4 +22,12 @@ StdLooseDiMuon.CombinationCut = "(ADAMASS('J/psi(1S)')<3000*MeV)"
 StdLooseDiMuon.MotherCut = "(VFASPF(VCHI2/VDOF)<64)"
 locations = updateDoD(StdLooseDiMuon)
 
+## ============================================================================
+if '__main__' == __name__ :
+
+    print __doc__
+    print __author__
+    print __version__
+    print locationsDoD ( locations )
+    
 
