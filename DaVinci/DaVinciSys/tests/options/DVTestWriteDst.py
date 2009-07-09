@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.5 2009-06-02 14:57:53 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.6 2009-07-09 09:38:45 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -50,14 +50,14 @@ for i in MassRanges :
     DaVinciWriteDst().DstFiles[ "Jpsi_"+name+".dst" ] = seq
     DaVinciWriteDst().Items += [ "/Event/Phys/Jpsi_"+name+"#2" ] # will not save StdLooseMuos
 ##############################################################################
-DaVinci().EvtMax = 20
+DaVinci().EvtMax = 100
 DaVinci().PrintFreq = 1 
 # DaVinci().SkipEvents = 0
-DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().DataType = "MC09" 
 # DaVinci().Simulation   = False
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ##############################################################################
-DaVinci().Input   = [
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003401/0000/00003401_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+# Bs->J/psi Phi MC09
+EventSelector().Input   = [
+    "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ] 

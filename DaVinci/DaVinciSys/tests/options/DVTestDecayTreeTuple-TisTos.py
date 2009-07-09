@@ -32,7 +32,7 @@ tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 from Configurables import DaVinci
 DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09" # Default is "DC06"
+DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple_TisTos.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple ]

@@ -1,4 +1,4 @@
-## $Id: DVTestBu2LLK-2008.py,v 1.4 2009-05-21 17:37:54 pkoppenb Exp $
+## $Id: DVTestBu2LLK-2008.py,v 1.5 2009-07-09 09:38:45 pkoppenb Exp $
 ## ============================================================================
 ## CVS tag $Name: not supported by cvs2svn $
 ## ============================================================================
@@ -54,7 +54,7 @@ DaVinci().Input   = [
 DaVinci().EvtMax = 100 
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
-
+DaVinci().DataType = "DC06"
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 

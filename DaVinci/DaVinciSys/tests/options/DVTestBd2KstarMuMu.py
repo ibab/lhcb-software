@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.7 2009-06-03 18:01:31 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.8 2009-07-09 09:38:45 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -102,7 +102,7 @@ DaVinci().Input = [
 DaVinci().EvtMax = 100 
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
-
+DaVinci().DataType = "DC06"
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.1 2009-06-22 15:24:11 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.2 2009-07-09 09:38:45 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the HltType.
 #
@@ -20,7 +20,7 @@ from Configurables import DaVinci
 DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
-DaVinci().DataType = "MC09"                    # Default is "DC06"
+DaVinci().DataType = "MC09"                    # Pretend it's real data
 DaVinci().Simulation   = True
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
 ########################################################################

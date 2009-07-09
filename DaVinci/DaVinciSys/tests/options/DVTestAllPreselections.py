@@ -1,6 +1,6 @@
-## $Id: DVTestAllPreselections.py,v 1.5 2009-05-20 17:04:01 pkoppenb Exp $
+## $Id: DVTestAllPreselections.py,v 1.6 2009-07-09 09:38:45 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ## ============================================================================
 from Gaudi.Configuration import *
 importOptions("$STDOPTS/PreloadUnits.opts")
@@ -31,6 +31,6 @@ DaVinci().Input = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000015_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000019_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000022_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-    
+DaVinci().DataType = "DC06"    
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

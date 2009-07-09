@@ -27,7 +27,7 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["Strip_10Hz_Bd2KstarMuMu"]
+tuple.InputLocations = ["StrippingBd2KstarMuMu_10HzFilter"]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
@@ -67,7 +67,7 @@ from Configurables import DaVinci
 #
 DaVinci().EvtMax = 2000
 DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09" # Default is "DC06"
+DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]

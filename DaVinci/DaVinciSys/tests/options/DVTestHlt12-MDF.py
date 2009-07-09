@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.3 2009-06-02 15:38:32 jpalac Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.4 2009-07-09 09:38:45 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -19,7 +19,7 @@ DaVinci().HltThresholdSettings = 'Miriam_20090430'
 DaVinci().EvtMax = 10000                       # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "2009"                    # Default is "MC09", prentend it's real data
 # DaVinci().Simulation   = False 
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
 ########################################################################

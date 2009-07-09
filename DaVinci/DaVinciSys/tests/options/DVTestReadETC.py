@@ -1,6 +1,6 @@
-## $Id: DVTestReadETC.py,v 1.2 2009-07-01 08:23:16 pkoppenb Exp $
+## $Id: DVTestReadETC.py,v 1.3 2009-07-09 09:38:45 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 ## ============================================================================
 #
 # Example options to read a user-defined ETC
@@ -15,7 +15,7 @@ StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelecti
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
-DaVinci().DataType = "2009"
+DaVinci().DataType = "MC09"
 
 DaVinci().Input   = [
     "COLLECTION='TagCreator/EventTuple' DATAFILE='etc.root' TYP='POOL_ROOT' SEL='(StrippingBs2JpsiPhiLine==1)'" ]

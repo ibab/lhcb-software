@@ -39,7 +39,7 @@ from Configurables import DaVinci
 DaVinci().EvtMax     = 100                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
-#DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "DC06"                    # Default is "DC06"
 DaVinci().Simulation    = True
 DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
 DaVinci().MoniSequence = [  tag, tagcheck ]  # The algorithms
