@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r8p1 2009-07-07 ===================
+! 2009-07-09 - Gerhard Raven
+ - add on-demand ODIN decoding to HltConfigSvc
+
 !========================== HltCommon v5r8 2009-07-03 ===================
 ! 2009-07-02 - Gerhard Raven
  - avoid creating tools which are never used

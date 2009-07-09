@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.30 2009-06-30 14:32:25 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.31 2009-07-09 08:35:09 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -42,7 +42,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_configuredTCK(0)
   , m_evtSvc(0)
   , m_incidentSvc(0)
-  // , m_decodeOdin(0)
+  , m_decodeOdin("ODINDecodeTool",this)
   , m_taskNumber(~0u)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
@@ -110,7 +110,7 @@ StatusCode HltConfigSvc::initialize() {
   if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
 
   //if (m_decodeOdinOnDemand) {
-  //  m_decodeOdin = tool<IGenericTool>( ... );
+  if (!m_decodeOdin.retrieve().isSuccess()) return StatusCode::FAILURE;
   //}
 
 
@@ -238,6 +238,7 @@ void HltConfigSvc::dummyCheckOdin() {
 void HltConfigSvc::checkOdin() {
 
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
+    if (!odin) m_decodeOdin->execute();
     //if (!odin && m_decodeOdinOnDemand ) {
         // TODO: invoke ODINDecodeTool if configured to do so..
     //    m_decodeOdin->execute()

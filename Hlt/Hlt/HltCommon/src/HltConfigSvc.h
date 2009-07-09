@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.13 2009-06-30 14:32:25 graven Exp $
+// $Id: HltConfigSvc.h,v 1.14 2009-07-09 08:35:09 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -14,6 +14,8 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiAlg/IGenericTool.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "PropertyConfigSvc.h"
 
 
@@ -59,7 +61,7 @@ private:
   TCKrep                       m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
-  // IGenericTool                *m_decodeOdin;
+  ToolHandle<IGenericTool>     m_decodeOdin;
   bool                         m_decodeOdinOnDemand;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
