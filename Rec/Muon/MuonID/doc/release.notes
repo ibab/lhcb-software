@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-09 - Jose A. Hernando
+ - Fix a small Window compilation warning
+
 ! 2009-07-09 - Marco Cattaneo
  - Fix a Windows compilation problem
  - Remove MuonID_dll.cpp, no longer needed from Gaudi v21r2

@@ -1500,7 +1500,7 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
 // date:    10/5/09
 //=====================================================================
 
-  float x = m_x;     // x-width for the integral
+  float x = (float)(m_x);     // x-width for the integral
   int nMax = m_nMax;   // number of steps  
   double landau = 0;
   double Prob=0;
