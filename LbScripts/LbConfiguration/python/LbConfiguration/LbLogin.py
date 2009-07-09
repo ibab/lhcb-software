@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.45 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.46 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -390,10 +390,10 @@ class LbLoginScript(Script):
                 m1 = ev["UNAME"]
             else :
                 m1 = os.popen("uname").read()[:-1]
-            if m1 == "Linux" or m1 == "LynxOS" :
+            if m1 in ["Linux", "LynxOS", "Darwin"] :
                 m2 = os.popen("uname -m").read()[:-1].strip()
                 natbin = "%s-%s" % (m1, m2)
-            elif m1 == "Darwin" or m1.startswith("CYGWIN") :
+            elif m1.startswith("CYGWIN") :
                 natbin = m1
         else : 
             natbin = "VisualC"        
