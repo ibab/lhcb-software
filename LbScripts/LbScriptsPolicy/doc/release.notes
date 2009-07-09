@@ -1,3 +1,7 @@
+2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r6
+
 2009-07-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: improved the cleanup of the PATHs.
