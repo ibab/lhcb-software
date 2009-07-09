@@ -151,8 +151,8 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
 
   switch ( (temp32 & LHCb::ODIN::BXTypeMask) >> LHCb::ODIN::BXTypeBits ) {
     case 0  : odin->setBunchCrossingType(LHCb::ODIN::NoBeam); break;
-    case 1  : odin->setBunchCrossingType(LHCb::ODIN::SingleBeamLeft); break;
-    case 2  : odin->setBunchCrossingType(LHCb::ODIN::SingleBeamRight); break;
+    case 1  : odin->setBunchCrossingType(LHCb::ODIN::Beam1); break;
+    case 2  : odin->setBunchCrossingType(LHCb::ODIN::Beam2); break;
     case 3  : odin->setBunchCrossingType(LHCb::ODIN::BeamCrossing); break;
     default : odin->setBunchCrossingType(LHCb::ODIN::NoBeam); break;
   }
