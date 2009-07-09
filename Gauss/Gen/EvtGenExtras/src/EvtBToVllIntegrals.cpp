@@ -22,9 +22,17 @@ Integrate::Integrate(const double& _e, const double& _MB, const double& _mK,
 	T0.set(1, 2, 0);
 	T0.set(2, 1, 0);
 	T0.set(2, 2, t0_2_2);
-	const double fK1 = constants::fKperp*pow(qcd::alpha_s(constants::mb, 4)
-			/qcd::alpha_s(1, 3), 4/23.);
-	fK = SignedPair<double>(fK1, constants::fKpar);
+	fK = SignedPair<double>(constants::fKperp, constants::fKpar);
+}
+
+SignedPair<EvtComplex> Integrate::getCfac() const{
+	const EvtComplex Ceff1_7 = (*C_mb)(7);
+	const EvtComplex cfac = Ceff1_7*( 3*Log( (constants::mb*constants::mb)/(constants::mu_mb*constants::mu_mb) ) 
+		- 4.0 + (4*constants::muf/constants::mb)  );
+	DEBUGPRINT("Ceff1[7]: ", Ceff1_7);//V
+	DEBUGPRINT("Cfac[1]: ", cfac);//V
+	DEBUGPRINT("Cfac[2]: ", -cfac);//V
+	return SignedPair<EvtComplex>(std::make_pair(cfac,-cfac));
 }
 
 SignedPair<EvtComplex> Integrate::getC1(const EvtComplex& _F_2_7,
@@ -41,7 +49,8 @@ SignedPair<EvtComplex> Integrate::getC1(const EvtComplex& _F_2_7,
 	const EvtComplex result2 = CF_factor*(part1 + part2
 			+ (MB/(2*constants::mb))*part3);
 
-	return SignedPair<EvtComplex>(std::make_pair(result1, result2));
+	const SignedPair<EvtComplex> Cfac = getCfac();
+	return SignedPair<EvtComplex>(std::make_pair(Cfac[1] + result1, Cfac[2] + result2));
 }
 
 ComplexPair Integrate::get_t_x(const double u, const double mq) const {
@@ -166,32 +175,39 @@ double Integrate::amom(const int& n) {
 }
 
 //Integrated LCDA of B for + and - signs
-double Integrate::PhiK(const double& u) {
+double Integrate::PhiK_1(const double& u) {
 	//Eqn 48			
-	const double amom1 = 0.2;
-	const double amom2 = 0.05;
-	const double lambda = 1.5;
-	const double uFac = (2*u) - 1;
-
-	//We use the GSL Gegenbauer Polynomials below...
-	//should be equivalent to GegenbauerC in Mathematica 
-	const double mom1 = amom1*gsl_sf_gegenpoly_1(lambda, uFac);
-	const double mom2 = amom2*gsl_sf_gegenpoly_2(lambda, uFac);
-	double mom3_10 = 0;
-	for (int i = 3; i < 11; ++i) {
-		mom3_10 += (amom(i)*gsl_sf_gegenpoly_n(i, lambda, uFac));
-	}
-	return 6*u*(1-u)*(1 + mom1 + mom2 + mom3_10);
-
+	const double amom1 = 0.03;
+	const double amom2 = 0.08;
+	
+	const double tmp = -1 + 2*u;
+	const double result = 6*(1 - u)*u*(1 + 3*(-1 + 2*u)*amom1 + 
+	     (-1.5 + (15*tmp*tmp)/2.)*amom2);
+	return result;
 }
-;
+
+//Integrated LCDA of B for + and - signs
+double Integrate::PhiK_2(const double& u) {
+	//Eqn 48			
+	const double amom1 = 0.02;
+	const double amom2 = 0.08;
+	
+	const double tmp = -1 + 2*u;
+	const double result  = 6*(1 - u)*u*(1 + 3*(tmp)*amom1 + 
+		     (-1.5 + (15*tmp*tmp)/2.)*amom2);
+	return result;
+}
+
+SignedPair<EvtComplex> Integrate::PhiK(const double& u){
+	SignedPair<EvtComplex> result(std::make_pair(PhiK_1(u),PhiK_2(u)));
+	return result;
+}
 
 ComplexPair Integrate::PhiBint() const {
 	//see Eqn 54
-	const double Lhqet = MB - constants::mb;
-	const double w0 = (2*Lhqet)/3.;
-	const EvtComplex PhiBint_1(1/((2/3.)*Lhqet));
-	EvtComplex PhiBint_2(-gsl_sf_expint_Ei(q2/(MB*w0)), constants::Pi);
+	const double w0 = constants::LambdaB;
+	const EvtComplex PhiBint_1(1/w0);
+		EvtComplex PhiBint_2(-gsl_sf_expint_Ei(q2/(MB*w0)), constants::Pi);
 	PhiBint_2 *= (pow(constants::E, (-q2/(MB*w0)))/w0);
 	return std::pair<const EvtComplex,const EvtComplex>(PhiBint_1,PhiBint_2);
 }
@@ -208,10 +224,9 @@ double Integrate::integralFunction1(double u, void* p) {
 
 	const int a = params->a;
 	const bool re = params->real;
-
 	Integrate cal(params->e, params->MB, params->mK, params->q2, params->C_mb,
 			params->C_mb3);
-	EvtComplex cResult = cal.PhiK(u) * cal.getT(1, a, u) * cal.PhiBint().first;
+	EvtComplex cResult = cal.PhiK_1(u) * cal.getT(1, a, u) * cal.PhiBint().first;
 
 	double result = 0.0;
 	//from playing about in mathematica, it seems I can integrate the Re and Im parts seperately
@@ -229,10 +244,9 @@ double Integrate::integralFunction2(double u, void* p) {
 
 	const int a = params->a;
 	const bool re = params->real;
-
 	Integrate cal(params->e, params->MB, params->mK, params->q2, params->C_mb,
 			params->C_mb3);
-	EvtComplex cResult = cal.PhiK(u) * cal.getT(2, a, u) * cal.PhiBint().second;
+	EvtComplex cResult = cal.PhiK_2(u) * cal.getT(2, a, u) * cal.PhiBint().second;
 
 	double result = 0.0;
 	//from playing about in mathematica, it seems I can intregrate the Re and Im parts seperately
@@ -269,11 +283,12 @@ EvtComplex Integrate::get_t(const int& a, const SignedPair<double>& xi,
 
 	const EvtComplex one(doIntegral(re_one), doIntegral(im_one));
 	const EvtComplex two(doIntegral(re_two), doIntegral(im_two));
+	
+	DEBUGPRINT("one: ", one);
+	DEBUGPRINT("two: ", two);
 
-	return (xi[a]*(qcd::as1(C_mb->getScaleValue(), 5)*constants::CF*C1[a]))
-			+ (((constants::Pi*constants::Pi)/constants::Nc)*Xi[a]
-					*((constants::fB*fK[a])/MB)*(one + two));
-
+	return constants::CF*qcd::as1(C_mb->getScaleValue(), 5)*C1[a]*xi[a] + 
+	   ((constants::fB*constants::Pi*constants::Pi*fK[a]*Xi[a])/(MB*constants::Nc))*(one + two);
 }
 
 double Integrate::doIntegral(const gsl_function& F) const{
@@ -283,7 +298,7 @@ double Integrate::doIntegral(const gsl_function& F) const{
 	double error = 0;
 
 	const int nDivisions = 100;
-	const double accuracyGoal = 1e-4;
+	const double accuracyGoal = 1e-5;
 
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 

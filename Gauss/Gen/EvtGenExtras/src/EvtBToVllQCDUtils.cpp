@@ -42,8 +42,8 @@ double qcd::as1(const double mu, const int nflav){
 }
 
 double qcd::mb_pole(const double mb){
-	//magic number 2 is 2GeV of PS mass - see eqn 45 of Beneke
-	return mb + ((4*alpha_s(mb,5))/(3*constants::Pi)*2);
+	//see eqn 45 of Beneke
+	return mb + ((4*alpha_s(mb,5))/(3*constants::Pi)*constants::muf);
 }
 
 EvtComplex qcd::h(const double& s, const double& mq, const double& mu){

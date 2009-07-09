@@ -208,7 +208,7 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	const double q2 = (q.mass2());
 	const double MB = constants::mB;
 	const double mK = constants::mKstar;
-	//const double q2 = 3.9;
+	//const double q2 = 1.0;
 	const double mKhat = mK/MB;
 
 	//set the parent ID so that we get the right WC
@@ -516,13 +516,13 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	tensors->at(G) = tensG;//will throw runtime exception if the vector is not correct
 	
 	//eqn 4.17 of Ali and Ball, and also 3.18 of hep-ph/0004262
-	const EvtComplex tensH = ((*(parameters->getC_mb()))(10)+(*(parameters->getCR_mb()))(10))*
-		( ((MB*MB/q2)*( (((1 + mk)*ffA1)) - ((1 - mk)*ffA2) - (2*mk*ffA0))) ) +
-		((mK*MB*ffA0*(*(parameters->getC_mb()))(12))/(constants::mmu*(constants::mb + constants::ms)));//scalar correction
+	const EvtComplex tensH = ((*(parameters->getC_mb()))(10)-(*(parameters->getCR_mb()))(10))*
+		( (MB*MB/q2)*( (1 + mk)*ffA1 - (1 - mk)*ffA2 - 2*mk*ffA0 ) ) -
+		( ((mk*MB*MB)/(2*constants::mmu))*ffA0*(*(parameters->getC_mb()))(11) );//scalar correction
 	tensors->at(H) = tensH;//will throw runtime exception if the vector is not correct
 	DEBUGPRINT("tensH: ", tensH);
 	
-	const EvtComplex tensS2 = (-MB*ffA0*(*(parameters->getC_mb()))(11))/(constants::mb + constants::ms);
+	const EvtComplex tensS2 = -ffA0*(*(parameters->getC_mb()))(12);
 	tensors->at(S2) = tensS2;//will throw runtime exception if the vector is not correct
 	DEBUGPRINT("tensS2: ", tensS2);//V
 }

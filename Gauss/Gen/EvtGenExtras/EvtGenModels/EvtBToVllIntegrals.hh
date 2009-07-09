@@ -44,6 +44,7 @@ public:
 	}
 	;
 
+	virtual SignedPair<EvtComplex> getCfac() const;
 	virtual SignedPair<EvtComplex> getC1(const EvtComplex& _F_2_7,
 			const EvtComplex& _F_8_7, const EvtComplex& _F_1_9,
 			const EvtComplex& _F_2_9, const EvtComplex& _F_8_9) const;
@@ -58,7 +59,9 @@ public:
 	//Gegenbauer moment
 	static double amom(const int& n);
 	//Integrated LCDA of B for + and - signs
-	static double PhiK(const double& u);
+	static double PhiK_1(const double& u);
+	static double PhiK_2(const double& u);
+	static SignedPair<EvtComplex> PhiK(const double& u);
 	ComplexPair PhiBint() const;
 	virtual EvtComplex getT(const int& sign, const int a, const double& u) const;
 

@@ -46,25 +46,59 @@ using constants::Pi;
 qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC7(const qcd::WilsonType C7h, const qcd::WilsonType C8h, const argument_type& scale){
 	switch(scale){
 	case MU_MW:
+	{
+		DEBUGPRINT("RunC7_MW: ", C7h);
 		return C7h;
+	}
 	case MU_MB:
-		return 0.6277390019256378*C7h + 0.10032280455435938*C8h;
+	{
+		const qcd::WilsonType result = 0.6277390019256378*C7h + 0.10032280455435938*C8h;
+		DEBUGPRINT("RunC71: ", result);
+		DEBUGPRINT("C7h: ", C7h);
+		DEBUGPRINT("C8h: ", C8h);
+		return result;
+	}
 	case MU_H:
-		return 0.5074850407598744*C7h + 0.11974496886416888*C8h;
+	{
+		const qcd::WilsonType result = 0.5074850407598744*C7h + 0.11974496886416888*C8h;
+		DEBUGPRINT("RunC73: ", result);
+		DEBUGPRINT("C7h: ", C7h);
+		DEBUGPRINT("C8h: ", C8h);
+		return result;
+	}
 	default:
+	{
+		DEBUGPRINT("RunC7_DEF: ", C7h);
 		return C7h;//no running
+	}
 	}
 }
 qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC8(const qcd::WilsonType C8h, const argument_type& scale){
 	switch(scale){
 	case MU_MW:
+	{
+		DEBUGPRINT("RunC8_MW: ", C8h);
 		return C8h;
+	}
 	case MU_MB:
-		return 0.6653600536335226*C8h;
+	{
+		const qcd::WilsonType result = 0.6653600536335226*C8h;
+		DEBUGPRINT("RunC81: ", result);
+		DEBUGPRINT("C8h: ", C8h);
+		return result;
+	}
 	case MU_H:
-		return 0.5523894040839378*C8h;
+	{
+		const qcd::WilsonType result = 0.5523894040839378*C8h;
+		DEBUGPRINT("RunC83: ", result);
+		DEBUGPRINT("C8h: ", C8h);
+		return result;
+	}
 	default:
+	{
+		DEBUGPRINT("RunC8_DEF: ", C8h);
 		return C8h;//no running
+	}
 	}
 }
 
@@ -317,6 +351,9 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	DEBUGPRINT("RunC7[c7,c8]: ", runC7(CNP(7),CNP(8),scale));//V
 	DEBUGPRINT("RunC8[c7]: ", runC8(CNP(8),scale));//V
 	
+	const EvtComplex Ceff_7 = (CmL(7)/as1 - CmL(3)/3. - 4*CmL(4)/9. - 20*CmL(5)/3. - 80*CmL(6)/9.);
+	const EvtComplex Ceff_8 = (CmL(8)/as1 + CmL(3) - CmL(4)/6. + 20*CmL(5) - 10*CmL(6)/3.);
+	
 	//this is the final result
 	//see Appendix A of hep-ph/0106067
 	(*C_barred)(1) = 0.5*CmL(1);
@@ -325,21 +362,21 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	(*C_barred)(4) = 0.5*CmL(4) + 8*CmL(6);
 	(*C_barred)(5) = CmL(3) - (1/6.)*CmL(4) + 4*CmL(5) - (2/3.)*CmL(6);
 	(*C_barred)(6) = 0.5*CmL(4) + 2*CmL(6);
-	(*C_barred)(7) = (CmL(7)/as1 - CmL(3)/3. - 4*CmL(4)/9. - 20*CmL(5)/3. - 80*CmL(6)/9.) + runC7(CNP(7),CNP(8),scale);
-	(*C_barred)(8) = (CmL(8)/as1 + CmL(3) - CmL(4)/6. + 20*CmL(5) - 10*CmL(6)/3.) + runC8(CNP(8),scale);
+	(*C_barred)(7) = Ceff_7 + runC7(CNP(7),CNP(8),scale);
+	(*C_barred)(8) = Ceff_8 + runC8(CNP(8),scale);
 	(*C_barred)(9) = (CmL(9)/as1) + CNP(9);
 	(*C_barred)(10) = (CmL(10)/as1) + CNP(10);
 	(*C_barred)(11) = CNP(11);
 	(*C_barred)(12) = CNP(12);
 	
-	DEBUGPRINT("Ceff[7]: ", (CmL(7)/as1 - CmL(3)/3. - 4*CmL(4)/9. - 20*CmL(5)/3. - 80*CmL(6)/9.));
-	DEBUGPRINT("Ceff[8]: ", (CmL(8)/as1 + CmL(3) - CmL(4)/6. + 20*CmL(5) - 10*CmL(6)/3.));
+	DEBUGPRINT("Ceff[7]: ",Ceff_7);
+	DEBUGPRINT("Ceff[8]: ", Ceff_8);
 	DEBUGPRINT("Cb[9]: ", (CmL(9)/as1));
 	DEBUGPRINT("Cb[10]: ", (CmL(10)/as1));
 
 	//now the right handed terms - we neglect CR(1-6) as they will be v. small
-	(*CR_barred)(7) = runC7(CR(7),CR(8),scale);
-	(*CR_barred)(8) = runC8(CR(8),scale);
+	(*CR_barred)(7) = (constants::ms/constants::mb)*(*C_barred)(7) + runC7(CR(7),CR(8),scale);
+	(*CR_barred)(8) = (constants::ms/constants::mb)*(*C_barred)(8) + runC8(CR(8),scale);
 	(*CR_barred)(9) = CR(9);
 	(*CR_barred)(10) = CR(10);
 
