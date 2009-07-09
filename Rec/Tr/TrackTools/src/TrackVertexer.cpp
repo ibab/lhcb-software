@@ -1,4 +1,4 @@
- // $Id: TrackVertexer.cpp,v 1.5 2009-07-08 14:14:52 wouter Exp $
+ // $Id: TrackVertexer.cpp,v 1.6 2009-07-09 09:47:52 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ TrackVertexer::fit(const LHCb::State& stateA, const LHCb::State& stateB) const
   LHCb::TrackStateVertex vertex( states, m_maxDChisq, m_maxNumIter ) ;
   if( vertex.fitStatus() == LHCb::TrackStateVertex::FitSuccess || !m_discardFailedFits) {
     // create a two prong vertex
-    LHCb::TwoProngVertex* rc = new LHCb::TwoProngVertex(vertex.position()) ;
+    rc = new LHCb::TwoProngVertex(vertex.position()) ;
     rc->setChi2(vertex.chi2()) ;
     rc->setCovMatrix( vertex.covMatrix() ) ;
     rc->setNDoF(vertex.nDoF()) ;
