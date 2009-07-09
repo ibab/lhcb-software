@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.224 2009-07-07 16:24:53 jonrob Exp $
+! $Id: release.notes,v 1.225 2009-07-09 11:14:01 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-07-09 - Chris Jones
+ - Add RichTrackSegment::StateErrors constructor from double values
+   (avoids double -> float conversion warnings).
 
 ! 2009-07-07 - Chris Jones
  - Add new Rich::Converter base class that extends the basic Converter

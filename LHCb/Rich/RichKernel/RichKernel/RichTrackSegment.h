@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.9 2008-02-21 16:35:40 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.10 2009-07-09 11:14:01 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -103,7 +103,7 @@ namespace LHCb
         m_errTY2 ( errors.errTY2() ),
         m_errP2  ( errors.errP2()  ) { }
 
-      /// Constructor with explicit values
+      /// Constructor with explicit float values
       StateErrors( const float errX2  = 0, ///< error on x squared
                    const float errY2  = 0, ///< error on y squared
                    const float errTX2 = 0, ///< error on x slope squared
@@ -115,6 +115,19 @@ namespace LHCb
           m_errTX2 ( errTX2 ),
           m_errTY2 ( errTY2 ),
           m_errP2  ( errP2  ) { }
+
+      /// Constructor with explicit double values
+      StateErrors( const double errX2,  ///< error on x squared
+                   const double errY2,  ///< error on y squared
+                   const double errTX2, ///< error on x slope squared
+                   const double errTY2, ///< error on y slope squared
+                   const double errP2   ///< error on momentum squared
+                   )
+        : m_errX2  ( static_cast<float>(errX2)  ),
+          m_errY2  ( static_cast<float>(errY2)  ),
+          m_errTX2 ( static_cast<float>(errTX2) ),
+          m_errTY2 ( static_cast<float>(errTY2) ),
+          m_errP2  ( static_cast<float>(errP2)  ) { }
 
       inline float errX2()  const { return m_errX2;  }  ///< Access the x error squared
       inline float errY2()  const { return m_errY2;  }  ///< Access the y error squared
