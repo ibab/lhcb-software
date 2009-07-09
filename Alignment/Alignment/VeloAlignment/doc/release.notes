@@ -1,6 +1,10 @@
 ! Package     : VeloAlignment
 ! Responsible : Silvia Borghi, Marco Gersabeck
 
+!========================== VeloAlign v4r6 2009-07-08 ========================
+! 2009-07-08 - Wouter Hulsbergen
+  - tag for use with LHCb v27r3 and REC v7r3
+
 !=============================================================================
 ! 30/06/2009 - Silvia Borghi  
   - VAlign.cpp, VAlign.h: fixes, add default for properties, add debugs"
