@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.8 2008-11-11 15:23:15 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.9 2009-07-09 19:47:57 wouter Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -28,10 +28,6 @@
 // Event
 #include "Event/GhostTrackInfo.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-using namespace boost::lambda;
 //===========================================================================
 
 //===========================================================================
@@ -204,12 +200,14 @@ StatusCode AlignSaveTuple::execute ( ) {
     LHCb::Track& aTrack = **iTracks;
 
     if ( m_mcData ) {
-      if ( iTracks == m_tracks->begin() )
-	if ( isGhostTrack( &aTrack ) )
-	  m_ghostRate = (double)1/m_eventMultiplicity;
-	else
-	  m_ghostRate = 0;
+      if ( iTracks == m_tracks->begin() ) {
+        if ( isGhostTrack( &aTrack ) )
+          m_ghostRate = (double)1/m_eventMultiplicity;
+        else
+          m_ghostRate = 0;
+      }
       
+
       LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
       for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
 	LHCb::Track& tr2 = **iTracks2;
@@ -226,9 +224,11 @@ StatusCode AlignSaveTuple::execute ( ) {
 
     // Get the number of IT and OT hits
     const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-    m_nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isIT,_1));
-    m_nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCb::LHCbID::isOT,_1));
-
+    m_nITHits = m_nOTHits =  0 ;
+    for( std::vector<LHCb::LHCbID>::const_iterator id = ids.begin() ; id != ids.end(); ++id)
+      if(      id->isIT() ) ++m_nITHits ;
+      else if( id->isOT() ) ++m_nOTHits ;
+    
     // Only fill NTuple when there are some IT or OT Hits
     if ( !m_nITHits && !m_nOTHits ) {
       if ( msgLevel( MSG::DEBUG ) )
