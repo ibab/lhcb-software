@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.67 2009-07-09 08:37:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.68 2009-07-09 14:44:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -100,6 +100,8 @@ class Moore(LHCbConfigurableUser):
         EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
         EventLoopMgr().Warnings = False
 
+        app=ApplicationMgr()
+
         # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
@@ -110,7 +112,6 @@ class Moore(LHCbConfigurableUser):
         RootHistCnv__PersSvc().OutputEnabled = False
 
         # set up the event selector
-        app=ApplicationMgr()
         mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],False)
         app.Runable = Online.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
@@ -127,7 +128,7 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
         self._configureOnlineSendSeq()
-        self._configureOnlineDB()
+        # self._configureOnlineDB()
 
     def _configureOnlineMessageSvc(self):
         # setup the message service
@@ -135,6 +136,7 @@ class Moore(LHCbConfigurableUser):
         if 'MessageSvc' in allConfigurables :
             del allConfigurables['MessageSvc']
         msg=MessageSvc('MessageSvc')
+        app=ApplicationMgr()
         app.MessageSvcType = msg.getType()
         app.SvcOptMapping.append( msg.getFullName() )
         msg.LoggerOnly = True

@@ -12,6 +12,9 @@ def start() :
     from Moore.Configuration import Moore
 
     Moore().RunOnline = True
+    # TODO: record these tags somewhere...
+    #Moore().CondDBtag = 'sim-20090402-vc-md100'
+    #Moore().DDDBtag   = 'sim-20090402-vc-md100'
     
     # Forward all attributes of 'OnlineEnv' to the job options service...
     import OnlineEnv 
