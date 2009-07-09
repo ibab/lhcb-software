@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2009-07-09 - Marco Clemencic
+ - Renamed the values (enum) for the beam crossing type in the ODIN class from
+   Left/Right to 1/2.
+   Needed for Kernel/LHCbAlgs > v2r27.
+
 !================ DAQEvent v7r21 2009-06-29 ===========================
 ! 2009-06-22 - Tomasz Skwarnicki
  - add src/component/RawEventSelectiveCopy for copying selected RawBanks

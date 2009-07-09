@@ -133,10 +133,10 @@
       <enum
         name   = 'BXTypes'
         desc   = ''
-        value  = 'NoBeam          = 0,
-                  SingleBeamLeft  = 1,
-                  SingleBeamRight = 2,
-                  BeamCrossing    = 3'
+        value  = 'NoBeam       = 0,
+                  Beam1        = 1,
+                  Beam2        = 2,
+                  BeamCrossing = 3'
         access = 'PUBLIC' />
 
       <enum
