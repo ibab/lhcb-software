@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-07-09 - Marco Cattaneo
+ - In LHCbExclusions.py: temporary exclusion of Exceptions/Errors/Warnings
+   summary message, to facilitate migration of reference files to Gaudi v21r3
+
 ! 2009-07-07 - Marco Cattaneo
  - In Configurable:
    . Change default DataType to 2009

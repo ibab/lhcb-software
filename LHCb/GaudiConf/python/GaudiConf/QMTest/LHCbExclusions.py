@@ -11,4 +11,5 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Using TAG", "TimingAuditor.T", "RootDBase.open"]) + \
     LineSkipper(["INFO Opened magnetic field file"]) + \
     LineSkipper(["INFO Connecting to database"]) + \
-    LineSkipper(["INFO Disconnect from database after being idle"])
+    LineSkipper(["INFO Disconnect from database after being idle"]) + \
+    LineSkipper(["SUCCESS Exceptions/Errors/Warnings"])
