@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.37 2009-05-01 13:13:10 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.38 2009-07-09 09:02:00 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -169,8 +169,17 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
-  declareInfo("#eventsHLT","", &counter("#events"),0,std::string("Events hlt1 input"));
+  declareInfo("#eventsHLT","",&counter("#events"),0,std::string("Events hlt1 input"));
   declareInfo("#acceptHLT","",&counter("#accept"),0,std::string("Events hlt1 accepted"));
+
+  //klo1
+  for (uint i=0; i!=m_GroupLabels.size();++i) {
+    m_allAlleyAcc.push_back(0);
+    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Acc]", m_allAlleyAcc.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Accepts");
+    m_allAlleyCall.push_back(0);
+    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Call]", m_allAlleyCall.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Calls");
+  }
+  //klo2
 
   return StatusCode::SUCCESS;
 };
@@ -245,11 +254,6 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
    }
 };
 
-
-
-
-
-
 void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
                                    const LHCb::L0DUReport*,
                                    const LHCb::HltDecReports* hlt) {
@@ -260,17 +264,30 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   ///////////////////////////////////////////////////////////////////////////////
   std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
   unsigned nAcc = 0;
-  
-  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
+  nAccAlley = (unsigned *)calloc(m_GroupLabels.size(),sizeof(unsigned));//klo
+  //for (uint i=0; i<m_GroupLabels.size();++i) {nAccAlley[i]=0;}//klo
+
+  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
     if (report == 0 ) {  
        warning() << "report " << *i << " not found" << endreq;
     }
     reps.push_back( std::make_pair( *i, report ) );
-    if (report && report->decision()) ++nAcc;
+    if (report && report->decision()){
+      ++nAcc;
+      ++nAccAlley[m_DecToGroup.find(*i)->second];//klo
+    }
   }
-  
+
+  //klo1
+  for (uint i=0; i<m_GroupLabels.size();i++) {
+    m_allAlleyCall[i]++;
+    m_allAlleyAcc[i] += ( nAccAlley[i] > 0 );
+  }
+  //klo2
+
   counter("#accept") += ( nAcc > 0 );
+
   fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
  
   for (size_t i = 0; i<reps.size();++i) {
@@ -291,14 +308,24 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   // of the Group it should be accounted for
   // Together with the BinLabels this is configured
   // in HLTConf/Configuration.py
+  
+  /*
+  COMMENTED OUT BY KLAUS
   m_DecToGroupType::iterator end   = m_DecToGroup.end();
   m_DecToGroupType::iterator found = m_DecToGroup.end();
   for(size_t j = 0; j < reps.size(); ++j) {
     found = m_DecToGroup.find(reps[j].first);
-    if (found != end) { 
+    if (found != end) {
       fill(m_hlt1alley, found->second, reps[j].second->decision());
     }
-  }  
+  }
+  */
+  //klo1
+  for (uint i=0; i<m_GroupLabels.size();i++) {
+    fill(m_hlt1alley,i,(nAccAlley[i]>0));
+  }
+  std::free(nAccAlley);
+  //klo2
 }
 
 
