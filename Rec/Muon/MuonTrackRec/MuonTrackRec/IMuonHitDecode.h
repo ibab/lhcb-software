@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.2 2009-03-24 10:42:24 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.3 2009-07-09 13:48:57 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -38,7 +38,7 @@ public:
     return  ( TDCdelta  * 25. / 16.)  ;
   }
   // specific for Online Monitoring
-  virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &tell1s, std::vector<int> &sizes) = 0;
+  virtual int banksSize(LHCb::RawBank::BankType bankType,  std::vector<int> &sizes) = 0;
   virtual int bankVersion() = 0;
   virtual void dumpRawBanks() = 0;  
   virtual void dumpFrame(int Tell1, int ODE) = 0;
@@ -71,6 +71,8 @@ public:
                                           unsigned int ch)  =0;
   virtual std::string& ecsChamberName(int region,
                                       int chamberNumber)=0;
+  virtual bool completeEvent() =0;
+  virtual void setCompleteEventMask(int mask) {m_ceMask=mask;}
 protected:
   inline std::string locBX(int iX) {
     std::stringstream sloc;
@@ -80,6 +82,7 @@ protected:
       sloc << "Next"<<  iX << "/";
     return sloc.str();
   }
+  int m_ceMask;
 private:
 
 };

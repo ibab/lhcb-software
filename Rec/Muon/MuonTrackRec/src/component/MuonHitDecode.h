@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.2 2009-03-24 10:42:24 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.3 2009-07-09 13:48:57 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -25,8 +25,8 @@ public:
     return (const std::vector<MuonLogHit*>*) (&m_hits);}
 
   // specific for Online Monitoring, not implemented here (just avoid compil. warnings)
-  virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &tell1s, std::vector<int> &sizes)
-  { return 0* (bankType == bankType) * tell1s.size() * sizes.size();}
+  virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &sizes)
+  { return 0* (bankType == bankType) * sizes.size();}
   virtual int bankVersion() {return 0;}
   virtual void dumpRawBanks() {}
   virtual void dumpFrame(int Tell1, int ODE) { Tell1=ODE;}
@@ -66,6 +66,7 @@ public:
   {int x=region*chamberNumber;x=0;
     nullstring="";
     return nullstring;}
+  virtual bool completeEvent() {return true;}
 
   // from GaudiTool
   virtual StatusCode 	initialize ();
