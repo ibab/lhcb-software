@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.46 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.47 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -477,8 +477,9 @@ class LbLoginScript(Script):
         else :
             if sys.platform == "darwin" :
                 opts.cmtvers = "v1r20p20070524"
-                if opts.mysiteroot :
-                    opts.use_cache = False
+
+        if sys.platform == "darwin" :
+            opts.use_cache = False
         
         if ev.has_key("CONTRIBDIR") :
             ev["CMT_DIR"] = ev["CONTRIBDIR"]
