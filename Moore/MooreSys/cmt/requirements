@@ -17,6 +17,7 @@ use TCKUtils                v1r0p1  Hlt
 use GaudiOnline             v2r30   Online
 use HltTCK                  v1r2    TCK
 use HltCommon               v5r8p1  Hlt
+use HltGlobalMonitor        v2r5    Hlt
 
 
 
