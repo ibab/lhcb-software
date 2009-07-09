@@ -1,4 +1,4 @@
-// $Id: UnpackRecVertex.cpp,v 1.2 2008-12-09 08:13:23 ocallot Exp $
+// $Id: UnpackRecVertex.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode UnpackRecVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::PackedRecVertices* dst = get<LHCb::PackedRecVertices>( m_inputName );
-  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::RecVertices* newRecVertices = new LHCb::RecVertices();
   put( newRecVertices, m_outputName );

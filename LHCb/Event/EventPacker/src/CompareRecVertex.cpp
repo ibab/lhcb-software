@@ -1,4 +1,4 @@
-// $Id: CompareRecVertex.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareRecVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -113,47 +113,47 @@ StatusCode CompareRecVertex::execute() {
       info() << "===== RecVertex key " << oVtx->key() << endmsg;
       info() << format( "Old   Technique %6d  chi2 %12.6f  nDoF%4d nTrack%4d  nExtra%4d", 
                         oVtx->technique(), oVtx->chi2(), oVtx->nDoF(), oVtx->tracks().size(), oVtx->extraInfo().size() ) 
-             << endreq;
+             << endmsg;
       info() << format( "Test  Technique %6d  chi2 %12.6f  nDoF%4d nTrack%4d  nExtra%4d", 
                         tVtx->technique(), tVtx->chi2(), tVtx->nDoF(), tVtx->tracks().size(), tVtx->extraInfo().size() ) 
-             << endreq;
+             << endmsg;
       if ( oVtx->tracks().size() == tVtx->tracks().size()   ) {
         info() << "Old  tracks ";
         for ( kk = 0; oVtx->tracks().size() > kk; kk++ ) info() << " " << oVtx->tracks()[kk];
-        info() << endreq << "Test tracks ";
+        info() << endmsg << "Test tracks ";
         for ( kk = 0; tVtx->tracks().size() > kk; kk++ ) info() << " " << tVtx->tracks()[kk];
-        info() << endreq;
+        info() << endmsg;
       }
      // position
       info() << format( "position Old  x%10.5f y%10.5f z%10.5f",
                         oVtx->position().x(), oVtx->position().y(), oVtx->position().z() )
-             << endreq;
+             << endmsg;
       info() << format( "position Test x%10.5f y%10.5f z%10.5f",
                         tVtx->position().x(), tVtx->position().y(), tVtx->position().z() )
-             << endreq;
+             << endmsg;
       
       info() << format( " old Diag %10.5f %10.5f %10.5f", 
                         oDiag[0], oDiag[1], oDiag[2])
-             << endreq;
+             << endmsg;
       info() << format( "test Diag %10.5f %10.5f %10.5f", 
                         tDiag[0], tDiag[1], tDiag[2] )
-             << endreq;
+             << endmsg;
       info() << " old Frac ";
       for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
         info () << format( " %8.5f", oFrac[kk] );
       }
-      info() << endreq << "test Frac ";
+      info() << endmsg << "test Frac ";
       for ( kk = 0 ; tFrac.size() > kk ; ++kk ) {
         info () << format( " %8.5f", tFrac[kk] );
       }
-      info() << endreq;
+      info() << endmsg;
       //== extraInfo
       oIt = oExtra.begin();
       tIt = tExtra.begin();
       for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
         info() << format( "   old Extra %5d %12.4f     new %5d %12.4f", 
                           (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second ) 
-               << endreq;
+               << endmsg;
       }
     }
   }

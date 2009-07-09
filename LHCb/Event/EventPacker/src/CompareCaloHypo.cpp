@@ -1,4 +1,4 @@
-// $Id: CompareCaloHypo.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareCaloHypo.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -144,56 +144,56 @@ StatusCode CompareCaloHypo::execute() {
       info() << "===== CaloHypo key " << oHypo->key() << endmsg;
       info() << format( "Old   Hypothesis %6d  likelihood %12.6f  nDigit%4d  nClusters%4d nHypo%4d", 
                         oHypo->hypothesis(), oHypo->lh(), oHypo->digits().size(),
-                        oHypo->clusters().size(), oHypo->hypos().size() ) << endreq;
+                        oHypo->clusters().size(), oHypo->hypos().size() ) << endmsg;
       info() << format( "Test  Hypothesis %6d  likelihood %12.6f  nDigit%4d  nClusters%4d nHypo%4d", 
                         tHypo->hypothesis(), tHypo->lh(), tHypo->digits().size(),
-                        tHypo->clusters().size(), tHypo->hypos().size() ) << endreq;
+                        tHypo->clusters().size(), tHypo->hypos().size() ) << endmsg;
 
       if ( oHypo->digits().size() == tHypo->digits().size()   ) {
         info() << "Old  digits ";
         for ( kk = 0; oHypo->digits().size() > kk; kk++ ) info() << " " << oHypo->digits()[kk];
-        info() << endreq << "Test digits ";
+        info() << endmsg << "Test digits ";
         for ( kk = 0; tHypo->digits().size() > kk; kk++ ) info() << " " << tHypo->digits()[kk];
-        info() << endreq;
+        info() << endmsg;
       }
       if ( oHypo->clusters().size() == tHypo->clusters().size()   ) {
         info() << "Old  clusters ";
         for ( kk = 0; oHypo->clusters().size() > kk; kk++ ) info() << " " << oHypo->clusters()[kk];
-        info() << endreq << "Test clusters ";
+        info() << endmsg << "Test clusters ";
         for ( kk = 0; tHypo->clusters().size() > kk; kk++ ) info() << " " << tHypo->clusters()[kk];
-        info() << endreq;
+        info() << endmsg;
       }
       if ( oHypo->hypos().size() == tHypo->hypos().size()   ) {
         info() << "Old  hypos ";
         for ( kk = 0; oHypo->hypos().size() > kk; kk++ ) info() << " " << oHypo->hypos()[kk];
-        info() << endreq << "Test hypos ";
+        info() << endmsg << "Test hypos ";
         for ( kk = 0; tHypo->hypos().size() > kk; kk++ ) info() << " " << tHypo->hypos()[kk];
-        info() << endreq;
+        info() << endmsg;
       }
       // position
       if ( 0 != oPos && 0 != tPos ) {
         info() << format( "position Old  z%10.5f x%10.5f y%10.5f e%12.3f   cx%10.5f cy%10.5f",
                           oPos->z(), oPos->x(), oPos->y(), oPos->e(), oPos->center()(0), oPos->center()(1) )
-               << endreq;
+               << endmsg;
         info() << format( "position Test z%10.5f x%10.5f y%10.5f e%12.3f   cx%10.5f cy%10.5f",
                           tPos->z(), tPos->x(), tPos->y(), tPos->e(), tPos->center()(0), tPos->center()(1) )
-               << endreq;
+               << endmsg;
 
         info() << format( " old Diag %10.5f %10.5f %12.3f %10.5f %10.5f", 
                           oDiag[0], oDiag[1], oDiag[2], oDiag[3], oDiag[4] )
-               << endreq;
+               << endmsg;
         info() << format( "test Diag %10.5f %10.5f %12.3f %10.5f %10.5f", 
                           tDiag[0], tDiag[1], tDiag[2], tDiag[3], tDiag[4] )
-             << endreq;
+             << endmsg;
         info() << " old Frac ";
         for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
           info () << format( " %8.5f", oFrac[kk] );
         }
-        info() << endreq << "test Frac ";
+        info() << endmsg << "test Frac ";
         for ( kk = 0 ; tFrac.size() > kk ; ++kk ) {
           info () << format( " %8.5f", tFrac[kk] );
         }
-        info() << endreq;
+        info() << endmsg;
       }
     }
   }

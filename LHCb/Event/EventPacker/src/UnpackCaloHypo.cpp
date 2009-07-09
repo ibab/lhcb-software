@@ -1,4 +1,4 @@
-// $Id: UnpackCaloHypo.cpp,v 1.2 2008-12-09 08:13:23 ocallot Exp $
+// $Id: UnpackCaloHypo.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ StatusCode UnpackCaloHypo::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::PackedCaloHypos* dst = get<LHCb::PackedCaloHypos>( m_inputName );
-  debug() << "Size of PackedCaloHypos = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedCaloHypos = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::CaloHypos* newCaloHypos = new LHCb::CaloHypos();
   put( newCaloHypos, m_outputName );

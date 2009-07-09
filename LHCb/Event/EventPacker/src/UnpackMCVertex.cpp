@@ -1,4 +1,4 @@
-// $Id: UnpackMCVertex.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackMCVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode UnpackMCVertex::execute() {
   debug() << "==> Execute" << endmsg;
 
   LHCb::PackedMCVertices* dst = get<LHCb::PackedMCVertices>( m_inputName );
-  debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::MCVertices* newMCVertices = new LHCb::MCVertices();
   put( newMCVertices, m_outputName );

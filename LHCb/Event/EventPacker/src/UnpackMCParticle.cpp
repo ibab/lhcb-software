@@ -1,4 +1,4 @@
-// $Id: UnpackMCParticle.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackMCParticle.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode UnpackMCParticle::execute() {
   debug() << "==> Execute" << endmsg;
 
   LHCb::PackedMCParticles* dst = get<LHCb::PackedMCParticles>( m_inputName );
-  debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::MCParticles* newMCParticles = new LHCb::MCParticles();
   put( newMCParticles, m_outputName );

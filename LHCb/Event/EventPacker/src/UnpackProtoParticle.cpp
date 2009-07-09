@@ -1,4 +1,4 @@
-// $Id: UnpackProtoParticle.cpp,v 1.2 2008-12-09 08:13:23 ocallot Exp $
+// $Id: UnpackProtoParticle.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ StatusCode UnpackProtoParticle::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::PackedProtoParticles* dst = get<LHCb::PackedProtoParticles>( m_inputName );
-  debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::ProtoParticles* newProtoParticles = new LHCb::ProtoParticles();
   put( newProtoParticles, m_outputName );

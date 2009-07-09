@@ -1,4 +1,4 @@
-// $Id: CompareMCParticle.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareMCParticle.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode CompareMCParticle::execute() {
     }
     
     if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
-      if( !isOK ) Warning( "Packed MCParticle info truncated. Set DEBUG OutputLevel for details" );
+      if( !isOK ) Warning( "Packed MCParticle info truncated. Set DEBUG OutputLevel for details" ).ignore();
       debug() << "=== MCParticle key " << oPart->key() << endmsg;
       debug() << format( "  old momentum %12.3f %12.3f %12.3f %12.4f",
                         oPart->momentum().px(), oPart->momentum().py(),

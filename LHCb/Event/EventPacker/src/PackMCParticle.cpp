@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.2 2008-11-19 13:00:55 cattanem Exp $
+// $Id: PackMCParticle.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ StatusCode PackMCParticle::execute() {
 
   LHCb::MCParticles* parts = get<LHCb::MCParticles>( m_inputName );
   debug() << m_inputName << " contains " << parts->size()
-          << " MCParticles to convert." << endreq;
+          << " MCParticles to convert." << endmsg;
   
   StandardPacker pack;
   
@@ -69,7 +69,7 @@ StatusCode PackMCParticle::execute() {
       newPart.endVertices.push_back( ref );
       if ( MSG::VERBOSE >= msgLevel() ) {
         verbose() << "Reference to endVertex       " 
-                  << format( "%8x",  ref ) << endreq;
+                  << format( "%8x",  ref ) << endmsg;
       }
     }
     out->addEntry( newPart );

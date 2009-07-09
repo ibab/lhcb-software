@@ -1,4 +1,4 @@
-// $Id: PackTwoProngVertex.cpp,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: PackTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode PackTwoProngVertex::execute() {
   for (  LHCb::TwoProngVertices::const_iterator itV = verts->begin(); verts->end() != itV ; ++itV ) {
     LHCb::TwoProngVertex*      vert = *itV;
     LHCb::PackedTwoProngVertex pVert;
-    debug() << "Found vertex key " << (*itV)->key() << endreq;
+    debug() << "Found vertex key " << (*itV)->key() << endmsg;
     pVert.key        = vert->key();
     pVert.technique  = vert->technique();
     pVert.chi2       = pack.fltPacked( vert->chi2() );
@@ -136,22 +136,22 @@ StatusCode PackTwoProngVertex::execute() {
     pVert.cov87 = pack.fraction( vert->momcovB()   (2,1)/err8/err7 );
 
     /*
-    info() << format( "cov %6d", pVert.cov00 ) << endreq;
-    info() << format( "cov %6d %6d", pVert.cov10, pVert.cov11 ) << endreq;
-    info() << format( "cov %6d %6d %6d", pVert.cov20, pVert.cov21, pVert.cov22 ) << endreq;
-    info() << format( "cov %6d %6d %6d %6d", pVert.cov30, pVert.cov31, pVert.cov32, pVert.cov33 ) << endreq;
+    info() << format( "cov %6d", pVert.cov00 ) << endmsg;
+    info() << format( "cov %6d %6d", pVert.cov10, pVert.cov11 ) << endmsg;
+    info() << format( "cov %6d %6d %6d", pVert.cov20, pVert.cov21, pVert.cov22 ) << endmsg;
+    info() << format( "cov %6d %6d %6d %6d", pVert.cov30, pVert.cov31, pVert.cov32, pVert.cov33 ) << endmsg;
     info() << format( "cov %6d %6d %6d %6d %6d", 
-                      pVert.cov40, pVert.cov41, pVert.cov42, pVert.cov43, pVert.cov44 ) << endreq;
+                      pVert.cov40, pVert.cov41, pVert.cov42, pVert.cov43, pVert.cov44 ) << endmsg;
     info() << format( "cov %6d %6d %6d %6d %6d %6d", 
-                      pVert.cov50, pVert.cov51, pVert.cov52, pVert.cov53, pVert.cov54, pVert.cov55 ) << endreq;
+                      pVert.cov50, pVert.cov51, pVert.cov52, pVert.cov53, pVert.cov54, pVert.cov55 ) << endmsg;
     info() << format( "cov %6d %6d %6d %6d %6d %6d %6d",
-                      pVert.cov60, pVert.cov61, pVert.cov62, pVert.cov63, pVert.cov64, pVert.cov65, pVert.cov66 ) << endreq;
+                      pVert.cov60, pVert.cov61, pVert.cov62, pVert.cov63, pVert.cov64, pVert.cov65, pVert.cov66 ) << endmsg;
     info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d",
                       pVert.cov70, pVert.cov71, pVert.cov72, pVert.cov73, pVert.cov74, pVert.cov75, 
-                      pVert.cov76, pVert.cov77 ) << endreq;
+                      pVert.cov76, pVert.cov77 ) << endmsg;
     info() << format( "cov %6d %6d %6d %6d %6d %6d %6d %6d %6d",
                       pVert.cov80, pVert.cov81, pVert.cov82, pVert.cov83, pVert.cov84, pVert.cov85, 
-                      pVert.cov86, pVert.cov87, pVert.cov88 ) << endreq;
+                      pVert.cov86, pVert.cov87, pVert.cov88 ) << endmsg;
     */
 
     //== Store the Tracks

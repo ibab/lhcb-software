@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.6 2009-01-21 14:17:53 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.7 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -83,22 +83,22 @@ StatusCode CompareTrack::execute() {
       info() << format( "Old   chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
                         oTrack->chi2PerDoF(), oTrack->nDoF(), oTrack->flags(), 
                         oTrack->lhcbIDs().size(), oExtra.size(), oTrack->nStates() )
-             << endreq;
+             << endmsg;
       info() << format( "Test  chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
                         tTrack->chi2PerDoF(), tTrack->nDoF(), tTrack->flags(), 
                         tTrack->lhcbIDs().size(), tExtra.size(), tTrack->nStates() )
-             << endreq;
+             << endmsg;
       for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
         info() << format( "   old ID %8x   new %8x", 
                           oTrack->lhcbIDs()[kk].lhcbID(), 
-                          tTrack->lhcbIDs()[kk].lhcbID() ) << endreq;
+                          tTrack->lhcbIDs()[kk].lhcbID() ) << endmsg;
       }
       oIt = oExtra.begin();
       tIt = tExtra.begin();
       for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
         info() << format( "   old Extra %5d %12.4f     new %5d %12.4f", 
                           (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second ) 
-               << endreq;
+               << endmsg;
       }
     }
 
@@ -178,32 +178,32 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
 
     if ( MSG::VERBOSE >= msgLevel() ) isOK = false; //== force printing
     if ( !isOK ) {
-      info() << "=== State differ: " << endreq;
+      info() << "=== State differ: " << endmsg;
       info() << "     old " 
              << format( " %12.5f %12.5f %12.5f %12.9f %12.9f %12.3f",
                         oSta->z(), oSta->x(), oSta->y(), 
                         oSta->tx(), oSta->ty(), 1./oSta->qOverP() )
-             << endreq;
+             << endmsg;
       info() << "    test " 
              << format( " %12.5f %12.5f %12.5f %12.9f %12.9f %12.3f",
                         tSta->z(), tSta->x(), tSta->y(), 
                         tSta->tx(), tSta->ty(), 1./tSta->qOverP() )
-             << endreq;
+             << endmsg;
       info() << format( " old Diag %10.5f %10.5f %12.9f %12.9f %12.3f", 
                         oDiag[0], oDiag[1], oDiag[2], oDiag[3], oDiag[4]*oP*oP )
-             << endreq;
+             << endmsg;
       info() << format( "test Diag %10.5f %10.5f %12.9f %12.9f %12.3f", 
                         tDiag[0], tDiag[1], tDiag[2], tDiag[3], tDiag[4]*tP*tP )
-             << endreq;
+             << endmsg;
       info() << " old Frac ";
       for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
         info () << format( " %8.5f", oFrac[kk] );
       }
-      info() << endreq << "test Frac ";
+      info() << endmsg << "test Frac ";
       for ( kk = 0 ; tFrac.size() > kk ; ++kk ) {
         info () << format( " %8.5f", tFrac[kk] );
       }
-      info() << endreq;
+      info() << endmsg;
     }    
 
 }

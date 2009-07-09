@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.7 2009-06-24 13:58:58 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.8 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode PackTrack::execute() {
       out->addId((*itI).lhcbID() );
     }
     newTrk.lastId    = out->sizeId();
-    debug() << "Stored LHCbIDs from " << newTrk.firstId << " to " << newTrk.lastId << endreq;
+    debug() << "Stored LHCbIDs from " << newTrk.firstId << " to " << newTrk.lastId << endmsg;
 
     //== Handle the states in the track
     newTrk.firstState = out->sizeState();
@@ -71,7 +71,7 @@ StatusCode PackTrack::execute() {
       convertState( *itS, out );
     }
     newTrk.lastState = out->sizeState();
-    debug() << "Stored states from " << newTrk.firstState << " to " << newTrk.lastState << endreq;
+    debug() << "Stored states from " << newTrk.firstState << " to " << newTrk.lastState << endmsg;
 
     //== Handles the ExtraInfo
     newTrk.firstExtra = out->sizeExtra();

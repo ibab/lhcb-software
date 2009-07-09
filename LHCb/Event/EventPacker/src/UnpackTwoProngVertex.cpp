@@ -1,4 +1,4 @@
-// $Id: UnpackTwoProngVertex.cpp,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: UnpackTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode UnpackTwoProngVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::PackedTwoProngVertices* dst = get<LHCb::PackedTwoProngVertices>( m_inputName );
-  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::TwoProngVertices* newTwoProngVertices = new LHCb::TwoProngVertices();
   put( newTwoProngVertices, m_outputName );

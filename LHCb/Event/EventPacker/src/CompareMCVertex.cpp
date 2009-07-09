@@ -1,4 +1,4 @@
-// $Id: CompareMCVertex.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareMCVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Boost
@@ -103,8 +103,7 @@ StatusCode CompareMCVertex::execute() {
     if (isOK && msgLevel(MSG::VERBOSE)) verbose() << "diff products OK" << endmsg;
     if ( !isOK || msgLevel(MSG::VERBOSE) ) {
       if( !isOK ) {
-        Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details",
-                 StatusCode::SUCCESS, 0 ).ignore();
+        Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details", StatusCode::SUCCESS, 0 ).ignore();
         debug() << "Packed MCVertex info truncated" << endmsg;
       }
       debug() << "=== MCVertex key " << oVert->key() << endmsg;

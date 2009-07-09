@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.7 2009-06-24 13:58:58 ocallot Exp $
+// $Id: ReadPackedDst.cpp,v 1.8 2009-07-09 09:44:16 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -68,8 +68,7 @@ StatusCode ReadPackedDst::execute() {
   // Decode the ODIN bank
   m_odinDecoder->execute();
   if ( !exist<LHCb::ODIN>(LHCb::ODINLocation::Default + m_postfix) ) {
-    warning() << "ODIN not found." << endreq;
-    return StatusCode::FAILURE;
+    return Warning( "ODIN not found" );
   }
   const std::vector<LHCb::RawBank*>& adds = dstEvent->banks( LHCb::RawBank::DstAddress );
   for (std::vector<LHCb::RawBank*>::const_iterator itA = adds.begin(); adds.end() != itA; ++itA ) {
@@ -83,7 +82,7 @@ StatusCode ReadPackedDst::execute() {
             << " svcType " << styp;
     char* cptr = (char*) iptr;
     char* dptr = cptr + strlen(cptr) + 1;
-    debug() << " par[0]='" << cptr << "' par[1]='" << dptr << "'" << endreq;
+    debug() << " par[0]='" << cptr << "' par[1]='" << dptr << "'" << endmsg;
   }
 
   const std::vector<LHCb::RawBank*>& banks = dstEvent->banks( LHCb::RawBank::DstBank );
@@ -98,7 +97,7 @@ StatusCode ReadPackedDst::execute() {
 
     debug() << "Bank nb " << bank->sourceID() << " version " << version << " size " << m_size
             << " classID " << classID << " name '" << name << "'  nLink " << *m_data
-            << endreq;
+            << endmsg;
     if (  LHCb::CLID_PackedTracks  == classID ) {  //== PackedTracks
       LHCb::PackedTracks* tracks = new LHCb::PackedTracks();
       put( tracks, name + m_postfix );
@@ -192,12 +191,12 @@ StatusCode ReadPackedDst::execute() {
       }
 
     } else {
-      warning() << "--- Unknown classID " << classID << " when decoding DstEvent" << endreq;
+      warning() << "--- Unknown classID " << classID << " when decoding DstEvent" << endmsg;
       return StatusCode::FAILURE;
     }
     //== End of bank. Check for leakage...
     if ( 0 != m_size ) {
-      warning() << "Non empty bank " << name << " after processing : " << m_size << " words left." << endreq;
+      warning() << "Non empty bank " << name << " after processing : " << m_size << " words left." << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -214,9 +213,9 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
   int blobNb           = *m_data++;
   m_size -= 3;
   if ( nObj * sizeof( CLASS) != totSize ) {
-    warning() << "getFromBlob: Tot " << totSize << " nObj " << nObj << " size " << sizeof( CLASS ) << endreq;
+    warning() << "getFromBlob: Tot " << totSize << " nObj " << nObj << " size " << sizeof( CLASS ) << endmsg;
   }
-  debug() << "totSize " << totSize << " nObj " << nObj << " blobNb " << blobNb << endreq;
+  debug() << "totSize " << totSize << " nObj " << nObj << " blobNb " << blobNb << endmsg;
 
   //== First restore a big vector of int in case the data is split into several blobs
   std::vector<int> tempVect( totSize/4 );  // size in bytes
@@ -233,11 +232,11 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
         }
       }
       if ( 0 == myBank ) {
-        warning() << "Blob number " << blobNb << " not found." << endreq;
+        warning() << "Blob number " << blobNb << " not found." << endmsg;
         return;
       }
     }
-    debug() << "Found " <<  myBank->size() << " bytes, need " << totSize << " " << endreq;
+    debug() << "Found " <<  myBank->size() << " bytes, need " << totSize << " " << endmsg;
     memcpy( temp, myBank->data(), myBank->size() );
     temp    += (myBank->size()/4);
     totSize -= myBank->size();

@@ -1,4 +1,4 @@
-// $Id: CompareProtoParticle.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareProtoParticle.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -103,19 +103,19 @@ StatusCode CompareProtoParticle::execute() {
       info() << "===== ProtoParticle key " << oPart->key() << endmsg;
       info() << format( "Old   track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
                         oTrack, oRichPID, oMuonPID, oHypo.size(), oExtra.size() )
-             << endreq;
+             << endmsg;
       info() << format( "Test  track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
                         tTrack, tRichPID, tMuonPID, tHypo.size(), tExtra.size() )
-             << endreq;
+             << endmsg;
       for ( kk = 0 ; oHypo.size() != kk ; ++kk ) {
-        info() << format( "   old CaloHypo %8x   new %8x", oHypo[kk], tHypo[kk] )  << endreq;
+        info() << format( "   old CaloHypo %8x   new %8x", oHypo[kk], tHypo[kk] )  << endmsg;
       }
       oIt = oExtra.begin();
       tIt = tExtra.begin();
       for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
         info() << format( "   old Extra %5d %12.4f     new %5d %12.4f", 
                           (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second ) 
-               << endreq;
+               << endmsg;
       }
     }
   }

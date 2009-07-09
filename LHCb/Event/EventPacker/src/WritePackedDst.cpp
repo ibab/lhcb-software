@@ -1,4 +1,4 @@
-// $Id: WritePackedDst.cpp,v 1.2 2009-06-24 13:58:58 ocallot Exp $
+// $Id: WritePackedDst.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode WritePackedDst::initialize() {
         m_containers.end() != itS; ++itS ) {
     info() << " '" << *itS << "',";
   }
-  info() << endreq;
+  info() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -80,7 +80,7 @@ StatusCode WritePackedDst::execute() {
   LHCb::RawEvent* evt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   IRegistry* reg = evt->registry();
   if ( !reg )  { 
-    warning() << "No opaque address for " <<  LHCb::RawEventLocation::Default << " !!!" << endreq;
+    warning() << "No opaque address for " <<  LHCb::RawEventLocation::Default << " !!!" << endmsg;
     return StatusCode::FAILURE;
   }
   IOpaqueAddress* padd = reg->address();
@@ -104,7 +104,7 @@ StatusCode WritePackedDst::execute() {
         m_containers.end() != itC; ++itC ) {
     //== Try to get the container, a data object
     if ( !exist<DataObject>( *itC ) ) {
-      warning() << "Container " << *itC << " does not exist." << endreq;
+      warning() << "Container " << *itC << " does not exist." << endmsg;
       return StatusCode::FAILURE;
     }
     DataObject* myObj = get<DataObject>( *itC );
@@ -216,7 +216,7 @@ StatusCode WritePackedDst::execute() {
       
     } else {
       warning() << "--- Unknown class ID " <<  myClID 
-                << " for container " << *itC << " --" << endreq;
+                << " for container " << *itC << " --" << endmsg;
       return StatusCode::FAILURE;
     }
   }

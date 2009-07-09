@@ -1,4 +1,4 @@
-// $Id: CompareTwoProngVertex.cpp,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: CompareTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -223,26 +223,26 @@ StatusCode CompareTwoProngVertex::execute() {
       info() << "===== TwoProngVertex key " << oVtx->key() << endmsg;
       info() << format( "Old   Technique %6d  chi2 %12.6f  nDoF%4d nTrack%4d  nExtra%4d", 
                         oVtx->technique(), oVtx->chi2(), oVtx->nDoF(), oVtx->tracks().size(), oVtx->extraInfo().size() ) 
-             << endreq;
+             << endmsg;
       info() << format( "Test  Technique %6d  chi2 %12.6f  nDoF%4d nTrack%4d  nExtra%4d", 
                         tVtx->technique(), tVtx->chi2(), tVtx->nDoF(), tVtx->tracks().size(), tVtx->extraInfo().size() ) 
-             << endreq;
+             << endmsg;
       if ( oVtx->tracks().size() == tVtx->tracks().size()   ) {
         info() << "Old  tracks ";
         for ( kk = 0; oVtx->tracks().size() > kk; kk++ ) info() << " " << oVtx->tracks()[kk];
-        info() << endreq << "Test tracks ";
+        info() << endmsg << "Test tracks ";
         for ( kk = 0; tVtx->tracks().size() > kk; kk++ ) info() << " " << tVtx->tracks()[kk];
-        info() << endreq;
+        info() << endmsg;
       }
      // position
       info() << format( "position Old  x%10.5f y%10.5f z%10.5f  txA%10.7f tyA%10.7f p%10.3f  txB%10.7f tyB%10.7f pB%10.3f",
                         oVtx->position().x(), oVtx->position().y(), oVtx->position().z(),
                         oVtx->momA()[0], oVtx->momA()[1], oPA, oVtx->momB()[0], oVtx->momB()[1], oPB )
-             << endreq;
+             << endmsg;
       info() << format( "position Test x%10.5f y%10.5f z%10.5f  txA%10.7f tyA%10.7f p%10.3f  txB%10.7f tyB%10.7f pB%10.3f",
                         tVtx->position().x(), tVtx->position().y(), tVtx->position().z(),
                         tVtx->momA()[0], tVtx->momA()[1], tPA, tVtx->momB()[0], tVtx->momB()[1], tPB )
-             << endreq;
+             << endmsg;
       int indx = 0;
       for ( int krow=0 ; 9 > krow ; ++krow ) {
         info() << format( " Old row%2d : ", krow );
@@ -250,13 +250,13 @@ StatusCode CompareTwoProngVertex::execute() {
         for ( kcol=0 ; krow > kcol ; ++kcol ) {
           info() << format( "%8.5f ", oFrac[indx+kcol] );
         }
-        info() << format( "  %10.5g", oDiag[krow]) << endreq;
+        info() << format( "  %10.5g", oDiag[krow]) << endmsg;
         info() << format( "Test row%2d : ", krow );
         for ( kcol=0 ; krow > kcol ; ++kcol ) {
           info() << format( "%8.5f ", tFrac[indx+kcol] );
         }
         indx += kcol;
-        info() << format( "  %10.5g", tDiag[krow]) << endreq;
+        info() << format( "  %10.5g", tDiag[krow]) << endmsg;
       }
       //== extraInfo
       oIt = oExtra.begin();
@@ -264,18 +264,18 @@ StatusCode CompareTwoProngVertex::execute() {
       for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
         info() << format( "   old Extra %5d %12.4f     new %5d %12.4f", 
                           (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second ) 
-               << endreq;
+               << endmsg;
       }
       //== Compatible PID
       info() << " old compatiblePID : ";
       for ( kk=0 ; oPid.size() > kk ; ++kk ) {
         info() << format( " %12d", oPid[kk].pid() );
       }
-      info() << endreq <<  "Test compatiblePID : ";
+      info() << endmsg <<  "Test compatiblePID : ";
       for ( kk=0 ; tPid.size() > kk ; ++kk ) {
         info() << format( " %12d", tPid[kk].pid() );
       }
-      info() << endreq;
+      info() << endmsg;
     }
   }
 

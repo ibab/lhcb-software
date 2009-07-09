@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.8 2009-06-24 13:58:58 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.9 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode UnpackTrack::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   LHCb::PackedTracks* dst = get<LHCb::PackedTracks>( m_inputName );
-  debug() << "Size of PackedTracks = " << dst->end() - dst->begin() << endreq;
+  debug() << "Size of PackedTracks = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::Tracks* newTracks = new LHCb::Tracks();
   put( newTracks, m_outputName );
