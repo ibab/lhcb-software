@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.21 2009-06-12 15:25:13 jonrob Exp $
+  * $Id: RichRecTrack.xml,v 1.22 2009-07-09 11:16:53 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -42,6 +42,13 @@
 		access = "PUBLIC" 
 		def    = "FloatType" 
 		type   = "float"
+	/>
+
+        <typedef 
+		desc   = "type for internal storage for integer data" 
+		access = "PUBLIC" 
+		def    = "IntType" 
+		type   = "int"
 	/>
 
 	<method 
@@ -211,7 +218,7 @@
         
     	<attribute 
 		name        = "charge" 
-		type        = "LHCb::RichRecTrack::FloatType"
+		type        = "LHCb::RichRecTrack::IntType"
 		compression = "FALSE" 
 		desc        = "Track charge" 
 		init        = "0" 
@@ -227,7 +234,7 @@
 
    	<attribute 
 		name        = "nDoF" 
-		type        = "LHCb::RichRecTrack::FloatType"
+		type        = "LHCb::RichRecTrack::IntType"
 		compression = "FALSE" 
 		desc        = "number of degrees of freedom" 
 		init        = "0" 
