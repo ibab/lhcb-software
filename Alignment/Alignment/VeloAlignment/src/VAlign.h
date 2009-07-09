@@ -15,7 +15,7 @@
 #include "Event/RecVertex.h"
 #include "Event/ODIN.h"
 
-#include "Event/TrackStateVertex.h"
+#include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 
