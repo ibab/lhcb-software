@@ -1,4 +1,4 @@
-// $Id: SmartMuonMeasProvider.cpp,v 1.2 2009-07-03 19:54:55 polye Exp $
+// $Id: SmartMuonMeasProvider.cpp,v 1.3 2009-07-09 11:23:12 cattanem Exp $
 // Include files
 // local
 //#include "MuonID/MuonMeasurementProvider.h"
@@ -112,7 +112,7 @@ std::vector<LHCb::LHCbID>  SmartMuonMeasProvider::idsInRange(LHCb::State& state,
 int SmartMuonMeasProvider::findClosestStation(double z)
 {
   int st=0;
-  double small=1e6;
+  double smallest=1e6;
   double stations_z[] = {12110.0,15270.0,16470.0,17670.0,18870.0};
 
   for (int i=0;i<5;i++) 
@@ -120,10 +120,10 @@ int SmartMuonMeasProvider::findClosestStation(double z)
     double difz=fabs((stations_z[i]-z));
     //std::cout<<"st="<<i<<std::endl;
     //std::cout<<"DIFZ="<<difz<<std::endl;
-    //std::cout<<"small="<<small<<std::endl;
-    if (difz<small)
+    //std::cout<<"smallest="<<smallest<<std::endl;
+    if (difz<smallest)
     {
-      small=difz;
+      smallest=difz;
       st=i;
     }
   }
