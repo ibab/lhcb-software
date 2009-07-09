@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.6 2008-07-11 08:53:08 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.7 2009-07-09 10:17:33 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -104,8 +104,8 @@ StatusCode FilterTrueTracks::execute() {
       Asct assoc(evtSvc(),*p);
       const Table* table = assoc.direct();
       if ( NULL==table) {
-        err() << "NO Table " << endmsg ;
-        return StatusCode::FAILURE ;
+        Warning("NO association Table for "+*p,StatusCode::FAILURE,1) ;
+        return StatusCode::SUCCESS ;
       }
 
       if (msgLevel(MSG::DEBUG)) nT += inTracks->size();
