@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 - Marco Gersabeck
+ - Removed usage of VeloClusters from PatVeloAlignTrackFilter.
+
 ! 2009-07-06 - David Hutchcroft
  - Added PatVeloTraversingTracking cpp and h which adds an algorithm that makes
    tracks that cross between detector halves even if the exact openning distace is

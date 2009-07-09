@@ -29,8 +29,6 @@ namespace Tf {
     {
       declareProperty( "RHitManagerName", m_rHitManagerName="DefaultVeloRHitManager" );
       declareProperty( "PhiHitManagerName", m_phiHitManagerName="DefaultVeloPhiHitManager" );
-      declareProperty( "VeloClusterLocation", m_clusterCont=LHCb::VeloClusterLocation::Default );
-      declareProperty( "CheckADC", m_checkADC = false );
       declareProperty( "MinRCharge", m_min_r_charge = 5 );
       declareProperty( "MaxRCharge", m_max_r_charge = 200 );
       declareProperty( "MinPhiCharge", m_min_phi_charge = 5 );
@@ -103,24 +101,6 @@ namespace Tf {
     }
     m_tothits = 0;
 
-    // get cluster container
-    if ( m_debugLevel ) debug() << "Retrieving " << m_clusterCont << endmsg;
-    if ( !exist<LHCb::VeloClusters>(m_clusterCont ) ) {
-      
-      if ( m_debugLevel )
-        debug() << " ----  No VeloClusters container retrieved --- " << endmsg;
-      
-      return (StatusCode::SUCCESS);
-      
-    } else {
-      m_clusters = get<LHCb::VeloClusters>(m_clusterCont );
-      
-      if ( m_debugLevel ) {
-        debug() << "---- VeloCluster Container retrieved from default location ----" << endmsg;
-        debug()<< "Number of clusters found in TES: " << m_clusters->size() <<endmsg;
-      }
-    }
-
     DefaultVeloRHitManager::Station *stationR0;
     DefaultVeloPhiHitManager::Station *stationP0;
     unsigned int zoneR0;
@@ -128,7 +108,7 @@ namespace Tf {
 
     std::vector<VeloRHit*>::const_iterator   cR0;
     std::vector<VeloPhiHit*>::const_iterator   cP0;
-    LHCb::VeloCluster *cluster;
+    LHCb::VeloLiteCluster *cluster;
     double charge = 0.;
 
     // loop over all hits to find space points
@@ -160,15 +140,6 @@ namespace Tf {
             VeloRHitRange hitsR0 = stationR0->hits(zoneR0);
             for(cR0 = hitsR0.begin(); hitsR0.end() != cR0; ++cR0) {
 
-              if ( m_checkADC ) {
-                cluster = (LHCb::VeloCluster*)m_clusters->containedObject( (*cR0)->channelID() ); 
-                charge = cluster->totalCharge();
-                if ( m_debugLevel ) debug() << "R signal " << charge << endreq;
-                if ( ( m_min_r_charge > charge ) || ( m_max_r_charge < charge ) ) {
-                  continue;
-                }
-              }
-
               double r = (*cR0)->rHalfBox();
               int r_coord = (int)floor( ( r - m_radiusOffset ) * m_nBinsR / 36. );
               if ( m_verboseLevel ) verbose() << "R coord matching: " << (*cR0)->rHalfBox() << " " << r_coord << endreq;
@@ -176,15 +147,6 @@ namespace Tf {
 
               VeloPhiHitRange hitsP0 = stationP0->hits(zoneP0);
               for(cP0 = hitsP0.begin(); hitsP0.end() != cP0; ++cP0) {
-
-                if ( m_checkADC ) {
-                  cluster = (LHCb::VeloCluster*)m_clusters->containedObject( (*cP0)->channelID() ); 
-                  charge = cluster->totalCharge();
-                  if ( m_debugLevel ) debug() << "Phi signal " << charge << endreq;
-                  if ( ( m_min_phi_charge > charge ) || ( m_max_phi_charge < charge ) ) {
-                    continue;
-                  }
-                }
 
                 double phi = (*cP0)->sortCoordHalfBox();
                 if ( Gaudi::Units::pi < phi ) phi -= 2 * Gaudi::Units::pi;

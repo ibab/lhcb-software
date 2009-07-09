@@ -36,15 +36,12 @@ namespace Tf {
 
       DefaultVeloRHitManager*   m_rHitManager;
       DefaultVeloPhiHitManager* m_phiHitManager;
-      LHCb::VeloClusters* m_clusters;
 
       std::string m_rHitManagerName;
       std::string m_phiHitManagerName;
-      std::string m_clusterCont;
       unsigned int m_numberOfRSectors;
       unsigned int m_numberOfPSectors;
       double m_radiusOffset;
-      bool m_checkADC;
       double m_min_r_charge;
       double m_max_r_charge;
       double m_min_phi_charge;
