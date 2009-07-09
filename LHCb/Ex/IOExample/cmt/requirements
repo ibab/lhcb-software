@@ -1,13 +1,9 @@
-# $Id: requirements,v 1.39 2009-04-15 07:37:10 cattanem Exp $
+# $Id: requirements,v 1.40 2009-07-09 09:58:45 cattanem Exp $
 package IOExample
-version v2r9
+version v3r0
 
-branches doc options cmt src
+branches doc options cmt
 include_path none
-
-use GaudiKernel      v*
-use GaudiAlg         v*
-use TrackEvent       v* Event
 
 # Uses only needed to set up run time environment
 private
@@ -15,11 +11,8 @@ private
   use GaudiPoolDb         v*              -no_auto_imports
   use GaudiConf           v*              -no_auto_imports
   use EventSys            v* Event        -no_auto_imports
+  use EventPacker         v* Event        -no_auto_imports
   macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
   use $(CASTOR_use)
   apply_pattern QMTest
 end_private
-
-
-library IOExample     *.cpp
-apply_pattern component_library library=IOExample

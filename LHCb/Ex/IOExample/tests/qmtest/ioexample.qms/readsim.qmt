@@ -3,6 +3,10 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/ReadSim.opts</text></set></argument>
   <argument name="reference"><text>../refs/ReadSim.ref</text></argument>
+  <argument name="validator"><text>
+from GaudiConf.QMTest.LHCbExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
   <argument name="prerequisites"><set>
     <tuple><text>ioexample.writesim</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
