@@ -1,4 +1,4 @@
-// $Id: Particles6.h,v 1.7 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Particles6.h,v 1.8 2009-07-09 13:39:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES6_H 
 #define LOKI_PARTICLES6_H 1
@@ -53,6 +53,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor from the function and daughter index 
        *  @param fun    the function to be used 
        *  @param index  the index of daughter particle
@@ -60,6 +61,33 @@ namespace LoKi
       ChildFunction 
       ( const LoKi::PhysTypes::Func& fun   , 
         const size_t                 index ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun    , 
+        const size_t                 index1 , 
+        const size_t                 index2 ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun    , 
+        const size_t                 index1 , 
+        const size_t                 index2 ,
+        const size_t                 index3 ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFunction 
+      ( const LoKi::PhysTypes::Func& fun    , 
+        const size_t                 index1 , 
+        const size_t                 index2 ,
+        const size_t                 index3 ,
+        const size_t                 index4 ) ;
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
        *  @param fun    the function to be used 
@@ -78,11 +106,14 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the function itself 
-      LoKi::PhysTypes::Fun m_fun ;
-      // index of daughter particle 
-      size_t m_index ;
+      // ======================================================================
+      /// the function itself 
+      LoKi::PhysTypes::Fun m_fun ;                       // the function itself 
+      /// indices of daughter particle
+      std::vector<size_t> m_index ;             // indices of daughter particle
+      // ======================================================================
     };
     // ========================================================================    
     /** @class ChildPredicate
@@ -109,6 +140,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /** constructor from the function and daughter index 
        *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
@@ -116,6 +148,33 @@ namespace LoKi
       ChildPredicate 
       ( const LoKi::PhysTypes::Cuts& cut   , 
         const size_t                 index ) ;
+      /** constructor from the function and daughter index 
+       *  @param cut    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut    , 
+        const size_t                 index1 ,
+        const size_t                 index2 ) ;
+      /** constructor from the function and daughter index 
+       *  @param cut    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut    , 
+        const size_t                 index1 ,
+        const size_t                 index2 ,
+        const size_t                 index3 ) ;
+      /** constructor from the function and daughter index 
+       *  @param cut    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildPredicate 
+      ( const LoKi::PhysTypes::Cuts& cut    , 
+        const size_t                 index1 ,
+        const size_t                 index2 ,
+        const size_t                 index3 ,
+        const size_t                 index4 ) ;
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
        *  @param cut    the function to be used 
@@ -134,15 +193,19 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the function itself 
-      LoKi::PhysTypes::Cut m_cut ;
-      // index of daughter particle 
-      size_t m_index ;
+      // ======================================================================
+      /// the function itself 
+      LoKi::PhysTypes::Cut m_cut ;                       // the function itself 
+      /// index of daughter particle 
+      std::vector<size_t> m_index ;               // index of daughter particle 
+      // ======================================================================
     };
     // ========================================================================
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

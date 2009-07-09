@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.13 2008-06-12 08:25:27 ibelyaev Exp $
+// $Id: Child.h,v 1.14 2009-07-09 13:39:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -118,6 +118,21 @@ namespace LoKi
       const size_t           index3   ,
       const size_t           index4   )
     { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
+    // ========================================================================
+    /** Trivial accessor to the daughter particles for the given particle.
+     *
+     *  @attention index starts with 1 , null index corresponds 
+     *             to the original particle 
+     *
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  indices the vector of indices 
+     *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2009-07-09
+     */
+    LHCb::Particle* child 
+    ( const LHCb::Particle*      particle , 
+      const std::vector<size_t>& indices  ) ;
     // ========================================================================
     /** trivial function to access all children particles 
      *  @see LHCb::Particle::daughters

@@ -1,4 +1,4 @@
-// $Id: Child.cpp,v 1.8 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: Child.cpp,v 1.9 2009-07-09 13:39:13 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -220,6 +220,59 @@ LoKi::Child::children
   result.reserve ( 10 ) ;
   _children ( particle , level , result ) ;
   return result ;
+}
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  inline LHCb::Particle* _child 
+  ( const LHCb::Particle*      particle , 
+    const std::vector<size_t>& indices  , 
+    size_t                     last     ) 
+  {
+    if ( 0 == particle   || 
+         indices.empty() || 
+         0 == last       ||
+         indices.size() < last ) { return 0 ; }
+    //
+    switch ( last ) 
+    {
+    case 1 :
+      return LoKi::Child::child ( particle , indices[0] ) ; 
+    case 2 :
+      return LoKi::Child::child ( particle , indices[0] , indices[1] ) ; 
+    case 3 :
+      return LoKi::Child::child ( particle , indices[0] , indices[1] , indices[2] ) ; 
+    case 4 :
+      return LoKi::Child::child ( particle , indices[0] , indices[1] , indices[2] , indices [3] ) ; 
+    default:
+      break ;
+    }
+    //
+    return LoKi::Child::child 
+      ( _child ( particle , indices , --last ) , indices.back() ) ; 
+    // 
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *
+ *  @attention index starts with 1 , null index corresponds 
+ *             to the original particle 
+ *
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  indices the vector of indices 
+ *  @return daughter particle with given index 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2009-07-09
+ */
+// ============================================================================
+LHCb::Particle* LoKi::Child::child 
+( const LHCb::Particle*      particle , 
+  const std::vector<size_t>& indices  )
+{ 
+  return _child ( particle , indices , indices.size () ) ; 
 }
 // ============================================================================
 // The END 
