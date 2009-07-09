@@ -1,0 +1,12 @@
+#!/bin/csh -f
+#$Header: /afs/cern.ch/project/cvs/reps/lhcb/LbRelease/scripts/add_DN_LFC,v 1.1 2009-07-09 09:58:05 joel Exp $
+
+#
+# add the DN of user into the LFC
+#
+__RCSID__="$Id: add_DN_LFC,v 1.1 2009-07-09 09:58:05 joel Exp $"
+
+source /afs/cern.ch/project/gd/LCG-share/current_3.1/etc/profile.d/grid-env.csh
+runpy LbRelease.add_DN_LFC ${*:q}
+
+exit 0
