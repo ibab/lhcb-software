@@ -1,5 +1,9 @@
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r2
+
+2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbConfiguration/LbLogin.py: 
 	- fixed the native bin guessing for Darwin
 	- disabled the cache globally for Darwin.
