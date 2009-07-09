@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-09 - Rob Lambert
+ - InputLocation fix in MuMuK* selection
+
 ! 2009-07-09 - Patrick Koppenburg
  - Typo fix in MuMuK8 selection
 
