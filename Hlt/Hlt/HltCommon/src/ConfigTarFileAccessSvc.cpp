@@ -115,11 +115,11 @@ private:
     long getOctal(const char *cp, int size)
     {
        long val = 0;
-       for( ; (size > 0)  && (*cp == ' '); cp++, size--);
-       if (   (size == 0) || !is_octal(*cp)) return -1;
-       for( ; (size > 0)  &&  is_octal(*cp); size--) val = val<<3 + (*cp++ - '0');
-       for( ; (size > 0)  && (*cp == ' '); cp++, size--);
-       if (   (size > 0)  && *cp) return -1;
+       for(;(size > 0) && (*cp == ' '); cp++, size--);
+       if ((size == 0) || !is_octal(*cp)) return -1;
+       for(; (size > 0) && is_octal(*cp); size--) val = val * 8 + *cp++ - '0';
+       for (;(size > 0) && (*cp == ' '); cp++, size--);
+       if ((size > 0) && *cp) return -1;
        return val;
     }
 
