@@ -4,7 +4,7 @@
 #============================================================================
 
 package LHCbMath
-version v3r10p1
+version v3r11
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -25,11 +25,8 @@ apply_pattern install_more_includes more=LHCbMath
 
 apply_pattern install_python_modules
 
-macro_append ROOT_linkopts " -lMathCore " \
-             WIN32 " libMathCore.lib "
-macro_append ROOT_linkopts "" \
-             ROOT_GE_5_19&WIN32 " libGenVector.lib " \
-             ROOT_GE_5_19 " -lGenVector "
+macro_append ROOT_linkopts " -lMathCore -lGenVector " \
+                     WIN32 " libMathCore.lib libGenVector.lib "
 
 # ================= constituents: linker library ============================
 library                     LHCbMathLib    ../src/*.cpp
@@ -56,9 +53,9 @@ apply_pattern reflex_dictionary                               \
               selectionfile=$(LHCBMATHROOT)/dict/LHCbMathDict.xml     \
               options="-U__MINGW32__"
 #============================================================================
-macro_append LHCbMathDict_dependencies " LHCbMathLib "
 
 macro LHCbMath_use_linkopts $(use_linkopts)
+
 #============================================================================
 private
 # Note: libgslcblas is needed by libgsl, but the link is missing.
