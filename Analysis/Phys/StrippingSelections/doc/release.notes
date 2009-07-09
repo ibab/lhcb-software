@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-09 - Patrick Koppenburg
+ - Typo fix in MuMuK8 selection
+
 ! 2009-07-07 - Anton Poluektov
  - Modified tests/StrippingSTEP09.py to demonstrate the new StreamFile option
    in StrippingConf

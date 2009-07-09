@@ -37,10 +37,9 @@ Strip_loose_Bd2KstarMuMu = CombineParticles("Strip_loose_Bd2KstarMuMu")
 Strip_loose_Bd2KstarMuMu.InputLocations = ["StdLooseDiMuon", "StdLooseDetachedKstar"]
 Strip_loose_Bd2KstarMuMu.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
 Strip_loose_Bd2KstarMuMu.DaughtersCuts = {
-    'K*(892)0': ("(BPVVDZ>-50) & "+
+    'K*(892)0':  "(BPVVDZ>-50) & "+
                  "(INTREE((ABSID=='pi+') & ((PIDpi-PIDmu)>-10) & ((PIDpi-PIDK)>-10))) &"+
-                 "(INTREE((ABSID=='K+') & ((PIDK-PIDmu)>-10) & ((PIDK-PIDpi)>-5)))",
-                 )
+                 "(INTREE((ABSID=='K+') & ((PIDK-PIDmu)>-10) & ((PIDK-PIDpi)>-5)))" ,
     'J/psi(1S)' : "(2 == NINTREE(((PIDmu-PIDpi)>-10) & ((PIDmu-PIDK)>-10) & (MIPCHI2DV(PRIMARY)>0)) )"
     }
 Strip_loose_Bd2KstarMuMu.CombinationCut = "(ADAMASS('B0')<300*MeV)"
