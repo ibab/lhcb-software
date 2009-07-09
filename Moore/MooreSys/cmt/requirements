@@ -1,5 +1,5 @@
 package MooreSys
-version v7r1
+version v7r2
 
 branches doc cmt
 
@@ -7,15 +7,14 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v7r1    Hlt
-use  HltLuminosityMonitor   v1r2    Hlt
+use  Moore                  v7r2    Hlt
 # backwards compatibility stub
 use  TCKData                v2r0    Hlt
 
 ### Temporarily here...
-use HltConf                 v3r1    Hlt
-use HltCommon               v5r7    Hlt
+use HltConf                 v3r3    Hlt
 use TCKUtils                v1r0p1    Hlt
+use GaudiOnline             v2r30   Online
 
 
 
