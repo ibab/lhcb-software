@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.4 2008-11-30 11:02:23 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.5 2009-07-09 11:21:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -111,7 +111,7 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     } // unscat > 0
 
     // Don't save in the segment if the emitted spectra was used
-    if ( !useEmittedSpectrum ) segment->setAverageCKTheta( id, angle );
+    if ( !useEmittedSpectrum ) segment->setAverageCKTheta( id, static_cast<LHCb::RichRecSegment::FloatType>(angle) );
     
     // return the newly calculated value
     return angle;
@@ -160,8 +160,9 @@ void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
     const double ckTheta = avgCherenkovTheta(segment,*hypo);
 
     // Set the value
-    segment->setAverageCKRadiusLocal( *hypo,
-                                      rMax * (ckTheta/m_nomCK[segment->trackSegment().radiator()]) );
+    const float C = 
+      static_cast<LHCb::RichRecSegment::FloatType>(rMax*(ckTheta/m_nomCK[segment->trackSegment().radiator()]));
+    segment->setAverageCKRadiusLocal( *hypo, C );
 
   }
 
@@ -234,9 +235,11 @@ double CherenkovAngle::satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
   if ( segment->avSaturatedRadiusLocal() < 0 )
   {
     // Get radius for saturated angle
-    segment->setAvSaturatedRadiusLocal( avCKRingRadiusLocal( segment,
-                                                             m_nomCK[segment->trackSegment().radiator()],
-                                                             nSamples ) );
+    const float R = 
+      static_cast<LHCb::RichRecSegment::FloatType>( avCKRingRadiusLocal( segment,
+                                                                         m_nomCK[segment->trackSegment().radiator()],
+                                                                         nSamples ) );
+    segment->setAvSaturatedRadiusLocal( R );
   }
 
   return segment->avSaturatedRadiusLocal();

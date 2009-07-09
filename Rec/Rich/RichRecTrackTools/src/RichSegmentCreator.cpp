@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.3 2009-07-09 11:21:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -143,8 +143,8 @@ SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
     seg = new LHCb::RichRecSegment ( segment,
                                      pTrk,
                                      m_binsEn[segment->radiator()],
-                                     m_minPhotEn[segment->radiator()],
-                                     m_maxPhotEn[segment->radiator()] );
+                                     static_cast<LHCb::RichRecSegment::FloatType>(m_minPhotEn[segment->radiator()]),
+                                     static_cast<LHCb::RichRecSegment::FloatType>(m_maxPhotEn[segment->radiator()]) );
     // Set the average photon energy
     segment->setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(seg) );
   }

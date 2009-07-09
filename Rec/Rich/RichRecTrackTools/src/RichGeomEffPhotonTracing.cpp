@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.5 2009-07-09 11:21:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -157,7 +157,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
                                              photon.smartID().hpdID(),
-                                             m_pdInc );
+                                             static_cast<LHCb::RichRecSegment::FloatType>(m_pdInc) );
 
           // flag regions where we expect hits for this segment
           if ( photon.detectionPoint().x() > 0 )
@@ -190,7 +190,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
     }
 
     // store result
-    segment->setGeomEfficiency( id, eff );
+    segment->setGeomEfficiency( id, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Segment " 
@@ -215,7 +215,8 @@ GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
      *  @todo Look to improving this by taking into account the cos^2 scattering
      *        probability. Need to do this though without using random numbers ...
      */
-    segment->setGeomEfficiencyScat( id, geomEfficiency(segment,id) );
+    segment->setGeomEfficiencyScat( id, 
+                                    static_cast<LHCb::RichRecSegment::FloatType>(geomEfficiency(segment,id)) );
   }
 
   // return result fo this id type

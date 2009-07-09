@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.14 2009-06-12 15:27:36 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.15 2009-07-09 11:21:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -285,27 +285,27 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           newTrack->richRecPixels().reserve(30);
 
           // Set vertex momentum
-          newTrack->setVertexMomentum ( trTrack->p()  );
-          newTrack->setVertexPt       ( trTrack->pt() );
+          newTrack->setVertexMomentum ( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->p())  );
+          newTrack->setVertexPt       ( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->pt()) );
 
           // chi2
-          newTrack->setChi2PerDoF( trTrack->chi2PerDoF() );
+          newTrack->setChi2PerDoF( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->chi2PerDoF()) );
           newTrack->setNDoF      ( trTrack->nDoF()       );
 
           // track charge
           newTrack->setCharge( trTrack->charge() );
 
           // clone variable
-          newTrack->setCloneDist( trTrack->info( LHCb::Track::CloneDist,
-                                                 newTrack->cloneDist() ) );
+          newTrack->setCloneDist( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->info( LHCb::Track::CloneDist,
+                                                                                            newTrack->cloneDist() )) );
 
           // likelihood
-          newTrack->setLikelihood( trTrack->info( LHCb::Track::Likelihood,
-                                                  newTrack->likelihood() ) );
+          newTrack->setLikelihood( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->info( LHCb::Track::Likelihood,
+                                                                                             newTrack->likelihood() )) );
 
           // ghost prob
-          newTrack->setGhostProbability( trTrack->info( LHCb::Track::GhostProbability,
-                                                        newTrack->ghostProbability() ) );
+          newTrack->setGhostProbability( static_cast<LHCb::RichRecTrack::FloatType>(trTrack->info( LHCb::Track::GhostProbability,
+                                                                                                   newTrack->ghostProbability() )) );
 
           // Set parent information
           newTrack->setParentTrack( trTrack );

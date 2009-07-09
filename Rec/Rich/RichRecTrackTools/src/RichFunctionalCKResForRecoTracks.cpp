@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.3 2008-11-30 11:02:23 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.4 2009-07-09 11:21:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -291,10 +291,10 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       } // ckexp > 0
 
       // Save final resolution value
-      segment->setCKThetaResolution( *hypo, sqrt(hypo_res2) );
+      segment->setCKThetaResolution( *hypo, static_cast<LHCb::RichRecSegment::FloatType>(std::sqrt(hypo_res2)) );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Segment " << segment->key() << " : " << *hypo << " ckRes " << sqrt(hypo_res2) << endreq;
+        verbose() << "Segment " << segment->key() << " : " << *hypo << " ckRes " << std::sqrt(hypo_res2) << endreq;
       }
 
     } // loop over mass hypos

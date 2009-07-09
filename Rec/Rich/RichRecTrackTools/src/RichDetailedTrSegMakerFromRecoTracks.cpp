@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.8 2009-04-14 14:43:12 cattanem Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.9 2009-07-09 11:21:24 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -737,8 +737,7 @@ DetailedTrSegMakerFromRecoTracks::
 getNextInterPoint( const Gaudi::XYZPoint&   point,
                    const Gaudi::XYZVector&  direction,
                    const DeRichRadiator * rad,
-                   Gaudi::XYZPoint& interP
-                   ) const
+                   Gaudi::XYZPoint& interP ) const
 {
   RichRadIntersection::Vector intersections;
   bool OK = false;

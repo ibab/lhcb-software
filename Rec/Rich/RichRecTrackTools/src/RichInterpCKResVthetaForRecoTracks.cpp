@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::InterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.2 2009-07-09 11:21:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -118,7 +118,7 @@ InterpCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
     }
 
     // compute the interpolated resolution
-    segment->setCKThetaResolution( id, res );
+    segment->setCKThetaResolution( id, static_cast<LHCb::RichRecSegment::FloatType>(res) );
 
   }
 

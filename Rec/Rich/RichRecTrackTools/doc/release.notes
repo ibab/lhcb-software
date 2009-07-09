@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 - Chris Jones
+ - Fix WIN32 warnings
+
 !======================== RichRecTrackTools v1r12 2009-06-17 =================
 ! 2009-06-10 - Chris Jones
  - Improvements to the track selectors. Remove the use of obsolete variables

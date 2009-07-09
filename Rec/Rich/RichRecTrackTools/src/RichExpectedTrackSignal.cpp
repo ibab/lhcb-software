@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.4 2008-02-15 10:31:36 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.5 2009-07-09 11:21:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -87,7 +87,7 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
                                           spectra.binEnergyLowerEdge(iEnBin),
                                           spectra.binEnergyUpperEdge(iEnBin) );
       if ( phots<0 ) phots = 0;
-      (spectra.energyDist(id))[iEnBin] = phots;
+      (spectra.energyDist(id))[iEnBin] = static_cast<LHCb::RichRecSegment::FloatType>(phots);
       signal += phots;
 
     }
@@ -98,7 +98,7 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
               << " nEmittedPhotons = " << signal << endreq;
     }
 
-    segment->setNEmittedPhotons( id, signal );
+    segment->setNEmittedPhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
   }
 
   return segment->nEmittedPhotons( id );
@@ -126,7 +126,9 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
         m_sigDetEff->photonDetEfficiency( segment, id, emitSpectra.binEnergy(iEnBin) );
       const double gasQuartzWinTrans =
         m_gasQuartzWin->photonTransProb(segment,emitSpectra.binEnergy(iEnBin));
-      signal += ( (detSpectra.energyDist(id))[iEnBin] = sig*gasQuartzWinTrans );
+      const double T = sig*gasQuartzWinTrans;
+      (detSpectra.energyDist(id))[iEnBin] = static_cast<LHCb::RichRecSegment::FloatType>(T);
+      signal += T;
     }
 
     if ( msgLevel(MSG::DEBUG) )
@@ -135,7 +137,7 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
               << " nDetectablePhotons = " << signal << endreq;
     }
 
-    segment->setNDetectablePhotons( id, signal );
+    segment->setNDetectablePhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
   }
 
   return segment->nDetectablePhotons( id );
@@ -172,7 +174,7 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
 
         // observable photons * signal/scatter prob
         (sigSpectra.energyDist(id))[iEnBin] =
-          (detSpectra.energyDist(id))[iEnBin] * (1.-scattProb);
+          static_cast<LHCb::RichRecSegment::FloatType>( (detSpectra.energyDist(id))[iEnBin] * (1.-scattProb) );
         signal  += (sigSpectra.energyDist(id))[iEnBin];
         scatter += (detSpectra.energyDist(id))[iEnBin] * scattProb;
 
@@ -187,8 +189,8 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
               << " nScatteredPhotons = " << scatter << endreq;
     }
 
-    segment->setNSignalPhotons( id, signal );
-    segment->setNScatteredPhotons( id, scatter );
+    segment->setNSignalPhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
+    segment->setNScatteredPhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(scatter) );
   }
 
   return segment->nSignalPhotons( id );
@@ -326,7 +328,7 @@ ExpectedTrackSignal::nSignalPhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nSignalPhotons( *segment, id );
     }
-    track->setNSignalPhotons( id, signal );
+    track->setNSignalPhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nSignalPhotons( id );
@@ -344,7 +346,7 @@ ExpectedTrackSignal::nObservableSignalPhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nObservableSignalPhotons( *segment, id );
     }
-    track->setNObservableSignalPhotons( id, signal );
+    track->setNObservableSignalPhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nObservableSignalPhotons( id );
@@ -362,7 +364,7 @@ ExpectedTrackSignal::nScatteredPhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nScatteredPhotons( *segment, id );
     }
-    track->setNScatteredPhotons( id, signal );
+    track->setNScatteredPhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nScatteredPhotons( id );
@@ -380,7 +382,7 @@ ExpectedTrackSignal::nObservableScatteredPhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nObservableScatteredPhotons( *segment, id );
     }
-    track->setNObservableScatteredPhotons( id, signal );
+    track->setNObservableScatteredPhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nObservableScatteredPhotons( id );
@@ -405,7 +407,7 @@ ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nEmittedPhotons( *segment, id );
     }
-    track->setNEmittedPhotons( id, signal );
+    track->setNEmittedPhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nEmittedPhotons( id );
@@ -423,7 +425,7 @@ ExpectedTrackSignal::nDetectablePhotons ( LHCb::RichRecTrack * track,
           ++segment ) {
       signal += nDetectablePhotons( *segment, id );
     }
-    track->setNDetectablePhotons( id, signal );
+    track->setNDetectablePhotons( id, static_cast<LHCb::RichRecTrack::FloatType>(signal) );
   }
 
   return track->nDetectablePhotons( id );

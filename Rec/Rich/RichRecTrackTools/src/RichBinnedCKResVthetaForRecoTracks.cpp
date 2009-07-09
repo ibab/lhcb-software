@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.2 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.3 2009-07-09 11:21:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -117,7 +117,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       // give each hypo that was OK, the smallest resolution
       for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
       {
-        segment->setCKThetaResolution( *hypo, OK[*hypo] ? res : 0 );
+        segment->setCKThetaResolution( *hypo, OK[*hypo] ? static_cast<LHCb::RichRecSegment::FloatType>(res) : 0.0f );
       }
 
       if ( msgLevel(MSG::VERBOSE) )
@@ -140,7 +140,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
 
       double res(0);
       ckThetaResolution_Imp(segment,id,res);
-      segment->setCKThetaResolution( id, res );
+      segment->setCKThetaResolution( id, static_cast<LHCb::RichRecSegment::FloatType>(res) );
 
       if ( msgLevel(MSG::VERBOSE) )
       {

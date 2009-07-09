@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.2 2009-07-09 11:21:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -95,7 +95,7 @@ GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
     }
 
     // Set the geom eff
-    segment->setGeomEfficiency( id, eff );
+    segment->setGeomEfficiency( id, static_cast<LHCb::RichRecSegment::FloatType>(eff) );
 
     if ( m_checkPhotonRegions )
     {
@@ -137,10 +137,10 @@ GeomEffFixedValue::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
   if ( !segment->geomEfficiencyScat().dataIsValid(id) )
   {
 
-    double eff = 0;
+    float eff = 0;
     if ( segment->trackSegment().radiator() == Rich::Aerogel ) 
     {
-      eff = ( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0 );
+      eff = ( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0.0f );
     }
 
     // Assign this efficiency to all hypotheses
