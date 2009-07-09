@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.25 2009-07-08 09:06:53 wouter Exp $
+ *  $Id: TAConfig.cpp,v 1.26 2009-07-09 08:45:53 wouter Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -25,7 +25,7 @@
 
 //#include "StringConvert.h"
 // Event
-#include "Event/StateTraj.h"
+#include "TrackKernel/StateTraj.h"
 #include "Event/Track.h"
 #include "Event/MuonMeasurement.h"
 #include "Event/OTMeasurement.h"
