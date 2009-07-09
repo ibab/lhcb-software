@@ -1,7 +1,9 @@
-!$Id: release.notes,v 1.39 2009-05-06 09:00:08 jpalac Exp $
+!$Id: release.notes,v 1.40 2009-07-09 09:14:07 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+!========================== HltGlobalMonitor v2r5   2009-07-09 ================
 
 !========================== HltGlobalMonitor v2r4p1 2009-05-06 ================
 
