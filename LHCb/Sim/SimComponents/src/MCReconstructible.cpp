@@ -4,7 +4,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.12 2009-01-16 08:06:44 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.13 2009-07-09 09:43:08 odescham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -20,7 +20,7 @@
 // the data
 #include "Event/MCParticle.h"
 #include "Event/MCTrackGeomCriteria.h"
-
+#include "CaloDet/DeCalorimeter.h"
 #include <boost/assign/list_of.hpp> // for 'map_list_of()'
 #include "LHCbMath/LHCbMath.h"
 
@@ -60,6 +60,7 @@ MCReconstructible::MCReconstructible( const std::string& type,
 		  boost::assign::list_of("hasVelo"));
   declareProperty("ChargedTtrack", m_chargedTCriteria = 
 		  boost::assign::list_of("hasT"));
+  declareProperty("NeutralEtMin", m_lowEt);
 }
 
 //=============================================================================
@@ -95,6 +96,16 @@ StatusCode MCReconstructible::initialize()
   m_critMap.insert(ChargedTtrack, new MCTrackGeomCriteria(m_chargedTCriteria));
   m_critMap.insert(ChargedVelo, new MCTrackGeomCriteria(m_chargedVeloCriteria));
 
+
+  // Calorimeter geometry
+  DeCalorimeter* m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
+  LHCb::CaloCellID refOut = LHCb::CaloCellID(2, 0, 6 ,0);
+  LHCb::CaloCellID refInn = LHCb::CaloCellID(2, 2, 25 ,23);
+  m_xECALInn = fabs(  m_calo->cellX(refInn)  );
+  m_yECALInn = fabs(  m_calo->cellY(refInn)  );
+  m_xECALOut = fabs(  m_calo->cellX(refOut)  );  
+  m_yECALOut = fabs(  m_calo->cellY(refOut)  );
+
   return sc;
 }
 
@@ -128,6 +139,7 @@ bool MCReconstructible::accept_neutral( const LHCb::MCParticle* mcPart ) const
   const double y  = mcPart->originVertex()->position().y();
   const double z  = mcPart->originVertex()->position().z();
   double pz = mcPart->momentum().pz();
+  if( pz < 0 )return false;
   pz < 0 ? pz = std::min(pz, -LHCb::Math::lowTolerance) : 
                pz = std::max(pz, LHCb::Math::lowTolerance);  
   
