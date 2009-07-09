@@ -204,6 +204,7 @@
  090602 - Added AppConfig and L0TCK to the removal process.
  090602 - Moved to LbScripts v4r1
  090618 - fixed bootstrap order for the removal mode.
+ 090709 - Don't try to create a log file in check-mode.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -213,10 +214,10 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090618'
+script_version = '090709'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v4r1"
+lbscripts_version = "v4r2"
 compat_version = "v1r0"
 #-----------------------------------------------------------------------------------
 
@@ -603,7 +604,7 @@ def getCMT(version=0):
             cmtvers = LbConfiguration.External.CMT_version
             log.debug("Extracting CMT version from LbConfiguration.External: %s" % cmtvers)
         except ImportError :
-            cmtvers = "v1r20p20070208"
+            cmtvers = "v1r20p20090520"
             log.debug("Using CMT version %s" % cmtvers)
     # get the cmt version number from the argument
     else:
@@ -1607,9 +1608,11 @@ def createBaseDirs(pname, pversion):
 
     logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
 
-
-    createDir(mypath.split(os.pathsep)[0], logname)
-
+    if not check_only :
+        logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
+        createDir(mypath.split(os.pathsep)[0], logname)
+    else :
+        logname = None
     return logname
 
 # install main logging script
@@ -2117,7 +2120,8 @@ def main():
         console.setLevel(logging.INFO)
     thelog.addHandler(console)
 
-    changePermissions('install_project.py', recursive=False)
+    if not check_only :
+        changePermissions('install_project.py', recursive=False)
 
 # check pversion
     if pversion == ' ' and pname != 'LHCbGrid':
@@ -2126,13 +2130,14 @@ def main():
 
     lognm = createBaseDirs(pname, pversion)
 
-    filehandler = logging.FileHandler(lognm, "w")
-    if python_version < (2, 5, 1) :
-        filehandler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s: %(message)s"))
-    else :
-        filehandler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s: %(funcName)-25s - %(message)s"))
-    filehandler.setLevel(logging.DEBUG)
-    thelog.addHandler(filehandler)
+    if lognm :
+        filehandler = logging.FileHandler(lognm, "w")
+        if python_version < (2, 5, 1) :
+            filehandler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s: %(message)s"))
+        else :
+            filehandler.setFormatter(logging.Formatter("%(asctime)s %(levelname)-8s: %(funcName)-25s - %(message)s"))
+        filehandler.setLevel(logging.DEBUG)
+        thelog.addHandler(filehandler)
 
     runInstall(pname, pversion, binary)
 

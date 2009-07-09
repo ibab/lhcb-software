@@ -1,3 +1,9 @@
+2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py:  
+	 - don't try to create a log file in check mode.
+     - changed the default CMT version to v1r20p20090520.
+    
 2009-07-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/MkLCGCMTtar: fixed the internal setting of the CMTCONFIG env variable.
