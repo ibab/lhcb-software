@@ -3,7 +3,7 @@
  *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.14 2009-02-21 22:00:25 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.15 2009-07-10 07:34:14 wouter Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -17,7 +17,7 @@
 #include "Kernel/LHCbID.h"
 
 // Event
-#include "Event/StateTraj.h"
+#include "TrackKernel/StateTraj.h"
 #include "Event/Track.h"
 #include "Event/MuonMeasurement.h"
 #include "GAlign.h"
