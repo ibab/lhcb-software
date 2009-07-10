@@ -127,7 +127,6 @@ def ConfiguredFitVelo( Name = "FitVelo",
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
                                         FieldOff=True )
     eventfitter.Fitter.NumberFitIterations = 2
-    eventfitter.Fitter.ZPositions = []
     #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
     #eventfitter.Fitter.ErrorX2 = 100
     #eventfitter.Fitter.ErrorY2 = 100
@@ -139,7 +138,6 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
                          TracksInContainer = "Rec/Track/VeloTT" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
-    eventfitter.Fitter.ZPositions = [ 990., 2165. ]
     eventfitter.Fitter.ErrorP = [1.2, 5e-07]
     eventfitter.Fitter.MaxNumberOutliers = 1
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
@@ -153,9 +151,7 @@ def ConfiguredFitSeed( Name = "FitSeed",
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.StateAtBeamLine = False
-    eventfitter.Fitter.ZPositions = [ 7500., 9450., 11900. ]
     eventfitter.Fitter.ErrorP = [0.04, 5e-08]
-    eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
 def ConfiguredFitForward( Name = "FitForward",
@@ -173,7 +169,6 @@ def ConfiguredFitMatch( Name = "FitMatch",
 def ConfiguredFitDownstream( Name = "FitDownstream",
                              TracksInContainer = "Rec/Track/Downstream" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
     eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
@@ -188,7 +183,6 @@ def ConfiguredPreFitMatch( Name = "PreFitMatch",
 def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
                                 TracksInContainer = "Rec/Track/Downstream" ):
     eventfitter = ConfiguredPrefitter(Name,TracksInContainer)
-    eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
     return eventfitter
 
 def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True  ):
@@ -198,7 +192,7 @@ def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters =
                                     LiteClusters = LiteClusters)
     fitter.NumberFitIterations = 1
     fitter.MaxNumberOutliers = 0
-    fitter.ZPositions = []
+    fitter.AddDefaultReferenceNodes = False
     fitter.NodeFitter.BiDirectionalFit = False
     fitter.NodeFitter.Smooth = False
     # at some point, need to switch to analytic evaluation
@@ -214,7 +208,6 @@ def ConfiguredFastEventFitter( Name, TracksInContainer ):
 
 def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter = ConfiguredFastFitter( Name, TracksInContainer,FieldOff=True )
-    eventfitter.Fitter.ZPositions = []
     eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
     eventfitter.Fitter.MeasProvider.IgnoreIT = True
     eventfitter.Fitter.MeasProvider.IgnoreOT = True
@@ -230,6 +223,6 @@ def ConfiguredStraightLineFit( Name, TracksInContainer,
     eventfitter.Fitter.ApplyMaterialCorrections = False
     eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
     eventfitter.Fitter.StateAtBeamLine = False
-    eventfitter.Fitter.ZPositions = [ ]
+    eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 

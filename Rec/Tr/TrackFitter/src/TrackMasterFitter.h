@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.22 2009-07-08 14:26:17 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.23 2009-07-10 11:55:14 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -95,7 +95,7 @@ private:
   // job options
   std::string m_extrapolatorName;   ///< name of the extrapolator in Gaudi
   bool m_upstream;                  ///< switch between upstream/downstream fit
-  std::vector<double> m_zPositions; ///< z-positions to determine the states
+  bool m_addDefaultRefNodes  ;      ///< add default reference nodes
   bool m_stateAtBeamLine;           ///< add state closest to the beam-line?
   int m_numFitIter;                 ///< number of fit iterations to perform
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
@@ -113,7 +113,8 @@ private:
   double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ; ///< Apply material corrections
   bool m_applyEnergyLossCorrections ; ///< Apply material corrections
- 
+  double m_maxDeltaChi2Converged ; ///< Maximum change in chisquare for converged fit
+
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering
   size_t m_minNumVeloRHits   ; ///< Minimum number of VeloR hits

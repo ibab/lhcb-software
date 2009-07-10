@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.67 2009-07-08 14:26:17 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.68 2009-07-10 11:55:14 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -70,12 +70,8 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     = 9.0         );
   declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   = 2           );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  = true        );
-  declareProperty( "ZPositions"          , 
-                   m_zPositions = boost::assign::list_of(StateParameters::ZBegRich1)
-                                                        (StateParameters::ZEndRich1)
-                                                        (StateParameters::ZBegRich2)
-                                                        (StateParameters::ZEndRich2));
-
+  declareProperty( "AddDefaultReferenceNodes" , m_addDefaultRefNodes = true ) ;
+  
   declareProperty( "UseSeedStateErrors", m_useSeedStateErrors = false );
 
   declareProperty( "ErrorX2"        , m_errorX2 =  400.0*Gaudi::Units::mm2 );
@@ -97,6 +93,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MinNumTTHitsForOutlierRemoval",      m_minNumTTHits      = 2 ) ;
   declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 4 ) ;
   declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
+  declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = -1 ) ;
 }
 
 //=========================================================================
@@ -135,11 +132,8 @@ StatusCode TrackMasterFitter::initialize()
          << " Max " << m_numOutlierIter << " outliers removed with outliers"
          << " at chi2 > " << m_chi2Outliers << endmsg
          << " State z positions at: " << endmsg
-         << ((m_stateAtBeamLine) ? " beam line," : "") << " first measurement" ;
-  std::vector<double>::const_iterator zPos;
-  for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
-    info()  << ", " << *zPos;
-  }
+         << ((m_stateAtBeamLine) ? " beam line," : "") << " first/last measurement"
+	 << (m_addDefaultRefNodes ? ", default reference positions" : "" ) ;
   info() << endmsg
          << "==================================================" << endmsg;
   
@@ -226,7 +220,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   
   // Iterate the track fit for linearisation
   int iter = 1;
-  for ( ; iter <= m_numFitIter; ++iter ) {   
+  bool converged = false ;
+  for ( ; iter <= m_numFitIter && !converged ; ++iter ) {   
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
     
     // update reference trajectories with smoothed states
@@ -239,6 +234,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     // reset the covariance of the first state
     seed.covariance() = seedCov ;
 
+    double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
     
     if ( sc.isFailure() ) return failure( "unable to fit the track" );
@@ -246,6 +242,9 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2() 
                                 << " ref state = (" << track.nodes().back()->state().stateVector() 
                                 << ") at z= " << track.nodes().back()->state().z() << endmsg;
+    double dchi2 = prevchi2 - track.chi2() ;
+    converged = iter>1 && std::abs(dchi2) < m_maxDeltaChi2Converged * track.nDoF();
+    
   }
   
   // Outlier removal iterations
@@ -308,23 +307,23 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
   
   std::vector<Node*>& nodes = track.nodes();
   
-  // Add the state at the first measurement position
+  // Add the state at the first and last measurement position
   // -----------------------------------------------
+  LHCb::Node *firstMeasurementNode(0), *lastMeasurementNode(0) ;
+  for( LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
+       inode != nodes.end() && !firstMeasurementNode; ++inode ) 
+    if( (*inode)->hasMeasurement() ) firstMeasurementNode = *inode ;
+  for( LHCb::Track::NodeContainer::reverse_iterator inode = nodes.rbegin() ;
+       inode != nodes.rend() && !lastMeasurementNode; ++inode ) 
+    if( (*inode)->hasMeasurement() ) lastMeasurementNode = *inode ;
   if ( ( m_upstream && !track.checkFlag(Track::Backward ) ) ||
-       ( !m_upstream && track.checkFlag(Track::Backward ))) {
-    std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
-    while ( !(*iNode)->hasMeasurement() ) ++iNode;
-    State& state = (*iNode) -> state();
-    state.setLocation( State::FirstMeasurement );
-    track.addToStates( state );
-  }
-  else {
-    std::vector<Node*>::iterator iNode = nodes.begin();
-    while ( !(*iNode)->hasMeasurement() ) ++iNode;
-    State& state = (*iNode) -> state();
-    state.setLocation( State::FirstMeasurement );
-    track.addToStates( state );
-  }
+       ( !m_upstream && track.checkFlag(Track::Backward ))) 
+    std::swap( lastMeasurementNode, firstMeasurementNode ) ;
+  firstMeasurementNode->state().setLocation( State::FirstMeasurement );
+  track.addToStates(firstMeasurementNode->state()) ;
+
+  lastMeasurementNode->state().setLocation( State::LastMeasurement );
+  track.addToStates(lastMeasurementNode->state()) ;
 
   // Add the states at the reference positions
   // ------------------------------------------
@@ -492,31 +491,26 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = track.measurements();
   Track::NodeContainer& nodes = track.nodes();
-  nodes.reserve( measures.size() + m_zPositions.size() );
+  nodes.reserve( measures.size() + 6 );
   for ( std::vector<Measurement*>::const_reverse_iterator it =
           measures.rbegin(); it != measures.rend(); ++it ) {
     FitNode* node = new FitNode( **it );
     nodes.push_back( node );
   }
 
-  // Loop over the predefined z positions and add them to the nodes.
-  for (std::vector<double>::const_iterator izpos = m_zPositions.begin() ; 
-       izpos != m_zPositions.end(); ++izpos ) {
-    double z = *izpos;
-    FitNode* node = new FitNode( z );
-    State& state = node->state();
-    // set the location (must find a better way to do this!)
-    if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
-      state.setLocation( State::BegRich1 );
-    else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
-      state.setLocation( State::EndRich1 );
-    else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
-      state.setLocation( State::BegRich2 );
-    else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
-      state.setLocation( State::EndRich2 );
-    else if ( fabs(z - StateParameters::ZEndVelo ) < TrackParameters::lowTolerance )
-      state.setLocation( State::EndVelo );
-    nodes.push_back( node ) ;
+  // Add reference nodes depending on track type
+  if( m_addDefaultRefNodes ) {
+    if(track.hasVelo() && ( track.hasT() ||track.hasTT()) )
+      nodes.push_back( new FitNode( StateParameters::ZEndVelo, State::EndVelo )) ;
+    if(track.hasTT() ) {
+      nodes.push_back( new FitNode( StateParameters::ZBegRich1, State::BegRich1 )) ;   
+      nodes.push_back( new FitNode( StateParameters::ZEndRich1, State::EndRich1 )) ;
+    }
+    if(track.hasT() ) {
+      nodes.push_back( new FitNode( StateParameters::ZBegT, State::AtT )) ;
+      nodes.push_back( new FitNode( StateParameters::ZBegRich2, State::BegRich2 )) ;   
+      nodes.push_back( new FitNode( StateParameters::ZEndRich2, State::EndRich2 )) ;
+    }
   }
 
   // At a node for the position at the beamline
