@@ -70,45 +70,58 @@ class StrippingConf( LHCbConfigurableUser ):
 #       Attach configurables of all active stripping lines to sequencer
 
         lines = self.activeLines()
+	streams = self.activeStreams()
 
 	output = (self.getProp('OutputType')).upper()
 
         if output not in [ "ETC", "DST", "NONE" ]:
             raise TypeError( "Invalid output type '%s'"%output )
 
-# always define stripping lines
-
-#        DaVinci().appendToMainSequence( [ GaudiSequencer("StrippingLineSequencer") ] )
-
 	if output == "ETC" : 
 
 #           The user wants to write ETC. 
 #           Selections of all active stripping lines will go there. 
-#           No division into streams at this point.
+
+# 	    Sequencer that will run all selections independently 
+#            (thus IgnoreFilterPassed = TRUE)
+
+	    strippingSeq = GaudiSequencer("StrippingSequencer")
+	    strippingSeq.IgnoreFilterPassed = TRUE
 
 	    tag = EventTuple("TagCreator")
 	    tag.EvtColsProduce = True
 	    tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
 	    tag.addTool(TupleToolSelResults())
 
-#
-#           Create a FilterDesktop for each selection just to make a more uniform selection 
-#           names for ETC. This could be just
-#	      tag.TupleToolSelResults.Selections = [ i.outputSelection() for i in lines ] 
-#           but the outputSelection names can be weird. Is there a better way? 
-#
+#           Sequencer for the global selection (logical OR of all selections)
+#           We need this in addition to StrippingSequencer because in ModeOR=TRUE 
+#           the sequencer will give up running the rest of algorithms after it found 
+#           the one with positive decision. 
 
-	    seq = GaudiSequencer("StrippingGlobal")
-	    seq.ModeOR = TRUE
-	    for i in lines : 
-	        name = i.name() + "Decision"
-	        log.info("Created decision " + name)
-		tag.TupleToolSelResults.Selections += [ i.name() ] 
-		seq.Members += [ i.configurable() ] 
-		
+	    globalSeq = GaudiSequencer("StrippingGlobal")
+	    globalSeq.ModeOR = TRUE
 	    tag.TupleToolSelResults.Selections += ["StrippingGlobal"]
 
-	    DaVinci().appendToMainSequence( [ seq ] )
+# 	    Define sequencers for stream selections
+	    for stream in streams : 
+		streamSeq = GaudiSequencer("StrippingStream"+stream)
+		streamSeq.ModeOR = TRUE
+		tag.TupleToolSelResults.Selections += [ "StrippingStream"+stream ]
+
+#           Cycle through all selections are append them to sequencers
+	    for i in lines : 
+		tag.TupleToolSelResults.Selections += [ i.name() ] 
+		strippingSeq.Members += [ i.configurable() ] 
+		stream = i.stream();
+		GaudiSequencer("StrippingStream"+stream).Members += [ i.configurable() ]
+		globalSeq.Members += [ i.configurable() ]
+		log.info("Line "+i.name()+" : Output selection - "+i.outputSelection())
+
+	    strippingSeq.Members += [ globalSeq ]
+	    for stream in streams : 
+	        strippingSeq.Members += [ GaudiSequencer("StrippingStream"+stream) ]
+
+	    DaVinci().appendToMainSequence( [ strippingSeq ] )
 	    DaVinci().appendToMainSequence( [ tag ] )
 	
 	if output == "DST" : 
@@ -116,7 +129,6 @@ class StrippingConf( LHCbConfigurableUser ):
 #           The user wants to write DST. 
 #           Selections of all active stripping lines will go into separate DST for each stream. 
 
-	    streams = self.activeStreams()
 	    dstPrefix = self.getProp("DSTPrefix")
 	    streamFile = self.getProp("StreamFile")
 	    
