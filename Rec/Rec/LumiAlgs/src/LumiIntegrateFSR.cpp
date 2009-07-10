@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.1 2009-06-12 08:17:50 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.2 2009-07-10 15:53:40 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -65,8 +65,8 @@ StatusCode LumiIntegrateFSR::initialize() {
       m_addBXTypes.push_back("NoBeam");
   }
   if (m_subtractBXTypes.empty()) {
-      m_subtractBXTypes.push_back("SingleBeamRight");
-      m_subtractBXTypes.push_back("SingleBeamLeft");
+      m_subtractBXTypes.push_back("Beam1");
+      m_subtractBXTypes.push_back("Beam2");
   }
   // ensure consistency
   m_BXTypes.push_back(m_PrimaryBXType);
