@@ -52,16 +52,14 @@ Strip_loose_Bd2KstarMuMu.MotherCut=( "(MIPDV(PRIMARY)<0.08*mm) & (MIPCHI2DV(PRIM
 # Filter the Bd for the ~10Hz stripping selection
 #
 
-filter_Bd2KstarMuMu_10Hz = StrippingMember (FilterDesktop
-			      , "Filter"
-		    	      , InputLocations = ["Strip_loose_Bd2KstarMuMu"]
-		    	      , Code = 
-		    	    		"(INTREE((ABSID=='K+') & (TRCHI2DOF < 36))) & "+
-		    	                "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 36))) & "+
-		    	        	"(2 == NINTREE((ABSID=='mu+') & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 16))) & "+
-		    	                "(INTREE((ABSID=='K*(892)0') & (BPVVDCHI2>25) & (VFASPF(VCHI2/VDOF)<36))) & "+
-		    	                "(PT>300*MeV) & (BPVDIRA>0.9998) & (BPVVDCHI2>36) & (VFASPF(VCHI2/VDOF)<36) "
-		             )
+filter_Bd2KstarMuMu_10Hz = FilterDesktop("filter_Bd2KstarMuMu_10Hz")
+filter_Bd2KstarMuMu_10Hz.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
+filter_Bd2KstarMuMu_10Hz.Code=( "(INTREE((ABSID=='K+') & (TRCHI2DOF < 36))) & "+
+                                "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 36))) & "+
+                                "(2 == NINTREE((ABSID=='mu+') & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 16))) & "+
+                                "(INTREE((ABSID=='K*(892)0') & (BPVVDCHI2>25) & (VFASPF(VCHI2/VDOF)<36))) & "+
+                                "(PT>300*MeV) & (BPVDIRA>0.9998) & (BPVVDCHI2>36) & (VFASPF(VCHI2/VDOF)<36) "
+                                )
 
 # 
 # Create StrippingLine with this selection.
@@ -75,17 +73,15 @@ Bd2KstarMuMu_10Hz_line = StrippingLine('Bd2KstarMuMu_10Hz'
 # Filter the Bd for the ~2Hz stripping selection
 #
 
-filter_Bd2KstarMuMu_2Hz = StrippingMember (FilterDesktop
-			      , "Filter"
-		    	      , InputLocations = ["filter_Bd2KstarMuMu_10Hz"]
-		    	      , Code = 
-		    	    		"(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5) & (TRCHI2DOF < 9))) & "+
-		    	        	"(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (TRCHI2DOF < 9))) & "+
-		    	                "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 16))) & "+
-		    	                "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-30*mm) & (VFASPF(VCHI2/VDOF)<16) & (PT>300*MeV))) & "+
-		    	                "(INTREE((ABSID=='J/psi(1S)') & (BPVVDCHI2>25) )) & "+
-		    	                "(BPVDIRA>0.9999) & (BPVVDCHI2>64) & (MIPCHI2DV(PRIMARY) < 36) & (VFASPF(VCHI2/VDOF)<16) "
-		             )
+filter_Bd2KstarMuMu_2Hz = FilterDesktop("filter_Bd2KstarMuMu_2Hz")
+filter_Bd2KstarMuMu_2Hz.InputLocations = ["filter_Bd2KstarMuMu_10Hz"]
+filter_Bd2KstarMuMu_2Hz.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5) & (TRCHI2DOF < 9))) & "+
+                                 "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (TRCHI2DOF < 9))) & "+
+                                 "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 16))) & "+
+                                 "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-30*mm) & (VFASPF(VCHI2/VDOF)<16) & (PT>300*MeV))) & "+
+                                 "(INTREE((ABSID=='J/psi(1S)') & (BPVVDCHI2>25) )) & "+
+                                 "(BPVDIRA>0.9999) & (BPVVDCHI2>64) & (MIPCHI2DV(PRIMARY) < 36) & (VFASPF(VCHI2/VDOF)<16) "
+                                 )
 
 #
 # Make the 2Hz Bd as a clone of 10Hz line
@@ -98,15 +94,13 @@ Bd2KstarMuMu_2Hz_line = Bd2KstarMuMu_10Hz_line.clone("Bd2KstarMuMu_2Hz"
 # Filter the Bd for the ~1Hz stripping selection
 #
 
-filter_Bd2KstarMuMu_1Hz = StrippingMember (FilterDesktop
-			      , "Filter"
-		    	      , InputLocations = ["Strip_loose_Bd2KstarMuMu"]
-		    	      , Code = 
-		    	    		"(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5))) & "+
-		    	        	"(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (MIPDV(PRIMARY) > 0.08*mm))) & "+
-		    	                "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-5*mm) & (PT>1000*MeV) & (MIPDV(PRIMARY) > 0.06*mm))) & "+
-		    	                "(BPVDIRA>0.99995) & (VFASPF(VMINVDDV(PRIMARY))>1*mm) & (MIPDV(PRIMARY) < 0.06*mm)"
-		             )
+filter_Bd2KstarMuMu_1Hz = FilterDesktop("filter_Bd2KstarMuMu_1Hz")
+filter_Bd2KstarMuMu_1Hz.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
+filter_Bd2KstarMuMu_1Hz.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5))) & "+
+                                 "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (MIPDV(PRIMARY) > 0.08*mm))) & "+
+                                 "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-5*mm) & (PT>1000*MeV) & (MIPDV(PRIMARY) > 0.06*mm))) & "+
+                                 "(BPVDIRA>0.99995) & (VFASPF(VMINVDDV(PRIMARY))>1*mm) & (MIPDV(PRIMARY) < 0.06*mm)"
+                                 )
 #
 # Make the 1Hz Bd as a clone of 10Hz line
 # 
@@ -114,6 +108,3 @@ Bd2KstarMuMu_1Hz_line = Bd2KstarMuMu_10Hz_line.clone("Bd2KstarMuMu_1Hz"
 			, algos = [ Strip_loose_Bd2KstarMuMu, filter_Bd2KstarMuMu_1Hz ]
 )
 
-#
-# TODO: Make both 10Hz and 2Hz lines from the same combinatorics with different FilterDesktops. 
-#

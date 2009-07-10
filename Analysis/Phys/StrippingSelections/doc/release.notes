@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-10 - Rob Lambert
+ - Changed Bd2K*MuMu selection to use FilterDesktop instances, 
+     not StrippingMembers.
+
 ! 2009-07-09 - V.Gligorov
  - Updated the StrippingTopo selection. The major changes are the addition of the
    "robust" stage and the prescaling of the 4-body topological line (10%).
