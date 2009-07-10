@@ -12,3 +12,4 @@ call %StripPath_tmpfile%
 
 if exist %StripPath_tmpfile% del %StripPath_tmpfile%
 set StripPath_tmpfile=
+set LB_NO_STRIP_PATH=

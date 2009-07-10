@@ -1,3 +1,8 @@
+2009-07-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/StripPath: remove LB_NO_STRIP_PATH after usage
+	* cmt/fragments/python_alias_header: removed excess antislash.
+
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r6

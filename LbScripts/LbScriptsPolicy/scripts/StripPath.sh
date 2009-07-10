@@ -3,4 +3,5 @@ if [[ "x$LB_NO_STRIP_PATH" ==  "x" ]] ; then
   . $tmpfile
   rm -f $tmpfile
   unset tmpfile
+  unset LB_NO_STRIP_PATH
 fi

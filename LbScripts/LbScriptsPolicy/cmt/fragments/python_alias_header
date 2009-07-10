@@ -15,7 +15,7 @@ ${CONSTITUENT}install :: $(bat_file)
 $(bat_file) :: $(py_file)
 	@if [ -e $(install_scripts_dir) ] ; then \
 	  echo "Creating $(bat_file) file" ; \
-	  echo "python %~d0%~p0\$(script) %*" > $(bat_file) ; \
+	  echo "python %~d0%~p0$(script) %*" > $(bat_file) ; \
 	  chmod a-x $(bat_file) ; \
 	fi
 

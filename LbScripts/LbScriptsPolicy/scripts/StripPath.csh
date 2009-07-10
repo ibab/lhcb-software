@@ -3,4 +3,5 @@ if (! ${?LB_NO_STRIP_PATH} ) then
   source $tmpfile
   rm -f $tmpfile
   unset tmpfile
+  unsetenv LB_NO_STRIP_PATH
 endif
