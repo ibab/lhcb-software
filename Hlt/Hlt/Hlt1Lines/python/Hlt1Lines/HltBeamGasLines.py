@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.3 2009-06-01 20:35:08 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.4 2009-07-10 15:51:13 panmanj Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -46,12 +46,12 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
         L0ChannelLeft = self.getProp('L0ChannelLeft')
         BeamGas_EtCut = self.getProp('BeamGas_EtCut')
 
-        # SingleBeamLeft BeamGas Alley
+        # SingleBeamLeft=Beam1 BeamGas Alley
         #-----------------------------------
         from Configurables import GaudiSequencer
         Line ( 'BeamGasLeft' 
                , prescale = self.prescale
-               , ODIN  = " ODIN_BXTYP == LHCb.ODIN.SingleBeamLeft "
+               , ODIN  = " ODIN_BXTYP == LHCb.ODIN.Beam1 "
                , L0DU  = "L0_CHANNEL('"+L0ChannelLeft+"')"
                , algos = [
                      convertL0Candidates('AllHadron')

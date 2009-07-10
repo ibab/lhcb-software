@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.9 2009-02-20 16:37:06 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.10 2009-07-10 15:52:45 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -56,8 +56,8 @@ StatusCode LumiAnalyser::initialize() {
   // initialize lists
   if (m_BXTypes.empty()) {
       m_BXTypes.push_back("BeamCrossing");
-      m_BXTypes.push_back("SingleBeamRight");
-      m_BXTypes.push_back("SingleBeamLeft");
+      m_BXTypes.push_back("Beam1");
+      m_BXTypes.push_back("Beam2");
       m_BXTypes.push_back("NoBeam");
   }
   if (m_addBXTypes.empty()) {
@@ -65,8 +65,8 @@ StatusCode LumiAnalyser::initialize() {
       m_addBXTypes.push_back("NoBeam");
   }
   if (m_subtractBXTypes.empty()) {
-      m_subtractBXTypes.push_back("SingleBeamRight");
-      m_subtractBXTypes.push_back("SingleBeamLeft");
+      m_subtractBXTypes.push_back("Beam1");
+      m_subtractBXTypes.push_back("Beam2");
   }
 
   if (m_Variables.empty()) {

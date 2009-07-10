@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-07-10 - Jaap Panman
+ - LumiHistoCollector.cpp: adapt to changed BXType names in ODIN
+ - LumiAnalyser.cpp: adapt to changed BXType names in ODIN
+
 !========================== HltLuminosity v2r8 2009-06-03 ===================
 ! 2009-05-30 - Gerhard Raven
  - use fill directly instead of fillHisto

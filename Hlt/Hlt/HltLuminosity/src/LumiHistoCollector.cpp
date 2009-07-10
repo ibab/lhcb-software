@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.cpp,v 1.5 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiHistoCollector.cpp,v 1.6 2009-07-10 15:52:45 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -66,8 +66,8 @@ StatusCode LumiHistoCollector::initialize() {
   // initialize lists for default behaviour
   if (m_BXTypes.empty()) {
       m_BXTypes.push_back("BeamCrossing");
-      m_BXTypes.push_back("SingleBeamRight");
-      m_BXTypes.push_back("SingleBeamLeft");
+      m_BXTypes.push_back("Beam1");
+      m_BXTypes.push_back("Beam2");
       m_BXTypes.push_back("NoBeam");
   }
   if (m_addBXTypes.empty()) {
@@ -75,8 +75,8 @@ StatusCode LumiHistoCollector::initialize() {
       m_addBXTypes.push_back("NoBeam");
   }
   if (m_subtractBXTypes.empty()) {
-      m_subtractBXTypes.push_back("SingleBeamRight");
-      m_subtractBXTypes.push_back("SingleBeamLeft");
+      m_subtractBXTypes.push_back("Beam1");
+      m_subtractBXTypes.push_back("Beam2");
   }
   if (m_Variables.empty()) {
       m_Variables.push_back("SPDMult");
