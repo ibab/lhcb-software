@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.69 2009-07-09 14:51:49 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.70 2009-07-10 07:20:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -92,7 +92,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import LoKiSvc
         LoKiSvc().Welcome = False
 
-        import OnlineEnv as Online
+        import OnlineEnv 
         self.setProp('UseTCK', True)
         self._enableDataOnDemand()
 
@@ -112,22 +112,28 @@ class Moore(LHCbConfigurableUser):
         RootHistCnv__PersSvc().OutputEnabled = False
 
         # set up the event selector
-        mepMgr = Online.mepManager(Online.PartitionID,Online.PartitionName,['EVENT','SEND'],False)
-        app.Runable = Online.evtRunable(mepMgr)
+        mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,['EVENT','SEND'],False)
+        app.Runable = OnlineEnv.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
-        evtMerger = Online.evtMerger(name='Output',buffer='SEND',datatype=Online.MDF_NONE,routing=1)
-        evtMerger.DataType = Online.MDF_BANKS
+        evtMerger = OnlineEnv.evtMerger(name='Output',buffer='SEND',datatype=OnlineEnv.MDF_NONE,routing=1)
+        evtMerger.DataType = OnlineEnv.MDF_BANKS
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
-        eventSelector = Online.mbmSelector(input='EVENT',TAE=( Online.TAE != 0 ))
+        eventSelector = OnlineEnv.mbmSelector(input='EVENT',TAE=( OnlineEnv.TAE != 0 ))
         app.ExtSvc.append(eventSelector)
-        Online.evtDataSvc()
+        OnlineEnv.evtDataSvc()
+
+        # define the send sequence
+        SendSequence =  GaudiSequencer('SendSequence')
+        SendSequence.OutputLevel = OnlineEnv.OutputLevel
+        from Configurables import HltLine
+        SendSequence.Members = [ HltLine('Hlt1Global'), evtMerger ]
+        ApplicationMgr().TopAlg.append(SendSequence)
 
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
-        self._configureOnlineSendSeq()
         # self._configureOnlineDB()
 
     def _configureOnlineMessageSvc(self):
@@ -144,22 +150,15 @@ class Moore(LHCbConfigurableUser):
             os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
             log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
         msg.fifoPath = os.environ['LOGFIFO']
-        msg.OutputLevel = Online.OutputLevel
+        import OnlineEnv
+        msg.OutputLevel = OnlineEnv.OutputLevel
         msg.doPrintAlways = False
-        msg.setError += ['LoKiSvc'];
+        #msg.setError += ['LoKiSvc'];
 
 
-    def _configureOnlineSendSeq(self):
-        # define the send sequence
-        SendSequence =  GaudiSequencer('SendSequence')
-        SendSequence.OutputLevel = Online.OutputLevel
-        from Configurables import HltLine
-        SendSequence.Members = [ HltLine('Hlt1Global'), evtMerger ]
-        ApplicationMgr().TopAlg.append(SendSequence)
 
     def _configureOnlineDB(self):
         ### TODO: make sure there is a FEST specific snapshot...
-        from Configurables import CondDB, RunChangeHandlerSvc
 
         tag = { "DDDB":     self.getProp('DDDBtag')   # "head-20090112",
               , "LHCBCOND": self.getProp('CondDBtag') # "head-20090112" 
@@ -169,6 +168,7 @@ class Moore(LHCbConfigurableUser):
 
         baseloc = "/group/online/hlt/conditions"
 
+        from Configurables import CondDB
         conddb = CondDB()
         # Set alternative connection strings and tags
         for part in [ "DDDB", "LHCBCOND" ]:
@@ -323,21 +323,21 @@ class Moore(LHCbConfigurableUser):
         #       Online requires UseTCK
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
-            import OnlineEnv as Online
+            import OnlineEnv
             self.setProp('EnableTimer',False)
             self.setProp('UseTCK',True)
             self.setProp('Simulation',False)
             self.setProp('DataType','2009' )
-            ### TODO: see if 'Online' has InitialTCK attibute. If so, set it
+            ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
             ## in case of LHCb or FEST, _REQUIRE_ it exists...
-            if hasattr(Online,'InitialTCK') :
-                self.setProp('InitialTCK',Online.InitialTCK)
+            if hasattr(OnlineEnv,'InitialTCK') :
+                self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 self.setProp('CheckOdin',True)
             # determine the partition we run in, and adapt settings accordingly...
-            if Online.PartitionName == 'FEST' or Online.PartitionName == 'LHCb' :
-                self.setProp('InitialTCK', Online.InitialTCK )
+            if OnlineEnv.PartitionName == 'FEST' or OnlineEnv.PartitionName == 'LHCb' :
+                self.setProp('InitialTCK', OnlineEnv.InitialTCK )
                 self.setProp('CheckOdin',True)
-            if Online.PartitionName == 'FEST' :
+            if OnlineEnv.PartitionName == 'FEST' :
                 # This is a bad hack which is probably incompatible with the use of snapshots...
                 self.setProp('Simulation',True)
 
