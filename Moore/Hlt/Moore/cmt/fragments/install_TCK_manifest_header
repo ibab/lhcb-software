@@ -3,4 +3,4 @@ MANIFEST_VERSION = ${MOOREVERSION}
 
 manifest ::  
 	mkdir -p $(target_directory)
-	test -f ${TCKDATAROOT}/manifest/MOORE_$(MANIFEST_VERSION) && cp ${TCKDATAROOT}/manifest/MOORE_$(MANIFEST_VERSION) $(target_directory)/manifest; true
+	test -f ${HLTTCKROOT}/manifest/MOORE_$(MANIFEST_VERSION) && cp ${HLTTCKROOT}/manifest/MOORE_$(MANIFEST_VERSION) $(target_directory)/manifest; true
