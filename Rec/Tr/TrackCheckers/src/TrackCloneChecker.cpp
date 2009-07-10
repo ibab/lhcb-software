@@ -1,4 +1,4 @@
-// $Id: TrackCloneChecker.cpp,v 1.3 2007-09-17 14:34:47 jonrob Exp $
+// $Id: TrackCloneChecker.cpp,v 1.4 2009-07-10 11:33:57 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -74,7 +74,7 @@ StatusCode TrackCloneChecker::execute()
     {
       debug() << "Track " << (*iTk)->key() << " given CloneDist "
               << (*iTk)->info(LHCb::Track::CloneDist,1e99)
-              << endreq;
+              << endmsg;
     }
 
     // MCP for main track
@@ -82,9 +82,9 @@ StatusCode TrackCloneChecker::execute()
     //if ( !mcP ) continue;
     if ( !selected(mcP) ) continue;
 
-    debug() << "Track " << (*iTk)->key() << " " << (*iTk)->history() << endreq;
+    debug() << "Track " << (*iTk)->key() << " " << (*iTk)->history() << endmsg;
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << **iTk << endreq;
+      verbose() << **iTk << endmsg;
 
     // tally object
     TrackTally & tally = m_trackMap[(*iTk)->history()];
@@ -93,7 +93,7 @@ StatusCode TrackCloneChecker::execute()
     LHCb::Track * cloneTrack = linker.first( *iTk );
     while ( cloneTrack != NULL )
     {
-      debug() << " -> Clone Info Found :-" << endreq;
+      debug() << " -> Clone Info Found :-" << endmsg;
 
       if ( mcP )
       {
@@ -109,23 +109,23 @@ StatusCode TrackCloneChecker::execute()
         {
           if ( mcP == mcP_clone )
           {
-            debug() << "  -> True Clone : klDist = " << linker.weight() << endreq;
+            debug() << "  -> True Clone : klDist = " << linker.weight() << endmsg;
             plot1D( logFLdist, "KLDtrueClones", "Log10(KLDistance) | True Clones", -5, 13, 100 );
           }
           else
           {
-            debug() << "  -> Not a Clone : klDist = " << linker.weight() << endreq;
+            debug() << "  -> Not a Clone : klDist = " << linker.weight() << endmsg;
             plot1D( logFLdist, "KLDnotClones", "Log10(KLDistance) | Not Clones", -5, 13, 100 );
           }
         }
         else if ( mcP_clone && !mcSel )
         {
-          debug() << "  -> Rejected MCP : klDist = " << linker.weight() << endreq;
+          debug() << "  -> Rejected MCP : klDist = " << linker.weight() << endmsg;
           plot1D( logFLdist, "KLDrejMCPs", "Log10(KLDistance) | Rejected MCParticles", -5, 13, 100 );
         }
         else
         {
-          debug() << "  -> Ghost track : klDist = " << linker.weight() << endreq;
+          debug() << "  -> Ghost track : klDist = " << linker.weight() << endmsg;
           plot1D( logFLdist, "KLDghosts", "Log10(KLDistance) | Ghosts", -5, 13, 100 );
         }
       }
@@ -147,9 +147,9 @@ StatusCode TrackCloneChecker::execute()
         if ( (*iTk)->hasInfo(LHCb::Track::CloneDist) )
           debug() << " -> Clone Flag "
                   << LHCb::Track::CloneDist << " = "
-                  << (*iTk)->info(LHCb::Track::CloneDist,9e99) << endreq;
-        if ( hasMCclones  && cloneID ) debug() << "  -> REJECTED CLONE" << endreq;
-        if ( !hasMCclones && cloneID ) debug() << "  -> REJECTED NONCLONE" << endreq;
+                  << (*iTk)->info(LHCb::Track::CloneDist,9e99) << endmsg;
+        if ( hasMCclones  && cloneID ) debug() << "  -> REJECTED CLONE" << endmsg;
+        if ( !hasMCclones && cloneID ) debug() << "  -> REJECTED NONCLONE" << endmsg;
       }
       if ( hasMCclones  ) ++tally.totalClones;
       if ( !hasMCclones ) ++tally.totalNonClones;
@@ -171,14 +171,14 @@ StatusCode TrackCloneChecker::finalize()
 {
   const std::string & lines
     = "============================================================================================";
-  always() << lines << endreq;
+  always() << lines << endmsg;
   always() << "      Clone summary for '" << m_cloneInfoTES
-           << "' IDed clones with KLdist<" <<  m_klCut<< endreq;
-  always() << lines << endreq;
+           << "' IDed clones with KLdist<" <<  m_klCut<< endmsg;
+  always() << lines << endmsg;
 
   std::pair<double,double> r1,r2,r3,r4,r5;
 
-  always() << "   Track type     NonClones/Evt  Clones/Evt     ClonesID/%     NonClonesID/%  GhostsID/%" << endreq;
+  always() << "   Track type     NonClones/Evt  Clones/Evt     ClonesID/%     NonClonesID/%  GhostsID/%" << endmsg;
   for ( TrackTally::Map::const_iterator iM = m_trackMap.begin(); iM != m_trackMap.end(); ++iM )
   {
     const TrackTally & tally = iM->second;
@@ -191,10 +191,10 @@ StatusCode TrackCloneChecker::finalize()
       % iM->first
       % r4.first % r4.second % r5.first % r5.second
       % r1.first % r1.second % r2.first % r2.second % r3.first % r3.second
-             << endreq;
+             << endmsg;
   }
 
-  always() << lines << endreq;
+  always() << lines << endmsg;
 
   return TrackCheckerBase::finalize();
 }

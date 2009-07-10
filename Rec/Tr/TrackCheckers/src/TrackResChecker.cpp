@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.11 2009-07-08 15:24:23 wouter Exp $
+// $Id: TrackResChecker.cpp,v 1.12 2009-07-10 11:33:57 cattanem Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -358,7 +358,7 @@ void TrackResChecker::plotsByMeasType(const IHistoTool& htool, const LHCb::Track
 StatusCode TrackResChecker::finalize () 
 {
 
-  info() << "     ************************************    "<<endreq;
+  info() << "     ************************************    "<<endmsg;
   
   for( HistoToolMap::const_iterator ihtool = m_histoTools.begin() ;
        ihtool != m_histoTools.end(); ++ihtool) {
@@ -377,7 +377,7 @@ StatusCode TrackResChecker::finalize ()
 	       << std::setw(10) << pull[i]->title() << " "
 	       <<  format( ":  mean =  %5.3f +/- %5.3f, RMS = %5.3f +/- %5.3f",
 			   pull[i]->mean(), Gaudi::Utils::HistoStats::meanErr(pull[i]),
-			   pull[i]->rms(), Gaudi::Utils::HistoStats::rmsErr(pull[i])) << endreq;
+			   pull[i]->rms(), Gaudi::Utils::HistoStats::rmsErr(pull[i])) << endmsg;
     
     const AIDA::IHistogram1D* res[2]= {0,0} ;
     res[0]  = htool->histo( HistoID("vertex/x_res") ) ;
@@ -386,14 +386,14 @@ StatusCode TrackResChecker::finalize ()
       if(res[i])
 	info() << ghtool->histoDir() << "/"
 	       << res[i]->title() << format( ":  RMS =  %5.3f +/- %5.3f micron",
-					     res[i]->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(res[i])*1000) << endreq;
+					     res[i]->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(res[i])*1000) << endmsg;
     
     const AIDA::IHistogram1D* dpop = htool->histo( HistoID("vertex/dpoverp") ) ;
     if(dpop)
       info() << ghtool->histoDir() << "/"
 	     << dpop->title() << format( ":  mean =  %6.4f +/- %6.4f, RMS =  %6.4f +/- %6.4f",
 					 dpop->mean(), Gaudi::Utils::HistoStats::meanErr(dpop),
-					 dpop->rms(), Gaudi::Utils::HistoStats::rmsErr(dpop)) << endreq; 
+					 dpop->rms(), Gaudi::Utils::HistoStats::rmsErr(dpop)) << endmsg; 
   }
   
   return TrackCheckerBase::finalize();

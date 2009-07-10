@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.9 2009-07-02 13:20:49 smenzeme Exp $
+// $Id: TrackCheckerBase.cpp,v 1.10 2009-07-10 11:33:57 cattanem Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -183,8 +183,8 @@ bool TrackCheckerBase::ksLambdaAncestor(const LHCb::MCParticle* mcPart) const
   bool fromKsL = false;
   const LHCb::MCParticle* mother = mcPart->mother();
   while ( mother !=0 && fromKsL == false) {
-    if(fabs(mother->particleID().pid()) == 310 || 
-       fabs(mother->particleID().pid()) == 3122)
+    if(abs(mother->particleID().pid()) == 310 || 
+       abs(mother->particleID().pid()) == 3122)
       fromKsL = true;
     mother = mother->mother();
   } // loop

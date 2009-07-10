@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.16 2009-07-02 13:20:49 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.17 2009-07-10 11:33:57 cattanem Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -443,34 +443,34 @@ StatusCode TrackEffChecker::finalize(){
   
   info() << "             **************         " 
          << format( "       %8.0f tracks including %8.0f ghosts [%5.1f %%] Event average %5.1f  ****",
-                    double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100, eGhost*100) << endreq;
+                    double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100, eGhost*100) << endmsg;
 
   info() << "     all  long                 "
 	 << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		    double(counter("nFound").flag()), double(counter("nToFind").flag()), tEff*100, tClone*100, pur*100) << endreq;
+		    double(counter("nFound").flag()), double(counter("nToFind").flag()), tEff*100, tClone*100, pur*100) << endmsg;
   
   info() << "     long, p > 5 GeV           "
          << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		    double(counter("nFoundG5").flag()), double(counter("nToFindG5").flag()), tEffG5*100, tCloneG5*100, purG5*100) << endreq;
+		    double(counter("nFoundG5").flag()), double(counter("nToFindG5").flag()), tEffG5*100, tCloneG5*100, purG5*100) << endmsg;
 
   if (counter("nToFindB").flag() > 0){
     info() << "     all  long B daughers      "
 	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundB").flag()), double(counter("nToFindB").flag()), tEffB*100, tCloneB*100, purB*100) << endreq;
+		      double(counter("nFoundB").flag()), double(counter("nToFindB").flag()), tEffB*100, tCloneB*100, purB*100) << endmsg;
     
     info() << "   long B daughters, p > 5 GeV "
 	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundG5B").flag()), double(counter("nToFindG5B").flag()), tEffG5B*100, tCloneG5B*100, purG5B*100) << endreq;
+		      double(counter("nFoundG5B").flag()), double(counter("nToFindG5B").flag()), tEffG5B*100, tCloneG5B*100, purG5B*100) << endmsg;
   }
   
   if (counter ("nToFindKsL").flag() > 0) {
     info() << "     all  long  Ks/Lambda      "
 	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundKsL").flag()), double(counter("nToFindKsL").flag()), tEffKsL*100, tCloneKsL*100, purKsL*100) << endreq;
+		      double(counter("nFoundKsL").flag()), double(counter("nToFindKsL").flag()), tEffKsL*100, tCloneKsL*100, purKsL*100) << endmsg;
     
     info() << "   long Ks/Lambda, p > 5 GeV   "
 	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundG5KsL").flag()), double(counter("nToFindG5KsL").flag()), tEffG5KsL*100, tCloneG5KsL*100, purG5KsL*100) << endreq;
+		      double(counter("nFoundG5KsL").flag()), double(counter("nToFindG5KsL").flag()), tEffG5KsL*100, tCloneG5KsL*100, purG5KsL*100) << endmsg;
   }
 
 

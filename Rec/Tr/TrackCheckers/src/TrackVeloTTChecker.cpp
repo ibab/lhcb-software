@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.7 2008-02-08 08:13:01 cattanem Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.8 2009-07-10 11:33:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -61,11 +61,11 @@ StatusCode TrackVeloTTChecker::execute() {
 
   // Counter of events processed
   ++m_nEvents;
-  debug() << "Processing event number " << m_nEvents << endreq;
+  debug() << "Processing event number " << m_nEvents << endmsg;
 
   ProcStatus* procStat = get<ProcStatus>( ProcStatusLocation::Default );
   if( ( procStat != 0 ) && procStat->aborted() ) {
-    info() << "Processing aborted -> no VELO-TT checking." << endreq;
+    info() << "Processing aborted -> no VELO-TT checking." << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -75,7 +75,7 @@ StatusCode TrackVeloTTChecker::execute() {
   // Retrieve informations about event
   //  EventHeader* evt = get<EventHeader>( EventHeaderLocation::Default );
   //  debug() << "    retrieved EVENT: " << evt->evtNum()
-  //          << " RUN: " << evt->runNum() << endreq;
+  //          << " RUN: " << evt->runNum() << endmsg;
   
   //  ntuple->column( "Run",   evt->runNum() );
   //  ntuple->column( "Event", evt->evtNumber() );
@@ -83,7 +83,7 @@ StatusCode TrackVeloTTChecker::execute() {
   // Retrieve TT clusters
   STClusters* ttClusters = get<STClusters>( STClusterLocation::TTClusters );
   if( 0 == ttClusters->size() )
-    info() << "No TT clusters retrieved" << endreq;
+    info() << "No TT clusters retrieved" << endmsg;
 
   // ntuple variables
   int                NTnVeloTT = 0;
@@ -118,7 +118,7 @@ StatusCode TrackVeloTTChecker::execute() {
   Tracks* allTracks = get<Tracks>( TrackLocation::Default );
 
   debug() << "Found " << allTracks->size()
-          << " tracks at " << TrackLocation::Default << endreq;
+          << " tracks at " << TrackLocation::Default << endmsg;
 
   Tracks::iterator aTr;
   for( aTr = allTracks->begin(); allTracks->end() != aTr; ++aTr ) {

@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.10 2009-07-08 15:24:23 wouter Exp $
+// $Id: TrackCheckerNT.cpp,v 1.11 2009-07-10 11:33:57 cattanem Exp $
 // Include files 
 
 // local
@@ -558,7 +558,7 @@ int TrackCheckerNT::convertMeasurementToID(const Measurement *m)
     const DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
     const DeOTModule *mod = OT->findModule(otm->channel());
     if(mod==0) {
-      error() << "Cannot find module for channel: " << otm->channel() << endreq ;
+      error() << "Cannot find module for channel: " << otm->channel() << endmsg ;
       return -1 ;
     }
     int k = (mod->monoLayerA(otm->channel().straw())?0:1) +
