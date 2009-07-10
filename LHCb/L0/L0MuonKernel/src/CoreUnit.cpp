@@ -212,6 +212,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   MuonLayout layout(48,8);
   // Layout of pads in M1
   MuonLayout layoutM1(24,8);
+  MuonLayout layoutM1_lowerRegion(12,4);
   // Layout of PU
   MuonLayout pulayout(2,2);
 
@@ -229,21 +230,28 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   int sta=0;
 
   // Loop over M1 pads 
-  std::vector<LHCb::MuonTileID> pads = layoutM1.tilesInArea(m_mid,m_tower.maxXFoi(1)/2,0);
+  std::vector<LHCb::MuonTileID> pads = layoutM1.tilesInArea(m_mid,m_tower.maxXFoi(0)/2,0);
+  if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " 
+                         << "# of M1 pads (M1 own granularity) in tower : " 
+                         << pads.size()<< std::endl;
   for (ip=pads.begin(); ip != pads.end(); ip++) {
 
-    if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "pad " << (*ip).toString() << std::endl;
+    if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << " - M1 pad " << (*ip).toString() << std::endl;
 
     // Pad's region
     unsigned int ipreg = ip->region();
 
-    // Vector of tiles with M3 granularity containing the fired pad
+    // Vector of tiles with M3 granularity containing M1 pad
     std::vector<LHCb::MuonTileID> padsM3gran;    
     padsM3gran = layout.tiles(*ip);
-
+    if (m_debug) std::cout << "*!! Core:initializeM1TowerMap "
+                           << " -  # of corresponding pads in M3 granularity : "
+                           << padsM3gran.size()<< std::endl;
+    
     // Loop over the tiles in M3 granularity 
     for ( ipM3gran = padsM3gran.begin(); ipM3gran != padsM3gran.end(); ipM3gran++ ) {
-      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap ip->region pad in M3 granularity: " 
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap "
+                             <<" --- ip->region pad in M3 granularity: " 
                              << (*ipM3gran).toString()<< std::endl;
      
       // Coordinates in Pu's region
@@ -284,8 +292,11 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
         
         // Set the corresponding bit in the tower
         m_tower.setBit(sta, nYindex, nXindex );
+
+        // Modify the M1 tile : degrade it to current region granularity
+        LHCb::MuonTileID iip = layoutM1_lowerRegion.contains(*ip);
         // Fill the map relating the local coordinates and the MuonTileID
-        m_tower.setPadIdMap(sta, yx, *ip);
+        m_tower.setPadIdMap(sta, yx, iip);
 
         if (m_debug) std::cout << "*!! Core:initializeM1TowerMap LOWER region" 
                                << " sta= "<<sta

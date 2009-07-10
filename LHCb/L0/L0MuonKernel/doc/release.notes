@@ -4,6 +4,9 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2009-07-10 - Julien Cogan
+ - Fix bug in emulator without M1
+
 !============================ L0MuonKernel v8r6p1 2009-06-29 ================== 
 ! 2009-06-17 - Julien Cogan
  - ErrorHandler : fix warnings for Windows

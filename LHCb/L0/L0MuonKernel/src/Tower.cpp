@@ -300,6 +300,7 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         // Station M1
         LHCb::MuonTileID padM1;
         int offM1=0;  // expressed with M3 granularity (la tour est 'super-homogène') 
+        candFlag=false;
         sta=0;
         if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
         if (m_debug) std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
@@ -312,15 +313,34 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         // If M1 is ignored
         if (m_ignoreM1==true){  
           if (m_debug) std::cout <<"--- Tower::processTower:   M1 is ignored"<< std::endl;
-//           std::pair<int,int> xyM1(colseed+m_maxXFoI[sta]+extrapM1,rowseed);
-//           padM1 = getPadIdMap(sta, xyM1); // xyM1 not filled in idmap inside event. Initialize in CoreUnit
           std::pair<int,int> yxM1(rowseed,colseed+m_maxXFoI[sta]+extrapM1);
           padM1 = getPadIdMap(sta, yxM1); // xyM1 not filled in idmap inside event. Initialize in CoreUnit
-          if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found yxM1 is "
+          if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit is NOT valid yxM1 is "
                                  <<yxM1.first<<","<<yxM1.second<< std::endl;
-          if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found mid is "
-                                 <<padM1.toString()<< std::endl;
-          candFlag=true;
+          if (!padM1.isValid()) { // If at the edge of a quarter, the extrapolated point might not be valid
+            for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
+              int ipendulum = L0Muon::pendulumM1(icol, m_procVersion);
+              std::pair<int,int> yxM1_notcentral(rowseed,colseed+m_maxXFoI[sta]+extrapM1+ipendulum);
+              if (m_debug) std::cout <<"--- Tower::processTower:       forced Bit for ipendulum = "<< ipendulum 
+                                     <<" yxM1 is "
+                                     <<yxM1_notcentral.first<<","<<yxM1_notcentral.second<< std::endl;
+              padM1 = getPadIdMap(sta, yxM1_notcentral);
+              if (padM1.isValid()) {
+                if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit for ipendulum IS VALID "<< std::endl;
+                offM1 = ipendulum;
+                break;
+              }
+            }
+          }
+          if (padM1.isValid()) {
+            if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found yxM1 is "
+                                   <<yxM1.first<<","<<yxM1.second<< std::endl;
+            if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found mid is "
+                                   <<padM1.toString()<< std::endl;
+            candFlag=true;
+          } else {
+            if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON no valid pad found"<< std::endl;
+          }
         } // End If M1 is ignored
         // If M1 is used
         else if (m_ignoreM1==false){           
@@ -370,9 +390,9 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
               }
             } // End of Loop over colums in the field 
           } // End If a bit is set in the field
-          if (candFlag==false) continue; 
-          // Conditions are fulfilled in M1; a candidate has been found
         } // End If M1 is used
+        // Conditions are fulfilled in M1; a candidate has been found
+        if (candFlag==false) continue; 
         if (m_debug) std::cout <<"--- Tower::processTower: M1 OK"<< std::endl;
         
         // In version 0, the offset in M1 is given  as it is, i.e. in the granularity of M3.
