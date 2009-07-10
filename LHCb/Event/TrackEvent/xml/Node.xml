@@ -45,7 +45,16 @@
           m_refVector.setZ(z) ;
         </code>
       </constructor>
-      
+
+      <constructor 
+	desc     = "Constructor from a z-position and a location"
+	argList  = "double z, LHCb::State::Location location"
+	initList = "m_type(Reference),m_state(location),m_refIsSet(false), m_measurement(0), m_residual(0.0), m_errResidual(0.0), m_errMeasure(0.0), m_projectionMatrix()">
+        <code>
+          m_refVector.setZ(z) ;
+        </code>
+      </constructor>
+     
       <destructor virtual = 'TRUE' desc='destructer'>
         <code>
         </code>

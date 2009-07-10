@@ -111,6 +111,15 @@
       </code>
       </constructor>
 
+     <constructor 
+	desc     = "Constructor with location" 
+	argList  = "const LHCb::State::Location&amp; location"
+	initList = "m_z(0)">
+       <code>
+       setLocation(location);
+      </code>
+      </constructor>
+
 
      <attribute
        type    = 'bitfield'
