@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.146 2009-07-10 03:06:26 gligorov Exp $
+!$Id: release.notes,v 1.147 2009-07-10 15:20:00 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-07-10 - Greig Cowan
+ - Added vertex chi2 cut to phi in StdLooseDetachedPhi.
 
 ! 2009-07-09 - V. Gligorov
  - Removed all PID cuts from the standard D02HH and Dplus particles.
