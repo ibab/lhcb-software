@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-07-10 - Marco Cattaneo
+ - Configuration.py: adapt to changed BXType names in ODIN
+ - Remove obsolete file LumiAlgs_dll.cpp
+
 !========================== LumiAlgs v2r1 2009-06-17 =========================
 ! 2009-06-12 - Jaap Panman
  - Configuration.py:  when running on DST different location to pass on LumiSummary

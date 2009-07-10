@@ -26,7 +26,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"DataType"      : "2008"     # Data type, can be ['DC06','2008','MC09','2009']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
-       ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] # bunch crossing types 
+       ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types 
        ,"HistoProduce"  : False
         }
 
