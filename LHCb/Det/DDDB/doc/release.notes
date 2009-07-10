@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2009-07-09 - Marco Clemencic
+ - Changed default tags for 2009 data:
+   . MC09-20090402-vc-md100 for SIMCOND
+
 ! 2009-07-08 - Marco Clemencic
  - Changed default tags for 2009 data:
    . head-20090708         for DDDB
