@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.23 2008-07-24 20:38:33 wouter Exp $
+// $Id: FitNode.cpp,v 1.24 2009-07-10 11:30:28 wouter Exp $
 // Include files
 
 // local
@@ -39,8 +39,8 @@ FitNode::FitNode():
 }
 
 /// Constructor from a z position
-FitNode::FitNode( double zPos ):
-  Node(zPos),
+FitNode::FitNode( double zPos, LHCb::State::Location location ):
+  Node(zPos,location),
   m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),

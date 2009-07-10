@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.25 2008-09-15 13:11:21 wouter Exp $
+// $Id: FitNode.h,v 1.26 2009-07-10 11:30:28 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -36,8 +36,8 @@ namespace LHCb
     /// Default constructor
     FitNode();
 
-    /// Constructor from a z position
-    FitNode( double zPos );
+    /// Constructor from a z position and a location
+    FitNode( double zPos, LHCb::State::Location location = LHCb::State::LocationUnknown );
 
     /// Constructor from a Measurement
     FitNode(Measurement& meas );
