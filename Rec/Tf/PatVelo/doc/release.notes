@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-07-10 - David Hutchcroft
+ - Changed the chi^2 cut to optimise for signal (not MB)
+
 ! 2009-07-10 - Marco Gersabeck
  - Removed obsolete variables from PatVeloAlignTrackFilter.
 
