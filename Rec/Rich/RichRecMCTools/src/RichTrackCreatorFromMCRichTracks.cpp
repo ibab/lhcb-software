@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.20 2009-06-11 12:41:07 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.21 2009-07-10 10:38:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -137,14 +137,14 @@ TrackCreatorFromMCRichTracks::trTracks() const
         //const Rich::Rec::Track::Type trType = getTrType( *track );
         // momentum and charge
         const double ptot   = mcPart->p();
-        const double charge = mcPart->particleID().threeCharge()/3;
+        const int    charge = ( mcPart->particleID().threeCharge()>0 ? 1 : -1 ); 
 
         // new fake Track
         LHCb::Track * newFake = new LHCb::Track();
 
         // set momentum and charge info
         LHCb::State fakeState;
-        fakeState.setQOverP( ptot>0 ? charge/ptot : 0 );
+        fakeState.setQOverP( ptot>0 ? (double)charge/ptot : 0 );
         newFake->addToStates( fakeState );
 
         // set track types
@@ -213,7 +213,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
   // momentum and charge
   const double ptot   = mcPart->p();
-  const double charge = mcPart->particleID().threeCharge()/3;
+  const int    charge = ( mcPart->particleID().threeCharge()>0 ? 1 : -1 );
 
   if ( msgLevel(MSG::VERBOSE) )
   {
@@ -349,7 +349,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         newTrack->setVertexPt( static_cast<LHCb::RichRecTrack::FloatType>(mcPart->pt()) );
 
         // track charge
-        newTrack->setCharge( (float)charge );
+        newTrack->setCharge( charge );
 
         // Count selected tracks
         ++tkCount.selectedTracks;

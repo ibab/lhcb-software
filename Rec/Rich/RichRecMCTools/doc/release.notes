@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-07-10 - Chris Jones
+ - Adapt to change in RichRecTrack charge data member from float to int
+
 !====================== RichRecMCTools v2r22 2009-06-17 =======================
 ! 2009-06-11 - Chris Jones
  - Fix some WIN32 compilation warnings
