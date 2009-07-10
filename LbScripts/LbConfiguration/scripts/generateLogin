@@ -290,14 +290,14 @@ unset LbLogin_tmpfile
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" --no-cache %%*
 """ % (targetlocation, mysiteroot, version)
             else :
                 content = """ @echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --mysiteroot=%s --scripts-version="%s" %%*
 """ % (targetlocation, mysiteroot, version)                
         else :
             if withoutcache :
@@ -305,14 +305,14 @@ python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfi
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" --no-cache %%*
 """ % (targetlocation, version)
             else :
                 content = """@echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\python\LbConfiguration\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% --scripts-version="%s" %%*
 """ % (targetlocation, version)                
         content += """set LbLoginStatus=%ERRORLEVEL%
 
@@ -361,7 +361,7 @@ if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
     rm -f ${LB_BANNER}
     unset LB_BANNER
   else
-    . %s/scripts/LbLogin.sh --quiet
+    . %s/scripts/LbLogin.sh --quiet "$@"
   fi
   export LBLOGIN_DONE=yes
   unset lbvers
@@ -380,7 +380,7 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
     rm -f ${LB_BANNER}
     unsetenv LB_BANNER
   else
-    source %s/scripts/LbLogin.csh --quiet
+    source %s/scripts/LbLogin.csh --quiet ${*:q}
   endif
   setenv LBLOGIN_DONE yes
   unset lbvers
@@ -388,7 +388,7 @@ endif
 
 """ % targetlocation
     elif shell == "bat" :
-        content += "call %s\scripts\LbLogin.bat --quiet" % targetlocation
+        content += "call %s\scripts\LbLogin.bat --quiet %%*" % targetlocation
         
     f.write(content)
     f.close()
@@ -409,10 +409,10 @@ if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
     lbvers=dev
   fi
   if [ -n "$LBLOGIN_DONE" ]; then
-    . %s/InstallArea/scripts/LbLogin.sh --silent >& /dev/null
+    . %s/InstallArea/scripts/LbLogin.sh --silent "$@" >& /dev/null
   else
     export LB_BANNER=`mktemp`
-    . %s/scripts/LbLogin.sh --quiet >> ${LB_BANNER}
+    . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
   fi
   unset lbvers
 fi 
@@ -427,17 +427,17 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
     set lbvers=dev
   endif
   if ( $?LBLOGIN_DONE ) then
-    source %s/scripts/LbLogin.csh --silent >& /dev/null
+    source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
   else
     setenv LB_BANNER `mktemp`
-    source %s/scripts/LbLogin.csh --quiet >! ${LB_BANNER}
+    source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
   endif
   unset lbvers
 endif 
 
 """ % (targetlocation, targetlocation )
     elif shell == "bat" :
-        content += "call %s\scripts\LbLogin.bat --silent" % targetlocation
+        content += "call %s\scripts\LbLogin.bat --silent %%*" % targetlocation
     f.write(content)
     f.close()
 
@@ -459,9 +459,9 @@ if [[ -e ${HOME}/.useLHCBLoginscript ]]; then
   if [ -e ${HOME}/.devLHCBLoginscript ]; then
     lbvers=dev
   fi
-  . %s/scripts/group_shell.sh
+  . %s/scripts/group_shell.sh "$@"
   if [[ -o login || -n "$LB_BANNER" ]] ; then
-    . %s/scripts/group_login.sh
+    . %s/scripts/group_login.sh "$@"
   fi
   unset lbvers
 fi
@@ -474,16 +474,16 @@ if (  -e ${HOME}/.useLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
   endif
-  source %s/scripts/group_shell.csh
+  source %s/scripts/group_shell.csh ${*:q}
   if ($?loginsh  || $?LB_BANNER) then
-    source %s/scripts/group_login.csh
+    source %s/scripts/group_login.csh ${*:q}
   endif
   unset lbvers
 endif     
         
 """ % (targetlocation, targetlocation)
     elif shell == "bat" :
-        content += "call %s\scripts\group_login.bat" % targetlocation
+        content += "call %s\scripts\group_login.bat %%*" % targetlocation
     f.write(content)
     f.close()
 

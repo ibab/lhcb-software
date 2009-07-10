@@ -1,3 +1,9 @@
+2009-07-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin:
+	- replaced argument for windows bat files as %*
+	- added argument passing to group_login, group_shell and LHCb wrappers.
+
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r2
