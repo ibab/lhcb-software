@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.61 2009-07-09 09:16:35 graven Exp $
+# $Id: requirements,v 1.62 2009-07-10 07:17:44 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -57,6 +57,7 @@ use TCKUtils                v1r0p1    Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 
+use LoKiHlt                 v2r2  Phys
 use PhysSys		v*	     -no_auto_imports
 
 #-- Online ??
@@ -77,11 +78,6 @@ alias Moore gaudirun.py
 #
 
 # copy the TCK manifest for the _current_ release to the install area...
-#macro Install_TCK_Manifest_output  "$(CMTINSTALLAREA)/TCK/manifest"
-#macro Install_TCK_Manifest_command "python ../scripts/InstallTCKManifest.py $(Install_TCK_Manifest_output)" \
-#apply_pattern CallCommand  target=Install_TCK_manifest
-
-# copy the TCK manifest for the _current_ release to the install area...
 make_fragment install_TCK_manifest -header=install_TCK_manifest_header
 document install_TCK_manifest manifest MANIFEST_VERSION=${MOOREVERSION}
 
@@ -92,8 +88,13 @@ document install_TCK_manifest manifest MANIFEST_VERSION=${MOOREVERSION}
 macro Create_RunMooreOnline_output  "../job/runMooreOnline_EFF.sh"
 macro Create_RunMooreOnline_command "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output)" \
         ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) foobar" 
-
 apply_pattern CallCommand  target=Create_RunMooreOnline
+
+# copy the TCK manifest for the _current_ release to the install area...
+#macro Install_TCK_Manifest_output  "$(CMTINSTALLAREA)/TCK/manifest"
+#macro Install_TCK_Manifest_command "python ../scripts/InstallTCKManifest.py $(Install_TCK_Manifest_output)" \
+#apply_pattern CallCommand  target=Install_TCK_Manifest
+
 
 private
   apply_pattern QMTest
