@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-07-10 - Marco Cattaneo
+ - Update reference for changed BXType names
+
 ! 2009-07-07 - Marco Cattaneo
  - 2008-Cosmics-Data.py now sets 2008 DataType
  - Update references for:
