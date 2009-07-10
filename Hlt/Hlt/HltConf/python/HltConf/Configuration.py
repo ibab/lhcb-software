@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.93 2009-07-09 09:07:02 kvervink Exp $"
+__version__ = "$Id: Configuration.py,v 1.94 2009-07-10 08:43:15 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -231,7 +231,7 @@ class HltConf(LHCbConfigurableUser):
                                   ("IgnoreLumi" , ".*IgnoreLumi.*"),
                                   ("Lumi"       , "Hlt1.*Lumi.*Decision"),
                                   ("Global"     , ".*Global.*"),
-                                  ("PA"         , "Hlt1RandomDecision", "Hlt1PhysicsDecision", "Hlt1Tell1ErrorDecision"),
+#                                  ("PA"         , "Hlt1RandomDecision", "Hlt1PhysicsDecision", "Hlt1Tell1ErrorDecision"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
 
@@ -240,6 +240,7 @@ class HltConf(LHCbConfigurableUser):
         patterns = []
         group_labels = [] 
         for pos in range(len(alley_string_patterns)):
+          print   alley_string_patterns[pos]
           (name, pattern_string) = alley_string_patterns[pos]
           patterns.append(re.compile(pattern_string))
           group_labels.append(name) 
