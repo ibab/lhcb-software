@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-07-09 - V.Gligorov
+ - Updated the StrippingTopo selection. The major changes are the addition of the
+   "robust" stage and the prescaling of the 4-body topological line (10%).
+
+! 2009-07-09 - V.Gligorov
  - Updated the StrippingB2DPi selection. The major changes are documented
    at the start of the file itself. Note that despite its name this selection
    selects B->DX with D=D0,D+,Ds and X=pi,K,K*,phi. More details on what is and
