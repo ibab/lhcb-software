@@ -42,10 +42,6 @@ namespace Tf {
       unsigned int m_numberOfRSectors;
       unsigned int m_numberOfPSectors;
       double m_radiusOffset;
-      double m_min_r_charge;
-      double m_max_r_charge;
-      double m_min_phi_charge;
-      double m_max_phi_charge;
       int m_min_tot;
       int m_max_tot;
       int m_min_rslice;

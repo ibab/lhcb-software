@@ -29,10 +29,6 @@ namespace Tf {
     {
       declareProperty( "RHitManagerName", m_rHitManagerName="DefaultVeloRHitManager" );
       declareProperty( "PhiHitManagerName", m_phiHitManagerName="DefaultVeloPhiHitManager" );
-      declareProperty( "MinRCharge", m_min_r_charge = 5 );
-      declareProperty( "MaxRCharge", m_max_r_charge = 200 );
-      declareProperty( "MinPhiCharge", m_min_phi_charge = 5 );
-      declareProperty( "MaxPhiCharge", m_max_phi_charge = 200 );
       declareProperty( "MinTot", m_min_tot = 20 );
       declareProperty( "MaxTot", m_max_tot = 5000 );
       declareProperty( "MinRSlice", m_min_rslice = 18 );
@@ -108,8 +104,6 @@ namespace Tf {
 
     std::vector<VeloRHit*>::const_iterator   cR0;
     std::vector<VeloPhiHit*>::const_iterator   cP0;
-    LHCb::VeloLiteCluster *cluster;
-    double charge = 0.;
 
     // loop over all hits to find space points
     for (unsigned int half=0; half < 2; ++half) {
