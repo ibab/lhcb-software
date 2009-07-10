@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-07-10 - Wouter Hulsbergen
+ - add constructor with 'location' to State and Node
+
 ! 2009-07-03 - Wouter Hulsbergen
  - bug fix: sort lhcbids in Track::setLhcbIDs
 
