@@ -267,8 +267,8 @@ class ConfiguredMuonIDs():
     if use_dist: mymuid.addTool(DistMuIDTool(), name='myMuIDTool')
     else: mymuid.addTool(Chi2MuIDTool(), name='myMuIDTool')
   
-    self.configureMuIDTool(mymuid.myMuIDTool,use_dist)      
-
+    self.configureMuIDTool(mymuid.myMuIDTool,use_dist)
+    return mymuid
 
   #def applyConf(self):
   def getMuonIDSeq(self):

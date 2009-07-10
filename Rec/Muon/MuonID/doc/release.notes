@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-10 - Jose A. Hernando
+ - The configurable can now configure a sequencer or an algorithm 
+
 ! 2009-07-09 - Jose A. Hernando
  - Fix a small Window compilation warning
 
