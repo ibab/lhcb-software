@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-07-10 - Wouter Hulsbergen
+ - Adapted to change in configuring z positions of reference nodes in fitter
+
 !========================== PatVeloTT v3r6 2009-03-11 ========================
 ! 2009-04-06 - Marco Cattaneo
  - Replace obsolescent endreq by endmsg
