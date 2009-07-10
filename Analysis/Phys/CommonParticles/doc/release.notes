@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.145 2009-07-09 15:23:57 rlambert Exp $
+!$Id: release.notes,v 1.146 2009-07-10 03:06:26 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-07-09 - V. Gligorov
+ - Removed all PID cuts from the standard D02HH and Dplus particles.
 
 ! 2009-07-09 - Rob Lambert
  - Added StdLooseDetachedKstar to StandardIntermediate

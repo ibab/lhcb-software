@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseDplus.py,v 1.4 2009-05-20 18:50:40 gligorov Exp $ 
+# $Id: StdLooseDplus.py,v 1.5 2009-07-10 03:05:19 gligorov Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseDplus.py
 #  configuration file for 'Standard Loose Dplus' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Dplus'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdLooseDplus2KPiPi' ,
@@ -29,7 +29,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseDplus2KPiPi = CombineParticles ( 'StdLooseDplus2KPiPi' )
 
-StdLooseDplus2KPiPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
+StdLooseDplus2KPiPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
 StdLooseDplus2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
 StdLooseDplus2KPiPi.DaughtersCuts = { "K+"  : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))", "pi+" : "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))" }
 #Need an upper mass window of 100 MeV for background estimation
@@ -51,7 +51,7 @@ locations = updateDoD ( StdLooseDplus2KKPi )
 # D+ -> 3 pi is a clone of D+ -> K Pi Pi 
 #
 StdLooseDplus2PiPiPi = StdLooseDplus2KPiPi.clone("StdLooseDplus2PiPiPi")
-StdLooseDplus2PiPiPi.InputLocations = [ "StdLoosePions" ]
+StdLooseDplus2PiPiPi.InputLocations = [ "StdNoPIDsPions" ]
 StdLooseDplus2PiPiPi.DecayDescriptor = "[D+ -> pi- pi+ pi+]cc"
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseDplus2PiPiPi )

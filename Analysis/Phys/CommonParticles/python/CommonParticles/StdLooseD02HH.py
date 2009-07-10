@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseD02HH.py,v 1.7 2009-05-20 18:54:47 gligorov Exp $ 
+# $Id: StdLooseD02HH.py,v 1.8 2009-07-10 03:05:14 gligorov Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseD02HH.py
 #  configuration file for 'Standard Loose D0 -> HH' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose D0 -> HH'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 __all__ = (
     'StdLooseD02KPi' ,
@@ -29,7 +29,7 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseD02KPi = CombineParticles ( 'StdLooseD02KPi' )
 
-StdLooseD02KPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
+StdLooseD02KPi.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
 StdLooseD02KPi.DaughtersCuts = { "K+" : "(TRCHI2DOF<10) & (PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
@@ -46,7 +46,7 @@ locations = updateDoD ( StdLooseD02KPi )
 ## PiPi
 StdLooseD02PiPi = StdLooseD02KPi.clone("StdLooseD02PiPi")
 StdLooseD02PiPi.DecayDescriptor = "[D0 -> pi- pi+]cc"
-StdLooseD02PiPi.InputLocations = [ "StdLoosePions" ]
+StdLooseD02PiPi.InputLocations = [ "StdNoPIDsPions" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseD02PiPi )
@@ -55,7 +55,7 @@ locations = updateDoD ( StdLooseD02PiPi )
 ## KK
 StdLooseD02KK = StdLooseD02KPi.clone("StdLooseD02KK")
 StdLooseD02KK.DecayDescriptor = "[D0 -> K- K+]cc"
-StdLooseD02KK.InputLocations = [ "StdLooseKaons" ]
+StdLooseD02KK.InputLocations = [ "StdNoPIDsKaons" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseD02KK )
@@ -64,7 +64,7 @@ locations = updateDoD ( StdLooseD02KK )
 ## Doubly Cabibbo suppressed
 StdLooseD02KPiDCS = StdLooseD02KPi.clone("StdLooseD02KPiDCS")
 StdLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
-StdLooseD02KPiDCS.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
+StdLooseD02KPiDCS.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseD02KPiDCS )
