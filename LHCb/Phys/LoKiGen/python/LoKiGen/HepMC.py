@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HepMC.py,v 1.7 2007-12-01 13:52:14 ibelyaev Exp $ 
+# $Id: HepMC.py,v 1.8 2009-07-12 12:34:41 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of HepMC-objects
@@ -327,9 +327,9 @@ def genParticles  ( o , *a ) :
     ...    print pion
     
     """
-    return LoKi.Dicts.Extract.genParticles ( o , *a )
+    return LoKi.GenExtract.genParticles ( o , *a )
 
-genParticles . __doc__ += "\n\n" + LoKi.Dicts.Extract.genParticles . __doc__  
+genParticles . __doc__ += "\n\n" + LoKi.GenExtract.genParticles . __doc__  
 getParticles = genParticles
 particles    = genParticles
 extract      = genParticles
@@ -521,9 +521,9 @@ _LCF.daughters     . __doc__ += "\n" + LoKi.GenChild.children          . __doc__
 _LCF.descendants   . __doc__ += "\n" + LoKi.GenChild.descendants       . __doc__ 
 _LCF.ancestors     . __doc__ += "\n" + LoKi.GenChild.ancestors         . __doc__ 
 
-_LCF.extract       . __doc__ += "\n" + LoKi.Dicts.Extract.genParticles . __doc__ 
-_LCF.particles     . __doc__ += "\n" + LoKi.Dicts.Extract.genParticles . __doc__ 
-_LCF.getParticles  . __doc__ += "\n" + LoKi.Dicts.Extract.genParticles . __doc__ 
+_LCF.extract       . __doc__ += "\n" + LoKi.GenExtract.genParticles . __doc__ 
+_LCF.particles     . __doc__ += "\n" + LoKi.GenExtract.genParticles . __doc__ 
+_LCF.getParticles  . __doc__ += "\n" + LoKi.GenExtract.genParticles . __doc__ 
 
 _LCF.count_if      . __doc__ += "\n" + LoKi.Dicts.GenAlgs.count_if     . __doc__ 
 _LCF.found         . __doc__ += "\n" + LoKi.Dicts.GenAlgs.found        . __doc__ 

@@ -1,4 +1,4 @@
-// $Id: GenExtractDicts.cpp,v 1.2 2007-08-11 20:18:13 ibelyaev Exp $
+// $Id: GenExtractDicts.cpp,v 1.3 2009-07-12 12:34:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,7 +26,7 @@
 // extract the particles from the event 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const HepMC::GenEvent*       event , 
   const LoKi::GenTypes::GCuts& cuts  ) 
 {
@@ -38,7 +38,7 @@ LoKi::Dicts::Extract::genParticles
 // extract the particles from the event 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const LHCb::HepMCEvent*      event , 
   const LoKi::GenTypes::GCuts& cuts  ) 
 {
@@ -50,7 +50,7 @@ LoKi::Dicts::Extract::genParticles
 // extract the particles from the event 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const LHCb::HepMCEvents*     event , 
   const LoKi::GenTypes::GCuts& cuts  ) 
 {
@@ -62,7 +62,7 @@ LoKi::Dicts::Extract::genParticles
 // extract the particles from the vertex 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const HepMC::GenVertex*      vertex , 
   const LoKi::GenTypes::GCuts& cuts   ,
   HepMC::IteratorRange         range  ) 
@@ -76,7 +76,7 @@ LoKi::Dicts::Extract::genParticles
 // extract the particles from the vertex 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const HepMC::GenVertex*      vertex , 
   HepMC::IteratorRange         range  ) 
 {
@@ -89,7 +89,7 @@ LoKi::Dicts::Extract::genParticles
 // extract the particles from the event 
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::Dicts::Extract::genParticles 
+LoKi::GenExtract::genParticles 
 ( const HepMC::GenParticle*    particle  , 
   const LoKi::GenTypes::GCuts& cuts  ) 
 {
@@ -98,10 +98,6 @@ LoKi::Dicts::Extract::genParticles
     ( particle , std::back_inserter( result ) , cuts ) ;
   return result ;
 }
-// ============================================================================
-
-
-
 // ============================================================================
 // The END 
 // ============================================================================
