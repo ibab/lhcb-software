@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.29 2009-03-06 08:12:32 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.30 2009-07-12 08:50:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -216,32 +216,32 @@ void BooleInit::modifyOdin(LHCb::ODIN* odin) {
     else {
       TriggerType = LHCb::ODIN::RandomTrigger;
       if (randNumber<m_thresInteraction[0]) BXType = LHCb::ODIN::NoBeam;
-      if (randNumber>m_thresInteraction[0] && randNumber<m_thresInteraction[1]) BXType = LHCb::ODIN::SingleBeamLeft;
-      if (randNumber>m_thresInteraction[1] && randNumber<m_thresInteraction[2]) BXType = LHCb::ODIN::SingleBeamRight;
+      if (randNumber>m_thresInteraction[0] && randNumber<m_thresInteraction[1]) BXType = LHCb::ODIN::Beam1;
+      if (randNumber>m_thresInteraction[1] && randNumber<m_thresInteraction[2]) BXType = LHCb::ODIN::Beam2;
       if (randNumber>m_thresInteraction[2]) BXType = LHCb::ODIN::BeamCrossing;
     }
   }
 
   if (interaction==1) {
     if (randNumber<m_thresDiffractive[0]) BXType = LHCb::ODIN::NoBeam;
-    if (randNumber>m_thresDiffractive[0] && randNumber<m_thresDiffractive[1]) BXType = LHCb::ODIN::SingleBeamLeft;
-    if (randNumber>m_thresDiffractive[1] && randNumber<m_thresDiffractive[2]) BXType = LHCb::ODIN::SingleBeamRight;
+    if (randNumber>m_thresDiffractive[0] && randNumber<m_thresDiffractive[1]) BXType = LHCb::ODIN::Beam1;
+    if (randNumber>m_thresDiffractive[1] && randNumber<m_thresDiffractive[2]) BXType = LHCb::ODIN::Beam2;
     if (randNumber>m_thresDiffractive[2]) BXType = LHCb::ODIN::BeamCrossing;
     TriggerType = LHCb::ODIN::RandomTrigger;
     // with random number some will be Reserve
   }
   if (interaction==0) {
     if (randNumber<m_thresElastic[0]) BXType = LHCb::ODIN::NoBeam;
-    if (randNumber>m_thresElastic[0] && randNumber<m_thresElastic[1]) BXType = LHCb::ODIN::SingleBeamLeft;
-    if (randNumber>m_thresElastic[1] && randNumber<m_thresElastic[2]) BXType = LHCb::ODIN::SingleBeamRight;
+    if (randNumber>m_thresElastic[0] && randNumber<m_thresElastic[1]) BXType = LHCb::ODIN::Beam1;
+    if (randNumber>m_thresElastic[1] && randNumber<m_thresElastic[2]) BXType = LHCb::ODIN::Beam2;
     if (randNumber>m_thresElastic[2]) BXType = LHCb::ODIN::BeamCrossing;
     TriggerType = LHCb::ODIN::RandomTrigger;
     // with random number some will be Reserve
   }
   
   if ( BXType == LHCb::ODIN::BeamCrossing ) BunchCurrent = 8 + (8<<4); // some current..
-  if ( BXType == LHCb::ODIN::SingleBeamLeft ) BunchCurrent = 8;        // some current..
-  if ( BXType == LHCb::ODIN::SingleBeamRight ) BunchCurrent = (8<<4);  // some current..
+  if ( BXType == LHCb::ODIN::Beam1 ) BunchCurrent = 8;        // some current..
+  if ( BXType == LHCb::ODIN::Beam2 ) BunchCurrent = (8<<4);  // some current..
   
   if(msgLevel(MSG::DEBUG)) debug() <<"Bunch crossing type: " << BXType 
                                    << " TriggerType " << TriggerType 
