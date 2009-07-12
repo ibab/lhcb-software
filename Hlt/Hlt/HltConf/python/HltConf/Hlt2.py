@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -223,7 +223,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2.Members += [ Sequence("Hlt2Requirements") ]
         Sequence("Hlt2Requirements").Members = [ ]
         reqs = self.getProp('Hlt2Requires')
-        if reqs.upper != "NONE" :
+        if reqs.upper() != "NONE" :
             from Configurables import LoKi__HDRFilter   as HltFilter
             from Configurables import LoKi__L0Filter    as L0Filter
             hlt2requires = { 'L0'   : L0Filter( 'L0Pass',          Code = "L0_DECISION" )
