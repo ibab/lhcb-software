@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.4 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: IHltUnit.h,v 1.5 2009-07-12 15:59:10 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -18,6 +18,8 @@
 // ============================================================================
 #include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
+// ============================================================================
+class DataObject ;
 // ============================================================================
 namespace Hlt 
 {
@@ -76,6 +78,18 @@ namespace LoKi
     ( const Key&      key      , 
       const Client&   client   ) const = 0 ;
     // ========================================================================
+    /** register the query  to TES-selection 
+     *  @param location TES location to be registered
+     *  @param consumer algorithm/consumer 
+     *  @return Status Code 
+     */
+    virtual StatusCode   
+    registerTESInput
+    ( const Key&         location  ,                   //          TES location 
+      const Client&      client    ) const = 0 ;       //                client
+    // ========================================================================
+  public:
+    // ========================================================================
     /** get the (const) selection by key 
      *  @param key the key 
      *  @return pointer to the selection 
@@ -83,7 +97,7 @@ namespace LoKi
     virtual const Hlt::Selection* 
     selection 
     ( const Key&      key      , 
-      const Client&   cleint   ) const = 0 ;
+      const Client&   client   ) const = 0 ;
     // =========================================================================
   public:
     // =========================================================================
@@ -94,6 +108,30 @@ namespace LoKi
     virtual const Hlt::Selection* 
     selection ( const Key& key ) const = 0 ;
     // =========================================================================
+  public:
+    // =========================================================================
+    /** get the object form TES 
+     *  @param client the client 
+     *  @param location the TES location 
+     *  @return the object 
+     */
+    virtual const DataObject*
+    tes 
+    ( const Client& client   , 
+      const Key&    location ) const = 0 ;
+    // =========================================================================
+  public:
+    // =========================================================================    
+    /** get the data form TES 
+     *  @param client the client 
+     *  @param TES -location 
+     *  @return the data 
+     */
+    template <class TYPE>
+    const TYPE* tesData  
+    ( const Client& client   , 
+      const Key&    location ) const ;
+    // ========================================================================
   public:
     // =========================================================================
     /** get the selection by key (non-const)
@@ -136,6 +174,24 @@ LoKi::IHltUnit::declareOutput
   delete selection ;
   return 0 ;
 }
+// ============================================================================
+/*  get the data form TES 
+ *  @param client the client 
+ *  @param TES -location 
+ *  @return the data 
+ */
+// ============================================================================
+template <class TYPE>
+const TYPE* LoKi::IHltUnit::tesData  
+( const LoKi::IHltUnit::Client& client   , 
+  const LoKi::IHltUnit::Key&    location ) const 
+{
+  const DataObject* obj = this->tes ( client , location ) ;
+  if ( 0 == obj ) { return 0 ; }
+  return dynamic_cast<const TYPE*> ( obj ) ;      
+}
+// ============================================================================
+
 // ============================================================================
 // The END 
 // ============================================================================

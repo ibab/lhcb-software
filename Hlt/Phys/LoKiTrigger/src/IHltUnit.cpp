@@ -1,4 +1,4 @@
-// $Id: IHltUnit.cpp,v 1.1 2008-11-10 17:31:53 ibelyaev Exp $
+// $Id: IHltUnit.cpp,v 1.2 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,7 +17,7 @@
 const InterfaceID& LoKi::IHltUnit::interfaceID() 
 {
   // the unique interafcx eidentifier 
-  static const InterfaceID s_IID ( "LoKi::IHltUnit" , 1 , 0 ) ;
+  static const InterfaceID s_IID ( "LoKi::IHltUnit" , 2 , 0 ) ;
   // 
   return s_IID ;
 }

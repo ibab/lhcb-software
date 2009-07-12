@@ -1,4 +1,4 @@
-// $Id: ServiceInspector.cpp,v 1.3 2009-03-28 14:17:57 ibelyaev Exp $
+// $Id: ServiceInspector.cpp,v 1.4 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -470,6 +470,138 @@ size_t Hlt::Service::selections ( Hlt::IInspector::KeyList& keys ) const
   std::sort( keys.begin() , keys.end() ) ;
   //
   return keys.size() ;
+}
+// ============================================================================
+/* get the input TES locations for the given reader 
+ * @param reader the algorithm
+ * @param locations (OUTPUT) the list of input TES locations 
+ * @return numebr of locations 
+ */
+// ============================================================================
+size_t Hlt::Service::readTES 
+( const IAlgorithm*         reader    , 
+  Hlt::IInspector::KeyList& locations ) const
+{
+  locations.clear() ;
+  if ( 0 == reader ) 
+  { 
+    Error ( "read : invalid algorithm!" ) ;
+    return 0 ;                                                       // RETURN 
+  }
+  TESMap::const_iterator intes = m_tesmap.find ( reader ) ;
+  if ( m_tesmap.end () != intes ) 
+  { 
+    if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
+    { Warning ( "readTES(1):  no TES-inputs for reader '" + reader -> name() + "'") ; }
+    return 0 ; 
+  }
+  //
+  locations.insert
+    ( locations.end ()         , 
+      intes -> second.begin () , 
+      intes -> second.end   () ) ;
+  //
+  return locations.size() ;                                          // RETURN 
+}
+// ============================================================================
+/* get the input TES locations for the given reader 
+ * @param reader the algorithm
+ * @param locations (OUTPUT) the list of input TES locations 
+ * @return numebr of locations 
+ */
+// ============================================================================
+size_t Hlt::Service::readTES 
+( const std::string&        reader    , 
+  Hlt::IInspector::KeyList& locations ) const
+{
+  locations.clear() ;
+  for ( TESMap::const_iterator imap = m_tesmap.begin() ; 
+        m_tesmap.end() != imap ; ++imap )
+  {
+    const IAlgorithm* ialg = imap->first ;
+    if ( 0 == ialg ) { continue ; }                               // CONTINUE 
+    if ( ialg->name() == reader ) 
+    { return readTES ( ialg , locations ) ; }                      // RETURN
+  } 
+  //
+  if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
+  { Warning ( "readTES(2) :  no TES-inputs for reader '" + reader + "'") ; }
+  //
+  return locations.size() ;
+}
+// ============================================================================
+/*  get the "readers" for the given TES-location
+ *  @param location TES-location
+ *  @param alglist (OUTPUT) the list of readers 
+ *  @return number of readers 
+ */
+// ============================================================================
+size_t Hlt::Service::readers 
+( const std::string&    location  , 
+  AlgList&              alglist   ) const
+{
+  alglist.clear() ;
+  for ( TESMap::const_iterator imap = m_tesmap.begin() ; 
+        m_tesmap.end() != imap ; ++imap )
+  {
+    TESLocs::const_iterator it = imap->second.find ( location ) ;
+    if ( imap->second.end () == it ) { continue ; }              // CONTINUE 
+    alglist.push_back  ( imap->first ) ;  
+  } 
+  if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
+  {
+    if ( alglist.empty() ) 
+    { Warning ( "readers:  not readers for location '" + location + "'") ; } 
+  }
+  //
+  return alglist.size () ;                                            // RETURN 
+}
+// ============================================================================
+/*  get all readers 
+ *  @param alglist (OUTPUT) the list of readers 
+ *  @return number of readers 
+ */
+// ============================================================================
+size_t Hlt::Service::allReaders ( AlgList& alglist   ) const 
+{
+  alglist.clear() ;
+  for ( TESMap::const_iterator imap = m_tesmap.begin() ; 
+        m_tesmap.end() != imap ; ++imap ) { alglist.push_back ( imap->first ) ; }
+  //
+  if ( alglist.empty() ) 
+  {
+    if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
+    { Warning ( "allReaders:  not readers" ) ; } 
+  }
+  return alglist.size() ;
+}
+// ============================================================================
+/** get all TES-inptu locations 
+ *  @param locations (OUTPUT) the list of input TES locations 
+ *  @return number of locations 
+ */
+// ============================================================================
+size_t Hlt::Service::allTES ( KeyList&              locations ) const 
+{
+  locations.clear() ;
+  std::set<std::string> tmp ;
+  for ( TESMap::const_iterator imap = m_tesmap.begin() ; 
+        m_tesmap.end() != imap ; ++imap ) 
+  {
+    const TESLocs& locs = imap->second ;
+    for ( TESLocs::const_iterator it = locs.begin() ; locs.end( )!= it ; ++it ) 
+    { tmp.insert ( *it ) ; }
+  }
+  //
+  locations.insert ( locations.end() , tmp.begin () , tmp.end () ) ;
+  //
+  if ( locations.empty() ) 
+  {
+    if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
+    { Warning ( "allTES:  now locations" ) ; } 
+  }
+  return locations.size() ;
+  //
 }
 // ============================================================================
 // The END 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Service.py,v 1.1 2009-03-28 13:58:48 ibelyaev Exp $ 
+# $Id: Service.py,v 1.2 2009-07-12 15:59:10 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiTrigger/Service.py
 #  Useful decorator for Hlt::Service 
@@ -16,7 +16,7 @@ Useful decorator for HLT Service and its interfaces
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = ( 'iHltInspector', )
 # =============================================================================
@@ -32,12 +32,15 @@ AppMgr        = GaudiPython.Bindings.AppMgr
 Hlt           = cpp.Hlt
 
 
-def selNode ( s ) : return ' %s ' % s 
-
+def selNode ( s ) : return ' %s '    % s 
+def tesNode ( l ) : return ' %s '    % l
 def algNode ( a ) : return ' Alg%s ' % a
 
 def selLine ( s ) :
     return " \t\t %s [shape=ellipse,color=yellow,style=filled];" % selNode ( s ) 
+
+def tesLine ( l ) :
+    return " \t\t %s [shape=ellipse,color=green,style=filled];"  % tesNode ( l ) 
 
 def algLine ( a ) :
     return " \t\t %s [label=%s,shape=box,color=red,style=filled];" % ( algNode ( a ) , a )  
@@ -105,7 +108,7 @@ class iHltInspector(iService) :
         if not self._ihltis : self.retrieveInterface() 
         num = self._ihltis.consumers ( selection , lst )
         if lst.size() != num :
-            raise AttributeError, 'Unable to extrack valid list of algorithms'
+            raise AttributeError, 'Unable to extract valid list of algorithms'
         result = []
         for i in range(0,num) :
             alg = lst[i]
@@ -130,7 +133,7 @@ class iHltInspector(iService) :
         if not self._ihltis : self.retrieveInterface() 
         num = self._ihltis.inputs ( algorithm , lst )
         if lst.size() != num :
-            raise AttributeError, 'Unable to extrack valid list of keys'
+            raise AttributeError, 'Unable to extract valid list of keys'
         result = []
         for i in range(0,num) :
             key = lst[i]
@@ -155,13 +158,105 @@ class iHltInspector(iService) :
         if not self._ihltis : self.retrieveInterface() 
         num = self._ihltis.outputs( algorithm , lst )
         if lst.size() != num :
-            raise AttributeError, 'Unable to extrack valid list of keys'
+            raise AttributeError, 'Unable to extract valid list of keys'
         result = []
         for i in range(0,num) :
             key = lst[i]
             result.append ( key )
         return result
- 
+
+    ## get the list of readers for the given location
+    #  @see Hlt::IInspector::allReaders 
+    def allReaders ( self ) :
+        """
+        Get all registered TES-readers
+        
+        >>> svc = ...                  ## get the inspection service
+        >>> readers = scv.allReaders() ## get the list of all registered readers
+        
+        
+        """
+        lst = Hlt.IInspector.AlgList()
+        if not self._ihltis : self.retrieveInterface() 
+        num = self._ihltis.allReaders ( lst )
+        if lst.size() != num :
+            raise AttributeError, 'Unable to extract valid list of readers'
+        result = []
+        for i in range(0,num) :
+            alg = lst[i]
+            result.append ( iAlgorithm( alg.name() , alg ) )
+        return result
+
+    ## get the list of registeres TES input locations 
+    #  @see Hlt::IInspector::allTES
+    def allTES ( self ) :
+        """
+        Get all registered TES input locations
+
+        >>> svc = ...           ## get the inspection service
+        >>> tes = scv.allTES()  ## get all registered TES input locations
+        
+        """
+        lst = Hlt.IInspector.KeyList()
+        if not self._ihltis : self.retrieveInterface() 
+        num = self._ihltis.allTES( lst )
+        if lst.size() != num :
+            raise AttributeError, 'Unable to extract valid list of keys'
+        result = []
+        for i in range(0,num) :
+            key = lst[i]
+            result.append ( key )
+        return result
+    
+    ## get the list of input TES location for the given reader
+    #  @see Hlt::IInspector::readTES
+    def readTES ( self , algorithm ) :
+        """
+        Get the list of registered input locations for the given reader
+
+        >>> svc = ...                  ## get the inspection service
+        >>> alg = ...                  ## get the reader 
+        >>> tes = scv.readTES ( alg )  ## get the registered TES input locations
+        
+        """
+        if type(algorithm) == iAlgorithm :
+            algorithm.retrieveInterface()
+            algorithm = algorithm._ialg
+
+        lst = Hlt.IInspector.KeyList()
+        if not self._ihltis : self.retrieveInterface() 
+        num = self._ihltis.readTES ( algorithm , lst )
+        if lst.size() != num :
+            raise AttributeError, 'Unable to extract valid list of keys'
+        result = []
+        for i in range(0,num) :
+            key = lst[i]
+            result.append ( key )
+        return result
+
+    ## get the list of readers for the given registred TES input location
+    #  @see Hlt:IInspector::readers 
+    def readers ( self , location ) :
+        """
+        Get the list of readers for the given registred TES input location
+
+        >>> svc = ...                   ## get the inspection service
+        >>> tes = ...                   ## get the TES input location 
+        >>> algs = scv.readers ( tes )  ## get the registered readers
+        
+        """
+        
+        lst = Hlt.IInspector.AlgList()
+        if not self._ihltis : self.retrieveInterface() 
+        num = self._ihltis.readers ( location  , lst )
+        if lst.size() != num :
+            raise AttributeError, 'Unable to extract valid list of readers'
+        result = []
+        for i in range(0,num) :
+            alg = lst[i]
+            result.append ( iAlgorithm( alg.name() , alg ) )
+        return result
+        
     ## check the existence of the algorithm
     #  @see Hlt::IInspector::hasAlgorithm
     def hasAlgorithm ( self , algorithm ) :
@@ -329,12 +424,15 @@ class iHltInspector(iService) :
 
         inps = self.inputs  ( alg )
         outs = self.outputs ( alg ) 
-
+        tess = self.readTES ( alg )
+        
         output  = "The algorithm: %s  \n" % alg
-        output += "\tINPUT  HLT-Selections: \n"
+        output += "\tINPUT  HLT-Selections : %s \n" % len(inps)
         for i in inps : output += "\t\t%s\n" % i
-        output += "\tOUTPUT HLT-Selections: \n"
+        output += "\tOUTPUT HLT-Selections : %s \n" % len(outs) 
         for o in outs : output += "\t\t%s\n" % o
+        output += "\tREAD   TES-Locations  : %s \n" % len(tess)
+        for l in tess : output += "\t\t%s\n" % l
 
         return output 
 
@@ -349,6 +447,7 @@ class iHltInspector(iService) :
 
         inps = self.inputs  ( alg )
         outs = self.outputs ( alg )
+        tess = self.readTES ( alg )
 
         if str != type(alg) : alg=alg.name() 
 
@@ -386,6 +485,10 @@ class iHltInspector(iService) :
         file_.write ( '## OUTPUT SELECTIONS:          \n' )
         for o in outs : 
             file_.write ( selLine ( o )  +           '\n' )
+        # TES input locations  
+        file_.write ( '## INPUT TES-LOCATIONS:        \n' )
+        for l in tess : 
+            file_.write ( tesLine ( l )  +           '\n' )
 
         ## links:
         for i in inps :
@@ -395,6 +498,10 @@ class iHltInspector(iService) :
         for o in outs :
             file_.write ( arrow ( algNode ( alg ) , selNode ( o ) ) +  "\n" ) 
 
+        ## links:
+        for l in tess :
+            file_.write ( arrow ( tesNode ( l ) , algNode ( alg ) ) +  "\n" ) 
+            
         
         file_.write ( '}                              \n' )   ## CLOSING LINE 
         file_.flush ()
@@ -486,6 +593,7 @@ class iHltInspector(iService) :
         
         sels = self.selections ()
         algs = self.algorithms () 
+        tess = self.allTES     () 
 
         fname = None
         tmp   = False 
@@ -518,6 +626,7 @@ class iHltInspector(iService) :
             # get inputs & outputs
             inps = self.inputs  ( alg )
             outs = self.outputs ( alg ) 
+            tess = self.readTES ( alg ) 
 
             file_.write ( 'subgraph HLT_Algorithm_%s {  \n' % alg.name() )   ## start subgraph 
             
@@ -535,12 +644,21 @@ class iHltInspector(iService) :
                     file_.write ( selLine ( o )  + '\n' )
                     processed.add ( o )
                     
+            # TES inputs
+            for l in tess :
+                if not l in processed :
+                    file_.write ( tesLine ( l )  + '\n' )
+                    processed.add ( l )
+                    
             # lines:
             for i in inps :
                 file_.write ( arrow ( selNode ( i ) , algNode ( alg.name() ) ) +  "\n" ) 
             # lines:
             for o in outs :
                 file_.write ( arrow ( algNode ( alg.name() ) , selNode ( o ) ) +  "\n" ) 
+            # lines:
+            for l in tess :
+                file_.write ( arrow ( tesNode ( l ) , algNode ( alg.name() ) ) +  "\n" ) 
 
             file_.write ( '}; \n' )   ## end of subgraph
             

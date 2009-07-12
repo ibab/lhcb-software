@@ -1,4 +1,4 @@
-// $Id: IHltRegister.h,v 1.2 2009-03-19 20:11:55 ibelyaev Exp $
+// $Id: IHltRegister.h,v 1.3 2009-07-12 15:59:10 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTREGISTER_H 
 #define LOKI_IHLTREGISTER_H 1
@@ -143,8 +143,8 @@ namespace Hlt
     /** register the output selection during the allowed transaction for 
      *  locked service 
      *  @attention the service much be locked properly during the transaction!
-     *  @param sel the selection to be registered 
-     *  @param alg the algorithm/producer
+     *  @param selection the selection to be registered 
+     *  @param producer  the algorithm/producer
      *  @return status code 
      */
     virtual StatusCode        registerOutput 
@@ -153,15 +153,25 @@ namespace Hlt
     /** register the input selection  dirung the allower transactions for 
      *  locked service 
      *  @attention the service much be locked properly during the transaction!
-     *  @param sel the selection to be registered 
-     *  @param alg the algorithm/consumer
+     *  @param selection the selection to be registered 
+     *  @param consumer the algorithm/consumer
      *  @return status code 
      */
     virtual StatusCode        registerInput 
     ( const Key&              selection ,                 // the input selection 
       const IAlgorithm*       consumer  ) = 0 ;           //            consumer 
     // =========================================================================
-  protected : // lets be a bit paranoic about the registration
+    /** register the query to TES-selection 
+     *  @attention the service much be locked properly during the transaction!
+     *  @param location TES location to be registered
+     *  @param consumer algorithm/consumer 
+     *  @return Status Code 
+     */
+    virtual StatusCode        registerTESInput
+    ( const Key&              location  ,                 //        TES location 
+      const IAlgorithm*       consumer  ) = 0 ;           //            consumer   
+    // =========================================================================
+  protected :                   // lets be a bit paranoic about the registration
     // =========================================================================
     /** start the transaction/lock the registrator 
      *  @see  Hlt::IRegister::Lock
@@ -174,7 +184,7 @@ namespace Hlt
      *  @param alg the algorithm which ends the transaction
      *  @param status code
      */
-    virtual StatusCode unlock ( const IAlgorithm* alg  ) = 0 ;  
+    virtual StatusCode unlock ( const IAlgorithm* alg ) = 0 ;  
     // =========================================================================
   public: // mandatory stuff from the framework
     // ========================================================================

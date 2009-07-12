@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.7 2009-03-22 17:57:42 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.8 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -97,7 +97,27 @@ namespace LoKi
     virtual const Hlt::Selection* 
     selection ( const Key& key ) const ;
     // =========================================================================
-  public:
+    /** get the object form TES 
+     *  @param client the client 
+     *  @param location the TES location 
+     *  @return the object 
+     */
+    const DataObject*
+    tes 
+    ( const Client& client   , 
+      const Key&    location ) const ;
+    // =========================================================================
+    /** register the query  to TES-selection 
+     *  @param location TES location to be registered
+     *  @param consumer algorithm/consumer 
+     *  @return Status Code 
+     */
+    virtual StatusCode   
+    registerTESInput
+    ( const Key&         location  ,                    //          TES location 
+      const Client&      client    ) const ;            //                client
+    // =========================================================================
+ public:
     // =========================================================================
     /** get the selection by key (non-const)
      *  @param key the key 
@@ -199,12 +219,15 @@ namespace LoKi
   private:
     // ========================================================================
     /// container of keys 
-    typedef GaudiUtils::VectorMap<Key,      Hlt::Selection*> OMap;
-    typedef GaudiUtils::VectorMap<Key,const Hlt::Selection*> IMap;
+    typedef GaudiUtils::VectorMap<Key,      Hlt::Selection*> OMap ;
+    typedef GaudiUtils::VectorMap<Key,const Hlt::Selection*> IMap ;
+    typedef std::vector<Key>                                 LVct ;
     /// keys for all "input"  selections 
     mutable IMap      m_in  ;               // keys for all "input"  selections 
     /// keys for all "output" selections 
     mutable OMap      m_out ;               // keys for all "output" selections 
+    /// keys for all TES input locations 
+    mutable LVct      m_tes ;               // keys for all TES input locations 
     /// the functor itself
     LoKi::Types::FCut m_cut ;                             // the functor itself
     // ======================================================================== 

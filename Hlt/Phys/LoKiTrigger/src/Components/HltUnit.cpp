@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.5 2009-03-22 17:57:42 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.6 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -245,6 +245,55 @@ StatusCode LoKi::HltUnit::execute ()
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+/*  get the object form TES 
+ *  @param client the client 
+ *  @param location the TES location 
+ *  @return the object 
+ */
+// ============================================================================
+const DataObject*
+LoKi::HltUnit::tes 
+( const LoKi::IHltUnit::Client& /* client  */ , 
+  const LoKi::IHltUnit::Key&       location   ) const 
+{
+  // check the location
+  LVct::const_iterator ifind = std::find
+    ( m_tes.begin() , m_tes.end  () , location ) ;
+  //
+  Assert ( m_tes.end() != ifind , 
+           "tes: anuthorized access to TES -data" ) ;
+  return hltSvc()->tes ( this , location ) ;
+  //
+}
+// ============================================================================
+/* register the query  to TES-selection 
+ *  @param location TES location to be registered
+ *  @param consumer algorithm/consumer 
+ *  @return Status Code 
+ */
+// ============================================================================
+StatusCode LoKi::HltUnit::registerTESInput
+( const LoKi::IHltUnit::Key&       location    ,        //         TES location 
+  const LoKi::IHltUnit::Client& /* client   */ ) const  //               client
+{
+  //
+  StatusCode sc = regSvc()->registerTESInput ( location , this ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to register INPUT TES location '" + 
+                   location + "'" , sc ) ; }
+  //
+  LVct::const_iterator ifind = 
+    std::find ( m_tes.begin() , m_tes.end() , location ) ;
+  if ( m_tes.end () != ifind ) { return StatusCode::SUCCESS ;}        // RETURN 
+  //
+  m_tes.push_back ( location ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+
+
 // ============================================================================
 // the factory (needed for instantiations):
 // ============================================================================

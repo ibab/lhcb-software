@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.3 2009-04-09 15:12:13 ibelyaev Exp $
+// $Id: ServiceRegister.cpp,v 1.4 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -130,7 +130,7 @@ StatusCode Hlt::Service::registerOutput
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-/*  register the input selection  dirung the allower transactions for 
+/*  register the input selection  dirung the allowed transactions for 
  *  locked service 
  *  @param sel the selection to be registered 
  *  @param alg the algorithm/consumer
@@ -199,6 +199,57 @@ StatusCode Hlt::Service::registerInput
           << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
   //
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  register the requies to TES-selection 
+ *  @attention the service much be locked properly during the transaction!
+ *  @param location TES location to be registered
+ *  @param consumer algorithm/consumer 
+ *  @return Status Code 
+ */
+// ============================================================================
+StatusCode Hlt::Service::registerTESInput
+( const Key&              location  ,                 //        TES location 
+  const IAlgorithm*       consumer  )                 //            consumer   
+{
+  // ==========================================================================
+  if      ( 0 == consumer  ) 
+  { return Error ( "registerTESInput: invalid consumer"  , 
+                   Register_Invalid_Consumer          ) ; }           // RETURN
+  else if ( !m_locker      ) 
+  { return Error ( "registerTESInput: the service is not locked" ,   
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  else if ( m_locker != consumer ) 
+  { return Error ( "registerTESInput: the service is locked by '" 
+                   + m_locker->name() + "'" , 
+                   Register_Invalid_Lock              ) ;  }          // RETURN
+  //
+  TESMap::iterator intes = m_tesmap.find ( consumer ) ;
+  if ( m_tesmap.end() == intes ) 
+  {
+    m_tesmap.insert ( consumer , TESLocs() ) ;
+    intes = m_tesmap.find ( consumer ) ;
+  }
+  TESLocs::iterator iin = intes->second.find ( location ) ;
+  if ( intes->second.end() != iin )
+  { Warning ( "registerTESInput: the input location '" 
+              + location + 
+              "' is already input location " ,
+              Register_Double_Registration ) ; }
+  else 
+  {
+    // Insert it!!!
+    TESLocs locs = intes->second ;
+    locs.insert ( location ) ;
+    m_tesmap.update ( consumer , locs ) ;
+  }
+  // debug printout here 
+  debug() << "Register  INPUT-TES " 
+          << " location '"       << std::string(location)  << "'" 
+          << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
+  //
+  return StatusCode::SUCCESS ;                                        // RETURN 
+  // ==========================================================================
 }
 // ============================================================================
 // The END 

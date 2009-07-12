@@ -1,4 +1,4 @@
-// $Id: IHltRegister.cpp,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: IHltRegister.cpp,v 1.2 2009-07-12 15:59:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -94,7 +94,7 @@ Hlt::IRegister:: ~IRegister() {}
 // ============================================================================
 const InterfaceID& Hlt::IRegister::interfaceID() 
 {
-  static const InterfaceID s_IID ("Hlt::IRegister" , 1 , 0 ) ;
+  static const InterfaceID s_IID ("Hlt::IRegister" , 2 , 0 ) ;
   return s_IID ;
 }
 // ============================================================================  

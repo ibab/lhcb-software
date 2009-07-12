@@ -1,4 +1,4 @@
-// $Id: Service.h,v 1.4 2009-03-28 14:17:57 ibelyaev Exp $
+// $Id: Service.h,v 1.5 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_SERVICE_H 
 #define LOKITRIGGER_SERVICE_H 1 
@@ -42,7 +42,7 @@ class IANNSvc      ;                      // "Assigned Numbers & Names" service
 namespace Hlt 
 {
   // ==========================================================================
-  /** @class Service Service.h
+  /** @class Service
    *  
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -69,23 +69,36 @@ namespace Hlt
     /** register the output selection during the allowed transaction for 
      *  locked service 
      *  @see Hlt::IRegister
-     *  @param sel the selection to be registered 
-     *  @param alg the algorithm/producer
+     *  @param selection the selection to be registered 
+     *  @param producer  the algorithm/producer
      *  @return status code 
      */
-    virtual StatusCode        registerOutput 
+    virtual StatusCode        
+    registerOutput 
     ( Hlt::Selection*         selection ,               // the output selection 
       const IAlgorithm*       producer  )  ;            //             producer 
     /** register the input selection  dirung the allower transactions for 
      *  locked service 
      *  @see Hlt::IRegister
-     *  @param sel the selection to be registered 
-     *  @param alg the algorithm/consumer
+     *  @param selection the selection to be registered 
+     *  @param consumer the algorithm/consumer
      *  @return status code 
      */
-    virtual StatusCode           registerInput 
+    virtual StatusCode           
+    registerInput 
     ( const Hlt::IRegister::Key& selection ,             // the input selection 
       const IAlgorithm*          consumer  ) ;           //            consumer 
+    // ========================================================================
+    /** register the requiest to TES-selection 
+     *  @attention the service much be locked properly during the transaction!
+     *  @param location TES location to be registered
+     *  @param consumer algorithm/consumer 
+     *  @return Status Code 
+     */
+    virtual StatusCode  
+    registerTESInput
+    ( const Key&                 location ,              //        TES location 
+      const IAlgorithm*          consumer ) ;            //            consumer   
     // ========================================================================
   protected: // Hlt::IRegister (public) 
     // ========================================================================
@@ -131,6 +144,17 @@ namespace Hlt
     virtual Hlt::Selection*  retrieve
     ( const IAlgorithm*      producer ,                  //        the producer
       const Hlt::IData::Key& key      ) const ;          //  selection key/name
+    // ========================================================================
+  public: // TES locations
+    // ========================================================================
+    /** retrieve the object from TES 
+     *  @param reader the algorithm
+     *  @param location TES-location 
+     *  @return object for TES 
+     */
+    virtual const DataObject* tes 
+    ( const IAlgorithm* reader   ,                              //       reader 
+      const Key&        location ) const ;                      // TES-location
     // ========================================================================
   public:   // Hlt::IInspector 
     // ========================================================================
@@ -262,6 +286,45 @@ namespace Hlt
      *  @return number of selections  
      */
     virtual size_t selections ( KeyList& keys ) const ;
+    // ========================================================================
+  public:  // TES selections  
+    // ========================================================================
+    /** get the "readers" for the given TES-location
+     *  @param location TES-location
+     *  @param alglist (OUTPUT) the list of readers 
+     *  @return number of readers 
+     */
+    virtual size_t readers 
+    ( const std::string&    location  , 
+      AlgList&              alglist   ) const ;
+    /** get all readers 
+     *  @param alglist (OUTPUT) the list of readers 
+     *  @return number of readers 
+     */
+    virtual size_t allReaders 
+    ( AlgList&              alglist   ) const ;
+    /** get the input TES locations for the given reader 
+     *  @param reader the algorithm
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return number of locations 
+     */
+    virtual size_t readTES 
+    ( const IAlgorithm*     reader    , 
+      KeyList&              locations ) const ;
+    /** get the input TES locations for the given reader 
+     *  @param reader the algorithm
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return numebr of locations 
+     */
+    virtual size_t readTES 
+    ( const std::string&    reader    , 
+      KeyList&              locations ) const ;
+    /** get all TES-inptu locations 
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return number of locations 
+     */
+    virtual size_t allTES 
+    ( KeyList&              locations ) const ;
     // ========================================================================
   public: // IIncidentListener
     // ========================================================================
@@ -421,7 +484,7 @@ namespace Hlt
     // ========================================================================
   private:
     // ========================================================================
-    /// the actul a type of structure for output selections 
+    /// the actual a type of structure for output selections 
     typedef GaudiUtils::VectorMap<Alg,SelMap>  OutputMap ; // output selections
     /// the actul a type of structure for input  selections 
     typedef GaudiUtils::VectorMap<Alg,SelMap>  InputMap  ; //  input selections 
@@ -429,6 +492,15 @@ namespace Hlt
     OutputMap  m_outputs ;          // The map: algorithm --> output selections 
     /// The map: algorithm --> input selections 
     InputMap   m_inputs  ;          // The map: algorithm -->  input selections
+    // ========================================================================
+  private: // TES-input selections/locations 
+    // ========================================================================
+    /// the list of TES-input locations 
+    typedef std::set<std::string>  TESLocs ; // the list of TES-input locations 
+    /// the actual type of structure for TES-locations 
+    typedef GaudiUtils::VectorMap<Alg,TESLocs>     TESMap ; 
+    /// the map: algorithm -> input TES locations 
+    TESMap   m_tesmap ;            // the map: algorithm -> input TES locations
     // ========================================================================
   protected : // Helpers 
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: IHltInspector.h,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
+// $Id: IHltInspector.h,v 1.3 2009-07-12 15:59:10 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTINSPECTOR_H 
 #define LOKI_IHLTINSPECTOR_H 1
@@ -138,6 +138,45 @@ namespace Hlt
     virtual size_t outputs 
     ( const std::string& algorithm , 
       KeyList&           selections ) const = 0 ;
+    // ========================================================================
+  public: // TES-selections 
+    // ========================================================================
+    /** get the "readers" for the given TES-location
+     *  @param location TES-location
+     *  @param alglist (OUTPUT) the list of readers 
+     *  @return number of readers 
+     */
+    virtual size_t readers 
+    ( const std::string&    location  , 
+      AlgList&              alglist   ) const  = 0 ;
+    /** get all readers 
+     *  @param alglist (OUTPUT) the list of readers 
+     *  @return number of readers 
+     */
+    virtual size_t allReaders 
+    ( AlgList&              alglist   ) const  = 0 ;
+    /** get the input TES locations for the given reader 
+     *  @param reader the algorithm
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return numebr of locations 
+     */
+    virtual size_t readTES 
+    ( const IAlgorithm*     reader    , 
+      KeyList&              locations ) const  = 0 ;
+    /** get the input TES locations for the given reader 
+     *  @param reader the algorithm
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return numebr of locations 
+     */
+    virtual size_t readTES 
+    ( const std::string&    reader    , 
+      KeyList&              locations ) const  = 0 ;
+    /** get all TES-input locations 
+     *  @param locations (OUTPUT) the list of input TES locations 
+     *  @return numebr of locations 
+     */
+    virtual size_t allTES 
+    ( KeyList&              locations ) const  = 0 ;
     // ========================================================================
   public:
     // ========================================================================

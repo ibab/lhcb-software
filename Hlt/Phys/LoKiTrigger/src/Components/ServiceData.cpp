@@ -1,8 +1,12 @@
-// $Id: ServiceData.cpp,v 1.1 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: ServiceData.cpp,v 1.2 2009-07-12 15:59:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-// Local
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
+// local
 // ============================================================================
 #include "Service.h"
 // ============================================================================
@@ -96,9 +100,38 @@ const Hlt::Selection* Hlt::Service::selection
   return isel->second ;
 }
 // ============================================================================
-
-
-
+/* retrieve the object from TES 
+ *  @param reader the algorithm
+ *  @param location TES-location 
+ *  @return object for TES 
+ */
+// ============================================================================
+const DataObject* Hlt::Service::tes 
+( const IAlgorithm* reader   ,                              //       reader 
+  const Key&        location ) const                        // TES-location
+{
+  // be a little bit paranoic:
+  Assert ( 0 != reader                   , 
+           "tes: invalid reader"        , TES_Invalid_Reader   ) ;
+  // check in map
+  TESMap::const_iterator ifind = m_tesmap.find ( reader  ) ;
+  Assert ( m_tesmap.end() != ifind      , 
+           "tes: unknown reader"        , TES_Unknown_Reader   ) ; 
+  // check the location 
+  TESLocs::const_iterator iloc = ifind->second.find ( location ) ;
+  Assert ( ifind->second.end() != iloc  , 
+           "tes: unknown TES-location"  , TES_Unknown_Location ) ; 
+  // check for own readiong abilities 
+  const GaudiAlgorithm* alg = dynamic_cast<const GaudiAlgorithm*> ( reader ) ;
+  if ( 0 == alg ) 
+  {
+    Error (" Reader is not GaudiAlgorithm :-(, not (ye) implemented)") ;
+    return 0 ;
+  } 
+  const DataObject* obj = alg->get<DataObject>( location ) ;
+  //
+  return obj ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
