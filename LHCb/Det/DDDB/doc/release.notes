@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================== DDDB v1r20 2009-07-13 ============================
+! 2009-07-13 - Marco Clemencic
+ - Changed default tags for 2009 data:
+   . head-20090713         for DDDB
+   . head-20090713         for LHCBCOND
+   . sim-20090713-vc-md100 for SIMCOND
+
 ! 2009-07-09 - Marco Clemencic
  - Changed default tags for 2009 data:
    . MC09-20090402-vc-md100 for SIMCOND
