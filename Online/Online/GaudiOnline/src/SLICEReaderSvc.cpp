@@ -176,19 +176,19 @@ StatusCode SLICEReaderSvc::initialize()
 
     m_CurFile =0;
     if(m_InputFiles.size() == 0) 
-        msgLog << MSG::WARNING << "No input files -> no injection" << endmsg;
+        msgLog << MSG::WARNING << WHERE << "No input files -> no injection" << endmsg;
 
 /*
     for(std::vector<std::string>::iterator ite = m_InputFiles.begin(); ite != m_InputFiles.end(); ++ite)
     {
-        msgLog << MSG::INFO << *ite << endmsg;        
+        msgLog << MSG::INFO << WHERE << *ite << endmsg;        
     }  
 */
     m_CurEvtLen=m_OffsetEvt=m_CurEvtIte=m_CurSliceIte=0;
 
     m_TotEvtsRead=0;
 
-    msgLog << MSG::INFO << "INITIALISATION DONE" << endmsg;
+    msgLog << MSG::INFO << WHERE << "INITIALISATION DONE" << endmsg;
     m_ReaderState = READY;
     return StatusCode::SUCCESS;
 }
@@ -214,13 +214,13 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
   
     static MsgStream msgLog(msgSvc(), name());
  
-    msgLog << MSG::DEBUG << "Size of chunk read : " << size << endmsg;
+    msgLog << MSG::INFO << WHERE << "Size of chunk read : " << size << endmsg;
 
     /// Special case: The event was on two slices, as we start to read a new slice we have to check if we have to find the remaining part of an event.
     /// If so, build back the event with the part previously read on the previous slice, and push it in the buffer.
     if(m_CurEvtIte >0 && m_CurEvtIte < m_CurEvtLen)
     { 
-        msgLog << MSG::DEBUG << "(m_CurEvtIte = " << m_CurEvtIte << " < m_CurEvtLen = " << m_CurEvtLen << ")" << endmsg;
+        msgLog << MSG::INFO << WHERE << "(m_CurEvtIte = " << m_CurEvtIte << " < m_CurEvtLen = " << m_CurEvtLen << ")" << endmsg;
         memcpy(m_CurEvent+m_CurEvtIte, slice, m_CurEvtLen-m_CurEvtIte);
         m_CurSliceIte=m_CurEvtLen-m_CurEvtIte;
         m_CurEvtIte=m_CurEvtLen;
@@ -228,7 +228,7 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
         StatusCode sc = pushEvent(m_CurEvent, m_CurEvtLen);
         if(sc.isRecoverable()) 
         {
-            msgLog << MSG::INFO << "End of run : exiting decodeMDF" << endmsg;
+            msgLog << MSG::INFO << WHERE << "End of run : exiting decodeMDF" << endmsg;
             return sc;
         } 
         if(sc.isFailure())
@@ -238,8 +238,8 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
         }
 
             
-        msgLog << MSG::DEBUG << "Cur evt Len = " << m_CurEvtLen << ", cur evt ite = " << m_CurEvtIte << endmsg;
-        msgLog << MSG::DEBUG << "Cur slice Len = " << m_SliceLen << ", cur slice ite = " << m_CurSliceIte << endmsg;
+        msgLog << MSG::INFO << WHERE << "Cur evt Len = " << m_CurEvtLen << ", cur evt ite = " << m_CurEvtIte << endmsg;
+        msgLog << MSG::INFO << WHERE << "Cur slice Len = " << m_SliceLen << ", cur slice ite = " << m_CurSliceIte << endmsg;
     }
     
     //Event completely read 
@@ -247,14 +247,14 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
     
  
     m_OffsetEvt = m_CurSliceIte;
-    msgLog << MSG::DEBUG << "cursliceite " << m_CurSliceIte << ", offsetevt " << m_OffsetEvt << endmsg;
+    msgLog << MSG::INFO << WHERE << "cursliceite " << m_CurSliceIte << ", offsetevt " << m_OffsetEvt << endmsg;
 
     /// While the slice was not completely parsed 
     while (m_OffsetEvt < size) {
         int *pword = (int *) (slice+m_OffsetEvt);
         m_CurEvtLen=*pword; //If a MDF Header is on 2 different chunks, this pointer is correct anyway
         if(m_CurEvtLen == 0) {
-            msgLog << MSG::WARNING << "Evt size equals 0" << endmsg;
+            msgLog << MSG::WARNING << WHERE << "Evt size equals 0" << endmsg;
         //    displayBuf(slice+m_OffsetEvt, 56); 
             return StatusCode::FAILURE;
         }
@@ -285,7 +285,7 @@ StatusCode SLICEReaderSvc::decodeMDF(char *slice, int size)
             StatusCode sc = pushEvent(slice+m_OffsetEvt, m_CurEvtLen);
             if(sc.isRecoverable())
             {   
-                msgLog << MSG::INFO << "End of run : exiting decodeMDF" << endmsg;
+                msgLog << MSG::INFO << WHERE << "End of run : exiting decodeMDF" << endmsg;
                 return sc;
             }
             if(sc.isFailure()) 
@@ -319,7 +319,7 @@ StatusCode SLICEReaderSvc::readFile()
 
     ++m_TotFilesRead; 
     
-    msgLog << MSG::INFO << "Reading file " << m_InputFiles[m_CurFile] << endmsg;
+    msgLog << MSG::INFO << WHERE << "Reading file " << m_InputFiles[m_CurFile] << endmsg;
     
     // First slice, we assume size of event is the first byte
     ret = read(fd, m_Buffer, TWOMB); 
@@ -336,7 +336,7 @@ StatusCode SLICEReaderSvc::readFile()
         if(sc.isFailure()) {
             
             if(sc.isRecoverable()) {
-                msgLog << MSG::INFO << "End of run : exiting readFile" << endmsg;
+                msgLog << MSG::INFO << WHERE << "End of run : exiting readFile" << endmsg;
             }
             else {
                 msgLog << MSG::ERROR << "Problem occured decoding MDF file "<< m_InputFiles[m_CurFile] << endmsg;
@@ -351,7 +351,7 @@ StatusCode SLICEReaderSvc::readFile()
     close(fd);
     
 
-    msgLog << MSG::INFO << "End of readfile procedure: "<< m_TotFilesRead << " files have been read." << endmsg;
+    msgLog << MSG::INFO << WHERE << "End of readfile procedure: "<< m_TotFilesRead << " files have been read." << endmsg;
     return StatusCode::SUCCESS;
 }
     
@@ -367,7 +367,7 @@ StatusCode SLICEReaderSvc::run()
         switch(m_ReaderState) {
         case STOPPED:
         case NOT_READY:
-            msgLog << MSG::DEBUG << "Exiting from reading loop" << endmsg;
+            msgLog << MSG::INFO << WHERE << "Exiting from reading loop" << endmsg;
             return StatusCode::SUCCESS;
         case READY:
             MEPRxSys::microsleep(100000); // 100 ms
@@ -376,7 +376,7 @@ StatusCode SLICEReaderSvc::run()
         }
     }
 
-    msgLog << MSG::INFO << "Reader running" << endmsg;
+    msgLog << MSG::INFO << WHERE << "Reader running" << endmsg;
  
     StatusCode sc=StatusCode::SUCCESS;
     do
@@ -391,7 +391,7 @@ StatusCode SLICEReaderSvc::run()
     if(sc.isFailure()) {
         if(sc.isRecoverable())
         {
-            msgLog << MSG::INFO << "End of run : exiting run, files read: "<< m_TotFilesRead << endmsg;
+            msgLog << MSG::INFO << WHERE << "End of run : exiting run, files read: "<< m_TotFilesRead << endmsg;
             return StatusCode::SUCCESS;
         }
         else msgLog << MSG::ERROR << "File reading procedure failed" << endmsg;
@@ -409,7 +409,7 @@ StatusCode SLICEReaderSvc::finalize()
     MsgStream msgLog(msgSvc(),name());
     m_ReaderState = NOT_READY;
     m_LoopOverFiles = false;
-    msgLog << MSG::INFO << "Finalization" << endmsg;
+    msgLog << MSG::INFO << WHERE << "Finalization" << endmsg;
  
     if(m_IncidentSvc) {
         m_IncidentSvc->removeListener(this);
@@ -444,7 +444,7 @@ void SLICEReaderSvc::handle(const Incident& incident){
           if(mbm_cancel_request(m_BMID) != MBM_NORMAL) {
               msgLog << MSG::ERROR << "Could not cancel writing request" << endmsg;
           }
-          msgLog << MSG::DEBUG << "request cancelled" << endmsg;
+          msgLog << MSG::INFO << WHERE << "request cancelled" << endmsg;
 
       } 
   }
@@ -472,7 +472,7 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
     if(mbm_get_space_a(m_BMID, size, (int **)&buf, NULL, this) != MBM_NORMAL)
     {
         if(m_ReaderState != RUNNING) {
-            msgLog << MSG::INFO << "End of run : mgm_get_space cancelled" << endmsg;
+            msgLog << MSG::INFO << WHERE << "End of run : mgm_get_space cancelled" << endmsg;
             return StatusCode::RECOVERABLE;
         }
         msgLog << MSG::ERROR << "mbm_get_space_a failed" << endmsg;
@@ -484,7 +484,7 @@ StatusCode SLICEReaderSvc::pushEvent(char *event, int size)
     if(mbm_declare_event_and_send(m_BMID, size, r.evtype, r.trmask, 0, (void **) &buf, &size, m_PartitionID) != MBM_NORMAL)
     {
         if(m_ReaderState != RUNNING) {
-            msgLog << MSG::INFO << "End of run : mgm_declare_event_and_send cancelled" << endmsg;
+            msgLog << MSG::INFO << WHERE << "End of run : mgm_declare_event_and_send cancelled" << endmsg;
             return StatusCode::RECOVERABLE;
         }
         msgLog << MSG::ERROR << "mbm_declare_event_and_send failed" << endmsg;

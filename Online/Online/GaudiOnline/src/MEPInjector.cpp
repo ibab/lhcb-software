@@ -192,13 +192,14 @@ StatusCode MEPInjector::queryInterface(const InterfaceID& riid, void** ppIf) {
  */
 StatusCode MEPInjector::initBuffers() {
     MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     std::vector<char *> items;
 //    items.push_back(strcpy(new char[16], "mbm_install"));
     static char type[64]="mbm_install";
     items.push_back(type);
     if(m_BufferOptions.size() < 3) {
-        msgLog << MSG::WARNING << "Invalid buffer options, the injector will use default values" << endmsg;
+        msgLog << MSG::WARNING << WHERE << "Invalid buffer options, the injector will use default values" << endmsg;
         items.push_back(strcpy(new char[10], "-s=70000"));
         items.push_back(strcpy(new char[10], "-e=100"));
         items.push_back(strcpy(new char[10], "-u=20"));
@@ -213,10 +214,19 @@ StatusCode MEPInjector::initBuffers() {
     items.push_back(new char[64]);
     char **pName = &(items.back());
     items.push_back(strcpy(new char[3], "-c")); 
-    
+   
+    std::vector<std::vector<std::string>::iterator> iteToDelete;
 
     /// Makes buffers and attaches to them.
     for(std::vector<std::string>::iterator iteNames = m_BufferNames.begin(); iteNames != m_BufferNames.end(); ++iteNames) {
+
+        if(strcmp(iteNames->c_str(),PERA) != 0 && strcmp(iteNames->c_str(),PERB) !=0 && strcmp(iteNames->c_str(),LUMI) != 0 && strcmp(iteNames->c_str(),RAND) != 0 ) {
+            msgLog << MSG::ERROR << WHERE << "Invalid buffer manager name: " << *iteNames << ", please use PERA (trg 4) or PERB (trg 5), LUMI (trg 1) or RAND (trg 3)." << endmsg;
+            msgLog << MSG::ERROR << WHERE << "Trying to continue with other configured buffers." << endmsg;
+            iteToDelete.push_back(iteNames);
+            continue;
+        }
+
         std::string tmp = "-i="+*iteNames;
         strcpy(*pName, tmp.c_str());
 
@@ -226,23 +236,28 @@ StatusCode MEPInjector::initBuffers() {
            return StatusCode::FAILURE;
         }
     
-        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " installed" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "Buffer " << *iteNames << " installed" << endmsg;
         
         BMID bmid= mbm_include(iteNames->c_str(), m_ProcName.c_str(), m_PartitionID); 
         if(bmid==MBM_INV_DESC) {
-            msgLog << MSG::ERROR << "Unable to attach to buffer manager "<< *iteNames << " as " << m_ProcName << endmsg;
+            msgLog << MSG::ERROR << WHERE << "Unable to attach to buffer manager "<< *iteNames << " as " << m_ProcName << endmsg;
             return StatusCode::FAILURE;
         }
-        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " included" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "Buffer " << *iteNames << " included" << endmsg;
         m_EventBuffers[*iteNames]=bmid;  
-    }    
+    }   
+
+    for(std::vector< std::vector<std::string>::iterator >::iterator iteIte = iteToDelete.begin(); iteIte != iteToDelete.end(); ++iteIte) {
+        m_BufferNames.erase(*iteIte);
+    }
 
     for(std::vector<char *>::iterator ite=items.begin()+1; ite!=items.end(); ++ite) {
         delete [] *ite;
     }
     items.clear(); 
 
-    msgLog << MSG::INFO << "Buffer initialized" << endmsg;
+    msgLog << MSG::INFO << WHERE << "Buffer initialized" << endmsg;
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -251,6 +266,7 @@ StatusCode MEPInjector::initBuffers() {
  */
 StatusCode MEPInjector::initConsumers() {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     for(std::map<std::string, BMID>::iterator ite=m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite) {
         //use the requirem,etns to compute the probability of choosing buffers?
         for(Requirements::iterator i=m_Req.begin(); i!=m_Req.end(); ++i) {
@@ -258,11 +274,12 @@ StatusCode MEPInjector::initConsumers() {
             r.parse(*i);
             //pcons->addRequest(r);
             if(MBM_NORMAL != mbm_add_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType, r.freqType, r.freq)) {
-                msgLog << MSG::ERROR << "Unable to add a request to the queue " << ite->first << endmsg;
+                msgLog << MSG::ERROR << WHERE << "Unable to add a request to the queue " << ite->first << endmsg;
                 return StatusCode::FAILURE; 
             }  
         }
     }
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS; 
 }
 
@@ -270,6 +287,7 @@ StatusCode MEPInjector::initConsumers() {
  */
 StatusCode MEPInjector::deleteConsumers() {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     /// Deletes consumers, excludes buffers.
     for(std::map<std::string, BMID>::iterator ite = m_EventBuffers.begin(); ite != m_EventBuffers.end(); ++ite) {   
         mbm_cancel_request(ite->second);
@@ -278,7 +296,7 @@ StatusCode MEPInjector::deleteConsumers() {
             Requirement r;
             r.parse(*i);
             if(MBM_NORMAL != mbm_del_req(ite->second, r.evtype, r.trmask, r.vetomask, r.maskType, r.userType)) {
-                msgLog << MSG::WARNING << "Problem deleting request, continue" << endmsg;
+                msgLog << MSG::WARNING << WHERE << "Problem deleting request, continue" << endmsg;
             }
         } 
         mbm_free_space(ite->second);
@@ -294,7 +312,7 @@ StatusCode MEPInjector::deleteConsumers() {
     static char type[64]="mbm_install";
     items.push_back(type);
     if(m_BufferOptions.size() < 3) {   
-        msgLog << MSG::WARNING << "Invalid buffer options, the injector will use default values" << endmsg;
+        msgLog << MSG::WARNING << WHERE << "Invalid buffer options, the injector will use default values" << endmsg;
         items.push_back(strcpy(new char[10], "-s=70000"));
         items.push_back(strcpy(new char[10], "-e=100"));
         items.push_back(strcpy(new char[10], "-u=20"));
@@ -318,10 +336,11 @@ StatusCode MEPInjector::deleteConsumers() {
            return StatusCode::FAILURE;
         }
 
-        msgLog << MSG::DEBUG << "Buffer " << *iteNames << " deinstalled" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "Buffer " << *iteNames << " deinstalled" << endmsg;
     }
 
     m_EventBuffers.clear();
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -332,9 +351,10 @@ StatusCode MEPInjector::deleteConsumers() {
 StatusCode MEPInjector::initialize() {
     StatusCode sc = Service::initialize();
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
     if (!sc.isSuccess()) {
-        msgLog << MSG::ERROR << "Failed to initialize service base class." << endmsg;
+        msgLog << MSG::ERROR << WHERE << "Failed to initialize service base class." << endmsg;
         return sc;
     }
 
@@ -356,13 +376,13 @@ StatusCode MEPInjector::initialize() {
     /// Initializes Buffer Managers.
     sc = initBuffers();
     if(sc.isFailure()) {
-        msgLog << MSG::ERROR << "Failed to make buffers" << endmsg;
+        msgLog << MSG::ERROR << WHERE << "Failed to make buffers" << endmsg;
         return sc; 
     }
 
     sc = initConsumers();
     if(sc.isFailure()) {   
-        msgLog << MSG::ERROR << "Failed to instanciate consumers" << endmsg;
+        msgLog << MSG::ERROR << WHERE << "Failed to instanciate consumers" << endmsg;
         return sc;
     }
 
@@ -374,7 +394,7 @@ StatusCode MEPInjector::initialize() {
     /// Initializes buffers for each Tell1 to emulate.
     for(std::vector<std::string>::iterator ite=m_Tell1Boards.begin(); ite != m_Tell1Boards.end(); ite+=3) {
         if(!m_AutoMode && strncmp((ite+1)->c_str(), "tfc", 3)==0) {
-            msgLog << MSG::INFO << "No MEP for " << *ite << endmsg;
+            msgLog << MSG::INFO << WHERE << "No MEP for " << *ite << endmsg;
             continue; 
         }
         u_int32_t tell1id = MEPRxSys::IPStringToBits(*ite);
@@ -391,12 +411,12 @@ StatusCode MEPInjector::initialize() {
         std::string res, msg;
         
         MEPRxSys::name_from_addr(iteTell1ID->first, res, msg);
-        msgLog << MSG::INFO << "tell1: " << res << ", msg: "<< msg << endmsg;    
+        msgLog << MSG::INFO << WHERE << "tell1: " << res << ", msg: "<< msg << endmsg;    
     }
 */
-    msgLog << MSG::INFO << "Allocated MEPs : "<< endmsg;
-    msgLog << MSG::INFO << strAllocatedMEPs << endmsg;
-    msgLog << MSG::INFO << "Number : " << m_MapTell1MEPs.size() << endmsg; 
+    msgLog << MSG::INFO << WHERE << "Allocated MEPs : "<< endmsg;
+    msgLog << MSG::INFO << WHERE << strAllocatedMEPs << endmsg;
+    msgLog << MSG::INFO << WHERE << "Number : " << m_MapTell1MEPs.size() << endmsg; 
    
     
     m_HLTReqsIte = m_HLTReqs.begin();
@@ -434,8 +454,8 @@ StatusCode MEPInjector::initialize() {
             return StatusCode::FAILURE;
         }
 
-        msgLog << MSG::DEBUG << "IP to send to HLT : "<<m_HLTIfIPAddr << " interface : "<<m_HLTEthInterface << endmsg; 
-        msgLog << MSG::DEBUG << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg; 
+        msgLog << MSG::DEBUG << WHERE << "IP to send to HLT : "<<m_HLTIfIPAddr << " interface : "<<m_HLTEthInterface << endmsg; 
+        msgLog << MSG::DEBUG << WHERE << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg; 
 
 	if ((m_FromOdinSock = MEPRxSys::open_sock(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, m_OdinIfIPAddr, false, errmsg)) < 0) {
             ERRMSG(msgLog, "Failed to open socket:" + errmsg);
@@ -509,7 +529,7 @@ StatusCode MEPInjector::initialize() {
     }
 
     for(int i=0; i<8; ++i) {
-        if(CPU_ISSET(i, &mask)) msgLog << MSG::INFO << "CPU " << i << " is set for InjectorProcessing Thread" << endmsg;
+        if(CPU_ISSET(i, &mask)) msgLog << MSG::INFO << WHERE << "CPU " << i << " is set for InjectorProcessing Thread" << endmsg;
     }
     exit(0);
 */
@@ -521,11 +541,11 @@ StatusCode MEPInjector::initialize() {
 
     if(!m_AutoMode) {
         m_InjState = READY;
-        msgLog << MSG::DEBUG << "Injector initialized in TFC mode" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "Injector initialized in TFC mode" << endmsg;
     }
     else { 
         m_InjState = READY; //RUNNING
-        msgLog << MSG::DEBUG << "Injector initialized in automode" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "Injector initialized in automode" << endmsg;
     }
 
 
@@ -551,6 +571,7 @@ StatusCode MEPInjector::initialize() {
         }
     }
 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -591,28 +612,28 @@ StatusCode MEPInjector::pingHLTNodes() {
 
     char icmpDatagram[84];
     bzero(icmpDatagram, 84);
-    msgLog << MSG::DEBUG << "ping to HLT nodes" << endmsg;
+    msgLog << MSG::DEBUG << WHERE << "ping to HLT nodes" << endmsg;
     if(m_AutoMode) {
         int n =
             MEPRxSys::send_msg_arb_source(m_ToHLTSock, 0x01, MEPRxSys::IPStringToBits(m_HLTIfIPAddr),
                                           inet_addr(m_HLTStrIPAddrTo.c_str()), icmpDatagram, 84);
         if(n!=84) {
-            msgLog << MSG::ERROR << "Ping failed" << endmsg;
+            msgLog << MSG::ERROR << WHERE << "Ping failed" << endmsg;
             return StatusCode::FAILURE;
         }
-        msgLog << MSG::DEBUG << m_HLTStrIPAddrTo << " pinged in order to add it to the ARP table" << endmsg;
+        msgLog << MSG::DEBUG << WHERE << m_HLTStrIPAddrTo << " pinged in order to add it to the ARP table" << endmsg;
     }
     else {
         for(std::vector<std::string>::iterator ite = m_HLTNodes.begin(); ite != m_HLTNodes.end(); ++ite) { 
-            msgLog << MSG::DEBUG << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
+            msgLog << MSG::DEBUG << WHERE << " ping from " << m_HLTIfIPAddr << " to " << *ite << endmsg; 
             int n =
                 MEPRxSys::send_msg_arb_source(m_ToHLTSock, 0x01, MEPRxSys::IPStringToBits(m_HLTIfIPAddr),
                                           inet_addr(ite->c_str()), icmpDatagram, 84);
             if(n!=84) {
-                msgLog << MSG::ERROR << "Ping failed" << endmsg;
+                msgLog << MSG::ERROR << WHERE << "Ping failed" << endmsg;
                 return StatusCode::FAILURE;  
             } 
-            msgLog << MSG::DEBUG << *ite << " pinged in order to add it to the ARP table" << endmsg;
+            msgLog << MSG::DEBUG << WHERE << *ite << " pinged in order to add it to the ARP table" << endmsg;
         }
     }
     return StatusCode::SUCCESS;
@@ -627,22 +648,23 @@ StatusCode MEPInjector::pingHLTNodes() {
 void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src) {
     unsigned int *word9tfc, *word9tape;
     MsgStream msgLog(msgSvc(), name());     //Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     if(dest != NULL && src != NULL) {
         if(*dest != NULL && *src !=NULL) {
             if(m_Debug) {
-                msgLog << MSG::DEBUG << "        | From TFC | From Tape " << endmsg;
-                msgLog << MSG::DEBUG << "Run     |"<< (*dest)->Run << " | " << (*src)->Run << endmsg; 
-                msgLog << MSG::DEBUG << "EvtType |"<< (*dest)->EventType << " | " << (*src)->EventType << endmsg; 
-                msgLog << MSG::DEBUG << "Calib   |"<< (*dest)->CalibrationStep << " | " << (*src)->CalibrationStep << endmsg; 
-                msgLog << MSG::DEBUG << "Orbit   |"<< (*dest)->Orbit << " | " << (*src)->Orbit << endmsg; 
-                msgLog << MSG::DEBUG << "L0Id    |"<< (*dest)->L0ID << " | " << (*src)->L0ID << endmsg; 
-                msgLog << MSG::DEBUG << "GPS     |"<< (*dest)->GPSTime << " | " << (*src)->GPSTime << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "        | From TFC | From Tape " << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "Run     |"<< (*dest)->Run << " | " << (*src)->Run << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "EvtType |"<< (*dest)->EventType << " | " << (*src)->EventType << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "Calib   |"<< (*dest)->CalibrationStep << " | " << (*src)->CalibrationStep << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "Orbit   |"<< (*dest)->Orbit << " | " << (*src)->Orbit << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "L0Id    |"<< (*dest)->L0ID << " | " << (*src)->L0ID << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "GPS     |"<< (*dest)->GPSTime << " | " << (*src)->GPSTime << endmsg; 
                 unsigned int *word8tfc, *word8tape;
                 word8tfc=(unsigned int*) *dest;
                 word8tfc+=7;
                 word8tape=(unsigned int*) *src;
                 word8tape+=7;
-                msgLog << MSG::DEBUG << "Word 8  |"<< *word8tfc   << " | " << *word8tape << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "Word 8  |"<< *word8tfc   << " | " << *word8tape << endmsg;
 
             }
     
@@ -666,15 +688,16 @@ void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src) {
             word9tfc = (((unsigned int *) (*dest))+8);
             word9tape = (((unsigned int *) (*src))+8); 
             if(m_Debug) 
-                msgLog << MSG::DEBUG << "Word 9  |"<< *word9tfc   << " | " << *word9tape << endmsg;  
+                msgLog << MSG::DEBUG << WHERE << "Word 9  |"<< *word9tfc   << " | " << *word9tape << endmsg;  
             *word9tfc = ((*word9tfc)&m_TFCMask) | ((*word9tape)&m_TapeMask);
 
         }     
         else {
-            if(*dest == NULL) msgLog << MSG::WARNING << "No Odin bank where to write information" << endmsg;
-            if(*src == NULL) msgLog << MSG::WARNING << "No Odin bank where to get information" << endmsg;
+            if(*dest == NULL) msgLog << MSG::WARNING << WHERE << "No Odin bank where to write information" << endmsg;
+            if(*src == NULL) msgLog << MSG::WARNING << WHERE << "No Odin bank where to get information" << endmsg;
         }
     }
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 }
 
 /** Display a buffer in hexadecimal.
@@ -694,6 +717,7 @@ void displayBuff(char *buf, int size) {
  */
 StatusCode MEPInjector::getEvent(int nbEv) {
     static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     Requirement r;
     int pp[TWOMB];
@@ -701,10 +725,13 @@ StatusCode MEPInjector::getEvent(int nbEv) {
 
     BMID bmid;
 
+    char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
+    OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
+
     int eventActual = 0;
     do {
         if(m_EventBuffers.size() < 1) {
-            msgLog << MSG::ERROR << "No input to get event from ..." << endmsg;
+            msgLog << MSG::ERROR << WHERE << "No input to get event from ..." << endmsg;
             return StatusCode::FAILURE;
         } 
         else if(m_EventBuffers.size() == 1 || m_AutoMode) {
@@ -712,67 +739,65 @@ StatusCode MEPInjector::getEvent(int nbEv) {
         }
         else {
             /// Select the input buffer according to the TFC trigger type.
-            char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
-            OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
-            msgLog << MSG::DEBUG << "Online Trigger Type: " << ori->triggerType << endmsg; 
+            msgLog << MSG::DEBUG << WHERE << "Online Trigger Type: " << ori->triggerType << endmsg; 
             switch(ori->triggerType) {
                     // Static "map" not very elegant but easier to implement and to control via job options 
                 case 1 : //LUMI
-                        msgLog << MSG::DEBUG << "Trigger Type 1: LUMI event selected" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 1: LUMI event selected" << endmsg;
                         bmid = m_EventBuffers[LUMI];
                         break;
                 case 3 : //RAND
-                        msgLog << MSG::DEBUG << "Trigger Type 2: RAND event selected" << endmsg; 
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 2: RAND event selected" << endmsg; 
                         bmid = m_EventBuffers[RAND];
                         break;  
                 case 5 : //PERB
-                        msgLog << MSG::DEBUG << "Trigger Type 5: PERB event selected" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 5: PERB event selected" << endmsg;
                         bmid = m_EventBuffers[PERB];
                         break;
                 case 6 : //TIMI, don't know what it is, process it like PERA
-                        msgLog << MSG::WARNING << "Trigger Type 6: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::WARNING << WHERE << "Trigger Type 6: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 7 : //CALX, don't know what it is, process it like PERA
-                        msgLog << MSG::WARNING << "Trigger Type 7: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::WARNING << WHERE << "Trigger Type 7: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 0 : //PHYS, should not be seen, process it like PERA (periodic A)
-                        msgLog << MSG::WARNING << "Trigger Type 0: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::WARNING << WHERE << "Trigger Type 0: Not implemented. Fallback to PERA buffer" << endmsg;
                       
                 case 2 : //AUXI, should not be seen, process it like PERA
-                        msgLog << MSG::WARNING << "Trigger Type 2: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::WARNING << WHERE << "Trigger Type 2: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 4 : //PERA
-                        msgLog << MSG::DEBUG << "Trigger Type 4: PERA event selected" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 4: PERA event selected" << endmsg;
                         bmid = m_EventBuffers[PERA];
                         break;
-                default : msgLog << MSG::ERROR << "Odin trigger type decoding error" << endmsg;
+                default : msgLog << MSG::ERROR << WHERE << "Odin trigger type decoding error" << endmsg;
                         return StatusCode::FAILURE;
             
             } 
-      
         }
 
         /// Checks if the buffer is not empty before to try to get an event from it.
         if(mbm_events_in_buffer(bmid, &eventActual) != MBM_NORMAL) {   
-            msgLog << MSG::WARNING << "Error checking number of event in buffer " << LUMI << endmsg;
+            msgLog << MSG::WARNING << WHERE << "Error checking number of event in buffer of trigger type: " << ori->triggerType << endmsg;
             MEPRxSys::microsleep(1000);
         }
     }
     while(eventActual <= 0 && m_InjState == RUNNING);
 
     if(m_InjState != RUNNING) { 
-        msgLog << MSG::INFO << "End of injection : mbm_get_event cancelled" << endmsg;
+        msgLog << MSG::INFO << WHERE << "End of injection : mbm_get_event cancelled" << endmsg;
         return StatusCode::RECOVERABLE;
     }
 
     /// Get the event. 
     if(mbm_get_event(bmid,&p, &m_CurEventSize, &r.evtype, r.trmask, m_PartitionID) != MBM_NORMAL) {
-        msgLog << MSG::ERROR << "mbm_get_event failed" << endmsg;
+        msgLog << MSG::ERROR << WHERE << "mbm_get_event failed" << endmsg;
         return StatusCode::FAILURE;
     }
     memcpy(m_CurEvent, p, m_CurEventSize);  
     if(mbm_free_event(bmid) != MBM_NORMAL) {
-        msgLog << MSG::ERROR << __PRETTY_FUNCTION__ << __LINE__ << "Could not free buffer memory, aborting injection" << endmsg;
+        msgLog << MSG::ERROR << WHERE << __PRETTY_FUNCTION__ << __LINE__ << "Could not free buffer memory, aborting injection" << endmsg;
         return StatusCode::FAILURE;
     }
     ++m_TotEvtsRead;
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 
 }
@@ -784,6 +809,7 @@ StatusCode MEPInjector::readEvent() {
     icalled++;
 
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     static unsigned int nbEv =0;
     int tell1id = 0;
@@ -792,7 +818,7 @@ StatusCode MEPInjector::readEvent() {
     /// Get an event. 
     StatusCode sc = getEvent(nbEv); 
     if(sc.isRecoverable()) {
-        msgLog << MSG::INFO << "End of injection : exiting readEvent" << endmsg;
+        msgLog << MSG::INFO << WHERE << "End of injection : exiting readEvent" << endmsg;
         return StatusCode::RECOVERABLE;
     } 
 
@@ -815,11 +841,11 @@ StatusCode MEPInjector::readEvent() {
             /// Merge tape and TFC bank contents according to what was defined. 
             if(hdr->type() == RawBank::ODIN && !m_AutoMode) {
                 if(m_OdinMEP->size() == 0) {
-                    msgLog << MSG::ERROR << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
+                    msgLog << MSG::ERROR << WHERE << "No Odin MEP received, the algorithm should not be there ..." << endmsg;
                     return StatusCode::FAILURE;
                 }
 
-                msgLog << MSG::DEBUG << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
+                msgLog << MSG::DEBUG << WHERE << "nbEv = " << nbEv << "; packing factor = " << m_PackingFactor << endmsg;   
 
                 if(m_Offline) {
                     char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
@@ -965,8 +991,8 @@ StatusCode MEPInjector::readEvent() {
             memcpy(ccur, hdr, len); 
 	}//end for all banks of the event
         if(m_Debug) { 
-            msgLog << MSG::INFO << "Event " << m_TotEvtsRead <<" read:" << bytesRead << "/" << m_CurEventSize << endmsg;
-            msgLog << MSG::INFO << nbBks << " banks read in the event" << endmsg;
+            msgLog << MSG::INFO << WHERE << "Event " << m_TotEvtsRead <<" read:" << bytesRead << "/" << m_CurEventSize << endmsg;
+            msgLog << MSG::INFO << WHERE << nbBks << " banks read in the event" << endmsg;
         }
  
         if(++nbEv == m_PackingFactor) {
@@ -976,6 +1002,7 @@ StatusCode MEPInjector::readEvent() {
     } //end if get event success
     else
         return StatusCode::FAILURE; 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -1067,6 +1094,8 @@ void MEPInjector::printMEP(MEPEvent *me, int size) {
 StatusCode MEPInjector::injectorProcessing() {
     static MsgStream msgLog(msgSvc(), name());
 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
+
     StatusCode sc = StatusCode::RECOVERABLE;
     while ((sc.isSuccess() || sc.isRecoverable()) && m_InjState == RUNNING ) {
         if(!m_AutoMode && sc.isRecoverable()) {
@@ -1074,7 +1103,7 @@ StatusCode MEPInjector::injectorProcessing() {
             if(!m_gotHLT) {
                 sc = getHLTInfo();
                 if(sc.isRecoverable()) {
-                    msgLog << MSG::INFO << "Could not get a HLT destination" << endmsg;
+                    msgLog << MSG::DEBUG << WHERE << "Could not get a HLT destination" << endmsg;
                     continue;
                 }
                 if(sc.isFailure()) {
@@ -1089,7 +1118,7 @@ StatusCode MEPInjector::injectorProcessing() {
             if(!m_gotOdin) {
                 sc = getOdinInfo();
                 if(sc.isRecoverable()) { 
-                    msgLog << MSG::INFO << "Could not get a TFC information" << endmsg;
+                    msgLog << MSG::DEBUG << WHERE << "Could not get a TFC information" << endmsg;
                     continue;
                 }
                 if(sc.isFailure()) {
@@ -1104,6 +1133,7 @@ StatusCode MEPInjector::injectorProcessing() {
         
     }
 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
  
     return StatusCode::SUCCESS;
 }
@@ -1113,6 +1143,7 @@ StatusCode MEPInjector::injectorProcessing() {
 StatusCode MEPInjector::readThenSend() {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     StatusCode sc;
     static unsigned int nbEv = 1;	// Used in Odin Mode to read the L0Id of the good bank    // Used to count nb event read
@@ -1125,7 +1156,7 @@ StatusCode MEPInjector::readThenSend() {
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
-	msgLog << MSG::ERROR << " Reading an event from the buffer managers" << endmsg;
+	msgLog << MSG::ERROR << WHERE << " Reading an event from the buffer managers" << endmsg;
         return StatusCode::FAILURE;
     }
   
@@ -1191,7 +1222,7 @@ StatusCode MEPInjector::readThenSend() {
             StatusCode sc; 
             sc = getHLTInfo();
             if(sc.isRecoverable()) {
-                msgLog << MSG::INFO << "Could not get a HLT destination" << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "Could not get a HLT destination" << endmsg;
                 return sc;
             }
 
@@ -1203,7 +1234,7 @@ StatusCode MEPInjector::readThenSend() {
 
             sc = getOdinInfo();
             if(sc.isRecoverable()) {
-                msgLog << MSG::INFO << "Could not get a TFC information" << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "Could not get a TFC information" << endmsg;
                 return sc;
             }
 
@@ -1230,12 +1261,14 @@ StatusCode MEPInjector::readThenSend() {
             MEPFragment *mepfrag = (MEPFragment *) ( ((char *) m_OdinMEP) + MEPEVENTOFFSET +
                                    IPHDRSZ + MEPHDRSZ + nbEv * ODFRAGSZ);
             m_EvtID = mepfrag->eventID();
-            msgLog << MSG::DEBUG << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
         }
 	++nbEv;
 
  
     }//end if(packing_factor)
+
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -1261,6 +1294,7 @@ int MEPInjector::getMTU(int netdev) {
  */
 in_addr_t MEPInjector::getTell1IP(int type, int src) {
     static MsgStream msgLog(msgSvc(), name());	//Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     
 //    static stdmap<int, int> MuonMap
     in_addr_t ipNet= ( (192 + (169<<8))&0x0000ffff);
@@ -1281,7 +1315,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
                 case 129 : return (ipNet | (4<<24));  
                 case 131 : return (ipNet | (5<<24)); 
                 default : 
-                    //msgLog << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
+                    //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
                     return 0;
             }
         }
@@ -1373,7 +1407,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
                 case 40: return (ipNet | (2<<24));
                 case 104: return (ipNet | (16<<24));
                 default : 
-                    //msgLog << MSG::WARNING << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
+                    //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for Velo bank type"<<endmsg;   
                     return 0;
             }
         }
@@ -1438,7 +1472,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
             case 107: return (ipNet | (47<<24));
             case 108: return (ipNet | (48<<24));
         default : 
-            //msgLog << MSG::WARNING << "Unknown source "<< src << " for TT bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for TT bank type"<<endmsg;   
             return 0; 
         } 
 	break;
@@ -1508,7 +1542,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
 	case 13:
 	    return (/*inet_addr("192.169.9.1")*/ ipNet | (9<<16) |(1<<24));
 	default:
-            //msgLog << MSG::WARNING << "Unknown source "<< src << " for Muon bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for Muon bank type"<<endmsg;   
             return 0;
 
 	}
@@ -1518,7 +1552,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
         switch(src) {
         case 0 : return (ipNet | (1<<24));   // Not sure about only this one, if an unknown src appear, it should be it ;) /* Dear Martin mentionned 2 but it seems it is 0*/
         default : 
-            //msgLog << MSG::WARNING << "Unknown source "<< src << " for L0PU bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for L0PU bank type"<<endmsg;   
             return 0;
         }  
 	return (/*inet_addr("192.169.15.0")*/ ipNet | (15<<16) | ((src + 1) << 24));	//TPU
@@ -1556,7 +1590,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
         case 1 :  return (ipNet | (2<<24));
         case 0 :  return (ipNet | (3<<24));
         default : 
-            //msgLog << MSG::WARNING << "Unknown source "<< src << " for L0Muon bank type"<<endmsg;   
+            //msgLog << MSG::WARNING << WHERE << "Unknown source "<< src << " for L0Muon bank type"<<endmsg;   
             return 0;
         } 
              
@@ -1564,6 +1598,7 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
     default:
         break;
     }
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return 0;
 }
 
@@ -1573,9 +1608,10 @@ in_addr_t MEPInjector::getTell1IP(int type, int src) {
  */
 StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     if(me->size() == 0) { 
-        msgLog << MSG::WARNING << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
+        msgLog << MSG::WARNING << WHERE << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
         return StatusCode::SUCCESS; //no data to send
     }
     me->setSize(0);
@@ -1661,8 +1697,8 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     int iLastDGramSize = MEPSize - uiMaxData * iNbIter;
 
     if(m_Debug) {
-        msgLog << MSG::DEBUG << " Number of fragments : " << iNbIter << " of size "<< iIPMTU << endmsg;
-        msgLog << MSG::DEBUG << " Size of last fragment : " << iLastDGramSize <<endmsg;
+        msgLog << MSG::DEBUG << WHERE << " Number of fragments : " << iNbIter << " of size "<< iIPMTU << endmsg;
+        msgLog << MSG::DEBUG << WHERE << " Size of last fragment : " << iLastDGramSize <<endmsg;
     }
     int iBytesSent = 0;
 
@@ -1729,9 +1765,11 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
 
         m_TotMEPsTx++;
         m_TotBytesTx += iBytesSent; 
+        msgLog << MSG::DEBUG << WHERE << endmsg;
 	return StatusCode::SUCCESS;
     }
     ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::FAILURE;
 }
 
@@ -1740,6 +1778,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
  */
 StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
     static MsgStream msgLog(msgSvc(), name()); 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     int n =
 	MEPRxSys::send_msg(m_ToOdinSock, m_BitOdinIPAddr, MEP_REQ_TOS, req, MEP_REQ_LEN,
@@ -1749,7 +1788,7 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
 	m_TotMEPReqTx += req->nmep;
 	m_TotMEPReqPktTx++;
 
-         msgLog << MSG::DEBUG << "SEND REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg; 
+         msgLog << MSG::DEBUG << WHERE << "SEND REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg; 
 
 	return StatusCode::SUCCESS;
     }
@@ -1758,6 +1797,7 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
         return StatusCode::FAILURE;
     }
     ERRMSG(msgLog, " MEPRequest corrupted on send!");
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::FAILURE;
 }
 
@@ -1767,6 +1807,7 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
  */
 StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
     static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     int n = MEPRxSys::rx_poll(m_FromOdinSock, m_TimeOut);  
  
@@ -1804,10 +1845,12 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
     MEPHdr *mephdr = (MEPHdr *) ( ((char *) bufMEP) +  IPHDRSZ);
 
     static int prevL0ID =0;
-    if(mephdr->m_l0ID -prevL0ID != m_PackingFactor) {
-        msgLog << MSG::WARNING << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; next L0ID: " << mephdr->m_l0ID << "; it seems we lost a TFC packet" << endmsg;
+    static int prevPF =0; 
+    if(mephdr->m_l0ID - prevL0ID != prevPF) {
+        msgLog << MSG::WARNING << WHERE << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; Next L0ID: " << mephdr->m_l0ID << "; Previous Packing Factor: " << prevPF << "; 2 possibilities: packet lost, or sequence disordered." << endmsg;
     }
     prevL0ID = mephdr->m_l0ID;
+    prevPF = mephdr->m_nEvt;
 
 
     *retLen = len;
@@ -1846,6 +1889,7 @@ StatusCode MEPInjector::receiveMEPReq(char *req) {
         return StatusCode::RECOVERABLE;
     }
     msgLog << MSG::DEBUG<<"MEP REQUEST RECEIVED"<<endmsg;
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -1854,6 +1898,7 @@ StatusCode MEPInjector::receiveMEPReq(char *req) {
  */
 StatusCode MEPInjector::manageMEPRequest() {
     static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     StatusCode sc = StatusCode::SUCCESS;
     char req[MEP_REQ_LEN + IPHDRSZ];
     memset(req, 0, sizeof(req));
@@ -1893,9 +1938,9 @@ StatusCode MEPInjector::manageMEPRequest() {
         m_CurMEPReqCredits += mreq->nmep;    
    
         if(m_Debug) {
-            msgLog << MSG::DEBUG << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
-            msgLog << MSG::DEBUG << "    Total of credits : " << m_HLTReqs[hdr->saddr] << endmsg;   
-            msgLog << MSG::DEBUG << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "FARM IP ADDRESS : "<< MEPRxSys::dotted_addr(hdr->saddr) <<" ; Credit asked " << m_HLTReqs[hdr->saddr] <<endmsg;
+            msgLog << MSG::DEBUG << WHERE << "    Total of credits : " << m_HLTReqs[hdr->saddr] << endmsg;   
+            msgLog << MSG::DEBUG << WHERE << "Total of MEP requested : " << m_TotMEPReqRx << endmsg;
         }
 
         while(newcredits--) {   
@@ -1908,15 +1953,16 @@ StatusCode MEPInjector::manageMEPRequest() {
 
         int testsem = 0;
         sem_getvalue(&m_MEPReqCount, &testsem);
-        msgLog << MSG::DEBUG << "RECV: Credit count = "<<testsem << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "RECV: Credit count = "<<testsem << endmsg;
 
-        msgLog << MSG::DEBUG << "RECV REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "RECV REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
 
         if (pthread_mutex_unlock(&m_SyncReqOdin)) {
             ERRMSG(msgLog, " Unlocking mutex");
             return StatusCode::FAILURE;
         }
     }
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -1925,6 +1971,7 @@ StatusCode MEPInjector::manageMEPRequest() {
 StatusCode MEPInjector::manageOdinMEP() {
     static MsgStream msgLog(msgSvc(), name());
     StatusCode sc;
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     char *bufMEP = (char *) malloc(m_OdinBufSize); // I don't like calloc
     if(bufMEP == NULL) {
@@ -1933,11 +1980,6 @@ StatusCode MEPInjector::manageOdinMEP() {
     }
     memset(bufMEP, 0, m_OdinBufSize);
   
-    while(m_InjState != RUNNING) {
-        MEPRxSys::microsleep(1000);
-        //If injector is not running, idle  
-    }
-
     int len;
 
     while (!m_ManagerStop) {
@@ -1968,14 +2010,15 @@ StatusCode MEPInjector::manageOdinMEP() {
 
         MEPHdr *mephdr = (MEPHdr *) ( ((char *) tmp) +  MEPEVENTOFFSET + IPHDRSZ);
 
-        static int prevL0ID =0; 
-        if(mephdr->m_l0ID -prevL0ID != m_PackingFactor) {
-            msgLog << MSG::WARNING << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; next L0ID: " << mephdr->m_l0ID << "; it seems we lost a TFC packet" << endmsg;
+        static int prevL0ID =0;
+        static int prevPF =0;
+        if(mephdr->m_l0ID -prevL0ID != prevPF) {
+            msgLog << MSG::WARNING << WHERE << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; Next L0ID: " << mephdr->m_l0ID << "; Previous Packing Factor: " << prevPF << "; 2 possibilities: packet lost, or sequence disordered." << endmsg;
         }
         prevL0ID = mephdr->m_l0ID;
- 
+        prevPF = mephdr->m_nEvt;
 
-        msgLog << MSG::DEBUG << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
+        msgLog << MSG::DEBUG << WHERE << "SIZE OF ODIN MEP BUFFER : " << m_QueueOdinMEP.size() << endmsg; 
 
         if(sem_post(&m_OdinCount)==-1) {
             ERRMSG(msgLog, "Posting on the semaphore");
@@ -1985,9 +2028,9 @@ StatusCode MEPInjector::manageOdinMEP() {
 
         int testsem = 0;
         sem_getvalue(&m_OdinCount, &testsem);
-        msgLog << MSG::DEBUG << "RECV: Odin SEM before post = "<<testsem << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "RECV: Odin SEM before post = "<<testsem << endmsg;
 
-        msgLog << MSG::DEBUG << "RECV ODI: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "RECV ODI: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
 
 	if (pthread_mutex_unlock(&m_SyncMainOdin)) {
 	    ERRMSG(msgLog, "Failed unlocking mutex");
@@ -1996,6 +2039,7 @@ StatusCode MEPInjector::manageOdinMEP() {
 
     }
     free(bufMEP);
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -2004,12 +2048,13 @@ StatusCode MEPInjector::manageOdinMEP() {
  */
 StatusCode MEPInjector::getHLTInfo() {
     static MsgStream msgLog(msgSvc(), name());    //Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     StatusCode ret=StatusCode::RECOVERABLE;
     int retVal=0;
  
     int testsem = 0;
     sem_getvalue(&m_MEPReqCount, &testsem);
-    msgLog << MSG::DEBUG << "CONS: Credit SEM = "<<testsem << endmsg;
+    msgLog << MSG::DEBUG << WHERE << "CONS: Credit SEM = "<<testsem << endmsg;
 
  
 //    while((retVal=sem_wait(&m_MEPReqCount))==-1 && errno == EINTR) continue;
@@ -2022,11 +2067,11 @@ StatusCode MEPInjector::getHLTInfo() {
     }
 
     if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "End of injection : Exiting getHLTInfo" << endmsg;
+        msgLog << MSG::INFO << WHERE << "End of injection : Exiting getHLTInfo" << endmsg;
         return StatusCode::RECOVERABLE;
     }
 
-    msgLog << MSG::DEBUG << "After sem wait" << endmsg; 
+    msgLog << MSG::DEBUG << WHERE << "After sem wait" << endmsg; 
 
     if (pthread_mutex_lock(&m_SyncReqOdin)) {
         ERRMSG(msgLog, "Failed locking mutex");
@@ -2052,10 +2097,10 @@ StatusCode MEPInjector::getHLTInfo() {
             --m_CurMEPReqCredits;
             ++m_TotCreditConsumed;
             if(m_Debug) {
-                msgLog << MSG::DEBUG << "Get HLT information" << endmsg; 
-                msgLog << MSG::DEBUG << "	" << "Farm selected : " << MEPRxSys::dotted_addr(m_HLTIPAddrTo) << endmsg;
-                msgLog << MSG::DEBUG << "      " << "Nb Reqs : " << m_HLTReqsIte->second << endmsg;  
-                msgLog << MSG::DEBUG << "Credits consumed : " << m_TotCreditConsumed << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "Get HLT information" << endmsg; 
+                msgLog << MSG::DEBUG << WHERE << "	" << "Farm selected : " << MEPRxSys::dotted_addr(m_HLTIPAddrTo) << endmsg;
+                msgLog << MSG::DEBUG << WHERE << "      " << "Nb Reqs : " << m_HLTReqsIte->second << endmsg;  
+                msgLog << MSG::DEBUG << WHERE << "Credits consumed : " << m_TotCreditConsumed << endmsg;
             }
 
             m_HLTReqsIte++;
@@ -2072,12 +2117,13 @@ StatusCode MEPInjector::getHLTInfo() {
         }
     }
  
-    msgLog << MSG::DEBUG << "CONS REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
+    msgLog << MSG::DEBUG << WHERE << "CONS REQ: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
 
     if (pthread_mutex_unlock(&m_SyncReqOdin)) {
         ERRMSG(msgLog, "Failed unlocking mutex");
         return StatusCode::FAILURE;
     }
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return ret;
 }
@@ -2089,11 +2135,12 @@ StatusCode MEPInjector::getOdinInfo() {
 
     StatusCode ret=StatusCode::RECOVERABLE;
     static MsgStream msgLog(msgSvc(), name());    //Message stream for output
+    msgLog << MSG::DEBUG << WHERE << endmsg;
     int retVal=0;
 
     int testsem = 0;
     sem_getvalue(&m_OdinCount, &testsem);
-    msgLog << MSG::DEBUG << "CONS: Odin SEM = "<<testsem << endmsg;
+    msgLog << MSG::DEBUG << WHERE << "CONS: Odin SEM = "<<testsem << endmsg;
 
 //    while ( (retVal=sem_wait(&m_OdinCount)==-1) && errno == EINTR) continue;
     retVal=sem_wait(&m_OdinCount);
@@ -2104,7 +2151,7 @@ StatusCode MEPInjector::getOdinInfo() {
     }
 
     if(m_InjState != RUNNING) {
-        msgLog << MSG::INFO << "End of injection : Exiting getOdinInfo" << endmsg;
+        msgLog << MSG::INFO << WHERE << "End of injection : Exiting getOdinInfo" << endmsg;
         return StatusCode::RECOVERABLE;
     } 
 
@@ -2128,7 +2175,7 @@ StatusCode MEPInjector::getOdinInfo() {
         MEPHdr *mephdr = (MEPHdr *) ( ((char *) m_OdinMEP) +  MEPEVENTOFFSET + IPHDRSZ);
 
         if(m_L0ID != mephdr->m_l0ID - m_PackingFactor) {
-            msgLog << MSG::WARNING << __FUNCTION__ << "Previous L0ID: " << m_L0ID << "; next L0ID: " << mephdr->m_l0ID << "; it seems we lost a TFC packet" << endmsg;
+            msgLog << MSG::WARNING << WHERE << __FUNCTION__ << "Previous L0ID: " << m_L0ID << "; Next L0ID: " << mephdr->m_l0ID << "; Previous Packing Factor: " << m_PackingFactor << "; 2 possibilities: packet lost, or sequence disordered." << endmsg;
         }
 
         m_EvtID = mephdr->m_l0ID;
@@ -2137,16 +2184,16 @@ StatusCode MEPInjector::getOdinInfo() {
         m_PackingFactor = mephdr->m_nEvt;
 
         if(m_Debug) { 
-            msgLog << MSG::DEBUG << "Odin information read : " <<endmsg;
-            msgLog << MSG::DEBUG << "	" << "EvtID = "<< m_EvtID << endmsg;
-            msgLog << MSG::DEBUG << "	" << "PartitionID = "<< m_PartitionID << endmsg;
-            msgLog << MSG::DEBUG << "	" << "PackingFactor = "<< m_PackingFactor << endmsg;
-            msgLog << MSG::DEBUG << "	" << "L0ID = " << m_L0ID << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "Odin information read : " <<endmsg;
+            msgLog << MSG::DEBUG << WHERE << "	" << "EvtID = "<< m_EvtID << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "	" << "PartitionID = "<< m_PartitionID << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "	" << "PackingFactor = "<< m_PackingFactor << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "	" << "L0ID = " << m_L0ID << endmsg;
         }
 
 
  
-        msgLog << MSG::DEBUG << "CONS ODI: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
+        msgLog << MSG::DEBUG << WHERE << "CONS ODI: "<< "MEPReqPktTx:" << m_TotMEPReqPktTx << "; MEPReqPktRx:" << m_TotMEPReqPktRx << "; MEPReqTx:" << m_TotMEPReqTx <<"; MEPReqRx:" << m_TotMEPReqRx << "; CreditsConsumed:" << m_TotCreditConsumed << "; m_TotEvtsSent: " << m_TotEvtsSent << "; CurrentCredits:"<< m_CurMEPReqCredits << "; CurOdinMEPs:"<< m_CurOdinMEPs << "; m_TotOdinMEPRx" << m_TotOdinMEPRx << endmsg;
      
         ret = StatusCode::SUCCESS; 
     }
@@ -2165,6 +2212,7 @@ StatusCode MEPInjector::getOdinInfo() {
         return StatusCode::FAILURE;
     }
 
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     return ret;
 }
@@ -2173,7 +2221,7 @@ StatusCode MEPInjector::getOdinInfo() {
  */
 StatusCode MEPInjector::error(const std::string & msg) {
     static MsgStream msgLog(msgSvc(), name());
-    msgLog << MSG::ERROR << msg << endmsg;
+    msgLog << MSG::ERROR << WHERE << msg << endmsg;
     return StatusCode::FAILURE;
 }
 
@@ -2285,7 +2333,7 @@ StatusCode MEPInjector::finalize() {
                 ERRMSG(msgLog, "Could not send Odin MEP");
                 return StatusCode::FAILURE;
             }
-            msgLog << MSG::DEBUG << "Odin MEP sent";
+            msgLog << MSG::DEBUG << WHERE << "Odin MEP sent";
         }
  
         m_TotEvtsSent += m_PackingFactor; 
@@ -2337,12 +2385,12 @@ StatusCode MEPInjector::finalize() {
         m_MonSvc = 0;
     }
 
-    msgLog << MSG::INFO << "Finalization done" << endmsg;
-    msgLog << MSG::INFO << "A few stats" << endmsg;
-    msgLog << MSG::INFO << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
-    msgLog << MSG::INFO << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
-    msgLog << MSG::INFO << "Total of credit asked to Odin : " << m_TotMEPReqTx << endmsg;
-    msgLog << MSG::INFO << "Total of Odin MEP Rx : " << m_TotOdinMEPRx << endmsg;
+    msgLog << MSG::INFO << WHERE << "Finalization done" << endmsg;
+    msgLog << MSG::INFO << WHERE << "A few stats" << endmsg;
+    msgLog << MSG::INFO << WHERE << "Total of MEPs sent : " << m_TotMEPsTx << endmsg;
+    msgLog << MSG::INFO << WHERE << "Total of MEP Requests received : " << m_TotMEPReqRx << endmsg;
+    msgLog << MSG::INFO << WHERE << "Total of credit asked to Odin : " << m_TotMEPReqTx << endmsg;
+    msgLog << MSG::INFO << WHERE << "Total of Odin MEP Rx : " << m_TotOdinMEPRx << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -2359,7 +2407,7 @@ StatusCode MEPInjector::run() {
         switch(m_InjState) {
         case STOPPED:
         case NOT_READY:
-            msgLog << MSG::DEBUG << "Exiting from reading loop" << endmsg;
+            msgLog << MSG::DEBUG << WHERE << "Exiting from reading loop" << endmsg;
             return StatusCode::SUCCESS;
         case READY:
             MEPRxSys::microsleep(100000); // 100 ms
@@ -2398,7 +2446,7 @@ StatusCode MEPInjector::run() {
         m_IncidentSvc = 0;
     }
 */
-    msgLog << MSG::INFO << "End of injection : End of run" << endmsg;
+    msgLog << MSG::INFO << WHERE << "End of injection : End of run" << endmsg;
 
     return StatusCode::SUCCESS;
 }
@@ -2472,7 +2520,7 @@ int MEPInjector::setupCounters() {
    ::memcpy(m_AllNames, (const char *) all_names.data(), all_names.size() +1);
   
   m_MonSvc->declareInfo("srcName", "C:", m_AllNames, sizeof(m_Tell1Boards), "Source IP names", this);
-//  msgLog << MSG::INFO << all_names << ", " << m_Tell1Boards.size() << endmsg;
+//  msgLog << MSG::INFO << WHERE << all_names << ", " << m_Tell1Boards.size() << endmsg;
   return 0;
 }
 
