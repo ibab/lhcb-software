@@ -442,11 +442,11 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	const EvtComplex _APL = scaleFactor * -sqrt(2)*N*constants::mB*aL;
 	const EvtComplex _APR = scaleFactor * -sqrt(2)*N*constants::mB*aR;
 	
-	const EvtComplex _A0L = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
-	const EvtComplex _A0R = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2));
-	
+    const EvtComplex _A0L = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
+    const EvtComplex _A0R = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2)); 
+		
 	const EvtComplex _AT = scaleFactor * ((N*sqrt(lambda))/(mk*sqrt(q2)))*
-		(tensF + (mk*mk*tensG) - tensG - (q2/constants::mB*constants::mB)*tensH );
+		(tensF + (mk*mk*tensG) - tensG - (q2/mB2)*tensH );
 	const EvtComplex _AS = scaleFactor * (N*sqrt(lambda)*tensS2);
 	
 	DEBUGPRINT("ATL: ", _ATL);
