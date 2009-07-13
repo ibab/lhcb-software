@@ -1,4 +1,4 @@
-// $Id: MCDecayTreeTuple.cpp,v 1.4 2009-06-01 15:40:27 pkoppenb Exp $
+// $Id: MCDecayTreeTuple.cpp,v 1.5 2009-07-13 10:44:19 rlambert Exp $
 // Include files 
 
 #include "boost/lexical_cast.hpp" 
@@ -27,7 +27,7 @@ MCDecayTreeTuple::MCDecayTreeTuple( const std::string& name,
 {
   declareProperty( "TupleName", m_tupleName="MCDecayTree" );
   // fill some default value
-  m_toolList.push_back( "MCTupleToolMCTruth" );
+  m_toolList.push_back( "MCTupleToolKinematic" );
   m_toolList.push_back( "TupleToolEventInfo" );
   
   declareProperty( "ToolList", m_toolList );
