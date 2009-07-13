@@ -47,7 +47,8 @@ public:
   //and mix will be 1 if it mixed otherwise 0
   static void incoherentMix(const EvtId id, double &t, int &mix);
 
-
+  static double getDeltaGamma(const EvtId id);
+  static double getDeltaM(const EvtId id);
 
 };
 

@@ -17,6 +17,8 @@
 //
 //    RYD     March 24, 1998         Module created
 //
+//    COWAN   June 10, 2009	     Added methods for getting dGamma(s)
+//				     and dm(s) using B(s)0H and B(s)0L.
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
@@ -414,11 +416,37 @@ void EvtCPUtil::incoherentMix(const EvtId id, double &t, int &mix){
 }
 
 
+double EvtCPUtil::getDeltaGamma(const EvtId id){
 
+  int stdHepNum = EvtPDL::getStdHep(id);
+  stdHepNum = abs(stdHepNum);
+  EvtId partId = EvtPDL::evtIdFromStdHep(stdHepNum);
 
+  std::string partName = EvtPDL::name(partId);
+  std::string hname = partName + std::string("H");
+  std::string lname = partName + std::string("L");
+  
+  EvtId lId = EvtPDL::getId(lname);
+  EvtId hId = EvtPDL::getId(hname);
 
+  double ctauL = EvtPDL::getctau(lId);  
+  double ctauH = EvtPDL::getctau(hId);
+  
+  double dGamma = (1/ctauL - 1/ctauH)*EvtConst::c;
+  return dGamma;
+}
 
+double EvtCPUtil::getDeltaM(const EvtId id){
 
+  int stdHepNum = EvtPDL::getStdHep(id);  
+  stdHepNum = abs(stdHepNum); 
+  EvtId partId = EvtPDL::evtIdFromStdHep(stdHepNum);
+  
+  std::string partName = EvtPDL::name(partId);
+  std::string parmName = std::string("dm_incohMix_") + partName;
 
-
+  int ierr;  
+  double dM = atof(EvtSymTable::get(parmName,ierr).c_str());
+  return dM;
+}
 

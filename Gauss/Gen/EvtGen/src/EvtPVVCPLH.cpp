@@ -21,6 +21,9 @@
 //    DUPREE    October 10, 2006       Large modification: EvtSVVCPLH->EvtPVVCPLH
 //                                     Time-dependence correctly
 //
+//    COWAN	June 10, 2009	       Modified to use the new EvtCPUtils class.
+//				       EvtIncoherentMixing removed.
+//
 //------------------------------------------------------------------------
 //
 #include <stdlib.h>
@@ -89,20 +92,15 @@ void EvtPVVCPLH::decay( EvtParticle *p){
 // deltaMs large ..and..
 // CPV-phase small
   EvtCPUtil::OtherB(p,t,other_b);
-//  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);//also possible
 
   //Here we're gonna generate and set the "envelope" lifetime
   //So we take the longest living component (for positive deltaGamma: tauH)
   //The double exponent will be taken care of later, by the amplitudes
   //Tristan
   
-  // TODO: fix for new EvtGen
-////  static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
-////  static double deltaGamma = EvtIncoherentMixing::getdGammas();
-////  static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
-  static double Gamma = 0. ;
-  static double deltaGamma = 0. ;
-  static double ctauLong = 0. ;
+  static double Gamma = EvtConst::c/(EvtPDL::getctau(BS0));
+  static double deltaGamma = EvtCPUtil::getDeltaGamma(BS0);
+  static double ctauLong = EvtConst::c/(Gamma-fabs(deltaGamma)/2);
   // if dG>0: tauLong=tauH(CP-odd) is then largest
 
   //This overrules the lifetimes made in OtherB
@@ -124,18 +122,16 @@ void EvtPVVCPLH::decay( EvtParticle *p){
   //deltaMs is no argument anymore
   //Tristan
   
-  // TODO: Fix for new EvtGen
-//.  static double deltaMs = EvtIncoherentMixing::getdeltams();
-  static double deltaMs = 0. ;
+  static double deltaMs = EvtCPUtil::getDeltaM(BS0);
 
   EvtComplex cG0P,cG1P,cG1M;
 
   double mt = exp(-std::max(0.,deltaGamma)*t/(2*EvtConst::c));
   double pt = exp(+std::min(0.,deltaGamma)*t/(2*EvtConst::c));
 
-  EvtComplex gplus = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
+  EvtComplex gplus  = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
 		      +pt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin(-deltaMs*t/(2*EvtConst::c))) )/2;
- EvtComplex gminus = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
+  EvtComplex gminus = ( mt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin( deltaMs*t/(2*EvtConst::c)))
         	      -pt*EvtComplex(cos(deltaMs*t/(2*EvtConst::c)),sin(-deltaMs*t/(2*EvtConst::c))) )/2;;
 
   if (other_b==BSB){
