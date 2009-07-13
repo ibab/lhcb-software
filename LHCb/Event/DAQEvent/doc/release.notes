@@ -1,9 +1,10 @@
-!----------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 !Package: DAQEvent
 !Author:  Markus Frank (based on work by Jose' Helder Lopes)
 !Purpose: Define the classes delivered to the online farm by the DAQ
-!----------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
+!================ DAQEvent v8r0 2009-07-13 ===================================
 ! 2009-07-09 - Marco Clemencic
  - Renamed the values (enum) for the beam crossing type in the ODIN class from
    Left/Right to 1/2.
@@ -24,7 +25,8 @@
 
 !================ DAQEvent v7r19 2009-03-09 ===========================
 ! 2009-02-25 - Deschamps Olivier
- - src/components/RawBankReadoutStatusMonitor : implement automatic bin labels + few minor fixes
+ - src/components/RawBankReadoutStatusMonitor : implement automatic bin labels +
+                                                few minor fixes
  - cmt/requirements : explicit link libHist in ROOT_linkOpts
 
 !================ DAQEvent v7r18 2009-02-18 ===========================
