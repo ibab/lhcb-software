@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r11 2009-07-13 =========================
+! 2009-07-10 - MC for Wouter
+ - In MatrixTransforms.h, use std::sqrt, std::abs instead of sqrt, fabs 
+
 ! 2009-07-09 - Marco Cattaneo
  - Line.h: Fix a compilation warning on windows
  - Cleanup requirements (remove linkopts for ROOT < 5.19)
