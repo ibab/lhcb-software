@@ -139,7 +139,8 @@ def printProjects():
         if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC','BENDER','LHCBGRID']:
           for toberemove in unusedProjectVersions[pName]:
             print 'remove ',pName,' version ',toberemove
-            os.popen('cd $MYSITEROOT ; `which install_project` -p '+pName+' -v '+toberemove+' -r')
+            if not printAll:
+               os.popen('cd $MYSITEROOT ; `which install_project` -p '+pName+' -v '+toberemove+' -r')
 
 #------------------------------------------------------------------------------
 # Find database packages known to distribution area
