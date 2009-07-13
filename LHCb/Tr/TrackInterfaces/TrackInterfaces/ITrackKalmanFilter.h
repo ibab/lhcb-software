@@ -1,4 +1,4 @@
-// $Id: ITrackKalmanFilter.h,v 1.1 2009-07-08 14:15:50 wouter Exp $
+// $Id: ITrackKalmanFilter.h,v 1.2 2009-07-13 15:43:04 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKKALMANFILTER_H 
 #define TRACKINTERFACES_ITRACKKALMANFILTER_H 
 
@@ -7,8 +7,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-// from LHCbKernel
-#include "Kernel/ParticleID.h"
 
 // Forward declarations
 namespace LHCb {
