@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r8 2009-07-13 ========================
+! 2009-07-13 - Marco Cattaneo
+ - Remove obsolete file STAlgorithms_dll.cpp
+
 ! 2009-07-03
  - Add functionality to STKiller algs [makes selector name an option ]
  - Update killingExample.opts
