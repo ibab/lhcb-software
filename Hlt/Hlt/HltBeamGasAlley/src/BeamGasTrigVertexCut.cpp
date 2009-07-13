@@ -8,7 +8,6 @@
 
 #include "BeamGasTrigVertexCut.h"
 
-//#include "HltBase/IHltConfSummaryTool.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : BeamGasTrigVertexCut
 // 2008-06-16 : Plamen Hopchev <plamen.hopchev@cern.ch>
@@ -46,14 +45,11 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 
   verbose() << "==> Initialize" << endmsg;
   
-  m_nBins = (int)(m_histoZMax - m_histoZMin)/m_binWidth;
-  
   info() << "========== Algorithm parameters ======"            << endreq
          << "RZTracksLocation     = " << m_RZTracksLocation     << endreq   
          << "HistoZRangeLow       = " << m_histoZMin << " mm"   << endreq
          << "HistoZRangeUp        = " << m_histoZMax << " mm"   << endreq
 	 << "HistoBinWidth        = " << m_binWidth  << " mm"	<< endreq
-	 << "NumberOfBins	     = " << m_nBins    		<< endreq
 	 << "MaxBinValueCut       = " << m_maxCut		<< endreq
 	 << "ZExclusionRangeLow   = " << m_zExclusionRangeLow   << " mm"    << endreq
 	 << "ZExclusionRangeUp    = " << m_zExclusionRangeUp    << " mm"    << endreq
@@ -69,68 +65,86 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 //=============================================================================
 StatusCode BeamGasTrigVertexCut::execute() {
 
-  bool isDebug   = msgLevel( MSG::DEBUG );
-  if(isDebug){  debug() << "==> Execute" << endmsg; }
+  bool trigDecision  = false;  
+  std::vector<double> vect_z_r0;
+  vect_z_r0.reserve(200);
+  
+  debug() << "==> Execute" << endmsg;
   
   LHCb::Tracks* BGtracks;
   if( exist<LHCb::Tracks>( m_RZTracksLocation ) ){ BGtracks = get<LHCb::Tracks>( m_RZTracksLocation ); }
   else { error() << "Can't find input tracks" << endmsg; return StatusCode::SUCCESS; }  
-  debug() << "N tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
+  debug() << "Number of tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
     
   float z, r, t;  
   float z_r0 = 0.;
   
-  AIDA::IHistogram1D* h_z_r0BGTracks = book("z at r=0 of BG tracks" , m_histoZMin, m_histoZMax, m_nBins);
-  
-  // Fill the histo with the tracks z position at r=0
+  // Fill the vector with the tracks z position at r=0
   for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
   {  
-    //New Idea From DAVID !!!
     z = (*itT)->firstState().z();
     r = (*itT)->firstState().x();
     t = (*itT)->firstState().tx();
     z_r0 = z - r/t;
-    
-    if( z_r0 < m_zExclusionRangeLow || z_r0 > m_zExclusionRangeUp ) 
-    { h_z_r0BGTracks->fill(z_r0, 1.0); }    
-  }
-  
-  
-  if( h_z_r0BGTracks->entries() > m_maxCut )
-  {
-    TH1D* z_r0HistROOT = Gaudi::Utils::Aida2ROOT::aida2root(h_z_r0BGTracks);
-    
-    int maxBin = z_r0HistROOT->GetMaximumBin();
-    float zPosOfMaxBin = z_r0HistROOT->GetBinCenter( maxBin );
-    float maxBinHeight = z_r0HistROOT->GetBinContent( maxBin );    
-    
-    // Trigger the event if it has max_bin with enough entries. Controlled by the MaxBinValueCut job-option !!!
-    // Actually the triggering is done in the finalize() of HltAlgorithm, by checking the number of candidates.
-    // And we push_back the tracks of the max-bin in the candidates container just below. 
-    // *** We have 2 triggering cuts. MaxBinValueCut is the CRUCIAL! ***
-    // *** But be sure that the HltAlgorithm job-option "MinCandidates" is: 0 < MinCandidates <= MaxBinValueCut+1
-    // *** Otherwise the event will not be triggered (or will always be triggered if MinCandidates = 0)
-    
-    if( maxBinHeight > m_maxCut )
+        
+    if ( (z_r0 > m_histoZMin) && (z_r0 < m_histoZMax  ) )
     { 
-      //Fill the candidates container with the tracks of the max bin          
-      for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {  
-        z = (*itT)->firstState().z();
-        r = (*itT)->firstState().x();
-    	t = (*itT)->firstState().tx();
-    	z_r0 = z - r/t;
-        if( std::fabs(z_r0 - zPosOfMaxBin) < m_binWidth*0.5 ) m_trackSelection->push_back( *itT );
-      }
-      debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
-           
-      if( zPosOfMaxBin > 0 ) m_trigEventsZpositive += 1;
-      else m_trigEventsZnegative += 1;
-      	
-    }
+      if ( (z_r0 < m_zExclusionRangeLow) || (z_r0 > m_zExclusionRangeUp) )
+        vect_z_r0.push_back( z_r0 );    
+    }  
   }
+  
+  // If we have enough entries, look for the entries in the "max bin"
+       
+  if( vect_z_r0.size() > m_maxCut )
+  {
+    debug() << "\nVect Enetered loop with entries =" << vect_z_r0.size() << endmsg;
+
+    std::sort( vect_z_r0.begin(), vect_z_r0.end() );
+
+    std::vector<double>::iterator it_z_r0     = vect_z_r0.begin();
+    std::vector<double>::iterator it_z_r0_end = vect_z_r0.end(); // This is *AFTER* the last element !!!
+    
+    while( it_z_r0 != (it_z_r0_end - m_maxCut) )
+    { 
+      double firstEl = *it_z_r0;
+      double lastEl  = *(it_z_r0 + m_maxCut);
       
-  h_z_r0BGTracks->reset();          
- 
+      // at every step check if the distance between the first and the (first+m_binWidth)^th
+      // track is < m_binWidth; if Yes --> trigger
+      // !!!TO-DO: modify m_binWidth, depending on the z-position!!!
+      
+      if ((lastEl - firstEl) < m_binWidth)
+      {
+        // Trigger!
+	trigDecision = true;
+        debug() << "Vect Triggered Event \n\t start = " << firstEl << "\n\t end = " << lastEl << endmsg;
+    
+	//Fill the candidates container with the tracks with good  z_r0        
+        for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT )
+	{  
+          z = (*itT)->firstState().z();
+          r = (*itT)->firstState().x();
+          t = (*itT)->firstState().tx();
+          z_r0 = z - r/t;
+          if( std::fabs(z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1)) ) 
+          {  
+            m_trackSelection->push_back( *itT );         
+          }
+        }
+	
+	debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
+
+	if( firstEl > 0 ) m_trigEventsZpositive += 1;
+	else m_trigEventsZnegative += 1;	
+
+	break; // the while loop
+      }
+                      
+      ++it_z_r0;
+    }   
+  }  
+           
   return StatusCode::SUCCESS;
 }
 
@@ -143,5 +157,9 @@ StatusCode BeamGasTrigVertexCut::finalize() {
             << m_trigEventsZnegative << "   " << m_trigEventsZpositive << std::endl;
 
   return HltAlgorithm::finalize () ;
+
 }
+
+
+
 
