@@ -6,6 +6,11 @@
 
 ! 2009-07-09 - Michael Alexander
   -VeloIPResolutionMonitor:
+     - Switched char* for std::string in lines 199 & 200
+     - Minor change to some histo titles
+
+! 2009-07-09 - Michael Alexander
+  -VeloIPResolutionMonitor:
 		 - bug fix in IP_Z resolution calculation
 		 - added histos of signed 3D and signed 3D with phase space correction
 			 IP resolutions

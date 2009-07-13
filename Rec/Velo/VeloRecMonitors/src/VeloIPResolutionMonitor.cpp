@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.3 2009-07-09 12:09:08 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.4 2009-07-13 11:28:12 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -128,7 +128,8 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     m_histoIDs.push_back( tempID.str() );
     
     std::ostringstream tempTitle;
-    tempTitle << m_bins[i] << " < 1/PT < " << m_bins[i+1] << " (GeV^{-1})";
+    if( !m_useLogScale ) tempTitle << m_bins[i] << " < 1/PT < " << m_bins[i+1] << " (GeV^{-1})";
+    else tempTitle << m_bins[i] << " < log_{10}(1/PT) < " << m_bins[i+1] << " (GeV^{-1})";
     m_histoTitles.push_back( tempTitle.str() );
 
     // if underlying histograms are to be saved, the histograms for each bin are booked and pointers to the underlying 
@@ -195,7 +196,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   }  
 
   // book the histograms of fit results against 1/PT using the defined bins
-  char* XTitle;
+  std::string XTitle;
   if( !m_useLogScale ) XTitle = "1/PT (GeV^{-1})";
   else XTitle = "log_{10}(1/PT) (GeV^{-1})";
   
@@ -203,7 +204,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                             "Width of Gaussian fit to IP_X resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_X->SetXTitle(XTitle);
+  m_h_GaussWidthVsInversePT_X->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_X->SetYTitle("Width of Gaussian (mm)");
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_X->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
@@ -211,7 +212,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                             "Width of Gaussian fit to IP_Y resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_Y->SetXTitle(XTitle);
+  m_h_GaussWidthVsInversePT_Y->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_Y->SetYTitle("Width of Gaussian (mm)");
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_Y->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
   
@@ -219,7 +220,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                             "Width of Gaussian fit to IP_Z resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_Z->SetXTitle(XTitle);
+  m_h_GaussWidthVsInversePT_Z->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_Z->SetYTitle("Width of Gaussian (mm)");
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_Z->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
@@ -227,23 +228,23 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                                "1/PT Vs MPV of Landau fit to absolute unsigned 3D IP resolution", 
                                                                m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                                (int)m_bins.size() - 1 ) );
-  m_h_MPVofLandauVsInversePT_unsigned3D->SetXTitle(XTitle);
+  m_h_MPVofLandauVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
   m_h_MPVofLandauVsInversePT_unsigned3D->SetYTitle("MPV of IP Resolution (mm)");
   if( m_useVariableBins ) m_h_MPVofLandauVsInversePT_unsigned3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
   m_h_GaussWidthVsInversePT_signed3D = Aida2ROOT::aida2root( book( "GaussWidth_signed3DIP_Vs_InversePT",
-                                                              "1/PT Vs width of Gaussian fit to absolute signed 3D IP resolution",
+                                                              "Width of Gaussian fit to absolute signed 3D IP resolution Vs 1/PT",
                                                                    m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                                    (int)m_bins.size() - 1 ) );
-  m_h_GaussWidthVsInversePT_signed3D->SetXTitle(XTitle);
+  m_h_GaussWidthVsInversePT_signed3D->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_signed3D->SetYTitle("Width of Gaussian (mm)");
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_signed3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
   m_h_GaussWidthVsInversePT_signed3DPhSpCorrect = Aida2ROOT::aida2root( book( "GaussWidth_signed3DIP_PhSpCorrect_Vs_InversePT",
-                                "1/PT Vs width of Gaussian fit to signed absolute 3D IP resolution with phase space correction", 
+                                "Width of Gaussian fit to signed absolute 3D IP resolution with phase space correction Vs 1/PT", 
                                                                         m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                                         (int)m_bins.size() - 1 ) );
-  m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetXTitle(XTitle);
+  m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetYTitle("Width of Gaussian (mm)");
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
@@ -253,7 +254,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 
   m_h_InversePTVsNTracks = Aida2ROOT::aida2root( book( "NTracks_Vs_InversePT", "Number of tracks found in each bin of 1/PT", 
                                                        m_bins[0], m_bins[ (int)m_bins.size() - 1 ], (int)m_bins.size() -1 ));
-  m_h_InversePTVsNTracks->SetXTitle(XTitle);
+  m_h_InversePTVsNTracks->SetXTitle(XTitle.c_str());
   m_h_InversePTVsNTracks->SetYTitle("Number of tracks");
   if( m_useVariableBins ) m_h_InversePTVsNTracks->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
