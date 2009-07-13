@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.4 2009-07-13 11:28:12 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.5 2009-07-13 11:44:27 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -225,8 +225,8 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   if( m_useVariableBins ) m_h_GaussWidthVsInversePT_Z->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
   m_h_MPVofLandauVsInversePT_unsigned3D = Aida2ROOT::aida2root( book( "MPVofLandau_unsigned3DIP_Vs_InversePT", 
-                                                               "1/PT Vs MPV of Landau fit to absolute unsigned 3D IP resolution", 
-                                                               m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
+                                                               "MPV of Landau fit to absolute unsigned 3D IP resolution Vs 1/PT",
+                                                                      m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                                (int)m_bins.size() - 1 ) );
   m_h_MPVofLandauVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
   m_h_MPVofLandauVsInversePT_unsigned3D->SetYTitle("MPV of IP Resolution (mm)");
