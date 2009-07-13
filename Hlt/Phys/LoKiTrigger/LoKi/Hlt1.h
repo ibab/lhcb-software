@@ -1,4 +1,4 @@
-// $Id: Hlt1.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: Hlt1.h,v 1.3 2009-07-13 19:02:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -20,6 +20,7 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Interface.h"
 #include "LoKi/TrackTypes.h"
+#include "LoKi/IHltUnit.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -220,6 +221,114 @@ namespace LoKi
       stringKey                         m_selName   ;
       // ======================================================================
     };
+    // ========================================================================
+    /** @class TrTES
+     *
+     *  The special Hlt1 "source-from-TES"
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2009-07-13
+     */
+    class TrTES
+      : public LoKi::BasicFunctors<LHCb::Track*>::Source 
+    {
+    public: 
+      // ======================================================================
+      /// constructor from the key and cuts 
+      TrTES ( const std::string&         key  , 
+              const LoKi::Types::TrCuts& cuts ) ;
+      /// constructor from the key aand cuts 
+      TrTES ( const LoKi::Types::TrCuts& cuts ,
+              const std::string&         key  ) ;
+      /// constructor from the key and cuts 
+      TrTES ( const std::string&         key  ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~TrTES () ;                      // MANDATORY: virtual destructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  TrTES* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ()  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================      
+    public:      
+      // ======================================================================      
+      /// get the unit 
+      const LoKi::IHltUnit*      unit () const { return m_unit ; }  // get unit 
+      /// get the key 
+      const std::string&         key  () const { return m_key  ; }  //  get key 
+      /// get the cuts 
+      const LoKi::Types::TrCuts& cuts () const { return m_cut  ; }  //  get cut 
+      /// get the cuts 
+      const LoKi::Types::TrCuts& cut  () const { return m_cut  ; }  //  get cut 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// The Unit 
+      LoKi::Interface<LoKi::IHltUnit>  m_unit ;                     // The Unit 
+      /// The Key 
+      LoKi::IHltUnit::Key              m_key  ;                     //  The Key
+      /// The Cut 
+      LoKi::Types::TrCut               m_cut  ;                     //  The Cut
+      // ======================================================================      
+    };   
+    // ========================================================================
+    /** @class RvTES
+     *
+     *  The special Hlt1 "source-from-TES"
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2009-07-13
+     */
+    class RvTES
+      : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source 
+    {
+    public: 
+      // ======================================================================
+      /// constructor from the key and cuts 
+      RvTES ( const std::string&         key  , 
+              const LoKi::Types::RVCuts& cuts ) ;
+      /// constructor from the key aand cuts 
+      RvTES ( const LoKi::Types::RVCuts& cuts ,
+              const std::string&         key  ) ;
+      /// constructor from the key and cuts 
+      RvTES ( const std::string&         key  ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~RvTES () ;                      // MANDATORY: virtual destructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RvTES* clone() const ; 
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ()  const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================      
+    public:      
+      // ======================================================================      
+      /// get the unit 
+      const LoKi::IHltUnit*      unit () const { return m_unit ; }  // get unit 
+      /// get the key 
+      const std::string&         key  () const { return m_key  ; }  //  get key 
+      /// get the cuts 
+      const LoKi::Types::RVCuts& cuts () const { return m_cut  ; }  //  get cut 
+      /// get the cuts 
+      const LoKi::Types::RVCuts& cut  () const { return m_cut  ; }  //  get cut 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// The Unit 
+      LoKi::Interface<LoKi::IHltUnit>  m_unit ;                     // The Unit 
+      /// The Key 
+      LoKi::IHltUnit::Key              m_key  ;                     //  The Key
+      /// The Cut 
+      LoKi::Types::RVCut               m_cut  ;                     //  The Cut
+      // ======================================================================      
+    };   
     // ========================================================================
   } // end of namespace LoKi::Hlt1
   // ==========================================================================

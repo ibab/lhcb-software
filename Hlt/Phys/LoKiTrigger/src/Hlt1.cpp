@@ -1,10 +1,11 @@
-// $Id: Hlt1.cpp,v 1.3 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: Hlt1.cpp,v 1.4 2009-07-13 19:02:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
+#include "LoKi/apply.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -204,7 +205,197 @@ std::ostream& LoKi::Hlt1::RvRegister::fillStream ( std::ostream& s ) const
 
 
 
+// ============================================================================
+// constructor from the key and cuts 
+// ============================================================================
+LoKi::Hlt1::TrTES::TrTES
+( const std::string&         key  , 
+  const LoKi::Types::TrCuts& cuts ) 
+  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( cuts ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// constructor from the key and cuts 
+// ============================================================================
+LoKi::Hlt1::TrTES::TrTES
+( const LoKi::Types::TrCuts& cuts ,
+  const std::string&         key  )
+  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( cuts ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// constructor from the key and 
+// ============================================================================
+LoKi::Hlt1::TrTES::TrTES
+( const std::string&         key  )
+  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Hlt1::TrTES::~TrTES () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Hlt1::TrTES* LoKi::Hlt1::TrTES::clone() const 
+{ return new TrTES ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Hlt1::TrTES::result_type 
+LoKi::Hlt1::TrTES::operator() () const 
+{
+  // get the data from unit 
+  typedef LHCb::Track::Container TRACKS ;
+  const TRACKS* tracks = m_unit -> tesData<TRACKS>( *this , m_key ) ;
+  Assert ( 0 != tracks , "Unable to pick up data from TES" ) ;
+  result_type output ;
+  output.reserve ( tracks->size() ) ; 
+  /// select the tracks
+  LoKi::apply_filter  
+    ( tracks -> begin () , 
+      tracks -> end   () , 
+      m_cut.func ()      , 
+      std::back_inserter ( output ) ) ;
+  // 
+  return output ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& LoKi::Hlt1::TrTES::fillStream ( std::ostream& s ) const 
+{ return s << "TrTES('" << key() << "," << cuts() << "')" ; }
+// ============================================================================
 
+
+// ============================================================================
+// constructor from the key and cuts 
+// ============================================================================
+LoKi::Hlt1::RvTES::RvTES
+( const std::string&         key  , 
+  const LoKi::Types::RVCuts& cuts ) 
+  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( cuts ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// constructor from the key and cuts 
+// ============================================================================
+LoKi::Hlt1::RvTES::RvTES
+( const LoKi::Types::RVCuts& cuts ,
+  const std::string&         key  )
+  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( cuts ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// constructor from the key and 
+// ============================================================================
+LoKi::Hlt1::RvTES::RvTES
+( const std::string&         key  )
+  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
+  , m_unit (      ) 
+  , m_key  ( key  ) 
+  , m_cut  ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
+{
+  // get the unit :
+  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  m_unit = _unit ;
+  // register TES input location 
+  StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
+  //
+}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Hlt1::RvTES::~RvTES () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Hlt1::RvTES* LoKi::Hlt1::RvTES::clone() const 
+{ return new RvTES ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Hlt1::RvTES::result_type 
+LoKi::Hlt1::RvTES::operator() () const 
+{
+  // get the data from unit 
+  typedef LHCb::RecVertex::Container VERTICES ;
+  const VERTICES* vertices = m_unit -> tesData<VERTICES>( *this , m_key ) ;
+  Assert ( 0 !=   vertices , "Unable to pick up data from TES" ) ;
+  result_type output ;
+  output.reserve ( vertices->size() ) ; 
+  /// select the tracks
+  LoKi::apply_filter  
+    ( vertices -> begin () , 
+      vertices -> end   () , 
+      m_cut.func ()      , 
+      std::back_inserter ( output ) ) ;
+  // 
+  return output ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& LoKi::Hlt1::RvTES::fillStream ( std::ostream& s ) const 
+{ return s << "RvTES('" << key() << "," << cuts() << "')" ; }
 
 // ============================================================================
 // The END 

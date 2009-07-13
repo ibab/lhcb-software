@@ -1,4 +1,4 @@
-// $Id: TrSources.h,v 1.1 2007-12-09 19:04:41 ibelyaev Exp $
+// $Id: TrSources.h,v 1.2 2009-07-13 19:02:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRSOURCES_H 
 #define LOKI_TRSOURCES_H 1
@@ -28,6 +28,7 @@ namespace LoKi
   // ==========================================================================
   namespace Tracks
   {
+    // ========================================================================
     /** @class SourceTES 
      * 
      *  @see LoKi::Cuts::TrSOURCE

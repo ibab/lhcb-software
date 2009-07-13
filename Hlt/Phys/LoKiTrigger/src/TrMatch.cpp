@@ -1,4 +1,4 @@
-// $Id: TrMatch.cpp,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: TrMatch.cpp,v 1.3 2009-07-13 19:02:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -52,8 +52,8 @@ LoKi::Hlt1::TrMatch::operator()
   ( LoKi::Hlt1::TrMatch::argument a ) const 
 {
   if ( !m_match || 0 == alg() ) { init () ; }
-  Assert ( !(!m_match) && 0 != alg() ,  "Inavlid setup!" ) ;
   
+  Assert ( !(!m_match) && 0 != alg() ,  "Invalid setup!" ) ;
   
   typedef LHCb::Track::Container    Tracks ;  
   typedef std::vector<LHCb::Track*> TRACKS ;
@@ -76,13 +76,13 @@ LoKi::Hlt1::TrMatch::operator()
     arg1 = &tracks2 ;
     arg2 = &a       ;
   }
-
+  
   // double loop over all 2-tracks combinations
   for ( TRACKS::const_iterator itrk1 = arg1->begin() ; arg1->end() != itrk1 ; ++itrk1 ) 
   {
     const LHCb::Track* trk1 = *itrk1 ;
     if ( 0 == trk1 ) { continue ; }                                // CONTINUE 
-    
+    //
     for ( TRACKS::const_iterator itrk2 = arg2->begin() ; arg2->end() != itrk2 ; ++itrk2 ) 
     {
       const LHCb::Track* trk2 = *itrk2 ;
@@ -114,11 +114,11 @@ LoKi::Hlt1::TrMatch::operator()
         otracks->insert ( output.back() ) ;
       }
       // ======================================================================
-    } // end of the loop over the second conatiner of tracks 
-  } // end of the loop over the first constainer of tarcks
-  // final... 
+    } //                    end of the loop over the second container of tracks 
+  } //                      end of the loop over the first constainer of tarcks
+  //                                                                   final... 
   // register the selection in Hlt Data Service 
-  return m_sink ( output ) ; // RETURN 
+  return m_sink ( output ) ;                                          // RETURN 
 }
 // ============================================================================
 // OPTIONAL: nice printout 

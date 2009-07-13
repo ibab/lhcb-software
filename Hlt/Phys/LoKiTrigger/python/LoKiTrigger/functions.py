@@ -304,8 +304,10 @@ RVSIZE         = LoKi.Functors.Size  ('LHCb::RecVertex*') ()
 ## Hlt1 stuff 
 TrSELECTION = LoKi.Hlt1.TrSelection 
 TrREGISTER  = LoKi.Hlt1.TrRegister
+TrTES       = LoKi.Hlt1.TrTES
 RvSELECTION = LoKi.Hlt1.RvSelection 
 RvREGISTER  = LoKi.Hlt1.RvRegister
+RvTES       = LoKi.Hlt1.RvTES
 TrUPGRADE   = LoKi.Hlt1.TrUpgrade
 TrMATCH     = LoKi.Hlt1.TrMatch
 TrMATCH2    = LoKi.Hlt1.TrMatch2

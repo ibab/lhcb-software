@@ -1,4 +1,4 @@
-// $Id: TrMatch.h,v 1.2 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: TrMatch.h,v 1.3 2009-07-13 19:02:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRMATCH_H 
 #define LOKI_TRMATCH_H 1
@@ -163,7 +163,7 @@ namespace LoKi
     };
     // ========================================================================
     /** @class TrMatch2 TrMatch.h LoKi/TrMatch.h
-     *  Simple helper whcich represent the track matching concept  
+     *  Simple helper which represent the track matching concept  
      *  @see ITrackMatch 
      *  @see LoKi::Hlt1::MatchConf
      *  @see LoKi::Hlt1::TrMatch
