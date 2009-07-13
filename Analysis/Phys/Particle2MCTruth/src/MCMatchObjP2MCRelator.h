@@ -1,10 +1,12 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.11 2009-06-30 08:46:46 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.12 2009-07-13 12:18:55 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
 // Include files
 #include <functional>
 // from Gaudi
+#include <GaudiKernel/IIncidentListener.h>
+#include <GaudiKernel/IIncidentSvc.h>
 #include "P2MCP/P2MCPBase.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCMatchObj.h"
@@ -20,7 +22,8 @@ namespace LoKi
  *  @author Juan PALACIOS
  *  @date   2009-03-04
  */
-class MCMatchObjP2MCRelator : public P2MCPBase
+class MCMatchObjP2MCRelator : public P2MCPBase,
+                              public virtual IIncidentListener
 
 {
 public: 
@@ -38,9 +41,15 @@ public:
   virtual bool isMatched(const LHCb::Particle* particle, 
                          const LHCb::MCParticle* mcParticle) const ;
 
+public :
+  virtual void handle( const Incident& );
+
 private:
 
-  LoKi::MCMatch matcher() const;
+  inline LoKi::MCMatch matcher() const 
+  {
+    return LoKi::MCMatch( m_matcher );
+  }
 
   void addTables(LoKi::MCMatchObj* matcher) const;
   
@@ -57,10 +66,11 @@ private:
 private:
 
   LoKi::IReporter* m_reporter;
-  mutable LoKi::MCMatchObj* m_matcher;
+  LoKi::MCMatchObj* m_matcher;
   typedef std::vector<std::string> Addresses ;
   Addresses m_tables;
-
+  IIncidentSvc* m_incSvc;
+  
 };
 
 
