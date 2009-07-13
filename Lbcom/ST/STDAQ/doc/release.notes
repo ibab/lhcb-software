@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r19 2009-07-13 ======================
+! 2009-07-13 - Marco Cattaneo
+ - Remove obsolete file STDAQ_dll.cpp
+
 ! 2009-07-07 Mark Tobin
  - Fix gcc43 compilation warnings 
 
