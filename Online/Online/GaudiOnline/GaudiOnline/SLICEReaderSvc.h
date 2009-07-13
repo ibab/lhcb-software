@@ -44,14 +44,17 @@ class MsgStream;
 class IIncidentSvc;
 class ISvcLocator;
 
-#define TWOMB 2097152
-#define MDFHDRSZ 48 //12 word of 32 bits, or 4 bytes
-#define BKSZMAX 65536
-
 /*
  *  LHCb namespace declaration
  */
 namespace LHCb  {
+
+#define WHERE "File: " << __FILE__ << "[" << __LINE__ << "] " << __FUNCTION__ << "() :"
+
+#define TWOMB 2097152
+#define MDFHDRSZ 48 //12 word of 32 bits, or 4 bytes
+#define BKSZMAX 65536
+
 
   /** @class SLICEReaderSvc SLICEReader.h GaudiOnline/SLICEReader.h
     *

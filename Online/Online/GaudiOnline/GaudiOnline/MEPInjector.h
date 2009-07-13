@@ -54,6 +54,8 @@
  */
 namespace LHCb {
 
+#define WHERE "File: " << __FILE__ << "[" << __LINE__ << "] " << __FUNCTION__ << "() :"
+
 #define TWOMB 2097152
 #define MEP_REQ_TTL     10
 
