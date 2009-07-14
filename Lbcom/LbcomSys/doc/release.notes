@@ -6,6 +6,33 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r4>2009-07-15 LbcomSys v7r4</A></H1><PRE>
+This version uses Gaudi v21r3 and LHCb v27r4
+
+- Packages modified: STAlgorithms v3r7, STDAQ v3r19, STMonitors v1r5,
+    STTools v3r10
+
+- In STAlgorithms v3r7
+  . Add functionality to STKiller algs [makes selector name an option ]
+  . Update killingExample.opts
+
+- In STDAQ v3r19
+  . Added method to get TELL1 number from source ID to readout tool.
+  . Fixed a bug in the STPedestalDecoding.cpp
+
+- In STMonitors v1r5
+  . Replace endreq by endmsg
+  . Modified algorithms to get TELL1 number from SourceID using readout tool.
+  . Modified STClusterMonitor and STTAEClusterMonitor to book histograms at
+    initialize stage.
+
+- In STTools v3r10
+  . Don't default to all in case of empty list
+  . Add printout to STSelectChannelIDByElement
+
+- In STAlgorithms v3r7, STDAQ v3r19, STMonitors v1r5, STTools v3r10
+  . Remove obsolete file <package>_dll.cpp, no longer needed with Gaudi v21r2
+
 </PRE><H1><A NAME=v7r3>2009-07-01 LbcomSys v7r3</A></H1><PRE>
 This version uses Gaudi v21r2 and LHCb v27r3
 
