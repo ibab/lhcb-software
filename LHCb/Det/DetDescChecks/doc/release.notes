@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.46 2009-07-10 17:30:55 marcocle Exp $ 
+! $Id: release.notes,v 1.47 2009-07-14 07:57:04 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r11 2009-07-14 ========================
 ! 2009-07-09 - Marco Clemencic
  - Added test for 2009 data type.
 
