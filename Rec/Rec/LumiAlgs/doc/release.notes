@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v2r2 2009-07-14 =========================
 ! 2009-07-10 - Jaap Panman
  - LumiIntegrateFSR.cpp: adapt to changed BXType names in ODIN
 
