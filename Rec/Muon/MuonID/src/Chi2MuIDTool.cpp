@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.5 2009-07-07 22:02:41 polye Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.6 2009-07-14 12:42:07 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -392,11 +392,6 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
   
   LHCb::State* muState = (LHCb::State*)&(seed.closestState(9450.));
   
-  if (m_mySeedState!=0) {  
-    debug()<<"m_mySeedState"<<endmsg;
-    debug()<<m_mySeedState<<endmsg;
-    debug()<<"x="<<m_mySeedState->x()<<",y="<<m_mySeedState->y()<<",z="<<m_mySeedState->z()<<endmsg;
-  }
   debug()<<"muState"<<endmsg;
   debug()<<muState<<endmsg;
   debug()<<"x="<<muState->x()<<",y="<<muState->y()<<",z="<<muState->z()<<endmsg;
