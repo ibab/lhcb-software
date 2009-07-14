@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.439 2009-07-08 18:22:08 pkoppenb Exp $
+! $Id: release.notes,v 1.440 2009-07-14 15:44:53 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2009-07-14 - Juan PALACIOS
+ - src/PVRelatorAlg.cpp
+  . Fix erroneous property checking logic in initialize method
+
 ! 2009-07-08 - Patrick Koppenburg
  - PhysDesktop : Do set inputlocations ...
-   . Remove wrong error message about locations beuing set twice
+   . Remove wrong error message about locations being set twice
 
 
 ! 2009-07-06 - Patrick Koppenburg
