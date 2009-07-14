@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.109 2009-07-14 12:40:52 jpalac Exp $
+# $Id: requirements,v 1.110 2009-07-14 13:30:41 jpalac Exp $
 package AnalysisSys
 version v3r6
 
@@ -30,7 +30,8 @@ use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
 use  DecayTreeTuple             v2r3p3   Phys   # Rob Lambert
 ####################################################################
 #
-use PhysSelPython v1r0 PhysSel
+use PhysSelPython               v1r0     PhysSel
+use AnalysisPython              v1r0     Phys
 #
 # Stripping
 #
