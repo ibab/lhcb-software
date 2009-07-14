@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.269 2009-07-12 14:19:24 spradlin Exp $ 
+! $Id: release.notes,v 1.270 2009-07-14 07:10:46 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-14 - Jaap Panman
+ - HltInit.py: adapt to changed BXType names in ODIN
 
 ! 2009-07-12 - Patrick Spradlin
   - python/HltConf/Hlt2.py
