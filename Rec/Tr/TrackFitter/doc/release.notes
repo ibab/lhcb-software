@@ -3,11 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
-! 2009-07-10 - Wouter Hulsbergen
- - added 'convergence criterium': can now optionally run fit until it has converged
- - moved addition of z-position reference nodes from configuration into fit to simplify configuration
- - added state for last measurement
-
+!=========================== TrackFitter v2r35 2009-07-14 ===================
 ! 2009-07-08 - Wouter Hulsbergen
  - introduced ITrackKalmanFilter as a base class for TrackKalmanFilter
  - adapted to migration of track classes to TrackKernel
