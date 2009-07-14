@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : PhysSel/PhysSelPython
+! Responsible : Juan Palacios
+! Purpose     : Helper python classes for writing offline selections
+!-----------------------------------------------------------------------------
+
+! 2009-07-14 - Juan Palacios
+ - First import to CVS
