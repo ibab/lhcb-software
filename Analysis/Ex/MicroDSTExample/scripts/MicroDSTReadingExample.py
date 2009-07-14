@@ -182,6 +182,7 @@ ptRecursiveLoop = Functors.ContainerRecursiveLoop(ptPlotter, recursionFunc)
 massRecursiveLoop = Functors.ContainerRecursiveLoop(massPlotter, recursionFunc)
 massResRecursiveLoop = Functors.ContainerRecursiveLoop(massResPlotter,
                                                        recursionFunc)
+#assocTreeRecLoop = Functors.ContainerRecursiveLoop(assocCounter, recursionFunc)
 
 propTimeLoop = Functors.ContainerLoop( tauPlotter )
 refitPropTimeLoop = Functors.ContainerLoop( refitTauPlotter )
@@ -216,7 +217,7 @@ while ( nextEvent() ) :
         ptRecursiveLoop(particles)
         massRecursiveLoop(particles)
         massResRecursiveLoop(particles)
-
+#        assocTreeRecLoop(particles)
         # functors to get rec and MC proper time for standard and re-fitted
         # primary vertices
         tauFunc = Functors.PropTime(bestVertexFun, properTimeFitter)
