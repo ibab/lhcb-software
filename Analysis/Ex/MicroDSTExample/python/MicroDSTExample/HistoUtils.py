@@ -411,7 +411,7 @@ class HistoFile :
     histoList = [h0, h1, h2, h3]
     hFile.save(histoList)
     ...
-    hWriter.close()
+    hFile.close()
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
