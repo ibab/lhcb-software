@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.361 2009-07-06 15:27:41 pkoppenb Exp $
+! $Id: release.notes,v 1.362 2009-07-14 14:36:04 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-07-14 - Juan PALACIOS
+ - python/DaVinci/PhysMicroDST.py
+  . Remove PhysDesktop.InputLocations
 
 ! 2009-07-06 - Patrick Koppenburg
  - DaVinci DataType now MC09 by default
