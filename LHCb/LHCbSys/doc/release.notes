@@ -5,6 +5,107 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v27r4>2009-07-15 LHCbSys v27r4</A></H1><PRE>
+This version uses Gaudi v21r2 and LCG_56b
+
+- Packages added: Tr/TrackKernel v1r0
+- Packages modified: DDDB v1r20, DetDescChecks v4r11, MuonDet v8r5p1, 
+    STDet v4r11, DAQEvent v8r0, EventPacker v1r6, MCEvent v2r15p1, 
+    RecEvent v2r20p1, TrackEvent v4r22, IOExample v3r0, GaudiConf v12r7,
+    LHCbAlgs v2r28, LHCbKernel v11r5p1, LHCbMath v3r11, L0MuonKernel v8r7,
+    LoKiGen v8r6, LoKiMC v8r6, LoKiPhys v8r8, RichKernel v7r24,
+    RichRecBase v3r24, SimComponents v2r19, STKernel v1r15, CondDBUI v2r20,
+    TfKernel v2r11p2, TrackInterfaces v4r5
+
+- In DDDB v1r20
+  . Changed default tags for 2009 data:
+    o head-20090713         for DDDB
+    o head-20090713         for LHCBCOND
+    o sim-20090713-vc-md100 for SIMCOND
+
+- In DetDescChecks v4r11
+  . Added test for 2009 data type.
+
+- In STDet v4r11
+  . DeTTSector: Corrected small bug building of conditionsPathName.
+
+- In DAQEvent v8r0, LHCbAlgs v2r28
+  . Renamed the values (enum) for the beam crossing type in the ODIN class from
+    Left/Right to 1/2.
+
+- In EventPacker v1r6
+  . Add DumpTracks algorithm, previously in Ex/IOExample
+  . Replace all endreq by endmsg
+  . Fix untested StatusCode on a Warning() method call
+
+- In TrackEvent v4r22
+  . Add constructor with 'location' to State and Node
+  . Bug fix: sort lhcbids in Track::setLhcbIDs
+
+- In IOExample v3r0
+  . Move DumpTracks algorithm to EventPacker package and remove component library
+  . In QMTests, include the LHCbExclusions file for the validation with reference
+
+- In GaudiConf v12r7
+  . In LHCbExclusions.py: temporary exclusion of Exceptions/Errors/Warnings
+    summary message, to facilitate migration of reference files to Gaudi v21r3
+  . In Configurable:
+    o Change default DataType to 2009
+    o If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
+      (previously setting of DDDBtag and CondDBtag was compulsory)
+
+- In LHCbMath v3r11
+  . In MatrixTransforms.h, use std::sqrt, std::abs instead of sqrt, fabs 
+  . Cleanup requirements (remove linkopts for ROOT < 5.19)
+  . Fix some doxygen warnings
+
+- In L0MuonKernel v8r7
+  . Fix bug in emulator without M1
+
+- In LoKiGen v8r6, LoKiMC v8r6
+  . Minor fix to please Bender
+
+- In LoKiPhys v8r8
+  . Add additional indices for CHILD and CHILDCUT functors
+
+- In RichKernel v7r24
+  . Add RichTrackSegment::StateErrors constructor from double values
+    (avoids double -> float conversion warnings).
+  . Add new Rich::Converter base class that extends the basic Converter
+    class adding various additional RICH functionality as implemented in
+    Rich::CommonBase. Needed to eventually remove code duplication in 
+    various Panoramix packages.
+
+- In RichRecBase v3r24
+  . Fix bug in RichRecTrack where NDOF and charge data members were floats
+    instead of ints !
+
+- In SimComponents v2r19
+  . MCReconstructible : return false for pz < 0 in neutral_accept ! Ecal 
+    geometrical parameters from CaloDet 
+
+- In STKernel v1r15
+  . Moved method to retrieve TELL1 number from a SourceID from STCommonBase to
+    the readout tool.
+
+- In CondDBUI v2r20
+  . Improvements to the new CondDBBrowser:
+    o better look of the list of IoVs
+    o cache the tags of the already viewed folder to improve responsiveness
+
+- In TrackInterfaces v4r5
+  . Added ITrackKalmanFilter
+
+- In TfKernel v2r11p2, TrackInterfaces v4r5
+  . Remove requirements hack for windows and Gaudi v21r1
+
+- In EventPacker v1r6, LHCbAlgs v2r28,  SimComponents v2r19
+  . Remove <package>_dll.cpp file, no longer needed with Gaudi v21r2
+
+- In MuonDet v8r5p1, MCEvent v2r15p1, RecEvent v2r20p1, LHCbKernel v11r5p1,
+     LHCbMath v3r11, TfKernel v2r11p2
+  . Fix Windows compilation warnings
+
 </PRE><H1><A NAME=v27r3>2009-07-01 LHCbSys v27r3</A></H1><PRE>
 This version uses Gaudi v21r2 and LCG_56b
 
