@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.21 2009-07-01 15:20:52 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.22 2009-07-14 12:35:13 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -27,7 +27,6 @@ from Configurables import PVRelatorAlg
 from Configurables import CopyParticle2MCRelations
 from Configurables import P2MCRelatorAlg
 from Configurables import MakeResonances
-from MicroDSTExample import Selections
 #==============================================================================
 # Some steering options
 #
@@ -49,14 +48,11 @@ L0DUInfo = False
 HltInfo = False
 #==============================================================================
 importOptions("$STDOPTS/LHCbApplication.opts")
-#mySelection = Selections.KstarSel
-#mySelection = Selections.Phi2KKSel
-mySelection = Selections.Bs2JpsiPhiSel
-#mySelection = Selections.BdJpsiKstarSel
-importOptions(mySelection.mainOptions)
-importOptions(mySelection.dataFiles)
-mainLocation = mySelection.mainLocation
-mainSelector = MakeResonances(mySelection.mainSelector)
+importOptions('$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py')
+from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
+mySequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
+mainLocation = "Phys/"+mySequence.topAlgName()
+mainSelector = mySequence.algo
 #mainSelector.ReFitPVs=True
 mainSelector.OutputLevel=4
 #
@@ -71,7 +67,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='"+ mySelection.mainSequence +DSTMC+"_"+ evtString +"_Kevt.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='"+ mySequence.name() +DSTMC+"_"+ evtString +"_Kevt_NewPythonSelection.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
@@ -84,7 +80,7 @@ if (allEventInfo) :
     MicroDSTStream.AcceptAlgs.append( 'AllEvents' )
     
 # Create selection sequence and add to OutputStream's AcceptAlgs list
-MySelection = GaudiSequencer(mySelection.mainSequence)
+MySelection = mySequence.sequence()
 MicroDSTStream.AcceptAlgs.append( MySelection.name() )
 #==============================================================================
 
