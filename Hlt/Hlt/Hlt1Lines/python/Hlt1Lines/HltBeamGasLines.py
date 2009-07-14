@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.5 2009-07-14 14:18:35 phopchev Exp $
+# $Id: HltBeamGasLines.py,v 1.6 2009-07-14 19:47:30 phopchev Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -19,12 +19,12 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 from HltLine.HltLine import Hlt1Line   as Line
 
-from Configurables import DecodeVeloRawBuffer
-from Configurables import Tf__PatVeloRTracking
-from Configurables import BeamGasTrigCheckL0TracksBXType
-from Configurables import BeamGasTrigExtractClusters
-from Configurables import BeamGasTrigClusterCut
-from Configurables import BeamGasTrigVertexCut
+#from Configurables import DecodeVeloRawBuffer
+#from Configurables import Tf__PatVeloRTracking
+#from Configurables import BeamGasTrigCheckL0TracksBXType
+#from Configurables import BeamGasTrigExtractClusters
+#from Configurables import BeamGasTrigClusterCut
+#from Configurables import BeamGasTrigVertexCut
 
 class HltBeamGasLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
@@ -58,6 +58,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	L0DURequirement = "L0_CHANNEL('" + self.getProp('L0Channel' + whichBeam) + "')"
 	algoList = []	
 	
+	'''
 	### Can this alg be totally replaced:
 	### a) BXType   b) L0Decision   c) N RZ tracks	    
 	algCheckL0 = BeamGasTrigCheckL0TracksBXType(   'CheckL0' + whichBeam
@@ -90,6 +91,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	algoList.append( algCheckL0   )
 	algoList.append( algRTracking )
 	algoList.append( algVtxCut    )
+        '''
 
 	return Line( lineName
 	           ,prescale = self.prescale
@@ -107,6 +109,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	L0DURequirement = "L0_CHANNEL('" + self.getProp('L0ChannelBeamCrossing') + "')"
 	algoList = []
 
+        '''  
 	### Reconstruct RZ Tracks Manually 
 	algDecodeVelo = DecodeVeloRawBuffer()  
 
@@ -154,6 +157,8 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	algoList.append( algExtractClust )
 	algoList.append( algRTracking2   )
 	algoList.append( algVtxCut       )
+
+        '''
 
         return Line( lineName
                    ,prescale = self.prescale

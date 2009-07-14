@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.10 2009-07-14 14:18:35 phopchev Exp $
+! $Id: release.notes,v 1.11 2009-07-14 19:47:30 phopchev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-07-14 - Plamen Hopchev
+ - HltBeamGasLines.py: keep the lines as they are, but
+   comment out the actual conf and addition to the Line 
+   of the trig algos, as they are not yet in the release
 
 ! 2009-07-14 - Plamen Hopchev
  - HltBeamGasLines.py: bring it closer to what it is supposed to do - configure the 
