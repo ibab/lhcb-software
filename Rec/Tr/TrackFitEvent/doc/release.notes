@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v4r0 2009-07-14 ====================
 ! 2009-07-10 Wouter Hulsbergen
  - add constructor with State::Location to FitNode
 
