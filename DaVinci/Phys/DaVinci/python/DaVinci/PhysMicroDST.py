@@ -1,7 +1,7 @@
 """
 High level configuration example for a typical physics MicroDST
 """
-__version__ = "$Id: PhysMicroDST.py,v 1.12 2009-06-30 16:26:25 jpalac Exp $"
+__version__ = "$Id: PhysMicroDST.py,v 1.13 2009-07-14 14:34:57 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 
@@ -141,12 +141,10 @@ class PhysMicroDST(LHCbConfigurableUser) :
     def copyBTaggingInfo(self) :
         from Configurables import BTagging, BTaggingTool
         from Configurables import CopyFlavourTag
-        from Configurables import PhysDesktop
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging('BTagging')
-        BTagAlgo.addTool(PhysDesktop)
         BTaggingTool("BTaggingTool").OutputLevel=4
-        BTagAlgo.PhysDesktop.InputLocations=[self.mainLocation()]
+        BTagAlgo.InputLocations=[self.mainLocation()]
         BTagLocation = self.mainLocation()+"/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
         self.seqMicroDST().Members += [BTagAlgo]
