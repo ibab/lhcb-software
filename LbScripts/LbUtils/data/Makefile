@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.1 2009-07-09 16:53:56 hmdegaud Exp $
+# $Id: Makefile,v 1.2 2009-07-14 13:47:20 hmdegaud Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -13,7 +13,7 @@
 ################################################################################
 
 # --- List of Packages in the current directory
-packages := $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements))
+packages := $(strip $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements)))
 
 # --- Utility functions 
 escape_slash = $(subst /,_slash_,$(1))
