@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-14 - Wouter Hulsbergen
+ - Adapted configurable to change in TrackMasterFitter properties 
+
 !======================== MuonID v7r0 2009-07-14 =====================
 ! 2009-07-10 - Erica Polycarpo 
  - Set FindQuality=False for DataType="2009" to disable Muon Track fit
