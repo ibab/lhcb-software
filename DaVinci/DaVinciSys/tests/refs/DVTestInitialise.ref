@@ -264,7 +264,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 DataOnDemandSvc                                                INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ToolSvc                                                        INFO Removing all tools created by ToolSvc
-ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
+ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO This machine has a speed about   2.16 times the speed of a 2.8 GHz Xeon.

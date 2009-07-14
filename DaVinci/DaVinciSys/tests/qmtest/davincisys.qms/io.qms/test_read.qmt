@@ -10,7 +10,7 @@
 findReferenceBlock("""
 DaVinciInit                                                 SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Events"                                        |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Events"                                        |        76 |         76 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
