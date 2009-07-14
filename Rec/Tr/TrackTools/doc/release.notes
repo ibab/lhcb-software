@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v3r19 2009-07-14 ========================
+! 2009-07-14 - Marco Cattaneo
+ - Remove obsolete file TrackTools_dll.cpp
+
 ! 2009-07-09 - Wouter Hulsbergen
  - Fix bug in TrackVertexer that was introduced when moving code from
  TrackStateVertex in TrackKernel migration
