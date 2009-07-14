@@ -4,5 +4,9 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2009-07-14 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+   . Add documentation
+
 ! 2009-07-14 - Juan Palacios
  - First import to CVS
