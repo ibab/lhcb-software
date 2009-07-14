@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v4r7 2009-07-14 =======================
 ! 2009-07-10 - Marco Cattaneo
  - Fix compilation on Windows (use abs(int) instead of fabs(int))
  - Remove obsolete file TrackCheckers_dll.cpp
