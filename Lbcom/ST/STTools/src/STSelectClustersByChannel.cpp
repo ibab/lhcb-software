@@ -1,4 +1,4 @@
-// $Id: STSelectClustersByChannel.cpp,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+// $Id: STSelectClustersByChannel.cpp,v 1.2 2009-07-14 11:04:20 lnicolas Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,6 +34,9 @@ StatusCode STSelectClustersByChannel::initialize() {
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   m_selector = tool<ISTChannelIDSelector>(m_selectorType, m_selectorName, this);  
+
+  info() << "Adding Tool: type: " << m_selectorType << " / name: " 
+	 << m_selectorName << endmsg;
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: STSelectByCharge.cpp,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+// $Id: STSelectByCharge.cpp,v 1.2 2009-07-14 11:04:20 lnicolas Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,6 +29,18 @@ STSelectByCharge::~STSelectByCharge()
 {
   //destructer
 }
+
+StatusCode STSelectByCharge::initialize() {
+  
+  StatusCode sc = ST::ToolBase::initialize();
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
+
+  info() << "Min Charge set to " << m_minCharge << " / max charge set to " 
+	 << m_maxCharge << endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
 
 bool STSelectByCharge::select( const LHCb::STCluster* cluster ) const{
   return (*this) (cluster);  

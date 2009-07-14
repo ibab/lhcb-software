@@ -1,4 +1,4 @@
-// $Id: STClusterSelectorOR.cpp,v 1.2 2009-03-14 09:16:34 mneedham Exp $
+// $Id: STClusterSelectorOR.cpp,v 1.3 2009-07-14 11:04:20 lnicolas Exp $
 // ============================================================================
 // Include files 
 
@@ -65,11 +65,15 @@ StatusCode STClusterSelectorOR::initialize ()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class GaudiTool",sc);}
   // locate selectors 
+
+  if (m_selectorsTypeNames.size() == 0)  return  Error("No selectors specified") ;
+
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
   {
     ISTClusterSelector* selector = tool<ISTClusterSelector>( *it );
     m_selectors.push_back( selector );
+    info() << " Adding selector named " << *it << endmsg;
   };     
   ///
   return StatusCode::SUCCESS ;

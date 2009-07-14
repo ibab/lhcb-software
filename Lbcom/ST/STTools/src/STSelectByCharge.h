@@ -1,4 +1,4 @@
-// $Id: STSelectByCharge.h,v 1.1 2009-03-14 09:16:35 mneedham Exp $
+// $Id: STSelectByCharge.h,v 1.2 2009-07-14 11:04:20 lnicolas Exp $
 #ifndef STSelectByCharge_H
 #define STSelectByCharge_H 1
 
@@ -33,6 +33,8 @@ class STSelectByCharge: public ST::ToolBase,
   /// destructer
   virtual ~STSelectByCharge();
 
+  /// initialize
+  virtual StatusCode initialize();
 
   /**  @param  cluster pointer to ST cluster object to be selected 
   *  @return true if cluster is selected
