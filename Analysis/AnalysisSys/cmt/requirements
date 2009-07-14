@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.108 2009-07-13 13:33:09 jpalac Exp $
+# $Id: requirements,v 1.109 2009-07-14 12:40:52 jpalac Exp $
 package AnalysisSys
 version v3r6
 
@@ -29,6 +29,8 @@ use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
 use  DecayTreeTuple             v2r3p3   Phys   # Rob Lambert
 ####################################################################
+#
+use PhysSelPython v1r0 PhysSel
 #
 # Stripping
 #

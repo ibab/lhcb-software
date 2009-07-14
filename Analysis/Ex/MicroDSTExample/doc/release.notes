@@ -1,9 +1,34 @@
-!$Id: release.notes,v 1.35 2009-07-02 13:50:03 jpalac Exp $
+!$Id: release.notes,v 1.36 2009-07-14 12:36:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-07-14 - Juan PALACIOS
+ - Removed files:
+      options/selections/BachelorHForBs2DsPi.py
+      options/selections/Bs2Jpsi2MuMuPhi2KK.opts
+      options/selections/Bs2Jpsi2MuMuPhi2KK.py
+      options/selections/__init__.py
+      options/selections/Jpsi2MuMu.opts
+      options/selections/Jpsi2MuMu.py
+      options/selections/Phi2KK.opts
+      options/selections/Phi2KK.py
+      options/selections/rundv.py
+      options/selections/Selection.py
+      options/selections/SelectionSequence.py
+      options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts
+      options/selections/SeqBs2Jpsi2MuMuPhi2KK.py
+    .py files have been modified and moved to python/MicroDSTExample/Selections
+ - Removed:
+ 
+ - Added new example Bs->J/Psi selection using new PhysSelPython 
+   wrapper classes:
+      python/MicroDSTExample/Selections/Bs2Jpsi2MuMuPhi2KK.py
+      python/MicroDSTExample/Selections/Jpsi2MuMu.py
+      python/MicroDSTExample/Selections/Phi2KK.py
+      python/MicroDSTExample/Selections/SeqBs2Jpsi2MuMuPhi2KK.py
 
 !======================= Ex/MicroDSTExample v2r7 2009-07-02 ==================
 
