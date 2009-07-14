@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r17 2009-07-14 =======================
+! 2009-07-14 - Marco Cattaneo
+ - Removed obsolete file TrackIdealPR_dll.cpp
+
 ! 2009-07-08 - Wouter Hulsbergen
  - removed StateTraj and dependency on TrackFitEvent
 
