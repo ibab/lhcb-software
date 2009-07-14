@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.22 2009-07-14 12:35:13 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.23 2009-07-14 17:02:36 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -223,6 +223,7 @@ evtCountAlg = EventCountHisto('EvtCountAlg')
 #evtCountAlg.OutputLevel= 1
 # make a DaVinci application configurable and add the crucial sequence to it.
 dv = DaVinci()
+dv.DataType = 'DC06'
 dv.EvtMax = nEvents
 if L0DUInfo :
     dv.ReplaceL0BanksWithEmulated = True
