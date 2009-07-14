@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r15 2009-07-14 =========================
+! 2009-07-14 - Marco Cattaneo
+ - Remove obsolete file PatVelo_dll.cpp
+
 ! 2009-07-10 - David Hutchcroft
  - Changed the chi^2 cut to optimise for signal (not MB)
 
