@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.43 2009-06-30 15:03:28 cattanem Exp $
+# $Id: requirements,v 1.44 2009-07-14 07:58:30 cattanem Exp $
 package CondDBUI
 
-version v2r19
+version v2r20
 
 branches cmt doc python scripts qt_resources
 #ignore_pattern package_stamps
