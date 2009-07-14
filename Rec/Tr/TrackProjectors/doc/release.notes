@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r23 2009-07-14 =====================
+! 2009-07-14 - Marco Cattaneo
+ - Remove obsolete file TrackProjectors_dll.cpp
+
 ! 2009-07-08 - Wouter Hulsbergen
  - adapted to migration of track classes to TrackKernel
 
