@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!======================= TrackExtrapolators v2r22 2009-07-14 =================
+! 2009-07-14 - Marco Cattaneo
+ - Remove obsolete file TrackExtrapolators_dll.cpp
+
 ! 2009-07-08 - Wouter Hulsbergen
  - adapted to migration of track classes to TrackKernel
 
