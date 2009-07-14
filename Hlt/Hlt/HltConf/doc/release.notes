@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.270 2009-07-14 07:10:46 panmanj Exp $ 
+! $Id: release.notes,v 1.271 2009-07-14 17:57:38 phopchev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-14 - Plamen Hopchev
+ - HltInit.py: another change to the Hlt1SelectionIDs for BeamGas Tirggers
 
 ! 2009-07-14 - Jaap Panman
  - HltInit.py: adapt to changed BXType names in ODIN
