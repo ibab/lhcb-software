@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r17 2009-07-14 =========================
 ! 2009-07-10 - Marco Cattaneo
  - Adapt BooleInit to change of names in ODIN::BXTypes enum
  - Remove DigiAlg_dll.cpp file
