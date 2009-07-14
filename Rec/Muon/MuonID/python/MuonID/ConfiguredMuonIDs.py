@@ -60,9 +60,8 @@ class ConfiguredMuonIDs():
     myfitter.FitUpstream = self.info.FitUpstream
     myfitter.MaxNumberOutliers = self.info.MaxNumberOutliers
     myfitter.NumberFitIterations = self.info.NumberFitIterations
-    myfitter.ZPositions = self.info.ZPositions
     myfitter.StateAtBeamLine = self.info.StateAtBeamLine
-
+    myfitter.AddDefaultReferenceNodes = False
 
   def configureIsMuonCandidateC(self, ismc):
     """
