@@ -3,7 +3,7 @@ Module which implements simple file-based locking mechanism
 
 @author: Karol Kruzelecki
 """
-import os, time, md5, string
+import os, time, md5
 
 
 def _hash(value):
@@ -86,7 +86,7 @@ class Lock(object):
         if self._splitCommand is None:
             return os.system(self._command)
         else:
-            cmds = string.split(self._command, self._splitCommand)
+            cmds = self._command.split(self._splitCommand)
             status = 0
             for c in cmds:
                 ret = os.system(c)
