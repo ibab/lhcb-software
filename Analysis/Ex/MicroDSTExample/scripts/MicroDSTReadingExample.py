@@ -1,7 +1,7 @@
 import sys, getopt
 from math import sqrt, fabs
 from GaudiConf.Configuration import *
-from MicroDSTExample import Helpers, Functors, Debug
+from AnalysisPython import Helpers, Functors, DebugMCAssoc
 from Gaudi.Configuration import EventSelector
 from GaudiPython.Bindings   import AppMgr
 from GaudiPython.Bindings import gbl, AppMgr, Helper
@@ -156,7 +156,7 @@ for cat in range(0,6) :
                            100, 0., 1.)
 
 # a little functor to print out MC association trees
-assocCounter = Debug.AssocTreeDebugger(MCAssocTool, particleNameFunc)
+assocCounter = DebugMCAssoc.AssocTreeDebugger(MCAssocTool, particleNameFunc)
 
 # we want mass and Pt plots to be made for all particles, so we need to make a
 # functor X such that calling X(particle) results in filling the plot with
