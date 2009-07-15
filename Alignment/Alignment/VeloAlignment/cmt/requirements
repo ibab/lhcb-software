@@ -20,6 +20,7 @@ use           VeloDet           v*    Det
 
 # Needed for Millepede
 use           AlignmentInterfaces    v*    Alignment
+use           AlignTrTools           v*    Alignment
 
 # Needed for AlignSensors
 use           ROOT              v*    LCG_Interfaces -no_auto_imports
