@@ -1,5 +1,5 @@
 package BooleSys
-version v19r4
+version v19r5
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v19r4   Digi  # Marco Cattaneo
+use Boole               v19r5   Digi  # Marco Cattaneo
 use DigiAlg             v4r17   Digi  # Marco Cattaneo
 
 # Calorimeter
