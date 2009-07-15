@@ -15,6 +15,8 @@ branches          cmt doc src
 #============================================================================
 # use   Package      v1r*    Hat
 use GaudiAlg v*
+use AIDA                v*   LCG_Interfaces
+
 
 use HltEvent            v*    Event
 use L0Event		v*    Event

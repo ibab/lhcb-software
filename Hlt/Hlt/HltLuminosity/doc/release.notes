@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-07-15 - Gerhard Raven
+ - add missing AIDA dependency to requirements
+
 ! 2009-07-10 - Jaap Panman
  - LumiHistoCollector.cpp: adapt to changed BXType names in ODIN
  - LumiAnalyser.cpp: adapt to changed BXType names in ODIN
