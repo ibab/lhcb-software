@@ -3,9 +3,6 @@ from Configurables import DaVinci, PhysMicroDST
 
 importOptions("$STDOPTS/PreloadUnits.opts")
 
-#importOptions( "$MICRODSTEXAMPLEROOT/options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts")
-#MySelection = GaudiSequencer("SelBs2Jpsi2MuMuPhi2KK")
-
 from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 MySelection = selSequence.sequence()
@@ -13,7 +10,6 @@ MySelection = selSequence.sequence()
 conf = PhysMicroDST()
 conf.OutputPrefix = "MicroDST"
 conf.MicroDSTFile = "MyTestMDST_MC_newConfWithAlgo.mdst"
-#conf.MicroDSTSelectionAlg = "Bs2Jpsi2MuMuPhi2KK"
 #conf.MicroDSTSelectionAlg = selSequence.topAlgName()
 conf.MicroDSTSelectionAlg = selSequence.algo
 conf.CopyL0DUReport = False
@@ -38,8 +34,6 @@ MySelection.Members += [PVReFitter, PVRelator]
 conf.CopyRelatedPVs = True
 conf.P2PVRelationsSuffix = "P2ReFitPVSortedRelations"
 '''
-#conf.CopyRelatedPVs = True
-#conf.P2PVRelationsSuffix = "Particle2VertexRelations"
 #
 conf.CopyBTags = True
 dv = DaVinci()
