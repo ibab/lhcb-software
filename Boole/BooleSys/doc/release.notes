@@ -16,8 +16,6 @@ Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
   . Changed default tags for 2009 DataType (DDDB v1r20)
     o head-20090713         for DDDB
     o sim-20090713-vc-md100 for SIMCOND
-    o If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
-      (previously setting of DDDBtag and CondDBtag was compulsory)
 
 - Changes to monitoring
   . Modified STClusterMonitor to book histograms at initialize (STMonitors v1r5)
