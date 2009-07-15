@@ -58,7 +58,7 @@ bool DimInfoMonObject::createMonObject() {
     //gSystem->Sleep(m_waitTime);
     usleep(10);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
-    msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
+    //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   }
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;

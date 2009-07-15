@@ -158,6 +158,7 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
     elementName = serverName;
   }
   else {
+    termSvcName = serviceName;
     groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
     elementName = termSvcName;
   }
@@ -188,6 +189,7 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
     elementName = serverName;
   }
   else {
+    termSvcName = serviceName;
     groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
     elementName = termSvcName;
   }
@@ -502,9 +504,9 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       //EvH I commented this line out for the moment because the servername is now the partitionname
       //(for the presenter) - not that slice name PARTxx
       //if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
-      if(0 == it->second->monObject()) continue;
+     if(0 == it->second->monObject()) continue;
 
-      msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
+      msg << MSG::DEBUG << "Term being saved: " << it->second->dimInfo()->getName() << endreq;
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  

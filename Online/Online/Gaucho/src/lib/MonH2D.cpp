@@ -143,12 +143,12 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
       binLabelX.push_back(labelX);
     }
   }
-  if (bBinLabelX){
-    binLabelX.clear();
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      std::string labelX;
-      ar & labelX;
-      binLabelX.push_back(labelX);
+  if (bBinLabelY){
+    binLabelY.clear();
+    for (int i = 1; i < (nbinsy+1) ; ++i){
+      std::string labelY;
+      ar & labelY;
+      binLabelY.push_back(labelY);
     }
   }
   ar & m_fDimension;
