@@ -8,6 +8,9 @@
 from GaudiKernel.ProcessJobOptions import importOptions
 importOptions("$APPCONFIGROOT/options/Boole/MC09-WithTruth.py")
 
+from Configurables import Boole
+Boole().DataType  = "MC09"
+
 ##############################################################################
 # I/O datasets and database tags are defined in a separate file,
 # see examples in MC09-Files.py
