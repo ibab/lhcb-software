@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v37r2
+version v37r3
 
 #============================================================================
 #-- Structure
@@ -21,10 +21,11 @@ use DecFiles           v18r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
+use BcVegPyData        v1r*                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
 
 #-- Package to run the application with different configurations
-use AppConfig          v2r*                  -no_auto_imports
+use AppConfig          v3r*                  -no_auto_imports
 #===========================================================================
 
 # Packages needed to compile and link the application
