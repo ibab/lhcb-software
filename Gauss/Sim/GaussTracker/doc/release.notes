@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!====================== GaussTracker v6r2p1 2009-07-15 =======================
 ! 2009-06-10 - Gloria CORTI
  - Fix compilation warning of initialization list order mismatch with 
    respect to constructor declaration order
