@@ -95,7 +95,7 @@ class NextEvent:
         self.appMgr = am
     def __call__(self) :
         self.appMgr.run(1)
-        if bool(self.appMgr.evtSvc()['/Event'])
+        return bool(self.appMgr.evtSvc()['/Event'])
 #==============================================================================
 class EventData :
     def __init__(self, evtSvc) :
