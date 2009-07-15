@@ -1,4 +1,4 @@
-// $Id: OTMuonCosmicsMatching.cpp,v 1.3 2009-02-06 13:17:35 janos Exp $
+// $Id: OTMuonCosmicsMatching.cpp,v 1.4 2009-07-15 15:11:24 wouter Exp $
 // Include files 
 
 // from STD
@@ -191,7 +191,11 @@ void OTMuonCosmicsMatching::filter( const std::vector< MatchingHelpers::MatchedT
 
 void OTMuonCosmicsMatching::merge( const LHCb::Track& tTrack, const LHCb::Track& muonTrack, LHCb::Track& track ) const {
   track.copy( tTrack );
-  if ( m_addMuonIDs ) BOOST_FOREACH( LHCbID id, muonTrack.lhcbIDs() ) track.addToLhcbIDs( id );
+  if ( m_addMuonIDs ) {
+    BOOST_FOREACH( LHCbID id, muonTrack.lhcbIDs() ) {
+      track.addToLhcbIDs( id );
+    }
+  }
 }
 
 void OTMuonCosmicsMatching::fillNTuple( const std::vector< MatchingHelpers::MatchedTrack >& matchedTracks ) const {
