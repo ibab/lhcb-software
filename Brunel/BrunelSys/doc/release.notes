@@ -3,14 +3,78 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-07-07 - Marco Cattaneo
- - Update reference for STMonitor histos now booked at initialize
+</PRE><H1><A NAME=v35r4>2009-07-16 Brunel v35r4</A></H1><PRE>
+This version uses projects Gaudi v21r3, LHCb v27r4, Lbcom v7r4, Rec v7r4
+ and SQLDDDB v5r9, ParamFiles v8r1, FieldMap v5r2, AppConfig v2r*
 
-! 2009-07-06 - Marco Cattaneo
- - Update reference for changes to MuonID reference values
+This is a development version for changes subsequent to the 2009 MC production. 
+Output requires DaVinci v22r3 or greater
 
-! 2009-07-02 - Marco Cattaneo
- - Update reference for changes to MuonID, MuonPIDChecker, ChargedProtoPAlg
+- New tuning
+  . Modified HPD description to speed up initialization 
+    (SQLDDDB v5r9 with head-20090708 tag or later, DetDescCnv v4r9)
+  . New implementation of MuonID (MuonID v7r0)
+    o IsMuonLoose condition (which takes the OR of the muon hits in FOI instead
+      of the AND) is now the "default" condition (instead of IsMuon) for the
+      first step of the MuonID. The DLL is built only if the IsMuonLoose is true
+    o Muon Tracks are stored in the MuonPID object only if IsMuonLoose is true
+    o MuonPID objects are stored in the ProtoParticle only if IsMuonLoose is true
+    o IsMuon is still kept as member of the MuonPID object, it can be recovered
+      whenever it is needed. IsMuon=true data set is always a subsample of the
+      IsMuonLoose=true data set
+  . Changes to track selection for ProtoParticles (GlobalReco v6r2)
+    o Suppress all Velo and Tracks from being made into ProtoParticles
+    o Add loose track selection criteria to charged ProtoParticle creation. 
+      Current cut is track Chi^2/d.o.f. < 50
+  . Changed the PatVelo chi^2 cut to optimise for MC09 signal (not Minimum Bias).
+    (PatVelo v3r15) (see <a href="http://indico.cern.ch/materialDisplay.py?contribId=2&sessionId=0&materialId=slides&confId=62985">presentation</a> at tracking workshop on 2009-07-10)   
+  . Tune Tsa & Match tracks for MC09 (TsaAlgorithms v3r11,TrackMatching v2r23)  
+    (see <a href="http://indico.cern.ch/materialDisplay.py?contribId=1&sessionId=0&materialId=slides&confId=62985">presentation</a> at tracking workshop on 2009-07-10)
+
+- Changes to configuration
+  . Change default DataType to "2009" (Brunel(), GaudiConf v12r7)
+  . If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
+    (previously setting of DDDBtag and CondDBtag was compulsory)(GaudiConf v12r7)
+  . Changed default tags for 2009 DataType (DDDB v1r20)
+    o head-20090713         for DDDB
+    o sim-20090713-vc-md100 for SIMCOND
+    o head-20090713         for LHCBCOND
+  . Luminosity sequences changed to follow change in BXType names in ODIN from
+    Left/Right to 1/2 (Brunel(), DAQEvent v8r0, LHCbAlgs v2r28, LumiAlgs v2r2)
+  . MuonID now configured via configurables (RecSys v7r4, MuonID v7r0)
+    o MuonIDAlg renamed from MuonID
+  . MuonPIDChecker now configured via configurable (Brunel, MuonPIDChecker v4r0)
+
+- Bug fixes
+  . Fix bug in RichRecTrack where NDOF and charge data members were floats
+    instead of ints (RichRecBase v3r24, RichRecMCTools v2r23)
+  . Added test of vertex pointer returned by TrackVertexer in TrackV0Finder
+    (TrackUtils v1r28)
+
+- Changes to monitoring
+  . Modified STClusterMonitor to book histograms at initialize (STMonitors v1r5)
+  . Modifications to MuonPID monitoring and checking (MuonPIDChecker v4r0)
+    o The configuration and reference values vary according to the DataType 
+      chosen. Possible DataTypes so far are: DC06, 2008, MC09, 2009
+    o Added Histograms for binned DLL, ProbMu, ProbNMu, Eff, Misid vs DLL Cut,
+      multiplicity as a function of Track x,y and region and other quantities
+      introduced in the new MuonID v7r0 
+    o Separate monitoring of MuonPIDs from monitoring of Muon tracks in 
+      methods getTrInfo and getMuTrInfo
+  . Compact a bit the summary table for charged ProtoParticles (GlobalReco v6r23)
+  . Add efficiency on ks and lambda daughters + B daughters to default 
+    TrackChecker output (TrackCheckers v4r7)
+	. Changes to VeloTrackMonitor (VeloRecMonitors v1r10)
+    o remove one 2d histogram
+    o uncomment histograms for measurement number for pos. and neg. tracks
+    o added new histograms Pseudoefficiency vs sensorID, adc distributions for r
+      and  phi clusters associated to the tracks
+		o bug fix in number of measurements per track
+
+ - Changes to example options files
+   . 2008-Cosmics-Data.py now sets 2008 DataType
+   . Fix DataType in Brunel-MC09-*.py, was using default value, not "MC09"
+
 
 </PRE><H1><A NAME=v35r3>2009-07-02 Brunel v35r3</A></H1><PRE>
 This version uses projects Gaudi v21r2, LHCb v27r3, Lbcom v7r3, Rec v7r3
