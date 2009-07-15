@@ -1,8 +1,8 @@
 import os, sys, shutil, re, time, pickle, string
+from stat import S_IWRITE, ST_MODE, S_IMODE, S_IRWXU
 from pprint import pformat
 from LbUtils.Lock import Lock
 from threading import Thread
-from stat import S_IWRITE
 from setup import *
 
 sys.path = [os.path.abspath(os.environ['LCG_NIGHTLIES_SCRIPTDIR'])] + sys.path
@@ -28,11 +28,18 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
     else:
         return it.result
 
+def _fixPerms(path):
+    """ change file/dir permissions to be able to remove them """
+    mode = S_IMODE(os.stat(path)[ST_MODE])
+    if (mode & S_IRWXU) != S_IRWXU:
+        os.chmod(path, mode | S_IRWXU)
+
 def rmtree(path, ignore_errors=False, onerror=None):
-    """ remove read-only flag form all files and directories and call shutil.rmtree """
+    """ change permissions of all files and directories and call shutil.rmtree """
+    _fixPerms(path)
     for root, dirs, files in os.walk(path):
         for x in dirs+files:
-            os.chmod(os.sep.join([root, x]), S_IWRITE)
+            _fixPerms(os.path.join(root, x))
     shutil.rmtree(path, ignore_errors, onerror)
 
 def copyLocal(sourceDir, targetDir):
@@ -568,6 +575,8 @@ def make(slotName, projectName, minusj):
     configuration.system('cmt show projects')
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show uses')
+    configuration.system('echo "' + '*'*80 + '"')
+    configuration.system('cmt show tags')
     configuration.system('echo "' + '*'*80 + '"')
 
     if systemType == 'windows':
