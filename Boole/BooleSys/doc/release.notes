@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v19r4>2009-07-16 Boole v19r4</A></H1><PRE>
+This version uses projects Gaudi v21r3, LHCb v27r4, Lbcom v7r4
+ and SQLDDDB v5r9, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
+
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+- Changes to configuration
+  . If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
+    (previously setting of DDDBtag and CondDBtag was compulsory)(GaudiConf v12r7)
+  . Changed default tags for 2009 DataType (DDDB v1r20)
+    o head-20090713         for DDDB
+    o sim-20090713-vc-md100 for SIMCOND
+    o If DDDB tags not explicitly set, use DDDBConf defaults for given DataType
+      (previously setting of DDDBtag and CondDBtag was compulsory)
+
+- Changes to monitoring
+  . Modified STClusterMonitor to book histograms at initialize (STMonitors v1r5)
+
+
 </PRE><H1><A NAME=v19r3>2009-07-02 Boole v19r3</A></H1><PRE>
 This version uses projects Gaudi v21r2, LHCb v27r3, Lbcom v7r3
  and SQLDDDB v5r8, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v2r*
