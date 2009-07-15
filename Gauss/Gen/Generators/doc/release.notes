@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.151 2009-06-19 13:19:27 robbep Exp $
+! $Id: release.notes,v 1.152 2009-07-15 09:51:29 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v10r2 2009-07-15 ==========================
 ! 2009-06-19 - Patrick Robbe
  - EvtGenDecay.cpp: reactivates computing of branching fraction in 
     DECAY.DEC
 
 ! 2009-06-15 - Gloria CORTI
- - Fix compilation warning of unused variable removing leftover old variable 
+ - Fix compilation warning of unused variable removing leftover old variable
    when modified how to store luminosity
    . Generation.cpp
 
