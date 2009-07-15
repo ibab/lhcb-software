@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-07-15 - Wouter Hulsbergen
+ - Adapted to change in OT linker table such that this now works for MC09
+
 !======================= TrackIdealPR v2r17 2009-07-14 =======================
 ! 2009-07-14 - Marco Cattaneo
  - Removed obsolete file TrackIdealPR_dll.cpp

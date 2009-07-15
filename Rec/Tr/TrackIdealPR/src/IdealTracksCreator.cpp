@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.44 2009-07-08 15:28:21 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.45 2009-07-15 12:38:23 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -314,20 +314,15 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
 					   Track* track ) const
 {
   unsigned int nOTMeas = 0;
-  const OTTime* aTime = m_otLinker.first( mcPart );
-  while ( NULL != aTime ) {
-
+  std::vector<OTChannelID> channels = m_otLinker.keyRange(mcPart);
+  for( std::vector<OTChannelID>::const_iterator ichan = channels.begin() ;
+       ichan != channels.end(); ++ichan)
     // possible inefficiency
     if (m_uniformDist->shoot() < m_otEff){
-
-      LHCbID id = LHCbID(aTime->channel()); 
-      track -> addToLhcbIDs(id);
-      
+      track -> addToLhcbIDs(LHCb::LHCbID(*ichan)) ;
       ++nOTMeas;      
     }
-    aTime = m_otLinker.next();
-  } // loop over OTTimes
-
+  
   debug() << "- " << nOTMeas << " OTMeasurements added" << endreq;
 
   return StatusCode::SUCCESS;

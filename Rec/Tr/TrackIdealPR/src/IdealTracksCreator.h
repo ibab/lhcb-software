@@ -23,6 +23,7 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/MuonCoord.h"
+#include "Linker/LinkedFromKey.h"
 
 // Forward declarations
 class ITrajPoca;
@@ -120,7 +121,7 @@ private:
   std::vector<int> m_tracktypes;    ///< Track types of the monitored tracks
   
   typedef LinkedFrom<LHCb::STCluster,LHCb::MCParticle> STLinker;
-  typedef LinkedFrom<LHCb::OTTime,LHCb::MCParticle> OTLinker;
+  typedef LinkedFromKey<LHCb::MCParticle, LHCb::OTChannelID> OTLinker ;
   typedef LinkedFrom<LHCb::VeloCluster,LHCb::MCParticle> VeloLinker;
   typedef LinkedFrom<LHCb::MuonCoord,LHCb::MCParticle> MuonLinker;
 
