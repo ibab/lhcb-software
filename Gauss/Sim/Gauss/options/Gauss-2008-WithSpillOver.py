@@ -30,7 +30,7 @@ MessageSvc().Format = "% F%24W%S%7W%R%T %0W%M"
 EventDataSvc().ForceLeaves = True
 # POOL persistency 
 EventPersistencySvc().CnvServices  = []
-importOptions("$STDOPTS/SimDicts.opts")
+importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 # Other outputs
 gauss.HistogramPersistency = "NONE"
 #
