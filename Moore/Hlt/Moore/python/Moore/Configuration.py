@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.70 2009-07-10 07:20:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.71 2009-07-15 20:50:09 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -170,12 +170,16 @@ class Moore(LHCbConfigurableUser):
 
         from Configurables import CondDB
         conddb = CondDB()
+        # hack to allow us to chance connectionstrings...
+        conddb.UseOracle = True
         # Set alternative connection strings and tags
         for part in [ "DDDB", "LHCBCOND" ]:
             conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
                                                                                                            "part": part,
                                                                                                            "tag":  tag[part]}
-            conddb.Tags[part] = tag[part]
+            # always use HEAD -- blindly trust the snapshot to be
+            # right (this is faster, but less safe)
+            conddb.Tags[part] = 'HEAD'
         part = "ONLINE"
         conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
                                                                                                        "part": part,
