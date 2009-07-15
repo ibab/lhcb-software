@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.226 2009-07-13 15:10:30 cattanem Exp $
+! $Id: release.notes,v 1.227 2009-07-15 14:27:46 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-07-15 - Chris Jones
+ - Fix minor bug in Rich::Geom::AngleBetween
 
 !====================== RichKernel v7r24 2009-07-13 ====================
 ! 2009-07-09 - Chris Jones
