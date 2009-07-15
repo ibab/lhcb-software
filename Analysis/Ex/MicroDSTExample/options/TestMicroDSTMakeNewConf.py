@@ -2,19 +2,27 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci, PhysMicroDST
 
 importOptions("$STDOPTS/PreloadUnits.opts")
-importOptions( "$MICRODSTEXAMPLEROOT/options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts")
-MySelection = GaudiSequencer("SelBs2Jpsi2MuMuPhi2KK")
+
+#importOptions( "$MICRODSTEXAMPLEROOT/options/selections/SeqBs2Jpsi2MuMuPhi2KK.opts")
+#MySelection = GaudiSequencer("SelBs2Jpsi2MuMuPhi2KK")
+
+from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
+selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
+MySelection = selSequence.sequence()
 
 conf = PhysMicroDST()
 conf.OutputPrefix = "MicroDST"
-conf.MicroDSTFile = "MyTestMDST_MC_newConf.mdst"
-conf.MicroDSTSelectionAlg = "Bs2Jpsi2MuMuPhi2KK"
+conf.MicroDSTFile = "MyTestMDST_MC_newConfWithAlgo.mdst"
+#conf.MicroDSTSelectionAlg = "Bs2Jpsi2MuMuPhi2KK"
+#conf.MicroDSTSelectionAlg = selSequence.topAlgName()
+conf.MicroDSTSelectionAlg = selSequence.algo
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
 # to use the PV re-fitting, need to re-fit PVs, relate them, and pass the relations table location to the MicroDST maker. Could we put this On-Demand?
+'''
 from Configurables import PVReFitterAlg, PVRelatorAlg
-mainLocation = "Phys/"+"DC06selBs2JpsiPhi_unbiased"
+mainLocation = "Phys/" + selSequence.topAlgName()
 PVReFitter = PVReFitterAlg("PVReFitterAlg")
 PVReFitter.ParticleInputLocation = mainLocation+"/Particles"
 PVReFitter.VertexOutputLocation = mainLocation+"/RefittedVertices"
@@ -29,11 +37,14 @@ PVRelator.P2PVRelationsOutputLocation = p2pvSortedRelationsLoc
 MySelection.Members += [PVReFitter, PVRelator]
 conf.CopyRelatedPVs = True
 conf.P2PVRelationsSuffix = "P2ReFitPVSortedRelations"
+'''
+#conf.CopyRelatedPVs = True
+#conf.P2PVRelationsSuffix = "Particle2VertexRelations"
 #
 conf.CopyBTags = True
 dv = DaVinci()
+dv.DataType = 'DC06'
 dv.EvtMax = 500
-#dv.HistogramFile = "MyTestMDST_MC_newConf.dst"
 dv.UserAlgorithms = [MySelection]
 dv.Input =  [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
