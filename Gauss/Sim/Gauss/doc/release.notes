@@ -4,6 +4,45 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-07-15 - Gloria CORTI
+ - Change major version of AppConfig as the previous one is incompatible
+   and can no longer be used
+ - Fix minor version of BcVegPyData
+ - Introduce Gauss() configurable and remove files that are obsolete.
+   Leave only options either used by Gauss() or that can be used as modifier.
+   Update them when necessary or write corresponding '.py'
+
+   The application sequence is now set by the configurable
+   . MODIFIED: python/Gauss/Configurable.py
+               options: Gauss.py Gauss-Job.py 
+                        BCMSimulation.opts (to include units)         
+   . REMOVED : Gauss.opts Generator.opts Simulation.opts SimGeometry.opts
+               RichExtendedInfo.opts Common.opts
+               GaussSimPhase.opts ( not yet ported to Gauss() )
+   . REPLACED: GenStandAlone.opts by GenStandAlone.py
+
+   For setting beam parameters use files in $APPCONFIGOPTS/Gauss as example
+   to see how to set Gauss() properties
+   . REMOVED: Beam450GeV-VeloClosed-MagDown.py Beam450GeV-VeloClosed-MagOff.py
+              Beam450GeV-VeloClosed-MagUp.py Beam450GeV-VeloOpen-MagDown.py 
+              Beam450GeV-VeloOpen-MagOff.py Beam450GeV-VeloOpen-MagUp.py
+              Beam5TeV-VeloClosed-MagDown.py Beam5TeV-VeloClosed-MagOff.py 
+              Beam5TeV-VeloClosed-MagUp.py Beam5TeV-VeloOpen-MagDown.py 
+              Beam5TeV-VeloOpen-MagOff.py Beam5TeV-VeloOpen-MagUp.py
+              Beam7TeV-VeloClosed-MagDown.py Beam7TeV-VeloClosed-MagOff.py 
+              Beam7TeV-VeloClosed-MagUp.py Beam7TeV-VeloOpen-MagDown.py 
+              Beam7TeV-VeloOpen-MagOff.py Beam7TeV-VeloOpen-MagUp.py
+              BeamCond-5TeV.opts BeamCond-5TeV.py PilotRun.opts
+              FixedLumi-5.opts
+
+   The following still work (imported or as argument of gaudirun.py):
+              BeamScintillators.opts
+
+   The following works only if given as argument of 
+         gaudirun.py --post-option=POST_OPTIONS
+              DRaysOn-HT.opts DRaysOn-LT.opts MuonLowEnergy.opts           
+
+
 ! 2009-06-24 - Silvia Miglioranzi
  - Introduction of new gen-only QMtests for the following event types:
    - 14143011 (use of BcVegPy instead of Pythia) 
