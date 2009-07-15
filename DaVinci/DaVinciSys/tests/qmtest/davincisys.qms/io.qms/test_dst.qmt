@@ -8,9 +8,9 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DSTJpsi_3000_3500                                              INFO Events output: 1
-DSTJpsi_3050_3150                                              INFO Events output: 11
-DSTJpsi_2600_3200                                              INFO Events output: 1
+DSTJpsi_3000_3500                                              INFO Events output: 11
+DSTJpsi_3050_3150                                              INFO Events output: 58
+DSTJpsi_2600_3200                                              INFO Events output: 7
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
