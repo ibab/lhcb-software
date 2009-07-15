@@ -5,11 +5,134 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-- In RecSys v   
-  . Change configurable to configure MuonID using new configurable (E. Polycarpo)
+</PRE><H1><A NAME=v7r4>2009-07-15 RecSys v7r4</A></H1><PRE>
+This version uses Gaudi v21r3 and LHCb v27r4.
+
+- Packages modified: MuonID v7r0, MuonPIDChecker v4r0, GlobalReco v6r23,
+    LumiAlgs v2r2, RichRecMCTools v2r23, RichRecTrackTools v1r13, PatVelo v3r15,
+    TsaAlgorithms v3r11, TrackMatching v2r23, TrackCheckers v4r7,
+    TrackExtrapolators v2r22, TrackFitEvent v4r0, TrackFitter v2r35,
+    TrackIdealPR v2r17, TrackMonitors v1r11, TrackProjectors v2r23,
+    TrackTools v3r19, TrackUtils v1r28, VeloRecMonitors v1r10
+
+- In RecSys v7r4
+  . Change configurable to configure MuonID using new configurable
+
+- In MuonID v7r0 (see MuonID/doc/release.notes for many more details)
+  . Changes in MuonID(Alg).cpp (renamed from MuonID.cpp(h):
+    o Input IsMuonLoose in addition to IsMuon in MuonPID objects
+    o MuonPID info made also available in MuonTracks (PreSelMom, InAcceptance,
+      IsMuon...)
+    o New properties FindQuality, AllMuonTracks, Weight, DLL_Flag
+    o New method calcMuonLL_dist to use the distance built with the closest hit
+      in order to make a hypothesis test for muons and  non-muons. 
+  . New set of tools, classes and algorithms for alternative MuonID analysis:
+    Interpolator, CLTool, GetArrival, IsMuonCandidateC, chi2MuIDTool, 
+    distMuIDTool, SmartMuonMeasProvider, MakeMuonMeasurements
+  . New python Configurator (ConfiguredMuonIDs) module to configure tools and 
+	  algorithms in package. 
+
+- In MuonPIDChecker v4r0
+  . Checker and Monitor now run with configurables. Options are no longer used.
+  . The configuration and reference values vary according to the DataType chosen.
+    Possible DataTypes so far are: DC06, 2008, MC09, 2009
+  . Added Properties "IsMuonFlag", "DLLFlag"
+  . Added Histograms for binned DLL, ProbMu, ProbNMu, Eff, Misid vs DLL Cut,
+    multiplicity as a function of Track x,y and region and other quantities
+    introduced in the new MuonID v7r0 
+  . Separate monitoring of MuonPIDs from monitoring of Muon tracks in 
+    methods getTrInfo and getMuTrInfo
+  . Pass linker as argument in order to use it only in getTrType if RunningMC
+  . Put reference values as properties so that they can be changed more easily
+
+- In GlobalReco v6r23
+  . Add an option to ChargedProtoPAlg to allow the track selector type to 
+    be controlled.
+  . Improve how the track selection cuts are implemented in the python 
+    Configurable.
+  . Suppress all Velo and Tracks from being made into ProtoParticles.
+  . Add loose track selection criteria to charged ProtoParticle creation. 
+    Current cut is track Chi^2/d.o.f. < 50
+  . Compact a bit the summary printout for charged ProtoParticles.
+
+- In LumiAlgs v2r2
+  . Adapt to changed BXType names in ODIN
+
+- In RichRecMCTools v2r23
+  . Adapt to change in RichRecTrack charge data member from float to int
+
+- In PatVelo v3r15
+  . Changed the chi^2 cut to optimise for signal (not Minimum Bias)
+  . Removed usage of VeloClusters from PatVeloAlignTrackFilter.
+  . Added PatVeloTraversingTracking cpp and h which adds an algorithm that makes
+    tracks that cross between detector halves even if the exact openning distace
+    is not known.
+  . Changes to NewVeloSpaceTool:
+    o Removed double definition of the option for ForwardStepError
+    o Copy David's tuning of the track fit
+    o Produce two fitted states to get the best Match performance
+
+- In TsaAlgorithms v3r11
+  . Faster better generic tracking
+  . Tune tuning for MC09. Ghost rate reduced by ~1 % for few per mille loss
+    in efficiency. See talk in tracking workshop on July 10 
+
+- In TrackMatching v2r23
+  . Tune for MC09. See talk in tracking workshop on July 10
+
+- In TrackCheckers v4r7
+  . Add efficiency on ks and lambda daughters + B daughters to default output
+
+- In TrackFitEvent v4r0
+  . Add constructor with State::Location to FitNode
+  . Moved non-event model classes to TrackKernel
+
+- In TrackFitter v2r35
+  . Introduced ITrackKalmanFilter as a base class for TrackKalmanFilter
+
+- In TrackIdealPR v2r17
+  . Removed StateTraj and dependency on TrackFitEvent
+
+- In TrackTools v3r19
+  . Add new base class "TrackSelectorBase" for all track selectors
+  . Minor change in TTHitExpectation to get required behaviour  
+  . Add isolated track selector for IT (ITIsolatedTrackSelector)
+  . Add possibility to select parts of IT or TT to IT/TTHitExpectation and
+    STClusterCollector
+  . Speed up STClusterCollector code
+
+- In TrackUtils v1r28
+  . Added test of vertex pointer returned by TrackVertexer in TrackV0Finder
+
+- In VeloRecMonitors v1r10
+	. Changes to VeloTrackMonitor: 
+    o remove one 2d histogram
+    o uncomment histograms for measurement number for pos. and neg. tracks
+    o added new histograms Pseudoefficiency vs sensorID,  adc distributions for r
+      and  phi clusters associated to the tracks
+		o bug fix in number of measurements per track
+  . Added VeloIPResolutionMonitor algorithm
+
+- In TrackMatching v2r23, TrackCheckers v4r7, TrackExtrapolators v2r22,
+     TrackFitter v2r35, TrackMonitors v1r11, TrackProjectors v2r23,
+     TrackTools v3r19, TrackUtils v1r28
+  . Adapted to migration of track classes to TrackKernel
+
+- In GlobalReco v6r23, RichRecTrackTools v1r13, TrackCheckers v4r7
+  . Fix WIN32 warnings
+
+- In TrackCheckers v4r7, TrackMonitors v1r11
+  . Replace endreq by endmsg
+
+- In MuonID v7r0, MuonPIDChecker v4r0, GlobalReco v6r23, LumiAlgs v2r2,
+     RichRecMCTools v2r23, RichRecTrackTools v1r13, PatVelo v3r15,
+     TsaAlgorithms v3r11, TrackMatching v2r23, TrackCheckers v4r7,
+     TrackExtrapolators v2r22, TrackFitter v2r35, TrackIdealPR v2r17,
+     TrackMonitors v1r11, TrackProjectors v2r23, TrackTools v3r19, 
+     TrackUtils v1r28, VeloRecMonitors v1r10
+  . Remove obsolete file <package>_dll.cpp, no longer needed from Gaudi v21r2
 
 </PRE><H1><A NAME=v7r3>2009-07-01 RecSys v7r3</A></H1><PRE>
-
 This version uses Gaudi v21r2 and LHCb v27r3.
 
 - Packages modified: CaloReco v4r20, GlobalReco v6r22, TrackFitEvent v3r23,
