@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.30 2009-06-26 09:22:33 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.31 2009-07-15 19:08:53 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -833,7 +833,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   if ( problem ) 
   {
-    Warning ( "The problem with combinatorics has been occured" ) ; 
+    Warning ( "A problem with combinatorics has occured" ) ; 
     if ( !m_stopIncidentName.empty() ) 
     { incSvc()->fireIncident   ( Incident( name() , m_stopIncidentName ) ) ; }
   }
