@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.63 2009-07-10 07:20:25 graven Exp $
+# $Id: requirements,v 1.64 2009-07-15 13:04:19 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -50,11 +50,11 @@ use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
 ### Temporarily here...
-use  TCKData                v2r0    Hlt
-use HltConf                 v3r3    Hlt
-use HltCommon               v5r8p1  Hlt
+use TCKData                 v2r0    Hlt
+use HltCommon               v5r8p2  Hlt
+use HltConf                 v3r4    Hlt
 use HltGlobalMonitor        v2r5    Hlt
-use TCKUtils                v1r0p1    Hlt
+use TCKUtils                v1r2    Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 
