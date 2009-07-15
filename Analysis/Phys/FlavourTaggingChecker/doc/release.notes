@@ -1,16 +1,18 @@
-! $Id: release.notes,v 1.56 2009-07-05 21:21:55 musy Exp $
+! $Id: release.notes,v 1.57 2009-07-15 17:24:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v3r7 2009-07-15 ============
+
 ! 2009-07-05 - Marco Musy
  changes in py options for the cheated selection
  changes in BTaggingAnalysis.cpp and CheatedSelection.cpp
  rise version to v3r7
 
-!========================== FlavourTaggingChecker v3r6 2009-06-23 ===================
+!========================== FlavourTaggingChecker v3r6 2009-06-23 ===========
 ! 2009-04-24 - Marco Musy
   adapt for changes in the Event Model Event/xml/Tagger.xml where
   std::vector&lt;LHCb::Particle&gt; becomes std::vector&lt;LHCb::Particle*&gt;
