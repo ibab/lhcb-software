@@ -1,9 +1,10 @@
-// $Id: L0MuonAlg.cpp,v 1.22 2009-01-30 08:29:02 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.23 2009-07-15 20:22:28 graven Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
 
 #include "L0MuonAlg.h"
+#include "SubstituteEnvVarInPath.h"
 
 // Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
@@ -38,12 +39,6 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
 
   m_muonBuffer = 0;
 
-  m_configfile="L0MuonKernel.xml";
-  if( NULL != getenv("PARAMFILESROOT") )
-  {
-    m_configfile  = getenv( "PARAMFILESROOT" ) ;
-    m_configfile += "/data/L0MuonKernel.xml"  ;
-  }
 
   m_foiXSize.push_back(4); // 0-> Xfoi in M1
   m_foiXSize.push_back(5); // 1-> Xfoi in M2
@@ -57,7 +52,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 3-> Yfoi in M4
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
-  declareProperty("ConfigFile"     , m_configfile);
+  declareProperty("ConfigFile"     , m_configfile= "$PARAMSFILEROOT/data/L0MuonKernel.xml")  ;
   declareProperty("IgnoreM1"       , m_ignoreM1 = false );
   declareProperty("IgnoreM2"       , m_ignoreM2 = false );
   declareProperty("ForceM3"        , m_forceM3  = false );
@@ -93,7 +88,7 @@ StatusCode L0MuonAlg::initialize()
   // Instanciate the MuonTrigger Units and Registers
   L0Muon::RegisterFactory::selectInstance(0);
 
-  std::string xmlFileName = m_configfile;
+  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
   info() <<  "XML file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName);
   L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();

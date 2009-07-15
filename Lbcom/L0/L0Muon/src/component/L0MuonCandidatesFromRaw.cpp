@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.22 2009-02-20 09:16:21 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.23 2009-07-15 20:22:28 graven Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -6,6 +6,7 @@
 #include "L0MuonCandidatesFromRaw.h"
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
 #include "ProcessorKernel/RegisterFactory.h"
+#include "SubstituteEnvVarInPath.h"
 
 /// Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
@@ -27,15 +28,8 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   :GaudiAlgorithm(name, pSvcLocator)
  
 {
-  
-  m_configfile="L0MuonKernel.xml";
-  if( NULL != getenv("PARAMFILESROOT") )
-  {
-    m_configfile  = getenv( "PARAMFILESROOT" ) ;
-    m_configfile += "/data/L0MuonKernel.xml"  ;
-  }
 
-  declareProperty( "ConfigFile"     , m_configfile      );
+  declareProperty( "ConfigFile"     , m_configfile= "$PARAMFILESROOT/data/L0MuonKernel.xml" );
 
   declareProperty( "DisableTAE"     , m_disableTAE = false  );
 
@@ -58,7 +52,7 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   L0Muon::RegisterFactory::selectInstance(1);
 
   // Instanciate the MuonTrigger registers
-  std::string xmlFileName = m_configfile;
+  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
   info() <<  "XML config file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
   if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;

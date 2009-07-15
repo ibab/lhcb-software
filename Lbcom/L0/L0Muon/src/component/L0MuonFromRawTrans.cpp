@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.15 2008-12-15 10:25:01 cattanem Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.16 2009-07-15 20:22:28 graven Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -21,6 +21,7 @@
 #include "L0MuonKernel/L0MuonKernelFromXML.h"
 #include "ProcessorKernel/RegisterFactory.h"
 
+#include "SubstituteEnvVarInPath.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0MuonFromRawTrans
 //
@@ -38,13 +39,7 @@ L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
                                         ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  m_configfile="L0MuonKernel.xml";
-  if( NULL != getenv("PARAMFILESROOT") )
-  {
-    m_configfile  = getenv( "PARAMFILESROOT" ) ;
-    m_configfile += "/data/L0MuonKernel.xml"  ;
-  }
-  declareProperty( "ConfigFile" , m_configfile      );
+  declareProperty( "ConfigFile" , m_configfile="$PARAMFILESROOT/data/L0MuonKernel.xml" );
   declareProperty( "DumpErrors"  , m_dumpError=false      );
 
   
@@ -64,7 +59,7 @@ StatusCode L0MuonFromRawTrans::initialize() {
   debug() << "==> Initialize" << endmsg;
   L0Muon::RegisterFactory::selectInstance(2);
   // Instanciate the MuonTrigger registers
-  std::string xmlFileName = m_configfile;
+  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
   info() <<  "Configuration file is " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
 
