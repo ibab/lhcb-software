@@ -95,7 +95,15 @@ class NextEvent:
         self.appMgr = am
     def __call__(self) :
         self.appMgr.run(1)
-        return  self.appMgr.evtSvc()['/Event'] != None
+        if self.appMgr.evtSvc()['/Event'] : return True
+        return False
+#==============================================================================
+class EventData :
+    def __init__(self, evtSvc) :
+        self.evtSvc = evtSvc
+    def __getitem__(self, location) :
+        if self.evtSvc[location] :
+            return self.evtSvc[location]
 #==============================================================================
 class PartPropSvc:
     def __init__(self, am) :
