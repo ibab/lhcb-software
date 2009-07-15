@@ -1,6 +1,0 @@
-target_directory = ${CMTINSTALLAREA}/TCK
-MANIFEST_VERSION = ${MOOREVERSION}
-
-manifest ::  
-	mkdir -p $(target_directory)
-	test -f ${HLTTCKROOT}/manifest/MOORE_$(MANIFEST_VERSION) && cp ${HLTTCKROOT}/manifest/MOORE_$(MANIFEST_VERSION) $(target_directory)/manifest; true
