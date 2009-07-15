@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.19 2009-07-09 09:14:07 graven Exp $
+#$Id: requirements,v 1.20 2009-07-15 19:44:36 graven Exp $
 #============================================================================
 # Created    : 2008-01-21
 # Maintainer : Bruno Souza de Paula	 
@@ -15,16 +15,18 @@ include_path none
 #============================================================================
 use GaudiAlg            v*
 
+use AIDA                v*   LCG_Interfaces
+use Boost               v*   LCG_Interfaces
+
 
 use HltEvent            v*    Event
-use L0Event		v*    Event
+use L0Event     		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
 
 use TrackInterfaces     v*    Tr
 
-use Boost        v*   LCG_Interfaces
 #============================================================================
 # Component library building rule
 #============================================================================
