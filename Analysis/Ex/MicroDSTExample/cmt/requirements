@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.16 2009-07-15 07:17:41 jpalac Exp $
+#$Id: requirements,v 1.17 2009-07-15 12:56:31 jpalac Exp $
 #============================================================================
 # Created    : 2008-09-23
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           MicroDSTExample
-version           v2r7
+version           v2r8
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,6 +17,7 @@ branches          cmt doc options python job scripts
 use   MicroDSTConf           v*    MicroDST
 use   MicroDSTAlgorithm      v*    MicroDST
 use   PhysSelPython          v*    PhysSel
+use   AnalysisPython         v*    Phys
 include_path      none
 
 #============================================================================
