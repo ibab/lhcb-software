@@ -4,6 +4,7 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!======================== GiGaCnv v18r6p1 2009-07-15 =========================
 ! 2009-06-10 - Gloria CORTI
  - Fix warning of unused variable. At the same time change "log" to "msg"
    and "ednreq" to "endmsg
