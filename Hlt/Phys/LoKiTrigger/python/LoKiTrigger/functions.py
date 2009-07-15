@@ -289,33 +289,36 @@ RVCutVal    = LoKi.FunctorFromFunctor  ( _vv  , bool )
 
 
 TrSOURCE       = LoKi.Tracks.SourceTES 
+TrTES          = LoKi.Tracks.SourceTES 
 TrSOURCEDIRECT = LoKi.Tracks.SourceDirect 
 
 TrEMPTY        = LoKi.Functors.Empty ('LHCb::Track*') ()
 TrSIZE         = LoKi.Functors.Size  ('LHCb::Track*') ()
 
 RVSOURCE       = LoKi.RecVertices.SourceTES 
+RVTES          = LoKi.RecVertices.SourceTES 
 RVSOURCEDIRECT = LoKi.RecVertices.SourceDirect 
 
 RVEMPTY        = LoKi.Functors.Empty ('LHCb::RecVertex*') ()
 RVSIZE         = LoKi.Functors.Size  ('LHCb::RecVertex*') ()
 
-
+# =============================================================================
 ## Hlt1 stuff 
 TrSELECTION = LoKi.Hlt1.TrSelection 
 TrREGISTER  = LoKi.Hlt1.TrRegister
-TrTES       = LoKi.Hlt1.TrTES
+TrPUT       = LoKi.Hlt1.TrRegister
+TrINPUT     = LoKi.Hlt1.TrTESInput
 RvSELECTION = LoKi.Hlt1.RvSelection 
 RvREGISTER  = LoKi.Hlt1.RvRegister
-RvTES       = LoKi.Hlt1.RvTES
+RvPUT       = LoKi.Hlt1.RvRegister
+RvINPUT     = LoKi.Hlt1.RvTESInput
 TrUPGRADE   = LoKi.Hlt1.TrUpgrade
 TrMATCH     = LoKi.Hlt1.TrMatch
 TrMATCH2    = LoKi.Hlt1.TrMatch2
 VxMAKER     = LoKi.Hlt1.VxMaker 
 VxUPGRADE   = LoKi.Hlt1.VxUpgrade
 
-
-
+# =============================================================================
 # ## Simple way to create the 'smart' function from the regular function.
 def info ( key , fun , update = False ) :
     """

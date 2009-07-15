@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.8 2009-07-12 15:59:11 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.9 2009-07-15 16:31:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -56,7 +56,19 @@ namespace LoKi
      *  @see LoKi::FilterAlg
      *  @see LoKi::ICoreFactory 
      */
-    virtual StatusCode decode() ;
+    virtual StatusCode decode  () ;
+    // ========================================================================
+    /** define the code 
+     *  @see LoKi::FilterAlg
+     *  @see LoKi::ICoreFactory 
+     */
+    virtual StatusCode defineCode () ;
+    // ========================================================================
+    /** define the stream 
+     *  @see LoKi::FilterAlg
+     *  @see LoKi::ICoreFactory 
+     */
+    virtual StatusCode setCode ( const LoKi::Types::FCuts& cut ) ; // functor
     // ========================================================================
   public:                                                // LoKi::IHltUnit part 
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: Hlt1.h,v 1.3 2009-07-13 19:02:49 ibelyaev Exp $
+// $Id: Hlt1.h,v 1.4 2009-07-15 16:31:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -30,8 +30,8 @@ namespace LoKi
     // ========================================================================
     /** @class TrSelection
      *  simple functor which acts as a source for the tracks
-     *  Tracks are extracted from IHltDataSvc
-     *  @see IHltDataSvc
+     *  Tracks are extracted from Hlt::IData
+     *  @see Hlt::IData
      *  @see LoKi::IHltUnit
      *  @see LoKi::Cuts::TsSELECTION 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -80,8 +80,8 @@ namespace LoKi
     // ========================================================================
     /** @class TrRegister
      *  simple functor which register its input in Hlt Store 
-     *  Tracks are copied to IHltDataSvc
-     *  @see IHltDataSvc
+     *  Tracks are copied to Hlt::IData
+     *  @see Hlt::IData
      *  @see LoKi::IHltUnit
      *  @see LoKi::Cuts::TrREGISTER
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -127,8 +127,8 @@ namespace LoKi
     // ========================================================================
     /** @class RvSelection 
      *  simple functor which acts as a source for the vertices
-     *  Vertices are extracted from IHltDataSvc
-     *  @see IHltDataSvc
+     *  Vertices are extracted from Hlt::IData
+     *  @see Hlt::IData
      *  @see LoKi::IHltUnit
      *  @see LoKi::Cuts::RvSELECTION
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -177,7 +177,7 @@ namespace LoKi
     // ========================================================================
     /** @class RvRegister
      *  simple functor which register its input in Hlt Store 
-     *  Vertices are copied to IHltDataSvc
+     *  Vertices are copied to Hlt::IData
      *  @see IHltDataSvc
      *  @see LoKi::IHltUnit
      *  @see LoKi::Cuts::RvREGISTER
@@ -222,33 +222,33 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    /** @class TrTES
+    /** @class TrTESInput
      *
      *  The special Hlt1 "source-from-TES"
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-07-13
      */
-    class TrTES
+    class TrTESInput
       : public LoKi::BasicFunctors<LHCb::Track*>::Source 
     {
     public: 
       // ======================================================================
       /// constructor from the key and cuts 
-      TrTES ( const std::string&         key  , 
-              const LoKi::Types::TrCuts& cuts ) ;
+      TrTESInput ( const std::string&         key  , 
+                   const LoKi::Types::TrCuts& cuts ) ;
       /// constructor from the key aand cuts 
-      TrTES ( const LoKi::Types::TrCuts& cuts ,
-              const std::string&         key  ) ;
+      TrTESInput ( const LoKi::Types::TrCuts& cuts ,
+                   const std::string&         key  ) ;
       /// constructor from the key and cuts 
-      TrTES ( const std::string&         key  ) ;
+      TrTESInput ( const std::string&         key  ) ;
       /// MANDATORY: virtual destructor
-      virtual ~TrTES () ;                      // MANDATORY: virtual destructor
+      virtual ~TrTESInput () ;                      // MANDATORY: virtual destructor
       // ======================================================================
     public:
       // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  TrTES* clone() const ; 
+      virtual  TrTESInput* clone() const ; 
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ()  const ;
       /// OPTIONAL: the nice printout
@@ -276,33 +276,33 @@ namespace LoKi
       // ======================================================================      
     };   
     // ========================================================================
-    /** @class RvTES
+    /** @class RvTESInput
      *
      *  The special Hlt1 "source-from-TES"
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-07-13
      */
-    class RvTES
+    class RvTESInput
       : public LoKi::BasicFunctors<LHCb::RecVertex*>::Source 
     {
     public: 
       // ======================================================================
       /// constructor from the key and cuts 
-      RvTES ( const std::string&         key  , 
-              const LoKi::Types::RVCuts& cuts ) ;
+      RvTESInput ( const std::string&         key  , 
+                   const LoKi::Types::RVCuts& cuts ) ;
       /// constructor from the key aand cuts 
-      RvTES ( const LoKi::Types::RVCuts& cuts ,
-              const std::string&         key  ) ;
+      RvTESInput ( const LoKi::Types::RVCuts& cuts ,
+                   const std::string&         key  ) ;
       /// constructor from the key and cuts 
-      RvTES ( const std::string&         key  ) ;
+      RvTESInput ( const std::string&         key  ) ;
       /// MANDATORY: virtual destructor
-      virtual ~RvTES () ;                      // MANDATORY: virtual destructor
+      virtual ~RvTESInput () ;                 // MANDATORY: virtual destructor
       // ======================================================================
     public:
       // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  RvTES* clone() const ; 
+      virtual  RvTESInput* clone() const ; 
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ()  const ;
       /// OPTIONAL: the nice printout

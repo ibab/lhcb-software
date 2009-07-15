@@ -1,4 +1,4 @@
-// $Id: HltTool.h,v 1.1 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: HltTool.h,v 1.2 2009-07-15 16:31:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTTOOL_H 
 #define LOKI_HLTTOOL_H 1
@@ -145,7 +145,7 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /** constructor fofrom tool type/name & "public" flag
+      /** constructor from tool type/name & "public" flag
        *  @param tool the tool type/name 
        *  @param flag public?
        */

@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.6 2009-07-12 15:59:11 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.7 2009-07-15 16:31:47 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -152,13 +152,43 @@ StatusCode LoKi::HltUnit::decode()
   /// lock Hlt Register Service 
   Hlt::IRegister::Lock     lock2 ( regSvc() , this         ) ;
   /// decode & initialize the functors 
+  StatusCode sc = defineCode () ;
+  Assert ( sc.isSuccess() , "Unable to defineCode for functor!" ) ;
+  // =========================================================================
+  return StatusCode::SUCCESS ;  
+}
+// ============================================================================
+/*  define the code 
+ *  @see LoKi::FilterAlg
+ *  @see LoKi::ICoreFactory 
+ */
+// ============================================================================
+StatusCode LoKi::HltUnit::defineCode () 
+{
+  // ==========================================================================
+  /// decode & initialize the functors 
   StatusCode sc = i_decode<LoKi::Hybrid::ICoreFactory> ( m_cut ) ;
   Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
   // =========================================================================
   return StatusCode::SUCCESS ;  
 }
 // ============================================================================
-/* query interface trick (please do not abuse it!)
+/* define the stream 
+ *  @see LoKi::FilterAlg
+ *  @see LoKi::ICoreFactory 
+ */
+// ============================================================================
+StatusCode LoKi::HltUnit::setCode ( const LoKi::Types::FCuts& cut ) 
+{
+  m_cut = cut ;
+  //
+  if ( msgLevel ( MSG::DEBUG ) )
+  { debug() << "Set new Code: " << m_cut << endmsg ; }
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  query interface trick (please do not abuse it!)
  *  @see IInterface::queryInterface 
  *  @param iid  the unique interface ID 
  *  @param ppvi pointer to the interface 

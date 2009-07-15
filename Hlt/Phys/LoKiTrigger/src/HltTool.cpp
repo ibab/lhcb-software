@@ -1,4 +1,4 @@
-// $Id: HltTool.cpp,v 1.1 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: HltTool.cpp,v 1.2 2009-07-15 16:31:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // =============================================================================
@@ -60,7 +60,7 @@ LoKi::Hlt1::TrackFunction::TrackFunction
 std::ostream& LoKi::Hlt1::TrackFunction::fillStream  ( std::ostream& s ) const 
 {
   return s << "LoKi.Hlt1.TrackFunction('" 
-           << tool() << "," << ( pub() ? "True" : "False" ) << ")" ;  
+           << tool() << "'," << ( pub() ? "True" : "False" ) << ")" ;  
 }
 // =============================================================================
 
@@ -88,7 +88,7 @@ std::ostream& LoKi::Hlt1::TrackBiFunction::fillStream
 ( std::ostream& s ) const 
 {
   return s << "LoKi.Hlt1.TrackBiFunction('" 
-           << tool() << "," << ( pub() ? "True" : "False" ) << ")" ;  
+           << tool() << "'," << ( pub() ? "True" : "False" ) << ")" ;  
 }
 // =============================================================================
 
@@ -117,7 +117,7 @@ std::ostream& LoKi::Hlt1::MatchTVelo::fillStream
 ( std::ostream& s ) const 
 {
   return s << "LoKi.Hlt1.MatchTVelo('" 
-           << tool() << "," << ( pub() ? "True" : "False" ) << ")" ;  
+           << tool() << "'," << ( pub() ? "True" : "False" ) << ")" ;  
 }
 // =============================================================================
 
@@ -145,7 +145,7 @@ std::ostream& LoKi::Hlt1::TrackVertexFunction::fillStream
 ( std::ostream& s ) const 
 {
   return s << "LoKi.Hlt1.TrackVertexFunction('" 
-           << tool() << "," << ( pub() ? "True" : "False" ) << ")" ;  
+           << tool() << "'," << ( pub() ? "True" : "False" ) << ")" ;  
 }
 // =============================================================================
 
