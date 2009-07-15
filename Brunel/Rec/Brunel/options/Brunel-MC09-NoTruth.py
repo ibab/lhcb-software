@@ -6,10 +6,10 @@
 #   gaudirun.py Brunel-MC09-NoTruth.py <someDataFiles>.py
 ##############################################################################
 
-from Configurables import Brunel
+from GaudiKernel.ProcessJobOptions import importOptions
+importOptions("$APPCONFIGOPTS/Brunel/MC09-NoTruth.py")
 
-Brunel().InputType = "DIGI" # implies also Brunel().Simulation = True
-Brunel().DigiType  = "Minimal"
+from Configurables import Brunel
 Brunel().DataType  = "MC09"
 
 ##############################################################################

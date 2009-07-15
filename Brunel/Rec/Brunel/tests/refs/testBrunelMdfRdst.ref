@@ -1,6 +1,8 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/mdfrdst.py'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/mdfrdst.py'
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/options/Brunel-MC09-WithTruth.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r8/options/Brunel/MC09-WithTruth.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r8/options/Brunel/MC09-WithTruth.py'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/options/Brunel-MC09-WithTruth.py'
 # applying configuration of Brunel
 # WARNING: WithMC = True, but OutputType = 'DIGI'. Forcing WithMC = False
@@ -59,7 +61,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r3
-                                          running on lxbuild120.cern.ch on Tue Jul 14 11:47:07 2009
+                                          running on lxbuild120.cern.ch on Wed Jul 15 16:33:33 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -71,7 +73,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/Output
@@ -176,7 +178,7 @@ PreFitForward.F...   INFO  Upstream fit
 PreFitForward.F...   INFO  Number of fit iterations: 2
 PreFitForward.F...   INFO  Max 0 outliers removed with outliers at chi2 > 9
 PreFitForward.F...   INFO  State z positions at:
-PreFitForward.F...   INFO  beam line, first measurement, 990, 2165, 9450, 11900
+PreFitForward.F...   INFO  beam line, first/last measurement, default reference positions
 PreFitForward.F...   INFO ==================================================
 PreFitForward        INFO
 PreFitForward        INFO =========== PreFitForward Settings ============
@@ -194,7 +196,7 @@ FitForward.Fitter    INFO  Upstream fit
 FitForward.Fitter    INFO  Number of fit iterations: 2
 FitForward.Fitter    INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitForward.Fitter    INFO  State z positions at:
-FitForward.Fitter    INFO  beam line, first measurement, 990, 2165, 9450, 11900
+FitForward.Fitter    INFO  beam line, first/last measurement, default reference positions
 FitForward.Fitter    INFO ==================================================
 FitForward           INFO
 FitForward           INFO =========== FitForward Settings ============
@@ -215,7 +217,7 @@ FitSeed.Fitter       INFO  Upstream fit
 FitSeed.Fitter       INFO  Number of fit iterations: 2
 FitSeed.Fitter       INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitSeed.Fitter       INFO  State z positions at:
-FitSeed.Fitter       INFO  first measurement, 7500, 9450, 11900
+FitSeed.Fitter       INFO  first/last measurement, default reference positions
 FitSeed.Fitter       INFO ==================================================
 FitSeed              INFO
 FitSeed              INFO =========== FitSeed Settings ============
@@ -232,7 +234,7 @@ PreFitMatch.Fitter   INFO  Upstream fit
 PreFitMatch.Fitter   INFO  Number of fit iterations: 2
 PreFitMatch.Fitter   INFO  Max 0 outliers removed with outliers at chi2 > 9
 PreFitMatch.Fitter   INFO  State z positions at:
-PreFitMatch.Fitter   INFO  beam line, first measurement, 990, 2165, 9450, 11900
+PreFitMatch.Fitter   INFO  beam line, first/last measurement, default reference positions
 PreFitMatch.Fitter   INFO ==================================================
 PreFitMatch          INFO
 PreFitMatch          INFO =========== PreFitMatch Settings ============
@@ -248,7 +250,7 @@ FitMatch.Fitter      INFO  Upstream fit
 FitMatch.Fitter      INFO  Number of fit iterations: 2
 FitMatch.Fitter      INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitMatch.Fitter      INFO  State z positions at:
-FitMatch.Fitter      INFO  beam line, first measurement, 990, 2165, 9450, 11900
+FitMatch.Fitter      INFO  beam line, first/last measurement, default reference positions
 FitMatch.Fitter      INFO ==================================================
 FitMatch             INFO
 FitMatch             INFO =========== FitMatch Settings ============
@@ -275,7 +277,7 @@ PreFitDownstrea...   INFO  Upstream fit
 PreFitDownstrea...   INFO  Number of fit iterations: 2
 PreFitDownstrea...   INFO  Max 0 outliers removed with outliers at chi2 > 9
 PreFitDownstrea...   INFO  State z positions at:
-PreFitDownstrea...   INFO  beam line, first measurement, 990, 2165, 9450
+PreFitDownstrea...   INFO  beam line, first/last measurement, default reference positions
 PreFitDownstrea...   INFO ==================================================
 PreFitDownstream     INFO
 PreFitDownstream     INFO =========== PreFitDownstream Settings ============
@@ -291,7 +293,7 @@ FitDownstream.F...   INFO  Upstream fit
 FitDownstream.F...   INFO  Number of fit iterations: 2
 FitDownstream.F...   INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitDownstream.F...   INFO  State z positions at:
-FitDownstream.F...   INFO  beam line, first measurement, 990, 2165, 9450
+FitDownstream.F...   INFO  beam line, first/last measurement, default reference positions
 FitDownstream.F...   INFO ==================================================
 FitDownstream        INFO
 FitDownstream        INFO =========== FitDownstream Settings ============
@@ -307,7 +309,7 @@ PatVeloTT.Fitter     INFO  Upstream fit
 PatVeloTT.Fitter     INFO  Number of fit iterations: 1
 PatVeloTT.Fitter     INFO  Max 1 outliers removed with outliers at chi2 > 9
 PatVeloTT.Fitter     INFO  State z positions at:
-PatVeloTT.Fitter     INFO  first measurement, 990, 2165
+PatVeloTT.Fitter     INFO  first/last measurement, default reference positions
 PatVeloTT.Fitter     INFO ==================================================
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
@@ -319,7 +321,7 @@ FitVeloTT.Fitter     INFO  Upstream fit
 FitVeloTT.Fitter     INFO  Number of fit iterations: 2
 FitVeloTT.Fitter     INFO  Max 1 outliers removed with outliers at chi2 > 9
 FitVeloTT.Fitter     INFO  State z positions at:
-FitVeloTT.Fitter     INFO  beam line, first measurement, 990, 2165
+FitVeloTT.Fitter     INFO  beam line, first/last measurement, default reference positions
 FitVeloTT.Fitter     INFO ==================================================
 FitVeloTT            INFO
 FitVeloTT            INFO =========== FitVeloTT Settings ============
@@ -348,7 +350,7 @@ FitVelo.Fitter       INFO  Upstream fit
 FitVelo.Fitter       INFO  Number of fit iterations: 2
 FitVelo.Fitter       INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitVelo.Fitter       INFO  State z positions at:
-FitVelo.Fitter       INFO  beam line, first measurement
+FitVelo.Fitter       INFO  beam line, first/last measurement, default reference positions
 FitVelo.Fitter       INFO ==================================================
 FitVelo              INFO
 FitVelo              INFO =========== FitVelo Settings ============
@@ -531,7 +533,7 @@ MuonIDAlg.myMuI...   INFO  Downstream fit
 MuonIDAlg.myMuI...   INFO  Number of fit iterations: 1
 MuonIDAlg.myMuI...   INFO  Max 0 outliers removed with outliers at chi2 > 9
 MuonIDAlg.myMuI...   INFO  State z positions at:
-MuonIDAlg.myMuI...   INFO  first measurement, 11900
+MuonIDAlg.myMuI...   INFO  first/last measurement
 MuonIDAlg.myMuI...   INFO ==================================================
 MuonIDAlg            INFO  -----> DLL  new (binned-integrated method)
 RecoPROTOSeq         INFO Member list: ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, with context 'Offline'
@@ -837,7 +839,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.09 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
