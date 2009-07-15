@@ -9,7 +9,7 @@ class MCAssociator :
         self.verbose = verbose
     def __call__(self, p) :
         mcp = self.mcAssoc.relatedMCP(p)
-        if self.verbose and (mcp == None) :
+        if self.verbose and mcp :
             print "Found no associated MCP"
         return mcp
 #==============================================================================
@@ -18,7 +18,7 @@ class MassRes:
         self.assocFun = assocFun
     def __call__(self, particle) :
         mcp = self.assocFun(particle)
-        if (mcp != None) :
+        if mcp :
             return particle.momentum().mass()-mcp.momentum().mass()
 #==============================================================================
 class TauRes:
@@ -28,10 +28,10 @@ class TauRes:
         self.mcTauFunc = mcTauFunc
     def __call__(self, particle) :
         mcp = self.assocFun(particle)
-        if (mcp != None) :
+        if mcp :
             tau = self.tauFunc(particle)
             mcTau = self.mcTauFunc(mcp)
-            if tau != None and mcTau != None :
+            if tau and mcTau :
                 return tau-mcTau
 #==============================================================================
 class Mass:
@@ -59,7 +59,7 @@ class PropTime:
         self.fitter = fitter
     def __call__(self, particle) :
         vertex = self.bv(particle)
-        if (vertex != None) :
+        if vertex :
             tau = Double(-999999/SystemOfUnits.picosecond)
             error = Double(0.)
             chi2=Double(0.)
@@ -70,7 +70,7 @@ class BestTo:
     def __init__(self, table) :
         self.table = table
     def __call__(self, frm) :
-        if (self.table !=None) :
+        if self.table :
             range = self.table.relations(frm)
             if ( not range.empty()) :
                 return range.back().to()
@@ -81,9 +81,9 @@ class HistoPlotter :
         self.functor = functor
         self.key = keyGetter
     def __call__(self, obj) :
-        if obj != None :
+        if obj :
             value = self.functor(obj)
-            if value != None :
+            if value :
                 if type(self.histos) == list or type(self.histos) == dict :
                     self.histos[self.key(obj)].fill(value)
                 else :
@@ -133,6 +133,6 @@ class ContainerRecursiveLoop :
             obj = Helpers.deSmartRef(obj)
             self.functor(obj)
             daughters = self.recursor(obj)
-            if daughters != None and not daughters.empty() :
+            if daughters and not daughters.empty() :
                 self.__call__(daughters)
 #==============================================================================

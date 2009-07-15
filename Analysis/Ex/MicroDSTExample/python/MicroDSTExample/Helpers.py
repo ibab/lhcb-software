@@ -62,7 +62,7 @@ def deSmartRef(T) :
 #==============================================================================
 def properTime(particle, vertex, fitter) :
     tau =Double(-999999/SystemOfUnits.picosecond)
-    if (vertex != None) :
+    if vertex :
         error = Double(0.)
         chi2=Double(0.)
         fitter.fit(vertex, particle, tau, error, chi2)
@@ -76,11 +76,11 @@ def pid(particle) :
 #==============================================================================
 def properTimeMC(particle) :
     tau = -99999.
-    if ( particle == None or pid(particle) == -99000000 ) : return tau
+    if  particle or pid(particle) == -99000000  : return tau
     originVertex = particle.originVertex()
-    if None == originVertex : return tau
+    if originVertex : return tau
     decayVtx = decayVertex(particle)
-    if (decayVtx !=None) :
+    if decayVtx :
         decayPos = decayVtx.position()
         originPos = originVertex.position()
         flightVector = XYZVector( decayPos.x()-originPos.x(),
