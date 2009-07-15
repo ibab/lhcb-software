@@ -5,7 +5,7 @@
 #   gaudirun.py Boole-MC09-NoTruth.py <someDataFiles>.py
 ##############################################################################
 
-from Gaudi.Configuration import *
+from GaudiKernel.ProcessJobOptions import importOptions
 importOptions("$APPCONFIGROOT/options/Boole/MC09-NoTruth.py")
 
 ##############################################################################
