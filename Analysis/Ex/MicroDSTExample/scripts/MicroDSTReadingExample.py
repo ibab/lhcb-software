@@ -15,7 +15,7 @@ aida2root = gbl.Gaudi.Utils.Aida2ROOT.aida2root
 import PartProp.Service
 #==============================================================================
 def safeFill(histo, value) :
-    if value != None : fill(histo, value)
+    if value : fill(histo, value)
 
 #==============================================================================
 def printHelp():
@@ -195,17 +195,17 @@ while ( nextEvent() ) :
     nPrimaryVertices += PVs.size()
     safeFill( nPVPlot, PVs.size() )
     mcParts = evtSvc[mcParticlePath]
-    if mcParts != None : nMCEvents += 1
+    if mcParts : nMCEvents += 1
     
     for PV in PVs : safeFill(vertexZ, PV.position().z() )
     
     particles = evtSvc[particlePath]
     flavTags = evtSvc[flavTagPath]
-    if flavTags != None :
+    if flavTags :
         for tag in flavTags :
             safeFill( omegaPlots[tag.category()], tag.omega() )
 
-    if (particles!=None):
+    if particles:
         nRecEvents+=1
         nParticles += particles.size()
         bestVertexFun = Functors.BestTo(evtSvc[stdVertexAssocPath])
