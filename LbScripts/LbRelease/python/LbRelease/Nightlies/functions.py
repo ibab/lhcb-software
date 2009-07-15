@@ -30,9 +30,12 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
 
 def _fixPerms(path):
     """ change file/dir permissions to be able to remove them """
-    mode = S_IMODE(os.stat(path)[ST_MODE])
-    if (mode & S_IRWXU) != S_IRWXU:
-        os.chmod(path, mode | S_IRWXU)
+    try:
+        mode = S_IMODE(os.stat(path)[ST_MODE])
+        if (mode & S_IRWXU) != S_IRWXU:
+            os.chmod(path, mode | S_IRWXU)
+    except OSError:
+        pass
 
 def rmtree(path, ignore_errors=False, onerror=None):
     """ change permissions of all files and directories and call shutil.rmtree """
