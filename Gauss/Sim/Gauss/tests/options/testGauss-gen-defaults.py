@@ -43,7 +43,6 @@ HistogramPersistencySvc().OutputFile = idFile+'-histos.root'
 
 tape = OutputStream("GaussTape")
 tape.Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
-ApplicationMgr( OutStream = [tape] )
 
 
 GenMonitor = GaudiSequencer( "GenMonitor" )
