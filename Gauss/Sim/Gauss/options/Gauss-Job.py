@@ -11,7 +11,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts = 100
+nEvts = 5
 LHCbApp().EvtMax = nEvts
 
 #--Set name of output files for given job (uncomment the lines)
