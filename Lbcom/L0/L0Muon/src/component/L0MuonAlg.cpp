@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.23 2009-07-15 20:22:28 graven Exp $
+// $Id: L0MuonAlg.cpp,v 1.24 2009-07-16 08:44:52 graven Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -52,7 +52,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 3-> Yfoi in M4
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
-  declareProperty("ConfigFile"     , m_configfile= "$PARAMSFILEROOT/data/L0MuonKernel.xml")  ;
+  declareProperty("ConfigFile"     , m_configfile= "$PARAMFILESROOT/data/L0MuonKernel.xml")  ;
   declareProperty("IgnoreM1"       , m_ignoreM1 = false );
   declareProperty("IgnoreM2"       , m_ignoreM2 = false );
   declareProperty("ForceM3"        , m_forceM3  = false );
