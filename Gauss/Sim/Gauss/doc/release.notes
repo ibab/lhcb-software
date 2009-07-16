@@ -4,6 +4,20 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-07-16 - Gloria CORTI
+ - Put protection in Gauss() so that is LHCbApp.EvtMax is not set Gauss will
+   not run as only generating events is working and reading from a file (for
+   monitor or to separate the simulation phase) has not yet been implemented.
+ - Put protection in Gauss() enforcing only ONE OutStream in ApplicationMgr. 
+ - Modify options testGauss-gen-10evts-defaults.py and 
+   testGauss-gen-defaults.py to remove setting output stream that is not
+   necessary as done in Gauss()
+ - Modify Gauss-MC09.opts to remove import of Gauss.py no longer necessary
+   and pick default configuration for MC09 production also for beam parameters
+ - Gauss.py is now only a template to show what mustbe done. It will NOT
+   work by itself without setting databases' tags
+ - Reset number of events to 5 in Gauss-Job.py for tests
+
 ! 2009-07-15 - Gloria CORTI
  - Change major version of AppConfig as the previous one is incompatible
    and can no longer be used
@@ -17,9 +31,12 @@
                options: Gauss.py Gauss-Job.py 
                         BCMSimulation.opts (to include units)         
    . REMOVED : Gauss.opts Generator.opts Simulation.opts SimGeometry.opts
-               RichExtendedInfo.opts Common.opts
+               RichExtendedInfo.opts Common.opts Monitor.opts
+               Gauss-2008-WithSpillOver.py
                GaussSimPhase.opts ( not yet ported to Gauss() )
+               MergeWithMinBias.opts ( not yet ported to Gauss() )
    . REPLACED: GenStandAlone.opts by GenStandAlone.py
+               CollisionsCenterOfCavern.opts by CollisionsCenterOfCavern.py
 
    For setting beam parameters use files in $APPCONFIGOPTS/Gauss as example
    to see how to set Gauss() properties
@@ -36,11 +53,13 @@
               FixedLumi-5.opts
 
    The following still work (imported or as argument of gaudirun.py):
-              BeamScintillators.opts
-
-   The following works only if given as argument of 
-         gaudirun.py --post-option=POST_OPTIONS
-              DRaysOn-HT.opts DRaysOn-LT.opts MuonLowEnergy.opts           
+              BeamScintillators.opts EvtGenAlone.opts MonitorInDetail.opts
+	
+   The following works only if given to gaudirun.py via --post-option
+              DRaysOn-HT.opts DRaysOn-LT.opts MuonLowEnergy.opts 
+              CaloOnly.opts DebugG4Track.opts  
+   for example:
+     > gaudirun.py ... --post-option=importOptions("DRaysOn-HT.opts") 
 
 
 ! 2009-06-24 - Silvia Miglioranzi
