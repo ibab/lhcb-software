@@ -27,7 +27,7 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["StrippingBd2KstarMuMu_10HzFilter"]
+tuple.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
@@ -56,7 +56,7 @@ mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolR
 # Selection
 #
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = []
+StrippingConf().ActiveLines = ['Bd2KstarMuMu_10Hz']
 StrippingConf().OutputType = "NONE"
 
 from Configurables import DaVinci
@@ -65,7 +65,7 @@ from Configurables import DaVinci
 #
 # DaVinci
 #
-DaVinci().EvtMax = 2000
+DaVinci().EvtMax = 1000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
