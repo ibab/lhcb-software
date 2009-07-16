@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r2 2009-07-16 ====================
+
 ! 2009-07-10 - Rob Lambert
  - Changed Bd2K*MuMu selection to use FilterDesktop instances, 
      not StrippingMembers.

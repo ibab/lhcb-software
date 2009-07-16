@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v1r2 2009-07-16 ===================
+
 ! 2009-07-10 - Anton Poluektov
    * Fixed the bug due to ModeOR=TRUE in the global sequencer for ETC output. 
      (after the positive decision for one of the selections, all the rest was 
