@@ -1,5 +1,5 @@
 package OTDAQ
-version v7r5p1
+version v7r5p2
 
 branches OTDAQ cmt dict doc src options Event
 
@@ -7,6 +7,7 @@ use GaudiAlg    v*
 use DAQEvent	v*      Event
 use DigiEvent   v*      Event
 use OTDet	v*	Det
+use LoKiCore    v*      Phys
 use GSL         v*      LCG_Interfaces
 
 #---- Copy header  files to the InstallArea
@@ -22,7 +23,3 @@ apply_pattern     reflex_dictionary                             \
                   headerfiles=$(OTDAQROOT)/dict/OTDAQDict.h     \
                   selectionfile=$(OTDAQROOT)/dict/OTDAQDict.xml \
                   options="-U__MINGW32__"
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

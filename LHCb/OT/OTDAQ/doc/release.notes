@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2009-07-16 - Marco Cattaneo
+ - Add missing dependency on LoKiCore
+ - Remove Gaudi v21r1 hack from requirements
+
 !======================= OTDAQ v7r5p1 2009-06-02 =======================
 ! 2009-06-02 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
