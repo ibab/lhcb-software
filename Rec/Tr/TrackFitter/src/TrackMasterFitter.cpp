@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.68 2009-07-10 11:55:14 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.69 2009-07-16 10:58:34 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -163,9 +163,11 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   if( track.nodes().empty() || m_makeNodes ) {
     sc = makeNodes( track,pid );
     if ( sc.isFailure() )
-    {
       return failure( "unable to make nodes from the measurements" );
-    }
+  } else {
+    sc = updateRefVectors( track ) ;
+    if ( sc.isFailure() )
+      return failure( "unable to make nodes from the measurements" );
   }
 
   if (m_useSeedStateErrors) {
@@ -225,7 +227,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( m_debugLevel ) debug() << "Iteration # " << iter << endmsg;
     
     // update reference trajectories with smoothed states
-    if( iter > 1 ) {
+    // TODO: combine this with the projection of the residuals which now resides in TrackKalmanFilter
+    if( iter > 1) {
       sc = updateRefVectors( track );
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
