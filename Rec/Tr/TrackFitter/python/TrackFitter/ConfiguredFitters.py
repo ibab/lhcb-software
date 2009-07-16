@@ -115,7 +115,7 @@ def ConfiguredPrefitter( Name = "DefaultEventFitter",
                                         SimplifiedGeometry=SimplifiedGeometry,
                                         NoDriftTimes=True,
                                         LiteClusters=LiteClusters)
-    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.NumberFitIterations = 1
     eventfitter.Fitter.MaxNumberOutliers = 0
     eventfitter.Fitter.ErrorY2 = 10000
     return eventfitter
