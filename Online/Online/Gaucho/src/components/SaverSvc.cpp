@@ -178,11 +178,18 @@ StatusCode SaverSvc::initialize() {
     //declareInfo("SAVESETLOCATION/"+*it, m_file[i],"Filename of latest saveset");
     
     std::string *fileName = processMgr->fileNamePointer();
+    std::string name;
+    name=*fileName;
     
     //declareInfo("SAVESETLOCATION/"+*it, *fileName,"Filename of latest saveset");
-    std::string infoName = m_tmpPart+"/SAVESETLOCATION/"+*it;
     
-    declareInfo(infoName, *fileName, "Filename of latest saveset");
+    //evh comment next 2 lines & replace 16/07/2009
+    //std::string infoName = m_tmpPart+"/SAVESETLOCATION/"+*it;        
+    //declareInfo(infoName, *fileName, "Filename of latest saveset");
+    //fileName = "SAVESETLOCATION/......................................................";
+    std::string infoName = m_tmpPart+"/SaverSvc/SAVESETLOCATION";
+    m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char *) name.c_str());
+
     
     //declareInfo("filesize",m_fileSize,"Filesize of latest saveset");
   

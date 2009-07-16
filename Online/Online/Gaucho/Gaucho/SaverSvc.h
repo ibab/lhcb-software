@@ -7,6 +7,7 @@
 //#include "GaudiKernel/IMonitorSvc.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "dis.hxx"
 
 class IIncidentSvc;
 class ProcessManager;
@@ -67,7 +68,8 @@ private:
   std::string m_saveDir;
   int m_saveDiff;
   bool m_enablePostEvents;
-    
+  
+  DimService* m_dimSvcSaveSetLoc;  
   };
 }  //end namespace LHCb  
 
