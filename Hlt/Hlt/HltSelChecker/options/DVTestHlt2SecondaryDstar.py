@@ -6,7 +6,7 @@
  #  @date 2007-07-20
 ###
 #--------------------------------------------------------------
-signal = "Dstar"
+signal = "SecondaryDstar"
 #
 #
 #
@@ -61,4 +61,4 @@ DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/PromptDst-27363000-lum2-fixedL0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/s/spradlin/DC06_DST/DC06-phys-v4-lumi2/11463000-Bd_DstX_2body/SelDstar2D0Pi_D02HH.00.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
