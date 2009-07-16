@@ -45,6 +45,8 @@ private:
   void normaliseSS(std::vector<double>& );
   double pol2(double x, double a0, double a1);
   double pol3(double x, double a0, double a1, double a2);
+  double m_P0mu, m_P1mu, m_P0e, m_P1e, m_P0k, m_P1k; 
+  double m_P0ks, m_P1ks, m_P0ps, m_P1ps;  
 
 };
 #endif // NNETTOOL_NNETTOOL_MLP_H

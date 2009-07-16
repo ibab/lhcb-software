@@ -31,6 +31,18 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
                             const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
+
+  declareProperty( "P0_mu_scale", m_P0mu =  9.084315e-01);
+  declareProperty( "P1_mu_scale", m_P1mu = -8.764311e-01);
+  declareProperty( "P0_e_scale",  m_P0e  =  7.937505e-01);
+  declareProperty( "P1_e_scale",  m_P1e  = -7.197138e-01);
+  declareProperty( "P0_k_scale",  m_P0k  =  9.839528e-01);
+  declareProperty( "P1_k_scale",  m_P1k  = -9.846077e-01);
+  declareProperty( "P0_ks_scale", m_P0ks =  1.004943);
+  declareProperty( "P1_ks_scale", m_P1ks = -1.017668);
+  declareProperty( "P0_ps_scale", m_P0ps =  1.147873);
+  declareProperty( "P1_ps_scale", m_P1ps = -1.241866);
+    
 }
 NNetTool_MLP::~NNetTool_MLP(){}
 StatusCode NNetTool_MLP::initialize() { return StatusCode::SUCCESS; }
@@ -78,7 +90,7 @@ double NNetTool_MLP::MLPm(std::vector<double>& par) {
   NNmuon net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
 
-  double pn = 1.0-pol2(rnet, 9.084315e-01, -8.764311e-01);// <=========
+  double pn = 1.0-pol2(rnet, m_P0mu, m_P1mu);// <=========
 
   debug()<<"entering muon: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
@@ -94,7 +106,7 @@ double NNetTool_MLP::MLPe(std::vector<double>& par) {
   NNele net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
 
-  double pn = 1.0-pol2(rnet, 7.937505e-01, -7.197138e-01);// <=========
+  double pn = 1.0-pol2(rnet, m_P0e, m_P1e);// <=========
 
   debug()<<"entering ele: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
@@ -110,7 +122,7 @@ double NNetTool_MLP::MLPk(std::vector<double>& par ) {
   NNkaon net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
 
-  double pn = 1.0-pol2(rnet, 9.839528e-01, -9.846077e-01 );// <=========
+  double pn = 1.0-pol2(rnet, m_P0k, m_P1k);// <=========
 
   debug()<<"entering k: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
@@ -128,7 +140,7 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par) {
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
                           par.at(5),par.at(6),par.at(7) );
   
-  double pn = 1.0-pol2(rnet, 1.004943, -1.017668);// <=========
+  double pn = 1.0-pol2(rnet, m_P0ks, m_P1ks);// <=========
 
   debug()<<"entering kS: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
@@ -147,7 +159,7 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
                           par.at(5),par.at(6),par.at(7) );
 
-  double pn = 1.0-pol2(rnet, 1.147873, -1.241866 );// <=========
+  double pn = 1.0-pol2(rnet, m_P0ps, m_P1ps);// <=========
 
   debug()<<"entering pS: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
