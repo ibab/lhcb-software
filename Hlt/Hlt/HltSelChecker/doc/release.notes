@@ -20,7 +20,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-07-16 - Patrick Koppenburg
- - Change data sample fro D*. Now clearly uses prompt D*
+ - Change data samples for D*. Now one test for prompt and one for secondary charm
 
 ! 2009-07-09 - Patrick Koppenburg
  - Merge two B->J/psi Ks tests.
