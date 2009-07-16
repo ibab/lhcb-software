@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.9 2009-07-15 17:49:25 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-07-16 16:25:58 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -70,8 +70,8 @@ class Gauss(LHCbConfigurableUser):
        ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,
                                 3.82*SystemOfUnits.cm ]
        ,"BeamSize"          : [ 0.038*SystemOfUnits.mm, 0.038*SystemOfUnits.mm ]
-       ,"BunchCrossingRate" : 11.245*SystemOfUnits.kilohertz
-       ,"LumiPerBunch"      : 0.116*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
+       ,"CrossingRate"      : 11.245*SystemOfUnits.kilohertz
+       ,"Luminosity"        : 0.116*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
        ,"TotalCrossSection" : 97.2*SystemOfUnits.millibarn
       }
     
@@ -239,7 +239,7 @@ class Gauss(LHCbConfigurableUser):
             simWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"
         simWriter.RequireAlgs.append( 'GaussSequencer' )
 
-        ApplicationMgr().OutStream.append(simWriter)
+        ApplicationMgr().OutStream = [ simWriter ]
         FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 
@@ -302,7 +302,10 @@ class Gauss(LHCbConfigurableUser):
 ##         if "Gen" not in self.getProp("MainSequence") :
 ##             log.warning("No generator phase. Need input file")
 ##             return
-        
+
+        if self.evtMax() <= 0:
+            raise RuntimeError("Generating events but selected '%s' events. Use LHCbApp().EvtMax "%self.evtMax())
+
         gaussGeneratorSeq = GaudiSequencer( "Generator", IgnoreFilterPassed = True )
         gaussSeq = GaudiSequencer("GaussSequencer")
         gaussSeq.Members += [ gaussGeneratorSeq ]
@@ -812,8 +815,8 @@ class Gauss(LHCbConfigurableUser):
                                     FixedLuminosityForRareProcess,
                                     FixedNInteractions )
     
-        lumiPerBunch = self.getProp("LumiPerBunch")
-        crossingRate = self.getProp("BunchCrossingRate")
+        lumiPerBunch = self.getProp("Luminosity")
+        crossingRate = self.getProp("CrossingRate")
         totCrossSection = self.getProp("TotalCrossSection")
 
         # For standard fixed luminosity in main event
