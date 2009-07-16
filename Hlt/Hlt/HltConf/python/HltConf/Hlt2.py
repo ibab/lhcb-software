@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -132,15 +132,15 @@ class Hlt2Conf(LHCbConfigurableUser):
         from MuonID import ConfiguredMuonIDs
         from Configurables import MuonRec, MuonIDAlg
         cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-#        MuonIDSeq = cm.getMuonIDSeq()
-        HltMuonID = MuonIDAlg().clone('HltMuonID')
-        HltMuonID.TrackLocation = self.getProp("Hlt2Tracks")
-        HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" 
-        HltMuonID.MuonTrackLocation = "Hlt/Track/Muon"
-        
-        HltMuonIDSeq = Sequence('HltMuonIDSeq')
-        HltMuonIDSeq.Members += [ "MuonRec", HltMuonID ]
+        HltMuonIDAlg = cm.configureMuonIDAlg("HltMuonIDAlg")
+        HltMuonIDAlg.TrackLocation = "Hlt/Track/Long"
+        HltMuonIDAlg.MuonIDLocation = "Hlt/Muon/MuonPID"
+        HltMuonIDAlg.MuonTrackLocation = "Hlt/Track/Muon"
+        HltMuonIDSeq = GaudiSequencer("HltMuonIDSeq")
+        HltMuonIDSeq.Members += ["MuonRec", HltMuonIDAlg]
+
         return HltMuonIDSeq
+
 #
 # Calo
 #
