@@ -19,8 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-16 - Patrick Koppenburg
+ - Change data sample fro D*. Now clearly uses prompt D*
+
 ! 2009-07-09 - Patrick Koppenburg
- - Merge tow B->J/psi Ks tests.
+ - Merge two B->J/psi Ks tests.
 
 ! 2009-07-08 - Patrick Koppenburg
  - Add "MCTupleToolEventType" to EventTuple
