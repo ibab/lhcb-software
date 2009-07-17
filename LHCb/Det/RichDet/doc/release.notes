@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-07-17 - Antonis Papanestis
+ - Small change in DeRichSphMirror to pick up the Surface location
+   from a user parameter (rather than trying to guess it).
+
 !======================== RichDet v12r0 2009-06-29 ===========================
 ! 2009-06-26 - Antonis Papanestis
  - New transform from the global frame to the photodetector panel frame that 
