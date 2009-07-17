@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-07-17 - Gloria CORTI
+ - NOTE THAT Particle Guns and Machine Induces Background events (LSS and TCT)
+   CANNOT BE GENERATED with this version of Gauss as they are. 
+   The Gauss() configurable need to be extended and their options as shown
+   in example and in the DecFiles need to be modified. 
+   To prevent accidentally generaing them their packages are temporarly 
+   switched off in this release
+
 ! 2009-07-16 - Gloria CORTI
  - Put protection in Gauss() so that is LHCbApp.EvtMax is not set Gauss will
    not run as only generating events is working and reading from a file (for

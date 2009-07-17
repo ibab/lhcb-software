@@ -54,8 +54,8 @@ use SimComponents      v*     Sim            -no_auto_imports
 #== From GAUSS project =====================================================
 
 #-- Generator
-use ParticleGuns       v*     Gen            -no_auto_imports 
-use LbMIB              v*     Gen            -no_auto_imports
+#use ParticleGuns       v*     Gen            -no_auto_imports # TEMPORARLY OFF
+#use LbMIB              v*     Gen            -no_auto_imports # TEMPORARLY OFF
 use LbPythia           v*     Gen            -no_auto_imports
 
 #-- Not built on Windows
