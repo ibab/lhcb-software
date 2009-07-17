@@ -40,6 +40,14 @@ public:
   void DrawPEOrigin();
   std::vector<bool> DecodeRichHpdReflectionFlag() const;
 
+  /// Sorting operator
+  inline bool operator< ( const RichG4Hit & hit ) const
+  { 
+    // sort by z coord of emission point
+    // doesn't really matter what, as long as it is predictable
+    return ( this->GetPhotEmisPt().z() < hit.GetPhotEmisPt().z() );
+  }
+
 private:
 
   G4double m_edep;           ///< energy deposited in the Si Det.
@@ -61,11 +69,11 @@ private:
                                // c4f10 =1, cf4=2. aerogel=10-25,Gasqw=6-7(rich1,rich2)
                                // , hpdqw=8, filtergeneric=4,
                                // filterd263=5, nitrogen=30-31(rich1,rich2).
-  G4ThreeVector m_PhotEmisPt;  ///< emiss pt coord of the photon.
+  G4ThreeVector m_PhotEmisPt;   ///< emiss pt coord of the photon.
   G4double m_PhotEnergyAtProd;  ///< Photon energy in MeV at Ckv Production.
   G4double m_ThetaCkvAtProd;    ///< Cherenkov Angle Theta (rad) at Ckv production.
   G4double m_PhiCkvAtProd;      ///< Cherenkov Angle Phi (rad) at Ckv production.
-  G4double m_ChTrackTotMom;   ///< Total momentum (MeV) of the mother of Photon at Ckv Production.
+  G4double m_ChTrackTotMom;     ///< Total momentum (MeV) of the mother of Photon at Ckv Production.
   G4ThreeVector m_ChTrackMomVect; ///< Three Momentum of the mother of Photon at Ckv Production.
   // Only with RichVerboseTag mode
   G4double m_RichHitGlobalTime;    ///< Global time for RichHit.

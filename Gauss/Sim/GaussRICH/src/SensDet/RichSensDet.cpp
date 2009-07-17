@@ -1,11 +1,11 @@
-// $Id: RichSensDet.cpp,v 1.23 2008-10-24 09:39:28 seaso Exp $
-// Include files 
+// $Id: RichSensDet.cpp,v 1.24 2009-07-17 13:46:13 jonrob Exp $
+// Include files
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 
 // Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
@@ -34,8 +34,6 @@
 #include "RichPhotoElectron.h"
 
 
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichSensDet
 //
@@ -49,12 +47,11 @@ DECLARE_TOOL_FACTORY( RichSensDet );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichSensDet::RichSensDet
-( const std::string& type   ,
-  const std::string& name   ,
-  const IInterface*  parent )
-  : GiGaSensDetBase     ( type , name , parent )
-  , G4VSensitiveDetector( name  )
+RichSensDet::RichSensDet( const std::string& type   ,
+                          const std::string& name   ,
+                          const IInterface*  parent )
+  : G4VSensitiveDetector ( name  ),  
+    GiGaSensDetBase      ( type , name , parent )
 {
 
   IDataProviderSvc* detSvc;
@@ -69,7 +66,7 @@ RichSensDet::RichSensDet
     m_RichHC.reserve(m_NumberOfHCInRICH);
 
     G4String HCName;
-    
+
 
     for(int ihc=0; ihc<m_RichG4HCName->RichHCSize(); ++ihc ) {
       HCName=(m_RichG4HCName->RichHCName(ihc));
@@ -118,13 +115,13 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
   G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
-  // Now get the charged track (ie. photoelectron or backscattered electron or the mip)  
+  // Now get the charged track (ie. photoelectron or backscattered electron or the mip)
   // which created the  hit.
   G4Track* aTrack = aStep->GetTrack();
   // Check that tracks are charged - GC & SE April 2006
   if( aTrack->GetDefinition()->GetPDGCharge() == 0.0 ) {
     return false;
-  }  
+  }
 
   G4ThreeVector CurPEOrigin;
   // log << MSG::VERBOSE <<" Track Def  and creator proc "
@@ -136,10 +133,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
   if(((aTrack->GetDefinition() == G4Electron::Electron()) ||
       (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron())) &&
-     ( (aCreatorProcessName  == "RichHpdPhotoelectricProcess" ) || 
+     ( (aCreatorProcessName  == "RichHpdPhotoelectricProcess" ) ||
        ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess")) )
   {
-    CurPEOrigin = aTrack->GetVertexPosition() ;     
+    CurPEOrigin = aTrack->GetVertexPosition() ;
   }
 
   MsgStream log( msgSvc() , name() );
@@ -227,18 +224,18 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurHpdReflectionFlag=0;
   G4ThreeVector CurHpdQwPhotIncidentPosition;
 
-  
-  
+
+
   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
   GaussTrackInformation* aRichPETrackInfo
-      = (GaussTrackInformation*)aUserTrackinfo;
+    = (GaussTrackInformation*)aUserTrackinfo;
 
   if( ( (aTrack->GetDefinition() == G4Electron::Electron()) ||
         (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
-       (( aCreatorProcessName  == "RichHpdPhotoelectricProcess")  ||
-        ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess") ) ) {
-     if(aRichPETrackInfo)
-     {
+      (( aCreatorProcessName  == "RichHpdPhotoelectricProcess")  ||
+       ( aCreatorProcessName  == "RichHpdSiEnergyLossProcess") ) ) {
+    if(aRichPETrackInfo)
+    {
       if(aRichPETrackInfo->detInfo())
       {
         RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
@@ -261,17 +258,17 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
             CurElectronBackScatFlag = aPEInfo->BackscatteredPeFlag();
             CurPhotoElectricFlag = aPEInfo->PhotoElectricFlag();
             CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
-            
-            
+
+
             log << MSG::DEBUG << "Now in ProcessHits()  "
-              <<" Track id of charged tk opt phot pe "
+                <<" Track id of charged tk opt phot pe "
                 << CurOptPhotMotherChTrackID <<"   "
                 <<  CurOptPhotID<<"   "
                 << aTrack->GetTrackID() << endreq;
-	          if( CurElectronBackScatFlag > 0) {
-               log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
-		           << CurElectronBackScatFlag << endreq;
-	          }
+            if( CurElectronBackScatFlag > 0) {
+              log << MSG::DEBUG << "Now in RichSensDet ProcessHits() backscattered eln  "
+                  << CurElectronBackScatFlag << endreq;
+            }
 
             if(  aPEInfo->  VerbosePeTagFlag() ) {
               aRichVerboseFlag =1;
@@ -291,17 +288,17 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
               CurHpdQwPhotIncidentPosition=aPEInfo->HpdQWExtPhotIncidentPosition();
-              
+
             }
-            
+
 
 
           }
         }
       }
-     }
+    }
   }
-  
+
 
 
   G4int CurPETrackID=aTrack->GetTrackID();
@@ -358,31 +355,31 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   //  G4cout<<" RichsensDet Backsct eln Mothertrackid currentTrackid "<<CurOptPhotMotherChTrackID<<"  "<<CurPETrackID<<G4endl;
   //}
 
-     if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
-      newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
+  if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
+  newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
                                                   // like Charged track -> Cherenkov photon -> photoelectron-> hit
-                                                   //  photoelectron-> backscattered electron->hit.
+  //  photoelectron-> backscattered electron->hit.
 
-      //     if( CurOptPhotMotherChTrackID == 0) { // this line fixed as below on Oct-24-2008 by SE to avoid mc hit without mc tracks.
-     if( CurOptPhotMotherChTrackID <= 0) {           // this is for mip particle and the possible backscatted electrons from them.
-       newHit ->setTrackID(CurPETrackID);
-       if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
-     }
+  //     if( CurOptPhotMotherChTrackID == 0) { // this line fixed as below on Oct-24-2008 by SE to avoid mc hit without mc tracks.
+  if( CurOptPhotMotherChTrackID <= 0) {           // this is for mip particle and the possible backscatted electrons from them.
+    newHit ->setTrackID(CurPETrackID);
+    if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
+  }
 
-     //    if( CurElectronBackScatFlag > 0 ) {
-     // newHit ->setTrackID(CurPETrackID); //  photoelectron-> backscattered electron->hit.
-     // if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
-     // }
-    
-  
-  
+  //    if( CurElectronBackScatFlag > 0 ) {
+  // newHit ->setTrackID(CurPETrackID); //  photoelectron-> backscattered electron->hit.
+  // if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
+  // }
 
-  
+
+
+
+
   //  if ( CurOptPhotMotherChTrackID >=0 ) {
-    // Charged track -> Cherenkov photon -> photoelectron-> hit 
+  // Charged track -> Cherenkov photon -> photoelectron-> hit
   //  newHit ->setTrackID(CurOptPhotMotherChTrackID);
   // } else {
-    // Charged track -> hit
+  // Charged track -> hit
   //   newHit ->setTrackID(CurPETrackID);
   //   if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);
   //  }
@@ -391,14 +388,14 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if ( CurrentRichDetNumber == 0 ) {
     if ( CurrentRichDetSector == 0 ) {
       CurrentRichCollectionSet=0;
-    } else { 
-      CurrentRichCollectionSet=1; 
+    } else {
+      CurrentRichCollectionSet=1;
     }
   } else if ( CurrentRichDetNumber == 1 ) {
     if ( CurrentRichDetSector == 0 ) {
       CurrentRichCollectionSet=2;
-    } else { 
-      CurrentRichCollectionSet=3; 
+    } else {
+      CurrentRichCollectionSet=3;
     }
   }
 
@@ -437,29 +434,29 @@ void RichSensDet::Initialize(G4HCofThisEvent*  HCE) {
 
   MsgStream log( msgSvc() , name() );
 
-   log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
+  log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
       <<SensitiveDetectorName<<"  "<<collectionName[0]
       <<"  "<<collectionName[1]<<"  "
-  	      <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
+      <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
 
   // G4String CurCollName;
   RichG4HitsCollection* CurColl;
   m_RichHC.clear();
-    
-     for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
 
-      CurColl =
-         new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
+  for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
 
-         m_RichHC.push_back(CurColl);
+    CurColl =
+      new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
 
-      if(m_HpdHCID[ihhc] < 0  ){
-         m_HpdHCID[ihhc] = G4SDManager::GetSDMpointer()->
-         GetCollectionID(collectionName[ihhc]);
-      }
+    m_RichHC.push_back(CurColl);
 
-        HCE->AddHitsCollection( m_HpdHCID[ihhc] , m_RichHC[ihhc]  );
-     }
+    if(m_HpdHCID[ihhc] < 0  ){
+      m_HpdHCID[ihhc] = G4SDManager::GetSDMpointer()->
+        GetCollectionID(collectionName[ihhc]);
+    }
+
+    HCE->AddHitsCollection( m_HpdHCID[ihhc] , m_RichHC[ihhc]  );
+  }
 
 }
 
@@ -469,21 +466,21 @@ void RichSensDet::Initialize(G4HCofThisEvent*  HCE) {
 //=============================================================================
 //void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
 
-  //  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
-  //  G4cout<<" richsensdet collectionname endevent "<<ihid<<"  "<<collectionName[ihid]<<"  "<< ihid
-  //   <<"  "<< m_HpdHCID[ihid] << G4endl;
-  //  
-  //
-  //  if(m_HpdHCID[ihid] < 0  )
-  //  {
-  //    m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
-  //      GetCollectionID(collectionName[ihid]);
-  //  }
-  //  G4cout<<" richsensdet collectionname "<<ihid<<"  "<<collectionName[ihid]<<"   "<< m_HpdHCID[ihid]<< G4endl;
-  //  
-  //
-  //    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
-  // }
+//  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
+//  G4cout<<" richsensdet collectionname endevent "<<ihid<<"  "<<collectionName[ihid]<<"  "<< ihid
+//   <<"  "<< m_HpdHCID[ihid] << G4endl;
+//
+//
+//  if(m_HpdHCID[ihid] < 0  )
+//  {
+//    m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
+//      GetCollectionID(collectionName[ihid]);
+//  }
+//  G4cout<<" richsensdet collectionname "<<ihid<<"  "<<collectionName[ihid]<<"   "<< m_HpdHCID[ihid]<< G4endl;
+//
+//
+//    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
+// }
 
 //}
 

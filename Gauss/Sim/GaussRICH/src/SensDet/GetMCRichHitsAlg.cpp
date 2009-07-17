@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.35 2009-03-26 21:49:02 robbep Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.36 2009-07-17 13:46:12 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -51,8 +51,10 @@ StatusCode GetMCRichHitsAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get RichDet objects
-  m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
-  m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
+  if ( richIsActive(Rich::Rich1) )
+    m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  if ( richIsActive(Rich::Rich2) )
+    m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   return sc;
 }
@@ -74,7 +76,11 @@ StatusCode GetMCRichHitsAlg::execute()
   // get hitscollections from GiGa
   *gigaSvc() >> hitscollections;
 
-  if ( 0 != hitscollections )
+  // relations betwen RichG4Hit and MCRichHit
+  G4HitTable * relationTable = new G4HitTable();
+  put ( relationTable, g4HitToMCRichHitRelLoc() );
+
+  if ( NULL != hitscollections )
   {
 
     // note this key is need for consistency with MCRichOpticalPhoton converter
@@ -113,22 +119,24 @@ StatusCode GetMCRichHitsAlg::execute()
       // reserve space
       totalSize += numberofhits;  // count the total num of hits in all collections.
 
-      // CRJ : Disclaimer ! Be careful when editting the following as there is
-      // a hidden dependency on the position of the MCRichHit in the container and
-      // the associated g4hit. There MUST be one MCRichHit added in sequence for
-      // each non-NULL g4hit
-
       // now loop through the hits in the current collection.
       for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
-        // Pointer to G4 hit modif rwl 22.01.08
+        // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
         if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
+
+        // Rich detector information
+        const Rich::DetectorType rich = g4hit->detectorType();
+        if ( !richIsActive(rich) ) { continue; }
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
         // add to container
         hits->push_back( mchit );
+
+        // store relation between G4 hit and this MCRichHit
+        relationTable->relate( g4hit, mchit );
 
         // hit position
         mchit->setEntry( Gaudi::XYZPoint(g4hit->GetGlobalPos()) );
@@ -139,8 +147,7 @@ StatusCode GetMCRichHitsAlg::execute()
         // time of flight
         mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
-        // Rich detector information
-        const Rich::DetectorType rich = g4hit->detectorType();
+        // Store Rich detector information
         mchit->setRich( rich );
         if ( !mchit->richInfoValid() )
         {
@@ -155,7 +162,7 @@ StatusCode GetMCRichHitsAlg::execute()
           std::ostringstream mess;
           mess << "track ID > 0 and unknown radiator ID " << radID
                << " -> MCRichHit history incomplete";
-          Warning ( mess.str(), StatusCode::SUCCESS );
+          Warning ( mess.str(), StatusCode::SUCCESS ).ignore();
         }
 
         // store radiator info

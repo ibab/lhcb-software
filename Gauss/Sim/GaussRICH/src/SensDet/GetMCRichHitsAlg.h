@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.10 2009-03-26 21:49:02 robbep Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.11 2009-07-17 13:46:12 jonrob Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -106,6 +106,7 @@ private:
 
   /// MCParticles location
   std::string m_mcParticles ;
+
 private:
 
   /// Print a monitoring statistic

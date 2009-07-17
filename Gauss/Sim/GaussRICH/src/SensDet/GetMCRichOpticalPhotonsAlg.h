@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.4 2009-03-26 21:49:47 robbep Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.h,v 1.5 2009-07-17 13:46:12 jonrob Exp $
 #ifndef SENSDET_GETMCRICHOPTICALPHOTONSALG_H
 #define SENSDET_GETMCRICHOPTICALPHOTONSALG_H 1
 
@@ -26,7 +26,6 @@ public:
 
   virtual ~GetMCRichOpticalPhotonsAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 

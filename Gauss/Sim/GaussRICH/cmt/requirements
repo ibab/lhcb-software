@@ -3,7 +3,7 @@
 # Maintainer : Sajan Easo
 #============================================================================
 package GaussRICH
-version v9r4p2
+version v9r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,10 +13,10 @@ branches          cmt src doc options
 #============================================================================
 use GaussTools    v*   Sim
 use AIDA          v*   LCG_Interfaces
-
 use MCEvent       v*   Event
 use RichKernel    v*   Rich
 use RichDet       v*   Det
+use Relations     v*   Kernel
 
 # CRJ : Needed for Linker algs. To be removed when they are.
 use  LinkerEvent  v*   Event

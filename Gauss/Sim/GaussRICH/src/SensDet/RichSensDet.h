@@ -1,4 +1,4 @@
-// $Id: RichSensDet.h,v 1.5 2008-03-28 13:25:32 seaso Exp $
+// $Id: RichSensDet.h,v 1.6 2009-07-17 13:46:13 jonrob Exp $
 #ifndef       RichSensDet_H
 #define       RichSensDet_H 1
 
@@ -23,6 +23,7 @@ class G4HCofThisEvent;
 
 class RichSensDet: virtual public GiGaSensDetBase
 {
+
 public:
 
   /** standard constructor

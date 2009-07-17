@@ -1,4 +1,4 @@
-// $Id: GetMCRichInfoBase.h,v 1.4 2008-06-02 13:00:18 jonrob Exp $
+// $Id: GetMCRichInfoBase.h,v 1.5 2009-07-17 13:46:12 jonrob Exp $
 #ifndef SENSDET_GetMCRichInfoBase_H
 #define SENSDET_GetMCRichInfoBase_H 1
 
@@ -35,6 +35,10 @@
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichPoissonEffFunctor.h"
 
+// Relations
+#include "Relations/Relation1D.h"
+//#include "Relations/RelationWeighted1D.h"
+
 // local
 #include "RichG4HitCollName.h"
 #include "RichG4Hit.h"
@@ -59,6 +63,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode sysExecute();    ///< Algorithm system execute
 
 protected:
 
@@ -102,10 +107,30 @@ protected:
   /// data location in TES (const)
   const std::string & dataLocationInTES() const { return m_dataToFill; }
 
+  /// Which RICH is activate
+  inline bool richIsActive( const Rich::DetectorType rich ) const
+  {
+    return m_RICHes[rich];
+  }
+
+  /// Location of RichG4Hit to MCRichHit relations
+  inline std::string g4HitToMCRichHitRelLoc() const
+  {
+    return "/Event/MC/Rich/RichG4HitToMCRichHitRelation";
+  }
+
 private:
 
   /// Fill collection data
   void getRichG4CollectionRange();
+
+protected:
+
+  /// Relations between RichG4Hits and MCRichHits
+  typedef LHCb::Relation1D<const RichG4Hit*,LHCb::MCRichHit> G4HitTable;
+
+  /// Get the MCRichHit associated to a given RichG4Hits
+  const LHCb::MCRichHit * getMCRichHit( const RichG4Hit* g4hit );
 
 private:
 
@@ -115,6 +140,8 @@ private:
   mutable IGiGaKineCnvSvc*   m_gigaKineCnvSvc;           ///< Pointer to GiGaKine Service
   mutable RichG4HitCollName* m_RichG4HitCollectionName;  ///< G4 hit collections for RICH
   std::vector<int> m_colRange;                           ///< Collection data
+  std::vector<bool> m_RICHes;                            ///< The RICH detectors to create data objects for
+  G4HitTable * m_relationTable;                          ///< G4 hit to MCRichHit relation table
 
 protected:
 

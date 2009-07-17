@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.15 2009-03-26 21:49:47 robbep Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.16 2009-07-17 13:46:12 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -40,19 +40,6 @@ GetMCRichOpticalPhotonsAlg::GetMCRichOpticalPhotonsAlg( const std::string& name,
 GetMCRichOpticalPhotonsAlg::~GetMCRichOpticalPhotonsAlg() { }
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode GetMCRichOpticalPhotonsAlg::initialize()
-{
-  const StatusCode sc = GetMCRichInfoBase::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
-
-  // add custom initialisations here
-
-  return sc;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode GetMCRichOpticalPhotonsAlg::execute()
@@ -76,7 +63,6 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
     photons->reserve( mcHits->size() );
 
     // note this key is need for consistency with MCRichHit converter
-    unsigned int globalKey = 0;
     ++m_nEvts; // Count events
     for ( int iii=0; iii < RichG4HitCollectionName()->RichHCSize(); ++iii )
     {
@@ -99,21 +85,20 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
       const int numberofhits = myCollection->entries();
 
-      // CRJ : Disclaimer. Be careful when editting the following as there is
-      // a hidden dependency on the globalkey value between the various GetXXX 
-      // algorithms. globalkey MUST be incremented once for each non-NULL g4hit
-
-      //convert hits
+      // convert hits
       for ( int ihit = 0; ihit < numberofhits; ++ihit )
       {
         // Pointer to G4 hit
         const RichG4Hit * g4hit = (*myCollection)[ihit];
         if ( !g4hit ) { Error( "Null RichG4Hit pointer" ); continue; }
 
+        // Rich detector information
+        const Rich::DetectorType rich = g4hit->detectorType();
+        if ( !richIsActive(rich) ) { continue; }
+
         // Find associated MCRichHit
-        if ( globalKey >= mcHits->size() ) { return Error( "Global Key mis-match" ); }
-        const MCRichHit * mchit = (*mcHits)[globalKey];
-        if ( !mchit ) { return Error( "Null MCRichHit pointer" ); }
+        const MCRichHit * mchit = getMCRichHit(g4hit);
+        if ( !mchit ) continue;
 
         // Only create a photon for Cherenkov radiator hits
         if ( mchit->radiator() != Rich::InvalidRadiator )
@@ -122,7 +107,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
           // New optical photon object
           MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
           // insert in container, with same key as MCRichHit position in container
-          photons->insert( mcPhoton, globalKey );
+          photons->insert( mcPhoton, mchit->index() );
 
           // SmartRef to associated MCRichHit
           mcPhoton->setMcRichHit( mchit );
@@ -161,9 +146,6 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
           ++m_hitTally[mchit->radiator()];
 
         }
-
-        // increment key
-        ++globalKey;
 
       } // loop over g4 hits
 

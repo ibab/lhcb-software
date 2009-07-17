@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.h,v 1.3 2006-03-15 15:07:16 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.h,v 1.4 2009-07-17 13:46:13 jonrob Exp $
 #ifndef SENSDET_GetMCRichSegmentsAlg_H
 #define SENSDET_GetMCRichSegmentsAlg_H 1
 
@@ -26,7 +26,6 @@ public:
 
   virtual ~GetMCRichSegmentsAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 

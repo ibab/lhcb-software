@@ -4,6 +4,13 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2009-07-17 - Chris Jones
+ - Update the algorithms that create the various output data outputs to no
+   longer rely on the implicit ordering of the RichG4Hits to assoicate them
+   to MCRichHits. Instead, an explicit Relations object is created and used.
+ - Add job option "RichDetectors" to allow hits in a given Rich to be 
+   suppressed.
+
 !======================== GaussRICH v9r4p2 2009-07-15 ========================
 ! 2009-07-03 - Sajan Easo
     - Compilation warnings from several 'unused variables' fixed . 
