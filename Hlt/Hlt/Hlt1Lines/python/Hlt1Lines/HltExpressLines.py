@@ -12,11 +12,14 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) : 
         from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
+        from HltConf.HltDecodeRaw import DecodeVELO
         Line( 'VeloAlign'
             , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
             , prescale = self.prescale
             , postscale = self.postscale
-            , algos = [ PatVeloAlignTrackFilter('HltVeloAlignFilter') ] 
+            , algos = [ DecodeVELO
+                      , PatVeloAlignTrackFilter('HltVeloAlignFilter') 
+                      ] 
             )
 
         Line( 'XPress' 
