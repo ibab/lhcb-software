@@ -13,6 +13,9 @@
 ##-- 
 
 from Gaudi.Configuration import *
+from Configurables import DaVinci
+DaVinci().DataType = "DC06"
+DaVinci().InputType = "RDST"
 
 EventSelector().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00001896/RDST/0000/00001896_00000004_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",

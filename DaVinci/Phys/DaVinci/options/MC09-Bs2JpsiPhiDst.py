@@ -2,7 +2,9 @@
 #-- Contains event types : 
 #--   13144005 - 14 files - 212463 events - 61.11 GBytes
 
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
+from Configurables import DaVinci
+DaVinci().DataType = "MC09"
 
 EventSelector().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004879/0000/00004879_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",

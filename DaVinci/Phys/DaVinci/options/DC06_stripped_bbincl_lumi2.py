@@ -14,6 +14,8 @@
 """
 
 from Gaudi.Configuration import EventSelector
+from Configurables import DaVinci
+DaVinci().DataType = "DC06"
 
 EventSelector().Input   = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
