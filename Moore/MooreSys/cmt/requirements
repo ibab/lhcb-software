@@ -1,5 +1,5 @@
 package MooreSys
-version v7r2
+version v7r3
 
 branches doc cmt
 
@@ -8,18 +8,10 @@ branches doc cmt
 #=======================================================
 
 use  Moore                  v7r2    Hlt
-# backwards compatibility stub
-use  TCKData                v2r0    Hlt
 
 ### Temporarily here...
-use HltCommon               v5r8p2  Hlt
-use HltConf                 v3r4    Hlt
-use HltGlobalMonitor        v2r5    Hlt
 use TCKUtils                v1r2    Hlt
 
-use GaudiOnline             v2r30   Online
-use HltTCK                  v1r2    TCK
-use LoKiHlt                 v2r2    Phys
 
 
 
