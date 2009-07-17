@@ -22,7 +22,7 @@
 # |-L0                         = False
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
-# |-DataType                   = 'DC06'
+# |-DataType                   = 'MC09'
 # |-RedoMCLinks                = False
 # |-HistogramFile              = ''
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
@@ -80,8 +80,9 @@
 # MergedPi0Rec.EtCut = 2.*GeV;
 # <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/REC/REC_v7r4/Calo/CaloReco/options/MergedPi0Rec.opts'
 # <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/REC/REC_v7r4/Calo/CaloReco/options/CaloRecoOnDemand.opts'
-# Doing MuonID for DC06 and DST
-# WARNING: Redoing MC links enforced with DC06
+# Doing MuonID for MC09 and DST
+# MuonID WARNING: FOI tuning not ready for DATA=MC09,VERSION=def. Loading FOIfactor=1.200000
+# MuonID WARNING: new DLL parameters not tuned for DATA=MC09,VERSION=def. Loading values for DC06
 # No MainOptions specified. DaVinci() will import no options file!
 # Adding DST sequence
 # Append to Main Sequence has been called
@@ -109,8 +110,8 @@
 # |-L0                         = False
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
-# |-DataType                   = 'DC06'
-# |-RedoMCLinks                = True  (default: False)
+# |-DataType                   = 'MC09'
+# |-RedoMCLinks                = False
 # |-HistogramFile              = ''
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # applying configuration of DaVinciWriteDst
@@ -124,19 +125,18 @@
 # applying configuration of AnalysisConf
 # Applying Analysis configuration
 # /***** User AnalysisConf/AnalysisConf **************************************************************
-# |-DataType    = 'DC06'
-# |-RedoMCLinks = True  (default: False)
+# |-DataType    = 'MC09'
+# |-RedoMCLinks = False  (default: False)
 # |-Simulation  = True
 # \----- (End of User AnalysisConf/AnalysisConf) -----------------------------------------------------
 # WARNING: file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/LHCB/LHCB_v27r4/Calo/CaloDAQ/options/CaloDigitsOnDemand.opts' already included, ignored.
-# WARNING: Default tag requested for partition DDDB (using DC06-20081002)
-# WARNING: Default tag requested for partition LHCBCOND (using DC06-20081002)
+# WARNING: Default tag requested for partition DDDB (using MC09-20090602)
+# WARNING: Default tag requested for partition SIMCOND (using MC09-20090402-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to DaVinci version v23r3
-                                          running on lxplus206.cern.ch on Fri Jul 17 08:56:56 2009
+                                          running on lxplus202.cern.ch on Fri Jul 17 11:10:08 2009
 ====================================================================================================================================
-ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc                                         INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 ToolSvc.CondDBEntityResolver                                   INFO Initializing...
@@ -146,7 +146,7 @@ DetectorDataSvc                                             SUCCESS Detector des
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.38 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
 DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      }
 DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' }
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -188,13 +188,16 @@ ProtoPRecalibration                                            INFO Member list:
 COOLConfSvc                                                    INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                                                    INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                                                           INFO Using TAG "DC06-20081002"
-LHCBCOND                                                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND                                                       INFO Using TAG "DC06-20081002"
+DDDB                                                           INFO Using TAG "MC09-20090602"
+SIMCOND                                                        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
+SIMCOND                                                        INFO Using TAG "MC09-20090402-vc-md100"
 MuonIDSeq                                                      INFO Member list: MuonIDAlg
 MuonIDAlg                                                      INFO MuonIDAlg v7r0
-ONLINE_200806                                                  INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-200806.db/ONLINE"
-ONLINE_200806                                                  INFO Using TAG ""
+MagneticFieldSvc.MagToolRealDown                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c1.vp.cdf
+MagneticFieldSvc.MagToolRealDown                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.vp.cdf
+MagneticFieldSvc.MagToolRealDown                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.vp.cdf
+MagneticFieldSvc.MagToolRealDown                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.vp.cdf
+MagneticFieldSvc.MagToolRealDown                               INFO Map scaled by factor 1
 TransportSvc                                                   INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc                                                   INFO Recovery of geometry errors is  ENABLED
 ToolSvc.TrajOTProjector                                        INFO Use drifttime           = 1
@@ -214,9 +217,7 @@ MuonIDAlg.myMuIDTool.fitter                                    INFO ============
 MuonIDAlg                                                      INFO  -----> DLL  new (binned-integrated method)
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
-AnalysisInitSeq                                                INFO Member list: GaudiSequencer/RedoMCLinks
-RedoMCLinks                                                    INFO Member list: GaudiSequencer/KillMCLinks, TrackAssociator
-KillMCLinks                                                    INFO Member list: TESCheck/DaVinciEvtCheck, EventNodeKiller/DaVinciEvtNodeKiller, TrackAssociator
+AnalysisInitSeq                                                INFO Member list:
 DaVinciMainSequence                                            INFO Member list: GaudiSequencer/DstWriters
 DstWriters                                                     INFO Member list:
 MonitoringSequence                                             INFO Member list:
@@ -263,7 +264,7 @@ ToolSvc                                                        INFO Removing all
 ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.38 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.05 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -280,11 +281,6 @@ TimingAuditor.TIMER                                            INFO      UpdateM
 TimingAuditor.TIMER                                            INFO      ChargedProtoCombineDLLsAl|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO      RichPIDsFromProtos       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   AnalysisInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    RedoMCLinks                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     KillMCLinks               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      DaVinciEvtCheck          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      DaVinciEvtNodeKiller     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      TrackAssociator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciMainSequence          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   DstWriters                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  MonitoringSequence           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
