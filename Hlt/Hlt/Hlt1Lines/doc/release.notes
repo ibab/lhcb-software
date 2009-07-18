@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.13 2009-07-17 11:10:03 graven Exp $
+! $Id: release.notes,v 1.14 2009-07-18 14:58:57 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-07-18 - Gerhard Raven
+ - remove the VeloClosing line (defined as the OR of the A- and C-side
+   VeloClosing lines) as with the regex functionality of HLT_PASS_RE this
+   is no longer needed as an explicit line..
+ - rename the VeloAlign line into AlignVelo such that Hlt1Velo.* does
+   _not_ match it...
 
 ! 2009-07-17 - Gerhard Raven
  - add explicit velo decoding in front of VeloAlignFilter

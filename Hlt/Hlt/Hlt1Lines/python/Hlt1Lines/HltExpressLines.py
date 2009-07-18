@@ -6,19 +6,19 @@ from HltLine.HltLine import Hlt1Line as Line
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
-                               , 'Hlt1VeloAlign' : 0.0 #  0.000001 
+                               , 'Hlt1AlignVelo' : 0.0 #  0.000001 
                                }
                 } 
 
     def __apply_configuration__(self) : 
         from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
         from HltConf.HltDecodeRaw import DecodeVELO
-        Line( 'VeloAlign'
+        Line( 'AlignVelo' # do _not_ start with Velo, as those are assumed to be closing lines...
             , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
             , prescale = self.prescale
             , postscale = self.postscale
             , algos = [ DecodeVELO
-                      , PatVeloAlignTrackFilter('HltVeloAlignFilter') 
+                      , PatVeloAlignTrackFilter('HltAlignVeloFilter') 
                       ] 
             )
 

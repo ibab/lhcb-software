@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.4 2009-07-03 10:14:42 graven Exp $
+# $Id: HltVeloLines.py,v 1.5 2009-07-18 14:58:57 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 #
@@ -20,7 +20,7 @@ from HltLine.HltLine import Hlt1Line   as Line
 from HltLine.HltLine import Hlt1Member as Member
 
 class HltVeloLinesConf(HltLinesConfigurableUser):
-   __slots__ = { 'Prescale'                   : { 'Hlt1VeloClosing' : 1, 'Hlt1Velo.Side' : 0.0001 } 
+   __slots__ = { 'Prescale'                   : { 'Hlt1Velo.Side' : 0.0001 } 
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
@@ -100,9 +100,3 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                 ]
                 , postscale = self.postscale
                 )
-
-        Line( 'VeloClosing' 
-            , prescale = self.prescale
-            , HLT = "HLT_PASS('Hlt1VeloCSideDecision','Hlt1VeloASideDecision')" 
-            , postscale = self.postscale
-            )
