@@ -1,9 +1,34 @@
-! $Id: release.notes,v 1.31 2009-06-16 09:57:28 cattanem Exp $ 
+! $Id: release.notes,v 1.32 2009-07-18 13:01:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-18 - Vanya BELYAEV
+
+ - Kernel/ParticleID.h
+
+       fix threeCharge/jSpin/sSpin/lSpin/isMeson bypasses for B0L & B0H 
+
+ - provide the iterator for the service:
+
+       >>> svc = ...  # get the service 
+       >>> for pp in svc : print pp.particle() 
+
+ - provide the decorators for Decays::Symbols 
+
+       >>> for PartProp.decorators import Symbols
+
+       ## print all symbols  
+       >>> for s in Symbols : print s     
+
+       ## print the help for each symbols
+       >>> for s in Symbols : print Symbols.symbol ( s ) 
+
+ - cmt/requirements 
+
+       version increment to v1r4 
 
 !======================== PartProp v1r3 2009-06-16 ============================
 ! 2009-06-03 - Vanya BELYAEV

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.4 2009-03-09 17:27:45 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.5 2009-07-18 13:01:49 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/decorators.py
 #  The set of basic decorator for objects from Kernel/PartProp package 
@@ -12,7 +12,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $" 
 # =============================================================================
 
 import PyCintex
@@ -29,7 +29,7 @@ Decays = _global.Decays
 ## get all particl eproeprties form the service 
 def _get_all_ ( self , asList = False ) :
     """
-    Get all particle properties form the service
+    Get all particle properties from the service
 
     >>> svc = ... # get the service
     >>> all = svc.all ()  # get all properties
@@ -82,6 +82,8 @@ def _get_ppv_ ( self , cut , asList = False ) :
 LHCb.IParticlePropertySvc.get = _get_pp_
 ## decorate the vector 
 LHCb.IParticlePropertySvc.ParticleProperties.get = _get_ppv_
+
+LHCb.IParticlePropertySvc.__len__ = LHCb.IParticlePropertySvc.size
 
 # =============================================================================
 ## Convert LHCb::IParticlePropertySvc::ParticleProperties into python list
@@ -153,6 +155,7 @@ LHCb.IParticlePropertySvc.ParticleProperties.fromLst  = _ppv_from_lst_
 ## decorate the vector of properties 
 LHCb.IParticlePropertySvc.ParticleProperties.__repr__ = lambda s : s.toList().__repr__()
 LHCb.IParticlePropertySvc.ParticleProperties.__str__  = _prnt_as_table_
+LHCb.IParticlePropertySvc.ParticleProperties.__len__  = LHCb.IParticlePropertySvc.ParticleProperties.size
 
 
 ## decorate the printout for LHCb::ParticleProperty
@@ -241,6 +244,43 @@ def _validate_ ( self , svc ) :
 _decays.validate = _validate_
 _items .validate = _validate_
 
+
+_old_symbols_   = Decays.Symbols.symbols
+_old_particles_ = Decays.Symbols.particles
+
+def _symbols_ ( self ) :
+    """
+    Get all known predefined symbols:
+    
+    >>> syms = ...         # get the table of symbols
+    >>> s = syms.symbols() # get the list of symbols
+    
+    """
+    strings = std.vector('std::string')()
+    _old_symbols_ ( self , strings )
+    res = []
+    for s in strings : res.append ( s )
+    return res
+
+def _sym_iter_ ( self ) :
+    """
+    Iteration over all known symbols
+
+    >>> syms = ...  # get the table of symbols
+    >>> for s in syms :
+    ...    print ' help for %s :' % s , syms.symbol ( s ) 
+    """
+    _list =self.symbols()
+    _i = 0
+    while _i < len ( _list ) :
+        yield _list[_i]
+        _i += 1 
+
+Decays.Symbols.symbols   = _symbols_
+Decays.Symbols.__iter__  = _sym_iter_ 
+
+## instance:
+Symbols = Decays.Symbols.instance()                                ## instance
 
 from PartProp.Nodes import *
 

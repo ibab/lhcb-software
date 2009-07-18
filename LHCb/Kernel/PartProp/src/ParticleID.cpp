@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.5 2008-12-16 12:48:11 cattanem Exp $
+// $Id: ParticleID.cpp,v 1.6 2009-07-18 13:01:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,7 +43,8 @@ bool LHCb::ParticleID::isMeson( ) const
   if ( hasQuarks() ) 
   {
     const unsigned int aid = abspid();
-    if ( 130 == aid || 310 == aid ) { return true; } // K0S/K0L ? 
+    if ( 130 == aid || 310 == aid  ) { return true; } // K0S/K0L ? 
+    if ( 150 == aid || 510 == aid  ) { return true; } // B0L/B0H ? 
     //
     if ( 0 != digit_<nj>  () && 
          0 != digit_<nq3> () && 
@@ -221,7 +222,7 @@ int LHCb::ParticleID::threeCharge( ) const
     // H2 or H3 with DC06 convention
     if ( 45 == extra || 46 == extra ) { return 3 ; } // H2 or H3 
     // Alpha or He3 with DC06 convetion
-    if ( 47 == extra || 49 == extra ) { return 6 ; } // alph aor He3
+    if ( 47 == extra || 49 == extra ) { return 6 ; } // alpha or He3
     // Nuclei with PDG2008 convention (2006 Monte Carlo nuclear code scheme)
     // +/- 10LZZZAAAI
     if ( isNucleus() ) { return 3*Z(); } // ion
@@ -229,8 +230,8 @@ int LHCb::ParticleID::threeCharge( ) const
     return 0 ;
   }
   
-  // KS, KL 
-  if( 0 == digit_<nj>() ) { return 0 ; } // K0S/K0L ??
+  // KS, KL, BL, BH 
+  if( 0 == digit_<nj>() ) { return 0 ; } // K0S/K0L/B0L/B0H ??
   
   // 
   static const int ch100[100] = {
@@ -275,6 +276,10 @@ int LHCb::ParticleID::threeCharge( ) const
 // ============================================================================
 int LHCb::ParticleID::jSpin( ) const 
 {
+  const unsigned int aid = abspid () ;
+  if ( 130 == aid || 310 == aid  ||                   // K0S/K0L ? 
+       150 == aid || 510 == aid  ) { return 1 ; }     // B0L/B0H ? 
+  //
   const int fun = fundamentalID () ;
   // 
   if ( 0 < fun && fun <= 100 ) { return 0 ; }
@@ -287,6 +292,10 @@ int LHCb::ParticleID::jSpin( ) const
 // ============================================================================
 int LHCb::ParticleID::sSpin( ) const 
 {
+  const unsigned int aid = abspid () ;
+  if ( 130 == aid || 310 == aid  ||                   // K0S/K0L ? 
+       150 == aid || 510 == aid  ) { return 1 ; }     // B0L/B0H ? 
+  
   if ( !isMeson() ) { return 0 ; }
 
   const int jl   =  digit_<nl> () ;
@@ -310,6 +319,11 @@ int LHCb::ParticleID::sSpin( ) const
 // ============================================================================
 int LHCb::ParticleID::lSpin( ) const 
 {
+  
+  const unsigned int aid = abspid () ;
+  if ( 130 == aid || 310 == aid  ||                   // K0S/K0L ? 
+       150 == aid || 510 == aid  ) { return 1 ; }     // B0L/B0H ? 
+  
   if( !isMeson() ) { return 0 ; }
   //
   const int jl   =  digit_<nl> () ;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Service.py,v 1.4 2008-12-03 17:35:54 ibelyaev Exp $ 
+# $Id: Service.py,v 1.5 2009-07-18 13:01:49 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Service.py
 #  Useful decorator for LHcb::(I)ParticlePropertySvc
@@ -14,7 +14,7 @@ Useful decorator for LHCb::(I)ParticlePropertySvc
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = ( 'iParticlePropertySvc', )
 # =============================================================================
@@ -164,14 +164,47 @@ class iParticlePropertySvc(iService) :
         >>> sc = svc.validate ( node )
         """
         return obj.validate ( self.svc () ) 
+
+    ## make iteration over all known particle properties 
+    def __iter__ ( self ) :
+        """
+        Make an iteration over all known particle properties:
+
+        >>> svc = ...       # get the service
+        >>> for pp i svc :  # make an iteration
+        ...     print pp 
+        
+        """
+        if not self._ipps : self.retrieveInterface() 
+        _list = self._ipps.all ( False )
+        _size = len ( _list )
+        _i = 0
+        while _i < _size :
+            yield _list[_i]
+            _i += 1 
+
+    ## get the size (number of known particle proeprties)
+    def size ( self ) :
+        """
+        Get the length(size) of known particle properties 
+        """
+        if not self._ipps : self.retrieveInterface() 
+        return self._ipps.size()
     
+    ## get the size (number of known particle proeprties)
+    def __len__ ( self ) :
+        """
+        Get the length(size) of known particle properties 
+        """
+        return self.size() 
+
+
 # useful types 
 iParticlePropertySvc.ParticleIDs = LHCb.IParticlePropertySvc.ParticleIDs
 iParticlePropertySvc.Decay       = LHCb.IParticlePropertySvc.Decay
 iParticlePropertySvc.Decays      = LHCb.IParticlePropertySvc.Decays
 iParticlePropertySvc.Item        = LHCb.IParticlePropertySvc.Item
 iParticlePropertySvc.Items       = LHCb.IParticlePropertySvc.Items
-
 
 # =============================================================================
 ## accessor to the service 
@@ -189,8 +222,6 @@ def _ppSvc_ ( self, name='LHCb::ParticlePropertySvc') :
 
 AppMgr.ppSvc  = _ppSvc_
 AppMgr.ppsvc  = _ppSvc_
-
-
 
 # =============================================================================
 # The END 
