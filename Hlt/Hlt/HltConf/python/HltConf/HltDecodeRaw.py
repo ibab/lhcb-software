@@ -1,7 +1,6 @@
 
 from Configurables import DataOnDemandSvc
 from GaudiKernel.ProcessJobOptions import importOptions
-from Gaudi.Configuration import allConfigurables
 from HltLine.HltLine import bindMembers
 importOptions('$STDOPTS/DecodeRawEvent.py')
 _map = DataOnDemandSvc().AlgMap
@@ -19,6 +18,7 @@ def _convert(x) :
 DecodeODIN   = _convert( _map.pop("DAQ/ODIN") )
 DecodeL0MUON = _convert( _map.pop('Trig/L0/MuonCtrl') ) 
 DecodeL0CALO = _convert(_map.pop('Trig/L0/Calo') ) 
+_convert( _map.pop('Trig/L0/FullCalo') )
 DecodeL0DU =  _convert( _map.pop('Trig/L0/L0DUReport') )
 DecodeVELO =  _convert( _map.pop("Raw/Velo/LiteClusters") )
 DecodeTT   =  _convert( _map.pop("Raw/TT/LiteClusters") )
@@ -31,8 +31,6 @@ DecodeSPD =  _convert( _map.pop("Raw/Spd/Digits") )
 DecodePRS =  _convert( _map.pop("Raw/Prs/Digits") )
 DecodeHCAL =  _convert( _map.pop("Raw/Hcal/Digits") )
 
-# disable everything
-#for i in _map.keys() : _map.pop(i)
 
 #and export explicit (configured!) decoders:
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'

@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.15 2009-06-28 19:58:00 graven Exp $
+# $Id: Hlt1.py,v 1.16 2009-07-18 15:04:36 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -72,7 +72,7 @@ class Hlt1Conf(LHCbConfigurableUser):
         if (self.getProp("EnableLumiEventWriting")) :
             EndMembers += [ HltLumiWriter()
                           , Sequence( 'LumiStripper' , Members = 
-                                [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ~HLT_PASS('Hlt1IgnoringLumiDecision') " ) 
+                                [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
                                 , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
                                 , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
                                 ])

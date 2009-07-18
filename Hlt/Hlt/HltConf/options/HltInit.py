@@ -7,7 +7,7 @@ if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
 HltANNSvc().Hlt1SelectionID = {
     # Global
     "Hlt1Global"                            :    1,
-    # L0 (prescaled)
+    # L0 (prescaled) Hlt1L0.*Decision
     "Hlt1L0MuonDecision"                    :   10,
     "Hlt1L0MuonNoGlobDecision"              :   11,
     "Hlt1L0DiMuonDecision"                  :   12,
@@ -21,20 +21,20 @@ HltANNSvc().Hlt1SelectionID = {
     # Misc...
     "Hlt1IncidentDecision"                  :   30,
     "Hlt1Tell1ErrorDecision"                :   31,
-    # LU
-    "Hlt1LumiDecision"                      :   40, 
-    "Hlt1IgnoringLumiDecision"              :   41,
+    # LU Hlt1Lumi.*Decision
+    #"Hlt1LumiDecision"                      :   40, 
+    #"Hlt1IgnoringLumiDecision"              :   41,
     "Hlt1LumiNoBeamDecision"                :   45, 
     "Hlt1LumiBeamCrossingDecision"          :   46, 
     "Hlt1LumiBeam1Decision"                 :   47, 
     "Hlt1LumiBeam2Decision"                 :   48,
-    # BG
+    # BG  Hlt1BeamGas.*Decision
     "Hlt1BeamGasDecision"                   :   50, 
     "Hlt1BeamGas1Decision"                  :   51,
     "Hlt1BeamGas2Decision"                  :   52,
     "Hlt1BeamGasCrossingDecision"           :   53,
-    # VE
-    "Hlt1VeloClosingDecision"               :   60,
+    # VE Hlt1Velo.*Decision
+    #"Hlt1VeloClosingDecision"               :   60,
     "Hlt1VeloASideDecision"                 :   61,
     "Hlt1VeloCSideDecision"                 :   62,
     # PA
@@ -43,8 +43,8 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0ForcedDecision"                  :   72,
     # XP
     "Hlt1XPressDecision"                    :   80,
-    "Hlt1VeloAlignDecision"                 :   81,
-    # MU
+    "Hlt1AlignVeloDecision"                 :   81,
+    # MU Hlt1(Single|Di)Muon.*Decision
     "Hlt1SingleMuonNoIPL0Decision"          :  100,
     "Hlt1SingleMuonNoIPGECDecision"         :  101,
     "Hlt1SingleMuonIPCL0Decision"           :  105,
@@ -62,10 +62,10 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiMuonNoPVL0DiDecision"            :  130,
     "Hlt1DiMuonNoPV2L0Decision"             :  131,
     "Hlt1DiMuonNoPVL0SegDecision"           :  132,
-    #
+    # Hlt1MuTrack.*Decision
     "Hlt1MuTrackDecision"                   :  150,
     "Hlt1MuTrack4JPsiDecision"              :  151,
-    # HA
+    # HA Hl1(Single,Di)Hadron.*Decision
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
     # PH
