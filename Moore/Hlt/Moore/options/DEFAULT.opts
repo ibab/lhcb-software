@@ -23,9 +23,7 @@ ApplicationMgr.TopAlg += { "UpdateAndReset" };
 
 ////////////////////HLT specific settings/////////////////
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$MOOREOPTS/DecodeRawEvent.opts"
 
-ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ; 
 
 ///@TODO: this is not maintainable -- need either a single tag, or it comes from @OnlineEnv...
 ///       or it points at the right snapshot...
