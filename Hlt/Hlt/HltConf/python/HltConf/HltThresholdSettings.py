@@ -77,67 +77,63 @@ FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
 ####
 # Leptonic scenario
 #
-Hlt2_Leptonic = { 'TOPO' : { 'ComRobAllTrkPtLL' : 800.0
-                           , 'ComRobAllTrkPVIPLL' : 0.025
-                           , 'ComRobPairMinDocaUL' : 0.1
-                           , 'ComRobTrkMaxPtLL' : 1500.0
-                           , 'ComTFVtxPVDispChi2LL' : 169.0
-                           , 'RobustPointingUL' : 0.12
-                           , 'TFPointUL' : 0.2
-                           , 'CharmRobustPointUL' : 0.04
-                           , 'CharmTFPointUL' : 0.04
-                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.0
-                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.2
-                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.2
-                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.2
-                           }
-                , 'LEPT' : { }
-                  }
+Hlt2_Leptonic = { 'Hlt2TopologicalLinesConf' :{ 'ComRobAllTrkPtLL' : 800.0
+                                               , 'ComRobAllTrkPVIPLL' : 0.025
+                                               , 'ComRobPairMinDocaUL' : 0.1
+                                               , 'ComRobTrkMaxPtLL' : 1500.0
+                                               , 'ComTFVtxPVDispChi2LL' : 169.0
+                                               , 'RobustPointingUL' : 0.12
+                                               , 'TFPointUL' : 0.2
+                                               , 'CharmRobustPointUL' : 0.04
+                                               , 'CharmTFPointUL' : 0.04
+                                               , 'Prescale' : { 'Hlt2TopoTF4BodyCharmSignal' : 0.0
+                                                              , 'Hlt2TopoTF4BodyReq4Yes' : 0.2
+                                                              , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
+                                                              , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
+                                                           }
+                               }
 Hlt2_Leptonic.update(Miriam_20090430)
 ####
 # hadronic scenario
 #
-Hlt2_Hadronic = { 'TOPO' : { 'ComRobAllTrkPtLL' : 400.0
-                           , 'ComRobAllTrkPVIPLL' : 0.025
-                           , 'ComRobPairMinDocaUL' : 0.15
-                           , 'ComRobTrkMaxPtLL' : 1500.0
-                           , 'ComTFVtxPVDispChi2LL' : 196.0
-                           , 'RobustPointingUL' : 0.28
-                           , 'TFPointUL' : 0.16
-                           , 'CharmRobustPointUL' : 0.04
-                           , 'CharmTFPointUL' : 0.04
-                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.2
-                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.2
-                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.2
-                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.2
-                           }
-                , 'LEPT' : { }
+Hlt2_Hadronic = { 'Hlt2TopologicalLinesConf' : { 'ComRobAllTrkPtLL' : 400.0
+                                               , 'ComRobAllTrkPVIPLL' : 0.025
+                                               , 'ComRobPairMinDocaUL' : 0.15
+                                               , 'ComRobTrkMaxPtLL' : 1500.0
+                                               , 'ComTFVtxPVDispChi2LL' : 196.0
+                                               , 'RobustPointingUL' : 0.28
+                                               , 'TFPointUL' : 0.16
+                                               , 'CharmRobustPointUL' : 0.04
+                                               , 'CharmTFPointUL' : 0.04
+                                               , 'Prescale' : { 'Hlt2TopoTF4BodyCharmSignal' : 0.2
+                                                              , 'Hlt2TopoTF4BodyReq4Yes' : 0.2
+                                                              , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
+                                                              , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
+                                               }
                   }
 Hlt2_Hadronic.update(Miriam_20090430)
 ####
 # charming scenario
 #
-Hlt2_Charming = { 'TOPO' : { 'ComRobAllTrkPtLL' : 400.0
-                           , 'ComRobAllTrkPVIPLL' : 0.025
-                           , 'ComRobPairMinDocaUL' : 0.15
-                           , 'ComRobTrkMaxPtLL' : 500.0
-                           , 'ComTFVtxPVDispChi2LL' : 196.0
-                           , 'RobustPointingUL' : 0.24
-                           , 'TFPointUL' : 0.08
-                           , 'CharmRobustPointUL' : 0.12
-                           , 'CharmTFPointUL' : 0.12
-                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.4
-                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.0
-                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.0
-                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.0
-                           }
-                , 'LEPT' : { }
+Hlt2_Charming = { 'Hlt2TopologicalLinesConf' : { 'ComRobAllTrkPtLL' : 400.0
+                                               , 'ComRobAllTrkPVIPLL' : 0.025
+                                               , 'ComRobPairMinDocaUL' : 0.15
+                                               , 'ComRobTrkMaxPtLL' : 500.0
+                                               , 'ComTFVtxPVDispChi2LL' : 196.0
+                                               , 'RobustPointingUL' : 0.24
+                                               , 'TFPointUL' : 0.08
+                                               , 'CharmRobustPointUL' : 0.12
+                                               , 'CharmTFPointUL' : 0.12
+                                               , 'Prescale' : { 'Hlt2TopoTF4BodyCharmSignal' : 0.4
+                                                              , 'Hlt2TopoTF4BodyReq4Yes' : 0.0
+                                                              , 'Hlt2TopoTF4BodyReq3Yes' : 0.0
+                                                              , 'Hlt2TopoTF4BodyReq2Yes' : 0.0 } 
+                                                 }
                   }
 Hlt2_Charming.update(Miriam_20090430)
 ####
 # Optimised scenario
 # @author miriam.gandelman@cern.ch
 #
-Hlt2_Optimised = { 'TOPO' : { },
-                   'LEPT' : {} }
+Hlt2_Optimised = { 'Topological' : { } }
 Hlt2_Optimised.update(Miriam_20090430)

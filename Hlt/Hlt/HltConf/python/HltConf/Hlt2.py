@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -35,34 +35,101 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2HHLinesConf ]
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
+       , "HltType"                    : 'Hlt1+Hlt2' # only care about Hlt2
        , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
        , "ActiveHlt2Lines"            : [] # list of lines to be added
        , "HistogrammingLevel"         : 'None' # or 'Line'
-       , "ThresholdSettings"          : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
+       , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
        , "Hlt2Tracks"                 : "Hlt/Track/Long"
-               }
+         }
 
+###################################################################################
 #
-# Lines
+# Get Hlt2 lines Configurables
+#
+    def getHlt2Configurables(self):
+        """
+        Return a dictionary of configurables
+        """
+        #
+        # 1) convert hlt type to trigger categories
+        #
+        hlttype           = self.getProp("HltType")
+        # Dictionary of Hlt2 type
+        trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
+                }
+        for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
+        #
+        # 2) define what categories stand for
+        # There are the strings used in HltThresholdSettings
+        #
+        type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
+                               , Hlt2B2DXLinesConf ]
+                    , 'LEPT' : [ Hlt2InclusiveDiMuonLinesConf
+                               , Hlt2InclusiveMuonLinesConf ]
+                    , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
+                    , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
+                               , Hlt2B2JpsiXLinesConf
+                               , Hlt2XGammaLinesConf
+                               , Hlt2B2HHLinesConf ]
+                      }
+
+        return type2conf
+        
+###################################################################################
+#
+# Threshold settings
+#
+# This is copied and edited from Hlt1.confType().
+# One could outsource that to some function, but who cares?
 #
     def hlt2Lines(self,Hlt2):
         """
         The actual lines
         """
-        Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ] 
-        Hlt2B2DXLinesConf()
-        Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf()
-        Hlt2B2JpsiXLinesConf()
-        Hlt2InclusiveDiMuonLinesConf()
-        Hlt2InclusiveMuonLinesConf()
-        Hlt2InclusivePhiLinesConf()
-        Hlt2TopologicalLinesConf()
-        Hlt2XGammaLinesConf()
-        Hlt2B2HHLinesConf()
+        Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
+        ThresholdSettings = self.getProp("ThresholdSettings")
+        print "# Hlt2 thresholds:", ThresholdSettings
         #
-        # @todo need to be translated
+        type2conf = self.getHlt2Configurables()
         #
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" )
+        # Loop over thresholds
+        #
+        for i in type2conf :
+            for confs in type2conf[i] :
+                if confs not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
+                log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
+                # FIXME: warning: the next is 'brittle': if someone outside 
+                #        does eg. HltMuonLinesConf(), it will get activated
+                #        regardless of whether we do it over here...
+                #        So anyone configuring some part explictly will _always_ get
+                #        that part of the Hlt run, even if it does not appear in HltType...
+                conf = confs()
+                n = conf.name()
+                if ThresholdSettings and n in ThresholdSettings : 
+                    for (k,v) in ThresholdSettings[n].iteritems() :
+                        # configurables have an exception for list and dict: 
+                        #   even if not explicitly set, if you ask for them, you get one...
+                        #   this is done to make foo().somelist += ... work.
+                        # hence we _assume_ that, even if we have an attr, but it matches the
+                        # default, it wasn't set explicitly, and we overrule it...
+#                        print '#PK#', n, k, '- PROP',conf.getProp(k), '- DEF', conf.getDefaultProperty(k)
+                        if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
+                            log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+                        else :
+                            if ( type(v) == type({})): # special case for dictionaries (needed in topo)
+                                val = conf.getProp(k)
+                                val.update(v)                                
+#                                print '#PK# updating', n, k, 'to', val
+                                setattr(conf,k,val)
+                            else :
+#                                print '#PK# setting', n, k, 'to', v
+                                setattr(conf,k,v)
+
+        #
+        # more
+        importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" ) # I AM OBSOLETE : KILL ME!!!
+###################################################################################
 #
 # Reco
 #
@@ -73,6 +140,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         #  Full reconstruction of all tracks 
         from HltConf.HltReco import HltRecoSequence
         Hlt2.Members += [ HltRecoSequence ]
+
+###################################################################################
 #
 # Particle making
 #
@@ -81,14 +150,15 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2 sequencing (was options/Hlt2Particles.py)
         """
         SeqHlt2Particles = Sequence('SeqHlt2Particles'
-                                          , MeasureTime = True 
-                                          , IgnoreFilterPassed = True) # do all 
+                                    , MeasureTime = True 
+                                    , IgnoreFilterPassed = True) # do all 
         Hlt2.Members += [ SeqHlt2Particles ]
         SeqHlt2Particles.Members += [ self.hlt2Charged() ] # charged
         SeqHlt2Particles.Members += [ self.hlt2Calo() ] # calo
         SeqHlt2Particles.Members += [ self.hlt2Muon() ] # muon
         self.hlt2Protos(SeqHlt2Particles)          # protos
         
+###################################################################################
 #
 # ProtoParticles
 #
@@ -122,6 +192,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         SeqHlt2Particles.Members += [ NeutralProtoPAlg('HltNeutralProtoPAlg') ]
 
         
+###################################################################################
 #
 # MuonID
 #
@@ -141,6 +212,7 @@ class Hlt2Conf(LHCbConfigurableUser):
 
         return HltMuonIDSeq
 
+###################################################################################
 #
 # Calo
 #
@@ -182,6 +254,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         ClusChi22ID('HltClusChi22ID').Tracks =        HltTracks
         # return
         return caloSeq 
+
+###################################################################################
 #
 # Charged Particle making
 #
@@ -213,6 +287,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         SeqHlt2Charged.Members += [ HltInsertTrackErrParam ]
         return SeqHlt2Charged
        
+###################################################################################
 #
 # Requirements
 #
@@ -231,6 +306,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              }
             for i in reqs.split('+') :
                 if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
+
+###################################################################################
 #
 # Main configuration
 #

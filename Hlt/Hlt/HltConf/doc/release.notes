@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.274 2009-07-20 14:43:07 pkoppenb Exp $ 
+! $Id: release.notes,v 1.275 2009-07-20 17:19:51 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-20 - Patrick Koppenburg
+ - First working version of Hlt2 threshold settings. Presently only topo 
+   implemented
+   . HltThresholdSettings : Prescales need to be dictionaries
+                            use Configurables names instead of shortcuts
+   . Hlt2 : read and use HltThresholdSettings
+ - tagged pkoppenb_20090720 (no a)
 
 ! 2009-07-20 - Patrick Koppenburg
  - Added template Hlt2 configuration to HltThresholdSettings. 100% untested.

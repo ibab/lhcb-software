@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.17 2009-07-20 14:43:07 pkoppenb Exp $
+# $Id: Hlt1.py,v 1.18 2009-07-20 17:19:52 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -56,7 +56,7 @@ class Hlt1Conf(LHCbConfigurableUser):
       hlttype           = self.getProp("HltType")
       ThresholdSettings = self.getProp("ThresholdSettings")
       
-      trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'     # Note : Hlt2 not done here: done in Hlt2.py
+      trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'  
               , 'DEFAULT': 'PA+LU+L0+VE+XP'
                 }
       for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
@@ -73,7 +73,6 @@ class Hlt1Conf(LHCbConfigurableUser):
                   }
       
       for i in hlttype.split('+') :
-         print "# PK ", i
          if i == 'NONE' : continue # no operation...
          if i == 'Hlt2' : continue # we deal with this later...
          if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i

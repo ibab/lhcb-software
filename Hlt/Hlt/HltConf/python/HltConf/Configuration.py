@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.97 2009-07-20 14:43:07 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.98 2009-07-20 17:19:52 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -95,9 +95,10 @@ class HltConf(LHCbConfigurableUser):
         # Hlt2
         #
         if hlttype.find('Hlt2') != -1 :                
-            self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires", "ActiveHlt2Lines",
-                                           "HistogrammingLevel", "ThresholdSettings"])
-
+            Hlt2Conf().ThresholdSettings = ThresholdSettings
+            self.setOtherProps(Hlt2Conf(),["DataType","HltType","Hlt2Requires", "ActiveHlt2Lines",
+                                           "HistogrammingLevel"])
+            Hlt2Conf()
 
 ##################################################################################
     def configureRoutingBits(self) :
