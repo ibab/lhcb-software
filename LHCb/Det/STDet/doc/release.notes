@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.172 2009-07-13 14:03:07 cattanem Exp $
+!$Id: release.notes,v 1.173 2009-07-20 11:18:14 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2009-19-07 M Needham
+ - Add  tolerance to globalInActive method
+ 
 !======================== STDet v4r11 2009-07-13 =========================
 ! 2009-07-06 - Jeroen van Tilburg
  - DeTTSector: Corrected small bug building of conditionsPathName.

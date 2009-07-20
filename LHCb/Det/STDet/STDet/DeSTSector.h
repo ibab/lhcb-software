@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.40 2009-05-08 16:57:05 jvantilb Exp $
+// $Id: DeSTSector.h,v 1.41 2009-07-20 11:18:13 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -318,7 +318,7 @@ public:
   */
   const Sensors& sensors() const;
 
-  /** locate sensor based on a point  
+  /** locate sensor based on a point
   * @return module */
   DeSTSensor* findSensor(const Gaudi::XYZPoint& point) const;  
 
@@ -328,9 +328,11 @@ public:
 
   /** check if inside the active area  
   * @param  point point in global frame
+  * @param  tol   tolerance
   * @return bool isInside  
   **/
-  bool globalInActive(const Gaudi::XYZPoint& point ) const;
+  bool globalInActive(const Gaudi::XYZPoint& point, 
+                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
   /** globalInActive
    * @param  point point in global frame

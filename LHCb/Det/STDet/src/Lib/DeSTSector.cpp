@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.56 2009-05-08 16:57:06 jvantilb Exp $
+// $Id: DeSTSector.cpp,v 1.57 2009-07-20 11:18:14 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -21,6 +21,7 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
 
 /** @file DeSTSector.cpp
  *
@@ -560,10 +561,17 @@ DeSTSensor* DeSTSector::findSensor(const Gaudi::XYZPoint& point) const{
   return (iter != m_sensors.end() ? *iter: 0);
 }
 
-bool DeSTSector::globalInActive(const Gaudi::XYZPoint& point) const{
+bool DeSTSector::globalInActive(const Gaudi::XYZPoint& point,
+                                Gaudi::XYZPoint tol) const{
 
-  const DeSTSensor* aSensor =  findSensor(point);
-  return (aSensor ?  aSensor->globalInActive(point) : false );
+  bool found = false; 
+  BOOST_FOREACH(DeSTSensor* aSensor, m_sensors ){
+    if (aSensor->globalInActive(point,tol) == true){ 
+      found = true;
+      break;
+    }
+  } 
+  return found ;
 }
 
 bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point, 
