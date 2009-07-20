@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.11 2008-11-24 13:26:24 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.12 2009-07-20 20:16:02 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -22,24 +22,25 @@ class ILifetimeFitter;
  *
  * <b>Properties</b>:
  *
- * <b>IPVOfflineTool</b>  : Implemenmtation of IPVOfflineTool. Default: PVOfflineTool
+ * <b>IPVOfflineTool</b>  : Implemenmtation of IPVOfflineTool. Default: PVOfflineTool.
  *
- * <b>IPVReFitter</b>     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter
- * <b>UseIPVOfflineTool</b> : bool, apply IPVOfflineTool::reDoSinglePV method.
+ * <b>IPVReFitter</b>     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter.
  *
- * <b>UseIPVReFitter</b> : bool, apply IPVReFitter::remove method.
+ * <b>UseIPVOfflineTool</b> : bool, apply IPVOfflineTool::reDoSinglePV method. Default: false.
  *
- * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted.
+ * <b>UseIPVReFitter</b> : bool, apply IPVReFitter::remove method. Default: true.
+ *
+ * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted. Default "".
  *
  * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
- * re-fitted.
+ * re-fitted. Default LHCb::RecVertexLocation::Primary.
  *
  * <b>P2VRelationsOutputLocation</b>: TES location of the relations table 
  * relating the particles in ParticleInputLocation to the re-fitted 
- * primary vertices.
+ * primary vertices. Default: "".
  *
  * <b>VertexOutputLocation</b>: TES location of the 
- * KeyedContainer<LHCb::RecVertex> containing the re-fitted vertices.
+ * KeyedContainer<LHCb::RecVertex> containing the re-fitted vertices. Default "".
  *
  * The algorithm iterates over the LHCb::Particles in ParticleInputLocation,
  * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
