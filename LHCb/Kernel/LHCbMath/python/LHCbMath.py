@@ -51,7 +51,8 @@ RhoEtaPhiLineF = Line(RhoEtaPhiPointF, RhoEtaPhiVectorF)
 RhoZPhiLineF   = Line(RhoZPhiPointF, RhoZPhiVectorF)
 #
 GeomFun = GaudiPython.gbl.Gaudi.Math.GF
-XYZGeomFun = GeomFun(XYZPoint, XYZLine, Plane3D)
+# this causes a seg fault in debug mode:
+#XYZGeomFun = GeomFun(XYZPoint, XYZLine, Plane3D)
 """
 
 # these are the real definitions.
