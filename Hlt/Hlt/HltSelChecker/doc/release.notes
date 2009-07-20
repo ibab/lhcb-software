@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-20 - Patrick Koppenburg
+ - Add helper files for Hlt2 settings
+
 ! 2009-07-16 - Patrick Koppenburg
  - Change data samples for D*. Now one test for prompt and one for secondary charm
 
