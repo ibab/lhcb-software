@@ -1,4 +1,4 @@
-// $Id: OTHitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: OTHitExpectation.h,v 1.3 2009-07-20 11:16:57 mneedham Exp $
 #ifndef _OTHitExpectation_H
 #define _OTHitExpectation_H
 
@@ -56,9 +56,19 @@ public:
   *  @return Info info including likelihood
   */
   virtual IHitExpectation::Info expectation( const LHCb::Track& aTrack ) const;
-                                                                           
+    
+  /** Collect all the expected hits
+  *
+  * @param aTrack Reference to the Track to test
+  * @param hits collected lhcbIDs
+  * 
+  **/ 
+  virtual void collect(const LHCb::Track& aTrack, 
+                       std::vector<LHCb::LHCbID>& ids ) const;
+                                                                       
 private:
 
+  typedef std::vector<Tf::Tsa::IOTExpectedHits::OTPair> OTPairs;
 
   LHCb::OTChannelID channelHint(const LHCb::OTChannelID& hintChan,
                                 const std::vector<LHCb::LHCbID>& ids) const;

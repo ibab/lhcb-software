@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.6 2009-07-03 13:31:03 mneedham Exp $
+// $Id: TTHitExpectation.h,v 1.7 2009-07-20 11:16:57 mneedham Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -22,7 +22,8 @@
 namespace LHCb{
   class Track;
   class StateVector;  
-  class STChannelID;
+  class STChannelID; 
+  class LHCbID;
 }
 
 
@@ -63,23 +64,26 @@ public:
   *  @return Info info including likelihood
   */
   virtual IHitExpectation::Info expectation( const LHCb::Track& aTrack ) const;
-                                                                           
+
+  /** Collect all the expected hits
+   *
+   * @param aTrack Reference to the Track to test
+   * @param hits collected lhcbIDs
+   * 
+   **/ 
+  virtual void collect(const LHCb::Track& aTrack, 
+                       std::vector<LHCb::LHCbID>& ids ) const;
+                                                                                                                                                            
 private:
 
 
-  void collectHits(std::vector<LHCb::STChannelID>& chan, 
+  void collectHits(std::vector<LHCb::STChannelID>& chans, 
 		  LHCb::StateVector stateVec, const unsigned int station ) const;
 
   bool insideSensor(const DeSTSensor* sensor,const Tf::Tsa::Line3D& line) const;
 
   Gaudi::XYZPoint intersection(const Tf::Tsa::Line3D& line,
                                const Gaudi::Plane3D& aPlane) const;
-
-  bool isOKStrip(const LHCb::STChannelID& elemChan,
-                  const DeSTSector* sector,
-                  const unsigned int firstStrip, 
-                  const unsigned int lastStrip) const;
-
 
   bool select(const LHCb::STChannelID& chan) const;
 
@@ -93,6 +97,7 @@ private:
   std::string m_selectorName;
   ISTChannelIDSelector* m_selector;
 
+  bool m_allStrips;
 
 };
 

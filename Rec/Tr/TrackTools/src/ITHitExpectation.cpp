@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.cpp,v 1.5 2009-07-03 13:31:03 mneedham Exp $
+// $Id: ITHitExpectation.cpp,v 1.6 2009-07-20 11:16:57 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -53,7 +53,7 @@ ITHitExpectation::ITHitExpectation(const std::string& type,
   // constructer
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
   declareProperty( "SelectorName", m_selectorName = "ALL" );
-
+  declareProperty( "allStrips", m_allStrips = false);
 };
 
 //=============================================================================
@@ -103,32 +103,19 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
   Tf::Tsa::Line aLine(0.,0.);
 
   const DeSTDetector::Layers& layers = m_itDet->layers();
-  std::vector<unsigned int> expected;
+  // std::vector<unsigned int> expected;
 
   for (DeSTDetector::Layers::const_iterator iterL = layers.begin(); 
        iterL != layers.end() ; ++iterL ){  
 
-
     STChannelID chan = (*iterL)->elementID();
 
-    // check we want this layer
-    //    if (m_selector->select(chan) == false) continue;
-    
     aParab = xParabola(aTrack,(*iterL)->globalCentre().z());
     aLine = yLine(aTrack,(*iterL)->globalCentre().z());
 
-    typedef std::vector<Tf::Tsa::IITExpectedHits::ITPair> ITPairs;
     ITPairs output;
+    int sect = boxToSector(chan);
     
-    // convert box to sector
-    int sect = 0;
-    if (chan.detRegion() == 3) {
-      sect = 1;
-    }
-    else if (chan.detRegion() == 4){
-      sect = 2;
-    }
-
     // to avoid double counting !
     if (chan.detRegion() == 1 && aParab.value((*iterL)->globalCentre().z()) > 0.) continue;
     if (chan.detRegion() == 2 && aParab.value((*iterL)->globalCentre().z()) < 0.) continue;
@@ -155,9 +142,58 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
 }
 
 
+void ITHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCbID>& ids) const{
+
+  Tf::Tsa::Parabola aParab(0.,0.,0.);
+  Tf::Tsa::Line aLine(0.,0.);
+
+  const DeSTDetector::Layers& layers = m_itDet->layers();
+
+  for (DeSTDetector::Layers::const_iterator iterL = layers.begin(); 
+       iterL != layers.end() ; ++iterL ){  
+
+    STChannelID chan = (*iterL)->elementID();
+
+    aParab = xParabola(aTrack,(*iterL)->globalCentre().z());
+    aLine = yLine(aTrack,(*iterL)->globalCentre().z());
+
+    ITPairs output;
+    int sect = boxToSector(chan);
+    
+    // to avoid double counting !
+    if (chan.detRegion() == 1 && aParab.value((*iterL)->globalCentre().z()) > 0.) continue;
+    if (chan.detRegion() == 2 && aParab.value((*iterL)->globalCentre().z()) < 0.) continue;
+
+    StatusCode sc = m_expectedITHits->collect(aParab,aLine,chan,output,sect);   
+    if (sc.isFailure()){
+      Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+    }
+    int old = -1;
+    ids.reserve(output.size());
+    for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter ){ 
+      if ( int(iter->second) != old || m_allStrips) {
+        old = int(iter->second);
+        if (select(iter->first)) ids.push_back(LHCb::LHCbID(iter->first));
+      } // test on old or take all
+    }  // pairs      
+  } //layer
+  
+}
+
 unsigned int ITHitExpectation::nExpected(const LHCb::Track& aTrack) const{
 
   return expectation(aTrack).nExpected;
-
 }  
 
+int ITHitExpectation::boxToSector(const LHCb::STChannelID& chan) const{
+
+ // convert box to sector
+ int sect = 0;
+ if (chan.detRegion() == 3) {
+   sect = 1;
+ }
+ else if (chan.detRegion() == 4){
+   sect = 2;
+ }
+ return sect;
+}

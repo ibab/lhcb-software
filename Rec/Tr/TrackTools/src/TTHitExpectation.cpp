@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.8 2009-07-06 12:48:57 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.9 2009-07-20 11:16:57 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -16,7 +16,7 @@
 #include "Event/StateParameters.h"
 
 #include "TTHitExpectation.h"
-
+#include <boost/foreach.hpp>
 #include <algorithm>
 
 using namespace LHCb;
@@ -36,7 +36,8 @@ TTHitExpectation::TTHitExpectation(const std::string& type,
 
   declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
-  declareProperty( "SelectorName", m_selectorName = "ALL" ); 
+  declareProperty( "SelectorName", m_selectorName = "TTLiteKiller" ); 
+  declareProperty( "allStrips", m_allStrips = false);
 
   declareInterface<IHitExpectation>(this);
 };
@@ -106,9 +107,30 @@ unsigned int TTHitExpectation::nExpected(const LHCb::Track& aTrack) const{
   return expectedHitsA.size() + expectedHitsB.size();  
 }
 
-void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan, 
-                                  LHCb::StateVector stateVec, const unsigned int station ) const{
+void TTHitExpectation::collect(const LHCb::Track& aTrack, std::vector<LHCb::LHCbID>& ids) const{
 
+  // make a line at TTa and TTb
+  const State& TTaState = aTrack.closestState(m_zTTa);
+  StateVector stateVectorTTa(TTaState.position(), TTaState.slopes());
+
+  const State& TTbState = aTrack.closestState(m_zTTb);
+  StateVector stateVectorTTb(TTbState.position(), TTbState.slopes());
+
+  // determine which modules should be hit
+  std::vector<STChannelID> expectedHits; expectedHits.reserve(8);
+  collectHits(expectedHits, stateVectorTTa, 1);
+  collectHits(expectedHits, stateVectorTTb, 2);
+
+  // convert to LHCb ids
+  ids.reserve(expectedHits.size());
+  BOOST_FOREACH(STChannelID chan, expectedHits) {
+    ids.push_back(LHCbID(chan));
+  }
+ 
+} 
+
+void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chans, 
+                                  LHCb::StateVector stateVec, const unsigned int station ) const{
 
   // loop over the sectors
   const DeSTDetector::Sectors& sectorVector = m_ttDet->sectors();
@@ -116,7 +138,7 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
   for (; iterS != sectorVector.end(); ++iterS){
     // propagate to z of sector
     m_extrapolator->propagate(stateVec,(*iterS)->globalCentre().z());    
-    STChannelID elemID = (*iterS)->elementID();
+    const STChannelID elemID = (*iterS)->elementID();
     if (elemID.station() == station){
       // loop over sensors
       const DeSTSector::Sensors& tsensors = (*iterS)->sensors();
@@ -141,10 +163,22 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
           if ((*iter)->isStrip(firstStrip-1) == true) --firstStrip;
           if ((*iter)->isStrip(lastStrip+1) == true) ++lastStrip;
 
-          if (isOKStrip(elemID, *iterS  ,firstStrip, lastStrip) == true){
-            chan.push_back(elemID);
-	  }
-        }
+          bool found = false;
+          for (unsigned int iStrip = firstStrip ; iStrip != lastStrip; ++iStrip){        
+            const STChannelID chan = (*iterS)->stripToChan(iStrip);
+            if ((*iterS)->isOKStrip(chan) == true){ // check it is alive
+              if (m_allStrips == true) {
+                chans.push_back(elemID); // take them all
+	      }
+              else {
+                found = true; // take just the sector
+	      }
+	    } // ok strip
+	  } // loop strips
+
+          if (!m_allStrips && found == true) chans.push_back(elemID);
+
+        } // select
       }  // iter
     } // station
   } // sector
@@ -160,26 +194,5 @@ Gaudi::XYZPoint TTHitExpectation::intersection(const Tf::Tsa::Line3D& line,
   Gaudi::Math::intersection(line,aPlane,inter,mu);
   return inter;
 }
-
-
-bool TTHitExpectation::isOKStrip(const LHCb::STChannelID& elemChan,
-                              const DeSTSector* sector,
-                              const unsigned int firstStrip, 
-                              const unsigned int lastStrip) const{
-
-
-  unsigned int iStrip = firstStrip;
-  for (; iStrip <= lastStrip; ++iStrip){
-
-     LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
-                                                      elemChan.station(),
-                                                      elemChan.layer(),
-                                                      elemChan.detRegion(),
-                                                      elemChan.sector(), iStrip);
-     if (sector->isOKStrip(aChan) == false) return false;
-  }
-  return true;
-}
-
 
 

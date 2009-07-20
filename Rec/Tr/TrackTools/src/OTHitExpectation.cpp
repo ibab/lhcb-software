@@ -1,4 +1,4 @@
-// $Id: OTHitExpectation.cpp,v 1.3 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: OTHitExpectation.cpp,v 1.4 2009-07-20 11:16:57 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -89,9 +89,7 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
   info.nFound = 0;
   info.likelihood = 0.0;
 
-
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-
   std::vector<LHCb::LHCbID> otHits; otHits.reserve(ids.size());
   LoKi::select(ids.begin(), ids.end(), std::back_inserter(otHits), bind(&LHCbID::isOT,_1));
   
@@ -102,14 +100,12 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
   for (DeOTDetector::Layers::const_iterator iterL = layers.begin(); 
        iterL != layers.end() ; ++iterL ){  
 
-    OTChannelID chan = (*iterL)->elementID();
     DeOTQuarter* quart = (*iterL)->quarters().front();
     DeOTModule* module = quart->modules().front();
     aParab = xParabola(aTrack,module->centerOfModule().z());
     aLine = yLine(aTrack,module->centerOfModule().z());
   
-    LHCb::OTChannelID testChan = channelHint(chan,ids);
-    typedef std::vector<Tf::Tsa::IOTExpectedHits::OTPair> OTPairs;
+    LHCb::OTChannelID testChan = channelHint((*iterL)->elementID(),ids);
     OTPairs output;
 
     // try both sectors...
@@ -138,6 +134,45 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   return info;
 }
+
+void OTHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCbID>& ids) const{
+  
+  const std::vector<LHCb::LHCbID>& idsOnTrack = aTrack.lhcbIDs();
+  std::vector<LHCb::LHCbID> otHits; otHits.reserve(idsOnTrack.size());
+  LoKi::select(idsOnTrack.begin(), idsOnTrack.end(), std::back_inserter(otHits), bind(&LHCbID::isOT,_1));
+  
+  Tf::Tsa::Parabola aParab(0.,0.,0.);
+  Tf::Tsa::Line aLine(0.,0.);
+
+  const DeOTDetector::Layers& layers = m_otDet->layers();
+  for (DeOTDetector::Layers::const_iterator iterL = layers.begin(); 
+       iterL != layers.end() ; ++iterL ){  
+
+    DeOTQuarter* quart = (*iterL)->quarters().front();
+    DeOTModule* module = quart->modules().front();
+    aParab = xParabola(aTrack,module->centerOfModule().z());
+    aLine = yLine(aTrack,module->centerOfModule().z());
+  
+    LHCb::OTChannelID testChan = channelHint((*iterL)->elementID(),ids);
+    OTPairs output;
+
+    // try both sectors...
+    for (unsigned int iSector = 3; iSector <=4; ++iSector){
+      StatusCode sc = m_expectedOTHits->collect(aParab,aLine,testChan,output, iSector); 
+      if (sc.isFailure()){
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+      }  
+    }  // sectors
+
+    ids.reserve(output.size());
+    for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
+      ids.push_back(LHCbID(iter->first)); 
+    }  // pairs
+   
+  } // layers
+
+}
+
 unsigned int OTHitExpectation::nExpected(const LHCb::Track& aTrack) const{
 
   IHitExpectation::Info info = expectation(aTrack);

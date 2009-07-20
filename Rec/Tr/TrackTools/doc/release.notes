@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+
+! 2009-07-19 M Needham
+- Follow changes in IHitExpectation interface 
+
 !======================== TrackTools v3r19 2009-07-14 ========================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file TrackTools_dll.cpp
