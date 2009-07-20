@@ -1,4 +1,3 @@
-
 __all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType' )
 
 def SettingsForDataType( x ) :
@@ -6,8 +5,13 @@ def SettingsForDataType( x ) :
                            'MC09' : Miriam_20090430 }  # temporary
     return _dataType2Settings[x] if x in _dataType2Settings else None
 
-
-
+#########################################################################################
+# HLT1
+#########################################################################################
+#
+# Miriam's Hlt1 bandwidth division for 2*10^32 @ 40 MHz, done on DC06 MC
+# @author miriam.gandelman@cern.ch
+#
 Miriam_20090430 = { 'HA' : { 'SingleHadron_PTCut' : 4450
                            , 'HadMain_IPCut'      : 0.09
                            , 'HadMain_PTCut'      : 1600
@@ -45,7 +49,10 @@ Miriam_20090430 = { 'HA' : { 'SingleHadron_PTCut' : 4450
                            , 'MuTrackTrChi2'      : 10 
                            }
                   }
-
+#
+# FEST settings Gerhard.Raven@nikhef.nl
+# @author Gerhard.Raven@nikhef.nl
+#
 FEST = {}
 FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
               , 'XP' : { 'Prescale' : { 'Hlt1XPress'    : 0.0025
@@ -59,3 +66,78 @@ FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
               }
            )
 
+#########################################################################################
+# HLT2 for 2*10^32 @ 40 MHz, done on DC06 MC
+#
+# @author Compiled by Patrick.Koppenburg@cern.ch
+#
+# TOPO cuts by <p.spradlin1@physics.ox.ac.uk>
+# LEPT cuts by
+#
+####
+# Leptonic scenario
+#
+Hlt2_Leptonic = { 'TOPO' : { 'ComRobAllTrkPtLL' : 800.0
+                           , 'ComRobAllTrkPVIPLL' : 0.025
+                           , 'ComRobPairMinDocaUL' : 0.1
+                           , 'ComRobTrkMaxPtLL' : 1500.0
+                           , 'ComTFVtxPVDispChi2LL' : 169.0
+                           , 'RobustPointingUL' : 0.12
+                           , 'TFPointUL' : 0.2
+                           , 'CharmRobustPointUL' : 0.04
+                           , 'CharmTFPointUL' : 0.04
+                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.0
+                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.2
+                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.2
+                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.2
+                           }
+                , 'LEPT' : { }
+                  }
+Hlt2_Leptonic.update(Miriam_20090430)
+####
+# hadronic scenario
+#
+Hlt2_Hadronic = { 'TOPO' : { 'ComRobAllTrkPtLL' : 400.0
+                           , 'ComRobAllTrkPVIPLL' : 0.025
+                           , 'ComRobPairMinDocaUL' : 0.15
+                           , 'ComRobTrkMaxPtLL' : 1500.0
+                           , 'ComTFVtxPVDispChi2LL' : 196.0
+                           , 'RobustPointingUL' : 0.28
+                           , 'TFPointUL' : 0.16
+                           , 'CharmRobustPointUL' : 0.04
+                           , 'CharmTFPointUL' : 0.04
+                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.2
+                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.2
+                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.2
+                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.2
+                           }
+                , 'LEPT' : { }
+                  }
+Hlt2_Hadronic.update(Miriam_20090430)
+####
+# charming scenario
+#
+Hlt2_Charming = { 'TOPO' : { 'ComRobAllTrkPtLL' : 400.0
+                           , 'ComRobAllTrkPVIPLL' : 0.025
+                           , 'ComRobPairMinDocaUL' : 0.15
+                           , 'ComRobTrkMaxPtLL' : 500.0
+                           , 'ComTFVtxPVDispChi2LL' : 196.0
+                           , 'RobustPointingUL' : 0.24
+                           , 'TFPointUL' : 0.08
+                           , 'CharmRobustPointUL' : 0.12
+                           , 'CharmTFPointUL' : 0.12
+                           , 'Prescale["Hlt2TopoTF4BodyCharmSignal"]' : 0.4
+                           , 'Prescale["Hlt2TopoTF4BodyReq4Yes"]' : 0.0
+                           , 'Prescale["Hlt2TopoTF4BodyReq3Yes"]' : 0.0
+                           , 'Prescale["Hlt2TopoTF4BodyReq2Yes"]' : 0.0
+                           }
+                , 'LEPT' : { }
+                  }
+Hlt2_Charming.update(Miriam_20090430)
+####
+# Optimised scenario
+# @author miriam.gandelman@cern.ch
+#
+Hlt2_Optimised = { 'TOPO' : { },
+                   'LEPT' : {} }
+Hlt2_Optimised.update(Miriam_20090430)

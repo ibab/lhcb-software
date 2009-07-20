@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.16 2009-07-18 15:04:36 graven Exp $
+# $Id: Hlt1.py,v 1.17 2009-07-20 14:43:07 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,66 +14,104 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
 from HltLine.HltLine     import addHlt1Prop
-
+from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
+from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
+from Hlt1Lines.HltL0Lines       import HltL0LinesConf
+from Hlt1Lines.HltLumiLines     import HltLumiLinesConf
+from Hlt1Lines.HltMuonLines     import HltMuonLinesConf
+from Hlt1Lines.HltHadronLines   import HltHadronLinesConf
+from Hlt1Lines.HltElectronLines import HltElectronLinesConf
+from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
+from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
+from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __slots__ = { "LumiBankKillerAcceptFraction" : 0.0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
-               , "EnableHltGlobalMonitor"       : True
-               , "EnableHltDecReports"          : True
-               , "EnableHltSelReports"          : True
-               , "EnableHltVtxReports"          : True
-               , "EnableHltRoutingBits"         : True
-               , "EnableLumiEventWriting"       : True
-               }
+   __used_configurables__ = [ # Hlt1 Lines
+                               HltCommissioningLinesConf
+                             , HltVeloLinesConf
+                             , HltLumiLinesConf
+                             , HltBeamGasLinesConf
+                             , HltL0LinesConf
+                             , HltMuonLinesConf
+                             , HltHadronLinesConf
+                             , HltElectronLinesConf
+                             , HltPhotonLinesConf
+                             , HltExpressLinesConf ]
 
+   __slots__ = {"HltType"                      : 'Hlt1+Hlt2'  # can be PA as well, Hlt1 part irrelevant
+                , "LumiBankKillerAcceptFraction" : 0.0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
+                , "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
+                }
+
+   def confType(self) :
+      """
+      Hlt1 configuration
+      """
+      hlttype           = self.getProp("HltType")
+      ThresholdSettings = self.getProp("ThresholdSettings")
+      
+      trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'     # Note : Hlt2 not done here: done in Hlt2.py
+              , 'DEFAULT': 'PA+LU+L0+VE+XP'
+                }
+      for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
+      type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
+                  , 'LU' : HltLumiLinesConf
+                  , 'BG' : HltBeamGasLinesConf
+                  , 'L0' : HltL0LinesConf
+                  , 'VE' : HltVeloLinesConf
+                  , 'XP' : HltExpressLinesConf
+                  , 'MU' : HltMuonLinesConf
+                  , 'HA' : HltHadronLinesConf
+                  , 'PH' : HltPhotonLinesConf
+                  , 'EL' : HltElectronLinesConf
+                  }
+      
+      for i in hlttype.split('+') :
+         print "# PK ", i
+         if i == 'NONE' : continue # no operation...
+         if i == 'Hlt2' : continue # we deal with this later...
+         if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
+         if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
+         log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
+         # FIXME: warning: the next is 'brittle': if someone outside 
+         #        does eg. HltMuonLinesConf(), it will get activated
+         #        regardless of whether we do it over here...
+         #        So anyone configuring some part explictly will _always_ get
+         #        that part of the Hlt run, even if it does not appear in HltType...
+         conf = type2conf[i]()
+         if ThresholdSettings and i in ThresholdSettings : 
+            for (k,v) in ThresholdSettings[i].iteritems() :
+               # configurables have an exception for list and dict: 
+               #   even if not explicitly set, if you ask for them, you get one...
+               #   this is done to make foo().somelist += ... work.
+               # hence we _assume_ that, even if we have an attr, but it matches the
+               # default, it wasn't set explicitly, and we overrule it...
+               if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
+                  log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+               else :
+                  setattr(conf,k,v)
+
+                  
+##################################################################################
+#
+#      
    def __apply_configuration__(self):
-        from Configurables       import GaudiSequencer as Sequence
-        from Configurables       import HltGlobalMonitor
-        from Configurables       import bankKiller
-        from Configurables       import LoKi__HDRFilter   as HltFilter
-        from Configurables       import HltSelReportsMaker, HltSelReportsWriter
-        from Configurables       import HltDecReportsWriter
-        from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
-        from Configurables       import HltRoutingBitsWriter
-        from Configurables       import HltLumiWriter
-        from Configurables       import DeterministicPrescaler as Prescale
-        # add a few thing to our printout
-        addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
+      from Configurables       import GaudiSequencer as Sequence
+      self.confType() 
+         
+      # add a few thing to our printout
+      addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
                     , 'Code', 'InputLocations'
                     , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                     , 'OutputSelection','Context' ])
-
-        importOptions('$HLTCONFROOT/options/HltInit.py')
-
-        ## finally, define the Hlt1 sequence!!
-        Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
-
-
-        # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
-        _list = ( ( "EnableHltGlobalMonitor" , HltGlobalMonitor  )
-                , ( "EnableHltDecReports"    , HltDecReportsWriter )
-                , ( "EnableHltSelReports"    , [HltSelReportsMaker, HltSelReportsWriter ] )
-                , ( "EnableHltVtxReports"    , [HltVertexReportsMaker, HltVertexReportsWriter ] )
-                , ( "EnableHltRoutingBits"   , HltRoutingBitsWriter )
-                )
-
-        End = Sequence( 'HltEndSequence', IgnoreFilterPassed = True )
-        EndMembers = End.Members
-        for i in [ i for (k,i) in _list if self.getProp(k) ] :
-            if type(i) is not list : i = [ i ]
-            # make sure we only instantiate if we actually use it...
-            EndMembers += [ j() for j in i ]
-        if (self.getProp("EnableLumiEventWriting")) :
-            EndMembers += [ HltLumiWriter()
-                          , Sequence( 'LumiStripper' , Members = 
-                                [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
-                                , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
-                                ])
-                          ] 
+      
+      importOptions('$HLTCONFROOT/options/HltInit.py')
+      
+      ## finally, define the Hlt1 sequence!!
+      Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )

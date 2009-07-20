@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.96 2009-07-18 21:08:56 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.97 2009-07-20 14:43:07 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,34 +15,16 @@ from HltLine.HltLine     import hlt1Lines
 from HltLine.HltLine     import hlt2Lines
 from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
-from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
-from Hlt1Lines.HltL0Lines       import HltL0LinesConf
-from Hlt1Lines.HltLumiLines     import HltLumiLinesConf
-from Hlt1Lines.HltMuonLines     import HltMuonLinesConf
-from Hlt1Lines.HltHadronLines   import HltHadronLinesConf
-from Hlt1Lines.HltElectronLines import HltElectronLinesConf
-from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
-from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
-from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
-
 from HltConf.Hlt1             import Hlt1Conf
 from HltConf.Hlt2             import Hlt2Conf
 from RichRecSys.Configuration import *
 
+##################################################################################
 class HltConf(LHCbConfigurableUser):
+    """
+    Hlt configuration
+    """
     __used_configurables__ = [ Hlt1Conf
-                             # Hlt1 Lines
-                             , HltCommissioningLinesConf
-                             , HltVeloLinesConf
-                             , HltLumiLinesConf
-                             , HltBeamGasLinesConf
-                             , HltL0LinesConf
-                             , HltMuonLinesConf
-                             , HltHadronLinesConf
-                             , HltElectronLinesConf
-                             , HltPhotonLinesConf
-                             , HltExpressLinesConf
                              , Hlt2Conf ]
     __slots__ = { "L0TCK"                      : ''
                 , "HltType"                    : 'Hlt1+Hlt2'
@@ -54,97 +36,74 @@ class HltConf(LHCbConfigurableUser):
                 , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
                 , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
+                , "EnableHltGlobalMonitor"       : True
+                , "EnableHltDecReports"          : True
+                , "EnableHltSelReports"          : True
+                , "EnableHltVtxReports"          : True
+                , "EnableHltRoutingBits"         : True
+                , "EnableLumiEventWriting"       : True
                 }   
 
+##################################################################################
     def defineL0Channels(self, L0TCK = None) :
-            if L0TCK :
-                importOptions('$L0TCK/L0DUConfig.opts')
-                from Configurables import L0DUMultiConfigProvider
-                if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-                    raise KeyError('requested L0 TCK %s is not known'%L0TCK)
-                from Hlt1Lines.HltL0Candidates import decodeL0Channels
-                channels = decodeL0Channels( L0TCK )
-            else :
-                channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
-            from Hlt1Lines.HltL0Candidates import setupL0Channels
-            setupL0Channels( channels ) 
+        """
+        Define L0 channels
+        """
+        if L0TCK :
+            importOptions('$L0TCK/L0DUConfig.opts')
+            from Configurables import L0DUMultiConfigProvider
+            if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+                raise KeyError('requested L0 TCK %s is not known'%L0TCK)
+            from Hlt1Lines.HltL0Candidates import decodeL0Channels
+            channels = decodeL0Channels( L0TCK )
+        else :
+            channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+        from Hlt1Lines.HltL0Candidates import setupL0Channels
+        setupL0Channels( channels ) 
 
 
+##################################################################################
     def confType(self,hlttype) :
-            self.defineL0Channels( self.getProp('L0TCK') )
-            #
-            #  main HLT sequencer
-            # 
-            from Configurables import L0DUFromRawAlg
-            Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                                , Members = #[ L0DUFromRawAlg()
-                                            [ Sequence('Hlt1') 
-                                            , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
-                                            , Sequence('HltEndSequence') 
-                                            ] )
-            trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'
-                    , 'DEFAULT': 'PA+LU+L0+VE+XP'
-                    }
-            for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
-            type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
-                        , 'LU' : HltLumiLinesConf
-                        , 'BG' : HltBeamGasLinesConf
-                        , 'L0' : HltL0LinesConf
-                        , 'VE' : HltVeloLinesConf
-                        , 'XP' : HltExpressLinesConf
-                        , 'MU' : HltMuonLinesConf
-                        , 'HA' : HltHadronLinesConf
-                        , 'PH' : HltPhotonLinesConf
-                        , 'EL' : HltElectronLinesConf }
-
-            ThresholdSettings = None
-            if self.getProp('ThresholdSettings'): 
-                exec "from HltThresholdSettings import %s as ThresholdSettings" % self.getProp('ThresholdSettings')
-            else :
-                from HltThresholdSettings import SettingsForDataType
-                ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
+        """
+        Decoding fo configuration. That's where Hlt1 and 2 configurations are called.
+        """
+        self.defineL0Channels( self.getProp('L0TCK') )
+        #
+        #  main HLT sequencer
+        # 
+        from Configurables import L0DUFromRawAlg
+        Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
+                       , Members = #[ L0DUFromRawAlg()
+                       [ Sequence('Hlt1') 
+                         , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                         , Sequence('HltEndSequence') 
+                         ] )
+        
+        ThresholdSettings = None
+        if self.getProp('ThresholdSettings'): 
+            exec "from HltThresholdSettings import %s as ThresholdSettings" % self.getProp('ThresholdSettings')
+        else :
+            from HltThresholdSettings import SettingsForDataType
+            ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
             log.info('# ThresholdSettings ' + str(ThresholdSettings) )
-
-            for i in hlttype.split('+') :
-                if i == 'NONE' : continue # no operation...
-                if i == 'Hlt2' : continue # we deal with this later...
-                if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
-                if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
-                log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
-                # FIXME: warning: the next is 'brittle': if someone outside 
-                #        does eg. HltMuonLinesConf(), it will get activated
-                #        regardless of whether we do it over here...
-                #        So anyone configuring some part explictly will _always_ get
-                #        that part of the Hlt run, even if it does not appear in HltType...
-                conf = type2conf[i]()
-                if ThresholdSettings and i in ThresholdSettings : 
-                    for (k,v) in ThresholdSettings[i].iteritems() :
-                        # configurables have an exception for list and dict: 
-                        #   even if not explicitly set, if you ask for them, you get one...
-                        #   this is done to make foo().somelist += ... work.
-                        # hence we _assume_ that, even if we have an attr, but it matches the
-                        # default, it wasn't set explicitly, and we overrule it...
-                        if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
-                            log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
-                        else :
-                            setattr(conf,k,v)
-            Hlt1Conf()
-            if hlttype is 'PA' :  # if _only_ PA, we strip down even more...
-                Hlt1Conf().EnableHltGlobalMonitor = False
-                Hlt1Conf().EnableHltSelReports = False
-                Hlt1Conf().EnableHltVtxReports = False
-                Hlt1Conf().EnableLumiEventWriting = False
-                self.setProp('ActiveHlt1Lines',[ 'Hlt1Physics','Hlt1Random'] )
-            #
-            # Hlt2
-            #
-            if hlttype.find('Hlt2') != -1 :                
-                self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires", "ActiveHlt2Lines",
-                                               "HistogrammingLevel", "ThresholdSettings"])
-                
+            
+        Hlt1Conf().ThresholdSettings = ThresholdSettings
+        Hlt1Conf().HltType = self.getProp("HltType")
+        
+        Hlt1Conf()
+        #
+        # Hlt2
+        #
+        if hlttype.find('Hlt2') != -1 :                
+            self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires", "ActiveHlt2Lines",
+                                           "HistogrammingLevel", "ThresholdSettings"])
 
 
+##################################################################################
     def configureRoutingBits(self) :
+        """
+        Routing bits
+        """
         ## set triggerbits
         #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
         # 32-63: reserved for Hlt1
@@ -165,7 +124,11 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltRoutingBitsWriter
         HltRoutingBitsWriter().RoutingBits = routingBits
 
+##################################################################################
     def configureVertexPersistence(self) :
+        """
+        persistify vertices
+        """
         ## and persist some vertices...
         ## uhhh... need to pick only those in ActiveHlt1Lines...
         vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
@@ -175,7 +138,11 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
 
+##################################################################################
     def configureANNSelections(self) :
+        """
+        Assigned numbers configuration
+        """
         ### TODO: use the computed indices available from the lines...
         ### TODO: what about shared selections??? (which appear with multiple indices!)
         ###       but which have names not prefixed by the line name
@@ -210,7 +177,12 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'  )
 
 
+##################################################################################
     def configureHltMonitoring(self, lines) :
+        """
+        Hlt Monitoring
+        @todo That's all Hlt1. Shouldn't it go there ?
+        """
         import re
         ## and tell the monitoring what it should expect..
         from Configurables import HltGlobalMonitor
@@ -273,7 +245,11 @@ class HltConf(LHCbConfigurableUser):
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='HltLine' ) 
             
 
+##################################################################################
     def postConfigAction(self) : 
+        """
+        ???
+        """
         from HltLine.HltLine     import Hlt1Line
         from HltLine.HltLine     import Hlt2Line
 
@@ -313,6 +289,55 @@ class HltConf(LHCbConfigurableUser):
         if self.getProp("Verbose") : print Sequence('Hlt') 
          
 
+##################################################################################
+#
+# end sequence
+#
+    def endSequence(self,hlttype):
+        """
+        define end sequence (mostly for lumi)
+        """
+        from Configurables       import GaudiSequencer as Sequence
+        from Configurables       import HltGlobalMonitor
+        from Configurables       import bankKiller
+        from Configurables       import LoKi__HDRFilter   as HltFilter
+        from Configurables       import HltSelReportsMaker, HltSelReportsWriter
+        from Configurables       import HltDecReportsWriter
+        from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
+        from Configurables       import HltRoutingBitsWriter
+        from Configurables       import HltLumiWriter
+        from Configurables       import DeterministicPrescaler as Prescale
+        
+        if hlttype is 'PA' :  # if _only_ PA, we strip down even more...
+            self.EnableHltGlobalMonitor = False
+            self.EnableHltSelReports = False
+            self.EnableHltVtxReports = False
+            self.EnableLumiEventWriting = False
+            self.ActiveHlt1Lines = [ 'Hlt1Physics','Hlt1Random'] 
+            
+            # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
+        _list = ( ( "EnableHltGlobalMonitor" , HltGlobalMonitor  )
+                  , ( "EnableHltDecReports"    , HltDecReportsWriter )
+                  , ( "EnableHltSelReports"    , [HltSelReportsMaker, HltSelReportsWriter ] )
+                  , ( "EnableHltVtxReports"    , [HltVertexReportsMaker, HltVertexReportsWriter ] )
+                  , ( "EnableHltRoutingBits"   , HltRoutingBitsWriter )
+                  )
+        
+        End = Sequence( 'HltEndSequence', IgnoreFilterPassed = True )
+        EndMembers = End.Members
+        for i in [ i for (k,i) in _list if self.getProp(k) ] :
+            if type(i) is not list : i = [ i ]
+            # make sure we only instantiate if we actually use it...
+            EndMembers += [ j() for j in i ]
+        if (self.getProp("EnableLumiEventWriting")) :
+            EndMembers += [ HltLumiWriter()
+                            , Sequence( 'LumiStripper' , Members = 
+                                        [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
+                                          , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
+                                          , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
+                                          ])
+                            ] 
+##################################################################################
     def __apply_configuration__(self):
         """
         Apply Hlt configuration
@@ -323,5 +348,6 @@ class HltConf(LHCbConfigurableUser):
         importOptions('$HLTCONFROOT/options/HltInit.py')
         log.info("Loaded HltInit")
         self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
-        self.confType(self.getProp('HltType'))
+        self.confType(self.getProp('HltType'))      
+        self.endSequence(self.getProp('HltType'))
         appendPostConfigAction( self.postConfigAction )

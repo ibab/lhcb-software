@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.273 2009-07-18 15:04:35 graven Exp $ 
+! $Id: release.notes,v 1.274 2009-07-20 14:43:07 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-20 - Patrick Koppenburg
+ - Added template Hlt2 configuration to HltThresholdSettings. 100% untested.
+ - First set of changes to Configurations.py and Hlt1.py : Just a reshuffling 
+   of Hl1t methods and slots (!) between Configuration.py and Hlt1.py.
+   . Decoding of Hlt1 thresholds goes from Configuration to Hlt1
+   . End sequence stuff goes from Hlt1 to Configuration
+   . Completely backwards-compatible as far as I can tell.
+ - tagged pkoppenb_20090720a (note the a)
 
 ! 2009-07-18 - Gerhard Raven
  - use regex where appropriate: no longer need eg. HltLumiDecision or 
