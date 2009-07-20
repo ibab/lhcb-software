@@ -2063,7 +2063,8 @@ def main():
         keys, values = getopt.getopt(arguments,'hdflrbp:v:c:ng:s:',
             ['help','debug','full','list','remove','binary=',
              'project=','version=','cmtversion=','nocheck',
-             'retry=','grid=','setup-script=','check', 'overwrite'])
+             'retry=','grid=','setup-script=','check', 'overwrite',
+             'compatversion='])
 
     except getopt.GetoptError:
         help()
@@ -2082,6 +2083,8 @@ def main():
             remove_flag = True
         if key in ( '-c', '--cmtversion'):
             cmtversion = value
+        if key == '--compatversion':
+            compat_version = value
         if key in ( '-v', '--version'):
             pversion = value
         if key in ('-p', '--project'):

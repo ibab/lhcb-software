@@ -1,3 +1,9 @@
+2009-07-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the option "--compatversion" to pass 
+	the version of the Compat project version to be installed. To noted that this project
+	can always be installed explicitly with "python install_project.py -p Compat -v vXrY -b"
+
 2009-07-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r2
