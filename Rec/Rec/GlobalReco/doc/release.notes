@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-07-20 - Chris Jones
+ - Store Muon PID information in charged ProtoParticles when MuonPID::IsMuonLoose
+   is true, not MuonPID::IsMuon. 
+
 !========================== GlobalReco v6r23 2009-07-14 ======================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file GlobalRoco_dll.cpp

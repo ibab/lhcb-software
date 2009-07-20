@@ -2,8 +2,9 @@
 # Created    : 2002-07-08
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
+
 package           GlobalReco
-version           v6r23
+version           v6r24
 
 branches          cmt doc src python root
 include_path none
