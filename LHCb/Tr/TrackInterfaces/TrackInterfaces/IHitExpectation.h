@@ -1,4 +1,4 @@
-// $Id: IHitExpectation.h,v 1.1 2007-09-17 08:28:40 mneedham Exp $ 
+// $Id: IHitExpectation.h,v 1.2 2009-07-20 11:16:09 mneedham Exp $ 
 #ifndef _IHitExpectation_H
 #define _IHitExpectation_H
  
@@ -16,8 +16,11 @@ static const InterfaceID IID_IHitExpectation( "IHitExpectation", 0, 0 );
 
 namespace LHCb{ 
  class Track;
+ class LHCbID;
 };
   
+#include <vector>
+
 class IHitExpectation: virtual public IAlgTool{
  
 public:
@@ -55,6 +58,16 @@ public:
   */
   virtual Info expectation( const LHCb::Track& aTrack ) const = 0;
                                                                                    
+  /** Collect all the expected hits
+   *
+   * @param aTrack Reference to the Track to test
+   * @param hits collected lhcbIDs
+   * 
+   **/ 
+  virtual void collect(const LHCb::Track& aTrack, 
+                       std::vector<LHCb::LHCbID>& ids ) const = 0;
+                                                                                 
+
                                                                       
 };
                                                                                
