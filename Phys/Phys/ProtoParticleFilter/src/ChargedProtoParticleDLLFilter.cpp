@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.cpp,v 1.3 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.cpp,v 1.4 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -56,14 +56,6 @@ StatusCode ChargedProtoParticleDLLFilter::initialize()
   return sc;
 }
 
-//=============================================================================
-// Finalise
-//=============================================================================
-StatusCode ChargedProtoParticleDLLFilter::finalize()
-{
-  return ProtoParticleDLLFilter::finalize();
-}
-
 bool
 ChargedProtoParticleDLLFilter::isSatisfied( const ProtoParticle* const & proto ) const
 {
@@ -76,10 +68,12 @@ ChargedProtoParticleDLLFilter::isSatisfied( const ProtoParticle* const & proto )
   }
   if ( !m_trSel->accept(*track) )
   {
-    verbose() << " -> ProtoParticle fails Track selection" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> ProtoParticle fails Track selection" << endreq;
     return false;
   }
-  verbose() << " -> ProtoParticle passes Track selection" << endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " -> ProtoParticle passes Track selection" << endreq;
   // if that is OK, apply cuts
   return ProtoParticleDLLFilter::isSatisfied( proto );
 }
@@ -101,6 +95,10 @@ ChargedProtoParticleDLLFilter::createCut( const std::string & tag,
 
   // Otherwise try and decode here
 
+  // Try to get a double from the value
+  double cut_value = 0;
+  if ( ! stringToDouble ( value, cut_value ) ) return NULL;
+
   // Create a new Cut object
   ProtoParticleSelection::SingleVariableCut * cut = new ProtoParticleSelection::SingleVariableCut();
 
@@ -108,7 +106,7 @@ ChargedProtoParticleDLLFilter::createCut( const std::string & tag,
   // Cut delimiter type
   cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim)  );
   // cut value
-  cut->setCutValue    ( boost::lexical_cast<double>(value)             );
+  cut->setCutValue    ( cut_value                                      );
   // cut description
   cut->setDescription ( "Charged Track Cut : "+tag+" "+delim+" "+value );
 

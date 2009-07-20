@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleCALOFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleCALOFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleCALOFilter.cpp,v 1.3 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -41,27 +41,6 @@ ProtoParticleCALOFilter::ProtoParticleCALOFilter( const std::string& type,
 ProtoParticleCALOFilter::~ProtoParticleCALOFilter() { }
 
 //=============================================================================
-// Initialise
-//=============================================================================
-StatusCode ProtoParticleCALOFilter::initialize()
-{
-  const StatusCode sc = ProtoParticleRICHFilter::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // intialisation tasks
-
-  return sc;
-}
-
-//=============================================================================
-// Finalise
-//=============================================================================
-StatusCode ProtoParticleCALOFilter::finalize()
-{
-  return ProtoParticleRICHFilter::finalize();
-}
-
-//=============================================================================
 // Create a cut object from decoded cut options
 //=============================================================================
 const ProtoParticleSelection::Cut *
@@ -77,6 +56,10 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
   if ( basecut ) return basecut;
 
   // Otherwise, cut data is CALO specific, so treat here
+
+  // True to get a double from the value
+  double cut_value = 0;
+  if ( ! stringToDouble ( value, cut_value ) ) return NULL;
   
   // Create a new Cut object
   ProtoParticleSelection::SingleVariableCut * dllcut = new ProtoParticleSelection::SingleVariableCut();
@@ -85,7 +68,7 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
   // Cut delimiter type
   dllcut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
   // cut value
-  dllcut->setCutValue    ( boost::lexical_cast<double>(value)            );
+  dllcut->setCutValue    ( cut_value                                     );
   // cut description
   dllcut->setDescription ( "Calo Cut : "+tag+" "+delim+" "+value         );
 

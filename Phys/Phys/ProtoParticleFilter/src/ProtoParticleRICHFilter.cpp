@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleRICHFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleRICHFilter.cpp,v 1.1 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleRICHFilter.cpp,v 1.2 2009-07-20 16:43:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -42,27 +42,6 @@ ProtoParticleRICHFilter( const std::string& type,
 ProtoParticleRICHFilter::~ProtoParticleRICHFilter() { }
 
 //=============================================================================
-// Initialise
-//=============================================================================
-StatusCode ProtoParticleRICHFilter::initialize()
-{
-  const StatusCode sc = ChargedProtoParticleDLLFilter::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // intialisation tasks
-
-  return sc;
-}
-
-//=============================================================================
-// Finalise
-//=============================================================================
-StatusCode ProtoParticleRICHFilter::finalize()
-{
-  return ChargedProtoParticleDLLFilter::finalize();
-}
-
-//=============================================================================
 // Create a cut object from decoded cut options
 //=============================================================================
 const ProtoParticleSelection::Cut *
@@ -78,6 +57,10 @@ ProtoParticleRICHFilter::createCut( const std::string & tag,
   if ( basecut ) return basecut;
   // Otherwise, cut data is RICH specific, so treat here
 
+  // Try to get a double from the value
+  double cut_value = 0;
+  if ( ! stringToDouble ( value, cut_value ) ) return NULL;
+
   // Create a new Cut object, of type DLLCut
   ProtoParticleSelection::DLLCut * dllcut = new ProtoParticleSelection::DLLCut();
 
@@ -85,7 +68,7 @@ ProtoParticleRICHFilter::createCut( const std::string & tag,
   // Cut delimiter type
   dllcut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
   // cut value
-  dllcut->setCutValue    ( boost::lexical_cast<double>(value)            );
+  dllcut->setCutValue    ( cut_value                                     );
   // cut description
   dllcut->setDescription ( "Rich DLL : "+tag+" "+delim+" "+value     );
 

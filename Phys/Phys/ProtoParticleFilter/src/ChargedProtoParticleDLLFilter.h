@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.h,v 1.3 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -48,9 +48,6 @@ public: // Core Gaudi methods
 
   /// Initialisation
   virtual StatusCode initialize();
-
-  /// Finalisation
-  virtual StatusCode finalize();
 
 public: // tool interface methods
 

@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleMUONFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleMUONFilter.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleMUONFilter.cpp,v 1.3 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -41,27 +41,6 @@ ProtoParticleMUONFilter::ProtoParticleMUONFilter( const std::string& type,
 ProtoParticleMUONFilter::~ProtoParticleMUONFilter() { }
 
 //=============================================================================
-// Initialise
-//=============================================================================
-StatusCode ProtoParticleMUONFilter::initialize()
-{
-  const StatusCode sc = ProtoParticleCALOFilter::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // intialisation tasks
-
-  return sc;
-}
-
-//=============================================================================
-// Finalise
-//=============================================================================
-StatusCode ProtoParticleMUONFilter::finalize()
-{
-  return ProtoParticleCALOFilter::finalize();
-}
-
-//=============================================================================
 // Create a cut object from decoded cut options
 //=============================================================================
 const ProtoParticleSelection::Cut *
@@ -78,6 +57,47 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
   // Otherwise, cut data is MUON specific, so treat here
 
   // Pointer to a cut object
+  if ( "ISMUON" == tag || "ISMUONLOOSE" == tag )
+  {
+    info() << "Making a IsMuonCut " << tag << endmsg;
+    if ( "=" != delim )
+    {
+      Exception( "Cut "+tag+" only supports '=' delimitor" );
+    }
+    // Create a new Cut object, of type IsMuonCut
+    ProtoParticleSelection::IsMuonCut * cut 
+      = new ProtoParticleSelection::IsMuonCut( "ISMUONLOOSE" == tag );
+    // cut value and delimitor
+    if      ( "TRUE"  == to_upper(value) )
+    {
+      cut->setDelim    ( ProtoParticleSelection::Cut::GT );
+      cut->setCutValue ( 0                               );
+    }
+    else if ( "FALSE" == to_upper(value) )
+    {
+      cut->setDelim    ( ProtoParticleSelection::Cut::LT );
+      cut->setCutValue ( 1                               );
+    }
+    else
+    {
+      delete cut;
+      Exception( "Unknown value "+value+" for "+tag+" cut" );
+    }
+    // cut description
+    cut->setDescription ( "Muon : "+tag+" = "+value );
+    // set this cut object as the one to return
+    basecut = cut;
+  }
+
+  // If the above worked, return
+  if ( basecut ) return basecut;
+  // otherwise, try again
+
+  // True to get a double from the value
+  double cut_value = 0;
+  if ( ! stringToDouble ( value, cut_value ) ) return NULL;
+
+  // try other cuts ...
   if ( "MUONNSHAREDHITS" == tag )
   {
     // Create a new Cut object, of type SingleVariableCut
@@ -85,11 +105,12 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
     // Cut delimiter type
     cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
     // cut value
-    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    cut->setCutValue    ( cut_value                                     );
     // cut description
     cut->setDescription ( "Muon NSharedHits : "+tag+" "+delim+" "+value );
     // the variable to cut upon
     cut->setVariable    ( LHCb::ProtoParticle::MuonNShared              );
+    // set this cut object as the one to return
     basecut = cut;
   }
   else if ( "MUONMULL" == tag )
@@ -99,11 +120,12 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
     // Cut delimiter type
     cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
     // cut value
-    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    cut->setCutValue    (cut_value                                      );
     // cut description
     cut->setDescription ( "Muon MuLL : "+tag+" "+delim+" "+value        );
     // the variable to cut upon
     cut->setVariable    ( LHCb::ProtoParticle::MuonMuLL                 );
+    // set this cut object as the one to return
     basecut = cut;
   }
   else if ( "MUONBKGLL" == tag )
@@ -113,11 +135,12 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
     // Cut delimiter type
     cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
     // cut value
-    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    cut->setCutValue    ( cut_value                                     );
     // cut description
     cut->setDescription ( "Muon BkgLL : "+tag+" "+delim+" "+value       );
     // the variable to cut upon
     cut->setVariable    ( LHCb::ProtoParticle::MuonBkgLL                );
+    // set this cut object as the one to return
     basecut = cut;
   }
   else if ( "MUONDLL(MU-BKG)" == tag )
@@ -127,11 +150,12 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
     // Cut delimiter type
     cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
     // cut value
-    cut->setCutValue    ( boost::lexical_cast<double>(value)            );
+    cut->setCutValue    ( cut_value                                     );
     // cut description
     cut->setDescription ( "Muon MuLL-BkgLL : "+tag+" "+delim+" "+value  );
     // the variables to cut upon
     cut->setDLLs( LHCb::ProtoParticle::MuonMuLL, LHCb::ProtoParticle::MuonBkgLL );
+    // set this cut object as the one to return
     basecut = cut;
   }
 

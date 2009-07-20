@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleRICHFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleRICHFilter.h,v 1.1 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleRICHFilter.h,v 1.2 2009-07-20 16:43:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -44,12 +44,6 @@ public: // Core Gaudi methods
                            const IInterface* parent );
 
   virtual ~ProtoParticleRICHFilter( ); ///< Destructor
-
-  /// Initialisation
-  virtual StatusCode initialize();
-
-  /// Finalisation
-  virtual StatusCode finalize();
 
 protected:
 

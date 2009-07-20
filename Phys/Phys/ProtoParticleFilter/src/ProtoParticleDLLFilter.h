@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.h,v 1.2 2006-11-20 15:59:49 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.h,v 1.3 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -47,12 +47,6 @@ public: // Core Gaudi methods
                           const IInterface* parent );
 
   virtual ~ProtoParticleDLLFilter( ); ///< Destructor
-
-  /// Initialisation
-  virtual StatusCode initialize();
-
-  /// Finalisation
-  virtual StatusCode finalize();
 
 private:
 

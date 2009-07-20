@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.cpp,v 1.3 2007-08-10 13:48:23 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.cpp,v 1.4 2009-07-20 16:43:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -40,27 +40,6 @@ ProtoParticleDLLFilter::ProtoParticleDLLFilter( const std::string& type,
 ProtoParticleDLLFilter::~ProtoParticleDLLFilter() { }
 
 //=============================================================================
-// Initialise
-//=============================================================================
-StatusCode ProtoParticleDLLFilter::initialize()
-{
-  const StatusCode sc = ProtoParticleFilterBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // intialisation tasks
-
-  return sc;
-}
-
-//=============================================================================
-// Finalise
-//=============================================================================
-StatusCode ProtoParticleDLLFilter::finalize()
-{
-  return ProtoParticleFilterBase::finalize();
-}
-
-//=============================================================================
 // Create a cut object from decoded cut options
 //=============================================================================
 const ProtoParticleSelection::Cut *
@@ -75,6 +54,10 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
             << tag << " " << delim << " " << value << endreq;
   }
 
+  // Try to get a double from the value
+  double cut_value = 0;
+  if ( ! stringToDouble ( value, cut_value ) ) return NULL;
+
   // Create a new Cut object, of type DLLCut
   ProtoParticleSelection::DLLCut * dllcut = new ProtoParticleSelection::DLLCut();
 
@@ -82,7 +65,7 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   // Cut delimiter type
   dllcut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
   // cut value
-  dllcut->setCutValue    ( boost::lexical_cast<double>(value)            );
+  dllcut->setCutValue    ( cut_value                                     );
   // cut description
   dllcut->setDescription ( "Combined DLL : "+tag+" "+delim+" "+value     );
 
