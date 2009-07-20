@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.7 2009-06-11 15:30:44 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.8 2009-07-20 16:44:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -60,6 +60,8 @@ public:
 
 public: // Helper classes
 
+  // ==========================================================================================================
+
   /** @class Cut ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
    *
    *  Utility class describing a single cut on a ProtoParticle variable
@@ -77,6 +79,7 @@ public: // Helper classes
         UndefinedDelim=-1, ///< Undefined delimiter type
         LT=0               ///< Less than
         , GT               ///< Greater than
+        , EQ               ///< Equals
       };
     /// Type for list of cuts
     typedef std::vector<const ProtoParticleSelection::Cut*> Vector;
@@ -131,6 +134,7 @@ public: // Helper classes
       const ProtoParticleSelection::Cut::Delim Delim =
         ( delim == "<" ? ProtoParticleSelection::Cut::LT :
           delim == ">" ? ProtoParticleSelection::Cut::GT :
+          delim == "=" ? ProtoParticleSelection::Cut::EQ :
           ProtoParticleSelection::Cut::UndefinedDelim );
       if ( Delim == ProtoParticleSelection::Cut::UndefinedDelim )
       {
@@ -148,8 +152,9 @@ public: // Helper classes
     {
       switch ( delim() )
       {
-      case ProtoParticleSelection::Cut::GT:   return value > cut;
-      case ProtoParticleSelection::Cut::LT:   return value < cut;
+      case ProtoParticleSelection::Cut::GT:   return value >  cut;
+      case ProtoParticleSelection::Cut::LT:   return value <  cut;
+      case ProtoParticleSelection::Cut::EQ:   return value == cut; /// CRJ : Unsafe. Need to address.
       default:                                return false;
       }
     }
@@ -159,6 +164,8 @@ public: // Helper classes
     double m_cutValue;                 ///< The cut value
     std::string m_description;         ///< A string description of the cut
   };
+
+  // ==========================================================================================================
 
   /** @class SingleVariableCut ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
    *
@@ -197,14 +204,15 @@ public: // Helper classes
     LHCb::ProtoParticle::additionalInfo variable() const { return m_variable; }
 
     /// Set the variable type
-    void setVariable( const LHCb::ProtoParticle::additionalInfo variable ) { m_variable=variable; }
-
+    void setVariable( const LHCb::ProtoParticle::additionalInfo variable ) { m_variable = variable; }
 
   private:
 
     LHCb::ProtoParticle::additionalInfo m_variable; ///< The ProtoParticle variable to apply the cut on
 
   };
+
+  // ==========================================================================================================
 
   /** @class DLLCut ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
    *
@@ -262,6 +270,48 @@ public: // Helper classes
     LHCb::ProtoParticle::additionalInfo m_dll2;
 
   };
+
+  // ==========================================================================================================
+
+  /** @class IsMuonCut Kernel/ProtoParticleSelection.h
+   *
+   *  Utility class describing a cut on IsMuon or IsMuonLoose flags in the MuonPID information
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   20/07/2009
+   */
+  class IsMuonCut : public Cut
+  {
+  public:
+
+    /// Standard constructor
+    IsMuonCut( const bool looseMuonSel         = true,
+               const Delim delim               = Cut::GT,
+               const double cutValue           = 0,
+               const std::string & description = "Unknown" )
+      : Cut ( delim, cutValue, description ),
+        m_looseMuonSelection ( looseMuonSel ) { }
+
+    /// Destructor
+    virtual ~IsMuonCut() { }
+
+  public:
+
+    /// Clone method
+    virtual Cut * clone() const;
+
+  public:
+
+    // test if a ProtoParticle passes the cut or not
+    virtual bool isSatisfied( const LHCb::ProtoParticle * proto ) const;
+
+  private:
+
+    bool m_looseMuonSelection; ///< Use the Loose or standard Muon selection
+
+  };
+
+  // ==========================================================================================================
 
   /** @class DetectorRequirements ProtoParticleSelection.h Kernel/ProtoParticleSelection.h
    *
@@ -408,6 +458,14 @@ public: // Helper classes
       return proto->hasInfo( LHCb::ProtoParticle::InAccBrem );
     }
 
+    // Methods to test a ProtoParticle has MUON information
+
+    /// Does this ProtoParticle have MUON information
+    inline bool hasMuonInfo( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->hasInfo( LHCb::ProtoParticle::InAccMuon );
+    }
+
     // Methods to test if a ProtoParticle has any sub-det DLL information
 
     /// Does this ProtoParticle have RICH DLL information
@@ -436,6 +494,8 @@ public: // Helper classes
     std::string m_description; ///< A string description of the cut
 
   };
+
+  // ==========================================================================================================
 
 public: // accessors and setters etc.
 

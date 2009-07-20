@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.303 2009-06-16 10:00:37 cattanem Exp $
+!$Id: release.notes,v 1.304 2009-07-20 16:44:29 jonrob Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-07-20 - Chris Jones
+ - Update ProtoParticleSelection code to implement new Cuts based on the
+   IsMuon and IsMuonLoose flags in the MuonPID information.
+   IsMuonLoose requires post-MC09 data.
 
 !======================== DaVinciKernel v7r7 2009-06-16 =====================
 ! 2009-06-11 - Chris Jones

@@ -4,7 +4,7 @@
  * Implementation file for tool ProtoParticleFilterBase
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.7 2008-04-29 14:17:45 pkoppenb Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.8 2009-07-20 16:44:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -16,6 +16,7 @@
 
 // boost
 #include "boost/assign/list_of.hpp"
+#include "boost/lexical_cast.hpp"
 
 // namespaces
 using namespace LHCb;
@@ -49,7 +50,7 @@ ProtoParticleFilterBase::ProtoParticleFilterBase( const std::string& type,
 
     else if ( NAME == "MUON" )
     {
-      m_selectionOpts.push_back("RequiresDet='MUON' CombDLL(mu-pi)>'-8.0'");
+      m_selectionOpts.push_back("RequiresDet='MUON' IsMuon=True CombDLL(mu-pi)>'-8.0'");
     }
     else if ( NAME == "ELECTRON" )
     {
@@ -86,15 +87,9 @@ StatusCode ProtoParticleFilterBase::initialize()
   return sc;
 }
 
-StatusCode ProtoParticleFilterBase::finalize()
-{
-  // Perform some generic finalisation tasks
-  return GaudiTool::finalize();
-}
-
 StatusCode ProtoParticleFilterBase::defineSelections()
 {
-  debug() << "Defining ProtoParticle selection criteria" << endreq;
+  debug() << "Defining ProtoParticle selection criteria" << endmsg;
 
   if ( !m_selectionOpts.empty() )
   {
@@ -117,13 +112,13 @@ StatusCode ProtoParticleFilterBase::defineSelections()
 StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & description )
 {
   // seperate into detector and cut data
-  if (msgLevel(MSG::DEBUG)) debug() << "Selection criteria : " << description << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Selection criteria : " << description << endmsg;
 
   // Create a new ProtoParticleSelection for this description
   m_protoSels.push_back( ProtoParticleSelection() );
   ProtoParticleSelection & protoSel = m_protoSels.back();
 
-  // first decode "=" selections to get detector criteria
+  // first decode "=" selections (could be detector requirements or cuts)
   Parser detTokens;
   detTokens.analyse( description, "=" );
   for ( Parser::Results::const_iterator i = detTokens.results().begin();
@@ -131,20 +126,31 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
   {
     const std::string & tag   = to_upper((*i).tag());
     const std::string & value = (*i).value();
-    debug() << " -> Detector Requirement : " << tag << " = " << value << endreq;
     const ProtoParticleSelection::DetectorRequirements * detreq = createDetReq(tag,value);
     if ( NULL != detreq )
     {
+      debug() << " -> Detector Requirement : " << tag << " = " << value << endmsg;
       protoSel.addToDetReqs(detreq);
     }
     else
     {
-      m_protoSels.pop_back();
-      return Error( "Failed to decode detector requirement : "+tag+" = "+value );
+      // Could be an equality cut (IsMuon etc.)
+      debug() << "   -> Not a Det Req - Try a Cut ..." << endmsg;
+      const ProtoParticleSelection::Cut * cut = createCut( tag, "=", value );
+      if ( cut )
+      {
+        protoSel.addToCuts( cut );
+      }
+      else
+      {
+        // do not know what to do so fail
+        m_protoSels.pop_back();
+        return Error( "Failed to decode : "+tag+" = "+value );
+      }
     }
   }
 
-  // next decode the cuts themselves
+  // next decode < or > cuts
 
   // list of possible delimiter types
   static const std::vector<std::string> delims = boost::assign::list_of("<")(">");
@@ -162,7 +168,7 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
       const std::string & tag   = to_upper((*iT).tag());
       const std::string & value = (*iT).value();
       // proccess this cut
-      debug() << " -> Cut : " << tag << " " << *iDelim << " " << value << endreq;
+      debug() << " -> Cut : " << tag << " " << *iDelim << " " << value << endmsg;
       const ProtoParticleSelection::Cut * cut = createCut( tag, *iDelim, value );
       if ( cut )
       {
@@ -235,7 +241,7 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << " -> Applying all cuts to ProtoParticle " << proto->key() << " : "
-              << *proto << endreq;
+              << *proto << endmsg;
   }
 
   bool selected = false;
@@ -250,10 +256,10 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
             = (*iSel).detReqs().begin();
           iDet != (*iSel).detReqs().end(); ++iDet )
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying DetReq " << (*iDet)->description() << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying DetReq " << (*iDet)->description() << endmsg;
       if ( !(*iDet)->isSatisfied(proto) )
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Requirement failed" << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Requirement failed" << endmsg;
         OK = false;    // failed one detector requirement
         break;         // abort other checks
       }
@@ -266,10 +272,10 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
     for ( ProtoParticleSelection::Cut::Vector::const_iterator iCut = (*iSel).cuts().begin();
           iCut != (*iSel).cuts().end(); ++iCut )
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying cut " << (*iCut)->description() << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "  -> Applying cut " << (*iCut)->description() << endmsg;
       if ( !(*iCut)->isSatisfied(proto) )
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Cut failed" << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "   -> Cut failed" << endmsg;
         OK = false;     // cut is not satisfied
         break;          // abort checking other cuts
       }
@@ -279,11 +285,28 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
     if ( OK )
     {
       selected = true; // cuts OK
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "    -> Passed Selection" << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "    -> Passed Selection" << endmsg;
       break;           // selections are exclusive, so if pass one abort checking others.
     }
 
   } // loop over selections
 
   return selected;
+}
+
+  // Try and convert a string to a double
+bool ProtoParticleFilterBase::stringToDouble( const std::string value, 
+                                              double & number ) const
+{
+  // Do in try block in case string cannot be interpreted as a double by boost lexical cast
+  try
+  {
+    number = boost::lexical_cast<double>(value);
+  }
+  catch ( const std::exception & expt )
+  {
+    debug() << value << " cannot be interpreted as a double" << endmsg;
+    return false;
+  }
+  return true;
 }

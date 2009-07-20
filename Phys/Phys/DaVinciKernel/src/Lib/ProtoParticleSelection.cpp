@@ -5,7 +5,7 @@
  * Implementation file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.cpp,v 1.5 2006-11-20 15:52:51 jonrob Exp $
+ * $Id: ProtoParticleSelection.cpp,v 1.6 2009-07-20 16:44:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -45,6 +45,11 @@ ProtoParticleSelection::Cut * ProtoParticleSelection::SingleVariableCut::clone()
   return new SingleVariableCut(*this);
 }
 
+ProtoParticleSelection::Cut * ProtoParticleSelection::IsMuonCut::clone() const
+{
+  return new IsMuonCut(*this);
+}
+
 ProtoParticleSelection::DetectorRequirements *
 ProtoParticleSelection::DetectorRequirements::clone() const
 {
@@ -69,6 +74,23 @@ ProtoParticleSelection::DLLCut::isSatisfied( const LHCb::ProtoParticle * proto )
 }
 
 bool
+ProtoParticleSelection::IsMuonCut::isSatisfied( const LHCb::ProtoParticle * proto ) const
+{
+  // Use a static MuonPID data object to decode the bit-packed Muon Status word
+  static LHCb::MuonPID mPID;
+  // Access the status word
+  ProtoParticle::ExtraInfo::const_iterator mStatus = proto->extraInfo().find( ProtoParticle::MuonPIDStatus );
+  if ( mStatus == proto->extraInfo().end() ) return false;
+  // decode the status word
+  mPID.setStatus( static_cast<unsigned int>(mStatus->second) );
+  const double value = ( m_looseMuonSelection ? 
+                         static_cast<double>(mPID.IsMuonLoose()) : 
+                         static_cast<double>(mPID.IsMuon())      );
+  // test the cut
+  return testCut( value, cutValue() );
+}
+
+bool
 ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoParticle * proto ) const
 {
   bool detOK = true;
@@ -76,7 +98,7 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   if ( requirement() == MustHave )
   {
     if ( (detector() == RICH && !hasRichDLL(proto)) ||
-         (detector() == MUON && !hasMuonDLL(proto)) ||
+         (detector() == MUON && !hasMuonInfo(proto)) ||
          (detector() == CALO && !hasCaloDLL(proto)) ||
          (detector() == RICH_AEROGEL  && !hasRichAerogel(proto)) ||
          (detector() == RICH_RICH1GAS && !hasRich1Gas(proto))    ||
@@ -93,17 +115,17 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   }
   else if ( requirement() == OnlyHave )
   {
-    if ( (detector() == RICH && (!hasRichDLL(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
-         (detector() == MUON && (!hasMuonDLL(proto) || hasRichDLL(proto) || hasCaloDLL(proto))) ||
-         (detector() == CALO && (!hasCaloDLL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
-         (detector() == RICH_AEROGEL  && (!hasRichAerogel(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
-         (detector() == RICH_RICH1GAS && (!hasRich1Gas(proto) || hasMuonDLL(proto) || hasCaloDLL(proto)))    ||
-         (detector() == RICH_RICH2GAS && (!hasRich2Gas(proto) || hasMuonDLL(proto) || hasCaloDLL(proto))) ||
-         (detector() == CALO_SPD      && (!hasCaloSPD(proto)  || hasRichDLL(proto) || hasMuonDLL(proto))) ||
-         (detector() == CALO_PRS      && (!hasCaloPRS(proto)  || hasRichDLL(proto) || hasMuonDLL(proto))) ||
-         (detector() == CALO_ECAL     && (!hasCaloECAL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
-         (detector() == CALO_HCAL     && (!hasCaloHCAL(proto) || hasRichDLL(proto) || hasMuonDLL(proto))) ||
-         (detector() == CALO_BREM     && (!hasCaloBREM(proto) || hasRichDLL(proto) || hasMuonDLL(proto)))
+    if ( (detector() == RICH && (!hasRichDLL(proto) || hasMuonInfo(proto) || hasCaloDLL(proto))) ||
+         (detector() == MUON && (!hasMuonInfo(proto) || hasRichDLL(proto) || hasCaloDLL(proto))) ||
+         (detector() == CALO && (!hasCaloDLL(proto) || hasRichDLL(proto) || hasMuonInfo(proto))) ||
+         (detector() == RICH_AEROGEL  && (!hasRichAerogel(proto) || hasMuonInfo(proto) || hasCaloDLL(proto))) ||
+         (detector() == RICH_RICH1GAS && (!hasRich1Gas(proto) || hasMuonInfo(proto) || hasCaloDLL(proto)))    ||
+         (detector() == RICH_RICH2GAS && (!hasRich2Gas(proto) || hasMuonInfo(proto) || hasCaloDLL(proto))) ||
+         (detector() == CALO_SPD      && (!hasCaloSPD(proto)  || hasRichDLL(proto) || hasMuonInfo(proto))) ||
+         (detector() == CALO_PRS      && (!hasCaloPRS(proto)  || hasRichDLL(proto) || hasMuonInfo(proto))) ||
+         (detector() == CALO_ECAL     && (!hasCaloECAL(proto) || hasRichDLL(proto) || hasMuonInfo(proto))) ||
+         (detector() == CALO_HCAL     && (!hasCaloHCAL(proto) || hasRichDLL(proto) || hasMuonInfo(proto))) ||
+         (detector() == CALO_BREM     && (!hasCaloBREM(proto) || hasRichDLL(proto) || hasMuonInfo(proto)))
          )
     {
       detOK = false;
@@ -112,7 +134,7 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   else if ( requirement() == MustNotHave )
   {
     if ( (detector() == RICH && hasRichDLL(proto)) ||
-         (detector() == MUON && hasMuonDLL(proto)) ||
+         (detector() == MUON && hasMuonInfo(proto)) ||
          (detector() == CALO && hasCaloDLL(proto)) ||
          (detector() == RICH_AEROGEL  && hasRichAerogel(proto)) ||
          (detector() == RICH_RICH1GAS && hasRich1Gas(proto))    ||

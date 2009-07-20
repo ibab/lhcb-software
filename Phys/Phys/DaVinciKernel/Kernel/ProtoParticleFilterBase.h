@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.h,v 1.2 2007-03-02 12:36:53 cattanem Exp $
+ * $Id: ProtoParticleFilterBase.h,v 1.3 2009-07-20 16:44:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -51,9 +51,6 @@ public: // Gaudi methods
   /// Initialisation
   virtual StatusCode initialize();
 
-  /// Finalisation
-  virtual StatusCode finalize();
-
 protected: // Definitions
 
   /// Type for job options selection descriptions
@@ -67,7 +64,7 @@ public: // tool interface methods
 protected:
 
   /// Converts a string to entirely upper case
-  inline std::string to_upper( const std::string & in )
+  inline std::string to_upper( const std::string & in ) const
   {
     std::string out( in );
     std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
@@ -109,6 +106,9 @@ protected:
 
   /// Read access to ProtoParticleSelection::Vector
   inline const ProtoParticleSelection::Vector & protoSels() const { return m_protoSels; }
+
+  /// Try and convert a string to a double
+  bool stringToDouble( const std::string value, double & number ) const;
 
 private: // utility classes
 
