@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.h,v 1.3 2009-03-30 12:54:54 mneedham Exp $
+// $Id: ITTrackMonitor.h,v 1.4 2009-07-20 11:17:31 mneedham Exp $
 #ifndef ITTRACKMONITOR_H
 #define ITTRACKMONITOR_H 1
  
@@ -51,6 +51,8 @@ class ITTrackMonitor : public TrackMonitorBase {
   unsigned int m_minNumITHits;
   bool m_splitByITType; 
   bool m_plotsByLayer;  
+
+  std::string m_clusterLocation;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.h,v 1.1 2009-01-19 11:25:10 mneedham Exp $
+// $Id: TTTrackMonitor.h,v 1.2 2009-07-20 11:17:31 mneedham Exp $
 #ifndef TTTRACKMONITOR_H
 #define TTTRACKMONITOR_H 1
  
@@ -40,11 +40,15 @@ class TTTrackMonitor : public TrackMonitorBase {
 
   void fillHistograms(const LHCb::Track& track, 
                       const std::vector<LHCb::LHCbID>& itIDs) const ;
+
+  unsigned int histoBin(const LHCb::STChannelID& chan) const;
+
   double m_refZ;
   double m_xMax;
   double m_yMax;
 
   unsigned int m_minNumTTHits;
+  std::string m_clusterLocation;
   
 };
 

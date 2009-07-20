@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.5 2009-03-30 12:54:54 mneedham Exp $
+// $Id: ITTrackMonitor.cpp,v 1.6 2009-07-20 11:17:31 mneedham Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -43,6 +43,7 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("splitByITType", m_splitByITType = true); 
   declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("minNumITHits", m_minNumITHits = 6u); 
+  declareProperty("InputData" , m_clusterLocation = STClusterLocation::ITClusters); 
 }
 
 //=============================================================================
@@ -75,11 +76,18 @@ StatusCode ITTrackMonitor::execute()
     return Warning( inputContainer()+" not found", StatusCode::SUCCESS, 0);
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
 
+  // locate the cluster container
+  const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
+
   std::map<std::string, unsigned int> tMap;
   std::string type = "";
 
+ 
   // # number of tracks
   plot(tracks->size(),1, "# tracks", 0, 500, 100 );
+  
+  // tmp container for ids
+  std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
   LHCb::Tracks::const_iterator iterT = tracks->begin();
@@ -103,9 +111,22 @@ StatusCode ITTrackMonitor::execute()
       } 
       
       fillHistograms(**iterT,type,ids);
+
+      // insert into tmp container
+      BOOST_FOREACH( LHCb::LHCbID id, ids ){
+        usedIDs.push_back(id.stID());
+      } // for each
     }
+
   } // iterT
 
+
+  // see how many hits in the IT were actually used
+  if (clusters->size() > 0u) {
+    std::sort(usedIDs.begin(), usedIDs.end());
+    std::unique(usedIDs.begin(), usedIDs.end());
+    plot(usedIDs.size()/(double)clusters->size(), "fraction used", 0., 1., 200);
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -152,23 +173,37 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
       LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
       if ( fNode->hasMeasurement() == false ||  fNode->measurement().type() != LHCb::Measurement::IT) continue;
-    
+      STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());    
+
       // unbiased residuals and biased residuals
-      LHCb::LHCbID nodeID = fNode->measurement().lhcbID();
-      STChannelID chan = fNode->measurement().lhcbID().stID();
+      const STChannelID chan = hit->lhcbID().stID();
       plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),ittype+"/biasedResidual","biasedResidual",  -2., 2., 200 );
+      // make plots per layer
       if (m_plotsByLayer == true){
-	std::string layerName = ITNames().LayerToString(chan);
-	std::string stationName = ITNames().StationToString(chan);
+	const std::string layerName = ITNames().LayerToString(chan);
+	const std::string stationName = ITNames().StationToString(chan);
         plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+layerName,"unbiasedResidual"+layerName,  -2., 2., 200 );
         plot(fNode->residual(),ittype+"/biasedResidual"+layerName,"biasedResidual"+layerName,  -2., 2., 200 );
         plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+stationName+layerName,"unbiasedResidual"+stationName+layerName,  -2., 2., 200 );
         plot(fNode->residual(),ittype+"/biasedResidual"+stationName+layerName,"biasedResidual"+stationName+layerName,  -2., 2., 200 );
       }      
 
+      // 2D plots in full detail mode
+      if (fullDetail() == true){
+        const unsigned int bin = chan.station()*100 + chan.layer()*10 + chan.sector(); 
+        const std::string boxName = ITNames().BoxToString(chan);
+        plot2D(bin, fNode->unbiasedResidual() , ittype+"/unbiasedResSector"+boxName ,
+               "unbiasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
+        plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
+               "/biasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
+
+        const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
+        plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
+        plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
+      }
+
       // get the measurement and plot ST related quantities
-      STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());
       plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);
       plot(hit->size(), ittype+"/size",  "cluster size", -0.5, 10.5, 11);
       if (hit->highThreshold() ) ++nHigh;

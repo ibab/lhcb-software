@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.3 2009-02-17 09:59:10 pkoppenb Exp $
+// $Id: TTTrackMonitor.cpp,v 1.4 2009-07-20 11:17:31 mneedham Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -41,6 +41,7 @@ TrackMonitorBase( name , pSvcLocator ){
 
   declareProperty("ReferenceZ", m_refZ = 2500.0); // midpoint of IT 
   declareProperty("minNumITHits", m_minNumTTHits = 2u); 
+  declareProperty("InputData" , m_clusterLocation = STClusterLocation::TTClusters);
 }
 
 //=============================================================================
@@ -72,12 +73,18 @@ StatusCode TTTrackMonitor::execute()
   if (!exist<LHCb::Tracks>(inputContainer())) 
     return Warning(inputContainer()+" not found", StatusCode::SUCCESS, 0);    
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+  
+  // locate the cluster container
+  const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
   std::map<std::string, unsigned int> tMap;
   std::string type = "";
 
   // # number of tracks
   plot(tracks->size(),1, "# tracks", 0, 500, 100 );
+
+  // tmp container for ids
+  std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
   LHCb::Tracks::const_iterator iterT = tracks->begin();
@@ -99,11 +106,22 @@ StatusCode TTTrackMonitor::execute()
       } else if( splitByAlgorithm() ) {
 	type = LHCb::Track::HistoryToString((*iterT)->history()) ;
       } 
+
+      // insert into tmp container
+      BOOST_FOREACH( LHCb::LHCbID id, ids ){
+        usedIDs.push_back(id.stID());
+      } // for each
       
       fillHistograms(**iterT,ids);
     }
   } // iterT
 
+  // see how many hits in the IT were actually used
+  if (clusters->size() > 0u) {
+    std::sort(usedIDs.begin(), usedIDs.end());
+    std::unique(usedIDs.begin(), usedIDs.end());
+    plot(usedIDs.size()/(double)clusters->size(), "fraction used", 0., 1., 200);
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -141,11 +159,25 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       // unbiased residuals and biased residuals
       LHCb::LHCbID nodeID = fNode->measurement().lhcbID();
       STChannelID chan = fNode->measurement().lhcbID().stID();
+      STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());
       plot(fNode->unbiasedResidual(),"unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),"biasedResidual","biasedResidual",  -2., 2., 200 );
+
+         // 2D plots in full detail mode
+      if (fullDetail() == true){
+	const unsigned int bin = histoBin(chan);
+        const std::string layerName = TTNames().UniqueLayerToString(chan);
+        plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
+               "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+        plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
+               "/biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+
+        const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
+        plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
+        plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
+      }
       
       // get the measurement and plot ST related quantities
-      STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());
       plot(hit->totalCharge(),"charge", "clusters charge", 0., 200., 100);
       plot(hit->size(), "size",  "cluster size", -0.5, 10.5, 11);
       if (hit->highThreshold() ) ++nHigh;
@@ -162,4 +194,13 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 
 
 }
+
+unsigned int TTTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
+
+  // convert layer and station to a flat number
+  unsigned int layer;
+  chan.station() == 1u ?layer = chan.layer() : layer = chan.layer() + 2;
+  return layer * 100 + chan.sector();
+}
+
 
