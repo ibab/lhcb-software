@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.147 2009-07-10 15:20:00 gcowan Exp $
+!$Id: release.notes,v 1.148 2009-07-20 16:41:59 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-07-20 - Chris Jones
+ - Update Muon selection criteria to include new IsMuon=True cut.
+   In future it will be possible to select muons with the looser
+   IsMuonLoose=True requirement, but this requires post-MC09 data.
 
 ! 2009-07-10 - Greig Cowan
  - Added vertex chi2 cut to phi in StdLooseDetachedPhi.

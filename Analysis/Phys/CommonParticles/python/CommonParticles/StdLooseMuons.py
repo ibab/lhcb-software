@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseMuons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
+# $Id: StdLooseMuons.py,v 1.5 2009-07-20 16:41:59 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseMuons.py
 #  configuration file for 'Standard Loose Muons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose Muons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'StdLooseMuons' ,
@@ -34,7 +34,7 @@ selector = trackSelector ( algorithm )
 
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
-fltr.Selection = [ "RequiresDet='MUON'"  ]
+fltr.Selection = [ "RequiresDet='MUON' IsMuon=True" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
