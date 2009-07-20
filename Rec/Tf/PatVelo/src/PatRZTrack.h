@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.h,v 1.5 2009-04-01 09:54:20 dhcroft Exp $
+// $Id: PatRZTrack.h,v 1.6 2009-07-20 11:35:32 dhcroft Exp $
 #ifndef TF_PATRZTRACK_H 
 #define TF_PATRZTRACK_H 1
 
@@ -8,7 +8,7 @@
 
 #include "gsl/gsl_pow_int.h"
 
-#include "TfKernel/VeloRHit.h"
+#include "PatVeloHit.h"
 
 namespace Tf {
   /** @class PatRZTrack PatRZTrack.h
@@ -35,7 +35,7 @@ namespace Tf {
         return errR2() + gsl_pow_2(z-meanZ()) * m_slopeErr;  
       }
       inline bool valid()          const { return m_valid; }
-      inline VeloRHits* coords()       { return &m_coord; };
+      inline PatVeloRHits* coords()       { return &m_coord; };
       inline unsigned int nbCoords() const { return m_coord.size(); }
       inline int missedStations() const { return m_missedStations; }
       inline int zone()            const { return m_zone; } ///< get R zone
@@ -50,7 +50,7 @@ namespace Tf {
       void setMissedStations( int missed ) { m_missedStations = missed ; } 
       void setBackward( bool flag )      { m_backward = flag; }  
 
-      void addRCoord( VeloRHit* coord ); ///< new R coord + fit
+      void addRCoord( PatVeloRHit* coord ); ///< new R coord + fit
 
       void tagUsedCoords();   ///< Label coords in PatVeloDataHolder as used
 
@@ -79,7 +79,7 @@ namespace Tf {
 
       double m_slopeErr; ///< error on dr/dz
 
-      VeloRHits m_coord; ///< Container of R coords
+      PatVeloRHits m_coord; ///< Container of R coords
 
   };
 }

@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.13 2009-06-29 09:17:46 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.14 2009-07-20 11:35:32 dhcroft Exp $
 // Include files 
 
 // local
@@ -174,7 +174,7 @@ namespace Tf {
       w = dCos * dCos / (variance + MSError);
       v.increment(w,lv,z);
 
-      if( fullErrorPoints < 
+      if( fullErrorPoints <=  
 	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ){
 	MSError += stepError;
       }
@@ -204,7 +204,7 @@ namespace Tf {
       w = dSin * dSin / (variance + MSError);
       v.increment(w,lv,z);
 
-      if( fullErrorPoints < 
+      if( fullErrorPoints <=
 	  static_cast<unsigned int>(itC - m_rCoord.rbegin()) ) {
 	MSError += stepError;
       }
@@ -301,7 +301,7 @@ namespace Tf {
       chi2 += w * dSin * dSin * du * du ;
       chi2 += w * dCos * dCos * dv * dv ;
 
-      if( fullErrorPoints < 
+      if( fullErrorPoints <= 
 	  static_cast<unsigned int>(itC - m_phiCoord.rbegin()) ) {
 	MSError += stepError;
       }
@@ -329,7 +329,7 @@ namespace Tf {
       chi2 += w * dCos * dCos * du * du ;
       chi2 += w * dSin * dSin * dv * dv ;
 
-      if( fullErrorPoints < 
+      if( fullErrorPoints <=
 	  static_cast<unsigned int>(itC - m_rCoord.rbegin()) ) {
 	MSError += stepError;
       }

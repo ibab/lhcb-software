@@ -1,4 +1,4 @@
-// $Id: PatVeloHit.h,v 1.5 2007-09-16 13:52:03 krinnert Exp $
+// $Id: PatVeloHit.h,v 1.6 2009-07-20 11:35:32 dhcroft Exp $
 #ifndef INCLUDE_TF_PATVELOHIT_H
 #define INCLUDE_TF_PATVELOHIT_H 1
 
@@ -110,6 +110,7 @@ namespace Tf {
   typedef PatVeloHit<DeVeloPhiType,Tf::VeloPhiHit> PatVeloPhiHit;
 
   typedef PatVeloRHit::range_type   PatVeloRHitRange;
+  typedef PatVeloRHit::container_type   PatVeloRHits;
   typedef PatVeloPhiHit::range_type PatVeloPhiHitRange;
 }
 #endif // INCLUDE_TF_PATVELOHIT_H

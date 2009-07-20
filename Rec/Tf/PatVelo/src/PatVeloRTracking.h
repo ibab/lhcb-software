@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.3 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloRTracking.h,v 1.4 2009-07-20 11:35:32 dhcroft Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "TfKernel/DefaultVeloRHitManager.h"
+#include "PatVeloRHitManager.h"
 
 // Local
 #include "PatRZTrack.h"
@@ -35,9 +35,9 @@ namespace Tf {
 
     private:
 
-      typedef VeloRHit::range_type RHitRange;                                        ///< shortcut to range of r hits
-      typedef DefaultVeloRHitManager::StationIterator        StationIterator;        ///< shortcut for station iterator
-      typedef DefaultVeloRHitManager::StationReverseIterator StationReverseIterator; ///< shortcut for reverse station iterator
+      typedef PatVeloRHit::range_type RHitRange;                                 ///< shortcut to range of r hits
+      typedef PatVeloRHitManager::StationIterator        StationIterator;        ///< shortcut for station iterator
+      typedef PatVeloRHitManager::StationReverseIterator StationReverseIterator; ///< shortcut for reverse station iterator
 
     private:
       /** Take three sectors and set up the combinations to pass to 
@@ -71,7 +71,7 @@ namespace Tf {
           unsigned int &nbUsed,
           double tol, 
           bool forward,
-          VeloRHits *extraCoord);
+          PatVeloRHits *extraCoord);
 
       /// add the hits from the other side of the detector to a track
       void addOppositeSideHits(PatRZTrack &newTrack, const int &zone,
@@ -81,7 +81,7 @@ namespace Tf {
       void mergeTracks( std::vector<PatRZTrack> &rzTracks );
 
     private:
-      DefaultVeloRHitManager*   m_hitManager;
+      PatVeloRHitManager*   m_hitManager;
 
       std::string  m_outputLocation;    ///< Location of track container on the TES
       std::string  m_hitManagerName;    ///< Name of the hit manager instance 

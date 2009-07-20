@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.h,v 1.3 2008-08-26 17:52:20 dhcroft Exp $
+// $Id: PatVeloPhiHitManager.h,v 1.4 2009-07-20 11:35:32 dhcroft Exp $
 #ifndef INCLUDE_TF_PATVELOPHIHITMANAGER_H
 #define INCLUDE_TF_PATVELOPHIHITMANAGER_H 1
 
@@ -38,6 +38,12 @@ namespace Tf {
       void prepareHits(Station* station);        ///< Prepare hits for one station only, implementation
 
       void resetUsedFlagOfHits(); ///< Reset all used flags to unused
+
+  private:
+  /// Max number of clusters in phi inner region before region killed as too hot
+      unsigned int m_maxPhiInner; 
+  /// Max number of clusters in phi outer region before region killed as too hot
+      unsigned int m_maxPhiOuter; 
       
   };
 }

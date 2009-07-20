@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.8 2009-04-01 09:54:20 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.9 2009-07-20 11:35:32 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -44,7 +44,7 @@ namespace Tf {
       declareProperty( "OutputTracksName", m_outputLocation   =
           LHCb::TrackLocation::RZVelo     );
       declareProperty( "HitManagerName", m_hitManagerName     =
-          "DefaultVeloRHitManager"     );
+          "PatVeloRHitManager"     );
       declareProperty( "MergeTracks"     , m_mergeTracks      = false     );
       declareProperty( "NCommonToMerge"  , m_nCommonToMerge   = 2         );
       declareProperty( "AdjacentSectors" , m_adjacentSectors  = false     );
@@ -69,7 +69,7 @@ namespace Tf {
 
     if(m_isDebug){debug() << "==> Initialize" << endmsg;}
 
-    m_hitManager = tool<DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager", m_hitManagerName );
+    m_hitManager = tool<PatVeloRHitManager>( "Tf::PatVeloRHitManager", m_hitManagerName );
 
     //== Get detector element
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -253,9 +253,9 @@ namespace Tf {
       PatRZTrack* tr = &(*itRzt);
       double nbClus = tr->coords()->size();
       double nbOver = 0;
-      for ( VeloRHits::iterator itC = tr->coords()->begin();
+      for ( PatVeloRHits::iterator itC = tr->coords()->begin();
           tr->coords()->end() != itC; ++itC ) {
-        if ( m_chargeThreshold < (*itC)->signal() ) ++nbOver;
+        if ( m_chargeThreshold < (*itC)->hit()->signal() ) ++nbOver;
       }
 
       if ( nbClus * m_highChargeFract > nbOver ) {
@@ -318,7 +318,7 @@ namespace Tf {
 					   tr->missedStations()) );
 
         // store details of hits on track
-        for ( VeloRHits::iterator itC = tr->coords()->begin();
+        for ( PatVeloRHits::iterator itC = tr->coords()->begin();
             tr->coords()->end() != itC; ++itC ) {
           track->addToLhcbIDs( (*itC)->lhcbID() );
         }
@@ -438,14 +438,14 @@ namespace Tf {
       const DeVeloRType* rSensor1 = (*station1)->sensor();
 
       // get first cluster in third sensor
-      VeloRHitRange hits2 = (*station2)->hits(zone2);
-      VeloRHits::const_iterator  first2 = hits2.begin();
+      RHitRange hits2 = (*station2)->hits(zone2);
+      RHitRange::const_iterator  first2 = hits2.begin();
       // iterators for the othe sensors
-      VeloRHits::const_iterator c0, c2;
+      RHitRange::const_iterator c0, c2;
       // loop over all possible clusters in first station
-      VeloRHitRange hits0 = (*station0)->hits(zone0);
+      RHitRange hits0 = (*station0)->hits(zone0);
       for ( c0 = hits0.begin(); hits0.end() != c0 ; ++c0 ) {
-        if ( (*c0)->isUsed() ) continue; // cluster already used
+        if ( (*c0)->hit()->isUsed() ) continue; // cluster already used
         double r0 = (*c0)->coordHalfBox();
 
         // calculate min and max r of cluster in first sensor
@@ -461,7 +461,7 @@ namespace Tf {
         // loop over clusters in third station finding a possible match
         for ( c2 = first2; hits2.end() != c2 ; ++c2 ) {
 
-          if ( 0 != iCase && (*c2)->isUsed() ) continue;
+          if ( 0 != iCase && (*c2)->hit()->isUsed() ) continue;
 
           double r2 = (*c2)->coordHalfBox();
           if ( rMax <= r2 ) break;
@@ -477,29 +477,29 @@ namespace Tf {
           double rTol = m_rMatchTol * rPitch;
 
           // try to find a matching co-ord
-          VeloRHit* bestc1 = (*station1)->closestHitHalfBox(zone1, rPred, rTol );
+          PatVeloRHit* bestc1 = (*station1)->closestHitHalfBox(zone1, rPred, rTol );
           if ( 0 == bestc1 ) continue;
 
           //=== We have 3 aligned points
           if ( m_isVerbose ) {
             double r1 = bestc1->coordHalfBox();
             verbose() << format( "Triplet  z0 %6.1f  r %6.3f  ", z0, r0 );
-            printCluster( *c0, verbose() );
+            printCluster( (*c0)->hit(), verbose() );
             verbose() << format( "         z1 %6.1f  r %6.3f  ", z1, r1 );
-            printCluster( bestc1, verbose() );
+            printCluster( bestc1->hit(), verbose() );
             verbose() << format( "         z2 %6.1f  r %6.3f  ", z2, r2 );
-            printCluster( *c2, verbose() );
+            printCluster( (*c2)->hit(), verbose() );
           }
           // create track
           PatRZTrack newTrack;
-          newTrack.addRCoord( *c0    );
+          newTrack.addRCoord( *c0 );
           newTrack.addRCoord( bestc1 );
-          newTrack.addRCoord( *c2    );
+          newTrack.addRCoord( *c2 );
 
           //count "used" hits
           unsigned int nbUsed = 0; // first is unused by construction.
-          if ( bestc1->isUsed() ) ++nbUsed;
-          if ( (*c2)->isUsed()  ) ++nbUsed;
+          if ( bestc1->hit()->isUsed() ) ++nbUsed;
+          if ( (*c2)->hit()->isUsed()  ) ++nbUsed;
 
           int nMiss = extendTrack(newTrack,station2,zone2,nbUsed, m_rExtraTol, forward , 0);
 
@@ -589,7 +589,7 @@ namespace Tf {
       unsigned int &nbUsed,
       double myTol,
       bool forward,
-      VeloRHits *extraCoord){
+      PatVeloRHits *extraCoord){
 
     // determine where to stop
     unsigned int half = static_cast<unsigned int>((*station)->sensor()->isRight());
@@ -638,7 +638,7 @@ namespace Tf {
       if ( (*station)->sensor()->rMin(zone) > rPred ) break;  // no longer inside.
 
       //== Select the best hit when extrapolating
-      VeloRHit* bestc = (*station)->closestHitHalfBox( zone, rPred, tol );
+      PatVeloRHit* bestc = (*station)->closestHitHalfBox( zone, rPred, tol );
       if ( 0 != bestc ) {
         lastZ = z;
         // add hit to track or to temporary storage
@@ -648,11 +648,11 @@ namespace Tf {
         }else{
           extraCoord->push_back( bestc );
         }
-        if ( bestc->isUsed() ) ++nbUsed;
+        if ( bestc->hit()->isUsed() ) ++nbUsed;
         if ( m_isVerbose ) {
           verbose()   
             << format( "    add  z  %6.1f  r %6.3f  ", z, bestc->coordHalfBox() );
-          printCluster( bestc, verbose() );
+          printCluster( bestc->hit(), verbose() );
         }
       } else {
         // no hit found
@@ -667,7 +667,7 @@ namespace Tf {
     addOppositeSideHits(PatRZTrack &newTrack,const int &zone,
         const DeVeloRType* sensor ){
 
-      VeloRHits extraCoords;
+      PatVeloRHits extraCoords;
 
       const DeVeloRType* otherSideSensor = sensor->otherSideRSensor();
       if (!otherSideSensor) return;
@@ -721,13 +721,13 @@ namespace Tf {
         if ( (*it2).minSensor() > (*it1).maxSensor() - m_nCommonToMerge ) continue;
         int nCommon = 0;
         int nCommonSensor = 0;
-        VeloRHits::iterator itC1, itC2;
+        PatVeloRHits::iterator itC1, itC2;
         for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
-          if ( (*itC1)->sensor()->sensorNumber() < (*it2).minSensor() ) continue;
-          if ( (*itC1)->sensor()->sensorNumber() > (*it2).maxSensor() ) continue;
+          if ( (*itC1)->sensorNumber() < (*it2).minSensor() ) continue;
+          if ( (*itC1)->sensorNumber() > (*it2).maxSensor() ) continue;
           for ( itC2 = (*it2).coords()->begin(); (*it2).coords()->end() != itC2; ++itC2 ) {
             if ( (*itC1) == (*itC2) ) nCommon++;
-            if ( (*itC1)->sensor()->sensorNumber() == (*itC2)->sensor()->sensorNumber() ) nCommonSensor++;
+            if ( (*itC1)->sensorNumber() == (*itC2)->sensorNumber() ) nCommonSensor++;
           }
           if ( nCommonSensor > nCommon ) break;
         }
@@ -737,19 +737,19 @@ namespace Tf {
               << " common sensors" << endreq;
             debug() << " Track 1" << endreq;
             for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
-              printCluster( *itC1, debug() );
+              printCluster( (*itC1)->hit(), debug() );
             }
             debug() << " Track 2" << endreq;
             for ( itC2 = (*it2).coords()->begin(); (*it2).coords()->end() != itC2; ++itC2 ) {
-              printCluster( *itC2, debug() );
+              printCluster( (*itC2)->hit(), debug() );
             }
           }
           if ( nCommon == nCommonSensor ) {
             for ( itC2 = (*it2).coords()->begin(); (*it2).coords()->end() != itC2; ++itC2 ) {
-              unsigned int mySens = (*itC2)->sensor()->sensorNumber();
+              unsigned int mySens = (*itC2)->sensorNumber();
               bool foundSensor = false;
               for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
-                if ( (*itC1)->sensor()->sensorNumber() == mySens ) foundSensor = true;
+                if ( (*itC1)->sensorNumber() == mySens ) foundSensor = true;
               }
               if ( !foundSensor ) (*it1).addRCoord( *itC2 );
             }
@@ -759,7 +759,7 @@ namespace Tf {
             if ( msgLevel( MSG::DEBUG ) ) {
               debug() << "---> Tracks are merged <--- Resulting track: " << endreq;
               for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
-                printCluster( *itC1, debug() );
+                printCluster( (*itC1)->hit(), debug() );
               }
             }
           }

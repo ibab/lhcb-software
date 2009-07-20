@@ -1,4 +1,4 @@
-// $Id: PatVeloRHitManager.cpp,v 1.4 2008-08-26 17:52:20 dhcroft Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.5 2009-07-20 11:35:32 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 
@@ -25,6 +25,8 @@ namespace Tf {
     : Tf::ExtendedVeloRHitManager<PatVeloRHit>(type, name, parent)
     {
       declareInterface<PatVeloRHitManager>(this);
+      // cut tuned on MC09 signal / DC06 minBias : review with real data
+      declareProperty("MaxClustersRZone", m_maxRClustersZone = 24) ; 
     }
 
   //=============================================================================
@@ -36,6 +38,9 @@ namespace Tf {
     if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
     debug() << "==> Initialize" << endmsg;
+
+    info() << "Kill hits in R zone with more than " << m_maxRClustersZone
+	   << " clusters" << endmsg;
 
     return StatusCode::SUCCESS;
   }
@@ -90,15 +95,22 @@ namespace Tf {
 
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
           Tf::VeloRHitRange hits = defaultStation->hits(zone);
-          Tf::VeloRHits::const_iterator hi   = hits.begin();
-          Tf::VeloRHits::const_iterator hend = hits.end();
-
-          m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
-          for ( ; hi != hend; ++hi ) { // import all hits
-            m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
-            station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
-          }
-        }
+	  bool markUsed = false;
+	  if ( hits.size() > m_maxRClustersZone ){
+	    Warning("Very hot VELO R zone: ignoring clusters",
+		    StatusCode::SUCCESS, 0 ).ignore();
+	    markUsed = true;
+	  }
+	  Tf::VeloRHits::const_iterator hi   = hits.begin();
+	  Tf::VeloRHits::const_iterator hend = hits.end();
+	  
+	  m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
+	  for ( ; hi != hend; ++hi ) { // import all hits
+	    if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+	    m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+	    station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+	  }
+	}
         station->setHitsPrepared(true);
       }
     }
@@ -119,13 +131,20 @@ namespace Tf {
 
     for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
       Tf::VeloRHitRange hits = defaultStation->hits(zone);
+      bool markUsed = false;
+      if ( hits.size() > m_maxRClustersZone ){
+	Warning("Very hot VELO R zone: ignoring clusters",
+		StatusCode::SUCCESS, 0 ).ignore();
+	markUsed = true;
+      }
       Tf::VeloRHits::const_iterator hi   = hits.begin();
       Tf::VeloRHits::const_iterator hend = hits.end();
-
+      
       m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
       for ( ; hi != hend; ++hi ) { // import all hits
-        m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
-        station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+	if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+	m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+	station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
       }
     }
     station->setHitsPrepared(true);

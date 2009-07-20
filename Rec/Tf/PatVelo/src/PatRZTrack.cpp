@@ -1,4 +1,4 @@
-// $Id: PatRZTrack.cpp,v 1.7 2009-04-01 09:54:20 dhcroft Exp $
+// $Id: PatRZTrack.cpp,v 1.8 2009-07-20 11:35:32 dhcroft Exp $
 // Include files 
 
 // local
@@ -34,9 +34,9 @@ namespace Tf {
     m_coord.reserve( 20 );
   }
 
-  void PatRZTrack::addRCoord( VeloRHit* coord )  { 
-    if ( coord->sensor()->sensorNumber() > m_maxSensor ) m_maxSensor = coord->sensor()->sensorNumber();
-    if ( coord->sensor()->sensorNumber() < m_minSensor ) m_minSensor = coord->sensor()->sensorNumber();
+  void PatRZTrack::addRCoord( PatVeloRHit* coord )  { 
+    if ( coord->sensorNumber() > m_maxSensor ) m_maxSensor = coord->sensorNumber();
+    if ( coord->sensorNumber() < m_minSensor ) m_minSensor = coord->sensorNumber();
     m_coord.push_back( coord ); 
     double z = coord->z();
     double w = coord->weight(); 
@@ -59,7 +59,7 @@ namespace Tf {
 
   double PatRZTrack::chi2() const {
     double chi2=0;
-    for(VeloRHits::const_iterator i= m_coord.begin() ; i < m_coord.end(); ++i){
+    for(PatVeloRHits::const_iterator i= m_coord.begin() ; i < m_coord.end(); ++i){
       chi2 += gsl_pow_2((*i)->coordHalfBox() - (*i)->z()*m_slope - m_pos0)*
 	(*i)->weight();
     }
@@ -67,14 +67,14 @@ namespace Tf {
   }
 
   void PatRZTrack::tagUsedCoords()  {
-    for ( VeloRHits::iterator itC = m_coord.begin();
+    for ( PatVeloRHits::iterator itC = m_coord.begin();
         m_coord.end() != itC; ++itC ){
-      (*itC)->setStatus(HitBase::UsedByVeloRZ);
+      (*itC)->hit()->setStatus(HitBase::UsedByVeloRZ);
     }
   }
 
   double PatRZTrack::rInterpolated( double z ) {
-    VeloRHits::const_iterator itF,itN, itNN;
+    PatVeloRHits::const_iterator itF,itN, itNN;
 
     //== Get itF,itN the coordinates z is in between.
     if ( m_backward ) {

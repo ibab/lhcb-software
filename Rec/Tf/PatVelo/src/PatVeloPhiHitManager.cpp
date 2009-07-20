@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.cpp,v 1.3 2008-08-26 17:52:20 dhcroft Exp $
+// $Id: PatVeloPhiHitManager.cpp,v 1.4 2009-07-20 11:35:32 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -26,6 +26,10 @@ namespace Tf {
     : Tf::ExtendedVeloPhiHitManager<PatVeloPhiHit>(type, name, parent)
     {
       declareInterface<PatVeloPhiHitManager>(this);
+      // cut tuned on MC09 signal / DC06 minBias : review with real data
+      declareProperty("MaxClustersPhiInner", m_maxPhiInner = 28) ; 
+      // cut tuned on MC09 signal / DC06 minBias : review with real data
+      declareProperty("MaxClustersPhiOuter", m_maxPhiOuter = 33) ; 
     }
 
   //=============================================================================
@@ -38,6 +42,10 @@ namespace Tf {
 
     debug() << "==> Initialize" << endmsg;
 
+    info() << "Kill hits in Inner Phi zone with more than " <<  m_maxPhiInner
+	   << " clusters" << endmsg;
+    info() << "Kill hits in Outer Phi zone with more than " <<  m_maxPhiOuter
+	   << " clusters" << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -69,13 +77,21 @@ namespace Tf {
 
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
           Tf::VeloPhiHitRange hits = defaultStation->hits(zone);
-          Tf::VeloPhiHits::const_iterator hi   = hits.begin();
-          Tf::VeloPhiHits::const_iterator hend = hits.end();
-
-          m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
-          for ( ; hi != hend; ++hi) { // import all hits
-            m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
-            station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+	  bool markUsed = false;
+	  if ( ( zone == 0 && hits.size() > m_maxPhiInner ) ||
+	       ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
+	    Warning("Very hot VELO Phi zone: ignoring clusters",
+		    StatusCode::SUCCESS, 0 ).ignore();
+	    markUsed = true;
+	  }
+	  Tf::VeloPhiHits::const_iterator hi   = hits.begin();
+	  Tf::VeloPhiHits::const_iterator hend = hits.end();
+	  
+	  m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
+	  for ( ; hi != hend; ++hi) { // import all hits
+	    if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+	    m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
+	    station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
           }
         }
         station->setHitsPrepared(true);
@@ -98,13 +114,20 @@ namespace Tf {
 
     for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
       Tf::VeloPhiHitRange hits = defaultStation->hits(zone);
+      bool markUsed = false;
+      if ( ( zone == 0 && hits.size() > m_maxPhiInner ) ||
+	   ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
+	Warning("Very hot VELO Phi zone: ignoring clusters",
+		StatusCode::SUCCESS, 0 ).ignore();
+      }
       Tf::VeloPhiHits::const_iterator hi   = hits.begin();
       Tf::VeloPhiHits::const_iterator hend = hits.end();
-
+      
       m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
       for ( ; hi != hend; ++hi ) { // import all hits
-        m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
-        station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+	if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+	m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
+	station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
       }
     }
     station->setHitsPrepared(true);
