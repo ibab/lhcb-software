@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.441 2009-07-15 19:08:53 graven Exp $
+! $Id: release.notes,v 1.442 2009-07-20 20:26:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2009-07-20 - Juan PALACIOS
+ - src/CombineParticles.cpp
+  . Fix doxygen: <code> and </code> -> @code and @endcode 
 ! 2009-07-15 - Gerhard Raven
  - update warning text in case of stopped combinatorics
 
