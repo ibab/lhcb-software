@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.31 2009-07-15 19:08:53 graven Exp $
+// $Id: CombineParticles.cpp,v 1.32 2009-07-20 20:25:46 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -37,7 +37,7 @@
 #include "LoKi/Particles0.h"
 #include "LoKi/PIDOperators.h"
 // ============================================================================
-// Boots 
+// Boost 
 // ============================================================================
 #include "boost/algorithm/string.hpp"
 // ============================================================================
@@ -140,7 +140,7 @@ namespace
  *
  *
  *  Example python configuration fragment (from DaVinci tutorial):
- *  <code>
+ *  @code
  *   # make a CombioneParticles instance
  *   bs2jpsiphi = CombineParticles("Bs2JpsiPhi")
  *   # give it some input particles (leading "Phys/" no longer needed)
@@ -169,7 +169,7 @@ namespace
  *                                     "PT/1000" : ('pt_%1%',0,5,500) ,
  *                                      "M"       : ('mass in MeV_%1%_%2%_%3%',4*Units.GeV,6*Units.GeV) }
  *
- *  </code>
+ *  @endcode
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-01
