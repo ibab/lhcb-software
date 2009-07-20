@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.44 2009-07-14 07:58:30 cattanem Exp $
+# $Id: requirements,v 1.45 2009-07-20 12:54:23 marcocle Exp $
 package CondDBUI
 
-version v2r20
+version v2r21
 
 branches cmt doc python scripts qt_resources
 #ignore_pattern package_stamps
@@ -60,6 +60,12 @@ make_fragment pyqt_resource -header=pyqt_resource_header -trailer=pyqt_resource_
 pattern PyQtResource  \
    document pyqt_resource PyQtResource output=<output> <qrc_files>
 
+macro pyqt_uic_command "python -m PyQt4.uic.pyuic"
+make_fragment pyqt_uic -header=pyqt_uic_header -trailer=pyqt_uic_trailer
+pattern PyQtUIC  \
+   document pyqt_uic PyQtUIC output=<output> <ui_files>
+
 # Generate the resource file for the browser
-apply_pattern PyQtResource qrc_files=../qt_resources/*.qrc output=../python/CondDBUI/Browser/Resources.py
-macro_append CondDBUI_python_dependencies " PyQtResource "
+apply_pattern PyQtResource qrc_files=../qt_resources/*.qrc output=../python/CondDBUI/Browser/Resources_rc.py
+apply_pattern PyQtUIC ui_files=../qt_resources/MainWindow.ui output=../python/CondDBUI/Browser/Ui_MainWindow.py
+macro_append CondDBUI_python_dependencies " PyQtResource PyQtUIC "

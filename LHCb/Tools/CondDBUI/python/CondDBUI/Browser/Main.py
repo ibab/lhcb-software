@@ -28,11 +28,6 @@ def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py")
 #  retrieved from the options file.
 #  @see getStandardConnectionStrings()
 def main(argv = []):
-    try: # import the Qt resources for the application
-        import Resources
-    except ImportError:
-        print "Warning: cannot load resources file."
-
     from PyQt4.QtGui import QApplication
     from MainWindow import MainWindow
 
@@ -41,7 +36,7 @@ def main(argv = []):
     if __versionNumber__ == "$":
         __versionNumber__ = 'HEAD version'
 
-    __versionId__  = '$Id: Main.py,v 1.4 2009-06-16 10:29:54 marcocle Exp $'.split()
+    __versionId__  = '$Id: Main.py,v 1.5 2009-07-20 12:54:22 marcocle Exp $'.split()
     if len(__versionId__) < 4:
         __versionDate__ = 'unknown'
     else:

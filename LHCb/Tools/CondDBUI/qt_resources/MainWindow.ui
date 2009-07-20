@@ -14,7 +14,7 @@
    <string comment="Browser for LHCb Conditions Database" >CondDBBrowser</string>
   </property>
   <property name="windowIcon" >
-   <iconset resource="../../../qt_resources/Resources.qrc" >
+   <iconset resource="Resources.qrc" >
     <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
   </property>
   <widget class="QWidget" name="mainPanel" >
@@ -432,7 +432,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../qt_resources/Resources.qrc" />
+  <include location="Resources.qrc" />
  </resources>
  <connections>
   <connection>

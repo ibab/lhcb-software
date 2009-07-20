@@ -12,7 +12,8 @@ from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
                          QAction,
                          QIcon,
                          QStyle, QStyleFactory)
-from PyQt4 import uic
+
+from Ui_MainWindow import Ui_MainWindow
 
 from CondDBUI import CondDB
 
@@ -21,7 +22,7 @@ from Models import *
 import os
 
 ## Class containing the logic of the application.
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     ## Constructor.
     #  Initialises the base class, define some internal structures and set the icon of
     #  the window.
@@ -43,7 +44,7 @@ class MainWindow(QMainWindow):
         # self.db has the variables expanded.
         self._connectionString = None
         # Prepare the GUI.
-        uic.loadUi(os.path.join(os.path.dirname(__file__),"MainWindow.ui"), self)
+        self.setupUi(self)
         # --- Part of the initialization that require the GUI objects. ---
         # Window title
         self.setWindowTitle(self.appName)

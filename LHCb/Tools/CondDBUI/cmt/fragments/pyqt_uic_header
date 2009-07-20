@@ -1,0 +1,6 @@
+# ============= pyqt_uic_header:begin =============
+${CONSTITUENT} :: $(output)
+
+${CONSTITUENT}clean ::
+	$(cmt_uninstallarea_command) $(output)
+# ============= pyqt_uic_header:end =============
