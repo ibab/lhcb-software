@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.165 2009-06-03 09:28:20 jpalac Exp $
+! $Id: release.notes,v 1.166 2009-07-20 20:16:21 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-07-20 - Juan PALACIOS
+ - src/PVRelatorAlg.h
+  . Improve doxygen
+ - cmt/requirements
+  . Increase version to v5r6p2
 
 !========================== VertexFit v5r6p1 2009-06-02 ===============
 
