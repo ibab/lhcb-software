@@ -1,4 +1,2 @@
 # ============= pyqt_uic_trailer:begin =============
-$(output):: $(inputs)
-	$(pyqt_uic_command) -o $(output) $(inputs)
-# ============= pyqt_uic_trailer:end =============
+# ============= pyqt_uic_trailer:end ===============

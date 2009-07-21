@@ -1,3 +1,0 @@
-# ============= pyqt_uic:begin =============
-inputs = $(inputs) ${FULLNAME}
-# ============= pyqt_uic:end =============

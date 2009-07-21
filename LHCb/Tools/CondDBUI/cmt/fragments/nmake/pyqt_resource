@@ -1,3 +1,0 @@
-# ============= pyqt_resource:begin =============
-inputs = $(inputs) ${FULLNAME}
-# ============= pyqt_resource:end =============
