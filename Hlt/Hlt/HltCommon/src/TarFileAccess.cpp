@@ -161,6 +161,18 @@ namespace TarFileAccess_details {
     };
 }
 
+//=============================================================================
+// implementation of TarFileAccess
+//=============================================================================
+TarFileAccess::TarFileAccess() {}
+
+TarFileAccess::~TarFileAccess() {
+    for (container_t::iterator i = m_tarFiles.begin(); i!=m_tarFiles.end();++i) {
+        delete i->second; // this closes the files
+    }
+    m_tarFiles.clear();
+}
+
 
 const std::vector<std::string>&
 TarFileAccess::protocols() const {

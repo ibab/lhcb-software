@@ -10,6 +10,8 @@ namespace TarFileAccess_details { class TarFile; };
 
 class TarFileAccess : public IFileAccess {
 public:
+    TarFileAccess();
+    ~TarFileAccess();
     std::auto_ptr<std::istream> open(const std::string &url);
     const std::vector<std::string>& TarFileAccess::protocols() const;
 private:
