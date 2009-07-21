@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-21 - Patrick Koppenburg
+ - Added tests for B->eeK* (low mass), Bu->J/psiK, Bc->J/psiMuNu and Bc->J/psiPi
+   Data provided by He Jibo.
+
 ! 2009-07-20 - Patrick Koppenburg
  - Add helper files for Hlt2 settings
 
