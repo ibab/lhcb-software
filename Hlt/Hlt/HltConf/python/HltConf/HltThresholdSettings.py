@@ -73,11 +73,22 @@ FEST.update(  { 'VE' : { 'Prescale' : { '.*'            : 1 } }
 #
 # TOPO cuts by <p.spradlin1@physics.ox.ac.uk>
 # LEPT cuts by
+# PHI  cuts by <Kim.Vervink@cern.ch>
 #
+####
+# Phi cuts first, as one uses the same for leptonic and charm
+# 200 Hz runs with default cuts
+Hlt2_Phi_200Hz = { 'Hlt2InclusivePhiLinesConf' : { } }
+# 100 Hz tightens 3 of them
+Hlt2_Phi_100Hz = { 'Hlt2InclusivePhiLinesConf' : { 'TFPhiPT'       : 2000
+                                                 , 'TFPhiVCHI2'    : 9
+                                                 , 'TFKaonRichPID' : 2
+                                                 }
+                 }
 ####
 # Leptonic scenario
 #
-Hlt2_Leptonic = { 'Hlt2TopologicalLinesConf' :{ 'ComRobAllTrkPtLL' : 800.0
+Hlt2_Leptonic = { 'Hlt2TopologicalLinesConf' : { 'ComRobAllTrkPtLL' : 800.0
                                                , 'ComRobAllTrkPVIPLL' : 0.025
                                                , 'ComRobPairMinDocaUL' : 0.1
                                                , 'ComRobTrkMaxPtLL' : 1500.0
@@ -90,9 +101,10 @@ Hlt2_Leptonic = { 'Hlt2TopologicalLinesConf' :{ 'ComRobAllTrkPtLL' : 800.0
                                                               , 'Hlt2TopoTF4BodyReq4Yes' : 0.2
                                                               , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
                                                               , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
-                                                           }
+                                               }
                                }
-Hlt2_Leptonic.update(Miriam_20090430)
+Hlt2_Leptonic.update(Hlt2_Phi_100Hz)    # append 100 Hz of Phis
+Hlt2_Leptonic.update(Miriam_20090430)   # append Hlt1 cuts
 ####
 # hadronic scenario
 #
@@ -111,7 +123,8 @@ Hlt2_Hadronic = { 'Hlt2TopologicalLinesConf' : { 'ComRobAllTrkPtLL' : 400.0
                                                               , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
                                                }
                   }
-Hlt2_Hadronic.update(Miriam_20090430)
+Hlt2_Hadronic.update(Hlt2_Phi_200Hz)   # append 200 Hz of Phis   
+Hlt2_Hadronic.update(Miriam_20090430)  # append Hlt1 cuts
 ####
 # charming scenario
 #
@@ -130,7 +143,8 @@ Hlt2_Charming = { 'Hlt2TopologicalLinesConf' : { 'ComRobAllTrkPtLL' : 400.0
                                                               , 'Hlt2TopoTF4BodyReq2Yes' : 0.0 } 
                                                  }
                   }
-Hlt2_Charming.update(Miriam_20090430)
+Hlt2_Charming.update(Hlt2_Phi_100Hz)    # append 100 Hz of Phis
+Hlt2_Charming.update(Miriam_20090430)   # append Hlt1 cuts
 ####
 # Optimised scenario
 # @author miriam.gandelman@cern.ch

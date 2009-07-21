@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.275 2009-07-20 17:19:51 pkoppenb Exp $ 
+! $Id: release.notes,v 1.276 2009-07-21 08:47:13 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-21 - Patrick Koppenburg
+ - Add Inclusive Phi cuts (read from Vava/Kim/Magnus slides at Hlt2/Phy meeting)
 
 ! 2009-07-20 - Patrick Koppenburg
  - First working version of Hlt2 threshold settings. Presently only topo 
