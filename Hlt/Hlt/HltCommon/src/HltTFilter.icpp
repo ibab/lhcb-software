@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.22 2009-05-30 11:45:10 graven Exp $
+// $Id: HltTFilter.icpp,v 1.23 2009-07-21 10:04:09 graven Exp $
 // Include files
 
 #include "EParser.h"
@@ -134,8 +134,10 @@ StatusCode HltTFilter<T>::execute() {
   // loop in filters, and apply to the surviving objects
   BOOST_FOREACH( TFilterData *filter, m_tfilters ) {
 
-    verbose() << " applying filter " << filter->filtername << endreq;
-    verbose() << " input objects " << out->size() << endreq;
+    if (msgLevel(MSG::VERBOSE)) {
+        verbose() << " applying filter " << filter->filtername << endreq;
+        verbose() << " input objects " << out->size() << endreq;
+    }
 
     if (m_addInfo) {
       BOOST_FOREACH( T* cand, *out ) cand->addInfo(filter->infoID,(*filter->function)(*cand));
@@ -167,7 +169,7 @@ StatusCode HltTFilter<T>::execute() {
                 out->end() );
 
     size_t ncan = out->size();
-    debug() << " filtered  " << ncan << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " filtered  " << ncan << endreq;
     
     filter->counter += !out->empty();
     // continue or break

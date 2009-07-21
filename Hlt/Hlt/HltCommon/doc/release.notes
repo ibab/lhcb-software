@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-07-21 - Gerhard Raven
+ - add IFileAccess implementation to read files inside tar files
+
 !========================== HltCommon v5r8p1 2009-07-07 ===================
 ! 2009-07-09 - Gerhard Raven
  - add on-demand ODIN decoding to HltConfigSvc

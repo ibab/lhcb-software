@@ -25,7 +25,7 @@ namespace {
 
 TCKrep& 
 TCKrep::set(const std::string& s) {
-        boost::regex e("^(0x[0-9a-fA-F]{8})$");
+        static boost::regex e("^(0x[0-9a-fA-F]{8})$");
         boost::smatch what;
         if(!boost::regex_match(s, what, e)) {
             throw GaudiException("Invalid TCK format",s,StatusCode::FAILURE);

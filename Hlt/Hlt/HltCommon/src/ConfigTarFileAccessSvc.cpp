@@ -213,7 +213,6 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
   if ( !status.isSuccess() )   return status;
   status = setProperties();
 
-  info() << " opening " << m_name << endmsg;
   m_file.reset( new TarFile(m_name) );
   info() << " opened " << m_name << endmsg;
 
