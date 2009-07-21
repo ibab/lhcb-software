@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.18 2009-07-20 17:19:52 pkoppenb Exp $
+# $Id: Hlt1.py,v 1.19 2009-07-21 09:11:11 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -84,8 +84,8 @@ class Hlt1Conf(LHCbConfigurableUser):
          #        So anyone configuring some part explictly will _always_ get
          #        that part of the Hlt run, even if it does not appear in HltType...
          conf = type2conf[i]()
-         if ThresholdSettings and i in ThresholdSettings : 
-            for (k,v) in ThresholdSettings[i].iteritems() :
+         if ThresholdSettings and conf in ThresholdSettings : 
+            for (k,v) in ThresholdSettings[conf].iteritems() :
                # configurables have an exception for list and dict: 
                #   even if not explicitly set, if you ask for them, you get one...
                #   this is done to make foo().somelist += ... work.
