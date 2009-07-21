@@ -3,6 +3,163 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v37r3">2009-07-21 - GaussSys v37r3</A></H1><PRE>
+<H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090602
+   and SIMCOND tag sim-20090402-xx. Previous tags are depracated.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   <b>AppConfig v3r* (latest v3r0)</b>,
+   DecFiles v18r* (<b>latest v18r2</b>), 
+   ParamFiles v8r0, 
+   SQLDDDB v5r* (<b>latest v5r7</b>), FieldMap v5r* (latest v5r3),
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+! 2009-07-21 - Gloria CORTI
+ - Temporarly switch off for this version ParticleGuns and LbMIB as the 
+   genertion of these types of events does not work yet with the new Gauss()
+   configurable.
+
+! 2009-06-24 - Silvia MIGLIORANZI
+ - Update of the QMTest gausssys.qmt (and corresponding reference files).
+
+!======================== Gauss v37r3 2009-07-21 =============================
+! 2009-07-17 - Gloria CORTI
+ - NOTE THAT Particle Guns and Machine Induces Background events (LSS and TCT)
+   CANNOT BE GENERATED with this version of Gauss as they are.
+   The Gauss() configurable need to be extended and their options as shown
+   in example and in the DecFiles need to be modified.
+   To prevent accidentally generaing them their packages are temporarly
+   switched off in this release
+
+! 2009-07-16 - Gloria CORTI
+ - Put protection in Gauss() so that is LHCbApp.EvtMax is not set Gauss will
+   not run as only generating events is working and reading from a file (for
+   monitor or to separate the simulation phase) has not yet been implemented.
+ - Put protection in Gauss() enforcing only ONE OutStream in ApplicationMgr.
+ - Modify options testGauss-gen-10evts-defaults.py and
+   testGauss-gen-defaults.py to remove setting output stream that is not
+   necessary as done in Gauss()
+ - Modify Gauss-MC09.opts to remove import of Gauss.py no longer necessary
+   and pick default configuration for MC09 production also for beam parameters
+ - Gauss.py is now only a template to show what mustbe done. It will NOT
+   work by itself without setting databases' tags
+ - Reset number of events to 5 in Gauss-Job.py for tests
+
+! 2009-07-15 - Gloria CORTI
+ - Change major version of AppConfig as the previous one is incompatible
+   and can no longer be used
+ - Fix minor version of BcVegPyData
+ - Introduce Gauss() configurable and remove files that are obsolete.
+   Leave only options either used by Gauss() or that can be used as modifier.
+   Update them when necessary or write corresponding '.py'
+
+   The application sequence is now set by the configurable
+   . MODIFIED: python/Gauss/Configurable.py
+               options: Gauss.py Gauss-Job.py
+                        BCMSimulation.opts (to include units)
+   . REMOVED : Gauss.opts Generator.opts Simulation.opts SimGeometry.opts
+               RichExtendedInfo.opts Common.opts Monitor.opts
+               Gauss-2008-WithSpillOver.py
+               GaussSimPhase.opts ( not yet ported to Gauss() )
+               MergeWithMinBias.opts ( not yet ported to Gauss() )
+   . REPLACED: GenStandAlone.opts by GenStandAlone.py
+               CollisionsCenterOfCavern.opts by CollisionsCenterOfCavern.py
+
+   For setting beam parameters use files in $APPCONFIGOPTS/Gauss as example
+   to see how to set Gauss() properties
+   . REMOVED: Beam450GeV-VeloClosed-MagDown.py Beam450GeV-VeloClosed-MagOff.py
+              Beam450GeV-VeloClosed-MagUp.py Beam450GeV-VeloOpen-MagDown.py
+              Beam450GeV-VeloOpen-MagOff.py Beam450GeV-VeloOpen-MagUp.py
+              Beam5TeV-VeloClosed-MagDown.py Beam5TeV-VeloClosed-MagOff.py
+              Beam5TeV-VeloClosed-MagUp.py Beam5TeV-VeloOpen-MagDown.py
+              Beam5TeV-VeloOpen-MagOff.py Beam5TeV-VeloOpen-MagUp.py
+              Beam7TeV-VeloClosed-MagDown.py Beam7TeV-VeloClosed-MagOff.py
+              Beam7TeV-VeloClosed-MagUp.py Beam7TeV-VeloOpen-MagDown.py
+              Beam7TeV-VeloOpen-MagOff.py Beam7TeV-VeloOpen-MagUp.py
+              BeamCond-5TeV.opts BeamCond-5TeV.py PilotRun.opts
+              FixedLumi-5.opts
+
+   The following still work (imported or as argument of gaudirun.py):
+              BeamScintillators.opts EvtGenAlone.opts MonitorInDetail.opts
+
+   The following works only if given to gaudirun.py via --post-option
+              DRaysOn-HT.opts DRaysOn-LT.opts MuonLowEnergy.opts
+              CaloOnly.opts DebugG4Track.opts
+   for example:
+     > gaudirun.py ... --post-option='importOptions("DRaysOn-HT.opts")'
+
+
+! 2009-06-24 - Silvia Miglioranzi
+ - Introduction of new gen-only QMtests for the following event types:
+   - 14143011 (use of BcVegPy instead of Pythia)
+   - 60001008 (use of Hijing instead of Pythia)
+   and corresponding ref files for the different platforms.
+
+! 2009-06-23 - Silvia Miglioranzi
+ - Update of QMTests gauss-mc09.qmt and gauss-gen-mc09.qmt (and corresponding
+   ref files). Introduction of new gen-only QMtests for the following event
+   types:
+   - 10000000
+   - 14103000
+   - 22112000
+   - 42112000
+   and corresponding ref files for the different platforms.
+   Removal of the ref files of the obsolete gauss-2008.qmt (already removed).
+
+!========================== EvtGen v11r3 2009-07-15 ==========================
+! 2009-07-13 - Greig Cowan
+ - Fixed EvtPVVCPLH model to use the new framework. Added getDeltaGamma() and
+   getDeltaM() methods to EvtCPUtil.cpp. Added EvtPVVCPLH into the list of
+   allowed decay models.
+
+!====================== Generators v10r2 2009-07-15 ==========================
+! 2009-06-19 - Patrick Robbe
+ - EvtGenDecay.cpp: reactivates computing of branching fraction in
+    DECAY.DEC
+
+! 2009-06-15 - Gloria CORTI
+ - Fix compilation warning of unused variable removing leftover old variable
+   when modified how to store luminosity
+   . Generation.cpp
+
+!====================== GaussPhysics v6r3 2009-07-15 =========================
+! 2009-07-03 - Patrick Robbe for Neal Gueissaz
+ - Add Neutralino2 definition (G4Neutralino2.cpp, G4Neutralino2.h)
+ - Add Neutralino2 to GiGaPhysUnknownParticles list
+
+!======================== GiGaCnv v18r6p1 2009-07-15 =========================
+! 2009-06-10 - Gloria CORTI
+ - Fix warning of unused variable. At the same time change "log" to "msg"
+   and "ednreq" to "endmsg"
+   . GiGaInstall.{h,cpp}
+
+!======================== GaussRICH v9r4p2 2009-07-15 ========================
+! 2009-07-03 - Sajan Easo
+    - Compilation warnings from several 'unused variables' fixed .
+
+!====================== GaussTracker v6r2p1 2009-07-15 =======================
+! 2009-06-10 - Gloria CORTI
+ - Fix compilation warning of initialization list order mismatch with
+   respect to constructor declaration order
+   . GiGaSensDetTracker.cpp
+
+!======================= MuonMoniSim v2r5p1 2009-07-15 =======================
+! 2009-06-15 - Gloria CORTI
+ - Fix compilation warning for unused variables, commenting out line where
+   defined.
+   . MuonHitChecker.cpp
+
+!=============================================================================
 </PRE><H1><A NAME="v37r2">2009-06-03 - GaussSys v37r2</A></H1><PRE>
 <H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090602
    and SIMCOND tag sim-20090402-xx. Previous tags are depracated.
@@ -23,9 +180,6 @@ Purpose: LHCb Simulation program
    pythia8 107.1,
    bcvegpy (LHCb build)
 </A></H3>
-
-! 2009-06-24 - Silvia MIGLIORANZI
- - Update of the QMTest gausssys.qmt (and corresponding reference files).
 
 !======================== Gauss v37r2 2009-06-03 =============================
 ! 2009-06-03 - Gloria CORTI
