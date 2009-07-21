@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleMUONFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleMUONFilter.cpp,v 1.3 2009-07-20 16:43:18 jonrob Exp $
+ * $Id: ProtoParticleMUONFilter.cpp,v 1.4 2009-07-21 13:28:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -155,6 +155,21 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
     cut->setDescription ( "Muon MuLL-BkgLL : "+tag+" "+delim+" "+value  );
     // the variables to cut upon
     cut->setDLLs( LHCb::ProtoParticle::MuonMuLL, LHCb::ProtoParticle::MuonBkgLL );
+    // set this cut object as the one to return
+    basecut = cut;
+  }
+  else if ( "MUONPROBABILITY" == tag )
+  {
+    // Create a new Cut object, of type SingleVariableCut
+    ProtoParticleSelection::SingleVariableCut * cut = new ProtoParticleSelection::SingleVariableCut();
+    // Cut delimiter type
+    cut->setDelim       ( ProtoParticleSelection::Cut::delimiter(delim) );
+    // cut value
+    cut->setCutValue    ( std::log(cut_value)                           );
+    // cut description
+    cut->setDescription ( "Muon Probability : "+tag+" "+delim+" "+value );
+    // the variable to cut upon
+    cut->setVariable    ( LHCb::ProtoParticle::MuonMuLL                 );
     // set this cut object as the one to return
     basecut = cut;
   }
