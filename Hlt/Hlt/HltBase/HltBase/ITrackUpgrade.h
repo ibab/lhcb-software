@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.6 2008-11-12 14:24:08 ibelyaev Exp $
+// $Id: ITrackUpgrade.h,v 1.7 2009-07-21 07:59:43 graven Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -47,7 +47,7 @@ public:
     std::vector<LHCb::Track*>&       otracks ) = 0;
   
   /// upgrade an input track
-  virtual StatusCode upgrade( LHCb::Track&, 
+  virtual StatusCode upgrade( const LHCb::Track&, 
                               std::vector<LHCb::Track*>& tracks) = 0;
   
   /// returns the view of the seed track (the volume of search window)

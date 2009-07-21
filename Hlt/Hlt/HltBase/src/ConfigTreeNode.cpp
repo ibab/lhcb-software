@@ -18,12 +18,12 @@ ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const
 
 istream& ConfigTreeNode::read(istream& is) {
     bool parsing_nodes = false;
-    boost::regex leaf("^Leaf: ([a-fA-F0-9]{32})$"),
-                 nodestart("^Nodes: \\[$"),
-                 nodeend("^\\]$"),
-                 node("^ ?([a-fA-F0-9]{32})$"),
-                 label("^Label: (.*)$"),
-                 ignore("^$");
+    static boost::regex leaf("^Leaf: ([a-fA-F0-9]{32})$"),
+                        nodestart("^Nodes: \\[$"),
+                        nodeend("^\\]$"),
+                        node("^ ?([a-fA-F0-9]{32})$"),
+                        label("^Label: (.*)$"),
+                        ignore("^$");
     while (!is.eof()) {
         string s; getline(is,s);
         boost::smatch what;

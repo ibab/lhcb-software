@@ -336,6 +336,7 @@ double HltUtils::matchIDsFraction(const LHCb::Track& tref,
                                   const LHCb::Track& track) {
   // TODO: can we use std::set_intersection on lhcbIDs? 
   //       i.e. are they sorted?
+  // They are starting in the LHCb v27r3...
   return (tref.lhcbIDs().empty()) ? 0. :
              double(zen::count(tref.lhcbIDs(),track.lhcbIDs())) / 
              double(tref.lhcbIDs().size());

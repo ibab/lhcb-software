@@ -16,13 +16,13 @@ void PropertyConfig::initProperties(const IProperty& obj) {
 
 istream& PropertyConfig::read(istream& is) {
     bool parsing_properties = false;
-    boost::regex name("^Name: (.*)$"),
-                 type("^Type: (.*)$"),
-                 kind("^Kind: (.*)$"),
-                 propstart("^Properties: \\[$"),
-                 propend("^\\]$"),
-                 property("^ ?'([^']+)':(.*)$"),
-                 ignore("^$");
+    static boost::regex name("^Name: (.*)$"),
+                        type("^Type: (.*)$"),
+                        kind("^Kind: (.*)$"),
+                        propstart("^Properties: \\[$"),
+                        propend("^\\]$"),
+                        property("^ ?'([^']+)':(.*)$"),
+                        ignore("^$");
     while (!is.eof()) {
         string s; getline(is,s);
         boost::smatch what;

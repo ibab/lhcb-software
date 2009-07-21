@@ -37,7 +37,7 @@ ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_typ
     //Verify validity rules: 
     if (alias.major()=="TCK")  {
         //  If TCK, it must of format TCK/0xabcd1234
-        boost::regex e("^TCK/(0x[0-9a-fA-F]{8})$");
+        static boost::regex e("^TCK/(0x[0-9a-fA-F]{8})$");
         boost::smatch what;
         if(!boost::regex_match(alias.str(), what, e)) {
             invalidate("invalid TCK format");
@@ -51,7 +51,7 @@ ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_typ
         }
     } else if (alias.major()=="TOPLEVEL") {
         // must have TOPLEVEL/release/runtype/digest
-        boost::regex e("^TOPLEVEL/[^/]+/[^/]+/([0-9a-fA-F]{32})$");
+        static boost::regex e("^TOPLEVEL/[^/]+/[^/]+/([0-9a-fA-F]{32})$");
         boost::smatch what;
         if(!boost::regex_match(alias.str(), what, e)) {
             invalidate("invalid TOPLEVEL format");
@@ -84,8 +84,8 @@ std::istream& ConfigTreeNodeAlias::alias_type::read(std::istream& os) {
 }
 
 istream& ConfigTreeNodeAlias::read(istream& is) {
-    boost::regex ref("^Ref: ([a-fA-F0-9]{32})$"),
-                 alias("^Alias: (.*)$");
+    static boost::regex ref("^Ref: ([a-fA-F0-9]{32})$"),
+                        alias("^Alias: (.*)$");
     while (!is.eof()) {
         string s; getline(is,s);
         boost::smatch what;

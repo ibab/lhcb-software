@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-07-21 - Gerhard Raven
+ - make boost::regex static to avoid compiling regex more than strictly
+   needed
 !========================== HltBase v6r5 2009-07-03 ===================
 ! 2009-06-30 - Gerhard Raven
  - reduce IConfigTreeEditor interface (some functionality made obsolete 
