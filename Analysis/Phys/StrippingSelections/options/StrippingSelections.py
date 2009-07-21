@@ -26,6 +26,10 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhi.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiK.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhiPrescaledAndDetached.py")
 
+# Basem's selection :
+#importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBiasedBs2JpsiPhi.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBiasedBs2JpsiPhi.py")
+
 # Topological selections
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingTopo.py")
 

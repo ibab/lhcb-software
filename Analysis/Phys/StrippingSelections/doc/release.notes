@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-17 Basem Khanji
+ - Add Biased stripping selection for Bs2JpsiPhi channel.
+
 !===================== StrippingSelections v1r2 2009-07-16 ====================
 
 ! 2009-07-10 - Rob Lambert
