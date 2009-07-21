@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.149 2009-07-21 08:28:16 jonrob Exp $
+!$Id: release.notes,v 1.150 2009-07-21 08:42:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================= CommonParticles v6r0 2009-07-21 ===================
 
 ! 2009-07-10 - Greig Cowan
  - Added vertex chi2 cut to phi in StdLooseDetachedPhi.
