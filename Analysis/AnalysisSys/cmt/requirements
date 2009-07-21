@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.111 2009-07-21 08:44:26 jpalac Exp $
+# $Id: requirements,v 1.112 2009-07-21 08:49:41 jpalac Exp $
 package AnalysisSys
 version v3r6
 
@@ -23,7 +23,7 @@ use  DaVinciAssociators         v9r3p3   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r1     Phys   # Juan Palacios
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r6     Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r7     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
@@ -35,8 +35,8 @@ use AnalysisPython              v1r0     Phys
 #
 # Stripping
 #
-use StrippingConf               v1r1     Phys   # Anton Poluektov
-use StrippingSelections         v1r1     Phys   # Anton Poluektov
+use StrippingConf               v1r2     Phys   # Anton Poluektov
+use StrippingSelections         v1r2     Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
@@ -52,7 +52,7 @@ use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
 ####################################################################
 use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r7    Ex                # Juan Palacios
+use MicroDSTExample             v2r8    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
