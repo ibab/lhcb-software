@@ -6,12 +6,12 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 
-SaverSvc.OutputLevel = 1;
-MessageSvc.OutputLevel = 1;
+SaverSvc.OutputLevel = 3;
+MessageSvc.OutputLevel = 3;
 
 SaverSvc.partname=@OnlineEnv.PartitionName;
 SaverSvc.taskname={"GauchoJob"};
 SaverSvc.refreshTime=900;
-SaverSvc.dimclientdns="HLT01";
+SaverSvc.dimclientdns="MONA08";
 SaverSvc.savedir="/hist/Savesets";
 
