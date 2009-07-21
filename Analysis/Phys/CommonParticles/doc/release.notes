@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.150 2009-07-21 08:42:41 jpalac Exp $
+!$Id: release.notes,v 1.151 2009-07-21 08:59:46 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -6,6 +6,29 @@
 !-----------------------------------------------------------------------------
 
 !========================= CommonParticles v6r0 2009-07-21 ===================
+
+! 2009-07-21 - Chris Jones
+ - Update Track selection so default cuts set is now NULL (I.e. no cuts) 
+   following requests from the physics working groups.
+ 
+   This can be changed via :-
+
+   from CommonParticles.Utils import DefaultTrackingCuts
+
+   # Set cuts to default (proposed) Loose selection
+   DefaultTrackingCuts().useCutSet("Loose")
+
+   # Set by hand to custom values
+   DefaultTrackingCuts().Cuts = { "Chi2Cut" : [ 0, 10 ] }
+
+   The Cut Set "Loose" (currently) corresponds to the cuts
+
+       Cut                Min.   Max.
+      ----------------------------------
+      "Chi2Cut"       : [  0,    10    ]
+      "LikelihoodCut" : [ -100,  9e40  ]
+      "CloneDistCut"  : [ -1e10, 9e40  ]
+      "GhostProbCut"  : [ -1,    0.99  ]
 
 ! 2009-07-10 - Greig Cowan
  - Added vertex chi2 cut to phi in StdLooseDetachedPhi.

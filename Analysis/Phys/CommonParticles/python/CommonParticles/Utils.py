@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Utils.py,v 1.4 2009-07-08 16:40:28 jonrob Exp $ 
+# $Id: Utils.py,v 1.5 2009-07-21 08:59:46 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/Utils.py
 #  helper file for configuration of "standard particles"
@@ -11,7 +11,7 @@
 Helper file for configuration of 'standard particles'
 """
 author  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+version = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     # general:
@@ -26,7 +26,7 @@ __all__ = (
 from Gaudi.Configuration      import *
 from Configurables            import DataOnDemandSvc
 from Configurables            import TrackSelector
-from LHCbKernel.Configuration import *
+from Configurables            import LHCbConfigurableUser
 
 # local storage of data-on-demand actions 
 _particles = {}
@@ -35,13 +35,23 @@ _particles = {}
 ## @class DefaultTrackingCuts
 #  Little class to hold default track selection criteria
 class DefaultTrackingCuts(LHCbConfigurableUser) :
-    __slots__ = { "Cuts" :  {  "Chi2Cut"       : [  0,    10    ]
-                              ,"LikelihoodCut" : [ -100,  9e40  ]
-                              ,"CloneDistCut"  : [ -1e10, 9e40  ]
-                              ,"GhostProbCut"  : [ -1,    0.99  ]
-                              },
-                  "Types" :  ["Long"]
+
+    ## Configuration slots
+    __slots__ = { "Cuts"  :  { },      ## The cuts to apply
+                  "Types" :  ["Long"]  ## The track types to include
                   }
+    ## Set the default cuts to a predefined set
+    def useCutSet(self,cutset) :
+        if   cutset == "NULL"  :
+            self.setProp("Cuts",{})
+        elif cutset == "Loose" :
+            self.setProp("Cuts", { "Chi2Cut"       : [  0,    10    ]
+                                  ,"LikelihoodCut" : [ -100,  9e40  ]
+                                  ,"CloneDistCut"  : [ -1e10, 9e40  ]
+                                  ,"GhostProbCut"  : [ -1,    0.99  ]
+                                   })
+        else :
+            raise RuntimeError("ERROR : Unknown Cut Set '%s'"%cutset)
 
 
 # =============================================================================
