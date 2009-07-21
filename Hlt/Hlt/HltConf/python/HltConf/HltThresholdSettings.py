@@ -101,6 +101,7 @@ Hlt2_Phi_200Hz = { Hlt2InclusivePhiLinesConf   : { } }
 Hlt2_Phi_100Hz = { Hlt2InclusivePhiLinesConf   : { 'TFPhiPT'       : 2000
                                                  , 'TFPhiVCHI2'    : 9
                                                  , 'TFKaonRichPID' : 2
+                                                 , 'TFKaonIPS'     : 9
                                                  }
                  }
 ####

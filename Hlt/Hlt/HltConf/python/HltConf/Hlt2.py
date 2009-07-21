@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -20,6 +20,7 @@ from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
+from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Configurables import RichRecSysConf
 
 class Hlt2Conf(LHCbConfigurableUser):
@@ -32,7 +33,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2TopologicalLinesConf
                              , RichRecSysConf
                              , Hlt2XGammaLinesConf
-                             , Hlt2B2HHLinesConf ]
+                             , Hlt2B2HHLinesConf
+                             , Hlt2B2LLXLinesConf ]
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
        , "HltType"                    : 'Hlt1+Hlt2' # only care about Hlt2
@@ -71,7 +73,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                     , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
                                , Hlt2B2JpsiXLinesConf
                                , Hlt2XGammaLinesConf
-                               , Hlt2B2HHLinesConf ]
+                               , Hlt2B2HHLinesConf
+                               , Hlt2B2LLXLinesConf ]
                       }
 
         return type2conf
