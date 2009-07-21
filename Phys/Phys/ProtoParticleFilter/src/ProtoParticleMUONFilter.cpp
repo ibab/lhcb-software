@@ -5,7 +5,7 @@
  * Implementation file for algorithm ProtoParticleMUONFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleMUONFilter.cpp,v 1.4 2009-07-21 13:28:25 jonrob Exp $
+ * $Id: ProtoParticleMUONFilter.cpp,v 1.5 2009-07-21 14:17:37 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -59,7 +59,6 @@ ProtoParticleMUONFilter::createCut( const std::string & tag,
   // Pointer to a cut object
   if ( "ISMUON" == tag || "ISMUONLOOSE" == tag )
   {
-    info() << "Making a IsMuonCut " << tag << endmsg;
     if ( "=" != delim )
     {
       Exception( "Cut "+tag+" only supports '=' delimitor" );
