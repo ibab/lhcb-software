@@ -1,0 +1,27 @@
+#============================================================================
+# Created    : 2009-july-1
+# Maintainer : Neal Gauvin (Gueissaz)
+#============================================================================
+package Hlt/HltDisplVertices
+version        v1r0
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# Used packages. 
+#============================================================================
+use  DaVinciKernel   v*    Phys
+use  DaVinci    v* Phys
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltDisplVertices    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltDisplVertices
