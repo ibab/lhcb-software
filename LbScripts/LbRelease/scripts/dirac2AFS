@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, sys, shutil, getopt
+import os, sys, shutil, getopt,fileinput
 
 def usage():
     print "dirac2AFS.py <options>"
