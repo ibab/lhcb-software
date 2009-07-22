@@ -391,6 +391,8 @@ StatusCode MEPInjector::initialize() {
  
     std::string strAllocatedMEPs = "";
 
+    m_DatagramID = 1;
+
     /// Initializes buffers for each Tell1 to emulate.
     for(std::vector<std::string>::iterator ite=m_Tell1Boards.begin(); ite != m_Tell1Boards.end(); ite+=3) {
         if(!m_AutoMode && strncmp((ite+1)->c_str(), "tfc", 3)==0) {
@@ -644,6 +646,7 @@ StatusCode MEPInjector::pingHLTNodes() {
  * The word 9 bitmask can be defined in the option file, the default value has been agreed after the first FEST week:
  *     LSB comes from TFC (TFCMask),
  *     MSB comes from Tape (TapeMask).
+ * TCK comes from Online
  */
 void MEPInjector::copyOdinBank(OnlineRunInfo **dest, OnlineRunInfo **src) {
     unsigned int *word9tfc, *word9tape;
@@ -1202,6 +1205,7 @@ StatusCode MEPInjector::readThenSend() {
 	} // end for
 
         m_TotEvtsSent += m_PackingFactor;
+        if(++m_DatagramID == 0) ++m_DatagramID;
 
 /*
         if(clock_gettime(CLOCK_REALTIME, &m_RTCurTime)) {
@@ -1622,10 +1626,11 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     mh = (struct MEPHdr *) &(((u_int8_t *) me->start())[20]);        // The MEP-header starts after the 20 byte IP-header
     int MEPSize = mh->m_totLen;
 
-
+/*
     u_int16_t datagramID =
 	((u_int16_t) (0x000000FF & m_L0ID) << 8) |
 	((u_int16_t) (0x0000FF00 & m_L0ID) >> 8);
+*/
 
     int iDatagramSize = MEPSize +20 ;
 
@@ -1655,7 +1660,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
 	int n =
 	    MEPRxSys::send_msg_arb_source(m_ToHLTSock, m_MEPProto, tell1IP,
 					  addrTo, datagram, iDatagramSize,
-					  datagramID);
+					  m_DatagramID);
 
 	if (n == (int) iDatagramSize) {
             m_TotMEPsTx++;
@@ -1713,7 +1718,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
 	int n =
 	    MEPRxSys::send_msg_arb_source(m_ToHLTSock, m_MEPProto, tell1IP,
 					  addrTo, cBuf, uiMaxData + 20,
-					  datagramID);
+					  m_DatagramID);
 	if (n == -1) {
 	    ERRMSG(msgLog, " MEP sending ");
 	    return StatusCode::FAILURE;
@@ -1745,7 +1750,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
 	MEPRxSys::send_msg_arb_source(m_ToHLTSock, m_MEPProto, tell1IP,
 				      addrTo,
 				      cBuf, iLastDGramSize + 20,
-				      datagramID);
+				      m_DatagramID);
 
     iBytesSent += n;
 
