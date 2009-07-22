@@ -198,6 +198,9 @@ namespace LHCb {
     
     unsigned short m_EvtID;     /* Id of the event currently processed */
 
+    unsigned short m_DatagramID; /* Datagram Id to manage ourselves this integer, and do not respect the MEP protocol */ 
+                                 /* Because Odin starts to 0 and raw ip does not like it */
+
     int m_OdinTell1ID;          /* Id of the Odin board */
 
     std::map<unsigned long, StreamBuffer> m_MapStreamBuffers; /* Streambuffers which manage the memory allocated for the tell1 MEPs */
