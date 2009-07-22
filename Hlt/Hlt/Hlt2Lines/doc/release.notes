@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.26 2009-07-21 14:40:57 pkoppenb Exp $
+$Id: release.notes,v 1.27 2009-07-22 08:19:24 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-07-22 - Patrick Koppenburg for Neal Gauvin
+ - Add displaced vertices line
 
 ! 2009-07-21 - Patrick Koppenburg
  - Moved B->LLK lines from HltSelections
