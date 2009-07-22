@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.3 2009-07-20 22:28:11 marcocle Exp $
+# $Id: Makefile,v 1.4 2009-07-22 20:01:56 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -22,7 +22,11 @@ unescape_slash = $(subst _slash_,/,$(1))
 #  Note: The command "cmt show groups" does not work in old versions of CMT
 cmt_version := $(shell cmt version)
 ifeq ($(cmt_version),v1r20p20090520)
+ifdef CMTUSERCONTEXT
+groups = all `(cmt show groups)`
+else
 groups = all `(cd $*/cmt ; cmt show groups)`
+endif
 else
 groups = all all_groups
 endif
@@ -48,7 +52,7 @@ override CMTEXTRATAGS := $(subst ;,$(COMMA),$(CMTEXTRATAGS))
 override CMTPROJECTPATH := $(subst ;,:,$(CMTPROJECTPATH))
 
 # --- Declare the variables that have to be exported
-export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CCACHE_PREFIX
+export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEXT
 
 # --- Main targets
 all: $(packages:=_build)
@@ -84,11 +88,20 @@ else
 endif
 	@$(call build_banner,$*)
 	@date > $*/cmt/build.$(CMTCONFIG).log
+ifdef CMTUSERCONTEXT
+	@+cd $*/cmt ; \
+	for group in $(groups) ; do \
+		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
+		date >> build.$(CMTCONFIG).log ; \
+		test $$BUILD_RESULT -eq 0 || exit $$BUILD_RESULT ; \
+	done
+else
 	@for group in $(groups) ; do \
 		$(MAKE) -C $*/cmt $$group 2>&1 | tee -a $*/cmt/build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
 		date >> $*/cmt/build.$(CMTCONFIG).log ; \
 		test $$BUILD_RESULT -eq 0 || exit $$BUILD_RESULT ; \
 	done
+endif
 
 ifeq ($(cmt_version),v1r20p20090520)
 %_clean: %/cmt/Makefile %/cmt/version.cmt
@@ -100,6 +113,9 @@ endif
 
 
 ## --- Dependencies between packages
+# The PKG_ONLY macro can be used to build a single package disregarding the
+# dependencies between packages.
+ifndef PKG_ONLY
 MKDEPCMD := cmt show uses | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print $$5"/"$$3}else{print $$3}}'
 .%.pack.d: pack=$(call unescape_slash,$*)
 .%.pack.d:
@@ -109,6 +125,7 @@ MKDEPCMD := cmt show uses | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print 
 
 ifneq ($(MAKECMDGOALS),purge)
 -include $(patsubst %,.%.pack.d,$(call escape_slash, $(packages)))
+endif
 endif
 
 # --- List of phony targets
