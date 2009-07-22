@@ -10,9 +10,6 @@
 
 //from Kernel
 #include "Kernel/DVAlgorithm.h"
-// from Event
-//#include "Event/Track.h"
-//#include "Event/RecVertex.h"
 
 //get the Header of the event
 #include "Event/RecHeader.h"
@@ -45,9 +42,11 @@ bool Hlt2DisplVertices::sortPVz(const RecVertex* first, const RecVertex* second)
 Hlt2DisplVertices::Hlt2DisplVertices(const std::string& name,
                              ISvcLocator* pSvcLocator)
   : DVAlgorithm(name,pSvcLocator)
+    , m_piMass(139.57)
+    , m_pt(400.)
 {
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
-                  "Rec/Vertices/Hlt2RV");
+                  "Hlt/Vertices/Hlt2RV");
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
   declareProperty("RMin", m_RMin = 0.3 );
   declareProperty("MinMass1", m_MinMass1 = 9*GeV );
@@ -102,11 +101,10 @@ StatusCode Hlt2DisplVertices::initialize() {
 
   //Sanity checks
   if( m_MinMass2 > m_MinMass1 ){
-    info()<<"#######################################################"<< endmsg;
-    info()<<"MinMass2 set to a value smaller than MinMass1 : "
-	  << m_MinMass2 <<"<"<< m_MinMass1 << endmsg;
-    info()<<"MinMass2 de facto set to MinMass1"<< endmsg;
-    info()<<"#######################################################"<< endmsg;
+    warning()<<"MinMass2 set to a value smaller than MinMass1 : "	
+             << m_MinMass2 <<"<"<< m_MinMass1 
+             <<"This is non-sense !"<< endmsg;
+    return StatusCode::FAILURE;
   }
 
 
@@ -124,17 +122,18 @@ StatusCode Hlt2DisplVertices::execute() {
   //save a dummy Particle in the TES
   Particle::ConstVector Pions ;
   const Particle::ConstVector & InputParts = desktop()->particles();
-  if( InputParts.empty() ) return desktop()->cloneTrees(Pions);
-  Pion = *(InputParts.begin());
+  if( InputParts.empty() ) return StatusCode::SUCCESS;
+  const LHCb::Particle* Pion = *(InputParts.begin()); //a pion
 
   m_map.clear(); //Re-initialize the map
 
   //Retrieve the RecVertex
   RecVertices* RVs = get<RecVertices>(m_InputDisplVertices);
-  debug()<<"Retrived "<< RVs->size() 
-	 <<" displ vertices, the one with lowest z will be disguarded" 
-	 << endmsg;
-  if( RVs->size()<2 ) return desktop()->cloneTrees(Pions);
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"Retrived "<< RVs->size() 
+           <<" displ vertices, the one with lowest z will be disguarded" 
+           << endmsg;
+  if( RVs->size()<2 ) return StatusCode::SUCCESS;
   //sort them by ascending z position
   sort( RVs->begin(), RVs->end(), sortPVz);
 
@@ -147,18 +146,21 @@ StatusCode Hlt2DisplVertices::execute() {
   for(; RVs->end() != iRV; iRV++) {
     const RecVertex* RV = *iRV;
  
-    debug()<<"Rec Vertex position "<< RV->position() << endmsg;
+    if(msgLevel(MSG::DEBUG)) 
+      debug()<<"Rec Vertex position "<< RV->position() << endmsg;
 
     //Check if RV has backward tracks to avoid PVs
     if( HasBackwardTracks(RV) ){ 
-      debug() <<"RV has a backward track, not considered !"<< endmsg;
+      if(msgLevel(MSG::DEBUG))
+        debug() <<"RV has a backward track, not considered !"<< endmsg;
       continue;
     }
 
     //Check if RV is radially displaced
     double R = RV->position().rho();
     if( R < m_RMin ){
-      debug() <<"RV has an insufficent radial displacement !"<< endmsg;
+      if(msgLevel(MSG::DEBUG))
+        debug() <<"RV has an insufficent radial displacement !"<< endmsg;
       continue;
     }
 
@@ -172,7 +174,8 @@ StatusCode Hlt2DisplVertices::execute() {
     Kinematics( RecParts, mass, sumpt ); 
 
     //Properties of reconstructed vertices
-    debug()<<"RV mass "<< mass <<" R "<< R <<" sum pt "<< sumpt << endmsg;
+    if(msgLevel(MSG::DEBUG)) 
+      debug()<<"RV mass "<< mass <<" R "<< R <<" sum pt "<< sumpt << endmsg;
 
     //Remove low mass and sumpt RV 
     if( mass < m_MinMass2 || sumpt < m_MinMass2 ) continue;
@@ -192,14 +195,16 @@ StatusCode Hlt2DisplVertices::execute() {
   // Cuts 
   if( Sel1 > 0 || Sel2 >1 ){
 
-    debug()<<"Event satisfied HLT2DisplVertices criteria !"<< endmsg;
+    if(msgLevel(MSG::DEBUG)) 
+      debug()<<"Event satisfied HLT2DisplVertices criteria !"<< endmsg;
     setFilterPassed(true);
     Pions.push_back(Pion);
     return desktop()->cloneTrees(Pions);
 
-  } else { debug()<<"Event rejected !"<< endmsg; } 
+  } else { if(msgLevel(MSG::DEBUG)){ debug()<<"Event rejected !"<< endmsg;} } 
 
-  return desktop()->cloneTrees(Pions);
+  //  return desktop()->cloneTrees(Pions);
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -267,8 +272,8 @@ void Hlt2DisplVertices::CreateMap(){
 const Particle * Hlt2DisplVertices::DefaultParticle( const Track * p ){
 
   double sx = p->slopes().x(); double sy = p->slopes().y();
-  double pz = 400/sqrt( sx*sx + sy*sy );
-  double e = sqrt( pow(139.57,2) + pow(400.,2) + pz*pz );
+  double pz = m_pt/sqrt( sx*sx + sy*sy );
+  double e = sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
   Particle pion;
   const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
   pion.setMomentum(mom);
@@ -344,8 +349,9 @@ bool Hlt2DisplVertices::RemVtxFromDet( const RecVertex* RV ){
     } 
     int size = path.size();
     plot( size, "NbofDetV", 0, 5 );
-    debug()<<"Found "<< size <<" physical volumes related to point "
-	   << RV->position() <<endmsg;
+    if(msgLevel(MSG::DEBUG))
+      debug()<<"Found "<< size <<" physical volumes related to point "
+             << RV->position() <<endmsg;
 
     const IPVolume* pvlast = 0;
     if ( !path.empty() ) { pvlast = path.back(); }
@@ -357,8 +363,10 @@ bool Hlt2DisplVertices::RemVtxFromDet( const RecVertex* RV ){
     if ( 0 != lvlast ) { matlast = lvlast->material (); }
 
     if ( 0 != matlast )  { 
-      debug()<<"Physical volume related to point "<< RV->position() <<endmsg;
-      debug()<< matlast << endl;
+      if(msgLevel(MSG::DEBUG)){
+        debug()<<"Physical volume related to point "<< RV->position() <<endmsg;
+        debug()<< matlast << endl;
+      }
       //if( matlast->name() == "Vacuum" ) return false;
       return true;
     } 
@@ -379,13 +387,16 @@ bool Hlt2DisplVertices::RemVtxFromDet( const RecVertex* RV ){
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
     plot( radlength, "RVRadLength", 0, 0.01);
-    debug()<<"Radiation length from "<< start <<" to "
-	   << end <<" : "<< radlength 
-	   <<" [mm]" << endmsg;
-    
-    if( radlength > threshold ){ 
-      debug()<<"RV is too closed to a detector material --> disguarded !"
-	     << endmsg;
+    if(msgLevel(MSG::DEBUG)){
+      debug()<<"Radiation length from "<< start <<" to "
+             << end <<" : "<< radlength 
+             <<" [mm]" << endmsg;
+    }
+
+    if( radlength > threshold ){
+      if(msgLevel(MSG::DEBUG))
+        debug()<<"RV is too closed to a detector material --> disguarded !"
+               << endmsg;
       return true;
     }
   } //end of >0 condition
