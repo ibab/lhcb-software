@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -95,14 +95,16 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
         ThresholdSettings = self.getProp("ThresholdSettings")
-        print "# Hlt2 thresholds:", ThresholdSettings
+        #print "# Hlt2 thresholds:", ThresholdSettings
         #
         type2conf = self.getHlt2Configurables()
         #
         # Loop over thresholds
         #
         for i in type2conf :
+            #print '# TYPE2CONF', i
             for confs in type2conf[i] :
+                #print '# CONF', confs
                 if confs not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
                 log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
                 # FIXME: warning: the next is 'brittle': if someone outside 
@@ -111,8 +113,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                 #        So anyone configuring some part explictly will _always_ get
                 #        that part of the Hlt run, even if it does not appear in HltType...
                 conf = confs()
-                if ThresholdSettings and conf in ThresholdSettings : 
-                    for (k,v) in ThresholdSettings[conf].iteritems() :
+                if ThresholdSettings and confs in ThresholdSettings : 
+                    #print '# Found', conf.name()
+                    for (k,v) in ThresholdSettings[confs].iteritems() :
                         # configurables have an exception for list and dict: 
                         #   even if not explicitly set, if you ask for them, you get one...
                         #   this is done to make foo().somelist += ... work.
@@ -124,8 +127,10 @@ class Hlt2Conf(LHCbConfigurableUser):
                             if ( type(v) == type({})): # special case for dictionaries (needed in topo)
                                 val = conf.getProp(k)
                                 val.update(v)                                
+                                #print '# SETTING dictionary', conf.name(), val
                                 setattr(conf,k,val)
                             else :
+                                #print '# SETTING           ', conf.name(), v
                                 setattr(conf,k,v)
 
         #
