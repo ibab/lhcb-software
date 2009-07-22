@@ -1,0 +1,48 @@
+// $Id: IParticleTupleTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+#ifndef DECAYTUPLE_IPARTICLETUPLETOOL_H
+#define DECAYTUPLE_IPARTICLETUPLETOOL_H  1
+
+// Include files
+// from STL
+#include <string>
+
+// from Gaudi
+#include "GaudiKernel/IAlgTool.h"
+
+static const InterfaceID IID_IParticleTupleTool ( "IParticleTupleTool", 1, 0 );
+
+namespace Tuples{
+  class Tuple;
+};
+namespace LHCb {
+  class Particle;
+};
+
+/** @class IParticleTupleTool
+ * 
+ * Fill some particle related variables into a tuple.
+ * 
+ * \sa IEventTupleTool
+ * 
+ * @author Jeremie Borel
+ * @date November 2007
+ */
+class IParticleTupleTool : virtual public IAlgTool {
+ public:
+  virtual ~IParticleTupleTool(){};
+  // Return the interface ID
+  static const InterfaceID& interfaceID() { return IID_IParticleTupleTool; }
+
+  //! Fill the tuple. 
+
+  //! - \b top  : may be used to provide additional information about \b part, like the top particle of the decay.
+  //! - \b part : the particle about which some info are filled.
+  //! - \b head : prefix for the tuple column name.
+  //! - \b tuple: the tuple to fill
+  virtual StatusCode fill( const LHCb::Particle* top
+			   , const LHCb::Particle* part
+			   , const std::string& head
+			   , Tuples::Tuple& tuple )=0;
+};
+
+#endif // DECAYTUPLE_IPARTICLETUPLETOOL_H
