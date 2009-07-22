@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.39 2009-04-23 12:47:57 pkoppenb Exp $ 
+// $Id: DVAlgorithm.h,v 1.40 2009-07-22 11:39:17 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -614,6 +614,8 @@ private:
   bool m_preloadTools;
   /// InputLocations
   std::vector<std::string> m_inputLocations ;
+
+  std::vector<std::string> m_p2PVInputLocations ;
 
 };
 // ==========================================================================
