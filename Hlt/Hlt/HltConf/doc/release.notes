@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.279 2009-07-22 08:23:25 pkoppenb Exp $ 
+! $Id: release.notes,v 1.280 2009-07-22 10:57:32 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-22 - Patrick Koppenburg
+ - Do not include Hlt2Lines.py from HltSelections anymore. This _kills_
+   the following lines:
+   . Hlt2LineB2TwoBody
+   . Hlt2LineBs2PhiPhi
+   . Hlt2LineHidValley
+   . Hlt2LineZ02MuMu
+   . Hlt2LineDrellYan
 
 ! 2009-07-22 - Patrick Koppenburg
  - Add Hlt2DisplVerticesLines (Neil Gauvin) to Hlt2

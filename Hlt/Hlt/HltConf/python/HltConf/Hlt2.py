@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -129,8 +129,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                                 setattr(conf,k,v)
 
         #
-        # more
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" ) # I AM OBSOLETE : KILL ME!!!
+        # Obsolete. This is now commented out.
+        #
+        # importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" ) # I AM OBSOLETE : KILL ME!!!
 ###################################################################################
 #
 # Reco
