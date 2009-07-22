@@ -5,7 +5,7 @@
  * Header file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleDLLFilter.h,v 1.3 2009-07-20 16:43:18 jonrob Exp $
+ * $Id: ProtoParticleDLLFilter.h,v 1.4 2009-07-22 11:36:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -16,7 +16,7 @@
 #define PROTOPARTICLEFILTER_ProtoParticleDLLFilter_H 1
 
 // base class
-#include "Kernel/ProtoParticleFilterBase.h"
+#include "ProtoParticleFilterBase.h"
 
 // Interfaces
 #include "Kernel/IProtoParticleFilter.h"

@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleDLLFilter.h,v 1.3 2009-07-20 16:43:18 jonrob Exp $
+ * $Id: ChargedProtoParticleDLLFilter.h,v 1.4 2009-07-22 11:36:23 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -15,7 +15,7 @@
 #ifndef PROTOPARTICLEFILTER_ChargedProtoParticleDLLFilter_H
 #define PROTOPARTICLEFILTER_ChargedProtoParticleDLLFilter_H 1
 
-// base classyy
+// base class
 #include "ProtoParticleDLLFilter.h"
 
 // Interfaces
