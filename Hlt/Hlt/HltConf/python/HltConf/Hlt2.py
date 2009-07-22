@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -77,7 +77,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                                , Hlt2XGammaLinesConf
                                , Hlt2B2HHLinesConf
                                , Hlt2B2LLXLinesConf
-                               , Hlt2DisplVerticesConf ]
+                               , Hlt2DisplVerticesLinesConf ]
                       }
 
         return type2conf
