@@ -200,10 +200,10 @@ def SetThresholds(ThresholdSettings,confs):
                 if ( type(v) == type({})): # special case for dictionaries (needed in topo)
                     val = conf.getProp(k)
                     val.update(v)                                
-                    print '# SETTING dictionary', conf.name(), val
+#                    print '# SETTING dictionary', conf.name(), val
                     setattr(conf,k,val)
                 else :
-                    print '# SETTING           ', conf.name(), v
+#                    print '# SETTING           ', conf.name(), v
                     setattr(conf,k,v)
 
     
