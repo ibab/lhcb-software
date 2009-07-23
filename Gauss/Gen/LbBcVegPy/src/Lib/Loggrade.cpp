@@ -1,4 +1,4 @@
-// $Id: Loggrade.cpp,v 1.1.1.1 2006-04-24 21:45:50 robbep Exp $
+// $Id: Loggrade.cpp,v 1.2 2009-07-23 19:45:37 jhe Exp $
 // access BcGen common Loggrade
 #include "LbBcVegPy/Loggrade.h"
 
@@ -33,6 +33,12 @@ int& Loggrade::ivegasopen() {
 int& Loggrade::igrade() {
   init(); // check COMMON is initialized
   return s_loggrade->igrade;
+}
+
+// access iusecurdir in common
+int& Loggrade::iusecurdir() {
+  init(); // check COMMON is initialized
+  return s_loggrade->iusecurdir;
 }
 
 

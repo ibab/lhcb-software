@@ -1,4 +1,4 @@
-// $Id: Loggrade.h,v 1.2 2006-05-03 08:24:31 robbep Exp $
+// $Id: Loggrade.h,v 1.3 2009-07-23 19:45:37 jhe Exp $
 
 #ifndef LBBCVEGPY_LOGGRADE_H
 #define LBBCVEGPY_LOGGRADE_H 1
@@ -22,6 +22,7 @@ public:
   int& igenerate();
   int& ivegasopen();
   int& igrade();
+  int& iusecurdir();
 
   inline void init(); // inlined for speed of access (small function)
 
@@ -34,6 +35,7 @@ private:
     int igenerate;
     int ivegasopen;
     int igrade;
+    int iusecurdir;
   };
   int m_dummy;
   double m_realdummy;

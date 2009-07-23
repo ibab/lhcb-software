@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.12 2009-05-26 17:07:56 gcorti Exp $
+! $Id: release.notes,v 1.13 2009-07-23 19:45:37 jhe Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
 !=====================================================================
+
+
+
+!===================== LbBcVegPy v3r0 2009-07-23 =====================
+! 2009-07-23 - Jibo He
+ - Update the Bc mass to 6276 MeV, change the c and b quark's masses
+   accordingly.
+   . src/BcVegPyProduction.cpp
+ - Add one variable IUSECURDIR accordingly (as BcVegPy) in
+	 . src/Lib/gloggrade.F
+   . src/Lib/Loggrade.cpp 
+	 . LbBcVegPy/Loggrade.h
+ - This version should use BcVegPy data v2r0 or above. 
+
 
 !===================== LbBcVegPy v2r1 2009-05-26 =====================
 ! 2009-05-26 - Gloria CORTI
