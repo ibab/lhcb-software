@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.442 2009-07-20 20:26:01 jpalac Exp $
+! $Id: release.notes,v 1.443 2009-07-23 08:20:03 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-07-20 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Compare weight to std::numeric_limits<double>::epsilon() instead of 0.
+    Print error is weight is less than epsilon.
 
 ! 2009-07-20 - Juan PALACIOS
  - src/CombineParticles.cpp
