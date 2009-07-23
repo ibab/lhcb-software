@@ -4,14 +4,14 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v1r1 2009-07-23 ===================
 ! 2009-07-23 - Neal Gauvin (Gueissaz)
-- remove the nasty DaVinci v* Phys dependance
-
+  - remove the nasty DaVinci v* Phys dependance
 
 !========================== HltDisplVertices v1r0 2009-07-23 ==================
 ! 2009-07-23 - Neal Gauvin (Gueissaz)
- - Initial version for testing.
-- The Hlt2DisplVertices algorithm essentially loops on all reconstructed vertices.
+  - Initial version for testing.
+  - The Hlt2DisplVertices algorithm essentially loops on all reconstructed vertices.
 	The one with lowest z is not considered.
 	Vertices with at least one backward track are not considered.
 	2 kinds of cuts are applied to the set of displaced vertices :
