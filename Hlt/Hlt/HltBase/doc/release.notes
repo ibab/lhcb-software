@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v6r5p1 2009-07-23 ===================
 ! 2009-07-21 - Gerhard Raven
  - make boost::regex static to avoid compiling regex more than strictly
    needed
