@@ -18,11 +18,12 @@ CommandHandler::CommandHandler(char* cmd, FILE* logFilePointer) : command(cmd) {
  *  processed by the concrete command handlers
  */
 Command* CommandHandler::parse(char *buf) {
-    string name, p1, p2, p3, p4;
+    string name, p1, p2, p3, p4, p5, p6, p7, p8;
     // tokenize the command string which is like
     // command/param1 or
     // command/param1/param2 or
     // command/param1/param2/name=value
+    // command/param1/param2/name=value/name=value/name=value
     char* cp = NULL;
     if((cp= strtok(buf, DELIMITER_S)) == NULL) {
         this->setErrorMessage( new string("Error: can not tokenize") );
@@ -41,7 +42,7 @@ Command* CommandHandler::parse(char *buf) {
     } else {
         p2 += string(cp);
     }
-    if((cp = strtok(NULL, DELIMITER_S)) == NULL) {
+     if((cp = strtok(NULL, DELIMITER_S)) == NULL) {
         this->setErrorMessage( new string("Info: no third parameter found\n") );
     } else {
         // split the name=value
@@ -58,6 +59,45 @@ Command* CommandHandler::parse(char *buf) {
         p3 += (name);
         p4 += (value);
     }
+
+    if((cp = strtok(NULL, DELIMITER_S)) == NULL) {
+        this->setErrorMessage( new string("Info: no fifth parameter found\n") );
+    } else {
+        // split the name=value
+        char * name = NULL;
+        char * value = NULL;
+        if((name = strtok(cp, "=")) == NULL) {
+            this->setErrorMessage( new string("Error: invalid name=value pair") );
+            return NULL;
+        } 
+        if((value = strtok(NULL, "=")) == NULL) {
+            this->setErrorMessage( new string("Error: invalid name=value pair") );
+            return NULL;
+        }
+        p5 += (name);
+        p6 += (value);
+    }
+    if((cp = strtok(NULL, DELIMITER_S)) == NULL) {
+        this->setErrorMessage( new string("Info: no seventh parameter found\n") );
+    } else {
+        // split the name=value
+        char * name = NULL;
+        char * value = NULL;
+        if((name = strtok(cp, "=")) == NULL) {
+            this->setErrorMessage( new string("Error: invalid name=value pair") );
+            return NULL;
+        } 
+        if((value = strtok(NULL, "=")) == NULL) {
+            this->setErrorMessage( new string("Error: invalid name=value pair") );
+            return NULL;
+        }
+        p7 += (name);
+        p8 += (value);
+    }
+
+
+
+
     // check for valid command
     if(name == string(START_WRITER) ||
        name == string(STOP_WRITER) ||
@@ -65,7 +105,7 @@ Command* CommandHandler::parse(char *buf) {
        name == string(CLOSE_FILE) ||
        name == string(DEBUG) ||
        name == string(LOG) ) {
-       return new Command(name, p1, p2, p3, p4); // valid command
+       return new Command(name, p1, p2, p3, p4, p5, p6, p7, p8); // valid command
     } else {
         this->setErrorMessage( new string("Command not known") );
         return NULL;

@@ -17,6 +17,7 @@
  *  param2 - second parameter
  *  param3 - third parameter
  *  param4 - fourth parameter
+ *  more parameters 5-8 (this is not very good way to do it)
  *  writers - the list with the Writers to work with
  */
 class Command {
@@ -26,10 +27,15 @@ class Command {
         std::string param2;
         std::string param3;
         std::string param4;
-        Writers* writers;
+        std::string param5;
+	std::string param6;
+	std::string param7;
+	std::string param8;
+	
+	Writers* writers;
 
-        Command(std::string n, std::string p1, std::string p2, std::string p3, std::string p4) 
-               : name(n), param1(p1), param2(p2), param3(p3), param4(p4)  {
+        Command(std::string n, std::string p1, std::string p2, std::string p3, std::string p4, std::string p5, std::string p6, std::string p7, std::string p8 ) 
+               : name(n), param1(p1), param2(p2), param3(p3), param4(p4), param5(p5), param6(p6), param7(p7), param8(p8)  {
         }
 };
 
