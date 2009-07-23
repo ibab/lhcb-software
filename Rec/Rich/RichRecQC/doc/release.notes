@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-07-23 - Chris Jones
+ - Use NULL MC Truth tools with WithMC=True in the python Configuration.
+
 !======================= RichRecQC v2r31 2009-06-30 ==========================
 ! 2009-06-25 - Chris Jones
  - Add OutputLevel property to RichRecQCConf Configurable that can be used

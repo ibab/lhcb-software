@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.36 2009-06-25 10:09:46 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2009-07-23 16:20:26 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -127,6 +127,11 @@ class RichRecQCConf(RichConfigurableUser):
             self.PidTrackTypes += [ ["Forward","Match"],
                                     ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
 
+        # Do we need MC access or not
+        if not self.getProp("WithMC") :
+            self.toolRegistry().Tools += [ "Rich::MC::NULLMCTruthTool/RichMCTruthTool",
+                                           "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
+            
         # Some monitoring of raw information
         if self.getProp("RawMonitoring") :
 
