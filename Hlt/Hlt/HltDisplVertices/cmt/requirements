@@ -14,8 +14,11 @@ branches          cmt doc src options
 #============================================================================
 # Used packages. 
 #============================================================================
+
 use  DaVinciKernel   v*    Phys
-use  DaVinci    v* Phys
+use DetDesc v* Det
+
+
 include_path      none
 #============================================================================
 # Component library building rule

@@ -1,0 +1,23 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltDisplVertices
+! Responsible : Neal Gauvin (Gueissaz)
+! Purpose     : Apply some cuts on reconstructed vertices
+!-----------------------------------------------------------------------------
+
+! 2009-07-23 - Neal Gauvin (Gueissaz)
+- remove the nasty DaVinci v* Phys dependance
+
+
+!========================== HltDisplVertices v1r0 2009-07-23 ==================
+! 2009-07-23 - Neal Gauvin (Gueissaz)
+ - Initial version for testing.
+- The Hlt2DisplVertices algorithm essentially loops on all reconstructed vertices.
+	The one with lowest z is not considered.
+	Vertices with at least one backward track are not considered.
+	2 kinds of cuts are applied to the set of displaced vertices :
+	>1 prey passing thighter cuts  --> when hunting single long-lived particles
+	>2 preys passing looser cuts  --> when looking for 2 particles, coming from a mother one.
+	To allow for kinematical cuts, association is done between the Velo
+	tracks participating to the vertex and the reconstructed Hlt2Pions.
+	When no Hlt2Pions found, default pions with 0.4 GeV pt are created.
+	Vertices that are found to be close to the detector material could be possibly eliminated.
