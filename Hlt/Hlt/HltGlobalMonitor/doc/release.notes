@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.41 2009-07-15 19:44:36 graven Exp $
+!$Id: release.notes,v 1.42 2009-07-23 16:47:38 pkoppenb Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
+!========================== HltGlobalMonitor v2r5p1 2009-07-23 ===================
 2009-07-15 - Gerhard Raven
  - add AIDA to requirements
 
