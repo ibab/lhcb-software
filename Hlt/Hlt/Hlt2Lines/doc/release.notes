@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.27 2009-07-22 08:19:24 pkoppenb Exp $
+$Id: release.notes,v 1.28 2009-07-23 16:42:17 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v1r4 2009-07-23 ===================
 ! 2009-07-22 - Patrick Koppenburg for Neal Gauvin
  - Add displaced vertices line
 
@@ -12,7 +13,8 @@ $Id: release.notes,v 1.27 2009-07-22 08:19:24 pkoppenb Exp $
  - Moved B->LLK lines from HltSelections
 
 ! 2009-07-21 - Geraldine Conti
- - Translation of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK* and Bu->JpsiK+ into the new configurable
+ - Translation of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK* 
+   and Bu->JpsiK+ into the new configurable
 
 ! 2009-07-08 - Angelo Carbone
  - B->hh first import
