@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.34 2009-03-30 10:53:18 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.35 2009-07-23 16:04:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -88,7 +88,7 @@ namespace Rich
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "RichRecPixel location : " << m_richRecPixelLocation << endreq;
+        debug() << "RichRecPixel location : " << m_richRecPixelLocation << endmsg;
       }
 
       // get tools and det elems
@@ -134,23 +134,23 @@ namespace Rich
         const StatDivFunctor occ("%8.2f +-%6.2f");
         const std::string & lines
           = "=====================================================================================================";
-        info() << lines << endreq
-               << "                       Pixel Cluster Creator Summary for " << m_Nevts << " events :-" << endreq;
+        info() << lines << endmsg
+               << "                       Pixel Cluster Creator Summary for " << m_Nevts << " events :-" << endmsg;
 
         info() << " Selected         :  RICH1 = " << occ(m_hitCount[Rich::Rich1].numClusters,m_Nevts)
                << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].numClusters,m_Nevts)
-               << " HPD pixel clusters / event" << endreq;
+               << " HPD pixel clusters / event" << endmsg;
 
         info() << " Av. Cluster Size :  RICH1 = "
                << occ(m_hitCount[Rich::Rich1].numPixels,m_hitCount[Rich::Rich1].numClusters)
                << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].numPixels,m_hitCount[Rich::Rich2].numClusters)
-               << " HPD pixels / cluster" << endreq;
+               << " HPD pixels / cluster" << endmsg;
 
         info() << " Rejected         :  RICH1 = " << occ(m_hitCount[Rich::Rich1].rejectedPixels,m_Nevts)
                << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].rejectedPixels,m_Nevts)
-               << " HPD pixels / event" << endreq;
+               << " HPD pixels / event" << endmsg;
 
-        info() << lines << endreq;
+        info() << lines << endmsg;
       }
       else
       {
@@ -163,7 +163,7 @@ namespace Rich
     {
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << " -> Creating RichRecPixel from RichSmartID " << id << endreq;
+        debug() << " -> Creating RichRecPixel from RichSmartID " << id << endmsg;
       }
 
       // See if this RichRecPixel already exists
@@ -194,15 +194,16 @@ namespace Rich
 
           if ( msgLevel(MSG::DEBUG) )
           {
-            debug() << "Created pixel " << *pixel << endreq;
+            debug() << "Created pixel " << *pixel << endmsg;
             if ( msgLevel(MSG::VERBOSE) )
             {
               // Test global -> local transformations
-              verbose() << id << endreq;
-              verbose() << " Global before = " << gPos << endreq;
+              verbose() << id << endmsg;
+              verbose() << " Global before = " << gPos << endmsg;
               const Gaudi::XYZPoint lPos = smartIDTool()->globalToPDPanel(gPos);
-              verbose() << "  -> Local     = " << lPos << endreq;
-              verbose() << "   -> Global   = " << smartIDTool()->globalPosition( lPos, id.rich(), id.panel() )  << endreq;
+              verbose() << "  -> Local     = " << lPos << endmsg;
+              verbose() << "   -> Global   = " << smartIDTool()->globalPosition( lPos, id.rich(), id.panel() )  
+                        << endmsg;
             }
           }
 
@@ -225,7 +226,7 @@ namespace Rich
     {
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << " -> Creating RichRecPixel from cluster " << cluster << endreq;
+        debug() << " -> Creating RichRecPixel from cluster " << cluster << endmsg;
       }
 
       // the core cluster ID
@@ -262,7 +263,7 @@ namespace Rich
 
           if ( msgLevel(MSG::DEBUG) )
           {
-            debug() << "Created pixel " << *pixel << endreq;
+            debug() << "Created pixel " << *pixel << endmsg;
           }
 
         }
@@ -346,7 +347,7 @@ namespace Rich
                     if ( msgLevel(MSG::DEBUG) )
                     {
                       debug() << "From " << smartIDs.size() << " RichSmartIDs found "
-                              << clusters->clusters().size() << " clusters" << endreq;
+                              << clusters->clusters().size() << " clusters" << endmsg;
                     }
 
                     // loop over the clusters
@@ -489,7 +490,7 @@ namespace Rich
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "Found " << m_pixels->size() << " pre-existing RichRecPixels in TES at "
-                    << pixelLocation() << endreq;
+                    << pixelLocation() << endmsg;
           }
 
           if ( bookKeep() )
@@ -567,7 +568,7 @@ namespace Rich
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Created " << richPixels()->size() << " RichRecPixels at "
-                << pixelLocation() << endreq;
+                << pixelLocation() << endmsg;
       }
     }
 
