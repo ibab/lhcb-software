@@ -24,7 +24,12 @@ C...User process event common block.
       SAVE /HEPRUP/
 
       CHARACTER*472 BASENAME
-
+      CHARACTER*472 ENERGYNAME      
+      CHARACTER*472 FULLPATHNAME
+      
+      COMMON/UPCOM/ECM,PMBC,PMB,PMC,FBCC,PMOMUP(5,8),
+     & 	COLMAT(10,64),BUNDAMP(4),PMOMZERO(5,8)
+      
       COMMON/GRADE/XI(50,10)
       COMMON/COUNTER/IBCSTATE,NEV
       LOGICAL GENERATE,VEGASOPEN,USEGRADE
@@ -65,70 +70,93 @@ C....To store CROSSMAX of each Bc state
 C...THERE LIST SOME TYPICAL WAYS FOR RECORDING THE $BCVEGPYDATAROOT/DATA. USERS MAY USE
 C...THEIR OWN CONVENIENT WAY TO DO SO.
       
-
-      
+  
       CALL GETENV( 'BCVEGPYDATAROOT' , BASENAME )
+
+C...For reading grid files for different center of mass energy
+      IF( ABS(ECM-14000).LE.1. )THEN 
+        ENERGYNAME='14TeV/'
+      ELSE IF( ABS(ECM-10000).LE.1. )THEN
+        ENERGYNAME='10TeV/'
+      ELSE IF( ABS(ECM-8000).LE.1. )THEN
+        ENERGYNAME='8TeV/'
+      ELSE
+        ENERGYNAME='***Not-Supported-Energy***/'
+        WRITE(*,*) "***************************************************"
+        WRITE(*,*) "The energy " ,ECM," GeV is not supported in BcVegPy"
+        WRITE(*,*) "***************************************************"
+      ENDIF 
+
+C...Full path of the grid data files      
+      FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
+     &  //ENERGYNAME(1:len_trim(ENERGYNAME))
+
+C      WRITE(*,*) " FULLPATHNAME", FULLPATHNAME
+
+C...If you want to use the grid data files in current directory
+C   Uncomment the following line
+C      FULLPATHNAME=''
 
 C.the following from bcvegy
 C.*******************************************************
 
       IF(IMIX.EQ.1) THEN
-         IF(IMIXTYPE.EQ.1) THEN
-            OPEN(UNIT=36,FILE=
-     &           BASENAME(1:len_trim(BASENAME))//'/data/grade1s0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=37,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3s1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=38,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=39,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=46,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=47,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p2.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=48,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade81s.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=49,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade83s.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
-         IF(IMIXTYPE.EQ.2) THEN
-            OPEN(UNIT=36,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1s0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=37,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3s1.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
-         IF(IMIXTYPE.EQ.3) THEN
-            OPEN(UNIT=38,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=39,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=46,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=47,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p2.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=48,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade81s.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=49,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade83s.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
+        IF(IMIXTYPE.EQ.1) THEN
+          OPEN(UNIT=36,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=37,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=38,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=39,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=46,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=47,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=48,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=49,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
+        IF(IMIXTYPE.EQ.2) THEN
+          OPEN(UNIT=36,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=37,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
+        IF(IMIXTYPE.EQ.3) THEN
+          OPEN(UNIT=38,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=39,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=46,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=47,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=48,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=49,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
       END IF                    !IMIX=1       
-
+      
 
       IF(IGRADE.EQ.1) THEN
          USEGRADE=.TRUE.

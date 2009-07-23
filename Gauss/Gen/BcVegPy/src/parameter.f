@@ -15,6 +15,9 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C...Preamble: declarations.
       IMPLICIT DOUBLE PRECISION(A-H, O-Z)
       IMPLICIT INTEGER(I-N)
+
+C...PYTHIA common block.
+      COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
       
 C...User process event common block.
       COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
@@ -57,6 +60,8 @@ C...STATES: 1---Singlet 1S0; 2---singlet 3s1; 7---octet 1s0; 8---octet 3s1;
 C...3---Singlet 1p1; 4---Singlet 3p0; 5---Singlet 3p1; 6---Singlet 3p2.
       COMMON/MIXEVNT/XBCSEC(8),IMIX,IMIXTYPE
 
+C... Get the center of mass energy from pythia beam parameter      
+      ECM = P(1,4) + P(2,4)
 
       PI = DACOS(-1.0D0)
 

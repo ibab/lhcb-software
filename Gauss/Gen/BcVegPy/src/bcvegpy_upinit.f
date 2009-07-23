@@ -16,6 +16,8 @@ C...EXTERNAL statement.
       EXTERNAL PYDATA,TOTFUN
 
       CHARACTER*472 BASENAME
+      CHARACTER*472 ENERGYNAME      
+      CHARACTER*472 FULLPATHNAME
 
 C...PYTHIA common block.
       COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
@@ -135,13 +137,34 @@ C The following from main
 C**************************************************************************************
       CALL GETENV( 'BCVEGPYDATAROOT' , BASENAME )
 
+C...For reading grid files for different center of mass energy
+      IF( ABS(ECM-14000).LE.1. )THEN 
+        ENERGYNAME='14TeV/'
+      ELSE IF( ABS(ECM-10000).LE.1. )THEN
+        ENERGYNAME='10TeV/'
+      ELSE IF( ABS(ECM-8000).LE.1. )THEN
+        ENERGYNAME='8TeV/'
+      ELSE
+        ENERGYNAME='***Not-Supported-Energy***/'
+        WRITE(*,*) "***************************************************"
+        WRITE(*,*) "The energy " ,ECM," GeV is not supported in BcVegPy"
+        WRITE(*,*) "***************************************************"
+      ENDIF 
 
+C...Full path of the grid data files      
+      FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
+     &  //ENERGYNAME(1:len_trim(ENERGYNAME))
+      
+C...If you want to use the grid data files in current directory
+C   Uncomment the following line
+C      FULLPATHNAME=''
+      
 CC...Commented 09/05/2007, initializations done sereral times, messages unwanted
 CC      IF(IMIX.EQ.1) THEN
 
 C...Commented by hejb, not wanted for this version
 C     OPEN(UNIT=3,FILE
-C     &   =BASENAME(1:len_trim(BASENAME))//'/data/mix.dat'
+C     &   =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/mix.dat'
 C     &   ,STATUS='UNKNOWN')
 CC         WRITE(*,'(A)') 'GET THE MIXING RESULTS FOR GLUON-GLUON FUSION.'
 C	WRITE(3,'(A)') 'GET THE MIXING RESULTS FOR GLUON-GLUON FUSION.'
@@ -186,102 +209,102 @@ C--------------------------------------------
 C...FILE ABOUT THE GENERATED GRADE BY VEGAS.
       IF(IMIX.EQ.0)THEN
 C....Added by hejb (for this IF-ENDIF unit)
-         IF(IBCSTATE.EQ.1)
-     &     OPEN(UNIT=36,FILE=
-     &    BASENAME(1:len_trim(BASENAME))//'/data/grade1s0.dat'
-     &   ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.2)
-     &     OPEN(UNIT=37,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade3s1.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.3)
-     &     OPEN(UNIT=38,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade1p1.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.4)
-     &     OPEN(UNIT=39,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade3p0.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.5)
-     &     OPEN(UNIT=46,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade3p1.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.6)
-     &     OPEN(UNIT=47,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade3p2.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.7)
-     &     OPEN(UNIT=48,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade81s.dat'
-     &     ,STATUS='UNKNOWN')
-         IF(IBCSTATE.EQ.8)
-     &     OPEN(UNIT=49,FILE
-     &     =BASENAME(1:len_trim(BASENAME))//'/data/grade83s.dat'
-     &     ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.1)
+     &    OPEN(UNIT=36,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.2)
+     &    OPEN(UNIT=37,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.3)
+     &    OPEN(UNIT=38,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.4)
+     &    OPEN(UNIT=39,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.5)
+     &    OPEN(UNIT=46,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.6)
+     &    OPEN(UNIT=47,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.7)
+     &    OPEN(UNIT=48,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
+     &    ,STATUS='UNKNOWN')
+        IF(IBCSTATE.EQ.8)
+     &    OPEN(UNIT=49,FILE
+     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
+     &    ,STATUS='UNKNOWN')
       END IF                    !IMIX=0
-
+      
 C...Commented by hejb
 C     &   OPEN(UNIT=11,FILE
-C     &   =BASENAME(1:len_trim(BASENAME))//'/data/grade.dat'
+C     &   =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade.dat'
 C     &   ,STATUS='UNKNOWN')
  
       IF(IMIX.EQ.1) THEN
-         IF(IMIXTYPE.EQ.1) THEN
-            OPEN(UNIT=36,FILE=
-     &           BASENAME(1:len_trim(BASENAME))//'/data/grade1s0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=37,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3s1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=38,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=39,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=46,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=47,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p2.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=48,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade81s.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=49,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade83s.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
-         IF(IMIXTYPE.EQ.2) THEN
-            OPEN(UNIT=36,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1s0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=37,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3s1.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
-         IF(IMIXTYPE.EQ.3) THEN
-            OPEN(UNIT=38,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade1p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=39,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p0.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=46,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p1.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=47,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade3p2.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=48,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade81s.dat'
-     &           ,STATUS='UNKNOWN')
-            OPEN(UNIT=49,FILE
-     &           =BASENAME(1:len_trim(BASENAME))//'/data/grade83s.dat'
-     &           ,STATUS='UNKNOWN')
-         END IF
+        IF(IMIXTYPE.EQ.1) THEN
+          OPEN(UNIT=36,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=37,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=38,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=39,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=46,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=47,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=48,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=49,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
+        IF(IMIXTYPE.EQ.2) THEN
+          OPEN(UNIT=36,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=37,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
+        IF(IMIXTYPE.EQ.3) THEN
+          OPEN(UNIT=38,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=39,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=46,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=47,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=48,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
+     &      ,STATUS='UNKNOWN')
+          OPEN(UNIT=49,FILE
+     &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
+     &      ,STATUS='UNKNOWN')
+        END IF
       END IF                    !IMIX=0
-
+      
 
 
 C--------------------------------------------
@@ -294,27 +317,27 @@ C...Commneted by hejb, not wanted for this version
 C      IF(IMIX.EQ.0) THEN
 C	 IF(IBCSTATE.EQ.1)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/1s0.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/1s0.dat'
 C     &    ,STATUS='UNKNOWN')
 C	 IF(IBCSTATE.EQ.2)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/3s1.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/3s1.dat'
 C     &    ,STATUS='UNKNOWN')
 C	 IF(IBCSTATE.EQ.3)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/1p1.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/1p1.dat'
 C     &    ,STATUS='UNKNOWN')
 C	 IF(IBCSTATE.EQ.4)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/3p0.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/3p0.dat'
 C     &    ,STATUS='UNKNOWN')
 C	 IF(IBCSTATE.EQ.5)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/3p1.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/3p1.dat'
 C     &    ,STATUS='UNKNOWN')
 C	 IF(IBCSTATE.EQ.6)
 C     &	    OPEN(UNIT=3,FILE
-C     &    =BASENAME(1:len_trim(BASENAME))//'/data/3p2.dat'
+C     &    =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/3p2.dat'
 C     &    ,STATUS='UNKNOWN')
 C      END IF !IF IMIX=0
 
@@ -618,7 +641,7 @@ C	       DO I=1,50
 C	         READ(11,*) (XI(I,J),J=1,7)
 C	       END DO
 C	       OPEN(UNIT=29,FILE
-C     &          =BASENAME(1:len_trim(BASENAME))//'/data/newgrade.dat'
+C     &          =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/newgrade.dat'
 C     &          ,STATUS='UNKNOWN')
 C            END IF              !IVEGRADE=1	   
 
@@ -885,7 +908,7 @@ C	       DO I=1,50
 C	          READ(11,*) (XI(I,J),J=1,7)
 C	       END DO
 C	       OPEN(UNIT=29,FILE
-C     &          =BASENAME(1:len_trim(BASENAME))//'/data/newgrade.dat'
+C     &          =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'/data/newgrade.dat'
 C     &          ,STATUS='UNKNOWN')
 C	   END IF	   
 C	     CALL VEGAS(TOTFUN,5,NUMBER,NITMX,2)
@@ -944,80 +967,80 @@ C		 WRITE(3,'(A)')'GETTING THE INFO. OF THE SUBPORCESS....'
 C...USING THE EXISTED GRADE. ONE THING SHOULD BE CARE HERE IS THAT
 C...THE EXISTED GRADE SHOULD BE FORMED UNDER THE SAME PARAMETERS.
       IF(IMIX.EQ.0) THEN
-         IF(USEGRADE) THEN
+        IF(USEGRADE) THEN
 CC            WRITE(*,'(A)') 'USING THE EXISTED VEGAS GRADE.'
 C            WRITE(3,'(A)') 'USING THE EXISTED VEGAS GRADE.'
-
-            IF(IBCSTATE.EQ.1)THEN
-               READ(36,*) XBCSEC(1),BCCRMA(1)
-               DO I=1,50
-                  READ(36,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(36)
-               XSECUP(1)=XBCSEC(1) !added by hejb, not sure it is right for every IDWTUP value.
-            END IF
-            IF(IBCSTATE.EQ.2)THEN
-               READ(37,*) XBCSEC(2),BCCRMA(2)
-               DO I=1,50
-                  READ(37,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(37)
-               XSECUP(1)=XBCSEC(2)
-            END IF  
-            IF(IBCSTATE.EQ.3)THEN
-               READ(38,*) XBCSEC(3),BCCRMA(3)
-               DO I=1,50
-                  READ(38,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(38)
-               XSECUP(1)=XBCSEC(3)
-            END IF
-            IF(IBCSTATE.EQ.4)THEN
-               READ(39,*) XBCSEC(4),BCCRMA(4)
-               DO I=1,50
-                  READ(39,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(39)
-               XSECUP(1)=XBCSEC(4)
-            END IF
-            IF(IBCSTATE.EQ.5)THEN
-               READ(46,*) XBCSEC(5),BCCRMA(5)
-               DO I=1,50
-                  READ(46,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(46)
-               XSECUP(1)=XBCSEC(5)
-            END IF
-            IF(IBCSTATE.EQ.6)THEN
-               READ(47,*) XBCSEC(6),BCCRMA(6)
-               DO I=1,50
-                  READ(47,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(47)
-               XSECUP(1)=XBCSEC(6)
-            END IF
+          
+          IF(IBCSTATE.EQ.1)THEN
+            READ(36,*) XBCSEC(1),BCCRMA(1)
+            DO I=1,50
+              READ(36,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(36)
+            XSECUP(1)=XBCSEC(1)*2.0 !added by hejb, not sure it is right for every IDWTUP value.
+          END IF
+          IF(IBCSTATE.EQ.2)THEN
+            READ(37,*) XBCSEC(2),BCCRMA(2)
+            DO I=1,50
+              READ(37,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(37)
+            XSECUP(1)=XBCSEC(2)*2.0
+          END IF  
+          IF(IBCSTATE.EQ.3)THEN
+            READ(38,*) XBCSEC(3),BCCRMA(3)
+            DO I=1,50
+              READ(38,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(38)
+            XSECUP(1)=XBCSEC(3)*2.0
+          END IF
+          IF(IBCSTATE.EQ.4)THEN
+            READ(39,*) XBCSEC(4),BCCRMA(4)
+            DO I=1,50
+              READ(39,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(39)
+            XSECUP(1)=XBCSEC(4)*2.0
+          END IF
+          IF(IBCSTATE.EQ.5)THEN
+            READ(46,*) XBCSEC(5),BCCRMA(5)
+            DO I=1,50
+              READ(46,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(46)
+            XSECUP(1)=XBCSEC(5)*2.0
+          END IF
+          IF(IBCSTATE.EQ.6)THEN
+            READ(47,*) XBCSEC(6),BCCRMA(6)
+            DO I=1,50
+              READ(47,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(47)
+            XSECUP(1)=XBCSEC(6)*2.0
+          END IF
 C***************************************
-            IF(IBCSTATE.EQ.7) THEN
-               CALL PARASWAVE(IBCSTATE)
-               IBCSTATE=1       !IBCSTATE=7 <=> IBCSTATE=1 & IOCTET=1
-               READ(48,*) XBCSEC(7),BCCRMA(7)
-               DO I=1,50
-                  READ(48,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(48)
-               XSECUP(1)=XBCSEC(7)
-            END IF
-            IF(IBCSTATE.EQ.8) THEN
-               CALL PARASWAVE(IBCSTATE)
-               IBCSTATE=2       !IBCSTATE=8 <=> IBCSTATE=2 & IOCTET=1
-               READ(49,*) XBCSEC(8),BCCRMA(8)
-               DO I=1,50
-                  READ(49,*) (XI(I,J),J=1,7)
-               END DO
-               REWIND(49)
-               XSECUP(1)=XBCSEC(8)
-            END IF
-         END IF                 !USEGRADE
+          IF(IBCSTATE.EQ.7) THEN
+            CALL PARASWAVE(IBCSTATE)
+            IBCSTATE=1          !IBCSTATE=7 <=> IBCSTATE=1 & IOCTET=1
+            READ(48,*) XBCSEC(7),BCCRMA(7)
+            DO I=1,50
+              READ(48,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(48)
+            XSECUP(1)=XBCSEC(7)*2.0
+          END IF
+          IF(IBCSTATE.EQ.8) THEN
+            CALL PARASWAVE(IBCSTATE)
+            IBCSTATE=2          !IBCSTATE=8 <=> IBCSTATE=2 & IOCTET=1
+            READ(49,*) XBCSEC(8),BCCRMA(8)
+            DO I=1,50
+              READ(49,*) (XI(I,J),J=1,7)
+            END DO
+            REWIND(49)
+            XSECUP(1)=XBCSEC(8)*2.0
+          END IF
+        END IF                  !USEGRADE
       END IF                    !The end of IMIX=0
 
 
@@ -1025,77 +1048,77 @@ C***************************************
 C...***************************************************************************************
 C...added by hejb, to read the recorded cross sections
       IF(USEGRADE.AND.IMIX.EQ.1)THEN
-         IF(IMIXTYPE.EQ.1.OR.IMIXTYPE.EQ.2)THEN
-            READ(36,*) XBCSEC(1),BCCRMA(1)
-            REWIND(36)
-            READ(37,*) XBCSEC(2),BCCRMA(2)
-            REWIND(37)
-         END IF
+        IF(IMIXTYPE.EQ.1.OR.IMIXTYPE.EQ.2)THEN
+          READ(36,*) XBCSEC(1),BCCRMA(1)
+          REWIND(36)
+          READ(37,*) XBCSEC(2),BCCRMA(2)
+          REWIND(37)
+        END IF
 C***************************************
-         IF(IMIXTYPE.EQ.1.OR.IMIXTYPE.EQ.3)THEN
-            READ(38,*) XBCSEC(3),BCCRMA(3)
-            REWIND(38)
-            READ(39,*) XBCSEC(4),BCCRMA(4)
-            REWIND(39)
-            READ(46,*) XBCSEC(5),BCCRMA(5)
-            REWIND(46)
-            READ(47,*) XBCSEC(6),BCCRMA(6)
-            REWIND(47)
-            READ(48,*) XBCSEC(7),BCCRMA(7)
-            REWIND(48)
-            READ(49,*) XBCSEC(8),BCCRMA(8)
-            REWIND(49)
-         END IF
+        IF(IMIXTYPE.EQ.1.OR.IMIXTYPE.EQ.3)THEN
+          READ(38,*) XBCSEC(3),BCCRMA(3)
+          REWIND(38)
+          READ(39,*) XBCSEC(4),BCCRMA(4)
+          REWIND(39)
+          READ(46,*) XBCSEC(5),BCCRMA(5)
+          REWIND(46)
+          READ(47,*) XBCSEC(6),BCCRMA(6)
+          REWIND(47)
+          READ(48,*) XBCSEC(7),BCCRMA(7)
+          REWIND(48)
+          READ(49,*) XBCSEC(8),BCCRMA(8)
+          REWIND(49)
+        END IF
       END IF
-
+      
 
 C...Cut from bcgen_upevnt, hejb 2006/03/20
 C...To get the sum of the cross section of the eight Bc states
       IF(IMIX.EQ.1) THEN
-	 IF(IMIXTYPE.EQ.1) THEN 
-            XBCSUM=0.0D0
-            DO I=1,8
-               XBCSUM=XBCSUM+XBCSEC(I)
-            END DO
-            IBCLIMIT=8
+        IF(IMIXTYPE.EQ.1) THEN 
+          XBCSUM=0.0D0
+          DO I=1,8
+            XBCSUM=XBCSUM+XBCSEC(I)
+          END DO
+          IBCLIMIT=8
 C...To caluculate the average cross section and give it to XSECUP(1),added by hejb
-            XBCSSQ=0.0D0
-            DO I=1,8
-               XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
-            END DO
+          XBCSSQ=0.0D0
+          DO I=1,8
+            XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
+          END DO
 CC            XSECUP(1)=XBCSSQ/XBCSUM
-            XSECUP(1)=XBCSUM
-	 END IF
+          XSECUP(1)=XBCSUM*2.0
+        END IF
 C....******************************************************************************
-	 IF(IMIXTYPE.EQ.2) THEN 
-            XBCSUM=0.0D0
-            DO I=1,2
-               XBCSUM=XBCSUM+XBCSEC(I)
-            END DO
-            IBCLIMIT=2
+        IF(IMIXTYPE.EQ.2) THEN 
+          XBCSUM=0.0D0
+          DO I=1,2
+            XBCSUM=XBCSUM+XBCSEC(I)
+          END DO
+          IBCLIMIT=2
 C...To caluculate the average cross section and give it to XSECUP(1)
-            XBCSSQ=0.0D0
-            DO I=1,2
-               XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
-            END DO
+          XBCSSQ=0.0D0
+          DO I=1,2
+            XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
+          END DO
 CC            XSECUP(1)=XBCSSQ/XBCSUM
-            XSECUP(1)=XBCSUM
-	 END IF
+          XSECUP(1)=XBCSUM*2.0
+        END IF
 C...******************************************************************************
-	 IF(IMIXTYPE.EQ.3) THEN 
-            XBCSUM=0.0D0
-            DO I=3,8
-               XBCSUM=XBCSUM+XBCSEC(I)
-            END DO
-            IBCLIMIT=8
+        IF(IMIXTYPE.EQ.3) THEN 
+          XBCSUM=0.0D0
+          DO I=3,8
+            XBCSUM=XBCSUM+XBCSEC(I)
+          END DO
+          IBCLIMIT=8
 C...To caluculate the average cross section and give it to XSECUP(1)
-            XBCSSQ=0.0D0
-            DO I=3,8
-               XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
-            END DO 
+          XBCSSQ=0.0D0
+          DO I=3,8
+            XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
+          END DO 
 CC            XSECUP(1)=XBCSSQ/XBCSUM
-            XSECUP(1)=XBCSUM  
-	 END IF
+          XSECUP(1)=XBCSUM*2.0  
+        END IF
       END IF
               
 
