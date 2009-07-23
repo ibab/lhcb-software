@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.281 2009-07-22 17:06:48 pkoppenb Exp $ 
+! $Id: release.notes,v 1.282 2009-07-23 16:19:43 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-23 - Patrick Koppenburg
+ - Repeat the "21/7 version didn't work" bug fix for Hlt1. BANG HEAD!
+   . Move threshold setting functionality to HltThresholdSettings
+     to make sure that the same bug does not need to be fixed twice
 
 ! 2009-07-22 - Patrick Koppenburg
  - Do not include Hlt2Lines.py from HltSelections anymore. This _kills_

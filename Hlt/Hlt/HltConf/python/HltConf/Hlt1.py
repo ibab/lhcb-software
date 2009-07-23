@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.19 2009-07-21 09:11:11 pkoppenb Exp $
+# $Id: Hlt1.py,v 1.20 2009-07-23 16:19:43 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -83,18 +83,10 @@ class Hlt1Conf(LHCbConfigurableUser):
          #        regardless of whether we do it over here...
          #        So anyone configuring some part explictly will _always_ get
          #        that part of the Hlt run, even if it does not appear in HltType...
-         conf = type2conf[i]()
-         if ThresholdSettings and conf in ThresholdSettings : 
-            for (k,v) in ThresholdSettings[conf].iteritems() :
-               # configurables have an exception for list and dict: 
-               #   even if not explicitly set, if you ask for them, you get one...
-               #   this is done to make foo().somelist += ... work.
-               # hence we _assume_ that, even if we have an attr, but it matches the
-               # default, it wasn't set explicitly, and we overrule it...
-               if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
-                  log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
-               else :
-                  setattr(conf,k,v)
+         confs = type2conf[i]
+         if ThresholdSettings:
+            from HltThresholdSettings import SetThresholds
+            SetThresholds(ThresholdSettings,confs)
 
                   
 ##################################################################################

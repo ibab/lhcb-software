@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -112,27 +112,10 @@ class Hlt2Conf(LHCbConfigurableUser):
                 #        regardless of whether we do it over here...
                 #        So anyone configuring some part explictly will _always_ get
                 #        that part of the Hlt run, even if it does not appear in HltType...
-                conf = confs()
-                if ThresholdSettings and confs in ThresholdSettings : 
-                    #print '# Found', conf.name()
-                    for (k,v) in ThresholdSettings[confs].iteritems() :
-                        # configurables have an exception for list and dict: 
-                        #   even if not explicitly set, if you ask for them, you get one...
-                        #   this is done to make foo().somelist += ... work.
-                        # hence we _assume_ that, even if we have an attr, but it matches the
-                        # default, it wasn't set explicitly, and we overrule it...
-                        if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
-                            log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
-                        else :
-                            if ( type(v) == type({})): # special case for dictionaries (needed in topo)
-                                val = conf.getProp(k)
-                                val.update(v)                                
-                                #print '# SETTING dictionary', conf.name(), val
-                                setattr(conf,k,val)
-                            else :
-                                #print '# SETTING           ', conf.name(), v
-                                setattr(conf,k,v)
-
+                if ThresholdSettings:
+                    from HltThresholdSettings import SetThresholds
+                    SetThresholds(ThresholdSettings,confs)
+                    
         #
         # Obsolete. This is now commented out.
         #

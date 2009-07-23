@@ -171,3 +171,40 @@ Hlt2_Charming.update(Miriam_20090430)   # append Hlt1 cuts
 Hlt2_Optimised = { Hlt2TopologicalLinesConf  : {}
                  , Hlt2InclusivePhiLinesConf : {} }
 Hlt2_Optimised.update(Miriam_20090430)  # append Hlt1 cuts
+#########################################################################################
+# Utilisty function for setting thresholds both in Hlt1 and 2
+#
+# @author Moved by Patrick.Koppenburg@cern.ch
+#
+####
+def SetThresholds(ThresholdSettings,confs):
+    """
+    Look in ThresholdSettings fr configurable confs
+    and set the appropriate settings
+
+    @author G. Raven, P. Koppenburg
+    @date 23/7/2009 (moved)
+    """
+    if confs in ThresholdSettings : 
+        conf = confs()
+        #print '# Found', conf.name()
+        for (k,v) in ThresholdSettings[confs].iteritems() :
+            # configurables have an exception for list and dict: 
+            #   even if not explicitly set, if you ask for them, you get one...
+            #   this is done to make foo().somelist += ... work.
+            # hence we _assume_ that, even if we have an attr, but it matches the
+            # default, it wasn't set explicitly, and we overrule it...
+            if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
+                log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+            else :
+                if ( type(v) == type({})): # special case for dictionaries (needed in topo)
+                    val = conf.getProp(k)
+                    val.update(v)                                
+                    print '# SETTING dictionary', conf.name(), val
+                    setattr(conf,k,val)
+                else :
+                    print '# SETTING           ', conf.name(), v
+                    setattr(conf,k,v)
+
+    
+    
