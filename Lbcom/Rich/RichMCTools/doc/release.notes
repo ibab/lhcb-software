@@ -4,6 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2009-07-23 - Chris Jones
+ - Add new tool Rich::MC::NULLMCTruthTool that implements the MC truth 
+   interface but always returns NULL information.
+
 !========================== RichMCTools v3r11 2009-02-20 =====================
 ! 2009-01-20 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
