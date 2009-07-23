@@ -6,6 +6,14 @@
 !-----------------------------------------------------------------------------
 
 
+</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r26</A></H1><PRE>
+     New version v4r24 built against LHCb v27r3 and GAUDI v21r1.
+     Updates for OnlineTasks, GaudiOnline, Dim (v19r2) Camera, Gaucho, 
+     HistDbPython, PyDim and Writer.
+
+</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r25</A></H1><PRE>
+     New version v4r24 built against LHCb v27r3 and GAUDI v21r1.
+
 </PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r24</A></H1><PRE>
      New version v4r24 built against LHCb v27r2 and GAUDI v21r1.
      Update OnlineTasks to v1r24 and GaudiOnline v2r30.
