@@ -52,8 +52,9 @@ C...THE SUBPROCESS q\bar{q}->Bc+b+\bar{c} TO GENERATE EVENTS.
       DIMENSION X(10),IA(10)
 
 C.... common block for deciding whether using existing grade
-
-      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE
+C...  IUSECURDIR added (20090723), to enable the usage of the grade files
+C...  in the current directory (`pwd`), mainly for Grid.  
+      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE,IUSECURDIR
 
 c...XSECUP(8) RECORDS THE TOTAL DIFFERENTIAL CROSS-SECTIONS FOR DIFFERENT
 C...STATES: 1---Singlet 1S0; 2---singlet 3s1; 7---octet 1s0; 8---octet 3s1;
@@ -87,15 +88,17 @@ C...For reading grid files for different center of mass energy
         WRITE(*,*) "***************************************************"
       ENDIF 
 
-C...Full path of the grid data files      
-      FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
-     &  //ENERGYNAME(1:len_trim(ENERGYNAME))
+C...Full path of the grid data files. Use the ones (should be uploaded
+C...by the user himself) in the currect directory when IUSECURDIR=1
+C...Use the ones in the standard releases when IUSECURDIR=0 (default) 
+      IF(IUSECURDIR.EQ.1)THEN
+        FULLPATHNAME=''
+      ELSE
+        FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
+     &    //ENERGYNAME(1:len_trim(ENERGYNAME))  
+      ENDIF
 
 C      WRITE(*,*) " FULLPATHNAME", FULLPATHNAME
-
-C...If you want to use the grid data files in current directory
-C   Uncomment the following line
-C      FULLPATHNAME=''
 
 C.the following from bcvegy
 C.*******************************************************

@@ -80,7 +80,9 @@ C...USED IN GRV98L
       COMMON/INTINIF/IINIF
         
 C...transform some variables
-      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE
+C...  IUSECURDIR added (20090723), to enable the usage of the grade files
+C...  in the current directory (`pwd`), mainly for Grid.  
+      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE,IUSECURDIR
 
 C...FOR TRANSFORM THE SUBPROCESS INFORMATION, I.E.,  WHETHER USING
 C...THE SUBPROCESS q\bar{q}->Bc+b+\bar{c} TO GENERATE EVENTS.
@@ -151,14 +153,16 @@ C...For reading grid files for different center of mass energy
         WRITE(*,*) "***************************************************"
       ENDIF 
 
-C...Full path of the grid data files      
-      FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
-     &  //ENERGYNAME(1:len_trim(ENERGYNAME))
-      
-C...If you want to use the grid data files in current directory
-C   Uncomment the following line
-C      FULLPATHNAME=''
-      
+C...Full path of the grid data files. Use the ones (should be uploaded
+C...by the user himself) in the currect directory when IUSECURDIR=1
+C...Use the ones in the standard releases when IUSECURDIR=0 (default) 
+      IF(IUSECURDIR.EQ.1)THEN
+        FULLPATHNAME=''
+      ELSE
+        FULLPATHNAME=BASENAME(1:len_trim(BASENAME))//'/data/'
+     &    //ENERGYNAME(1:len_trim(ENERGYNAME))  
+      ENDIF
+
 CC...Commented 09/05/2007, initializations done sereral times, messages unwanted
 CC      IF(IMIX.EQ.1) THEN
 

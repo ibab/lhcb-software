@@ -44,7 +44,9 @@ C...transform of the VEGAS information
 C...transform the events number and Bc state.
       COMMON/COUNTER/IBCSTATE,NEV
 C...transform some variables
-      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE
+C...  IUSECURDIR added (20090723), to enable the usage of the grade files
+C...  in the current directory (`pwd`), mainly for Grid.  
+      COMMON/LOGGRADE/IEVNTDIS,IGENERATE,IVEGASOPEN,IGRADE,IUSECURDIR
 C...IOCTET--WHETHER GETTING THE COLOR-OCTET COMPONENT CONTRIBUTIONS. 
 C...HERE ONLY FOR gg->(c\bar{b})+b+~c, (c\bar{b}) IN color-octet 
 c...S-WAEE STATES. COEOCT--COEFFICIENT FOR COLOR-OCTET
