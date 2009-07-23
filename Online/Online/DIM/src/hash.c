@@ -19,9 +19,7 @@ int	max;
 	return (code % max);
 }
 */
-int HashFunction(name, max)
-char	*name;
-int	max;
+int HashFunction(char *name, int max)
 {
    unsigned int b    = 378551;
    unsigned int a    = 63689;

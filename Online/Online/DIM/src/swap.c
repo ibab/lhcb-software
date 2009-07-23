@@ -8,8 +8,7 @@
  *
  */
 
-double _swapd( d )
-double d;
+double _swapd( double d )
 {
 	double	r[2];
 	register char	*p, *q;
@@ -21,8 +20,7 @@ double d;
 	return r[0];
 }
 
-int _swapl( l )
-int l;
+int _swapl( int l )
 {
 	int	r[2];
 	register char	*p, *q;
@@ -37,8 +35,7 @@ int l;
 	return r[0];
 }
 
-short _swaps( s )
-short s;
+short _swaps( short s )
 {
 	short	r[2];
 	register char	*p, *q;
@@ -51,8 +48,7 @@ short s;
 	return r[0];
 }
 
-double _swapd_by_addr( d )
-double *d;
+double _swapd_by_addr( double *d )
 {
 	double	r[2];
 	register char	*p, *q;
@@ -65,8 +61,7 @@ double *d;
 	return r[0];
 }
 
-int _swapl_by_addr( l )
-int *l;
+int _swapl_by_addr( int *l )
 {
 	int	r[2];
 	register char	*p, *q;
@@ -81,8 +76,7 @@ int *l;
 	return r[0];
 }
 
-short _swaps_by_addr( s )
-short *s;
+short _swaps_by_addr( short *s )
 {
 	short	r[2];
 	register char	*p, *q;
@@ -95,9 +89,7 @@ short *s;
 	return r[0];
 }
 
-void _swaps_buffer( s2, s1, n)
-short *s1, *s2;
-register int n;
+void _swaps_buffer( short *s2, short *s1, int n)
 {
 	register char *p, *q;
 	short r[2];
@@ -120,9 +112,7 @@ register int n;
 	}
 }
 
-void _swapl_buffer( s2, s1, n)
-int *s1, *s2;
-register int n;
+void _swapl_buffer( int *s2, int *s1, int n)
 {
 	register char *p, *q;
 	int r[2];
@@ -150,9 +140,7 @@ register int n;
 }
 
 
-void _swapd_buffer( s2, s1, n)
-double *s1, *s2;
-register int n;
+void _swapd_buffer( double *s2, double *s1, int n)
 {
 	register char *p, *q;
 	double r[2];

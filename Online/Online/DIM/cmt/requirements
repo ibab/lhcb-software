@@ -36,12 +36,13 @@ apply_pattern linker_library library=dim
 macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=dns files=dns.c 
-####apply_pattern dim_exe name=did files=did/make_did.c
+apply_pattern dim_exe name=did files=did/make_did.c
 # The link below is ugly, but the linking is not proper on lxplus
 macro_append  didlinkopts " /usr/X11R6/lib/libMrm.so.3 "\
  slc4-amd64               " -L/usr/X11R6/lib64 -lMrm " \
  x86_64                   " -L/usr/X11R6/lib64 -lMrm " \
  WIN32                    " "
+
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
 #apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c

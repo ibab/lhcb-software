@@ -11,15 +11,13 @@
 #include <dim.h>
 
 
-void sll_init( head )
-SLL* head;
+void sll_init( SLL* head )
 {
 	head->next = (SLL *)0;
 }
 
 
-int sll_insert_queue( head, item )
-register SLL *head, *item;
+int sll_insert_queue( SLL* head, SLL* item )
 {
 	SLL *auxp;
 
@@ -34,10 +32,7 @@ register SLL *head, *item;
 }
 
 
-SLL *sll_search( head, data, size )
-register SLL *head; 
-char *data;
-int size;
+SLL *sll_search( SLL* head, char *data, int size )
 {
 	DISABLE_AST
 	while( (head = head->next) )
@@ -52,8 +47,7 @@ int size;
 }
 
 
-SLL *sll_get_next(item)
-register SLL *item;
+SLL *sll_get_next(SLL* item)
 {
 	DISABLE_AST
 	if( item )
@@ -63,8 +57,7 @@ register SLL *item;
 }
 
 
-int sll_empty( head )
-register SLL *head;
+int sll_empty( SLL* head )
 {
 	register int ret;
  
@@ -78,8 +71,7 @@ register SLL *head;
 }
 
 
-int sll_remove( head, item )
-register SLL *head, *item;
+int sll_remove( SLL* head, SLL* item )
 {
 	register int ret = 0;
 
@@ -99,8 +91,7 @@ register SLL *head, *item;
 }	
 
 
-SLL *sll_remove_head( head ) 
-register SLL *head;
+SLL *sll_remove_head( SLL* head ) 
 {
 	register SLL *auxp;
 
@@ -113,8 +104,7 @@ register SLL *head;
 	return(auxp);
 }
 
-SLL *sll_get_head( head ) 
-register SLL *head;
+SLL *sll_get_head( SLL* head ) 
 {
 	register SLL *auxp;
 
@@ -125,11 +115,7 @@ register SLL *head;
 }
 
 
-SLL *sll_search_next_remove( item, offset, data, size )
-register SLL *item; 
-int offset;
-char *data;
-int size;
+SLL *sll_search_next_remove( SLL* item, int offset, char *data, int size )
 {
 	register SLL *auxp;
  

@@ -19,8 +19,7 @@
 #define DIMLIB
 #include <dim.h>
 
-int get_proc_name(proc_name)
-char *proc_name;
+int get_proc_name(char *proc_name)
 {
 #ifndef VxWorks
 	sprintf( proc_name, "%d", getpid() );
@@ -31,8 +30,7 @@ char *proc_name;
 }
 
 
-int get_node_name(node_name)
-char *node_name;
+int get_node_name(char *node_name)
 {
 #ifndef VxWorks
 struct hostent *host;
@@ -97,8 +95,7 @@ get_node_addr returns the "default" interface address, not the one chosen by
 DIM_HOST_NODE. This makes the DNS or a DIM server respond to both interfaces 
 */
 
-int get_node_addr(node_addr)
-char *node_addr;
+int get_node_addr(char *node_addr)
 {
 #ifndef VxWorks
 struct hostent *host;
@@ -180,9 +177,7 @@ void dim_print_date_time_millis()
 	printf("milliseconds: %d ", millies);
 }
 
-void dim_print_msg(msg, severity)
-char *msg;
-int severity;
+void dim_print_msg(char *msg, int severity)
 {
 	dim_print_date_time();
 	switch(severity)
@@ -200,15 +195,13 @@ int severity;
 	fflush(stdout);
 }
 
-void dim_panic( s )
-char *s;
+void dim_panic( char *s )
 {
 	printf( "\n\nDNA library panic: %s\n\n", s );
 	exit(0);
 }
 
-int get_dns_node_name( node_name )
-char *node_name;
+int get_dns_node_name( char *node_name )
 {
 	char	*p;
 
@@ -231,8 +224,29 @@ int get_dns_port_number()
 	}
 }
 
-int get_dns_accepted_domains( domains )
-char *domains;
+int dim_get_env_var( char *env_var, char *value, int len )
+{
+	char	*p;
+	int tot, sz;
+
+	if( (p = getenv(env_var)) == NULL )
+		return(0);
+	else {
+		tot = strlen(p)+1;
+		if(value != 0)
+		{
+			sz = tot;
+			if(sz > len)
+				sz = len;
+			strncpy(value, p, sz);
+			if((sz == len) && (len > 0))
+				value[sz-1] = '\0';
+		}
+		return(tot);
+	}
+}
+
+int get_dns_accepted_domains( char *domains )
 {
 	char	*p;
 	int append = 0;
@@ -258,8 +272,7 @@ char *domains;
 	}
 }
 
-int get_dns_accepted_nodes( nodes )
-char *nodes;
+int get_dns_accepted_nodes( char *nodes )
 {
 	char	*p;
 

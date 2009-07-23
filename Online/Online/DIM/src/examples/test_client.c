@@ -36,6 +36,15 @@ int *tag, *size;
 
 void got_servers( int *tag, char *list, int *size)
 {
+	if(tag){}
+	if(size){}
+	printf("%s",list);
+}
+
+void got_services( int *tag, char *list, int *size)
+{
+	if(tag){}
+	if(size){}
 	printf("%s",list);
 }
 
@@ -79,9 +88,7 @@ int *tag, *size;
 
 }
 
-main(argc,argv)
-int argc;
-char **argv;
+int main(int argc, char **argv)
 {
 	int i;
 	char aux[80];
@@ -93,25 +100,21 @@ char **argv;
 /*
 	dic_set_dns_node("pclhcb99.cern.ch");
 */
-
+	if(argc){}
 	sprintf(str,"%s/SET_EXIT_HANDLER",argv[2]);
-/*	sprintf(str,"%s/SET_EXIT_HANDLER","xx");  */
 	dic_cmnd_service(str, &id, 4);
 	dic_get_id(aux);
 	printf("%s\n",aux);
 	strcpy(client_str,argv[1]);
-/*	strcpy(client_str,"yy");     */
 
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str,"%s/Service_%03d",argv[2],i);
-/*		sprintf(str,"%s/Service_%03d","xx",i);     */
 		dic_info_service( str, TIMED, 10, 0, 0, rout, i,
 			  "No Link", 8 );
 	}
 	
 	sprintf(aux,"%s/TEST_SWAP",argv[2]);
-/*	sprintf(aux,"%s/TEST_SWAP","xx");     */
 	dic_info_service_stamped( aux, TIMED, 5, 0, 0, rout, 1200,
 			  &no_link, 4 );
 
@@ -122,14 +125,18 @@ char **argv;
 */
 
 	sprintf(aux,"%s/TEST_CMD",argv[2]);
-/*	sprintf(aux,"%s/TEST_CMD","xx");     */
+/*
 	dic_info_service("DIS_DNS/SERVER_LIST",MONITORED, 0, 0, 0, got_servers, 0,
 		"not there", 10);
+	dic_info_service("xx/SERVICE_LIST",MONITORED, 0, 0, 0, got_services, 0,
+		"not there", 10);
+*/
 	while(1)
 	{
 		sleep(10);
 
-		printf("Sending Command, size = %d, i = %d\n",sizeof(t), t.i);
-		dic_cmnd_service(aux,&t,sizeof(t));
+		printf("Sending Command, size = %d, i = %d\n",(int)sizeof(t), t.i);
+		dic_cmnd_service(aux,&t,(int)sizeof(t));
 	}
+	return 1;
 }

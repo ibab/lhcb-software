@@ -1,6 +1,10 @@
 #define DIMLIB
 #include <dis.hxx>
 #include "tokenstring.hxx"
+//#include <iostream>
+//using namespace std;
+#include <time.h>
+//#include <sys/timeb.h>
 
 DimClientExitHandler *DimServer::itsClientExit = 0;
 DimExitHandler *DimServer::itsExit = 0;
@@ -9,6 +13,7 @@ char *DimServer::itsName = 0;
 char *DimServer::clientName = 0;
 char *DimServer::dimDnsNode = 0;
 int DimServer::autoStart = 1;
+//int DimServer::itsNServices = 0;
 
 extern "C" {
 static void user_routine( void *tagp, void **buf, int *size, int *first_time)
@@ -17,6 +22,7 @@ static void user_routine( void *tagp, void **buf, int *size, int *first_time)
 //	int id = *tag;
 	DimService *t;
 
+	if(first_time){}
 //	t = (DimService *)id_get_ptr(id, SRC_DIS);
 	t = *(DimService **)tagp;
 	if( t->itsServiceHandler ) {
@@ -38,9 +44,10 @@ static void user_routine( void *tagp, void **buf, int *size, int *first_time)
 }
 }
 
-void DimService::declareIt(char *name, char *format, DimServiceHandler *handler)
+void DimService::declareIt(char *name, char *format, DimServiceHandler *handler, DimServerDns *dns)
 {
 //	itsTagId = 0;
+	itsDns = dns;
 	itsName = new char[strlen(name)+1];
 	itsDataSize = 0;
 	strcpy( itsName, name);
@@ -49,11 +56,21 @@ void DimService::declareIt(char *name, char *format, DimServiceHandler *handler)
 	else
 		itsServiceHandler = 0;
 //	itsTagId = id_get((void *)this, SRC_DIS);
-	itsId = dis_add_service( name, format, NULL, 0, 
-//			user_routine, itsTagId);
-			user_routine, (long)this);
-
-	DimServer::start();
+	if(itsDns == 0)
+	{
+		itsId = dis_add_service( name, format, NULL, 0, 
+//				user_routine, itsTagId);
+				user_routine, (long)this);
+		DimServer::start();
+	}
+	else
+	{
+		itsId = dis_add_service_dns( itsDns->getDnsId(), name, format, NULL, 0, 
+//				user_routine, itsTagId);
+				user_routine, (long)this);
+//		itsDns->addServiceId(itsId);
+		DimServer::start(itsDns);
+	}
 }
 
 void DimService::storeIt(void *data, int size)
@@ -102,9 +119,10 @@ static void command_routine( void *tagp, void *buf, int *size)
 }
 }
 
-void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler)
+void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler, DimServerDns *dns)
 {
 //	itsTagId = 0;
+	itsDns = dns;
 	itsName = new char[strlen(name)+1];
 	strcpy( itsName, name);
 	itsFormat = new char[strlen(format)+1];
@@ -115,27 +133,40 @@ void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler)
 	else
 		itsCommandHandler = 0;
 //	itsTagId = id_get((void *)this, SRC_DIS);
-	itsId = dis_add_cmnd( name, format, command_routine,
+	if(!itsDns)
+	{
+		itsId = dis_add_cmnd( name, format, command_routine,
+//				itsTagId);
+				(long)this);
+		DimServer::start();
+	}
+	else
+	{
+		itsId = dis_add_cmnd_dns( itsDns->getDnsId(), name, format, command_routine,
 //			itsTagId);
 			(long)this);
-	DimServer::start();
+//		itsDns->addServiceId(itsId);
+		DimServer::start(itsDns);
+	}
 }
 
 extern "C" {
-
+/*
 static void timeout_rout(DimRpc *t)
 {
 	sleep(t->itsTimeout);
 	t->itsKilled = 1;
 }
-
+*/
 static void rpcin_routine( void *tagp, void *buf, int *size)
 {
+	time_t tt1, tt2;
+
 //	int *tag = (int *)tagp;
 //	int id = *tag;
 	DimRpc *t;
 	int tout, clientId, ids[2];
-	long tid;
+//	long tid;
 
 //	t = (DimRpc *)id_get_ptr(id, SRC_DIS);
 	t = *(DimRpc **)tagp;
@@ -144,23 +175,32 @@ static void rpcin_routine( void *tagp, void *buf, int *size)
 	clientId = dis_get_conn_id();
 	tout = dis_get_timeout(t->itsIdOut, clientId);
 	t->itsTimeout = tout;
-	tid = 0;
+//	tid = 0;
 	if(tout > 0)
 	{
+		tt1 = time((time_t *)0);
 		t->itsKilled = 0;
-		tid = dim_start_thread((void(*)(void *))timeout_rout,(void *)t);
+//		dtq_start_timer(t->itsTimeout,(void(*)(void *))timeout_rout,(void *)t);
+//		tid = dim_start_thread((void(*)(void *))timeout_rout,(void *)t);
 	}
 	DimCore::inCallback = 2;
 	t->rpcHandler();
 	DimCore::inCallback = 0;
 	t->itsDataIn = 0;
 	t->itsSizeIn = 0;
+	if(tout > 0)
+	{
+		tt2 = time((time_t *)0);
+		if((tt2 - tt1) > tout)
+			t->itsKilled = 1;
+	}
 	if(!t->itsKilled)
 	{
-		if(tid)
-		{
-			dim_stop_thread(tid);
-		}
+//		if(tid)
+//		{
+//			dtq_stop_timer((void *)t);
+//			dim_stop_thread(tid);
+//		}
 		ids[0] = clientId;
 		ids[1] = 0;
 		dis_selective_update_service(t->itsIdOut, ids);
@@ -170,12 +210,13 @@ static void rpcin_routine( void *tagp, void *buf, int *size)
 }
 
 extern "C" {
-static void rpcout_routine( void *tagp, void **buf, int *size, int *firt_time)
+static void rpcout_routine( void *tagp, void **buf, int *size, int *first_time)
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;
 	DimRpc *t;
 
+	if(first_time){}
 //	t = (DimRpc *)id_get_ptr(id, SRC_DIS);
 	t = *(DimRpc**)tagp;
 	*buf = t->itsDataOut;
@@ -183,9 +224,10 @@ static void rpcout_routine( void *tagp, void **buf, int *size, int *firt_time)
 }
 }
 
-void DimRpc::declareIt(char *name, char *formatin, char *formatout)
+void DimRpc::declareIt(char *name, char *formatin, char *formatout, DimServerDns *dns)
 {
 //	itsTagId = 0;
+	itsDns = dns;
 	itsName = new char[strlen(name)+1];
 	strcpy( itsName, name);
 	itsNameIn = new char[strlen(name)+1+10];
@@ -200,13 +242,28 @@ void DimRpc::declareIt(char *name, char *formatin, char *formatout)
 	itsTimeout = 0;
 	
 //	itsTagId = id_get((void *)this, SRC_DIS);
-	itsIdIn = dis_add_cmnd( itsNameIn, formatin, 
-//		rpcin_routine, itsTagId);
-		rpcin_routine, (long)this);
-	itsIdOut = dis_add_service( itsNameOut, formatout, 0,0, 
-//		rpcout_routine, itsTagId);
-		rpcout_routine, (long)this);
-	DimServer::start();
+	if(!itsDns)
+	{
+		itsIdIn = dis_add_cmnd( itsNameIn, formatin, 
+//			rpcin_routine, itsTagId);
+			rpcin_routine, (long)this);
+		itsIdOut = dis_add_service( itsNameOut, formatout, 0,0, 
+//			rpcout_routine, itsTagId);
+			rpcout_routine, (long)this);
+		DimServer::start();
+	}
+	else
+	{
+		itsIdIn = dis_add_cmnd_dns( itsDns->getDnsId(), itsNameIn, formatin, 
+//			rpcin_routine, itsTagId);
+			rpcin_routine, (long)this);
+		itsIdOut = dis_add_service_dns( itsDns->getDnsId(), itsNameOut, formatout, 0,0, 
+//			rpcout_routine, itsTagId);
+			rpcout_routine, (long)this);
+//		itsDns->addServiceId(itsIdIn);
+//		itsDns->addServiceId(itsIdOut);
+		DimServer::start(itsDns);
+	}
 }
 
 void DimRpc::storeIt(void *data, int size)
@@ -233,11 +290,122 @@ static void exit_user_routine(int*);
 static void srv_error_user_routine(int, int, char*);
 }
 
+DimServerDns::DimServerDns(const char *node)
+{
+	init(node, 0);
+}
+	
+DimServerDns::DimServerDns(const char *node, int port)
+{
+	init(node, port);
+}
+
+DimServerDns::DimServerDns(const char *node, int port, char *name)
+{
+	init(node, port);
+	DimServer::start(this, name);
+}
+	
+#define DisDnsIdBlock 100
+
+void DimServerDns::init(const char *node, int port)
+{
+	if(!itsNode)
+	{
+		itsNode = new char[strlen(node)+1];
+		strcpy(itsNode,node);
+	}
+	itsPort = port;
+	autoStart = 1;
+	itsName = 0;
+	itsServiceIdList = new int[DisDnsIdBlock];
+	itsServiceIdListSize = DisDnsIdBlock;
+	itsNServiceIds = 0;
+//	itsNServices = 0;
+	itsDnsId = DimServer::addDns(node, port);
+}
+
+void DimServerDns::addServiceId(int id)
+{
+	int *tmp;
+
+	DISABLE_AST
+	if((itsNServiceIds + 2) > itsServiceIdListSize)
+	{
+		tmp = new int[itsServiceIdListSize + DisDnsIdBlock];
+		memcpy(tmp, itsServiceIdList, itsServiceIdListSize*sizeof(int));
+		delete itsServiceIdList;
+		itsServiceIdList = tmp;
+		itsServiceIdListSize += DisDnsIdBlock;
+	}
+	itsServiceIdList[itsNServiceIds] = id;
+	itsServiceIdList[itsNServiceIds+1] = 0;
+	itsNServiceIds++;
+	ENABLE_AST
+}
+
+int *DimServerDns::getServiceIdList()
+{
+	int *list;
+	if(itsNServiceIds)
+		list = itsServiceIdList;
+	else
+		list = 0;
+	itsNServiceIds = 0;
+	return list;
+}
+
+DimServerDns::~DimServerDns()
+{
+	if(itsName)
+	{
+		DimServer::stop(this);
+		delete[] itsName;
+	}
+	if(itsNode)
+		delete[] itsNode;
+}
+
+long DimServerDns::getDnsId()
+{
+	return itsDnsId;
+}
+
+void DimServerDns::setName(const char *name)
+{
+	if(!itsName)
+	{
+		itsName = new char[strlen(name)+1];
+		strcpy(itsName,name);
+	}
+}
+
+char *DimServerDns::getName()
+{
+	return itsName;
+}
+
+void DimServerDns::autoStartOn()
+{
+	autoStart = 1;
+}
+
+void DimServerDns::autoStartOff()
+{
+	autoStart = 0;
+}
+
+int DimServerDns::isAutoStart()
+{
+	return autoStart;
+}
+
 DimServer::DimServer()
 {
 	itsClientExit = this; 
 	itsExit = this;
 	itsSrvError = this;
+//	itsNServices = 0;
 }
 
 DimServer::~DimServer() 
@@ -263,15 +431,76 @@ void DimServer::start(const char *name)
 	dis_start_serving(itsName);
 }
 
+void DimServer::start(DimServerDns *dns, const char *name)
+{
+	long dnsid;
+
+	DISABLE_AST
+	dns->setName(name);
+	dnsid = dns->getDnsId();
+	dis_start_serving_dns(dnsid, (char *)name /*, dns->getServiceIdList()*/);
+	ENABLE_AST
+}
+/*
+void DimServer::threadHandler()
+{
+	int oldNServices;
+
+	while(1)
+	{
+		oldNServices = itsNServices;
+		usleep(100000);
+		if(oldNServices == itsNServices)
+			break;
+	}
+cout << "Starting " << itsNServices << endl;
+	{
+		DISABLE_AST
+		dis_start_serving(itsName);
+		itsNServices = 0;
+		ENABLE_AST
+	}
+
+}
+*/
 void DimServer::start()
 {
+//	itsNServices++;
 	if((itsName) && (autoStart))
+	{
+//		DimThread::start();
 		dis_start_serving(itsName);
+	}
+}
+
+void DimServer::start(DimServerDns *dns)
+{
+	long dnsid;
+	char *name;
+	int isAuto;
+
+	DISABLE_AST
+//	dns->itsNServices++;
+
+	name = dns->getName();
+	dnsid = dns->getDnsId();
+	isAuto = dns->isAutoStart();
+	if((name) && (isAuto))
+	{
+//		DimThread::start();
+		dis_start_serving_dns(dnsid, (char *)name /*, dns->getServiceIdList()*/);
+	}
+	ENABLE_AST
 }
 
 void DimServer::stop()
 {
 	dis_stop_serving();
+}
+
+void DimServer::stop(DimServerDns *dns)
+{
+	dis_stop_serving_dns(dns->getDnsId());
 }
 
 void DimServer::autoStartOn()
@@ -398,6 +627,10 @@ int DimServer::setDnsNode(const char *node, int port)
 	return dis_set_dns_node((char *)node); 
 }
 
+long DimServer::addDns(const char *node, int port) 
+{
+	return dis_add_dns((char *)node, port); 
+}
 char *DimServer::getDnsNode() 
 {
 	if(!dimDnsNode)
@@ -477,7 +710,7 @@ DimService::DimService(const char *name, int &value)
 	itsData = &value;
 	itsSize = sizeof(int);
 	itsType = DisINT;
-	declareIt((char *)name, (char *)"L", 0);
+	declareIt((char *)name, (char *)"L", 0, 0);
 }
 
 DimService::DimService(const char *name, float &value)
@@ -485,7 +718,7 @@ DimService::DimService(const char *name, float &value)
 	itsData = &value;
 	itsSize = sizeof(float);
 	itsType = DisFLOAT;
-	declareIt((char *)name, (char *)"F", 0);
+	declareIt((char *)name, (char *)"F", 0, 0);
 }
 
 DimService::DimService(const char *name, double &value)
@@ -493,7 +726,7 @@ DimService::DimService(const char *name, double &value)
 	itsData = &value;
 	itsSize = sizeof(double);
 	itsType = DisDOUBLE;
-	declareIt((char *)name, (char *)"D", 0);
+	declareIt((char *)name, (char *)"D", 0, 0);
 }
 
 DimService::DimService(const char *name, longlong &value)
@@ -501,7 +734,7 @@ DimService::DimService(const char *name, longlong &value)
 	itsData = &value;
 	itsSize = sizeof(longlong);
 	itsType = DisXLONG;
-	declareIt((char *)name, (char *)"X", 0);
+	declareIt((char *)name, (char *)"X", 0, 0);
 }
 
 DimService::DimService(const char *name, short &value)
@@ -509,7 +742,7 @@ DimService::DimService(const char *name, short &value)
 	itsData = &value;
 	itsSize = sizeof(short);
 	itsType = DisSHORT;
-	declareIt((char *)name, (char *)"S", 0);
+	declareIt((char *)name, (char *)"S", 0, 0);
 }
 
 DimService::DimService(const char *name, char *string)
@@ -517,7 +750,7 @@ DimService::DimService(const char *name, char *string)
 	itsData = string;
 	itsSize = strlen(string)+1;
 	itsType = DisSTRING;
-	declareIt((char *)name, (char *)"C", 0);
+	declareIt((char *)name, (char *)"C", 0, 0);
 }
 
 DimService::DimService(const char *name, char *format, void *structure, int size)
@@ -525,7 +758,7 @@ DimService::DimService(const char *name, char *format, void *structure, int size
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, 0);
+	declareIt((char *)name, format, 0, 0);
 }
 
 DimService::DimService(const char *name, char *format, DimServiceHandler *handler)
@@ -533,7 +766,73 @@ DimService::DimService(const char *name, char *format, DimServiceHandler *handle
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
-	declareIt((char *)name, format, handler);
+	declareIt((char *)name, format, handler, 0);
+}
+
+// with Dns
+
+DimService::DimService(DimServerDns *dns, const char *name, int &value) 
+{
+	itsData = &value;
+	itsSize = sizeof(int);
+	itsType = DisINT;
+	declareIt((char *)name, (char *)"L", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, float &value)
+{
+	itsData = &value;
+	itsSize = sizeof(float);
+	itsType = DisFLOAT;
+	declareIt((char *)name, (char *)"F", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, double &value)
+{
+	itsData = &value;
+	itsSize = sizeof(double);
+	itsType = DisDOUBLE;
+	declareIt((char *)name, (char *)"D", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, longlong &value)
+{
+	itsData = &value;
+	itsSize = sizeof(longlong);
+	itsType = DisXLONG;
+	declareIt((char *)name, (char *)"X", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, short &value)
+{
+	itsData = &value;
+	itsSize = sizeof(short);
+	itsType = DisSHORT;
+	declareIt((char *)name, (char *)"S", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, char *string)
+{
+	itsData = string;
+	itsSize = strlen(string)+1;
+	itsType = DisSTRING;
+	declareIt((char *)name, (char *)"C", 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, char *format, void *structure, int size)
+{
+	itsData = structure;
+	itsSize = size;
+	itsType = DisPOINTER;
+	declareIt((char *)name, format, 0, dns);
+}
+
+DimService::DimService(DimServerDns *dns, const char *name, char *format, DimServiceHandler *handler)
+{
+	itsData = 0;
+	itsSize = 0;
+	itsType = DisPOINTER;
+	declareIt((char *)name, format, handler, dns);
 }
 
 DimService::~DimService()
@@ -821,12 +1120,22 @@ CmndInfo::~CmndInfo()
 
 DimCommand::DimCommand(const char *name, char *format)
 {
-	declareIt( (char *)name, format, 0);
+	declareIt( (char *)name, format, 0, 0);
 }
 
 DimCommand::DimCommand(const char *name, char *format, DimCommandHandler *handler)
 {
-	declareIt( (char *)name, format, handler);
+	declareIt( (char *)name, format, handler, 0);
+}
+
+DimCommand::DimCommand(DimServerDns *dns, const char *name, char *format)
+{
+	declareIt( (char *)name, format, 0, dns);
+}
+
+DimCommand::DimCommand(DimServerDns *dns, const char *name, char *format, DimCommandHandler *handler)
+{
+	declareIt( (char *)name, format, handler, dns);
 }
 
 int DimCommand::getNext()
@@ -921,7 +1230,12 @@ DimRpc::DimRpc()
 
 DimRpc::DimRpc(const char *name, const char *formatin, const char *formatout)
 {
-	declareIt( (char *)name, (char *)formatin, (char *)formatout);
+	declareIt( (char *)name, (char *)formatin, (char *)formatout, 0);
+}
+
+DimRpc::DimRpc(DimServerDns *dns, const char *name, const char *formatin, const char *formatout)
+{
+	declareIt( (char *)name, (char *)formatin, (char *)formatout, dns);
 }
 
 DimRpc::~DimRpc()

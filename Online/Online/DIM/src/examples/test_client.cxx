@@ -8,6 +8,7 @@ class ErrorHandler : public DimErrorHandler
 	{
 		int index = 0;
 		char **services;
+		if(code){}
 		cout << severity << " " << msg << endl;
 		services = DimClient::getServerServices();
 		cout<< "from "<< DimClient::getServerName() << " services:" << endl;

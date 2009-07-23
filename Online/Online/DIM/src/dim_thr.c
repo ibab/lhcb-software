@@ -46,6 +46,7 @@ void *dim_tcpip_thread(void *tag)
 	thr_getprio(thr_self(),&prio);
 	thr_setprio(thr_self(),prio+10);
 	*/
+	if(tag){}
 	IO_thread = pthread_self();
 
 	dim_tcpip_init(1);
@@ -79,6 +80,7 @@ void *dim_dtq_thread(void *tag)
 	thr_getprio(thr_self(),&prio);
 	thr_setprio(thr_self(),prio+5);
 	*/
+	if(tag){}
 	ALRM_thread = pthread_self();
 
 	dim_dtq_init(1);
@@ -214,9 +216,7 @@ void dim_stop()
 	DIM_THR_init_done = 0;
 }
 
-long dim_start_thread(thread_ast, tag)
-void *(*thread_ast)(void *);
-long tag;
+long dim_start_thread(void *(*thread_ast)(void *), long tag)
 {
 	pthread_t t_id;
     pthread_attr_t attr;
@@ -235,6 +235,8 @@ int dim_stop_thread(long t_id)
 {
 	int ret;
 	ret = pthread_cancel((pthread_t)t_id);
+	dim_print_date_time();
+	printf("dim_stop_thread: this function is obsolete, it creates memory leaks\n");
 	return ret;
 }
 
@@ -374,10 +376,9 @@ void ignore_sigpipe()
   }
 }
 
-void pipe_sig_handler( num )
-int num;
+void pipe_sig_handler( int num )
 {
- 
+	if(num){} 
 /*
 	printf( "*** pipe_sig_handler called ***\n" );
 */  
@@ -528,13 +529,16 @@ DllExp HANDLE Global_DIM_event = 0;
 DllExp HANDLE Global_DIM_mutex = 0;
 void dim_tcpip_stop(), dim_dtq_stop();
 
-long dim_start_thread(thread_ast, tag)
+typedef struct{
+	void (*thread_ast)();
+	long tag;
+	
+}THREAD_PARAMS;
+
 #ifndef STDCALL
-void (*thread_ast)();
-long tag;
+long dim_start_thread(void (*thread_ast)(), long tag)
 #else
-unsigned long (*thread_ast)(void *);
-void *tag;
+long dim_start_thread(unsigned long (*thread_ast)(void *), void *tag)
 #endif
 {
 DWORD threadid = 0;
@@ -566,6 +570,8 @@ int dim_stop_thread(long thread_id)
 	int ret;
 
 	ret = TerminateThread((HANDLE)thread_id, 0);
+	CloseHandle((HANDLE)thread_id);
+	printf("dim_stop_thread: this function is obsolete, it creates memory leaks\n");
 	return ret;
 }
 

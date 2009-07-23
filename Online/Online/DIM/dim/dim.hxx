@@ -47,4 +47,14 @@ public:
 	virtual void threadHandler() { };
 };
 
+class DllExp DimUtil
+{
+public:
+	static char *getEnvVar(char *varName);
+	DimUtil();
+	~DimUtil();
+	static char *itsBuffer;
+	static int itsBufferSize;
+};
+
 #endif

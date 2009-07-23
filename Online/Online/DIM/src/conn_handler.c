@@ -46,8 +46,7 @@ static void **Id_arr;
 static int Curr_N_Ids = 0;
 static int Curr_id = 1;
 
-void conn_arr_create(type)
-SRC_TYPES type;
+void conn_arr_create(SRC_TYPES type)
 {
 
 	if( Curr_N_Conns == 0 )
@@ -116,8 +115,7 @@ int conn_get()
 }
 
 
-void conn_free(conn_id)
-int conn_id;
+void conn_free(int conn_id)
 {
 	DISABLE_AST
 	Dna_conns[conn_id].busy = FALSE;
@@ -125,9 +123,7 @@ int conn_id;
 }
 
 
-void *arr_increase(conn_ptr, conn_size, n_conns)
-void *conn_ptr;
-int conn_size, n_conns;
+void *arr_increase(void *conn_ptr, int conn_size, int n_conns)
 {
 	register char *new_ptr;
 
@@ -144,9 +140,7 @@ void id_arr_create()
 }
 
 
-void *id_arr_increase(id_ptr, id_size, n_ids)
-register void *id_ptr;
-register int id_size, n_ids;
+void *id_arr_increase(void *id_ptr, int id_size, int n_ids)
 {
 	register char *new_ptr;
 
@@ -155,9 +149,7 @@ register int id_size, n_ids;
 	return(new_ptr);
 }
 
-int id_get(ptr, type)
-void *ptr;
-SRC_TYPES type;
+int id_get(void *ptr, SRC_TYPES type)
 {
 	register int i, id;
 	register ID_ITEM *idp;
@@ -189,9 +181,7 @@ SRC_TYPES type;
 	return(id);
 }
 
-void *id_get_ptr(id, type)
-int id;
-SRC_TYPES type;
+void *id_get_ptr(int id, SRC_TYPES type)
 {
 	ID_ITEM *idp;
 	void *ptr;
@@ -213,9 +203,7 @@ SRC_TYPES type;
 	return(0);
 }
 
-void id_free(id, type)
-int id;
-SRC_TYPES type;
+void id_free(int id, SRC_TYPES type)
 {
 	ID_ITEM *idp;
 	DISABLE_AST

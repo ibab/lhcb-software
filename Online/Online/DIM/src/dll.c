@@ -11,8 +11,7 @@
 #include <dim.h>
 
 
-void dll_init( head )
-register DLL* head;
+void dll_init( DLL* head )
 {
 	DISABLE_AST
 	head->next = head;
@@ -21,8 +20,7 @@ register DLL* head;
 }
 
 
-void dll_insert_queue( head, item )
-register DLL *head, *item;
+void dll_insert_queue( DLL* head, DLL* item )
 {
 	register DLL *prevp;
 
@@ -35,8 +33,7 @@ register DLL *head, *item;
 	ENABLE_AST
 }	
 
-void dll_insert_after( atitem, item )
-register DLL *atitem, *item;
+void dll_insert_after( DLL* atitem, DLL* item )
 {
 	register DLL *auxp;
 
@@ -49,10 +46,7 @@ register DLL *atitem, *item;
 	ENABLE_AST
 }	
 
-DLL *dll_search( head, data, size )
-register DLL *head; 
-register char *data;
-register int size;
+DLL *dll_search( DLL* head, char *data, int size )
 {
 	register DLL *auxp= head->next;
  
@@ -69,8 +63,7 @@ register int size;
 }
 
 
-DLL *dll_get_next( head, item )
-register DLL *head, *item;
+DLL *dll_get_next( DLL* head, DLL* item )
 {
 	DISABLE_AST
 	if( item->next != head ) {
@@ -81,8 +74,7 @@ register DLL *head, *item;
 	return((DLL *) 0);
 }
 
-DLL *dll_get_prev( head, item )
-register DLL *head, *item;
+DLL *dll_get_prev( DLL* head, DLL* item )
 {
 	DISABLE_AST
 	if( item->prev != head ) {
@@ -93,8 +85,7 @@ register DLL *head, *item;
 	return((DLL *) 0);
 }
 
-int dll_empty( head )
-register DLL *head;
+int dll_empty( DLL* head )
 {
 	DISABLE_AST
 	if( head->next != head ) {
@@ -106,8 +97,7 @@ register DLL *head;
 }
 
 
-void dll_remove( item ) 
-register DLL *item;
+void dll_remove( DLL* item ) 
 {
 	register DLL *prevp, *nextp;
 
@@ -119,11 +109,7 @@ register DLL *item;
 	ENABLE_AST
 }	
 
-DLL *dll_search_next_remove( head, offset, data, size )
-register DLL *head; 
-int offset;
-register char *data;
-register int size;
+DLL *dll_search_next_remove( DLL* head, int offset, char *data, int size )
 {
 	register DLL *auxp= head->next;
 	DLL *retp = 0;

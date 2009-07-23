@@ -87,8 +87,7 @@ _DIM_PROTO( static void get_format_data, (int format, FORMAT_STR *format_data,
 _DIM_PROTO( static void execute_service,      (DIS_PACKET *packet, 
 					DIC_SERVICE *servp, int size) );
 
-void print_packet(packet)
-DIS_PACKET *packet;
+void print_packet(DIS_PACKET *packet)
 {
 	dim_print_date_time();
 	printf(" - Bad ID received from server -> Packet received:\n");
@@ -111,8 +110,7 @@ void dic_no_threads()
 	Threads_off = 1;
 }
 
-void dic_add_error_handler( user_routine) 
-void (*user_routine)();
+void dic_add_error_handler( void (*user_routine)()) 
 {
 
 	DISABLE_AST
@@ -120,9 +118,7 @@ void (*user_routine)();
 	ENABLE_AST
 }
 
-static void error_handler(conn_id, severity, errcode, reason)
-int conn_id, severity, errcode;
-char *reason;
+static void error_handler(int conn_id, int severity, int errcode, char *reason)
 {
 	int last_conn_id;
 
@@ -145,9 +141,7 @@ char *reason;
 	}
 }
 
-static void recv_rout( conn_id, packet, size, status )
-int conn_id, size, status;
-DIS_PACKET *packet;
+static void recv_rout( int conn_id, DIS_PACKET *packet, int size, int status )
 {
 	register DIC_SERVICE *servp, *auxp;
 	register DIC_CONNECTION *dic_connp;
@@ -376,10 +370,7 @@ DIS_PACKET *packet;
 	}
 }
 
-static void execute_service(packet, servp, size)
-DIS_PACKET *packet;
-DIC_SERVICE *servp;
-int size;
+static void execute_service(DIS_PACKET *packet, DIC_SERVICE *servp, int size)
 {
 	int format;
 	FORMAT_STR format_data_cp[MAX_NAME/4], *formatp;
@@ -409,7 +400,7 @@ int size;
 			servp->time_stamp[1] = vtohl(((DIS_STAMPED_PACKET *)packet)->time_stamp[1]);
 			servp->quality = vtohl(((DIS_STAMPED_PACKET *)packet)->quality);
 		}
-		else if((vtohl(((DIS_STAMPED_PACKET *)packet)->reserved[0])) == 0xc0dec0de)
+		else if((vtohl(((DIS_STAMPED_PACKET *)packet)->reserved[0])) == (int)0xc0dec0de)
 		{
 /*
 			servp->time_stamp[0] &= 0x0000FFFF;
@@ -467,13 +458,12 @@ int size;
 	Current_server = 0;
 }
 
-static void recv_dns_dic_rout( conn_id, packet, size, status )
-int conn_id, size, status;
-DNS_DIC_PACKET *packet;
+static void recv_dns_dic_rout( int conn_id, DNS_DIC_PACKET *packet, int size, int status )
 {
 	register DIC_SERVICE *servp, *auxp;
 	void dim_panic(char *);
 
+	if(size){}
 	switch( status )
 	{
 	case STA_DISC:       /* connection broken */
@@ -521,8 +511,7 @@ DNS_DIC_PACKET *packet;
 }
 
 
-void service_tmout( serv_id )
-int serv_id;
+void service_tmout( int serv_id )
 {
 	int once_only, size = 0;
 	register DIC_SERVICE *servp;
@@ -580,15 +569,8 @@ int serv_id;
 }
 
 
-unsigned dic_info_service( serv_name, req_type, req_timeout, serv_address,
-			   serv_size, usr_routine, tag, fill_addr, fill_size )
-char *serv_name;
-int req_type, req_timeout, serv_size; 
-void *serv_address;
-void *fill_addr;
-int fill_size;
-long tag;
-void (*usr_routine)();
+unsigned dic_info_service( char *serv_name, int req_type, int req_timeout, void *serv_address,
+			   int serv_size, void (*usr_routine)(), long tag, void *fill_addr, int fill_size )
 {
 	unsigned ret;
 
@@ -599,15 +581,8 @@ void (*usr_routine)();
 	return(ret);
 }
 
-unsigned dic_info_service_stamped( serv_name, req_type, req_timeout, 
-		serv_address, serv_size, usr_routine, tag, fill_addr, fill_size ) 
-char *serv_name;
-int req_type, req_timeout, serv_size; 
-void *serv_address;
-void *fill_addr;
-int fill_size;
-long tag;
-void (*usr_routine)();
+unsigned dic_info_service_stamped( char *serv_name, int req_type, int req_timeout, void *serv_address,
+			   int serv_size, void (*usr_routine)(), long tag, void *fill_addr, int fill_size )
 {
 	unsigned ret;
 
@@ -618,16 +593,8 @@ void (*usr_routine)();
 	return(ret);
 }
 
-unsigned request_service( serv_name, req_type, req_timeout, serv_address,
-			   serv_size, usr_routine, tag, fill_addr, fill_size, stamped )
-char *serv_name;
-int req_type, req_timeout, serv_size; 
-void *serv_address;
-void *fill_addr;
-int fill_size;
-long tag;
-void (*usr_routine)();
-int stamped;
+unsigned request_service( char *serv_name, int req_type, int req_timeout, void *serv_address,
+			   int serv_size, void (*usr_routine)(), long tag, void *fill_addr, int fill_size, int stamped )
 {
 	register DIC_SERVICE *servp;
 	int conn_id;
@@ -695,10 +662,7 @@ int stamped;
 }
 
 
-int dic_cmnd_service( serv_name, serv_address, serv_size )
-char *serv_name;
-void *serv_address;
-int serv_size;
+int dic_cmnd_service( char *serv_name, void *serv_address, int serv_size )
 {
 	int ret;
 
@@ -709,10 +673,7 @@ int serv_size;
 
 }
 
-int dic_cmnd_service_stamped( serv_name, serv_address, serv_size )
-char *serv_name;
-void *serv_address;
-int serv_size;
+int dic_cmnd_service_stamped( char *serv_name, void *serv_address, int serv_size )
 {
 	int ret;
 
@@ -723,12 +684,8 @@ int serv_size;
 
 }
 
-int dic_cmnd_callback( serv_name, serv_address, serv_size, usr_routine, tag )
-char *serv_name;
-void *serv_address;
-int serv_size;
-void (*usr_routine)();                                    
-long tag;
+int dic_cmnd_callback( char *serv_name, void *serv_address, int serv_size, 
+					  void (*usr_routine)(), long tag )
 {
 	int ret;
 
@@ -737,12 +694,8 @@ long tag;
 	return(ret ? 1 : 0);
 }
 
-int dic_cmnd_callback_stamped( serv_name, serv_address, serv_size, usr_routine, tag )
-char *serv_name;
-void *serv_address;
-int serv_size;
-void (*usr_routine)();                                    
-long tag;
+int dic_cmnd_callback_stamped( char *serv_name, void *serv_address, int serv_size, 
+					  void (*usr_routine)(), long tag )
 {
 	int ret;
 
@@ -751,13 +704,8 @@ long tag;
 	return(ret ? 1 : 0);
 }
 
-int request_command(serv_name,serv_address,serv_size,usr_routine,tag,stamped)
-char *serv_name;
-void *serv_address;
-int serv_size;
-void (*usr_routine)();                                    
-long tag;
-int stamped;
+int request_command(char *serv_name, void *serv_address, int serv_size, 
+					  void (*usr_routine)(), long tag, int stamped)
 {
 	int conn_id, ret;
 	register DIC_SERVICE *servp, *testp;
@@ -825,13 +773,9 @@ int stamped;
 	return(-1);
 }
 
-DIC_SERVICE *insert_service( type, timeout, name, address, size, routine, 
-			 tag, fill_addr, fill_size, pending, stamped)
-int type, *address, size, *fill_addr, fill_size, timeout;
-long tag;
-char *name;
-int pending, stamped;
-void (*routine)();
+DIC_SERVICE *insert_service( int type, int timeout, char *name, int *address, int size, 
+							void (*routine)(), long tag, int *fill_addr, int fill_size, 
+							int pending, int stamped)
 {
 	register DIC_SERVICE *newp;
 	int *fillp;
@@ -899,12 +843,8 @@ void (*routine)();
 }
 
 
-void modify_service( servp, timeout, address, size, routine, 
-			 tag, fill_addr, fill_size, stamped)
-register DIC_SERVICE *servp;
-int *address, size, *fill_addr, fill_size, timeout, stamped;
-long tag;
-void (*routine)();
+void modify_service( DIC_SERVICE *servp, int timeout, int *address, int size, void (*routine)(), 
+			 long tag, int *fill_addr, int fill_size, int stamped)
 {
 	int *fillp;
 
@@ -935,10 +875,7 @@ void (*routine)();
 		servp->timer_ent = NULL;
 }
 
-void dic_change_address( serv_id, serv_address, serv_size)
-unsigned serv_id;
-void *serv_address;
-int serv_size;
+void dic_change_address( unsigned serv_id, void *serv_address, int serv_size)
 {
 	register DIC_SERVICE *servp;
 
@@ -954,8 +891,7 @@ int serv_size;
 	ENABLE_AST
 }
 
-int dic_get_quality( serv_id )
-unsigned serv_id;
+int dic_get_quality( unsigned serv_id )
 {
 	register DIC_SERVICE *servp;
 
@@ -979,8 +915,7 @@ unsigned serv_id;
 	return(servp->quality);
 }
 
-char *dic_get_format( serv_id )
-unsigned serv_id;
+char *dic_get_format( unsigned serv_id )
 {
 	register DIC_SERVICE *servp;
 
@@ -1003,9 +938,7 @@ unsigned serv_id;
 	return(servp->def);
 }
 
-int dic_get_timestamp( serv_id, secs, milisecs )
-unsigned serv_id;
-int *secs, *milisecs;
+int dic_get_timestamp( unsigned serv_id, int *secs, int *milisecs )
 {
 	register DIC_SERVICE *servp;
 
@@ -1042,8 +975,7 @@ int *secs, *milisecs;
 	}
 }
 
-void dic_release_service( service_id )
-register unsigned service_id;
+void dic_release_service( unsigned service_id )
 {
 	register DIC_SERVICE *servp;
 	register int conn_id, pending;
@@ -1116,8 +1048,7 @@ register unsigned service_id;
 }
 
 
-int release_service( servicep )
-register DIC_SERVICE *servicep;
+int release_service( DIC_SERVICE *servicep )
 {
 	register DIC_SERVICE *servp;
 	register int conn_id = 0;
@@ -1185,10 +1116,9 @@ register DIC_SERVICE *servicep;
 }
 
 
-int locate_service( servp )
-register DIC_SERVICE *servp;
+int locate_service( DIC_SERVICE *servp )
 {
-	extern int open_dns(void (*)(), void (*)(), int, int, int);
+	extern int open_dns(long, void (*)(), void (*)(), int, int, int);
 
 	if(!strcmp(servp->serv_name,"DIS_DNS/SERVER_INFO"))
 	{
@@ -1203,7 +1133,7 @@ register DIC_SERVICE *servp;
 	if( !Dns_dic_conn_id )
 	  {
 	    DISABLE_AST;
-		Dns_dic_conn_id = open_dns( recv_dns_dic_rout, error_handler,
+		Dns_dic_conn_id = open_dns( 0, recv_dns_dic_rout, error_handler,
 					Tmout_min,
 					Tmout_max,
 					SRC_DIC);
@@ -1221,8 +1151,7 @@ register DIC_SERVICE *servp;
 	return(Dns_dic_conn_id);
 }
 
-DIC_SERVICE *locate_command( serv_name )
-register char *serv_name;
+DIC_SERVICE *locate_command( char *serv_name )
 {
 	register DIC_SERVICE *servp;
 
@@ -1234,8 +1163,7 @@ register char *serv_name;
 	return((DIC_SERVICE *)0);
 }
 
-DIC_SERVICE *locate_pending( serv_name )
-register char *serv_name;
+DIC_SERVICE *locate_pending( char *serv_name )
 {
 	register DIC_SERVICE *servp;
 
@@ -1266,8 +1194,7 @@ DIC_BAD_CONNECTION *locate_bad(char *node, char *task, int port)
 	return((DIC_BAD_CONNECTION *)0);
 }
 
-static void request_dns_info(id)
-int id;
+static void request_dns_info(int id)
 {
 	DIC_SERVICE *servp, *ptr;
 	int n_pend = 0;
@@ -1277,7 +1204,7 @@ int id;
 	DISABLE_AST
     if( Dns_dic_conn_id <= 0)
 	{
-		Dns_dic_conn_id = open_dns( recv_dns_dic_rout, error_handler,
+		Dns_dic_conn_id = open_dns( 0, recv_dns_dic_rout, error_handler,
 					   Tmout_min,
 					   Tmout_max,
 					   SRC_DIC);
@@ -1336,8 +1263,7 @@ int id;
 }
 
 
-int request_dns_single_info( servp )
-DIC_SERVICE *servp;
+int request_dns_single_info( DIC_SERVICE *servp )
 {
 	static DIC_DNS_PACKET Dic_dns_packet;
 	static SERVICE_REQ *serv_reqp;
@@ -1369,8 +1295,7 @@ DIC_SERVICE *servp;
 }
 
 
-static int handle_dns_info( packet )
-DNS_DIC_PACKET *packet;
+static int handle_dns_info( DNS_DIC_PACKET *packet )
 {
 	int conn_id, service_id;
 	DIC_SERVICE *servp;
@@ -1629,9 +1554,7 @@ void move_to_notok_service();
 		request_dns_info(0);
 }
 
-void move_to_ok_service( servp, conn_id )
-register DIC_SERVICE *servp;
-int conn_id;
+void move_to_ok_service( DIC_SERVICE *servp, int conn_id )
 {
 	if(Dic_conns[conn_id].service_head)
 	{
@@ -1643,17 +1566,14 @@ int conn_id;
 	}
 }
 
-void move_to_bad_service( servp, bad_connp)
-register DIC_SERVICE *servp;
-DIC_BAD_CONNECTION *bad_connp;
+void move_to_bad_service( DIC_SERVICE *servp, DIC_BAD_CONNECTION *bad_connp)
 {
 	servp->pending = WAITING_DNS_UP;
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) bad_connp->conn.service_head, (DLL *) servp );
 }
 
-void move_to_cmnd_service( servp )
-register DIC_SERVICE *servp;
+void move_to_cmnd_service( DIC_SERVICE *servp )
 {
 /*
 	if(servp->pending != WAITING_CMND_ANSWER)
@@ -1664,24 +1584,21 @@ register DIC_SERVICE *servp;
 	dll_insert_queue( (DLL *) Cmnd_head, (DLL *) servp );
 }
 
-void move_to_notok_service( servp )
-register DIC_SERVICE *servp;
+void move_to_notok_service(DIC_SERVICE *servp )
 {
 
 	dll_remove( (DLL *) servp );
 	dll_insert_queue( (DLL *) Service_pend_head, (DLL *) servp );
 }
 
-static void get_format_data(format, format_data, def)
-register int format;
-register FORMAT_STR *format_data;
-register char *def;
+static void get_format_data(int format, FORMAT_STR *format_data, char *def)
 {
 	register FORMAT_STR *formatp = format_data;
 	register char code, last_code = 0;
 	int num;
 	char *ptr = def;
 
+	if(format){}
 	while(*ptr)
 	{
 		switch(*ptr)
@@ -1810,9 +1727,7 @@ register char *def;
 */
 }
 
-int end_command(servp, ret)
-DIC_SERVICE *servp;
-int ret;
+int end_command(DIC_SERVICE *servp, int ret)
 {
 	DIC_SERVICE *aux_servp;
 	DIC_CONNECTION *dic_connp;
@@ -1847,8 +1762,7 @@ int ret;
 	return(ret);
 }
 
-int send_service_command(servp)
-register DIC_SERVICE *servp;
+int send_service_command(DIC_SERVICE *servp)
 {
     int ret = 1;
 	int conn_id;
@@ -1879,10 +1793,7 @@ register DIC_SERVICE *servp;
 	return(ret);
 }	
 
-int send_service(conn_id, servp)
-register int conn_id;
-
-register DIC_SERVICE *servp;
+int send_service(int conn_id, DIC_SERVICE *servp)
 {
 	static DIC_PACKET *dic_packet;
 	static int serv_packet_size = 0;
@@ -1912,8 +1823,7 @@ typedef struct
 	int serv_id;
 } CMNDCB_ITEM;
 
-void do_cmnd_callback(itemp)
-CMNDCB_ITEM *itemp;
+void do_cmnd_callback(CMNDCB_ITEM *itemp)
 {
 
 	DIC_SERVICE *servp;
@@ -1941,9 +1851,7 @@ CMNDCB_ITEM *itemp;
 	free(itemp);
 }
 
-int send_command(conn_id, servp)
-register int conn_id;
-register DIC_SERVICE *servp;
+int send_command(int conn_id, DIC_SERVICE *servp)
 {
 	static DIC_PACKET *dic_packet;
 	static int cmnd_packet_size = 0;
@@ -2020,13 +1928,12 @@ register DIC_SERVICE *servp;
 	return(ret);
 }
 
-int find_connection(node, task, port)
-char *node, *task;
-int port;
+int find_connection(char *node, char *task, int port)
 {
 	register int i;
 	register DIC_CONNECTION *dic_connp;
 
+	if(task){}
 	for( i=0, dic_connp = Dic_conns; i<Curr_N_Conns; i++, dic_connp++ )
 	{
 /*
@@ -2040,8 +1947,7 @@ int port;
 	return(0);
 }
 
-int dic_get_id(name)
-char *name;
+int dic_get_id(char *name)
 {
 	extern int get_proc_name(char *name);
 
@@ -2100,8 +2006,7 @@ void DIMDestroy(int tid)
 
 #endif
 
-static void release_conn(conn_id)
-register int conn_id;
+static void release_conn(int conn_id)
 {
 	register DIC_CONNECTION *dic_connp = &Dic_conns[conn_id];
 
@@ -2218,8 +2123,7 @@ char *dic_get_error_services()
 	return(dic_get_server_services(Error_conn_id));
 }
 
-char *dic_get_server_services(conn_id)
-int conn_id;
+char *dic_get_server_services(int conn_id)
 {
 	DIC_SERVICE *servp;
 	DIC_CONNECTION *dic_connp;
@@ -2286,8 +2190,7 @@ int dic_get_conn_id()
 	return(Curr_conn_id);
 }
 
-int dic_get_server(name)
-char *name;
+int dic_get_server(char *name)
 {
 	int ret = 0;
 	char node[MAX_NODE_NAME], task[MAX_TASK_NAME];
@@ -2306,8 +2209,7 @@ char *name;
 	return(ret);
 }
 
-int dic_get_server_pid(pid)
-int *pid;
+int dic_get_server_pid(int *pid)
 {
 	int ret = 0;
 

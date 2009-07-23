@@ -32,8 +32,7 @@ void dis_disable_padding()
 	Dis_padding = 0;
 }
 
-static int get_curr_bytes(items, bytes_left, item_size)
-int items, bytes_left, item_size;
+static int get_curr_bytes(int items, int bytes_left, int item_size)
 {
 	int num;
 
@@ -157,8 +156,7 @@ void *buff_out;
 
 #endif
 
-static int check_padding(curr_bytes, item_size)
-int curr_bytes, item_size;
+static int check_padding(int curr_bytes, int item_size)
 {
 	int num;
 
@@ -169,15 +167,12 @@ int curr_bytes, item_size;
 	return num;
 }
 
-int copy_swap_buffer_out(format, format_data, buff_out, buff_in, size)
-int format;
-register int size;
-register FORMAT_STR *format_data;
-register void *buff_out, *buff_in;
+int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, void *buff_in, int size)
 {
 	int num, pad_num, curr_size = 0, curr_out = 0;
 	int next_par_bytes, curr_par_num;
 	
+	if(format){}
 	if(!format_data->par_bytes) {
 		if(buff_in != buff_out)
 			memcpy( buff_out, buff_in, size );
@@ -272,10 +267,7 @@ register void *buff_out, *buff_in;
 	return(curr_out);
 }
 
-int copy_swap_buffer_in(format_data, buff_out, buff_in, size)
-register int size;
-register FORMAT_STR *format_data;
-register void *buff_out, *buff_in;
+int copy_swap_buffer_in(FORMAT_STR *format_data, void *buff_out, void *buff_in, int size)
 {
 	int num, pad_num, curr_size = 0, curr_out = 0;
 	int next_par_bytes, curr_par_num, curr_par_bytes;

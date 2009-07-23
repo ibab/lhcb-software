@@ -52,5 +52,12 @@ _DIM_PROTOE( void dis_disable_padding,      		() );
 _DIM_PROTOE( int dis_get_timeout,      		(unsigned service_id, int client_id) );
 _DIM_PROTOE( char *dis_get_error_services,	() );
 _DIM_PROTOE( char *dis_get_client_services,	(int conn_id) );
+_DIM_PROTOE( int dis_start_serving_dns,    (long dns_id, char *task_name/*, int *id_list*/) );
+_DIM_PROTOE( void dis_stop_serving_dns,    (long dns_id) );
+_DIM_PROTOE( unsigned dis_add_service_dns, (long dns_id, char *service_name, char *service_type,
+				   void *service_address, int service_size,
+				   void (*usr_routine)(void*,void**,int*,int*), long tag) );
+_DIM_PROTOE( unsigned dis_add_cmnd_dns,        (long dns_id, char *service_name, char *service_type,
+			           void (*usr_routine)(void*,void*,int*), long tag) );
 
 #endif

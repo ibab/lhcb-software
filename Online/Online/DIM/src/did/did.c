@@ -86,9 +86,7 @@ static int reglist_num = (sizeof reglist / sizeof reglist[0]);
 
 SERVER *Curr_servp;
 
-XmFontList util_get_font( fontname, top )
-     char * fontname;
-     Widget top;
+XmFontList util_get_font( char *fontname, Widget top )
 {
 XFontStruct * mf;
 XmFontList font;
@@ -138,8 +136,7 @@ char w_name[MAX_NAME];
 	*/
 }
 
-void gui_create_main_window(parent)
-     Widget parent;
+void gui_create_main_window(Widget parent)
 {
 
 Widget mw;
@@ -358,8 +355,7 @@ int n;
     
 }
 
-Widget create_separator(parent_id)
-Widget parent_id;
+Widget create_separator(Widget parent_id)
 {
 	Widget w;
 	Arg arglist[10];
@@ -750,8 +746,7 @@ XmString xms;
 }
 
 
-Widget gui_toplevel(argv)
-     char **argv;
+Widget gui_toplevel(char **argv)
 {
 int n;
 Arg arglist[6];
@@ -766,9 +761,7 @@ Arg arglist[6];
      
 }
 
-Widget gui_initialize (argc, argv)
-int argc;
-char **argv;
+Widget gui_initialize (int argc, char **argv)
 {
 Widget toplevel;
 void gui_create_main_window();
@@ -795,9 +788,7 @@ void gui_create_main_window();
     return toplevel;
 }
 
-int main(argc, argv)
-    unsigned int argc;                  /* Command line argument count. */
-    char *argv[];                       /* Pointers to command line args. */
+int main(int argc, char *argv[])
 {
     int i;
 	char opt_str[20], *ptr;
@@ -909,8 +900,7 @@ int main(argc, argv)
 
 static char no_link = -1;
 
-void app_initialize(tag)
-int tag;
+void app_initialize(int tag)
 {
 void check_put_label();
 
@@ -921,6 +911,7 @@ extern void get_all_colors();
 extern void set_title();
 extern void set_icon_title();
 
+	if(tag){}
 	get_all_colors(display,Matrix_id[Curr_matrix]);
 	set_title(toplevel_widget,"DID - DIM Information Display");
 	set_icon_title(toplevel_widget,"DID");
@@ -940,42 +931,38 @@ extern void set_icon_title();
 /*
  * All errors are fatal.
  */
-void s_error(problem_string)
-    char *problem_string;
+void s_error(char *problem_string)
 {
     printf("%s\n", problem_string);
     exit(0);
 }
 
-void did_exit (w, tag, reason)
-Widget		w;
-int		*tag;
-unsigned long	*reason;
+void did_exit(Widget w, int *tag, unsigned long *reason)
 {
+	if(w){}
+	if(tag){}
+	if(reason){}
 	exit(0);
 }
 
 extern Pixel rgb_colors[MAX_COLORS];
 
-void create_main (w, tag, reason)
-Widget		w;
-int		*tag;
-unsigned long	*reason;
+void create_main (Widget w, int *tag, unsigned long *reason)
 {
-
+	if(tag){}
+	if(reason){}
 	Window_id = w;
 /*
 	dtq_start_timer(5, app_initialize, 0);
 */
 }
 
-void view_opts (w, tag, reason)
-Widget		w;
-int		tag;
-unsigned long	*reason;
+void view_opts(Widget w, int tag, unsigned long *reason)
 {
 	void get_server_node(), get_server_service(), show_servers();
 
+	if(w){}
+	if(reason){}
 	Curr_view_opt = tag;
 	switch(tag)
 	{
@@ -994,12 +981,11 @@ unsigned long	*reason;
 	}
 }
 
-void dns_control (w, tag, reason)
-Widget		w;
-int		tag;
-unsigned long	*reason;
+void dns_control(Widget w, int tag, unsigned long *reason)
 {
 
+	if(w){}
+	if(reason){}
 	switch(tag)
 	{
 		case 0 :
@@ -1043,7 +1029,7 @@ int get_nodes();
 		nodeptrs[i] = ptr;
 		sptr = ptr;
 		ptr = strchr(ptr,'\n');
-		for(j = 0; j < strlen(sptr); j++)
+		for(j = 0; j < (int)strlen(sptr); j++)
 		  sptr[j] = tolower(sptr[j]);
 		*ptr++ = '\0';
 	}
@@ -1101,8 +1087,7 @@ Widget id,sel_id;
 	*/
 }	
 
-int get_nodes(node_ptr)
-char *node_ptr;
+int get_nodes(char *node_ptr)
 {
 DNS_SERVER_INFO *ptr;
 int n_nodes = 0;
@@ -1166,9 +1151,7 @@ void get_service_format()
 	}
 }
 
-void recv_service_info(tag, buffer, size)
-int *tag, *size;
-int *buffer;
+void recv_service_info(int *tag, int *buffer, int *size)
 {
 /*
 	char str[256], *ptr, *ptr1;
@@ -1176,6 +1159,7 @@ int *buffer;
 */
 	void print_service_formatted();
 
+	if(tag){}
 	Service_content_str = malloc(1024 + (*size)*16);
 	Service_buffer = malloc(*size);
 	memcpy(Service_buffer, (char *)buffer, *size);
@@ -1210,9 +1194,7 @@ int *buffer;
 	*/
 }
 	
-void print_service_formatted(buff, size)
-void *buff;
-int size;
+void print_service_formatted(void *buff, int size)
 {
 char type;
 int num, ret;
@@ -1221,7 +1203,7 @@ char *ptr;
 void *buffer_ptr;
 char timestr[128], aux[10];
 int quality = 0, secs = 0, mili = 0; 
-int did_write_string();
+int did_write_string(char, int, void **, int);
 time_t tsecs;
 
   sprintf(Service_content_str,
@@ -1280,11 +1262,7 @@ time_t tsecs;
    }
 }
 
-int did_write_string(type, num, buffer_ptr, ssize)
-char type;
-int num;
-void **buffer_ptr;
-int ssize;
+int did_write_string(char type, int num, void **buffer_ptr, int ssize)
 {
 void *ptr;
 int size, psize;
@@ -1453,8 +1431,7 @@ int last[4];
 }
 */
 
-void print_service_standard(buff, size)
-int *buff, size;
+void print_service_standard(int *buff, int size)
 {
 int i,j;
 char *asc, *ptr, str[80], tmp[256];
@@ -1521,8 +1498,7 @@ int last[4];
 	strcpy(ptr, tmp);
 }
 
-void print_service_longlong(buff, size)
-longlong *buff, size;
+void print_service_longlong(longlong *buff, int size)
 {
 int i,j;
 char *asc, *ptr, str[80], tmp[256];
@@ -1568,9 +1544,7 @@ longlong last[4];
 	strcpy(ptr, tmp);
 }
 
-void print_service_short(buff, size)
-short *buff;
-int size;
+void print_service_short(short *buff, int size)
 {
 int i,j;
 char *asc, *ptr, str[80], tmp[256];
@@ -1637,9 +1611,7 @@ short last[8];
 	strcpy(ptr, tmp);
 }
 
-void print_service_char(buff, size)
-char *buff;
-int size;
+void print_service_char(char *buff, int size)
 {
 int i,j;
 char *asc, *ptr, str[80], tmp[256];
@@ -1700,9 +1672,7 @@ char last[16];
 	strcpy(ptr, tmp);
 }
 
-void print_service_float(buff, size)
-float *buff;
-int size;
+void print_service_float(float *buff, int size)
 {
 int i;
 char *ptr, str[80], tmp[256];
@@ -1735,9 +1705,7 @@ char *ptr, str[80], tmp[256];
 	ptr += strlen(tmp);
 }
 
-void print_service_double(buff, size)
-double *buff;
-int size;
+void print_service_double(double *buff, int size)
 {
 int i;
 char *ptr, str[80], tmp[256];
@@ -1770,10 +1738,7 @@ char *ptr, str[80], tmp[256];
 	ptr += strlen(tmp);
 }
 
-void ok_pop_up (w, tag, reason)
-Widget		w;
-long		tag;
-unsigned long	*reason;
+void ok_pop_up (Widget w, long tag, unsigned long *reason)
 {
 Widget id, sel_id;
 char *str, *pstr;
@@ -1840,6 +1805,7 @@ void show_servers();
 		return;
 	}
 */
+	if(reason){}
 	if(tag == DID_KILL_ALL)
 	{
 		dic_cmnd_service("DIS_DNS/KILL_SERVERS",0,0);
@@ -1923,8 +1889,7 @@ void show_servers();
 	}
 }
 
-int get_type_size(type)
-char type;
+int get_type_size(char type)
 {
   int size;
 
@@ -1958,8 +1923,7 @@ char type;
   return(size);
 }
 
-void did_prepare_command(str)
-char *str;
+void did_prepare_command(char *str)
 {
 char type;
 int num;
@@ -1969,7 +1933,7 @@ static int last_size = 0;
 static void *last_buffer = 0;
 void *buffer_ptr;
 char *str_ptr;
-void did_read_string();
+void did_read_string(char, int, void **, char **);
 
    str_ptr = str; 
    ptr = Curr_service_format; 
@@ -2050,11 +2014,7 @@ int read_str_char(char *str, char *cc)
   return(1);
 }
 
-void did_read_string(type, num, buffer_ptr, str_ptr)
-char type;
-int num;
-void **buffer_ptr;
-char **str_ptr;
+void did_read_string(char type, int num, void **buffer_ptr, char **str_ptr)
 {
 int i, ret;
 float ff;
@@ -2162,13 +2122,11 @@ char cc;
   *str_ptr = strp;
 }
 
-void cancel_pop_up (w, tag, reason)
-Widget		w;
-long		tag;
-unsigned long	*reason;
+void cancel_pop_up (Widget w, int tag, unsigned long *reason)
 {
 	void print_service_formatted();
 
+	if(reason){}
 	if(tag == MAX_POP_UPS+1)
 	{
 	  print_service_formatted(Service_buffer,Service_size);
@@ -2250,12 +2208,10 @@ unsigned long	*reason;
 	}
 }
 
-void create_matrix(w, tag, reason)
-Widget		w;
-int		*tag;
-unsigned long	*reason;
+void create_matrix(Widget w, int *tag, unsigned long *reason)
 {
 
+	if(reason){}
 	Matrix_id[*tag] = w;
 	if(*tag)
 		XtUnmanageChild(w);
@@ -2263,12 +2219,9 @@ unsigned long	*reason;
 		Curr_matrix = 0;
 }
 
-void create_label(w, tag, reason)
-Widget		w;
-int		*tag;
-unsigned long	*reason;
+void create_label(Widget w, int *tag, unsigned long *reason)
 {
-
+	if(reason){}
 	if(!*tag)
 		Label_id = w;
 	else
@@ -2290,17 +2243,14 @@ static int curr_allocated_size = 0;
 static DNS_SERVER_INFO *dns_info_buffer;
 */
 
-void update_servers_new(tag, buffer, size)
-int *tag,*size;
-char *buffer;
+void update_servers_new(int *tag, char *buffer, int *size)
 {
-
- printf("Server_list:\n%s\n",buffer);
+	if(tag){}
+	if(size){}
+	printf("Server_list:\n%s\n",buffer);
 }
 
-SERVER *find_server(node, pid)
-     char *node;
-     int pid;
+SERVER *find_server(char *node, int pid)
 {
   SERVER *servp;
   DNS_SERVER_INFO *ptr;
@@ -2322,16 +2272,14 @@ SERVER *find_server(node, pid)
 	  */
 
 
-void update_servers(tag, buffer, size)
-int *tag,*size;
-DNS_DID *buffer;
+void update_servers(int *tag, DNS_DID *buffer, int *size)
 {
 int n_services, service_size;
 SERVER *servp;
 int j;
 char str[MAX_NAME], sname[MAX_NAME], *ptr;
 
-
+	if(tag){}
 	if(!Server_head)
 	{
 		Server_head = (SERVER *)malloc(sizeof(SERVER));
@@ -2464,9 +2412,7 @@ void put_label();
 	Force_update = 1;                
 }
 
-void update_show_servers(tag, reason)
-     void *tag;
-     unsigned long *reason;
+void update_show_servers(void *tag, unsigned long *reason)
 {
 DNS_SERVER_INFO *server_ptr;
 DNS_SERVICE_INFO *service_ptr;
@@ -2480,6 +2426,8 @@ void remove_all_buttons();
 void put_label();
 
     DISABLE_AST
+	if(tag){}
+	if(reason){}
     if((N_services != old_n_services) || (Force_update))
     {
         if(!Matrix_id[Curr_matrix])
@@ -2559,10 +2507,10 @@ void put_label();
 				  if(ptr)
 				    *ptr = '\0';
 				  ptr = node;
-				  for(i = 0; i < strlen(ptr); i++)
+				  for(i = 0; i < (int)strlen(ptr); i++)
 				    ptr[i] = tolower(ptr[i]);
 				  ptr = par;
-				  for(i = 0; i < strlen(ptr); i++)
+				  for(i = 0; i < (int)strlen(ptr); i++)
 				    ptr[i] = tolower(ptr[i]);
 					 if(!strcmp(/*server_ptr->*/node, /*Curr_view_opt_*/par))
 					{
@@ -2650,9 +2598,7 @@ void put_label();
     ENABLE_AST
 }
 
-Widget create_button(name, servp)
-char *name;
-SERVER *servp;
+Widget create_button(char *name, SERVER *servp)
 {
 Arg arglist[10];
 int n, n_services = -1;
@@ -2748,8 +2694,7 @@ SERVER *servp;
 	}
 }
 
-void remove_button(servp)
-SERVER *servp;
+void remove_button(SERVER *servp)
 {
 
 	if(servp->button_id)
@@ -2760,10 +2705,7 @@ SERVER *servp;
 	}
 }
 
-void activate_services(w, servp, reason)
-Widget		w;
-SERVER		*servp;
-unsigned long	*reason;
+void activate_services(Widget w, SERVER *servp, unsigned long *reason)
 {
 DNS_SERVER_INFO *ptr;
 char str[MAX_NAME];
@@ -2771,6 +2713,8 @@ Widget id,sel_id;
 void got_service_list();
 void kick_it();
 
+	if(w){}
+	if(reason){}
 	if(servp->pop_widget_id[0])
 	{
 		XtDestroyWidget(servp->pop_widget_id[0]);
@@ -2826,14 +2770,12 @@ void kick_it()
 
 typedef char DID_SLOT[MAX_NAME];
 
-void got_service_list(servp_ptr, buffer, size)
-SERVER **servp_ptr;
-int *size;
-char *buffer;
+void got_service_list(SERVER **servp_ptr, char *buffer, int *size)
 {
 SERVER *servp;
 void do_got_service_list();
 
+	if(size){}
 	servp = *servp_ptr;
 	if(Curr_service_list)
 	  free(Curr_service_list);
@@ -2850,8 +2792,7 @@ void do_got_service_list();
 	*/
 }
 
-void do_got_service_list(servp)
-     SERVER *servp;
+void do_got_service_list(SERVER *servp)
 {
 char cmd_str[256], svc_str[256];
 DNS_SERVER_INFO *ptr;
@@ -2919,14 +2860,12 @@ void delete_str();
 	set_something(id,XmNlistVisibleItemCount,(i < 20) ? i : 20);
 }
 
-void show_clients(servp_ptr, buffer, size)
-SERVER **servp_ptr;
-int *size;
-char *buffer;
+void show_clients(SERVER **servp_ptr, char *buffer, int *size)
 {
 SERVER *servp;
 void do_show_clients();
 
+	if(size){}
 	servp = *servp_ptr;
 	if(Curr_client_list)
 	  free(Curr_client_list);
@@ -2943,8 +2882,7 @@ void do_show_clients();
 	*/
 }
 
-void do_show_clients(servp)
-     SERVER *servp;
+void do_show_clients(SERVER *servp)
 {
 int i = 0;
 char str[2048], *strp, *strp1;
@@ -3014,10 +2952,7 @@ void delete_str();
 	*/
 }
 
-void activate_clients(w, servp, reason)
-Widget		w;
-SERVER		*servp;
-unsigned long	*reason;
+void activate_clients(Widget w, SERVER *servp, unsigned long *reason)
 {
 DNS_SERVER_INFO *ptr;
 char str[100];
@@ -3025,6 +2960,8 @@ void show_clients();
 void kick_it_again();
 Widget id,sel_id;
 
+	if(w) {}
+	if(reason){}
 	Curr_servp = servp;
 	ptr = &servp->server;
 	if(servp->pop_widget_id[1])
@@ -3078,10 +3015,7 @@ void kick_it_again()
   printf("kick_it_again\n");
 }
 
-Widget put_popup(servp,type,title)
-SERVER *servp;
-char *title;
-int type;
+Widget put_popup(SERVER *servp, int type, char *title)
 {
     Widget id;
     void activate_services(), activate_clients();
@@ -3111,9 +3045,7 @@ int type;
 	return(id);
 }	
 
-Widget put_selection(tag,title)
-int tag;
-char *title;
+Widget put_selection(int tag, char *title)
 {
     Widget id;
 	extern void set_title();
@@ -3147,13 +3079,13 @@ char *title;
 	return(id);
 }	
 
-void check_put_label(tag)
-int tag;
+void check_put_label(int tag)
 {
 	static int old_n_services = 0;
 	static int changing = 0;
 	void put_label();
 
+	if(tag){}
 	if(N_services != old_n_services)
 	{
 		put_label();
@@ -3273,10 +3205,8 @@ Widget create_kill_confirmation()
   
 }
 
-Widget create_selection_dialog(ok, apply, cancel, list, sel, tag, items)
-char *ok, *apply, *cancel, *list, *sel;
-long tag;
-int items;
+Widget create_selection_dialog(char *ok, char *apply, char *cancel, char *list, char *sel, 
+							   long tag, int items)
 {
 Widget sd;
 XmString xmOk, xmApply, xmCancel, xmList, xmSelection;
@@ -3335,8 +3265,7 @@ int n;
     return(sd);
 }
 
-Widget create_file_selection_dialog(type)
-long type;
+Widget create_file_selection_dialog(long type)
 {
 Widget sd;
 XmString xm1;
@@ -3368,9 +3297,7 @@ int n;
 	return(sd);
 }
 
-Widget create_prompt_dialog(label, tag)
-     char *label;
-     long tag;
+Widget create_prompt_dialog(char *label, long tag)
 {
 Widget sd;
 XmString xm1;
@@ -3399,9 +3326,7 @@ int n;
 	return(sd);
 }
 
-Widget create_question_dialog(label, tag)
-     char *label;
-     long tag;
+Widget create_question_dialog(char *label, long tag)
 {
 Widget sd;
 XmString xm1;
@@ -3435,7 +3360,8 @@ Widget create_service_dialog()
 Widget fd, rc, sw, lb, rc1;
 XmString xm1;
 Arg ar[20];
-int n, par, reason;
+int n, par;
+unsigned long reason;
         
     n = 0; 
     XtSetArg(ar[n],XmNborderWidth, 1); n++;
@@ -3505,10 +3431,7 @@ int n, par, reason;
     return(fd);
 }
 
-Widget create_push_button(parent, str, tag)
-     Widget parent;
-     char *str;
-     long tag;
+Widget create_push_button(Widget parent, char *str, long tag)
 {
 Widget b;
 XmString xm1;

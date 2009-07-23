@@ -70,11 +70,12 @@ static int DBGe_trap = 0;
 static int DBGm_trap = 0;
 static int DBGx_trap = 0;
 
-static void DBG_Trap(code)
+static void DBG_Trap(int code)
 {
   /* if you set a break point here you can trap all */
   /* native calls that are activated by the mask DBG_trap */
 // TODO DBG_Trap should invoke the debugger
+	if(code){}
   return;
 }
 // ===============================================================================Debug/tracing support=
@@ -200,8 +201,9 @@ JNI_OnLoad(JavaVM* jvm, void* reserved)
   int    bugs =0;
   JNIEnv *env;
 
-  DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
+//  DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
 
+  if(reserved){}
   theJavaVM = jvm;
 
   dim_jni_attachThread(&env);
@@ -311,8 +313,9 @@ JNI_OnUnLoad(JNIEnv* env, void* reserved)
 {
 //  static JNIEnv* env;
 
-  DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
+//  DBGe(dim_Dbg_MODULE) ; /* trap only, report on exit */
 
+  if(reserved){}
 //  (*jvm)->AttachCurrentThread(jvm, (void *)&env, NULL);
   (*env)->DeleteGlobalRef(env, NativeDataMemory);
   (*env)->DeleteGlobalRef(env, SendSynchronizer);
@@ -345,10 +348,11 @@ JNI_OnUnLoad(JNIEnv* env, void* reserved)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_dim_Native_init
-  (JNIEnv* env, jclass dimNativeClass)
+  (JNIEnv* env, jclass nativeClass)
 {
   JavaVM* jvm;
 
+  if(nativeClass){}
   if(theJavaVM!=NULL) return JNI_VERSION;
   (*env)->GetJavaVM(env, &jvm);
   return JNI_OnLoad(jvm, 0);
@@ -360,9 +364,10 @@ JNIEXPORT jint JNICALL Java_dim_Native_init
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_dim_Native_stop
-  (JNIEnv* env, jclass dimNativeClass)
+  (JNIEnv* env, jclass nativeClass)
 {
 
+  if(nativeClass){}
   return JNI_OnUnLoad(env, 0);
 }
 
@@ -375,8 +380,10 @@ JNIEXPORT jint JNICALL Java_dim_Native_stop
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_dim_Dbg_setMask
-  (JNIEnv *env, jclass dimNativeClass, jint dbg_mask)
+  (JNIEnv *env, jclass nativeClass, jint dbg_mask)
 {
+	if(env){}
+	if(nativeClass){}
   if(dim_Dbg_TRANSACTIONS & (DBG_mask|dbg_mask))
     printf("DimJNI: debug mask changed from %08x to %08x\n", DBG_mask, dbg_mask);
   DBG_mask = dbg_mask;
@@ -388,8 +395,10 @@ JNIEXPORT void JNICALL Java_dim_Dbg_setMask
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_dim_Dbg_getMask
-  (JNIEnv *env, jclass dimNativeClass)
+  (JNIEnv *env, jclass nativeClass)
 {
+	if(env){}
+	if(nativeClass){}
   return DBG_mask;
 }
 
@@ -437,8 +446,9 @@ jint send_data
 
   const char* cmnd = (*env)->GetStringUTFChars(env, name, 0);
 
-  DBGe(dim_Dbg_SEND_NATIVE) ; /* trap only, report later */
+//  DBGe(dim_Dbg_SEND_NATIVE) ; /* trap only, report later */
 
+  if(timeout){}
   if(mode & dim_Native_F_STAMPED) stamped = 1;
   if(mode & dim_Native_F_WAIT)  // note: dim_Native_F_WAIT defined as -2147483648L //(0x80000000)
   {
@@ -493,6 +503,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jboolean data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jboolean";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -506,6 +517,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jchar data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jchar";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -519,6 +531,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jbyte data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jbyte";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -532,6 +545,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jshort data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jshort";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -545,6 +559,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jint data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jint";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -558,6 +573,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jlong data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jlong";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -571,6 +587,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jfloat data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jfloat";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -584,6 +601,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
   (JNIEnv *env, jclass This, jstring name, jobject theCompletionHandler, jint mode, jint timeout, jdouble data)
 {
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jdouble";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, &data, sizeof(data));
 }
 
@@ -600,6 +618,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	const char* data = (*env)->GetStringUTFChars(env, sdata, 0);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "String";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, (void*) data, strlen(data)+1);
 
 	(*env)->ReleaseStringUTFChars(env,sdata, data);
@@ -623,6 +642,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "boolean[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseBooleanArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -646,6 +666,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jchar[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseCharArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -669,6 +690,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jbyte[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseByteArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -692,6 +714,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jshort[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseShortArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -715,6 +738,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jint[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseIntArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -738,6 +762,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jlong[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseLongArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -761,6 +786,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jfloat[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseFloatArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -784,6 +810,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 	length          = (*env)->GetArrayLength(env,dataArray) * sizeof(*nativeDataArray);
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "jdouble[]";
+  if(This){}
   ret = send_data(env, name, theCompletionHandler, mode, timeout, nativeDataArray, length);
 
 	(*env)->ReleaseDoubleArrayElements(env,dataArray,nativeDataArray,JNI_ABORT);
@@ -801,6 +828,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_send__Ljava_lang_String_2Ldim_CompletionH
 {
 
   DBG(dim_Dbg_SEND_NATIVE) send_data_format = "nativeDataBlock";
+  if(This){}
   return send_data(env, name, theCompletionHandler, mode, timeout, (void*) nativeDataBlock, nativeDataSize);
 }
 
@@ -959,8 +987,9 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
   extern unsigned request_service(char *, int, int , void *, int , void (*)(),
 				    long, void *, int, int);
 
-  DBGe(dim_Dbg_INFO_SERVICE); /* trap only, we report on exit */
+//  DBGe(dim_Dbg_INFO_SERVICE); /* trap only, we report on exit */
 
+  if(This){}
   if(mode & dim_Native_F_STAMPED) stamped = 1;
 	if(mode & dim_Native_F_WAIT)
   {
@@ -1004,6 +1033,7 @@ JNIEXPORT jlong JNICALL Java_dim_DimTimer_start
    jobject callback_param;
    void  (*callback_function)();
  
+  if(This){}
   callback_param = (*env)->NewGlobalRef(env, aDimTimer);
   callback_function = &timer_callback; //TODO who should do the cleanup?
 
@@ -1025,6 +1055,8 @@ JNIEXPORT void JNICALL Java_dim_DimTimer_stop
    jobject callback_param;
    int ret;
  
+   if(env){}
+   if(This){}
 //  callback_param = (*env)->NewGlobalRef(env, aDimTimer);
    callback_param = (jobject) aDimTimer;
 
@@ -1047,8 +1079,9 @@ JNIEXPORT void JNICALL Java_dim_Client_releaseService
 
   DIC_SERVICE *servp;
 
-  DBGe(dim_Dbg_INFO_SERVICE) ; /* Trap only, report later */
+//  DBGe(dim_Dbg_INFO_SERVICE) ; /* Trap only, report later */
 
+  if(This){}
   servp = (DIC_SERVICE *)id_get_ptr(sid, SRC_DIC);
 
 /*
@@ -1077,6 +1110,8 @@ JNIEXPORT void JNICALL Java_dim_Client_noPadding
   (JNIEnv* env, jclass This)
 {
 
+  if(env){}
+  if(This){}
   dic_disable_padding();
 	return;
 }
@@ -1090,6 +1125,7 @@ JNIEXPORT jstring JNICALL Java_dim_Client_getFormat
   (JNIEnv* env, jclass This, jint sid)
 {
 
+  if(This){}
 	return (*env)->NewStringUTF(env, (char*)dic_get_format(sid));
 }
 
@@ -1103,6 +1139,8 @@ JNIEXPORT void JNICALL Java_dim_Client_stop
 {
 	extern void dim_stop();
 
+	if(env){}
+	if(This){}
 	dim_stop();
 	return;
 }
@@ -1117,6 +1155,8 @@ JNIEXPORT jint JNICALL Java_dim_DimInfo_getQuality
 {
 	int ret;
 	
+	if(env){}
+	if(This){}
 	ret = dic_get_quality(sid);
 	return ret;
 }
@@ -1130,6 +1170,8 @@ JNIEXPORT jint JNICALL Java_dim_DimInfo_getTimestamp
   (JNIEnv* env, jclass This, jint sid)
 {
 	int mysecs, mymilli;
+  if(env){}
+  if(This){}
 	dic_get_timestamp(sid, &mysecs, &mymilli);
 	return mysecs;
 }
@@ -1143,6 +1185,8 @@ JNIEXPORT jint JNICALL Java_dim_DimInfo_getTimestampMillisecs
   (JNIEnv* env, jclass This, jint sid)
 {
 	int mysecs, mymilli;
+  if(env){}
+  if(This){}
 	dic_get_timestamp(sid, &mysecs, &mymilli);
 	return mymilli;
 }
@@ -1159,6 +1203,8 @@ JNIEXPORT jint JNICALL Java_dim_Server_startServing
   (JNIEnv* env, jclass This, jstring serverName)
 {
 	const char* serverNameUTF = (*env)->GetStringUTFChars(env, serverName, 0);
+
+	if(This){}
 
 	dis_start_serving(serverNameUTF);
 
@@ -1177,6 +1223,8 @@ JNIEXPORT void JNICALL Java_dim_Server_stopServing
   (JNIEnv* env, jclass This)
 {
 	DBGe(dim_Dbg_SERVER) printf("DimJNI: Stop serving\n");
+	if(env){}
+	if(This){}
 	dis_stop_serving();
 	return;
 }
@@ -1197,7 +1245,7 @@ void server_getInfo_callback(jobject* _dataEncoder, void* *address, int *size)
 	JNIEnv* env;
 	int doit;
 
-	DBGe(dim_Dbg_SERVICE_CALLBACK) ; /* no report, only trap */
+//	DBGe(dim_Dbg_SERVICE_CALLBACK) ; /* no report, only trap */
 
 	doit = dim_jni_attachThread(&env);
 //	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
@@ -1234,6 +1282,8 @@ JNIEXPORT jint JNICALL Java_dim_Server_getClientConnID
 {
 	DBGe(dim_Dbg_GETCLIENT) printf("DimJNI: Server.getClientConnID\n");
 
+	if(env){}
+	if(This){}
 	return dis_get_conn_id();
 }
 
@@ -1249,6 +1299,7 @@ JNIEXPORT jstring JNICALL Java_dim_Server_getClient
 
 	DBGe(dim_Dbg_GETCLIENT) printf("DimJNI: Server.getClient\n");
 
+	if(This){}
 	if(dis_get_client(name)) 
 		return (*env)->NewStringUTF(env, name);
 	else					 
@@ -1267,6 +1318,7 @@ JNIEXPORT jstring JNICALL Java_dim_Server_getServices
 
 	DBGe(dim_Dbg_GETCLIENT) printf("DimJNI: Server.getClientServices\n");
 
+	if(This){}
 	if( (id = dis_get_conn_id()) ) 
 		return (*env)->NewStringUTF(env, dis_get_client_services(id));
 	else
@@ -1283,6 +1335,8 @@ JNIEXPORT jint JNICALL Java_dim_Client_getServerPID
 {
 	int pid, ret;
 
+	if(env){}
+	if(This){}
 	ret = dic_get_server_pid(&pid);
 	if(!ret)
 		return 0;
@@ -1297,6 +1351,8 @@ JNIEXPORT jint JNICALL Java_dim_Client_getServerPID
 JNIEXPORT jint JNICALL Java_dim_Client_getServerConnID
   (JNIEnv* env, jclass This)
 {
+	if(env){}
+	if(This){}
 	return dic_get_conn_id();
 }
 
@@ -1310,6 +1366,7 @@ JNIEXPORT jstring JNICALL Java_dim_Client_getServer
 {
 	char name[MAX_NODE_NAME+MAX_TASK_NAME+4];
 
+	if(This){}
 	if(dic_get_server(name)) 
 		return (*env)->NewStringUTF(env, name);
 	else					 
@@ -1326,6 +1383,7 @@ JNIEXPORT jstring JNICALL Java_dim_Client_getServices
 {
 	int id;
 
+	if(This){}
 	if( (id = dic_get_conn_id()) ) 
 		return (*env)->NewStringUTF(env, dic_get_server_services(id));
 	else
@@ -1344,8 +1402,9 @@ JNIEXPORT jint JNICALL Java_dim_Server_addService
 	const char* serviceTypeUTF = (*env)->GetStringUTFChars(env, serviceType, 0);
 	jint sid;
 
-  DBGe(dim_Dbg_ADD_SERVICE) ; /* no reporting, for trap only */
+//  DBGe(dim_Dbg_ADD_SERVICE) ; /* no reporting, for trap only */
 
+	if(This){}
  	dataEncoder = (*env)->NewGlobalRef(env, dataEncoder);
 	sid = dis_add_service(serviceNameUTF, serviceTypeUTF, 0, 0, server_getInfo_callback, dataEncoder);
 
@@ -1378,7 +1437,8 @@ JNIEXPORT jint JNICALL Java_dim_Server_addCommand
 	const char* serviceTypeUTF = (*env)->GetStringUTFChars(env, serviceType, 0);
 	jint sid;
 
-	DBGe(dim_Dbg_ADD_CMND) ; /* trap only, repot later */
+//	DBGe(dim_Dbg_ADD_CMND) ; /* trap only, repot later */
+	if(This){}
  	dataDecoder = (*env)->NewGlobalRef(env, dataDecoder);
 	sid = dis_add_cmnd(serviceNameUTF, serviceTypeUTF, server_cmnd_callback, dataDecoder);
 
@@ -1401,6 +1461,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_selectiveUpdateService
 	jint* clientArray;
 	extern void do_update_service(unsigned, int *);
 
+	if(This){}
 	if(clients==NULL) clientArray = NULL;
 	else			  clientArray = (*env)->GetIntArrayElements(env,clients,0);
 
@@ -1422,6 +1483,8 @@ JNIEXPORT jint JNICALL Java_dim_Server_removeService
   (JNIEnv* env, jclass This, jint sid)
 {
 	DBGe(dim_Dbg_RELEASE_SERVICE) printf("DimJNI: Server.removedService %d\n", sid);
+	if(env){}
+	if(This){}
 	dis_remove_service(sid);
 	return 0;
 }
@@ -1435,6 +1498,8 @@ JNIEXPORT void JNICALL Java_dim_Server_noPadding
   (JNIEnv* env, jclass This)
 {
 
+  if(env){}
+  if(This){}
   dis_disable_padding();
 	return;
 }
@@ -1450,6 +1515,8 @@ JNIEXPORT void JNICALL Java_dim_DimErrorHandler_addSrvErrorHandler
 
 	void  (*callback_function)();
 
+	if(env){}
+	if(This){}
 	callback_function = &server_error_callback;
 
 	dis_add_error_handler( callback_function );
@@ -1468,6 +1535,8 @@ JNIEXPORT void JNICALL Java_dim_DimErrorHandler_addCltErrorHandler
 
 	void  (*callback_function)();
 
+	if(env){}
+	if(This){}
 	callback_function = &client_error_callback;
  
 	dic_add_error_handler( callback_function ); 
@@ -1486,6 +1555,8 @@ JNIEXPORT void JNICALL Java_dim_DimExitHandler_addExitHandler
 
 	void  (*callback_function)();
 
+	if(env){}
+	if(This){}
 	callback_function = &server_exit_callback;
 
 	dis_add_exit_handler( callback_function ); 
@@ -1503,6 +1574,8 @@ JNIEXPORT void JNICALL Java_dim_DimServer_disableAST
 {
 	
 	DIM_LOCK
+	if(env){}
+	if(This){}
 	return;
 }
 
@@ -1515,6 +1588,8 @@ JNIEXPORT void JNICALL Java_dim_DimServer_enableAST
   (JNIEnv* env, jclass This)
 {
 	
+	if(env){}
+	if(This){}
 	DIM_UNLOCK
 	return;
 }
@@ -1529,6 +1604,8 @@ JNIEXPORT void JNICALL Java_dim_DimClient_disableAST
 {
 	
 	DIM_LOCK
+	if(env){}
+	if(This){}
 	return;
 }
 
@@ -1541,6 +1618,8 @@ JNIEXPORT void JNICALL Java_dim_DimClient_enableAST
   (JNIEnv* env, jclass This)
 {
 	
+	if(env){}
+	if(This){}
 	DIM_UNLOCK
 	return;
 }
@@ -1555,6 +1634,8 @@ JNIEXPORT void JNICALL Java_dim_DimServer_setDnsNode
 {
 	const char* nodesUTF = (*env)->GetStringUTFChars(env, nodes, 0);
 	
+	if(env){}
+	if(This){}
 	dis_set_dns_node(nodesUTF);
 	return;
 }
@@ -1567,6 +1648,8 @@ JNIEXPORT void JNICALL Java_dim_DimServer_setDnsNode
 JNIEXPORT void JNICALL Java_dim_DimServer_setDnsPort
   (JNIEnv* env, jclass This, jint port)
 {
+	if(env){}
+	if(This){}
 	dis_set_dns_port(port);
 	return;
 }
@@ -1581,6 +1664,8 @@ JNIEXPORT void JNICALL Java_dim_DimClient_setDnsNode
 {
 	const char* nodesUTF = (*env)->GetStringUTFChars(env, nodes, 0);
 	
+	if(env){}
+	if(This){}
 	dic_set_dns_node(nodesUTF);
 	dic_close_dns();
 	return;
@@ -1594,6 +1679,8 @@ JNIEXPORT void JNICALL Java_dim_DimClient_setDnsNode
 JNIEXPORT void JNICALL Java_dim_DimClient_setDnsPort
   (JNIEnv* env, jclass This, jint port)
 {
+	if(env){}
+	if(This){}
 	dic_set_dns_port(port);
 	return;
 }
@@ -1608,6 +1695,7 @@ JNIEXPORT jstring JNICALL Java_dim_DimServer_getDnsNode
 {
 	char nodes[255];
 	
+	if(This){}
 	dis_get_dns_node(nodes);
 	return (*env)->NewStringUTF(env, (char*)nodes);
 }
@@ -1622,6 +1710,7 @@ JNIEXPORT jstring JNICALL Java_dim_DimClient_getDnsNode
 {
 	char nodes[255];
 	
+	if(This){}
 	dic_get_dns_node(nodes);
 	return (*env)->NewStringUTF(env, (char*)nodes);
 }
@@ -1635,6 +1724,8 @@ JNIEXPORT jint JNICALL Java_dim_DimServer_getDnsPort
   (JNIEnv* env, jclass This)
 {
 	
+	if(env){}
+	if(This){}
 	return dis_get_dns_port();
 }
 
@@ -1646,7 +1737,9 @@ JNIEXPORT jint JNICALL Java_dim_DimServer_getDnsPort
 JNIEXPORT jint JNICALL Java_dim_DimClient_getDnsPort
   (JNIEnv* env, jclass This)
 {
-	
+
+	if(env){}
+	if(This){}
 	return dic_get_dns_port();
 }
 
@@ -1659,6 +1752,8 @@ JNIEXPORT void JNICALL Java_dim_DimService_setQuality
   (JNIEnv* env, jclass This, jint sid, jint qual)
 {
 	
+	if(env){}
+	if(This){}
 	dis_set_quality(sid, qual);
 	return;
 }
@@ -1673,6 +1768,8 @@ JNIEXPORT void JNICALL Java_dim_DimService_setTimestamp
   (JNIEnv* env, jclass This, jint sid, jint secs, jint millisecs)
 {
 
+	if(env){}
+	if(This){}
 	dis_set_timestamp(sid, secs, millisecs);
 	return;
 }
@@ -1685,12 +1782,16 @@ JNIEXPORT void JNICALL Java_dim_DimService_setTimestamp
  * Signature: (III)V
  */
 JNIEXPORT void JNICALL Java_dim_Memory_dumpInternalData
-  (JNIEnv *env, jclass dimNativeClass, jlong internalDataAddress, jint internalDataSize, jint dumpOptions)
+  (JNIEnv *env, jclass nativeClass, jlong internalDataAddress, jint internalDataSize, jint dumpOptions)
 {
   {
     int* data = (int*) internalDataAddress;
     int leng = internalDataSize/sizeof(int);
     int  i;
+
+	if(env){}
+	if(dumpOptions){}
+	if(nativeClass){}
     for (i=0;i<leng;i++)
     {
       if((i%8)==0) printf("%04x:",i);
@@ -1711,6 +1812,8 @@ JNIEXPORT void JNICALL Java_dim_Memory_dumpInternalData
 JNIEXPORT jboolean JNICALL Java_dim_Memory_getBoolean
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getBoolean\n");
 	return *(jboolean*)nativeDataAddress;
 }
@@ -1723,6 +1826,8 @@ JNIEXPORT jboolean JNICALL Java_dim_Memory_getBoolean
 JNIEXPORT jchar JNICALL Java_dim_Memory_getChar
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getChar\n");
 	return *(jchar*)nativeDataAddress;
 }
@@ -1735,6 +1840,8 @@ JNIEXPORT jchar JNICALL Java_dim_Memory_getChar
 JNIEXPORT jbyte JNICALL Java_dim_Memory_getByte
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getByte\n");
 	return *(jbyte*)nativeDataAddress;
 }
@@ -1747,6 +1854,8 @@ JNIEXPORT jbyte JNICALL Java_dim_Memory_getByte
 JNIEXPORT jshort JNICALL Java_dim_Memory_getShort
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getShort\n");
 	return *(jshort*)nativeDataAddress;
 }
@@ -1759,6 +1868,8 @@ JNIEXPORT jshort JNICALL Java_dim_Memory_getShort
 JNIEXPORT jint JNICALL Java_dim_Memory_getInt
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getInt\n");
 	return *(jint*)nativeDataAddress;
 }
@@ -1771,6 +1882,8 @@ JNIEXPORT jint JNICALL Java_dim_Memory_getInt
 JNIEXPORT jlong JNICALL Java_dim_Memory_getLong
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getLong\n");
 	return *(jlong*)nativeDataAddress;
 }
@@ -1783,6 +1896,8 @@ JNIEXPORT jlong JNICALL Java_dim_Memory_getLong
 JNIEXPORT jfloat JNICALL Java_dim_Memory_getFloat
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getFloat\n");
 	return *(jfloat*)nativeDataAddress;
 }
@@ -1795,6 +1910,8 @@ JNIEXPORT jfloat JNICALL Java_dim_Memory_getFloat
 JNIEXPORT jdouble JNICALL Java_dim_Memory_getDouble
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getDouble\n");
 	return *(jdouble*)nativeDataAddress;
 }
@@ -1808,6 +1925,9 @@ JNIEXPORT jdouble JNICALL Java_dim_Memory_getDouble
 JNIEXPORT jstring JNICALL Java_dim_Memory_getString
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jint maxSize)
 {
+	if(env){}
+	if(nativeClass){}
+	if(maxSize){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.getString\n");
 	return (*env)->NewStringUTF(env, (char*)nativeDataAddress);
 }
@@ -1821,6 +1941,7 @@ JNIEXPORT jstring JNICALL Java_dim_Memory_getString
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoBooleanArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoBooleanArray\n");
 	(*env)->SetBooleanArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1834,6 +1955,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoBooleanArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoCharArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoCharArray\n");
 	(*env)->SetCharArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1847,6 +1969,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoCharArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoByteArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoByteArray\n");
 	(*env)->SetByteArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1860,6 +1983,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoByteArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoShortArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoShortArray\n");
 	(*env)->SetShortArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1873,6 +1997,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoShortArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoIntArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jintArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoIntArray\n");
 	(*env)->SetIntArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1886,6 +2011,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoIntArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoLongArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoLongArray\n");
 	(*env)->SetLongArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1899,6 +2025,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoLongArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoFloatArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoFloatArray\n");
 	(*env)->SetFloatArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1912,6 +2039,7 @@ JNIEXPORT void JNICALL Java_dim_Memory_copyIntoFloatArray
 JNIEXPORT void JNICALL Java_dim_Memory_copyIntoDoubleArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY) printf("DimJNI: Memory.copyIntoDoubleArray\n");
 	(*env)->SetDoubleArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -1931,7 +2059,9 @@ JNIEXPORT jlong JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
   (JNIEnv* env, jclass nativeClass, jint size)
 {
   jlong address;
-	DBGe(dim_Dbg_MEMORY_ALLOCATE) ; /* report only */
+	if(env){}
+	if(nativeClass){}
+//	DBGe(dim_Dbg_MEMORY_ALLOCATE) ; /* report only */
   address = (jlong) malloc(size);
 	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%08lx\n", size, address);
   return address;
@@ -1945,6 +2075,8 @@ JNIEXPORT jlong JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
 JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
   (JNIEnv* env, jclass nativeClass, jlong desc)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%08lx\n", desc);
  //printf("free %08X\n", desc);
  	free((void*)desc);
@@ -1959,6 +2091,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setBoolean
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jboolean data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setBoolean(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jboolean*)nativeDataAddress = data;
 }
@@ -1971,6 +2105,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setBoolean
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setChar
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jchar data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setChar(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jchar*)nativeDataAddress = data;
 }
@@ -1983,6 +2119,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setChar
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setByte
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyte data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setByte(0x%08lx, %02x)\n", nativeDataAddress, data);
 	*(jbyte*)nativeDataAddress = data;
 }
@@ -1995,6 +2133,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setByte
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setShort
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshort data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setShort(0x%08lx, %04x)\n", nativeDataAddress, data);
 	*(jshort*)nativeDataAddress = data;
 }
@@ -2007,6 +2147,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setShort
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setInt
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jint data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setInt(0x%08lx, %0x)\n", nativeDataAddress, data);
 	*(jint*)nativeDataAddress = data;
 }
@@ -2019,6 +2161,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setInt
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setLong
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlong data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setLong(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jlong*)nativeDataAddress = data;
 }
@@ -2031,6 +2175,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setLong
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setFloat
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloat data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setFloat(0x%08lx, %f)\n", nativeDataAddress, data);
 	*(jfloat*)nativeDataAddress = data;
 }
@@ -2043,6 +2189,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setFloat
 JNIEXPORT void JNICALL Java_dim_MutableMemory_setDouble
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdouble data)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setDouble(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jdouble*)nativeDataAddress = data;
 }
@@ -2059,6 +2207,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setString
 
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setString(0x%08lx, %s)\n", nativeDataAddress, charData);
 
+	if(nativeClass){}
 	strcpy((char*)nativeDataAddress, charData);
 	(*env)->ReleaseStringUTFChars(env, data, charData);
 }
@@ -2072,6 +2221,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setString
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromBooleanArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbooleanArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromBooleanArray\n");
 	(*env)->GetBooleanArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2085,6 +2235,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromBooleanArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromCharArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jcharArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromCharArray\n");
 	(*env)->GetCharArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2098,6 +2249,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromCharArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromByteArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jbyteArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromByteArray\n");
 	(*env)->GetByteArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2111,6 +2263,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromByteArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromShortArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jshortArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromShortArray\n");
 	(*env)->GetShortArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2124,6 +2277,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromShortArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromIntArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jintArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromIntArray\n");
 	(*env)->GetIntArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2137,6 +2291,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromIntArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromLongArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jlongArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromLongArray\n");
 	(*env)->GetLongArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2150,6 +2305,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromLongArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromFloatArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jfloatArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromFloatArray\n");
 	(*env)->GetFloatArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2163,6 +2319,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromFloatArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromDoubleArray
   (JNIEnv* env, jclass nativeClass, jlong nativeDataAddress, jdoubleArray array, jint arrayOffset, jint length)
 {
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyFromDoubleArray\n");
 	(*env)->GetDoubleArrayRegion(env, array, arrayOffset, length, (void*) nativeDataAddress);
 	return ;
@@ -2176,6 +2333,8 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_copyFromDoubleArray
 JNIEXPORT void JNICALL Java_dim_MutableMemory_copyNativeDataBlock
   (JNIEnv* env, jclass nativeClass, jlong destinationDataAddress, jlong sourceDataAddress, jint length)
 {
+	if(env){}
+	if(nativeClass){}
 	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.copyNativeDataBlock\n");
   memcpy((void *)destinationDataAddress, (void *)sourceDataAddress, length);
 	return ;
@@ -2224,9 +2383,11 @@ JNIEXPORT jlong JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
 {
 	objectDescriptor_type* descriptor;
 
-  DBGe(dim_Dbg_DESCRIPTORS) ; /* trap only, report on exit */
+//  DBGe(dim_Dbg_DESCRIPTORS) ; /* trap only, report on exit */
   // todo put object descriptor and entry array in the same malloc (for dump purposes)
 //printf("malloc descriptor\n");
+	if(env){}
+	if(nativeClass){}
 	if(maxEntries==0) maxEntries = 10;
 	descriptor = (objectDescriptor_type*) malloc(sizeof(objectDescriptor_type));
 	descriptor->entry = (objectDescriptorEntry_type*) malloc(maxEntries * sizeof(objectDescriptorEntry_type));
@@ -2275,6 +2436,7 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_addFieldToObjectDescriptor
 
 	// TODO: if(fieldType == "I") field_type = f_int; etc
 
+	if(nativeClass){}
 	entry->type         =f_skip;
 	entry->length       =0;
 	entry->offset       =offset;
@@ -2366,6 +2528,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_deleteObjectDescriptor
 {
 	objectDescriptor_type* descriptor = (objectDescriptor_type*) desc;
  
+	if(nativeClass){}
 	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %08lx\n", (long)desc);
 	(*env)->DeleteGlobalRef(env, descriptor->objectClass);
 //printf("free descriptor\n");
@@ -2392,6 +2555,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyIntoObject
 
 	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyIntoObject %08lx\n", (long)desc);
 
+	if(nativeClass){}
 	// test if object can be cast to object class
 	if((*env)->IsInstanceOf(env, theObject, objectClass) != JNI_TRUE)
 	{
@@ -2463,6 +2627,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyFromObject
 
 	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyFromObject %08x\n", (int)desc);
 
+	if(nativeClass){}
 	// test if object can be cast to object class
 	if((*env)->IsInstanceOf(env, theObject, objectClass) != JNI_TRUE)
 	{

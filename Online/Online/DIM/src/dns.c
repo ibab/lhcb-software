@@ -102,13 +102,12 @@ _DIM_PROTO( void print_hash_table,       (void) );
 _DIM_PROTO( static void release_conn,    (int conn_id) );
 
 
-static void recv_rout( conn_id, packet, size, status )
-int conn_id, size, status;
-DIC_DNS_PACKET *packet;
+static void recv_rout( int conn_id, DIC_DNS_PACKET *packet, int size, int status )
 {
 	int handle_registration();
 	int handle_client_request();
 
+	if(size){}
 	switch(status)
 	{
 	case STA_DISC:     /* connection broken */
@@ -160,10 +159,10 @@ DIC_DNS_PACKET *packet;
 	}
 }
 
-static void error_handler(conn_id, severity, errcode, reason)
-int conn_id, severity, errcode;
-char *reason;
+static void error_handler(int conn_id, int severity, int errcode, char *reason)
 {
+	if(conn_id){}
+	if(errcode){}
 	dim_print_msg(reason, severity);
 /*
 	if(severity == 3)
@@ -174,10 +173,7 @@ char *reason;
 */
 }
 
-int handle_registration( conn_id, packet, tmout_flag )
-int conn_id;
-DIS_DNS_PACKET *packet;
-int tmout_flag;
+int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 {
 	DNS_SERVICE *servp;
 	DNS_DIS_PACKET dis_packet;
@@ -278,7 +274,8 @@ int tmout_flag;
 			dna_set_test_write(conn_id, 10);
 		}
 		Dns_conns[conn_id].old_n_services = 0;
-/*		Dns_conns[conn_id].n_services = 1;
+/*
+		Dns_conns[conn_id].n_services = 1;
 		do_update_did(conn_id);
 */
 		update_did = 1;
@@ -541,8 +538,7 @@ void do_update_did(int conn_id)
 */
 }
 
-void check_validity(conn_id)
-int conn_id;
+void check_validity(int conn_id)
 {
 	int time_diff;
 	DNS_DIS_PACKET dis_packet;
@@ -581,7 +577,8 @@ int conn_id;
 		if( !dna_write_nowait(conn_id, &dis_packet, DNS_DIS_HEADER) )
 		{
 			dim_print_date_time();
-			printf(" Server Validity: Couldn't write, releasing %d\n",conn_id);
+			printf(" Server Validity: Couldn't write, releasing Conn %3d : Server %s@%s\n",conn_id,
+				Net_conns[conn_id].task, Net_conns[conn_id].node);
 			fflush(stdout);
 			release_conn(conn_id);
 		}
@@ -590,9 +587,7 @@ int conn_id;
 }		
 
 
-int handle_client_request( conn_id, packet )
-int conn_id;
-DIC_DNS_PACKET *packet;
+int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 {
 	DNS_SERVICE *servp;
 	NODE *nodep;
@@ -656,7 +651,9 @@ DIC_DNS_PACKET *packet;
 			if( !dna_write_nowait(conn_id, &dic_packet, DNS_DIC_HEADER) )
 			{
 				dim_print_date_time();
-				printf(" Stop Client: Couldn't write, releasing %d\n",conn_id);
+				printf(" Stop Client: Couldn't write, releasing Conn %3d : Client %s@%s\n",conn_id,
+					Net_conns[conn_id].task,
+					Net_conns[conn_id].node);
 				fflush(stdout);
 				release_conn(conn_id);
 			}
@@ -861,7 +858,9 @@ DIC_DNS_PACKET *packet;
 	if( !dna_write_nowait(conn_id, &dic_packet, DNS_DIC_HEADER) )
 	{
 		dim_print_date_time();
-		printf(" Client Request: Couldn't write, releasing %d\n",conn_id);
+		printf(" Client Request: Couldn't write, releasing Conn %3d : Client %s@%s\n",conn_id,
+					Net_conns[conn_id].task,
+					Net_conns[conn_id].node);
 		fflush(stdout);
 		release_conn(conn_id);
 	}
@@ -912,8 +911,7 @@ void do_inform_clients(int conn_id)
 }
 
 
-void inform_clients(servp)
-DNS_SERVICE *servp;
+void inform_clients(DNS_SERVICE *servp)
 {
 	RED_NODE *nodep, *prevp; 
 	NODE *full_nodep; 
@@ -939,15 +937,22 @@ DNS_SERVICE *servp;
 		strcpy( packet.service_def, servp->serv_def );
 /* Should it be dna_write_nowait? 16/9/2008 */
 /* moved from dna_write to dna_write_nowait in 14/10/2008 */
-/*		dna_write_nowait(nodep->conn_id, &packet, DNS_DIC_HEADER);  */
+/*
+		dna_write_nowait(nodep->conn_id, &packet, DNS_DIC_HEADER);
+*/
 		if( !dna_write_nowait(nodep->conn_id, &packet, DNS_DIC_HEADER) )
 		{
 			dim_print_date_time();
-			printf(" Inform Client: Couldn't write, releasing %d\n",nodep->conn_id);
+			printf(" Inform Client: Couldn't write, releasing Conn %3d : Client %s@%s\n",nodep->conn_id,
+					Net_conns[nodep->conn_id].task,
+					Net_conns[nodep->conn_id].node);
 			fflush(stdout);
-			release_conn(nodep->conn_id);
+/*
+release_conn(nodep->conn_id);
+*/
 		}
-/*		if(dna_write_nowait(nodep->conn_id, &packet, DNS_DIC_HEADER))
+/*
+		if(dna_write_nowait(nodep->conn_id, &packet, DNS_DIC_HEADER))
 		{
 */
 			dll_remove( (DLL *) nodep );
@@ -957,14 +962,14 @@ DNS_SERVICE *servp;
 			nodep = nodep->prev;
 			free( full_nodep );
 			prevp = nodep;
-/*		}
- */
+/*
+		}
+*/
 	}
 }
 
 #ifdef VMS
-static release_client(conn_id)
-int conn_id;
+static release_client(int conn_id)
 {
 char *ptr_task;
 char *ptr_node;
@@ -996,8 +1001,7 @@ int i;
 }
 #endif
 
-static void release_conn(conn_id)
-int conn_id;
+static void release_conn(int conn_id)
 {
 	DNS_SERVICE *servp, *old_servp;
 	NODE *nodep, *old_nodep;
@@ -1119,7 +1123,7 @@ int conn_id;
 }
 
 
-void set_in_error(conn_id)
+void set_in_error(int conn_id)
 {
 	DNS_SERVICE *servp;
 
@@ -1136,13 +1140,9 @@ void set_in_error(conn_id)
 	}
 }
 
-void get_dns_server_info(tag, bufp, size, first_time)
-int *tag;
-int **bufp;
-int *size;
-int *first_time;
+void get_dns_server_info(int *tag, int **bufp, int *size, int *first_time)
 {
-	
+	if(tag){}
 	if(*first_time)
 	{
 
@@ -1163,10 +1163,7 @@ int *first_time;
 }
 
 
-void send_dns_server_info(conn_id, bufp, size)
-int conn_id;
-int **bufp;
-int *size;
+void send_dns_server_info(int conn_id, int **bufp, int *size)
 {
 	static int curr_allocated_size = 0;
 	static DNS_DID *dns_info_buffer;
@@ -1223,11 +1220,7 @@ int *size;
 	ENABLE_AST
 }
 
-void get_new_dns_server_info(tag, bufp, size, first_time)
-int *tag;
-int **bufp;
-int *size;
-int *first_time;
+void get_new_dns_server_info(int *tag, int **bufp, int *size, int *first_time)
 {
 	static int curr_allocated_size = 0;
 	static char *info_buffer;
@@ -1240,6 +1233,8 @@ int *first_time;
 	DNS_SERVICE *servp;
 	int find_services();
 
+	if(tag){}
+	DISABLE_AST
  	for( i = 0; i< Curr_N_Conns; i++ )
 	{
 		if( Dns_conns[i].src_type == SRC_DIS )
@@ -1339,11 +1334,10 @@ int *first_time;
 	}
 	*bufp = (int *)info_buffer;
 	*size = strlen(info_buffer)+1+pid_size+1;
+	ENABLE_AST
 }
 
-int main(argc,argv)
-int argc;
-char **argv;
+int main(int argc, char **argv)
 {
 	int i, protocol, dns_port;
 	int *bufp;
@@ -1528,8 +1522,7 @@ void service_init()
 }
 
 
-void service_insert(servp)
-RED_DNS_SERVICE *servp;
+void service_insert(RED_DNS_SERVICE *servp)
 {
 	int index;
 
@@ -1539,8 +1532,7 @@ RED_DNS_SERVICE *servp;
 }
 
 
-void service_remove(servp)
-RED_DNS_SERVICE *servp;
+void service_remove(RED_DNS_SERVICE *servp)
 {
 	if( servp->node_head )
 		free( servp->node_head );
@@ -1548,8 +1540,7 @@ RED_DNS_SERVICE *servp;
 }
 
 
-DNS_SERVICE *service_exists(name)
-char *name;
+DNS_SERVICE *service_exists(char *name)
 {
 	int index;
 	RED_DNS_SERVICE *servp;
@@ -1618,8 +1609,7 @@ void print_hash_table()
 	fflush(stdout);
 }
 
-int find_services(wild_name)
-char *wild_name;
+int find_services(char *wild_name)
 {
 
 	int i;
@@ -1710,14 +1700,14 @@ char *wild_name;
 	return(count);
 }
 
-void set_rpc_info(tag, buffer, size)
-int *tag, *size;
-char *buffer;
+void set_rpc_info(int *tag, char *buffer, int *size)
 {
 	char aux[MAX_NAME], rpcaux[MAX_NAME+32], *ptr, *rpcptr;
     int i, n, rpc, id[2];
 	DNS_SERVICE *servp, *aux_servp;
 
+	if(size){}
+	if(tag){}
 	n = find_services(buffer);
 	if(!Rpc_info_size)
 	{
@@ -1803,11 +1793,10 @@ char *buffer;
 	free(Service_info_list);
 }
 
-void get_rpc_info(tag, buffer, size)
-int *tag, *size;
-char **buffer;
+void get_rpc_info(int *tag, char **buffer, int *size)
 {
-	
+
+	if(tag){}
 	*buffer = Rpc_info;
 	*size = strlen(Rpc_info)+1;
 }

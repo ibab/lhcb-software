@@ -55,6 +55,34 @@ public:
 	virtual ~DimExitHandler() {};
 };
 
+class DllExp DimServerDns
+{
+public:
+	DimServerDns(const char *node);
+	DimServerDns(const char *node, int port);
+	DimServerDns(const char *node, int port, char *name);
+	~DimServerDns();
+	void init(const char *node, int port);
+	long getDnsId();
+	void setName(const char *name);
+	char *getName();
+	void autoStartOn();
+	void autoStartOff();
+	int isAutoStart();
+	void addServiceId(int id);
+	int *getServiceIdList();
+private:
+	char *itsNode;
+	int itsPort;
+	long itsDnsId;
+	char *itsName;
+	int autoStart;
+	int *itsServiceIdList;
+	int itsServiceIdListSize;
+	int itsNServiceIds;
+//	int itsNServices;
+};
+
 class DllExp DimServer : public DimServiceHandler, public DimCommandHandler,
 	public DimClientExitHandler, public DimExitHandler, public DimErrorHandler
 {
@@ -66,11 +94,15 @@ public:
 	static DimClientExitHandler *itsClientExit;
 	static DimExitHandler *itsExit;
 	static DimErrorHandler *itsSrvError;
+//	static int itsNServices;
 	DimServer();
 	virtual ~DimServer();
 	static void start(const char *name);
+	static void start(DimServerDns *dns, const char *name);
 	static void start();
+	static void start(DimServerDns *dns);
 	static void stop();
+	static void stop(DimServerDns *dns);
 	static void autoStartOn();
 	static void autoStartOff();
 	// Get Current Client Identifier	
@@ -85,6 +117,8 @@ public:
 	static void addErrorHandler(DimErrorHandler *handler);
 	static int setDnsNode(const char *node);
 	static int setDnsNode(const char *node, int port);
+	static long addDns(const char *node, int port);
+	static void stopDns(long dnsid);
 	static char *getDnsNode();
 	static int getDnsPort();
 	static void setWriteTimeout(int secs);
@@ -120,6 +154,17 @@ public :
 	DimService(const char *name, char *format, void *structure, int size);
 
 	DimService(const char *name, char *format, DimServiceHandler *handler);
+
+	DimService(DimServerDns *dns, const char *name, int &value);
+	DimService(DimServerDns *dns, const char *name, float &value);
+	DimService(DimServerDns *dns, const char *name, double &value);
+	DimService(DimServerDns *dns, const char *name, longlong &value);
+	DimService(DimServerDns *dns, const char *name, short &value);
+	DimService(DimServerDns *dns, const char *name, char *string);
+
+	DimService(DimServerDns *dns, const char *name, char *format, void *structure, int size);
+
+	DimService(DimServerDns *dns, const char *name, char *format, DimServiceHandler *handler);
 
 	virtual ~DimService();
 
@@ -170,8 +215,9 @@ private :
 	char *itsName;
 	int itsId;
 	int itsTagId;
-	void declareIt(char *name, char *format, DimServiceHandler *handler);
+	void declareIt(char *name, char *format, DimServiceHandler *handler, DimServerDns *dns);
 	void storeIt(void *data, int size);
+	DimServerDns *itsDns;
 };
 
 class DllExp CmndInfo : public SLLItem {
@@ -191,6 +237,10 @@ public :
 	DimCommand(const char *name, char *format);
 
 	DimCommand(const char *name, char *format, DimCommandHandler *handler);
+
+	DimCommand(DimServerDns *dns, const char *name, char *format);
+
+	DimCommand(DimServerDns *dns, const char *name, char *format, DimCommandHandler *handler);
 
 	int getNext();
 	void *itsData;
@@ -216,9 +266,10 @@ private :
 	int itsId;
 	int itsTagId;
 	char *itsFormat;
-	void declareIt(char *name, char *format, DimCommandHandler *handler);
+	void declareIt(char *name, char *format, DimCommandHandler *handler, DimServerDns *dns);
 	CmndInfo *currCmnd;
 	SLList itsCmndList;
+	DimServerDns *itsDns;
 };
 
 class DllExp DimRpc
@@ -229,6 +280,8 @@ public :
 	DimRpc();
 
 	DimRpc(const char *name, const char *formatin, const char *formatout);
+
+	DimRpc(DimServerDns *dns, const char *name, const char *formatin, const char *formatout);
 
 	// Desctructor
 	virtual ~DimRpc();
@@ -266,9 +319,10 @@ private :
 	char *itsName;
 	char *itsNameIn;
 	char *itsNameOut;
-	void declareIt(char *name, char *formatin, char *formatout);
+	void declareIt(char *name, char *formatin, char *formatout, DimServerDns *dns);
 	void storeIt(void *data, int size);
 	void timerHandler();
+	DimServerDns *itsDns;
 public:
 	int itsKilled;
 	int itsTimeout;

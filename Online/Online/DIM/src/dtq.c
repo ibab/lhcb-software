@@ -80,8 +80,7 @@ void dim_no_threads()
 	dis_no_threads();
 }
 
-int dim_dtq_init(thr_flag)
-int thr_flag;
+int dim_dtq_init(int thr_flag)
 {
 struct sigaction sig_info;
 sigset_t set;
@@ -139,15 +138,14 @@ int pid, ret = 0;
 	return(ret);
 }
 
-void dummy_alrm_sig_handler( num )
-int num;
+void dummy_alrm_sig_handler( int num )
 {
+	if(num){}
 }
 
 #else
 
-int dim_dtq_init(thr_flag)
-int thr_flag;
+int dim_dtq_init(int thr_flag)
 {
 	int tid = 1;
 	void create_alrm_thread(void);
@@ -207,8 +205,7 @@ void dim_dtq_stop()
 	sigvec_done = 0;
 }
 
-static int get_current_time(millies)
-int *millies;
+static int get_current_time(int *millies)
 {
 	int secs;
 #ifdef WIN32
@@ -296,6 +293,7 @@ int dtq_task(void *dummy)
 int deltat;
 static int to_go;
 
+	if(dummy){}
 	while(1)
 	{
 		if(DIM_next_time)
@@ -361,8 +359,7 @@ int dtq_create()
 }
 
 
-int dtq_delete(queue_id)
-int queue_id;
+int dtq_delete(int queue_id)
 {
 	TIMR_ENT *queue_head, *entry;
 
@@ -383,10 +380,7 @@ int queue_id;
 	return(1);			
 }
 	
-TIMR_ENT *dtq_add_entry(queue_id, time, user_routine, tag)
-int queue_id, time;
-long tag;
-void (*user_routine)();
+TIMR_ENT *dtq_add_entry(int queue_id, int time, void (*user_routine)(), long tag)
 {
 	TIMR_ENT *new_entry, *queue_head, *auxp, *prevp;
 	int next_time, min_time = 100000;
@@ -477,8 +471,7 @@ void (*user_routine)();
 	return(new_entry); 
 }
 
-int dtq_clear_entry(entry)
-TIMR_ENT *entry;
+int dtq_clear_entry(TIMR_ENT *entry)
 {
 	int time_left, deltat = 0;
 
@@ -491,9 +484,7 @@ TIMR_ENT *entry;
 }
 
 
-int dtq_rem_entry(queue_id, entry)
-int queue_id;
-TIMR_ENT *entry;
+int dtq_rem_entry(int queue_id, TIMR_ENT *entry)
 {
 	int time_left, deltat = 0;
 
@@ -514,8 +505,7 @@ TIMR_ENT *entry;
 	return(time_left);
 }
 
-static int rem_deleted_entries(queue_id)
-int queue_id;
+static int rem_deleted_entries(int queue_id)
 {
 	TIMR_ENT *auxp, *prevp, *queue_head;
 	int n;
@@ -546,8 +536,7 @@ int queue_id;
 	return(1);
 }
 
-static int get_minimum(deltat)
-int deltat;
+static int get_minimum(int deltat)
 {
 	TIMR_ENT *auxp, *queue_head;
 	int queue_id;
@@ -624,8 +613,7 @@ static int stop_it()
 	return(min_time);
 }
 
-static int start_it(new_time)
-int new_time;
+static int start_it(int new_time)
 {
 	int next_time;
 	TIMR_ENT *queue_head;
@@ -753,11 +741,11 @@ static int scan_it()
 	return(0);
 }
 
-static void alrm_sig_handler( num)
-int num;
+static void alrm_sig_handler( int num)
 {
 	int next_time;
 
+	if(num){}
 	next_time = stop_it();
 	if(Threads_off)
 	{
@@ -778,10 +766,7 @@ static void Std_timer_handler()
 {
 }
 
-void dtq_start_timer(time, user_routine, tag)
-int time;
-long tag;
-void (*user_routine)();
+void dtq_start_timer(int time, void (*user_routine)(), long tag)
 {
 	extern void dim_init_threads();
 
@@ -797,8 +782,7 @@ void (*user_routine)();
 }
 
 
-int dtq_stop_timer(tag)
-long tag;
+int dtq_stop_timer(long tag)
 {
 	TIMR_ENT *entry, *queue_head, *prevp;
 	int time_left = -1;
@@ -819,9 +803,9 @@ long tag;
 
 static int Dtq_sleeping = 0;
 
-void dtq_sleep_rout(tag)
-long tag;
+void dtq_sleep_rout(long tag)
 {
+	if(tag){}
 	Dtq_sleeping = 0;
 #ifdef WIN32
 	wake_up();
@@ -830,8 +814,7 @@ long tag;
 
 #ifndef WIN32
 
-unsigned int dtq_sleep(secs)
-unsigned int secs;
+unsigned int dtq_sleep(int secs)
 {
 
 #ifndef NOTHREADS
@@ -859,8 +842,7 @@ unsigned int secs;
 
 #else
 
-unsigned int dtq_sleep(secs)
-unsigned int secs;
+unsigned int dtq_sleep(int secs)
 {
 	Dtq_sleeping = 1;
 	dtq_start_timer(secs, dtq_sleep_rout, 1);

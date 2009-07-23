@@ -23,19 +23,17 @@ TT t;
 int big_buff[1024];
 */
 
-void cmnd_rout(tag, buf, size)
-int *tag, *size;
-TT *buf;
+void cmnd_rout(int *tag, TT *buf, int *size)
 {
 
+	if(tag){}
 	printf("Command received, size = %d, TT size = %d:\n", *size,
-	       sizeof(TT));
+	       (int)sizeof(TT));
 	printf("buf->i = %d, buf->d = %2.2f, buf->s = %d, buf->c = %c, buf->f = %2.2f, buf->str = %s\n",
 			buf->i,buf->d,buf->s,buf->c,buf->f,buf->str);
 }
 
-void client_exited(tag)
-int *tag;
+void client_exited(int *tag)
 {
 	char name[84];
 
@@ -45,22 +43,38 @@ int *tag;
 		printf("Client %d exited\n", *tag);
 }
 
-void exit_cmnd(code)
-int *code;
+void exit_cmnd(int *code)
 {
 	printf("Exit_cmnd %d\n", *code);
 	exit(*code);
 }
 
-main(argc,argv)
-int argc;
-char **argv;
+int NewData;
+int NewIds[11];
+
+int main(int argc, char **argv)
 {
 	int i, id, *ptr;
 	char aux[80];
-	char name[84];
-	int index = 0;
+	char name[84], name1[132];
+	int on = 0;
+	long dnsid;
+	char extra_dns[128];
+	int new_dns = 0;
+/*
+	int buf_sz, buf_sz1;
+*/
 
+	if(argc){}
+	new_dns = dim_get_env_var("EXTRA_DNS_NODE", extra_dns, sizeof(extra_dns));
+	if(new_dns)
+		dnsid = dis_add_dns(extra_dns,0);
+/*
+	buf_sz = dim_get_write_buffer_size();
+	dim_set_write_buffer_size(10000000);
+	buf_sz1 = dim_get_write_buffer_size();
+printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
+*/
 	dis_add_exit_handler(exit_cmnd);
 	dis_add_client_exit_handler(client_exited);
 	for(i = 0; i< 10; i++)
@@ -111,7 +125,35 @@ char **argv;
 		}
 		sleep(1);
 */
+/*
 		pause();
+		*/
+		sleep(10);
+		if(new_dns)
+		{
+			if(!on)
+			{
+				for(i = 0; i < 10; i++)
+				{
+					sprintf(name1,"NewService%d",i);
+					NewIds[i] = dis_add_service_dns(dnsid, name1, "i", &NewData, sizeof(NewData), 
+						(void *)0, 0 );
+				}
+				NewIds[10] = 0;
+				dis_start_serving_dns(dnsid, "xx_new"/*, NewIds*/);
+				on = 1;
+			}
+			else
+			{
+				for(i = 0; i < 10; i++)
+				{
+					dis_remove_service(NewIds[i]);
+				}
+				on = 0;
+			}
+		}
+
 	}
+	return 1;
 }
 

@@ -9,7 +9,7 @@ public:
 		dim_print_date_time();
 		cout << "Callback RPC Received : " << getInt() << endl;
 	}
-	Rpc(char *name) :	DimRpcInfo(name, 5, -1) {};
+	Rpc(char *name) :	DimRpcInfo(name, 1, -1) {};
 };
 
 typedef struct tst{
@@ -36,16 +36,20 @@ public:
 void do_work(void *tag)
 {
 	DimRpcInfo *myRpc;
+//	Rpc *myRpc;
 	char name[64];
 	int out, in;
 	
 	sprintf(name,"TESTRPC%d/INT",(long)tag);
-	myRpc = new DimRpcInfo(name,-1);
+	myRpc = new DimRpcInfo(name, 10, -1);
+//	myRpc = new Rpc(name);
 
 	out = 1;
 	while(1)
 	{
 		sleep(5);
+		dim_print_date_time();
+//		cout << "RPC Sent : " << out << endl;
 		myRpc->setData(out);
 		in = myRpc->getInt();
 cout << "Instance "<<(long)tag<<" sent "<<out<< " got "<<in <<endl;

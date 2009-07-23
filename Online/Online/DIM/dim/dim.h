@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1804
+#define DIM_VERSION_NUMBER 1902
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -182,9 +182,8 @@ _DIM_PROTO( short _swaps,   (short s) );
 /*
 #define MAX_CMND 		16384
 #define MAX_IO_DATA 	65535
-*/
 #define MAX_IO_DATA		(TCP_SND_BUF_SIZE - 16)
-
+*/
 typedef enum { DNS_DIS_REGISTER, DNS_DIS_KILL, DNS_DIS_STOP, 
 			   DNS_DIS_EXIT } DNS_DIS_TYPES;
 typedef enum { RD_HDR, RD_DATA, RD_DUMMY } CONN_STATE;

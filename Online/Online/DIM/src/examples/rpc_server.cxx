@@ -13,7 +13,7 @@ class RpcInt : public DimRpc
 		dim_print_date_time();
 		printf("Got RPC %d\n", val);
 		val++;
-//		sleep(4);
+//		usleep(700000);
 		dim_print_date_time();
 		printf("Answering RPC %d\n", val);
 		setData(val);

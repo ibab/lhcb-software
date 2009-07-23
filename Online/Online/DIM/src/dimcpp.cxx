@@ -11,6 +11,8 @@
 #include <dim.hxx>
 
 int DimCore::inCallback = 0;
+int DimUtil::itsBufferSize = 0;
+char *DimUtil::itsBuffer = (char *)0;
 
 extern "C" {
 static void timer_user_routine(void *tp)
@@ -104,3 +106,32 @@ int DimThread::stop()
 	return ret;
 }
 */
+
+DimUtil::DimUtil() 
+{
+}
+	
+DimUtil::~DimUtil()
+{
+}
+
+char *DimUtil::getEnvVar(char *name)
+{
+	int size;
+
+	size = dim_get_env_var(name, 0, 0);
+	if(!size)
+		return (char *)0;
+	if((itsBufferSize < size ) && (itsBufferSize != 0))
+	{
+		delete[] itsBuffer;
+		itsBufferSize = 0;
+	}
+	if(!itsBufferSize)
+	{
+		itsBuffer = new char[size];
+		itsBufferSize = size;
+	}
+	dim_get_env_var(name, itsBuffer, itsBufferSize);
+	return itsBuffer;
+}

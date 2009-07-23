@@ -89,9 +89,13 @@ static int DIM_IO_Done = 0;
 static int DIM_IO_valid = 1;
 
 static int Write_timeout = 5;
+static int Write_buffer_size = TCP_SND_BUF_SIZE;
+static int Read_buffer_size = TCP_RCV_BUF_SIZE;
 
-void dim_set_write_timeout(secs)
-     int secs;
+int Tcpip_max_io_data_write = TCP_SND_BUF_SIZE - 16;
+int Tcpip_max_io_data_read = TCP_RCV_BUF_SIZE - 16;
+
+void dim_set_write_timeout(int secs)
 {
   Write_timeout = secs;
 }
@@ -99,6 +103,38 @@ void dim_set_write_timeout(secs)
 int dim_get_write_timeout()
 {
   return(Write_timeout);
+}
+
+int dim_set_write_buffer_size(int size)
+{
+	if(size >= TCP_SND_BUF_SIZE)
+	{
+		Write_buffer_size = size;
+		Tcpip_max_io_data_write = size - 16;
+		return(1);
+	}
+	return(0);
+}
+
+int dim_get_write_buffer_size()
+{
+	return(Write_buffer_size);
+}
+
+int dim_set_read_buffer_size(int size)
+{
+	if(size >= TCP_RCV_BUF_SIZE)
+	{
+		Read_buffer_size = size;
+		Tcpip_max_io_data_read = size - 16;
+		return(1);
+	}
+	return(0);
+}
+
+int dim_get_read_buffer_size()
+{
+	return(Read_buffer_size);
 }
 
 #ifdef WIN32
@@ -144,8 +180,7 @@ int myclosesocket(int path)
 }
 #endif
 
-int dim_tcpip_init(thr_flag)
-int thr_flag;
+int dim_tcpip_init(int thr_flag)
 {
 #ifdef WIN32
 	int addr, flags = 1;
@@ -260,8 +295,7 @@ void dim_tcpip_stop()
 	init_done = 0;
 }
 
-static int enable_sig(conn_id)
-int conn_id;
+static int enable_sig(int conn_id)
 {
 	int ret = 1, flags = 1;
 #ifndef WIN32
@@ -370,8 +404,7 @@ static void dump_list()
 }
 */
 
-static int list_to_fds( fds )
-fd_set *fds;
+static int list_to_fds( fd_set *fds )
 {
 	int	i;
 	int found = 0;
@@ -392,9 +425,7 @@ fd_set *fds;
 	return(found);
 }
 
-static int fds_get_entry( fds, conn_id ) 
-fd_set *fds;
-int *conn_id;
+static int fds_get_entry( fd_set *fds, int *conn_id ) 
 {
 	int	i;
 
@@ -415,8 +446,7 @@ int *conn_id;
 
 #if defined(__linux__) && !defined (darwin)
 
-void tcpip_set_keepalive( channel, tmout )
-int channel, tmout;
+void tcpip_set_keepalive( int channel, int tmout )
 {
    int val;
 
@@ -436,8 +466,7 @@ int channel, tmout;
 
 #else
 
-static void tcpip_test_write( conn_id )
-int conn_id;
+static void tcpip_test_write( int conn_id )
 {
 	/* Write to every socket we use, which uses the TCPIP protocol,
 	 * which has an established connection (reading), which is currently
@@ -457,8 +486,7 @@ int conn_id;
 
 #endif
 
-void tcpip_set_test_write(conn_id, timeout)
-int conn_id, timeout;
+void tcpip_set_test_write(int conn_id, int timeout)
 {
 #if defined(__linux__) && !defined (darwin)
 	tcpip_set_keepalive(Net_conns[conn_id].channel, timeout);
@@ -470,8 +498,7 @@ int conn_id, timeout;
 #endif
 }
 
-void tcpip_rem_test_write(conn_id)
-int conn_id;
+void tcpip_rem_test_write(int conn_id)
 {
 	if(Net_conns[conn_id].timr_ent)
 	{
@@ -481,16 +508,15 @@ int conn_id;
 	Net_conns[conn_id].last_used = time(NULL);
 }
 
-void tcpip_pipe_sig_handler( num )
-int num;
+void tcpip_pipe_sig_handler( int num )
 {
+	if(num){}
 /*
 	printf( "*** pipe_sig_handler called ***\n" );
 */
 }
 
-static int get_bytes_to_read(conn_id)
-int conn_id;
+static int get_bytes_to_read(int conn_id)
 {
 	int i, ret, count;
 	
@@ -510,8 +536,7 @@ int conn_id;
 	return(count);
 }
 
-static int do_read( conn_id )
-int conn_id;
+static int do_read( int conn_id )
 {
 	/* There is 'data' pending, read it.
 	 */
@@ -571,8 +596,7 @@ int conn_id;
 }
 
 
-void do_accept( conn_id )
-int conn_id;
+void do_accept( int conn_id )
 {
 	/* There is a 'connect' pending, serve it.
 	 */
@@ -582,7 +606,7 @@ int conn_id;
 	othersize = sizeof(other);
 	memset( (char *) &other, 0, othersize );
 	Net_conns[conn_id].mbx_channel = accept( Net_conns[conn_id].channel,
-						 (struct sockaddr*)&other, &othersize );
+						 (struct sockaddr*)&other, (unsigned int *)&othersize );
 	if( Net_conns[conn_id].mbx_channel < 0 ) 
 	{
 		return;
@@ -618,13 +642,13 @@ printf("TCPIP got %d.%d.%d.%d \n",
 				      conn_id, TCPIP );
 }
 
-void io_sig_handler(num)
-int num;
+void io_sig_handler(int num)
 {
     fd_set	rfds;
     int	conn_id, ret, selret, count;
 	struct timeval	timeout;
 
+	if(num){}
 	do
 	{
 		timeout.tv_sec = 0;		/* Don't wait, just poll */
@@ -671,7 +695,7 @@ void tcpip_task( void *dummy)
 #ifndef WIN32
 	int data;
 #endif
-
+	if(dummy){}
 	while(1)
 	{
 		while(!DIM_IO_valid)
@@ -739,10 +763,7 @@ void tcpip_task( void *dummy)
 	}
 }
 
-int tcpip_start_read( conn_id, buffer, size, ast_routine )
-int size, conn_id;
-char *buffer;
-void (*ast_routine)();
+int tcpip_start_read( int conn_id, char *buffer, int size, void (*ast_routine)() )
 {
 	/* Install signal handler stuff on the socket, and record
 	 * some necessary information: we are reading, and want size
@@ -766,9 +787,7 @@ void (*ast_routine)();
 	return(1);
 }
 
-int check_node_addr( node, ipaddr)
-char *node;
-unsigned char *ipaddr;
+int check_node_addr( char *node, unsigned char *ipaddr)
 {
 unsigned char *ptr;
 int ret;
@@ -809,10 +828,7 @@ int ret;
 	return(1);
 }
 
-int tcpip_open_client( conn_id, node, task, port )
-int conn_id;
-char *node, *task;
-int port;
+int tcpip_open_client( int conn_id, char *node, char *task, int port )
 {
 	/* Create connection: create and initialize socket stuff. Try
 	 * and make a connection with the server.
@@ -911,7 +927,7 @@ int port;
 		return(0);
 	}
 
-	val = TCP_SND_BUF_SIZE;      
+	val = Write_buffer_size;      
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_SNDBUF, 
 			(char*)&val, sizeof(val))) == -1 ) 
 	{
@@ -922,7 +938,7 @@ int port;
 		return(0);
 	}
 
-	val = TCP_RCV_BUF_SIZE;
+	val = Read_buffer_size;
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_RCVBUF, 
 			(char*)&val, sizeof(val))) == -1 ) 
 	{
@@ -975,9 +991,7 @@ int port;
 	return(1);
 }
 
-int tcpip_open_server( conn_id, task, port )
-int conn_id, *port;
-char *task;
+int tcpip_open_server( int conn_id, char *task, int *port )
 {
 	/* Create connection: create and initialize socket stuff,
 	 * find a free port on this node.
@@ -1003,7 +1017,7 @@ char *task;
 		return(0);
 	}
 
-	val = TCP_SND_BUF_SIZE;
+	val = Write_buffer_size;
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_SNDBUF, 
 			(void *)&val, sizeof(val))) == -1 ) 
 	{
@@ -1013,8 +1027,20 @@ char *task;
 		closesock(path); 
 		return(0);
 	}
-
-	val = TCP_RCV_BUF_SIZE;
+/*
+	sval1 = sizeof(val1);
+	if ((ret_code = getsockopt(path, SOL_SOCKET, SO_SNDBUF, 
+			(void *)&val1, &sval1)) == -1 ) 
+	{
+#ifdef DEBUG
+		printf("Couln't set SO_SNDBUF\n");
+#endif
+		closesock(path); 
+		return(0);
+	}
+printf("Set size to %d, got size %d\n", val, val1);
+*/
+	val = Read_buffer_size;
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_RCVBUF, 
 			(void *)&val, sizeof(val))) == -1 ) 
 	{
@@ -1090,9 +1116,7 @@ printf("Trying port %d, ret = %d\n", *port, ret);
 }
 
 
-int tcpip_start_listen( conn_id, ast_routine )
-int conn_id;
-void (*ast_routine)();
+int tcpip_start_listen( int conn_id, void (*ast_routine)() )
 {
 	/* Install signal handler stuff on the socket, and record
 	 * some necessary information: we are NOT reading, thus
@@ -1116,8 +1140,7 @@ void (*ast_routine)();
 }
 
 
-int tcpip_open_connection( conn_id, path )
-int conn_id, path;
+int tcpip_open_connection( int conn_id, int path )
 {
 	/* Fill in/clear some fields, the node and task field
 	 * get filled in later by a special packet.
@@ -1135,7 +1158,7 @@ int conn_id, path;
 		closesock(path); 
 		return(0);
 	}
-	val = TCP_SND_BUF_SIZE;      
+	val = Write_buffer_size;      
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_SNDBUF, 
 			(char*)&val, sizeof(val))) == -1 ) 
 	{
@@ -1146,7 +1169,7 @@ int conn_id, path;
 		return(0);
 	}
 
-	val = TCP_RCV_BUF_SIZE;
+	val = Read_buffer_size;
 	if ((ret_code = setsockopt(path, SOL_SOCKET, SO_RCVBUF, 
 			(char*)&val, sizeof(val))) == -1 ) 
 	{
@@ -1167,17 +1190,13 @@ int conn_id, path;
 }
 
 
-void tcpip_get_node_task( conn_id, node, task )
-int conn_id;
-char *node, *task;
+void tcpip_get_node_task( int conn_id, char *node, char *task )
 {
 	strcpy( node, Net_conns[conn_id].node );
 	strcpy( task, Net_conns[conn_id].task );
 }
 
-int tcpip_write( conn_id, buffer, size )
-int conn_id, size;
-char *buffer;
+int tcpip_write( int conn_id, char *buffer, int size )
 {
 	/* Do a (synchronous) write to conn_id.
 	 */
@@ -1193,8 +1212,7 @@ char *buffer;
 	return(wrote);
 }
 
-int set_non_blocking(channel)
-     int channel;
+int set_non_blocking(int channel)
 {
   int ret, flags = 1;
 	ret = ioctl(channel, FIONBIO, &flags );
@@ -1208,8 +1226,7 @@ int set_non_blocking(channel)
 	return(1);
 }
 
-int set_blocking(channel)
-     int channel;
+int set_blocking(int channel)
 {
   int ret, flags = 0;
 	ret = ioctl(channel, FIONBIO, &flags );
@@ -1223,9 +1240,7 @@ int set_blocking(channel)
 	return(1);
 }
 
-int tcpip_write_nowait( conn_id, buffer, size )
-int conn_id, size;
-char *buffer;
+int tcpip_write_nowait( int conn_id, char *buffer, int size )
 {
 	/* Do a (asynchronous) write to conn_id.
 	 */
@@ -1267,8 +1282,7 @@ char *buffer;
 	return(wrote);
 }
 
-int tcpip_close( conn_id )
-int conn_id;
+int tcpip_close( int conn_id )
 {
 	int channel;
 	/* Clear all traces of the connection conn_id.
@@ -1289,24 +1303,22 @@ int conn_id;
 }
 
 
-int tcpip_failure( code )
-int code;
+int tcpip_failure( int code )
 {
 	return(!code);
 }
 
-int tcpip_would_block( code )
-int code;
+int tcpip_would_block( int code )
 {
    if(code == EWOULDBLOCK)
 		return(1);
     return(0);
 }
 
-void tcpip_report_error( code )
-int code;
+void tcpip_report_error( int code )
 {
 #ifndef WIN32
+	if(code){}
 	perror("tcpip");
 #else
 	int my_perror();
@@ -1316,9 +1328,7 @@ int code;
 }
 
 #ifdef WIN32
-int my_perror(str, error)
-char *str;
-int error;
+int my_perror(char *str, int error)
 {
 int code;
 
@@ -1457,9 +1467,7 @@ int code;
 	return(1);
 }
 
-void my_strerror(error, msg)
-int error;
-char *msg;
+void my_strerror(int error, char *msg)
 {
 int code;
 char str[128];
@@ -1597,12 +1605,11 @@ char str[128];
 }
 #endif
 
-void tcpip_get_error( str, code )
-char *str;
-int code;
+void tcpip_get_error( char *str, int code )
 {
 	DISABLE_AST
 #ifndef WIN32
+	if(code){}
 	if((errno == ENOENT) && (h_errno == HOST_NOT_FOUND))
 		strcpy(str,"Host not found");
 	else

@@ -15,6 +15,7 @@ int *buffer;
 {
 void print_service();
 
+	if(tag){}
 	if((*size == 4 ) && (*buffer == no_link))
 	{
 		printf("Service %s Not Available\n", str);
