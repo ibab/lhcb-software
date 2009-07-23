@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.4 2009-06-25 11:56:45 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.5 2009-07-23 16:06:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -148,8 +148,8 @@ void Rich::ToolRegistry::addEntry( const std::string & nickname,
 {
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
-    Warning( "Nickname '" + nickname + "' mapping changed : '"
-             + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS );
+    Print( "Nickname '" + nickname + "' mapping changed : '"
+           + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS ).ignore();
   }
   if ( msgLevel(MSG::DEBUG) )
   {
