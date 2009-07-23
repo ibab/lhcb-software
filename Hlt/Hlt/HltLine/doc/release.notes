@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.13 2009-07-15 16:25:51 ibelyaev Exp $
+! $Id: release.notes,v 1.14 2009-07-23 16:44:43 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v1r3 2009-07-23 ===================
 ! 2009-07-15 - Vanya BELYAEV
 
  - move Hlt1Units to Hlt/Hlt1Lines 
