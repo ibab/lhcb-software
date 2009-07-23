@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-07-23 - Chris Jones
+ - Add new NULL MC truth tool, that always returns NULL associations.
+
 !====================== RichRecMCTools v2r23 2009-07-14 =======================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file RichRecMCTools_dll.cpp

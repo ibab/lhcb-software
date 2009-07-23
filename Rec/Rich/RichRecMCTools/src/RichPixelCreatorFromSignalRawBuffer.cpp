@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.8 2008-03-25 16:46:34 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.9 2009-07-23 16:16:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -119,6 +119,7 @@ PixelCreatorFromSignalRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluste
 
   // Si back-scatter ?
   if ( m_rejHPDBackScatter && m_mcTool->isSiBackScatter(cluster) ) return NULL;
+
   // reject trackless hits
   if ( !rejectTrackless(cluster) ) return NULL;
 
