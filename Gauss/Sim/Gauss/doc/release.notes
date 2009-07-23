@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-07-23 - Silvia Miglioranzi
+ - Updated QMtest (gauss-mc09.qmt) using the new Gauss v37r3 settings. Updated 
+   the slc4_amd64_gcc34 reference file.
+
 !======================== Gauss v37r3 2009-07-21 =============================
 ! 2009-07-17 - Gloria CORTI
  - NOTE THAT Particle Guns and Machine Induces Background events (LSS and TCT)
