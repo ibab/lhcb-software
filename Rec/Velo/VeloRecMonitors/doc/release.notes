@@ -4,6 +4,17 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-07-23 - Silvia Borghi
+	-VeloTrackMonitor: 
+     - Add histogram of the efficiency evaluated by interpolation
+     - Change the pseudoefficiency versus Sensor number by the efficiency 
+       evaluated by interpolation
+     - Change the cluster phi in local frame with cluster phi in half frame
+     - In residual versus phi, change local phi with phi in half frame
+     - Replace number of measurement with number of clusters
+     - Fix histogram titles
+     - Check type of the track instead of the location
+
 !======================= VeloRecMonitors v1r10 2009-07-14 ====================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file VeloRecMonitors_dll.cpp

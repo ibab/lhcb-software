@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.7 2009-07-02 15:12:56 siborghi Exp $
+// $Id: VeloTrackMonitor.h,v 1.8 2009-07-23 11:27:35 siborghi Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -59,7 +59,6 @@ namespace Velo
     StatusCode MCInfo();
     StatusCode monitorTracks();
     StatusCode unbiasedResiduals(LHCb::Track *track);
-    StatusCode fill_clusteradcsum(LHCb::Tracks* tracks);
     Gaudi::XYZPoint extrapolateToZ(LHCb::Track *track, double toZ);
     DeVelo* m_veloDet;
     
