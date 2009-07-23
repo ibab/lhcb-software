@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.37 2009-07-23 16:20:26 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.38 2009-07-23 17:26:44 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -36,9 +36,8 @@ class RichRecQCConf(RichConfigurableUser):
        ,"AlignmentMonitoring"       : True
        ,"HPDIFBMonitoring"          : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
-       ,"PidTrackTypes":  [ ["All"], ["Forward","Match"] ]
-       ,"RecoTrackTypes": [ ["All"],
-                            ["Forward","Match"],
+       ,"PidTrackTypes":  [ ["Forward","Match"] ]
+       ,"RecoTrackTypes": [ ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
        ,"EffTrackTypes": [ ["Forward","Match"],
                            ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
@@ -124,8 +123,10 @@ class RichRecQCConf(RichConfigurableUser):
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
             # Extend PID performance monitoring types
-            self.PidTrackTypes += [ ["Forward","Match"],
+            self.PidTrackTypes += [ ["All"],["Forward","Match"],
                                     ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
+            # Extend CK theta resolution plots
+            self.RecoTrackTypes += [ ["All"] ]
 
         # Do we need MC access or not
         if not self.getProp("WithMC") :

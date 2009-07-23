@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.46 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.47 2009-07-23 17:26:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -127,7 +127,8 @@ StatusCode RecoQC::execute()
       if ( Rich::Unknown  == mcType ) mcType = Rich::Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
     }
-    verbose() << "   => type = " << mcType << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "   => type = " << mcType << endreq;
 
     // Expected Cherenkov theta angle for 'true' particle type
     thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
@@ -139,7 +140,7 @@ StatusCode RecoQC::execute()
     const double beta = m_richPartProp->beta( pTot, mcType );
     // selection cuts
     if ( beta < m_minBeta[rad] || beta > m_maxBeta[rad] ) continue;
-    verbose() << "   => Passed beta cut" << endreq;
+    //verbose() << "   => Passed beta cut" << endreq;
 
     // isolated track ?
     const bool isolated = m_isoTrack->isIsolated( segment, mcType );
@@ -169,7 +170,8 @@ StatusCode RecoQC::execute()
     // loop over photons for this segment 
     unsigned int truePhotons(0);
     double avRecTrueTheta(0);
-    verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endreq;
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
