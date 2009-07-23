@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r9 2009-07-23 ===================
 ! 2009-07-15 - Gerhard Raven
  - add missing AIDA dependency to requirements
 
