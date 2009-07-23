@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.7 2009-07-23 08:20:04 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.8 2009-07-23 08:22:15 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -112,7 +112,7 @@ private:
         if (wt > std::numeric_limits<double>::epsilon() ) {
           table.i_push(particle,*iPV, wt );
         } else {
-          Error("Weight effectively 0. PV not related.").ignore();
+          Warning("Weight effectively 0. PV not related.").ignore();
         }
       }
       table.i_sort();
