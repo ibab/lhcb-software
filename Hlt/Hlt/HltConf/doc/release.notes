@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.282 2009-07-23 16:19:43 pkoppenb Exp $ 
+! $Id: release.notes,v 1.283 2009-07-23 16:44:16 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v4r0 2009-07-23 ===================
 ! 2009-07-23 - Patrick Koppenburg
  - Repeat the "21/7 version didn't work" bug fix for Hlt1. BANG HEAD!
    . Move threshold setting functionality to HltThresholdSettings
