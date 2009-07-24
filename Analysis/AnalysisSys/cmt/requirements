@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.112 2009-07-21 08:49:41 jpalac Exp $
+# $Id: requirements,v 1.113 2009-07-24 07:41:56 jpalac Exp $
 package AnalysisSys
 version v3r6
 
@@ -7,14 +7,14 @@ branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v1r2     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r3     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v6r0     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v8r6p1   Phys   # Marco Musy
+use  FlavourTagging             v8r7     Phys   # Marco Musy
 use  DaVinciFilter              v6r12    Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r5     Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r2     Rich   # Chris Jones
+use  RichPIDQC                  v1r2p1   Rich   # Chris Jones
 use  DstCalibSel                v1r1     Rich   # Andrew Powell
 
 ####################################################################
@@ -31,12 +31,12 @@ use  DecayTreeTuple             v2r3p3   Phys   # Rob Lambert
 ####################################################################
 #
 use PhysSelPython               v1r0     PhysSel
-use AnalysisPython              v1r0     Phys
+use AnalysisPython              v1r1     Phys
 #
 # Stripping
 #
 use StrippingConf               v1r2     Phys   # Anton Poluektov
-use StrippingSelections         v1r2     Phys   # Anton Poluektov
+use StrippingSelections         v1r3     Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
@@ -47,7 +47,7 @@ use  MicroDSTBase        	v1r4p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r2    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r4p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r6    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r2    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r3    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
