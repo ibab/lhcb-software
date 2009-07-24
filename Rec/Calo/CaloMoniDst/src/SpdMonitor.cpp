@@ -56,40 +56,41 @@ class IHistogram2D    ;
 
 class SpdMonitor : public CaloMoniAlg
 {
-	
-	friend class AlgFactory<SpdMonitor>;
+  
+  friend class AlgFactory<SpdMonitor>;
 public:
-	virtual StatusCode initialize();	
-	virtual StatusCode execute();
-	virtual StatusCode finalize();
-	
+  virtual StatusCode initialize();  
+  virtual StatusCode execute();
+  virtual StatusCode finalize();
+  
 protected:
-	
-	SpdMonitor ( const std::string& name, ISvcLocator* pSvc )
+  
+  SpdMonitor ( const std::string& name, ISvcLocator* pSvc )
     : CaloMoniAlg ( name , pSvc )
       , m_nEvents   ( 0 )
-	{
-		declareProperty("HistogramFlag", m_produceHistogram = true);
-		declareProperty("EcalThreshold", m_ecalThres=700);
-	}
-	
-	virtual ~SpdMonitor() {};
-	
-	
+  {
+    declareProperty("HistogramFlag", m_produceHistogram = true);
+    declareProperty("EcalThreshold", m_ecalThres=700);
+  }
+  
+  virtual ~SpdMonitor() {};
+  
+  
 private:
-		
-	bool m_produceHistogram ; // do histos	
-	unsigned int m_nEvents;
-	DeCalorimeter *m_detSpd;
-	DeCalorimeter *m_detEcal;
-	unsigned int n_cells;
-	/// ECAL
-	double m_ecalThres;
-	CaloVector<int> m_neighN;	
-	
-};		
+    
+  CaloDigits* digitsSpd;
+  bool m_produceHistogram ; // do histos  
+  unsigned int m_nEvents;
+  DeCalorimeter *m_detSpd;
+  DeCalorimeter *m_detEcal;
+  unsigned int n_cells;
+  /// ECAL
+  double m_ecalThres;
+  CaloVector<int> m_neighN; 
+  
+};    
 DECLARE_ALGORITHM_FACTORY( SpdMonitor );
-	
+  
 // ============================================================================
 
 
@@ -100,12 +101,12 @@ StatusCode SpdMonitor::initialize()
   if (sc.isFailure()) return sc;
   
   
-  hBook2("o_flat","Flat outer", 6.,58.,52, 0.,64.,64);		
+  hBook2("o_flat","Flat outer", 6.,58.,52, 0.,64.,64);    
   hBook2("o_neigh","Avg occupancy of neighbors (outer SPD)", 6.,58.,52,0.,64.,64);
   hBook2("o_occupancy","Occupancy of the outer SPD", 6.,58.,52,0.,64.,64);
   hBook2("m_flat","Flat middle", 12.,52.,40,0.,64.,64); 
   hBook2("m_neigh","Avg occupancy of neighors (middle SPD)", 12.,52.,40,0.,64.,64);
-  hBook2("m_occupancy","Occupancy of the middle SPD", 12.,52.,40,0.,64.,64);	
+  hBook2("m_occupancy","Occupancy of the middle SPD", 12.,52.,40,0.,64.,64);  
   hBook2("i_flat" ,"Flat inner", 14.,50.,36,8.,56.,48);
   hBook2("i_neigh" ,"Avg occupancy of neighbors (inner SPD)",14.,50.,36,8.,56.,48);
   hBook2("i_occupancy" ,"Occupancy of the inner SPD", 14.,50.,36,8.,56.,48);
@@ -133,7 +134,7 @@ StatusCode SpdMonitor::initialize()
   hBook1("o_elec" ,"Multiplicity / ECAL Clusters (outer)",0,1.,100);  
   hBook1("m_elec" ,"Multiplicity / ECAL Clusters (middle)",0,1.,100);  
   hBook1("i_elec" ,"Multiplicity / ECAL Clusters (inner)",0,1.,100);
-  hBook1("elec","Multiplicity / ECAL Clusters",0,1.,100);		
+  hBook1("elec","Multiplicity / ECAL Clusters",0,1.,100);   
   
   // Loads the detectors
   
@@ -142,7 +143,7 @@ StatusCode SpdMonitor::initialize()
   n_cells = m_detSpd->numberOfCells();
 
   // Histograms
-  if ( m_produceHistogram )	info() << "Histograms will be produced" << endmsg; 
+  if ( m_produceHistogram ) info() << "Histograms will be produced" << endmsg; 
   
   // Initialize neighbor matrix
   for(unsigned int cellIt = 0; cellIt!=m_detSpd->numberOfCells(); cellIt++){
@@ -182,14 +183,14 @@ StatusCode SpdMonitor::finalize()
 // ============================================================================
 StatusCode SpdMonitor::execute()
 {   
-	
+  
 
   debug() << "==> Execute " << endmsg;
   m_nEvents++;  
   debug() << "...processing Event " << m_nEvents << endmsg;
 
 
-  int mult[3]={0};	
+  int mult[3]={0};  
   int multEcal[3]={0};
   int nclus[3]={0};  
   
@@ -200,14 +201,14 @@ StatusCode SpdMonitor::execute()
     debug() << "No Table container found at " << CaloDigitLocation::Spd << endmsg;
     return StatusCode::SUCCESS;
   }
-  CaloDigits* digitsSpd = get<CaloDigits>(CaloDigitLocation::Spd);  
+  digitsSpd = get<CaloDigits>(CaloDigitLocation::Spd);  
 
   
-	CaloVector<int> m_neighHit;
-	CaloVector<int> m_neighHitEcal;
-	CaloVector<int> m_cellHit;
+  CaloVector<int> m_neighHit;
+  CaloVector<int> m_neighHitEcal;
+  CaloVector<int> m_cellHit;
   // Initialize the occupancy matrices
-  for(unsigned int cellIt = 0; cellIt!=n_cells; cellIt++){	
+  for(unsigned int cellIt = 0; cellIt!=n_cells; cellIt++){  
     const LHCb ::CaloCellID id = m_detSpd->cellIdByIndex(cellIt);
     m_cellHit.addEntry(0, id);
     m_neighHit.addEntry( 0, id);
@@ -216,8 +217,8 @@ StatusCode SpdMonitor::execute()
 
   // Determine which cells have a hit
   for(CaloDigits::iterator idig = digitsSpd->begin() ; digitsSpd->end() !=  idig ; idig++){
-    if ( NULL == *idig )continue;
-	  CaloCellID cell = (*idig)->cellID();
+    if ( NULL == *idig ) continue;
+    CaloCellID cell = (*idig)->cellID();
     m_cellHit[cell]=1;
     const CaloNeighbors& neigh = m_detSpd->zsupNeighborCells(cell);    
     for (CaloNeighbors::const_iterator neighIt = neigh.begin(); neighIt != neigh.end(); neighIt++){
@@ -225,35 +226,35 @@ StatusCode SpdMonitor::execute()
     }
   }
 
-	// fill histo
+  // fill histo
   for(unsigned int cellIt = 0; cellIt!=n_cells; cellIt++){
-	  const CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);    
-	  double neighAve=float(m_neighHit[cell])/float(m_neighN[cell]);
+    const CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);    
+    double neighAve=float(m_neighHit[cell])/float(m_neighN[cell]);
 
-	  if( 0 == cell.area()) {		  
+    if( 0 == cell.area()) {     
       // OUTER CALORIMETER
-      hFill2("o_flat",cell.row(), cell.col());  // Generation of a flat histogram
-      hFill2("o_neigh",cell.row(), cell.col() , neighAve);
+      hFill2("o_flat",cell.col(), cell.row());  // Generation of a flat histogram
+      hFill2("o_neigh",cell.col(), cell.row() , neighAve);
       if ( m_cellHit[cell]){  // The cell has has been hit
         mult[0]++;
-        hFill2("o_occupancy",cell.row(), cell.col());
+        hFill2("o_occupancy",cell.col(), cell.row());
       }
     }
     else if( 1 == cell.area() ){          
       // MIDDLE CALORIMETER
-      hFill2("m_flat",cell.row(), cell.col());  // Generation of a flat histogram
-      hFill2("m_neigh",cell.row(), cell.col(), neighAve);
+      hFill2("m_flat",cell.col(), cell.row());  // Generation of a flat histogram
+      hFill2("m_neigh",cell.col(), cell.row(), neighAve);
       if (m_cellHit[cell]){  // The cell has has been hit
         mult[1]++;
-        hFill2("m_avgOcccupancy",cell.row(), cell.col());
+        hFill2("m_occupancy",cell.col(), cell.row());
       }
     }
     else if( 2 == cell.area() ){
-      hFill2("i_flat",cell.row(), cell.col());  // Generation of a flat histograms
-      hFill2("i_neigh" ,cell.row(), cell.col(),neighAve);
+      hFill2("i_flat",cell.col(), cell.row());  // Generation of a flat histograms
+      hFill2("i_neigh" ,cell.col(), cell.row(),neighAve);
       if (m_cellHit[cell]){  // The cell has has been hit
         mult[2]++;
-        hFill2("i_occupancy" ,cell.row(), cell.col());
+        hFill2("i_occupancy" ,cell.col(), cell.row());
       }
     } 
   }
@@ -271,56 +272,56 @@ StatusCode SpdMonitor::execute()
   CaloClusters* ecalClus = get<CaloClusters> ( CaloClusterLocation::Ecal ) ;
   
   if (ecalClus != 0){
-	  debug() <<"ECAL clusters present"<<endmsg;
+    debug() <<"ECAL clusters present"<<endmsg;
     for (CaloClusters::const_iterator iClus = ecalClus->begin(); iClus != ecalClus->end(); ++iClus){
       CaloCellID seedCell = (*iClus)->seed();
       double seedE=(*iClus)->e();
       debug() <<"Seed cell: "<<seedCell<<" with energy "<<seedE/GeV<<" GeV"<<endmsg;
-/*		Histograms for plotting the cluster energy and choosig the threshold
-			
-		plot(seedE/GeV,"clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
-		plot(seedE/MeV,"clusterEMeV" ,"Cluster energy in ECAL", 0.,2000.,200);
-		
-		switch(seedCell.area()){
-			case 0:
-				plot(seedE/GeV,"o_clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
-				plot(seedE/MeV,"o_clusterEMeV" ,"Cluster energy in ECAL", 0.,1000.,100);
-				break;
-			case 1:
-				plot(seedE/GeV,"m_clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
-				plot(seedE/MeV,"m_clusterEMeV" ,"Cluster energy in ECAL", 0.,1000.,100);
-				break;
-			case 2:
-				plot(seedE/GeV,"i_clusterE" ,"Cluster energy in ECAL", 0.,20.,1000);
-				plot(seedE/MeV,"i_clusterEMeV" ,"Cluster energy in ECAL", 0.,1500.,150);
-				break;
-		}*/
-		
+/*    Histograms for plotting the cluster energy and choosig the threshold
+      
+    plot(seedE/GeV,"clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
+    plot(seedE/MeV,"clusterEMeV" ,"Cluster energy in ECAL", 0.,2000.,200);
+    
+    switch(seedCell.area()){
+      case 0:
+        plot(seedE/GeV,"o_clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
+        plot(seedE/MeV,"o_clusterEMeV" ,"Cluster energy in ECAL", 0.,1000.,100);
+        break;
+      case 1:
+        plot(seedE/GeV,"m_clusterE" ,"Cluster energy in ECAL", 0.,50.,100);
+        plot(seedE/MeV,"m_clusterEMeV" ,"Cluster energy in ECAL", 0.,1000.,100);
+        break;
+      case 2:
+        plot(seedE/GeV,"i_clusterE" ,"Cluster energy in ECAL", 0.,20.,1000);
+        plot(seedE/MeV,"i_clusterEMeV" ,"Cluster energy in ECAL", 0.,1500.,150);
+        break;
+    }*/
+    
       if (seedE>=m_ecalThres){
         if( 0 == seedCell.area()){
-					hFill2("o_occupancyEcal",seedCell.row(), seedCell.col());
-					nclus[0]++;
-					if (m_cellHit[seedCell]){
-						multEcal[0]++;
-						hFill2("o_ecal+spd",seedCell.row(), seedCell.col());
-					}
+          hFill2("o_occupancyEcal",seedCell.col(), seedCell.row());
+          nclus[0]++;
+          if (m_cellHit[seedCell]){
+            multEcal[0]++;
+            hFill2("o_ecal+spd",seedCell.col(), seedCell.row());
+          }
         }
         else if( 1 == seedCell.area()){
-					hFill2("m_occcupancyEcal",seedCell.row(), seedCell.col()); 
-				debug()<<"1: "<<nclus[1]<<endmsg;
-				nclus[1]++;
-					if (m_cellHit[seedCell]){
-						multEcal[1]++;
-						hFill2("m_ecal+spd",seedCell.row(), seedCell.col());
-					}
+          hFill2("m_occcupancyEcal",seedCell.col(), seedCell.row()); 
+        debug()<<"1: "<<nclus[1]<<endmsg;
+        nclus[1]++;
+          if (m_cellHit[seedCell]){
+            multEcal[1]++;
+            hFill2("m_ecal+spd",seedCell.col(), seedCell.row());
+          }
         }
         else if( 2 == seedCell.area()){
-					hFill2("i_occupancyEcal",seedCell.row(), seedCell.col());
-					nclus[2]++;
-					if (m_cellHit[seedCell]){
-						multEcal[2]++;
-						hFill2("i_ecal+spd",seedCell.row(), seedCell.col());  
-					}
+          hFill2("i_occupancyEcal",seedCell.col(), seedCell.row());
+          nclus[2]++;
+          if (m_cellHit[seedCell]){
+            multEcal[2]++;
+            hFill2("i_ecal+spd",seedCell.col(), seedCell.row());  
+          }
         }
         
         
@@ -330,20 +331,20 @@ StatusCode SpdMonitor::execute()
             m_neighHitEcal[*neighIt]+=1;
           }
         }
-      }	
+      } 
     }
     for(unsigned int cellIt = 0; cellIt!=n_cells; cellIt++){
-      CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);    				
+      CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);            
       double neighAve=float(m_neighHitEcal[cell])/float(m_neighN[cell]);
       
       if( 0 == cell.area()){
-        hFill2("o_neighEcal",cell.row(), cell.col(), neighAve);
+        hFill2("o_neighEcal",cell.col(), cell.row(), neighAve);
       }
       else if(1 == cell.area()){
-        hFill2("m_neighEcal",cell.row(), cell.col(), neighAve);
+        hFill2("m_neighEcal",cell.col(), cell.row(), neighAve);
       }
       else if(2 == cell.area()){
-        hFill2("i_neighEcal",cell.row(), cell.col(),neighAve);
+        hFill2("i_neighEcal",cell.col(), cell.row(),neighAve);
       }
     }
     
