@@ -10,14 +10,14 @@ TChain* MakeChain(TString head, int max, TString loc = "TriggerTuple/EventTuple"
 
 int main(int argc, char** argv){
   cout << "Hello world " << argc << endl ;
-  if ( argc!=3 ) {
+  if ( argc!=3 && argc!=4 ) {
     cout << "./GetRates.exe Tuples/Hlt12-StatsTuple-305- 30" << endl ;
     return -9 ;
   }
   
   TString head = argv[1];
   int maxI = atoi(argv[2]);
-  cout << head << " " << maxI << endl ;
+  cout << head << " " << maxI << " " << endl ;
   TChain* MB = MakeChain(head,maxI);
   cout << "2" << endl ;
   SelsPlots(MB);

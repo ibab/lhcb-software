@@ -56,7 +56,7 @@ def getStats(f,signal):
             epsilon = epsilon + 0.00001
             if (debug): print line
             sel =  (line.split()[1]).replace("Hlt2","").replace("Decision","")
-            Hlt2Sel = float((line.split()[4]).replace("%",""))+epsilon
+            Hlt2Sel = float((line.split()[5]).replace("%",""))+epsilon   # on Hlt1
             if (debug): print sel, Hlt2Sel
             BestSelDict[sel] = Hlt2Sel # make sure they never get same efficiency
 #            if (( line.split()[-1]).find('#')<0) :
