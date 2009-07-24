@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.h,v 1.8 2009-04-16 12:28:38 jvantilb Exp $
+// $Id: STOfflinePosition.h,v 1.9 2009-07-24 12:15:31 mneedham Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
@@ -70,6 +70,7 @@ private:
   double m_trim;                   ///< Trimming value to suppress cap. coupling
   bool m_mergeClusters;            ///< Flag to merge split clusters
   std::string m_clusterLocation;   ///< Location STClusters (needed for merging)
+  double m_APE;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.17 2009-04-24 16:17:35 jvantilb Exp $
+// $Id: STOfflinePosition.cpp,v 1.18 2009-07-24 12:15:31 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -44,7 +44,9 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
   declareProperty("MergeClusters", m_mergeClusters = false );
   declareSTConfigProperty("InputData", m_clusterLocation , 
                           STClusterLocation::TTClusters);
+  declareProperty("APE", m_APE = 0.0); // Alignment Precision Error
   declareInterface<ISTClusterPosition>(this);
+  
 }
 
 STOfflinePosition::~STOfflinePosition() 
@@ -156,10 +158,14 @@ STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
 }
 
 double STOfflinePosition::error(const unsigned int nStrips) const
-{ 
- // estimate of error
- return (nStrips < m_errorVec.size() ? 
-         m_errorVec[nStrips-1] : m_errorVec.back());
+{
+  // estimate of error                                                           
+  double eValue =0.0;
+  nStrips < m_errorVec.size() ?  eValue = m_errorVec[nStrips-1] : eValue = m_errorVec.back();
+  if (m_APE > 0.0){
+    eValue = sqrt(eValue*eValue + m_APE*m_APE );
+  }
+  return eValue;
 }
 
 double STOfflinePosition::stripFraction(const double stripNum,
