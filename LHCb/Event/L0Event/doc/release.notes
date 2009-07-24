@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.122 2009-06-29 11:04:25 cattanem Exp $
+! $Id: release.notes,v 1.123 2009-07-24 16:53:29 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2009-07-24 - Olivier Deschamps
+ - implement RAMBCID data
 
 !======================== L0Event v17r5 2009-06-29 ===========================
 ! 2009-06-23 - Olivier Deschamps

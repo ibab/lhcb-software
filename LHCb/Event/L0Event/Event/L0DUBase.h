@@ -1,4 +1,4 @@
-// $Id: L0DUBase.h,v 1.8 2009-03-05 15:35:10 odescham Exp $
+// $Id: L0DUBase.h,v 1.9 2009-07-24 16:53:29 odescham Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
@@ -45,9 +45,9 @@ namespace L0DUBase{
     static const  int MuonSign[Conditions::LastIndex]                = { 26 ,  0 , 1 , 0 };
 
   };
-  
-  
-  
+  namespace RAMBCID{
+    static const unsigned int Max = 255;
+  }
   
 
   /*
