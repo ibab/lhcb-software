@@ -14,13 +14,21 @@ DataOnDemandSvc.AlgMap += {
  ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"
 };
 
-CaloClusterOnDemand.Members += { "CellularAutomatonAlg/EcalClust",
-                                 "CaloSharedCellAlg/EcalShare",
-                                 "CaloClusterCovarianceAlg/EcalCovar",
-                                 "CaloClusterCorrect3x3Position/EcalPosition"};
+// Add digit sequence in CaloCluster-onDemand to please HLT
+CaloClusterOnDemand.Members += {   "GaudiSequencer/CaloDigitsSeq"
+                                   "CellularAutomatonAlg/EcalClust",
+                                   "CaloSharedCellAlg/EcalShare",
+                                   "CaloClusterCovarianceAlg/EcalCovar",
+                                   "CaloClusterCorrect3x3Position/EcalPosition"};
+// Warning instance name MUST be the same as in CaloDigitsOnDemand !
+CaloDigitsSeq.Members += { "CaloDigitsFromRaw/SpdFromRaw"
+                           "CaloDigitsFromRaw/PrsFromRaw"
+                           "CaloZSupAlg/EcalZSup"
+                           "CaloZSupAlg/HcalZSup"}
+
+
+
 MergedPi0Rec.CreateSplitClustersOnly = true;
-
-
 #include "$CALORECOOPTS/MergedPi0Rec.opts"
 
 // Other Calo objects (CaloHypo, CaloPIDs) are available on DST
