@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.12 2009-02-09 10:38:23 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.13 2009-07-24 13:58:59 jluisier Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -67,6 +67,23 @@ STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
   } else { // Add one because offline strips start at one.
     ++strip;
   }
+
+  
+  // hack for TED run 
+  STChannelID chan = STChannelID(STChannelID::typeIT, ITNames::IT3, 
+                                 ITNames::X1, ITNames::Top, 1, 0);
+  
+  if (m_sectorsVector[index] == chan){
+    if (strip <= 128){
+      strip = strip + 128;
+    }
+    else if(strip >128 && strip <= 256){
+      strip = strip - 128;
+    } 
+    else {
+      // nothing
+    } 
+  }  
   
   return std::make_pair(STChannelID(m_sectorsVector[index].type(),
                      m_sectorsVector[index].station(), 
