@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.43 2009-06-17 11:11:11 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2009-07-24 15:08:40 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-07-24 - Chris Jones
+ - change std::map< std::string, XXX * > to 
+   GaudiUtils::HashMap< const std::string, XXX * > for faster lookups.
 
 !========================== CaloMoniDst v3r8 2009-06-17 =======================
 ! 2009-06-05 - Olivier Deschamps

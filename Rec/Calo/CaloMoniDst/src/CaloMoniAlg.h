@@ -9,6 +9,7 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "CaloUtils/Calo2Dview.h"
 #include "Kernel/CaloCellID.h"
+#include "GaudiKernel/HashMap.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -149,8 +150,8 @@ public:
 protected:
   //
   // Histogram Map
-  std::map< std::string, AIDA::IHistogram1D * > h1;
-  std::map< std::string, AIDA::IHistogram2D * > h2;
+  GaudiUtils::HashMap< const std::string, AIDA::IHistogram1D * > h1;
+  GaudiUtils::HashMap< const std::string, AIDA::IHistogram2D * > h2;
   //
 private:
   // address/location/name in Transient Store of input data container
