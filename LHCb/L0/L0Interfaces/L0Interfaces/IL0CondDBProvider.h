@@ -1,4 +1,4 @@
-// $Id: IL0CondDBProvider.h,v 1.2 2007-10-31 16:42:21 odescham Exp $
+// $Id: IL0CondDBProvider.h,v 1.3 2009-07-24 16:51:53 odescham Exp $
 #ifndef IL0CONDDBPROVIDER_H 
 #define IL0CONDDBPROVIDER_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IL0CondDBProvider ( "IL0CondDBProvider", 1, 0 );
+static const InterfaceID IID_IL0CondDBProvider ( "IL0CondDBProvider", 1, 1 );
 
 /** @class IL0CondDBProvider IL0CondDBProvider.h
  *  
@@ -27,8 +27,9 @@ public:
   virtual double scale(unsigned int base)=0;
   virtual double caloEtScale()=0;
   virtual double muonPtScale()=0;
-
-
+  virtual const std::vector<int> RAMBCID(std::string vsn)=0;
+  virtual const int RAMBCID(std::string vsn,int bcid)=0;
+  
 protected:
 
 private:
