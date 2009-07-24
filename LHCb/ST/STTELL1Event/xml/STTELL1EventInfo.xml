@@ -378,11 +378,43 @@
 	const  = "TRUE"
 	access = "PUBLIC"
 	/>
+     
 
+    <method name = "noEvent"
+       type = "bool"
+       desc = "test for event loss on link"
+       argList = "const unsigned int"
+       const = "TRUE" />
 
+       
+    <method name = "noClock"
+       type = "bool"
+       desc = "test for clock loss on link"
+       argList = "const unsigned int"
+       const = "TRUE" />
+
+      <method name = "TLKLinkLoss"
+       type = "bool"
+       desc = "test if link has link loss"
+       argList = "const unsigned int"
+       const = "TRUE" />
+
+      <method name = "syncRAMFull"
+       type = "bool"
+       desc = "test if link has synch RAM Full error"
+       argList = "const unsigned int"
+       const = "TRUE" />
+
+     <method name = "syncEvtSizeError"
+       type = "bool"
+       desc = "test if link has synch event size error"
+       argList = "const unsigned int"
+       const = "TRUE" />
+
+     
         <method name = "linkEnabled"
          type = "bool"
-         desc = "test if bit enable"
+         desc = "test if link enabled"
          argList = "const unsigned int"
          const = "TRUE" />
 

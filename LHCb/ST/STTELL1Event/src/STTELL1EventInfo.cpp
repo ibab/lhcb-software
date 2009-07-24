@@ -78,8 +78,28 @@ bool LHCb::STTELL1EventInfo::linkEnabled(const unsigned int iLink) const{
 } 
 
 bool LHCb::STTELL1EventInfo::enabled() const{
-  unsigned int testValue = OptLnkDisable();
-  return (testValue ==  (OptLnkDisableBits-1) << 5  ? false : true );
+  const unsigned int testValue = OptLnkDisable();
+  return (testValue ==  ((1 << OptLnkDisableBits) - 1)   ? false : true );
+}
+
+bool LHCb::STTELL1EventInfo::noEvent(const unsigned int iLink) const{
+  return (OptLnkNoEvt() >> iLink & 1);
+}
+
+bool LHCb::STTELL1EventInfo::noClock(const unsigned int iLink) const{
+  return (OptLnkNoClock() >> iLink & 1);
+}
+
+bool LHCb::STTELL1EventInfo::TLKLinkLoss(const unsigned int iLink) const{
+  return (tlkLnkLoss() >> iLink & 1);
+}
+
+bool LHCb::STTELL1EventInfo::syncRAMFull(const unsigned int iLink) const{
+  return (SyncRAMFull() >> iLink & 1); 
+} 
+
+bool LHCb::STTELL1EventInfo::syncEvtSizeError(const unsigned int iLink) const{
+  return (SyncEvtSizeError() >> iLink & 1);
 }
 
 // fillstream method
