@@ -1,9 +1,10 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.8 2009-04-18 23:21:43 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.9 2009-07-24 16:50:21 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
+// from LHCb
+#include "Event/ODIN.h"
 // local
 #include "L0DUEmulatorTool.h"
 
@@ -48,8 +49,10 @@ StatusCode L0DUEmulatorTool::initialize(){
   debug() << "Initialize  L0EmulatorTool" << endreq;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
-  m_decoder   = tool<IL0ProcessorDataDecoder>("L0ProcessorDataDecoder","L0ProcessorDataDecoder",this);
-  m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
+  // get tools
+  m_decoder  = tool<IL0ProcessorDataDecoder>("L0ProcessorDataDecoder","L0ProcessorDataDecoder",this);
+  m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
+  m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
   return sc;
 }
 
@@ -198,6 +201,24 @@ StatusCode L0DUEmulatorTool::fillData(){
   // ------------------------------------  
   for( LHCb::L0DUElementaryData::Map::iterator idata = dataMap.begin();idata != dataMap.end() ; idata++){
     LHCb::L0DUElementaryData* data = (*idata).second;
+    // Fill RAM(BCID)
+    const std::string dataName = data->name();
+    int index = dataName.rfind("(BCID)");
+    if( dataName.rfind("RAM") != (int) std::string::npos && index != (int) std::string::npos ){
+      std::string ram = dataName.substr(0,index);
+      // get BCID from ODIN
+      m_odin->getTime();
+      unsigned int odBX = 0;
+      if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
+        LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+        odBX = odin->bunchId();
+      }else{
+        Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ,StatusCode::SUCCESS).ignore();
+      }
+      const int ramBcid = m_condDB->RAMBCID( ram , odBX);
+      //info() << "--------------- " << odBX << " " << ram << " " << ramBcid << endmsg;
+      data->setOperand( ramBcid  , m_condDB->scale(L0DUBase::Type::Digit) , L0DUBase::RAMBCID::Max  );
+    }
     if( data->type() != LHCb::L0DUElementaryData::Compound )continue;
     StatusCode sc = dataTree(data, dataMap);
     if(sc.isFailure())return sc;

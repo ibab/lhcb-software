@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.4 2009-04-18 23:21:43 odescham Exp $
+// $Id: L0DUEmulatorTool.h,v 1.5 2009-07-24 16:50:21 odescham Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -9,6 +9,7 @@
 #include "L0Interfaces/IL0DUEmulatorTool.h"            
 #include "L0Interfaces/IL0ProcessorDataDecoder.h"
 #include "L0Interfaces/IL0CondDBProvider.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 
 /** @class L0DUEmulatorTool L0DUEmulatorTool.h
@@ -52,7 +53,7 @@ private:
   int                          m_nMu;
   IL0ProcessorDataDecoder*  m_decoder;
   IL0CondDBProvider*        m_condDB;  
+  IEventTimeDecoder*        m_odin;
   LHCb::L0DUConfig*         m_config;
-
 };
 #endif // L0DUEMULATORTOOL_H

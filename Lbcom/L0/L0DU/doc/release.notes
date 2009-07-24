@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.162 2009-06-23 12:48:33 odescham Exp $
+! $Id: release.notes,v 1.163 2009-07-24 16:50:21 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-07-24 - Olivier Deschamps
+ - implement RAMBCID data
+
 
 ! 2009-06-23 - Olivier Deschamps
  - options/ : new options for fast (partial) decoding of L0DU bank (FastDecoding.opts)

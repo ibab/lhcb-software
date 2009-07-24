@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.5 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.6 2009-07-24 16:50:21 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 // Interfaces
 #include "L0Interfaces/IL0DUConfigProvider.h"            
+#include "L0Interfaces/IL0CondDBProvider.h"
 #include "Event/L0DUBase.h"
 
 /** @class L0DUConfigProvider L0DUConfigProvider.h
@@ -113,5 +114,6 @@ private:
   std::map<std::string,int > m_conditionInputs;
   std::map<std::string,int > m_conditionNumber;
   std::map<std::string,int > m_conditionOperator;
+  IL0CondDBProvider*        m_condDB;  
 };
 #endif // L0DUCONFIGPROVIDER_H

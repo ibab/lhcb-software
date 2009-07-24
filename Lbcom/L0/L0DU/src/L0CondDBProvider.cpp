@@ -1,4 +1,4 @@
-// $Id: L0CondDBProvider.cpp,v 1.2 2007-10-31 16:42:10 odescham Exp $
+// $Id: L0CondDBProvider.cpp,v 1.3 2009-07-24 16:50:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,10 +26,11 @@ L0CondDBProvider::L0CondDBProvider( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_gain()
+    m_gain(),
+    m_cycle(3564)
 {
   declareInterface<IL0CondDBProvider>(this);
-
+  declareProperty("RAMBCID" , m_mapRam);
 }
 //=============================================================================
 // Destructor
@@ -43,6 +44,22 @@ StatusCode L0CondDBProvider::initialize(){
   if(sc.isFailure())return sc;
 
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); 
+
+  // RAM(BCID)
+  m_rams += "{|";
+  for(std::map<std::string,std::vector<int> >::iterator it = m_mapRam.begin(); m_mapRam.end() != it; ++it){
+    std::string vsn = (*it).first;
+    std::vector<int> rMap = (*it).second;
+    if( rMap.size() != m_cycle){
+      fatal() << " The RAM(BCID) vsn = '" << vsn << "' is badly defined (" << rMap.size() << "/" << m_cycle 
+              << ") elements" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
+    m_rams += vsn + "|";
+  }
+  m_rams += "}";
+  info() << "Registered RAM(BCID) versions = " << m_rams << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -69,7 +86,7 @@ double L0CondDBProvider::caloEtScale(){
   } else {
     error() << "Parameter 'L0EtBin' not found in Ecal 'Gain'" << endreq;
   }
-  debug() << "CaloEt scale set to" << caloEtScale << " MeV" << endreq;
+  debug() << "CaloEt scale set to " << caloEtScale << " MeV" << endreq;
   return caloEtScale;
 }
 
@@ -78,3 +95,25 @@ double L0CondDBProvider::muonPtScale(){
   double muonPtScale = 40.*Gaudi::Units::MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
   return muonPtScale;
 }
+
+
+const std::vector<int> L0CondDBProvider::RAMBCID(std::string vsn){
+  const std::vector<int> empty;
+  std::map<std::string,std::vector<int> >::iterator it = m_mapRam.find(vsn);
+  if( it == m_mapRam.end() ){
+    Warning("The RAM(BCID) with the requested version " + vsn + " has not been found" ).ignore();
+    return empty;
+  }
+  return (*it).second;
+}
+const int L0CondDBProvider::RAMBCID(std::string vsn,int bcid){
+  const std::vector<int>& ram = RAMBCID( vsn );
+  if( bcid+1 > (int)ram.size()){
+    std::stringstream b("");
+    b<<bcid;
+    Warning("The requested BCID = " + b.str() + " exceed the RAM(BCID) size").ignore();
+    return 0;
+  }
+  return ram[bcid];
+}
+

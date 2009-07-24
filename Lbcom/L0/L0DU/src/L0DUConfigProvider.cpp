@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.12 2009-04-10 14:53:19 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.13 2009-07-24 16:50:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -146,8 +146,10 @@ StatusCode L0DUConfigProvider::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 
-  //
-  
+  //get condDB tool
+  m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
+
+  //  
   m_separators = *(m_sepMap.begin());
   if(m_sepMap.size() != 1)
     warning() << "A single pair of separators must be defined - will use the first : " 
@@ -167,7 +169,7 @@ StatusCode L0DUConfigProvider::initialize(){
   if(m_def == "")m_def = "No Description";
   if(m_channels.size()   == 0  || 
      m_conditions.size() == 0) {
-    error() << "Incomplete description for configuration (TCK = " << m_tckopts << ")" << endreq;
+    error() << "Incomplete description for configuration (TCK = " << format("0x%04X" , m_tckopts )  << ")" << endreq;
     return StatusCode::FAILURE;  
   }
 
@@ -177,7 +179,7 @@ StatusCode L0DUConfigProvider::initialize(){
 
 
   if(sc.isFailure()){
-    fatal() << " configuring L0DU failed" << endreq;
+    fatal() << " configuring L0DU (TCK = " << format("0x%04X" , m_tckopts )  << ") failed" << endreq;
     return StatusCode::FAILURE; 
   }
   m_config->setDefinition( m_def);
@@ -511,6 +513,25 @@ StatusCode L0DUConfigProvider::createConditions(){
     std::string data =  *(values.begin()); // The dataName
 
 
+    // Special case : create RAM(BCID) data on-the-fly
+    if( data.rfind("RAM") != std::string::npos && data.rfind("(BCID)") != std::string::npos ){
+      int idData = m_dataMap.size();
+      LHCb::L0DUElementaryData* ramData = 
+        new LHCb::L0DUElementaryData(idData, LHCb::L0DUElementaryData::Constant, data, "Id" , data ) ;
+      m_dataMap[data]=ramData;
+      // TEMP
+      int ind = data.rfind("(BCID)");
+      std::string vsn = data.substr(0,ind);
+      debug() <<"RAM(BCID) L0DU DATA for RAM vsn = " << vsn << " HAS BEEN DEFINED" <<endreq;
+      //check the RAM version exists
+      const std::vector<int> ram = m_condDB->RAMBCID( vsn );
+      if( ram.size() == 0){
+        fatal() << "RAM(BCID) versions '" << vsn << "' is not registered" << endmsg;
+        return StatusCode::FAILURE;
+      }
+    }
+    
+    // Check data consistency
     LHCb::L0DUElementaryData::Map::iterator idata = m_dataMap.find( data );
     if( m_dataMap.end() == idata ){
       fatal() << " Can not set-up the '" << conditionName
@@ -520,8 +541,8 @@ StatusCode L0DUConfigProvider::createConditions(){
       info() << " The previously defined L0DU Data are : " << endreq;
       for (LHCb::L0DUElementaryData::Map::iterator idata = m_dataMap.begin() ; 
            idata != m_dataMap.end() ;idata++){
-        info() <<  " -->  "<< (*idata).second->name()  <<  endreq;
-      }    
+        info() <<  " -->  "<< (*idata).second->name()  <<  endreq; 
+      }
       return StatusCode::FAILURE;
     }
 
