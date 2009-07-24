@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-07-24 - Olivier Deschamps 
+ - CaloDigit.xml : add default location for HLT1 partial digit decoding
+
 !========================== DigiEvent v2r11p1 2009-05-28 =====================
 ! 2009-05-28 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
