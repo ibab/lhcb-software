@@ -185,8 +185,8 @@ def SetThresholds(ThresholdSettings,confs):
     @author G. Raven, P. Koppenburg
     @date 23/7/2009 (moved)
     """
+    conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
     if confs in ThresholdSettings : 
-        conf = confs()
         #print '# Found', conf.name()
         for (k,v) in ThresholdSettings[confs].iteritems() :
             # configurables have an exception for list and dict: 
