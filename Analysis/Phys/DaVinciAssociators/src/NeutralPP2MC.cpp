@@ -1,6 +1,6 @@
-// $Id: NeutralPP2MC.cpp,v 1.21 2009-01-22 16:42:05 pkoppenb Exp $
+// $Id: NeutralPP2MC.cpp,v 1.22 2009-07-24 23:08:36 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.21 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.22 $
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -144,24 +144,42 @@ StatusCode NeutralPP2MC::execute(){
     
     if ( NULL == table && NULL == linkerTable ) { continue; } // CONTINUE
     
+    int npp = 0;
     for ( ProtoParticles::const_iterator ipp = protos->begin() ; protos->end() != ipp ; ++ipp ){
       const ProtoParticle* pp = *ipp ;
       if ( 0 == pp ) { continue ; }
+      if ( msgLevel( MSG::DEBUG )
+           debug() <<"- ProtoParticle : #" << npp << " ( Context = '" << context() << "' )" << endmsg;
+      npp++;
       const Hypos& hypos = pp->calo() ;
       // loop over all hypotheses for givel protoparticle
       for ( Hypos::const_iterator ihypo = hypos.begin() ; hypos.end() != ihypo ; ++ihypo){
         const CaloHypo* hypo = *ihypo ;
         if ( 0 == hypo  ) { continue ; }                         // CONTINUE 
-        const Clusters& clusters = hypo->clusters();
+        
+        if ( msgLevel( MSG::DEBUG )
+             debug() << "  --> CaloHypo : Energy = " << hypo->e() << " : Hypothesis = " << hypo->hypothesis() << endmsg;
+             
+             const Clusters& clusters = hypo->clusters();
         for ( Clusters::const_iterator icluster = clusters.begin() ; clusters.end() != icluster ; ++icluster ){
           const CaloCluster* cluster = *icluster ;
           if ( 0 == cluster ) { continue ; }                  // CONTINUE 
+          
+          if ( msgLevel( MSG::DEBUG )
+               debug() << "   ---> CaloCluster : Energy = " << cluster->e() << endmsg;
+          
           Range range = mcTable -> relations ( cluster ) ;          
           for ( relation rel = range.begin() ; range.end() != rel ; ++rel ){
             const MCParticle* mcPart = rel->to();
             if ( 0 == mcPart ) { continue ; }              // CONTINUE 
+            
             const double weight = rel->weight() / cluster->e() ;
-            if ( NULL != table )      { table       -> relate (  pp , mcPart , weight ) ; }
+
+            if ( msgLevel( MSG::DEBUG )
+                 debug() << "    ----> MCParticle : Energy " << mcPart->momentum().e() << " : PID = " 
+                   << mcPart->particleID().pid() << " : Weight " << weight << endmsg;
+
+            if ( NULL != table )      { table       -> relate (  pp , mcPart , weight ) ; } 
             if ( NULL != linkerTable ){ linkerTable -> link   (  pp , mcPart , weight ) ; }
             
           } // end of loop over MC relations
