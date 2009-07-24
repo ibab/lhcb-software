@@ -23,6 +23,8 @@ use   TrackInterfaces 	v*	Tr
 use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
 use   PartProp          v*      Kernel
+use   STAlgorithms      v*	ST
+use   STKernel		v*	ST
 
 #============================================================================
 # Component library building rule

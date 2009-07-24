@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-07-24 J Luisier
+ - Add STEfficiency alg (works only for IT at the moment)
+
 ! 2009-07-19 M Needham 
  - Add histograms to IT/TT TrackMonitors
 
