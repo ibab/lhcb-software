@@ -18,6 +18,8 @@ use GaudiPolicy       v*
 use GaudiAlg          v*
 use ROOT              v*    LCG_Interfaces  -no_auto_imports
 
+apply_pattern disable_package_on platform=target-winxp
+
 #============================================================================
 # Includes
 #============================================================================
