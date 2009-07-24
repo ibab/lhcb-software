@@ -81,7 +81,7 @@ void ProcessMgr::timerHandler(){
     //std::string fileName = "from timerHandler";
     //int fileSize = 0;
     //m_serviceMap->write(m_saveDir, *m_pFile);
-    msg << MSG::DEBUG << "Before Save hiostograms in file: "<< m_fileName << endreq;
+    msg << MSG::DEBUG << "Before Save histograms in file: "<< m_fileName << endreq;
     write();
     msg << MSG::DEBUG << "After Save histograms in file: "<< m_fileName << endreq;
     //m_pGauchoMonitorSvc->updateAll(false);

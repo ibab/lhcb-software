@@ -15,6 +15,7 @@
 #include "Gaucho/MonRateDecoder.h"
 #include "TFile.h"
 #include "TDirectory.h"
+#include "TSystem.h"
 
 BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr): 
   m_name("BaseServiceMap"),
@@ -491,13 +492,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
     
    // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
-    std::string tmpfile = saveDir + taskName + "-" + timestr + ".root";
+    std::string tmpfile = saveDir + taskName + "/" + taskName + "-" + timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
     f = new TFile(fileName.c_str(),"create");
-
-
+    
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
       msg << MSG::DEBUG << "Term : " << it->first << " servername " << serverName << endreq;
@@ -505,8 +505,6 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       //(for the presenter) - not that slice name PARTxx
       //if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
      if(0 == it->second->monObject()) continue;
-
-      msg << MSG::DEBUG << "Term being saved: " << it->second->dimInfo()->getName() << endreq;
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
@@ -516,36 +514,36 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
           it->second->loadMonObject();
           it->second->monObject()->loadObject();
 	 // std::vector<std::string> HistoDirName;  
-	  for (int i=2;i<(int)HistoFullName.size()-1;i++) {
+	  for (int i=3;i<(int)HistoFullName.size()-1;i++) {
 	     //recreate the directory structure inside the root file before saving
              //HistoDirName keeps track of the directory names, to avoid rewriting them
-	        if (i>2) {   
+	        if (i>3) {   
 		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
-		    msg << MSG::DEBUG << "cding 1 into " << HistoFullName[i].c_str()<< endreq; 
-		    dir->cd(HistoFullName[i].c_str());}                 
+		          dir->cd(HistoFullName[i].c_str());}
 		    else {
-		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i)); 
+		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subsubdir %02d",i)); 
 		       dir->cd();
-		    }   		    
-                }		 
+		    }   	
+	        }   		    		 
 	        else {
 		  if (dir) {
 		      dir=f->GetDirectory(HistoFullName[i].c_str());
-		      msg << MSG::DEBUG << "cding 2 into " << HistoFullName[i].c_str()<< endreq; 
 		      dir->cd(HistoFullName[i].c_str());		       
 		  }    
 		  else { 
 		      if (dir=f->GetDirectory(HistoFullName[i].c_str())) {}		         
-		      else dir=f->mkdir(HistoFullName[i].c_str(),"top dir");
+		      else {
+		      dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
+		      }
 		  }   
-		}
+	        }
          }   
 	 if (dir) { 	  
-	    // dir->cd();	 
+	     dir->cd();	 
 	 }	
 	 else {	  
 	     f->cd();
-	 }
+	 }	
           it->second->monObject()->write();
 
       }
