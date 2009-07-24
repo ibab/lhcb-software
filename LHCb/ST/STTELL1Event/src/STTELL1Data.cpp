@@ -1,6 +1,7 @@
 // fillstream method
 
 #include "Event/STTELL1Data.h"
+#include "Event/STTELL1EventInfo.h"
 #include <iostream>
 
 std::ostream& LHCb::STTELL1Data::fillStream(std::ostream& s) const{
@@ -37,6 +38,19 @@ std::ostream& LHCb::STTELL1Data::fillStream(std::ostream& s) const{
   } // loop links		
   s << "########################################################################" << std::endl;
   return s;
+}
+
+std::vector<const LHCb::STTELL1EventInfo*> LHCb::STTELL1Data::validData() const{
+
+  std::vector<const LHCb::STTELL1EventInfo*> theData;
+  std::vector<unsigned int> sentPP = sentPPs(); 
+  for (std::vector<unsigned int>::const_iterator iter = m_sentPPs.begin();
+       iter != m_sentPPs.end(); ++iter){
+    const LHCb::STTELL1EventInfo* info = m_eventInfo[*iter];
+    theData.push_back(info);
+  }
+
+  return theData;
 }
 
 

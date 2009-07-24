@@ -386,6 +386,11 @@
          argList = "const unsigned int"
          const = "TRUE" />
 
+        <method name = "enabled" 
+         type = "bool"
+         desc = "true if pp has enabled links"
+         const = "TRUE" />
+ 
          <method 
           name = "fillStream"
           desc = "Print in a human readable way"

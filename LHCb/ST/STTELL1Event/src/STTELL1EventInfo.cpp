@@ -43,8 +43,9 @@ unsigned int LHCb::STTELL1EventInfo::pcnVote() const{
   
   std::map<unsigned int, unsigned int> pcns;
   for (unsigned int iLink = 0; iLink < nBeetle ; ++iLink)
-    pcns[findPCN(iLink)] += 1;     
-   
+    if (linkEnabled(iLink) == true){
+      pcns[findPCN(iLink)] += 1;     
+    } 
   // find the best
   unsigned int majorityVote = 200;
   unsigned int maxValue = 0;
@@ -70,23 +71,16 @@ bool LHCb::STTELL1EventInfo::pcnConsistency() const
   else
     return false;
 
-  /*
-    bool isConsistent(true);
-
-    isConsistent *= (pcnv == pcnBeetle0());
-    isConsistent *= (pcnv == pcnBeetle1());
-    isConsistent *= (pcnv == pcnBeetle2());
-    isConsistent *= (pcnv == pcnBeetle3());
-    isConsistent *= (pcnv == pcnBeetle4());
-    isConsistent *= (pcnv == pcnBeetle5());
-
-    return isConsistent;
-  */
 }
 
 bool LHCb::STTELL1EventInfo::linkEnabled(const unsigned int iLink) const{
-  return  (OptLnkDisable() >> iLink & 1) ;
+  return  !(OptLnkDisable() >> iLink & 1) ;
 } 
+
+bool LHCb::STTELL1EventInfo::enabled() const{
+  unsigned int testValue = OptLnkDisable();
+  return (testValue ==  (OptLnkDisableBits-1) << 5  ? false : true );
+}
 
 // fillstream method
 std::ostream& LHCb::STTELL1EventInfo::fillStream(std::ostream& s) const{

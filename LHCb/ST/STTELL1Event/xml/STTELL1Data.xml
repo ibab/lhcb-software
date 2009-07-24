@@ -80,6 +80,14 @@
         desc = 'which pp sent data'
       /> 
 
+
+     <method 
+        type =' std::vector &lt; const LHCb::STTELL1EventInfo*  &gt;'
+        name = 'validData'
+        desc = 'data from pps that are read out'
+        const = 'TRUE'
+      /> 
+     
           
        <relation 
        name="eventInfo" 
@@ -87,9 +95,7 @@
        type="LHCb::STTELL1EventInfo"
        desc= "Vector of 4 Event Info block (1 per PP)"
        />
- 
-  
-      
+     
       <method 
           name = "fillStream"
           desc = "Print in a human readable way"
