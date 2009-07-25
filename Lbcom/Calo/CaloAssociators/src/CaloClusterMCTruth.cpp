@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.8 2008-09-23 10:32:32 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.9 2009-07-25 01:06:47 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2008/09/23 10:32:32  odescham
+// remove obsolete stuff
+//
 // Revision 1.7  2008/09/23 10:00:59  odescham
 // add HLT context for cluster-MC association
 //
@@ -81,18 +84,17 @@ protected:
    *  @param name algorithm instance name 
    *  @param pSvc pointer to service locator
    */
-  CaloClusterMCTruth
-  ( const std::string& name , 
-    ISvcLocator*       pSvc ) 
+  CaloClusterMCTruth  ( const std::string& name , ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
     , m_inputRelations    ( "Relations/" + LHCb::CaloDigitLocation::Default )
     , m_outputRelations   ( )
-    , m_clusterContainers ()
-  {    // set the appropriate default values for input data (linker)
+    , m_clusterContainers ()  { 
+   // set the appropriate default values for input data (linker)
     declareProperty ( "Clusters", m_clusterContainers);
     declareProperty ( "Input"  , m_inputRelations  ) ;
     declareProperty ( "Output" , m_outputRelations ) ;
-
+    declareProperty ( "StatusFilter" , m_sFilter = LHCb::CaloDigitStatus::UseForEnergy );
+    declareProperty ( "WeightFilter" , m_wFilter = 0. );
     
     std::string out( context() );
     std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
@@ -121,6 +123,8 @@ private:
   std::string m_outputRelations ;
   typedef std::vector<std::string> Inputs ;
   Inputs      m_clusterContainers; 
+  int m_sFilter;
+  double m_wFilter;
 };
 // ============================================================================
 
@@ -153,8 +157,7 @@ StatusCode CaloClusterMCTruth::execute    ()
   Table* table = new Table( 1000 ) ;
   put( table , m_outputRelations ) ;
   
-  if ( m_inputRelations.empty() ) 
-  { return Error ( "No inputs are specified!" ) ; }
+  if ( m_inputRelations.empty() )  { return Error ( "No inputs are specified!" ) ; }
 
 
   StatusCode sc = StatusCode::SUCCESS ;
@@ -162,17 +165,14 @@ StatusCode CaloClusterMCTruth::execute    ()
   DigTable* digTable = get<DigTable> ( m_inputRelations ) ;
   
   // loop over all containers of clusters 
-  for ( Inputs::const_iterator container = m_clusterContainers.begin() ; 
-        m_clusterContainers.end() != container ; ++container ){
+  for ( Inputs::const_iterator container = m_clusterContainers.begin() ;m_clusterContainers.end() != container ; ++container ){
     
     // get the container of clusters 
     if( !exist<Clusters>( *container))  continue;
     Clusters* clusters = get<Clusters> ( *container ) ;
    
     // loop over all clusters in the container  
-    for ( Clusters::const_iterator icluster = clusters->begin() ; 
-          clusters->end() != icluster ; ++icluster ) 
-    {
+    for ( Clusters::const_iterator icluster = clusters->begin() ; clusters->end() != icluster ; ++icluster ){
       const Cluster* cluster = *icluster ;
       if ( 0 == cluster ) { continue ; }
       
@@ -182,46 +182,42 @@ StatusCode CaloClusterMCTruth::execute    ()
       // loop over all digits in the cluster and collect 
       // the links from individual  digits
       const Entries& entries = cluster->entries() ;
-      for ( Entries::const_iterator entry = entries.begin() ; 
-            entries.end() != entry ; ++entry ) 
-      {
+      for ( Entries::const_iterator entry = entries.begin() ; entries.end() != entry ; ++entry ){
+
+        if( m_sFilter >= 0 && (entry->status() & m_sFilter) == 0 ){ continue ; }
+
+
         const Digit* digit = entry->digit() ;
         if ( 0 == digit ) { continue ; }
-        
         // get all MC relations from this digit
         DigTable::Range range = digTable->relations ( digit ) ;
         // loop over all MC entries and collect the enegy 
-        for ( DigTable::iterator item = range.begin() ; 
-              range.end() != item ; ++item ) 
-        {
+        for ( DigTable::iterator item = range.begin() ;range.end() != item ; ++item ){
           const LHCb::MCParticle* particle = item -> to     () ;
           const double      energy   = item -> weight () ;
-          // accumulate the energy from the same particle 
+          // accumulate the energy from the same particle
           mcMap[particle] += energy ;
         }
       }; // end of loop over all entries in Cluster
       
-      if ( mcMap.empty() ) 
-      { Warning ( "No MC information for the cluster is found" ) ; }
+      if ( mcMap.empty() ){ Warning ( "No MC information for the cluster is found" ) ; }
       
       // loop over auxillary container of merged depositions
       // and fill relation table entries for given cluster 
-      for ( CaloMCMap::iterator imap = mcMap.begin() ; 
-            mcMap.end() != imap ; ++imap ) 
-      {
+      for ( CaloMCMap::iterator imap = mcMap.begin() ;mcMap.end() != imap ; ++imap ){
         // MC particle  
         const LHCb::MCParticle* particle = imap -> first  ;
         if ( 0 == particle  ) { continue ; }
         // its cumulative energy deposition to the cluster 
         const double      energy   = imap -> second ;
+
+        if ( cluster->e() > 0 && energy / cluster->e() < m_wFilter )continue;
+
         // fill the relation table:         ATTENTION "i_push" is used!
         table->i_push ( cluster , particle , energy ) ; // NB: "i_push"
-      } ;
-      
+      } ;      
     } ; // end of loop over clusters
-    
-  } ; // end of loop over containers of clusters 
-  
+  } ; // end of loop over containers of clusters
   // mandatory after "i_push" ;
   table->i_sort()  ;                                     // NB: "i_sort"
 
@@ -232,16 +228,11 @@ StatusCode CaloClusterMCTruth::execute    ()
   if ( table->relations().empty() ) 
   { Warning ( " The relations table '"+ m_outputRelations + "' is empty!") ; }
   
-  if ( msgLevel ( MSG::DEBUG )  ) 
-  { debug() << " Number of established relations are #"
-            << table->relations().size() << endreq ; }
+  if ( msgLevel ( MSG::DEBUG )  )  { debug() << " Number of established relations are #"
+                                             << table->relations().size() << endreq ; }
 
   return StatusCode::SUCCESS ;  
 };
-
-// ============================================================================
-// The END 
-// ============================================================================
 
 
 

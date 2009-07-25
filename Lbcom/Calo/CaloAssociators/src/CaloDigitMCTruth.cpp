@@ -1,6 +1,6 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.11 2008-10-01 15:05:46 cattanem Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.12 2009-07-25 01:06:47 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
 // ============================================================================
 // Include files 
 // ============================================================================

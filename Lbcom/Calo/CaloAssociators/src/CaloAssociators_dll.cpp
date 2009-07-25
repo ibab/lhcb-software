@@ -1,8 +1,11 @@
-// $Id: CaloAssociators_dll.cpp,v 1.1.1.1 2002-04-08 14:27:28 ibelyaev Exp $
+// $Id: CaloAssociators_dll.cpp,v 1.2 2009-07-25 01:06:47 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/04/08 14:27:28  ibelyaev
+// CaloAssociators: New package
+// 
 // ============================================================================
 // Include files
 #include "GaudiKernel/LoadFactoryEntries.h"

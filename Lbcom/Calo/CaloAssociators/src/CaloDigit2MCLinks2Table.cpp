@@ -1,8 +1,11 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.5 2006-04-06 13:26:11 odescham Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.6 2009-07-25 01:06:47 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/04/06 13:26:11  odescham
+// generic tools moved to CaloUtils
+//
 // Revision 1.4  2006/03/28 14:44:36  cattanem
 // remove checks on return code from methods that only fail with exception
 //

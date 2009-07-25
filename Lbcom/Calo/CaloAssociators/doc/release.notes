@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.56 2009-02-20 12:23:31 cattanem Exp $
+! $Id: release.notes,v 1.57 2009-07-25 01:06:47 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2009-07-24 Olivier Deschamps
+ - add CaloClusterEntry status and weight filtering in CaloClusterMCTruth.cpp : default UseForEnergy digits only and no minimal weight
 
 !===================== CaloAssociators v6r7 2009-02-20 ========================
 ! 2009-02-03 - Marco Cattaneo
