@@ -1,6 +1,6 @@
-// $Id: NeutralPP2MC.cpp,v 1.22 2009-07-24 23:08:36 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.23 2009-07-25 00:42:17 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.22 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -148,7 +148,7 @@ StatusCode NeutralPP2MC::execute(){
     for ( ProtoParticles::const_iterator ipp = protos->begin() ; protos->end() != ipp ; ++ipp ){
       const ProtoParticle* pp = *ipp ;
       if ( 0 == pp ) { continue ; }
-      if ( msgLevel( MSG::DEBUG )
+      if ( msgLevel( MSG::DEBUG ))
            debug() <<"- ProtoParticle : #" << npp << " ( Context = '" << context() << "' )" << endmsg;
       npp++;
       const Hypos& hypos = pp->calo() ;
@@ -157,7 +157,7 @@ StatusCode NeutralPP2MC::execute(){
         const CaloHypo* hypo = *ihypo ;
         if ( 0 == hypo  ) { continue ; }                         // CONTINUE 
         
-        if ( msgLevel( MSG::DEBUG )
+        if ( msgLevel( MSG::DEBUG ))
              debug() << "  --> CaloHypo : Energy = " << hypo->e() << " : Hypothesis = " << hypo->hypothesis() << endmsg;
              
              const Clusters& clusters = hypo->clusters();
@@ -165,7 +165,7 @@ StatusCode NeutralPP2MC::execute(){
           const CaloCluster* cluster = *icluster ;
           if ( 0 == cluster ) { continue ; }                  // CONTINUE 
           
-          if ( msgLevel( MSG::DEBUG )
+          if ( msgLevel( MSG::DEBUG ))
                debug() << "   ---> CaloCluster : Energy = " << cluster->e() << endmsg;
           
           Range range = mcTable -> relations ( cluster ) ;          
@@ -175,7 +175,7 @@ StatusCode NeutralPP2MC::execute(){
             
             const double weight = rel->weight() / cluster->e() ;
 
-            if ( msgLevel( MSG::DEBUG )
+            if ( msgLevel( MSG::DEBUG ))
                  debug() << "    ----> MCParticle : Energy " << mcPart->momentum().e() << " : PID = " 
                    << mcPart->particleID().pid() << " : Weight " << weight << endmsg;
 
