@@ -1,4 +1,4 @@
-// $Id: MakeMuonMeasurements.cpp,v 1.2 2009-07-06 08:13:41 cattanem Exp $
+// $Id: MakeMuonMeasurements.cpp,v 1.3 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -60,12 +60,12 @@ StatusCode MakeMuonMeasurements::execute() {
 
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>("Raw/Muon/Coords");
     
-  debug()<<"cleared m_muonProvider"<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"cleared m_muonProvider"<<endmsg;
   for (LHCb::MuonCoords::iterator it = coords->begin();
        it != coords->end(); ++it){
 
     LHCb::MuonCoord& tile = **it;
-    debug() << " MuonCoord " << tile << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << " MuonCoord " << tile << endmsg;
     LHCb::LHCbID id = LHCb::LHCbID(tile.key());
 
     int istation = id.muonID().station();
@@ -78,11 +78,12 @@ StatusCode MakeMuonMeasurements::execute() {
 
   }
   
-  for (int i = 0; i <5; i++) {
-    debug() << " measurements at station " << i <<" is "
-           << muprov->atStation(i).size() << endmsg;
-  }
-
+  if ( msgLevel(MSG::DEBUG) )
+    for (int i = 0; i <5; i++) {
+      debug() << " measurements at station " << i <<" is "
+              << muprov->atStation(i).size() << endmsg;
+    }
+  
   return StatusCode::SUCCESS;
 }
 

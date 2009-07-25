@@ -1,4 +1,4 @@
-// $Id: GetArrival.cpp,v 1.3 2009-07-07 22:02:41 polye Exp $
+// $Id: GetArrival.cpp,v 1.4 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -35,35 +35,35 @@ GetArrival::GetArrival( const std::string& type,
 
   //remove smallest amongst all probabilities for 4 stations
   declareProperty("removeSmallest", m_removeSmallest=false);
-  debug()<< "removeSmallest="<<m_removeSmallest<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "removeSmallest="<<m_removeSmallest<<endmsg;
 
   declareProperty("useFunct", m_useFunct=false);
   //use fitted functions instead of histograms
-  debug()<< "useFunct="<<m_useFunct<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "useFunct="<<m_useFunct<<endmsg;
     
   //moms for all 4 stations
   declareProperty("moms", m_moms = boost::assign::list_of (-1.));
-  debug()<< "moms="<<m_moms<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "moms="<<m_moms<<endmsg;
 
   //probs corresponding to those moms in each station
   declareProperty("probs", m_probs);
-  debug()<< "probs="<<m_probs<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "probs="<<m_probs<<endmsg;
   
   //parameter alpha in fitted curves
   declareProperty("alpha", m_alpha = boost::assign::list_of (-1.));
-  debug()<< "alpha="<<m_alpha<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "alpha="<<m_alpha<<endmsg;
   
   ////parameter beta in fitted curves
   declareProperty("beta", m_beta = boost::assign::list_of (-1.));
-  debug()<< "beta="<<m_beta<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "beta="<<m_beta<<endmsg;
 
   ////eff of muon chambers
   declareProperty("eff", m_eff=.99);
-  debug()<< "eff="<<m_eff<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "eff="<<m_eff<<endmsg;
 
   ////number of min hits for cls arr
   declareProperty("MinHits",m_minhits=2);
-  debug()<<"MinHits="<<m_minhits;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"MinHits="<<m_minhits;
 
 }
 
@@ -102,7 +102,7 @@ StatusCode GetArrival::initialize() {
       {
         //TODO: sure?
         m_init.setCode(401);
-        debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug() << "ARRIVAL TOOL NOT INITIALIZED"<<endmsg;
         // m_init.setChecked();
         return sc;
       }
@@ -112,7 +112,7 @@ StatusCode GetArrival::initialize() {
     
     //number of points per each station
     m_npoints = m_moms.size();
-    debug() << " npoints: " << m_npoints << endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug() << " npoints: " << m_npoints << endmsg;
     if ((m_probs.size()%m_npoints)!=0){
       m_init.setCode(402);
       return sc;
@@ -130,7 +130,7 @@ StatusCode GetArrival::initialize() {
         continue;
       }
       
-      debug()<<"ST="<<i<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<i<<endmsg;
       
       for (int j=0;j<m_npoints;j++){
         //int g_ind=i*m_npoints+j;
@@ -139,7 +139,7 @@ StatusCode GetArrival::initialize() {
       }
       
       //from vector build uniformer to interpolate between different moms.
-      debug() << " m_vprobs "<< i << m_vprobs[i]<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug() << " m_vprobs "<< i << m_vprobs[i]<<endmsg;
       m_functprobs.push_back(Uniformer(m_moms,m_vprobs[i]));
       
     }
@@ -171,7 +171,7 @@ StatusCode GetArrival::initialize() {
     if (countArray(type_st,4,1)>=m_minhits) m_types_st.push_back(type_st);  
   }
 
-  debug()<<"m_types_st="<<m_types_st<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"m_types_st="<<m_types_st<<endmsg;
 
   m_init.ignore();
   return sc;
@@ -207,18 +207,18 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
     double prob_st=findProbStation(st,mom);
     if (!(binary_search(sts.begin(),sts.end(),st))) prob_st=1-prob_st;    
 
-    debug()<<"ST="<<st<<",prob="<<prob_st<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<st<<",prob="<<prob_st<<endmsg;
     all_probs.push_back(prob_st);
   }
 
   //sort all probs according to value
   sort(all_probs.begin(),all_probs.end());
-  debug()<<"all_probs sorted="<<all_probs<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"all_probs sorted="<<all_probs<<endmsg;
 
   //if removeSmallest, remove smallest
   if (m_removeSmallest) all_probs.erase(all_probs.begin());
   
-  debug()<<"after removal (if removeSmallest)"<<all_probs<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"after removal (if removeSmallest)"<<all_probs<<endmsg;
 
   //calculate prod for all stored values
   for (std::vector<double>::const_iterator it=all_probs.begin();
@@ -228,7 +228,7 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
          prob*=p; 
       }
   
-  debug()<<"all_prob="<<prob<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"all_prob="<<prob<<endmsg;
   if (prob==0) return 1e-6; 
 
   return prob;
@@ -259,7 +259,7 @@ StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vec
   {                        
     if (!it->isMuon()) continue;
     int st=(*it).muonID().station();
-    debug()<<"added station "<<st<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"added station "<<st<<endmsg;
     if (!stInStations(st,sts_init)) sts_init.push_back(st);
   }
   
@@ -302,9 +302,9 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
 
 
 
-  debug()<<"sts="<<type_st<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"sts="<<type_st<<endmsg;
   parr= probTypeSt(mutrack.p(),type_st);
-  debug()<<"prob="<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"prob="<<endmsg;
   return sc;
 }
 
@@ -334,7 +334,7 @@ double GetArrival::probTypeSt(const double p, const std::vector<int>& type_st) {
   
   double pp = p4 + p3 + p2 + p1 + p0;
   
-  debug()<< "@probTypeSt: "<<type_st<<","<<p4<<","<<p3<<","<<p2<<","<<p1<<","<<p0<<","<<pp<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "@probTypeSt: "<<type_st<<","<<p4<<","<<p3<<","<<p2<<","<<p1<<","<<p0<<","<<pp<<endmsg;
   return pp;
 }
 
@@ -379,7 +379,7 @@ double GetArrival::probTypeStStation(const double p, const std::vector<int>& typ
 
   double val = PP*pow(m_eff,m-nholes)*pow((1-m_eff),nholes);
   
-  debug()
+  if (msgLevel(MSG::DEBUG) ) debug()
     <<"@probTypeStStation: "<<p<<","<<type_st<<","<<station
     <<" \np4, p3, p2, p1, pp ="<<P4<<","<<P3<<","<<P2<<","<<P1<<","<<PP
     <<" \neff, (1-eff) "<<","<<pow(m_eff,m-nholes)<<","<<pow((1-m_eff),nholes)
@@ -429,7 +429,7 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
   
   if (countArray(type_st,4,1)<m_minhits) {
     sc.setCode(412);
-    debug()<<"number of hits less than min"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"number of hits less than min"<<endmsg;
     return sc;
   }
   
@@ -452,15 +452,15 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
   }
   if (tot > ((double) 0.)) clarr = stot/tot;
   else {
-    debug()<<"tot=0, division by 0"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"tot=0, division by 0"<<endmsg;
     return sc;
   }
   
   for (unsigned int i=0; i<m_types_st.size();i++){
-    debug() << " probTypeSt " << m_types_st[i]<<","<<vals[i]<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug() << " probTypeSt " << m_types_st[i]<<","<<vals[i]<<endmsg;
   }
   
-  debug()
+  if (msgLevel(MSG::DEBUG) ) debug()
     << " currenttype_st "<<type_st<<","<<sval
     << " tot,stot,cls "<<tot<<","<<stot<<","<<clarr<<endmsg;
   

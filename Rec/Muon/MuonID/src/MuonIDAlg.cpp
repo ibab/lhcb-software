@@ -212,9 +212,11 @@ StatusCode MuonIDAlg::initialize() {
 
   info()   << "MuonIDAlg v7r0 " << endmsg;
 
-  debug()  << "==> Initialise" << endmsg;
-  debug()  << "Input tracks in: " << m_TracksPath << endmsg;
-  debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endmsg;  
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "==> Initialise" << endmsg;
+    debug()  << "Input tracks in: " << m_TracksPath << endmsg;
+    debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endmsg;  
+  }
   
   m_ntotmu=0;
   m_mullfail=0;
@@ -237,7 +239,7 @@ StatusCode MuonIDAlg::initialize() {
   m_regionOuterX.resize(m_NStation);
   m_regionInnerY.resize(m_NStation);
   m_regionOuterY.resize(m_NStation);
-
+  
   // fill local arrays of pad sizes and region sizes
   m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   int station,region;
@@ -250,142 +252,116 @@ StatusCode MuonIDAlg::initialize() {
     for(region = 0 ; region < m_NRegion ; region++ ){
       m_padSizeX[station * m_NRegion + region]=m_mudet->getPadSizeX(station,region);
       m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
-
+      
       if(m_padSizeX[station * m_NRegion + region]==0){
         return Error( "Muon Chamber Pad Size could not be retrieved !!!" );
       }
     }
   }
 
-  debug()  << "-Geometry information ----------------"<< endmsg;
-  debug()  << "Outer X M1 = " << m_regionOuterX[0] << endmsg;
-  debug()  << "Outer Y M1 = " << m_regionOuterY[0] << endmsg;
-  debug()  << "Outer X M5 = " << m_regionOuterX[4] << endmsg;
-  debug()  << "Outer Y M5 = " << m_regionOuterY[4] << endmsg;
-  debug()  << "Inner X M1 = " << m_regionInnerX[0] << endmsg;
-  debug()  << "Inner Y M1 = " << m_regionInnerY[0] << endmsg;
-  debug()  << "Inner X M5 = " << m_regionInnerX[4] << endmsg;
-  debug()  << "Inner Y M5 = " << m_regionInnerY[4] << endmsg;
-  debug()  << "stationZ M1 = " << m_stationZ[0] << endmsg;
-  debug()  << "stationZ M2 = " << m_stationZ[1] << endmsg;
-  debug()  << "stationZ M3 = " << m_stationZ[2] << endmsg;
-  debug()  << "stationZ M4 = " << m_stationZ[3] << endmsg;
-  debug()  << "stationZ M5 = " << m_stationZ[4] << endmsg;
-  debug()  << "--------------------------------------"<< endmsg;
-
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "-Geometry information ----------------"<< endmsg;
+    debug()  << "Outer X M1 = " << m_regionOuterX[0] << endmsg;
+    debug()  << "Outer Y M1 = " << m_regionOuterY[0] << endmsg;
+    debug()  << "Outer X M5 = " << m_regionOuterX[4] << endmsg;
+    debug()  << "Outer Y M5 = " << m_regionOuterY[4] << endmsg;
+    debug()  << "Inner X M1 = " << m_regionInnerX[0] << endmsg;
+    debug()  << "Inner Y M1 = " << m_regionInnerY[0] << endmsg;
+    debug()  << "Inner X M5 = " << m_regionInnerX[4] << endmsg;
+    debug()  << "Inner Y M5 = " << m_regionInnerY[4] << endmsg;
+    debug()  << "stationZ M1 = " << m_stationZ[0] << endmsg;
+    debug()  << "stationZ M2 = " << m_stationZ[1] << endmsg;
+    debug()  << "stationZ M3 = " << m_stationZ[2] << endmsg;
+    debug()  << "stationZ M4 = " << m_stationZ[3] << endmsg;
+    debug()  << "stationZ M5 = " << m_stationZ[4] << endmsg;
+    debug()  << "--------------------------------------"<< endmsg;
+  }
+  
   if( m_MomentumCuts.empty() ||
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion ||
       m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion ||
       m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion ||
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion
-      ){
-    err() << "MuonIDAlg:: OPTIONS initialising MuonID are missing"
-          << " or wrong size for " << m_NStation << " stations and "
-          << m_NRegion << " regions"
-          << endmsg;
-    return StatusCode::FAILURE;
+      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion){ 
+    return Error(format("OPTIONS initialising MuonID are missing or wrong size for %d stations and %d regions", 
+                        m_NStation, m_NRegion));
+    
   }
   
-  if( m_MomentumCuts.size() != 2 ){
-    err()
-      << "MuonIDAlg:: OPTIONS are wrong:"
-      << " size of MomentumCuts vector is not correct"
-      << endmsg;
-    return StatusCode::FAILURE;
+  if( m_MomentumCuts.size() != 2 ) return Error(" OPTIONS are wrong: size of MomentumCuts vector is not correct");
+  
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "MuonIDAlg::  Momentum bins are (MeV/c) " <<endmsg;
+    debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endmsg;
   }
   
-  debug()  << "MuonIDAlg::  Momentum bins are (MeV/c) " <<endmsg;
-  debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endmsg;
-
   std::vector<double>::const_iterator iMom;
-  for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
-    debug()  << "Mom. cuts = " << *iMom << endmsg ;
+  if (msgLevel(MSG::DEBUG) ){
+    for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
+      debug()  << "Mom. cuts = " << *iMom << endmsg ;
+    }
   }
-
-  if( m_distPion.size() != 9 || m_distMuon.size() != 9){
-    err() << "MuonIDAlg:: OPTIONS are wrong:"
-          <<" size of m_distPion or m_distMuon vector is not correct"
-          << endmsg;
-    return StatusCode::FAILURE;
-  }
+  
+  
+  if( m_distPion.size() != 9 || m_distMuon.size() != 9) 
+    return Error("OPTIONS are wrong: size of m_distPion or m_distMuon vector is not correct");
   
   //  Load MeasurementProvider Tool
   m_Chi2MuIDTool  = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
-
+  
   // GL&SF: Check that Landaus parameters are properly uploaded:
   m_parLandauMu = 6;
   m_parLandauNonMu = 3;
-
+  
   if( m_MuLanParR1_1.size() != m_parLandauMu || m_MuLanParR1_2.size() != m_parLandauMu || 
       m_MuLanParR1_3.size() != m_parLandauMu || m_MuLanParR1_4.size() != m_parLandauMu || 
       m_MuLanParR1_5.size() != m_parLandauMu || m_MuLanParR1_6.size() != m_parLandauMu ||
-      m_MuLanParR1_5.size() != m_parLandauMu )
-      {
-    err() << "OPTIONS initialising Landau Parameters for muons in R1 are missing" << endmsg;
-    return StatusCode::FAILURE;
+      m_MuLanParR1_5.size() != m_parLandauMu ) {
+    return Error("OPTIONS initialising Landau Parameters for muons in R1 are missing");
   }
   if( m_MuLanParR2_1.size() != m_parLandauMu || m_MuLanParR2_2.size() != m_parLandauMu || 
       m_MuLanParR2_3.size() != m_parLandauMu || m_MuLanParR2_4.size() != m_parLandauMu || 
-      m_MuLanParR2_5.size() != m_parLandauMu )
-      {
-    err() << "OPTIONS initialising Landau Parameters for muons in R2 are missing" << endmsg;
-    return StatusCode::FAILURE;
+      m_MuLanParR2_5.size() != m_parLandauMu ) {
+    return Error("OPTIONS initialising Landau Parameters for muons in R2 are missing");
   }
   if( m_MuLanParR3_1.size() != m_parLandauMu || m_MuLanParR3_2.size() != m_parLandauMu || 
       m_MuLanParR3_3.size() != m_parLandauMu || m_MuLanParR3_4.size() != m_parLandauMu || 
-      m_MuLanParR3_5.size() != m_parLandauMu )
-      {
-    err() << "OPTIONS initialising Landau Parameters for muons in R3 are missing" << endmsg;
-    return StatusCode::FAILURE;
+      m_MuLanParR3_5.size() != m_parLandauMu ){
+    return Error("OPTIONS initialising Landau Parameters for muons in R3 are missing");
   }
   if( m_MuLanParR4_1.size() != m_parLandauMu || m_MuLanParR4_2.size() != m_parLandauMu || 
       m_MuLanParR4_3.size() != m_parLandauMu || m_MuLanParR4_4.size() != m_parLandauMu || 
-      m_MuLanParR4_5.size() != m_parLandauMu )
-      {
-    err() << "OPTIONS initialising Landau Parameters for muons in R4 are missing" << endmsg;
-    return StatusCode::FAILURE;
+      m_MuLanParR4_5.size() != m_parLandauMu ) {
+    return Error("OPTIONS initialising Landau Parameters for muons in R4 are missing");
   }
-
+  
   if( m_NonMuLanParR1.size() != m_parLandauNonMu || m_NonMuLanParR2.size() != m_parLandauNonMu || 
-      m_NonMuLanParR3.size() != m_parLandauNonMu || m_NonMuLanParR4.size() != m_parLandauNonMu )
-      {
-    err() << "OPTIONS initialising Landau Parameters for non-muons are missing" << endmsg;
-    return StatusCode::FAILURE;
+      m_NonMuLanParR3.size() != m_parLandauNonMu || m_NonMuLanParR4.size() != m_parLandauNonMu ) {
+    return Error("OPTIONS initialising Landau Parameters for non-muons are missing");
   }
 
   // GL&SF: Check bin size:
   if( (m_MupBinsR1.size()!=(unsigned)m_nMupBinsR1) || (m_MupBinsR2.size()!=(unsigned)m_nMupBinsR2) ||
       (m_MupBinsR3.size()!=(unsigned)m_nMupBinsR3) || (m_MupBinsR4.size()!=(unsigned)m_nMupBinsR4)){
-    err() << "OPTIONS initialising momentum bins for muons are missing" << endmsg;
-    return StatusCode::FAILURE;
+    return Error("OPTIONS initialising momentum bins for muons are missing");
   }
-
+  
   // GL&SF: Check that dll flag is properly set:
   if (m_dllFlag==0) info() << " -----> DLL standard (old method) " << endmsg;
   if (m_dllFlag==1) info() << " -----> DLL  new (binned-integrated method) " << endmsg;
   
-  if (m_dllFlag<0 || m_dllFlag>1) {
-    err() << "DLL flag set to a not existing value:" << endmsg;
-    err() << "allowed values are: 0=DLL old, 1=DLL integrated" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (m_dllFlag<0 || m_dllFlag>1) 
+    return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated");
   
   // GL&SF: Check that parameters of the integral are fine
-  if ((int)(m_x*m_nMax) !=800) {
-    err() << "DLL integral cannot be calculated, parameters are wrong: x, N "<<m_x <<","<< m_nMax << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-
+  if ((int)(m_x*m_nMax) !=800) return Error(format("DLL integral cannot be calculated, parameters are wrong: x, N %8.3f, %8.3f",
+                                                   m_x,m_nMax));
+  
   // GL&SF: Calculate Landaus normalizations:
   StatusCode sc2 = calcLandauNorm();
-  if ( sc2.isFailure() ) {
-    err() << " Normalizations of Landaus not properly set " << endmsg;
-    return sc2;
-  }
-
+  if ( sc2.isFailure() ) return Error(" Normalizations of Landaus not properly set ",sc2);
+  
   return StatusCode::SUCCESS;
 }
 
@@ -394,7 +370,7 @@ StatusCode MuonIDAlg::initialize() {
 //=============================================================================
 StatusCode MuonIDAlg::execute() {
 
-  debug()  << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()  << "==> Execute" << endmsg;
   m_nmu = 0;
 
   StatusCode sc = fillCoordVectors();
@@ -403,11 +379,9 @@ StatusCode MuonIDAlg::execute() {
   }
   
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
-  if ( trTracks==0 ){
-    err() << " Cannot retrieve Tracks " << endmsg;
-    return StatusCode::FAILURE;
-  }
-  debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endmsg;
+  if ( trTracks==0 ) return Error(" Cannot retrieve Tracks ");
+
+  if (msgLevel(MSG::DEBUG) ) debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endmsg;
   
   LHCb::MuonPIDs * pMuids = new LHCb::MuonPIDs();
   LHCb::Tracks * mutracks = new LHCb::Tracks();
@@ -464,21 +438,23 @@ StatusCode MuonIDAlg::execute() {
   }  // loop over tracks
 
   // Debug : muon identification event summary
-  debug()  << "MuonIDAlg:: Number of MuonPID objects created: " << pMuids->size()
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "MuonIDAlg:: Number of MuonPID objects created: " << pMuids->size()
            << endmsg;
-  debug()  << "MuonIDAlg:: Number of tracks with IsMuonLoose = True : " << m_nmu
+    debug()  << "MuonIDAlg:: Number of tracks with IsMuonLoose = True : " << m_nmu
            << endmsg;
+  }
   m_ntotmu += m_nmu;
 
   // Register the MuonIDs container to the TES
   put(pMuids,m_MuonPIDsPath);
   // Register the PIDTracks container to the TES
   put(mutracks,m_MuonTracksPath);
-  debug()  << "execute:: Muon Tracks registered  " << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: Muon Tracks registered  " << endmsg;
   // Register the PIDTracksIsMuonLoose container to the TES
   if (m_DoAllMuonTracks) put(mutracks_all,m_MuonTracksPathAll);
   else delete mutracks_all;
-  debug()  << "execute:: All Muon Tracks registered or deleted " << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: All Muon Tracks registered or deleted " << endmsg;
 
   clearCoordVectors();
 
@@ -490,9 +466,11 @@ StatusCode MuonIDAlg::execute() {
 //=============================================================================
 StatusCode MuonIDAlg::finalize() {
 
-  debug()  << "==> Finalize" << endmsg;
-  debug()  << "==> Total number of tracks with IsMuon=1 : " <<
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "==> Finalize" << endmsg;
+    debug()  << "==> Total number of tracks with IsMuon=1 : " <<
     m_ntotmu << endmsg;
+  }
   info()  << "==> Total number of tracks with IsMuon=1 failing likelihood (p<0): " <<
     m_mullfail << endmsg;
 
@@ -510,10 +488,7 @@ StatusCode MuonIDAlg::fillCoordVectors(){
 
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
-  if ( coords==0 ) {
-    err() << " Cannot retrieve MuonCoords " << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if ( coords==0 ) return Error(" Cannot retrieve MuonCoords ");
 
   // loop over the coords
   LHCb::MuonCoords::const_iterator iCoord;
@@ -540,9 +515,10 @@ StatusCode MuonIDAlg::fillCoordVectors(){
 // 23-5-2009
 //=====================================
 StatusCode MuonIDAlg::find_LandauParam(const double& p,const std::vector<int>& trackRegion, double *parMu, double *parNonMu){
-
-  // Regions are defined in M2 (projective geometry).
-  if (trackRegion[1]==0){//Region 1
+  // Track region is defined in M2 or M3
+  int region=trackRegion[1]; // M2 
+  if (region<0) region=trackRegion[2]; // M3 
+  if (region==0){//Region 1
     if (p>m_PreSelMomentum && p<m_MupBinsR1[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_1[i]; } } 
     if (p>m_MupBinsR1[0] && p<m_MupBinsR1[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_2[i]; } } 
     if (p>m_MupBinsR1[1] && p<m_MupBinsR1[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_3[i]; } } 
@@ -551,33 +527,31 @@ StatusCode MuonIDAlg::find_LandauParam(const double& p,const std::vector<int>& t
     if (p>m_MupBinsR1[4] && p<m_MupBinsR1[5]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_6[i]; } }
     if (p>m_MupBinsR1[5]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_7[i]; } }
     for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR1[i]; }
-  }else if (trackRegion[1]==1){// Region 2
+  }else if (region==1){// Region 2
     if (p>m_PreSelMomentum  && p<m_MupBinsR2[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_1[i]; } } 
     if (p>m_MupBinsR2[0] && p<m_MupBinsR2[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_2[i]; } } 
     if (p>m_MupBinsR2[1] && p<m_MupBinsR2[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_3[i]; } } 
     if (p>m_MupBinsR2[2] && p<m_MupBinsR2[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_4[i]; } } 
     if (p>m_MupBinsR2[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR2_5[i]; } } 
     for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR2[i]; } 
-  }else if (trackRegion[1]==2){// Region 3
+  }else if (region==2){// Region 3
     if (p>m_PreSelMomentum  && p<m_MupBinsR3[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_1[i]; } } 
     if (p>m_MupBinsR3[0] && p<m_MupBinsR3[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_2[i]; } } 
     if (p>m_MupBinsR3[1] && p<m_MupBinsR3[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_3[i]; } } 
     if (p>m_MupBinsR3[2] && p<m_MupBinsR3[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_4[i]; } } 
     if (p>m_MupBinsR3[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR3_5[i]; } } 
     for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR3[i]; } 
-  }else if (trackRegion[1]==3){// Region 4
+  }else if (region==3){// Region 4
     if (p>m_PreSelMomentum  && p<m_MupBinsR4[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_1[i]; } } 
     if (p>m_MupBinsR4[0]  && p<m_MupBinsR4[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_2[i]; } } 
     if (p>m_MupBinsR4[1]  && p<m_MupBinsR4[2]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_3[i]; } }
     if (p>m_MupBinsR4[2]  && p<m_MupBinsR4[3]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_4[i]; } }
     if (p>m_MupBinsR4[3] ) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR4_5[i]; } } 
     for (int i=0;i<3;i++){parNonMu[i] = m_NonMuLanParR4[i]; }
-  }else{
-    err() << " Not valid region " << endmsg;
-    return StatusCode::FAILURE;
-  }
+  } else return Error(" Not valid region ");
   return StatusCode::SUCCESS;
 }
+
 
 
 //=============================================================================
@@ -614,7 +588,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    
   // OK: track failed preselection say so and return
    if(!passed){
-     debug() << " Track failed preselection " << endmsg;
+     if (msgLevel(MSG::DEBUG) ) debug() << " Track failed preselection " << endmsg;
      return StatusCode::SUCCESS;
    }
    
@@ -647,7 +621,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
      if (m_occupancy[ist]>0) stations.push_back(ist);
    }
  
-   debug()<<"stations="<<stations<<endmsg;
+   if (msgLevel(MSG::DEBUG) ) debug()<<"stations="<<stations<<endmsg;
    //bool myIsMuon = IsMuon(stations,m_MomentumPre);
    //bool myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);
 
@@ -655,8 +629,10 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    bool myIsMuon = IsMuon(stations,m_MomentumPre,w);
    bool myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre,w);
 
-   debug()<<"myIsMuon="<<myIsMuon<<endmsg;
-   debug()<<"myIsMuonLoose="<<myIsMuonLoose<<endmsg;
+   if (msgLevel(MSG::DEBUG) ) {
+     debug()<<"myIsMuon="<<myIsMuon<<endmsg;
+     debug()<<"myIsMuonLoose="<<myIsMuonLoose<<endmsg;
+   }
    
 
    int station;
@@ -666,19 +642,19 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
    
    // calculate MuProb
    double MuProb = calcMuProb( pMuid );
-   debug()  << "MuProb= " << MuProb <<endmsg;
+   if (msgLevel(MSG::DEBUG) ) debug()  << "MuProb= " << MuProb <<endmsg;
    
    // calculate Muon DLL
    if(m_dllFlag == 0){   //  (old Erica&Miriam code):
      sc = calcMuonLL( pMuid );
+     if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL failed (P<0) to MuonPID object " << pMuid << endmsg;
      if(sc.isFailure()){
-       warning() << " calcMuonLL failed (P<0) to MuonPID object " << pMuid << endmsg;
        if (myIsMuonLoose) m_mullfail++; 
      }
    }  else {             // DLL with distance+integral:
      sc = calcMuonLL_dist(pMuid,m_MomentumPre); 
      if(sc.isFailure()){
-       warning() << " calcMuonLL(binned) failed (P<0) to MuonPID object " << pMuid << endmsg;
+       if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL(binned) failed (P<0) to MuonPID object " << pMuid << endmsg;
        if (myIsMuonLoose) m_mullfail++; 
      }
    }
@@ -687,13 +663,15 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
   //increment number of IsMuonLoose=true tracks for monitoring
   if(pMuid->IsMuonLoose()) m_nmu++;
 
-  debug()  << "IsMuonLoose = " << pMuid->IsMuonLoose() 
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "IsMuonLoose = " << pMuid->IsMuonLoose() 
            << " bin = "   << momentumBin <<" " << " p = " << m_MomentumPre << endmsg; 
-  debug()  << " coord in FOI ("; 
-  for(station = 0; station < m_NStation ; station++ ){
-    debug() << m_occupancy[station] << "," ;
+    debug()  << " coord in FOI ("; 
+    for(station = 0; station < m_NStation ; station++ ){
+      debug() << m_occupancy[station] << "," ;
+    }
+   debug() << ")" << endmsg;
   }
-  debug() << ")" << endmsg;
   
   return StatusCode::SUCCESS;
  }
@@ -734,11 +712,13 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
 
   P_weights(p,w);
 
-  debug()<<"IsMuon"<<endmsg;
-  debug()<<"pr1="<<pr1<<endmsg;
-  debug()<<"pr2="<<pr2<<endmsg;
-  debug()<<"pr3="<<pr3<<endmsg;
-  debug()<<"IsMuon p="<<mom<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"IsMuon"<<endmsg;
+    debug()<<"pr1="<<pr1<<endmsg;
+    debug()<<"pr2="<<pr2<<endmsg;
+    debug()<<"pr3="<<pr3<<endmsg;
+    debug()<<"IsMuon p="<<mom<<endmsg;
+  }
   
   if (mom>pr1 && mom<pr2)
   {
@@ -773,16 +753,20 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
   std::vector<int> vstations_rel1 = boost::assign::list_of(1)(2)(3);
   std::vector<int> vstations_rel2 = boost::assign::list_of(1)(2)(3)(4);
 
-  debug()<<"vstations_rel1"<<vstations_rel1<<endmsg;
-  debug()<<"vstations_rel2"<<vstations_rel2<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"vstations_rel1"<<vstations_rel1<<endmsg;
+    debug()<<"vstations_rel2"<<vstations_rel2<<endmsg;
+  }
   
   const double pr1=m_PreSelMomentum;
   const double pr2=m_MomentumCuts[0];
 
-  debug()<<"IsMuonLoose"<<endmsg;
-  debug()<<"pr1="<<pr1<<endmsg;
-  debug()<<"pr2="<<pr2<<endmsg;
-  debug()<<"p IsMuonLoose="<<mom<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"IsMuonLoose"<<endmsg;
+    debug()<<"pr1="<<pr1<<endmsg;
+    debug()<<"pr2="<<pr2<<endmsg;
+    debug()<<"p IsMuonLoose="<<mom<<endmsg;
+  }
 
   P_weights(mom,w);
 
@@ -795,7 +779,7 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
       int ist = *it;
       if (stInStations(ist,vstations_rel1)&& w[ist]) j+=1;
     }
-    debug()<<"first bin, j="<<j<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"first bin, j="<<j<<endmsg;
     if (j>1) return true;
   }
    
@@ -808,7 +792,7 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
       int ist = *it;
       if (stInStations(ist,vstations_rel2)&& w[ist]) j+=1;
     }
-    debug()<<"second bin, j="<<j<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"second bin, j="<<j<<endmsg;
     if (j>2) return true;
   }
   return false;
@@ -819,7 +803,7 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
 //=============================================================================
 void MuonIDAlg::P_weights(const double& p, bool *w){
 
-  debug() <<" Weights for momentum dependance "<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug() <<" Weights for momentum dependance "<<endmsg;
 
   for(int i=0;i<5;i++){ w[i]=0;}
 
@@ -925,36 +909,33 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
-  if (myDist<=0) {
-    err() <<" Closest Distance < 0 " << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (myDist<=0) return Error(" Closest Distance < 0 ");
+  
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=myDist;
 
   // Region of the track extrapolated:
   for (int sta=0;sta<m_NStation; sta++){
     trackRegion[sta] = findTrackRegion(sta);
-    if (trackRegion[sta]<0){
-      err() << " Track extrapolation in station " << sta << " gives not-existent region " << endmsg;
-      return StatusCode::FAILURE;
-    }
+    if (trackRegion[sta]<0 && msgLevel(MSG::DEBUG) ) 
+      debug() << format(" Track extrapolation in station %d gives not-existent region ",sta)
+              << endmsg;
   }
+  
 
   // Find Landau's parameters for a given track:
   StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
-  if (sc.isFailure()){
-    err() <<" Find Landau Parameters: no valid region" << endmsg;
-    return sc;  
+  if (sc.isFailure()) {
+    return Error(" Find Landau Parameters: no valid region",sc);
   }
   
 
   // Calculate Prob(mu) and Prob(non-mu) for a given track;
   ProbMu = calc_ProbMu(myDist, parMu);
-  if (ProbMu<0) return StatusCode::FAILURE;
+  if (ProbMu<0) return Error("ProbMu <0", StatusCode::FAILURE); 
 
   ProbNonMu = calc_ProbNonMu(myDist, parNonMu);
-  if (ProbNonMu<0) return StatusCode::FAILURE;
+  if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
 
   // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
@@ -1041,7 +1022,7 @@ StatusCode MuonIDAlg::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pM
   }
 
   double dist1 = m_dist;
-  debug()  << " mdist 1=  " << m_dist << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()  << " mdist 1=  " << m_dist << endmsg;
 
   // loop over the muonIDs
   LHCb::MuonPIDs::const_iterator iMuon;
@@ -1061,7 +1042,7 @@ StatusCode MuonIDAlg::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pM
       }
 
       double dist2 = m_dist;
-      debug()  << " mdist 2=  " << m_dist << endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()  << " mdist 2=  " << m_dist << endmsg;
       // the muonID which gets the number of shared hits is the one
       // which has the biggest dist
       if( dist2 < dist1 ) {
@@ -1074,7 +1055,7 @@ StatusCode MuonIDAlg::calcSharedHits( LHCb::MuonPID* muonid, LHCb::MuonPIDs * pM
       }
     }
   }
-  debug()  << "nShared=  " <<  muonid->nShared() << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()  << "nShared=  " <<  muonid->nShared() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -1162,8 +1143,10 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
   // calculate the square of the distances
   int nstn = 0;
   for( int stn = 0 ; stn < 5 ; stn++ ){
-    debug()  << " mCoordDX =  " << stn << mCoordDX[stn] << endmsg;
-    debug()  << " mCoordDY =  " << stn << mCoordDY[stn] << endmsg;
+    if (msgLevel(MSG::DEBUG) ) {
+      debug()  << " mCoordDX =  " << stn << mCoordDX[stn] << endmsg;
+      debug()  << " mCoordDY =  " << stn << mCoordDY[stn] << endmsg;
+    }
     if ( mCoordDX[stn] != 0. ) {
       nstn++;
       m_dist += mCoordDX[stn]*mCoordDX[stn] + mCoordDY[stn]*mCoordDY[stn];
@@ -1191,10 +1174,12 @@ StatusCode MuonIDAlg::preSelection(LHCb::MuonPID * pMuid, bool &passed){
   }
   pMuid->setInAcceptance(1);
   // in first and last station acceptance
-  debug()  << "trackX0 = " << m_trackX[0] << endmsg;
-  debug()  << "trackX4 = " << m_trackX[4] << endmsg;
-  debug()  << "trackY0 = " << m_trackY[0] << endmsg;
-  debug()  << "trackY4 = " << m_trackY[4] << endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()  << "trackX0 = " << m_trackX[0] << endmsg;
+    debug()  << "trackX4 = " << m_trackX[4] << endmsg;
+    debug()  << "trackY0 = " << m_trackY[0] << endmsg;
+    debug()  << "trackY4 = " << m_trackY[4] << endmsg;
+  }
   if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[0] &&
           fabs(m_trackY[0]) <  m_regionOuterY[0] )  ||
        ! (fabs(m_trackX[m_NStation-1]) <
@@ -1255,12 +1240,14 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
 
-            debug()  << "FOIfactor : " << m_foifactor << endmsg;
+            if (msgLevel(MSG::DEBUG) ) {
+	      debug()  << "FOIfactor : " << m_foifactor << endmsg;
 
-            debug()  << "ratioX = " << fabs( x - m_trackX[station])
+	      debug()  << "ratioX = " << fabs( x - m_trackX[station])
                      << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = "
                      << foiXDim <<" foiYDim = " << foiYDim <<endmsg;
-            debug()  << "padX = " << dx << " padY = " << dy << endmsg;
+	      debug()  << "padX = " << dx << " padY = " << dy << endmsg;
+	    }
 
             // it is in the window
             // add the hit to the MuonPID
@@ -1513,7 +1500,7 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
     } 
   }
   if(parNonMu[2]>0){
-    debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
     return Prob = Prob/parNonMu[2];  
   }else{
     warning() << "ProbNonMu: normalization out of control " << endmsg;
@@ -1540,58 +1527,37 @@ StatusCode MuonIDAlg::calcLandauNorm(){
   //===================
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_1[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin1 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }  
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin1 out of control");
   m_MuLanParR1_1[5] = Norm;
-
+  
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_2[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin2 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin2 out of control");
   m_MuLanParR1_2[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_3[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin3 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin3 out of control");
   m_MuLanParR1_3[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_4[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin4 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin4 out of control");
   m_MuLanParR1_4[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_5[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin5 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin5 out of control");
   m_MuLanParR1_5[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_6[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin6 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin6 out of control");
   m_MuLanParR1_6[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR1_7[i];}  
   Norm = calcNorm(par);
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R1 bin7 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin7 out of control");
   m_MuLanParR1_7[5] = Norm;
 
   //====================
@@ -1600,42 +1566,27 @@ StatusCode MuonIDAlg::calcLandauNorm(){
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR2_1[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R2 bin1 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin1 out of control");
   m_MuLanParR2_1[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR2_2[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R2 bin2 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin2 out of control");
   m_MuLanParR2_2[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR2_3[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R2 bin3 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin3 out of control");
   m_MuLanParR2_3[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR2_4[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R2 bin4 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin4 out of control");
   m_MuLanParR2_4[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR2_5[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R2 bin5 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin5 out of control");
   m_MuLanParR2_5[5] = Norm;
 
   //====================
@@ -1644,42 +1595,27 @@ StatusCode MuonIDAlg::calcLandauNorm(){
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR3_1[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R3 bin1 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin1 out of control");
   m_MuLanParR3_1[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR3_2[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R3 bin2 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin2 out of control");
   m_MuLanParR3_2[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR3_3[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R3 bin3 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin3 out of control");
   m_MuLanParR3_3[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR3_4[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R3 bin4 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin4 out of control");
   m_MuLanParR3_4[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR3_5[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R3 bin5 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin5 out of control");
   m_MuLanParR3_5[5] = Norm;
 
   //====================
@@ -1687,42 +1623,27 @@ StatusCode MuonIDAlg::calcLandauNorm(){
   //====================
   for(int i=0;i<5;i++){par[i]=m_MuLanParR4_1[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R4 bin1 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin1 out of control");
   m_MuLanParR4_1[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR4_2[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R4 bin2 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin2 out of control");
   m_MuLanParR4_2[5] = Norm;
-
+  
   for(int i=0;i<5;i++){par[i]=m_MuLanParR4_3[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R4 bin3 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin3 out of control");
   m_MuLanParR4_3[5] = Norm;
 
   for(int i=0;i<5;i++){par[i]=m_MuLanParR4_4[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R4 bin4 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin4 out of control");
   m_MuLanParR4_4[5] = Norm;
-
+  
   for(int i=0;i<5;i++){par[i]=m_MuLanParR4_5[i];}  
   Norm = calcNorm(par);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Muon R4 bin5 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin5 out of control");
   m_MuLanParR4_5[5] = Norm;
 
 
@@ -1732,36 +1653,24 @@ StatusCode MuonIDAlg::calcLandauNorm(){
 
   for(int i=0;i<3;i++){parnmu[i]=m_NonMuLanParR1[i];}  
   Norm = calcNorm_nmu(parnmu);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Non-Muon R1 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0) return Error("normalization of Non-Muon R1 out of control");
   m_NonMuLanParR1[2] = Norm;
-
+  
   for(int i=0;i<3;i++){parnmu[i]=m_NonMuLanParR2[i];}  
   Norm = calcNorm_nmu(parnmu);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Non-Muon R2 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0)  return Error("normalization of Non-Muon R2 out of control");
   m_NonMuLanParR2[2] = Norm;
-
+  
   for(int i=0;i<3;i++){parnmu[i]=m_NonMuLanParR3[i];}  
   Norm = calcNorm_nmu(parnmu);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Non-Muon R3 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0)  return Error("normalization of Non-Muon R3 out of control");
   m_NonMuLanParR3[2] = Norm;
-
+  
   for(int i=0;i<3;i++){parnmu[i]=m_NonMuLanParR4[i];}  
   Norm = calcNorm_nmu(parnmu);  
-  if (Norm<0 || Norm==0){
-    err() << "normalization of Non-Muon R4 out of control" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if (Norm<0 || Norm==0)  return Error("normalization of Non-Muon R4 out of control");
   m_NonMuLanParR4[2] = Norm;
-
+  
   return StatusCode::SUCCESS;
   
 }
@@ -1770,10 +1679,10 @@ StatusCode MuonIDAlg::calcLandauNorm(){
 double MuonIDAlg::calcNorm(double *par){
 //=====================================================================
 // comment: Calculate Normalizations for muons
-// authors: G. Lanfranchi & S. Furcas, 
+// authors: G. Lanfranchi & S. Furcas,
 // date:    10/5/09
 //=====================================================================
-
+  
   double Norm = 0.;
   double landau1 = 0;
   double landau2 = 0;
@@ -1820,14 +1729,8 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
   // get state closest to M1 for extrapolation
   const LHCb::State * state = &(pTrack->closestState(9450.));
 
-  if(!state1){
-    err() << " Failed to get 1st state from track " << endmsg;
-    return StatusCode::FAILURE;
-  }
-  if(!state){
-    err() << " Failed to get state from track " << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if(!state1) return Error(" Failed to get 1st state from track ");
+  if(!state)  return Error(" Failed to get state from track ");
 
   // get the momentum (MeV/c)
   m_Momentum = state->p();
@@ -1928,14 +1831,14 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
     ids_init.push_back(id);
   }
   
-  debug()<<"ids ready to get chi2"<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"ids ready to get chi2"<<endmsg;
   
   double Quality=-1;
   if (m_FindQuality) {  
     // get chi2 value    
     LHCb::Track mtrack_partial;
     bool isMuonCandidate=false;
-    debug()<<"m_Chi2MuIDTool="<<m_Chi2MuIDTool<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"m_Chi2MuIDTool="<<m_Chi2MuIDTool<<endmsg;
     if (!ids_init.empty()) {      
       StatusCode sc = m_Chi2MuIDTool-> muonCandidate(*mother, mtrack_partial,
                                                      isMuonCandidate,ids_init);
@@ -1943,23 +1846,28 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
         std::vector<LHCb::LHCbID>::const_iterator id;
         for(id = mtrack_partial.lhcbIDs().begin() ; 
             id !=  mtrack_partial.lhcbIDs().end() ; id++){
-          debug()<< "id is muon? "<<id->isMuon()<<endmsg;
-          if (id->isMuon()) debug()<< "id station  " 
-                                   << id->muonID().station()<<endmsg;
-          debug()<< "id channelID="<< id->channelID()<<endmsg;
+          if (msgLevel(MSG::DEBUG) ) debug()<< "id is muon? "<<id->isMuon()<<endmsg;
+          if (id->isMuon()) {
+            if (msgLevel(MSG::DEBUG) ) debug()<< "id station  " 
+                                              << id->muonID().station()<<endmsg;
+          }
+          
+          if (msgLevel(MSG::DEBUG) ) debug()<< "id channelID="<< id->channelID()<<endmsg;
         }
         
         StatusCode sc2 = m_Chi2MuIDTool->muonQuality(mtrack_partial,Quality);
         if (!sc2.isFailure()) {
-          debug()<<"\t Quality="<< Quality<<endmsg;
+          if (msgLevel(MSG::DEBUG) ) debug()<<"\t Quality="<< Quality<<endmsg;
           mtrack->addInfo(300,Quality);
           mtrack->setChi2PerDoF(Quality);
         }
-        else debug()<<"Error when preparing track to fit"<<endmsg;
+        else {
+          if (msgLevel(MSG::DEBUG) ) debug()<<"Error when preparing track to fit"<<endmsg;
+        }
       }
     }
   }
-
+  
   mtrack->addInfo(300,Quality);  
   mtrack->addInfo(301,mupid.PreSelMomentum());
   mtrack->addInfo(302,mupid.InAcceptance());
@@ -1974,7 +1882,7 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
     DLL     = mupid.MuonLLMu()-mupid.MuonLLBg();
     NShared = mupid.nShared();
   }
-  debug()<< "makeMuonTrack:: Dist, DLL, NShared: "<< Dist<<" "<<DLL<<" "<<NShared<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "makeMuonTrack:: Dist, DLL, NShared: "<< Dist<<" "<<DLL<<" "<<NShared<<endmsg;
   
   mtrack->addInfo(305,Dist);
   mtrack->addInfo(306,DLL);

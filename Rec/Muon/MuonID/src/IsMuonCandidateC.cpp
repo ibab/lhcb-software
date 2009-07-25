@@ -1,4 +1,4 @@
-// $Id: IsMuonCandidateC.cpp,v 1.3 2009-07-06 08:13:41 cattanem Exp $
+// $Id: IsMuonCandidateC.cpp,v 1.4 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -97,8 +97,8 @@ bool IsMuonCandidateC::IsMuonSimple(const std::vector<int>& stations)
   int musize=stations.size();
   if (musize < m_minhits) 
   {  
-    debug()<<"size of mutrack is "<<musize<<endmsg;
-    debug()<<"m_minhits is "<<m_minhits<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"size of mutrack is "<<musize<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"m_minhits is "<<m_minhits<<endmsg;
     return false;
   }
   return true;

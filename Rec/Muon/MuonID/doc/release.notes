@@ -2,6 +2,13 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-24 - Xabier Cid Vidal, Erica Polycarpo
+ - Protect debug messages to be printed only if OuputLevel=DEBUG
+ - Change some Error/Warning messages to Rdebug messages 
+ - Change findTrackRegion to use region in M2 or M3 instead of M2 only
+ - Remove Error message if findTrackRegion returns -1 
+ - Skip Prob calculation only if no valid region in M2 AND M3
+
 ! 2009-07-14 - Wouter Hulsbergen
  - Adapted configurable to change in TrackMasterFitter properties 
 

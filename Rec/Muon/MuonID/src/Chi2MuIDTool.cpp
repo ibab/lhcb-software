@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.6 2009-07-14 12:42:07 cattanem Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.7 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -96,14 +96,14 @@ StatusCode Chi2MuIDTool::isGoodSeed(const LHCb::Track& seed)
   //track below min momentum
   if (seed.p()<m_minmom)
   {
-    debug() << "Track mom below momentum threshold of "<<m_minmom<<endmsg;
+    if ( msgLevel(MSG::DEBUG)) debug() << "Track mom below momentum threshold of "<<m_minmom<<endmsg;
     sc.setCode(101); return sc;
   }
   
   //track not in acceptance (standard definition)
   if (!(isTrackInAcceptance(seed)))
   {
-    debug()<< "Track not in MuonChambers acceptance"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<< "Track not in MuonChambers acceptance"<<endmsg;
     sc.setCode(102); return sc;
   }
   return sc;
@@ -118,7 +118,7 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   StatusCode sc = StatusCode::SUCCESS;
   m_arrivalCuts=true;
   m_applyIsMuon=true;
-  debug()<<"ids_init.size()="<<ids_init.size()<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"ids_init.size()="<<ids_init.size()<<endmsg;
   bool del_muonprov=false;
 
   if (ids_init.size()==0)
@@ -142,7 +142,7 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
     m_arrivalCuts=false;
     m_applyIsMuon=false;
 
-    debug()<<"READY TO CHARGE IDS onto m_muonProvider"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"READY TO CHARGE IDS onto m_muonProvider"<<endmsg;
     std::vector<LHCb::LHCbID>::const_iterator it;
     
     m_muonProvider = new SmartMuonMeasProvider();
@@ -156,10 +156,12 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
       int istation=id.muonID().station();
 
       //from LHCbID, get xmeas and ymeas
-      debug()<<"istation="<<istation<<endmsg;
-      debug()<<"channelID="<<id.channelID()<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) {
+	debug()<<"istation="<<istation<<endmsg;
+	debug()<<"channelID="<<id.channelID()<<endmsg;
+      }
       if (!id.isMuon()) {
-        warning()<<"NON MUON ID!"<<endmsg;
+        Warning("NON MUON ID!").ignore();
         continue;
       }
       
@@ -167,24 +169,27 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
       LHCb::Measurement* ymeas = m_measProvider->measurement(id,1);
       //debug()<<"xmeas="<<(*xmeas)<<endmsg;
       //debug()<<"ymeas="<<(*ymeas)<<endmsg;
-      debug()<<"channelID after measprovider="<<xmeas->lhcbID().channelID()<<endmsg;
-      debug()<<"xmeas before smmp="<<xmeas<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) {
+	debug()<<"channelID after measprovider="<<xmeas->lhcbID().channelID()<<endmsg;
+	debug()<<"xmeas before smmp="<<xmeas<<endmsg;
+      }
 
-      debug()<<"m_muonProvider->atStation("<<istation<<").size()="<<m_muonProvider->atStation(istation).size()<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()<<"m_muonProvider->atStation("<<istation
+                                        <<").size()="<<m_muonProvider->atStation(istation).size()<<endmsg;
       //for each station, fill muprovider with corresponding MeasPair
       m_muonProvider->atStation(istation).push_back( MeasPair(xmeas,ymeas) );
       m_nsigmasUsed=50;
-      debug()<<"ID correctly loaded into m_muonProvider"<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()<<"ID correctly loaded into m_muonProvider"<<endmsg;
     }
-    debug()<<"ID correctly loaded into m_muonProvider"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"ID correctly loaded into m_muonProvider"<<endmsg;
   }
   
   // get hits in FOI (nsigmas). Run IsMuon
   sc = search(seed, muTrack);
-  debug()<<"muTrack with seeds on it"<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"muTrack with seeds on it"<<endmsg;
   if (sc.isFailure()) 
   {
-    debug()<< "No new track built"<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<< "No new track built"<<endmsg;
     if (sc.getCode()==203) isMuonCandidate=false;
     else if ((sc.getCode()!=204) && (m_applyIsMuon))  warning()<< "No available info about IsMuon"<<endmsg;
     if (del_muonprov) delete m_muonProvider;
@@ -226,8 +231,10 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   // m_measProvider->load(muTrack);  
   StatusCode sc2 = m_fitter->fit(muTrack);
 
-  debug()<<"BACK in muonQuality"<<endmsg;
-  debug()<<"sc2"<<sc2.getCode()<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"BACK in muonQuality"<<endmsg;
+    debug()<<"sc2"<<sc2.getCode()<<endmsg;
+  }
   debug()<<"sc2.isFailure()"<<sc2.isFailure()<<endmsg;
   
   if (sc2.isFailure())
@@ -237,9 +244,11 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   }
   
   
-  debug()<<"muTrack="<<muTrack<<endmsg;
-  debug()<<"ids size="<<muTrack.lhcbIDs().size()<<endmsg;
-  debug()<<"chi2="<<muTrack.chi2()<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"muTrack="<<muTrack<<endmsg;
+    debug()<<"ids size="<<muTrack.lhcbIDs().size()<<endmsg;
+    debug()<<"chi2="<<muTrack.chi2()<<endmsg;
+  }
   Quality=muTrack.chi2()/(2.*muTrack.lhcbIDs().size());
 
   return sc;
@@ -252,7 +261,7 @@ StatusCode Chi2MuIDTool::muonArrival(LHCb::Track& muTrack, double& Arrival)
   //compute arrival probability
   Arrival = 0;
   StatusCode sc=m_GetArrival->getArrivalFromTrack(muTrack,Arrival);
-  debug()<<"Arrival="<<Arrival<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"Arrival="<<Arrival<<endmsg;
   if (sc.isFailure()) Arrival=0;
   return sc;
 }
@@ -270,14 +279,17 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
   double qualityCLb=0;
   double qualityCLR=0;
 
-  debug()<<"Arrival="<<Arrival<<endmsg;
-  debug()<<"Qualty ="<<Quality<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"Arrival="<<Arrival<<endmsg;
+    debug()<<"Qualty ="<<Quality<<endmsg;
+  }
 
   
   sc=m_CLQuality->cl(Quality,qualityCLs,qualityCLb,qualityCLR,muTrack.p());
   if (sc.isFailure())
   {    
-    return Error("WRONG CLQUALITY VALUE",sc);
+    if (msgLevel(MSG::DEBUG) ) debug()<<"WRONG CLQUALITY VALUE"<<endmsg;
+    return sc;
   }
   
   
@@ -313,23 +325,36 @@ StatusCode Chi2MuIDTool::muonID(const LHCb::Track& seed,LHCb::Track& muTrack,
   StatusCode sc = StatusCode::SUCCESS;
   
   sc=isGoodSeed(seed);
-  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail good seed",sc);
-
+  if (sc.isFailure()) {
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail good seed, sc="<<sc.getCode()<<endmsg;
+    return sc;
+  }
+  
   sc=muonCandidate(seed,muTrack,isMuonCandidate,ids_init);
-  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon candidate",sc);
+  if (sc.isFailure()) {
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail muon candidate, sc="<<sc.getCode()<<endmsg;
+    return sc;
+  }
   
   sc=muonQuality(muTrack,Quality);
-  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon quality",sc);
+  if (sc.isFailure()) {
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail muon quality, sc="<<sc.getCode()<<endmsg;
+    return sc;
+  }
   
   sc=muonArrival(muTrack, Arrival);
-  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon arrival",sc);
-
+  if (sc.isFailure()) {
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail muon arrival, sc="<<sc.getCode()<<endmsg;
+    return sc;
+  }
+  
   sc=muonDLL(muTrack, Quality, CLQuality, Arrival, CLArrival, DLL);
-  if (sc.isFailure()) return Error("Chi2MuIDTool: Fail muon DLL",sc);
-
+  if (sc.isFailure()) {
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail muon dll, sc="<<sc.getCode()<<endmsg;
+    return sc;
+  } 
   return sc;
 }
-
 
 
  
@@ -344,7 +369,7 @@ bool Chi2MuIDTool::isTrackInsideStation(const int& istation)
   const bool xcond=((fabs(pos.x()) > m_mudet->getInnerX(istation)) && (fabs(pos.x())<m_mudet->getOuterX(istation)));
   const bool ycond=((fabs(pos.y()) > m_mudet->getInnerY(istation)) && (fabs(pos.y())<m_mudet->getOuterY(istation)));
   
-  debug()<<"st="<<istation<<",xcond="<<xcond<<",ycond="<<ycond<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"st="<<istation<<",xcond="<<xcond<<",ycond="<<ycond<<endmsg;
   
   bool outcond=false;
   
@@ -392,16 +417,18 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
   
   LHCb::State* muState = (LHCb::State*)&(seed.closestState(9450.));
   
-  debug()<<"muState"<<endmsg;
-  debug()<<muState<<endmsg;
-  debug()<<"x="<<muState->x()<<",y="<<muState->y()<<",z="<<muState->z()<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"muState"<<endmsg;
+    debug()<<muState<<endmsg;
+    debug()<<"x="<<muState->x()<<",y="<<muState->y()<<",z="<<muState->z()<<endmsg;
+  }
 
   if (m_mySeedState==muState) return sc;
   else m_mySeedState=muState;
   
   
   m_states.clear();
-  debug()<< " seed state"<< *muState;
+  if (msgLevel(MSG::DEBUG) ) debug()<< " seed state"<< *muState;
   
   //propagate state to each station
   //for control purpose, also check is extrapolation was succesful for every station
@@ -413,9 +440,9 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
     // LHCb::State* muStateC = muState.clone();
 
     LHCb::State muStateC(*muState);
-    debug()<< " seed first state clone"<< muStateC;
+    if (msgLevel(MSG::DEBUG) ) debug()<< " seed first state clone"<< muStateC;
     StatusCode code= m_extrapolator->propagate(muStateC,z);
-    debug() << " makeState: state at " << z << " = " << muStateC << endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug() << " makeState: state at " << z << " = " << muStateC << endmsg;
     if (code.isFailure()) 
       {
         return Error("EXTRAPOLATION OF STATES FAILED AT STATION",sc);
@@ -423,7 +450,7 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
     m_states.push_back(muStateC);
     ist++;
   }
-  debug() << " makeStates: number of states " << m_states.size() << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug() << " makeStates: number of states " << m_states.size() << endmsg;
   return sc;
   
 }
@@ -437,37 +464,41 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
   //from muonProvider, get idsInRange if any
   for (int i = 1; i < 5; ++i) {
     //if (m_muonProviderInRange[i].size() == 0 ) continue;
-    debug()<<"m_nsigmasUsed="<<m_nsigmasUsed<<endmsg;
-    debug()<<"Z of states="<<m_states[i].position().z()<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) {
+      debug()<<"m_nsigmasUsed="<<m_nsigmasUsed<<endmsg;
+      debug()<<"Z of states="<<m_states[i].position().z()<<endmsg;
+    }
     std::vector<LHCb::LHCbID> ids = 
       m_muonProvider->idsInRange(m_states[i],m_nsigmasUsed,m_discrval);
     
-    debug()<<"ids size="<<ids.size()<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()<<"ids size="<<ids.size()<<endmsg;
 
     if (ids.size()>0) 
     { 
       int ist=ids[0].muonID().station();
-      debug()<<"ids0 station="<<ist<<endmsg;
-      debug()<<"ids0 channelID="<<ids[0].channelID()<<endmsg;
+      if (msgLevel(MSG::DEBUG) ) {
+	debug()<<"ids0 station="<<ist<<endmsg;
+        debug()<<"ids0 channelID="<<ids[0].channelID()<<endmsg;
+      }
       // if mom below m_2hits, check if hit is in stations 4 or 5
       if ((mom<m_2hits) && (ist==3 || ist==4) && m_arrivalCuts) 
       {
         continue;
-        debug()<<"skiped spurius hit in station"<<ist<<endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug()<<"skiped spurius hit in station"<<ist<<endmsg;
       }
       
       // if mom below m_2hits, check if hit is in station 5
       if ((mom<m_3hits) && (ist==4) && m_arrivalCuts)
       {
         continue;
-        debug()<<"skiped spurius hit in station"<<ist<<endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug()<<"skiped spurius hit in station"<<ist<<endmsg;
       }
       muTrack.addToLhcbIDs(ids[0]);
       j += 1;
     }
     
   }
-  debug() << "Number of LHCbIDs added =" << j
+  if (msgLevel(MSG::DEBUG) ) debug() << "Number of LHCbIDs added =" << j
          << endmsg;
 }
 
@@ -485,11 +516,11 @@ StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
   
 
   //get states and hits
-  debug()<<"get states and hits"<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"get states and hits"<<endmsg;
   LHCb::State lstate = seed.closestState(9450.);
-  debug()<<"closest state found"<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"closest state found"<<endmsg;
   muTrack.addToStates(lstate);
-  debug()<<"x="<<lstate.x()<<", y="<<lstate.y()<<", z="<<lstate.z()<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"x="<<lstate.x()<<", y="<<lstate.y()<<", z="<<lstate.z()<<endmsg;
 
   addLHCbIDsToMuTrack(muTrack,seed.p());
   // apply isMuon
