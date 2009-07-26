@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.14 2008-10-28 14:51:39 cattanem Exp $
+ *  $Id: DeRichSystem.h,v 1.15 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -13,8 +13,8 @@
 #ifndef RICHDET_DERICHSYSTEM_H
 #define RICHDET_DERICHSYSTEM_H 1
 
-// DetDesc
-#include "DetDesc/DetectorElement.h"
+// base class
+#include "RichDet/DeRichBase.h"
 
 // LHCbKernel
 #include "Kernel/RichSide.h"
@@ -27,9 +27,6 @@
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
 #include "RichKernel/RichMap.h"
-
-//local
-#include "RichDet/DeRichLocations.h"
 
 // External declarations
 extern const CLID CLID_DERichSystem;
@@ -46,13 +43,13 @@ extern const CLID CLID_DERichSystem;
  * @date   27/01/2006
  *
  */
-class DeRichSystem: public DetectorElement
+class DeRichSystem: public DeRichBase
 {
 
 public:
 
   /// Constructor for this class
-  DeRichSystem();
+  DeRichSystem( const std::string & name = "" );
 
   /// Default destructor
   virtual ~DeRichSystem();
@@ -183,8 +180,8 @@ public:
    *  @param L1Input  L1 input number
    *  @return HPD hardware ID
    */
-  const Rich::DAQ::HPDHardwareID 
-  hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID, 
+  const Rich::DAQ::HPDHardwareID
+  hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
                  const Rich::DAQ::Level1Input L1Input ) const;
 
   /** Obtain a list of RichSmartID HPD identifiers for a given level1 hardwareID

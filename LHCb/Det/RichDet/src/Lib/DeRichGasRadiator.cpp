@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.13 2009-05-01 14:22:19 papanest Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.14 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -15,7 +15,6 @@
 // Include files
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -33,8 +32,8 @@ const CLID CLID_DeRichGasRadiator = 12042;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichGasRadiator::DeRichGasRadiator() :
-  DeRichSingleSolidRadiator(),
+DeRichGasRadiator::DeRichGasRadiator(const std::string & name) :
+  DeRichSingleSolidRadiator(name),
   m_temperatureCond (),
   m_pressureCond    (),
   m_scaleFactorCond ()
@@ -56,7 +55,7 @@ const CLID& DeRichGasRadiator::classID() { return CLID_DeRichGasRadiator; }
 StatusCode DeRichGasRadiator::initialize ( )
 {
 
-  MsgStream msg( msgSvc(), "DeRichGasRadiator" );
+  MsgStream msg = msgStream( "DeRichGasRadiator" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
@@ -119,7 +118,6 @@ StatusCode DeRichGasRadiator::initialize ( )
 //=========================================================================
 StatusCode DeRichGasRadiator::updateProperties ( )
 {
-  MsgStream msg( msgSvc(), myName() );
 
   // load parameters
   // get temperature and pressure
@@ -134,18 +132,17 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   {
     const double curPressure = m_pressureCond->param<double>("CurrentPressure");
     const double curTemp     = m_temperatureCond->param<double>("CurrentTemperature");
-    msg << MSG::INFO
-        << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::Pa
-        << " Pa Temperature = " << curTemp << " K"
-        << endmsg;
+    info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::Pa
+           << " Pa Temperature = " << curTemp << " K"
+           << endmsg;
   }
 
   if ( (photonEnergyHighLimit < ckvPhotonEnergyHighLimit ) ||
        (ckvPhotonEnergyLowLimit < photonEnergyLowLimit ) )
   {
-    msg << MSG::ERROR << "Inadmissible photon energy limits "
-        << photonEnergyHighLimit << " " << ckvPhotonEnergyHighLimit
-        << ckvPhotonEnergyLowLimit << " " << photonEnergyLowLimit << endmsg;
+    error() << "Inadmissible photon energy limits "
+            << photonEnergyHighLimit << " " << ckvPhotonEnergyHighLimit
+            << ckvPhotonEnergyLowLimit << " " << photonEnergyLowLimit << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -178,12 +175,11 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& momVect,
                                                     const TabulatedProperty* tabProp )
 {
-  MsgStream msg( msgSvc(), myName() );
 
   // test the tab property pointer
   if ( !tabProp )
   {
-    msg << MSG::ERROR << "NULL TabulatedProperty pointer" << endmsg;
+    error() << "NULL TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -232,8 +228,8 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
     aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
   }
 
-  msg << MSG::DEBUG << "Table in TabulatedProperty " << tabProp->name()
-      << " updated with " << momVect.size() << " bins" << endmsg;
+  debug() << "Table in TabulatedProperty " << tabProp->name()
+          << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 }

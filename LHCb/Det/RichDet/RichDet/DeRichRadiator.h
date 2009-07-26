@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.25 2008-11-30 10:20:45 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.26 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -19,7 +19,6 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 // DetDesc
-#include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/Material.h"
@@ -31,6 +30,7 @@
 #include "Kernel/RichRadIntersection.h"
 
 // RichDet
+#include "RichDet/DeRichBase.h"
 #include "RichDet/Rich1DTabProperty.h"
 #include "RichDet/DeRichLocations.h"
 
@@ -46,13 +46,13 @@
  */
 //----------------------------------------------------------------------------
 
-class DeRichRadiator: public DetectorElement
+class DeRichRadiator: public DeRichBase
 {
 
 public:
 
   /// Default constructor
-  DeRichRadiator();
+  DeRichRadiator( const std::string & name = "" );
 
   /// Destructor
   virtual ~DeRichRadiator();
@@ -185,11 +185,6 @@ public:
                                       const Gaudi::XYZVector& vGlobal,
                                       std::vector<RichRadIntersection>& intersections ) const = 0;
 
-  /** Returns the name of this particular radiator medium
-   *  @return radiator name
-   */
-  inline const std::string & myName() const { return m_name; }
-
   /** Returns the refractive index at the given photon energy for this radiator
    *  @param energy The photon energy 
    *  @return The refractive index at that energy
@@ -229,10 +224,6 @@ protected:
 
   /// First update flag
   bool m_firstUpdate;
-
-private:
-
-  std::string m_name; ///< The name of this radiator
 
 };
 

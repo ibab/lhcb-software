@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.18 2009-06-11 15:56:04 jonrob Exp $
+ * $Id: DeRichHPD.cpp,v 1.19 2009-07-26 18:13:18 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -12,7 +12,6 @@
 //=============================================================================
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -46,7 +45,8 @@ namespace
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichHPD::DeRichHPD():
+DeRichHPD::DeRichHPD(const std::string & name):
+  DeRichBase          ( name ),
   m_deSiSensor        ( NULL ),
   m_pvWindow          ( NULL ),
   m_windowSolid       ( NULL ),
@@ -100,7 +100,7 @@ StatusCode DeRichHPD::initialize ( )
 
   // store the name of the HPD, without the /dd/Structure part
   const std::string::size_type pos = name().find("HPD:");
-  m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPD_NO_NAME" );
+  setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichHPD_NO_NAME" );
 
   // extract HPD number from detector element name
   const std::string::size_type pos2 = name().find(":");
@@ -185,7 +185,7 @@ StatusCode DeRichHPD::initialize ( )
                    childIDetectorElements().front() : NULL );
   if ( !m_deSiSensor )
   {
-    msg << MSG::ERROR << "Cannot find SiSensor detector element for HPD " << m_name << endmsg;
+    msg << MSG::ERROR << "Cannot find SiSensor detector element for HPD " << myName() << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -207,7 +207,6 @@ StatusCode DeRichHPD::initialize ( )
     return StatusCode::FAILURE;
   }
 
-  MsgStream moreInfo( msgSvc(), myName() ); // output only for this HPD
   if ( deRichS->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
   {
     // convert copy number to smartID
@@ -223,7 +222,7 @@ StatusCode DeRichHPD::initialize ( )
     }
     m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
     flags[6] = true;
-    moreInfo << MSG::DEBUG << "HPD:" << id << endmsg;
+    debug() << "HPD:" << id << endmsg;
   }
   else           // use copy number to locate QE
   {
@@ -248,8 +247,8 @@ StatusCode DeRichHPD::initialize ( )
     }
   }
   msg << MSG::DEBUG << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
-  moreInfo << MSG::DEBUG << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
-  moreInfo << MSG::DEBUG << m_hpdQuantumEffFunc->tabProperty() << endmsg;
+  debug() << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
+  debug() << m_hpdQuantumEffFunc->tabProperty() << endmsg;
 
   // Magnetic Distortions
   // Make interpolators
@@ -295,8 +294,7 @@ StatusCode DeRichHPD::getParameters ( )
   SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
   if ( !deRich1 )
   {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
+    error() << "Could not load DeRich1" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -307,9 +305,8 @@ StatusCode DeRichHPD::getParameters ( )
     m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
   else
   {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::WARNING << "No parameters for refraction on HPD window! "
-        << "Corrections will not work properly!" << endmsg;
+    warning() << "No parameters for refraction on HPD window! "
+              << "Corrections will not work properly!" << endmsg;
   }
 
   m_UseHpdMagDistortions = 0 != deRich1->param<int>("UseHpdMagDistortions");
@@ -324,8 +321,7 @@ StatusCode DeRichHPD::getParameters ( )
     (dataSvc(),"/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
   if (!HPDdeMag)
   {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::FATAL << "Could not load HpdDemagnification" << endmsg;
+    fatal() << "Could not load HpdDemagnification" << endmsg;
     return StatusCode::FAILURE;
   }
   const TabulatedProperty::Table & DeMagTable = HPDdeMag->table();
@@ -344,8 +340,7 @@ StatusCode DeRichHPD::updateTransformations ( )
   // Do not print message the first time
   if ( flags[2] )
   {
-    MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::INFO << "Updating geometry transformations for HPD:" << m_number <<endmsg;
+    info() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
   }
   // print the message the following times.
   flags[2] = true;
@@ -354,8 +349,7 @@ StatusCode DeRichHPD::updateTransformations ( )
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
   if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
   {
-    MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::FATAL << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
+    fatal() << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
     return StatusCode::FAILURE;
   }
   const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
@@ -383,8 +377,8 @@ StatusCode DeRichHPD::updateTransformations ( )
   m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
 
   return StatusCode::SUCCESS;
-
 }
+
 //=================================================================================
 // Demagnification Tables for simulation and reconstruction (Marco Musy 07/09/2006)
 //=================================================================================
@@ -393,8 +387,7 @@ StatusCode DeRichHPD::updateDemagProperties()
   // Do not print message the first time
   if ( flags[1] )
   {
-    MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::INFO << "Updating Demag properties for HPD:" << m_number <<endmsg;
+    info() << "Updating Demag properties for HPD:" << m_number <<endmsg;
   }
   // print the message the following times.
   flags[1] = true;
@@ -402,22 +395,19 @@ StatusCode DeRichHPD::updateDemagProperties()
   // Initialise the demagnifcation
   StatusCode sc = fillHpdDemagTable();
   if (!sc) {
-    MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::FATAL<< "Could not initialise demagnification table for HPD:" << m_number <<endmsg;
+    fatal() << "Could not initialise demagnification table for HPD:" << m_number <<endmsg;
     return sc;
   }
 
   // Initialise the magnification
   sc = fillHpdMagTable();
   if (!sc) {
-    MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::FATAL<< "Could not initialise magnification table for HPD:" << m_number <<endmsg;
+    fatal() << "Could not initialise magnification table for HPD:" << m_number <<endmsg;
     return sc;
   }
 
   return sc;
 }
-
 
 //=========================================================================
 //  fillHpdDemagTable
@@ -430,8 +420,7 @@ StatusCode DeRichHPD::fillHpdDemagTable()
   SmartDataPtr<TabulatedProperty> dem(dataSvc(), XmlHpdDemagPath+"Sim_"+
                                       boost::lexical_cast<std::string>(m_number));
   if (!dem) {
-    MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::ERROR<<"Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
+    error() << "Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
     return StatusCode::FAILURE;
   }
   TabulatedProperty::Table & simTable = dem->table();
@@ -445,8 +434,7 @@ StatusCode DeRichHPD::fillHpdDemagTable()
 
   if (coeff_sim.size() < 8)
   {
-    MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::ERROR<< "coeff_sim.size()<8"<<endmsg;
+    error() << "coeff_sim.size()<8"<<endmsg;
     return StatusCode::FAILURE;
   }
   const double r_a0 = coeff_sim.at(0);
@@ -519,8 +507,7 @@ StatusCode DeRichHPD::fillHpdMagTable( )
 
   if(coeff_rec.size() < 8)
   {
-    MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::ERROR<< "coeff_rec.size()<8"<<endmsg;
+    error() << "coeff_rec.size()<8"<<endmsg;
     return StatusCode::FAILURE;
   }
   const double r_a0 = coeff_rec.at(0);
@@ -725,43 +712,3 @@ bool DeRichHPD::testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
                                                   vInKapton,
                                                   kaptonTicks ) );
 }
-
-// CRJ Comment out by default since having a 57 element array in each HPD just for this is
-// wasteful, and this random stuff should go anyway IMHO ...
-/*
-//===========================================================================
-int DeRichHPD::number_mm( void ) {
-int *piState= &rgiState[2];
-int iState1= piState[-2];
-int iState2= piState[-1];
-int iRand= ( piState[iState1] + piState[iState2] ) & (( 1 << 30 ) - 1);
-piState[iState1] = iRand;
-if ( ++iState1 == 55 ) iState1 = 0;
-if ( ++iState2 == 55 ) iState2 = 0;
-piState[-2] = iState1;
-piState[-1] = iState2;
-return iRand >> 6;
-}
-//===========================================================================
-int DeRichHPD::number_range( int from, int to ) {
-int power, number;
-if ( ( to = to - from + 1 ) <= 1 )  return from;
-for ( power = 2; power < to; power <<= 1 );
-while ( ( number = number_mm() & ( power - 1 ) ) >= to );
-return from + number;
-}
-//===========================================================================
-void DeRichHPD::init_mm( ) {
-int *piState;
-int iState;
-piState = &rgiState[2];
-piState[-2] = 0;
-piState[-1] = 31;
-piState[0] = ( (int) time( NULL ) ) & ( ( 1 << 30 ) - 1 );
-piState[1] = 1;
-for ( iState = 2; iState < 55; iState++ )
-piState[iState] = ( piState[iState-1] + piState[iState-2] )
-& ( ( 1 << 30 ) - 1 );
-return;
-}
-*/

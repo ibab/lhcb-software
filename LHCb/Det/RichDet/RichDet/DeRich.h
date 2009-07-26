@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.26 2008-10-28 14:51:39 cattanem Exp $
+ *  $Id: DeRich.h,v 1.27 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,7 +14,6 @@
 #define RICHDET_DERICH_H 1
 
 // DetDesc
-#include "DetDesc/DetectorElement.h"
 #include "RichDet/Rich1DTabProperty.h"
 
 // Mathcore
@@ -25,6 +24,8 @@
 // LHCbKernel
 #include "Kernel/RichSide.h"
 
+// Local
+#include "RichDet/DeRichBase.h"
 #include "RichDet/RichMirrorSegPosition.h"
 #include "RichDet/DeRichLocations.h"
 
@@ -42,13 +43,14 @@ class DeRichHPDPanel;
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
-class DeRich: public DetectorElement {
+class DeRich: public DeRichBase
+{
 
 public:
   /**
    * Constructor for this class
    */
-  DeRich();
+  DeRich(const std::string & name = "");
 
   /**
    * Default destructor
@@ -177,11 +179,6 @@ public:
    */
   virtual RichMirrorSegPosition secMirrorSegPos( const int mirrorNumber ) const;
 
-  /** Returns the name of this particular detector
-   *  @return detector name
-   */
-  inline const std::string& myName() const { return m_name; }
-
   virtual StatusCode alignSphMirrors() = 0;
   virtual StatusCode alignSecMirrors() = 0;
 
@@ -227,10 +224,9 @@ protected:
   /// Condition for the alignment of the secondary mirrors
   SmartRef<Condition> m_secMirAlignCond;
 
-  std::string m_name; ///< The name of this detector
-
   /// Pointers to the HPD panels of this Rich detector
   boost::array<DeRichHPDPanel*, 2> m_HPDPanels;
+
 };
 
 #endif    // RICHDET_DERICH_H

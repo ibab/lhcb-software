@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-07-26 - Chris Jones
+ - Add new base class 'DeRichBase' that implements various common 
+   functionality for all RICH detector elements.
+
 ! 2009-07-17 - Antonis Papanestis
  - Small change in DeRichSphMirror to pick up the Surface location
    from a user parameter (rather than trying to guess it).

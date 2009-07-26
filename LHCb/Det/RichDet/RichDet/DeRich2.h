@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.h,v 1.16 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRich2.h,v 1.17 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -34,7 +34,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRich2();
+  DeRich2(const std::string & name = "");
 
   /**
    * Default destructor

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.17 2008-11-30 10:20:45 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.18 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -39,7 +39,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRichSingleSolidRadiator();
+  DeRichSingleSolidRadiator( const std::string & name = "" );
 
   /**
    * Default destructor

@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.14 2008-11-30 10:20:45 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.15 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -38,7 +38,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRichMultiSolidRadiator();
+  DeRichMultiSolidRadiator( const std::string & name = "" );
 
   /**
    * Default destructor

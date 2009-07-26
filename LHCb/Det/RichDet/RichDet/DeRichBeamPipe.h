@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.8 2007-09-13 13:10:54 jpalac Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.9 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -14,12 +14,12 @@
 #define RICHDET_DERICHBEAMPIPE_H 1
 
 // DetDesc
-#include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidCons.h"
 
-#include "RichDet/DeRichLocations.h"
+// Local
+#include "RichDet/DeRichBase.h"
 
 // LHCbKernel
 
@@ -33,24 +33,25 @@ extern const CLID CLID_DERichBeamPipe;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
  */
-class DeRichBeamPipe : public DetectorElement
+class DeRichBeamPipe : public DeRichBase
 {
 
 public:
 
   /// Enum describing the various possible types of intersection
-  enum BeamPipeIntersectionType {
-    NoIntersection = 0, ///< Did not intersect the beam pipe at all
-    FrontAndBackFace,   ///< Entered via the front face and left via the back face (i.e. totally inside the beampipe)
-    FrontFaceAndCone,   ///< Entered via the front face and left via the cone surface
-    BackFaceAndCone,    ///< Entered via the cone surafece and left via the backface
-    ConeOnly            ///< Entered via the cone surafece and left via the cone surface
-  };
+  enum BeamPipeIntersectionType 
+    {
+      NoIntersection = 0, ///< Did not intersect the beam pipe at all
+      FrontAndBackFace,   ///< Entered via the front face and left via the back face (i.e. totally inside the beampipe)
+      FrontFaceAndCone,   ///< Entered via the front face and left via the cone surface
+      BackFaceAndCone,    ///< Entered via the cone surafece and left via the backface
+      ConeOnly            ///< Entered via the cone surafece and left via the cone surface
+    };
 
   /**
    * Constructor for this class
    */
-  DeRichBeamPipe();
+  DeRichBeamPipe(const std::string & name = "");
 
   /**
    * Default destructor
@@ -135,8 +136,7 @@ private: // data
 inline std::ostream& operator << ( std::ostream& s,
                                    const  DeRichBeamPipe::BeamPipeIntersectionType& type )
 {
-  s << DeRichBeamPipe::text( type );
-  return s;
+  return s << DeRichBeamPipe::text( type );
 }
 
 #endif    // RICHDET_DERICHBEAMPIPE_H

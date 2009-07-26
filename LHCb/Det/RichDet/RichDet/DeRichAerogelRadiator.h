@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.h,v 1.4 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.h,v 1.5 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -31,7 +31,7 @@ class DeRichAerogelRadiator : public DeRichSingleSolidRadiator
 public:
 
   /// Standard constructor
-  DeRichAerogelRadiator( );
+  DeRichAerogelRadiator( const std::string & name = "" );
 
   virtual ~DeRichAerogelRadiator( ); ///< Destructor
 

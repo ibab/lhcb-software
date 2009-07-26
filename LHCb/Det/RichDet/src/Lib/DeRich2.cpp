@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.37 2008-09-30 13:23:23 cattanem Exp $
+ *  $Id: DeRich2.cpp,v 1.38 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,7 +17,6 @@
 #include "RichDet/DeRichRadiator.h"
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -30,7 +29,9 @@
 const CLID CLID_DERich2 = 12002;  // User defined
 
 // Standard Constructors
-DeRich2::DeRich2() { m_name = "DeRich2"; }
+DeRich2::DeRich2(const std::string & name) 
+  : DeRich ( name )
+{ setMyName("DeRich2"); }
 
 // Standard Destructor
 DeRich2::~DeRich2() {}
@@ -46,8 +47,7 @@ const CLID& DeRich2::classID()
 StatusCode DeRich2::initialize()
 {
 
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
+  debug() << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
@@ -57,9 +57,9 @@ StatusCode DeRich2::initialize()
   m_nominalCentreOfCurvatureRight =
     Gaudi::XYZPoint( -nominalCoC[0], nominalCoC[1], nominalCoC[2]);
 
-  msg << MSG::DEBUG << "Nominal centre of curvature"
-      << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureRight
-      << endmsg;
+  debug() << "Nominal centre of curvature"
+          << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureRight
+          << endmsg;
 
   m_sphMirrorRadius = param<double>("SphMirrorRadius");
 
@@ -76,8 +76,8 @@ StatusCode DeRich2::initialize()
   m_nominalNormal = m_nominalPlaneLeft.Normal();
   m_nominalNormalRight = m_nominalPlaneRight.Normal();
 
-  msg << MSG::DEBUG << "Nominal normal " << Gaudi::XYZVector( m_nominalNormal )
-      << Gaudi::XYZVector( m_nominalNormalRight ) << endmsg;
+  debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormal )
+          << Gaudi::XYZVector( m_nominalNormalRight ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow:0");
   if ( pvGasWindow ) {
@@ -91,8 +91,8 @@ StatusCode DeRich2::initialize()
           m_gasWinRefIndex = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinRefIndex->valid() )
           {
-            msg << MSG::ERROR
-                << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+            error()
+              << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
             return StatusCode::FAILURE;
           }
         }
@@ -101,15 +101,15 @@ StatusCode DeRich2::initialize()
           m_gasWinAbsLength = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinAbsLength->valid() )
           {
-            msg << MSG::ERROR
-                << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+            error()
+              << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
             return StatusCode::FAILURE;
           }
         }
       }
     }
   } else {
-    msg << MSG::ERROR << "Could not find gas window properties" << endmsg;
+    error() << "Could not find gas window properties" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -122,14 +122,14 @@ StatusCode DeRich2::initialize()
 
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
-    msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
+    error() << "No info on spherical mirror reflectivity" << endmsg;
   else
   {
-    msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
+    debug() << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      msg << MSG::ERROR<<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
+      error()<<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -143,15 +143,15 @@ StatusCode DeRich2::initialize()
 
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
-    msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
+    error() << "No info on secondary mirror reflectivity" << endmsg;
   else
   {
-    msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
+    debug() << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
-      msg << MSG::ERROR
-          << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endreq;
+      error()
+        << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -169,12 +169,12 @@ StatusCode DeRich2::initialize()
 
   SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),panel0Location);
   if ( !panel0 ) {
-    msg << MSG::FATAL << "Cannot load " << panel0Location << endmsg;
+    fatal() << "Cannot load " << panel0Location << endmsg;
     return StatusCode::FAILURE;
   }
   SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),panel1Location);
   if ( !panel1 ) {
-    msg << MSG::FATAL << "Cannot load " << panel1Location << endmsg;
+    fatal() << "Cannot load " << panel1Location << endmsg;
     return StatusCode::FAILURE;
   }
   m_HPDPanels[panel0->side()] = panel0;
@@ -183,14 +183,14 @@ StatusCode DeRich2::initialize()
   // initialize Rich2Gas
   SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(), DeRichLocations::Rich2Gas);
   if ( !rich2Gas )
-    msg << MSG::ERROR << "Cannot initialize Rich2Gas" << endmsg;
+    error() << "Cannot initialize Rich2Gas" << endmsg;
 
 
   // update mirror alignment
   IUpdateManagerSvc* ums = updMgrSvc();
 
   bool needUpdate( false );
-  if ( hasCondition( "Rich2SphMirrorAlign" ) ) 
+  if ( hasCondition( "Rich2SphMirrorAlign" ) )
   {
     m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
     ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
@@ -199,8 +199,8 @@ StatusCode DeRich2::initialize()
   else {
     m_sphMirAlignCond = 0;
   }
-  
-  if ( hasCondition( "Rich2SecMirrorAlign" ) ) 
+
+  if ( hasCondition( "Rich2SecMirrorAlign" ) )
   {
     m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
     ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
@@ -213,7 +213,7 @@ StatusCode DeRich2::initialize()
   StatusCode upsc = StatusCode::SUCCESS;
   if ( needUpdate ) upsc = ums->update(this);
 
-  msg << MSG::DEBUG << "Initialisation Complete. Update:" << upsc << endreq;
+  debug() << "Initialisation Complete. Update:" << upsc << endreq;
   return upsc;
 }
 

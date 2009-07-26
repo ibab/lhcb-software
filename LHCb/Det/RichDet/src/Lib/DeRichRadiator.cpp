@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.17 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.18 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -28,8 +28,8 @@
 //=========================================================================
 //  default constructor
 //=========================================================================
-DeRichRadiator::DeRichRadiator() :
-  DetectorElement       (),
+DeRichRadiator::DeRichRadiator(const std::string & name) :
+  DeRichBase            ( name ),
   m_radiatorID          ( Rich::InvalidRadiator ),
   m_rich                ( Rich::InvalidDetector ),
   m_refIndex            ( 0                     ),
@@ -39,8 +39,8 @@ DeRichRadiator::DeRichRadiator() :
   m_rayleighTabProp     ( 0                     ),
   m_absorption          ( 0                     ),
   m_absorptionTabProp   ( 0                     ),
-  m_firstUpdate         ( true                  ),
-  m_name                ( "UnInitialized"       )   { }
+  m_firstUpdate         ( true                  )
+{ }
 
 //=========================================================================
 //  destructor
@@ -56,10 +56,9 @@ StatusCode DeRichRadiator::initialize()
 {
   // store the name of the radiator
   const std::string::size_type pos = name().find("Rich");
-  m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
+  setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
 
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Starting initialisation" << endreq;
+  debug() << "Starting initialisation" << endreq;
 
   if ( std::string::npos != name().find("Rich2") ) {
     m_radiatorID = Rich::Rich2Gas;
@@ -76,20 +75,20 @@ StatusCode DeRichRadiator::initialize()
         m_rich = Rich::Rich1;
       }
       else {
-        msg << MSG::ERROR << "Cannot find radiator type for " << name() << endreq;
+        error() << "Cannot find radiator type for " << name() << endreq;
         return StatusCode::FAILURE;
       }
     }
   }
 
-  msg << MSG::DEBUG << "Initializing Radiator : " << rich() << " " << radiatorID() << endreq;
+  debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode DeRichRadiator::initTabPropInterpolators()
 {
-  MsgStream msg( msgSvc(), "DeRichRadiator" );
+  MsgStream msg = msgStream( "DeRichRadiator" );
   msg << MSG::DEBUG << "Initialising interpolators" << endreq;
 
   if ( m_refIndexTabProp )

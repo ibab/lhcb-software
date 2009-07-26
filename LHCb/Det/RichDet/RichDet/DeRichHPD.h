@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.16 2008-10-28 10:17:22 cattanem Exp $
+ *  $Id: DeRichHPD.h,v 1.17 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -16,7 +16,6 @@
 #define RICHDET_DERICHHPD_H 1
 
 // DetDesc
-#include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/IPVolume.h"
 
@@ -24,6 +23,7 @@
 #include "Kernel/RichSmartID.h"
 
 // RichDet
+#include "RichDet/DeRichBase.h"
 #include "RichDet/Rich1DTabFunc.h"
 #include "RichDet/Rich1DTabProperty.h"
 
@@ -39,13 +39,14 @@ extern const CLID CLID_DERichHPD;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
  */
-class DeRichHPD: public DetectorElement {
+class DeRichHPD: public DeRichBase
+{
 
 public:
   /**
    * Constructor for this class
    */
-  DeRichHPD();
+  DeRichHPD(const std::string & name = "");
 
   /**
    * Default destructor
@@ -262,11 +263,6 @@ private: // functions
     return m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
   }
 
-  /** Returns the name of this particular HPD
-   *  @return HPD name
-   */
-  inline const std::string& myName() const { return m_name; }
-
   /// Get parameters from Rich1
   StatusCode getParameters();
 
@@ -298,7 +294,6 @@ private: // data
 
   const ISolid* m_kaptonSolid;     ///< Pointer to the kapton solid
 
-  std::string m_name;              ///< The name of this HPD
   int m_number;                    ///< HPD number (should be the same as copy number)
 
   double m_winInRsq;          ///< Inner radius of HPD window square

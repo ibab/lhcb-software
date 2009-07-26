@@ -3,15 +3,12 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.6 2007-09-13 13:10:55 jpalac Exp $
+ * $Id: DeRichBeamPipe.cpp,v 1.7 2009-07-26 18:13:18 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
  */
 //=============================================================================
-
-// Gaudi
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RichDet/DeRichBeamPipe.h"
@@ -23,18 +20,17 @@ const CLID CLID_DERichBeamPipe = 12050;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichBeamPipe::DeRichBeamPipe() :
-  m_localCone( NULL )
-{ }
+DeRichBeamPipe::DeRichBeamPipe(const std::string & name) :
+  DeRichBase  ( name ),
+  m_localCone ( NULL )
+{
+  setMyName("DeRichBeamPipe");
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichBeamPipe::~DeRichBeamPipe() {
-  if ( m_localCone )
-    delete m_localCone;
-}
-
+DeRichBeamPipe::~DeRichBeamPipe() { delete m_localCone; }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichBeamPipe::classID()
@@ -47,9 +43,8 @@ const CLID& DeRichBeamPipe::classID()
 //=========================================================================
 StatusCode DeRichBeamPipe::initialize ( )
 {
-  MsgStream msg( msgSvc(), "DeRichBeamPipe" );
-  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
-  msg << MSG::DEBUG << geometry()->lvolume()->name() << endmsg;
+  debug() << "Initialize " << name() << endmsg;
+  debug() << geometry()->lvolume()->name() << endmsg;
 
   m_solid = geometry()->lvolume()->solid();
 
@@ -63,7 +58,7 @@ StatusCode DeRichBeamPipe::initialize ( )
                                  );
   }
   else {
-    msg << MSG::FATAL << "Beam pipe solid is not a cone" << endmsg;
+    fatal() << "Beam pipe solid is not a cone" << endmsg;
     return StatusCode::FAILURE;
   }
 

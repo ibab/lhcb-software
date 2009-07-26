@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.70 2009-06-26 10:55:48 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.71 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -42,7 +42,8 @@
 const CLID CLID_DeRichHPDPanel = 12010;  // User defined
 
 // Standard Constructor
-DeRichHPDPanel::DeRichHPDPanel() :
+DeRichHPDPanel::DeRichHPDPanel(const std::string & name) :
+  DeRichBase    ( name                  ),
   m_deRichS     (     NULL              ),
   m_rich        ( Rich::InvalidDetector ),
   m_side        ( Rich::InvalidSide     ) { }
@@ -64,7 +65,7 @@ StatusCode DeRichHPDPanel::initialize()
 
   // store the name of the panel, without the /dd/Structure part
   const std::string::size_type pos = name().find("Rich");
-  m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
+  setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
 
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
 
@@ -310,8 +311,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   const unsigned int HPDNumber = hpdNumber(id);
   if ( HPDNumber > m_HPDMax )
   {
-    MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
-    msg << MSG::ERROR << "Inappropriate HPDNumber : " << HPDNumber;
+    error() << "Inappropriate HPDNumber : " << HPDNumber;
     return StatusCode::FAILURE;
   }
 
@@ -333,9 +333,9 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
 
   // if point still outside silicon flag an error
   if ( (fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*Gaudi::Units::mm) ||
-       (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm)   ) {
-    MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
+       (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm)   ) 
+  {
+    error() << "Point " << inSilicon << " is outside the silicon box "
         << DeHPD(HPDNumber)->name() << endmsg;
     return StatusCode::FAILURE;
   }

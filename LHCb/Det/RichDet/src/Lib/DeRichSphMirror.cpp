@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.32 2009-07-17 15:37:58 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.33 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -35,7 +35,8 @@
 const CLID CLID_DeRichSphMirror = 12030;  // User defined
 
 // Standard Constructor
-DeRichSphMirror::DeRichSphMirror() :
+DeRichSphMirror::DeRichSphMirror(const std::string & name) :
+  DeRichBase     ( name ),
   m_reflectivity ( NULL ),
   m_mirrorNumber ( -1   )
 {}
@@ -65,8 +66,8 @@ StatusCode DeRichSphMirror::initialize()
   Rich::DetectorType rich;
   const std::string::size_type pos = name().find("Rich");
   if ( std::string::npos != pos ) {
-    m_name = name().substr(pos);
-    std::string richNum = m_name.substr(4,1);
+    setMyName( name().substr(pos) );
+    std::string richNum = myName().substr(4,1);
     if ( richNum == "1" ) {
       rich = Rich::Rich1;
       const std::string::size_type secPos = name().find("Mirror2");
@@ -84,12 +85,12 @@ StatusCode DeRichSphMirror::initialize()
         return StatusCode::FAILURE;
       }
   } else {
-    m_name = "DeRichSphMirror_NO_NAME";
+    setMyName("DeRichSphMirror_NO_NAME");
     msgStart << MSG::FATAL << "Cannot identify Rich number!" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  std::string localName = ( secondary ? "DeRichSecMirror" : "DeRichSphMirror" );
+  const std::string localName = ( secondary ? "DeRichSecMirror" : "DeRichSphMirror" );
   MsgStream msg( msgSvc(), localName );
 
   // extract mirror number from detector element name
@@ -341,8 +342,9 @@ StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
 //=========================================================================
 //  updateGeometry
 //=========================================================================
-StatusCode DeRichSphMirror::updateGeometry ( ) {
-  //std::cout << "Update geometry of mirror " << myName() << std::endl;
+StatusCode DeRichSphMirror::updateGeometry ( ) 
+{
+  debug() << "Update geometry of mirror" << endmsg;
   m_mirrorCentre = geometry()->toGlobal(m_localMirrorCentre);
   m_centreOfCurvature = geometry()->toGlobal(m_localOrigin);
   return StatusCode::SUCCESS;

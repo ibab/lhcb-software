@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.h,v 1.5 2009-05-01 14:22:19 papanest Exp $
+ *  $Id: DeRichGasRadiator.h,v 1.6 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -34,7 +34,7 @@ class DeRichGasRadiator : public DeRichSingleSolidRadiator
 public:
 
   /// Standard constructor
-  DeRichGasRadiator( );
+  DeRichGasRadiator( const std::string & name = "" );
 
   virtual ~DeRichGasRadiator( ); ///< Destructor
 

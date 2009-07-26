@@ -3,14 +3,13 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.23 2008-10-28 14:51:39 cattanem Exp $
+ *  $Id: DeRich.cpp,v 1.24 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // DetDesc
@@ -29,15 +28,15 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRich::DeRich()
-  : m_gasWinRefIndex        ( 0 ),
+DeRich::DeRich(const std::string & name)
+  : DeRichBase             (name),
+    m_gasWinRefIndex        ( 0 ),
     m_gasWinAbsLength       ( 0 ),
     m_nominalHPDQuantumEff  ( 0 ),
     m_nominalSphMirrorRefl  ( 0 ),
     m_nominalSecMirrorRefl  ( 0 ),
     m_sphMirAlignCond       (),
-    m_secMirAlignCond       (),
-    m_name                  ( "DeRich" )
+    m_secMirAlignCond       ()
 { }
 
 //=============================================================================
@@ -59,8 +58,7 @@ DeRich::~DeRich() {
 //=========================================================================
 StatusCode DeRich::initialize ( )
 {
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
+  debug() << "Initialize " << name() << endmsg;
 
   if ( exists( "SphMirrorSegRows" ) )
   {
@@ -89,21 +87,20 @@ StatusCode DeRich::initialize ( )
     }
     else
     {
-      msg << MSG::FATAL << "Cannot find HPD QE location" << endmsg;
+      fatal() << "Cannot find HPD QE location" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
   SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
   if ( !tabQE )
-    msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
+    error() << "No info on HPD Quantum Efficiency" << endmsg;
   else {
-    msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
+    debug() << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
     m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
     if ( !m_nominalHPDQuantumEff->valid() )
     {
-      msg << MSG::ERROR
-          << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endreq;
+      error() << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -127,8 +124,7 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
     mirrorPos.setColumn( mirrorNumber % m_sphMirrorSegCols );
   }
   else {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "No position information for mirrors" << endmsg;
+    error() << "No position information for mirrors" << endmsg;
   }
 
   return mirrorPos;
@@ -149,8 +145,7 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
     mirrorPos.setColumn( mirrorNumber % m_secMirrorSegCols );
   }
   else {
-    MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::ERROR << "No position information for mirrors" << endmsg;
+    error() << "No position information for mirrors" << endmsg;
   }
 
   return mirrorPos;
@@ -164,8 +159,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
                                   SmartRef<Condition> mirrorAlignCond,
                                   const std::string& Rvector ) const {
 
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::VERBOSE << "Misaligning " << mirrorID << " in " << myName() << endmsg;
+  verbose() << "Misaligning " << mirrorID << " in " << myName() << endmsg;
 
   std::map<int, IPVolume*> mirrors;
   const IPVolume* cpvMirror;
@@ -183,7 +177,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
         //msg << MSG::VERBOSE << "Matched mirror " << mirrorName << endmsg;
         const std::string::size_type mpos = mirrorName.find(':');
         if ( std::string::npos == mpos ) {
-          msg << MSG::FATAL << "A mirror without a number!" << endmsg;
+          fatal() << "A mirror without a number!" << endmsg;
           return StatusCode::FAILURE;
         }
         int mirrorNumber = atoi( mirrorName.substr(mpos+1).c_str() );
@@ -191,27 +185,27 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
       }
     }
   }
-  msg << MSG::VERBOSE << "Found " << mirrors.size() << " mirrors" << endmsg;
+  verbose() << "Found " << mirrors.size() << " mirrors" << endmsg;
 
   std::vector<double> rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
   if ( rotX.size() != rotY.size() ) {
-    msg << MSG::FATAL << "Mismatch in X and Y rotations in Condition:"
-        << mirrorAlignCond->name() << endmsg;
+    fatal() << "Mismatch in X and Y rotations in Condition:"
+            << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
   if ( rotX.size() != mirrors.size() ) {
-    msg << MSG::FATAL << "Number of parameters does not match mirrors in:"
-        << mirrorAlignCond->name() << endmsg;
+    fatal() << "Number of parameters does not match mirrors in:"
+            << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
   std::vector<double> Rs = paramVect<double>(Rvector);
   if ( rotX.size() != Rs.size() ) {
-    msg << MSG::FATAL << "Number of Rs does not match mirrors in:"
-        << mirrorAlignCond->name() << endmsg;
+    fatal() << "Number of Rs does not match mirrors in:"
+            << mirrorAlignCond->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -228,7 +222,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     mirrors[mNum]->applyMisAlignment( matrix );
   }
 
-  msg << MSG::DEBUG << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
+  debug() << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
   return StatusCode::SUCCESS;
 
 }

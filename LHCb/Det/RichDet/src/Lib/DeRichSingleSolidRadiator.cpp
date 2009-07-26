@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.25 2008-11-30 10:20:45 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.26 2009-07-26 18:13:18 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -13,7 +13,6 @@
 #include "RichDet/DeRichSingleSolidRadiator.h"
 
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // MathCore files
@@ -28,8 +27,8 @@
 const CLID CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
-DeRichSingleSolidRadiator::DeRichSingleSolidRadiator()
-  : DeRichRadiator() {}
+DeRichSingleSolidRadiator::DeRichSingleSolidRadiator(const std::string & name)
+  : DeRichRadiator(name) {}
 
 // Standard Destructor
 DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() { }
@@ -45,9 +44,8 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   const StatusCode initSC =  DeRichRadiator::initialize();
   if ( initSC.isFailure() ) return initSC;
 
-  MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
-  log << MSG::DEBUG << "Starting initialisation for DeRichSingleSolidRadiator "
-      << name() << endreq;
+  debug() << "Starting initialisation for DeRichSingleSolidRadiator "
+          << name() << endreq;
 
   m_solid = geometry()->lvolume()->solid();
 
@@ -61,39 +59,39 @@ StatusCode DeRichSingleSolidRadiator::initialize()
       if ( (*matIter)->type() == "RINDEX" )
       {
         m_refIndexTabProp = (*matIter);
-        log << MSG::DEBUG << "Found TabProp " << m_refIndexTabProp->name() << " type "
-            << m_refIndexTabProp->type() << endmsg;
+        debug() << "Found TabProp " << m_refIndexTabProp->name() << " type "
+                << m_refIndexTabProp->type() << endmsg;
       }
       if ( (*matIter)->type() == "RAYLEIGH" )
       {
         m_rayleighTabProp = (*matIter);
-        log << MSG::DEBUG << "Found TabProp " << m_rayleighTabProp->name() << " type "
-            << m_rayleighTabProp->type() << endmsg;
+        debug() << "Found TabProp " << m_rayleighTabProp->name() << " type "
+                << m_rayleighTabProp->type() << endmsg;
       }
       if ( (*matIter)->type() == "CKVRNDX" )
       {
         m_chkvRefIndexTabProp = (*matIter);
-        log << MSG::DEBUG << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
-            << m_chkvRefIndexTabProp->type() << endmsg;
+        debug() << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
+                << m_chkvRefIndexTabProp->type() << endmsg;
       }
       if ( (*matIter)->type() == "ABSLENGTH" )
       {
         m_absorptionTabProp = (*matIter);
-        log << MSG::DEBUG << "Found TabProp " << m_absorptionTabProp->name() << " type "
-            << m_absorptionTabProp->type() << endmsg;
+        debug() << "Found TabProp " << m_absorptionTabProp->name() << " type "
+                << m_absorptionTabProp->type() << endmsg;
       }
     }
   }
 
   if (!m_refIndexTabProp)
   {
-    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
-        << endmsg;
+    error() << "Radiator " << name() << " without refractive index"
+            << endmsg;
     return StatusCode::FAILURE;
   }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG <<" Centre " << geometry()->toGlobal(zero) << endreq;
+  debug() <<" Centre " << geometry()->toGlobal(zero) << endreq;
 
   return initSC;
 }
@@ -105,19 +103,18 @@ StatusCode DeRichSingleSolidRadiator::
 prepareMomentumVector ( std::vector<double>& photonMomentumVect,
                         double min,
                         double max,
-                        unsigned int nbins) {
+                        unsigned int nbins)
+{
 
   // check parameters are sane
   if( max <= min ) {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Inadmissible photon energy limits "
-        << max << " " << min << endmsg;
+    error() << "Inadmissible photon energy limits "
+            << max << " " << min << endmsg;
     return StatusCode::FAILURE;
   }
   if ( nbins <= 0  ) {
-    MsgStream msg( msgSvc(), myName() );
-    msg << MSG::ERROR << "Inadimissible photon energy num bins "
-        << nbins << endmsg;
+    error() << "Inadimissible photon energy num bins "
+            << nbins << endmsg;
     return StatusCode::FAILURE;
   }
 

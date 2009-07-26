@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.55 2009-06-26 10:21:53 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.56 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -25,10 +25,10 @@
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 
 // RichDet
+#include "RichDet/DeRichBase.h"
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichHPD.h"
 #include "RichDet/DeRichLocations.h"
@@ -49,7 +49,7 @@ class DeRichSystem;
  *       DeRichHPDPanel::PDWindowPoint could be made the same. At the moment the
  *       hits obtained from these methods are on slightly different planes.
  */
-class DeRichHPDPanel: public DetectorElement
+class DeRichHPDPanel: public DeRichBase
 {
 
 public:
@@ -57,7 +57,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRichHPDPanel();
+  DeRichHPDPanel(const std::string & name = "");
 
   /**
    * Default destructor
@@ -255,11 +255,6 @@ private: // methods
    */
   bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
-  /** Returns the name of this particular HPD panel
-   *  @return HPD panel name
-   */
-  inline const std::string & myName() const { return m_name; }
-
   /// Returns the HPD number for the given RichSmartID
   unsigned int hpdNumber( const LHCb::RichSmartID smartID ) const;
 
@@ -273,8 +268,6 @@ private: // methods
   StatusCode generateGlobalToPDPanelTransforms();
 
 private: // data
-
-  std::string m_name;           ///< The name of this HPD panel
 
   unsigned int m_HPDColumns;    ///< Number of HPD columns in the panel
   unsigned int m_HPDNumInCol;   ///< Number of HPDs in each column

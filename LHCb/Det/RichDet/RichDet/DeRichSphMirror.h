@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.18 2008-01-29 07:58:28 papanest Exp $
+ *  $Id: DeRichSphMirror.h,v 1.19 2009-07-26 18:13:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,10 +18,9 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 
-#include "DetDesc/DetectorElement.h"
+#include "RichDet/DeRichBase.h"
 #include "DetDesc/ISolid.h"
 #include "RichDet/Rich1DTabProperty.h"
-
 
 // External declarations
 extern const CLID CLID_DeRichSphMirror;
@@ -33,7 +32,7 @@ extern const CLID CLID_DeRichSphMirror;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2004-06-18
  */
-class DeRichSphMirror : public DetectorElement
+class DeRichSphMirror : public DeRichBase
 {
 
 public:
@@ -41,7 +40,7 @@ public:
   /**
    * Constructor for this class
    */
-  DeRichSphMirror();
+  DeRichSphMirror(const std::string & name = "");
 
   /**
    * Default destructor
@@ -124,11 +123,6 @@ public:
                           const Gaudi::XYZVector & globalV,
                           Gaudi::XYZPoint& intersectionPoint ) const;
 
-  /** Returns the name of this particular mirror
-   *  @return mirror name
-   */
-  inline const std::string & myName() const { return m_name; }
-
   /**
    * Returns a pointer to the tabulated property that holds the reflectivity
    * of the mirror.
@@ -182,7 +176,6 @@ private: // data
 
   double m_radius;      ///< Spherical mirror radius
   int m_mirrorNumber;   ///< mirror (segment) number
-  std::string m_name;   ///< The name of this mirror
 
   /// The normal vector at the centre of the mirror
   Gaudi::XYZVector m_centreNormal;
