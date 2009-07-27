@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.38 2009-07-09 09:02:00 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.39 2009-07-27 10:08:19 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,7 +91,7 @@ StatusCode HltGlobalMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
-  m_odin            = book1D("ODIN type",  "ODIN Type ",-0.5, 7.5, 8);
+  m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
   std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
                 (ODIN::Reserve,           "Reserve")
                 (ODIN::PhysicsTrigger,    "Physics")
@@ -122,7 +122,7 @@ StatusCode HltGlobalMonitor::initialize() {
      	if (k != std::string::npos) s.erase(k,k+j->size());
       }
       labels.push_back(s);  
-  }
+}
 
   m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
                              m_Hlt1Lines.size()+1);
@@ -294,6 +294,8 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
 
     ++m_allCall[i];
     fill( m_hltInclusive, i, reps[i].second->decision());
+    //info() << "second try labels line" << i << "name = " << reps[i].first << endreq;
+    
     if (!reps[i].second->decision()) continue;
     ++m_allAcc[i];
    
