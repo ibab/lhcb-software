@@ -17,12 +17,15 @@ from Configurables import GaudiSequencer
 
 class ConfiguredMuonIDs():
 
-  def __init__(self, data="DC06",version="def",debug=False):
+  def __init__(self, data="DC06",version="def",specialData=[],debug=False):
     """
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
     if self.debug: print "# INITIALIZING CONFIGUREDMUONIDs"
+
+    self.specialData=specialData
+    if self.debug: print "# SPECIAL DATA=",self.specialData
 
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
     mod=[data+"_"+version,data+"_def","DC06_def"]
@@ -61,7 +64,7 @@ class ConfiguredMuonIDs():
     myfitter.MaxNumberOutliers = self.info.MaxNumberOutliers
     myfitter.NumberFitIterations = self.info.NumberFitIterations
     myfitter.StateAtBeamLine = self.info.StateAtBeamLine
-    myfitter.AddDefaultReferenceNodes = False
+    myfitter.AddDefaultReferenceNodes = self.info.AddDefaultReferenceNodes
 
   def configureIsMuonCandidateC(self, ismc):
     """
@@ -196,6 +199,9 @@ class ConfiguredMuonIDs():
     mymuid.MomentumCuts  = self.info.MomentumCuts
     mymuid.AllMuonTracks = self.info.AllMuonTracks
     mymuid.FindQuality = self.info.FindQuality
+    if "cosmics" in self.specialData:
+      print "# MuonID WARNING: MuonTrack Fit disabled for SpecialData = cosmics"
+      mymuid.FindQuality=False
     
     mymuid.XFOIParameter1 = self.info.XFOIParameter1
     mymuid.XFOIParameter2 = self.info.XFOIParameter2

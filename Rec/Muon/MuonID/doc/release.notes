@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2009-07-27 - Xabier Cid Vidal
+ - Change ConfiguredMuonIDs to disable the fit when reconstructed data are cosmics
+
 ! 2009-07-24 - Xabier Cid Vidal, Erica Polycarpo
  - Protect debug messages to be printed only if OuputLevel=DEBUG
  - Change some Error/Warning messages to Rdebug messages 

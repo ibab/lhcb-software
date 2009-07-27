@@ -88,7 +88,7 @@ UseSeedStateErrors = True
 FitUpstream = False
 MaxNumberOutliers = 0
 NumberFitIterations = 1
-ZPositions = [11900.]
+AddDefaultReferenceNodes = False
 StateAtBeamLine = False
 
 
