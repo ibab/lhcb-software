@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2009-07-01 18:42:41 polye Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-07-27 00:23:45 jcidvida Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -101,7 +101,7 @@ class RecSysConf(LHCbConfigurableUser):
         # MUON
         if "MUON" in recoSeq:
             from MuonID import ConfiguredMuonIDs
-            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"),specialData=self.getProp("SpecialData"))
             MuonIDSeq=cm.getMuonIDSeq()
             GaudiSequencer("RecoMUONSeq").Members += [ "MuonRec", MuonIDSeq ]
 
