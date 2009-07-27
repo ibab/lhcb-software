@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.47 2009-07-23 17:26:44 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.48 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -46,7 +46,7 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MinBeta", m_minBeta );
   declareProperty( "MaxBeta", m_maxBeta );
 
-  // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, Cf4
+  // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, CF4
   declareProperty( "ChThetaRecHistoLimitMin",
                    m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
   declareProperty( "ChThetaRecHistoLimitMax",
@@ -62,18 +62,59 @@ RecoQC::~RecoQC() { }
 StatusCode RecoQC::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
-  acquireTool( "TrackSelector", m_trSelector, this );
-  acquireTool( "RichStereoFitter",  m_fitter, this );
-  acquireTool( "RichCherenkovResolution", m_ckRes );
-  acquireTool( "RichIsolatedTrack", m_isoTrack );
-  acquireTool( "RichParticleProperties", m_richPartProp );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle      );
+  acquireTool( "TrackSelector",           m_trSelector, this );
+  acquireTool( "RichStereoFitter",        m_fitter, this );
+  acquireTool( "RichCherenkovResolution", m_ckRes        );
+  acquireTool( "RichIsolatedTrack",       m_isoTrack     );
+  acquireTool( "RichParticleProperties",  m_richPartProp );
 
   return sc;
+}
+
+StatusCode RecoQC::prebookHistograms()
+{
+
+  // Loop over radiators
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
+  {
+    richHisto1D( *rad,
+                 "ckResAllStereoRefit",
+                 "Rec-Exp Cktheta : All photons : Stereographic Refit",
+                 -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "ckResAllStereoRefitIsolated",
+                 "Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
+                 -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "thetaRec", "Reconstructed Ch Theta : All photons",
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "phiRec", "Reconstructed Ch Phi : All photons",
+                 0.0, 2.0*Gaudi::Units::pi, nBins1D() );
+    richHisto1D( *rad,
+                 "ckResAll", "Rec-Exp Cktheta : All photons",
+                 -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "thetaRecIsolated","Reconstructed Ch Theta : All photons : Isolated Tracks",
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "ckResAllIsolated","Rec-Exp Cktheta : All photons : Isolated Tracks",
+                 -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "totalPhotons","Photon Yield : All Tracks",
+                 -0.5, 50.5, 51 );
+    richHisto1D( *rad,
+                 "totalPhotonsIsolated","Photon Yield : Isolated Tracks",
+                 -0.5, 50.5, 51 );
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 // Main execution
@@ -113,7 +154,6 @@ StatusCode RecoQC::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    const std::string        RAD = Rich::text(rad);
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
@@ -153,21 +193,15 @@ StatusCode RecoQC::execute()
       // refitted CK theta
       if ( fitR.status == IStereoFitter::Result::Succeeded )
       {
-        plot1D( fitR.thcFit-thetaExpTrue,
-                hid(rad,"ckResAllStereoRefit"),
-                RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit",
-                -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+        richHisto1D(rad,"ckResAllStereoRefit")->fill(fitR.thcFit-thetaExpTrue);
         if ( isolated )
-        { 
-          plot1D( fitR.thcFit-thetaExpTrue,
-                  hid(rad,"ckResAllStereoRefitIsolated"),
-                  RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
-                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+        {
+          richHisto1D(rad,"ckResAllStereoRefitIsolated")->fill(fitR.thcFit-thetaExpTrue);
         }
       }
     }
 
-    // loop over photons for this segment 
+    // loop over photons for this segment
     unsigned int truePhotons(0);
     double avRecTrueTheta(0);
     if ( msgLevel(MSG::VERBOSE) )
@@ -182,24 +216,15 @@ StatusCode RecoQC::execute()
       // reconstructed phi
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
 
-      plot1D( thetaRec, hid(rad,"thetaRec"), RAD+" Reconstructed Ch Theta : All photons",
-              m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
-      plot1D( phiRec, hid(rad,"phiRec"), RAD+" Reconstructed Ch Phi : All photons",
-              0.0, 2.0*Gaudi::Units::pi, nBins1D() );
-      plot1D( thetaRec-thetaExpTrue,
-              hid(rad,"ckResAll"), RAD+" Rec-Exp Cktheta : All photons",
-              -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+      richHisto1D(rad,"thetaRec")->fill(thetaRec);
+      richHisto1D(rad,"phiRec")->fill(phiRec);
+      richHisto1D(rad,"ckResAll")->fill(thetaRec-thetaExpTrue);
 
       // isolated segment ?
       if ( isolated )
       {
-        plot1D( thetaRec, hid(rad,"thetaRecIsolated"), 
-                RAD+" Reconstructed Ch Theta : All photons : Isolated Tracks",
-                m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
-        plot1D( thetaRec-thetaExpTrue,
-                hid(rad,"ckResAllIsolated"),
-                RAD+" Rec-Exp Cktheta : All photons : Isolated Tracks",
-                -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+        richHisto1D(rad,"thetaRecIsolated")->fill(thetaRec);
+        richHisto1D(rad,"ckResAllIsolated")->fill(thetaRec-thetaExpTrue);
       }
 
       if ( mcTrackOK && mcRICHOK )
@@ -211,49 +236,39 @@ StatusCode RecoQC::execute()
           ++truePhotons;
           avRecTrueTheta += thetaRec;
           // resolution plot
-          plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResTrue"), RAD+" Rec-Exp Cktheta : MC true photons",
-                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+          richHisto1D ( rad, "ckResTrue", "Rec-Exp Cktheta : MC true photons",
+                        -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( thetaRec-thetaExpTrue );
           if ( resExpTrue>0 )
           {
             // pull plot
             const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-            plot1D( ckPull, hid(rad,"ckPull"), 
-                    RAD+" (Rec-Exp)/Res Cktheta", -4, 4, nBins1D() );
+            richHisto1D ( rad, "ckPull", "(Rec-Exp)/Res Cktheta",
+                          -4, 4, nBins1D() ) -> fill( ckPull );
           }
         }
         else // fake photon
         {
-          plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResFake"), 
-                  RAD+" Rec-Exp Cktheta : MC fake photons",
-                  -m_ckResRange[rad], m_ckResRange[rad], nBins1D() );
+          richHisto1D( rad, "ckResFake", "Rec-Exp Cktheta : MC fake photons",
+                       -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( thetaRec-thetaExpTrue );
         }
       } // MC is available
 
     } // photon loop
 
-    plot1D( segment->richRecPhotons().size(),
-            hid(rad,"totalPhotons"),
-            RAD+" Photon Yield : All Tracks",
-              -0.5, 50.5, 51 );
+    richHisto1D(rad,"totalPhotons")->fill(segment->richRecPhotons().size());
     if ( isolated )
     {
-      plot1D( segment->richRecPhotons().size(),
-              hid(rad,"totalPhotonsIsolated"),
-              RAD+" Photon Yield : Isolated Tracks",
-              -0.5, 50.5, 51 );
+      richHisto1D(rad,"totalPhotonsIsolated")->fill(segment->richRecPhotons().size());
     }
-    
-      // number of true photons
+
+    // number of true photons
     if ( truePhotons > 0 )
     {
-      plot1D( truePhotons, hid(rad,"nCKphots"), 
-              RAD+" True # p.e.s", -0.5, 50, 51 );
-      profile1D( avRecTrueTheta/(double)truePhotons,
-                 truePhotons, hid(rad,"nCKphotsVcktheta"),
-                 RAD+" True # p.e.s Versus CK theta",
-                 m_ckThetaMin[rad], m_ckThetaMax[rad] );
+      richHisto1D( rad, "nCKphots", "True # p.e.s",
+                   -0.5, 50, 51 ) -> fill( truePhotons );
+      richProfile1D( rad, "nCKphotsVcktheta", "True # p.e.s Versus CK theta",
+                     m_ckThetaMin[rad], m_ckThetaMax[rad],
+                     nBins1D() ) -> fill( avRecTrueTheta/(double)truePhotons, truePhotons );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];
     }
@@ -290,12 +305,12 @@ StatusCode RecoQC::finalize()
     {
       info() << " " << radName << " Av. # CK photons = "
              << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endreq;
-    }    
+    }
   }
 
   info() << "=============================================================================="
          << endreq;
 
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }

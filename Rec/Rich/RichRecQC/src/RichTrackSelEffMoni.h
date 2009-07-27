@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.h,v 1.3 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.h,v 1.4 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -51,6 +51,11 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
+
+      protected:
+        
+        /// Pre-Book all (non-MC) histograms
+        virtual StatusCode prebookHistograms();
   
       private: // data
 

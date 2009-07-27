@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.5 2009-06-10 16:15:01 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.6 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -59,6 +59,16 @@ StatusCode TrackSelEff::initialize()
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
 
   return sc;
+}
+
+StatusCode TrackSelEff::prebookHistograms()
+{
+  // Book (MC free) histos which must be ready after initialisation
+  // for online monitoring
+
+
+
+  return StatusCode::SUCCESS;
 }
 
 // Main execution

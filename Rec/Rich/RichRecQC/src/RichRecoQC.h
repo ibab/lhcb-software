@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.27 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.28 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -17,10 +17,6 @@
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
-
-// from Gaudi
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
 
 // Interfaces
 #include "MCInterfaces/IRichRecMCTruthTool.h"
@@ -72,6 +68,11 @@ namespace Rich
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
         virtual StatusCode finalize  ();    // Algorithm finalization
+
+      protected:
+
+        /// Pre-Book all (non-MC) histograms
+        virtual StatusCode prebookHistograms();
 
       private: // methods
 

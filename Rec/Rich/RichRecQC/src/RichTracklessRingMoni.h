@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingMoni.h,v 1.4 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.h,v 1.5 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -74,6 +74,11 @@ namespace Rich
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
 
+      protected:
+        
+        /// Pre-Book all (non-MC) histograms
+        virtual StatusCode prebookHistograms();
+        
       private:
 
         /// access RichRecMCTruthTool tool on demand

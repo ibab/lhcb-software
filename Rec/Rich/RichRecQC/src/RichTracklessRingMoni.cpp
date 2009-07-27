@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.6 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.7 2009-07-27 20:35:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -63,6 +63,28 @@ StatusCode TracklessRingMoni::initialize()
   return sc;
 }
 
+StatusCode TracklessRingMoni::prebookHistograms()
+{
+  // Book (MC free) histos which must be ready after initialisation
+  // for online monitoring
+ 
+  // Loop over radiators
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
+  {
+    richHisto1D( *rad, "ringRadii", "Trackless Ring Radii",
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+    richHisto1D( *rad, "totalPhotons", "Photon Yield : Trackless Rings",
+                 -0.5, 50.5, 51 );
+    richHisto1D( *rad, "ringRadiiRefitted", "Refitted Trackless Ring Radii (mm on HPD plane)",
+                 m_radiiMin[*rad], m_radiiMax[*rad], nBins1D() );
+    richHisto1D( *rad, "nRings", "Number of Rings",
+                 0.5, 50.5, 50 );
+  }
+
+  return StatusCode::SUCCESS;
+}
+
 // Main execution
 StatusCode TracklessRingMoni::execute()
 {
@@ -87,7 +109,6 @@ StatusCode TracklessRingMoni::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = ring->radiator();
-    const std::string        RAD = Rich::text(rad);
 
     // Ring knows if it is associated or not
     LHCb::RichRecSegment * nearestSeg = ring->richRecSegment();
@@ -114,8 +135,7 @@ StatusCode TracklessRingMoni::execute()
     const double rRadius = ring->radius(); // Ring radius (rads)
 
     // radius plot
-    plot1D( rRadius, hid(rad,"ringRadii"), RAD+" Trackless Ring Radii",
-            m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
+    richHisto1D(rad,"ringRadii")->fill(rRadius);
 
     // Expected CK theta for associated track
     const double avChTheta = ( hasTrackMC && nearestSeg ?
@@ -123,20 +143,15 @@ StatusCode TracklessRingMoni::execute()
 
     if ( hasTrackMC && nearestSeg )
     {
-      profile1D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadius"),
-                 RAD+" Ring Radius versus expected CK theta",
-                 m_ckThetaMin[rad], m_ckThetaMax[rad],
-                 nBins1D() );
-      plot1D( rRadius-avChTheta, hid(rad,"ringRadVCKexpect"),
-              RAD+" Ring radius - Expected track CK theta",
-              -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() );
+      richProfile1D( rad, "MCChThetaVRingRadius", "Ring Radius versus expected CK theta",
+                     m_ckThetaMin[rad], m_ckThetaMax[rad],
+                     nBins1D() ) -> fill( rRadius, avChTheta );
+      richHisto1D( rad, "ringRadVCKexpect", "Ring radius - Expected track CK theta",
+                   -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() ) -> fill( rRadius-avChTheta );
     }
 
     // photon yield
-    plot1D( (*iR)->richRecPixels().size(),
-            hid(rad,"totalPhotons"),
-            RAD+" Photon Yield : Trackless Rings",
-            -0.5, 50.5, 51 );
+    richHisto1D( rad, "totalPhotons" )->fill( (*iR)->richRecPixels().size() );
 
     // refit the ring ...
     FastRingFitter fitter(**iR);
@@ -153,12 +168,7 @@ StatusCode TracklessRingMoni::execute()
                            fitter.result().Variance < m_maxFitVariance[rad] );
     if ( refitOK )
     {
-      plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
-              RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
-              m_radiiMin[rad], m_radiiMax[rad], nBins1D() );
-      //plot1D( fitter.result().Variance, hid(rad,"ringVarianceRefitted"),
-      //        RAD+" Refitted Trackless Ring Variance",
-      //        0, m_maxFitVariance[rad], nBins1D() );
+      richHisto1D( rad, "ringRadiiRefitted" )->fill( fitter.result().Radius );
     }
 
     if ( richRecMCTool()->pixelMCHistoryAvailable() )
@@ -169,25 +179,27 @@ StatusCode TracklessRingMoni::execute()
         // refitted radius
         if ( refitOK )
         {
-          plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefittedMCtrue"),
-                  RAD+" Refitted Trackless Ring Radii (mm on HPD plane) : MCTrue Rings",
-                  m_radiiMin[rad], m_radiiMax[rad], nBins1D() );
+          richHisto1D( rad, "ringRadiiRefittedMCtrue", 
+                       "Refitted Trackless Ring Radii (mm on HPD plane) : MCTrue Rings",
+                       m_radiiMin[rad], m_radiiMax[rad], nBins1D() ) 
+            -> fill( fitter.result().Radius );
         }
 
         // association fraction
-        plot1D( mcinfo.associationFrac,
-                hid(rad,"mcAssocFrac"), RAD+" MC Association purity", m_mcAssocFrac, 1, nBins1D() );
+        richHisto1D( rad, "mcAssocFrac", "MC Association purity", 
+                     m_mcAssocFrac, 1, nBins1D() ) -> fill ( mcinfo.associationFrac );
 
         // Compare to MC segment expected values
         if ( hasTrackMC && nearestSeg && segmentMCP == mcinfo.mcParticle )
         {
-          profile1D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadiusMCtrue"),
-                     RAD+" Ring Radius versus expected CK theta : MCTrue Rings",
-                     m_ckThetaMin[rad], m_ckThetaMax[rad],
-                     nBins1D() );
-          plot1D( rRadius-avChTheta, hid(rad,"ringRadVCKexpectMCtrue"),
-                  RAD+" Ring radius - Expected track CK theta : MCTrue Rings",
-                  -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() );
+          richProfile1D( rad, "MCChThetaVRingRadiusMCtrue",
+                         "Ring Radius versus expected CK theta : MCTrue Rings",
+                         m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() )
+            -> fill ( rRadius, avChTheta );
+          richHisto1D( rad, "ringRadVCKexpectMCtrue",
+                       "Ring radius - Expected track CK theta : MCTrue Rings",
+                       -m_ckThetaRes[rad], m_ckThetaRes[rad], nBins1D() )
+            -> fill ( rRadius-avChTheta );
         }
 
       }
@@ -199,7 +211,7 @@ StatusCode TracklessRingMoni::execute()
         iRad != Rich::radiators().end(); ++iRad )
   {
     if ( ringsPerRad[*iRad]>0 )
-      plot1D( ringsPerRad[*iRad], hid(*iRad,"nRings"), "Number of Rings", 0.5, 50.5, 50 );
+      richHisto1D( *iRad, "nRings" )->fill( ringsPerRad[*iRad] );
   }
 
   return StatusCode::SUCCESS;
