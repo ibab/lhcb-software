@@ -19,22 +19,22 @@
 # |-UseSpillover   = False
 # |-CondDBtag      = ''
 # |-InitSequence   = ['Data', 'MUON']  (default: [])
-# |-DataType       = '2008'
+# |-DataType       = '2009'
 # |-NoWarnings     = False
 # |-LinkSequence   = ['VELO', 'TT', 'IT', 'OT', 'Tr', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
 # |-SpilloverPaths = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
 # |-DDDBtag        = ''
 # |-Monitors       = []  (default: [])
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
-# WARNING: Default tag requested for partition DDDB (using head-20090330)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20090402)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20090212)
+# WARNING: Default tag requested for partition DDDB (using head-20090713)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20090713)
+# WARNING: Default tag requested for partition SIMCOND (using sim-20090713-vc-md100)
 # DigiWriter.ItemList=['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCParticles#1', '/Event/pSim/MCVertices#1', '/Event/MC/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/Velo/Clusters2MCHits#1', '/Event/Link/Raw/TT/Clusters2MCHits#1', '/Event/Link/Raw/IT/Clusters2MCHits#1', '/Event/Link/Raw/OT/Times2MCHits#1']
 # DigiWriter.OptItemList=[]
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v18r1
-                                          running on lxbuild120.cern.ch on Wed Jul 15 18:05:26 2009
+                                          running on lxbuild120.cern.ch on Mon Jul 27 17:53:18 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -46,7 +46,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMUONSeq
 InitBooleSeq         INFO Member list: BooleInit
@@ -66,10 +66,10 @@ InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20090330"
+DDDB                 INFO Using TAG "head-20090713"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
-SIMCOND              INFO Using TAG "sim-20090212"
+SIMCOND              INFO Using TAG "sim-20090713-vc-md100"
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonlow-G4.root" for reading
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
@@ -107,10 +107,14 @@ SpdDigit             INFO Nominal gain parameters for   Middle region :    0.0 +
 SpdDigit             INFO Nominal gain parameters for    Inner region :    0.0 +   3.2 x sin(theta)
 SpdDigit             INFO Noise          :   0.0 +   0.0 (coherent) counts.
 SpdDigit             INFO Pedestal shift :  0.00 counts
-SpdDigit             INFO Actual dynamics saturation :   1.00 x ADCMax
-SpdDigit             INFO Subtract 0.0000 of previous BX
-SpdDigit             INFO Zero-suppression threshold :   0.50 ADC
-SpdDigit             INFO L0 trigger suppression     :   0.50 ADC
+SpdDigit             INFO Actual dynamics saturation :   0.90 x ADCMax
+SpdDigit             INFO Subtract 0.2000 of previous BX
+SpdDigit             INFO  MIP deposit    :   2.74 MeV
+SpdDigit             INFO Number of photo-electrons per MIP for    Outer region :   22.00
+SpdDigit             INFO Number of photo-electrons per MIP for   Middle region :   32.00
+SpdDigit             INFO Number of photo-electrons per MIP for    Inner region :   27.00
+SpdDigit             INFO Zero-suppression threshold :   0.58 ADC
+SpdDigit             INFO L0 trigger suppression     :   0.58 ADC
 SpdDigit             INFO L0 trigger ADC correction for    Outer region :    1.00
 SpdDigit             INFO L0 trigger ADC correction for   Middle region :    1.00
 SpdDigit             INFO L0 trigger ADC correction for    Inner region :    1.00
@@ -121,12 +125,16 @@ PrsDigit             INFO ----- Detector parameters (from condDB) --------------
 PrsDigit             INFO Nominal gain parameters for    Outer region :    0.0 + 274.0 x sin(theta)
 PrsDigit             INFO Nominal gain parameters for   Middle region :    0.0 + 274.0 x sin(theta)
 PrsDigit             INFO Nominal gain parameters for    Inner region :    0.0 + 274.0 x sin(theta)
-PrsDigit             INFO Noise          :   0.0 +   0.0 (coherent) counts.
+PrsDigit             INFO Noise          :   1.0 +   0.0 (coherent) counts.
 PrsDigit             INFO Pedestal shift :  0.00 counts
-PrsDigit             INFO Actual dynamics saturation :   1.00 x ADCMax
-PrsDigit             INFO Subtract 0.0000 of previous BX
-PrsDigit             INFO Zero-suppression threshold :   0.50 ADC
-PrsDigit             INFO L0 trigger suppression     :   0.50 ADC
+PrsDigit             INFO Actual dynamics saturation :   0.90 x ADCMax
+PrsDigit             INFO Subtract 0.2000 of previous BX
+PrsDigit             INFO  MIP deposit    :   2.74 MeV
+PrsDigit             INFO Number of photo-electrons per MIP for    Outer region :   22.00
+PrsDigit             INFO Number of photo-electrons per MIP for   Middle region :   32.00
+PrsDigit             INFO Number of photo-electrons per MIP for    Inner region :   27.00
+PrsDigit             INFO Zero-suppression threshold :   5.00 ADC
+PrsDigit             INFO L0 trigger suppression     : 100.00 ADC
 PrsDigit             INFO L0 trigger ADC correction for    Outer region :    1.00
 PrsDigit             INFO L0 trigger ADC correction for   Middle region :    1.00
 PrsDigit             INFO L0 trigger ADC correction for    Inner region :    1.00
@@ -137,25 +145,25 @@ EcalDigit            INFO ----- Detector parameters (from condDB) --------------
 EcalDigit            INFO Nominal gain parameters for    Outer region :  10000.0 + 7000.0 x sin(theta)
 EcalDigit            INFO Nominal gain parameters for   Middle region :  10000.0 + 7000.0 x sin(theta)
 EcalDigit            INFO Nominal gain parameters for    Inner region :  10000.0 + 7000.0 x sin(theta)
-EcalDigit            INFO Noise          :   0.0 +   0.0 (coherent) counts.
+EcalDigit            INFO Noise          :   1.2 +   0.3 (coherent) counts.
 EcalDigit            INFO Pedestal shift :  0.60 counts
-EcalDigit            INFO Actual dynamics saturation :   1.00 x ADCMax
+EcalDigit            INFO Actual dynamics saturation :   0.95 x ADCMax
 EcalDigit            INFO L0 trigger suppression     :   0.50 ADC
 EcalDigit            INFO L0 trigger ADC correction for    Outer region :    1.00
-EcalDigit            INFO L0 trigger ADC correction for   Middle region :    1.00
-EcalDigit            INFO L0 trigger ADC correction for    Inner region :    1.00
+EcalDigit            INFO L0 trigger ADC correction for   Middle region :    1.04
+EcalDigit            INFO L0 trigger ADC correction for    Inner region :    1.08
 EcalDigit            INFO ----- Digitization parameters (from CaloDigitAlg configuration) ------------------
 EcalDigit            INFO Additional  0.0% of the cells as dead (gain=0).
 EcalDigit            INFO Additional gain error  1.0%
 HcalDigit            INFO ----- Detector parameters (from condDB) ------------------
 HcalDigit            INFO Nominal gain parameters for    Outer region :  15000.0 +   0.0 x sin(theta)
 HcalDigit            INFO Nominal gain parameters for    Inner region :  15000.0 +   0.0 x sin(theta)
-HcalDigit            INFO Noise          :   0.0 +   0.0 (coherent) counts.
+HcalDigit            INFO Noise          :   1.2 +   0.3 (coherent) counts.
 HcalDigit            INFO Pedestal shift :  0.60 counts
-HcalDigit            INFO Actual dynamics saturation :   1.00 x ADCMax
+HcalDigit            INFO Actual dynamics saturation :   0.95 x ADCMax
 HcalDigit            INFO L0 trigger suppression     :   0.50 ADC
 HcalDigit            INFO L0 trigger ADC correction for    Outer region :    1.00
-HcalDigit            INFO L0 trigger ADC correction for    Inner region :    1.00
+HcalDigit            INFO L0 trigger ADC correction for    Inner region :    1.05
 HcalDigit            INFO ----- Digitization parameters (from CaloDigitAlg configuration) ------------------
 HcalDigit            INFO Additional  0.0% of the cells as dead (gain=0).
 HcalDigit            INFO Additional gain error  1.0%
@@ -179,6 +187,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
+ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {|}
 ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0xDC09 ==> OK
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xDC09 : DC09 tuning by Leandro (March 2009) - gain:Calo[20] : Muon[40]
@@ -418,7 +427,7 @@ L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.08 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -574,7 +583,7 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
 L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 2.75  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.71  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ServiceManager    WARNING Too low reference count for EventDataSvc (should not go below 1 at this point)
