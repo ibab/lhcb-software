@@ -171,7 +171,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber)
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-          "WriterHost", (long unsigned) strlen(xmlData));
+          "WriterHost", (size_t) strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
@@ -201,7 +201,7 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
 
   snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str(), identifier.c_str());
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-          "WriterHost", (long unsigned) strlen(xmlData));
+          "WriterHost", (size_t) strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));

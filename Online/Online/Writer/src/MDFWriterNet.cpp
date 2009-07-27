@@ -204,11 +204,15 @@ StatusCode MDFWriterNet::initialize(void)
       *m_log << MSG::INFO << "streamID: " << m_streamID << endmsg;
   } 
   // initialize named message queue
+  // The message queue is shared between several MDFWriterNet (one per partition ID in activity) 
   if((m_mq = mq_open("/writerqueue", O_RDWR, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
-      /**m_log << MSG::ERROR
-             << "Could not establish connection to message queue"
-             << endmsg;*/
+      *m_log << MSG::ERROR
+             << "Could not establish connection to message queue: "
+             << errno
+             << endmsg;
+  
       m_mq_available = false;
+ 
   } else {
       *m_log << MSG::INFO
              << "Established connection to message queue. "
@@ -408,15 +412,17 @@ void MDFWriterNet::closeFile(File *currFile)
   // log closing of file
   if(m_mq_available) {
 //      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
-      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%d%c%s%u%c%s%u",  
+
+      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zd%c%s%u%c%s%u",  
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
           DELIMITER, "lumiEvents=", currFile->getLumiEvents()) + 1;
+
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
-      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%d%c%s%u%c%s%u", 
+      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zd%c%s%u%c%s%u", 
           DELIMITER, getpid(), 
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
