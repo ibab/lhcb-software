@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.66 2009-07-08 18:30:25 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.67 2009-07-27 09:55:16 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -914,6 +914,23 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
   fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
 
   return StatusCode::SUCCESS ;
+}
+//=============================================================================
+StatusCode 
+PhysDesktop::setP2PVInputLocations ( const std::vector<std::string>& location) {
+
+  if (location.empty()) {
+    return Error("Attempting to set empty P->PV locations");
+  }
+  m_p2PVInputLocations = location;
+
+  return std::equal(location.begin(), 
+                    location.end(), 
+                    m_p2PVInputLocations.begin()) 
+    ? 
+    StatusCode::SUCCESS : 
+    StatusCode::FAILURE;
+
 }
 //=============================================================================
 void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,

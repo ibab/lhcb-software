@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.36 2009-07-06 15:25:35 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.37 2009-07-27 09:55:16 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -49,6 +49,10 @@ public:
 
   /// set InputLocations (for DVAlgorithm)
   virtual StatusCode setInputLocations(const std::vector<std::string> & ) ;
+
+  /// set O->PV InputLocations (for DVAlgorithm)
+  virtual StatusCode setP2PVInputLocations(const std::vector<std::string> & location) ;
+
 
   /// Load Input particles and vertices (in local data) from various input
   /// locations filled with previous processings and  
