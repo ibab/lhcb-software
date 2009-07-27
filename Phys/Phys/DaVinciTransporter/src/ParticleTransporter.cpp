@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.21 2008-04-15 15:45:33 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.22 2009-07-27 16:43:10 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,7 @@
 #include "LHCbMath/MatrixManip.h"
 // local
 #include "ParticleTransporter.h"
-#include "TransporterFunctions.h"
+#include "Kernel/TransporterFunctions.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : ParticleTransporter
 //
@@ -81,12 +81,12 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
 
   if ( ! (P->isBasicParticle()) ) {
-    verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
-    sc = DaVinciTransporter::transportComposite(P, zNew, transParticle);
+    verbose() << "Using DaVinci::Transporter::transportComposite" << endmsg;
+    sc = DaVinci::Transporter::transportComposite(P, zNew, transParticle);
     if (!sc) return sc;
   } else if (P->charge()==0. ) {
-    verbose() << "Using DaVinciTransporter::transportNeutralBasic" << endmsg;
-    sc = DaVinciTransporter::transportNeutralBasic(P, zNew, transParticle);
+    verbose() << "Using DaVinci::Transporter::transportNeutralBasic" << endmsg;
+    sc = DaVinci::Transporter::transportNeutralBasic(P, zNew, transParticle);
     if (!sc) return sc;
   } else {
     sc = transportChargedBasic(P, zNew, transParticle);
@@ -107,14 +107,14 @@ StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P,
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
   
   if ( ! (P->isBasicParticle()) ) {
-    sc = DaVinciTransporter::transportAndProjectComposite(P, 
-                                                          zNew, 
-                                                          transParticle);
+    sc = DaVinci::Transporter::transportAndProjectComposite(P, 
+                                               zNew, 
+                                               transParticle);
     if (!sc) return sc;
   } else if (P->charge()==0. ) {
-    sc = DaVinciTransporter::transportAndProjectNeutralBasic(P, 
-                                                             zNew, 
-                                                             transParticle);
+    sc = DaVinci::Transporter::transportAndProjectNeutralBasic(P, 
+                                                  zNew, 
+                                                  transParticle);
     if (!sc) return sc;
   } else {
     sc = transportChargedBasic(P, zNew, transParticle);
