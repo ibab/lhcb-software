@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.306 2009-07-22 11:42:41 jpalac Exp $
+!$Id: release.notes,v 1.307 2009-07-27 13:03:40 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-07-27 - Juan PALACIOS
+ - Major change: Move all interfaces to Phys/DaVinciInterfaces
+ - Increase major version number (v8r0)
+ - src/Lib/DVAlgorithm.cpp
+  . Move setting of P2PVInputLocations to initialize method.
 
 ! 2009-07-22 - Chris Jones
  - Move ProtoParticle classes to Phys/ProtoParticleFilter package.
