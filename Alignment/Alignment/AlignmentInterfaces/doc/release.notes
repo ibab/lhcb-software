@@ -3,7 +3,7 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
-</PRE><H1><A NAME=v2r8>2009-07-06 AlignmentInterfaces v3r0 </A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2009-07-06 AlignmentInterfaces v3r0 </A></H1><PRE>
 
 ! 2009/07/06 - Wouter Hulsbergen
 - Migrated from SolvKernel to AlignKernel
