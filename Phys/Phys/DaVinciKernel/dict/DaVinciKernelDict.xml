@@ -4,5 +4,6 @@
 
   <class name = "DVAlgorithm"/>
   <function name = "DaVinci::Utils::setInput"/>
+  <function name = "DaVinci::Transporter::*"/>
 
 </lcgdict>
