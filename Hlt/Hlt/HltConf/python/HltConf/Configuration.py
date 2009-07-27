@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.98 2009-07-20 17:19:52 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.99 2009-07-27 10:05:53 kvervink Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -196,7 +196,7 @@ class HltConf(LHCbConfigurableUser):
                                   ("Hadron"     , "Hlt1.*Hadron.*Decision"),
                                   ("SingleMuon" , "Hlt1.*SingleMuon.*Decision"),
                                   ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
-                                  ("MuonTrack"  , "Hlt1.*MuonTrack.*Decision"),
+                                  ("MuTrack"    , "Hlt1.*MuTrack.*Decision"),
                                   ("Velo"       , "Hlt1Velo.*Decision"),
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
