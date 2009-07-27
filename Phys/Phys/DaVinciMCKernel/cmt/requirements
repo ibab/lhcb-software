@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2009-05-22 12:51:35 cattanem Exp $
+# $Id: requirements,v 1.23 2009-07-27 16:31:52 jpalac Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -7,7 +7,7 @@
 # =============================================================================
 
 package           DaVinciMCKernel
-version           v3r3
+version           v4r0
 
 #============================================================================
 branches          cmt doc dict src options Kernel
@@ -19,7 +19,7 @@ use  GenEvent            v*  Event
 use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
-use  DaVinciKernel       v*  Phys
+use  DaVinciInterfaces   v*  Phys
 use  LoKiCore            v*  Phys
 
 # Exported header files
