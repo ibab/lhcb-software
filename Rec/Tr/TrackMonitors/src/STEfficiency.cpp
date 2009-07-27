@@ -1,11 +1,11 @@
-// $Id: STEfficiency.cpp,v 1.1 2009-07-24 14:03:15 jluisier Exp $
+// $Id: STEfficiency.cpp,v 1.2 2009-07-27 13:44:46 jluisier Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "STEfficiency2.h"
+#include "STEfficiency.h"
 
 
 #include "TrackInterfaces/IHitExpectation.h"
@@ -35,19 +35,19 @@ using namespace ST;
 using namespace AIDA;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : STEfficiency2
+// Implementation file for class : STEfficiency
 //
 // 2009-06-16 : Johan Luisier
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STEfficiency2 );
+DECLARE_ALGORITHM_FACTORY( STEfficiency );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-STEfficiency2::STEfficiency2( const string& name,
+STEfficiency::STEfficiency( const string& name,
 			      ISvcLocator* pSvcLocator)
   : TrackMonitorBase ( name , pSvcLocator )
 {
@@ -69,12 +69,12 @@ STEfficiency2::STEfficiency2( const string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-STEfficiency2::~STEfficiency2() {} 
+STEfficiency::~STEfficiency() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode STEfficiency2::initialize()
+StatusCode STEfficiency::initialize()
 {
   StatusCode sc( TrackMonitorBase::initialize() ); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by TrackMonitorBase
@@ -124,7 +124,7 @@ StatusCode STEfficiency2::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode STEfficiency2::execute()
+StatusCode STEfficiency::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -226,7 +226,7 @@ StatusCode STEfficiency2::execute()
   return StatusCode::SUCCESS;
 }
 
-bool STEfficiency2::foundHitInSector( const ISTClusterCollector::Hits& hits, 
+bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits, 
 				      const unsigned int testsector,
 				      const double resCut  ) const
 {
@@ -257,7 +257,7 @@ bool STEfficiency2::foundHitInSector( const ISTClusterCollector::Hits& hits,
   return found;
 }
 
-bool STEfficiency2::foundHitInLayer( const ISTClusterCollector::Hits& hits, 
+bool STEfficiency::foundHitInLayer( const ISTClusterCollector::Hits& hits, 
 				     const unsigned int testlayer,
 				     const double resCut  ) const
 {
@@ -291,7 +291,7 @@ bool STEfficiency2::foundHitInLayer( const ISTClusterCollector::Hits& hits,
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode STEfficiency2::finalize()
+StatusCode STEfficiency::finalize()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
@@ -465,7 +465,7 @@ StatusCode STEfficiency2::finalize()
   return TrackMonitorBase::finalize();  // must be called after all other actions
 }
 
-STEfficiency2::Category STEfficiency2::ITCategory(const vector<LHCb::LHCbID>& ids) const
+STEfficiency::Category STEfficiency::ITCategory(const vector<LHCb::LHCbID>& ids) const
 {
   typedef map<unsigned int, unsigned int> BoxMap;
   BoxMap nBox;
@@ -477,7 +477,7 @@ STEfficiency2::Category STEfficiency2::ITCategory(const vector<LHCb::LHCbID>& id
   return nBox.size() == 1 ? Category(nBox.begin() -> first) : Mixed ;
 }
 
-void STEfficiency2::filterNameList(vector<unsigned int>& vec)
+void STEfficiency::filterNameList(vector<unsigned int>& vec)
 {
   std::sort( vec.begin(), vec.end() );
   std::unique( vec.begin(), vec.end() );

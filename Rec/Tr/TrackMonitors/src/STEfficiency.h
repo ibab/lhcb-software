@@ -1,6 +1,6 @@
-// $Id: STEfficiency.h,v 1.1 2009-07-24 14:03:15 jluisier Exp $
-#ifndef STEFFICIENCY2_H 
-#define STEFFICIENCY2_H 1
+// $Id: STEfficiency.h,v 1.2 2009-07-27 13:44:46 jluisier Exp $
+#ifndef STEFFICIENCY_H 
+#define STEFFICIENCY_H 1
 
 // Include files
 #include "TrackMonitorBase.h"
@@ -22,12 +22,12 @@ class DeSTSector;
  *  @author Johan Luisier
  *  @date   2009-06-16
  */
-class STEfficiency2 : public TrackMonitorBase {
+class STEfficiency : public TrackMonitorBase {
 public: 
   /// Standard constructor
-  STEfficiency2( const std::string& name, ISvcLocator* pSvcLocator );
+  STEfficiency( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~STEfficiency2( ); ///< Destructor
+  virtual ~STEfficiency( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
