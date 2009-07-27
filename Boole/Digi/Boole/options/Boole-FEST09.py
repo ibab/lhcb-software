@@ -5,17 +5,8 @@
 #   gaudirun.py Boole-FEST09.py <someDataFiles>.py
 ##############################################################################
 
-from Configurables import Boole
-
-Boole().Outputs    = ["MDF"]
-#Boole().NoWarnings = True
-
-# Write out only events passing L0, or with simulated random trigger
-Boole().FilterSequence = ["L0","ODIN"]
-
-# Do not compress output file, for faster reading by FEST injector
-from Configurables import LHCb__RawDataCnvSvc
-LHCb__RawDataCnvSvc().Compress = 0
+from GaudiKernel.ProcessJobOptions import importOptions
+importOptions("$APPCONFIGROOT/options/Boole/FEST-L0Yes.py")
 
 ##############################################################################
 # I/O datasets and database tags are defined in a separate file,
