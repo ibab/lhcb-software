@@ -73,6 +73,11 @@ Purpose: LHCb Digitization program
    . Changes in STEffChecker output following changes to ST cluster selectors
    . Changes in printout due to move to Gaudi v21
 
+</PRE><H1><A NAME=v18r1>2009-05-12 Boole v18r1</A></H1><PRE>
+ - Built on v18b branch
+ - Changes to references to reflect changes in Boole v18r1 output:
+   . Update for OT time classification bug fix
+
 </PRE><H1><A NAME=v18r0>2009-04-14 Boole v18r0</A></H1><PRE>
  - Changes to requirements
    . Increase major version to v18r0
