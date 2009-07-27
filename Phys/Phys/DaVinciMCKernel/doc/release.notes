@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.90 2009-05-25 12:57:37 cattanem Exp $
+! $Id: release.notes,v 1.91 2009-07-27 16:32:03 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-07-27 - Juan PALACIOS
+ - cmt/requirements
+  . Use Phys/DaVinciInterfaces instead of Phys/DaVinciKernel.
+    Increase version to v4r0 since clients that use it and get DaVinciKernel
+    implicitly might break.
 
 !====================== DaVinciMCKernel v3r3 2009-05-25 ======================
 ! 2009-05-22 - Marco Cattaneo
