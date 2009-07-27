@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.44 2009-06-29 10:03:26 cattanem Exp $
+# $Id: requirements,v 1.45 2009-07-27 16:05:28 ibelyaev Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v7r12
+version           v7r13
 
 # =============== structure ===================================================
 branches          cmt doc CaloInterfaces
