@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichHistoAlgBase.h,v 1.5 2009-06-10 13:13:00 jonrob Exp $
+ *  $Id: RichHistoAlgBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,7 +19,7 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 // local
-#include "RichKernel/RichCommonBase.h"
+#include "RichKernel/RichHistoBase.h"
 
 // histogramming utilities
 #include "RichKernel/RichHistoID.h"
@@ -40,7 +40,7 @@ namespace Rich
    */
   //-----------------------------------------------------------------------------
 
-  class HistoAlgBase : public Rich::CommonBase<GaudiHistoAlg>
+  class HistoAlgBase : public Rich::HistoBase<GaudiHistoAlg>
   {
 
   public:
@@ -48,24 +48,8 @@ namespace Rich
     /// Standard constructor
     HistoAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
-      : Rich::CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
-    {
-      declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-      declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
-    }
-
-  protected:
-
-    /// Number of bins for 1D histograms
-    inline unsigned int nBins1D() const { return m_nBins1D; }
-
-    /// Number of bins for 2D histograms
-    inline unsigned int nBins2D() const { return m_nBins2D; }
-
-  private:
-
-    unsigned int m_nBins1D; ///< Number of bins for 1D histograms
-    unsigned int m_nBins2D; ///< Number of bins for 2D histograms
+      : Rich::HistoBase<GaudiHistoAlg> ( name, pSvcLocator )
+    { }
 
   };
 

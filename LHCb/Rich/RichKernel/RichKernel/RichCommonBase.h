@@ -5,7 +5,7 @@
  *  Header file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.14 2009-07-07 16:24:53 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.15 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -63,6 +63,8 @@ namespace Rich
 
     /// Destructor
     virtual ~CommonBase( );
+
+  public:
 
     /** Initialization of the algorithm after creation
      *

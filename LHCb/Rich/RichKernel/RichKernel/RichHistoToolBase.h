@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichHistoToolBase
  *
  *  CVS Log :-
- *  $Id: RichHistoToolBase.h,v 1.5 2009-06-10 13:13:00 jonrob Exp $
+ *  $Id: RichHistoToolBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,7 +19,7 @@
 #include "GaudiAlg/GaudiHistoTool.h"
 
 // local
-#include "RichKernel/RichCommonBase.h"
+#include "RichKernel/RichHistoBase.h"
 
 // histogramming utilities
 #include "RichKernel/RichHistoID.h"
@@ -40,7 +40,7 @@ namespace Rich
    */
   //-----------------------------------------------------------------------------
 
-  class HistoToolBase : public Rich::CommonBase<GaudiHistoTool>
+  class HistoToolBase : public Rich::HistoBase<GaudiHistoTool>
   {
 
   public:
@@ -49,24 +49,8 @@ namespace Rich
     HistoToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : Rich::CommonBase<GaudiHistoTool> ( type, name, parent )
-    { 
-      declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
-      declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
-    }
-
-  protected:
-
-    /// Number of bins for 1D histograms
-    inline unsigned int nBins1D() const { return m_nBins1D; }
-
-    /// Number of bins for 2D histograms
-    inline unsigned int nBins2D() const { return m_nBins2D; }
-
-  private:
-
-    unsigned int m_nBins1D; ///< Number of bins for 1D histograms
-    unsigned int m_nBins2D; ///< Number of bins for 2D histograms
+      : Rich::HistoBase<GaudiHistoTool> ( type, name, parent )
+    { }
 
   };
 

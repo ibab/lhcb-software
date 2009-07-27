@@ -1,0 +1,252 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichHistoBase.icpp
+ *
+ *  Implementation file for RICH base class : Rich::HistoBase
+ *
+ *  CVS Log :-
+ *  $Id: RichHistoBase.icpp,v 1.1 2009-07-27 20:29:02 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2009-07-27
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichKernel/RichHistoBase.h"
+
+// Disable warning on windows
+#ifdef _WIN32
+#pragma warning ( disable:4661 ) // incomplete explicit templates
+#endif
+
+// Base class methods
+#include "RichCommonBase.icpp"
+
+//=============================================================================
+// Destructor
+//=============================================================================
+template <class PBASE>
+Rich::HistoBase<PBASE>::~HistoBase() { }
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = CommonBase<PBASE>::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // Do stuff ...
+
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// System Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::sysInitialize()
+{
+  // run base clase method
+  StatusCode sc = CommonBase<PBASE>::sysInitialize();
+  if ( sc.isFailure() ) return sc;
+  // as last thing book any histos (only once)
+  if ( ! m_histosAreBooked )
+  {
+    sc = prebookHistograms();
+    m_histosAreBooked = true;
+  }
+  // return
+  return sc;
+}
+
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::finalize()
+{
+  // Do stuff ...
+
+  // Finalise base class and return
+  return CommonBase<PBASE>::finalize();
+}
+
+//=============================================================================
+
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::prebookHistograms()
+{
+  // Default implementation does nothing
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+
+template <class PBASE>
+AIDA::IHistogram1D *
+Rich::HistoBase<PBASE>::richHisto1D( const Rich::RadiatorType rad,
+                                     const std::string &       id,
+                                     const std::string &    title,
+                                     const double             low,
+                                     const double            high,
+                                     const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IHistogram1D * h = (m_rad1dhmaps[rad])[id];
+  if ( h ) return h;
+
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Book the histo
+  h = PBASE::book1D( hid(rad,id),
+                     Rich::text(rad)+" "+title,
+                     low, high, bins );
+
+  // save histo pointer
+  (m_rad1dhmaps[rad])[id] = h;
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IProfile1D *
+Rich::HistoBase<PBASE>::richProfile1D( const Rich::RadiatorType rad,
+                                       const std::string &       id,
+                                       const std::string &    title,
+                                       const double             low,
+                                       const double            high,
+                                       const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IProfile1D * h = (m_rad1dpmaps[rad])[id];
+  if ( h ) return h;
+
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Book the histo
+  h = PBASE::bookProfile1D( hid(rad,id),
+                            Rich::text(rad)+" "+title,
+                            low, high, bins );
+
+  // save histo pointer
+  (m_rad1dpmaps[rad])[id] = h;
+
+  // return the histo
+  return h;
+}
+
+//=============================================================================
+
+template <class PBASE>
+AIDA::IHistogram1D *
+Rich::HistoBase<PBASE>::richHisto1D( const Rich::DetectorType rich,
+                                     const std::string &       id,
+                                     const std::string &    title,
+                                     const double             low,
+                                     const double            high,
+                                     const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IHistogram1D * h = (m_rich1dhmaps[rich])[id];
+  if ( h ) return h;
+
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Book the histo
+  h = PBASE::book1D( hid(rich,id),
+                     Rich::text(rich)+" "+title,
+                     low, high, bins );
+
+  // save histo pointer
+  (m_rich1dhmaps[rich])[id] = h;
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IProfile1D *
+Rich::HistoBase<PBASE>::richProfile1D( const Rich::DetectorType rich,
+                                       const std::string &       id,
+                                       const std::string &    title,
+                                       const double             low,
+                                       const double            high,
+                                       const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IProfile1D * h = (m_rich1dpmaps[rich])[id];
+  if ( h ) return h;
+
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Book the histo
+  h = PBASE::bookProfile1D( hid(rich,id),
+                            Rich::text(rich)+" "+title,
+                            low, high, bins );
+
+  // save histo pointer
+  (m_rich1dpmaps[rich])[id] = h;
+
+  // return the histo
+  return h;
+}
+
+//=============================================================================
+
+template <class PBASE>
+AIDA::IHistogram1D *
+Rich::HistoBase<PBASE>::richHisto1D( const std::string &       id,
+                                     const std::string &    title,
+                                     const double             low,
+                                     const double            high,
+                                     const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IHistogram1D * h = m_1dhmap[id];
+  if ( h ) return h;
+
+  // Book the histo
+  h = PBASE::book1D( id, title,
+                     low, high, bins );
+
+  // save histo pointer
+  m_1dhmap[id] = h;
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IProfile1D *
+Rich::HistoBase<PBASE>::richProfile1D( const std::string &       id,
+                                       const std::string &    title,
+                                       const double             low,
+                                       const double            high,
+                                       const unsigned long     bins )
+{
+  // Already been booked ?
+  AIDA::IProfile1D * h = m_1dpmap[id];
+  if ( h ) return h;
+
+  // Book the histo
+  h = PBASE::bookProfile1D( id, title,
+                            low, high, bins );
+
+  // save histo pointer
+  m_1dpmap[id] = h;
+
+  // return the histo
+  return h;
+}

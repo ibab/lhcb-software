@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.228 2009-07-23 16:06:33 jonrob Exp $
+! $Id: release.notes,v 1.229 2009-07-27 20:29:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-07-27 - Chris Jones
+ - Add new common base class (RichHistoBase) for all histogramming
+   components that implement some common methods. In particular methods
+   that make pre-booking histograms during initialise more convenient by
+   implementing various RICH convections on the naming structure for 
+   histograms and the path in which they are stored in the persistent 
+   output ROOT file.
 
 ! 2009-07-23 - Chris Jones
  - Downgrade warning messages about changed tool types to Info in 
