@@ -1,4 +1,4 @@
-// $Id: L0CondDBProvider.h,v 1.3 2009-07-24 16:50:21 odescham Exp $
+// $Id: L0CondDBProvider.h,v 1.4 2009-07-27 13:43:29 odescham Exp $
 #ifndef L0CONDDBPROVIDER_H 
 #define L0CONDDBPROVIDER_H 1
 
@@ -28,7 +28,7 @@ public:
   double caloEtScale();
   double muonPtScale();
   const std::vector<int> RAMBCID(std::string vsn);
-  const int RAMBCID(std::string vsn,int bcid);
+  int RAMBCID(std::string vsn,int bcid);
   
 protected:
 

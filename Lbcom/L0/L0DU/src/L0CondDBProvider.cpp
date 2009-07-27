@@ -1,4 +1,4 @@
-// $Id: L0CondDBProvider.cpp,v 1.3 2009-07-24 16:50:21 odescham Exp $
+// $Id: L0CondDBProvider.cpp,v 1.4 2009-07-27 13:43:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -106,7 +106,7 @@ const std::vector<int> L0CondDBProvider::RAMBCID(std::string vsn){
   }
   return (*it).second;
 }
-const int L0CondDBProvider::RAMBCID(std::string vsn,int bcid){
+int L0CondDBProvider::RAMBCID(std::string vsn,int bcid){
   const std::vector<int>& ram = RAMBCID( vsn );
   if( bcid+1 > (int)ram.size()){
     std::stringstream b("");
