@@ -1,4 +1,4 @@
-// $Id: IL0CondDBProvider.h,v 1.3 2009-07-24 16:51:53 odescham Exp $
+// $Id: IL0CondDBProvider.h,v 1.4 2009-07-27 13:42:09 odescham Exp $
 #ifndef IL0CONDDBPROVIDER_H 
 #define IL0CONDDBPROVIDER_H 1
 
@@ -28,7 +28,7 @@ public:
   virtual double caloEtScale()=0;
   virtual double muonPtScale()=0;
   virtual const std::vector<int> RAMBCID(std::string vsn)=0;
-  virtual const int RAMBCID(std::string vsn,int bcid)=0;
+  virtual int RAMBCID(std::string vsn,int bcid)=0;
   
 protected:
 
