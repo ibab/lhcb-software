@@ -5,4 +5,4 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-07-22 - Juan Palacios
- - First import. Take all IIlgTools and IInterfaces from DaVinciKernel
+ - First import. Take all IAlgTools and IInterfaces from DaVinciKernel
