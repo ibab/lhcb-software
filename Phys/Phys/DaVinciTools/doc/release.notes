@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.445 2009-07-23 16:25:57 jpalac Exp $
+! $Id: release.notes,v 1.446 2009-07-27 10:04:09 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-07-27 - Juan PALACIOS
+ - PhysDesktop: Add implementation for 
+   virtual StatusCode  setP2PVInputLocations( const std::vector<std::string>& )
+   method
+ - cmt/requirements
+  . Increment version to v19r1
 
 !========================== DaVinciTools v19r0 2009-07-23 ===================
 
