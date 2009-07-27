@@ -4,6 +4,13 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!2009-07-27 Silvia Borghi
+- VeloTrackMonitor
+  - change the plot of phi coordinate of the plot, one histogram per half,
+    transform phi coordinate for the C side in the range -90,90.
+	  Top part of both halves has phi between (0,90) and the botton between 
+    (-90,0)
+
 ! 2009-07-23 - Silvia Borghi
 	-VeloTrackMonitor: 
      - Add histogram of the efficiency evaluated by interpolation

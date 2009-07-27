@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.19 2009-07-23 11:27:35 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.20 2009-07-27 16:39:52 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -606,10 +606,21 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       double y_loc = rCoor[i] * sin(correct_phi);    
       Gaudi::XYZPoint pointLocal(x_loc, y_loc, 0);
       Gaudi::XYZPoint phiStateHalf = sensor->localToVeloHalfBox( pointLocal );
-      plot1D( phiStateHalf.Phi()/degree,
-              "HalfPhiCoord", "Cluster #phi coordinate (degree) in half frame",
-              -190 , 190, 100 );
-      
+
+      // Plot of phi coordinate of the point in half frame: for C side translate the phi coordinate
+      // from (-180,-90)+(90,180) into (-90,90). Phi for top part for both halves is within (0,90)
+      // the bottom part within (-90,0)
+      //A side
+      if (i%2==0)
+        plot1D( phiStateHalf.Phi()/degree,
+                "HalfPhiCoordA", "Cluster #phi coordinate (degree) in half frame",
+                -95 , 95, 100 );
+      else
+        //C side
+        plot1D( -atan(tan(phiStateHalf.Phi()))/degree,
+                "HalfPhiCoordC", "Cluster #phi coordinate (degree) in half frame",
+                -95 , 95, 100 );
+
       if(m_hitmapHistos){ 
         
         Gaudi::XYZPoint pointGlobal(0, 0, 0);
