@@ -1,10 +1,13 @@
-// $Id: DeVeloSensor.h,v 1.43 2009-06-11 13:27:47 krinnert Exp $
+// $Id: DeVeloSensor.h,v 1.44 2009-07-27 10:36:15 jonrob Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
 // Include files
 #include <algorithm>
 #include <bitset>
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
 
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
@@ -197,10 +200,10 @@ public:
   /// Returns true if Phi Sensor
   inline bool isPhi() const {return m_isPhi;}
 
-  /// Returns true if sensor is top cabled 
+  /// Returns true if sensor is top cabled
   inline bool isTop() const {return m_isTop;}
 
-  /// Returns true if sensor is bottom cabled 
+  /// Returns true if sensor is bottom cabled
   inline bool isBottom() const {return !m_isTop;}
 
   /// fast cast to R sensor, returns 0 for wrong type
@@ -330,8 +333,8 @@ protected:
 public:
   /** @class DeVeloSensor::StripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
    *
-   *  Encodes strip information. 
-   *  From construction information states are : 
+   *  Encodes strip information.
+   *  From construction information states are :
    *  OK, Low gain, Noisy, Dead, Open, Pinhole and Short
    *
    *  @author Kurt Rinnert
@@ -346,8 +349,8 @@ public:
   private:
     enum {
       LOWGAIN=  2,
-      NOISY=	1,
-      STRIPOK =	0,
+      NOISY= 1,
+      STRIPOK = 0,
       DEAD=    -1,
       OPEN=    -2,
       PINHOLE= -3,
@@ -356,19 +359,19 @@ public:
 
   public:
     /// No problems with this strip
-    bool stripIsOK() const { return m_info==STRIPOK; } 
+    bool stripIsOK() const { return m_info==STRIPOK; }
     /// Lower gain strip
-    bool stripIsLowGain() const { return m_info==LOWGAIN; } 
+    bool stripIsLowGain() const { return m_info==LOWGAIN; }
     /// higher noise strip
-    bool stripIsNoisy() const { return m_info==NOISY; } 
+    bool stripIsNoisy() const { return m_info==NOISY; }
     /// very low gain strip
-    bool stripIsDead() const { return m_info==DEAD; } 
+    bool stripIsDead() const { return m_info==DEAD; }
     /// Did not bond strip to beetle
-    bool stripIsOpen() const { return m_info==OPEN; } 
+    bool stripIsOpen() const { return m_info==OPEN; }
     /// pinhole in sensor
-    bool stripIsPinhole() const { return m_info==PINHOLE; } 
+    bool stripIsPinhole() const { return m_info==PINHOLE; }
     /// Strip shorted to another (may not be next neighbour)
-    bool stripIsShort() const { return m_info==SHORT; } 
+    bool stripIsShort() const { return m_info==SHORT; }
     /// StripInfo as integer
     int asInt() const{ return m_info; }
 
@@ -404,7 +407,7 @@ public:
    *  @see StripInfo
    */
   StripInfo stripInfo(unsigned int strip) const { return m_stripInfos[strip]; }
- 
+
   /// call back function for strip noise condition update
   StatusCode updateStripNoiseCondition();
 
@@ -440,6 +443,13 @@ private:
    *  from initialize().
    */
   StatusCode registerConditionCallBacks();
+
+  /// On demand access to MsgStream object
+  inline MsgStream & msg() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloSensor" );
+    return *m_msgStream;
+  }
 
 protected:
 
@@ -488,12 +498,16 @@ private:
   std::vector<StripInfo> m_stripInfos;
   bool m_isReadOut;
   bool m_tell1WithoutSensor;
-  
+
   friend class DeVelo;
   mutable int m_moduleId;//<Liverpool database module id
 
   // Set output level for message service
   bool m_debug;
   bool m_verbose;
+
+  /// cached Message Stream object
+  mutable MsgStream * m_msgStream;
+
 };
 #endif // VELODET_DEVELOSENSOR_H

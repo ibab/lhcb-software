@@ -1,8 +1,9 @@
-// $Id: VeloAlignCond.h,v 1.3 2009-03-17 13:41:41 wouter Exp $
+// $Id: VeloAlignCond.h,v 1.4 2009-07-27 10:36:15 jonrob Exp $
 #ifndef VELODET_VELOALIGNCOND_H
 #define VELODET_VELOALIGNCOND_H 1
 
 // Include files
+#include "GaudiKernel/MsgStream.h"
 #include "DetDesc/AlignmentCondition.h"
 #include "VeloDet/CLIDVeloAlignCond.h"
 /** @class VeloAlignCond VeloAlignCond.h VeloDet/VeloAlignCond.h
@@ -12,7 +13,6 @@
  *  @date   2008-06-23
  */
 
-class MsgStream;
 class IMessageSvc;
 
 class VeloAlignCond : public AlignmentCondition {
@@ -79,6 +79,18 @@ protected:
 
   /// Flag to remember if the condition registered itself to the UpdateManagerSvc.
   bool m_inUpdMgrSvc;
+
+private:
+
+  /// cached Message Stream object
+  mutable MsgStream * m_msgStream;
+
+  /// On demand access to MsgStream object
+  inline MsgStream & msg() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( this->msgSvc(), "VeloAlignCond" );
+    return *m_msgStream;
+  }
 
 };
 #endif // VELODET_VELOALIGNCOND_H

@@ -1,7 +1,10 @@
-// $Id: DeVelo.h,v 1.56 2008-10-28 15:00:39 cattanem Exp $
+// $Id: DeVelo.h,v 1.57 2009-07-27 10:36:15 jonrob Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
 
 // Local
 #include "VeloDet/DeVeloSensor.h"
@@ -543,12 +546,19 @@ public:
    // private condition related methods 
 
 private:
+
   /** registers condition call backs
    *  This has only to be done once.  Method is called once
    *  from initialize().
    */
   StatusCode registerConditionCallBacks();
 
+  /// On demand access to MsgStream object
+  inline MsgStream & msg() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVelo" );
+    return *m_msgStream; 
+  }
 
   ///========================================================================
 protected: 
@@ -677,6 +687,9 @@ private:
   // Set output level for message service
   bool m_debug;
   bool m_verbose;
+
+  /// cached Message Stream object
+  mutable MsgStream * m_msgStream;
 
   double m_sensVolCut;
 };

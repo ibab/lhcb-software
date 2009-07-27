@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.42 2008-04-14 15:42:21 krinnert Exp $
+// $Id: DeVeloPhiType.cpp,v 1.43 2009-07-27 10:36:15 jonrob Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -9,7 +9,6 @@
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -67,12 +66,13 @@ DeVeloPhiType::DeVeloPhiType(const std::string& name)
   , m_otherSidePhiSensor(0)
   , m_otherSideRSensor(0)
   , m_stripLengths(VeloDet::deVeloPhiTypeStaticStripLengths())
+  , m_msgStream(NULL)
 {
 }
 //==============================================================================
 /// Destructor
 //==============================================================================
-DeVeloPhiType::~DeVeloPhiType() {}
+DeVeloPhiType::~DeVeloPhiType() { delete m_msgStream; }
 //==============================================================================
 /// Object identification
 //==============================================================================
@@ -96,11 +96,10 @@ StatusCode DeVeloPhiType::initialize()
     msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
   }
   delete pmgr;
-  MsgStream msg(msgSvc(), "DeVeloPhiType");
 
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloPhiType") == MSG::DEBUG  ) ;
@@ -134,10 +133,10 @@ StatusCode DeVeloPhiType::initialize()
     asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
   double phi = m_outerTilt - asin( m_outerDistToOrigin/outerRadius() );
-  msg << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/Gaudi::Units::degree
-      << " at boundary " << phiAtBoundary/Gaudi::Units::degree
-      << " and outside " << phi/Gaudi::Units::degree
-      << endreq;
+  msg() << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/Gaudi::Units::degree
+        << " at boundary " << phiAtBoundary/Gaudi::Units::degree
+        << " and outside " << phi/Gaudi::Units::degree
+        << endreq;
 
   // Angular coverage
   m_innerCoverage = param<double>("InnerCoverage");
@@ -171,7 +170,7 @@ StatusCode DeVeloPhiType::initialize()
   // first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update geometry cache." << endreq;
     return sc;
   }
 
@@ -218,8 +217,7 @@ void DeVeloPhiType::calcStripLines()
     Gaudi::XYZPoint begin(x1,y1,0);
     Gaudi::XYZPoint end(x2,y2,0);
     if(m_verbose) {
-      MsgStream msg(msgSvc(), "DeVeloPhiType");
-      msg << MSG::VERBOSE << "Sensor " << sensorNumber() << " " << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
+      msg() << MSG::VERBOSE << "Sensor " << sensorNumber() << " " << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
     }
     m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
   }
@@ -312,13 +310,12 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setType(LHCb::VeloChannelID::PhiType);
 
   if(m_verbose) {
-    MsgStream msg(msgSvc(), "DeVeloPhiType");
-    msg << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/Gaudi::Units::degree
-        << " radius " << localPoint.Rho()
-        << " phiOffset " << phiOffset(radius)/Gaudi::Units::degree
-        << " phi corrected " << phi/Gaudi::Units::degree << endreq;
-    msg << MSG::VERBOSE << " strip " << strip << " closest strip " << closestStrip
-        << " fraction " << fraction <<endreq;
+    msg() << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/Gaudi::Units::degree
+          << " radius " << localPoint.Rho()
+          << " phiOffset " << phiOffset(radius)/Gaudi::Units::degree
+          << " phi corrected " << phi/Gaudi::Units::degree << endreq;
+    msg() << MSG::VERBOSE << " strip " << strip << " closest strip " << closestStrip
+          << " fraction " << fraction <<endreq;
   }
   return StatusCode::SUCCESS;
 }
@@ -350,13 +347,12 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
 //==============================================================================
 StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPhiType");
-  msg << MSG::VERBOSE << "isInActiveArea: x=" << point.x() << ",y=" << point.y()
-      << endreq;
+  msg() << MSG::VERBOSE << "isInActiveArea: x=" << point.x() << ",y=" << point.y()
+        << endreq;
   //  check boundaries....
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
-    //    msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
+    //    msg() << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   bool isInner=true;
@@ -365,7 +361,7 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   }
   // Dead region
   if(m_middleRadius+m_rGap > radius && m_middleRadius-m_rGap < radius){
-    /*    msg << MSG::VERBOSE << "Inner " << isInner
+    /*    msg() << MSG::VERBOSE << "Inner " << isInner
           << " Inside dead region from bias line: " << radius
           << endreq;*/
     return StatusCode::FAILURE;
@@ -376,7 +372,7 @@ StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
   double y=point.y();
   bool cutOff=isCutOff(x,y);
   if(cutOff) {
-    /*    msg << MSG::VERBOSE << "Inner " << isInner << " Inside corner cut-off "
+    /*    msg() << MSG::VERBOSE << "Inner " << isInner << " Inside corner cut-off "
           << x << "," << y << endreq;*/
     return StatusCode::FAILURE;
   }
@@ -449,7 +445,6 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
                                    double &residual,
                                    double &chi2) const
 {
-  MsgStream msg(msgSvc(), "DeVeloPhiType");
   Gaudi::XYZPoint localPoint = DeVeloSensor::globalToLocal(point);
 
   StatusCode sc = isInActiveArea(localPoint);
@@ -499,12 +494,12 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
   chi2 = gsl_pow_2(residual/sigma);
 
-  msg << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
-      << " strip " << strip
-      << " x " << x << " y " << y << endreq;
-  msg << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear
-      << " residual " << residual << " sigma = " << sigma
-      << " chi2 = " << chi2 << endreq;
+  msg() << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
+        << " strip " << strip
+        << " x " << x << " y " << y << endreq;
+  msg() << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear
+        << " residual " << residual << " sigma = " << sigma
+        << " chi2 = " << chi2 << endreq;
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -552,23 +547,22 @@ void DeVeloPhiType::BuildRoutingLineMap(){
   m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+3,4));
 
   unsigned int count=0;
-  MsgStream msg( msgSvc(), "DeVeloPhiType" );
-  msg << MSG::DEBUG << "Building routing line map for sensor "
-      << (this->sensorNumber()) << endreq;
+  msg() << MSG::DEBUG << "Building routing line map for sensor "
+        << (this->sensorNumber()) << endreq;
   for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine;++routLine,++count){
     if(0 == count%6){
-      msg << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
+      msg() << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
     }
     strip=this->strip(routLine);
 
     m_mapStripToRoutingLine[strip]=routLine;
     m_mapRoutingLineToStrip[routLine]=strip;
 
-    msg << MSG::DEBUG << "Routing line " << routLine
-        << " Patttern element " << (patternElement(routLine))
-        << " number " << (patternNumber(routLine))
-        << " strip " << strip
-        << endreq;
+    msg() << MSG::DEBUG << "Routing line " << routLine
+          << " Patttern element " << (patternElement(routLine))
+          << " number " << (patternNumber(routLine))
+          << " strip " << strip
+          << endreq;
   }
 }
 //==============================================================================
@@ -745,17 +739,16 @@ StatusCode DeVeloPhiType::updateZoneLimits()
 
 StatusCode DeVeloPhiType::updateGeometryCache()
 {
-  MsgStream msg(msgSvc(), "DeVeloPhiType");
 
   StatusCode sc = updatePhiCache();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update phi cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update phi cache." << endreq;
     return sc;
   }
 
   sc = updateZoneLimits();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update zone limit cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update zone limit cache." << endreq;
     return sc;
   }
 

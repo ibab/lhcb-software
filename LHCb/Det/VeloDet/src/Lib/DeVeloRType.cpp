@@ -1,15 +1,14 @@
-// $Id: DeVeloRType.cpp,v 1.49 2008-04-14 15:42:21 krinnert Exp $
+// $Id: DeVeloRType.cpp,v 1.50 2009-07-27 10:36:15 jonrob Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
-// Include files 
+// Include files
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
@@ -24,80 +23,80 @@
 #include "Kernel/VeloChannelID.h"
 
 namespace VeloDet {
-/** This function simply provides access to a local static
- *  data which is used to initialize references in each instance
- *  of DeVeloRType.
- *  The purpose of this function is to work around
- *  a Microsoft(tm) specific extension in VC++ that makes
- *  awkward to have static data mebers accessed by inline
- *  funtions.
- *
- *  @see DeVeloRType
- */
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloRType
+   */
   static std::vector<double>& deVeloRTypeStaticRStrips()
   {
     static std::vector<double> s_rStrips;
     return s_rStrips;
   }
 
-/** This function simply provides access to a local static
- *  data which is used to initialize references in each instance
- *  of DeVeloRType.
- *  The purpose of this function is to work around
- *  a Microsoft(tm) specific extension in VC++ that makes
- *  awkward to have static data mebers accessed by inline
- *  funtions.
- *
- *  @see DeVeloRType
- */
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloRType
+   */
   static std::vector<double>& deVeloRTypeStaticRPitch()
   {
     static std::vector<double> s_rPitch;
     return s_rPitch;
   }
 
-/** This function simply provides access to a local static
- *  data which is used to initialize references in each instance
- *  of DeVeloRType.
- *  The purpose of this function is to work around
- *  a Microsoft(tm) specific extension in VC++ that makes
- *  awkward to have static data mebers accessed by inline
- *  funtions.
- *
- *  @see DeVeloRType
- */
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloRType
+   */
   static std::vector<double>& deVeloRTypeStaticPhiMin()
   {
     static std::vector<double> s_phiMin;
     return s_phiMin;
   }
 
-/** This function simply provides access to a local static
- *  data which is used to initialize references in each instance
- *  of DeVeloRType.
- *  The purpose of this function is to work around
- *  a Microsoft(tm) specific extension in VC++ that makes
- *  awkward to have static data mebers accessed by inline
- *  funtions.
- *
- *  @see DeVeloRType
- */
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloRType
+   */
   static std::vector<double>& deVeloRTypeStaticPhiMax()
   {
     static std::vector<double> s_phiMax;
     return s_phiMax;
   }
 
-/** This function simply provides access to a local static
- *  data which is used to initialize references in each instance
- *  of DeVeloRType.
- *  The purpose of this function is to work around
- *  a Microsoft(tm) specific extension in VC++ that makes
- *  awkward to have static data mebers accessed by inline
- *  funtions.
- *
- *  @see DeVeloRType
- */
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  The purpose of this function is to work around
+   *  a Microsoft(tm) specific extension in VC++ that makes
+   *  awkward to have static data mebers accessed by inline
+   *  funtions.
+   *
+   *  @see DeVeloRType
+   */
   static std::vector<std::pair<double, double> >& deVeloRTypeStaticStripPhiLimits()
   {
     static std::vector<std::pair<double, double> > s_stripPhiLimits;
@@ -119,7 +118,7 @@ bool DeVeloRType::m_staticDataInvalid = true;
 //==============================================================================
 /// Standard constructor
 //==============================================================================
-DeVeloRType::DeVeloRType(const std::string& name) : 
+DeVeloRType::DeVeloRType(const std::string& name) :
   DeVeloSensor(name),
   m_halfAngle(90.0 * Gaudi::Units::degree),
   m_quarterAngle(.5 * m_halfAngle),
@@ -132,7 +131,8 @@ DeVeloRType::DeVeloRType(const std::string& name) :
   m_rPitch(VeloDet::deVeloRTypeStaticRPitch()),
   m_phiMin(VeloDet::deVeloRTypeStaticPhiMin()),
   m_phiMax(VeloDet::deVeloRTypeStaticPhiMax()),
-  m_stripPhiLimits(VeloDet::deVeloRTypeStaticStripPhiLimits())
+  m_stripPhiLimits(VeloDet::deVeloRTypeStaticStripPhiLimits()),
+  m_msgStream(NULL)
 {
 }
 //==============================================================================
@@ -140,16 +140,17 @@ DeVeloRType::DeVeloRType(const std::string& name) :
 //==============================================================================
 DeVeloRType::~DeVeloRType()
 {
+  delete m_msgStream;
 }
 //==============================================================================
 /// Object identification
 //==============================================================================
-const CLID& DeVeloRType::clID() 
+const CLID& DeVeloRType::clID()
   const { return DeVeloRType::classID(); }
 //==============================================================================
 /// Initialisation method
 //==============================================================================
-StatusCode DeVeloRType::initialize() 
+StatusCode DeVeloRType::initialize()
 {
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
@@ -164,11 +165,10 @@ StatusCode DeVeloRType::initialize()
     msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
   }
   delete pmgr;
-  MsgStream msg(msgSvc(), "DeVeloRType");
-  
+
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloRType") == MSG::DEBUG  ) ;
@@ -181,17 +181,17 @@ StatusCode DeVeloRType::initialize()
   m_outerPitch = param<double>("OuterPitch");
 
   m_overlapInX = param<double>("ROverlapInX");
-  
+
   // the resolution of the sensor
   m_resolution.first = param<double>("RResGrad");
   m_resolution.second = param<double>("RResConst");
-  
-  /// Calculate the strip radii/phi limits 
+
+  /// Calculate the strip radii/phi limits
   calcStripLimits();
 
   /// Build up map of strips to routing lines
   BuildRoutingLineMap();
-  
+
   // geometry conditions, update global r of strip cache
   updMgrSvc()->
     registerCondition(this,this->m_geometry,&DeVeloRType::updateGeometryCache);
@@ -199,10 +199,10 @@ StatusCode DeVeloRType::initialize()
   // first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update geometry cache." << endreq;
     return sc;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -213,7 +213,6 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
                                        double& fraction,
                                        double& pitch) const
 {
-  MsgStream msg(msgSvc(), "DeVeloRType");
   Gaudi::XYZPoint localPoint = globalToLocal(point);
 
   // Check boundaries...
@@ -224,19 +223,19 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
   unsigned int closestStrip=0;
   double logarithm, strip;
   double radius=localPoint.Rho();
-  logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) / 
+  logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
   strip = log(logarithm)/m_pitchSlope;
   closestStrip = LHCb::Math::round(strip);
-  fraction = strip - closestStrip; 
- 
+  fraction = strip - closestStrip;
+
   // Which zone is the strip in?
   double phi=localPoint.phi();
   unsigned int zone=zoneOfPhi(phi);
-  
+
   // minimum strip in zone
   closestStrip += firstStrip(zone);
-  
+
   unsigned int sensor=sensorNumber();
   // set VeloChannelID....
   channel.setSensor(sensor);
@@ -255,23 +254,22 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
-  //MsgStream msg(msgSvc(), "DeVeloRType");
-  // check boundaries....  
+  // check boundaries....
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
-    //msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
+    //msg() << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   // Dead region from bias line
   double y=point.y();
   if (m_phiGap > y && -m_phiGap < y) {
-    //msg << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
+    //msg() << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
     return StatusCode::FAILURE;
   }
   // corner cut-offs
   bool cutOff=isCutOff(point.x(),point.y());
   if(cutOff) {
-    /*msg << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
+    /*msg() << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
       << endreq;    */
     return StatusCode::FAILURE;
   }
@@ -297,23 +295,23 @@ bool DeVeloRType::isCutOff(double x, double y) const
 /// Returns the minimum phi in a zone at given radius
 //==============================================================================
 double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
-    double phiMin;
-    if(0 == zone){
-      phiMin = -acos(m_overlapInX/radius);
-      double y=radius*sin(phiMin);
-      if(isCutOff(m_overlapInX,y)) {
-        double x,y;
-        intersectCutOff(radius,x,y);
-        y = -y;
-        phiMin=atan2(y,x);
-      }
-    } else if(2 == zone){
-      phiMin = asin(m_phiGap/radius);
-    } else {
-      phiMin = phiMinZone(zone);
+  double phiMin;
+  if(0 == zone){
+    phiMin = -acos(m_overlapInX/radius);
+    double y=radius*sin(phiMin);
+    if(isCutOff(m_overlapInX,y)) {
+      double x,y;
+      intersectCutOff(radius,x,y);
+      y = -y;
+      phiMin=atan2(y,x);
     }
-    return phiMin;
+  } else if(2 == zone){
+    phiMin = asin(m_phiGap/radius);
+  } else {
+    phiMin = phiMinZone(zone);
   }
+  return phiMin;
+}
 //==============================================================================
 /// Returns the maximum phi in a zone at given radius
 //==============================================================================
@@ -330,14 +328,14 @@ double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
       phiMax=atan2(y,x);
     }
   } else {
-      phiMax = phiMaxZone(zone);
+    phiMax = phiMaxZone(zone);
   }
   return phiMax;
 }
 //==============================================================================
 /// Return the length of a strip
 //==============================================================================
-double DeVeloRType::stripLength(const unsigned int strip) const { 
+double DeVeloRType::stripLength(const unsigned int strip) const {
   double phiMin=m_stripPhiLimits[strip].first;
   double phiMax=m_stripPhiLimits[strip].second;
   if(phiMin < 0) phiMin += 2*Gaudi::Units::pi;
@@ -349,8 +347,8 @@ double DeVeloRType::stripLength(const unsigned int strip) const {
 //==============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
 //==============================================================================
-StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start, 
-                                  const int& nOffset, 
+StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start,
+                                  const int& nOffset,
                                   LHCb::VeloChannelID& channel) const
 {
   unsigned int strip=0;
@@ -373,7 +371,7 @@ StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start,
 //=============================================================================
 /// Residual of 3-d point to a VeloChannelID
 //=============================================================================
-StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point, 
+StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
                                  const LHCb::VeloChannelID& channel,
                                  double &residual,
                                  double &chi2) const
@@ -384,42 +382,39 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
 ///Residual of 3-d point to a VeloChannelID + interstrip fraction
 //==============================================================================
 StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
-                                   const LHCb::VeloChannelID& channel,
-                                   const double interStripFraction,
-                                   double &residual,
-                                   double &chi2) const
+                                 const LHCb::VeloChannelID& channel,
+                                 const double interStripFraction,
+                                 double &residual,
+                                 double &chi2) const
 
 {
 
   // Perpendicular distance to strip.....
 
-  MsgStream msg(msgSvc(), "DeVeloRType");
-
-
   Gaudi::XYZPoint localPoint = DeVeloSensor::globalToLocal(point);
-  
+
   // Check boundaries...
   StatusCode sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
-  
+
   unsigned int strip=channel.strip();
   double offset=interStripFraction * rPitch(strip);
-  
+
   double rPoint = localPoint.Rho();
   double rStrip = rOfStrip(strip);
   residual = rStrip + offset  - rPoint;
-  
+
   double sigma=m_resolution.first*rPitch(strip) - m_resolution.second;
   chi2 = gsl_pow_2(residual/sigma);
-  
+
   if(m_verbose) {
-    msg << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip
-        << " rStrip = " << rStrip << " offset: " << offset <<  " residual " << residual
-        << " sigma = " << sigma
-        << " chi2 = " << chi2 << endreq;
+    msg() << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip
+          << " rStrip = " << rStrip << " offset: " << offset <<  " residual " << residual
+          << " sigma = " << sigma
+          << " chi2 = " << chi2 << endreq;
   }
-  
-  
+
+
 
   return StatusCode::SUCCESS;
 }
@@ -428,12 +423,12 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
 //==============================================================================
 void DeVeloRType::calcStripLimits()
 {
-  MsgStream msg( msgSvc(), "DeVeloRType" );
-  msg << MSG::VERBOSE << "calcStripLimits" << endreq;
+
+  msg() << MSG::VERBOSE << "calcStripLimits" << endreq;
   m_innerR = innerRadius() + m_innerPitch / 2;
   m_outerR = outerRadius() - m_outerPitch / 2;
 
-  m_pitchSlope = (m_outerPitch - m_innerPitch) / 
+  m_pitchSlope = (m_outerPitch - m_innerPitch) /
     (m_outerR - m_innerR);
 
   /// Dead region from bias line
@@ -441,7 +436,7 @@ void DeVeloRType::calcStripLimits()
 
   /// Corner cut offs
   cornerLimits();
-  
+
 
   // we only have to do this once, strip radii pitches and phi
   // limits are stored in statics, i.e. are technically the same
@@ -456,7 +451,7 @@ void DeVeloRType::calcStripLimits()
     double radius,pitch;
     for(unsigned int zone=0; zone<m_numberOfZones; ++zone) {
       for(unsigned int istrip=0; istrip<m_stripsInZone; ++istrip){
-        radius = (exp(m_pitchSlope*istrip)*m_innerPitch - 
+        radius = (exp(m_pitchSlope*istrip)*m_innerPitch -
                   (m_innerPitch-m_pitchSlope*m_innerR)) /
           m_pitchSlope;
         pitch = exp(m_pitchSlope*istrip)*m_innerPitch;
@@ -500,17 +495,17 @@ void DeVeloRType::calcStripLimits()
 
   if(m_debug) {
     for(unsigned int i=0; i < m_phiMin.size(); ++i){
-      msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
-          << " max " << m_phiMax[i] << " phiMin " 
-          << phiMinZone(i,innerRadius()) 
-          << " max " << phiMaxZone(i,innerRadius()) << endmsg;
+      msg() << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
+            << " max " << m_phiMax[i] << " phiMin "
+            << phiMinZone(i,innerRadius())
+            << " max " << phiMaxZone(i,innerRadius()) << endmsg;
     }
-    msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
-        << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
-    msg << MSG::DEBUG << "Pitch; inner " << m_rPitch[0] << " outer " 
-        << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerR
-        << " outer " << m_outerR 
-        << " slope " << m_pitchSlope << endmsg;
+    msg() << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0]
+          << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
+    msg() << MSG::DEBUG << "Pitch; inner " << m_rPitch[0] << " outer "
+          << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerR
+          << " outer " << m_outerR
+          << " slope " << m_pitchSlope << endmsg;
   }
 }
 //==============================================================================
@@ -529,10 +524,9 @@ void DeVeloRType::cornerLimits()
   m_cornerY1 = m*m_cornerX1+c;
   intersectCutOff(innerRadius(),m_cornerX2,m_cornerY2);
   if(m_debug) {
-    MsgStream msg( msgSvc(), "DeVeloRType" );
-    msg << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
-        << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2 
-        << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
+    msg() << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
+          << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2
+          << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
   }
 }
 //==============================================================================
@@ -559,16 +553,14 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
       y=y2;
     }
     if(m_verbose) {
-      MsgStream msg( msgSvc(), "DeVeloRType" );
-      msg << MSG::VERBOSE << "a=" << QuadA << ",b=" << QuadB << ",c=" << QuadC 
-          << " Solution 1: x=" << x1 << " y=" << y1
-          << " Solution 2: x=" << x2 << " y=" << y2
-          << " Chose: x=" << x << " y=" << y
-          << endreq;
+      msg() << MSG::VERBOSE << "a=" << QuadA << ",b=" << QuadB << ",c=" << QuadC
+            << " Solution 1: x=" << x1 << " y=" << y1
+            << " Solution 2: x=" << x2 << " y=" << y2
+            << " Chose: x=" << x << " y=" << y
+            << endreq;
     }
   } else {
-    MsgStream msg( msgSvc(), "DeVeloRType" );
-    msg << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endreq;
+    msg() << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endreq;
   }
 }
 //==============================================================================
@@ -586,7 +578,7 @@ void DeVeloRType::phiZoneLimits()
   m_phiMin.push_back(-m_quarterAngle);
   m_phiMin.push_back(0);
   m_phiMin.push_back(m_quarterAngle);
-  
+
   m_phiMax.push_back(-m_quarterAngle);
   m_phiMax.push_back(0);
   m_phiMax.push_back(m_quarterAngle);
@@ -606,26 +598,25 @@ void DeVeloRType::BuildRoutingLineMap(){
     m_mapStripToRoutingLine[strip+1024]=routLine+1024;
     m_mapRoutingLineToStrip[routLine+1024]=strip+1024;
     if(m_verbose) {
-      MsgStream msg( msgSvc(), "DeVeloRType" );
-      msg << MSG::VERBOSE << "Routing line " << routLine 
-          << " area " << routArea
-          << " strip " << m_mapRoutingLineToStrip[routLine]
-          << " +1024 line " << routLine+1024
-          << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
-          << endreq;
-      msg << MSG::VERBOSE << "Routing line " << routLine 
-          << " strip " << RoutingLineToStrip(routLine)
-          << " chip channel " << RoutingLineToChipChannel(routLine)
-          << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
-          << " from strip " << endreq;
+      msg() << MSG::VERBOSE << "Routing line " << routLine
+            << " area " << routArea
+            << " strip " << m_mapRoutingLineToStrip[routLine]
+            << " +1024 line " << routLine+1024
+            << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
+            << endreq;
+      msg() << MSG::VERBOSE << "Routing line " << routLine
+            << " strip " << RoutingLineToStrip(routLine)
+            << " chip channel " << RoutingLineToChipChannel(routLine)
+            << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
+            << " from strip " << endreq;
     }
   }
 }
 //=============================================================================
 // Select routing line area (pattern repeats for chips 7 to 0)
-// (0) Chips 15 to 13 
+// (0) Chips 15 to 13
 // (1) Chip 12
-// (2) Chip 11 
+// (2) Chip 11
 // (3) Chips 10 to 8
 //=============================================================================
 unsigned int DeVeloRType::RoutingLineArea(unsigned int routingLine){
@@ -656,7 +647,7 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
   } else if(3 == routArea){
     strip = (m_maxRoutingLine-m_nChan3-routLine);
   } else strip=9999;
-  //  std::cout << "strip " << strip << " scram " << ScrambleStrip(strip) 
+  //  std::cout << "strip " << strip << " scram " << ScrambleStrip(strip)
   //            << " rl " << routLine << " scram " << ScrambleStrip(routLine)
   //        << std::endl;
   return ScrambleStrip(strip);
@@ -664,49 +655,49 @@ unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int ro
 //==============================================================================
 // Return a trajectory (for track fit) from strip + offset
 //==============================================================================
-std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelID& id, 
+std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelID& id,
                                                         const double offset) const {
-    // r type is a circle
-    double z = 0.;
-    double radius = 0.;
-    double phiMin = 0.;
-    double phiMax = 0.;
-    unsigned int strip = id.strip();
-    StatusCode sc = stripLimits( strip, radius, phiMin, phiMax );
-    if(!sc){
-      throw GaudiException( "The trajectory could not be made",
-                            "DeVELO.cpp",StatusCode::FAILURE );
-    }
-    // offset is offset on R
-    radius += rPitch(strip) * offset;
-    
-    // start with coords of center and both ends in local frame
-    Gaudi::XYZPoint lOrigin(0.,0.,0.);
-    Gaudi::XYZPoint lBegin(radius*cos(phiMin),radius*sin(phiMin),z);
-    Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
+  // r type is a circle
+  double z = 0.;
+  double radius = 0.;
+  double phiMin = 0.;
+  double phiMax = 0.;
+  unsigned int strip = id.strip();
+  StatusCode sc = stripLimits( strip, radius, phiMin, phiMax );
+  if(!sc){
+    throw GaudiException( "The trajectory could not be made",
+                          "DeVELO.cpp",StatusCode::FAILURE );
+  }
+  // offset is offset on R
+  radius += rPitch(strip) * offset;
 
-    // move to global frame
-    Gaudi::XYZPoint gOrigin = localToGlobal(lOrigin);
-    Gaudi::XYZPoint gBegin = localToGlobal(lBegin);
-    Gaudi::XYZPoint gEnd = localToGlobal(lEnd);
-    /* Covert phi range to 0-360 to make sure trajectories run in right direction
-       and protect against crossing boundaries */
-    double phiBeginTmp=gBegin.phi();
-    if(phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
-    double phiEndTmp=gEnd.phi();
-    if(phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
-    if(phiBeginTmp > phiEndTmp){
-      Gaudi::XYZPoint gTmp=gBegin;
-      gBegin=gEnd;
-      gEnd=gTmp;
-    }
+  // start with coords of center and both ends in local frame
+  Gaudi::XYZPoint lOrigin(0.,0.,0.);
+  Gaudi::XYZPoint lBegin(radius*cos(phiMin),radius*sin(phiMin),z);
+  Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
 
-    // put into trajectory
-    LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gBegin-gOrigin,gEnd-gOrigin,radius);
+  // move to global frame
+  Gaudi::XYZPoint gOrigin = localToGlobal(lOrigin);
+  Gaudi::XYZPoint gBegin = localToGlobal(lBegin);
+  Gaudi::XYZPoint gEnd = localToGlobal(lEnd);
+  /* Covert phi range to 0-360 to make sure trajectories run in right direction
+     and protect against crossing boundaries */
+  double phiBeginTmp=gBegin.phi();
+  if(phiBeginTmp < 0) phiBeginTmp += 2*Gaudi::Units::pi;
+  double phiEndTmp=gEnd.phi();
+  if(phiEndTmp < 0) phiEndTmp += 2*Gaudi::Units::pi;
+  if(phiBeginTmp > phiEndTmp){
+    Gaudi::XYZPoint gTmp=gBegin;
+    gBegin=gEnd;
+    gEnd=gTmp;
+  }
 
-    std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
-    
-    return autoTraj;  
+  // put into trajectory
+  LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin,gBegin-gOrigin,gEnd-gOrigin,radius);
+
+  std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
+
+  return autoTraj;
 
 }
 
@@ -730,12 +721,12 @@ StatusCode DeVeloRType::updateStripRCache()
     // integrate over strip
     for ( ; phiLocal < phiMax; phiLocal += dphi) {
       Gaudi::XYZPoint lp(rLocal*cos(phiLocal),rLocal*sin(phiLocal),0.0);
-      
+
       num += dphi;
-      
+
       Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
       hbden += dphi/hbp.rho();
-      
+
       Gaudi::XYZPoint gp = localToGlobal(lp);
       gden += dphi/gp.rho();
     }
@@ -743,12 +734,12 @@ StatusCode DeVeloRType::updateStripRCache()
     // deal with the last interval, it might be shorter than the original dphi
     dphi = phiMax - phiLocal + dphi;
     num += dphi;
-    
+
     Gaudi::XYZPoint lp(rLocal*cos(phiMax),rLocal*sin(phiMax),0.0);
-    
+
     Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
     hbden += dphi/hbp.rho();
-    
+
     Gaudi::XYZPoint gp = localToGlobal(lp);
     gden += dphi/gp.rho();
 
@@ -757,7 +748,7 @@ StatusCode DeVeloRType::updateStripRCache()
     m_globalR [strip] = num/gden;
 
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -787,10 +778,10 @@ StatusCode DeVeloRType::updateZoneLimits()
     m_globalPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
     // map back to [-pi,pi]
     if (isRight()) {
-      if (m_globalPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;   
-      if (m_globalPhiLimitsZone[zone].second > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;   
-    } 
-    
+      if (m_globalPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;
+      if (m_globalPhiLimitsZone[zone].second > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;
+    }
+
     // determine the phi ranges of the zones in VELO half box frame
     std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
       (globalToVeloHalfBox(globalLimitsMin.first),globalToVeloHalfBox(globalLimitsMin.second));
@@ -812,9 +803,9 @@ StatusCode DeVeloRType::updateZoneLimits()
     m_halfboxPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
     // map back to [-pi,pi]
     if (isRight()) {
-      if (m_halfboxPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;   
-      if (m_halfboxPhiLimitsZone[zone].second > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;   
-    } 
+      if (m_halfboxPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;
+      if (m_halfboxPhiLimitsZone[zone].second > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].second -= 2.0*Gaudi::Units::pi;
+    }
 
     // r limits are the radii of the outer strip + local pitch/2 and the innder strip - local pitch/2
     m_globalRLimitsZone [zone].first  = globalROfStrip(minStrip)  - rPitch(minStrip)/2.0;
@@ -828,17 +819,16 @@ StatusCode DeVeloRType::updateZoneLimits()
 
 StatusCode DeVeloRType::updateGeometryCache()
 {
-  MsgStream msg(msgSvc(), "DeVeloRType");
-  
+
   StatusCode sc = updateStripRCache();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update strip r cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update strip r cache." << endreq;
     return sc;
   }
 
   sc = updateZoneLimits();
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR << "Failed to update zone limit cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update zone limit cache." << endreq;
     return sc;
   }
 

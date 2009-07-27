@@ -1,8 +1,11 @@
-// $Id: DeVeloPhiType.h,v 1.32 2008-06-02 08:37:39 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.33 2009-07-27 10:36:15 jonrob Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
 // Include files
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
 
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
@@ -467,6 +470,16 @@ private:
   inline double safePhiOffset(double const &c0, double const &d0, 
 			      double const & radius) const {
     return (fabs(d0/radius) < 1.) ? (asin(d0/radius) - c0) : (asin(1.) - c0);
+  }
+
+  /// cached Message Stream object
+  mutable MsgStream * m_msgStream;
+
+  /// On demand access to MsgStream object
+  inline MsgStream & msg() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloPhiType" );
+    return *m_msgStream; 
   }
 
 };

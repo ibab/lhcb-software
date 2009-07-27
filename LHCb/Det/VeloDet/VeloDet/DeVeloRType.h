@@ -1,8 +1,11 @@
-// $Id: DeVeloRType.h,v 1.30 2008-11-28 16:27:55 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.31 2009-07-27 10:36:15 jonrob Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
 // Include files
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
 
 // Gaudi Math definitions
 #include "GaudiKernel/Point3DTypes.h"
@@ -339,6 +342,16 @@ private:
   // Set output level for message service
   bool m_debug;
   bool m_verbose;
+
+  /// cached Message Stream object
+  mutable MsgStream * m_msgStream;
+
+  /// On demand access to MsgStream object
+  inline MsgStream & msg() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloRType" );
+    return *m_msgStream; 
+  }
 
 };
 

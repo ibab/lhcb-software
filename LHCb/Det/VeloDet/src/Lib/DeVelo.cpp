@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.88 2008-10-28 15:00:39 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.89 2009-07-27 10:36:15 jonrob Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -8,7 +8,6 @@
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -32,17 +31,18 @@
 
 // **  Standard Constructors
 
-DeVelo::DeVelo( const std::string& name ) :  
+DeVelo::DeVelo( const std::string& name ) :
   DetectorElement(name),
-  m_tell1ToSensorsConditionName("TELL1ToSensors")
+  m_tell1ToSensorsConditionName("TELL1ToSensors"),
+  m_msgStream(NULL)
 {
-  ; 
-} 
+  ;
+}
 
 //
 // Standard Destructor
 DeVelo::~DeVelo() {
-  // should be all handled by the TDS and the automatic deletion of the vectors
+  delete m_msgStream;
 }
 
 // ============================================================================
@@ -69,21 +69,21 @@ StatusCode DeVelo::initialize() {
     msgSvc()->setOutputLevel("DeVelo", outputLevel);
   }
   delete pmgr;
-  MsgStream msg( msgSvc(), "DeVelo" );
-  msg << MSG::DEBUG << "Initialising DeVelo " << endreq;
+
+  msg() << MSG::DEBUG << "Initialising DeVelo " << endreq;
   // Initialise the detector element
   sc = DetectorElement::initialize();
-  if( sc.isFailure() ) { 
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
-    return sc ; 
+  if( sc.isFailure() ) {
+    msg() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    return sc ;
   }
   m_debug   = (msgSvc()->outputLevel("DeVelo") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVelo") == MSG::VERBOSE) ;
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = findVeloSensors();
-  
-  msg << MSG::DEBUG << "Found " << veloSensors.size() 
-      << " sensors in the XML" << endreq;
+
+  msg() << MSG::DEBUG << "Found " << veloSensors.size()
+        << " sensors in the XML" << endreq;
 
   std::vector<DeVeloSensor*>::iterator iDESensor;
   m_nSensors=m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
@@ -95,31 +95,31 @@ StatusCode DeVelo::initialize() {
   // JPP sensors no longer pre-sorted by Z in XML so sort them before
   // storing.
   std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
- 
+
   // this determines the size of our pseudo map
   unsigned int maxSensorNumber=0;
-  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
+  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
       ++iDESensor){
-     if (maxSensorNumber < (*iDESensor)->sensorNumber())
-       maxSensorNumber = (*iDESensor)->sensorNumber();
+    if (maxSensorNumber < (*iDESensor)->sensorNumber())
+      maxSensorNumber = (*iDESensor)->sensorNumber();
   }
-  
+
   // ok, now we now the size of our pseudo map
   m_sensors.resize(maxSensorNumber+1,0);
-  
-  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
+
+  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
       ++iDESensor,++m_nSensors){
     // Sensors are pre-sorted in XML such that they increase with z position
     m_vpSensors.push_back(*iDESensor);
     unsigned int index=m_vpSensors.size()-1;
-    msg << MSG::DEBUG << "type " << (*iDESensor)->fullType() 
-        << " index " << index
-        << " R " << (*iDESensor)->isR() 
-        << " PHI " << (*iDESensor)->isPhi()
-        << " PU " << (*iDESensor)->isPileUp()
-        << " SNO " <<  (*iDESensor)->sensorNumber()
-        << endmsg;
-    
+    msg() << MSG::DEBUG << "type " << (*iDESensor)->fullType()
+          << " index " << index
+          << " R " << (*iDESensor)->isR()
+          << " PHI " << (*iDESensor)->isPhi()
+          << " PU " << (*iDESensor)->isPileUp()
+          << " SNO " <<  (*iDESensor)->sensorNumber()
+          << endmsg;
+
     bool isLeftSensor=false;
     // Check if sensor is on Left/Right side of LHCb
     if((*iDESensor)->isLeft()){
@@ -163,25 +163,25 @@ StatusCode DeVelo::initialize() {
         m_nRightPUSensors++;
       }
     } else {
-      msg << MSG::ERROR << "Sensor type is unknown" << endreq;
+      msg() << MSG::ERROR << "Sensor type is unknown" << endreq;
     }
     m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
-    msg << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
-        << " sensor " << m_vpSensors[index]->sensorNumber()
-        << " type " << m_vpSensors[index]->fullType() 
-        << " z = " << m_vpSensors[index]->z()
-        << " and in VELO frame " 
-        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
-        << endreq;
+    msg() << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
+          << " sensor " << m_vpSensors[index]->sensorNumber()
+          << " type " << m_vpSensors[index]->fullType()
+          << " z = " << m_vpSensors[index]->z()
+          << " and in VELO frame "
+          << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
+          << endreq;
   }
 
   // Set the associated and other side sensor links.  This makes assumptions about the
   // semantics of sensor number.  While this is a bad idea in general it is
-  // defendable inside the detector element itself. 
+  // defendable inside the detector element itself.
   for (std::vector<DeVeloRType*>::const_iterator iRS=leftRSensorsBegin();
-      iRS != leftRSensorsEnd();
-      ++iRS) {
-    
+       iRS != leftRSensorsEnd();
+       ++iRS) {
+
     // associated sensors on the left side
     DeVeloRType*   lRS = *iRS;
     DeVeloPhiType* lPS = const_cast<DeVeloPhiType*>(phiSensor(lRS->sensorNumber()+64));
@@ -203,21 +203,21 @@ StatusCode DeVelo::initialize() {
     if (rPS) rPS->setOtherSideRSensor(lRS);
     if (lPS) lPS->setOtherSidePhiSensor(rPS);
     if (lPS) lPS->setOtherSideRSensor(rRS);
-    
-  } 
-  
-  msg << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
-      << " Right " << m_nRightSensors << endreq;
-  msg << MSG::DEBUG << "There are " << m_nRSensors << " R sensors: Left " << m_nLeftRSensors
-      << " Right " << m_nRightRSensors << endreq;
-  msg << MSG::DEBUG << "There are " << m_nPhiSensors << " Phi sensors: Left " << m_nLeftPhiSensors
-      << " Right " << m_nRightPhiSensors << endreq;
-  msg << MSG::DEBUG << "There are " << m_nPileUpSensors << " Pile Up sensors: Left " << m_nLeftPUSensors
-      << " Right " << m_nRightPUSensors << endreq;
+
+  }
+
+  msg() << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
+        << " Right " << m_nRightSensors << endreq;
+  msg() << MSG::DEBUG << "There are " << m_nRSensors << " R sensors: Left " << m_nLeftRSensors
+        << " Right " << m_nRightRSensors << endreq;
+  msg() << MSG::DEBUG << "There are " << m_nPhiSensors << " Phi sensors: Left " << m_nLeftPhiSensors
+        << " Right " << m_nRightPhiSensors << endreq;
+  msg() << MSG::DEBUG << "There are " << m_nPileUpSensors << " Pile Up sensors: Left " << m_nLeftPUSensors
+        << " Right " << m_nRightPUSensors << endreq;
 
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
-    msg << MSG::ERROR << "Failure to register condition update call backs." << endreq;    
+    msg() << MSG::ERROR << "Failure to register condition update call backs." << endreq;
     return sc;
   }
 
@@ -242,9 +242,8 @@ int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
       return ((*iDeVeloSensor)->sensorNumber());
     }
   }
-  MsgStream msg(msgSvc(), "DeVelo");
-  msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
-      << point.z() << endmsg;
+  msg() << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = "
+        << point.z() << endmsg;
   return -999;
 }
 
@@ -253,39 +252,38 @@ std::vector<DeVeloSensor*> DeVelo::findVeloSensors()
 {
 
   std::vector<DeVeloSensor*> mySensors;
-  
+
   scanDetectorElement(this, mySensors);
   return mySensors;
-  
+
 }
 //=============================================================================
-void DeVelo::scanDetectorElement(IDetectorElement* detElem, 
+void DeVelo::scanDetectorElement(IDetectorElement* detElem,
                                  std::vector<DeVeloSensor*>& sensors)
 {
-  MsgStream msg( msgSvc(), "DeVelo" );  
   std::vector<IDetectorElement*> veloSensors =
     detElem->childIDetectorElements();
 
-  msg << MSG::DEBUG << "scanDetectorElement" << endreq;
-  
+  msg() << MSG::DEBUG << "scanDetectorElement" << endreq;
+
   std::vector<IDetectorElement*>::iterator iVeloSensors=veloSensors.begin();
 
   for (;iVeloSensors!=veloSensors.end(); ++iVeloSensors ) {
-    msg << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
-        << (*iVeloSensors)->name() << endreq;
+    msg() << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
+          << (*iVeloSensors)->name() << endreq;
     DeVeloSensor* pSensor = dynamic_cast<DeVeloSensor*>((*iVeloSensors));
     if (pSensor) {
       sensors.push_back(pSensor);
-      msg << MSG::DEBUG << "Storing detector " <<   (*iVeloSensors)->name()
-          << endreq;
-      
+      msg() << MSG::DEBUG << "Storing detector " <<   (*iVeloSensors)->name()
+            << endreq;
+
     }
-    
+
     scanDetectorElement(*iVeloSensors, sensors);
   }
 }
 //=========================================================================
-// members related to condition caching   
+// members related to condition caching
 //=========================================================================
 
 const DeVeloSensor* DeVelo::sensorByTell1Id(unsigned int tell1Id) const
@@ -312,17 +310,16 @@ bool DeVelo::tell1IdBySensorNumber(unsigned int sensorNumber, unsigned int& tell
   return true;
 }
 
-StatusCode DeVelo::registerConditionCallBacks() 
+StatusCode DeVelo::registerConditionCallBacks()
 {
-  StatusCode sc; 
-  MsgStream msg(msgSvc(), "DeVelo");
+  StatusCode sc;
 
   // TELL1 to sensor mapping condition
   // Also contains mapping of sensor to Liverpool module condition
   updMgrSvc()->registerCondition(this,
                                  condition(m_tell1ToSensorsConditionName.c_str()).path(),
                                  &DeVelo::updateTell1ToSensorsCondition);
-  
+
   // Half box offset  cache
   if(m_nLeftSensors > 0) {
     updMgrSvc()->
@@ -334,9 +331,9 @@ StatusCode DeVelo::registerConditionCallBacks()
   }
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg << MSG::ERROR 
-        << "Failed to update VELO conditions!"
-        << endreq;
+    msg() << MSG::ERROR
+          << "Failed to update VELO conditions!"
+          << endreq;
     return sc;
   }
 
@@ -345,21 +342,19 @@ StatusCode DeVelo::registerConditionCallBacks()
 
 StatusCode DeVelo::updateTell1ToSensorsCondition()
 {
-  MsgStream msg(msgSvc(), "DeVelo");
-
   m_tell1ToSensorsCondition = condition(m_tell1ToSensorsConditionName.c_str());
-  const std::vector<int>& tell1Ids 
+  const std::vector<int>& tell1Ids
     = m_tell1ToSensorsCondition->paramAsIntVect("Tell1Id");
-  const std::vector<int>& sensorNumbers 
+  const std::vector<int>& sensorNumbers
     = m_tell1ToSensorsCondition->paramAsIntVect("SensorId");
-  const std::vector<int>& moduleIds 
+  const std::vector<int>& moduleIds
     = m_tell1ToSensorsCondition->paramAsIntVect("ModuleId");
-  
+
   // check for trivial size mismatch bug in CondDB
   if ( tell1Ids.size() != sensorNumbers.size() || tell1Ids.size() != sensorNumbers.size()) {
-    msg << MSG::ERROR 
-        << "Number of TELL1 and sensor/module IDs do not match!"
-        << endreq;
+    msg() << MSG::ERROR
+          << "Number of TELL1 and sensor/module IDs do not match!"
+          << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -376,7 +371,7 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
     const DeVeloSensor* sens=sensor(sensorNumber);
     if(!sens) {
-      msg << MSG::ERROR << "No such sensor " << sensorNumber << endreq;
+      msg() << MSG::ERROR << "No such sensor " << sensorNumber << endreq;
       return StatusCode::FAILURE;
     }
     sens->m_moduleId=moduleId;
@@ -387,14 +382,14 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
   // check consistency with sensor readout flags. this assumes the latter are updated first.
   unsigned int tell1Id;
   for (std::vector<DeVeloSensor*>::const_iterator si = m_vpSensors.begin();
-       si != m_vpSensors.end(); 
+       si != m_vpSensors.end();
        ++si) {
     const DeVeloSensor* sensor = *si;
     if (sensor->isReadOut() && !tell1IdBySensorNumber(sensor->sensorNumber(),tell1Id)) {
-      msg << MSG::ERROR 
-          << "Sensor " << sensor->sensorNumber()
-          << " is considered active but not mapped to a TELL1 source ID!"
-          << endreq;
+      msg() << MSG::ERROR
+            << "Sensor " << sensor->sensorNumber()
+            << " is considered active but not mapped to a TELL1 source ID!"
+            << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -405,19 +400,19 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 StatusCode DeVelo::updateLeftHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
- 
+
   Gaudi::XYZPoint global = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[LeftHalf] = global-localZero;
-  
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode DeVelo::updateRightHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
-  
+
   Gaudi::XYZPoint global = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[RightHalf] = global-localZero;
-  
+
   return StatusCode::SUCCESS;
 }

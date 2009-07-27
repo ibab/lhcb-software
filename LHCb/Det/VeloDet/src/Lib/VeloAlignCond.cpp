@@ -1,4 +1,4 @@
-// $Id: VeloAlignCond.cpp,v 1.3 2009-03-17 13:41:41 wouter Exp $
+// $Id: VeloAlignCond.cpp,v 1.4 2009-07-27 10:36:15 jonrob Exp $
 #include "VeloDet/VeloAlignCond.h"
 
 #include "DetDesc/3DTransformationFunctions.h"
@@ -14,7 +14,7 @@
 // Converts two strings in the format "path/in/TS[param]" to two pairs of string
 VeloAlignCond::PositionPaths::PositionPaths(const std::string &_x,const std::string &_y){
   // prepare the reg. exp. parser
-  const std::string rgxp("^(.*)\\[(.*)\\]$"); 
+  const std::string rgxp("^(.*)\\[(.*)\\]$");
   boost::regex e(rgxp);
   boost::smatch what;
   // check X
@@ -48,17 +48,18 @@ VeloAlignCond::PositionPaths::PositionPaths(const std::string &_x,const std::str
 }
 
 //-----------------------------------------------------------------------------
-// Default costructor
+// Default constructor
 //-----------------------------------------------------------------------------
 VeloAlignCond::VeloAlignCond():
   AlignmentCondition(),
   m_paths(),
   m_xOffCond(0),m_yOffCond(0),
-  m_inUpdMgrSvc(false)
+  m_inUpdMgrSvc(false),
+  m_msgStream(NULL)
 {}
 
 //-----------------------------------------------------------------------------
-// Main costructor
+// Main constructor
 //-----------------------------------------------------------------------------
 VeloAlignCond::VeloAlignCond(const std::vector<double>& translation,
                              const std::vector<double>& rotation,
@@ -68,7 +69,8 @@ VeloAlignCond::VeloAlignCond(const std::vector<double>& translation,
   AlignmentCondition(translation,rotation,pivot),
   m_paths(),
   m_xOffCond(0),m_yOffCond(0),
-  m_inUpdMgrSvc(false)
+  m_inUpdMgrSvc(false),
+  m_msgStream(NULL)
 {
   if ( !xOffsetLoc.empty() ) this->addParam("XOffset",xOffsetLoc);
   if ( !yOffsetLoc.empty() ) this->addParam("YOffset",yOffsetLoc);
@@ -81,10 +83,11 @@ VeloAlignCond::~VeloAlignCond(){
   if ( m_inUpdMgrSvc ) {
     m_services->updMgrSvc()->unregister(this);
   }
+  delete m_msgStream;
 }
 
 //=============================================================================
-// Register to the UpdateManagerSvc for a 
+// Register to the UpdateManagerSvc for a
 //=============================================================================
 void VeloAlignCond::i_registerOffsetCond(const PositionPaths::ValueType &offsetCond, Condition *&cond,
                                          PositionPaths::ValueType &oldOffsetCond)
@@ -92,15 +95,14 @@ void VeloAlignCond::i_registerOffsetCond(const PositionPaths::ValueType &offsetC
   if (oldOffsetCond.first != offsetCond.first) { // do something only if they are not ==
     if (!oldOffsetCond.first.empty()) {
       // should deregister previous condition, but it is not implemented yet
-      MsgStream log(this->msgSvc(), "VeloAlignCond");
       if (this->registry()) {
-        log << MSG::WARNING << "In condition " << this->registry()->identifier() << ":" << endmsg;
+        msg() << MSG::WARNING << "In condition " << this->registry()->identifier() << ":" << endmsg;
       }
-      log << MSG::WARNING << "Offset condition changed from '"
-          << oldOffsetCond.first << "[" << oldOffsetCond.second << "]"
-          << "' to '"
-          << offsetCond.first << "[" << offsetCond.second << "]"
-          << "', but it will not taken into account (missing implementation)" << endmsg;
+      msg() << MSG::WARNING << "Offset condition changed from '"
+            << oldOffsetCond.first << "[" << oldOffsetCond.second << "]"
+            << "' to '"
+            << offsetCond.first << "[" << offsetCond.second << "]"
+            << "', but it will not taken into account (missing implementation)" << endmsg;
     } else { // it is implicit that (!offsetCond.empty()) because they are != and the other is empty
       m_services->updMgrSvc()->registerCondition(this, offsetCond.first,
                                                  &VeloAlignCond::makeMatrices,
@@ -126,7 +128,7 @@ StatusCode VeloAlignCond::initialize() {
   // This also sets m_paths.
   i_registerOffsetCond(paths.x, m_xOffCond, m_paths.x);
   i_registerOffsetCond(paths.y, m_yOffCond, m_paths.y);
-  
+
   if (!m_inUpdMgrSvc) {
     // the UMS doesn't know about us, so we have to call makeMatrices ourselves
     return makeMatrices();
@@ -180,16 +182,15 @@ Gaudi::Transform3D VeloAlignCond::motionSystemTransform() const
     }
     translations[1] += offset;
   }
-  
+
   return DetDesc::localToGlobalTransformation( translations,rotations,pivot );
 }
 
 //=============================================================================
-StatusCode VeloAlignCond::makeMatrices() 
+StatusCode VeloAlignCond::makeMatrices()
 {
-  MsgStream log(this->msgSvc(), "VeloAlignCond");
-  log << MSG::VERBOSE << "Making transformation matrix for \'" << name() 
-      << "\' Correcting for motion system position." << endmsg ;
+  msg() << MSG::VERBOSE << "Making transformation matrix for \'" << name()
+        << "\' Correcting for motion system position." << endmsg ;
   StatusCode sc = AlignmentCondition::makeMatrices() ;
   if( sc.isSuccess() ) {
     // The transform from the position of the sensors
@@ -204,18 +205,17 @@ StatusCode VeloAlignCond::makeMatrices()
 }
 
 //=============================================================================
-void VeloAlignCond::updateParams(const Gaudi::Transform3D& matrixInv) 
+void VeloAlignCond::updateParams(const Gaudi::Transform3D& matrixInv)
 {
-  MsgStream log(this->msgSvc(), "VeloAlignCond");
-  log << MSG::VERBOSE << "Updating condition parameters for \'" << name() 
-      << "\' Correcting for motion system position." << endmsg ;
+  msg() << MSG::VERBOSE << "Updating condition parameters for \'" << name()
+        << "\' Correcting for motion system position." << endmsg ;
   // The transform from the position of the sensors
   Gaudi::Transform3D mstransform        = motionSystemTransform() ;
   // The transform from the alignment condition
   Gaudi::Transform3D alignmenttransform = mstransform.Inverse() * matrixInv ;
   // Now call down to the base class with the corrected transform
   AlignmentCondition::updateParams( alignmenttransform ) ;
-} 
+}
 
 //=============================================================================
 void VeloAlignCond::update(ValidDataObject& obj)
