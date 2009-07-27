@@ -1851,7 +1851,7 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
 
     static int prevL0ID =0;
     static int prevPF =0; 
-    if(mephdr->m_l0ID - prevL0ID != prevPF) {
+    if( (int) (mephdr->m_l0ID - prevL0ID) != prevPF) {
         msgLog << MSG::WARNING << WHERE << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; Next L0ID: " << mephdr->m_l0ID << "; Previous Packing Factor: " << prevPF << "; 2 possibilities: packet lost, or sequence disordered." << endmsg;
     }
     prevL0ID = mephdr->m_l0ID;
@@ -2017,7 +2017,7 @@ StatusCode MEPInjector::manageOdinMEP() {
 
         static int prevL0ID =0;
         static int prevPF =0;
-        if(mephdr->m_l0ID -prevL0ID != prevPF) {
+        if( (int) (mephdr->m_l0ID -prevL0ID) != prevPF) {
             msgLog << MSG::WARNING << WHERE << __FUNCTION__ << "Previous L0ID: " << prevL0ID << "; Next L0ID: " << mephdr->m_l0ID << "; Previous Packing Factor: " << prevPF << "; 2 possibilities: packet lost, or sequence disordered." << endmsg;
         }
         prevL0ID = mephdr->m_l0ID;
