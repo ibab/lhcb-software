@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.52 2009-07-22 11:38:20 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.53 2009-07-27 12:31:32 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -205,7 +205,10 @@ StatusCode DVAlgorithm::initialize ()
     else
     { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
-  
+
+  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << m_p2PVInputLocations << endmsg;
+  desktop()->setP2PVInputLocations(m_p2PVInputLocations);
+
   if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
   return sc;
@@ -223,9 +226,6 @@ StatusCode DVAlgorithm::loadTools()
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with locations " << m_inputLocations << endmsg;
   desktop()->setInputLocations(m_inputLocations);
-
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << m_p2PVInputLocations << endmsg;
-  desktop()->setP2PVInputLocations(m_p2PVInputLocations);
   
   // vertex fitter
   IOnOffline* onof = NULL;
