@@ -3,7 +3,7 @@
 # Maintainer : Adlene Hicheur en Wouter Hulsbergen (Adlene.Hicheur@cern.ch
 # =============================================================================
 package             AlignKernel
-version             v2r0
+version             v3r0
 
 # ================= structure =================================================
 branches            cmt doc src xml AlignKernel
