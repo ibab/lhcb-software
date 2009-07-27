@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v4r3>2009-07-27 Escher v4r3</A></H1><PRE>
+- 27/07/2009: Johan Blouw tagged 4r3 for Alignment software project release v4r2
+
 - 17/04/2009: Johan Blouw
   - small changes to Configuration.py for Millepede style alignment
   - added use-case of VeloAlignment using M'pede
