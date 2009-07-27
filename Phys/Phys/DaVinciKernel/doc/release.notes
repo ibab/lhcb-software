@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.307 2009-07-27 13:03:40 jpalac Exp $
+!$Id: release.notes,v 1.308 2009-07-27 16:24:52 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-07-27 - Juan PALACIOS
+ - Add Kernel/TransporterFunctions.h
+  . Namespace DaVinci::Transporter with particle transport free functions.
+    Taken from Phys/DaVinciTransporter.
 
 ! 2009-07-27 - Juan PALACIOS
  - Major change: Move all interfaces to Phys/DaVinciInterfaces
