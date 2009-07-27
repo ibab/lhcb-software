@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.9 2009-07-24 16:50:21 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.10 2009-07-27 14:12:04 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -204,7 +204,7 @@ StatusCode L0DUEmulatorTool::fillData(){
     // Fill RAM(BCID)
     const std::string dataName = data->name();
     int index = dataName.rfind("(BCID)");
-    if( dataName.rfind("RAM") != (int) std::string::npos && index != (int) std::string::npos ){
+    if( (int) dataName.rfind("RAM") != (int) std::string::npos && index != (int) std::string::npos ){
       std::string ram = dataName.substr(0,index);
       // get BCID from ODIN
       m_odin->getTime();
