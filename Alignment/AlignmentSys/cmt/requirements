@@ -12,6 +12,7 @@ use AlignmentInterfaces	v3r0	Alignment # Johan Blouw
 use AlignmentTools      v3r0    Alignment # Sebastien Viret
 use AlignEvent		v1r0    Alignment # Wouter Hulsbergen
 use AlignKernel		v3r0    Alignment # Adlene Hicheur, Wouter Hulsbergen
+use AlignSolvTools	v3r0	Alignment # A. Hicheur, W. Hulsbergen
 use AlignTrTools	v4r3	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
 use TAlignment		v4r3	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 use AlignT2Velo         v1r1    Alignment # Steve Blusk

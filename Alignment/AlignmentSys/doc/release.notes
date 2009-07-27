@@ -7,6 +7,12 @@ Purpose: LHCb Alignment packages.
          components.
 
 </PRE><H1><A NAME=v4r2>2009-07-27 AlignmentSys v4r2</A></H1><PRE>
+** There was a problem introduced by J. Blouw. I did not realize that
+   in fact AlignSolvKernel was replaced with AligKernel. So, I had removed
+   AlignSolvTools... which was wrong. I have put it back, and retagged the
+   AlignmentSys package with the same tag. 
+
+
 - General comments: new packages & updates
 
 - Updated  Packages: 
