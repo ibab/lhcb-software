@@ -2,6 +2,10 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+!========================== VeloAlign v4r7 2009-07-27 ========================
+ - 27/07/2009 - Johan Blouw
+ - Tagged this package v4r7 for alignment release v4r3
+
 ! 2009-07-09 - Wouter Hulsbergen
  - adapted to migration to TrackKernel
 
