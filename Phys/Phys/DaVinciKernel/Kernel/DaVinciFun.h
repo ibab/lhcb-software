@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.h,v 1.1 2009-02-27 16:47:41 jpalac Exp $
+// $Id: DaVinciFun.h,v 1.2 2009-07-27 16:10:47 jpalac Exp $
 #ifndef KERNEL_DAVINCIFUN_H 
 #define KERNEL_DAVINCIFUN_H 1
 
@@ -77,5 +77,6 @@ namespace DaVinci {
     return dynamic_cast<const LHCb::RecVertex*>( range.back().to() );
   }
 
-}
+} // namespace DaVinci
+
 #endif // KERNEL_DAVINCIFUN_H
