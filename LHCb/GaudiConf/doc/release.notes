@@ -1,7 +1,9 @@
+! $Id: release.notes,v 1.163 2009-07-28 07:52:36 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v12r8 2009-07-28 ========================
 ! 2009-07-14 - Marco Cattaneo
  - In LHCbExclusions.py, remove exclusion of Exceptions/Errors/Warnings
    summary message, following migration to Gaudi v21r3
