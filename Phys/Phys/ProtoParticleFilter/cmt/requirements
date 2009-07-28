@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           ProtoParticleFilter
-version           v1r3
+version           v1r4
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -16,7 +16,8 @@ branches          cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   DaVinciKernel      v*    Phys
+use   GaudiAlg           v* 
+use   DaVinciInterfaces  v*    Phys
 use   TrackInterfaces    v*    Tr
 
 include_path      none
