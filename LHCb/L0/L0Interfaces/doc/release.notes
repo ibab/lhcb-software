@@ -3,13 +3,12 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-
-
+!====================== L0Interfaces v1r5 2009-07-28 ==========================
+! 2009-07-28 - Marco Cattaneo
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
 
 ! 2009-07-24 - Olivier Deschamps
  - IL0CondDBProvider : implement RAMBCID data provider
-
-
 
 !====================== L0Interfaces v1r4p1 2009-05-28 ========================
 ! 2009-05-28 - Marco Cattaneo
