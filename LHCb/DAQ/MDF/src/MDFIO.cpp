@@ -1,4 +1,4 @@
-// $Id: MDFIO.cpp,v 1.35 2009-07-28 16:48:09 frankb Exp $
+// $Id: MDFIO.cpp,v 1.36 2009-07-28 17:36:35 snies Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -149,6 +149,8 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         unsigned int trMask[4] = {~0,~0,~0,~0};
         const OnlineRunInfo* odin_info = odin[0]->begin<OnlineRunInfo>();
         MDFHeader::SubHeader inf = hdrBank->begin<MDFHeader>()->subHeader();
+        MsgStream log1(m_msgSvc, m_parent);
+        log1 << MSG::DEBUG << "Creating MDF/DAQ[DAQ_STATUS_BANK] with ODIN information." << endmsg;
         inf.H1->setTriggerMask(trMask);
         inf.H1->setRunNumber(odin_info->Run);
         inf.H1->setOrbitNumber(odin_info->Orbit);
