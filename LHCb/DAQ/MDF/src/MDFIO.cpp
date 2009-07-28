@@ -1,4 +1,4 @@
-// $Id: MDFIO.cpp,v 1.34 2008-11-13 09:24:26 frankb Exp $
+// $Id: MDFIO.cpp,v 1.35 2009-07-28 16:48:09 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -12,10 +12,10 @@
 #include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawDataAddress.h"
+#include "MDF/OnlineRunInfo.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MDFIO.h"
 #include "Event/RawEvent.h"
-#include "Event/ODIN.h"
 
 #include <cstring> // For memcpy, memmove with gcc 4.3
 
@@ -89,15 +89,15 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
       m_spaceActions++;
       StatusCode sc = encodeRawBanks(raw, space.first+hdrSize, len, true);
       if ( sc.isSuccess() ) {
-	sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
-	if ( sc.isSuccess() ) {
-	  m_writeActions++;
-	  return sc;
-	}
-	MsgStream err(m_msgSvc, m_parent);
-	err << MSG::ERROR << "Failed write data to output device." << endmsg;
-	m_writeErrors++;
-	return sc;
+        sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
+        if ( sc.isSuccess() ) {
+          m_writeActions++;
+          return sc;
+        }
+        MsgStream err(m_msgSvc, m_parent);
+        err << MSG::ERROR << "Failed write data to output device." << endmsg;
+        m_writeErrors++;
+        return sc;
       }
       MsgStream err(m_msgSvc, m_parent);
       err << MSG::ERROR << "Failed to encode output banks." << endmsg;
@@ -137,12 +137,24 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
           return commitRawBanks(raw,b,compTyp,chksumTyp,ioDesc);
         }
       }
-      len = rawEventLength(raw);
-      RawBank* hdrBank = createDummyMDFHeader( raw, len );
-      raw->adoptBank(hdrBank, true);
 
-      MsgStream log1(m_msgSvc, m_parent);
-      log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
+      len = rawEventLength(raw);
+      const _V& odin = raw->banks(RawBank::ODIN);
+      RawBank* hdrBank = createDummyMDFHeader( raw, len );
+      if ( odin.empty() )  {
+        MsgStream log1(m_msgSvc, m_parent);
+        log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
+      }
+      else   {
+        unsigned int trMask[4] = {~0,~0,~0,~0};
+        const OnlineRunInfo* odin_info = odin[0]->begin<OnlineRunInfo>();
+        MDFHeader::SubHeader inf = hdrBank->begin<MDFHeader>()->subHeader();
+        inf.H1->setTriggerMask(trMask);
+        inf.H1->setRunNumber(odin_info->Run);
+        inf.H1->setOrbitNumber(odin_info->Orbit);
+        inf.H1->setBunchID(odin_info->bunchID);
+      }
+      raw->adoptBank(hdrBank, true);
       return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
     }
     //== TAE event. Start scanning the whole TES for previous and next events.
@@ -165,15 +177,15 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         theRawEvents.push_back( rawEvt );
         ctrlData.push_back( n );               // BX offset
         ctrlData.push_back( offset );          // offset in buffer, after end of this bank 
-	if ( centerMDF == 0 || n == 0 ) {
-	  const _V& bnks = raw->banks(RawBank::DAQ);
-	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
-	    if ( (*i)->version() == DAQ_STATUS_BANK )  {
-	      centerMDF = *i;
-	      break;
-	    }
-	  }
-	}
+        if ( centerMDF == 0 || n == 0 ) {
+          const _V& bnks = raw->banks(RawBank::DAQ);
+          for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
+            if ( (*i)->version() == DAQ_STATUS_BANK )  {
+              centerMDF = *i;
+              break;
+            }
+          }
+        }
         size_t l = rawEventLengthTAE(rawEvt); 
         ctrlData.push_back(l);                 // size of this BX information
         offset += l;
@@ -213,14 +225,14 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
       }
       for(unsigned int kk=0; theRawEvents.size() != kk; ++kk ) {
         size_t myLength = ctrlData[3*kk + 2];  // 2 words header, third element for each buffer
-	StatusCode sc = encodeRawBanks(theRawEvents[kk], dest, myLength, true);
+        StatusCode sc = encodeRawBanks(theRawEvents[kk], dest, myLength, true);
         if ( !sc.isSuccess() ) {
-	  msg << MSG::ERROR << "Failed to encode output raw data banks." << endmsg;
-	  m_spaceErrors++;
-	  privateBank.removeBank( ctrlBank );
-	  privateBank.removeBank( hdrBank );
-	  return sc;
-	}
+          msg << MSG::ERROR << "Failed to encode output raw data banks." << endmsg;
+          m_spaceErrors++;
+          privateBank.removeBank( ctrlBank );
+          privateBank.removeBank( hdrBank );
+          return sc;
+        }
         dest  += myLength;
         len   -= myLength;
       }
@@ -228,13 +240,13 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
       if ( 0 != len ) {
         msg << MSG::ERROR << "Expect length=0, found " << len << " starting from " << total << endmsg;
       }
-      
+
       StatusCode sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdrBank, space.first, total);
       if ( !sc.isSuccess() ) {
         msg << MSG::ERROR << "Failed write data to output device." << endmsg;
       }
       msg << MSG::DEBUG << "Wrote TAE event of length:" << total 
-          << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
+        << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
       privateBank.removeBank( ctrlBank );
       privateBank.removeBank( hdrBank );
       return sc;
@@ -288,10 +300,10 @@ LHCb::MDFIO::commitRawBuffer(const void*       data,
         int hdrSize  = sizeof(MDFHeader)+h->subheaderLength();
         int bnkSize  = hdr->totalSize();
         writeBuffer(ioDesc, h, hdrSize);
-	// Need two write due to RAW bank alignment
-	sc = writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
-	sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-	return sc;
+        // Need two write due to RAW bank alignment
+        sc = writeBuffer(ioDesc, ptr+bnkSize, len-bnkSize);
+        sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
+        return sc;
       }
     case MDF_RECORDS:  // Already ready to write MDF record
       sc = writeBuffer(ioDesc, ptr, len);
@@ -380,7 +392,7 @@ bool LHCb::MDFIO::checkSumOk(int checksum, const char* src, int datSize, bool pr
         if ( prt )  {
           MsgStream log(m_msgSvc, m_parent);
           log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-              << std::hex << checksum << " got:" << std::hex << chk << endmsg;
+            << std::hex << checksum << " got:" << std::hex << chk << endmsg;
         }
         return false;
       }
@@ -527,7 +539,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
   int readSize  = h.recordSize()-rawSize;
   int chkSize   = h.recordSize()-4*sizeof(int);
   int alloc_len = rawSize+readSize+sizeof(MDFHeader)+sizeof(RawBank)+
-                  sizeof(int) + (compress ? expand*readSize : 0);
+    sizeof(int) + (compress ? expand*readSize : 0);
   if ( dbg )  {
     MsgStream log(m_msgSvc, m_parent);
     log << MSG::INFO << "Compression:" << compress << " Checksum:" << (checksum != 0) <<  endmsg;
@@ -599,7 +611,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
           }
           ++space_retry;
         }
-        NoSpace:
+NoSpace:
         MsgStream log0(m_msgSvc, m_parent);
         log0 << MSG::ERROR << "Cannot allocate sufficient space for decompression." << endmsg;
         return MDFDescriptor(0,-1);
@@ -638,8 +650,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
   return MDFDescriptor(0,-1);
 }
 
-MDFDescriptor 
-LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
+MDFDescriptor LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
   MDFHeader h;
   int rawSize = sizeof(MDFHeader);
   StatusCode sc = readBuffer(ioDesc, &h, rawSize);
@@ -665,14 +676,14 @@ LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
 StatusCode 
 LHCb::MDFIO::readBuffer(void* const /* ioDesc */, void* const /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::readBuffer: "\
-                           "This is a default implementation which should never be called!");
+    "This is a default implementation which should never be called!");
   return StatusCode::FAILURE;
 }
 
 StatusCode 
 LHCb::MDFIO::writeBuffer(void* const /* ioDesc */, const void* /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::writeBuffer: "\
-                           "This is a default implementation which should never be called!");
+    "This is a default implementation which should never be called!");
   return StatusCode::FAILURE;
 }
 
