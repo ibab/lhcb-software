@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.57 2009-07-25 01:06:47 odescham Exp $
+! $Id: release.notes,v 1.58 2009-07-28 09:58:27 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,8 +6,13 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r8 2009-07-28 ========================
+! 2009-07-28 - Marco Cattaneo
+ - Remove obsolete file CaloAssociators_dll.cpp
+
 ! 2009-07-24 Olivier Deschamps
- - add CaloClusterEntry status and weight filtering in CaloClusterMCTruth.cpp : default UseForEnergy digits only and no minimal weight
+ - add CaloClusterEntry status and weight filtering in CaloClusterMCTruth.cpp :
+   default UseForEnergy digits only and no minimal weight
 
 !===================== CaloAssociators v6r7 2009-02-20 ========================
 ! 2009-02-03 - Marco Cattaneo
