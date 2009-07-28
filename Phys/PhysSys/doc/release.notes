@@ -3,9 +3,18 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v8r7>2009-07-?? Phys v8r7 </A></H1><PRE>
+</PRE><H1><A NAME=v8r7>2009-07-28 Phys v8r7 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r7                                  #
+###############################################################################
 
  - Based on LHCb v27r4 and Gaudi v21r3
+
+  Highlights:
+
+  * PhysConf(): Default DataType now MC09
+  * PhysDesktop: InputLocations removed. Set DVAlgorithm.InputLocation
 
 </PRE><H1><A NAME=v8r6>2009-07-02 Phys v8r6 </A></H1><PRE>
 
