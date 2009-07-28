@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r32 2009-07-28 ==========================
 ! 2009-07-27 - Chris Jones
  - Update RichRecoQC and RichTracklessRingMoni to use new histogramming 
    methods in Rich/RichKernel. Improves CPU usage a little and also moves
