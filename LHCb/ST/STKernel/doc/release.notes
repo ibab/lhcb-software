@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.68 2009-07-24 13:58:59 jluisier Exp $
+! $Id: release.notes,v 1.69 2009-07-28 08:22:03 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r16 2009-07-28 ===========================
 ! 2009-07-24 J Luisier
  - Add ITDetectorHistoProperties class, to draw nice IT 2D plots
 

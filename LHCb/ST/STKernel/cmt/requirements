@@ -1,5 +1,5 @@
 package STKernel 
-version v1r15
+version v1r16
 
 use GaudiKernel v*
 use GaudiAlg    v*
@@ -9,7 +9,6 @@ use DAQEvent    v* Event
 use SiDAQ       v* Si
 use STDet       v* Det
 use Boost       v* LCG_Interfaces
-#use STTELL1Event v* ST
 
 branches Kernel doc cmt src 
 
