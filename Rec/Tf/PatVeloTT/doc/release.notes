@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== PatVeloTT v3r7 2009-07-28 ========================
+! 2009-07-28 - Marco Cattaneo
+ - Remove obsolete file PatVeloTT_dll.cpp
+
 ! 2009-07-10 - Wouter Hulsbergen
  - Adapted to change in configuring z positions of reference nodes in fitter
 
