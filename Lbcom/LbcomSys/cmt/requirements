@@ -1,5 +1,5 @@
 package LbcomSys
-version v7r4
+version v7r5
 
 branches doc cmt
 
@@ -11,7 +11,7 @@ branches doc cmt
 use Associators       v3r7    Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r7    Calo      # Olivier Deschamps
+use CaloAssociators   v6r8    Calo      # Olivier Deschamps
 use CaloTools         v5r9    Calo      # Olivier Deschamps
 
 # HLT
@@ -19,8 +19,8 @@ use HltDAQ            v1r0    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v9r21   L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v8r17   L0        # Olivier Deschamps   
-use L0Muon            v8r5    L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0DU              v8r18   L0        # Olivier Deschamps   
+use L0Muon            v8r5p1  L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
 
@@ -35,7 +35,7 @@ use OTMonitor         v2r11   OT        # Jan Amoraal
 use RichAlgorithms    v1r1    Rich      # Chris Jones
 use RichDAQ           v3r24   Rich      # Chris Jones
 use RichMCMonitors    v1r7    Rich      # Chris Jones
-use RichMCTools       v3r11   Rich      # Chris Jones
+use RichMCTools       v3r12   Rich      # Chris Jones
 use RichTools         v2r27   Rich      # Chris Jones
 
 # Silicon detectors
@@ -47,7 +47,7 @@ use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r13   ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r19   ST        # Jeroen van Tilburg, Matt Needham
 use STMonitors        v1r5    ST        # Mark Tobin
-use STTools           v3r10   ST        # Jeroen van Tilburg, Matt Needham
+use STTools           v3r11   ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v4r8    Velo      # Tomasz Szumlak
