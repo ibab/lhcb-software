@@ -1,12 +1,11 @@
 #ifndef CALOMONIDST_CALOEMUMONITOR_H
 #define CALOMONIDST_CALOEMUMONITOR_H 1
 // ============================================================================
-// $Id: CaloEMuMonitor.h,v 1.3 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloEMuMonitor.h,v 1.4 2009-07-28 12:26:46 cattanem Exp $
 // Include files
 // ============================================================================
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Kernel/Particle2MCLinker.h"
 
 // TrEvent
