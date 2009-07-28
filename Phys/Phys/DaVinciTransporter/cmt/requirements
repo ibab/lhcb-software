@@ -14,8 +14,7 @@ branches          cmt doc src
 
 # Used packages. 
 #============================================================================
-use GaudiAlg             v*
-use DaVinciInterfaces    v* Phys
+use DaVinciKernel        v* Phys
 use TrackInterfaces      v* Tr
 
 # Component library building rule
