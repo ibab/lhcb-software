@@ -94,36 +94,10 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                  , postscale = self.postscale
                  )
 
-        Line ('SingleElectronFromPi0'
-             , prescale = self.prescale
-             , L0DU = "L0_CHANNEL('LocalPi0')"
-             , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronWithIP
-                     + [ Member ( 'TF','Decision'
-                                , OutputSelection = '%Decision'
-                                , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
-                                , HistogramUpdatePeriod = 0
-                                , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
-                                )
-                       ]
-             , postscale = self.postscale
-             )
-
         Line( 'ElectronTrackWithIP' 
              , prescale = self.prescale
              , L0DU = "L0_CHANNEL('Electron')"
              , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
-                     + [ Member ( 'VF', 'VertexCut'
-                                , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
-                                , OutputSelection = '%Decision'
-                                )
-                       ]
-             , postscale = self.postscale
-            )
-
-        Line( 'ElectronFromPi0TrackWithIP' 
-             , prescale = self.prescale
-             , L0DU = "L0_CHANNEL('LocalPi0')"
-             , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronWithIP + companionTrackWithIP
                      + [ Member ( 'VF', 'VertexCut'
                                 , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                 , OutputSelection = '%Decision'
@@ -148,18 +122,3 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
              , postscale = self.postscale
             )
         
-        Line( 'ElectronFromPi0TrackNoIP' 
-             , prescale = self.prescale
-             , L0DU = "L0_CHANNEL('LocalPi0')"
-             , algos = [ convertL0Candidates('LocalPi0') ] + prepareElectronNoIP + companionTrackNoIP 
-                     + [ Member ( 'VF', 'VertexCut'
-                                , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
-                                )
-                       , DecodeECAL
-                       , Member ( 'VF', 'MassCut'
-                                , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
-                                , OutputSelection = '%Decision'
-                                )
-                       ]
-             , postscale = self.postscale
-            )
