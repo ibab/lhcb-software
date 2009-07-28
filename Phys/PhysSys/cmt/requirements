@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.191 2009-07-24 13:57:59 jpalac Exp $
+#$Id: requirements,v 1.192 2009-07-28 15:40:51 jpalac Exp $
 package PhysSys
 version v8r7
 
@@ -8,14 +8,14 @@ branches doc cmt
 
 #===================================================================
 use  PhysConf                   v1r2   Phys   # Patrick Koppenburg, Juan Palacios
-use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
-use  DaVinciTools       	v19r0    Phys   # Juan Palacios
-use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios
+use  ProtoParticleFilter        v1r4     Phys   # Chris Jones
+use  DaVinciTools       	v19r1    Phys   # Juan Palacios
+use  DaVinciTransporter 	v3r9     Phys   # Juan Palacios
 use  ParticleMaker      	v5r2     Phys   # Chris Jones
-use  VertexFit			v5r6p2   Phys   # Yuehong Xie
+use  VertexFit			v5r7   Phys   # Yuehong Xie
 use  LoKiFitters                v2r1p1   Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r4p1   Phys   # Wouter Hulsbergen
-use  PhysDict                   v4r0p2   Phys   # Juan Palacios
+use  PhysDict                   v4r1     Phys   # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
