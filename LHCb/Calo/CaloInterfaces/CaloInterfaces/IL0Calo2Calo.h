@@ -14,7 +14,7 @@
 
 static const InterfaceID IID_IL0Calo2Calo ( "IL0Calo2Calo", 1, 0 );
 
-/** @class IL0Calo2Calo  CaloInterfaces/IL0Calo2Calo.h
+/** @class IL0Calo2Calo IL0Calo2Calo.h CaloInterfaces/IL0Calo2Calo.h
  *  
  * Tool to get a list of CaloClusters (owned by TES) in the vicinity of the input L0CaloCandidate(s),
  * if necessary invoking decoding and clusterization.

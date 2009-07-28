@@ -1,20 +1,13 @@
-! $Id: release.notes,v 1.58 2009-07-27 16:05:28 ibelyaev Exp $
+! $Id: release.notes,v 1.59 2009-07-28 07:31:54 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloInterfaces v7r13 2009-07-28 ====================
 ! 2009-07-27 - Vanya Belyaev
+ - CaloInterafces/IL0Calo2Calo.h: new interface by Dima Golubkov  
 
- - CaloInterafces/IL0Calo2Calo.h
-
-    new interface by Dima Golubkov  
-
- - cmt/requirements 
-
-    version increment tp v7r13 
-
- 
 !========================= CaloInterfaces v7r12 2009-06-29 ====================
 ! 2009-06-17 O. Deschamps for V. Egorychev
  - ICaloClusterisation tool new virtual method

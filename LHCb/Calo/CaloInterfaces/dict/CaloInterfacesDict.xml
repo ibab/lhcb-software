@@ -13,6 +13,7 @@
   <class name    = "ICaloSubClusterTag"       />
   <class name    = "ICaloTrackIdEval"         />
   <class name    = "ICaloTrackMatch"          />
+  <class name    = "IL0Calo2Calo"             />
   <class name    = "IPart2Calo"               />
   <class name    = "ITrack2Calo"              />
   <class name    = "ICaloCosmicsTool"         />
