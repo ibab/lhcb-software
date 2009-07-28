@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.16 2009-07-28 09:43:09 witekma Exp $
+! $Id: release.notes,v 1.17 2009-07-28 14:22:30 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v1r2 2009-07-28 ===================
 ! 2009-07-28 - Mariusz Witek
 - removal of useless ElectronFromPi0 lines from HltElectronLines.py
 
-!========================== Hlt1Lines v1r2 2009-07-23 ===================
 ! 2009-07-18 - Gerhard Raven
  - remove the VeloClosing line (defined as the OR of the A- and C-side
    VeloClosing lines) as with the regex functionality of HLT_PASS_RE this
