@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.123 2009-07-24 16:53:29 odescham Exp $
+! $Id: release.notes,v 1.124 2009-07-28 07:40:47 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!======================== L0Event v17r7 2009-07-28 ===========================
 ! 2009-07-24 - Olivier Deschamps
  - implement RAMBCID data
 
-!======================== L0Event v17r5 2009-06-29 ===========================
+!======================== L0Event v17r6 2009-06-29 ===========================
 ! 2009-06-23 - Olivier Deschamps
  - L0DUReport.xml : fix gcc43 warnings
 

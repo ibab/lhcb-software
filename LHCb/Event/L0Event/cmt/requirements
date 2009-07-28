@@ -3,7 +3,7 @@
 # Maintainer : Juilen Cogan, Olivier Deschamps
 #============================================================================
 package           L0Event
-version           v17r6
+version           v17r7
 
 branches          cmt doc Event xml src
 
