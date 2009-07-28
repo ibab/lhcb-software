@@ -2,13 +2,12 @@
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "Kernel/DVAlgorithm.h"
 // from Event
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/RecVertex.h"
-#include <Linker/LinkedTo.h>
-#include <Event/MCTrackInfo.h>
+#include "Linker/LinkedTo.h"
+#include "Event/MCTrackInfo.h"
 // from gsl
 #include "gsl/gsl_math.h"
 // Local

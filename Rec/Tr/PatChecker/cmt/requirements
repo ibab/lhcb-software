@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           PatChecker
-version           v3r4p1
+version           v3r4p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,13 +14,16 @@ include_path      none
 # Used packages.
 #============================================================================
 use     TfKernel        v*      Tf
-use     VeloDet         v*      Det
-use     STDet           v*      Det
-use     OTDet           v*      Det
 use     LinkerEvent     v*      Event
-use     VeloEvent       v*      Event
+use     PhysEvent       v*      Event
 use     MCEvent         v*      Event
 use     DigiEvent       v*      Event
+use     MCInterfaces    v*      Kernel
+use     GaudiAlg        v*
+use     GaudiKernel     v*
+use     AIDA            v*      LCG_Interfaces
+use     GSL             v*      LCG_Interfaces
+
 #============================================================================
 # Component library building rule
 #============================================================================

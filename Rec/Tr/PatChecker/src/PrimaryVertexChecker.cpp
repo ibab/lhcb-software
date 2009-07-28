@@ -1,15 +1,13 @@
-// $Id: PrimaryVertexChecker.cpp,v 1.1 2008-12-05 13:52:54 witekma Exp $
+// $Id: PrimaryVertexChecker.cpp,v 1.2 2009-07-28 12:13:52 cattanem Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
-#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
-#include "VeloDet/DeVelo.h"
-#include <Linker/LinkedTo.h>
-#include <Event/MCTrackInfo.h>
+#include "Linker/LinkedTo.h"
+#include "Event/MCTrackInfo.h"
 #include "Event/L0DUReport.h"
 #include "GaudiUtils/HistoStats.h"
 #include "AIDA/IHistogram1D.h"
@@ -552,7 +550,8 @@ void  PrimaryVertexChecker::match_mc_vertex_by_distance(int ipv, std::vector<Rec
 }
 
 
-std::vector<MCPVInfo>::iterator PrimaryVertexChecker::closestMCPV(std::vector<MCPVInfo>& rblemcpv, std::vector<MCPVInfo>::iterator& itmc) {
+std::vector<MCPVInfo>::iterator PrimaryVertexChecker::closestMCPV(std::vector<MCPVInfo>& rblemcpv,
+                                                                  std::vector<MCPVInfo>::iterator& itmc) {
 
   std::vector<MCPVInfo>::iterator itret = rblemcpv.end();
   double mindist = 999999.;
