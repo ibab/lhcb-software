@@ -1,4 +1,4 @@
-// $Id: ITagger.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ITagger.h,v 1.2 2009-07-28 08:47:37 cattanem Exp $
 #ifndef TAGGERMUONTOOL_ITAGGERMUONTOOL_H
 #define TAGGERMUONTOOL_ITAGGERMUONTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 
 static const InterfaceID IID_ITagger("ITagger", 1 , 0);
