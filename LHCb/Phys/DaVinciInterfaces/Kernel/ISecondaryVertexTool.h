@@ -1,4 +1,4 @@
-// $Id: ISecondaryVertexTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ISecondaryVertexTool.h,v 1.2 2009-07-28 08:19:08 jpalac Exp $
 #ifndef SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 
 static const InterfaceID IID_ISecondaryVertexTool("ISecondaryVertexTool", 1 , 0); 
