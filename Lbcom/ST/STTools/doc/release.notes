@@ -2,7 +2,8 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-! 2009-07-26 
+!=========================== STTools v3r11 2009-07-28 =========================
+! 2009-07-26 M Needham
  - Add possibility to add a misalignment error to STOfflinePosition tool
 
 ! 2009-07-14 - Louis Nicolas
