@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.84 2009-07-15 20:22:28 graven Exp $
+!  $Id: release.notes,v 1.85 2009-07-28 10:04:51 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+!========================= L0Muon v8r5p1 2009-07-28 ========================
+! 2009-07-28 - Marco Cattaneo
+ - Remove obsolete file L0Muon_dll.cpp
 
 ! 2009-07-15 - Gerhard Raven
  - avoid pushing hardwired filenames into JobOptionsSvc by expanding
