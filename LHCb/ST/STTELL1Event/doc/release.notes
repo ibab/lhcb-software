@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.36 2009-07-24 14:34:04 mneedham Exp $
+! $Id: release.notes,v 1.37 2009-07-28 08:26:14 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
 
+!======================== STTELL1Event v1r9 2009-07-28 =======================
 ! 2009-07-24 M Needham
   - another bug fix in STTELL1EventInfo
 
