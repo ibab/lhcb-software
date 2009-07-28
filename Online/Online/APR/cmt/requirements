@@ -1,0 +1,19 @@
+package APR
+version v1r0
+
+branches  cmt
+use GaudiPolicy v*
+
+include_path none
+
+macro APR_home '/home/frankm/apr' WIN32 'C:\Program Files\Apache Software Foundation\Apache2.2'
+
+include_dirs "$(APR_home)/include/apr-1"
+
+macro APR_linkopts "-L$(APR_home)/lib -lapr-1 " \
+      target-winxp "/LIBPATH:$(APR_home)\lib apr-1.lib "
+
+macro  APR_cppflags ' -DAPR_DECLARE_EXPORT '
+
+apply_pattern set_lib_path
+macro APR_export_paths " $(APR_home)/lib $(APR_base)/include" 

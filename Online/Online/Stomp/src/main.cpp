@@ -38,7 +38,7 @@ extern "C" int stomp_service(int argc, char *argv[])    {
   SubscribeHandler handler(ini,&delivery);
 
   sensor.start();
-  sensor.add(&handler,"/topic/home");
+  sensor.add(&handler,(void*)"/topic/home");
   sensor.run();
   fprintf(stdout, "All stopped. OK\n");
   return 0;

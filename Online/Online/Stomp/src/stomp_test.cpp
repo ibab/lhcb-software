@@ -31,19 +31,19 @@ namespace {
   };
 }
 
-extern "C" int test_stomp_sensor(int argc, char *argv[])    {
+extern "C" int test_stomp_sensor(int /*argc*/, char** /*argv*/)    {
   setbuf(stdout, NULL);
   StompSensor sensor("myStomp","localhost", 61613);
   StompHandler handler;
   //_asm int 3
   sensor.start();
-  sensor.add(&handler,"/topic/home");
+  sensor.add(&handler,(void*)"/topic/home");
   sensor.run();
   fprintf(stdout, "All stopped. OK\n");
   return 0;
 }
 
-extern "C" int test_stomp(int argc, char *argv[])    {
+extern "C" int test_stomp(int /*argc*/, char** /*argv*/)    {
   int rc;
    setbuf(stdout, NULL);
    StompSensor sensor("myStomp","localhost", 61613);
