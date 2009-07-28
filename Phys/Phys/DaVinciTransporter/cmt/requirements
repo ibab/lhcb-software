@@ -1,3 +1,4 @@
+#$Id :$
 # Created    : 23/08/2004
 # Maintainer : P. Koppenburg
 #
@@ -5,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTransporter
-version           v3r8
+version           v3r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,8 +14,9 @@ branches          cmt doc src
 
 # Used packages. 
 #============================================================================
-use DaVinciKernel    v* Phys
-use TrackInterfaces  v* Tr
+use GaudiAlg             v*
+use DaVinciInterfaces    v* Phys
+use TrackInterfaces      v* Tr
 
 # Component library building rule
 #============================================================================
