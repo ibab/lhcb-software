@@ -4,5 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-07-28 - Juan Palacios
+ - Kernel/ISecondaryVertexTool.h
+  . Remove Kernel/DVAlgorithm.h include. No idea why it was there.
+ - Import Kernel/Particle2Vertex.h from Phys/DaVinciKernel.
+
 ! 2009-07-22 - Juan Palacios
  - First import. Take all IAlgTools and IInterfaces from DaVinciKernel
