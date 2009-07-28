@@ -3,12 +3,11 @@
 # Maintainer : Juan PALACIOS juan.palacios@cern.ch
 # =============================================================================
 package Phys/PhysDict
-version v4r0p2
+version v4r1
 # =============== structure ===================================================
 branches         cmt doc dict
 # =============== dependencies ================================================
 use HltEvent v* Event
-use GaudiKernel v*
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
                   dictionary=Phys                               \
