@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-07-28 - Xabier Cid Vidal
+ - Propagate SpecialData property to ConfiguredMuonIDs
+
 </PRE><H1><A NAME=v7r4>2009-07-15 RecSys v7r4</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r4.
 
