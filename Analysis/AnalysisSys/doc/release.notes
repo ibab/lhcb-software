@@ -3,7 +3,32 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v3r7>2009-07-?? Analysis v3r7 </A></H1><PRE>
+</PRE><H1><A NAME=v3r7>2009-07-28 Analysis v3r7 </A></H1><PRE>
+
+ - Based on LHCb v27r4 and Gaudi v21r3
+
+  Highlights:
+
+  * AnalysisConf(): Default DataType now MC09
+
+  * New CommonParticles, plus CommonParticle track selection
+
+  * Particle2MCTruth: speed up MC matching for events with many candidates
+
+  * StrippingConf(): Introduced a new option for StrippingConf(): StreamFile
+                     StrippingConf().StreamFile["BExclusive"] = "Common.dst"
+                     will write the BExclusive stream to Common.dst. 
+                     Writing many streams to one .dst file is possible. 
+
+  * StrippingSelections: new biased Bs2JpsiPhi selection
+
+  * PhysMicroDST(): now lives in MicroDST/MicroDSTConf. No need for DaVinci
+                    dependency on client side
+
+  * New package PhysSel/PhysSlePython with python classes for offline 
+    selections (example in Ex/MicroDSTExample/python/MicroDSTExample/Selections)
+  * New package Phys/AnalysisPython with helpful functors classes and helper 
+    functions for GaudiPython use.
 
 </PRE><H1><A NAME=v3r6>2009-07-02 Analysis v3r6 </A></H1><PRE>
 
