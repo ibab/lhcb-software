@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -14,6 +14,9 @@ from Configurables import GaudiSequencer as Sequence
 from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf 
+from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiLinesConf
+from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bd2JpsiKstarLinesConf
+from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bu2JpsiKLinesConf
 from Hlt2Lines.Hlt2B2PhiXLines          import Hlt2B2PhiXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
@@ -30,6 +33,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2JpsiXLinesConf
                              , Hlt2B2PhiXLinesConf
           		     , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
+                             , Hlt2Bs2JpsiPhiLinesConf
+          		     , Hlt2Bd2JpsiKstarLinesConf
+          		     , Hlt2Bu2JpsiKLinesConf  
 	                     , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
@@ -75,6 +81,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                                , Hlt2InclusiveMuonLinesConf ]
                     , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
                     , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
+                               , Hlt2Bs2JpsiPhiLinesConf
+                               , Hlt2Bd2JpsiKstarLinesConf
+                               , Hlt2Bu2JpsiKLinesConf    
                                , Hlt2B2JpsiXLinesConf
                                , Hlt2B2PhiXLinesConf
                                , Hlt2XGammaLinesConf

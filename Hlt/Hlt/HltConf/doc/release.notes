@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.285 2009-07-29 11:39:25 kimym Exp $ 
+! $Id: release.notes,v 1.286 2009-07-29 16:33:23 conti Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v4r0 2009-07-23 ===================
+
+! 2009-07-29 - Geraldine Conti
+- Added configuration lines for Hlt2Bs2JpsiPhiLines, Hlt2Bd2JpsiKstarLines and Hlt2Bu2JpsiKLines in Hlt2.py
 
 ! 2009-07-29 - Young Min Kim
  - Added configuration lines for Hlt2B2PhiXLines (just added in Hlt/Hlt2Lines) in Hlt2.py
