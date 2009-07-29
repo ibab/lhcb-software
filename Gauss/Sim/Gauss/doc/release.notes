@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================= Gauss v37r3p1 2009-07-29 ============================
 ! 2009-07-29 - Silvia Miglioranzi
  - To allow DIRAC people to change the XML catalog name, the FileCatalog 
    instruction in Sim/Gauss/python/Gauss/Configuration.py was modified from:
