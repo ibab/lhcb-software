@@ -241,7 +241,7 @@ StatusCode Hlt2DisplVerticesDEV::finalize() {
   if (msgLevel(MSG::DEBUG)) {
     debug() << "==> Finalize" << endmsg;
     if(m_nbevent == 0) m_nbevent++;
-    double err = 10.*sqrt( double(m_nbpassed/m_nbevent) );
+    double err = 10.*std::sqrt( static_cast<double>(m_nbpassed/m_nbevent) );
     debug() << "------------- Efficiency -----------"<< endmsg;
     debug() << "| Accepted event         "<< 100.*m_nbpassed/m_nbevent 
 	    <<"+-" << err
@@ -343,8 +343,8 @@ void Hlt2DisplVerticesDEV::CreateMap(){
 const Particle * Hlt2DisplVerticesDEV::DefaultParticle( const Track * p ){
 
   double sx = p->slopes().x(); double sy = p->slopes().y();
-  double pz = 400/sqrt( sx*sx + sy*sy );
-  double e = sqrt( pow(139.57,2) + pow(400.,2) + pz*pz );
+  double pz = m_pt/sqrt( sx*sx + sy*sy );
+  double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
   Particle pion;
   const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
   pion.setMomentum(mom);

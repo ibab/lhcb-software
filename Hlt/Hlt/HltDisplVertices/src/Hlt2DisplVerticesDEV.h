@@ -21,8 +21,10 @@
 
 /** @class Hlt2DisplVerticesDEV Hlt2DisplVerticesDEV.h
  *
+ * THIS IS A DEVELOPMENT VERSION
+ * please refer to Hlt2DisplVertices
  *
- *  @author Neal Gueissaz
+ *  @author Neal Gauvin (Gueissaz)
  *  @date   2009-july-1
  */
 
@@ -80,8 +82,10 @@ private:
   bool m_Save;
   bool m_DefMom;
 
-  //the highest pt Pions
+  //a pions
   const LHCb::Particle* Pion;
+  double m_piMass;  ///< the pion mass
+  double m_pt;      ///< default pt for default pions
 
 };
 #endif // Hlt2DisplVerticesDEV_H

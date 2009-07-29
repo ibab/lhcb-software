@@ -272,8 +272,8 @@ void Hlt2DisplVertices::CreateMap(){
 const Particle * Hlt2DisplVertices::DefaultParticle( const Track * p ){
 
   double sx = p->slopes().x(); double sy = p->slopes().y();
-  double pz = m_pt/sqrt( sx*sx + sy*sy );
-  double e = sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
+  double pz = m_pt/std::sqrt( sx*sx + sy*sy );
+  double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
   Particle pion;
   const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
   pion.setMomentum(mom);
