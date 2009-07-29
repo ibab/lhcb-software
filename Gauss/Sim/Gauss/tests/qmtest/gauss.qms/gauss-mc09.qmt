@@ -4,6 +4,7 @@
   <argument name="args"><set>
     <text>$GAUSSOPTS/Gauss-MC09.py</text>
     <text>$DECFILESROOT/options/30000000.opts</text>
+    <text>$LBPYTHIAROOT/options/Pythia.opts</text>	
     <text>$GAUSSOPTS/Gauss-Job.py</text>
   </set></argument>
   <argument name="timeout"><integer>1800</integer></argument>
