@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.cpp,v 1.3 2008-10-01 14:33:58 dhcroft Exp $
+// $Id: PatVeloFitLHCbIDs.cpp,v 1.4 2009-07-29 16:25:59 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -40,6 +40,10 @@ Tf::PatVeloFitLHCbIDs::PatVeloFitLHCbIDs( const std::string& type,
   declareProperty( "stepError"       , m_stepError        = 0.002     );
   declareProperty( "variableMS"      , m_variableMS       = false     );
   declareProperty( "forwardStepError", m_forwardStepError = 0.00035   );
+  declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );
+  declareProperty( "PhiHitManagerName" , m_phiHitManagerName  = "PatVeloPhiHitManager" );
+  declareProperty( "TrackToolName"   , m_trackToolName = "PatVeloTrackTool" );
+  declareProperty( "FullErrorPoints" , m_fullErrorPoints = 5          );
 }
 //=============================================================================
 // Destructor
@@ -51,12 +55,10 @@ StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if(!sc) return sc;
   
-  m_rHitManager = tool<PatVeloRHitManager>( "Tf::PatVeloRHitManager" );
-  m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
+  m_rHitManager = tool<PatVeloRHitManager>( "Tf::PatVeloRHitManager" , m_rHitManagerName );
+  m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" , m_phiHitManagerName );
   m_PatVeloTrackTool = 
-    tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool"); 
-  m_stepError        = m_stepError;
-  m_forwardStepError = m_forwardStepError; 
+    tool<PatVeloTrackTool>("Tf::PatVeloTrackTool", m_trackToolName ); 
   return StatusCode::SUCCESS;
 }
 
@@ -139,7 +141,7 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     }
   }
 
-  patVeloTrack->fitSpaceTrack( msCorr, true, m_beamState );
+  patVeloTrack->fitSpaceTrack( msCorr, true, m_beamState , m_fullErrorPoints );
 
   
   StatusCode sc =
@@ -169,6 +171,5 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     track.addToStates(savedStates);
   }
   
-
   return sc;
 }

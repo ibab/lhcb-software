@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-07-29 - David Hutchcroft
+ - Changed default name of PatVelo hit managers for PatVeloFitLHCbIDs
+
 !========================== PatVelo v3r16 2009-07-28 =========================
 ! 2009-07-20 - David Hutchcroft
  - Changed chi2 cut again to recover more efficiency

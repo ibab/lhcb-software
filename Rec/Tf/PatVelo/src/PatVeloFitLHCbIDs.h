@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.h,v 1.3 2008-10-01 14:33:58 dhcroft Exp $
+// $Id: PatVeloFitLHCbIDs.h,v 1.4 2009-07-29 16:25:59 dhcroft Exp $
 #ifndef TF_PATVELOFITLHCBIDS_H 
 #define TF_PATVELOFITLHCBIDS_H 1
 
@@ -69,6 +69,18 @@ namespace Tf {
 
     /// use the momentum dependant formula for MS correction
     bool m_variableMS;
+
+    /// Name of the R hit manager instance
+    std::string m_rHitManagerName;
+
+    /// Name of the Phi hit manager instance
+    std::string m_phiHitManagerName;
+
+    /// Name of the Track Tool used here
+    std::string m_trackToolName;
+
+    /// Number of measurements to take with a full error
+    unsigned int m_fullErrorPoints; 
 
   };
 }
