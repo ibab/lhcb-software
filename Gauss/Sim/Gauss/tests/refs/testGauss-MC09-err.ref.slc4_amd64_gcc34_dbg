@@ -10,32 +10,8 @@ WARNING - G4Navigator::ComputeStep()
           Trying pushing it of 9e-10 mm ...
 WARNING - G4Navigator::ComputeStep()
           Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-351.6272367,177.0839093,895)
-          direction: (-0.6090375677,0.32909704,0.7216428337).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (5.131739039,496.8898796,895)
-          direction: (0.01037781426,0.7661036821,0.6426332152).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-418.7482779,-180.2864505,895)
-          direction: (-0.5225511401,-0.2306044276,0.8208300092).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-160.2377104,424.3339715,895)
-          direction: (-0.2029036912,0.5243950115,0.8269461675).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (446.1331231,-60.42697959,895)
-          direction: (0.4352296097,-0.05936933686,0.898359877).
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (376.1255911,-48.96968152,904.0471445)
+          direction: (0.3727776869,-0.9105692689,0.178606838).
           Potential geometry or navigation problem !
           Trying pushing it of 9e-10 mm ...
 WARNING - G4Navigator::ComputeStep()

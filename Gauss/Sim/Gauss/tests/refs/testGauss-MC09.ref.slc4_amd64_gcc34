@@ -10,6 +10,8 @@
 # Generation.MinimumBias.ProductionTool = "PythiaProduction";
 # ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/minbias.dec";
 # <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r2/options/30000000.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
 # --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-Job.py'
 # <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-Job.py'
 # applying configuration of Gauss
@@ -30,10 +32,10 @@
 # |-TotalCrossSection = 9.7199999999999989e-24  (default: 9.7199999999999989e-24)
 # |-BeamMomentum      = 5000000.0  (default: 5000000.0)
 # \----- (End of User Gauss/Gauss) -------------------------------------------------------------------
-ApplicationMgr    SUCCESS
+ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to Gauss version v37r3
-                                          running on lxplus216.cern.ch on Thu Jul 23 17:42:55 2009
+                                          running on lxplus201.cern.ch on Tue Jul 28 17:35:46 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -79,7 +81,7 @@ ParticlePropertySvc        INFO Opened particle properties file : conddb:///para
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-30000000-5ev-20090723-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-30000000-5ev-20090728-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -90,15 +92,15 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   2.10 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.42 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.43 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlot
 GeneratorSlot              INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 5 events
 GaussGen                SUCCESS ==================================================================
-Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity.
+Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity. 
 Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 0.00116
 Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 0.011245
 Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
@@ -107,7 +109,7 @@ Generation.MinimumBias     INFO Generating Minimum Bias events.
 Generation.MinimumBia...SUCCESS ==================================================================
 Generation.MinimumBia...SUCCESS Using as production engine  PythiaProduction
 Generation.MinimumBia...SUCCESS ==================================================================
-Generation.MinimumBia...   INFO Colliding Beam Parameters:
+Generation.MinimumBia...   INFO Colliding Beam Parameters: 
 Generation.MinimumBia...   INFO Beam Momentum (TeV): 5
 Generation.MinimumBia...   INFO Vertical crossing angle (microradian): 0
 Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 329
@@ -115,8 +117,8 @@ Generation.MinimumBia...   INFO Horizontal crossing angle (microradian): 329
  Process switched off!
  Warning: requested subprocess 485 has vanishing cross-section.
  Process switched off!
-Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution
-Generation.BeamSpotSm...   INFO  Z primary = 0 mm
+Generation.BeamSpotSm...   INFO Smearing of interaction point with Gaussian distribution 
+Generation.BeamSpotSm...   INFO  Z primary = 0 mm 
 Generation.BeamSpotSm...   INFO  time of interaction vs T0 of IP is 0 ns
 Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.027 mm, 0.027 mm, 38.2 mm
 Generation              SUCCESS ==================================================================
@@ -154,8 +156,8 @@ OTHitMonitor.MCPartic...   INFO            Eta cut          : -1.79769e+308 < P 
 EventPersistencySvc        INFO Added successfully Conversion service:GiGaKine
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-30000000-5ev-20090723.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
-EventLoopMgr            WARNING Unable to locate service "EventSelector"
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-30000000-5ev-20090728.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+EventLoopMgr            WARNING Unable to locate service "EventSelector" 
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
@@ -172,24 +174,25 @@ GiGaGeo                    INFO world():: Global        'G4Field Manager' is set
 GiGaGeo                    INFO world():: Global        'G4MagneticField' is set to be = GiGaMagFieldGlobal
 GiGaGeo                    INFO world():: Global 'G4MagIntegratorStepper' is set to be = G4ClassicalRK4
 GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB
-GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder3 .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder4 .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder1 .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/BeforeMagnetRegion/TT/Modules/lvLadder2 .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvLong410Sector .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1LongLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITULongLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVLongLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2LongLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort320Sector .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX1ShortLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITUShortLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITVShortLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITX2ShortLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/Ladder/lvShort410Sector .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_4to7_ShortLayer .  Please Check Geometry DB  
+GiGaLVCnv               WARNING  GiGaLVolConv Misalignment: Multiple indistinguishable misalignable detector elements found inside  /dd/Geometry/AfterMagnetRegion/T/IT/lvITV_410_1to4_ShortLayer .  Please Check Geometry DB  
 RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root" for reading
+SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GaussSim                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 786365161, 0]
 GiGa.GiGaMgr               INFO GiGaRunManager::  Geometry will be extracted from GiGaGeo
 RichHpdPhotoElectricEffect UseHpdMagDistortions = 0
@@ -197,14 +200,13 @@ RichHpdPhotoElectricEffect PsfPreDc06Flag       = 0
 RichHpdPhotoElectricEffect UseNominalHpdQE =   0
 RichHpdProperties          INFO Total Number of hpds in Rich1 = 196
 RichHpdProperties          INFO Total Number of hpds in Rich2 = 288
-RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH
+RichHpdProperties          INFO Filled the HPD QE, PSF and Demag tables for  RICH  
 Rich Hpd SiHitEfficiency  BackScatterCorrectedProb 0.85   0.0385953
-GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm
-GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm
-GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm
-SIMCOND.TimeOutChecker     INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+GiGa.ModularPL             INFO  The production cut for gamma is set to 	10 mm 
+GiGa.ModularPL             INFO  The production cut for electron is set to 	1e+07 mm 
+GiGa.ModularPL             INFO  The production cut for positron is set to 	5 mm 
 
-phot:  Total cross sections from Sandia parametrisation.
+phot:  Total cross sections from Sandia parametrisation. 
       Sampling according PhotoElectric model
 
 compt:  Total cross sections has a good parametrisation from 10 KeV to (100/Z) GeV
@@ -232,7 +234,7 @@ eIoni:   tables are built for  e-
 eBrem:   tables are built for  e-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 eIoni:   tables are built for  e+
@@ -245,7 +247,7 @@ eIoni:   tables are built for  e+
 eBrem:   tables are built for  e+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Total cross sections and sampling from StandBrem model (based on the EEDL data library)
+      Total cross sections and sampling from StandBrem model (based on the EEDL data library) 
       Good description from 1 KeV to 100 GeV, log scale extrapolation above 100 GeV. LPM flag 1
 
 annihil:       Sampling according eplus2gg model
@@ -295,36 +297,36 @@ msc:  Model variant of multiple scattering for mu+
 muIoni:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model
+      Parametrised model 
 
 muPairProd:   tables are built for  mu+
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model
+      Parametrised model 
 
 muIoni:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below,
+      Bether-Bloch model for E > 0.2 MeV, parametrisation of Bragg peak below, 
       radiative corrections for E > 1 GeV
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 
 muBrems:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model
+      Parametrised model 
 
 muPairProd:   tables are built for  mu-
       dE/dx and range tables from 100 eV  to 100 TeV in 120 bins.
       Lambda tables from threshold to 100 TeV in 120 bins.
-      Parametrised model
+      Parametrised model 
 
 G4UHadronElasticProcess for neutron PDGcode= 2112  Elow(MeV)= 19  Elowest(eV)= 0
 
@@ -350,7 +352,6 @@ hIoni:   tables are built for  pi-
       Step function: finalRange(mm)= 1, dRoverRange= 0.2, integral: 1, fluct: 1
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
 GiGaGetEventAlg            INFO Number of extracted MCParticles '/Event/MC/Particles' 	419
-IODataManager              INFO Referring to dataset Gauss-30000000-5ev-20090723.sim by its file ID:E01D0D0C-A077-DE11-BF17-000423D30656
 Gauss-30000000-5ev-20...SUCCESS Root file version:51800
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 GaussSim                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 31909538, 0]
@@ -393,7 +394,7 @@ Number of accepted interactions with >= 3c : 0
 Number of accepted interactions with >= prompt C : 0
 Number of accepted interactions with b and c : 0
 
-GenMonitorAlg              INFO
+GenMonitorAlg              INFO 
 ======================== Generators Statistics ====================
 =                                                                 =
 = Number of particles generated: 614
@@ -413,7 +414,7 @@ GenMonitorAlg              INFO
 = Mean charged stable multiplicity in LHCb eta: 7
 =                                                                 =
 ===================================================================
-GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19
+GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19 
 GaussSim                SUCCESS ==================================================================
 GaussSim                SUCCESS 5 events processed
 GaussSim                SUCCESS ==================================================================
@@ -468,7 +469,7 @@ GetRichSegments            INFO Av. # MCRichSegments       : GasQuartzWin
 GetRichSegments            INFO Av. # MCRichSegments       : HPDQuartzWin =     0.20 +-  0.20 / event
 GetRichTracks              INFO Av. # MCRichTracks         : Overall =     0.00 +-  0.00
 VeloGaussMoni              INFO ------------------------------------------------------
-VeloGaussMoni              INFO                 - VeloGaussMoni table -
+VeloGaussMoni              INFO                 - VeloGaussMoni table -                 
 VeloGaussMoni              INFO ------------------------------------------------------
 VeloGaussMoni              INFO | Number of MCHits/Event:       175.8+/-70.3411
 VeloGaussMoni              INFO | Number of PileUpMCHits/Event: 10.6+/-4.50422
@@ -478,7 +479,7 @@ TTHitMonitor               INFO #hits per event: 51.2
 TTHitMonitor               INFO Mean beta * gamma: 381.267
 TTHitMonitor               INFO Most Probable deposited charge: 0.157798
 TTHitMonitor               INFO Half Sample width 0.0592113
-TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7
+TTHitMonitor            SUCCESS Booked 7 Histogram(s) : 1D=7 
 TTHitMonitor            SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "DeltaRay"                                      |         5 |          5 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
@@ -489,7 +490,7 @@ ITHitMonitor               INFO #hits per event: 57.6
 ITHitMonitor               INFO Mean beta * gamma: 1730.01
 ITHitMonitor               INFO Most Probable deposited charge: 0.106873
 ITHitMonitor               INFO Half Sample width 0.0420248
-ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
+ITHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
 ITHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "betaGamma"                                     |       288 |   498242.7 |     1730.0 |     3252.2 |     0.14684 |      13654. |
@@ -499,19 +500,19 @@ OTHitMonitor               INFO #hits per event: 137.4
 OTHitMonitor               INFO Mean beta * gamma: 494.66
 OTHitMonitor               INFO Most Probable deposited charge: 0.23061
 OTHitMonitor               INFO Half Sample width 0.120571
-OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9
+OTHitMonitor            SUCCESS Booked 9 Histogram(s) : 1D=9 
 OTHitMonitor            SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "betaGamma"                                     |       687 |   339831.3 |     494.66 |     1504.8 |     0.26224 |      13310. |
  | "numberHits"                                    |         5 |        687 |     137.40 |     126.34 |      0.0000 |      348.00 |
-SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
-PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19
-EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19
-HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16
+SpdMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
+PrsMonitor              SUCCESS Booked 19 Histogram(s) : 1D=19 
+EcalMonitor             SUCCESS Booked 19 Histogram(s) : 1D=19 
+HcalMonitor             SUCCESS Booked 16 Histogram(s) : 1D=16 
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO        Muon Monitoring Table
+MuonHitChecker             INFO        Muon Monitoring Table 
 MuonHitChecker             INFO -----------------------------------------------------------------
-MuonHitChecker             INFO  M1        M2        M3        M4        M5
+MuonHitChecker             INFO  M1        M2        M3        M4        M5 
 MuonHitChecker             INFO 17.200  6.000  0.000  0.000  0.000   R1
 MuonHitChecker             INFO 16.400  7.400  0.000  0.000  0.000   R2
 MuonHitChecker             INFO 9.800  2.400  0.800  0.000  0.000   R3
@@ -521,28 +522,28 @@ MuonHitChecker             INFO -------    Integrated over regions    ----------
 MuonHitChecker             INFO -----------------------------------------------------------------
 MuonHitChecker             INFO 59.600  21.000  1.600  1.000  0.000   allR
 MuonHitChecker             INFO  number of hit generate doutside gaps volume 0
-MuonMultipleScatterin...SUCCESS Booked 18 Histogram(s) : 2D=18
+MuonMultipleScatterin...SUCCESS Booked 18 Histogram(s) : 2D=18 
 GaussTape                  INFO Events output: 5
 EventLoopMgr               INFO Histograms converted successfully according to request.
 ToolSvc                    INFO Removing all tools created by ToolSvc
-GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2
-GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2
+GaussSim.GaussSimMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
+GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2 
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   2.43 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO DetectorsHits                 |     7.599 |     7.399 |    0.978      17.6 |       5 |     0.037 |
-ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     0.800 |     0.594 |    0.043       1.6 |       5 |     0.003 |
-ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.037 |    0.022       0.1 |       5 |     0.000 |
-ToolSvc.SequencerTime...   INFO   GetTTHits                   |     0.400 |     0.517 |    0.021       1.4 |       5 |     0.003 |
-ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.400 |     0.392 |    0.022       1.2 |       5 |     0.002 |
-ToolSvc.SequencerTime...   INFO   GetOTHits                   |     0.800 |     0.818 |    0.028       1.7 |       5 |     0.004 |
-ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     1.400 |     1.318 |    0.023       2.7 |       5 |     0.007 |
-ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.200 |     0.288 |    0.017       0.9 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.200 |     0.238 |    0.015       0.5 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     1.000 |     0.749 |    0.015       1.3 |       5 |     0.004 |
-ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.000 |     0.165 |    0.015       0.3 |       5 |     0.001 |
-ToolSvc.SequencerTime...   INFO   RichHits                    |     2.400 |     2.271 |    0.453       5.9 |       5 |     0.011 |
+ToolSvc.SequencerTime...   INFO DetectorsHits                 |     7.599 |     8.570 |    0.938      23.9 |       5 |     0.043 |
+ToolSvc.SequencerTime...   INFO   GetVeloHits                 |     0.800 |     0.625 |    0.042       1.7 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetPuVetoHits               |     0.000 |     0.038 |    0.022       0.1 |       5 |     0.000 |
+ToolSvc.SequencerTime...   INFO   GetTTHits                   |     0.600 |     0.512 |    0.021       1.5 |       5 |     0.003 |
+ToolSvc.SequencerTime...   INFO   GetITHits                   |     0.400 |     0.388 |    0.021       1.2 |       5 |     0.002 |
+ToolSvc.SequencerTime...   INFO   GetOTHits                   |     0.600 |     0.802 |    0.022       1.7 |       5 |     0.004 |
+ToolSvc.SequencerTime...   INFO   GetMuonHits                 |     1.200 |     1.290 |    0.022       2.6 |       5 |     0.006 |
+ToolSvc.SequencerTime...   INFO   GetSpdHits                  |     0.400 |     0.276 |    0.017       0.9 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   GetPrsHits                  |     0.400 |     0.235 |    0.014       0.5 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   GetEcalHits                 |     0.600 |     1.859 |    0.014       7.0 |       5 |     0.009 |
+ToolSvc.SequencerTime...   INFO   GetHcalHits                 |     0.200 |     0.173 |    0.015       0.4 |       5 |     0.001 |
+ToolSvc.SequencerTime...   INFO   RichHits                    |     2.400 |     2.360 |    0.437       6.5 |       5 |     0.012 |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -619,78 +620,77 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  ********* Fraction of events that fail fragmentation cuts =  0.00000 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   2.10 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   2.42 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 43255.225 | 43338.377 |   32.492  197763.7 |       5 |   216.692 |
-TimingAuditor.TIMER        INFO  GaussSequencer               | 42576.328 | 42656.967 |   30.123  194417.5 |       5 |   213.285 |
-TimingAuditor.TIMER        INFO   Generator                   |     8.599 |     8.464 |    1.717      22.7 |       5 |     0.042 |
-TimingAuditor.TIMER        INFO    GeneratorSlot              |     8.599 |     8.460 |    1.713      22.7 |       5 |     0.042 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.400 |     0.574 |    0.314       1.5 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     Generation                |     7.799 |     7.700 |    1.329      20.7 |       5 |     0.039 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.400 |     0.158 |    0.038       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.400 |     0.152 |    0.036       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO   Simulation                  | 42567.728 | 42648.490 |   28.399  194394.8 |       5 |   213.242 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 46848.878 | 48110.424 |   32.374  221786.2 |       5 |   240.552 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 46161.982 | 47188.165 |   30.048  217234.8 |       5 |   235.941 |
+TimingAuditor.TIMER        INFO   Generator                   |     8.199 |    37.191 |    1.650     166.6 |       5 |     0.186 |
+TimingAuditor.TIMER        INFO    GeneratorSlot              |     8.199 |    37.186 |    1.647     166.6 |       5 |     0.186 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.400 |     0.499 |    0.230       1.5 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     Generation                |     7.799 |    36.515 |    1.326     164.6 |       5 |     0.183 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.000 |     0.145 |    0.039       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.000 |     0.139 |    0.036       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO   Simulation                  | 46153.583 | 47150.961 |   28.392  217068.2 |       5 |   235.755 |
 TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.004 |    0.004       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 24926.610 | 24964.728 |    0.002  124823.6 |       5 |   124.824 |
-TimingAuditor.TIMER        INFO    SimulationSlot             | 17641.118 | 17683.740 |   28.387   69571.1 |       5 |    88.419 |
-TimingAuditor.TIMER        INFO     GaussSim                  |     0.200 |     0.359 |    0.197       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     SimMake                   | 17632.319 | 17674.746 |   27.635   69549.3 |       5 |    88.374 |
-TimingAuditor.TIMER        INFO      GenerationToSimulation   | 10920.540 | 10936.701 |    0.181   54674.7 |       5 |    54.684 |
-TimingAuditor.TIMER        INFO      GiGaFlushAlgorithm       |  6702.781 |  6729.024 |   21.907   14852.9 |       5 |    33.645 |
-TimingAuditor.TIMER        INFO      GiGaCheckEventStatus     |     0.200 |     0.010 |    0.004       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO      SimulationToMCTruth      |     0.800 |     0.949 |    0.141       2.6 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO      DetectorsHits            |     7.599 |     7.402 |    0.981      17.6 |       5 |     0.037 |
-TimingAuditor.TIMER        INFO       GetVeloHits             |     0.800 |     0.590 |    0.040       1.6 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO       GetPuVetoHits           |     0.000 |     0.032 |    0.020       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO       GetTTHits               |     0.400 |     0.512 |    0.018       1.4 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO       GetITHits               |     0.400 |     0.384 |    0.018       1.1 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO       GetOTHits               |     0.800 |     0.811 |    0.024       1.7 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO       GetMuonHits             |     1.400 |     1.309 |    0.020       2.6 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO       GetSpdHits              |     0.200 |     0.281 |    0.015       0.9 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       GetPrsHits              |     0.200 |     0.233 |    0.012       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       GetEcalHits             |     1.000 |     0.742 |    0.012       1.3 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO       GetHcalHits             |     0.000 |     0.156 |    0.012       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       RichHits                |     2.400 |     2.266 |    0.450       5.9 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        GetRichHits            |     0.800 |     0.919 |    0.085       2.2 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO        GetRichPhotons         |     0.600 |     0.312 |    0.029       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        GetRichSegments        |     0.400 |     0.447 |    0.025       1.3 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        GetRichTracks          |     0.400 |     0.277 |    0.019       0.8 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCPartToMCRichTrack    |     0.000 |     0.115 |    0.030       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCRichHitToMCRichOpPhot|     0.200 |     0.159 |    0.023       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      PackMCParticle           |     0.400 |     0.385 |    0.031       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      PackMCVertex             |     0.000 |     0.214 |    0.020       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO     SimMonitor                |     8.599 |     8.608 |    0.540      20.9 |       5 |     0.043 |
-TimingAuditor.TIMER        INFO      GiGaGetEventAlg          |     0.200 |     0.216 |    0.160       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      MCTruthMonitor           |     0.200 |     0.139 |    0.025       0.2 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      GiGaGetHitsAlg           |     0.200 |     0.173 |    0.072       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      DetectorsMonitor         |     7.399 |     7.312 |    0.183      18.3 |       5 |     0.037 |
-TimingAuditor.TIMER        INFO       VeloGaussMoni           |     2.599 |     2.721 |    0.026      10.1 |       5 |     0.014 |
-TimingAuditor.TIMER        INFO       TTHitMonitor            |     0.200 |     0.294 |    0.014       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       ITHitMonitor            |     0.400 |     0.154 |    0.007       0.3 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       OTHitMonitor            |     0.200 |     0.309 |    0.007       0.7 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO       SpdMonitor              |     0.400 |     0.401 |    0.028       1.2 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO       PrsMonitor              |     0.600 |     0.500 |    0.017       1.4 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO       EcalMonitor             |     0.400 |     0.585 |    0.016       1.5 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO       HcalMonitor             |     0.400 |     0.226 |    0.017       0.8 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       MuonHitChecker          |     0.200 |     0.437 |    0.019       1.1 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO       MuonMultipleScatteringCh|     2.000 |     1.648 |    0.016       7.7 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO      TestMCVertex             |     0.200 |     0.258 |    0.025       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      TestMCParticle           |     0.200 |     0.231 |    0.023       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      CompareMCVertex          |     0.200 |     0.112 |    0.013       0.2 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      CompareMCParticle        |     0.000 |     0.136 |    0.014       0.2 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO  GaussTape                    |   678.497 |   681.108 |    2.295    3345.5 |       5 |     3.406 |
+TimingAuditor.TIMER        INFO    Geo                        | 26168.822 | 26834.803 |    0.002  134174.0 |       5 |   134.174 |
+TimingAuditor.TIMER        INFO    SimulationSlot             | 19984.762 | 20316.134 |   28.379   82894.1 |       5 |   101.581 |
+TimingAuditor.TIMER        INFO     GaussSim                  |     0.400 |     0.363 |    0.153       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     SimMake                   | 19975.563 | 20306.944 |   27.724   82871.9 |       5 |   101.535 |
+TimingAuditor.TIMER        INFO      GenerationToSimulation   | 12512.898 | 12656.537 |    0.202   63273.7 |       5 |    63.283 |
+TimingAuditor.TIMER        INFO      GiGaFlushAlgorithm       |  7453.467 |  7638.950 |   21.882   19570.2 |       5 |    38.195 |
+TimingAuditor.TIMER        INFO      GiGaCheckEventStatus     |     0.000 |     0.009 |    0.004       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO      SimulationToMCTruth      |     0.800 |     0.945 |    0.131       2.6 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO      DetectorsHits            |     7.599 |     8.573 |    0.941      23.9 |       5 |     0.043 |
+TimingAuditor.TIMER        INFO       GetVeloHits             |     0.800 |     0.621 |    0.040       1.7 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       GetPuVetoHits           |     0.000 |     0.031 |    0.020       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO       GetTTHits               |     0.600 |     0.508 |    0.019       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       GetITHits               |     0.400 |     0.382 |    0.019       1.1 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO       GetOTHits               |     0.600 |     0.794 |    0.018       1.7 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO       GetMuonHits             |     1.200 |     1.281 |    0.019       2.6 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO       GetSpdHits              |     0.400 |     0.270 |    0.014       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       GetPrsHits              |     0.400 |     0.230 |    0.012       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       GetEcalHits             |     0.600 |     1.853 |    0.012       6.9 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO       GetHcalHits             |     0.000 |     0.158 |    0.012       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       RichHits                |     2.400 |     2.356 |    0.435       6.5 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO        GetRichHits            |     0.800 |     0.895 |    0.087       2.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        GetRichPhotons         |     0.800 |     0.318 |    0.030       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetRichSegments        |     0.600 |     0.549 |    0.025       1.8 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        GetRichTracks          |     0.200 |     0.281 |    0.021       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCPartToMCRichTrack    |     0.000 |     0.116 |    0.031       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCRichHitToMCRichOpPhot|     0.000 |     0.158 |    0.022       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      PackMCParticle           |     0.400 |     0.385 |    0.034       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      PackMCVertex             |     0.400 |     1.484 |    0.023       6.7 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO     SimMonitor                |     8.799 |     8.796 |    0.489      21.1 |       5 |     0.044 |
+TimingAuditor.TIMER        INFO      GiGaGetEventAlg          |     0.000 |     0.159 |    0.101       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      MCTruthMonitor           |     0.000 |     0.145 |    0.025       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      GiGaGetHitsAlg           |     0.200 |     0.170 |    0.072       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      DetectorsMonitor         |     7.599 |     7.541 |    0.193      18.6 |       5 |     0.038 |
+TimingAuditor.TIMER        INFO       VeloGaussMoni           |     2.799 |     2.747 |    0.027      10.2 |       5 |     0.014 |
+TimingAuditor.TIMER        INFO       TTHitMonitor            |     0.200 |     0.290 |    0.014       1.0 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       ITHitMonitor            |     0.200 |     0.155 |    0.007       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       OTHitMonitor            |     0.200 |     0.311 |    0.007       0.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO       SpdMonitor              |     0.600 |     0.412 |    0.026       1.2 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO       PrsMonitor              |     0.200 |     0.509 |    0.016       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       EcalMonitor             |     0.800 |     0.585 |    0.016       1.5 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       HcalMonitor             |     0.400 |     0.227 |    0.027       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       MuonHitChecker          |     0.400 |     0.463 |    0.020       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO       MuonMultipleScatteringCh|     1.800 |     1.806 |    0.015       8.4 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO      TestMCVertex             |     0.400 |     0.265 |    0.027       0.6 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      TestMCParticle           |     0.200 |     0.231 |    0.024       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      CompareMCVertex          |     0.200 |     0.114 |    0.015       0.2 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      CompareMCParticle        |     0.200 |     0.141 |    0.018       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO  GaussTape                    |   686.896 |   921.965 |    2.254    4550.7 |       5 |     4.610 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 1665     Message = 'RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:E01D0D0C-A077-DE11-BF17-000423D30656[Gauss-30000000-5ev-20090723.sim]
-XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:10D9421D-887B-DE11-9216-000423D67BF2[Gauss-30000000-5ev-20090728.sim]
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 33.5  [s] Ave/Min/Max= 6.69(+- 5.67)/0.022/ 14.7  [s] #=  5
-ChronoStatSvc              INFO Time User   : Tot=  258  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot= 37.1  [s] Ave/Min/Max= 7.42(+- 6.83)/0.022/ 18.5  [s] #=  5
+ChronoStatSvc              INFO Time User   : Tot=  277  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (ordered)
@@ -714,7 +714,7 @@ ChronoStatSvc              INFO Time User   : Tot=  258  [s]                    
 ******Stat******           INFO  "#Prs MCHits"   |         5 |       2079 |     415.80 |     344.52 |      0.0000 |      799.00 |
 ******Stat******           INFO  "#Ecal MCHits"  |         5 |       2444 |     488.80 |     387.56 |      0.0000 |      890.00 |
 ******Stat******           INFO ****************************************************************************************************
-ChronoStatSvc.finalize()   INFO  Service finalized succesfully
+ChronoStatSvc.finalize()   INFO  Service finalized succesfully 
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'EcalSensDet/GiGaGeo.Ecal' Counts = 1

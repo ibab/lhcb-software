@@ -4,14 +4,68 @@ Particle anti_xi_b0 has a strange PDGEncoding
 Particle xi_b0 has a strange PDGEncoding 
 WARNING - G4Navigator::ComputeStep()
           Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-214.4809855,463.9227669,895)
-          direction: (-0.1789043105,0.4400364176,0.8799779536).
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (387.6382955,383.7386469,895)
+          direction: (0.4677562372,0.4448847155,0.7637288082).
           Potential geometry or navigation problem !
           Trying pushing it of 9e-10 mm ...
 WARNING - G4Navigator::ComputeStep()
           Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (344.0947346,-272.6443861,895)
-          direction: (0.3313067247,-0.260851172,0.9067483224).
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-241.8754443,439.2252051,895)
+          direction: (-0.2287466916,0.3985465527,0.888164172).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (337.4979098,-263.97809,895)
+          direction: (0.3255997872,-0.2523134429,0.9112204481).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-275.9466722,-260.2343638,916.4559991)
+          direction: (-0.6034888116,-0.7787531164,0.1713033506).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (529.0480011,55.5419629,895)
+          direction: (0.2810435606,-0.02366573352,0.9594031739).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (532.8374932,55.83159655,895)
+          direction: (0.3397743744,-0.01916344569,0.9403117232).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (528.5554151,54.5185387,895)
+          direction: (0.2804785555,-0.03888438605,0.9590723562).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (505.928772,14.11678611,895)
+          direction: (0.110455295,-0.3398731195,0.9339624674).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (546.7420279,62.58421124,895)
+          direction: (0.4375905829,0.07531481119,0.8960145987).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (554.1067212,57.66369416,895)
+          direction: (0.4883942458,0.03935671949,0.8717351142).
+          Potential geometry or navigation problem !
+          Trying pushing it of 9e-10 mm ...
+WARNING - G4Navigator::ComputeStep()
+          Track stuck, not moving for 10 steps
+          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (446.1918791,-57.7612838,895)
+          direction: (0.4354715292,-0.05595709254,0.8984616581).
           Potential geometry or navigation problem !
           Trying pushing it of 9e-10 mm ...
 WARNING - G4Navigator::ComputeStep()
