@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.20 2009-07-27 16:39:52 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.21 2009-07-29 08:57:18 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -674,13 +674,14 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
       }
       //if expect hits on both sensor and only one sensor has hit -> mismatch
-      if (((N_exp[i]>=1) && (N_exp[i+64]>=1)) && ((N_rec[i]==0) || (N_rec[i+64]==0)))
+      if (((N_exp[i]>=1) && (N_exp[i+64]>=1)) && ((N_rec[i]==0) || (N_rec[i+64]==0))){
         if (N_rec[i+64]==0)
            plot1D(i+64,"ModuleMismatch","Tracks with one used sensor from a module vs Module number"
                  ,-0.5, 110.5, 111);
         else if (N_rec[i]==0)
           plot1D(i,"ModuleMismatch","Tracks with one used sensor from a module vs Module number"
                  ,-0.5, 110.5, 111);
+      } 
     }
   }//End of loop over track container
 
