@@ -23,13 +23,6 @@ qcd::EvtBToVllEvolveWC10D::EvtBToVllEvolveWC10D(const WilsonCoefficients<WilsonT
 	C(_c),CNP(_cnp),CR(_cr){
 }
 
-using constants::CF;
-using constants::Lqcd;
-using constants::Nc;
-using constants::mt;
-using constants::MW;
-using constants::Pi;
-
 /**
  * Wilson Coefficient format is
  * 
@@ -241,11 +234,11 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	const unsigned int nf = nfl;
 	const unsigned int nfl_MW = 5;
 	
-	const double as1MW = qcd::as1(MW,nf);
+	const double as1MW = qcd::as1(constants::MW,nf);
 	const double _B0 = qcd::B0(nf);
 	const double _B1 = qcd::B1(nf);
 	const double _B2 = qcd::B2(nf);
-	const double et = qcd::alpha_s(mu,nfl_MW)/qcd::alpha_s(MW,nfl_MW);
+	const double et = qcd::alpha_s(mu,nfl_MW)/qcd::alpha_s(constants::MW,nfl_MW);
 	
 	DEBUGPRINT("as1MW: ", as1MW);//V
 	DEBUGPRINT("B0[nf]: ", _B0);//V

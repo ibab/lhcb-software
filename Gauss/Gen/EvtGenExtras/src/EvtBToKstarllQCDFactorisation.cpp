@@ -557,15 +557,14 @@ EvtComplex QCDFactorisation::inner::getC0(const double& s){
 	gsl_sf_complex_dilog_e(abs(tmp),arg(tmp),&re,&im);
 	EvtComplex diLog4(re.val,im.val);
 
-	using constants::Pi;
 	const EvtComplex I(0,1);
 		
 	const double s1 = s;
 	return chop(((-log(-1 + I*sqrt(-1 + 4/s1)) + log(1 + I*sqrt(-1 + 4/s1)))*
-			(EvtComplex(0,-2)*Pi + log(4) + log(s1) + 2*log(1/(EvtComplex(0,-1)*sqrt(4 - s1) + 3*sqrt(s1) + I*sqrt(4 - s1)*s1 - pow(s1,1.5))))
-			+ log(-1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,2)*Pi - log(4) - log(s1) - 
+			(EvtComplex(0,-2)*constants::Pi + log(4) + log(s1) + 2*log(1/(EvtComplex(0,-1)*sqrt(4 - s1) + 3*sqrt(s1) + I*sqrt(4 - s1)*s1 - pow(s1,1.5))))
+			+ log(-1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,2)*constants::Pi - log(4) - log(s1) - 
 				2*log(EvtComplex(0,-1)/(sqrt(4 - s1) + I*sqrt(s1)*(-3 + s1 + I*sqrt(-((-4 + s1)*s1)))))) + 
-				log(1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,-2)*Pi + log(4) + log(s1) + 
+				log(1 - I*sqrt(-1 + 4/s1))*(EvtComplex(0,-2)*constants::Pi + log(4) + log(s1) + 
 					2*log(EvtComplex(0,-1)/(sqrt(4 - s1) + I*sqrt(s1)*(-3 + s1 + I*sqrt(-((-4 + s1)*s1)))))) - 4*diLog0 - 
 					2*diLog1 + 2*diLog2 + 2*diLog3 - 2*diLog4)/(2.*(-1 + s1)));
 }

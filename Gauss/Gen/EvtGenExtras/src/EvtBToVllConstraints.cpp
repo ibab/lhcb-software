@@ -54,15 +54,11 @@ EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
 	CQ1 = (*C)(11);
 	CQ2 = (*C)(12);
 
-	//Calculate some CKM factors from unitarity
-	Vub = constants::AbsVub/Power(Complex(constants::E),Complex(0,constants::gamma));
-	Vts = -((constants::AbsVub*Power(Complex(constants::E),Complex(0,constants::gamma))*
-			Sqrt(1 - Power(constants::Vcb,2)/(1 - Power(constants::AbsVub,2)))*constants::Vus)/
-				Sqrt(1 - Power(constants::AbsVub,2))) - 
-			(constants::Vcb*Sqrt(1 - Power(constants::Vus,2)/(1 - Power(constants::AbsVub,2))))/
-			Sqrt(1 - Power(constants::AbsVub,2));
-	Vtb = Sqrt(1 - Power(constants::AbsVub,2))*Sqrt(1 - Power(constants::Vcb,2)/(1 - Power(constants::AbsVub,2)));
-
+	DEBUGPRINT("Vub: ", constants::Vub);//V
+	DEBUGPRINT("Vts: ", constants::Vts);//V
+	DEBUGPRINT("Vtb: ", constants::Vtb);//V
+	DEBUGPRINT("Vtstb: ", constants::Vtstb);//V
+	
 }
 
 double EvtBToVllConstraints::getBrBsToMuMu() const{
@@ -76,7 +72,7 @@ double EvtBToVllConstraints::getBrBsToMuMu() const{
 	EvtComplex result = (Power(constants::alphaEM,2)*Power(constants::fBs,2)*Power(constants::GF,2)*constants::mBs*
 		     Sqrt(1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*constants::tauBs*
 		     (Power(Abs(P),2) + (1 - (4*Power(constants::mmu,2))/Power(constants::mBs,2))*
-		        Power(Abs(S),2))*Power(Abs(Vtb*conj(Vts)),2))/(16.*Power(constants::Pi,3));
+		        Power(Abs(S),2))*Power(Abs(constants::Vtb*conj(constants::Vts)),2))/(16.*Power(constants::Pi,3));
 	DEBUGPRINT("BRBmumu", result);//V
 	return real(result);//branching fractions are real!
 	
@@ -138,8 +134,8 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 	class utils{
 	public:
 		
-		utils(const qcd::WCPtrNaked _C, const qcd::WCPtrNaked _CR, const EvtComplex _Vtb, const EvtComplex _Vts):
-			C(_C),CR(_CR),C100(0.215),C200(-0.487),nfl(5),Vtb(_Vtb),Vts(_Vts){
+		utils(const qcd::WCPtrNaked _C, const qcd::WCPtrNaked _CR):
+			C(_C),CR(_CR),C100(0.215),C200(-0.487),nfl(5){
 		}
 
 		static double getLS0(const double sh){
@@ -234,7 +230,7 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		double getDiffDecayRate(const double sh) const{
 			const double mlh = constants::mmu/constants::mb;
 			return real((Power(constants::alphaEM,2)*Sqrt(1 - (4*Power(mlh,2))/sh)*Power(1 - sh,2)*
-				     getU(sh,C->getScaleValue())*Power(Abs(Vtb*Vts),2))/(4.*Power(constants::Pi,2)*Power(Abs(constants::Vcb),2)*
+				     getU(sh,C->getScaleValue())*Power(Abs(constants::Vtb*constants::Vts),2))/(4.*Power(constants::Pi,2)*Power(Abs(constants::Vcb),2)*
 				    		 f(constants::mc/constants::mb)*kappa(constants::mc/constants::mb)));
 		};
 		
@@ -252,16 +248,12 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		const double C100;
 		const double C200;
 		const int nfl;
-		
-		EvtComplex Vtb;
-		EvtComplex Vts;
-		
 	};
 	
 	qcd::WCPtrNaked C = fact.parameters->C_mb.get();
 	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
 
-	utils u(C,CR,Vts,Vtb);
+	utils u(C,CR);
 	
 	double result = 0;
 	double error = 0;
@@ -363,10 +355,10 @@ inline double EvtBToVllConstraints::getLambda(const double q2) const{
 	const double mk2 = (constants::mKstar/constants::mB)*(constants::mKstar/constants::mB);
 	return 1 + (mk2*mk2) + (q2*q2)/(mB2*mB2) - 2*( (q2/mB2) + (mk2)*(1 + q2/mB2) );
 }
-inline double EvtBToVllConstraints::getN(const double q2, const double beta, const double lambda) const{
+inline EvtComplex EvtBToVllConstraints::getN(const double q2, const double beta, const double lambda) const{
 	const double constant = (constants::GF*constants::GF*constants::alphaEM*constants::alphaEM)/
 		(3*pow(2,10)*pow(constants::Pi,5)*constants::mB);
-	return constants::Vtstb * sqrt(constant * q2 * sqrt(lambda) * beta);
+	return -constants::Vtstb * sqrt(constant * q2 * sqrt(lambda) * beta);
 }
 
 void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const{
@@ -378,8 +370,6 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	fact.parameters->setBbar(isBbar);
 	fact.getTnAmplitudes(q2,constants::mB,constants::mKstar, &tensors);
 	
-	const double scaleFactor = 1e11;//stop the amplitudes getting too small...
-		
 	const EvtComplex tensA = tensors.at(QCDFactorisation::A);
 	const EvtComplex tensB = tensors.at(QCDFactorisation::B);
 	const EvtComplex tensC = tensors.at(QCDFactorisation::C);
@@ -421,7 +411,7 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	
 	const double beta = getBeta(q2);
 	const double lambda = getLambda(q2);
-	const double N = getN(q2, beta, lambda);
+	const EvtComplex N = getN(q2, beta, lambda);
 	const double mB2 = constants::mB * constants::mB;
 	const double mk = constants::mKstar/constants::mB;
 	
@@ -436,18 +426,18 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 			&xi1,&xi2);
 	
 	//now calculate the spin amplitudes...
-	const EvtComplex _ATL = scaleFactor * sqrt(2*lambda)*N*constants::mB*cL;
-	const EvtComplex _ATR = scaleFactor * sqrt(2*lambda)*N*constants::mB*cR;
+	const EvtComplex _ATL = sqrt(2*lambda)*N*constants::mB*cL;
+	const EvtComplex _ATR = sqrt(2*lambda)*N*constants::mB*cR;
 	
-	const EvtComplex _APL = scaleFactor * -sqrt(2)*N*constants::mB*aL;
-	const EvtComplex _APR = scaleFactor * -sqrt(2)*N*constants::mB*aR;
+	const EvtComplex _APL = -sqrt(2)*N*constants::mB*aL;
+	const EvtComplex _APR = -sqrt(2)*N*constants::mB*aR;
 	
-    const EvtComplex _A0L = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
-    const EvtComplex _A0R = scaleFactor * ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2)); 
+    const EvtComplex _A0L = ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aL)/2. + lambda*bL))/(constants::mKstar*sqrt(q2));
+    const EvtComplex _A0R = ((constants::mB*mB2)*N*(-((1 - (mk*mk) - q2/mB2)*aR)/2. + lambda*bR))/(constants::mKstar*sqrt(q2)); 
 		
-	const EvtComplex _AT = scaleFactor * ((N*sqrt(lambda))/(mk*sqrt(q2)))*
+	const EvtComplex _AT = ((N*sqrt(lambda)*mB2)/(mk*sqrt(q2)))*
 		(tensF + (mk*mk*tensG) - tensG - (q2/mB2)*tensH );
-	const EvtComplex _AS = scaleFactor * (N*sqrt(lambda)*tensS2);
+	const EvtComplex _AS = (N*sqrt(lambda)*tensS2);
 	
 	DEBUGPRINT("ATL: ", _ATL);
 	DEBUGPRINT("ATR: ", _ATR);

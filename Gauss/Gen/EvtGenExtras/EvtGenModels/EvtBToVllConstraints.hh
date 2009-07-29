@@ -65,15 +65,11 @@ private:
 	//
 	EvtComplex CQ1;
 	EvtComplex CQ2;
-	//
-	EvtComplex Vub;
-	EvtComplex Vts;
-	EvtComplex Vtb;
 	
 	//useful functions for calculating the K* spin amplitudes
 	inline double getBeta(const double q2) const;
 	inline double getLambda(const double q2) const;
-	inline double getN(const double q2, const double beta, const double lambda) const;
+	inline EvtComplex getN(const double q2, const double beta, const double lambda) const;
 	
 	const double getJ5(const double q2) const;
 	const double getJ6(const double q2) const;
