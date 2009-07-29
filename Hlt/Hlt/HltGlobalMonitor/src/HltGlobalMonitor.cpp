@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.39 2009-07-27 10:08:19 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.40 2009-07-29 08:37:46 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -173,7 +173,7 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("#acceptHLT","",&counter("#accept"),0,std::string("Events hlt1 accepted"));
 
   //klo1
-  for (uint i=0; i!=m_GroupLabels.size();++i) {
+  for (long i=0; i!=m_GroupLabels.size();++i) {
     m_allAlleyAcc.push_back(0);
     declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Acc]", m_allAlleyAcc.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Accepts");
     m_allAlleyCall.push_back(0);
@@ -265,7 +265,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
   unsigned nAcc = 0;
   nAccAlley = (unsigned *)calloc(m_GroupLabels.size(),sizeof(unsigned));//klo
-  //for (uint i=0; i<m_GroupLabels.size();++i) {nAccAlley[i]=0;}//klo
+  //for (long i=0; i<m_GroupLabels.size();++i) {nAccAlley[i]=0;}//klo
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
@@ -280,7 +280,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
 
   //klo1
-  for (uint i=0; i<m_GroupLabels.size();i++) {
+  for (long i=0; i<m_GroupLabels.size();i++) {
     m_allAlleyCall[i]++;
     m_allAlleyAcc[i] += ( nAccAlley[i] > 0 );
   }
@@ -323,7 +323,8 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
   */
   //klo1
-  for (uint i=0; i<m_GroupLabels.size();i++) {
+  for (long
+ i=0; i<m_GroupLabels.size();i++) {
     fill(m_hlt1alley,i,(nAccAlley[i]>0));
   }
   std::free(nAccAlley);
