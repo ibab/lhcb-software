@@ -4,7 +4,10 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-!========================== HltDisplVertices v1r1 2009-07-23 ===================
+!========================== HltDisplVertices v1r1 2009-07-29 ===================
+! 2009-07-29 - Neal Gauvin (Gueissaz)
+ - Fix for windows
+
 ! 2009-07-23 - Neal Gauvin (Gueissaz)
   - remove the nasty DaVinci v* Phys dependance
 
