@@ -1,4 +1,4 @@
-// $Id: ICloneMCParticle.h,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+// $Id: ICloneMCParticle.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
 #ifndef MICRODST_ICLONEMCPARTICLE_H 
 #define MICRODST_ICLONEMCPARTICLE_H 1
 
@@ -16,25 +16,18 @@ namespace LHCb
   class MCParticle;
 }
 
-static const InterfaceID IID_ICloneMCParticle ( "ICloneMCParticle", 1, 0 );
-
 /** @class ICloneMCParticle ICloneMCParticle.h MicroDST/ICloneMCParticle.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class ICloneMCParticle : virtual public IAlgTool {
+class GAUDI_API ICloneMCParticle : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICloneMCParticle; }
+  DeclareInterfaceID(ICloneMCParticle, 2, 0 );
 
   virtual LHCb::MCParticle* operator() (const LHCb::MCParticle* mcPart) = 0;
-  
-protected:
-
-private:
 
 };
 #endif // MICRODST_ICLONEMCPARTICLE_H

@@ -1,4 +1,4 @@
-// $Id: ICloneVertex.h,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+// $Id: ICloneVertex.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
 #ifndef ICLONEVERTEX_H 
 #define ICLONEVERTEX_H 1
 
@@ -15,20 +15,17 @@ namespace LHCb
   class Vertex;
 }
 
-static const InterfaceID IID_ICloneVertex ( "ICloneVertex", 1, 0 );
-
 /** @class ICloneVertex ICloneVertex.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class ICloneVertex : virtual public IAlgTool {
+class GAUDI_API ICloneVertex : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICloneVertex; }
-
+  DeclareInterfaceID(ICloneVertex, 2, 0 );
+  
   virtual LHCb::Vertex* operator() (const LHCb::Vertex* vertex) = 0;
 
 };

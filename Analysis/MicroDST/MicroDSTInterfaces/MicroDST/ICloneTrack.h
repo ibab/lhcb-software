@@ -1,4 +1,4 @@
-// $Id: ICloneTrack.h,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+// $Id: ICloneTrack.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
 #ifndef MICRODST_ICLONETRACK_H 
 #define MICRODST_ICLONETRACK_H 1
 
@@ -15,25 +15,18 @@ namespace LHCb
   class Track;
 }
 
-static const InterfaceID IID_ICloneTrack ( "ICloneTrack", 1, 0 );
-
 /** @class ICloneTrack ICloneTrack.h MicroDST/ICloneTrack.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class ICloneTrack : virtual public IAlgTool {
+class GAUDI_API ICloneTrack : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICloneTrack; }
-
+  DeclareInterfaceID(ICloneTrack, 2, 0 );
+  
   virtual LHCb::Track* operator() (const LHCb::Track* track) = 0;
-
-protected:
-
-private:
 
 };
 #endif // MICRODST_ICLONETRACK_H

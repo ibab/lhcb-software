@@ -1,4 +1,4 @@
-// $Id: ICloneFlavourTag.h,v 1.1 2008-08-08 11:42:21 jpalac Exp $
+// $Id: ICloneFlavourTag.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
 #ifndef MICRODST_ICLONEFLAVOURTAG_H 
 #define MICRODST_ICLONEFLAVOURTAG_H 1
 
@@ -14,20 +14,17 @@ namespace LHCb
   class FlavourTag;
 }
 
-static const InterfaceID IID_ICloneFlavourTag ( "ICloneFlavourTag", 1, 0 );
-
 /** @class ICloneFlavourTag ICloneFlavourTag.h MicroDST/ICloneFlavourTag.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2008-08-08
  */
-class ICloneFlavourTag : virtual public IAlgTool {
-public: 
+class GAUDI_API ICloneFlavourTag : virtual public IAlgTool {
+public:
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICloneFlavourTag; }
-
+  DeclareInterfaceID(ICloneFlavourTag, 2, 0);
+  
   virtual LHCb::FlavourTag* operator() (const LHCb::FlavourTag* tag) = 0;
 
 };

@@ -1,4 +1,4 @@
-// $Id: ICloneMCVertex.h,v 1.1.1.1 2007-12-10 08:23:45 jpalac Exp $
+// $Id: ICloneMCVertex.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
 #ifndef MICRODST_ICLONEMCVERTEX_H 
 #define MICRODST_ICLONEMCVERTEX_H 1
 
@@ -15,19 +15,16 @@ namespace LHCb
   class MCVertex;
 }
 
-static const InterfaceID IID_ICloneMCVertex ( "ICloneMCVertex", 1, 0 );
-
 /** @class ICloneMCVertex ICloneMCVertex.h MicroDST/ICloneMCVertex.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class ICloneMCVertex : virtual public IAlgTool {
+class GAUDI_API ICloneMCVertex : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICloneMCVertex; }
+  DeclareInterfaceID(ICloneMCVertex, 2, 0 );
 
   virtual LHCb::MCVertex* operator() (const LHCb::MCVertex* mcVertex) = 0;
 
