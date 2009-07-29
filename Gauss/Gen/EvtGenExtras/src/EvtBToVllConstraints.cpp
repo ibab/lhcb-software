@@ -361,7 +361,8 @@ inline EvtComplex EvtBToVllConstraints::getN(const double q2, const double beta,
 	return -constants::Vtstb * sqrt(constant * q2 * sqrt(lambda) * beta);
 }
 
-void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const{
+void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps,\
+		const bool isBbar, const double _scaleFactor) const{
 
 	const bool _isBbar = fact.parameters->getisBbar();
 	
@@ -451,14 +452,14 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	DEBUGPRINT("AT: ", _AT);
 	DEBUGPRINT("AS: ", _AS);
 	
-	amps->at(ATL) = _ATL;
-	amps->at(ATR) = _ATR;
-	amps->at(APL) = _APL;
-	amps->at(APR) = _APR;
-	amps->at(A0L) = _A0L;
-	amps->at(A0R) = _A0R;
-	amps->at(AT) = _AT;
-	amps->at(AS) = _AS;
+	amps->at(ATL) = _scaleFactor*_ATL;
+	amps->at(ATR) = _scaleFactor*_ATR;
+	amps->at(APL) = _scaleFactor*_APL;
+	amps->at(APR) = _scaleFactor*_APR;
+	amps->at(A0L) = _scaleFactor*_A0L;
+	amps->at(A0R) = _scaleFactor*_A0R;
+	amps->at(AT) = _scaleFactor*_AT;
+	amps->at(AS) = _scaleFactor*_AS;
 	
 	//reset back to the previous value
 	fact.parameters->setBbar(_isBbar);

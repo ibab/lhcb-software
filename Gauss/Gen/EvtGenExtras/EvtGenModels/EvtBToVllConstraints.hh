@@ -26,7 +26,7 @@ public:
 	double getBrBToXsll() const;
 	double getSBToKStarGamma() const;
 	
-	void getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar) const;
+	void getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar, const double _scaleFactor = 1e12) const;
 	const std::pair<double, double> getS5Zero() const;
 	const std::pair<double, double> getS6Zero() const;
 
