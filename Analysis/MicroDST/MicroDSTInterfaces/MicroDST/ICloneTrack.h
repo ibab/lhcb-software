@@ -1,13 +1,8 @@
-// $Id: ICloneTrack.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
+// $Id: ICloneTrack.h,v 1.3 2009-07-29 21:29:01 jpalac Exp $
 #ifndef MICRODST_ICLONETRACK_H 
 #define MICRODST_ICLONETRACK_H 1
-
-// Include files
-// from STL
-#include <string>
-
-// from Gaudi
-#include "GaudiKernel/IAlgTool.h"
+// from MicroDST
+#include "MicroDST/ICloner.h"
 
 // Forward declarations
 namespace LHCb 
@@ -21,12 +16,10 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class GAUDI_API ICloneTrack : virtual public IAlgTool {
+class GAUDI_API ICloneTrack : virtual public MicroDST::ICloner<LHCb::Track> {
 public: 
 
   DeclareInterfaceID(ICloneTrack, 2, 0 );
-  
-  virtual LHCb::Track* operator() (const LHCb::Track* track) = 0;
 
 };
 #endif // MICRODST_ICLONETRACK_H

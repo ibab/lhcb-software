@@ -1,14 +1,8 @@
-// $Id: ICloneFlavourTag.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
+// $Id: ICloneFlavourTag.h,v 1.3 2009-07-29 21:29:01 jpalac Exp $
 #ifndef MICRODST_ICLONEFLAVOURTAG_H 
 #define MICRODST_ICLONEFLAVOURTAG_H 1
-
-// Include files
-// from STL
-#include <string>
-
-// from Gaudi
-#include "GaudiKernel/IAlgTool.h"
-
+//
+#include "MicroDST/ICloner.h"
 namespace LHCb
 {
   class FlavourTag;
@@ -20,12 +14,8 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2008-08-08
  */
-class GAUDI_API ICloneFlavourTag : virtual public IAlgTool {
+class GAUDI_API ICloneFlavourTag : virtual public MicroDST::ICloner<LHCb::FlavourTag> {
 public:
-
   DeclareInterfaceID(ICloneFlavourTag, 2, 0);
-  
-  virtual LHCb::FlavourTag* operator() (const LHCb::FlavourTag* tag) = 0;
-
 };
 #endif // MICRODST_ICLONEFLAVOURTAG_H

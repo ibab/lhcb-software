@@ -1,4 +1,4 @@
-// $Id: ICloneParticle.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
+// $Id: ICloneParticle.h,v 1.3 2009-07-29 21:29:01 jpalac Exp $
 #ifndef MICRODST_ICLONEPARTICLE_H 
 #define MICRODST_ICLONEPARTICLE_H 1
 
@@ -6,9 +6,8 @@
 // from STL
 #include <string>
 
-// from Gaudi
-#include "GaudiKernel/IAlgTool.h"
-
+// from MicroDST
+#include "MicroDST/ICloner.h"
 namespace LHCb 
 {
   class Particle;
@@ -20,11 +19,9 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class GAUDI_API ICloneParticle : virtual public IAlgTool {
+
+class GAUDI_API ICloneParticle : virtual public MicroDST::ICloner<LHCb::Particle> {
 public: 
   DeclareInterfaceID(ICloneParticle, 2, 0 );
-
-  virtual LHCb::Particle* operator() (const LHCb::Particle* particle) = 0;
-
 };
 #endif // MICRODST_ICLONEPARTICLE_H

@@ -1,14 +1,8 @@
-// $Id: ICloneProtoParticle.h,v 1.2 2009-07-29 16:46:46 jpalac Exp $
+// $Id: ICloneProtoParticle.h,v 1.3 2009-07-29 21:29:01 jpalac Exp $
 #ifndef MICRODST_ICLONEPROTOPARTICLE_H 
 #define MICRODST_ICLONEPROTOPARTICLE_H 1
-
-// Include files
-// from STL
-#include <string>
-
-// from Gaudi
-#include "GaudiKernel/IAlgTool.h"
-
+//
+#include "MicroDST/ICloner.h"
 // Forward declarations
 namespace LHCb 
 {
@@ -21,16 +15,10 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class GAUDI_API ICloneProtoParticle : virtual public IAlgTool {
+class GAUDI_API ICloneProtoParticle : virtual public MicroDST::ICloner<LHCb::ProtoParticle> {
 public: 
 
   DeclareInterfaceID(ICloneProtoParticle, 2, 0 );
-
-  virtual LHCb::ProtoParticle* operator() (const LHCb::ProtoParticle* proto) = 0;
-
-protected:
-
-private:
 
 };
 #endif // MICRODST_ICLONEPROTOPARTICLE_H
