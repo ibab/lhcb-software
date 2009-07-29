@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.39 2009-06-15 09:57:36 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.40 2009-07-29 17:02:46 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -50,7 +50,7 @@ tag.InputLocations = [ "Presel09Bu2LLK" ]
 from Configurables import DaVinci
 DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().DataType = "MC09"                    # Default is (still) "DC06"
+DaVinci().DataType = "MC09"                    # Default is "MC09"
 DaVinci().Simulation   = True
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
