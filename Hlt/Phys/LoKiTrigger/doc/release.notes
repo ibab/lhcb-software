@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.49 2009-07-23 16:48:25 pkoppenb Exp $
+! $Id: release.notes,v 1.50 2009-07-29 11:07:48 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiTrigger v9r5 2009-07-23 ===================
+!========================== LoKiTrigger v9r5 2009-07-29 ===================
+! 2009-07-29 - Patrick Koppenburg
+ - Make some iterators const, and see if windows likes that more...
+
 ! 2009-07-15 - Vanya BELYAEV
 
  - many minor fixes 

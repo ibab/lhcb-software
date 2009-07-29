@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.4 2009-07-12 15:59:11 ibelyaev Exp $
+// $Id: ServiceRegister.cpp,v 1.5 2009-07-29 11:07:48 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -224,13 +224,13 @@ StatusCode Hlt::Service::registerTESInput
                    + m_locker->name() + "'" , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
   //
-  TESMap::iterator intes = m_tesmap.find ( consumer ) ;
+  TESMap::const_iterator intes = m_tesmap.find ( consumer ) ;
   if ( m_tesmap.end() == intes ) 
   {
     m_tesmap.insert ( consumer , TESLocs() ) ;
     intes = m_tesmap.find ( consumer ) ;
   }
-  TESLocs::iterator iin = intes->second.find ( location ) ;
+  TESLocs::const_iterator iin = intes->second.find ( location ) ;
   if ( intes->second.end() != iin )
   { Warning ( "registerTESInput: the input location '" 
               + location + 
@@ -244,9 +244,9 @@ StatusCode Hlt::Service::registerTESInput
     m_tesmap.update ( consumer , locs ) ;
   }
   // debug printout here 
-  debug() << "Register  INPUT-TES " 
-          << " location '"       << std::string(location)  << "'" 
-          << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Register  INPUT-TES " 
+                                    << " location '"       << std::string(location)  << "'" 
+                                    << " for algorithm '"  << consumer  -> name ()   << "'" << endreq ;
   //
   return StatusCode::SUCCESS ;                                        // RETURN 
   // ==========================================================================
