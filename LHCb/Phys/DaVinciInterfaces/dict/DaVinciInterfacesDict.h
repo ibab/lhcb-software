@@ -1,14 +1,14 @@
-// $Id: DaVinciInterfacesDict.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
-#ifndef DICT_DAVINCIKERNELDICT_H 
-#define DICT_DAVINCIKERNELDICT_H 1
+// $Id: DaVinciInterfacesDict.h,v 1.2 2009-07-29 08:18:19 cattanem Exp $
+#ifndef DICT_DAVINCIINTERFACESDICT_H 
+#define DICT_DAVINCIINTERFACESDICT_H 1
 
 // Include files
 
-/** @file DaVinciKernelDict
+/** @file DaVinciInterfacesDict.h
  *  
  *
  *  @author Juan PALACIOS
- *  @date   2006-10-02
+ *  @date   2009-07-22
  */
 // ============================================================================
 // DaVinciKernel
@@ -61,4 +61,4 @@
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ISetInputParticles.h"
 
-#endif // DICT_DAVINCIKERNELDICT_H
+#endif // DICT_DAVINCIINTERFACESDICT_H

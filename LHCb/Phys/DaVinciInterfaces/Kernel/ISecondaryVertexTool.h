@@ -1,12 +1,22 @@
-// $Id: ISecondaryVertexTool.h,v 1.2 2009-07-28 08:19:08 jpalac Exp $
+// $Id: ISecondaryVertexTool.h,v 1.3 2009-07-29 08:18:19 cattanem Exp $
 #ifndef SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 1
 
 // Include files
 // from STL
-#include <string>
+#include <vector>
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+
+// from LHCb
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+
+// forward declarations
+namespace LHCb {
+  class RecVertex;
+}
 
 static const InterfaceID IID_ISecondaryVertexTool("ISecondaryVertexTool", 1 , 0); 
 

@@ -1,12 +1,21 @@
-// $Id: ITagger.h,v 1.2 2009-07-28 08:47:37 cattanem Exp $
+// $Id: ITagger.h,v 1.3 2009-07-29 08:18:19 cattanem Exp $
 #ifndef TAGGERMUONTOOL_ITAGGERMUONTOOL_H
 #define TAGGERMUONTOOL_ITAGGERMUONTOOL_H 1
 
 // Include files
-// from STL
-#include <string>
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+
+// from LHCb
+#include "Event/Particle.h"
+#include "Event/Tagger.h"
+#include "Event/Vertex.h"
+
+// forward declarations
+namespace LHCb {
+  class RecVertex;
+}
 
 static const InterfaceID IID_ITagger("ITagger", 1 , 0);
 
