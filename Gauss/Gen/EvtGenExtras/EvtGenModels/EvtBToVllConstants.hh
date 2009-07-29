@@ -34,7 +34,7 @@ namespace constants{
 	static const int Nc = 3;
 	static const double mB = 5.27953;//GeV
 	static const double mb = 4.52;//GeV
-	static const double mc = 1.75;//GeV
+	static const double mc = 1.6;//GeV
 	static const double mmu = 0.10566;//GeV
 	static const double mKstar = 0.896;//GeV
 	static const double ms = 0.104;//GeV

@@ -452,7 +452,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	//add contributions from primed operators
 	SignedPair<EvtComplex> C9p(0.0,0.0);
 	EvtComplex Ceff1_9p = 0.0;
-	if(parameters->includeRHC){
+	{
 		const IntegrateRight t1_int_right(e,MB,mK,q2,parameters->getCR_mb(),parameters->getCR_mb3());
 		const SignedPair<EvtComplex> CR1 = t1_int_right.getC1(F_2_7,F_8_7,F_1_9,F_2_9,F_8_9);
 		const EvtComplex tp_1 = t1_int_right.get_t(1, xi, CR1);
