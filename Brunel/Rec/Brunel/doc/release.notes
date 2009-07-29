@@ -3,10 +3,22 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-07-15 - Marco Cattaneo
- - Update references for changes in track fit initialization
- - In example options, include options from AppConfig when possible
- - Change version to v35r5
+</PRE><H1><A NAME=v35r5>2009-07-30 Brunel v35r5</A></H1><PRE>
+ - Changes to requirements
+   . Use AppConfig v3r*
+
+ - Changes to example options files
+   . Include options from AppConfig when possible
+
+ - Changes to references to reflect changes in Brunel v35r5 output:
+   . Velo tracking protection for hot events
+   . New tune of Velo tracking chi2 cut
+   . Fix to Muon configuration for real and cosmics data
+   . Fix to bug in TrackMasterFitter affecting fit initialisation
+   . Changes in track fit initialization
+   . Suppression of Rich MC lookup in case when simulation is switched off
+   . Improvements to Rich monitoring
+   . Changes to Velo track monitoring
 
 </PRE><H1><A NAME=v35r4>2009-07-14 Brunel v35r4</A></H1><PRE>
  - Changes to Configurable:
