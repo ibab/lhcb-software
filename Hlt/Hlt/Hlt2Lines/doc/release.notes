@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.28 2009-07-23 16:42:17 pkoppenb Exp $
+$Id: release.notes,v 1.29 2009-07-29 11:33:46 kimym Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,6 +6,10 @@ $Id: release.notes,v 1.28 2009-07-23 16:42:17 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v1r4 2009-07-23 ===================
+
+! 2009-07-29 - Young Min Kim
+ - Added Hlt2B2PhiXLines.py for Bs->PhiPhi selection
+
 ! 2009-07-22 - Patrick Koppenburg for Neal Gauvin
  - Add displaced vertices line
 
