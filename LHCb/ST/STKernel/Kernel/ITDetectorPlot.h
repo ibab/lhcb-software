@@ -11,6 +11,7 @@
  */
 
 #include "Kernel/STChannelID.h"
+#include <string>
 
 namespace ST
 {

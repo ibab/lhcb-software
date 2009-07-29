@@ -1,11 +1,8 @@
 #include "Kernel/ITDetectorPlot.h"
 
-using namespace std;
-using namespace LHCb;
 using namespace ST;
 
-
-ITDetectorHistoProperties::ITDetectorHistoProperties(const string& detType)
+ITDetectorHistoProperties::ITDetectorHistoProperties(const std::string& detType)
   :  m_detType( detType ), m_channelID( 0 )
 {
   if ( m_detType == "IT" )
@@ -118,7 +115,7 @@ const unsigned int& ITDetectorHistoProperties::nBinY() const
   return m_nBinY;
 }
 
-string ITDetectorHistoProperties::histoTitle() const
+std::string ITDetectorHistoProperties::histoTitle() const
 {
   return m_detType + " Efficiencies";
 }
