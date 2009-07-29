@@ -11,6 +11,8 @@ branches doc cmt
 use CaloDAQ               v4r12   Calo    # Olivier Deschamps
 use CaloInterfaces        v7r13   Calo    # Olivier Deschamps
 
+use MDF                   v3r19   DAQ     # Markus Frank
+
 # Kernel packages
 use KernelSys             v12r0   Kernel  # Marco Cattaneo
 use CaloKernel            v5r2    Calo    # Olivier Deschamps
@@ -99,7 +101,6 @@ use LoKiNumbers           v8r2    Phys    # Ivan Belyaev
 use LoKiPhys              v8r8    Phys    # Ivan Belyaev
 use LoKiPhysMC            v8r3    Phys    # Ivan Belyaev
 use MCInterfaces          v1r9    Kernel  # Marco Cattaneo et al.
-use MDF                   v3r18   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
