@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.29 2009-07-29 11:33:46 kimym Exp $
+$Id: release.notes,v 1.30 2009-07-29 16:30:07 conti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,6 +6,10 @@ $Id: release.notes,v 1.29 2009-07-29 11:33:46 kimym Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v1r4 2009-07-23 ===================
+
+! 2009-07-29 - Geraldine Conti
+- Update of the HLT2 exclusive selections for Bs->JpsiPhi, Bd->JpsiK* 
+   and Bu->JpsiK+ in the Hlt2B2JpsiXLines.py file
 
 ! 2009-07-29 - Young Min Kim
  - Added Hlt2B2PhiXLines.py for Bs->PhiPhi selection
