@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.h,v 1.2 2009-06-05 19:32:30 jonrob Exp $
+ *  $Id: RichRawDataSize.h,v 1.3 2009-07-29 12:35:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -55,6 +55,11 @@ namespace Rich
 
       virtual StatusCode initialize(); ///< Algorithm initialization
       virtual StatusCode execute();    ///< Algorithm execution
+
+    protected:
+
+      /// Pre-Book all (non-MC) histograms
+      virtual StatusCode prebookHistograms();
 
     private:
 

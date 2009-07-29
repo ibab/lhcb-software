@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.7 2009-06-08 17:17:44 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.8 2009-07-29 12:35:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -60,6 +60,22 @@ StatusCode RawDataSize::initialize()
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
+}
+
+StatusCode RawDataSize::prebookHistograms()
+{
+  
+  const Rich::DAQ::Level1HardwareIDs & l1IDs = m_RichSys->level1HardwareIDs();
+  for ( Rich::DAQ::Level1HardwareIDs::const_iterator iL = l1IDs.begin();
+        iL != l1IDs.end(); ++iL )
+  {
+    std::ostringstream title, ID;
+    title << "Data Size (32bit words) : L1HardwareID " << *iL;
+    ID << "L1s/L1HardwareID" << *iL;
+    richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 );
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -148,7 +164,7 @@ StatusCode RawDataSize::execute()
             std::ostringstream title, ID;
             title << "Data Size (32bit words) : HPDHardwareID " << hpdHardID;
             ID << "hpds/HPDHardwareID" << hpdHardID;
-            plot1D( nHPDwords, ID.str(), title.str(), -0.5, 500.5, 501 );
+            richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill( nHPDwords );
           }
           catch ( const GaudiException & excpt )
           {
@@ -160,10 +176,9 @@ StatusCode RawDataSize::execute()
 
     } // loop over ingresses
 
-    std::ostringstream title, ID;
-    title << "Data Size (32bit words) : L1HardwareID " << l1HardID;
+    std::ostringstream ID;
     ID << "L1s/L1HardwareID" << l1HardID;
-    plot1D( nL1Words, ID.str(), title.str(), -0.5, 500.5, 501 );
+    richHisto1D( ID.str() ) -> fill ( nL1Words );
 
     // Compare to the value obtained direct from the RawEvent(s)
     if ( nL1Words != l1SizeMap[l1HardID] )

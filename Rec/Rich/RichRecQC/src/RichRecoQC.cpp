@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.48 2009-07-27 20:35:28 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.49 2009-07-29 12:35:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -130,11 +130,11 @@ StatusCode RecoQC::execute()
   if ( trackCreator()->newTracks().isFailure() )
     return Error( "Problem creating RichRecTracks" );
 
-  // make sure RichrecPixels are ready
+  // Make sure RichRecPixels are ready
   if ( pixelCreator()->newPixels().isFailure() )
     return Error( "Problem creating RichRecPixels" );
 
-  // make sure photons are available
+  // Make sure photons are available
   if ( photonCreator()->reconstructPhotons().isFailure() )
     return Error( "Problem creating RichRecPhotons" );
 

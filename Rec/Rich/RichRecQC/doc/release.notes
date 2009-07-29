@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-07-29 - Chris Jones
+ - Convert remaining monitors over to pre-book all MC-free histograms during
+   initialisation. MC histograms are still booked on-demand as needed.
+
 !======================= RichRecQC v2r32 2009-07-28 ==========================
 ! 2009-07-27 - Chris Jones
  - Update RichRecoQC and RichTracklessRingMoni to use new histogramming 

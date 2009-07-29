@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.24 2009-03-05 13:14:34 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.25 2009-07-29 12:35:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -54,6 +54,22 @@ StatusCode PixelQC::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
+}
+
+StatusCode PixelQC::prebookHistograms()
+{
+
+  for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
+        rich != Rich::detectors().end(); ++rich )
+  {
+    richHisto1D( *rich,
+                 "nTotalPixsPerHPD", "Average overall HPD occupancy (nHits>0)",
+                 0, 150, 75 );
+    richHisto1D( *rich,
+                 "nTotalPixs", "Overall occupancy (nHits>0)", 0, 5000, 100 );
+  }
+
+  return StatusCode::SUCCESS;
 }
 
 // Main execution
@@ -167,17 +183,13 @@ StatusCode PixelQC::execute()
 
           if ( nHPDHits>0 )
           {
-            plot1D( nHPDHits,
-                    hid(rich,"nTotalPixsPerHPD"),
-                    Rich::text(rich)+" Average overall HPD occupancy (nHits>0)",
-                    0, 150, 75 );
+            richHisto1D( rich, "nTotalPixsPerHPD" ) -> fill( nHPDHits );
           }
           if ( nHPDSignalHits>0 )
           {
-            plot1D( nHPDSignalHits,
-                    hid(rich,"nSignalPixsPerHPD"),
-                    Rich::text(rich)+" Average signal HPD occupancy (nHits>0)",
-                    0, 150, 75 );
+            richHisto1D( rich, "nTotalPixsPerHPD",
+                         "Average signal HPD occupancy (nHits>0)",
+                         0, 150, 75 ) -> fill( nHPDSignalHits );
           }
           
         } // valid HPD ID
@@ -187,17 +199,15 @@ StatusCode PixelQC::execute()
   } // L1 boards
 
   if ( pixels[Rich::Rich1] > 0 )
-    plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nTotalPixs"),
-            Rich::text(Rich::Rich1)+" Overall occupancy (nHits>0)", 0, 5000, 100 );
+    richHisto1D(Rich::Rich1,"nTotalPixs") -> fill ( pixels[Rich::Rich1] );
   if ( pixels[Rich::Rich2] > 0 )
-    plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nTotalPixs"),
-            Rich::text(Rich::Rich2)+" Overall occupancy (nHits>0)", 0, 2000, 100 );
+    richHisto1D(Rich::Rich2,"nTotalPixs") -> fill ( pixels[Rich::Rich2] );
   if ( signal[Rich::Rich1] > 0 )
-    plot1D( signal[Rich::Rich1], hid(Rich::Rich1,"nSignalPixs"),
-            Rich::text(Rich::Rich1)+" Signal occupancy (nHits>0)", 0, 5000, 100 );
+    richHisto1D( Rich::Rich1, "nSignalPixs",
+                 "Signal occupancy (nHits>0)", 0, 5000, 100 ) -> fill ( signal[Rich::Rich1] );
   if ( signal[Rich::Rich2] > 0 )
-    plot1D( signal[Rich::Rich2], hid(Rich::Rich2,"nSignalPixs"),
-            Rich::text(Rich::Rich2)+" Signal occupancy (nHits>0)", 0, 2000, 100 );
+    richHisto1D( Rich::Rich2, "nSignalPixs",
+                 "Signal occupancy (nHits>0)", 0, 5000, 100 ) -> fill ( signal[Rich::Rich2] );
 
   return StatusCode::SUCCESS;
 }

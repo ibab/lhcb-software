@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.10 2008-01-30 17:01:29 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.11 2009-07-29 12:35:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -70,6 +70,11 @@ namespace Rich
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
         virtual StatusCode finalize  ();    // Algorithm finalization
+
+      protected:
+        
+        /// Pre-Book all (non-MC) histograms
+        virtual StatusCode prebookHistograms();
 
       private: // helper classes
 

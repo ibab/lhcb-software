@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.h,v 1.4 2009-07-27 20:35:28 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.h,v 1.5 2009-07-29 12:35:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -56,6 +56,19 @@ namespace Rich
         
         /// Pre-Book all (non-MC) histograms
         virtual StatusCode prebookHistograms();
+
+      private:
+
+        // Book the histos for the given track class
+        void prebookHistograms( const std::string & tkClass );
+
+        // track plots
+        void trackPlots( const std::string & tag );
+        
+        /// Fill track plots for given class tag
+        void fillTrackPlots( const LHCb::Track * track,
+                             const LHCb::RichRecTrack * rTrack,
+                             const std::string & tkClass );
   
       private: // data
 
