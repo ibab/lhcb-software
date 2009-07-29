@@ -33,7 +33,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 // Implementation file for class : Hlt2DisplVerticesDEV
 //
-// 2009-july-1 : Neal Gueissaz
+// 2009-july-1 : Neal Gauvin (Gueissaz)
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY(Hlt2DisplVerticesDEV);
@@ -241,7 +241,7 @@ StatusCode Hlt2DisplVerticesDEV::finalize() {
   if (msgLevel(MSG::DEBUG)) {
     debug() << "==> Finalize" << endmsg;
     if(m_nbevent == 0) m_nbevent++;
-    double err = 10.*sqrt( m_nbpassed/m_nbevent );
+    double err = 10.*sqrt( double(m_nbpassed/m_nbevent) );
     debug() << "------------- Efficiency -----------"<< endmsg;
     debug() << "| Accepted event         "<< 100.*m_nbpassed/m_nbevent 
 	    <<"+-" << err
