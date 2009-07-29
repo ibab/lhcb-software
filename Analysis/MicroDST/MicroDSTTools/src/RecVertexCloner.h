@@ -1,11 +1,11 @@
-// $Id: RecVertexCloner.h,v 1.6 2009-04-16 12:16:17 jpalac Exp $
+// $Id: RecVertexCloner.h,v 1.7 2009-07-29 21:38:20 jpalac Exp $
 #ifndef RECVERTEXCLONER_H 
 #define RECVERTEXCLONER_H 1
 
 // Include files
 // from Gaudi
 #include <MicroDST/MicroDSTTool.h>
-#include <MicroDST/ICloneRecVertex.h>            // Interface
+#include <MicroDST/ICloneVertexBase.h>            // Interface
 
 // local
 #include "RecVertexClonerFunctors.h"
@@ -20,7 +20,7 @@
  *  @date   2007-12-05
  */
 class RecVertexCloner : public MicroDSTTool, 
-                        virtual public ICloneRecVertex {
+                        virtual public ICloneVertexBase {
 public: 
   /// Standard constructor
   RecVertexCloner( const std::string& type, 
@@ -31,11 +31,11 @@ public:
 
   virtual LHCb::VertexBase* operator() (const LHCb::VertexBase* vertex);
 
-  virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
-
   StatusCode initialize();
 
 private:
+
+  LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 
   typedef MicroDST::RecVertexClonerShallowTracks PVCloner;
 
