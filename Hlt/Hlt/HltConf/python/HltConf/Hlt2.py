@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -14,6 +14,7 @@ from Configurables import GaudiSequencer as Sequence
 from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf 
+from Hlt2Lines.Hlt2B2PhiXLines          import Hlt2B2PhiXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
@@ -27,6 +28,7 @@ from Configurables import RichRecSysConf
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt2B2DXLinesConf
                              , Hlt2B2JpsiXLinesConf
+                             , Hlt2B2PhiXLinesConf
           		     , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
 	                     , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
@@ -74,6 +76,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                     , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
                     , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
                                , Hlt2B2JpsiXLinesConf
+                               , Hlt2B2PhiXLinesConf
                                , Hlt2XGammaLinesConf
                                , Hlt2B2HHLinesConf
                                , Hlt2B2LLXLinesConf
