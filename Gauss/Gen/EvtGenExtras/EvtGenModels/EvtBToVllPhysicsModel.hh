@@ -25,10 +25,6 @@ public:
 	virtual void setCommand(const std::string&){
 		//default is to do nothing
 	}
-	/** Allows some optimisations in the case that there are no RHC present. */
-	virtual bool hasRightHandedCurrents() const{
-		return true;
-	}
 	virtual ~IPhysicsModel(){}
 	
 };

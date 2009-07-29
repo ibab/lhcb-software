@@ -50,11 +50,10 @@ const double QCDFactorisation::im_f_1_9[4][2] = {{0.16371, -0.059691}, {-0.25044
 const double QCDFactorisation::im_f_2_7[4][2] = {{0.44999, 0}, {0.73732, -0.11806}, {1.05, -0.068733}, {0.76698, 0.049359}};
 const double QCDFactorisation::im_f_2_9[4][2] = {{-0.98225, 0.35815}, {1.5026, -0.098649}, {5.1892, -0.16745}, {15.146, -0.30383}};
 
-EvtBToVllParameters::EvtBToVllParameters(bool _includeRHC,
+EvtBToVllParameters::EvtBToVllParameters(
 		qcd::WCPtr _C_mb, qcd::WCPtr _C_mb3,
 		qcd::WCPtr _CR_mb, qcd::WCPtr _CR_mb3,
 		qcd::WCPtr _CNP_mw, qcd::WCPtr _CR_mw):
-		includeRHC(_includeRHC),
 		C_mb(_C_mb),C_mb3(_C_mb3),
 		CR_mb(_CR_mb),CR_mb3(_CR_mb3),
 		C_mb_conj(qcd::WilsonCoefficients<qcd::WilsonType>::conjugate(*C_mb)),
@@ -98,8 +97,7 @@ void QCDFactorisation::init(){
 	if(parameters){//init can be called publically to reset the module. avoid memory leak
 		delete parameters;
 	}
-	parameters = new EvtBToVllParameters(model.hasRightHandedCurrents(),
-			qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
+	parameters = new EvtBToVllParameters(qcd::WCPtr(_mb->first),qcd::WCPtr(_mb3->first),
 			qcd::WCPtr(_mb->second),qcd::WCPtr(_mb3->second),
 			CNP_mw,CR_mw);
 	
@@ -118,7 +116,6 @@ void QCDFactorisation::init(){
 	report(INFO,"EvtGen") << "\t(m_W): " << *(parameters->getCR_mw()) <<std::endl;
 	report(INFO,"EvtGen") << "\t(m_b): " << *(parameters->getCR_mb()) <<std::endl;
 	report(INFO,"EvtGen") << "\t(m_h): " << *(parameters->getCR_mb3()) <<std::endl;
-	report(INFO,"EvtGen") << "Model includes right handed currents: " << parameters->includeRHC << std::endl;
 
 	EvtBToVllConstraints constrain(*this);
 	if(calcConstraints){

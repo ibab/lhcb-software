@@ -29,7 +29,7 @@ class EvtBToVllParameters{
 	
 public:
 	
-	EvtBToVllParameters(bool _includeRHC,
+	EvtBToVllParameters(
 			qcd::WCPtr _C_mb, qcd::WCPtr _C_mb3,
 			qcd::WCPtr _CR_mb, qcd::WCPtr _CR_mb3,
 			qcd::WCPtr _CNP_mw, qcd::WCPtr _CR_mw);
@@ -67,8 +67,6 @@ public:
 	
 	
 	std::string flavourString() const;
-
-	const bool includeRHC;
 	
 private:
 	

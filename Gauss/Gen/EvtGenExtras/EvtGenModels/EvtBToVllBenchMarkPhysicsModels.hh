@@ -12,9 +12,6 @@ public:
 	std::string getModelName() const{
 		return "Standard_Model";
 	}
-	bool hasRightHandedCurrents() const{
-		return false;
-	}
 	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
 	qcd::WCPtr getLeftNewPhysicsDeltasMW() const{
 		return getZeroWCs();
@@ -55,9 +52,6 @@ public:
 	std::string getModelName() const{
 			return "FBMSSM_Model";
 	}
-	bool hasRightHandedCurrents() const{
-		return true;
-	}
 	qcd::WCPtr getLeftNewPhysicsDeltasMW() const;
 	qcd::WCPtr getRightWilsonCoefficientsMW() const;
 };	
@@ -66,9 +60,6 @@ class GMSSMPhysicsModel : public SMPhysicsModel {
 public:	
 	std::string getModelName() const{
 			return "GMSSM_Model";
-	}
-	bool hasRightHandedCurrents() const{
-		return true;
 	}
 	qcd::WCPtr getLeftNewPhysicsDeltasMW() const;
 	qcd::WCPtr getRightWilsonCoefficientsMW() const;
