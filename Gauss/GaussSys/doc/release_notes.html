@@ -3,6 +3,42 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v37r3p1">2009-07-29 - GaussSys v37r3p1</A></H1><PRE>
+<H2><A NAME="Note">MC09 version. Bug fix for setting catalog in production.
+   Otherwise identical to v37r3.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   <b>AppConfig v3r* (latest v3r0)</b>,
+   DecFiles v18r* (<b>latest v18r2</b>), 
+   ParamFiles v8r0, 
+   SQLDDDB v5r* (<b>latest v5r7</b>), FieldMap v5r* (latest v5r3),
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================= Gauss v37r3p1 2009-07-29 ============================
+! 2009-07-29 - Silvia Miglioranzi
+ - To allow DIRAC people to change the XML catalog name, the FileCatalog
+   instruction in Sim/Gauss/python/Gauss/Configuration.py was modified from:
+   FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
+   to:
+   if not FileCatalog().Catalogs:
+    FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
+-  Update of QMTest gauss-mc09.qmt (and corresponding ref files).
+
+! 2009-07-23 - Silvia Miglioranzi
+ - Updated QMtest (gauss-mc09.qmt) using the new Gauss v37r3 settings. Updated
+   the slc4_amd64_gcc34 reference file.
+
+!=============================================================================
 </PRE><H1><A NAME="v37r3">2009-07-21 - GaussSys v37r3</A></H1><PRE>
 <H2><A NAME="Note">MC09 version. Support latest DDDB tags MC09-20090602
    and SIMCOND tag sim-20090402-xx. Previous tags are depracated.
