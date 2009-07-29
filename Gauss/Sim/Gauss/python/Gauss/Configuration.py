@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.10 2009-07-16 16:25:58 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-07-29 16:15:13 silviam Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -240,7 +240,8 @@ class Gauss(LHCbConfigurableUser):
         simWriter.RequireAlgs.append( 'GaussSequencer' )
 
         ApplicationMgr().OutStream = [ simWriter ]
-        FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
+        if not FileCatalog().Catalogs:
+            FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 
 
