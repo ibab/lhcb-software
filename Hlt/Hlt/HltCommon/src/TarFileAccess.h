@@ -13,7 +13,7 @@ public:
     TarFileAccess();
     ~TarFileAccess();
     std::auto_ptr<std::istream> open(const std::string &url);
-    const std::vector<std::string>& TarFileAccess::protocols() const;
+    const std::vector<std::string>& protocols() const;
 private:
     typedef std::map<std::string,TarFileAccess_details::TarFile*> container_t;
     container_t m_tarFiles;
