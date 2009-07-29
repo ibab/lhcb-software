@@ -22,7 +22,8 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "# INITIALIZING CONFIGUREDMUONIDs"
+    if self.debug: print "# CONFIGUREDMUONIDs v7r1"
+    if self.debug: print "# INITIALIZING"
 
     self.specialData=specialData
     if self.debug: print "# SPECIAL DATA=",self.specialData
@@ -49,6 +50,7 @@ class ConfiguredMuonIDs():
     self.info.DEBUG = debug
     self.initializeAll = True
 
+
   def configureFitter(self,fitter):
     """
     configure fitter to be used inside MuonID chi2 calculation
@@ -66,6 +68,9 @@ class ConfiguredMuonIDs():
     myfitter.StateAtBeamLine = self.info.StateAtBeamLine
     myfitter.AddDefaultReferenceNodes = self.info.AddDefaultReferenceNodes
 
+    return myfitter
+
+
   def configureIsMuonCandidateC(self, ismc):
     """
     configure ismuoncandidatec tool. select ismuon type
@@ -79,6 +84,8 @@ class ConfiguredMuonIDs():
     myismc.MomRangeIsMuon = self.info.MomRangeIsMuon
     myismc.IsMuonOpt = self.info.IsMuonOpt
     myismc.MinHits = self.info.MinHits
+
+    return myismc
 
 
   def configureGetArrival(self,geta):
@@ -97,6 +104,8 @@ class ConfiguredMuonIDs():
     mygeta.beta = self.info.beta
     mygeta.eff = self.info.eff
     mygeta.MinHits = self.info.MinHits
+
+    return mygeta
 
 
   def configureCLTool(self, cltool, use_dist=False):
@@ -129,6 +138,7 @@ class ConfiguredMuonIDs():
       mycltool.Signal = self.info.chi2Signal
       mycltool.Bkg = self.info.chi2Bkg
 
+    return mycltool
     
 
   def configureMuIDTool(self,muidtool,use_dist=False):
@@ -170,16 +180,17 @@ class ConfiguredMuonIDs():
       if self.debug: print "# \tCONFIGURING MUIDTOOL: initializeAll=True"
       ## add and configure ismuoncandidatec tool
       mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
-      self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
+      out=self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
 
       ## add and configure getarrival tool
       mymuidtool.addTool(GetArrival(), name='GetArrival')
-      self.configureGetArrival(mymuidtool.GetArrival)
+      out=self.configureGetArrival(mymuidtool.GetArrival)
 
       ## add and configure CLQuality. use_dist1 will set either chi2 or dist histos
       mymuidtool.addTool(CLTool(), name='CLQuality')
-      self.configureCLTool(mymuidtool.CLQuality,use_dist1)
+      out=self.configureCLTool(mymuidtool.CLQuality,use_dist1)
 
+      return mymuidtool
     
 
   def configureMuonIDAlg (self,muonid,use_dist=False):
@@ -268,14 +279,18 @@ class ConfiguredMuonIDs():
     
     ## add and configure either DistMuIDTool or Chi2MuIDTool.
     ## no need to initialize all sub tools there
+    prev = self.initializeAll
     self.initializeAll = False
     if use_dist: mymuid.addTool(DistMuIDTool(), name='myMuIDTool')
     else: mymuid.addTool(Chi2MuIDTool(), name='myMuIDTool')
   
-    self.configureMuIDTool(mymuid.myMuIDTool,use_dist)
+    out = self.configureMuIDTool(mymuid.myMuIDTool,use_dist)
+    self.initializeAll = prev
+
     return mymuid
 
-  #def applyConf(self):
+
+
   def getMuonIDSeq(self):
     """
     general method for MuonIDAlg configuration.

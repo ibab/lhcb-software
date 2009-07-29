@@ -2,7 +2,12 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
-!======================== MuonID v7r1 2009-07-28 =====================
+!======================== MuonID v7r1 2009-07-29 =====================
+! 2009-07-29 - Xabier Cid Vidal
+ - Change python ConfiguredMuonIDs to prevent the use of pickle
+ - Change in MuonIDAlg to update the printing of the version
+
+
 ! 2009-07-27 - Xabier Cid Vidal
  - Change ConfiguredMuonIDs to disable the fit when reconstructed data are cosmics
 

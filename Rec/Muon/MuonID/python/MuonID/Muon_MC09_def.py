@@ -1,14 +1,14 @@
 import os
-import extpick
+import loadModule
 
 DEBUG=False
 DATA="MC09"
 VERSION="def"
 
 PYMUONIDROOT = os.environ["MUONIDROOT"]+"/python/MuonID/"
-FILENAME = PYMUONIDROOT+DATA+"_"+VERSION
-FILENAMEDEF0 = PYMUONIDROOT+DATA+"_def"
-FILENAMEDEF1 = PYMUONIDROOT+"DC06_def"
+FILENAME = "M_"+DATA+"_"+VERSION
+FILENAMEDEF0 = "M_"+DATA+"_def"
+FILENAMEDEF1 = "M_DC06_def"
 
 if DEBUG:
     print "# LOADING FROM"
@@ -125,22 +125,24 @@ lbinCenter=187500
 lbinCenterNmuons=74000
 applyOvlapLast=False
 
+
 ######################################################
 ####################### CLCHI2 #######################
 sname=FILENAME+"_chi2s"
 bname=FILENAME+"_chi2b"
 
-if os.path.exists(sname): chi2Signal=extpick.pickleLoad(sname)
-else:
-    print "# MuonID WARNING: chi2 signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(FILENAMEDEF0+"_chi2s"): chi2Signal=extpick.pickleLoad(FILENAMEDEF0+"_chi2s")
-    else: chi2Signal=extpick.pickleLoad(FILENAMEDEF1+"_chi2s")
 
-if os.path.exists(bname): chi2Bkg=extpick.pickleLoad(bname)
+if os.path.exists(PYMUONIDROOT+sname+".py"): chi2Signal=loadModule.loadFromModule(sname)
 else:
-    print "# MuonID WARNING: chi2 bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(FILENAMEDEF0+"_chi2b"): chi2Bkg=extpick.pickleLoad(FILENAMEDEF0+"_chi2b")
-    else: chi2Bkg=extpick.pickleLoad(FILENAMEDEF1+"_chi2b")
+    if DEBUG: print "# WARNING: chi2 signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_chi2s"+".py"): chi2Signal=loadModule.loadFromModule(FILENAMEDEF0+"_chi2s")
+    else: chi2Signal=loadModule.loadFromModule(FILENAMEDEF1+"_chi2s")
+
+if os.path.exists(PYMUONIDROOT+bname+".py"): chi2Bkg=loadModule.loadFromModule(bname)
+else:
+    if DEBUG: print "# WARNING: chi2 bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_chi2b"+".py"): chi2Bkg=loadModule.loadFromModule(FILENAMEDEF0+"_chi2b")
+    else: chi2Bkg=loadModule.loadFromModule(FILENAMEDEF1+"_chi2b")
 
 
 
@@ -152,19 +154,19 @@ sname=FILENAME+"_dists"
 bname=FILENAME+"_distb"
 
 
-if os.path.exists(sname): distSignal=extpick.pickleLoad(sname)
+if os.path.exists(PYMUONIDROOT+sname+".py"): distSignal=loadModule.loadFromModule(sname)
 else:
-    if DEBUG: print "# MuonID WARNING: dist signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(FILENAMEDEF0+"_dists"): distSignal=extpick.pickleLoad(FILENAMEDEF0+"_dists")
-    else: distSignal=extpick.pickleLoad(FILENAMEDEF1+"_dists")
+    if DEBUG: print "# WARNING: dist signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_dists"+".py"): distSignal=loadModule.loadFromModule(FILENAMEDEF0+"_dists")
+    else: distSignal=loadModule.loadFromModule(FILENAMEDEF1+"_dists")
 
 
 
-if os.path.exists(bname): distBkg=extpick.pickleLoad(bname)
+if os.path.exists(PYMUONIDROOT+bname+".py"): distBkg=loadModule.loadFromModule(bname)
 else:
-    if DEBUG: print "# MuonID WARNING: dist bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(FILENAMEDEF0+"_distb"): distBkg=extpick.pickleLoad(FILENAMEDEF0+"_distb")
-    else: distBkg=extpick.pickleLoad(FILENAMEDEF1+"_distb")
+    if DEBUG: print "# WARNING: dist bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_distb"+".py"): distBkg=loadModule.loadFromModule(FILENAMEDEF0+"_distb")
+    else: distBkg=loadModule.loadFromModule(FILENAMEDEF1+"_distb")
 
 
 
@@ -174,16 +176,20 @@ mname=FILENAME+"_gamoms"
 pname=FILENAME+"_gaprobs"
 
 
-if os.path.exists(mname): gamoms=extpick.pickleLoad(mname)
+if os.path.exists(PYMUONIDROOT+mname+".py"): gamoms=loadModule.loadFromModule(mname)
 else:
-    if DEBUG: print "# MuonID WARNING: get arrival moms not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    gamoms=extpick.pickleLoad(FILENAMEDEF+"_gamoms")
-
-
-if os.path.exists(pname): gaprobs=extpick.pickleLoad(pname)
+    if DEBUG: print "# WARNING: get arrival moms not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_gamoms"+".py"): gamoms=loadModule.loadFromModule(FILENAMEDEF0+"_gamoms")
+    else: gamoms=loadModule.loadFromModule(FILENAMEDEF1+"_gamoms")
+    
+    
+if os.path.exists(PYMUONIDROOT+pname+".py"): gaprobs=loadModule.loadFromModule(pname)
 else:
-    if DEBUG: print "# MuonID WARNING: get arrival probs not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    gaprobs=extpick.pickleLoad(FILENAMEDEF+"_gaprobs")
+    if DEBUG: print "# WARNING: get arrival probs not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
+    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_gaprobs"+".py"): gaprobs=loadModule.loadFromModule(FILENAMEDEF0+"_gaprobs")
+    else: gaprobs=loadModule.loadFromModule(FILENAMEDEF1+"_gaprobs")
+    
+
 
 
 useFunct=False
@@ -194,6 +200,7 @@ eff=0.99
 
 ##already present for IsMuonC
 ##MinHits=2
+
 
 #===========================================================
 # G. Lanfranchi & S. Furcas - 10/5/09
