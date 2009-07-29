@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.83 2009-05-11 14:10:59 jpalac Exp $
+! $Id: release.notes,v 1.84 2009-07-29 21:35:55 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2009-07-29 - Juan PALACIOS
+ - cmt/requirements
+  . Use MicroDSTTools
+  . Increase version to v3r7
+ - src/CopyParticle2PVRelations.h, CopyPrimaryVertices.h
+  . Use ICloneVertexBase.h
 
 !========================== MicroDSTAlgorithm v3r6 2009-05-11 =================
 
