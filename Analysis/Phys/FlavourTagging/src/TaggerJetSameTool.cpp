@@ -1,6 +1,6 @@
 // Include files 
 #include "TaggerJetSameTool.h"
-
+#include "Event/RecVertex.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerJetSameTool
 //

@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.18 2009-04-21 19:20:22 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.19 2009-07-29 09:39:39 jpalac Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -20,6 +20,8 @@
 #include "Kernel/IParticleDescendants.h"
 
 #include "ITaggingUtils.h"
+
+class IGeomDispCalculator;
 
 /** @class BTaggingTool BTaggingTool.h 
  *

@@ -1,6 +1,6 @@
-// $Id: SVertexTool.cpp,v 1.10 2008-11-11 20:47:12 musy Exp $
+// $Id: SVertexTool.cpp,v 1.11 2009-07-29 09:39:39 jpalac Exp $
 #include "SVertexTool.h"
-
+#include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexTool v1.3
 //

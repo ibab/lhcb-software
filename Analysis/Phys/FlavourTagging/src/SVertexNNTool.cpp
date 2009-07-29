@@ -1,6 +1,6 @@
-// $Id: SVertexNNTool.cpp,v 1.4 2006-10-24 10:16:44 jpalac Exp $
+// $Id: SVertexNNTool.cpp,v 1.5 2009-07-29 09:39:39 jpalac Exp $
 #include "SVertexNNTool.h"
-
+#include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : SVertexNNTool v1.3
 //

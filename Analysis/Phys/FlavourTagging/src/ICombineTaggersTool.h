@@ -1,4 +1,4 @@
-// $Id: ICombineTaggersTool.h,v 1.2 2006-10-24 10:16:44 jpalac Exp $
+// $Id: ICombineTaggersTool.h,v 1.3 2009-07-29 09:39:39 jpalac Exp $
 #ifndef ICOMBINETAGGERSTOOL_H 
 #define ICOMBINETAGGERSTOOL_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 #include "Kernel/ITagger.h" 
+
+#include "Event/FlavourTag.h"
 
 static const InterfaceID IID_ICombineTaggersTool("ICombineTaggersTool", 1 , 0); 
 
