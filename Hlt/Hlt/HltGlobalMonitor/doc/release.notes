@@ -1,15 +1,15 @@
-!$Id: release.notes,v 1.43 2009-07-29 08:33:59 kvervink Exp $
+!$Id: release.notes,v 1.44 2009-07-29 10:10:44 pkoppenb Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
-
-
-Changed labels "Odin type" to "Odin trigger type".
-Changed uint to long.
-
 !========================== HltGlobalMonitor v2r5p1 2009-07-23 ===================
-2009-07-15 - Gerhard Raven
+
+! 2009-07-29 - Kim Vervink
+ - Changed labels "Odin type" to "Odin trigger type".
+ - Changed uint to long.
+
+! 2009-07-15 - Gerhard Raven
  - add AIDA to requirements
 
 !========================== HltGlobalMonitor v2r5   2009-07-09 ================
