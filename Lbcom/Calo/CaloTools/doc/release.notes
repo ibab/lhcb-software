@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.65 2009-06-03 12:28:07 cattanem Exp $
+! $Id: release.notes,v 1.66 2009-07-29 19:39:09 dgolubko Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+! 2009-07-29 - Dmitry GOLUBKOV
+ - Add a new tool to get a list of CaloClusters for the input L0CaloCandidate(s)
+  L0Calo2CaloTool.cpp, L0Calo2CaloTool.h
+ - cmt/requirements verison increment to v5r10
 
 !========================== CaloTools v5r9 2009-06-03 =========================
 ! 2009-06-03 - Marco Cattaneo
