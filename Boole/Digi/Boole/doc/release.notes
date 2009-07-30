@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v19r5>2009-07-29 Boole v19r5</A></H1><PRE>
+</PRE><H1><A NAME=v19r5>2009-07-30 Boole v19r5</A></H1><PRE>
  - Changes to Configurable:
    . Change default data type to "2009"
 
@@ -17,6 +17,7 @@ Purpose: LHCb Digitization program
  - Changes to references to reflect changes in Boole v19r5 output:
    . Update for addition of RAMBID data in L0Calo
    . Update for change in STTools initialization printout
+   . Update for build MDF header bank using ODIN information if present
 
 </PRE><H1><A NAME=v19r4>2009-07-14 Boole v19r4</A></H1><PRE>
  - Changes to references to reflect changes in Boole v19r4 output:
