@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.4 2009-07-30 06:02:37 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.5 2009-07-30 10:05:04 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -16,7 +16,7 @@ class IInterface;
  *  @date   2007-11-30
  */
 template <class PBASE>
-class GAUDI_API MicroDSTCommon : public PBASE {
+class MicroDSTCommon : public PBASE {
 public: 
   /// Standard constructor
 

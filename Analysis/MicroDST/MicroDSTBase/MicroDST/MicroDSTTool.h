@@ -1,4 +1,4 @@
-// $Id: MicroDSTTool.h,v 1.3 2009-07-30 06:02:37 jpalac Exp $
+// $Id: MicroDSTTool.h,v 1.4 2009-07-30 10:05:04 jpalac Exp $
 #ifndef MICRODST_MICRODSTTOOL_H 
 #define MICRODST_MICRODSTTOOL_H 1
 
@@ -16,7 +16,7 @@
 class GAUDI_API MicroDSTTool : public MicroDSTCommon<GaudiTool>
 {
 public:
-
+  
   /// Standard constructor
   MicroDSTTool( const std::string& type, 
                 const std::string& name,
