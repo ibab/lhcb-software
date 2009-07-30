@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-07-26 - Anton Poluektov 
+ - Added LiMing's B->Jpsi f0 selection
+
 ! 2009-06-30 - Greig Cowan
  - Altered some cuts in Bd2DstarMuNu line.
 
