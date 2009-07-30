@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.4 2009-06-05 15:57:41 odescham Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.5 2009-07-30 08:44:14 dgolubko Exp $
 // Include files
 
 // from Gaudi
@@ -11,7 +11,7 @@
 #include "gsl/gsl_cdf.h"
 
 // =====================================================================
-/** @file
+/** @file CaloEMuMonitor.cpp
  *
  *  Implementation file for class CaloEMuMonitor - another algorithm to monitor
  *  the quality of Calo Electron and Muon PID.
@@ -267,6 +267,11 @@ bool CaloEMuMonitor::acceptE(const LHCb::ProtoParticle *proto) const
 StatusCode CaloEMuMonitor::execute()
 {
   ++ counter("nEvents");
+
+  if ( ! exist<LHCb::ProtoParticle::Container>( LHCb::ProtoParticleLocation::Charged ) ){
+    warning() << "event skept: " << LHCb::ProtoParticleLocation::Charged << " doesn't exist !!" << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   const LHCb::ProtoParticle::Container* particles =
     get<LHCb::ProtoParticle::Container>( LHCb::ProtoParticleLocation::Charged ) ;
