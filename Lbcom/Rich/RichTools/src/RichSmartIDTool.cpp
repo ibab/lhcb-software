@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.40 2009-06-26 10:56:07 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.41 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -58,7 +58,7 @@ StatusCode Rich::SmartIDTool::initialize()
         debug() << "Stored photodetector panel "
                 << m_photoDetPanels[rich][panel]->name()
                 << " offset=" << m_photoDetPanels[rich][panel]->localOffset()
-                << endreq;
+                << endmsg;
     }
   }
 
@@ -298,7 +298,7 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
     SmartIDSorter::sortByRegion(m_readoutChannels);
 
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
-           << nRich1 << " / " << nRich2 << endreq;
+           << nRich1 << " / " << nRich2 << endmsg;
 
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -308,9 +308,9 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
         Gaudi::XYZPoint gPos;
         sc = globalPosition(*iID,gPos);
         if ( sc.isFailure() ) Exception( "Problem converting RichSmartID to global coordinate" );
-        verbose() << " RichSmartID " << *iID << " " << (*iID).dataBitsOnly().key() << endreq
-                  << "     -> global Position : " << gPos << endreq
-                  << "     -> local Position  : " << globalToPDPanel(gPos) << endreq;
+        verbose() << " RichSmartID " << *iID << " " << (*iID).dataBitsOnly().key() << endmsg
+                  << "     -> global Position : " << gPos << endmsg
+                  << "     -> local Position  : " << globalToPDPanel(gPos) << endmsg;
       }
     }
 

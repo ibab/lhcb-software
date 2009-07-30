@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.27 2008-05-08 13:13:42 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.28 2009-07-30 12:14:16 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -212,13 +212,13 @@ StatusCode Rich::MirrorSegFinder::initialize( )
               << " spherical mirrors in the top and bottom of Rich1, and "
               << m_secMirrors[Rich::Rich1][Rich::top].size() << " and "
               << m_secMirrors[Rich::Rich1][Rich::bottom].size() << " secondary mirrors"
-              << endreq;
+              << endmsg;
     verbose() << "Stored " << m_sphMirrors[Rich::Rich2][Rich::left].size()
               << " and " << m_sphMirrors[Rich::Rich2][Rich::right].size()
               << " spherical mirrors in the left and right of Rich2, and "
               << m_secMirrors[Rich::Rich2][Rich::left].size() << " and "
               << m_secMirrors[Rich::Rich2][Rich::right].size() << " secondary mirrors"
-              << endreq;
+              << endmsg;
 
     {for ( unsigned int r=0; r<2; ++r )
       for ( unsigned int s=0; s<2; ++s )
@@ -227,7 +227,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
           verbose() << "Spherical mirror " << num << " rich=" << r << " side=" << s
                     << " " << m_sphMirrors[r][s][num]->name()
                     << " " << m_sphMirrors[r][s][num]->mirrorCentre()
-                    << endreq;
+                    << endmsg;
           //std::ostringstream title;
           //title << "Primary mirror Centres : Rich" << r+1 << " side " << s;
           //plot2D( m_sphMirrors[r][s][num]->mirrorCentre().x(),
@@ -243,7 +243,7 @@ StatusCode Rich::MirrorSegFinder::initialize( )
           verbose() << "Secondary mirror " << num << " rich=" << r << " side=" << s
                     << " " << m_secMirrors[r][s][num]->name()
                     << " " << m_secMirrors[r][s][num]->mirrorCentre()
-                    << endreq;
+                    << endmsg;
           //std::ostringstream title;
           //title << "Secondary mirror Centres : Rich" << r+1 << " side " << s;
           //plot2D( m_secMirrors[r][s][num]->mirrorCentre().x(),
@@ -267,10 +267,10 @@ StatusCode Rich::MirrorSegFinder::finalize( )
   // if test was performed, printout final max distances
   if ( m_testFinding )
   {
-    always() << "Rich1SphericalMaxDist = " << m_maxDist[Rich::Rich1][sph] << endreq;
-    always() << "Rich2SphericalMaxDist = " << m_maxDist[Rich::Rich2][sph] << endreq;
-    always() << "Rich1SecondaryMaxDist = " << m_maxDist[Rich::Rich1][sec] << endreq;
-    always() << "Rich2SecondaryMaxDist = " << m_maxDist[Rich::Rich2][sec] << endreq;
+    always() << "Rich1SphericalMaxDist = " << m_maxDist[Rich::Rich1][sph] << endmsg;
+    always() << "Rich2SphericalMaxDist = " << m_maxDist[Rich::Rich2][sph] << endmsg;
+    always() << "Rich1SecondaryMaxDist = " << m_maxDist[Rich::Rich1][sec] << endmsg;
+    always() << "Rich2SecondaryMaxDist = " << m_maxDist[Rich::Rich2][sec] << endmsg;
   }
 
   return Rich::ToolBase::finalize();
@@ -300,14 +300,14 @@ Rich::MirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
       if ( test_mirror != mirror )
       {
         m_maxDist[rich][sph] *= m_tuneScale;
-        info() << "Decreasing " << rich << " spherical parameter to " << m_maxDist[rich][sph] << endreq;
+        info() << "Decreasing " << rich << " spherical parameter to " << m_maxDist[rich][sph] << endmsg;
         mirror = test_mirror;
       }
     }
   }
 
   //if ( msgLevel(MSG::VERBOSE) )
-  //  verbose() << "Found primary mirror " << mirror << endreq;
+  //  verbose() << "Found primary mirror " << mirror << endmsg;
 
   // return found mirror
   return mirror;
@@ -363,14 +363,14 @@ Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
       if ( test_mirror != mirror )
       {
         m_maxDist[rich][sec] *= m_tuneScale;
-        info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endreq;
+        info() << "Decreasing " << rich << " secondary parameter to " << m_maxDist[rich][sec] << endmsg;
         mirror = test_mirror;
       }
     }
   }
 
   //if ( msgLevel(MSG::VERBOSE) )
-  // verbose() << "Found secondary mirror " << mirror << endreq;
+  // verbose() << "Found secondary mirror " << mirror << endmsg;
 
   // return found mirror
   return mirror;

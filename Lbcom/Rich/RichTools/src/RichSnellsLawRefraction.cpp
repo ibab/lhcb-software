@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SnellsLawRefraction
  *
  * CVS Log :-
- * $Id: RichSnellsLawRefraction.cpp,v 1.4 2008-11-30 10:43:47 jonrob Exp $
+ * $Id: RichSnellsLawRefraction.cpp,v 1.5 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -69,7 +69,7 @@ StatusCode SnellsLawRefraction::initialize()
   m_radiatorTool->intersections( p3, v, Rich::Aerogel, intersections );
   p3 = intersections.back().exitPoint();
   if ( p3.z() < m_minZaero ) m_minZaero = p3.z();
-  debug() << "Points " << p1 << " " << p2 << " " << p3 << endreq;
+  debug() << "Points " << p1 << " " << p2 << " " << p3 << endmsg;
 
   // make a plane using these points
   m_aeroExitPlane = Gaudi::Plane3D(p1,p2,p3);

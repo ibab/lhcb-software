@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::AddBackground
  *
  * CVS Log :-
- * $Id: RichAddBackground.cpp,v 1.2 2008-10-16 16:06:39 jonrob Exp $
+ * $Id: RichAddBackground.cpp,v 1.3 2009-07-30 12:08:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2008-10-10
@@ -78,13 +78,13 @@ StatusCode AddBackground::execute()
   for ( Rich::IAddBackground::HPDBackgrounds::const_iterator iB = backgrounds.begin();
         iB != backgrounds.end(); ++iB )
   {
-    debug() << "Found " << iB->second.size() << " background hits for " << iB->first << endreq;
+    debug() << "Found " << iB->second.size() << " background hits for " << iB->first << endmsg;
     counter("Added background hits / HPD") += iB->second.size();
 
     LHCb::RichSmartID::Vector & smartIDs 
       = *(const_cast<LHCb::RichSmartID::Vector*>(&(m_SmartIDDecoder->richSmartIDs(iB->first,true))));
 
-    debug() << "  -> Found " << smartIDs.size() << " pre-existing hits" << endreq;
+    debug() << "  -> Found " << smartIDs.size() << " pre-existing hits" << endmsg;
 
     // add the hits
     for ( LHCb::RichSmartID::Vector::const_iterator iBHit = iB->second.begin();
@@ -97,7 +97,7 @@ StatusCode AddBackground::execute()
       }
     }
 
-    debug() << "  ->       " << smartIDs.size() << " hits after background addition" << endreq;
+    debug() << "  ->       " << smartIDs.size() << " hits after background addition" << endmsg;
   }
 
   return sc;

@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.9 2007-11-26 17:40:31 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.10 2009-07-30 12:11:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -126,7 +126,7 @@ StatusCode MCCKPhotonYieldAlg::execute()
 
   // Is extended RICH info available ?
   const bool haveExtendedInfo = mcTruthTool()->extendedMCAvailable();
-  if (haveExtendedInfo) debug() << "Found extended RICH MC" << endreq;
+  if (haveExtendedInfo) debug() << "Found extended RICH MC" << endmsg;
 
   // now, loop over the MCParticles that where found
   debug() << "Found " << partsToHits.size() << " MCParticles with MCRichHits" << endmsg;
@@ -155,10 +155,10 @@ StatusCode MCCKPhotonYieldAlg::execute()
       // did this succeed ? If not reject this track
       if ( !mcSeg )
       {
-        debug() << "Failed to locate associated MCRichSegment -> reject" << endreq;
+        debug() << "Failed to locate associated MCRichSegment -> reject" << endmsg;
         continue;
       }
-      debug() << "Found associated MCRichSegment" << endreq;
+      debug() << "Found associated MCRichSegment" << endmsg;
 
       // shortcuts to entry and exit points
       const Gaudi::XYZPoint & entP = mcSeg->entryPoint();
@@ -187,7 +187,7 @@ StatusCode MCCKPhotonYieldAlg::execute()
            exitSlope  < m_minMRAD[rad] || exitSlope  > m_maxMRAD[rad] ) continue;
 
     }
-    debug() << " -> Segment selected" << endreq;
+    debug() << " -> Segment selected" << endmsg;
 
     // ------------------------------------------------------------------------------
 
@@ -195,14 +195,14 @@ StatusCode MCCKPhotonYieldAlg::execute()
     const MCRichHitVector & mchits = (*iP2R).second;
     unsigned int nSignalHits(0);
     debug() << " -> Found " << mchits.size() << " MCRichHits for MCParticle "
-            << mcpart->key() << " in " << rad << endreq;
+            << mcpart->key() << " in " << rad << endmsg;
     for ( MCRichHitVector::const_iterator iH = mchits.begin();
           iH != mchits.end(); ++iH )
     {
       // count only signal hits
       if ( !(*iH)->isBackground() ) { ++nSignalHits; }
     }
-    debug() << "  -> Found " << nSignalHits << " " << rad << " signal hits" << endreq;
+    debug() << "  -> Found " << nSignalHits << " " << rad << " signal hits" << endmsg;
 
     // only consider rads and MCParticles with at least one 'signal' hit
     if ( nSignalHits>0 )
@@ -269,19 +269,19 @@ StatusCode MCCKPhotonYieldAlg::finalize()
   // Statistical tools
   const StatDivFunctor eff("%8.2f +-%5.2f");
 
-  info() << lines << endreq;
+  info() << lines << endmsg;
 
   // track selection
   info() << " Track Selection : Min. Ptot (aero/R1Gas/R2Gas) = "
-         << m_minP << " MeV/c" << endreq;
+         << m_minP << " MeV/c" << endmsg;
   info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = "
-         << m_maxP << " MeV/c" << endreq;
-  info() << "                 : Min. Entry R (aero/R1Gas/R2Gas) = " << m_minEntryR << endreq;
-  info() << "                 : Max. Entry R (aero/R1Gas/R2Gas) = " << m_maxEntryR << endreq;
-  info() << "                 : Min. Exit  R (aero/R1Gas/R2Gas) = " << m_minExitR << endreq;
-  info() << "                 : Max. Exit  R (aero/R1Gas/R2Gas) = " << m_maxExitR << endreq;
-  info() << "                 : Min. MRAD    (aero/R1Gas/R2Gas) = " << m_minMRAD << endreq;
-  info() << "                 : Max. MRAD    (aero/R1Gas/R2Gas) = " << m_maxMRAD << endreq;
+         << m_maxP << " MeV/c" << endmsg;
+  info() << "                 : Min. Entry R (aero/R1Gas/R2Gas) = " << m_minEntryR << endmsg;
+  info() << "                 : Max. Entry R (aero/R1Gas/R2Gas) = " << m_maxEntryR << endmsg;
+  info() << "                 : Min. Exit  R (aero/R1Gas/R2Gas) = " << m_minExitR << endmsg;
+  info() << "                 : Max. Exit  R (aero/R1Gas/R2Gas) = " << m_maxExitR << endmsg;
+  info() << "                 : Min. MRAD    (aero/R1Gas/R2Gas) = " << m_minMRAD << endmsg;
+  info() << "                 : Max. MRAD    (aero/R1Gas/R2Gas) = " << m_maxMRAD << endmsg;
 
   // Summarise the photon tallies for each radiator type
   for ( RichRadCount::const_iterator iC = m_signalRadHits.begin();
@@ -293,11 +293,11 @@ StatusCode MCCKPhotonYieldAlg::finalize()
       rad.resize(15,' ');
       info() << " " << rad << " Av. # CK photons = "
              << eff((*iC).second.nPhotons,(*iC).second.nTracks) 
-             << " photons/MCParticle" << endreq;
+             << " photons/MCParticle" << endmsg;
     }
   }
 
-  info() << lines << endreq;
+  info() << lines << endmsg;
 
   // must be called after all other actions
   return RichHistoAlgBase::finalize();

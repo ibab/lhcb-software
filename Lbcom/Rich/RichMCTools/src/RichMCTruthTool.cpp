@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.37 2009-01-20 16:00:55 cattanem Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.38 2009-07-30 12:12:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -151,12 +151,12 @@ const LHCb::MCRichDigit * MCTruthTool::mcRichDigit( const LHCb::RichSmartID id )
 {
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Locating MCRichDigit for RichSmartID " << id << endreq;
+    debug() << "Locating MCRichDigit for RichSmartID " << id << endmsg;
   }
   const LHCb::MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
   if ( !mcDigit && msgLevel(MSG::DEBUG) )
   {
-    debug() << "Failed to locate MCRichDigit from RichSmartID " << id << endreq;
+    debug() << "Failed to locate MCRichDigit from RichSmartID " << id << endmsg;
   }
   return mcDigit;
 }
@@ -228,7 +228,7 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Failed to find MC history for " << id << endreq;
+    debug() << "Failed to find MC history for " << id << endmsg;
   }
   
   // if all else fails, assume background
@@ -252,7 +252,7 @@ bool MCTruthTool::isHPDReflection ( const LHCb::RichSmartID id ) const
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Failed to find MC history for " << id << endreq;
+    debug() << "Failed to find MC history for " << id << endmsg;
   }
   
   return (!isSignal && isHPDRefl);
@@ -275,7 +275,7 @@ bool MCTruthTool::isSiBackScatter ( const LHCb::RichSmartID id ) const
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Failed to find MC history for " << id << endreq;
+    debug() << "Failed to find MC history for " << id << endmsg;
   }
   
   return (!isSignal && isSiRefl);
@@ -374,7 +374,7 @@ const LHCb::MCRichDigits * MCTruthTool::mcRichDigits() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Successfully located " << m_mcRichDigits->size()
-                << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+                << " MCRichDigits at " << m_mcRichDigitsLocation << endmsg;
       }
     }
     else
@@ -383,7 +383,7 @@ const LHCb::MCRichDigits * MCTruthTool::mcRichDigits() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Failed to locate MCRichDigits at " << m_mcRichDigitsLocation
-                << endreq;
+                << endmsg;
       }
     }
 
@@ -406,7 +406,7 @@ MCTruthTool::mcRichDigitSummaries() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Successfully located " << m_mcRichDigitSums->size()
-                << " MCRichDigitSummaries at " << m_mcRichDigitSumsLocation << endreq;
+                << " MCRichDigitSummaries at " << m_mcRichDigitSumsLocation << endmsg;
       }
     }
     else
@@ -415,7 +415,7 @@ MCTruthTool::mcRichDigitSummaries() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Failed to locate MCRichDigitSummaries at " << m_mcRichDigitSumsLocation
-                << endreq;
+                << endmsg;
       }
     }
 
@@ -446,7 +446,7 @@ MCTruthTool::mcRichDigSumMap() const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Built RichSmartID->MCRichDigitSummary Map for " << m_mcRichDigSumMap.size()
-              << " RichSmartIDs" << endreq;
+              << " RichSmartIDs" << endmsg;
     }
 
   }
@@ -466,7 +466,7 @@ const LHCb::MCRichHits * MCTruthTool::mcRichHits() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Successfully located " << m_mcRichHits->size()
-                << " MCRichHits at " << m_mcRichHitsLocation << endreq;
+                << " MCRichHits at " << m_mcRichHitsLocation << endmsg;
       }
     }
     else
@@ -474,7 +474,7 @@ const LHCb::MCRichHits * MCTruthTool::mcRichHits() const
       m_mcRichHits = NULL;
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "Failed to locate MCRichHits at " << m_mcRichHitsLocation << endreq;
+        debug() << "Failed to locate MCRichHits at " << m_mcRichHitsLocation << endmsg;
       }
     }
 
@@ -495,7 +495,7 @@ MCTruthTool::mcPhotonLinks() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Linker for MCRichHits to MCRichOpticalPhotons not found at '" << loc
-                << "'" << endreq;
+                << "'" << endmsg;
       }
     }
   }
@@ -514,7 +514,7 @@ MCTruthTool::mcTrackLinks() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Linker for MCParticles to MCRichTracks not found at '"
-                << loc << "'" << endreq;
+                << loc << "'" << endmsg;
       }
     }
   }
@@ -538,7 +538,7 @@ MCTruthTool::mcPartToMCRichHitsMap() const
         {
           if ( msgLevel(MSG::VERBOSE) )
           {
-            verbose() << "Adding MCRichHit to list for MCParticle " << mcP->key() << endreq;
+            verbose() << "Adding MCRichHit to list for MCParticle " << mcP->key() << endmsg;
           }
           m_mcPToHits[mcP].push_back( *iHit );
         }
@@ -546,7 +546,7 @@ MCTruthTool::mcPartToMCRichHitsMap() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Built MCParticle->MCRichHit Map for " << m_mcPToHits.size()
-                << " RichSmartIDs" << endreq;
+                << " RichSmartIDs" << endmsg;
       }
     }
   }
@@ -570,14 +570,14 @@ MCTruthTool::smartIDToMCRichHitsMap() const
         const LHCb::RichSmartID pixelID = (*iHit)->sensDetID().pixelID();
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Adding MCRichHit to list for PixelID " << pixelID << endreq;
+          verbose() << "Adding MCRichHit to list for PixelID " << pixelID << endmsg;
         }
         m_smartIDsToHits[pixelID].push_back( *iHit );
       }
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Built RichSmartID->MCRichHit Map for " << m_smartIDsToHits.size()
-                << " RichSmartIDs" << endreq;
+                << " RichSmartIDs" << endmsg;
       }
     }
   }
@@ -617,7 +617,7 @@ MCTruthTool::mcRichHits( const LHCb::RichSmartID smartID ) const
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Found " << (*i).second.size()
-                << " MCRichHits for PixelID " << smartID << endreq;
+                << " MCRichHits for PixelID " << smartID << endmsg;
     }
     return (*i).second;
   }
@@ -626,7 +626,7 @@ MCTruthTool::mcRichHits( const LHCb::RichSmartID smartID ) const
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Failed to find MCRichHits associated to RichSmartID "
-            << smartID << endreq;
+            << smartID << endmsg;
   }
   return m_emptyContainer;
 }

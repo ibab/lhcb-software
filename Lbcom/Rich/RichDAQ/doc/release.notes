@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Chris Jones
+ - Replace all endreq with endmsg
+
 !========================== RichDAQ v3r24 2009-06-17 =========================
 ! 2009-06-03 - Chris Jones
  - Fix WIN32 compilation warning

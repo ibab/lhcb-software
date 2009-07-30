@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.7 2009-01-20 16:00:55 cattanem Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.8 2009-07-30 12:14:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -72,7 +72,7 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
 
   // Informational Printout
-  debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
+  debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endmsg;
 
   // Setup momentum thresholds
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
@@ -86,7 +86,7 @@ StatusCode Rich::ParticleProperties::initialize()
       m_momThres2[iRad][iHypo] = m_momThres[iRad][iHypo]*m_momThres[iRad][iHypo];
       debug() << m_momThres[iRad][iHypo] << " ";
     }
-    debug() << endreq;
+    debug() << endmsg;
   }
 
   // release tool
@@ -115,7 +115,7 @@ StatusCode Rich::ParticleProperties::initialize()
       }
     }
   }
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
   if ( m_pidTypes.empty() ) return Error( "No particle types specified" );
   if ( !hasPion )           return Error( "Pion hypothesis must be included in list" );
 

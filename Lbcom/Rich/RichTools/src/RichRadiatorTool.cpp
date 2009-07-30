@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.10 2008-05-08 12:39:50 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.11 2009-07-30 12:14:16 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -135,7 +135,7 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
     {
       debug() << " " << (*iS).entryPoint() << "->" << (*iS).exitPoint();
     }
-    debug() << endreq;
+    debug() << endmsg;
   }
 
   // return the number of intersections

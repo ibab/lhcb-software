@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.1 2008-10-17 11:06:12 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -72,17 +72,17 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   sc = initOccMap();
 
   // summary printout of options
-  debug() << m_whichRICH << " pixel suppression options :-" << endreq
-          << "  Occupancy memory                      = " << m_memory << endreq
-          << "  Occupancy scale factor                = " << m_scale << endreq
-          << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
+  debug() << m_whichRICH << " pixel suppression options :-" << endmsg
+          << "  Occupancy memory                      = " << m_memory << endmsg
+          << "  Occupancy scale factor                = " << m_scale << endmsg
+          << "  Absolute max HPD occupancy            = " << m_overallMax << endmsg;
   if ( m_useRunAv )
   {
-    debug() << "  Will use running average HPD occupancies" << endreq;
+    debug() << "  Will use running average HPD occupancies" << endmsg;
   }
   else
   {
-    debug() << "  Will use fixed average HPD occupancies" << endreq;
+    debug() << "  Will use fixed average HPD occupancies" << endmsg;
   }
 
   // return
@@ -121,8 +121,8 @@ StatusCode HighOccHPDSuppressionTool::initOccMap()
   }
   else
   {
-    info() << "Using NULL starting HPD occupancies" << endreq
-           << "Min # measurements before suppressing = " << m_minFills << endreq;
+    info() << "Using NULL starting HPD occupancies" << endmsg
+           << "Min # measurements before suppressing = " << m_minFills << endmsg;
   }
 
   return sc;
@@ -140,7 +140,7 @@ StatusCode HighOccHPDSuppressionTool::umsUpdateRICH2()
 
 StatusCode HighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType rich )
 {
-  info() << "Update triggered for " << rich << " HPD average occupancies" << endreq;
+  info() << "Update triggered for " << rich << " HPD average occupancies" << endmsg;
 
   // read data from conditions
   const Condition * data = getDet<Condition>(m_condBDLocs[rich]);
@@ -159,7 +159,7 @@ StatusCode HighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType rich 
     // update local data map
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Updating HPD " << HPD << " occupancy to " << occ << endreq;
+      verbose() << "Updating HPD " << HPD << " occupancy to " << occ << endmsg;
     }
     m_occMap[HPD] = HPDData( m_minFills+1 , occ );
   }
@@ -286,7 +286,7 @@ void HighOccHPDSuppressionTool::createHPDBackXML() const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << (*iS).first << " hID=" << hID << " nMeas=" << d.fillCount()
-              << " final occ = " << occ << endreq;
+              << " final occ = " << occ << endmsg;
     }
     // Create condition string
     if ( d.fillCount() > m_minFills )
@@ -302,12 +302,12 @@ void HighOccHPDSuppressionTool::createHPDBackXML() const
   Condition newCond1;
   newCond1.addParam( "HPDAvOccupancies",
                      entries[Rich::Rich1], "Average occupancy of RICH1 HPDs" );
-  always() << newCond1.toXml() << endreq;
+  always() << newCond1.toXml() << endmsg;
 
   // RICH2 condition
   Condition newCond2;
   newCond2.addParam( "HPDAvOccupancies",
                      entries[Rich::Rich2], "Average occupancy of RICH2 HPDs" );
-  always() << newCond2.toXml() << endreq;
+  always() << newCond2.toXml() << endmsg;
 
 }

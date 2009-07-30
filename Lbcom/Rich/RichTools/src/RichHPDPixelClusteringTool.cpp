@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.1 2008-10-17 11:06:12 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -43,10 +43,10 @@ StatusCode HPDPixelClusteringTool::initialize()
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "Using nearest neighbour pixel clustering tool" << endreq
-          << " -> Minimum cluster size        = " << m_minClusSize << endreq
-          << " -> Maximum cluster size        = " << m_maxClusSize << endreq
-          << " -> Allow diagonals in clusters = " << m_allowDiags << endreq;
+  debug() << "Using nearest neighbour pixel clustering tool" << endmsg
+          << " -> Minimum cluster size        = " << m_minClusSize << endmsg
+          << " -> Maximum cluster size        = " << m_maxClusSize << endmsg
+          << " -> Allow diagonals in clusters = " << m_allowDiags << endmsg;
 
   return sc;
 }
@@ -65,12 +65,12 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   // loop over pixels
   // requires them to be sorted by row then column
   if ( msgLevel(MSG::VERBOSE) ) 
-    verbose() << "Clustering with " << smartIDs.size() << " RichSmartIDs" << endreq;
+    verbose() << "Clustering with " << smartIDs.size() << " RichSmartIDs" << endmsg;
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
     // Print the input hits
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> " << *iS << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> " << *iS << endmsg;
 
     // get row and column data
     const int col     = pixelData->colNumber(*iS);
@@ -134,7 +134,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   if ( !clustersToSplit.empty() ) pixelData->splitClusters(clustersToSplit);
   
   // print the final cluster
-  if ( msgLevel(MSG::VERBOSE) ) { verbose() << *pixelData << endreq; }
+  if ( msgLevel(MSG::VERBOSE) ) { verbose() << *pixelData << endmsg; }
 
   // finally, return a pointer to this cluster object
   // user takes ownership at this point

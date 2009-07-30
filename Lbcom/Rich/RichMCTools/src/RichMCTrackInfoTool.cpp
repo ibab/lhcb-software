@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.14 2008-12-11 13:56:16 cattanem Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.15 2009-07-30 12:12:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -46,7 +46,7 @@ StatusCode MCTrackInfoTool::initialize()
 
   // Configure the ray-tracing mode
   m_traceMode.setAeroRefraction ( true );
-  info() << "Track " << m_traceMode << endreq;
+  info() << "Track " << m_traceMode << endmsg;
 
   return sc;
 }

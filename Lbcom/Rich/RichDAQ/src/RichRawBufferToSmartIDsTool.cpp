@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.27 2009-06-03 08:45:11 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.28 2009-07-30 12:09:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -55,7 +55,7 @@ StatusCode RawBufferToSmartIDsTool::initialize()
   // cached variables
   m_taeKey = taeKey(m_rawEventLocs);
 
-  debug() << "RawEvent TAEs : " << m_rawEventLocs << endreq;
+  debug() << "RawEvent TAEs : " << m_rawEventLocs << endmsg;
 
   return sc;
 }

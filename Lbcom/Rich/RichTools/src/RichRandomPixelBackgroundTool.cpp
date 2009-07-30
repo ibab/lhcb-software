@@ -1,4 +1,4 @@
-// $Id: RichRandomPixelBackgroundTool.cpp,v 1.1 2008-10-15 12:30:33 jonrob Exp $
+// $Id: RichRandomPixelBackgroundTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode RandomPixelBackgroundTool::initialize()
   // random numbers
   m_randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
 
-  info() << "Will add random pixel background at P=" << m_pixBackgroundProb << endreq;
+  info() << "Will add random pixel background at P=" << m_pixBackgroundProb << endmsg;
 
   return sc;
 }
@@ -85,7 +85,7 @@ RandomPixelBackgroundTool::createBackgrounds( HPDBackgrounds & backgrounds,
     if ( nBackPixs>0 )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Adding " << nBackPixs << " background hits to " << *iHPD << endreq;
+        debug() << "Adding " << nBackPixs << " background hits to " << *iHPD << endmsg;
       LHCb::RichSmartID::Vector & hits = backgrounds[*iHPD];
       const unsigned int maxTries(9999);
       unsigned int tries(0);
@@ -101,7 +101,7 @@ RandomPixelBackgroundTool::createBackgrounds( HPDBackgrounds & backgrounds,
         if ( hits.end() == std::find(hits.begin(),hits.end(),pixID) )
         {
           // add it to the output data
-          if ( msgLevel(MSG::DEBUG) ) debug() << " -> background hit " << pixID << endreq;
+          if ( msgLevel(MSG::DEBUG) ) debug() << " -> background hit " << pixID << endmsg;
           hits.push_back(pixID);
           --nBackPixs;
         }

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Chris Jones
+ - Replace all endreq with endmsg
+
 !=========================== RichTools v2r27 2009-06-29 ======================
 ! 2009-06-26 - Antonis Papanestis
  - Changed the way the global to/from photodetector panel frame conversion is 

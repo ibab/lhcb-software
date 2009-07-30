@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.1.1.1 2008-10-15 12:34:57 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.2 2009-07-30 12:08:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -49,7 +49,7 @@ StatusCode RawBufferToRichDigitsAlg::initialize()// RICH software
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
   if ( m_decodeOnly )
-  { info() << "Will only decode Raw Buffer -> No RichDigits produced" << endreq; }
+  { info() << "Will only decode Raw Buffer -> No RichDigits produced" << endmsg; }
 
   return sc;
 }
@@ -71,7 +71,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
           iL1 != data.end(); ++iL1 )
     {
-      debug() << "L1 board " << (*iL1).first << endreq;
+      debug() << "L1 board " << (*iL1).first << endmsg;
       // loop over ingresses for this L1 board
       for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
             iIn != (*iL1).second.end(); ++iIn )
@@ -98,7 +98,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Successfully registered " << digits->size()
-              << " RichDigits at " << m_richDigitsLoc << endreq;
+              << " RichDigits at " << m_richDigitsLoc << endmsg;
     }
 
   } // make digits

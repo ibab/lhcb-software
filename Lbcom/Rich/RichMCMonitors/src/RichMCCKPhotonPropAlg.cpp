@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonPropAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonPropAlg.cpp,v 1.3 2009-06-11 19:55:42 jonrob Exp $
+ * $Id: RichMCCKPhotonPropAlg.cpp,v 1.4 2009-07-30 12:11:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -101,7 +101,7 @@ StatusCode MCCKPhotonPropAlg::execute()
     if ( msgLevel(MSG::DEBUG) )
       debug() << rad << " photon : energy=" << energy << " refIndex=" << refInd 
               << " wavelength=" << wavelength
-              << endreq;
+              << endmsg;
 
     // plots
     plot1D( energy, hid(rad,"photonEnergy"), "CK Photon Energy (eV)",

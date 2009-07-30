@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.48 2008-05-08 12:39:50 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.49 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -84,7 +84,7 @@ StatusCode Rich::RayTracing::initialize()
     {
       m_photoDetPanels[rich][panel] =
         getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
-      debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endreq;
+      debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endmsg;
     }
   }
 

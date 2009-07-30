@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusterSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.1 2008-10-17 11:06:12 jonrob Exp $
+ * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.2 2009-07-30 12:14:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -49,8 +49,8 @@ StatusCode HPDPixelClusterSuppressionTool::initialize()
   // sanity checks
   if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 
-  debug() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << endreq
-          << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endreq;
+  debug() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << endmsg
+          << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endmsg;
 
   return sc;
 }
@@ -77,7 +77,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   // Print out clustering results
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << hpdID << endreq << *clusters << endreq;
+    verbose() << hpdID << endmsg << *clusters << endmsg;
   }
 
   // apply pixel cluster suppression
