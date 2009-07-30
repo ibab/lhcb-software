@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.26 2009-06-03 08:36:23 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.27 2009-07-30 09:25:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -688,6 +688,19 @@ namespace __gnu_cxx
   template <> struct hash<const Rich::DAQ::HPDL1InputID&>
   { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
 
+  /// HPDCopyNumber hash function
+  template <> struct hash<Rich::DAQ::HPDCopyNumber>
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber hash function
+  template <> struct hash<Rich::DAQ::HPDCopyNumber&>
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber hash function
+  template <> struct hash<const Rich::DAQ::HPDCopyNumber>
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber hash function
+  template <> struct hash<const Rich::DAQ::HPDCopyNumber&>
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+
 }
 
 namespace GaudiUtils
@@ -796,6 +809,19 @@ namespace GaudiUtils
   /// HPDL1InputID Hash function
   template <> struct Hash<const Rich::DAQ::HPDL1InputID&>
   { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+
+  /// HPDCopyNumber Hash function
+  template <> struct Hash<Rich::DAQ::HPDCopyNumber>
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber Hash function
+  template <> struct Hash<Rich::DAQ::HPDCopyNumber&>
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber Hash function
+  template <> struct Hash<const Rich::DAQ::HPDCopyNumber>
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  /// HPDCopyNumber Hash function
+  template <> struct Hash<const Rich::DAQ::HPDCopyNumber&>
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
 
 }
 
