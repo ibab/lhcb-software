@@ -1,8 +1,12 @@
-// $Id: CaloCellCode.h,v 1.7 2009-04-06 15:57:15 odescham Exp $ 
+// $Id: CaloCellCode.h,v 1.8 2009-07-30 12:08:28 ibelyaev Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
+// ============================================================================
+// Incldue file
+// ============================================================================
 // STD and STL 
+// ============================================================================
 #include <iostream> 
 #include <iomanip> 
 #include <string>
@@ -10,27 +14,48 @@
 #include <algorithm>
 #include <numeric>
 #include <cstring>  // for strlen with gcc 4.3
-
+// ============================================================================
 /** @class CaloCellCode CaloCellCode.h Kernel/CaloCellCode.h
  *
  *  Namespace for all code/decode rules of CaloCellID class  
  *
+ *  @todo CaloCellCode.h: switch from C-string to std::string
+ *  @todo CaloCellCode.h: make code more robust & CPU-efficient
+ *  @todo CaloCellCode.h: remove many redundant & confusing "static"
+ *  @todo CaloCellCode.h: return by reference 
+ *
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date    19/02/2001
  */
-
-
-
-namespace CaloCellCode{
-  enum CaloArea{ Outer = 0,
-                 Middle,
-                 Inner,
-                 PinArea
-  };
+// ============================================================================
+/** @namespace CaloCellCode 
+ *
+ *  Namespace for all code/decode rules of CaloCellID class  
+ *
+ *  @todo CaloCellCode.h: switch from C-string to std::string
+ *  @todo CaloCellCode.h: make code more robust & CPU-efficient
+ *  @todo CaloCellCode.h: remove many redundant & confusing "static"
+ *  @todo CaloCellCode.h: return by reference 
+ *
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date    19/02/2001
+ */
+namespace CaloCellCode
+{
+  // ==========================================================================
+  /// Calorimeter areas:
+  enum CaloArea
+    { 
+      Outer = 0 ,
+      Middle    ,
+      Inner     ,
+      PinArea
+    };
   static const unsigned int CaloAreaNums =  4;
-  static const std::string AreaName[CaloAreaNums] = {"Outer","Middle","Inner","PinArea"};
-
-  //
+  // ==========================================================================
+  static const std::string AreaName [CaloAreaNums] =  
+    { "Outer" , "Middle" , "Inner" ,"PinArea" };
+  // ==========================================================================
   /// 32 bits representation
   typedef unsigned int   ContentType     ;  
   //
@@ -74,13 +99,17 @@ namespace CaloCellCode{
   ( ( ( (ContentType) 1 ) << BitsRest ) - 1  ) << ShiftRest  ; 
   //
   
+  // ===========================================================================
   /// names of Calorimeter Detectors (to extract the coding of the "calo" )
   /// number of named calorimeters 
   static const unsigned int CaloNums = 4; 
   /// list of names of NAMED calorimeters 
   static const char* const  CaloNames[CaloNums] = 
   { "Spd" , "Prs" , "Ecal" , "Hcal" };
-  ///
+  // ==========================================================================
+  /** @class NameMatch 
+   *  Helper utility to find calorimeter by name 
+   */
   class NameMatch: public std::unary_function<const char*,bool> 
   {
   public:
@@ -101,6 +130,7 @@ namespace CaloCellCode{
     const    char* str;  
     unsigned int   len ;
   };
+  // =========================================================================
   // return calorimeter number from name, returns -1 for wrong name! 
   static inline int CaloNumFromName( const char* name ) 
   {
@@ -140,11 +170,8 @@ namespace CaloCellCode{
       else return "????";
     }
   };
-
-
-  ///
-};
-
+  // ==========================================================================
+} //                                                end of namespace CaloCellID 
 // ============================================================================
 // The End 
 // ============================================================================
