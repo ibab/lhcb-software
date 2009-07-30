@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.23 2009-07-26 18:13:18 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.24 2009-07-30 08:05:27 marcocle Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -25,6 +25,15 @@
 // boost
 #include "boost/format.hpp"
 #include "boost/lexical_cast.hpp"
+
+// Specialized hash function for Rich::DAQ::HPDCopyNumber
+namespace GaudiUtils {
+  template <>
+  inline std::size_t Hash<Rich::DAQ::HPDCopyNumber>::operator() ( const Rich::DAQ::HPDCopyNumber& key ) const
+  {
+    return key.data();
+  }
+}
 
 //=============================================================================
 
