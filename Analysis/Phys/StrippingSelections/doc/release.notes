@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-06-29 - Greig Cowan
+ - Added stripping line for Bd2DstatMuNu.
+
 !===================== StrippingSelections v1r3 2009-07-24 ====================
 
 ! 2009-07-30 Alessio Sarti

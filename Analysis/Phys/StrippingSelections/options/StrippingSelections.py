@@ -26,6 +26,9 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhi.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiK.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2JpsiPhiPrescaledAndDetached.py")
 
+# Greig and Marta's selection
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2DstarMuNu.py")
+
 # Basem's selection :
 #importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBiasedBs2JpsiPhi.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBiasedBs2JpsiPhi.py")
