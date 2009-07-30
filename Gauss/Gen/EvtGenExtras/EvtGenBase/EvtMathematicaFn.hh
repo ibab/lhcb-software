@@ -85,7 +85,7 @@ EvtComplex Sqrt(const EvtComplex value);
 EvtComplex Sqrt(const double value);
 
 EvtComplex PolyLog(const int n, const EvtComplex value);
-double PolyLog(const int n, const double value);
+EvtComplex PolyLog(const int n, const double value);
 
 template<class T>
 class DataBlock{

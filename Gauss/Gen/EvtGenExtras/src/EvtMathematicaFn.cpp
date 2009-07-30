@@ -14,9 +14,10 @@ EvtComplex PolyLog(const int n, const EvtComplex value){
 	return EvtComplex(re.val,im.val);
 }
 
-double PolyLog(const int n, const double value){
+EvtComplex PolyLog(const int n, const double value){
 	assert(n == 2);//We can only handle dilogarithms
-	return gsl_sf_dilog(value);
+	const EvtComplex tmp(value);
+	return PolyLog(n, tmp);
 }
 
 template<>
