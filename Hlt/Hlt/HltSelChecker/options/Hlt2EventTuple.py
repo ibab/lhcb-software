@@ -2,8 +2,6 @@
  #
  #  Generic Event Tuple configuration
  #
- #  For some unknown reason one can't have it at the same time as the DecayTreeTuple...
- #
  #  See DecayTreeTuple documentation
  #
  #  @author P. Koppenburg
@@ -16,7 +14,8 @@ from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger, L0F
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")
 tuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration",
-                   "TupleToolTrigger", "MCTupleToolEventType"  ]
+                   "TupleToolTrigger", "MCTupleToolEventType",
+                   "TupleToolTriggerRecoStats" ]
 tuple.addTool( TupleToolTrigger() )
 tuple.TupleToolTrigger.VerboseHlt1 = True
 tuple.TupleToolTrigger.VerboseHlt2 = True

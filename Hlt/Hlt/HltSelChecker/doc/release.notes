@@ -19,6 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Patrick Koppenburg
+ - options/Hlt2EventTuple.py : add TupleToolTriggerRecoStats (requires today's
+   head of DecayTreeTuple)
+ - Increment to v8r6
+
 !========================== HltSelChecker v8r5 2009-07-23 ===================
 ! 2009-07-24 - Patrick Koppenburg
  - Update scripts
