@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffCKMassRing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffCKMassRing.cpp,v 1.2 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichGeomEffCKMassRing.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -52,7 +52,7 @@ StatusCode GeomEffCKMassRing::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }
@@ -76,7 +76,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
         verbose() << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
                   << " track Dir "
                   << segment->trackSegment().bestMomentum().Unit()
-                  << endreq;
+                  << endmsg;
       }
 
       // Load the CK mass ring
@@ -104,7 +104,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
               verbose() << " -> photon was traced to detector at "
                         << hpdID << " "
                         << (*iP).globalPosition()
-                        << endreq;
+                        << endmsg;
             }
 
             // count detected photons
@@ -176,7 +176,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
       {
         debug() << "Segment "
           //<< segment->key()
-                << " has " << id << " geom. eff. " << eff << endreq;
+                << " has " << id << " geom. eff. " << eff << endmsg;
       }
     }
 

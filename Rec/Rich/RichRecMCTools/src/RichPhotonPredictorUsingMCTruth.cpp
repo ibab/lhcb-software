@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCTruth
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCTruth.cpp,v 1.1 2009-03-27 14:15:50 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingMCTruth.cpp,v 1.2 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -78,7 +78,7 @@ photonPossible( LHCb::RichRecSegment * segment,
                           ( m_bkgSelFrac > 0.0 && m_rand() < m_bkgSelFrac ) );
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << parent << " " << selected << endreq;
+    verbose() << parent << " " << selected << endmsg;
 
   return selected;
 }

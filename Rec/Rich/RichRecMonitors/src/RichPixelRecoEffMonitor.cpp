@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.8 2008-06-11 09:13:57 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.9 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -62,7 +62,7 @@ StatusCode PixelRecoEffMonitor::initialize()
 // Main execution
 StatusCode PixelRecoEffMonitor::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -73,7 +73,7 @@ StatusCode PixelRecoEffMonitor::execute()
     if ( pixelCreator()->newPixels().isFailure() )
       return Error( "Problem creating RichRecPixels" );
     debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endreq;
+            << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   // Histogramming
@@ -160,7 +160,7 @@ StatusCode PixelRecoEffMonitor::execute()
 
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << hpd << " Raw pixels " << rawIDs.size() << " reco " << nHPDs << endreq;
+          verbose() << hpd << " Raw pixels " << rawIDs.size() << " reco " << nHPDs << endmsg;
         }
 
       } // HPDs

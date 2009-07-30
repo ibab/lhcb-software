@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.22 2009-06-11 11:05:37 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.23 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,7 +76,7 @@ StatusCode MassHypothesisRingCreator::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -91,9 +91,9 @@ StatusCode MassHypothesisRingCreator::initialize()
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
   m_traceModeRad[Rich::Rich1Gas] = tmpMode;
   m_traceModeRad[Rich::Rich2Gas] = tmpMode;
-  info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
-  info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
-  info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
+  info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+  info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+  info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
   // only need to be rough
   m_nPointScale[Rich::Aerogel]  = m_maxPoint[Rich::Aerogel]  / 0.240;
@@ -101,8 +101,8 @@ StatusCode MassHypothesisRingCreator::initialize()
   m_nPointScale[Rich::Rich2Gas] = m_maxPoint[Rich::Rich2Gas] / 0.028;
 
   // ring info
-  info() << "Maximum # ray trace points = " << m_maxPoint << endreq;
-  info() << "Minimum # ray trace points = " << m_minPoint << endreq;
+  info() << "Maximum # ray trace points = " << m_maxPoint << endmsg;
+  info() << "Minimum # ray trace points = " << m_minPoint << endmsg;
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -150,7 +150,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     {
       verbose() << "Creating " << id
                 << " hypothesis ring for RichRecSegment " << segment->key()
-                << endreq;
+                << endmsg;
     }
 
     // Get a new ring and save it
@@ -210,7 +210,7 @@ LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
       m_rings = get<LHCb::RichRecRings>(m_ringLocation);
 
       debug() << "Found " << m_rings->size() << " pre-existing RichRecRings in TES at "
-              << m_ringLocation << endreq;
+              << m_ringLocation << endmsg;
 
     }
   }

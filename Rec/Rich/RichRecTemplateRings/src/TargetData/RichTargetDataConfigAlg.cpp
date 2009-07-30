@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.4 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.5 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -202,7 +202,7 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
            m2h.push_back(  tkTotMom);
 
          // info() <<"Target acquire track track num "<<rad
-         // <<"  "<<invIndex<<"  "<<aNumtk<<"  "<<n2s<<"  "<<pdPointLocal<<endreq;
+         // <<"  "<<invIndex<<"  "<<aNumtk<<"  "<<n2s<<"  "<<pdPointLocal<<endmsg;
            
          }
          

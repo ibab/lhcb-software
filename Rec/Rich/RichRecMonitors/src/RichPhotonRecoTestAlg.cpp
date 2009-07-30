@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPhotonRecoTestAlg
  *
- *  $Id: RichPhotonRecoTestAlg.cpp,v 1.8 2008-05-08 13:18:27 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.cpp,v 1.9 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -60,7 +60,7 @@ StatusCode PhotonRecoTestAlg::initialize()
 // Main execution
 StatusCode PhotonRecoTestAlg::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Perform some fixed reconstructions
   // ==================================
@@ -184,10 +184,10 @@ StatusCode PhotonRecoTestAlg::execute()
         LHCb::RichGeomPhoton photon;
         LHCb::RichRecPixel pix;
         pix.setGlobalPosition(*iD);
-        debug() << "Data Point " << *iD << endreq;
-        debug() << "Track Segment " << **iS << endreq;
+        debug() << "Data Point " << *iD << endmsg;
+        debug() << "Track Segment " << **iS << endmsg;
         const StatusCode sc = m_photonReco->reconstructPhoton( *iS, &pix, photon );
-        debug() << "Status " << sc << " Photon " << photon << endreq;
+        debug() << "Status " << sc << " Photon " << photon << endmsg;
       }
     }
     // finally, clean up by deleting temporary segments

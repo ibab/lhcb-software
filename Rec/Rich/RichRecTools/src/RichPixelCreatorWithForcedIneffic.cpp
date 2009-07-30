@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.5 2007-09-14 13:39:44 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.6 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -50,13 +50,13 @@ StatusCode PixelCreatorWithForcedIneffic::initialize()
   }
 
   info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::top]    
-         << "% of RICH1 top-panel pixels" << endreq;
+         << "% of RICH1 top-panel pixels" << endmsg;
   info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich1][Rich::bottom] 
-         << "% of RICH1 bottom-panel pixels" << endreq;
+         << "% of RICH1 bottom-panel pixels" << endmsg;
   info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::left]   
-         << "% of RICH2 left-panel pixels" << endreq;
+         << "% of RICH2 left-panel pixels" << endmsg;
   info() << "Will reject randomly " << 100*m_rejFrac[Rich::Rich2][Rich::right]  
-         << "% of RICH2 right-panel pixels" << endreq;
+         << "% of RICH2 right-panel pixels" << endmsg;
 
   return sc;
 }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::StatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.14 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichStatusCreator.cpp,v 1.15 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -56,7 +56,7 @@ StatusCode StatusCreator::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "RichRecStatus location : " << m_richStatusLocation << endreq;
+    debug() << "RichRecStatus location : " << m_richStatusLocation << endmsg;
   }
 
   return sc;

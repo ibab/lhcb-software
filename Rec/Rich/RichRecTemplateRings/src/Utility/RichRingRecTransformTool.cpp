@@ -1,4 +1,4 @@
-// $Id: RichRingRecTransformTool.cpp,v 1.3 2009-06-05 17:21:34 jonrob Exp $
+// $Id: RichRingRecTransformTool.cpp,v 1.4 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 #include<TMath.h>
 
@@ -192,7 +192,7 @@ VD RichRingRecTransformTool::GetCorrelation( VD aTar, VD aTemp){
       aCorr[2*af]   = aRatioReal;
       aCorr[2*af+1] = aRatioIm;
 
-      //  info<<" RichRingRecon Corr out bin real im "<<af<<"   "<<aRatioReal  <<"   "<<aRatioIm<<endreq;
+      //  info<<" RichRingRecon Corr out bin real im "<<af<<"   "<<aRatioReal  <<"   "<<aRatioIm<<endmsg;
 
   }  
   
@@ -686,7 +686,7 @@ double RichRingRecTransformTool::getTrackMassFromRadius(int itk, int irad, doubl
   }
   //test print 
   // info()<< "Transformtool irad Rec Momentem Recmass recBG recRadius "<< irad <<"  "<<aPartMomentum
-  //      << aMass <<"   "<< aBG<<"  "<<aRadius<<endreq;
+  //      << aMass <<"   "<< aBG<<"  "<<aRadius<<endmsg;
   //
   // end of test print
   return aMass;

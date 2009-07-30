@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::InterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.2 2009-07-09 11:21:25 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -66,7 +66,7 @@ StatusCode InterpCKResVthetaForRecoTracks::initialize()
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  info() << "Using interpolated Cherenkov theta resolution" << endreq;
+  info() << "Using interpolated Cherenkov theta resolution" << endmsg;
 
   return sc;
 }
@@ -136,8 +136,8 @@ InterpCKResVthetaForRecoTracks::getInterp( const Rich::RadiatorType rad,
   {
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Found CK resolution data for " << rad << " " << track << endreq;
-      //verbose() << " -> " << m_joData[key] << endreq;
+      verbose() << "Found CK resolution data for " << rad << " " << track << endmsg;
+      //verbose() << " -> " << m_joData[key] << endmsg;
     }
     m_ckRes[key] = new Rich1DTabFunc(m_joData[key]);
     if ( !m_ckRes[key]->valid() )

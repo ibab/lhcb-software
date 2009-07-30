@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.3 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.4 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,10 +75,10 @@ StatusCode BinnedCKResVthetaForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
-  info() << "Using binned Cherenkov theta resolution" << endreq;
+  info() << "Using binned Cherenkov theta resolution" << endmsg;
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }
@@ -126,7 +126,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
               hypo != m_pidTypes.end(); ++hypo )
         {
           verbose() << "Segment " << segment->key() << " : " << *hypo
-                    << " ckRes=" << segment->ckThetaResolution( *hypo ) << endreq;
+                    << " ckRes=" << segment->ckThetaResolution( *hypo ) << endmsg;
         }
       }
 
@@ -145,7 +145,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Segment " << segment->key() << " : " << id
-                  << " ckRes=" << segment->ckThetaResolution( id ) << endreq;
+                  << " ckRes=" << segment->ckThetaResolution( id ) << endmsg;
       }
 
     }

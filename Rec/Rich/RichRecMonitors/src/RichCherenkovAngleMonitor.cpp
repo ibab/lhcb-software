@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.18 2009-06-10 13:23:57 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.19 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -110,7 +110,7 @@ StatusCode CherenkovAngleMonitor::execute()
 
     // Get photons for this segment
     const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    verbose() << " Found " << photons.size() << " photon candidates" << endreq;
+    verbose() << " Found " << photons.size() << " photon candidates" << endmsg;
 
     // loop over photons
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();

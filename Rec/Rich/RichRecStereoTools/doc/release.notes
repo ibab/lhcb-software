@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Chris Jones
+ - Replace all endreq with endmsg
+
 !======================= RichRecStereoTools v1r6 2009-06-17 ==================
 ! 2009-06-11 - Chris Jones
  - Fix WIN32 compilation warnings about double -> float conversions

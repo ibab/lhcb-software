@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.3 2008-08-15 14:37:39 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.4 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -101,11 +101,11 @@ StatusCode CKthetaBandsPhotonPredictor::initialize()
     info() << trad << " : Sep. range     "
            << boost::format("%5.1f") % m_minROI[rad] << " -> "
            << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
-           << boost::format("%5.1f") % m_nSigma[rad] << " # sigma" << endreq;
+           << boost::format("%5.1f") % m_nSigma[rad] << " # sigma" << endmsg;
   }
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }

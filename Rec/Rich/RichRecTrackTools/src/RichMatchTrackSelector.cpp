@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.cpp,v 1.4 2009-06-10 16:12:58 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -75,7 +75,7 @@ MatchTrackSelector::trackSelected( const LHCb::Track * track ) const
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " -> Apply Match track specific criteria" << endreq;
+      verbose() << " -> Apply Match track specific criteria" << endmsg;
     }
 
     // match chi2 cut
@@ -88,13 +88,13 @@ MatchTrackSelector::trackSelected( const LHCb::Track * track ) const
     if ( i->second < m_minMatchChi2 || i->second > m_maxMatchChi2 )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed match chi2 cut" << endreq;
+        verbose() << " -> Track failed match chi2 cut" << endmsg;
       return false;
     }
 
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
   return true;
 }
 

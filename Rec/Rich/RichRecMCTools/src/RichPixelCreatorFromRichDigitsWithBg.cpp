@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.22 2009-03-30 10:45:46 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.23 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -51,7 +51,7 @@ StatusCode PixelCreatorFromRichDigitsWithBg::initialize()
 
   // warn that this background adding creator is being used
   info() << "Using background adding pixel creator : Will add " << m_numBgTracksToAdd[Rich::Rich1]
-         << "/" << m_numBgTracksToAdd[Rich::Rich2] << " traversing particles to RICH(1/2)" << endreq;
+         << "/" << m_numBgTracksToAdd[Rich::Rich2] << " traversing particles to RICH(1/2)" << endmsg;
 
   return sc;
 }
@@ -111,14 +111,14 @@ PixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
              << numTracksAddedToStack[Rich::Rich1]  << " particles ("
              << numDigitsAddedToStack[Rich::Rich1] << " digits) to the RICH1 stack ("
              << originalNumTracksInStack[Rich::Rich1] << "->" << m_digitsForTrackBg[Rich::Rich1].size() << ")"
-             << endreq;
+             << endmsg;
     }
     if (m_numBgTracksToAdd[Rich::Rich2] > 0) {
       info() << "Added "
              << numTracksAddedToStack[Rich::Rich2]  << " particles ("
              << numDigitsAddedToStack[Rich::Rich2] << " digits) to the RICH2 stack ("
              << originalNumTracksInStack[Rich::Rich2] << "->" << m_digitsForTrackBg[Rich::Rich2].size() << ")"
-             << endreq;
+             << endmsg;
     }
   }
 
@@ -211,7 +211,7 @@ StatusCode PixelCreatorFromRichDigitsWithBg::newPixels() const
       debug() << "Not enough background tracks in the stack ( R1="
               << m_digitsForTrackBg[Rich::Rich1].size() + m_digitsForTrackBg[Rich::Rich2].size()
               << " R2=" << m_numBgTracksToAdd[Rich::Rich1] + m_numBgTracksToAdd[Rich::Rich2] << " ). "
-              << "Refilling from this event" << endreq;
+              << "Refilling from this event" << endmsg;
 
       // fill the background data stack
       fillBgTrackStack();
@@ -286,12 +286,12 @@ StatusCode PixelCreatorFromRichDigitsWithBg::newPixels() const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Located " << digits->size() << " RichDigits at "
-              << m_recoDigitsLocation << endreq
+              << m_recoDigitsLocation << endmsg
               << "Added " << numBgTracksAdded
               << " additional background tracks with "
-              << numBgPixelsAdded << " pixels" << endreq
+              << numBgPixelsAdded << " pixels" << endmsg
               << "Created " << richPixels()->size() << " RichRecPixels at "
-              << pixelLocation() << endreq;
+              << pixelLocation() << endmsg;
     }
 
   }

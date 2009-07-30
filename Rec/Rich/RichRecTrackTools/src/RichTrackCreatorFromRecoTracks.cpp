@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.15 2009-07-09 11:21:25 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.16 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,7 +68,7 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   if ( m_buildHypoRings )
   {
     acquireTool( "RichMassHypoRings", m_massHypoRings );
-    info() << "Will create Mass hypothesis rings for each track" << endreq;
+    info() << "Will create Mass hypothesis rings for each track" << endmsg;
   }
 
   return sc;
@@ -117,7 +117,7 @@ TrackCreatorFromRecoTracks::trTracks() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "located " << m_trTracks->size() << " Tracks at "
-                << m_trTracksLocation << endreq;
+                << m_trTracksLocation << endmsg;
       }
     }
     else
@@ -163,7 +163,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     verbose() << "Trying Track " << trTrack->key()
               << " type " << trType << ", unique=" << trUnique
               << ", charge=" << trTrack->charge()
-              << endreq;
+              << endmsg;
   }
 
   // Is track a usable type
@@ -198,7 +198,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
       const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
 
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " Found " << Nsegs << " radiator segment(s)" << endreq;
+        verbose() << " Found " << Nsegs << " radiator segment(s)" << endmsg;
 
       if ( 0 < Nsegs )
       {
@@ -216,7 +216,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           if ( !(*iSeg) ) continue;
 
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endreq;
+            verbose() << "  -> Testing " << (*iSeg)->radiator() << " segment" << endmsg;
 
           // make a new RichRecSegment from this RichTrackSegment
           // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
@@ -230,7 +230,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             {
 
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "   -> TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
+                verbose() << "   -> TrackSegment in " << (*iSeg)->radiator() << " selected" << endmsg;
 
               // keep track
               keepTrack = true;
@@ -255,7 +255,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             {
               if ( msgLevel(MSG::VERBOSE) )
               {
-                verbose() << "   -> TrackSegment has no RICH info -> rejected" << endreq;
+                verbose() << "   -> TrackSegment has no RICH info -> rejected" << endmsg;
               }
               delete newSegment;
               newSegment = NULL;
@@ -266,7 +266,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           {
             if ( msgLevel(MSG::VERBOSE) )
             {
-              verbose() << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endreq;
+              verbose() << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endmsg;
             }
             delete newSegment;
             newSegment = NULL;

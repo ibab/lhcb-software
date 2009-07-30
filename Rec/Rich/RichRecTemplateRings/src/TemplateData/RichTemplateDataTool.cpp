@@ -1,4 +1,4 @@
-// $Id: RichTemplateDataTool.cpp,v 1.2 2009-06-05 17:21:34 jonrob Exp $
+// $Id: RichTemplateDataTool.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -147,7 +147,7 @@ StatusCode  RichTemplateDataTool::init(){
 
 StatusCode RichTemplateDataTool::RegisterCurrentCondition(int i, std::string aPath){
   StatusCode sc = StatusCode::SUCCESS;
-  debug() <<" Now registering condition "<<i<<"  "<<aPath<<endreq;
+  debug() <<" Now registering condition "<<i<<"  "<<aPath<<endmsg;
   
   if( i==0 ) {
         updMgrSvc()->registerCondition(this,aPath,
@@ -376,9 +376,9 @@ StatusCode RichTemplateDataTool::ConfigureTemplateForRadiator(){
 
 void RichTemplateDataTool::PrintTemplate() 
 {
-  info()<<" Number of Templates "<<m_NumTemplate<<endreq;
+  info()<<" Number of Templates "<<m_NumTemplate<<endmsg;
   info()<<" Number of Templates In Aerogel R1g R2g  "<<m_NumAgelTemplate<<"  "<<
-    m_NumR1gTemplate<<"  "<<m_NumR2gTemplate<<endreq;
+    m_NumR1gTemplate<<"  "<<m_NumR2gTemplate<<endmsg;
 
   if(  m_NumTemplate <= ( RConst()->maxNumRadiator()) ){
     
@@ -388,22 +388,22 @@ void RichTemplateDataTool::PrintTemplate()
     VD aPhiV =  m_ThTemplateInp[itemp];
     
     int aNumhit = m_NumHitsInTemplate[itemp];
-    info()<<" Number of hits in template "<<itemp<<"  "<<aNumhit<<endreq;
+    info()<<" Number of hits in template "<<itemp<<"  "<<aNumhit<<endmsg;
     for(int ih=0; ih< aNumhit; ++ih) {
       info() <<" X Y Rad phi of template hits "<<ih<<"  "<< aHitV[ih].x()<<"   "<< aHitV[ih].y()<<"  "
-             << aRadV[ih] <<"  "<< aPhiV[ih] << endreq;      
+             << aRadV[ih] <<"  "<< aPhiV[ih] << endmsg;      
     }
     int aNumTk =  m_TemplateCenterInp[itemp].size();
     for(int it=0; it< aNumTk ; ++it) {
       info()<<" XY of track projection "<<it<<"   "<< (m_TemplateCenterInp[itemp] [it]).x()<<
-        "    "<<(m_TemplateCenterInp[itemp] [it]).y()<<endreq;
+        "    "<<(m_TemplateCenterInp[itemp] [it]).y()<<endmsg;
       
     }
     
   }  
   }else {
     
-    info() << "Multiple templates per radiator "<<endreq;
+    info() << "Multiple templates per radiator "<<endmsg;
     
   }
   
@@ -416,10 +416,10 @@ void RichTemplateDataTool::PrintRadiatorHitTemplate (){
     VD aRV =  m_RHitTemplate[itemp];
     VD aTV =  m_ThHitTemplate[itemp];
     int aNumhit = (int) m_ThHitTemplate[itemp].size();
-    info()<<" Number of hits in template "<<itemp<<"  "<<aNumhit<<endreq;
+    info()<<" Number of hits in template "<<itemp<<"  "<<aNumhit<<endmsg;
     for(int ih=0; ih< aNumhit; ++ih) {
       info()<<" X Y Rad Phi of Configured Template "<<aHV[ih].x()<<"  "<<aHV[ih].y()<<"  "<<aRV[ih]
-            <<"   "<<aTV[ih]<<endreq;  
+            <<"   "<<aTV[ih]<<endmsg;  
     }
     
    }

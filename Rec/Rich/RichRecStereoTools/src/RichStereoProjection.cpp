@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::StereoProjection
  *
  *  CVS Log :-
- *  $Id: RichStereoProjection.cpp,v 1.1.1.1 2007-09-04 15:59:14 jonrob Exp $
+ *  $Id: RichStereoProjection.cpp,v 1.2 2009-07-30 11:21:31 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   20/06/2007
@@ -54,7 +54,7 @@ StatusCode StereoProjection::initialize()
 int StereoProjection::Project( const RichRecSegment *segment, RichRecRing &recRing ) const
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "RichRecSegment " << segment->key()
-                                      << " Projection stereo" << endreq;
+                                      << " Projection stereo" << endmsg;
 
   if (segment!=0) 
   {
@@ -106,7 +106,7 @@ int StereoProjection::Project( const RichRecSegment *segment, RichRecRing &recRi
 // Projection with other input
 int StereoProjection::Project( RichRecPhoton::ConstVector & richRecPhotons, RichRecRing &recRing ) const
 {
-  if ( msgLevel(MSG::DEBUG) )  debug() << "Projection stereo" << endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug() << "Projection stereo" << endmsg;
 
   if ( !richRecPhotons.empty() ) 
   {

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.5 2009-07-09 11:21:25 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.6 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -81,7 +81,7 @@ StatusCode GeomEffPhotonTracing::initialize()
                                        LHCb::RichTraceMode::FullHPDs : 
                                        LHCb::RichTraceMode::SimpleHPDs ) );
   if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
-  info() << "Sampling Mode : " << m_traceMode << endreq;
+  info() << "Sampling Mode : " << m_traceMode << endmsg;
 
   return sc;
 }
@@ -105,7 +105,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
         verbose() << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
                   << " track Dir "
                   << segment->trackSegment().bestMomentum().Unit()
-                  << endreq;
+                  << endmsg;
       }
 
       int nDetect(0), iPhot(0);
@@ -124,7 +124,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
         //  verbose() << " -> fake photon " << photDir
         //            << " testAng "
         //            << Rich::Geom::AngleBetween( segment->trackSegment().bestMomentum(), photDir )
-        //            << endreq;
+        //            << endmsg;
         //}
 
         // Ray trace through detector, using fast circle modelling of HPDs
@@ -148,7 +148,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
             verbose() << " -> photon was traced to detector at " 
                       << photon.smartID().hpdID() << " "
                       << photon.detectionPoint()
-                      << endreq;
+                      << endmsg;
           }
 
           // count detected photons
@@ -195,7 +195,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
     {
       debug() << "Segment " 
         //<< segment->key() 
-              << " has " << id << " geom. eff. " << eff << endreq;
+              << " has " << id << " geom. eff. " << eff << endmsg;
     }
 
   }

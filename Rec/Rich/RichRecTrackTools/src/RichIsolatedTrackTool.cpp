@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.9 2009-05-24 16:21:15 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.10 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -278,7 +278,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     counter(Rich::text(rad)+" : Isolated Tracks") += trackIsIsolated ? 1 : 0 ;
   }
 
-  if ( trackIsIsolated ) debug() << "Found isolated " << rad << " segment" << endreq;
+  if ( trackIsIsolated ) debug() << "Found isolated " << rad << " segment" << endmsg;
   
   // return final status
   return trackIsIsolated;

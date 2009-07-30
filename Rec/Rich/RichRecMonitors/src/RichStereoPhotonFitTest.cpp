@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : StereoPhotonFitTest
  *
- *  $Id: RichStereoPhotonFitTest.cpp,v 1.3 2009-06-10 13:23:57 jonrob Exp $
+ *  $Id: RichStereoPhotonFitTest.cpp,v 1.4 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -65,7 +65,7 @@ StatusCode StereoPhotonFitTest::initialize()
 // Main execution
 StatusCode StereoPhotonFitTest::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -76,7 +76,7 @@ StatusCode StereoPhotonFitTest::execute()
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endreq;
+            << " RichRecSegments" << endmsg;
   }
 
   // Rich Histo ID
@@ -109,7 +109,7 @@ StatusCode StereoPhotonFitTest::execute()
               << " " << rad
               << " " << pid
               << " : FitResult= " << fitR
-              << endreq;
+              << endmsg;
 
     // Is Fit 'OK' ?? Skip failed fits
     const bool fitOK = fitR.status == IStereoFitter::Result::Succeeded;

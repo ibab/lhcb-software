@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.11 2008-05-08 13:16:19 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.12 2009-07-30 11:17:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -80,8 +80,8 @@ StatusCode TrSegMakerFromMCRichTracks::initialize()
   m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
   m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
-  info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq;
-  info() << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;
+  info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endmsg;
+  info() << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endmsg;
 
   return sc;
 }
@@ -101,12 +101,12 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
   const LHCb::MCRichTrack * track = mcRichTrack(obj);
   if ( !track )
   {
-    verbose() << "MCRichTrack not available for input data object" << endreq;
+    verbose() << "MCRichTrack not available for input data object" << endmsg;
     return 0;
   }
 
   verbose() << "Trying MCRichTrack " << track->key() << " with "
-            << track-> mcSegments().size() << " MCRichSegments" << endreq;
+            << track-> mcSegments().size() << " MCRichSegments" << endmsg;
 
   // loop over radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
@@ -127,14 +127,14 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << " -> Found " << rad << " segment : pathL=" << segment->pathLength()
-                << " nPhots=" << segment->mcRichOpticalPhotons().size() << endreq;
+                << " nPhots=" << segment->mcRichOpticalPhotons().size() << endmsg;
     }
 
     // Apply selection cuts
     if ( segment->pathLength()                  < m_minPathL[rad] ) continue;
     if ( segment->mcRichOpticalPhotons().size() < m_minPhots[rad] ) continue;
 
-    verbose() << "  -> Segment selected" << endreq;
+    verbose() << "  -> Segment selected" << endmsg;
 
     // Get entry information
     const Gaudi::XYZPoint & entryPoint          = segment->entryPoint();
@@ -162,11 +162,11 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
       // printout
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> Found MCRichSegment for " << rad << endreq
-                  << "    Entry Point : " << entryPoint << endreq
-                  << "    Entry Mom.  : " << entryStateMomentum << endreq
-                  << "    Exit Point  : " << exitPoint << endreq
-                  << "    Exit Mom.   : " << exitStateMomentum << endreq;
+        verbose() << " -> Found MCRichSegment for " << rad << endmsg
+                  << "    Entry Point : " << entryPoint << endmsg
+                  << "    Entry Mom.  : " << entryStateMomentum << endmsg
+                  << "    Exit Point  : " << exitPoint << endmsg
+                  << "    Exit Mom.   : " << exitStateMomentum << endmsg;
       }
 
     }
@@ -187,13 +187,13 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
       // printout
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> Found MCRichSegment for " << rad << endreq
-                  << "    Entry Point : " << entryPoint << endreq
-                  << "    Entry Mom.  : " << entryStateMomentum << endreq
-                  << "    Mid Point   : " << midPoint << endreq
-                  << "    Mid Mom.    : " << midStateMomentum << endreq
-                  << "    Exit Point  : " << exitPoint << endreq
-                  << "    Exit Mom.   : " << exitStateMomentum << endreq;
+        verbose() << " -> Found MCRichSegment for " << rad << endmsg
+                  << "    Entry Point : " << entryPoint << endmsg
+                  << "    Entry Mom.  : " << entryStateMomentum << endmsg
+                  << "    Mid Point   : " << midPoint << endmsg
+                  << "    Mid Mom.    : " << midStateMomentum << endmsg
+                  << "    Exit Point  : " << exitPoint << endmsg
+                  << "    Exit Mom.   : " << exitStateMomentum << endmsg;
       }
 
     }
@@ -201,7 +201,7 @@ TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
   }
 
   // return value is number of segments formed
-  verbose() << "Created " << segments.size() << " RichTrackSegments" << endreq;
+  verbose() << "Created " << segments.size() << " RichTrackSegments" << endmsg;
   return segments.size();
 }
 
@@ -213,14 +213,14 @@ TrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
   const LHCb::MCRichTrack * track = dynamic_cast<const LHCb::MCRichTrack *>(obj);
   if ( track )
   {
-    verbose() << "Input data is of type MCRichTrack" << endreq;
+    verbose() << "Input data is of type MCRichTrack" << endmsg;
   }
   else
   {
     const LHCb::Track * trTrack = dynamic_cast<const LHCb::Track *>(obj);
     if ( trTrack )
     {
-      verbose() << "Input data is of type Track" << endreq;
+      verbose() << "Input data is of type Track" << endmsg;
       track = m_truth->mcRichTrack( m_rectruth->mcParticle(trTrack) );
     }
   }

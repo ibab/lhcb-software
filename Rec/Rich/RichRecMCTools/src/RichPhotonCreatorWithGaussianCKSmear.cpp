@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.8 2009-06-11 12:41:07 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.9 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -67,7 +67,7 @@ StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
                       Rich::text((Rich::RadiatorType)iRad) );
       }
       info() << "Applying a Gaussian smear of " << 1000*m_smearWid[iRad] << " mrad to "
-             << Rich::text((Rich::RadiatorType)iRad) << " photons" << endreq;
+             << Rich::text((Rich::RadiatorType)iRad) << " photons" << endmsg;
       willSmear = true;
     }
   }
@@ -75,11 +75,11 @@ StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
   {
     if ( m_applySmearingToAll )
     {
-      info() << "Applying smearing to all photons in selected radiators" << endreq;
+      info() << "Applying smearing to all photons in selected radiators" << endmsg;
     }
     else
     {
-      info() << "Applying smearing only to true Cherenkov photons" << endreq;
+      info() << "Applying smearing only to true Cherenkov photons" << endmsg;
     }
   }
   else
@@ -102,18 +102,18 @@ StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
     const StatDivFunctor occ("%10.2f +-%7.2f");
 
     // Print out final stats
-    info() << "=================================================================" << endreq
-           << "  Photon smearing summary : " << nEvents() << " events :-" << endreq
+    info() << "=================================================================" << endmsg
+           << "  Photon smearing summary : " << nEvents() << " events :-" << endmsg
            << "    Aerogel   : "
            << occ(m_smearCount[Rich::Aerogel],nEvents()) << "  photons/event "
-           << 1000*m_smearWid[Rich::Aerogel] << " mrad smear" << endreq
+           << 1000*m_smearWid[Rich::Aerogel] << " mrad smear" << endmsg
            << "    Rich1Gas     : "
            << occ(m_smearCount[Rich::Rich1Gas],nEvents())   << "  photons/event "
-           << 1000*m_smearWid[Rich::Rich1Gas] << " mrad smear" << endreq
+           << 1000*m_smearWid[Rich::Rich1Gas] << " mrad smear" << endmsg
            << "    Rich2Gas       : "
            << occ(m_smearCount[Rich::Rich2Gas],nEvents())     << "  photons/event "
-           << 1000*m_smearWid[Rich::Rich2Gas] << " mrad smear" << endreq
-           << "=================================================================" << endreq;
+           << 1000*m_smearWid[Rich::Rich2Gas] << " mrad smear" << endmsg
+           << "=================================================================" << endmsg;
 
   }
 
@@ -161,7 +161,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
         {
           verbose() << rad << " photon. Applying theta smearing " << smear
                     << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
-                    << " -> " << newCKtheta << endreq;
+                    << " -> " << newCKtheta << endmsg;
         }
         newPhoton->geomPhoton().setCherenkovTheta( static_cast<float>(newCKtheta) );
 

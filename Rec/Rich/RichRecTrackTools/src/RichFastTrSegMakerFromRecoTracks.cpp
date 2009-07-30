@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -124,7 +124,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   if ( usedRads(Rich::Aerogel) )
   {
     const Rich::RadiatorType rad = Rich::Aerogel;
-    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endmsg;
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
@@ -135,7 +135,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   if ( usedRads(Rich::Rich1Gas) )
   {
     const Rich::RadiatorType rad = Rich::Rich1Gas;
-    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endmsg;
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
@@ -146,7 +146,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   if ( usedRads(Rich::Rich2Gas) )
   {
     const Rich::RadiatorType rad = Rich::Rich2Gas;
-    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endreq;
+    info() << rad << " : Entry/Exit z position " << m_entryZ[rad] << " " << m_exitZ[rad] << endmsg;
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
@@ -156,12 +156,12 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
   // Define the segment type
   if      ( "AllStateVectors" == m_trSegTypeJO )
   {
-    info() << "Will create track segments using all State information" << endreq;
+    info() << "Will create track segments using all State information" << endmsg;
     m_trSegType = LHCb::RichTrackSegment::UseAllStateVectors;
   }
   else if ( "Choord" == m_trSegTypeJO )
   {
-    info() << "Will create track segments using the 'choord' direction definition" << endreq;
+    info() << "Will create track segments using the 'choord' direction definition" << endmsg;
     m_trSegType = LHCb::RichTrackSegment::UseChordBetweenStates;
   }
   else
@@ -197,7 +197,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     {
       if (*iS) verbose() << " " << (*iS)->z();
     }
-    verbose() << endreq;
+    verbose() << endmsg;
   }
 
   // make sure vector is empty
@@ -206,7 +206,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
   // Loop over all radiators
   for ( Radiators::const_iterator rad = m_rads.begin(); rad != m_rads.end(); ++rad )
   {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Considering radiator " << *rad << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Considering radiator " << *rad << endmsg;
 
     // Get the best state information for this track and radiator
     std::vector<const LHCb::State*> states(2);
@@ -223,19 +223,19 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
                                         m_entryPlanes[*rad],
                                         entryPoint ) )
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect entry plane" << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect entry plane" << endmsg;
       continue;
     }
     else
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "     Entry point intersection :- " << endreq
-                  << "      Pos " << entryPoint << endreq
-                  << "      Dir " << entryVect << endreq;
+        verbose() << "     Entry point intersection :- " << endmsg
+                  << "      Pos " << entryPoint << endmsg
+                  << "      Dir " << entryVect << endmsg;
       if ( !checkBoundaries(entryPoint,*rad) )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "     Entry point failed boundary checks for " << *rad << endreq;
+          verbose() << "     Entry point failed boundary checks for " << *rad << endmsg;
         continue;
       }
     }
@@ -251,19 +251,19 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
                                         m_exitPlanes[*rad],
                                         exitPoint ) )
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect exit plane" << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect exit plane" << endmsg;
       continue;
     }
     else
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "     Exit point intersection :- " << endreq
-                  << "      Pos " << exitPoint << endreq
-                  << "      Dir " << exitVect << endreq;
+        verbose() << "     Exit point intersection :- " << endmsg
+                  << "      Pos " << exitPoint << endmsg
+                  << "      Dir " << exitVect << endmsg;
       if ( !checkBoundaries(exitPoint,*rad) )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "     Exit point failed boundary checks for " << *rad << endreq;
+          verbose() << "     Exit point failed boundary checks for " << *rad << endmsg;
         continue;
       }
     }
@@ -279,31 +279,31 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
         = deBeam(*rad)->intersectionPoints( entryPoint, vect, inter1, inter2 );
 
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endreq;
+        verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endmsg;
 
       if ( intType == DeRichBeamPipe::NoIntersection )
       {
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
+          verbose() << "   --> No beam intersections -> No corrections needed" << endmsg;
       }
       else if ( intType == DeRichBeamPipe::FrontAndBackFace )
       {
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Inside beam pipe -> Reject segment" << endreq;
+          verbose() << "   --> Inside beam pipe -> Reject segment" << endmsg;
         continue;
       }
       else if ( intType == DeRichBeamPipe::FrontFaceAndCone )
       {
         // Update entry point to exit point on cone
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Correcting entry point to point on cone" << endreq;
+          verbose() << "   --> Correcting entry point to point on cone" << endmsg;
         entryPoint = inter2;
       }
       else if ( intType == DeRichBeamPipe::BackFaceAndCone )
       {
         // Update exit point to entry point on cone
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Correcting exit point to point on cone" << endreq;
+          verbose() << "   --> Correcting exit point to point on cone" << endmsg;
         exitPoint = inter1;
       }
     }
@@ -312,11 +312,11 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     // Printout the found entry/exit points
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  Final States for " << *rad << " are :-" << endreq
-                << "   Entry Point    : " << entryPoint << endreq
-                << "   Exit Point     : " << exitPoint << endreq
-                << "   Entry Momentum : " << entryVect << endreq
-                << "   Exit Momentum  : " << exitVect << endreq;
+      verbose() << "  Final States for " << *rad << " are :-" << endmsg
+                << "   Entry Point    : " << entryPoint << endmsg
+                << "   Exit Point     : " << exitPoint << endmsg
+                << "   Entry Momentum : " << entryVect << endmsg
+                << "   Exit Momentum  : " << exitVect << endmsg;
     }
 
     // Final sanity check that all is OK with the states
@@ -437,11 +437,11 @@ FastTrSegMakerFromRecoTracks::stateInfo( const LHCb::Track * track,
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "  For " << rad << " chose states at :-" << endreq
+    verbose() << "  For " << rad << " chose states at :-" << endmsg
               << "    Entry : Pos " << states[0]->position() << " : Dir "
-              << states[0]->slopes() << endreq
+              << states[0]->slopes() << endmsg
               << "    Exit  : Pos " << states[1]->position() << " : Dir "
-              << states[1]->slopes() << endreq;
+              << states[1]->slopes() << endmsg;
   }
 
   return true;

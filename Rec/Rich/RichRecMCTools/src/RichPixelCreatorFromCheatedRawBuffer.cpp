@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.10 2008-05-08 13:16:19 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.11 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -94,7 +94,7 @@ void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) c
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Pixel " << pixel->hpdPixelCluster()
-                    << " MC cheated global pos " << pixel->globalPosition() << endreq;
+                    << " MC cheated global pos " << pixel->globalPosition() << endmsg;
         }
         // break out of loop (i.e. ignore any other associated hits)
         break;

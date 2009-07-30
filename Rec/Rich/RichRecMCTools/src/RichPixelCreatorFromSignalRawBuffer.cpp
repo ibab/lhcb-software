@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.9 2009-07-23 16:16:47 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.10 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -52,18 +52,18 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
   acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
 
   if ( m_trackFilter )
-    info() << "Will remove hits that do not come from tracked particles" << endreq;
+    info() << "Will remove hits that do not come from tracked particles" << endmsg;
 
   if ( m_rejAllBackHits )
   {
-    info() << "Will reject ALL non Cherenkov signal hits" << endreq;
+    info() << "Will reject ALL non Cherenkov signal hits" << endmsg;
   }
   else
   {
     if ( m_rejHPDReflHits )
-      info() << "Will reject HPD reflections" << endreq;
+      info() << "Will reject HPD reflections" << endmsg;
     if ( m_rejHPDBackScatter )
-      info() << "Will reject back-scattered hits" << endreq;
+      info() << "Will reject back-scattered hits" << endmsg;
   }
 
   return sc;
@@ -139,17 +139,17 @@ PixelCreatorFromSignalRawBuffer::trackedMCPs() const
     if ( richTracks()->empty() )        Warning( "RichRecTrack container empty !");
 
     // Loop over reconstructed tracks to form a list of tracked MCParticles
-    debug() << "Found " << richTracks()->size() << " RichRecTracks" << endreq;
+    debug() << "Found " << richTracks()->size() << " RichRecTracks" << endmsg;
     for ( LHCb::RichRecTracks::const_iterator iTk = richTracks()->begin();
           iTk != richTracks()->end(); ++iTk )
     {
       if ( !(*iTk) ) continue;
       const LHCb::MCParticle * tkMCP = m_mcRecTool->mcParticle(*iTk);
-      verbose() << "RichRecTrack " << (*iTk)->key() << " has MCParticle " << tkMCP << endreq;
+      verbose() << "RichRecTrack " << (*iTk)->key() << " has MCParticle " << tkMCP << endmsg;
       if ( tkMCP ) m_trackedMCPs[tkMCP] = true;
     }
 
-    debug() << "Found " << m_trackedMCPs.size() << " tracked MCParticles" << endreq;
+    debug() << "Found " << m_trackedMCPs.size() << " tracked MCParticles" << endmsg;
 
   }
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.4 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -88,7 +88,7 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   // cache values
 
@@ -111,11 +111,11 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   // Printouts
   //---------------------------------------------------------------------------------------------
 
-  info() << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endreq
-         << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endreq
-         << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endreq;
+  info() << "Aerogel  Asymptopic Errors : " << m_asmpt[Rich::Aerogel]  << endmsg
+         << "Rich1Gas Asymptopic Errors : " << m_asmpt[Rich::Rich1Gas] << endmsg
+         << "Rich2Gas Asymptopic Errors : " << m_asmpt[Rich::Rich2Gas] << endmsg;
 
-  if ( m_useTS ) info() << "Will use TransportService to calculate material traversed" << endreq;
+  if ( m_useTS ) info() << "Will use TransportService to calculate material traversed" << endmsg;
 
   return sc;
 }
@@ -281,11 +281,11 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
         if ( msgLevel(MSG::DEBUG) )
         {
           debug() << "Track " << segment->richRecTrack()->key() << " " << rad << " " << *hypo
-                  << " : ptot " << ptot << " ckExp " << ckExp << endreq;
-          debug() << "  Rad length " << effectiveLength << endreq;
+                  << " : ptot " << ptot << " ckExp " << ckExp << endmsg;
+          debug() << "  Rad length " << effectiveLength << endmsg;
           debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
                   << scattErr << " curv " << curvErr << " dir " << dirErr
-                  << " mom " << momErr << " : Overall " << sqrt(hypo_res2) << endreq;
+                  << " mom " << momErr << " : Overall " << sqrt(hypo_res2) << endmsg;
         }
 
       } // ckexp > 0
@@ -294,7 +294,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       segment->setCKThetaResolution( *hypo, static_cast<LHCb::RichRecSegment::FloatType>(std::sqrt(hypo_res2)) );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Segment " << segment->key() << " : " << *hypo << " ckRes " << std::sqrt(hypo_res2) << endreq;
+        verbose() << "Segment " << segment->key() << " : " << *hypo << " ckRes " << std::sqrt(hypo_res2) << endmsg;
       }
 
     } // loop over mass hypos

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.4 2009-04-14 14:43:12 cattanem Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,7 +61,7 @@ StatusCode DelegatedTrackCreatorFromRecoTracks::initialize()
     const std::string trackType = ( slash>0 ? (*it).substr(0,slash) : *it );
     const std::string toolType  = ( slash>0 ? (*it).substr(slash+1) : *it );
     info() << "Track type '" << trackType
-           << "' will use RichTrackCreator '" << toolType << "'" << endreq;
+           << "' will use RichTrackCreator '" << toolType << "'" << endmsg;
     const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(trackType);
     if ( NULL == tmpMap[toolType] )
     {
@@ -123,7 +123,7 @@ DelegatedTrackCreatorFromRecoTracks::recoTracks() const
     // Obtain smart data pointer to Tracks
     m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
     debug() << "located " << m_trTracks->size() << " Tracks at "
-            << m_trTracksLocation << endreq;
+            << m_trTracksLocation << endmsg;
   }
 
   return m_trTracks;
@@ -164,7 +164,7 @@ DelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) co
     {
       verbose() << "Track " << trTrack->key()
                 << " type " << trType
-                << " -> delegating to " << tkTool(trType)->name() << endreq;
+                << " -> delegating to " << tkTool(trType)->name() << endmsg;
     }
 
     // Add to reference map

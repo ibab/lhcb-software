@@ -1,4 +1,4 @@
-// $Id: RichLocalTargetConfig.cpp,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichLocalTargetConfig.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -155,7 +155,7 @@ StatusCode RichLocalTargetConfig::SelectHitsInFoi(int itk, int irad , int iRich 
   // <<irad<<"  "<<itk
   //      <<"   "<< aFoiMinCut<<"   "<< aFoiMaxCut<<"  "<< m_rMin<<"  "<<m_rMax
   //       <<"   "<<m_rRatio<<"  "
-  //          <<"   "<<tMinRadInp<<"  "<<tMaxRadInp<< "  "<<aRadiusSigma<<endreq;
+  //          <<"   "<<tMinRadInp<<"  "<<tMaxRadInp<< "  "<<aRadiusSigma<<endmsg;
    //
   // end debug test print
  
@@ -263,7 +263,7 @@ StatusCode RichLocalTargetConfig::EstimateMeanRadiusFromRawRadius( int itk, int 
     
   double aSum=0.0;
   double aCount=0.0;
-  //debug()<<" Rich MeanRadius get the meanradius "<< irad<<"  "<<itk<<"  "<<aRawRadius << "   "<<aRadiusWidth<<endreq;
+  //debug()<<" Rich MeanRadius get the meanradius "<< irad<<"  "<<itk<<"  "<<aRawRadius << "   "<<aRadiusWidth<<endmsg;
   
   if(aRawRadius > 0.0 ) {
     int  aNumHitsTarget = tgD()->NumHitsTarget(iRich);
@@ -271,7 +271,7 @@ StatusCode RichLocalTargetConfig::EstimateMeanRadiusFromRawRadius( int itk, int 
 
       if(  m_HitIsSelected[i] ) {
         double rhit =  Tfm()->  CartToPolRadFromTHNum(i,itk,irad);       
-        // debug()<<"Meanradius finder  hitindex rhit radiusdiff "<<i<<"  "<<rhit<<"  "<< rhit - aRawRadius << endreq;
+        // debug()<<"Meanradius finder  hitindex rhit radiusdiff "<<i<<"  "<<rhit<<"  "<< rhit - aRawRadius << endmsg;
         
         if(fabs( rhit - aRawRadius ) < aRadiusWidth  ) {
           aSum += rhit;

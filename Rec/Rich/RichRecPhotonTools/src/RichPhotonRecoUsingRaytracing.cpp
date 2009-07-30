@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingRaytracing
  *
  * CVS Log :-
- *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.8 2009-06-11 11:57:40 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingRaytracing.cpp,v 1.9 2009-07-30 11:20:00 jonrob Exp $
  *
  * @author Claus P Buszello
  * @date 2008-01-11
@@ -95,7 +95,7 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
   // ray tracing mode
   m_mode.setAeroRefraction(true);
   m_mode.setForcedSide (true);
-  info() << "Ray tracing mode " << m_mode << endreq;
+  info() << "Ray tracing mode " << m_mode << endmsg;
 
   return sc;
 }
@@ -103,7 +103,7 @@ StatusCode PhotonRecoUsingRaytracing::initialize()
 StatusCode PhotonRecoUsingRaytracing::finalize()
 {
   // for  (int i=0;i<50;++i)
-  //  debug() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endreq;
+  //  debug() << "Iterations " << i <<": "<<m_itersA[i]<<"    "<<m_iters1[i]<<"   "<<m_iters2[i]<<endmsg;
   return PhotonRecoBase::finalize();
 }
 
@@ -160,7 +160,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                     (pixel->panel()).panel(),trSeg.avPhotonEnergy());
     if ( result < LHCb::RichTraceMode::InHPDPanel )
     {
-      debug() << "raytracing failed in " << radiator << " : " << result << endreq;
+      debug() << "raytracing failed in " << radiator << " : " << result << endmsg;
       return StatusCode::FAILURE;
     }
     locpos = m_idTool->globalToPDPanel(m_photon.detectionPoint());
@@ -235,24 +235,24 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       //break;
     }
     if (((maxiter-ii)> 5) && fabs(phil2-phi1)<.00001&& fabs(thetal2-theta1)<.00001 ){
-      //debug() << "its a trip hop" <<endreq;
+      //debug() << "its a trip hop" <<endmsg;
       ttheta = (ttheta + tthetal) / 2.;
       ii = 1;
       //break;
     }
     if (((maxiter-ii)>5) && fabs(phil3-phi1)<.00001 && fabs(thetal3-theta1)<.00001){
-      //debug() << "its a quad hop" <<endreq;
+      //debug() << "its a quad hop" <<endmsg;
       ttheta = (ttheta + tthetal + tthetal2) / 3.;
       ii = 1;
       //break;
     }
     if (((maxiter-ii)> 5) && fabs(phil4-phi1)<.00001&& fabs(thetal4-theta1)<.00001 ){
-      //debug() << "its a quint hop" <<endreq;
+      //debug() << "its a quint hop" <<endmsg;
       ii = 1; ttheta = (ttheta + tthetal + tthetal2 + thetal3) / 4.;
       //break;
     }
     if (((maxiter-ii)>5) && fabs(phil5-phi1)<.00001&& fabs(thetal5-theta1)<.00001 ){
-      //debug() << "its a sext hop" <<endreq;
+      //debug() << "its a sext hop" <<endmsg;
       ii = 1; ttheta = (ttheta + tthetal + tthetal2+ thetal3+ thetal4) / 5.;
       //break;
     }
@@ -269,7 +269,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     if ( result < LHCb::RichTraceMode::InHPDPanel ) {
       tphi   *= 0.95;
       ttheta *= 0.90;
-      debug() << "raytracing failed in " << radiator << " : " << result << endreq;
+      debug() << "raytracing failed in " << radiator << " : " << result << endmsg;
       continue;
     }
 
@@ -280,8 +280,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     const double xi = locpos.x();
 
     //       if (isnan(xi)){
-    //  debug() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endreq;
-    //  debug() <<theta0<<" "<<theta1<<" "<<ERL<<endreq;
+    //  debug() <<ii<<" nan "<<locpos.x()<<" "<<m_photon.detectionPoint().x()<<" "<<ttheta<<" "<<tphi<<endmsg;
+    //  debug() <<theta0<<" "<<theta1<<" "<<ERL<<endmsg;
     //       }
     const double R2 = (yi-my )*(yi-my ) +  ( xi-mx )*( xi-mx );
     //theta1 = atan(sqrt(R2)/ERL);
@@ -323,19 +323,19 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     }
 
 
-    //   if (ii<3) debug()<<"I used all but "<< ii << " of my iterations. Distance: "<<fabs(yi - y)<< " , "<<fabs(xi - x)<<endreq;
+    //   if (ii<3) debug()<<"I used all but "<< ii << " of my iterations. Distance: "<<fabs(yi - y)<< " , "<<fabs(xi - x)<<endmsg;
 
-    //       if (ii<10) debug()<<ii<<" "<<radiator<<endreq;
-    //       if (ii<10) debug()<<  phi0<<" "<<phi1<<" "<<tphi<<" "<<(phil+phi1)/2.<<endreq;
-    //       if (ii<10) debug()<<theta0<<" "<<theta1<<" "<<ttheta<<" "<<(thetal+theta1)/2.<<endreq;
-    //       if (ii<10) debug()<<yi<<" "<<y<<" "<<xi<<" "<<x<<" "<<my<<" "<<mx<<endreq;
+    //       if (ii<10) debug()<<ii<<" "<<radiator<<endmsg;
+    //       if (ii<10) debug()<<  phi0<<" "<<phi1<<" "<<tphi<<" "<<(phil+phi1)/2.<<endmsg;
+    //       if (ii<10) debug()<<theta0<<" "<<theta1<<" "<<ttheta<<" "<<(thetal+theta1)/2.<<endmsg;
+    //       if (ii<10) debug()<<yi<<" "<<y<<" "<<xi<<" "<<x<<" "<<my<<" "<<mx<<endmsg;
 
 
 
   }
 
   if (ii<1){
-    //debug()<<"===================================="<<endreq;
+    //debug()<<"===================================="<<endmsg;
     ttheta = (ttheta+tthetal+tthetal2+tthetal3+tthetal4+tthetal5)/6.;
   }
   const double besttheta = ttheta-m_ckFudge[radiator];

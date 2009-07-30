@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.9 2009-06-11 11:57:40 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.10 2009-07-30 11:20:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -122,24 +122,24 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 
     // information printout about configuration
     if ( m_testForUnambigPhots[*rad] )
-    {      info() << "Will test for unambiguous     " << *rad << " photons" << endreq; }
-    else { info() << "Will not test for unambiguous " << *rad << " photons" << endreq; }
+    {      info() << "Will test for unambiguous     " << *rad << " photons" << endmsg; }
+    else { info() << "Will not test for unambiguous " << *rad << " photons" << endmsg; }
 
     if ( m_rejectAmbigPhots[*rad] )
-    {      info() << "Will reject ambiguous " << *rad << " photons" << endreq; }
-    else { info() << "Will accept ambiguous " << *rad << " photons" << endreq; }
+    {      info() << "Will reject ambiguous " << *rad << " photons" << endmsg; }
+    else { info() << "Will accept ambiguous " << *rad << " photons" << endmsg; }
 
     if ( m_useAlignedMirrSegs[*rad] )
-    {      info() << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endreq;  }
-    else { info() << "Will use nominal mirrors for " << *rad << " reconstruction" << endreq; }
+    {      info() << "Will use fully alligned mirror segments for " << *rad << " reconstruction" << endmsg;  }
+    else { info() << "Will use nominal mirrors for " << *rad << " reconstruction" << endmsg; }
 
     if ( m_checkBeamPipe[*rad] )
-    {      info() << "Will check for " << *rad << " photons that hit the beam pipe" << endreq; }
+    {      info() << "Will check for " << *rad << " photons that hit the beam pipe" << endmsg; }
 
     if ( m_checkPrimMirrSegs[*rad] )
-    {      info() << "Will check for full intersecton with mirror segments for " << *rad << endreq; }
+    {      info() << "Will check for full intersecton with mirror segments for " << *rad << endmsg; }
 
-    info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endreq;
+    info() << "Minimum active " << *rad << " segment fraction = " << m_minActiveFrac[*rad] << endmsg;
 
   }
 
@@ -162,7 +162,7 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
       if ( m_nQits[Rich::Rich1Gas] < 1 ) return Error( "# Rich1Gas iterations < 1" );
       if ( m_nQits[Rich::Rich2Gas] < 1 ) return Error( "# Rich2Gas iterations < 1" );
       info() << "Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = "
-             << m_nQits << endreq;
+             << m_nQits << endmsg;
     }
   }
 
@@ -559,7 +559,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setSecondaryMirror        ( secSegment );
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Created photon " << gPhoton << endreq;
+    verbose() << "Created photon " << gPhoton << endmsg;
   }
   // --------------------------------------------------------------------------------------
 
@@ -683,13 +683,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << radiator << " best emission point correction :- " << endreq
-              << " -> Photon detection point = " << detectionPoint << endreq
-              << " -> Sph. Mirror ptns       = " << sphReflPoint1 << " " << sphReflPoint2 << endreq
-              << " -> Segment entry/exit     = " << trSeg.entryPoint() << " " << trSeg.exitPoint() << endreq
-              << " -> Segment fraction       = " << fraction << endreq
-              << " -> Emm. Ptn. Along traj   = " << alongTkFrac << endreq
-              << " -> Best Emission point    = " << emissionPoint << endreq;
+    verbose() << radiator << " best emission point correction :- " << endmsg
+              << " -> Photon detection point = " << detectionPoint << endmsg
+              << " -> Sph. Mirror ptns       = " << sphReflPoint1 << " " << sphReflPoint2 << endmsg
+              << " -> Segment entry/exit     = " << trSeg.entryPoint() << " " << trSeg.exitPoint() << endmsg
+              << " -> Segment fraction       = " << fraction << endmsg
+              << " -> Emm. Ptn. Along traj   = " << alongTkFrac << endmsg
+              << " -> Best Emission point    = " << emissionPoint << endmsg;
   }
 
   return true;

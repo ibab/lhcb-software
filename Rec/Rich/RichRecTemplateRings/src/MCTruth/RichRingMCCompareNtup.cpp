@@ -1,4 +1,4 @@
-// $Id: RichRingMCCompareNtup.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
+// $Id: RichRingMCCompareNtup.cpp,v 1.4 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ void RichRingMCCompareNtup:: RingReconNtup(){
 
   for(int irad = art->RParam()->MinRadiator(); irad <= art->RParam()->MaxRadiator();    ++irad){
     VI tkMM = art->Tfm()->getTrackIndexLimits( irad);
-    // info()<<" track num limits "<<tkMM<<endreq;
+    // info()<<" track num limits "<<tkMM<<endmsg;
     
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
       double aFoundRadius =  art->RRslt()->TrackFoundRadiusValue (itk, irad) ;
@@ -88,7 +88,7 @@ void RichRingMCCompareNtup:: RingReconNtup(){
 
             
       
-      // info()<<"Ntup filling true radius "<<irad<<" "<<itk<<"  "<<aTrueRadius<<endreq;
+      // info()<<"Ntup filling true radius "<<irad<<" "<<itk<<"  "<<aTrueRadius<<endmsg;
       
 
       rgTuple->column("Radiator", irad);
@@ -184,13 +184,13 @@ void RichRingMCCompareNtup::RingGlobalReconNtup(){
              }else {
 
                warning()<<"RichRingRec: MCGlobalNtupRecon: Unknown track segment  number for RichRecTrack in radiator "
-                             <<itk<<"  "<<irad<<endreq;
+                             <<itk<<"  "<<irad<<endmsg;
  
              }
              
              
            }else {
-             warning()<<"RichRingRec: MCGlobalNtupRecon: Unknown best radiator number for RichRecTrack  "<<irad<<endreq;
+             warning()<<"RichRingRec: MCGlobalNtupRecon: Unknown best radiator number for RichRecTrack  "<<irad<<endmsg;
              
            }
            

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.35 2009-06-11 12:41:07 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.36 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -82,14 +82,14 @@ MCTruthTool::trackToMCPLinks( const LHCb::Track * track ) const
   const std::string & loc = ( track ? objectLocation(track->parent()) : m_trLoc );
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "trackToMCPLinks for Track " << track->key()
-              << " at TES '" << loc << "'" << endreq;
+              << " at TES '" << loc << "'" << endmsg;
 
   // See if linker has already been loaded for this TES location
   TrackLocToMCPs::iterator iLinks = m_trToMCPLinks.find(loc);
   if ( m_trToMCPLinks.end() == iLinks )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> failed to find linker for this location. Attempting to load one" << endreq;
+      verbose() << " -> failed to find linker for this location. Attempting to load one" << endmsg;
 
     // try and load a new linker for this location
     MCTruthTool::TrackToMCP * linker = trackToMCPLinks(loc);
@@ -97,7 +97,7 @@ MCTruthTool::trackToMCPLinks( const LHCb::Track * track ) const
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "  -> No linker availanble for Track TES container. Returning default at "
-                  << m_trLoc << endreq;
+                  << m_trLoc << endmsg;
       linker = trackToMCPLinks(m_trLoc);
     }
 
@@ -117,13 +117,13 @@ MCTruthTool::trackToMCPLinks( const std::string & loc ) const
   if ( m_trToMCPLinks.end() == iLinks )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Attempting to load TrackToMCP Linker for '" << loc << "'" << endreq;
+      verbose() << " -> Attempting to load TrackToMCP Linker for '" << loc << "'" << endmsg;
 
     MCTruthTool::TrackToMCP * linker = new TrackToMCP( evtSvc(), loc );
     if ( !linker->direct() )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "  -> Linker for Tracks to MCParticles not found" << endreq;
+        verbose() << "  -> Linker for Tracks to MCParticles not found" << endmsg;
       // delete object and set to NULL, to force retrying next time this method is called.
       delete linker;
       linker = NULL;
@@ -132,7 +132,7 @@ MCTruthTool::trackToMCPLinks( const std::string & loc ) const
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "  -> Found " << linker->direct()->relations().size()
-                  << " Track to MCParticle associations" << endreq;
+                  << " Track to MCParticle associations" << endmsg;
       // Save this linker in the map
       m_trToMCPLinks[loc] = linker;
     }
@@ -153,13 +153,13 @@ MCTruthTool::mcSegToRingLinks() const
     const std::string & loc = LHCb::MCRichSegmentLocation::Default+"2MCCKRings";
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Attempting to load MCRichSegToMCCKRing Linker for '"
-              << loc << "'" << endreq;
+              << loc << "'" << endmsg;
     m_mcSegToRingLinks = new MCRichSegToMCCKRing( evtSvc(), loc );
     if ( !m_mcSegToRingLinks->direct() )
     {
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Linker for MCRichTracks to MCCKRings not found for '"
-                << loc << "'" << endreq;
+                << loc << "'" << endmsg;
       // delete object and set to NULL, to force retrying next time this method is called.
       delete m_mcSegToRingLinks;
       m_mcSegToRingLinks = NULL;
@@ -167,7 +167,7 @@ MCTruthTool::mcSegToRingLinks() const
     else if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << m_mcSegToRingLinks->direct()->relations().size()
-              << " Track to MCRichTrack->MCCKRings associations" << endreq;
+              << " Track to MCRichTrack->MCCKRings associations" << endmsg;
     }
   }
   return m_mcSegToRingLinks;
@@ -185,14 +185,14 @@ MCTruthTool::mcParticle( const LHCb::Track * track,
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << range.size() << " association(s) for Track " << track->key()
-              << " " << track->type() << " " << track->history() << endreq;
+              << " " << track->type() << " " << track->history() << endmsg;
     }
     const LHCb::MCParticle * mcp = NULL;
     double bestWeight = -1;
     for ( TrToMCTable::Range::iterator iMC = range.begin(); iMC != range.end(); ++iMC )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << " -> Found MCParticle " << iMC->to() << " weight=" << iMC->weight() << endreq;
+        debug() << " -> Found MCParticle " << iMC->to() << " weight=" << iMC->weight() << endmsg;
       if ( iMC->weight() > minWeight && iMC->weight() > bestWeight )
       {
         bestWeight = iMC->weight();
@@ -203,7 +203,7 @@ MCTruthTool::mcParticle( const LHCb::Track * track,
   }
   // If get here MC association failed
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "No MC association available for Tracks" << endreq;
+    debug() << "No MC association available for Tracks" << endmsg;
   return NULL;
 }
 
@@ -218,7 +218,7 @@ MCTruthTool::mcParticle( const LHCb::RichRecTrack * richTrack,
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "RichRecTrack " << richTrack->key()
-              <<  " has NULL pointer to parent" << endreq;
+              <<  " has NULL pointer to parent" << endmsg;
     }
     return NULL;
   }
@@ -229,14 +229,14 @@ MCTruthTool::mcParticle( const LHCb::RichRecTrack * richTrack,
   {
     // Track
     debug() << "RichRecTrack " << richTrack->key()
-            << " has parent track Track " << offTrack->key() << endreq;
+            << " has parent track Track " << offTrack->key() << endmsg;
     return mcParticle( offTrack, minWeight );
   }
   else if ( const LHCb::MCParticle * mcPart = dynamic_cast<const LHCb::MCParticle*>(obj) )
   {
     // MCParticle
     debug() << "RichRecTrack " << richTrack->key()
-            << " has parent track MCParticle " << mcPart->key() << endreq;
+            << " has parent track MCParticle " << mcPart->key() << endmsg;
     return mcPart;
   }
   else
@@ -328,7 +328,7 @@ MCTruthTool::trueCherenkovPhoton( const LHCb::RichRecSegment * segment,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Testing RichRecSegment " << segment->key()
-            << " and RichRecPixel " << pixel->key() << endreq;
+            << " and RichRecPixel " << pixel->key() << endmsg;
   }
 
   const LHCb::MCParticle * mcPart = trueRecPhoton( segment, pixel );
@@ -516,18 +516,18 @@ MCTruthTool::trueOpticalPhoton( const LHCb::RichRecSegment * segment,
   if ( mcPart )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Finding MCRichOpticalPhotons for pixel " << pixel->hpdPixelCluster() << endreq;
+      verbose() << "Finding MCRichOpticalPhotons for pixel " << pixel->hpdPixelCluster() << endmsg;
 
     // Now find associated MCRichOpticalPhoton
     const SmartRefVector<LHCb::MCRichHit> & hits = m_truth->mcRichHits(mcPart);
     if ( msgLevel(MSG::VERBOSE) )
-    { verbose() << "Found " << hits.size() << " MCRichHits" << endreq; }
+    { verbose() << "Found " << hits.size() << " MCRichHits" << endmsg; }
     for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = hits.begin();
           iHit != hits.end(); ++iHit )
     {
       if ( !(*iHit) ) continue;
       if ( msgLevel(MSG::VERBOSE) )
-      { verbose() << " -> Found mc hit in " << (*iHit)->radiator() << endreq; }
+      { verbose() << " -> Found mc hit in " << (*iHit)->radiator() << endmsg; }
       // compare mc hit id to pixel id(s)
       for ( LHCb::RichSmartID::Vector::const_iterator iS = pixel->hpdPixelCluster().smartIDs().begin();
             iS != pixel->hpdPixelCluster().smartIDs().end(); ++iS )
@@ -536,14 +536,14 @@ MCTruthTool::trueOpticalPhoton( const LHCb::RichRecSegment * segment,
                                         (*iHit)->sensDetID() :
                                         (*iHit)->sensDetID().pixelID() );
         if ( msgLevel(MSG::VERBOSE) )
-        { verbose() << "  -> " << (*iHit)->radiator() << " MCRichHit " << hitid << endreq; }
+        { verbose() << "  -> " << (*iHit)->radiator() << " MCRichHit " << hitid << endmsg; }
         if ( (*iS) == hitid )
         {
           // check radiator type
           if ( segment->trackSegment().radiator() == (*iHit)->radiator() )
           {
             if ( msgLevel(MSG::VERBOSE) )
-            { verbose() << "   -> hit selected" << endreq; }
+            { verbose() << "   -> hit selected" << endmsg; }
             photons.push_back( m_truth->mcOpticalPhoton(*iHit) );
           }
         } // same as hit ID
@@ -574,14 +574,14 @@ MCTruthTool::mcCKRing( const LHCb::RichRecSegment * segment ) const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Found " << range.size() << " MCCKRing association(s) for MCRichTrack " << mcSeg->key()
-              << endreq;
+              << endmsg;
     }
     const LHCb::RichRecRing * ring(NULL);
     double bestWeight = -999999;
     for ( MCRichSegToMCCKRTable::Range::iterator iMC = range.begin(); iMC != range.end(); ++iMC )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << " Found " << iMC->to() << " weight=" << iMC->weight() << endreq;
+        debug() << " Found " << iMC->to() << " weight=" << iMC->weight() << endmsg;
       if ( iMC->weight() > bestWeight )
       {
         bestWeight = iMC->weight();
@@ -592,7 +592,7 @@ MCTruthTool::mcCKRing( const LHCb::RichRecSegment * segment ) const
   }
   // If get here MC association failed
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "No MC association available for MCRichSegment -> MCCKRings" << endreq;
+    debug() << "No MC association available for MCRichSegment -> MCCKRings" << endmsg;
   return NULL;
 }
 

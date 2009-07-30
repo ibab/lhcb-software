@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.8 2007-02-02 10:07:13 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.9 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -86,7 +86,7 @@ StatusCode TimeMonitor::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << m_name << " : Time = " << time << " ms for " << nPIDs << " PIDs. "
-            << timePerPID << " ms/PID" << endreq;
+            << timePerPID << " ms/PID" << endmsg;
   }
 
   // increment counters
@@ -121,7 +121,7 @@ StatusCode TimeMonitor::finalize()
   const double evtTime = ( m_nEvents>0 ? m_totTime/static_cast<double>(m_nEvents) : 0 );
   const double pidTime = ( m_nPIDs>0   ? m_totTime/static_cast<double>(m_nPIDs)   : 0 );
   info() << "Average timing : " << evtTime << " ms/event, "
-         << pidTime << " ms/PID" << endreq;
+         << pidTime << " ms/PID" << endmsg;
 
   // return
   return RichRecHistoAlgBase::finalize();

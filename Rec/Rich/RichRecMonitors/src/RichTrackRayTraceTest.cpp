@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : TrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.7 2008-01-04 16:15:15 jonrob Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.8 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -57,7 +57,7 @@ StatusCode TrackRayTraceTest::initialize()
 // Main execution
 StatusCode TrackRayTraceTest::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -68,7 +68,7 @@ StatusCode TrackRayTraceTest::execute()
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endreq;
+            << " RichRecSegments" << endmsg;
   }
 
   // Iterate over segments
@@ -77,7 +77,7 @@ StatusCode TrackRayTraceTest::execute()
   {
     LHCb::RichRecSegment * segment = *iSeg;
 
-    debug() << "Looking at RichRecSegment " << segment->key() << endreq;
+    debug() << "Looking at RichRecSegment " << segment->key() << endmsg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
@@ -129,13 +129,13 @@ void TrackRayTraceTest::testRayTrace( const LHCb::RichTraceMode traceMode,
     mT << rich << " " << traceMode;
     const Gaudi::XYZPoint & gloP = photon.detectionPoint();
     const Gaudi::XYZPoint   locP = m_idTool->globalToPDPanel(gloP);
-    debug() << mT.str() << " OK : global=" << gloP << " local=" << locP << endreq;
+    debug() << mT.str() << " OK : global=" << gloP << " local=" << locP << endmsg;
     plot2D( locP.X(), locP.Y(), mT.str(),
             xMinPDLoc[rich], xMaxPDLoc[rich], yMinPDLoc[rich], yMaxPDLoc[rich], 200, 200 );
   }
   else
   {
-    debug() << rich << " " << traceMode << " FAILED" << endreq;
+    debug() << rich << " " << traceMode << " FAILED" << endmsg;
   }
 
 }

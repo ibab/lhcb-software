@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.2 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.3 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -59,15 +59,15 @@ StatusCode GeomEffFixedValue::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
   acquireTool( "RichRecGeometry", m_geomTool   );
 
-  info() << "Fixed geometrical efficiencies (aero/rich1Gas/rich2Gas) : " << m_fixedValue << endreq
-         << "Fixed scattered efficiency                              : " << m_fixedScatValue << endreq;
+  info() << "Fixed geometrical efficiencies (aero/rich1Gas/rich2Gas) : " << m_fixedValue << endmsg
+         << "Fixed scattered efficiency                              : " << m_fixedScatValue << endmsg;
   if ( m_checkBoundaries )
   {
-    info() << "Will take into account average HPD panel boundaries" << endreq;
+    info() << "Will take into account average HPD panel boundaries" << endmsg;
   }
   else
   {
-    info() << "Will assume infinite HPD panel boundaries" << endreq;
+    info() << "Will assume infinite HPD panel boundaries" << endmsg;
   }
 
   return sc;

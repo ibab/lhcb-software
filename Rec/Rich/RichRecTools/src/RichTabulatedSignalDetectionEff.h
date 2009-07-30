@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.15 2008-02-15 10:21:16 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.16 2009-07-30 11:23:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -107,7 +107,7 @@ namespace Rich
        */
       inline const DeRichHPD * deHPD( const LHCb::RichSmartID hpdID ) const
       {
-        //info() << "Getting HPD in " << hpdID.rich() << " " << hpdID.panel() << endreq;
+        //info() << "Getting HPD in " << hpdID.rich() << " " << hpdID.panel() << endmsg;
         return (m_hpdPanels[hpdID.rich()][hpdID.panel()])->deHPD(hpdID);
       }
 

@@ -1,4 +1,4 @@
-// $Id: RichRecPIDTupleAlg.cpp,v 1.1 2007-08-09 16:17:58 jonrob Exp $
+// $Id: RichRecPIDTupleAlg.cpp,v 1.2 2009-07-30 11:18:33 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -64,7 +64,7 @@ StatusCode PIDTupleAlg::execute()
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endreq;
+            << " RichRecSegments" << endmsg;
   }
 
   // Load the associations
@@ -125,7 +125,7 @@ StatusCode PIDTupleAlg::fillTrackTable()
   {
     // try and load this location
     const LHCb::RichPIDs* pids = get<LHCb::RichPIDs>( *iLoc );
-    verbose() << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endreq;
+    verbose() << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endmsg;
     if ( !pids ) continue;
     // loop over RichPIDs
     for ( LHCb::RichPIDs::const_iterator iPID = pids->begin();
@@ -137,7 +137,7 @@ StatusCode PIDTupleAlg::fillTrackTable()
       if ( !m_trSelector->trackSelected(track) ) continue;
       // associated MC
       const LHCb::MCParticle * mcPart = m_richRecMCTruth->mcParticle( track );
-      verbose() << " -> Track " << track << " MCParticle " << mcPart << endreq;
+      verbose() << " -> Track " << track << " MCParticle " << mcPart << endmsg;
       // fill map
       if ( mcPart )
       {

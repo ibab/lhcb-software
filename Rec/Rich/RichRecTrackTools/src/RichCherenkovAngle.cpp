@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.5 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.6 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -67,7 +67,7 @@ StatusCode CherenkovAngle::initialize()
   m_nomCK[Rich::Rich2Gas]  = acos(1.0/refRich2Gas);
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }

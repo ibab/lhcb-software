@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.19 2009-02-26 21:57:10 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.20 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -62,7 +62,7 @@ StatusCode PixelPositionMonitor::initialize()
 // Main execution
 StatusCode PixelPositionMonitor::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -73,7 +73,7 @@ StatusCode PixelPositionMonitor::execute()
     if ( pixelCreator()->newPixels().isFailure() )
       return Error( "Problem creating RichRecPixels" );
     debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endreq;
+            << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   // Histogramming
@@ -84,7 +84,7 @@ StatusCode PixelPositionMonitor::execute()
   DAQ::PDMap pdMap;
 
   // Iterate over pixels
-  debug() << "All Pixels " << richPixels()->size() << " :-" << endreq;
+  debug() << "All Pixels " << richPixels()->size() << " :-" << endmsg;
   std::vector<unsigned int> nPixs( Rich::NRiches, 0 );
   for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
         iPix != richPixels()->end();
@@ -121,20 +121,20 @@ StatusCode PixelPositionMonitor::execute()
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  -> Pixel            " << pixel->hpdPixelCluster() << endreq
-                << "     global           " << gPos << endreq
-                << "     local            " << lPos << endreq;
+      verbose() << "  -> Pixel            " << pixel->hpdPixelCluster() << endmsg
+                << "     global           " << gPos << endmsg
+                << "     local            " << lPos << endmsg;
       if ( rich == Rich::Rich1)
       {
-        verbose() << "     local Aerogel    " << pixel->radCorrLocalPositions().position(Rich::Aerogel) << endreq
-                  << "     local Rich1Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich1Gas) << endreq;
+        verbose() << "     local Aerogel    " << pixel->radCorrLocalPositions().position(Rich::Aerogel) << endmsg
+                  << "     local Rich1Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich1Gas) << endmsg;
       }
       else
       {
-        verbose() << "     local Rich2Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich2Gas) << endreq;
+        verbose() << "     local Rich2Gas   " << pixel->radCorrLocalPositions().position(Rich::Rich2Gas) << endmsg;
       }
-      verbose() << "     HPD centre       " << hpdGlo << endreq
-                << "     local HPD centre " << hpdLoc << endreq;
+      verbose() << "     HPD centre       " << hpdGlo << endmsg
+                << "     local HPD centre " << hpdLoc << endmsg;
     }
 
     // map of hits in each HPD
@@ -294,9 +294,9 @@ StatusCode PixelPositionMonitor::execute()
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Global : Pixel = " << (*iHit)->entry()
-                      << " : MC HPD window = " << mcPoint << endreq
+                      << " : MC HPD window = " << mcPoint << endmsg
                       << "Local  : Pixel = " << m_idTool->globalToPDPanel((*iHit)->entry())
-                      << " : MC HPD window = " << mcPointLoc << endreq;
+                      << " : MC HPD window = " << mcPointLoc << endmsg;
           }
         }
         // MC to rec position on HPD anode
@@ -320,7 +320,7 @@ StatusCode PixelPositionMonitor::execute()
 
   } // loop over all pixels
 
-  debug() << "RICH1 Pixels :-" << endreq;
+  debug() << "RICH1 Pixels :-" << endmsg;
   unsigned int nR1(0);
   IPixelCreator::PixelRange range1 = pixelCreator()->range(Rich::Rich1);
   for ( IPixelCreator::PixelRange::const_iterator iPix = range1.begin();
@@ -329,13 +329,13 @@ StatusCode PixelPositionMonitor::execute()
     ++nR1;
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endreq;
+      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endmsg;
     }
   }
   if ( nR1 != nPixs[Rich::Rich1] )
     Error("Mis-match in RICH1 pixels between full container and RICH1 iterators");
 
-  debug() << "RICH2 Pixels :-" << endreq;
+  debug() << "RICH2 Pixels :-" << endmsg;
   unsigned int nR2(0);
   IPixelCreator::PixelRange range2 = pixelCreator()->range(Rich::Rich2);
   for ( IPixelCreator::PixelRange::const_iterator iPix = range2.begin();
@@ -344,7 +344,7 @@ StatusCode PixelPositionMonitor::execute()
     ++nR2;
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endreq;
+      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endmsg;
     }
   }
   if ( nR2 != nPixs[Rich::Rich2] )
@@ -377,7 +377,7 @@ StatusCode PixelPositionMonitor::execute()
       Gaudi::XYZPoint tmpP;
       if ( !m_idTool->globalPosition(*iS,tmpP) ) continue;
       const Gaudi::XYZVector hitP = m_idTool->globalToPDPanel(tmpP) - hpdLoc;
-      verbose() << "Hit " << (*iS) << " " << hitP << endreq;
+      verbose() << "Hit " << (*iS) << " " << hitP << endmsg;
       plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*Gaudi::Units::mm,
               40*Gaudi::Units::mm, -40*Gaudi::Units::mm, 40*Gaudi::Units::mm, 32, 32 );
     }

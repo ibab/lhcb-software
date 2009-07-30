@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.3 2009-07-09 11:21:25 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.4 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -66,7 +66,7 @@ StatusCode SegmentCreator::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endreq;
+    debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endmsg;
   }
 
   acquireTool( "RichExpectedTrackSignal", m_signal );
@@ -98,11 +98,11 @@ StatusCode SegmentCreator::finalize()
     const StatDivFunctor occ("%7.2f +-%6.2f");
 
     // Print out final stats
-    debug() << "-------------------------------------------------------------------------------" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts)  << "  Aerogel  segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Rich1Gas],m_Nevts) << "  Rich1Gas segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Rich2Gas],m_Nevts) << "  Rich2Gas segments/event" << endreq
-            << "-------------------------------------------------------------------------------" << endreq;
+    debug() << "-------------------------------------------------------------------------------" << endmsg
+            << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts)  << "  Aerogel  segments/event" << endmsg
+            << " Created on average " << occ(m_segCount[Rich::Rich1Gas],m_Nevts) << "  Rich1Gas segments/event" << endmsg
+            << " Created on average " << occ(m_segCount[Rich::Rich2Gas],m_Nevts) << "  Rich2Gas segments/event" << endmsg
+            << "-------------------------------------------------------------------------------" << endmsg;
   }
 
   // Execute base class method
@@ -127,7 +127,7 @@ void SegmentCreator::handle ( const Incident& incident )
               << " RichRecSegments : Aerogel="
               << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
               << " Rich1Gas=" << m_segCount[Rich::Rich1Gas]-m_segCountLast[Rich::Rich1Gas]
-              << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endreq;
+              << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endmsg;
     }
   }
 }
@@ -191,7 +191,7 @@ LHCb::RichRecSegments * SegmentCreator::richSegments() const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Found " << m_segments->size() << " pre-existing RichRecSegments in TES at "
-                << m_richRecSegmentLocation << endreq;
+                << m_richRecSegmentLocation << endmsg;
       }
 
     }

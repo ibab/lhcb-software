@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.17 2009-06-11 11:13:41 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.18 2009-07-30 11:21:31 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -130,7 +130,7 @@ IStereoFitter::Result
 StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                    const IStereoFitter::Configuration & config ) const
 {
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"Stereo Fitter"<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Stereo Fitter"<<endmsg;
 
   if ( NULL == richSegment ) return Result(Result::Failed);
 
@@ -246,7 +246,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
           }
         }
         const int ngoodPhot = goodPhotons.size();
-        debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
+        debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
 
         m_RadiusGuess = 0;
         if ( ngoodPhot > 0 )
@@ -302,7 +302,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
           const double xphot = recRing.ringPoints()[index].localPosition().X();
           const double yphot = recRing.ringPoints()[index].localPosition().Y();
           const double sep   = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
-          debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endreq;
+          debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endmsg;
           if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
         }
         goodPhotons = goodPhotonsTmp;
@@ -310,7 +310,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
       //filter according to number of photons
       int ngoodPhot=goodPhotons.size();
-      debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
+      debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
       if ( ngoodPhot >= config.minRingPhotons &&
            ngoodPhot <  s_NmaxFitPhot )
       {
@@ -356,7 +356,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       }
       else {
         if(msgLevel(MSG::DEBUG)) debug()<<"Too many or to few photons in stereo fitter"
-                                        <<", ngoodPhot="<<ngoodPhot<<endreq;
+                                        <<", ngoodPhot="<<ngoodPhot<<endmsg;
         break;
       }
       ++n_iter;

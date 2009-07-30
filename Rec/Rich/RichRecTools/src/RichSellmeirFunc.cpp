@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.24 2008-09-12 15:54:07 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.25 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -58,7 +58,7 @@ StatusCode SellmeirFunc::initialize()
 
 StatusCode SellmeirFunc::umsUpdate()
 {
-  info() << "Sellmeir parameter update triggered" << endreq;
+  info() << "Sellmeir parameter update triggered" << endmsg;
 
   // Retrieve square of particle masses
   m_particleMassSq[Rich::Electron] = m_partProp->massSq( Rich::Electron );

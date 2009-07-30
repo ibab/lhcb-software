@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::FunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.15 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.16 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -56,9 +56,9 @@ StatusCode FunctionalRayleighScatter::initialize()
   m_AeroClarity = Rich1DE->param<double>( "AerogelClarity" )/Gaudi::Units::cm;
 
   // Informational Printout
-  debug() << " Using analytic implementation"   << endreq
-          << " eV to mm conversion factor   = " << m_eVToMicron << endreq
-          << " Aerogel clarity              = " << m_AeroClarity << endreq;
+  debug() << " Using analytic implementation"   << endmsg
+          << " eV to mm conversion factor   = " << m_eVToMicron << endmsg
+          << " Aerogel clarity              = " << m_AeroClarity << endmsg;
 
   return sc;
 }

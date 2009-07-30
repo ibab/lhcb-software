@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.27 2008-08-15 14:43:33 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.28 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -67,7 +67,7 @@ StatusCode RayTraceCherenkovCone::initialize()
   acquireTool( "RichSmartIDTool",    m_smartIDTool, 0, true );
   acquireTool( "RichRecGeometry",    m_geomTool );
 
-  info() << "# ray tracing attempts before bailout = " << m_nBailout << endreq;
+  info() << "# ray tracing attempts before bailout = " << m_nBailout << endmsg;
 
   return sc;
 }
@@ -137,7 +137,7 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
                                   const bool forceTracing ) const
 {
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
-  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
+  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endmsg;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
   if ( !ring->richRecSegment() )
   {
@@ -158,12 +158,12 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Ray tracing " << rich << " CK cone :-" << endreq;
-      debug() << " -> emissionPoint = " << emissionPoint << endreq;
-      debug() << " -> direction     = " << ring->richRecSegment()->trackSegment().bestMomentum() << endreq;
-      debug() << " -> CK theta      = " << ring->radius() << endreq;
-      debug() << " -> Av. photon en = " << ring->richRecSegment()->trackSegment().avPhotonEnergy() << endreq;
-      debug() << " -> " << mode << endreq;
+      debug() << "Ray tracing " << rich << " CK cone :-" << endmsg;
+      debug() << " -> emissionPoint = " << emissionPoint << endmsg;
+      debug() << " -> direction     = " << ring->richRecSegment()->trackSegment().bestMomentum() << endmsg;
+      debug() << " -> CK theta      = " << ring->radius() << endmsg;
+      debug() << " -> Av. photon en = " << ring->richRecSegment()->trackSegment().avPhotonEnergy() << endmsg;
+      debug() << " -> " << mode << endmsg;
     }
 
     // cos and sin values
@@ -217,7 +217,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                   const bool forceTracing ) const
 {
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
-  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
+  //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endmsg;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
   ring->ringPoints().clear();
 
@@ -235,11 +235,11 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Ray tracing " << rich << " CK cone :-" << endreq;
-      debug() << " -> emissionPoint = " << emissionPoint << endreq;
-      debug() << " -> direction     = " << direction << endreq;
-      debug() << " -> CK theta      = " << ckTheta << endreq;
-      debug() << " -> " << mode << endreq;
+      debug() << "Ray tracing " << rich << " CK cone :-" << endmsg;
+      debug() << " -> emissionPoint = " << emissionPoint << endmsg;
+      debug() << " -> direction     = " << direction << endmsg;
+      debug() << " -> CK theta      = " << ckTheta << endmsg;
+      debug() << " -> " << mode << endmsg;
     }
 
     // which rich and radiator
@@ -308,11 +308,11 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Ray tracing " << rich << " CK cone :-" << endreq;
-      debug() << " -> emissionPoint = " << emissionPoint << endreq;
-      debug() << " -> direction     = " << direction << endreq;
-      debug() << " -> CK theta      = " << ckTheta << endreq;
-      debug() << " -> " << mode << endreq;
+      debug() << "Ray tracing " << rich << " CK cone :-" << endmsg;
+      debug() << " -> emissionPoint = " << emissionPoint << endmsg;
+      debug() << " -> direction     = " << direction << endmsg;
+      debug() << " -> CK theta      = " << ckTheta << endmsg;
+      debug() << " -> " << mode << endmsg;
     }
 
     // cos and sin values

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.1.1.1 2007-11-26 17:25:47 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.2 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -71,7 +71,7 @@ StatusCode SimplePhotonPredictor::initialize()
     trad.resize(8,' ');
     info() << trad << " : Sep. range     " 
            << boost::format("%5.1f") % m_minROI[rad] << " -> "
-           << boost::format("%5.1f") % m_maxROI[rad] << " mm" << endreq;
+           << boost::format("%5.1f") % m_maxROI[rad] << " mm" << endmsg;
   }
 
   return sc;
@@ -89,18 +89,18 @@ StatusCode SimplePhotonPredictor::finalize()
     const PoissonEffFunctor occ("%10.2f +-%7.2f");
 
     // printout stats
-    info() << "======================================================================" << endreq
-           << "           Pixel/Segment combination selection summary : " << endreq
+    info() << "======================================================================" << endmsg
+           << "           Pixel/Segment combination selection summary : " << endmsg
            << "  Aerogel   : Selected "
            << occ(m_Nselected[Rich::Aerogel],m_Nselected[Rich::Aerogel]+m_Nreject[Rich::Aerogel])
-           << " % of possible candidates" << endreq
+           << " % of possible candidates" << endmsg
            << "  Rich1Gas  : Selected "
            << occ(m_Nselected[Rich::Rich1Gas],m_Nselected[Rich::Rich1Gas]+m_Nreject[Rich::Rich1Gas])
-           << " % of possible candidates" << endreq
+           << " % of possible candidates" << endmsg
            << "  Rich2Gas  : Selected "
            << occ(m_Nselected[Rich::Rich2Gas],m_Nselected[Rich::Rich2Gas]+m_Nreject[Rich::Rich2Gas])
-           << " % of possible candidates" << endreq
-           << "======================================================================" << endreq;
+           << " % of possible candidates" << endmsg
+           << "======================================================================" << endmsg;
   }
 
   // Execute base class method

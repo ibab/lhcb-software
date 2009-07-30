@@ -1,4 +1,4 @@
-// $Id: RichTargetDataTool.cpp,v 1.2 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichTargetDataTool.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -99,7 +99,7 @@ void RichTargetDataTool::StoreTargetTrackData(int ns, VC th, VI ti, VD mh ){
   // info() <<" Number of track segments in this radiator  "<<ns<<endmsg;
   //  for (int i=0; i<ns; ++i ) {
   //  info()<<" Rich track index coordxyz in Hpd Mom "<<i<<"  "<< th[i].x()<<"  "<<th[i].y()<<"  "
-  //        <<th[i].z()<<"  "<<mh[i]<<endreq;
+  //        <<th[i].z()<<"  "<<mh[i]<<endmsg;
   //                                                      
   //  }
   

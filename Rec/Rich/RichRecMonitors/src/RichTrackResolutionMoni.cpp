@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.14 2008-11-26 13:42:38 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.15 2009-07-30 11:18:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -57,7 +57,7 @@ StatusCode TrackResolutionMoni::initialize()
 // Main execution
 StatusCode TrackResolutionMoni::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -69,7 +69,7 @@ StatusCode TrackResolutionMoni::execute()
       return Error( "Problem creating RichRecTracks" );
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endreq;
+            << " RichRecSegments" << endmsg;
   }
 
   // Tally number of segments
@@ -111,7 +111,7 @@ StatusCode TrackResolutionMoni::execute()
     ++nSegs[rad]; // count segments per radiator
 
     verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()
-              << " RichRecSegment in " << rad << endreq;
+              << " RichRecSegment in " << rad << endmsg;
 
     // Ray traced hit point on PDPanel
     const Gaudi::XYZPoint & pdPoint = segment->pdPanelHitPoint();

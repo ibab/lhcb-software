@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.19 2009-06-12 09:16:51 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.20 2009-07-30 11:23:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -87,13 +87,13 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
   m_traceModeRad[Rich::Rich1Gas] = tmpMode;
   m_traceModeRad[Rich::Rich2Gas] = tmpMode;
-  debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
-  debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
-  debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
+  debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+  debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+  debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
   // Informational Printout
-  debug() << " HPD quartz window efficiency = " << qEff << endreq
-          << " Digitisation pedestal eff.   = " << pLos << endreq;
+  debug() << " HPD quartz window efficiency = " << qEff << endmsg
+          << " Digitisation pedestal eff.   = " << pLos << endmsg;
 
   return sc;
 }
@@ -110,7 +110,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   // Cherenkov theta for this segment/hypothesis combination
   // using emitted photon spectra (to avoid a circular information dependency)
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, hypo, true );
-  debug() << " -> Making new CK ring : theta = " << ckTheta << endreq;
+  debug() << " -> Making new CK ring : theta = " << ckTheta << endmsg;
   if ( ckTheta > 0 )
   {
     // make a ring object
@@ -144,7 +144,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Computing detection efficiency for " << segment << " " << hypo
-            << " photon energy=" << energy << endreq;
+            << " photon energy=" << energy << endmsg;
 
   // Get a (local) ring for this segment/hypo
   if ( segment != m_last_segment || m_last_hypo != hypo )
@@ -154,7 +154,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     m_last_hypo    = hypo;
     m_last_ring    = ckRing( segment, hypo );
   }
-  if ( !m_last_ring ) { debug() << " -> No Ring" << endreq; return 0; }
+  if ( !m_last_ring ) { debug() << " -> No Ring" << endmsg; return 0; }
 
   typedef Rich::Map<const LHCb::RichSmartID,unsigned int> HPDCount;
   typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
@@ -179,7 +179,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   }
   if ( msgLevel(MSG::DEBUG) )
     debug() << " -> Found " << totalInHPD << " usable ring points out of "
-            << m_last_ring->ringPoints().size() << endreq;
+            << m_last_ring->ringPoints().size() << endmsg;
   if ( 0 == totalInHPD ) { return 0; }
 
   // Get weighted average HPD Q.E.
@@ -254,7 +254,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << " -> Av. HPD Q.E. = " << hpdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
-            << " Sec. Mirr. Refl. " << secMirrRefl << endreq;
+            << " Sec. Mirr. Refl. " << secMirrRefl << endmsg;
 
   // return overall efficiency
   return m_qEffPedLoss * hpdQEEff * primMirrRefl * secMirrRefl;

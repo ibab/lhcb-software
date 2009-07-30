@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiAvHPD
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.2 2009-06-11 11:05:37 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiAvHPD.cpp,v 1.3 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -71,7 +71,7 @@ void BackgroundEstiAvHPD::computeBackgrounds() const
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Computing backgrounds using ALL " 
-            << richTracks()->size() << " tracks" << endreq; 
+            << richTracks()->size() << " tracks" << endmsg; 
 
   // General init
   richInit();
@@ -93,7 +93,7 @@ void BackgroundEstiAvHPD::computeBackgrounds( const LHCb::RichRecTrack::Vector &
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Computing backgrounds using " 
-            << tracks.size() << " SELECTED tracks" << endreq; 
+            << tracks.size() << " SELECTED tracks" << endmsg; 
 
   // General init
   richInit();
@@ -115,7 +115,7 @@ void BackgroundEstiAvHPD::computeBackgrounds( const LHCb::RichRecTrack * track )
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Computing backgrounds using SINGLE track : key=" << track->key()
-            << endreq;
+            << endmsg;
 
   // General init
   richInit();
@@ -217,14 +217,14 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
   for ( Rich::Detectors::const_iterator iRich = detectors().begin();
         iRich != detectors().end(); ++iRich )
   {
-    //verbose() << "Computing HPD backgrounds in " << *iRich << endreq;
+    //verbose() << "Computing HPD backgrounds in " << *iRich << endmsg;
 
     int iter = 1;
     bool cont = true;
     double rnorm = 0.0;
     while ( cont )
     {
-      //verbose() << " -> Iteration " << iter << endreq;
+      //verbose() << " -> Iteration " << iter << endmsg;
 
       int nBelow(0), nAbove(0);
       double tBelow = 0.0;
@@ -241,7 +241,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
           const double exp = (m_expPDsignals[*iRich])[pd];
           // First iteration, just set background for this HPD to the difference
           // between the observed and and expected number of hits in the HPD
-          //verbose() << "  -> HPD " << pd << " obs. = " << obs << " exp. = " << exp << endreq;
+          //verbose() << "  -> HPD " << pd << " obs. = " << obs << " exp. = " << exp << endmsg;
           bkg = obs - exp;
         }
         else
@@ -265,18 +265,18 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
 
       } // end loop over signal PDs
 
-      //verbose() << " -> Above = " << nAbove << " Below = " << nBelow << endreq;
+      //verbose() << " -> Above = " << nAbove << " Below = " << nBelow << endmsg;
 
       if ( nBelow > 0 && nAbove > 0 )
       {
         // we have some HPDs above and below expectation
         // calculate the amount of signal below per above HPD
         rnorm = tBelow / ( static_cast<double>(nAbove) );
-        //verbose() << "  -> Correction factor per HPD above = " << rnorm << endreq;
+        //verbose() << "  -> Correction factor per HPD above = " << rnorm << endmsg;
       }
       else
       {
-        //verbose() << "  -> Aborting iterations" << endreq;
+        //verbose() << "  -> Aborting iterations" << endmsg;
         cont = false;
       }
       if ( iter > m_maxBkgIterations ) cont = false;
@@ -304,7 +304,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Overall backgrounds RICH1/2 : " << bckEstimate << endreq;
+    debug() << "Overall backgrounds RICH1/2 : " << bckEstimate << endmsg;
   }
 
 }
@@ -336,7 +336,7 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
       << " Obs "  << (m_obsPDsignals[det])[pd]
       << " Exp "  << (m_expPDsignals[det])[pd]
       << " bkg "  << (*pixel)->currentBackground()
-      << endreq;
+      << endmsg;
       }
     */
 

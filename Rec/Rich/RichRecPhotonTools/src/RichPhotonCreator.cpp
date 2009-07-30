@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.3 2008-08-15 14:37:39 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.4 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,7 +76,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> RichRecPhoton selected" << endreq;
+        verbose() << "  -> RichRecPhoton selected" << endmsg;
       }
       // save this photon to TES
       savePhoton( newPhoton, key );
@@ -88,7 +88,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> RichRecPhoton FAILED probability checks" << endreq;
+        verbose() << "  -> RichRecPhoton FAILED probability checks" << endmsg;
       }
       delete newPhoton; // also deletes geomPhoton
       newPhoton = NULL;
@@ -99,7 +99,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
   {
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "   -> RichGeomPhoton reconstruction FAILED" << endreq;
+      verbose() << "   -> RichGeomPhoton reconstruction FAILED" << endmsg;
     }
     delete geomPhoton;
   }

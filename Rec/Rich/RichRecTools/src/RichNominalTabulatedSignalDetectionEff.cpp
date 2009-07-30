@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::NominalTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichNominalTabulatedSignalDetectionEff.cpp,v 1.2 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichNominalTabulatedSignalDetectionEff.cpp,v 1.3 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -59,8 +59,8 @@ StatusCode NominalTabulatedSignalDetectionEff::initialize()
   m_qEffPedLoss = qEff * pLos;
 
   // Informational Printout
-  debug() << " HPD quartz window efficiency = " << qEff << endreq
-          << " Digitisation pedestal eff.   = " << pLos << endreq;
+  debug() << " HPD quartz window efficiency = " << qEff << endmsg
+          << " Digitisation pedestal eff.   = " << pLos << endmsg;
 
   return sc;
 }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.3 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -112,11 +112,11 @@ StatusCode SepVCKthetaPhotonPredictor::initialize()
     info() << trad << " : Sep. range     "
            << boost::format("%5.1f") % m_minROI[rad] << " -> "
            << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
-           << boost::format("%5.1f") % m_tolF[rad] << " mm" << endreq;
+           << boost::format("%5.1f") % m_tolF[rad] << " mm" << endmsg;
   }
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
 }
@@ -133,18 +133,18 @@ StatusCode SepVCKthetaPhotonPredictor::finalize()
     const PoissonEffFunctor occ("%10.2f +-%7.2f");
 
     // printout stats
-    info() << "=================================================================" << endreq
-           << "  Pixel/Segment combination selection summary :-" << endreq
+    info() << "=================================================================" << endmsg
+           << "  Pixel/Segment combination selection summary :-" << endmsg
            << "    Aerogel   : "
            << occ(m_Nselected[Rich::Aerogel],m_Nselected[Rich::Aerogel]+m_Nreject[Rich::Aerogel])
-           << " % of possible candidates" << endreq
+           << " % of possible candidates" << endmsg
            << "    Rich1Gas  : "
            << occ(m_Nselected[Rich::Rich1Gas],m_Nselected[Rich::Rich1Gas]+m_Nreject[Rich::Rich1Gas])
-           << " % of possible candidates" << endreq
+           << " % of possible candidates" << endmsg
            << "    Rich2Gas  : "
            << occ(m_Nselected[Rich::Rich2Gas],m_Nselected[Rich::Rich2Gas]+m_Nreject[Rich::Rich2Gas])
-           << " % of possible candidates" << endreq
-           << "=================================================================" << endreq;
+           << " % of possible candidates" << endmsg
+           << "=================================================================" << endmsg;
   }
 
   // Execute base class method
@@ -202,14 +202,14 @@ SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
             //if ( msgLevel(MSG::VERBOSE) )
             //{
             //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-            //            << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
+            //            << dsep << " PASSED tol=" << m_tolF[rad] << endmsg;
             //}
             break;
           }
           //if ( msgLevel(MSG::VERBOSE) && !OK )
           //{
           //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-          //            << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
+          //            << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endmsg;
           //}
 
         } // loop over hypos
@@ -219,7 +219,7 @@ SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
       //{
       //  verbose() << "  -> sep2=" << sep2
       //            << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
-      //            << " -> reject" << endreq;
+      //            << " -> reject" << endmsg;
       //}
 
     } // inner region cut
@@ -227,7 +227,7 @@ SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
   } // same detector
   //else if ( msgLevel(MSG::VERBOSE) )
   //{
-  //  verbose() << "  -> " << " FAILED RICH detector check -> reject" << endreq;
+  //  verbose() << "  -> " << " FAILED RICH detector check -> reject" << endmsg;
   //}
 
   if ( OK ) { ++m_Nselected[rad]; }

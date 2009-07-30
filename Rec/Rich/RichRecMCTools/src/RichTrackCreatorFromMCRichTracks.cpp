@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.21 2009-07-10 10:38:07 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.22 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -106,7 +106,7 @@ TrackCreatorFromMCRichTracks::trTracks() const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "located " << m_mcrTracks->size() << " MCRichTracks at "
-              << m_mcrTracksLocation << endreq;
+              << m_mcrTracksLocation << endmsg;
     }
 
     if ( m_fakeRecoTracks )
@@ -123,7 +123,7 @@ TrackCreatorFromMCRichTracks::trTracks() const
       for ( LHCb::MCRichTracks::const_iterator track = m_mcrTracks->begin();
             track != m_mcrTracks->end(); ++track )
       {
-        verbose() << "Trying MCRichTrack " << (*track)->key() << endreq;
+        verbose() << "Trying MCRichTrack " << (*track)->key() << endmsg;
 
         // Pointer to underlying MCParticle
         const LHCb::MCParticle * mcPart = (*track)->mcParticle();
@@ -154,7 +154,7 @@ TrackCreatorFromMCRichTracks::trTracks() const
 
         // Track selection
         //if ( !trackSelector().trackSelected(newFake) ) { delete newFake; continue; }
-        verbose() << " -> Selected for fake reco track" << endreq;
+        verbose() << " -> Selected for fake reco track" << endmsg;
 
         // add to container
         fakedTracks()->insert( newFake );
@@ -169,7 +169,7 @@ TrackCreatorFromMCRichTracks::trTracks() const
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "Created " << fakedTracks()->size() << " fake Tracks for MCRichTracks" << endreq;
+        debug() << "Created " << fakedTracks()->size() << " fake Tracks for MCRichTracks" << endmsg;
       }
 
     } // build fake if
@@ -219,7 +219,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   {
     verbose() << "Trying MCRichTrack " << mcrTrack->key()
               << " ptot = " << ptot/Gaudi::Units::GeV << " GeV/c, charge = " << charge
-              << endreq;
+              << endmsg;
   }
 
   // Is track a usable type
@@ -244,7 +244,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " -> Track selected" << endreq;
+      verbose() << " -> Track selected" << endmsg;
     }
 
     // New track object pointer
@@ -255,7 +255,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     const int Nsegs = m_segMaker->constructSegments( mcrTrack, segments );
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " Found " << Nsegs << " radiator segments" << endreq;
+      verbose() << " Found " << Nsegs << " radiator segments" << endmsg;
     }
     if ( 0 < Nsegs )
     {
@@ -284,7 +284,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
           {
 
             if ( msgLevel(MSG::VERBOSE) )
-              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
+              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " selected" << endmsg;
 
             // keep track
             keepTrack = true;
@@ -310,7 +310,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
             if ( msgLevel(MSG::VERBOSE) )
             {
               verbose() << " TrackSegment in " << (*iSeg)->radiator()
-                        << " rejected : Has no RICH info" << endreq;
+                        << " rejected : Has no RICH info" << endmsg;
             }
             delete newSegment;
             newSegment = NULL;
@@ -322,7 +322,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << " TrackSegment in " << (*iSeg)->radiator()
-                      << " rejected : Failed to project to detector plane" << endreq;
+                      << " rejected : Failed to project to detector plane" << endmsg;
           }
           delete newSegment;
           newSegment = NULL;
@@ -377,7 +377,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     }
     else if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  --> No TrackSegments created" << endreq;
+      verbose() << "  --> No TrackSegments created" << endmsg;
     } // end segments if
 
     // Add to reference map
@@ -402,7 +402,7 @@ void TrackCreatorFromMCRichTracks::FinishEvent()
   if ( m_fakeTracks )
   {
     debug() << "Created " << m_fakeTracks->size() << " fake Tracks at "
-            << m_fakeTrLoc << endreq;
+            << m_fakeTrLoc << endmsg;
   }
 }
 

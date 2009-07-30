@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.7 2009-06-11 11:57:40 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.8 2009-07-30 11:20:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -69,7 +69,7 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   // loop over radiators
   for ( Rich::Radiators::const_iterator irad = Rich::radiators().begin();
@@ -92,6 +92,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
+  // return status. Default is failed until proved otherwise
+  StatusCode sc = StatusCode::FAILURE;
+
   // track segment
   const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
 
@@ -121,8 +124,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & pixPRad  = pixel->radCorrLocalPositions().position(radiator);
 
   // x,y differences
-  const float diff_x = static_cast<float>(segPSide.x() - pixPRad.x());
-  const float diff_y = static_cast<float>(segPSide.y() - pixPRad.y());
+  const float diff_x = static_cast<float>( segPSide.x() - pixPRad.x() );
+  const float diff_y = static_cast<float>( segPSide.y() - pixPRad.y() );
 
   // estimate phi from these hits
   // use full atan2
@@ -134,7 +137,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   float thetaCerenkov( static_cast<float>(m_ckFudge[radiator]) );
 
   // use ring info to determine CK theta
-  LHCb::RichRecSegment * seg             = const_cast<LHCb::RichRecSegment*>(segment); // need to remove this
+  LHCb::RichRecSegment           * seg   = const_cast<LHCb::RichRecSegment*>(segment); // need to remove this
   const LHCb::RichRecRing        * ring  = m_massHypoRings->massHypoRing( seg, m_pidTypes.front() );
   const LHCb::RichRecPointOnRing * point = ( ring ? ring->getPointClosestInAzimuth(phiCerenkov) : NULL );
   if ( point )
@@ -147,7 +150,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // estimate CK theta from reference point
       const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
                                 gsl_pow_2(segPSide.y()-point->localPosition().y()) );
-      thetaCerenkov += static_cast<float>(ring->radius() * std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp ));
+      thetaCerenkov += static_cast<float>( ring->radius() *
+                                           std::sqrt( (gsl_pow_2(diff_x)+gsl_pow_2(diff_y)) / sep2_tmp ) );
 
       // --------------------------------------------------------------------------------------
       // Set (remaining) photon parameters
@@ -163,12 +167,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // --------------------------------------------------------------------------------------
 
       // photon reco worked !
-      return StatusCode::SUCCESS;
+      sc = StatusCode::SUCCESS;
 
     }
 
   } // reference point located OK
 
   // if we get here photon reco failed
-  return StatusCode::FAILURE;
+  return sc;
 }

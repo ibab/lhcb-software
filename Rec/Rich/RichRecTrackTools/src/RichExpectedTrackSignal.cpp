@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.5 2009-07-09 11:21:24 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.6 2009-07-30 11:25:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,7 +61,7 @@ StatusCode ExpectedTrackSignal::initialize()
   acquireTool( "RichGasQuartzWindow",    m_gasQuartzWin );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  info() << "Particle types considered = " << m_pidTypes << endreq;
+  info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   info() << "Minimum number of expected photons (Aero/R1Gas/R2Gas) : " << m_minPhotonsPerRad << endmsg;
 
@@ -95,7 +95,7 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "RichRecSegment " << segment->key() << " " << id
-              << " nEmittedPhotons = " << signal << endreq;
+              << " nEmittedPhotons = " << signal << endmsg;
     }
 
     segment->setNEmittedPhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
@@ -134,7 +134,7 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "RichRecSegment " << segment->key() << " " << id
-              << " nDetectablePhotons = " << signal << endreq;
+              << " nDetectablePhotons = " << signal << endmsg;
     }
 
     segment->setNDetectablePhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
@@ -186,7 +186,7 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
     {
       debug() << "RichRecSegment " << segment->key() << " " << id
               << " nSignalPhotons = " << signal
-              << " nScatteredPhotons = " << scatter << endreq;
+              << " nScatteredPhotons = " << scatter << endmsg;
     }
 
     segment->setNSignalPhotons( id, static_cast<LHCb::RichRecSegment::FloatType>(signal) );
@@ -225,7 +225,7 @@ ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecSegment " << segment->key() << " " << id
-            << " avgSignalPhotEnergy = " << avgEnergy << endreq;
+            << " avgSignalPhotEnergy = " << avgEnergy << endmsg;
   }
 
   return avgEnergy;
@@ -258,7 +258,7 @@ ExpectedTrackSignal::avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecSegment " << segment->key() << " " << id
-            << " avgEmitPhotEnergy = " << avgEnergy << endreq;
+            << " avgEmitPhotEnergy = " << avgEnergy << endmsg;
   }
 
   return avgEnergy;
@@ -461,7 +461,7 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "RichRecSegment is above " << m_pidTypes.front()
-              << " threshold -> hasRichInfo" << endreq;
+              << " threshold -> hasRichInfo" << endmsg;
     }
 
     // see if any mass hypothesis is detectable
@@ -496,7 +496,7 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
   else if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecSegment is below " << m_pidTypes.front()
-            << " threshold -> noRichInfo" << endreq;
+            << " threshold -> noRichInfo" << endmsg;
   }
 
   return hasInfo;
@@ -538,7 +538,7 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
   {
     debug() << "Threshold check : " << tkSeg.radiator() << " " << type
             << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres
-            << " : above=" << above << endreq;
+            << " : above=" << above << endmsg;
   }
 
   // return status

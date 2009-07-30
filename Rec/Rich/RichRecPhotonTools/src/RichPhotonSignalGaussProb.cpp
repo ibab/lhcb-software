@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.4 2009-06-11 11:57:40 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.5 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,8 +74,8 @@ StatusCode PhotonSignalGaussProb::initialize()
 
   // Informational Printout
   debug() << " Mirror radii of curvature    = "
-          << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
-          << " Pixel area                   = " << m_pixelArea << endreq;
+          << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endmsg
+          << " Pixel area                   = " << m_pixelArea << endmsg;
 
   return sc;
 }

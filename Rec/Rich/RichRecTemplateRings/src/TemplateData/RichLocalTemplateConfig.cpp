@@ -1,4 +1,4 @@
-// $Id: RichLocalTemplateConfig.cpp,v 1.2 2009-06-05 17:21:34 jonrob Exp $
+// $Id: RichLocalTemplateConfig.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -82,7 +82,7 @@ StatusCode RichLocalTemplateConfig::ScaleTemplateHits( VI aVec, int itk , int ir
   
   double aMean= aSum/aNumhit;
 
-  // info()<<" current found radius "<<irad<<"  "<<itk<<"  "<<aMean<<endreq;
+  // info()<<" current found radius "<<irad<<"  "<<itk<<"  "<<aMean<<endmsg;
   
 
   RRslt()->setTrackFoundRadiusValue(itk,irad,aMean);

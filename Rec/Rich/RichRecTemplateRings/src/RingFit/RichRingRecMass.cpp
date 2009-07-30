@@ -1,4 +1,4 @@
-// $Id: RichRingRecMass.cpp,v 1.3 2009-06-05 17:21:33 jonrob Exp $
+// $Id: RichRingRecMass.cpp,v 1.4 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode  RichRingRecMass::bestReconstructedMassForRichTrack(VI SegmentIndex, 
   
   VI aTkSegIndexInRadiator (nrd, -100);
   
-  //  info()<<"Best mass select: Current track Num "<< currentTrackIndex<<endreq;
+  //  info()<<"Best mass select: Current track Num "<< currentTrackIndex<<endmsg;
   int arcount=0;
   VB  radiatorPresent(3, false);
   
@@ -125,7 +125,7 @@ StatusCode  RichRingRecMass::bestReconstructedMassForRichTrack(VI SegmentIndex, 
    
    if(aRadSelectedLight== -1 &&  aRadSelectedHeavy == -1 ) {     
      warning()<<" RichRingRecMass: No best mass found for richrectracknum segments  "
-           << currentTrackIndex<< "   "<< SegmentIndex<< endreq;   }
+           << currentTrackIndex<< "   "<< SegmentIndex<< endmsg;   }
    
    RRslt()->StoreSelectedTrackIndex(aTkSegIndexInRadiator, currentTrackIndex);
 
@@ -283,7 +283,7 @@ int RichRingRecMass::SelectFromPairOfBGA (double aBG1, double aBG2, double aMom 
    double aRichHeavyMassBegin = RConst()->RichHeavyMassBegin();
 
    debug()<<"Rich Select par from BG "<< aBG1<<"  "<< aBG2<<"  "<<aMom<<"  "
-          <<aMass1<<"  "<<aMass2<<"   "<<irad1<<"  "<<irad2<<"  "<<aRichHeavyMassBegin<<endreq;
+          <<aMass1<<"  "<<aMass2<<"   "<<irad1<<"  "<<irad2<<"  "<<aRichHeavyMassBegin<<endmsg;
    
    // test selection   
    //   if( ( aMom < RConst()->RichParticleCherenkovThreshold(irad2,3)) &&
@@ -314,7 +314,7 @@ int RichRingRecMass::SelectFromPairOfBGB (double aBG1, double aBG2, double aMom 
    double aRichHeavyMassBegin = RConst()->RichHeavyMassBegin();
 
    debug()<<"Rich Select par from BG "<< aBG1<<"  "<< aBG2<<"  "<<aMom<<"  "
-          <<aMass1<<"  "<<aMass2<<"   "<<irad1<<"  "<<irad2<<"  "<<aRichHeavyMassBegin<<endreq;
+          <<aMass1<<"  "<<aMass2<<"   "<<irad1<<"  "<<irad2<<"  "<<aRichHeavyMassBegin<<endmsg;
    
    // test selection   
    if( ( aMom < RConst()->RichParticleCherenkovThreshold(irad2,3)) ) {

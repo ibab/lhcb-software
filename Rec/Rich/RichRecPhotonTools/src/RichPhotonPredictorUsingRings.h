@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.h,v 1.2 2009-07-30 11:20:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -118,7 +118,7 @@ namespace Rich
       if ( !m_recRings ) {
         m_recRings = get<LHCb::RichRecRings>( m_ringLoc );
         debug() << "Located " << m_recRings->size()
-                << " RichRecRings at " << m_ringLoc << endreq;
+                << " RichRecRings at " << m_ringLoc << endmsg;
       }
       return m_recRings;
     }

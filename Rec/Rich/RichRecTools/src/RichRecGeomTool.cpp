@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.18 2007-09-04 16:54:00 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.19 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,7 +62,7 @@ StatusCode GeomTool::initialize()
   m_radOutLimLoc[Rich::Rich2Gas] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Rich2Gas);
 
   // info printout
-  info() << "Av. optical distortion correction parameters : " << m_radScale << endreq;
+  info() << "Av. optical distortion correction parameters : " << m_radScale << endmsg;
 
   return sc;
 }
@@ -189,7 +189,7 @@ double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Segment " << segment->key() << " " << segment->trackSegment().radiator()
-              << " " << id << " " << acc << endreq;
+              << " " << id << " " << acc << endmsg;
     }
 
   }

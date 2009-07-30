@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::BackgroundEstiClustering
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEstiClustering.cpp,v 1.3 2009-06-12 09:16:51 jonrob Exp $
+ *  $Id: RichRecBackgroundEstiClustering.cpp,v 1.4 2009-07-30 11:23:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -85,7 +85,7 @@ void BackgroundEstiClustering::pixelBackgrounds() const
                 << " Obs "  << (m_obsPDsignals[det])[pd]
                 << " Exp "  << (m_expPDsignals[det])[pd]
                 << " bkg "  << (*pixel)->currentBackground()
-                << endreq;
+                << endmsg;
     }
 
   }

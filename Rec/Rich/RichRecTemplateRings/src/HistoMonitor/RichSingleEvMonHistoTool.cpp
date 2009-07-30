@@ -1,4 +1,4 @@
-// $Id: RichSingleEvMonHistoTool.cpp,v 1.2 2009-06-05 17:21:32 jonrob Exp $
+// $Id: RichSingleEvMonHistoTool.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
 
 
@@ -52,7 +52,7 @@ void RichSingleEvMonHistoTool::PlotHitsAndTracksInEv(int irad ){
   int aNumHit = tgD()->NumHitsTarget(iRich);
   int aNumTk = tgD()->NumChRdTrackValue(irad);
 
-  debug()<<" Now in single ev histo Rich numhit numtk"<<  iRich<<"  "<< aNumHit<<"  "<< aNumTk <<endreq;
+  debug()<<" Now in single ev histo Rich numhit numtk"<<  iRich<<"  "<< aNumHit<<"  "<< aNumTk <<endmsg;
   
 
   for (int ih=0; ih< aNumHit; ++ih){
@@ -64,7 +64,7 @@ void RichSingleEvMonHistoTool::PlotHitsAndTracksInEv(int irad ){
     // debug print
     // info()<<" rad TrackNum  X Y coord RecMomentum "<<irad<<"  "<<it<<"  "
     //      << tgD()->TrackXcInpValue(it,irad)<<"   "<<tgD()-> TrackYcInpValue(it,irad)
-    //       <<"   "<<tgD()->TrackRecMomValue(it,irad)<<  endreq;
+    //       <<"   "<<tgD()->TrackRecMomValue(it,irad)<<  endmsg;
     //
     // end debug print
 
@@ -83,7 +83,7 @@ void RichSingleEvMonHistoTool::PlotTargetAndTemplate(){
   VD aRpTar = RLocTgC()->RpnTarget();
   VD aPpTar = RLocTgC()->PpnTarget();
   int aSize = (int) aRpTar.size();
-  //info()<<" Now in PlotTargettemplate with target size  "<<  aSize<<endreq;
+  //info()<<" Now in PlotTargettemplate with target size  "<<  aSize<<endmsg;
   
   for(int ih=0; ih<aSize; ++ih) {
     plot2D(aPpTar[ih],aRpTar[ih],"RPLPolTarget","LogR vs Phi Target ",0.0,aNumW*1.0, 0.0,aNumR*1.0,aNumW,aNumR);
@@ -96,7 +96,7 @@ void RichSingleEvMonHistoTool::PlotTargetAndTemplate(){
   VD aPpTem = RLocTDC()-> PpnTemplate(); 
   int bSize = (int) aRpTem.size();
 
-  //  info()<<" Now in PlotTargettemplate with template size  "<<  bSize<<endreq;
+  //  info()<<" Now in PlotTargettemplate with template size  "<<  bSize<<endmsg;
   for(int ik=0; ik<  bSize; ++ik) {
     plot2D(aPpTem[ik], aRpTem[ik],"RPLPolTemplate","LogR vs Phi Template",0.0,aNumW*1.0, 0.0,aNumR*1.0,aNumW,aNumR);  
   }
@@ -157,7 +157,7 @@ void RichSingleEvMonHistoTool::PlotInvCorr( VVD aRPInv){
      
      
   // end test histo  
-     //    info ()<<" end of plotting inv corr "<<endreq;
+     //    info ()<<" end of plotting inv corr "<<endmsg;
      
 
 }
@@ -169,14 +169,14 @@ void RichSingleEvMonHistoTool::PlotInvCorr( VVD aRPInv){
 //  m_WriteOutDebugHistoFlag = RParam()->WriteOutAuxiliaryDebugHisto();
 //  m_DebugHistoOutputFileName= RParam()->RichDebugAuxHistoFileName();  
 //  info()<<"  initialised Rich RingRec debug histo setup "<<m_WriteOutDebugHistoFlag<<"  "
-//        <<m_DebugHistoOutputFileName<<  endreq;
+//        <<m_DebugHistoOutputFileName<<  endmsg;
 //  
 //}
 
 //void RichSingleEvMonHistoTool::WriteOutDebugHistogramsToAuxiliaryFile() 
 //{
   // if( m_WriteOutDebugHistoFlag ) {
-  //  info()<<" Now write out the debug histo "<<endreq;
+  //  info()<<" Now write out the debug histo "<<endmsg;
   //  
   //  TFile afile( m_DebugHistoOutputFileName.data(),"recreate");
   //  m_RichOutHistogramList->Write();

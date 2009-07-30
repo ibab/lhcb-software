@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichMCTrueTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.cpp,v 1.3 2007-04-23 13:23:54 jonrob Exp $
+ *  $Id: RichMCTrueTrackSelector.cpp,v 1.4 2009-07-30 11:17:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -48,7 +48,7 @@ StatusCode MCTrueTrackSelector::initialize()
   const StatusCode sc = TrackSelectorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info() << "Selecting MCParticle associated tracks with weight > " << m_weight << endreq;
+  info() << "Selecting MCParticle associated tracks with weight > " << m_weight << endmsg;
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );

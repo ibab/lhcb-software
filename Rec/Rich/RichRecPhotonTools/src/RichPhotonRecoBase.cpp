@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoBase
  *
  * CVS Log :-
- * $Id: RichPhotonRecoBase.cpp,v 1.1 2008-02-18 14:53:00 jonrob Exp $
+ * $Id: RichPhotonRecoBase.cpp,v 1.2 2009-07-30 11:20:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-11-14
@@ -60,13 +60,13 @@ StatusCode PhotonRecoBase::initialize()
         rad != Rich::radiators().end(); ++rad )
   {
     if ( m_checkPhotCrossSides[*rad] )
-    {      info() << "Will reject photons that cross sides in " << *rad << endreq; }
+    {      info() << "Will reject photons that cross sides in " << *rad << endmsg; }
 
     // fudge factor warning
     if ( std::fabs(m_ckFudge[*rad]) > 1e-7 )
     {
       info() << "Applying " << Rich::text(*rad) 
-             << " CK theta correction factor : " << m_ckFudge[*rad] << endreq;
+             << " CK theta correction factor : " << m_ckFudge[*rad] << endmsg;
     }
   }
 
