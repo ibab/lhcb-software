@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.11 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.12 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -49,7 +49,7 @@ StatusCode Likelihood::initialize()
   statusCreator();
   photonCreator();
 
-  if ( m_oneAtATime ) info() << "WIll operate in single track 'local' mode" << endreq;
+  if ( m_oneAtATime ) info() << "WIll operate in single track 'local' mode" << endmsg;
 
   return sc;
 }
@@ -72,7 +72,7 @@ StatusCode Likelihood::execute()
   {
     if ( !photonCreator()->reconstructPhotons() ) return StatusCode::FAILURE;
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
+      debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endmsg;
     if ( richPhotons()->empty() )
       return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
@@ -103,7 +103,7 @@ StatusCode Likelihood::execute()
           track != gtracks.end(); ++track ) 
     {
       (*track)->richRecTrack()->setInUse(true);
-      if ( msgLevel(MSG::DEBUG) ) debug() << "PID'ing track " << (*track)->key() << endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "PID'ing track " << (*track)->key() << endmsg;
       m_pidTool->pid( *track );
       (*track)->richRecTrack()->setInUse(false);
     }

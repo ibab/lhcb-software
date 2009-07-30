@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichTrackPIDAlg.cpp,v 1.2 2008-04-16 17:39:01 jonrob Exp $
+ *  $Id: RichTrackPIDAlg.cpp,v 1.3 2009-07-30 11:13:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -56,7 +56,7 @@ StatusCode TrackPIDAlg::initialize()
   acquireTool( m_pidToolName,   m_pidTool          );
   acquireTool( "TrackSelector", m_trSelector, this );
 
-  info() << "Will PID " << m_nAtOnce << " track(s) at a time" << endreq;
+  info() << "Will PID " << m_nAtOnce << " track(s) at a time" << endmsg;
 
   return sc;
 }

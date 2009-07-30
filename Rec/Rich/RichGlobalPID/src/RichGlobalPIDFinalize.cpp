@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.22 2008-04-16 17:33:13 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.23 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -58,7 +58,7 @@ StatusCode Finalize::execute()
     {
       verbose() << "PID'ed Track "
                 << (*track)->key() << " (" << (*track)->trQuality()
-                << "), as " << rRTrack->currentHypothesis() << endreq;
+                << "), as " << rRTrack->currentHypothesis() << endmsg;
     }
 
     // Only store results for physics quality tracks

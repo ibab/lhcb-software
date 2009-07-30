@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.36 2008-10-16 11:38:20 cattanem Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.37 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -71,7 +71,7 @@ StatusCode TrackSel::initialize()
   if ( m_freezeTracks )
   {
     info() << "Will freeze selected tracks to mass hypothesis "
-           << (Rich::ParticleIDType)m_frozenType << endreq;
+           << (Rich::ParticleIDType)m_frozenType << endmsg;
     acquireTool( "TrackSelector", "FrozenTrackSelector", m_frozenTrSel, this );
   }
   
@@ -147,7 +147,7 @@ StatusCode TrackSel::execute()
     if ( m_resetToPion ) (*track)->setCurrentHypothesis( Rich::Pion );
     if ( msgLevel(MSG::VERBOSE) )
     { verbose() << "Track " << (*track)->key() << " has initial hypothesis "
-                << (*track)->currentHypothesis() << endreq; }
+                << (*track)->currentHypothesis() << endmsg; }
     
     // Make a new RichGlobalPIDTrack
     LHCb::RichGlobalPIDTrack * pidTrack = m_gtkCreator->createTrack(*track);
@@ -167,7 +167,7 @@ StatusCode TrackSel::execute()
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << " -> Track is selected to be frozen to type " 
-                    << (Rich::ParticleIDType)m_frozenType << endreq;
+                    << (Rich::ParticleIDType)m_frozenType << endmsg;
         }
       }
     }

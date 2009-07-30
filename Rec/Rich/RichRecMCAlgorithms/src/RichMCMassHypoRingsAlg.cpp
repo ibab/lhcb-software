@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.3 2009-06-11 12:44:56 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.4 2009-07-30 11:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -86,14 +86,14 @@ StatusCode MCMassHypoRingsAlg::initialize()
                                        LHCb::RichTraceMode::FullHPDs : 
                                        LHCb::RichTraceMode::SimpleHPDs ) );
   m_traceMode.setAeroRefraction ( true );
-  info() << "MCTrack " << m_traceMode << endreq;
+  info() << "MCTrack " << m_traceMode << endmsg;
   
   return sc;
 }
 
 StatusCode MCMassHypoRingsAlg::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // loop over data locations
   StatusCode sc = StatusCode::SUCCESS;
@@ -118,7 +118,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
                                              evtLoc+LHCb::MCRichSegmentLocation::Default );
   if ( !mcSegs ) { return StatusCode::SUCCESS; }
   debug() << "Successfully located " << mcSegs->size()
-          << " MCRichSegments at " << evtLoc << LHCb::MCRichSegmentLocation::Default << endreq;
+          << " MCRichSegments at " << evtLoc << LHCb::MCRichSegmentLocation::Default << endmsg;
 
   // Cache pointer to Ring tool for this event location
   const IMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
@@ -130,10 +130,10 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     const LHCb::MCRichSegment * segment = *iSeg;
     if ( !segment ) continue;
     verbose() << "Trying MCRichSegment " << segment->key() << " : radiator = "
-              << segment->radiator() << endreq;
+              << segment->radiator() << endmsg;
     if ( !m_usedRads[segment->radiator()] )
     {
-      verbose() << " -> Radiator type is rejected" << endreq;
+      verbose() << " -> Radiator type is rejected" << endmsg;
       continue;
     }
 
@@ -142,20 +142,20 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
       m_truth->mcParticleType( segment->mcParticle() );
     if ( Rich::Unknown == mcpid )
     {
-      verbose() << " -> MC type is Unknown -> abort" << endreq;
+      verbose() << " -> MC type is Unknown -> abort" << endmsg;
       continue;
     }
-    verbose() << " -> MC type is " << mcpid << endreq;
+    verbose() << " -> MC type is " << mcpid << endmsg;
 
     // Cherenkov angle for this segment
     const double theta = ckTheta(segment);
     if ( theta < m_minCKtheta[segment->radiator()] ||
          theta > m_maxCKtheta[segment->radiator()] )
     {
-      verbose() << " -> " << theta << " fails CK theta cut -> abort" << endreq;
+      verbose() << " -> " << theta << " fails CK theta cut -> abort" << endmsg;
       continue;
     }
-    verbose() << " -> CK theta = " << theta << endreq;
+    verbose() << " -> CK theta = " << theta << endmsg;
 
     int nPoints = static_cast<int>( 1500 * theta );
     if ( nPoints<30 ) nPoints = 30;
@@ -178,7 +178,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // if no points in acceptance, delete this ring and continue
     if ( points.empty() )
     {
-      verbose() << " -> CK ring found to not intersect any HPD -> abort" << endreq;
+      verbose() << " -> CK ring found to not intersect any HPD -> abort" << endmsg;
       continue;
     }
 
@@ -219,13 +219,13 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     linker()->link( segment, ring );
 
     verbose() << " -> All OK -> new ring created : CKtheta=" << ring->radius()
-              << endreq;
+              << endmsg;
 
   }
 
   debug() << "Created " << ringCr->massHypoRings()->size()
           << " MC mass hypothesis rings for " << evtLoc
-          << LHCb::MCRichSegmentLocation::Default << endreq;
+          << LHCb::MCRichSegmentLocation::Default << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -235,7 +235,7 @@ double MCMassHypoRingsAlg::ckTheta( const LHCb::MCRichSegment * segment ) const
   const SmartRefVector<LHCb::MCRichOpticalPhoton> & photons = segment->mcRichOpticalPhotons();
   if ( photons.empty() )
   {
-    verbose() << "  -> Segment has no associated MCRichOpticalPhotons" << endreq;
+    verbose() << "  -> Segment has no associated MCRichOpticalPhotons" << endmsg;
     return 0;
   }
   double angle = 0;

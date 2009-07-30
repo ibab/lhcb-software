@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.9 2009-06-11 12:50:40 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.10 2009-07-30 11:13:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -65,7 +65,7 @@ StatusCode SummaryAlg::initialize()
   acquireTool( "TrackSelector",           m_trSelector, this );
 
   info() << "Will select photons within (aero/R1Gas/R2Gas) " << m_nSigma
-         << " sigma of any mass hypothesis" << endreq;
+         << " sigma of any mass hypothesis" << endmsg;
 
   return sc;
 }

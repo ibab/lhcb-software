@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecPixelBackgroundAlg.cpp,v 1.1 2008-03-25 16:43:41 jonrob Exp $
+ *  $Id: RichRecPixelBackgroundAlg.cpp,v 1.2 2009-07-30 11:13:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -60,8 +60,8 @@ StatusCode PixelBackgroundAlg::execute()
   if ( !richPixels()   ) return Error( "Failed to access RichRecPixels"   );
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Found " << richSegments()->size() << " RichRecSegments" << endreq
-            << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
+    debug() << "Found " << richSegments()->size() << " RichRecSegments" << endmsg
+            << "Found " << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   // compute backgrounds

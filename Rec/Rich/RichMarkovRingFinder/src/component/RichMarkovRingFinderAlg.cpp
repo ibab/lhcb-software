@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.76 2009-06-11 13:11:32 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.77 2009-07-30 11:10:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -130,7 +130,7 @@ StatusCode AlgBase<SAMPLER>::initialize()
   m_sampler->initialise();
 
   info() << "Markov Chain Configuration : " << rich() << " " << panel()
-         << " " << m_sampler->configuration << endreq;
+         << " " << m_sampler->configuration << endmsg;
 
   return sc;
 }
@@ -181,7 +181,7 @@ StatusCode AlgBase<SAMPLER>::richInit()
 
   // Make sure RichRecPixels are available
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-  debug() << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
+  debug() << "Found " << richPixels()->size() << " RichRecPixels" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -211,7 +211,7 @@ StatusCode AlgBase<SAMPLER>::runRingFinder()
 
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Markov fit took " << output.numIterations << " iterations in "
-                << output.timeTaken << " ms" << endreq;
+                << output.timeTaken << " ms" << endmsg;
 
       // some plots on fit stats
       if ( produceHistos() )
@@ -270,14 +270,14 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
   const unsigned int nRingsBefore = rings->size();
 
-  debug() << "Found " << output.rings.size() << " Markov ring candidates" << endreq;
+  debug() << "Found " << output.rings.size() << " Markov ring candidates" << endmsg;
 
   // loop over final rings
   for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
         iRing != output.rings.end(); ++iRing )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Considering Markov Ring : " << *iRing << endreq;
+      verbose() << "Considering Markov Ring : " << *iRing << endmsg;
 
     // reference to generic ring
     const GenRingF::GenericRing & gen_ring = *iRing;
@@ -311,7 +311,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
         // finally, selected so add to ring
         newRing->richRecPixels().push_back( LHCb::RichRecPixelOnRing(pix,prob) );
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "  -> Adding pixel " << pix->key() << " to ring" << endreq;
+          verbose() << "  -> Adding pixel " << pix->key() << " to ring" << endmsg;
 
       }
     }
@@ -319,7 +319,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
     if ( newRing->richRecPixels().empty() )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> ring has no good hits -> rejecting" << endreq;
+        verbose() << " -> ring has no good hits -> rejecting" << endmsg;
       delete newRing;
       continue;
     }
@@ -327,7 +327,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> ring has " << newRing->richRecPixels().size()
-                  << " good hits -> keeping" << endreq;
+                  << " good hits -> keeping" << endmsg;
 
       // insert in Gaudi container
       rings->insert( newRing );
@@ -363,7 +363,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
+    debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endmsg;
   }
 
   // count # found rings per event
@@ -375,7 +375,7 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
 template < class SAMPLER >
 void AlgBase<SAMPLER>::addRingToPixels( LHCb::RichRecRing * ring ) const
 {
-  verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endreq;
+  verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endmsg;
   for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
         iP != ring->richRecPixels().end(); ++iP )
   {
@@ -425,7 +425,7 @@ bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
         const double Y ( m_scaleFactor * (*iPix)->localPosition().y() );
         input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "Adding data point at " << X << "," << Y << endreq;
+          verbose() << "Adding data point at " << X << "," << Y << endmsg;
       }
       else
       {
@@ -440,7 +440,7 @@ bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Selected " << input.hits.size() << " data points for "
               << Rich::text(rich()) << " " << Rich::text(rich(),panel())
-              << endreq;
+              << endmsg;
   }
 
   return OK;
@@ -471,7 +471,7 @@ void AlgBase<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring,
     }
   }
   if (msgLevel(MSG::VERBOSE))
-    verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endreq;
+    verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endmsg;
 }
 
 // Intrecepts messages from the 'Lester' code and sends them to gaudi
@@ -481,15 +481,15 @@ void AlgBase<SAMPLER>::lesterMessage( const Lester::MessageLevel level,
 {
   if      ( Lester::VERBOSE == level )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << message << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << message << endmsg;
   }
   else if ( Lester::DEBUG == level )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << message << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << message << endmsg;
   }
   else if ( Lester::INFO == level )
   {
-    if (msgLevel(MSG::INFO)) info() << message << endreq;
+    if (msgLevel(MSG::INFO)) info() << message << endmsg;
   }
   else if ( Lester::WARNING == level )
   {
@@ -517,7 +517,7 @@ StatusCode AlgBase<SAMPLER>::dumpToTextfile() const
     std::ostringstream filename;
     filename << Rich::text(rich()) << "-data" << nFile << ".txt";
     // open file
-    info() << "Creating data text file : " << filename.str() << endreq;
+    info() << "Creating data text file : " << filename.str() << endmsg;
     std::ofstream file(filename.str().c_str(),std::ios::app);
     // Iterate over pixels
     const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );

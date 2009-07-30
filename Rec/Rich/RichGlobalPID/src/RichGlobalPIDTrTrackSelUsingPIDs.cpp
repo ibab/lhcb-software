@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSelUsingPIDs
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSelUsingPIDs.cpp,v 1.1 2007-12-10 17:38:07 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSelUsingPIDs.cpp,v 1.2 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   10/12/2007
@@ -53,7 +53,7 @@ StatusCode TrackSelUsingPIDs::initialize()
 
   // Print out Dll cuts
   info() << "PID information from " << m_richPIDLocation
-         << " DLL cuts = " << m_dllCuts << endreq;
+         << " DLL cuts = " << m_dllCuts << endmsg;
 
   return sc;
 }

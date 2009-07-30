@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.7 2009-06-11 15:10:51 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.8 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -95,11 +95,11 @@ StatusCode LikelihoodTool::initialize()
   m_logMinSig = std::log( std::exp(m_minSig) - 1.0 );
 
   // Printout some initialisation info
-  info() << "Maximum event iterations                  = " << m_maxEventIterations << endreq;
-  info() << "Minimum signal for LL calculation         = " << m_minSig << endreq;
-  info() << "Track freeze-out DLL value                = " << freezeOutDll() << endreq;
-  info() << "Track forced change DLL value             = " << forceChangeDll() << endreq;
-  info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endreq;
+  info() << "Maximum event iterations                  = " << m_maxEventIterations << endmsg;
+  info() << "Minimum signal for LL calculation         = " << m_minSig << endmsg;
+  info() << "Track freeze-out DLL value                = " << freezeOutDll() << endmsg;
+  info() << "Track forced change DLL value             = " << forceChangeDll() << endmsg;
+  info() << "Maximum track changes per event iteration = " << m_maxTkChanges << endmsg;
 
   return sc;
 }
@@ -160,7 +160,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
   {
     debug() << "LogLL before/after initial minimisation = "
             << m_currentBestLL << "/" << finalLL
-            << " : " << nChangeFirstIt << " tracks changed hypothesis" << endreq;
+            << " : " << nChangeFirstIt << " tracks changed hypothesis" << endmsg;
   }
   m_currentBestLL = finalLL;
 
@@ -190,7 +190,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           ++counter( mess.str() );
           // Rerun iterations
           if ( msgLevel(MSG::DEBUG) )
-          { debug() << "Re-running event iteratons" << endreq; }
+          { debug() << "Re-running event iteratons" << endmsg; }
           eventIteration += doIterations();
         }
         m_currentBestLL = logLikelihood();
@@ -204,7 +204,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
       } // retry while loop
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "Ran " << nRetries << " iteration re-tries" << endreq;
+        debug() << "Ran " << nRetries << " iteration re-tries" << endmsg;
       }
 
     } // final check
@@ -215,7 +215,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
   {
     debug() << "Performed " << eventIteration
             << " event minimisation iteration(s). Final LogL = "
-            << m_currentBestLL << endreq;
+            << m_currentBestLL << endmsg;
   }
 
 }
@@ -231,7 +231,7 @@ unsigned int LikelihoodTool::doIterations() const
   while ( tryAgain || !minTracks.empty() )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "Event Iteration " << eventIteration << endreq;
+      debug() << "Event Iteration " << eventIteration << endmsg;
 
     // Iterate finding the best likelihood
     findBestLogLikelihood( minTracks );
@@ -245,7 +245,7 @@ unsigned int LikelihoodTool::doIterations() const
         if ( Rich::Unknown == iTrack->second )
         {
           err() << " Track " << (iTrack->first)->key()
-                << " has been Id'ed as Unknown !!" << endreq;
+                << " has been Id'ed as Unknown !!" << endmsg;
         }
         else
         {
@@ -255,7 +255,7 @@ unsigned int LikelihoodTool::doIterations() const
                     << " hypothesis to from "
                     << (iTrack->first)->richRecTrack()->currentHypothesis()
                     << " to " << iTrack->second << ". LogL = " << m_currentBestLL
-                    << endreq;
+                    << endmsg;
           }
           // Update hypothesis to best
           (iTrack->first)->richRecTrack()->setCurrentHypothesis( iTrack->second );
@@ -268,13 +268,13 @@ unsigned int LikelihoodTool::doIterations() const
     else if ( m_inR1 && m_inR2 )
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << " -> ALL DONE. Quitting event iterations" << endreq; }
+      { debug() << " -> ALL DONE. Quitting event iterations" << endmsg; }
       tryAgain = false;
     }
     else // have one last try in both riches
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << " -> Last try in both RICH detectors" << endreq; }
+      { debug() << " -> Last try in both RICH detectors" << endmsg; }
       m_inR1 = true;
       m_inR2 = true;
     }
@@ -295,7 +295,7 @@ unsigned int LikelihoodTool::doIterations() const
 unsigned int LikelihoodTool::initBestLogLikelihood() const
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Running initial log likelihood maximisation" << endreq;
+    debug() << "Running initial log likelihood maximisation" << endmsg;
 
   InitTrackInfo::Vector minTrackData;
   minTrackData.reserve(30); // average number of tracks that change DLL
@@ -311,7 +311,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
     if ( (*track)->frozenHypo() )
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endreq; }
+      { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endmsg; }
       continue;
     }
     // Initialise starting values
@@ -381,7 +381,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
               << boost::format("%4i") % (*iT).pidTrack->key()
               << " prefers hypothesis " << (*iT).hypo << " to "
               << (*iT).pidTrack->richRecTrack()->currentHypothesis()
-              << ". DLL = " << (*iT).minDLL << endreq ;
+              << ". DLL = " << (*iT).minDLL << endmsg ;
     }
     // set best hypothesis
     (*iT).pidTrack->richRecTrack()->setCurrentHypothesis( (*iT).hypo );
@@ -395,7 +395,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
 void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Finding best overall log likelihood" << endreq;
+    debug() << "Finding best overall log likelihood" << endmsg;
 
   // update RICH flags
   if (m_richCheck) updateRichFlags(minTracks);
@@ -418,13 +418,13 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
     LHCb::RichRecTrack * rRTrack = gTrack->richRecTrack();
 
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track " << gTrack->key() << " DLL = " << (*iP).first << endreq;
+      debug() << " -> Track " << gTrack->key() << " DLL = " << (*iP).first << endmsg;
 
     // skip globally frozen tracks
     if ( gTrack->frozenHypo() )
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << "  -> Skipping globally frozen track" << gTrack->key() << endreq; }
+      { debug() << "  -> Skipping globally frozen track" << gTrack->key() << endmsg; }
       continue;
     }
 
@@ -433,7 +433,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
     {
       if ( msgLevel(MSG::DEBUG) )
       { debug() << "  -> Freeze-out value = " << freezeOutDll()
-                << " -> Aborting remaining tracks" << endreq; }
+                << " -> Aborting remaining tracks" << endmsg; }
       break;
     }
 
@@ -443,7 +443,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
                            (m_inR2 && rRTrack->inRICH2()) ) )
     {
       if ( msgLevel(MSG::DEBUG) )
-      { debug() << "  -> Skipping track in unaltered RICH" << endreq; }
+      { debug() << "  -> Skipping track in unaltered RICH" << endmsg; }
       continue;
     }
 
@@ -461,7 +461,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
       const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "  -> Trying " << *hypo << " : DLL = " << deltaLogL << endreq;
+        verbose() << "  -> Trying " << *hypo << " : DLL = " << deltaLogL << endmsg;
       }
 
       // Set the value for deltaLL for this hypothesis
@@ -479,7 +479,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
             debug() << "    -> Track "
                     << boost::format("%4i") % gTrack->key() << " prefers hypothesis "
                     << *hypo << " to " << rRTrack->currentHypothesis()
-                    << ". DLL = " << deltaLogL << endreq ;
+                    << ". DLL = " << deltaLogL << endmsg ;
           }
 
           // set that a new best is found and update best dll and type
@@ -493,7 +493,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
           {
             if ( msgLevel(MSG::DEBUG) )
             {
-              debug() << "     -> Adding to force change list" << endreq;
+              debug() << "     -> Adding to force change list" << endmsg;
             }
             addto = true;
           }
@@ -555,7 +555,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "    -> Found " << minTracks.size()
-                << " tracks to change. Aborting track loop" << endreq;
+                << " tracks to change. Aborting track loop" << endmsg;
       }
       break;
     }
@@ -574,7 +574,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
   }
 
   if ( msgLevel(MSG::DEBUG) )
-  { debug() << "Found " << minTracks.size() << " track(s) to change" << endreq; }
+  { debug() << "Found " << minTracks.size() << " track(s) to change" << endmsg; }
 
 }
 
@@ -654,7 +654,7 @@ double LikelihoodTool::logLikelihood() const
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Computing event log likelihood using " << m_gpidTracksToPID->size()
-            << " tracks and " <<  richPixels()->size() << " pixels" << endreq;
+            << " tracks and " <<  richPixels()->size() << " pixels" << endmsg;
   }
 
   // Loop over tracks to form total expected hits part of LL
@@ -671,7 +671,7 @@ double LikelihoodTool::logLikelihood() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Track contribution    = " << trackLL << endreq;
+    debug() << " -> Track contribution    = " << trackLL << endmsg;
   }
 
   // Pixel loop
@@ -699,7 +699,7 @@ double LikelihoodTool::logLikelihood() const
                     << " bkg=" << pixel->currentBackground() 
                     << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
                                                                      rRTrack->currentHypothesis() )
-                    << endreq;
+                    << endmsg;
         }
         foundSelectedTrack = true;
         photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
@@ -719,8 +719,8 @@ double LikelihoodTool::logLikelihood() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << " -> Pixel contribution    = " << pixelLL << endreq;
-    debug() << " -> Detector contribution = " << detectorLL << endreq;
+    debug() << " -> Pixel contribution    = " << pixelLL << endmsg;
+    debug() << " -> Detector contribution = " << detectorLL << endmsg;
   }
 
   // return overall LL

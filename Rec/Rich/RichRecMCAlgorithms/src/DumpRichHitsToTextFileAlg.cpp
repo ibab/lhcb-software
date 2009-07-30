@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::DumpRichHitsToTextFileAlg
  *
  *  CVS Log :-
- *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.4 2009-05-22 15:49:33 jonrob Exp $
+ *  $Id: DumpRichHitsToTextFileAlg.cpp,v 1.5 2009-07-30 11:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2009-02-16
@@ -88,7 +88,7 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
            << "_" << m_nEvt << ".txt";
 
   // open file
-  info() << "Creating data text file : " << filename.str() << endreq;
+  info() << "Creating data text file : " << filename.str() << endmsg;
   std::ofstream file(filename.str().c_str(),std::ios::app);
 
   // Iterate over pixels

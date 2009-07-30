@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::Rec::GlobalPID::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDCommonBase.icpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDCommonBase.icpp,v 1.2 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -73,7 +73,7 @@ StatusCode Rich::Rec::GlobalPID::CommonBase<PBASE>::initialize()
 
   // PID types
   m_pidTypes = m_richPartProp->particleTypes();
-  this->debug() << "Particle types considered                 = " << m_pidTypes << endreq;
+  this->debug() << "Particle types considered                 = " << m_pidTypes << endmsg;
 
   return sc;
 }

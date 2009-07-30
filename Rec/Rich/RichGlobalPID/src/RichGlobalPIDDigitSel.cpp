@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.23 2008-10-16 11:38:20 cattanem Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.24 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -84,7 +84,7 @@ StatusCode DigitSel::execute()
 
   // final printout of selected number of pixels
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endreq;
+    debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endmsg;
 
   return StatusCode::SUCCESS;
 }

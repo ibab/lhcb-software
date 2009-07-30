@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : AddMissingMCRichTracksAlg
  *
  *  CVS Log :-
- *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.4 2008-01-25 13:22:36 jonrob Exp $
+ *  $Id: AddMissingMCRichTracksAlg.cpp,v 1.5 2009-07-30 11:15:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -59,7 +59,7 @@ StatusCode AddMissingMCRichTracksAlg::initialize()
   }
 
   info() << "Will add " << m_mcAddFrac*100
-         << " % of missing MC tracks" << endreq;
+         << " % of missing MC tracks" << endmsg;
 
   return sc;
 }
@@ -73,7 +73,7 @@ StatusCode AddMissingMCRichTracksAlg::execute()
     return Warning( "Failed to find MCRichTracks at '" + m_mcrTracksLocation 
                     + "' -> Cannot add any missing tracks" );
   }
-  debug() << "Found " << mcrTracks->size() << " MCRichTracks at " << m_mcrTracksLocation << endreq;
+  debug() << "Found " << mcrTracks->size() << " MCRichTracks at " << m_mcrTracksLocation << endmsg;
 
   // List of found MCRichTracks
   typedef std::set<const LHCb::MCRichTrack*> FoundMCTracks;
@@ -102,18 +102,18 @@ StatusCode AddMissingMCRichTracksAlg::execute()
       // toss a coin to only make a given fraction of tracks
       if ( m_rndm() < m_mcAddFrac )
       {
-        verbose() << " -> Creating new track" << endreq;
+        verbose() << " -> Creating new track" << endmsg;
         m_mcTkCreator->newTrack(*mctrack);
       }
       else
       {
-        verbose() << " -> NOT creating new track" << endreq;
+        verbose() << " -> NOT creating new track" << endmsg;
       }
     }
     else
     {
       verbose() << "MCRichTrack " << (*mctrack)->key()
-                << " already associated to a RichRecTrack" << endreq;
+                << " already associated to a RichRecTrack" << endmsg;
     }
 
   }

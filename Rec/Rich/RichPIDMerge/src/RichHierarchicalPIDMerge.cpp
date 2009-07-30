@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.11 2009-06-11 14:21:10 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.12 2009-07-30 11:12:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -117,13 +117,13 @@ StatusCode HierarchicalPIDMerge::execute()
     if ( !gPIDs )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Cannot locate RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
+        debug() << "Cannot locate RichGlobalPIDs at " << m_richGlobalPIDLocation << endmsg;
     }
     else
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Successfully located " << gPIDs->size()
-                  << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
+                  << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endmsg;
 
       for ( LHCb::RichGlobalPIDs::const_iterator gPID = gPIDs->begin();
             gPID != gPIDs->end(); ++gPID )
@@ -151,7 +151,7 @@ StatusCode HierarchicalPIDMerge::execute()
       debug() << "Successfully registered " << newPIDs->size()
               << " RichPIDs at " << m_richPIDLocation
               << " : Global=" << nUsedglobalPIDs
-              << endreq;
+              << endmsg;
     }
     else
     {
@@ -159,7 +159,7 @@ StatusCode HierarchicalPIDMerge::execute()
               << m_richPIDLocation << " with " << newPIDs->size()
               << " new RichPIDs"
               << " : Global=" << nUsedglobalPIDs
-              << endreq;
+              << endmsg;
     }
   }
 

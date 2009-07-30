@@ -2,11 +2,11 @@
 # Created    : 05/04/2002
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.19 2009-06-11 14:21:10 jonrob Exp $
+# $Id: requirements,v 1.20 2009-07-30 11:12:04 jonrob Exp $
 #============================================================================
 
 package RichPIDMerge
-version v2r7
+version v2r7p1
 
 # ================ structure ================================================
 branches src cmt doc options

@@ -1,4 +1,4 @@
-// $Id: TrackUseCaloMomentumAlg.cpp,v 1.1 2008-07-28 16:08:11 jonrob Exp $
+// $Id: TrackUseCaloMomentumAlg.cpp,v 1.2 2009-07-30 11:13:48 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode TrackUseCaloMomentumAlg::execute()
                   << " : Ptot " << (*iS)->p() << " -> ";
         // CRJ : ??? Need to correct energy to momentum using pion mass ???
         (*iS)->setQOverP( (*iS)->qOverP() * (*iS)->p() / caloEn );
-        verbose() << (*iS)->p() << endreq;
+        verbose() << (*iS)->p() << endmsg;
       }
 
     } // Track has CALO energy
@@ -97,7 +97,7 @@ StatusCode TrackUseCaloMomentumAlg::execute()
   } // loop over input tracks
 
   debug() << "Created " << out_tracks->size() << " Tracks at '"
-          << m_outTracksLoc << "'" << endreq;
+          << m_outTracksLoc << "'" << endmsg;
 
   return StatusCode::SUCCESS;
 }

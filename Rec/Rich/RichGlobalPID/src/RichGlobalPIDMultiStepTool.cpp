@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::MultiStepTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMultiStepTool.cpp,v 1.2 2008-08-19 11:01:46 jonrob Exp $
+ *  $Id: RichGlobalPIDMultiStepTool.cpp,v 1.3 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -81,7 +81,7 @@ const LHCb::RichPID * MultiStepTool::pid( const LHCb::Track * track ) const
   LHCb::RichGlobalPID * gpid = gpidPIDs()->object(track->key());
   if ( gpid && gpid->track() == track )
   {
-    debug() << "Found pre-existing PID object for track " << track->key() << endreq;
+    debug() << "Found pre-existing PID object for track " << track->key() << endmsg;
     return gpid;
   }
 
@@ -112,7 +112,7 @@ void MultiStepTool::pids( const LHCb::Track::ConstVector & tracks,
     LHCb::RichGlobalPID * gpid = gpidPIDs()->object((*iT)->key());
     if ( gpid && gpid->track() == *iT )
     {
-      debug() << "Found pre-existing PID object for track " << (*iT)->key() << endreq;
+      debug() << "Found pre-existing PID object for track " << (*iT)->key() << endmsg;
     }
     else
     {

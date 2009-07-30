@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::TrackCreator
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrackCreator.cpp,v 1.2 2009-06-11 15:10:51 jonrob Exp $
+ *  $Id: RichGlobalPIDTrackCreator.cpp,v 1.3 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -109,7 +109,7 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
   {
     warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
-              << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
+              << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endmsg;
   }
   // Internally, the Global PID normalises the DLL values to the best hypothesis
   // and also works in "-loglikelihood" space.

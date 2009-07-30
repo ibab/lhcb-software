@@ -4,7 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::MC::Monitor
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMonitor.cpp,v 1.7 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDMonitor.cpp,v 1.8 2009-07-30 11:06:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -45,7 +45,7 @@ StatusCode Monitor::initialize()
 // Main execution
 StatusCode Monitor::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   return StatusCode::SUCCESS;
 }
