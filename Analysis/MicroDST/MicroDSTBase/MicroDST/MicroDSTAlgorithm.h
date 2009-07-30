@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.h,v 1.2 2007-12-11 16:44:37 jpalac Exp $
+// $Id: MicroDSTAlgorithm.h,v 1.3 2009-07-30 06:02:37 jpalac Exp $
 #ifndef MICRODSTALGORITHM_H 
 #define MICRODSTALGORITHM_H 1
 
@@ -19,7 +19,7 @@ class ObjectContainerBase;
  *  @author Juan PALACIOS
  *  @date   2007-10-11
  */
-class MicroDSTAlgorithm : public MicroDSTCommon<GaudiAlgorithm>
+class GAUDI_API MicroDSTAlgorithm : public MicroDSTCommon<GaudiAlgorithm>
 {
 public: 
   /// Standard constructor

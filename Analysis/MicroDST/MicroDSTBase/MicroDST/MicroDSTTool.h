@@ -1,4 +1,4 @@
-// $Id: MicroDSTTool.h,v 1.2 2008-04-03 14:35:58 jpalac Exp $
+// $Id: MicroDSTTool.h,v 1.3 2009-07-30 06:02:37 jpalac Exp $
 #ifndef MICRODST_MICRODSTTOOL_H 
 #define MICRODST_MICRODSTTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include <GaudiAlg/GaudiTool.h>
 #include <MicroDST/MicroDSTCommon.h>
-static const InterfaceID IID_MicroDSTTool ( "MicroDSTTool", 1, 0 );
 
 /** @class MicroDSTTool MicroDSTTool.h MicroDST/MicroDSTTool.h
  *  
@@ -14,12 +13,9 @@ static const InterfaceID IID_MicroDSTTool ( "MicroDSTTool", 1, 0 );
  *  @author Juan PALACIOS
  *  @date   2007-12-04
  */
-class MicroDSTTool : public MicroDSTCommon<GaudiTool>
+class GAUDI_API MicroDSTTool : public MicroDSTCommon<GaudiTool>
 {
-public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_MicroDSTTool; }
+public:
 
   /// Standard constructor
   MicroDSTTool( const std::string& type, 

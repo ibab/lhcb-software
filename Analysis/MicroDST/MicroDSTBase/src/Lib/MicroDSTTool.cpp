@@ -1,9 +1,5 @@
-// $Id: MicroDSTTool.cpp,v 1.4 2008-06-20 07:59:35 jpalac Exp $
+// $Id: MicroDSTTool.cpp,v 1.5 2009-07-30 06:02:37 jpalac Exp $
 // Include files 
-
-// from Gaudi
-//#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "MicroDST/MicroDSTTool.h"
 
@@ -22,7 +18,6 @@ MicroDSTTool::MicroDSTTool( const std::string& type,
   : 
   MicroDSTCommon<GaudiTool> ( type, name , parent )
 {
-  declareInterface<MicroDSTTool>(this);
 }
 //=============================================================================
 StatusCode MicroDSTTool::initialize() 
