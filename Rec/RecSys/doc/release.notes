@@ -5,8 +5,102 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-07-28 - Xabier Cid Vidal
- - Propagate SpecialData property to ConfiguredMuonIDs
+</PRE><H1><A NAME=v7r5>2009-07-30 RecSys v7r5</A></H1><PRE>
+This version uses Gaudi v21r3 and LHCb v27r5.
+
+- Packages modified: CaloMoniDst v3r9, CaloReco v4r21, MuonID v7r1,
+    GlobalReco v6r24, RichRecMCTools v2r24, RichRecQC v2r32, PatVelo v3r16,
+    PatVeloTT v3r7, PatChecker v3r4p2, TrackFitter v2r36, TrackIdealPR v2r18,
+    TrackMonitors v1r12, TrackTools v3r20, VeloRecMonitors v1r11
+
+- In RecSys v7r5
+  . Configuation.py: Propagate SpecialData property to ConfiguredMuonIDs
+
+- In CaloMoniDst v3r9
+  . Remove not needed includes
+  . Clean up dependencies in requirements
+  . change std::map< std::string, XXX * > to 
+    GaudiUtils::HashMap< const std::string, XXX * > for faster lookups.
+
+- In CaloReco v4r21
+  . CaloRecoOnDemand.opts: Add digit sequence in CaloClusterOnDemand, for HLT
+
+- In MuonID v7r1
+  . Change ConfiguredMuonIDs to disable fit when reconstructed data are cosmics
+  . Protect debug messages to be printed only if OuputLevel=DEBUG
+  . Change some Error/Warning messages to debug messages 
+  . Change findTrackRegion to use region in M2 or M3 instead of M2 only
+  . Remove Error message if findTrackRegion returns -1 
+  . Skip Prob calculation only if no valid region in M2 AND M3
+  . Adapted configurable to change in TrackMasterFitter properties 
+
+- In GlobalReco v6r24
+  . Store Muon PID information in charged ProtoParticles when
+    MuonPID::IsMuonLoose is true, not MuonPID::IsMuon. 
+
+- In RichRecMCTools v2r24
+  . Add new NULL MC truth tool, that always returns NULL associations.
+
+- In RichRecQC v2r32
+  . Update RichRecoQC and RichTracklessRingMoni to use new histogramming 
+    methods in Rich/RichKernel. Improves CPU usage a little and also moves
+    histogram booking to initialize()
+  . Use NULL MC Truth tools with WithMC=True in the python Configuration.
+  . Suppress some monitors that combine all track types to "Expert" mode.
+    In practice, the individual track type monitors are more useful.
+
+- In PatVelo v3r16
+  . Changed chi2 cut again to recover more efficiency
+  . Added hot sector rejection to prevent exponential in time trigger behaviour
+    with very hot events with many ghosts.
+
+- In PatVeloTT v3r7
+  . Adapted to change in configuring z positions of reference nodes in fitter
+
+- In PatChecker v3r4p2
+  . Remove unnecessary include DVAlgorithm.h, DeVelo.h
+
+- In TrackFitter v2r36
+  . Fixed small bug in updating ref vectors in TrackMasterFitter. This had as a
+    consequence that we were running the 2nd iteration of the Prefit for nothing
+    since it would not actually use this as a reference in the normal fit. 
+    Now, we can just a single iteration prefit with no change in fitter output.
+  . Changed prefitters to run only single iteration.
+  . Added 'convergence criterium': can now optionally run fit until it has
+                                   converged
+  . Moved addition of z-position reference nodes from configuration into fit to
+    simplify configuration
+  . Added state for last measurement
+
+- In TrackIdealPR v2r18
+  . Adapted to change in OT linker table such that this now works for MC09
+
+- In TrackMonitors v1r12
+  . Add STEfficiency alg (works only for IT at the moment)
+  . Add histograms to IT/TT TrackMonitors
+
+- In TrackTools v3r20
+  . Follow changes in IHitExpectation interface 
+
+- In VeloRecMonitors v1r11
+  . VeloTrackMonitor:
+    o change the plot of phi coordinate of the plot, one histogram per half,
+      transform phi coordinate for the C side in the range -90,90. Top part of
+      both halves has phi between (0,90) and the botton between (-90,0)
+    o Add histogram of the efficiency evaluated by interpolation
+    o Change the pseudoefficiency versus Sensor number by the efficiency 
+      evaluated by interpolation
+    o Change the cluster phi in local frame with cluster phi in half frame
+    o In residual versus phi, change local phi with phi in half frame
+    o Replace number of measurement with number of clusters
+    o Fix histogram titles
+    o Check type of the track instead of the location
+
+- In CaloMoniDst v3r9, PatChecker v3r4p2
+  . Clean up dependencies in requirements
+
+- In CaloMoniDst v3r9, CaloReco v4r21, PatVeloTT v3r7, TrackFitter v2r36
+  . Remove obsolete file <package>_dll.cpp
 
 </PRE><H1><A NAME=v7r4>2009-07-15 RecSys v7r4</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r4.
