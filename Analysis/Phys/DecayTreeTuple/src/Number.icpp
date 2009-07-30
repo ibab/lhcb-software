@@ -1,0 +1,8 @@
+  /// generic templated method to extract the number of entries in a given location.
+  /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
+  template<class CLASS> 
+  int number(std::string location){
+    if (exist<CLASS>(location)){
+      return (get<CLASS>(location))->size() ;
+    } else return -1 ;
+  }

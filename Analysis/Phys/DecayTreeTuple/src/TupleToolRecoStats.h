@@ -1,4 +1,4 @@
-// $Id: TupleToolRecoStats.h,v 1.1 2009-02-11 18:02:35 pkoppenb Exp $
+// $Id: TupleToolRecoStats.h,v 1.2 2009-07-30 14:54:47 pkoppenb Exp $
 #ifndef TUPLETOOLRECOSTATS_H 
 #define TUPLETOOLRECOSTATS_H 1
 
@@ -27,15 +27,7 @@ public:
 protected:
 
 private:
-  /// generic templated method to extract the number of entries in a given location.
-  /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
-  template<class CLASS> 
-  int number(std::string location){
-    if (exist<CLASS>(location)){
-      return (get<CLASS>(location))->size() ;
-    } else return -1 ;
-  }
-  
+#include "Number.icpp"
 
 
 };
