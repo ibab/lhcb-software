@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.27 2009-07-30 09:25:25 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.28 2009-07-30 09:32:36 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -63,7 +63,7 @@ namespace Rich
     static const ShortType NumIngressPerL1 = 4;
 
     /** @brief Number of L1 inputs per ingress.
-     *  Allow for 12 here even thought the UKL1 boards only have 9, to allow the decoding
+     *  Allow for 12 here even though the UKL1 boards only have 9, to allow the decoding
      *  to work for some prototype boards which do have 12 inputs */
     static const ShortType NumL1InputsPerIngress = 12;
 
