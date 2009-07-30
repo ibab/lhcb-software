@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.28 2009-02-27 12:17:50 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.29 2009-07-30 08:01:09 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -212,6 +212,12 @@ public:
   /** find a list of sectors from list of nicknames  **/
   Sectors findSectors(const std::vector<std::string>& vec);
 
+  /** get list of all disabled sectors */
+  Sectors disabledSectors() const; 
+
+  /** get list of disabled beetles */
+  std::vector<LHCb::STChannelID> disabledBeetles() const;
+
 protected:
 
   /** set the first Station number */
@@ -348,6 +354,9 @@ inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<std::st
   sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
   return sectors;
 }
+
+
+
 
 #endif // _DeSTDetector_H
 

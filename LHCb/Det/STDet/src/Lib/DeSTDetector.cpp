@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.19 2009-05-08 16:57:06 jvantilb Exp $
+// $Id: DeSTDetector.cpp,v 1.20 2009-07-30 08:01:09 mneedham Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -147,6 +147,34 @@ DeSTStation* DeSTDetector::findStation(const std::string& nickname){
     std::find_if( m_stations.begin(), m_stations.end(), STDetFun::equal_by_name<DeSTStation*>(nickname));
   return (iter != m_stations.end() ? *iter: 0);
 }
+
+DeSTDetector::Sectors DeSTDetector::disabledSectors() const{
+
+  Sectors disabled;
+  const Sectors& vec = sectors();
+  Sectors::const_iterator iterS = vec.begin();
+  for (; iterS != vec.end(); ++iterS){
+    if ((*iterS)->sectorStatus() == DeSTSector::ReadoutProblems) disabled.push_back(*iterS);
+  } // iterS
+  return disabled; 
+} 
+
+std::vector<LHCb::STChannelID> DeSTDetector::disabledBeetles() const{
+
+  std::vector<LHCb::STChannelID> disabledBeetles;
+  const Sectors& vec = sectors();
+  Sectors::const_iterator iterS = vec.begin();
+  for (; iterS != vec.end(); ++iterS){
+    std::vector<DeSTSector::Status> bStatus = (*iterS)->beetleStatus();
+    for (unsigned int i = 0; i < bStatus.size(); ++i) {
+      if (bStatus[i] == DeSTSector::ReadoutProblems){
+	const unsigned int firstStripOnBeetle = (i*LHCbConstants::nStripsInBeetle) + 1;
+        disabledBeetles.push_back((*iterS)->stripToChan(firstStripOnBeetle)); 
+      }
+    } //i 
+  } // iterS
+  return disabledBeetles; 
+} 
 
 std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id, 
                                                          const double offset) 
