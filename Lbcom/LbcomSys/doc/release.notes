@@ -6,6 +6,37 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r5>2009-07-30 LbcomSys v7r5</A></H1><PRE>
+This version uses Gaudi v21r3 and LHCb v27r5
+
+- Packages modified: CaloAssociators v6r8, L0DU v8r18, L0Muon v8r5p1,
+    RichMCTools v3r12, STTools v3r11
+
+- In CaloAssociators v6r8
+  . Remove obsolete file CaloAssociators_dll.cpp
+  . Add CaloClusterEntry status and weight filtering in CaloClusterMCTruth.cpp :
+    default UseForEnergy digits only and no minimal weight
+
+- In L0DU v8r18
+  . Implement RAMBCID data
+  . FastDecoding.opts: New options for fast (partial) decoding of L0DU bank
+
+- In L0Muon v8r5p1
+  . Avoid pushing hardwired filenames into JobOptionsSvc by expanding
+    environment variables 'late'
+
+- In RichMCTools v3r12
+  . Add new tool Rich::MC::NULLMCTruthTool that implements the MC truth 
+    interface but always returns NULL information.
+
+- In STTools v3r11
+  . Add possibility to add a misalignment error to STOfflinePosition tool
+  . Add printouts in initialize of STClusterSelectorOR, STSelectByCharge,
+    STSelectChannelIDByStatus and STSelectClustersByChannel.
+
+- In CaloAssociators v6r8, L0DU v8r18, L0Muon v8r5p1, RichMCTools v3r12
+  . Remove obsolete file <package>_dll.cpp
+
 </PRE><H1><A NAME=v7r4>2009-07-15 LbcomSys v7r4</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r4
 
