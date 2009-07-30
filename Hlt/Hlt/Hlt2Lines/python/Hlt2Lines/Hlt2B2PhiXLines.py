@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.1 2009-07-29 11:33:46 kimym Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.2 2009-07-30 09:11:30 pkoppenb Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -6,6 +6,9 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
     '''
     Selection for Bs -> Phi Phi
+
+    @author KIM Young Min  <s0679231@sms.ed.ac.uk>
+    @date 29-07-2009
     '''
 
     __slots__ = { 'KaonPtCut'               : 500 #MeV
