@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2009-07-30 08:44:14 dgolubko Exp $ 
+! $Id: release.notes,v 1.47 2009-07-30 08:48:53 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -7,6 +7,7 @@
 
 ! 2009-07-30 - Dmitry GOLUBKOV
  - CaloEMuMonitor.cpp add protection when no charged ProtoParticle
+ - cmt/requirements version incremented to v3r10
 
 !========================== CaloMoniDst v3r9 2009-07-28 =======================
 ! 2009-07-28 - Marco Cattaneo
