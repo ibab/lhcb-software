@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Chris Jones
+ - Convert all endreq to endmsg
+
 ! 2009-07-29 - Chris Jones
  - Convert (most) remaining monitors over to pre-booking all MC-free 
    histograms during initialisation. MC histograms are still booked on-demand 
