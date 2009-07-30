@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.25 2009-07-29 12:35:06 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.26 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -75,7 +75,7 @@ StatusCode PixelQC::prebookHistograms()
 // Main execution
 StatusCode PixelQC::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -87,7 +87,7 @@ StatusCode PixelQC::execute()
     if ( sc.isFailure() )
     { return Error( "Problem creating RichRecPixels", sc ); }
     debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endreq;
+            << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   // count events
@@ -258,13 +258,13 @@ StatusCode PixelQC::finalize()
 
   if ( m_nEvts > 0 )
   {
-    info() << "================================================================================" << endreq
-           << "                         Pixel summary for " << m_nEvts << " events :-" << endreq
-           << "--------------------------------------------------------------------------------" << endreq;
+    info() << "================================================================================" << endmsg
+           << "                         Pixel summary for " << m_nEvts << " events :-" << endmsg
+           << "--------------------------------------------------------------------------------" << endmsg;
     printRICH(Rich::Rich1);
-    info() << "--------------------------------------------------------------------------------" << endreq;
+    info() << "--------------------------------------------------------------------------------" << endmsg;
     printRICH(Rich::Rich2);
-    info() << "================================================================================" << endreq;
+    info() << "================================================================================" << endmsg;
   }
 
   // Execute base class method
@@ -277,60 +277,60 @@ void PixelQC::printRICH( const Rich::DetectorType rich ) const
   const PoissonEffFunctor  pois ("%7.2f +-%6.2f");
 
   info() << "  " << rich << " : All pixels          : " << occ(m_recoTally.pixels[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.pixels[rich],m_rawTally.pixels[rich]) << " %" << endreq;
+         << "   Eff. = " << pois(m_recoTally.pixels[rich],m_rawTally.pixels[rich]) << " %" << endmsg;
 
   info() << "        : Cherenkov Signal    : " << occ(m_recoTally.signal[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.signal[rich],m_rawTally.signal[rich]) << " %" << endreq;
+         << "   Eff. = " << pois(m_recoTally.signal[rich],m_rawTally.signal[rich]) << " %" << endmsg;
 
   if ( Rich::Rich1 == rich )
   {
     info() << "        :     Aerogel         : " << occ(m_recoTally.radHits[Rich::Aerogel],m_nEvts)
            << "   Eff. = " << pois(m_recoTally.radHits[Rich::Aerogel],m_rawTally.radHits[Rich::Aerogel])
-           << " %" << endreq;
+           << " %" << endmsg;
     info() << "        :     Rich1Gas        : " << occ(m_recoTally.radHits[Rich::Rich1Gas],m_nEvts)
            << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich1Gas],m_rawTally.radHits[Rich::Rich1Gas])
-           << " %" << endreq;
+           << " %" << endmsg;
   }
   else
   {
     info() << "        :     Rich2Gas        : " << occ(m_recoTally.radHits[Rich::Rich2Gas],m_nEvts)
            << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich2Gas],m_rawTally.radHits[Rich::Rich2Gas])
-           << " %" << endreq;
+           << " %" << endmsg;
   }
 
   info() << "        : All Backgrounds     : " << occ(m_recoTally.bkgs[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endreq;
+         << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endmsg;
 
   if ( m_rawTally.npdqcks[rich] > 0 )
     info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endmsg;
 
   if ( m_rawTally.ngasck[rich] > 0 )
     info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endmsg;
 
   if ( m_rawTally.n2ck[rich] > 0 )
     info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endmsg;
 
   if ( m_rawTally.naerofilter[rich] > 0 )
     info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endmsg;
 
   if ( m_rawTally.nbackscatter[rich] > 0 )
     info() << "        :   - Si Back-Scatter : " << occ(m_recoTally.nbackscatter[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nbackscatter[rich],m_rawTally.nbackscatter[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.nbackscatter[rich],m_rawTally.nbackscatter[rich]) << " %" << endmsg;
 
   if ( m_rawTally.nhpdintreflect[rich] > 0 )
     info() << "        :   - HPD Reflections : " << occ(m_recoTally.nhpdintreflect[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nhpdintreflect[rich],m_rawTally.nhpdintreflect[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.nhpdintreflect[rich],m_rawTally.nhpdintreflect[rich]) << " %" << endmsg;
 
   if ( m_rawTally.ntrack[rich] > 0 )
     info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endmsg;
 
   if ( m_rawTally.nchargeshare[rich] > 0 )
     info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endreq;
+           << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endmsg;
 
 }

@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.11 2009-04-17 11:16:49 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.12 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -142,7 +142,7 @@ StatusCode AlignmentMonitor::initialize()
 //=============================================================================
 StatusCode AlignmentMonitor::execute() {
 
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Check Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -155,27 +155,27 @@ StatusCode AlignmentMonitor::execute() {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endreq;
+            << " RichRecSegments" << endmsg;
   }
   if ( msgLevel(MSG::DEBUG) ) {
-    debug() << " Found " << richTracks()->size() << " tracks" << endreq;
+    debug() << " Found " << richTracks()->size() << " tracks" << endmsg;
   }
 
   if ( (int)richTracks()->size() > m_maxUsedTracks ) {
     debug() << "Found " << richTracks()->size() << ">"
-            << m_maxUsedTracks << " max usable tracks, stopping." << endreq;
+            << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
     return StatusCode::SUCCESS;
   }
   if ( richPixels()->empty() ) {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endreq;
+            << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
     debug() << "No photons found : Created "
-            << richPhotons()->size() << " RichRecPhotons" << endreq;
+            << richPhotons()->size() << " RichRecPhotons" << endmsg;
   }
 
   // Iterate over segments
@@ -215,7 +215,7 @@ StatusCode AlignmentMonitor::execute() {
     thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, m_pType);
 
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " Found " << segment->richRecPhotons().size() << " in this segment" << endreq;
+      debug() << " Found " << segment->richRecPhotons().size() << " in this segment" << endmsg;
 
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )

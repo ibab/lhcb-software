@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.7 2007-08-09 16:20:32 jonrob Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.8 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -73,7 +73,7 @@ StatusCode SummaryQC::initialize()
 // Main execution
 StatusCode SummaryQC::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Try and load the Summary data
   if ( !exist<LHCb::RichSummaryTracks>(m_summaryLoc) )
@@ -189,47 +189,47 @@ StatusCode SummaryQC::finalize()
       m_nTruePhotons[Rich::Aerogel]+m_nTruePhotons[Rich::Rich1Gas]+m_nTruePhotons[Rich::Rich2Gas];
 
     // print out summary info
-    info() << "=======================================================================" << endreq;
-    info() << "           Rich Reconstruction Summary : " << m_nEvts << " events" << endreq;
-    info() << "-----------------------------------------------------------------------" << endreq;
+    info() << "=======================================================================" << endmsg;
+    info() << "           Rich Reconstruction Summary : " << m_nEvts << " events" << endmsg;
+    info() << "-----------------------------------------------------------------------" << endmsg;
 
     // track selection
     info() << " Track Selection : " << m_trSelector->selectedTracks()
            << " : beta > " << m_minBeta
-           << endreq;
-    info() << "-----------------------------------------------------------------------" << endreq;
+           << endmsg;
+    info() << "-----------------------------------------------------------------------" << endmsg;
 
-    info() << "    Created " << eff(m_nTracks,m_nEvts) << " RichSummaryTracks / event" << endreq;
+    info() << "    Created " << eff(m_nTracks,m_nEvts) << " RichSummaryTracks / event" << endmsg;
 
-    info() << "      -> with " << eff(totSegs,m_nTracks) << " radiator segments / track" << endreq;
+    info() << "      -> with " << eff(totSegs,m_nTracks) << " radiator segments / track" << endmsg;
     info() << "        -> " << eff(m_nSegments[Rich::Aerogel],m_nTracks)
-           << " aerogel  segments / track" << endreq;
+           << " aerogel  segments / track" << endmsg;
     info() << "        -> " << eff(m_nSegments[Rich::Rich1Gas],m_nTracks)
-           << " Rich1Gas segments / track" << endreq;
+           << " Rich1Gas segments / track" << endmsg;
     info() << "        -> " << eff(m_nSegments[Rich::Rich2Gas],m_nTracks)
-           << " Rich2Gas segments / track" << endreq;
+           << " Rich2Gas segments / track" << endmsg;
 
-    info() << "      -> with " << eff(totPhots,m_nTracks)  << " reco. photons / track" << endreq;
+    info() << "      -> with " << eff(totPhots,m_nTracks)  << " reco. photons / track" << endmsg;
     info() << "        -> " << eff(m_nPhotons[Rich::Aerogel],m_nSegments[Rich::Aerogel])
-           << " aerogel  photons / segment" << endreq;
+           << " aerogel  photons / segment" << endmsg;
     info() << "        -> " << eff(m_nPhotons[Rich::Rich1Gas],m_nSegments[Rich::Rich1Gas])
-           << " Rich1Gas photons / segment" << endreq;
+           << " Rich1Gas photons / segment" << endmsg;
     info() << "        -> " << eff(m_nPhotons[Rich::Rich2Gas],m_nSegments[Rich::Rich2Gas])
-           << " Rich2Gas photons / segment" << endreq;
+           << " Rich2Gas photons / segment" << endmsg;
 
     if ( totPhotsTrue>0 )
-      info() << "      -> with " << eff(totPhotsTrue,m_nTracks)  << " true photons / track" << endreq;
+      info() << "      -> with " << eff(totPhotsTrue,m_nTracks)  << " true photons / track" << endmsg;
     if ( m_nSegmentsMC[Rich::Aerogel]>0 )
       info() << "        -> " << eff(m_nTruePhotons[Rich::Aerogel],m_nSegmentsMC[Rich::Aerogel])
-             << " aerogel  photons / segment" << endreq;
+             << " aerogel  photons / segment" << endmsg;
     if ( m_nSegmentsMC[Rich::Rich1Gas]>0 )
       info() << "        -> " << eff(m_nTruePhotons[Rich::Rich1Gas],m_nSegmentsMC[Rich::Rich1Gas])
-             << " Rich1Gas photons / segment" << endreq;
+             << " Rich1Gas photons / segment" << endmsg;
     if ( m_nSegmentsMC[Rich::Rich2Gas]>0 )
       info() << "        -> " << eff(m_nTruePhotons[Rich::Rich2Gas],m_nSegmentsMC[Rich::Rich2Gas])
-             << " Rich2Gas photons / segment" << endreq;
+             << " Rich2Gas photons / segment" << endmsg;
 
-    info() << "-----------------------------------------------------------------------" << endreq;
+    info() << "-----------------------------------------------------------------------" << endmsg;
 
   }
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.72 2008-05-09 13:56:58 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.73 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -95,7 +95,7 @@ StatusCode PIDQC::initialize()
 
   if ( m_mcPsel )
   {
-    info() << "Will filter only selected MCParticles" << endreq;
+    info() << "Will filter only selected MCParticles" << endmsg;
     acquireTool( "MCParticleSelector", m_mcPselector, this );
   }
 
@@ -119,7 +119,7 @@ StatusCode PIDQC::initialize()
 // Main execution
 StatusCode PIDQC::execute()
 {
-  debug() << "Execute" << endreq;
+  debug() << "Execute" << endmsg;
 
   // Load RichPID data
   if ( !loadPIDData() || m_richPIDs.empty() ) return StatusCode::SUCCESS;
@@ -234,7 +234,7 @@ StatusCode PIDQC::execute()
           //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
           if ( msgLevel(MSG::DEBUG) )
           {
-            debug() << "MCPID below threshold :-" << endreq;
+            debug() << "MCPID below threshold :-" << endmsg;
             print ( debug(), iPID, pid, mcpid );
           }
           mcpid = Rich::BelowThreshold;
@@ -248,7 +248,7 @@ StatusCode PIDQC::execute()
         //        StatusCode::SUCCESS, 0 );
         if ( msgLevel(MSG::DEBUG) )
         {
-          debug() << "RecoPID below threshold :-" << endreq;
+          debug() << "RecoPID below threshold :-" << endmsg;
           print ( debug(), iPID, pid, mcpid );
         }
         pid = Rich::BelowThreshold;
@@ -261,7 +261,7 @@ StatusCode PIDQC::execute()
       if ( m_truth )
       {
         if ( msgLevel(MSG::VERBOSE) ) 
-          verbose() << "  MCID        = " << mcpid << endreq;
+          verbose() << "  MCID        = " << mcpid << endmsg;
 
         // Fill plots in PID performance tool
         if ( mcpid != Rich::Unknown &&
@@ -301,7 +301,7 @@ StatusCode PIDQC::execute()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endreq;
+    debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -395,41 +395,41 @@ StatusCode PIDQC::finalize()
       trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
       info() << "-------------+-------------------------------------------------+------------"
-             << endreq
-             << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endreq
-             << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endreq;
+             << endmsg
+             << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endmsg
+             << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endmsg;
       info() << " #Tks(+MC)   |";
       unsigned int tkCount = 0;
       for ( TkCount::const_iterator iTk = m_trackCount.begin();
             iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
-        if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
+        if ( tkCount == 3 ) { tkCount = 0; info() << endmsg << "             |"; }
         info() << " " << (*iTk).first << "=" << (*iTk).second.first
                << "(" << (*iTk).second.second << ")";
       }
       tkCount = 0;
-      info() << endreq
-             << " Using PIDs  | " << m_pidTDS << endreq
+      info() << endmsg
+             << " Using PIDs  | " << m_pidTDS << endmsg
              << " #PIDs(+MC)  |";
       for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
             iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
-        if ( tkCount == 3 ) { tkCount = 0; info() << endreq << "             |"; }
+        if ( tkCount == 3 ) { tkCount = 0; info() << endmsg << "             |"; }
         info() << " " << (*iPC).first << "=" << (*iPC).second.first
                << "(" << (*iPC).second.second << ")";
       }
-      info() << endreq;
+      info() << endmsg;
       if ( m_dllKaonCut < 9999991 ) {
-        info() << " Tagging tracks as kaons if kaon DLL > " << m_dllKaonCut << endreq;
+        info() << " Tagging tracks as kaons if kaon DLL > " << m_dllKaonCut << endmsg;
       }
       if ( m_dllPionCut < 9999991 ) {
-        info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endreq;
+        info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endmsg;
       }
       info() << "-------------+-------------------------------------------------+------------"
-             << endreq
+             << endmsg
              << "   %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
-             << endreq
+             << endmsg
              << "-------------+-------------------------------------------------+------------"
-             << endreq
-             << "             |                                                 |" << endreq;
+             << endmsg
+             << "             |                                                 |" << endmsg;
       const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
                                     " Kaon        |", " Proton      |", " X           |" };
       for ( iRec = 0; iRec < 6; ++iRec )
@@ -439,42 +439,42 @@ StatusCode PIDQC::finalize()
           m_sumTab[0][iRec] % m_sumTab[1][iRec] %
           m_sumTab[2][iRec] % m_sumTab[3][iRec] %
           m_sumTab[4][iRec] % m_sumTab[5][iRec] %
-          purity[iRec] << endreq;
+          purity[iRec] << endmsg;
       }
-      info() << "   (reco)    |                                                 |" << endreq
+      info() << "   (reco)    |                                                 |" << endmsg
              << "-------------+-------------------------------------------------+------------"
-             << endreq;
+             << endmsg;
       info() << "   %Eff.     |" << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f " ) %
         eff[0] % eff[1] % eff[2] % eff[3] % eff[4] % eff[5]
-             << "     |" << endreq;
+             << "     |" << endmsg;
       info() << "-------------+-------------------------------------------------+------------"
-             << endreq;
+             << endmsg;
 
       info() << " % ID eff    |  K->K,Pr   : "
              << boost::format( "%6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
-        kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endreq;
+        kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endmsg;
       info() << " % MisID eff |  K->e,m,pi : "
              << boost::format( "%6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
-        kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endreq;
+        kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endmsg;
       info() << " % ID rate   |  Events    : "
              << boost::format( "%6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
-        evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
+        evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endmsg;
 
       for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
       {
         const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
         const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
         info() << "             |  -> With "
-               << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endreq;
+               << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endmsg;
       }
 
       info() << "-------------+-------------------------------------------------+------------"
-             << endreq;
+             << endmsg;
 
     }
     else
     {
-      warning() << "NO ENTRIES -> PID table skipped ..." << endreq;
+      warning() << "NO ENTRIES -> PID table skipped ..." << endmsg;
     }
 
   } // final printout
@@ -493,7 +493,7 @@ StatusCode PIDQC::loadPIDData()
     {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
-      debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endreq;
+      debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endmsg;
       return StatusCode::SUCCESS;
     }
   }
@@ -505,7 +505,7 @@ StatusCode PIDQC::loadPIDData()
 void PIDQC::countTracks( const std::string & location )
 {
   LHCb::Tracks * tracks = get<LHCb::Tracks>( location );
-  debug() << "Found " << tracks->size() << " Tracks at " << location << endreq;
+  debug() << "Found " << tracks->size() << " Tracks at " << location << endmsg;
   for ( LHCb::Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
@@ -545,35 +545,35 @@ void PIDQC::print( MsgStream & msg,
 
   msg << "RichPID " << iPID->key() << " ("
       << iPID->pidType() << "), '"
-      << tkType << "' track, Ptot " << boost::format(m_sF)%tkPtot << " GeV/c," << endreq
+      << tkType << "' track, Ptot " << boost::format(m_sF)%tkPtot << " GeV/c," << endmsg
       << "  Active rads =";
   if ( iPID->usedAerogel()  ) { msg << " " << Rich::Aerogel;  }
   if ( iPID->usedRich1Gas() ) { msg << " " << Rich::Rich1Gas; }
   if ( iPID->usedRich2Gas() ) { msg << " " << Rich::Rich2Gas; }
-  msg << endreq
+  msg << endmsg
       << "  Threshold   = ";
   {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
     const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
     const std::string T = iPID->isAboveThreshold(pid) ? "T" : "F";
     msg << T << " ";
   }}
-  msg << endreq
+  msg << endmsg
       << "  Dlls        = "
       << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Electron)) << " "
       << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Muon)) << " "
       << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Pion)) << " "
       << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Kaon)) << " "
       << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Proton))
-      << endreq
+      << endmsg
       << "  Prob(r/n)   = ";
   {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
     const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
     msg << boost::format(m_sF)%(iPID->particleRawProb(pid))
         << "/" << boost::format(m_sF)%(iPID->particleNormProb(pid)) << " ";
   }}
-  msg << endreq
-      << "  RecoPID     = " << pid << endreq;
-  msg << "  MCID        = " << mcpid << endreq;
+  msg << endmsg
+      << "  RecoPID     = " << pid << endmsg;
+  msg << "  MCID        = " << mcpid << endmsg;
 }
 
 const Rich::Rec::IPIDPlots * PIDQC::plotsTool( const Rich::ParticleIDType mcpid )

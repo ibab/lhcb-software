@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::TracklessRingMoni
  *
- *  $Id: RichTracklessRingMoni.cpp,v 1.7 2009-07-27 20:35:28 jonrob Exp $
+ *  $Id: RichTracklessRingMoni.cpp,v 1.8 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -58,7 +58,7 @@ StatusCode TracklessRingMoni::initialize()
   // tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endreq;
+  debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endmsg;
 
   return sc;
 }
@@ -95,7 +95,7 @@ StatusCode TracklessRingMoni::execute()
   if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
   const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endreq;
+    debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endmsg;
 
   // Rich Histo ID
   const RichHistoID hid;
@@ -163,7 +163,7 @@ StatusCode TracklessRingMoni::execute()
                 << " " << fitter.result().Radius
                 << " " << fitter.result().Variance
                 << " " << fitter.numberOfPoints()
-                << endreq;
+                << endmsg;
     const bool refitOK = ( fitter.result().Status == 0 &&
                            fitter.result().Variance < m_maxFitVariance[rad] );
     if ( refitOK )

@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.49 2009-07-29 12:35:07 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.50 2009-07-30 11:02:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -143,7 +143,7 @@ StatusCode RecoQC::execute()
   const bool mcRICHOK  = richRecMCTool()->pixelMCHistoryAvailable();
 
   // Iterate over segments
-  debug() << "Found " << richSegments()->size() << " segments" << endreq;
+  debug() << "Found " << richSegments()->size() << " segments" << endmsg;
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
@@ -168,7 +168,7 @@ StatusCode RecoQC::execute()
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
     }
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "   => type = " << mcType << endreq;
+      verbose() << "   => type = " << mcType << endmsg;
 
     // Expected Cherenkov theta angle for 'true' particle type
     thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
@@ -180,7 +180,7 @@ StatusCode RecoQC::execute()
     const double beta = m_richPartProp->beta( pTot, mcType );
     // selection cuts
     if ( beta < m_minBeta[rad] || beta > m_maxBeta[rad] ) continue;
-    //verbose() << "   => Passed beta cut" << endreq;
+    //verbose() << "   => Passed beta cut" << endmsg;
 
     // isolated track ?
     const bool isolated = m_isoTrack->isIsolated( segment, mcType );
@@ -205,7 +205,7 @@ StatusCode RecoQC::execute()
     unsigned int truePhotons(0);
     double avRecTrueTheta(0);
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endreq;
+      verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endmsg;
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
@@ -286,11 +286,11 @@ StatusCode RecoQC::finalize()
   const StatDivFunctor occ("%8.2f +-%5.2f");
 
   info() << "=============================================================================="
-         << endreq;
+         << endmsg;
 
   // track selection
-  info() << " Track Selection : " << m_trSelector->selectedTracks() << endreq;
-  info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endreq;
+  info() << " Track Selection : " << m_trSelector->selectedTracks() << endmsg;
+  info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
 
   // loop over radiators
   for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
@@ -304,12 +304,12 @@ StatusCode RecoQC::finalize()
     if ( m_truePhotCount[rad]>0 )
     {
       info() << " " << radName << " Av. # CK photons = "
-             << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endreq;
+             << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endmsg;
     }
   }
 
   info() << "=============================================================================="
-         << endreq;
+         << endmsg;
 
   // Execute base class method
   return HistoAlgBase::finalize();
