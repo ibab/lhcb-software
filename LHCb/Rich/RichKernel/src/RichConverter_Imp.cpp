@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.2 2009-07-07 17:27:11 jonrob Exp $
+ *  $Id: RichConverter_Imp.cpp,v 1.3 2009-07-30 11:28:22 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -39,7 +39,7 @@ StatusCode Rich::Converter_Imp::Print( const std::string& Message ,
                                        const MSG::Level & level   ,
                                        const StatusCode & Status ) const
 {
-  this->msgStream(level) << Message << endreq ;
+  this->msgStream(level) << Message << endmsg ;
   return Status;
 }
 

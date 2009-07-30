@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.18 2009-07-08 13:28:46 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.19 2009-07-30 11:28:22 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -45,7 +45,7 @@ StatusCode Rich::CommonBase<PBASE>::initialize()
 
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
-    this -> debug() << "Initialize" << endreq;
+    this -> debug() << "Initialize" << endmsg;
 
   return sc;
 }
@@ -59,7 +59,7 @@ StatusCode Rich::CommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
-    this -> debug() << "Finalize" << endreq;
+    this -> debug() << "Finalize" << endmsg;
 
   // Finalise base class and return
   return PBASE::finalize();
@@ -132,7 +132,7 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
         if ( ts_sp )
         {
           if ( this -> msgLevel(MSG::VERBOSE) )
-          { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endreq; }
+          { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endmsg; }
           sc = this->joSvc()->addPropertyToCatalogue(fullname,*ts_sp).isSuccess();
           if ( !sc ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
         }
@@ -177,7 +177,7 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
         if ( NULL != sp )
         {
           if ( this -> msgLevel(MSG::VERBOSE) )
-          { this -> verbose() << "  -> Found requested property" << *sp << " for " << name << endreq; }
+          { this -> verbose() << "  -> Found requested property" << *sp << " for " << name << endmsg; }
           break;
         }
         else

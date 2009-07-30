@@ -5,7 +5,7 @@
  *  Header file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.15 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.16 2009-07-30 11:28:21 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -144,7 +144,7 @@ namespace Rich
       if ( this -> msgLevel(MSG::DEBUG) )
       {
         this -> debug() << " Acquired tool '" << pTool->name()
-                        << "' of type '" << toolRegistry()->toolType(nickName) << "'" << endreq;
+                        << "' of type '" << toolRegistry()->toolType(nickName) << "'" << endmsg;
       }
 
       // return the tool pointer
@@ -187,7 +187,7 @@ namespace Rich
       {
         if ( this -> msgLevel(MSG::DEBUG) )
         {
-          this -> debug() << " Forced release for tool '" << pTool->name() << "'" << endreq;
+          this -> debug() << " Forced release for tool '" << pTool->name() << "'" << endmsg;
         }
         release( pTool );
         pTool = NULL;

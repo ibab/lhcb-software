@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.28 2008-10-21 19:15:25 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.29 2009-07-30 11:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -88,7 +88,7 @@ namespace Rich
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endreq;
+        debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endmsg;
       }
 
       // get tools
@@ -132,11 +132,11 @@ namespace Rich
         info() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
                << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
                << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
-               << endreq;
+               << endmsg;
       }
 
       m_pidTypes = m_richPartProp->particleTypes();
-      info() << "Particle types considered = " << m_pidTypes << endreq;
+      info() << "Particle types considered = " << m_pidTypes << endmsg;
 
       return sc;
     }
@@ -178,15 +178,15 @@ namespace Rich
         const StatDivFunctor occ("%10.2f +-%7.2f");
 
         // Print out final stats
-        info() << "=================================================================" << endreq
-               << "  Photon candidate summary : " << nEvents() << " events :-" << endreq
+        info() << "=================================================================" << endmsg
+               << "  Photon candidate summary : " << nEvents() << " events :-" << endmsg
                << "    Aerogel   : "
-               << occ(m_photCount[Rich::Aerogel],nEvents())  << "  photons/event" << endreq
+               << occ(m_photCount[Rich::Aerogel],nEvents())  << "  photons/event" << endmsg
                << "    Rich1Gas  : "
-               << occ(m_photCount[Rich::Rich1Gas],nEvents()) << "  photons/event" << endreq
+               << occ(m_photCount[Rich::Rich1Gas],nEvents()) << "  photons/event" << endmsg
                << "    Rich2Gas  : "
-               << occ(m_photCount[Rich::Rich2Gas],nEvents()) << "  photons/event" << endreq
-               << "=================================================================" << endreq;
+               << occ(m_photCount[Rich::Rich2Gas],nEvents()) << "  photons/event" << endmsg
+               << "=================================================================" << endmsg;
 
       }
       else
@@ -203,7 +203,7 @@ namespace Rich
       {
         debug() << "Found " << trackCreator()->richTracks()->size()
                 << " RichRecTracks and " << pixelCreator()->richPixels()->size()
-                << " RichRecPixels" << endreq;
+                << " RichRecPixels" << endmsg;
       }
       if ( !trackCreator()->richTracks()->empty() &&
            !pixelCreator()->richPixels()->empty() )
@@ -228,9 +228,9 @@ namespace Rich
 
             if ( msgLevel(MSG::VERBOSE) )
             {
-              verbose() << "Trying track " << track->key() << endreq
+              verbose() << "Trying track " << track->key() << endmsg
                         << " -> Found " << track->richRecSegments().size()
-                        << " RichRecSegments" << endreq;
+                        << " RichRecSegments" << endmsg;
             }
 
             // Iterate over segments
@@ -244,7 +244,7 @@ namespace Rich
               //if ( msgLevel(MSG::VERBOSE) )
               //{
               // verbose() << " -> Trying segment " << segment->key() << " "
-              //           << segment->trackSegment().radiator() << endreq;
+              //           << segment->trackSegment().radiator() << endmsg;
               //}
 
               if ( !segment->allPhotonsDone() )
@@ -266,7 +266,7 @@ namespace Rich
                 {
                   //if ( msgLevel(MSG::VERBOSE) )
                   //{
-                  //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endreq;
+                  //  verbose() << " -> Trying pixel " << (*iPixel)->key() << endmsg;
                   //}
                   reconstructPhoton( segment, *iPixel );
                 } // pixel loop
@@ -305,7 +305,7 @@ namespace Rich
       {
         verbose() << "Trying photon reco. with segment " << segment->key()
                   << " and pixel " << pixel->key() << " " << pixel->hpdPixelCluster()
-                  << endreq;
+                  << endmsg;
       }
 
       // check photon is possible before proceeding
@@ -313,13 +313,13 @@ namespace Rich
       {
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "   -> FAILED predictor check -> reject" << endreq;
+          verbose() << "   -> FAILED predictor check -> reject" << endmsg;
         }
         return NULL;
       }
       else if (  msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "   -> PASSED predictor check" << endreq;
+        verbose() << "   -> PASSED predictor check" << endmsg;
       }
 
       // flag this tool as having been called
@@ -367,7 +367,7 @@ namespace Rich
           {
             debug() << "Found " << m_photons->size()
                     << " pre-existing RichRecPhotons in TES at "
-                    << m_richRecPhotonLocation << endreq;
+                    << m_richRecPhotonLocation << endmsg;
           }
 
           // Remake local photon reference map
@@ -392,7 +392,7 @@ namespace Rich
     {
       if ( !track->allPhotonsDone() && track->inUse() )
       {
-        debug() << "Reconstructing all photons for track " << track->key() << endreq;
+        debug() << "Reconstructing all photons for track " << track->key() << endmsg;
 
         // Iterate over segments
         for ( LHCb::RichRecTrack::Segments::iterator segment =
@@ -413,7 +413,7 @@ namespace Rich
     {
       if ( !segment->allPhotonsDone() && segment->richRecTrack()->inUse() )
       {
-        debug() << "Reconstructing all photons for segment " << segment->key() << endreq;
+        debug() << "Reconstructing all photons for segment " << segment->key() << endmsg;
 
         // Which Rich
         const Rich::DetectorType rich = segment->trackSegment().rich();
@@ -425,7 +425,7 @@ namespace Rich
                                             pixelCreator()->range(rich) :
                                             has1 ? pixelCreator()->range(rich,Rich::top) :
                                             pixelCreator()->range(rich,Rich::bottom) );
-        debug() << " -> Found " << range.size() << " pixels" << endreq;
+        debug() << " -> Found " << range.size() << " pixels" << endmsg;
         for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
               iPixel != range.end(); ++iPixel )
         {
@@ -531,7 +531,7 @@ namespace Rich
       }
       if ( !ok && msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "    -> photon FAILED checkAngleInRange test" << endreq;
+        verbose() << "    -> photon FAILED checkAngleInRange test" << endmsg;
       } 
       return ok;
     }
@@ -572,7 +572,7 @@ namespace Rich
         debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel="
                 << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
                 << " Rich1Gas=" << m_photCount[Rich::Rich1Gas]-m_photCountLast[Rich::Rich1Gas]
-                << " Rich2Gas=" << m_photCount[Rich::Rich2Gas]-m_photCountLast[Rich::Rich2Gas] << endreq;
+                << " Rich2Gas=" << m_photCount[Rich::Rich2Gas]-m_photCountLast[Rich::Rich2Gas] << endmsg;
       }
     }
 

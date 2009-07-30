@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.15 2009-06-10 13:17:29 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.16 2009-07-30 11:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -115,7 +115,7 @@ namespace Rich
       m_tkToolNames[Rich::Rec::Track::Trigger]     = "Rich::Rec::BaseTrackSelector";
       m_tkToolNames[Rich::Rec::Track::MCRichTrack] = "Rich::Rec::BaseTrackSelector";
 
-      info() << "Track Selection : " << m_trNames << endreq;
+      info() << "Track Selection : " << m_trNames << endmsg;
       for ( TrackNames::const_iterator iName = m_trNames.begin();
             iName != m_trNames.end(); ++iName )
       {
@@ -145,7 +145,7 @@ namespace Rich
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
-                  << "' for type " << Rich::text(type) << endreq;
+                  << "' for type " << Rich::text(type) << endmsg;
 
       StatusCode sc = StatusCode::SUCCESS;
 
@@ -168,7 +168,7 @@ namespace Rich
             {
               //---------------------------------------------------------------------------------
               if (msgLevel(MSG::VERBOSE))
-                verbose() << "Found global " << *iP << " option" << endreq;
+                verbose() << "Found global " << *iP << " option" << endmsg;
               const std::string fullname = name()+"."+Rich::text(type);
               const std::vector<const Property*> * properties = joSvc()->getProperties(fullname);
               bool found = false;
@@ -228,7 +228,7 @@ namespace Rich
       if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
       {
         verbose() << "Track algorithm type " << Rich::Rec::text(type)
-                  << " not selected" << endreq;
+                  << " not selected" << endmsg;
       }
       return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
     }
@@ -242,7 +242,7 @@ namespace Rich
       if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
       {
         verbose() << "Track algorithm type " << Rich::Rec::text(type)
-                  << " not selected" << endreq;
+                  << " not selected" << endmsg;
       }
       return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
     }

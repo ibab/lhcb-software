@@ -5,7 +5,7 @@
  *  Header file for poisson efficiency functor : RichStatDivFunctor
  *
  *  CVS Log :-
- *  $Id: RichStatDivFunctor.h,v 1.7 2007-03-19 15:03:29 jonrob Exp $
+ *  $Id: RichStatDivFunctor.h,v 1.8 2009-07-30 11:28:21 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -81,7 +81,7 @@ namespace Rich
    *
    *  @code
    *  RichStatDivFunctor result("%8.2f +-%6.2f");
-   *  info() << "Result = " << result(a,b) << endreq;
+   *  info() << "Result = " << result(a,b) << endmsg;
    *  @endcode
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch

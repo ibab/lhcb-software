@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.18 2008-04-16 17:31:38 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.19 2009-07-30 11:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -68,7 +68,7 @@ namespace Rich
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "RichRecTrack location : " << m_richRecTrackLocation << endreq;
+        debug() << "RichRecTrack location : " << m_richRecTrackLocation << endmsg;
       }
 
       // tools
@@ -82,9 +82,9 @@ namespace Rich
 
       // track ray tracing
       m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
-      info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endreq;
-      info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endreq;
-      info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endreq;
+      info() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+      info() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+      info() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
       return sc;
     }
@@ -124,9 +124,9 @@ namespace Rich
         const StatDivFunctor    occ("%8.2f +-%5.2f");
 
         // Print out final track stats
-        info() << "=================================================================================" << endreq;
-        info() << "                     Track Selection Summary : " << m_Nevts << " events" << endreq;
-        info() << "---------------------------------------------------------------------------------" << endreq;
+        info() << "=================================================================================" << endmsg;
+        info() << "                     Track Selection Summary : " << m_Nevts << " events" << endmsg;
+        info() << "---------------------------------------------------------------------------------" << endmsg;
         for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
               i != m_nTracksAll.end(); ++i )
         {
@@ -135,18 +135,18 @@ namespace Rich
           name.resize(18,' ');
           info() << "  " << name << " :" << occ((*i).second.selectedTracks,m_Nevts)
                  << " tracks/event : RICH eff " << eff((*i).second.selectedTracks,(*i).second.triedTracks)
-                 << " % " << endreq;
+                 << " % " << endmsg;
           if ( (*i).second.aeroSegs>0 )
             info() << "                     :"
-                   << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endreq;
+                   << occ((*i).second.aeroSegs,m_Nevts)  << " Aerogel  segments/event" << endmsg;
           if ( (*i).second.rich1GasSegs>0 )
             info() << "                     :"
-                   << occ((*i).second.rich1GasSegs,m_Nevts) << " Rich1Gas segments/event" << endreq;
+                   << occ((*i).second.rich1GasSegs,m_Nevts) << " Rich1Gas segments/event" << endmsg;
           if ( (*i).second.rich2GasSegs>0 )
             info() << "                     :"
-                   << occ((*i).second.rich2GasSegs,m_Nevts)   << " Rich2Gas segments/event" << endreq;
+                   << occ((*i).second.rich2GasSegs,m_Nevts)   << " Rich2Gas segments/event" << endmsg;
         }
-        info() << "=================================================================================" << endreq;
+        info() << "=================================================================================" << endmsg;
 
       }
 
@@ -186,7 +186,7 @@ namespace Rich
                     << (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks << "/"
                     << (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks << ")";
           }
-          debug() << endreq;
+          debug() << endmsg;
         } // debug
       } // has been called
     }
@@ -213,7 +213,7 @@ namespace Rich
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "Found " << m_tracks->size() << " pre-existing RichRecTracks in TES at "
-                    << m_richRecTrackLocation << endreq;
+                    << m_richRecTrackLocation << endmsg;
           }
 
           if ( m_bookKeep )
@@ -258,7 +258,7 @@ namespace Rich
       if ( OK )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endreq;
+          verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endmsg;
 
         // set global hit point
         newSegment->setPdPanelHitPoint( hitPoint );
@@ -286,7 +286,7 @@ namespace Rich
           newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
           newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::left );
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "    -> Segment force traces to left/top HPD panel at " << hitPoint << endreq;
+            verbose() << "    -> Segment force traces to left/top HPD panel at " << hitPoint << endmsg;
         }
 
         // right/bottom
@@ -302,7 +302,7 @@ namespace Rich
           newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
           newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::right );
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endreq;
+            verbose() << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endmsg;
         }
 
       }

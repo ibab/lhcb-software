@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2009-07-30 - Chris Jones
+ - Replace all endreq with endmsg
+
 !===================== RichRecBase v3r24 2009-07-13 ==========================
 ! 2009-07-09 - Chris Jones
  - Fix bug in RichRecTrack where NDOF and charge data members were floats
