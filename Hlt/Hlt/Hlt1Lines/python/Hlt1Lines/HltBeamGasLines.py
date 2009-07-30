@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.6 2009-07-14 19:47:30 phopchev Exp $
+# $Id: HltBeamGasLines.py,v 1.7 2009-07-30 15:40:34 dhcroft Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -130,13 +130,18 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	algExtractClust = BeamGasTrigExtractClusters(   OutputLocation = "Raw/Velo/UnusedRLiteClusters"
                                                       , OutputLevel = INFO )
 
-	algRTracking2 = Tf__PatVeloRTracking(   'HltRecoRZVelo_BeamCrossing_Second'
-	                		      , HitManagerName = "SecondDefaultVeloRHitManager"
-					      #, ToolSvc.SecondDefaultVeloRHitManager.LiteClusterLocation = "Raw/Velo/UnusedRLiteClusters"
-					      , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
-					      , ZVertexMin  = self.getProp('ZVertexMin')
-					      , ZVertexMax  = self.getProp('ZVertexMax')
-					      , OutputLevel = INFO )  
+        algRTracking2 = Tf__PatVeloRTracking(   'HltRecoRZVelo_BeamCrossing_Second'
+                   , HitManagerName = "SecondPatVeloRHitManager"
+                   , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
+                   , ZVertexMin  = self.getProp('ZVertexMin')
+                   , ZVertexMax  = self.getProp('ZVertexMax')
+                   , OutputLevel = INFO )
+
+        DefaultVeloRHitManager( "SecondDefaultVeloRHitManager"
+                                , LiteClusterLocation = "Raw/Velo/UnusedRLiteClusters" )
+        PatVeloRHitManager("SecondPatVeloRHitManager"
+                             , DefaultHitManagerName= "SecondDefaultVeloRHitManager" )
+                                                                                                                                                         
 
 	algVtxCut = BeamGasTrigVertexCut(   'BeamGasTrigVertexCut_BeamCrossing'
 	                		  , RZTracksInputLocation = algRTracking2.OutputTracksName
