@@ -127,10 +127,12 @@ void QCDFactorisation::init(){
 		std::cout << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
 		const double sBToKStarGamma = constrain.getSBToKStarGamma();
 		std::cout << "S(B_d->K*gamma) is: " << sBToKStarGamma << std::endl;
+		const std::pair<double, double> s4Zero = constrain.getS4Zero();
+		std::cout << "S4 Zero Crossing point is: " << s4Zero.first << " (GeV^2). Gradient at this point is " <<  s4Zero.second <<std::endl;
+		const std::pair<double, double> s5Zero = constrain.getS5Zero();
+		std::cout << "S5 Zero Crossing point is: " << s5Zero.first << " (GeV^2). Gradient at this point is " << s5Zero.second <<std::endl;		
 		const std::pair<double, double> s6Zero = constrain.getS6Zero();
 		std::cout << "S6 (~AFB) Zero Crossing point is: " << s6Zero.first << " (GeV^2). Gradient at this point is " <<  s6Zero.second <<std::endl;
-		const std::pair<double, double> s5Zero = constrain.getS5Zero();
-		std::cout << "S5 Zero Crossing point is: " << s5Zero.first << " (GeV^2). Gradient at this point is " << s5Zero.second <<std::endl;
 	}
 	
 #if 0

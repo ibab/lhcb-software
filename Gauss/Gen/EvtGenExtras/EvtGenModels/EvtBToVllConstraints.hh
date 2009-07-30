@@ -27,6 +27,7 @@ public:
 	double getSBToKStarGamma() const;
 	
 	void getSpinAmplitudes(const double q2, std::vector<EvtComplex>* amps, const bool isBbar, const double _scaleFactor = 1e12) const;
+	const std::pair<double, double> getS4Zero() const;
 	const std::pair<double, double> getS5Zero() const;
 	const std::pair<double, double> getS6Zero() const;
 
@@ -71,6 +72,7 @@ private:
 	inline double getLambda(const double q2) const;
 	inline EvtComplex getN(const double q2, const double beta, const double lambda) const;
 	
+	const double getJ4(const double q2) const;
 	const double getJ5(const double q2) const;
 	const double getJ6(const double q2) const;
 	const std::pair<double, double> findZero(gsl_function* F) const;

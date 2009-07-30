@@ -1,3 +1,4 @@
+#include "EvtGenModels/EvtBToVllBasisCoeffs.hh"
 #include "EvtGenModels/EvtBToVllConstraints.hh"
 #include "EvtGenModels/EvtBToVllEvolveWC.hh"
 #include "EvtGenModels/EvtBToVllQCDUtils.hh"
@@ -117,14 +118,13 @@ double EvtBToVllConstraints::getSBToKStarGamma() const{
 	const double beta = (21.1/180)*constants::Pi;//Value of beta from HFAG Winter 08/09
 	const EvtComplex tbyxi(-0.08912655225010323,-0.033310267087406725);
 	const double tpbyxi = 0.0;//an approximation - we neglect the NP contribution to C8
-	const EvtComplex Ceffp1_7 = (constants::ms/constants::mb)*C7sm + C7R;
-	
+
 	const EvtComplex common = ((Ceffp1_7 + tpbyxi)/(Ceff1_7 + tbyxi));
 	const EvtComplex top = 2*Im(common*Exp(EvtComplex(0.0,-2*beta)));
 	const EvtComplex bottom = Abs(common);
 
 	const EvtComplex SBtoKStarGamma =  top/(1 + bottom*bottom);
-	DEBUGPRINT("SBtoKStarGamma: ", SBtoKStarGamma);
+	DEBUGPRINT("SBtoKStarGamma: ", SBtoKStarGamma);//V
 
 	return Re(SBtoKStarGamma);
 }
@@ -465,22 +465,46 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	fact.parameters->setBbar(_isBbar);
 }
 
+const double EvtBToVllConstraints::getJ4(const double q2) const{
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	return obs.getS(EvtBToVllBasisCoeffs::I4); 
+}
+
 const double EvtBToVllConstraints::getJ5(const double q2) const{
-	
-	std::vector<EvtComplex> amps(NUMBER_OF_AMPS);
-	getSpinAmplitudes(q2, &amps, true);//calc for the Bbar
-	
-	return (3*getBeta(q2)*(-((constants::mmu*(Re(amps.at(APL)*Conjugate(amps.at(AS))) +
-			Re(amps.at(APR)*Conjugate(amps.at(AS)))))/sqrt(q2)) + Re(amps.at(A0L)*Conjugate(amps.at(APL))) - 
-	       Re(amps.at(A0R)*Conjugate(amps.at(APR)))))/(2.*sqrt(2));
-	
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	return obs.getS(EvtBToVllBasisCoeffs::I5); 
 }
 
 const double EvtBToVllConstraints::getJ6(const double q2) const{
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	return obs.getS(EvtBToVllBasisCoeffs::I6); 
+}
+
+
+const std::pair<double, double> EvtBToVllConstraints::getS4Zero() const{
 	
-	std::vector<EvtComplex> amps(NUMBER_OF_AMPS);
-	getSpinAmplitudes(q2, &amps, true);//calc for the Bbar
-	return ( 1.5*getBeta(q2)*( Re(amps.at(ATL) * Conjugate(amps.at(APL))) - Re(amps.at(ATR) * Conjugate(amps.at(APR))) ) );
+	//hack to get const correctness 
+	class s4utils{
+	public:
+		s4utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const s4utils* c = (s4utils*)params;
+			const double result = c->calc->getJ4(q2);
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	s4utils u(this);
+	
+    gsl_function F;
+    F.function = &s4utils::getValue;
+    F.params = &u;
+    return findZero(&F);
 }
 
 const std::pair<double, double> EvtBToVllConstraints::getS5Zero() const{
@@ -492,7 +516,7 @@ const std::pair<double, double> EvtBToVllConstraints::getS5Zero() const{
 		}
 		static double getValue(const double q2, void* params){
 			const s5utils* c = (s5utils*)params;
-			const double result = c->calc->getJ5(q2);//scale up to a more useful range
+			const double result = c->calc->getJ5(q2);
 			return result;
 		}
 	private:
@@ -515,7 +539,7 @@ const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
 		}
 		static double getValue(const double q2, void* params){
 			const s6utils* c = (s6utils*)params;
-			const double result = c->calc->getJ6(q2);//scale up to a more useful range
+			const double result = c->calc->getJ6(q2);
 			return result;
 		}
 	private:
