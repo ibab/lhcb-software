@@ -1,4 +1,4 @@
-// $Id: UpdateMuonPIDInProtoP.cpp,v 1.1 2009-01-22 14:19:05 jonrob Exp $
+// $Id: UpdateMuonPIDInProtoP.cpp,v 1.2 2009-07-30 12:16:52 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -126,7 +126,7 @@ bool UpdateMuonPIDInProtoP::replaceMuon( LHCb::ProtoParticle * proto ) const
               << " BkLL=" <<  muonPID->MuonLLBg()
               << " nSharedHits=" << muonPID->nShared()
               << " isMuon=" << muonPID->IsMuon()
-              << endreq;
+              << endmsg;
   }
 
   // store acceptance flag for those in acceptance (lack of flag signifies
@@ -173,7 +173,7 @@ bool UpdateMuonPIDInProtoP::getMuonData()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << muonpids->size()
-            << " MuonPIDs from " << m_muonPath << endreq;
+            << " MuonPIDs from " << m_muonPath << endmsg;
   }
 
   // refresh the reverse mapping

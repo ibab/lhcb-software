@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.9 2009-07-09 11:19:05 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.10 2009-07-30 12:16:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -124,7 +124,7 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endreq;
+    debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endmsg;
   }
 
   return StatusCode::SUCCESS;

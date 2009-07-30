@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.16 2008-06-30 15:39:27 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.17 2009-07-30 12:16:52 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode NeutralProtoPAlg::initialize()
   for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
         m_hyposLocations.end() != location ; ++location )
   {
-    info() << " Hypothesis loaded from " << *location << endreq;
+    info() << " Hypothesis loaded from " << *location << endmsg;
   }
 
   // Initialize counters
@@ -143,7 +143,7 @@ StatusCode NeutralProtoPAlg::execute()
 
   if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation ))  
   {
-    warning() << "No matching table at " << m_matchLocation<< endreq ;
+    warning() << "No matching table at " << m_matchLocation<< endmsg ;
     return StatusCode::SUCCESS;
   }
   const LHCb::Calo2Track::IClusTrTable* table = get<LHCb::Calo2Track::IClusTrTable> ( m_matchLocation ) ;
@@ -154,7 +154,7 @@ StatusCode NeutralProtoPAlg::execute()
 
     // Load the CaloHypo objects if the container exists
     if ( !exist<LHCb::CaloHypos>( *location ))  {
-      warning() << "No CaloHypo at " << *location  << endreq ;
+      warning() << "No CaloHypo at " << *location  << endmsg ;
       continue;
     }
     const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *location );
@@ -216,20 +216,20 @@ StatusCode NeutralProtoPAlg::finalize() {
   
   if(m_nEvts > 0 ){
 
-    info() << " -----------------------"<< endreq;
+    info() << " -----------------------"<< endmsg;
     info() << " Created = " << (double) m_counts["All"] / (double) m_nEvts
-           << " Neutral ProtoParticles/event" << endreq;
+           << " Neutral ProtoParticles/event" << endmsg;
     for( std::map<std::string,long>::iterator iprototype = m_counts.begin();
          iprototype != m_counts.end(); iprototype ++){
       if((*iprototype).first != "All")
         info() << "  -> " << (double) (*iprototype).second / (double) m_nEvts
                << " proto/event with CaloHypo::Hypothesis = " << (*iprototype).first
-               << endreq;;
+               << endmsg;;
     }
-    info() << " -----------------------"<< endreq;
+    info() << " -----------------------"<< endmsg;
   }
   else{
-    info() << " 0 event processed ==> 0 Neutral ProtoParticle produced ! " << endreq; 
+    info() << " 0 event processed ==> 0 Neutral ProtoParticle produced ! " << endmsg; 
   }
   
 

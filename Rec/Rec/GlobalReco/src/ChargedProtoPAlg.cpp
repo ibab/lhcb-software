@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.71 2009-07-20 13:19:50 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.72 2009-07-30 12:16:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -160,7 +160,7 @@ StatusCode ChargedProtoPAlg::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << tracks->size()
-            << " Tracks from " << m_tracksPath << endreq;
+            << " Tracks from " << m_tracksPath << endmsg;
   }
 
   // Load the RichPIDs
@@ -205,14 +205,14 @@ StatusCode ChargedProtoPAlg::execute()
 
     // Select tracks
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Trying Track " << (*iTrack)->key() << endreq;
+      verbose() << "Trying Track " << (*iTrack)->key() << endmsg;
     if ( !m_trSel->accept(**iTrack) ) continue;
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " -> Track selected " << (*iTrack)->key() << endreq;
-      verbose() << " -> Track type " << (*iTrack)->type() << endreq;
-      verbose() << " -> Track flag " << (*iTrack)->flag() << endreq;
-      verbose() << " -> Track charge " << (*iTrack)->charge() << endreq;
+      verbose() << " -> Track selected " << (*iTrack)->key() << endmsg;
+      verbose() << " -> Track type " << (*iTrack)->type() << endmsg;
+      verbose() << " -> Track flag " << (*iTrack)->flag() << endmsg;
+      verbose() << " -> Track charge " << (*iTrack)->charge() << endmsg;
     }
 
     // Count selected tracks
@@ -302,7 +302,7 @@ StatusCode ChargedProtoPAlg::execute()
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << " -> Created ProtoParticle : " << *proto << endreq;
+      verbose() << " -> Created ProtoParticle : " << *proto << endmsg;
     }
     if ( msgLevel(MSG::DEBUG) ){
       debug() << " Created protoparticle with MuonID "
@@ -333,7 +333,7 @@ bool ChargedProtoPAlg::addRich( ProtoParticle * proto ) const
   // RichPID for this track is found, so save data
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << " -> Found RichPID data : DLLs = " << richPID->particleLLValues() << endreq;
+    verbose() << " -> Found RichPID data : DLLs = " << richPID->particleLLValues() << endmsg;
   }
 
   // reference to RichPID object
@@ -372,7 +372,7 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto ) const
               << " nSharedHits=" << muonPID->nShared()
               << " isMuonLoose=" << muonPID->IsMuonLoose()
               << " isMuon=" << muonPID->IsMuon()
-              << endreq;
+              << endmsg;
   }
 
   // store acceptance flag for those in acceptance (lack of flag signifies
@@ -419,7 +419,7 @@ bool ChargedProtoPAlg::addEcal( LHCb::ProtoParticle * proto ) const
 
       if( hasEcalPID )
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is in Ecal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is in Ecal acceptance"  << endmsg;
         proto->addInfo(ProtoParticle::InAccEcal, true );
 
         // Get the highest weight associated electron CaloHypo (3D matching)
@@ -477,22 +477,22 @@ bool ChargedProtoPAlg::addEcal( LHCb::ProtoParticle * proto ) const
                     << " Spd Digits " <<  proto->info(ProtoParticle::CaloChargedSpd, 0.)
                     << " Ecal Cluster " <<  proto->info(ProtoParticle::CaloChargedEcal, 0.)
                     << " TrajectoryL " <<  proto->info(ProtoParticle::CaloTrajectoryL, 0.)
-                    << endreq;
+                    << endmsg;
 
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Ecal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Ecal acceptance"  << endmsg;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Ecal acceptance table "  << endreq;
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Ecal acceptance table "  << endmsg;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Ecal PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Ecal PID has been disabled"  << endmsg;
   }
 
   return hasEcalPID;
@@ -517,7 +517,7 @@ bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
       hasBremPID = aRange.front().to();
       if ( hasBremPID )
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endmsg;
         proto->addInfo(ProtoParticle::InAccBrem , true );
 
         // Get the highest weight associated brem. CaloHypo (3D matching)
@@ -547,21 +547,21 @@ bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
                     << " Spd Digits " <<  proto->info(ProtoParticle::CaloNeutralSpd, 0.)
                     << " Prs Digits " <<  proto->info(ProtoParticle::CaloNeutralPrs, 0.)
                     << " Ecal Cluster " <<  proto->info(ProtoParticle::CaloNeutralEcal, 0.)
-                    << endreq;
+                    << endmsg;
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is NOT in Ecal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is NOT in Ecal acceptance"  << endmsg;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << " ->  No entry for that track in the Brem acceptance table"  << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " ->  No entry for that track in the Brem acceptance table"  << endmsg;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Brem PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Brem PID has been disabled"  << endmsg;
   }
 
   return hasBremPID;
@@ -584,7 +584,7 @@ bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
       hasHcalPID = aRange.front().to();
       if( hasHcalPID )
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Hcal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Hcal acceptance"  << endmsg;
         proto->addInfo(ProtoParticle::InAccHcal, true );
 
         // Get the HcalE (intermediate) estimator
@@ -603,22 +603,22 @@ bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
                     << " HcalE      =" <<  proto->info(ProtoParticle::CaloHcalE, -999.)
                     << " Dlle (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDe, -999.)
                     << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
-                    << endreq;
+                    << endmsg;
 
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Hcal acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Hcal acceptance"  << endmsg;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Hcal acceptance table"  << endreq;
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Hcal acceptance table"  << endmsg;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Hcal PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Hcal PID has been disabled"  << endmsg;
   }
 
   return hasHcalPID;
@@ -641,7 +641,7 @@ bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
       hasPrsPID = aRange.front().to();
       if( hasPrsPID )
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Prs acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Prs acceptance"  << endmsg;
         proto->addInfo(ProtoParticle::InAccPrs , true );
 
         // Get the PrsE (intermediate) estimator
@@ -656,22 +656,22 @@ bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
           verbose() << " -> Prs PID : "
                     << " PrsE       =" <<  proto->info(ProtoParticle::CaloPrsE, -999.)
                     << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
-                    << endreq;
+                    << endmsg;
 
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Prs acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Prs acceptance"  << endmsg;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Prs acceptance table"  << endreq;
+      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Prs acceptance table"  << endmsg;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Prs PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Prs PID has been disabled"  << endmsg;
   }
 
   return hasPrsPID;
@@ -694,7 +694,7 @@ bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
       hasSpdPID = aRange.front().to();
       if( hasSpdPID )
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Spd acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Spd acceptance"  << endmsg;
         proto->addInfo(ProtoParticle::InAccSpd , true );
 
         // Get the PrsE (intermediate) estimator
@@ -704,22 +704,22 @@ bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Spd PID : "
                     << " SpdE       =" <<  proto->info(ProtoParticle::CaloSpdE, -999.)
-                    << endreq;
+                    << endmsg;
 
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is NOT in Spd acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is NOT in Spd acceptance"  << endmsg;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> No entry for that track in the Spd acceptance table"  << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> No entry for that track in the Spd acceptance table"  << endmsg;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Spd PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Spd PID has been disabled"  << endmsg;
   }
 
   return hasSpdPID;
@@ -763,7 +763,7 @@ bool ChargedProtoPAlg::getRichData()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << richpids->size()
-            << " RichPIDs from " << m_richPath << endreq;
+            << " RichPIDs from " << m_richPath << endmsg;
   }
 
   // refresh the reverse mapping
@@ -796,7 +796,7 @@ bool ChargedProtoPAlg::getMuonData()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully loaded " << muonpids->size()
-            << " MuonPIDs from " << m_muonPath << endreq;
+            << " MuonPIDs from " << m_muonPath << endmsg;
   }
 
   // refresh the reverse mapping
@@ -849,7 +849,7 @@ bool ChargedProtoPAlg::getEcalData()
   }
 
   const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
-  if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endreq;
+  if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }
@@ -879,7 +879,7 @@ bool ChargedProtoPAlg::getBremData()
   }
 
   bool sc  = sc1 && sc2 && sc3 && sc4;
-  if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endreq;
+  if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }
@@ -904,7 +904,7 @@ bool ChargedProtoPAlg::getSpdData()
 
   const bool sc  = sc1 && sc2;
 
-  if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endreq;
+  if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }
@@ -932,7 +932,7 @@ bool ChargedProtoPAlg::getPrsData()
 
   const bool sc  = sc1 && sc2 && sc3;
 
-  if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endreq;
+  if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }
@@ -964,7 +964,7 @@ bool ChargedProtoPAlg::getHcalData()
 
   const bool sc  = sc1 && sc2 && sc3 && sc4;
 
-  if ( sc ) debug() << "HCAL PID SUCCESSFULLY LOADED" << endreq;
+  if ( sc ) debug() << "HCAL PID SUCCESSFULLY LOADED" << endmsg;
 
   return sc;
 }

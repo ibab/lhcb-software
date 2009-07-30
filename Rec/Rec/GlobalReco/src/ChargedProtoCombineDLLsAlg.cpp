@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.18 2008-03-27 13:13:26 cattanem Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.19 2009-07-30 12:16:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -80,41 +80,41 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
 
   for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << "Electron PID technique " << *itech << " unknown"<< endreq;
+      error() << "Electron PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_elCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_muDisable.begin(); itech != m_muDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << "Muon PID technique " << *itech << " unknown"<< endreq;
+      error() << "Muon PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_muCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_prDisable.begin(); itech != m_prDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << "Proton PID technique " << *itech << " unknown"<< endreq;
+      error() << "Proton PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_prCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_piDisable.begin(); itech != m_piDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << "Pion PID technique " << *itech << " unknown"<< endreq;
+      error() << "Pion PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_piCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_kaDisable.begin(); itech != m_kaDisable.end(); ++itech){
     if(0 == m_maskTechnique[to_upper(*itech)]){
-      error() << "Kaon PID technique " << *itech << " unknown"<< endreq;
+      error() << "Kaon PID technique " << *itech << " unknown"<< endmsg;
       scc = StatusCode::FAILURE;
     }
     m_kaCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
 
-  info() << "Using retuned RICH el and mu DLL values in combined DLLs" << endreq;
+  info() << "Using retuned RICH el and mu DLL values in combined DLLs" << endmsg;
   if ( 0 == m_elCombDll ) Warning( "Not creating Combined DLL for electron hypothesis", StatusCode::SUCCESS );
   if ( 0 == m_muCombDll ) Warning( "Not creating Combined DLL for muon hypothesis", StatusCode::SUCCESS );
   if ( 0 == m_piCombDll ) Warning( "Not creating Combined DLL for pion hypothesis", StatusCode::SUCCESS );

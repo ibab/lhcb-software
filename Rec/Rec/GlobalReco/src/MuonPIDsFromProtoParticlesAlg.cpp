@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.9 2008-03-27 11:06:24 pkoppenb Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.10 2009-07-30 12:16:52 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -82,7 +82,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
   }
   else if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Found " << muonTracks->size() << " Muon Tracks at " << m_muonTrackLoc << endreq;
+    debug() << "Found " << muonTracks->size() << " Muon Tracks at " << m_muonTrackLoc << endmsg;
   }
 
   // new MuonPID container
@@ -133,7 +133,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       if ( muonTrack )
       {
         if ( msgLevel(MSG::DEBUG) )
-        { debug() << "Adding MuonTrack " << muonTrack->key() << " to MuonPID object" << endreq; }
+        { debug() << "Adding MuonTrack " << muonTrack->key() << " to MuonPID object" << endmsg; }
         pid->setMuonTrack( muonTrack );
       }
 
@@ -143,7 +143,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endreq;
+    debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endmsg;
   }
 
   return StatusCode::SUCCESS;
