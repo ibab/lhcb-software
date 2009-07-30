@@ -36,7 +36,6 @@ This version uses Gaudi v21r3 and LCG_56b
     element
 
 - In DigiEvent v2r12
-  . requirements: remove hack for Gaudi v21r1 to link dictionary on windows
   . CaloDigit.xml: add default location for HLT1 partial digit decoding
 
 - In L0Event v17r7
