@@ -1,4 +1,4 @@
-// $Id: TrackCloner.cpp,v 1.2 2008-08-11 15:54:02 jpalac Exp $
+// $Id: TrackCloner.cpp,v 1.3 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,11 +27,8 @@ TrackCloner::TrackCloner( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent )
+  base_class ( type, name , parent )
 {
-
-  declareInterface<ICloneTrack>(this);
-
 }
 //=============================================================================
 StatusCode TrackCloner::initialize() 
@@ -39,7 +36,7 @@ StatusCode TrackCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
   
   if (! sc.isSuccess() ) return sc;
   

@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.h,v 1.6 2008-08-22 12:24:33 jpalac Exp $
+// $Id: MCParticleCloner.h,v 1.7 2009-07-30 10:03:01 jpalac Exp $
 #ifndef MCPARTICLECLONER_H 
 #define MCPARTICLECLONER_H 1
 
@@ -31,8 +31,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class MCParticleCloner : public MicroDSTTool, 
-                         virtual public ICloneMCParticle {
+class MCParticleCloner : public extends1<MicroDSTTool, ICloneMCParticle> {
 public: 
   /// Standard constructor
   MCParticleCloner( const std::string& type, 

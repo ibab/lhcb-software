@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.h,v 1.7 2009-07-29 21:38:20 jpalac Exp $
+// $Id: RecVertexCloner.h,v 1.8 2009-07-30 10:03:01 jpalac Exp $
 #ifndef RECVERTEXCLONER_H 
 #define RECVERTEXCLONER_H 1
 
@@ -19,8 +19,8 @@
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class RecVertexCloner : public MicroDSTTool, 
-                        virtual public ICloneVertexBase {
+class RecVertexCloner : public extends1<MicroDSTTool, ICloneVertexBase>
+{
 public: 
   /// Standard constructor
   RecVertexCloner( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: TrackCloner.h,v 1.3 2008-08-11 16:01:13 jpalac Exp $
+// $Id: TrackCloner.h,v 1.4 2009-07-30 10:03:01 jpalac Exp $
 #ifndef MICRODST_TRACKPARTICLECLONER_H 
 #define MICRODST_TRACKCLONER_H 1
 
@@ -17,8 +17,7 @@
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
-class TrackCloner : public MicroDSTTool, 
-                    virtual public ICloneTrack {
+class TrackCloner : public extends1<MicroDSTTool, ICloneTrack> {
 public: 
   /// Standard constructor
   TrackCloner( const std::string& type, 

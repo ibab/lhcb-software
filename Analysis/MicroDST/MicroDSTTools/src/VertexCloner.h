@@ -1,4 +1,4 @@
-// $Id: VertexCloner.h,v 1.2 2008-04-04 14:07:49 jpalac Exp $
+// $Id: VertexCloner.h,v 1.3 2009-07-30 10:03:01 jpalac Exp $
 #ifndef MICRODST_VERTEXCLONER_H 
 #define MICRODST_VERTEXCLONER_H 1
 
@@ -18,8 +18,7 @@
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class VertexCloner : public MicroDSTTool, 
-                     virtual public ICloneVertex {
+class VertexCloner : public extends1<MicroDSTTool, ICloneVertex> {
 public: 
   /// Standard constructor
   VertexCloner( const std::string& type, 

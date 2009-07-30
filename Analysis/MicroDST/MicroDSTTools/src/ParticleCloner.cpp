@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.5 2008-08-22 15:32:20 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.6 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -32,14 +32,13 @@ ParticleCloner::ParticleCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent ),
+  //  base_class ( type, name , parent ),
+  base_class( type, name, parent),
   m_vertexCloner(0),
   m_vertexClonerName("VertexCloner"),
   m_ppCloner(0),
   m_ppClonerName("ProtoParticleCloner")
 {
-
-  declareInterface<ICloneParticle>(this);
 
   declareProperty("ICloneVertex", m_vertexClonerName);
   declareProperty("ICloneProtoParticle", m_ppClonerName);
@@ -51,7 +50,7 @@ StatusCode ParticleCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
 
   debug() << "Going to initialise ICloneProtoParticle and ICloneVertex" << endmsg;
   

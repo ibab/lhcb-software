@@ -1,4 +1,4 @@
-// $Id: FlavourTagCloner.h,v 1.2 2008-11-17 08:55:41 jpalac Exp $
+// $Id: FlavourTagCloner.h,v 1.3 2009-07-30 10:03:01 jpalac Exp $
 #ifndef FLAVOURTAGCLONER_H 
 #define FLAVOURTAGCLONER_H 1
 
@@ -18,8 +18,7 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2008-08-08
  */
-class FlavourTagCloner : public MicroDSTTool, 
-                         virtual public ICloneFlavourTag {
+class FlavourTagCloner : public extends1<MicroDSTTool, ICloneFlavourTag> {
 public: 
   /// Standard constructor
   FlavourTagCloner( const std::string& type, 

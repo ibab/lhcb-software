@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.h,v 1.3 2008-08-11 16:01:13 jpalac Exp $
+// $Id: ProtoParticleCloner.h,v 1.4 2009-07-30 10:03:01 jpalac Exp $
 #ifndef MICRODST_PROTOPARTICLEPARTICLECLONER_H 
 #define MICRODST_PROTOPARTICLECLONER_H 1
 
@@ -24,8 +24,8 @@ class ICloneTrack;
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
-class ProtoParticleCloner : public MicroDSTTool, 
-                            virtual public ICloneProtoParticle {
+class ProtoParticleCloner : public extends1<MicroDSTTool, ICloneProtoParticle>
+{
 public: 
   /// Standard constructor
   ProtoParticleCloner( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.cpp,v 1.4 2009-04-16 12:16:17 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.cpp,v 1.5 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,19 +26,17 @@ RecVertexClonerWithTracks::RecVertexClonerWithTracks( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent ),
+  base_class ( type, name , parent ),
   m_trackCloner(0),
   m_trackClonerType("TrackCloner")
 {
-  declareInterface<ICloneRecVertex>(this);
   declareProperty("ICloneTrack", m_trackClonerType);
-
 }
 //=============================================================================
 StatusCode RecVertexClonerWithTracks::initialize() 
 {
   
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
 
   debug() << "Going to get TrackCloner" << endmsg;
 
@@ -88,7 +86,7 @@ LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
 //=============================================================================
 StatusCode RecVertexClonerWithTracks::finalize() 
 {
-  return MicroDSTTool::finalize();
+  return base_class::finalize();
 }
 //=============================================================================
 // Destructor

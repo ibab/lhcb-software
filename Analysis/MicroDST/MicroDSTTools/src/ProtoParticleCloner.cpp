@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.5 2008-08-14 19:33:48 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.6 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -33,12 +33,10 @@ ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent ),
+  base_class ( type, name , parent ),
   m_trackCloner(0),
   m_trackClonerName("TrackCloner")
 {
-
-  declareInterface<ICloneProtoParticle>(this);
 
   declareProperty("ICloneTrack", m_trackClonerName);
 
@@ -49,7 +47,7 @@ StatusCode ProtoParticleCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
   
   if (! sc.isSuccess() ) return sc;
   

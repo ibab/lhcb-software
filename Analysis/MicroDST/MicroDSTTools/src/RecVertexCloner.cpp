@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.cpp,v 1.6 2009-07-29 21:38:20 jpalac Exp $
+// $Id: RecVertexCloner.cpp,v 1.7 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,9 +26,8 @@ DECLARE_TOOL_FACTORY( RecVertexCloner );
 RecVertexCloner::RecVertexCloner( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : MicroDSTTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
-  declareInterface<ICloneVertexBase>(this);
 }
 //=============================================================================
 StatusCode RecVertexCloner::initialize() 
@@ -36,7 +35,7 @@ StatusCode RecVertexCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  return MicroDSTTool::initialize();
+  return base_class::initialize();
 
 }
 //=============================================================================

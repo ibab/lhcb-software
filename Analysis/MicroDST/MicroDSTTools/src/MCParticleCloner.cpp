@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.7 2009-04-16 12:14:47 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.8 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -29,10 +29,9 @@ MCParticleCloner::MCParticleCloner( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent ),
+  base_class ( type, name , parent ),
   m_vertexClonerName("NONE") 
 {
-  declareInterface<ICloneMCParticle>(this);
   declareProperty("ICloneMCVertex", m_vertexClonerName);
 }
 //=============================================================================
@@ -41,7 +40,7 @@ StatusCode MCParticleCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
   
   if (! sc.isSuccess() ) return sc;
 
@@ -128,7 +127,7 @@ LHCb::MCParticle* MCParticleCloner::operator() (const LHCb::MCParticle* mcp)
 //=============================================================================
 StatusCode MCParticleCloner::finalize() 
 {
-  return MicroDSTTool::finalize();
+  return base_class::finalize();
 }
 //=============================================================================
 // Destructor

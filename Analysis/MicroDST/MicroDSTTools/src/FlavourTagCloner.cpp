@@ -1,4 +1,4 @@
-// $Id: FlavourTagCloner.cpp,v 1.2 2008-11-17 08:55:41 jpalac Exp $
+// $Id: FlavourTagCloner.cpp,v 1.3 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -26,9 +26,8 @@ DECLARE_TOOL_FACTORY( FlavourTagCloner );
 FlavourTagCloner::FlavourTagCloner( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : MicroDSTTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
-  declareInterface<ICloneFlavourTag>(this);
 }
 //=============================================================================
 LHCb::FlavourTag* FlavourTagCloner::operator() (const LHCb::FlavourTag* tag)

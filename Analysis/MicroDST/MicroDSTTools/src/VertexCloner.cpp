@@ -1,4 +1,4 @@
-// $Id: VertexCloner.cpp,v 1.3 2008-08-13 16:56:32 jpalac Exp $
+// $Id: VertexCloner.cpp,v 1.4 2009-07-30 10:03:01 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,14 +28,11 @@ VertexCloner::VertexCloner( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   : 
-  MicroDSTTool ( type, name , parent ),
+  base_class ( type, name , parent ),
   m_particleCloner(0),
   m_particleClonerName("ParticleCloner")
 {
-  declareInterface<ICloneVertex>(this);
-
   declareProperty("ICloneParticle", m_particleClonerName);
-
 }
 //=============================================================================
 StatusCode VertexCloner::initialize() 
@@ -43,7 +40,7 @@ StatusCode VertexCloner::initialize()
 
   debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc = MicroDSTTool::initialize();
+  StatusCode sc = base_class::initialize();
   
   if (! sc.isSuccess() ) return sc;
 
@@ -92,7 +89,7 @@ LHCb::Vertex* VertexCloner::clone(const LHCb::Vertex* vertex)
 //=============================================================================
 StatusCode VertexCloner::finalize() 
 {
-  return MicroDSTTool::finalize();
+  return base_class::finalize();
 }
 //=============================================================================
 // Destructor
