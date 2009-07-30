@@ -13,7 +13,6 @@ This version uses Gaudi v21r3 and LHCb v27r5
     RichMCTools v3r12, STTools v3r11
 
 - In CaloAssociators v6r8
-  . Remove obsolete file CaloAssociators_dll.cpp
   . Add CaloClusterEntry status and weight filtering in CaloClusterMCTruth.cpp :
     default UseForEnergy digits only and no minimal weight
 
