@@ -87,10 +87,12 @@ FEST.update(  { HltVeloLinesConf : { 'Prescale' : { '.*'            : 1 } }
 # @author Compiled by Patrick.Koppenburg@cern.ch
 #
 # TOPO cuts by <p.spradlin1@physics.ox.ac.uk>
-# LEPT cuts by
+# LEPT cuts by Antonio Perez-Calero <aperez@ecm.ub.es>
 # PHI  cuts by <Kim.Vervink@cern.ch>
 #
 ####
+from Hlt2Lines.Hlt2InclusiveMuonLines import Hlt2InclusiveMuonLinesConf
+from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
 ####
@@ -104,6 +106,8 @@ Hlt2_Phi_100Hz = { Hlt2InclusivePhiLinesConf   : { 'TFPhiPT'       : 2000
                                                  , 'TFKaonIPS'     : 9
                                                  }
                  }
+
+
 ####
 # Leptonic scenario
 #
@@ -119,11 +123,24 @@ Hlt2_Leptonic = { Hlt2TopologicalLinesConf : { 'ComRobAllTrkPtLL' : 800.0
                                              , 'Prescale' : { 'Hlt2TopoTF4BodyCharmSignal' : 0.0
                                                             , 'Hlt2TopoTF4BodyReq4Yes' : 0.2
                                                             , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
-                                                            , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
-                                             }
+                                                            , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 }
+                                               }
+                  , Hlt2InclusiveMuonLinesConf : {'IncludeLines': ['SingleMuonLow',
+                                                                 'IncMuTrack']
+                                                }
+                  
+                  , Hlt2InclusiveDiMuonLinesConf : {'IncludeLines': ['UnbiasedJPsi',
+                                                                   'UnbiasedPsi2S',
+                                                                   'UnbiasedBmm',
+                                                                   'BiasedDiMuonMass',
+                                                                   'BiasedDiMuonIP']
+                                                  }
                   }
+
 Hlt2_Leptonic.update(Hlt2_Phi_100Hz)    # append 100 Hz of Phis
 Hlt2_Leptonic.update(Miriam_20090430)   # append Hlt1 cuts
+
+
 ####
 # hadronic scenario
 #
@@ -141,9 +158,19 @@ Hlt2_Hadronic = { Hlt2TopologicalLinesConf   : { 'ComRobAllTrkPtLL' : 400.0
                                                               , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
                                                               , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 } 
                                                }
+                  , Hlt2InclusiveMuonLinesConf : {'IncludeLines': ['IncMuTrackLow']
+                                                }
+                  
+                  , Hlt2InclusiveDiMuonLinesConf : {'IncludeLines': ['UnbiasedJPsiLow',
+                                                                   'UnbiasedPsi2S',
+                                                                   'UnbiasedBmm']
+                                                  }
                   }
+
 Hlt2_Hadronic.update(Hlt2_Phi_200Hz)   # append 200 Hz of Phis   
 Hlt2_Hadronic.update(Miriam_20090430)  # append Hlt1 cuts
+
+
 ####
 # charming scenario
 #
@@ -161,9 +188,18 @@ Hlt2_Charming = {  Hlt2TopologicalLinesConf  : { 'ComRobAllTrkPtLL' : 400.0
                                                               , 'Hlt2TopoTF4BodyReq3Yes' : 0.0
                                                               , 'Hlt2TopoTF4BodyReq2Yes' : 0.0 } 
                                                  }
-                  }
+                   , Hlt2InclusiveMuonLinesConf : {'IncludeLines': ['IncMuTrackMid']
+                                                 }
+                   
+                   , Hlt2InclusiveDiMuonLinesConf : {'IncludeLines': ['UnbiasedJPsi',
+                                                                    'UnbiasedPsi2S',
+                                                                    'UnbiasedBmm']
+                                                   }
+                   }
 Hlt2_Charming.update(Hlt2_Phi_100Hz)    # append 100 Hz of Phis
 Hlt2_Charming.update(Miriam_20090430)   # append Hlt1 cuts
+
+
 ####
 # Optimised scenario
 # @author miriam.gandelman@cern.ch
@@ -171,8 +207,10 @@ Hlt2_Charming.update(Miriam_20090430)   # append Hlt1 cuts
 Hlt2_Optimised = { Hlt2TopologicalLinesConf  : {}
                  , Hlt2InclusivePhiLinesConf : {} }
 Hlt2_Optimised.update(Miriam_20090430)  # append Hlt1 cuts
+
+
 #########################################################################################
-# Utilisty function for setting thresholds both in Hlt1 and 2
+# Utility function for setting thresholds both in Hlt1 and 2
 #
 # @author Moved by Patrick.Koppenburg@cern.ch
 #

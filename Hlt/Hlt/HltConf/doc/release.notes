@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.287 2009-07-31 10:58:13 pkoppenb Exp $ 
+! $Id: release.notes,v 1.288 2009-07-31 14:42:01 aperezca Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-07-31 - Antonio Perez-Calero
+ - Added muon trigger configuration for different rate scenarios to HltThresholdSettings.py
 
 ! 2009-07-29 - Geraldine Conti
 - Added configuration lines for Hlt2Bs2JpsiPhiLines, Hlt2Bd2JpsiKstarLines and Hlt2Bu2JpsiKLines in Hlt2.py
