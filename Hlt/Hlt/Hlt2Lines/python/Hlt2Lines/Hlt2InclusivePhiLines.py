@@ -24,16 +24,19 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'KaonPT'              : 800      # MeV
                   ,'KaonIP'              : 0.05     # mm
                   ,'PhiMassWin'          : 12       # MeV
+                  ,'PhiMassWinSB'        : 30       # MeV
                   ,'PhiPT'               : 1800     # MeV
                   ,'PhiDOCA'             : 0.2      # mm
                   ,'TFKaonPT'            : 0        # MeV
                   ,'TFKaonIPS'           : 6        # dimensionless
                   ,'TFPhiMassWin'        : 12       # MeV
+                  ,'TFPhiMassWinSB'      : 30       # MeV
                   ,'TFPhiPT'             : 1800     # MeV
                   ,'TFPhiVCHI2'          : 20       # dimensionless
                   ,'TFKaonRichPID'       : 0        # dimensionless
                   
                   ,'IncludeLines'   :['IncPhi',
+                                      'IncPhiSidebands',
                                       'IncPhiRobust',
                                       'IncPhiTF'
                                      ]
@@ -70,6 +73,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                               , InputLocations  = [ GoodKaons ]
                               )
 
+
         ############################################################################
         #    Inclusive Phi selection, Track fitted
         ############################################################################
@@ -102,6 +106,68 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                               , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
                               )
 
+
+
+############################ Extra line with larger mass window ####################
+
+        ############################################################################
+        #    Inclusive Phi selection Mass Sidebands, robust cuts
+        ############################################################################
+
+        kaonPtCut = "(PT>"+str(self.getProp('KaonPT'))+"*MeV)"
+        kaonIpCut = "(MIPDV(PRIMARY)>"+str(self.getProp('KaonIP'))+")"
+        phiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinSB'))+"*MeV)"
+        phiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<"+str(self.getProp('PhiDOCA'))+")"
+        phiPtCut = "(PT>"+str(self.getProp('PhiPT'))+"*MeV)"
+        Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
+                              , "Combine"
+                              , DecayDescriptors = decayDesc
+                              , DaughtersCuts = { "K+" : kaonPtCut+" & "+kaonIpCut }
+                              , CombinationCut =  phiMassCutSB+" & "+phiDocaCut
+                              , MotherCut = phiPtCut
+                              , InputLocations  = [ GoodKaons ]
+                              )
+
+
+        ############################################################################
+        #    Inclusive Phi selection Mass Sidebands, Track fitted
+        ############################################################################
+
+        TfKaonPtCut = "(PT>"+str(self.getProp('TFKaonPT'))+"*MeV)"
+        TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TFKaonIPS'))+")"
+        TfPhiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWinSB'))+"*MeV)"
+        TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('TFPhiVCHI2'))+")"
+        TfPhiPtCut = "(PT>"+str(self.getProp('TFPhiPT'))+"*MeV)"
+        Hlt2InclusivePhiTFSB = Hlt2Member( CombineParticles
+                              , "TFCombine"
+                              , DecayDescriptors = decayDesc
+                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
+                              , CombinationCut = TfPhiMassCutSB 
+                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                              , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
+                              )
+
+
+
+        ############################################################################
+        #    Inclusive Phi selection Mass Sidebands, RICH PID
+        ############################################################################
+
+        TfKaonRichPidTf = "(PIDK>"+str(self.getProp('TFKaonRichPID'))+")"
+        Hlt2InclusivePhiRichSB = Hlt2Member( CombineParticles
+                              , "RichCombine"
+                              , DecayDescriptors = decayDesc
+                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
+                              , CombinationCut = TfPhiMassCutSB
+                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                              , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
+                              )
+
+
+
+
+
+
         ############################################################################
         #    Inclusive Phi complete line
         ############################################################################
@@ -119,6 +185,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                           )
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : 50000} )
 
+ 
         ############################################################################
         #    Inclusive Phi robust only line
         ############################################################################
@@ -148,3 +215,22 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTFDecision" : 50002 } )
 
 
+
+
+
+       ############################################################################
+        #    Inclusive Phi complete line for mass sidebands
+        ############################################################################
+
+        if 'IncPhiSidebands' in self.getProp('IncludeLines'):
+          line = Hlt2Line('IncPhiSidebands'
+                          , prescale = 0.15
+                          , algos = [ GoodKaons, 
+                                      Hlt2InclusivePhiSB, 
+                                      GaudiSequencer("Hlt2IncPhiTFSBParticlesSeq"),
+                                      Hlt2InclusivePhiTFSB,
+                                      GaudiSequencer("Hlt2IncPhiRichSBParticlesSeq"),
+                                      Hlt2InclusivePhiRichSB]
+                          , postscale = 1
+                          )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : 50003} )
