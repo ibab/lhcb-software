@@ -210,7 +210,7 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << "MuonIDAlg v7r1 " << endmsg;
+  info()   << "MuonIDAlg v7r2 " << endmsg;
 
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "==> Initialise" << endmsg;
