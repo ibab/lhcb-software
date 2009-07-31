@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromAllMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.2 2009-07-31 12:20:26 jonrob Exp $
+ *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.3 2009-07-31 12:47:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -63,7 +63,7 @@ PixelCreatorFromAllMCRichHits::buildPixel( const Rich::HPDPixelCluster& cluster 
   {
     pix = buildPixel( *iS );
   }
-  // return
+  // return (last one ...)
   return pix;
 }
 
@@ -84,35 +84,32 @@ PixelCreatorFromAllMCRichHits::buildPixel( const LHCb::RichSmartID& id ) const
 
   // Get MC hits
   const SmartRefVector<LHCb::MCRichHit>& mcRichHits = m_mcTool->mcRichHits( id );
-  if ( !mcRichHits.empty() )
-  {
-    // Loop over hits
-    bool first(true);
-    for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcRichHits.begin();
-          iHit != mcRichHits.end(); ++iHit )
-    {
-      // if first, just reuse the original, otherwise clone
-      LHCb::RichRecPixel * pix = ( first ? pixel : new LHCb::RichRecPixel(*pixel) );
-      // save this pixel for clones
-      if ( !first ) savePixel( pix );
-      // Is this a true CK photon ?
-      const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
-      if ( mcPhot )
-      {
-        // Update coordinates with cheated info
-        pix->setGlobalPosition( mcPhot->hpdQWIncidencePoint() );
-        pix->setLocalPosition( smartIDTool()->globalToPDPanel(pix->globalPosition()) );
-        // set the corrected local positions
-        geomTool()->setCorrLocalPos(pix,id.rich());
-        // some printout
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> MC cheated global pos " << pix->globalPosition() << endmsg;
-        }
-      }
-      first = false;
-    }
 
+  // Loop over hits
+  bool first(true);
+  for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcRichHits.begin();
+        iHit != mcRichHits.end(); ++iHit )
+  {
+    // if first, just reuse the original, otherwise clone
+    LHCb::RichRecPixel * pix = ( first ? pixel : new LHCb::RichRecPixel(*pixel) );
+    // save this pixel for clones
+    if ( !first ) savePixel( pix );
+    // Is this a true CK photon ?
+    const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
+    if ( mcPhot )
+    {
+      // Update coordinates with cheated info
+      pix->setGlobalPosition( mcPhot->hpdQWIncidencePoint() );
+      pix->setLocalPosition( smartIDTool()->globalToPDPanel(pix->globalPosition()) );
+      // set the corrected local positions
+      geomTool()->setCorrLocalPos(pix,id.rich());
+      // some printout
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> MC cheated global pos " << pix->globalPosition() << endmsg;
+      }
+    }
+    first = false;
   }
 
   // return
