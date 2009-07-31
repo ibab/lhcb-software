@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.66 2009-07-29 19:39:09 dgolubko Exp $
+! $Id: release.notes,v 1.67 2009-07-31 17:15:22 dgolubko Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+! 2009-07-31 - Dmitry Golubkov
+ - L0Calo2CaloTool.cpp - fix compilation warnings on slc4
+
 ! 2009-07-29 - Dmitry GOLUBKOV
  - Add a new tool to get a list of CaloClusters for the input L0CaloCandidate(s)
   L0Calo2CaloTool.cpp, L0Calo2CaloTool.h
