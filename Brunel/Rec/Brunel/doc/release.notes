@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-07-31 - Marco Cattaneo
+ - Exclude printout of MuonID version from QMTest log file comparisons
+ - Update references for:
+   . fix to duplicate creation of PatVelo hit manager tools
+   . all Rich monitors booked at initialisation
+ - Increment version to v35r6
+
 </PRE><H1><A NAME=v35r5>2009-07-30 Brunel v35r5</A></H1><PRE>
  - Changes to requirements
    . Use AppConfig v3r*
