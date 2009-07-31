@@ -200,10 +200,11 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		EvtComplex getC9new(const double sh, const double mu) const{
+			const double mbp = qcd::mb_pole(constants::mb);
 			return -(qcd::alpha_s(constants::mb,nfl)*(C100*get_F_1_9(sh,mu) + C200*get_F_2_9(sh,mu) + 
 			         (*C)(8)*get_F_8_9(sh,mu)))/(4.*constants::Pi) + 
 			         (1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi)*
-			         ((*C)(9) + qcd::Y(constants::mb*constants::mb*sh,*C));
+			         ((*C)(9) + qcd::Y(mbp*mbp*sh,*C));
 		};
 		
 		EvtComplex getC10new(const double sh, const double) const{
@@ -211,8 +212,8 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		EvtComplex getU(const double sh, const double mu) const{
-			
-			const double mlh = constants::mmu/constants::mb; 
+			const double mbp = qcd::mb_pole(constants::mb);
+			const double mlh = constants::mmu/mbp; 
 			
 			return (3*Power(constants::mb, 2)*(1 - (4*Power(mlh, 2))/sh)*sh
 					* (Power(Abs((*C)(11)), 2) + Power(Abs((*C)(12)), 2)))/2. + 6*Power(
