@@ -1,10 +1,17 @@
-// $Id: Pi0Calibr.cpp,v 1.1.1.1 2005-05-31 13:03:31 ibelyaev Exp $
+// $Id: Pi0Calibr.cpp,v 1.2 2009-07-31 13:51:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2005/05/31 13:03:31  ibelyaev
+// New package: Collection of algorithms for "physics" Calorimeter calibration
+// 
 // ============================================================================
 // Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <set>
 // ============================================================================
 // Event 
 // ============================================================================
@@ -18,143 +25,253 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/Algo.h"
+#include "LoKi/ParticleCuts.h"
 // ============================================================================
-
-  
-  template<>
-  inline Tuples::Tuple& operator<<
-    ( Tuples::Tuple&                              tuple , 
-      const Tuples::TupleColumn<CaloCellID>&      item ) 
-  {
-    if ( !tuple.valid() ) { return tuple ; } // no action 
-    //
-    const std::string& name   = item.name  () ;
-    const CaloCellID&  cellID = item.value () ;
-    //
-    tuple -> column ( name + "a"  , cellID.area () , 0 ,   7 ) ;
-    tuple -> column ( name + "r"  , cellID.row  () , 0 , 127 ) ;  
-    tuple -> column ( name + "c"  , cellID.col  () , 0 , 127 ) ;  
-    //
-    return tuple ;
-  } ;
-
 /// anonymous namespace to hide local functions 
+// ============================================================================
 namespace 
 {
-  inline const ProtoParticle* protoP ( const Particle* gamma ) 
+  // ==========================================================================
+  inline const LHCb::ProtoParticle* protoP ( const LHCb::Particle* gamma ) 
   {
     if ( 0 == gamma ) { return 0 ; }
-    const ContainedObject* origin = gamma->origin() ;
-    return dynamic_cast<const ProtoParticle*>( origin ) ;
-  };
-  inline const CaloHypo*  hypo( const Particle* gamma ) 
+    return gamma->proto () ;
+  }
+  // ==========================================================================
+  inline const LHCb::CaloHypo*  hypo( const LHCb::Particle* gamma ) 
   {
     if ( 0 == gamma         ) { return 0 ; }
-    const ProtoParticle* pp = protoP( gamma ) ;
+    const LHCb::ProtoParticle* pp = protoP ( gamma ) ;
     if ( 0 == pp            ) { return 0 ; }
     if ( pp->calo().empty() ) { return 0 ; }
     return (*(pp->calo().begin())) ;
-  };
-  inline const CaloCluster* cluster ( const Particle* gamma ) 
+  }
+  // ==========================================================================
+  inline const LHCb::CaloCluster* cluster ( const LHCb::Particle* gamma ) 
   {
     if ( 0 == gamma            ) { return 0 ; }
-    const CaloHypo* h = hypo( gamma ) ;
+    const LHCb::CaloHypo* h = hypo( gamma ) ;
     if ( 0 == h                ) { return 0 ; }
     if ( h->clusters().empty() ) { return 0 ; }
     return (*(h->clusters().begin()));
-  };
-  inline CaloCellID cellID( const Particle* gamma ) 
+  }
+  // ==========================================================================
+  inline LHCb::CaloCellID cellID ( const LHCb::Particle* gamma ) 
   {
-    if ( 0 == gamma  ) { return CaloCellID() ; }
-    const CaloCluster* cl = cluster( gamma ) ;
-    if ( 0 == cl     ) { return CaloCellID() ; }
+    if ( 0 == gamma  ) { return LHCb::CaloCellID() ; }
+    const LHCb::CaloCluster* cl = cluster( gamma ) ;
+    if ( 0 == cl     ) { return LHCb::CaloCellID() ; }
     return cl->seed() ;  
-  };
-  
+  }
+  // ==========================================================================
   template <class FROM> 
   inline double energyFrom 
-  ( const Particle* gamma , 
-    const FROM&     from  ) 
+  ( const LHCb::Particle* gamma , 
+    const FROM&           from  ) 
   {
-    if ( 0 == gamma ) { return -1 * TeV ; }
-    const CaloHypo* h = hypo( gamma ) ;
-    if ( 0 == h     ) { return -1 * TeV ; }
+    if ( 0 == gamma ) { return -1 * Gaudi::Units::TeV ; }
+    const LHCb::CaloHypo* h = hypo( gamma ) ;
+    if ( 0 == h     ) { return -1 * Gaudi::Units::TeV ; }
     double energy = 0 ;
-    typedef CaloHypo::Digits Digits ;
+    typedef LHCb::CaloHypo::Digits Digits ;
     const Digits& digits = h->digits() ;
     for ( Digits::const_iterator idigit = digits.begin() ; 
           digits.end() != idigit ; ++idigit ) 
     {
-      const CaloDigit* digit = *idigit ;
+      const LHCb::CaloDigit* digit = *idigit ;
       if ( 0 == digit    ) { continue ; }
       if ( from( digit ) ) { energy += digit->e() ; }
     }
     return energy ;
   }
-  
-};
-
-
-LOKI_ALGORITHM ( LoKi_Pi0Calibr ) 
+  // ==========================================================================
+  inline size_t getDigits 
+  ( const LHCb::CaloCluster*          cluster , 
+    std::set<const LHCb::CaloDigit*>& digits  ) 
+  {
+    if ( 0 == cluster ) { return digits.size() ; }
+    typedef  std::vector<LHCb::CaloClusterEntry> Entries ;
+    const Entries& entries = cluster->entries() ;    
+    for ( Entries::const_iterator ientry = entries.begin() ; 
+          entries.end() != ientry ; ++ientry )
+    {
+      const LHCb::CaloDigit* digit = ientry->digit() ;
+      if ( 0 == digit ) { continue ; }
+      digits.insert ( digit ) ;
+    }
+    return digits.size() ;
+  }
+  // ==========================================================================
+  inline size_t getDigits 
+  ( const LHCb::CaloHypo*             hypo    , 
+    std::set<const LHCb::CaloDigit*>& digits  ) 
+  {
+    if ( 0 == hypo ){ return digits.size () ; }
+    //
+    typedef LHCb::CaloHypo::Digits Digits ;
+    const Digits& digs = hypo->digits() ;
+    for ( Digits::const_iterator idigit = digs.begin() ; 
+          digs.end() != idigit ; ++idigit ) 
+    {
+      const LHCb::CaloDigit* digit = *idigit ;
+      if ( 0 == digit    ) { continue ; }
+      digits.insert ( digit ) ;
+    }
+    //
+    if ( hypo->clusters().empty() ) { return digits.size() ; }
+    return getDigits ( *(hypo->clusters().begin()) , digits ) ;  
+    //
+  }
+  // ==========================================================================
+  inline size_t getDigits 
+  ( const LHCb::Particle*             gamma   , 
+    std::set<const LHCb::CaloDigit*>& digits  ) 
+  {
+    if ( 0 == gamma         ) { return digits.size () ; }
+    const LHCb::ProtoParticle* pp = gamma->proto() ;
+    if ( 0 ==  pp           ) { return digits.size () ; }
+    if ( pp->calo().empty() ) { return digits.size () ; }
+    return getDigits( *(pp->calo().begin()), digits ) ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+LOKI_ALGORITHM ( Kali_Pi0 ) 
 {
-  using namespace LoKi       ;
-  using namespace LoKi::Cuts ;
+  using namespace LoKi         ;
+  using namespace LoKi::Types  ;
+  using namespace LoKi::Cuts   ;
+  using namespace Gaudi::Units ;
   
-  CaloDataFunctor::DigitFromCalo spd ( "Spd" ) ;
-  CaloDataFunctor::DigitFromCalo prs ( "Prs" ) ;
+  LHCb::CaloDataFunctor::DigitFromCalo spd ( "Spd" ) ;
+  LHCb::CaloDataFunctor::DigitFromCalo prs ( "Prs" ) ;
   
   // get all photons with 
   Range gamma = select ( "g" , ( "gamma" == ID ) && ( PT > 300 * MeV ) ) ;
   
   Tuple tuple = nTuple ( " PI0 tuple " ) ;
   
+  typedef std::set<const LHCb::CaloDigit*> SET ;
+  SET digits ;
+  
+  AIDA::IHistogram1D* h = book ( "mpi0" , 0 , 250 , 250 ) ;
+  
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 ) 
   {
     const double m12 = pi0->mass ( 1 , 2 ) ;
-    if ( m12 > 200 * MeV ) { continue ; }  // CONTINUE
+    if ( m12 > 250 * MeV ) { continue ; }  // CONTINUE
     
-    const Particle* g1 = pi0(1) ;
+    const LHCb::Particle* g1 = pi0(1) ;
     if ( 0 == g1         ) { continue ; }  // CONTINUE 
     
-    const Particle* g2 = pi0(2) ;
+    const LHCb::Particle* g2 = pi0(2) ;
     if ( 0 == g2         ) { continue ; }  // CONTINUE
     
     LoKi::LorentzVector p12 = pi0->p(1,2) ;
+    if ( 800 * Gaudi::Units::MeV > p12.Pt() ) { continue ; }
     
-    tuple << Tuples::Column ( "m12"  , m12             / GeV ) ;
+    double spd1e = energyFrom ( g1 , spd ) / GeV ;
+    if ( 0 < spd1e ) { continue ; }
     
-    tuple << Tuples::Column ( "p0"   , p12             / GeV ) ;
-    tuple << Tuples::Column ( "g1"   , g1->momentum()  / GeV ) ;
-    tuple << Tuples::Column ( "g2"   , g2->momentum()  / GeV ) ;
+    double spd2e = energyFrom ( g2 , spd ) / GeV ;
+    if ( 0 < spd2e ) { continue ; }
     
-    tuple << Tuples::Column ( "pt"   , p12.perp()      / GeV ) ;
-    tuple << Tuples::Column ( "pt1"  , PT ( g1 )       / GeV ) ;
-    tuple << Tuples::Column ( "pt2"  , PT ( g2 )       / GeV ) ;
+    double prs1e = energyFrom ( g1 , prs ) / GeV ;
+    double prs2e = energyFrom ( g2 , prs ) / GeV ;
     
-    tuple << Tuples::Column ( "spd1" , energyFrom ( g1 , spd ) / GeV ) ;
-    tuple << Tuples::Column ( "prs1" , energyFrom ( g1 , prs ) / GeV ) ;
-    tuple << Tuples::Column ( "spd2" , energyFrom ( g2 , spd ) / GeV ) ;
-    tuple << Tuples::Column ( "prs2" , energyFrom ( g2 , prs ) / GeV ) ;
-
-    const CaloCellID cel1 = cellID( g1 ) ;
-    const CaloCellID cel2 = cellID( g2 ) ;
+    if ( prs1e > prs2e ) 
+    {
+      std::swap ( g1    , g2 ) ;
+      std::swap ( spd1e , spd2e ) ;
+      std::swap ( prs1e , prs2e ) ; 
+    }
     
-    tuple << Tuples::Column ( "cel1" , cel1 ) ;
-    tuple << Tuples::Column ( "cel2" , cel2 ) ;
+    // fill the histogram 
+    if ( 0 != h ) { h->fill ( m12 ) ; }
     
-    tuple << Tuples::Column ( "ind1" , cel1.index()    ) ;
-    tuple << Tuples::Column ( "ind2" , cel2.index()    ) ;
+    tuple -> column ( "spd2" , spd2e ) ;
     
-    tuple << Tuples::Column ( "cat1" , cel1.index()%15 ) ;
-    tuple << Tuples::Column ( "cat2" , cel2.index()%15 ) ;
+    tuple -> column ( "m12"  , m12             / GeV ) ;
     
-    tuple -> write () ;
-
+    tuple -> column ( "p0"   , p12             / GeV ) ;
+    tuple -> column ( "g1"   , g1->momentum()  / GeV ) ;
+    tuple -> column ( "g2"   , g2->momentum()  / GeV ) ;
+    
+    tuple -> column ( "pt"   , p12.Pt()        / GeV ) ;
+    tuple -> column ( "pt1"  , PT ( g1 )       / GeV ) ;
+    tuple -> column ( "pt2"  , PT ( g2 )       / GeV ) ;
+    
+    tuple -> column ( "prs1" , prs1e ) ;
+    tuple -> column ( "prs2" , prs2e ) ;
+    
+    tuple -> column ( "spd1" , spd1e ) ;
+    tuple -> column ( "spd2" , spd2e ) ;
+    
+    const LHCb::CaloCellID cel1 = cellID( g1 ) ;
+    const LHCb::CaloCellID cel2 = cellID( g2 ) ;
+    
+    tuple -> column ( "ind1" , cel1.index()    ) ;
+    tuple -> column ( "ind2" , cel2.index()    ) ;
+    
+    tuple -> write () ; 
+    
+    getDigits ( g1 , digits ) ;
+    getDigits ( g2 , digits ) ;
+    
   }
   
+  counter ( "#digits" ) += digits.size  () ;
+  counter ( "#empty"  ) += digits.empty () ;
+  
+  setFilterPassed ( !digits.empty() ) ;
+  
+  typedef LHCb::CaloDigit::Container Digits ;
+
+  std::vector<Digits*> digs ;
+  
+  Digits* d1 = get<Digits> ( LHCb::CaloDigitLocation::Spd  ) ;
+  digs.push_back ( d1 ) ;
+  Digits* d2 = get<Digits> ( LHCb::CaloDigitLocation::Prs  ) ;
+  digs.push_back ( d2 ) ;
+  Digits* d3 = get<Digits> ( LHCb::CaloDigitLocation::Ecal ) ;
+  digs.push_back ( d3 ) ;
+  Digits* d4 = get<Digits> ( LHCb::CaloDigitLocation::Hcal ) ;
+  digs.push_back ( d4 ) ;
+
+  size_t size1 = 0 ;
+  size_t size2 = 0 ;
+  
+  for ( std::vector<Digits*>::iterator ic = digs.begin() ; 
+        digs.end() != ic ; ++ic ) 
+  {
+    Digits* d = *ic ;
+    if ( 0 == d ) { continue ; }
+    //
+    size1 += d->size() ;
+    //
+    Digits::iterator ifind = d->begin() ;
+    while ( ifind != d->end() ) 
+    {
+      const LHCb::CaloDigit* digit = *ifind ;
+      if ( 0 == digit ) { continue ; }
+      //
+      SET::const_iterator iset = digits.find ( digit ) ;
+      if ( digits.end() != iset ) { ++ifind ; continue ; }
+      //
+      d->erase ( *ifind ) ;
+      //
+      ifind = d->begin() ;
+    } 
+    size2 += d->size() ;
+  }
+  
+  counter ( "#size1"        ) +=               size1 ;
+  counter ( "#size2"        ) +=               size2 ;
+  counter ( "#size2/size1"  ) += double(size2)/size1 ;
+  
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 // The END 
 // ============================================================================
