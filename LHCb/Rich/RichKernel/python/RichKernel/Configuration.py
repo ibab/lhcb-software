@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2009-06-25 10:01:08 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-07-31 12:02:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -294,7 +294,10 @@ class RichTools(RichConfigurableUser):
             tool = self.__makeRichTool( Rich__Rec__MC__PixelCreatorFromSignalRawBuffer, nickname, private )
         elif pixtype == "RawBufferWithIneffic":
             from Configurables import Rich__Rec__PixelCreatorWithForcedIneffic
-            tool = self.__makeRichTool(Rich__Rec__PixelCreatorWithForcedIneffic,nickname, private)
+            tool = self.__makeRichTool(Rich__Rec__PixelCreatorWithForcedIneffic,nickname, private )
+        elif pixtype == "AllMCRichHits":
+            from Configurables import Rich__Rec__MC__PixelCreatorFromAllMCRichHits
+            tool = self.__makeRichTool(Rich__Rec__MC__PixelCreatorFromAllMCRichHits,nickname, private ) 
         else:
             raise RuntimeError("Unknown Pixel Creator '%s'"%pixtype)
         return tool
