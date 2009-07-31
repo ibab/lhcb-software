@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.14 2009-07-31 09:26:34 jpalac Exp $
+!$Id: release.notes,v 1.15 2009-07-31 11:37:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
@@ -6,9 +6,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-05-11 - Juan PALACIOS
+ - python/MicroDSTConf/PhysMicroDST.py
+  . Now possible to make many instances of a PhysMicroDST configurable.
+  . OutputPrefix property removed. Now taken from the name of the instance.
  - cmt/requirements
+  . Increase version to v2r4
   . Fix such that PhysMicroDST configurable is available via Configurables module.
-  . Increase version to v2r3p1
 
 !========================== MicroDSTConf v2r3 2009-07-24 ==================
 
