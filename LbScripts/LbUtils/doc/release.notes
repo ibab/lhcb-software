@@ -1,3 +1,10 @@
+2009-07-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile:
+	Changed one of the possible values of Package_failure_policy.
+	Added CCACHE_PREFIX to the list of exported variables (to be able to use
+	ccache and distcc at the same time).
+
 2009-07-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: Added the macro Package_failure_policy to control what

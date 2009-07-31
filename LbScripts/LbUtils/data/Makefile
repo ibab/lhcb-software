@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.5 2009-07-28 13:33:34 marcocle Exp $
+# $Id: Makefile,v 1.6 2009-07-31 19:56:56 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -49,7 +49,7 @@ endef
 #    (complementary to the option '-k')
 #  Allowed values for Package_failure_policy:
 #    stop:   do not continue (default)
-#    next:   if a group fails, continue with the next package
+#    skip:   if a group fails, continue with the next package
 #    ignore: try all the groups even if one fails before going to the next package
 #            (may result in duplicated errors within a package) 
 Package_failure_handler = test $$BUILD_RESULT -eq 0 || exit $$BUILD_RESULT ;
@@ -57,13 +57,13 @@ ifdef Package_failure_policy
 ifeq ($(Package_failure_policy),stop)
 Package_failure_handler = test $$BUILD_RESULT -eq 0 || exit $$BUILD_RESULT ;
 else
-ifeq ($(Package_failure_policy),next)
+ifeq ($(Package_failure_policy),skip)
 Package_failure_handler = test $$BUILD_RESULT -eq 0 || break ;
 else
 ifeq ($(Package_failure_policy),ignore)
 Package_failure_handler = 
 else
-$(error Unknown Package_failure_policy "$(Package_failure_policy)". Allowed values: "stop" (default), "ignore", "next")
+$(error Unknown Package_failure_policy "$(Package_failure_policy)". Allowed values: "stop" (default), "skip", "ignore")
 endif
 endif
 endif
@@ -77,6 +77,7 @@ override CMTPROJECTPATH := $(subst ;,:,$(CMTPROJECTPATH))
 
 # --- Declare the variables that have to be exported
 export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEXT
+export CCACHE_PREFIX
 
 # --- Main targets
 all: $(packages:=_build)
@@ -115,12 +116,14 @@ endif
 ifdef CMTUSERCONTEXT
 	@+cd $*/cmt ; \
 	for group in $(groups) ; do \
+		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
 		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
 		date >> build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
 	done
 else
 	@for group in $(groups) ; do \
+		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
 		$(MAKE) -C $*/cmt $$group 2>&1 | tee -a $*/cmt/build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
 		date >> $*/cmt/build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
