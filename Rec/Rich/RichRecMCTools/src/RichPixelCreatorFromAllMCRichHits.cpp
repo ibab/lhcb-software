@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromAllMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.1 2009-07-31 11:57:12 jonrob Exp $
+ *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.2 2009-07-31 12:20:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -56,14 +56,15 @@ StatusCode PixelCreatorFromAllMCRichHits::initialize()
 LHCb::RichRecPixel *
 PixelCreatorFromAllMCRichHits::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
+  LHCb::RichRecPixel * pix(NULL);
   // build hits for each pixel in the cluster
   for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
         iS != cluster.smartIDs().end(); ++iS )
   {
-    buildPixel( *iS );
+    pix = buildPixel( *iS );
   }
-  // always return NULL ...
-  return NULL;
+  // return
+  return pix;
 }
 
 LHCb::RichRecPixel *
@@ -78,39 +79,39 @@ PixelCreatorFromAllMCRichHits::buildPixel( const LHCb::RichSmartID& id ) const
   // First run base class method to produce reconstructed pixel
   LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
 
+  // set the associated cluster
+  pixel->setAssociatedCluster( Rich::HPDPixelCluster(id) );
+
   // Get MC hits
   const SmartRefVector<LHCb::MCRichHit>& mcRichHits = m_mcTool->mcRichHits( id );
   if ( !mcRichHits.empty() )
   {
-
     // Loop over hits
+    bool first(true);
     for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcRichHits.begin();
           iHit != mcRichHits.end(); ++iHit )
     {
+      // if first, just reuse the original, otherwise clone
+      LHCb::RichRecPixel * pix = ( first ? pixel : new LHCb::RichRecPixel(*pixel) );
+      // save this pixel for clones
+      if ( !first ) savePixel( pix );
       // Is this a true CK photon ?
       const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
       if ( mcPhot )
       {
-        // clone the pixel for this hit
-        LHCb::RichRecPixel * pix = new LHCb::RichRecPixel(*pixel);
         // Update coordinates with cheated info
         pix->setGlobalPosition( mcPhot->hpdQWIncidencePoint() );
         pix->setLocalPosition( smartIDTool()->globalToPDPanel(pix->globalPosition()) );
         // set the corrected local positions
         geomTool()->setCorrLocalPos(pix,id.rich());
-        // save this pixel
-        savePixel( pix );
         // some printout
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << " -> MC cheated global pos " << pix->globalPosition() << endmsg;
         }
       }
+      first = false;
     }
-
-    // delete the original
-    delete pixel;
-    pixel = NULL;
 
   }
 
