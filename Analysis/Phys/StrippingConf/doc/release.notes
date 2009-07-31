@@ -4,6 +4,13 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-07-31 - Anton Poluektov
+
+  * Added checkPV attribute to the StrippingLine. checkPV=True by default. 
+    If checkPV is True, it adds an instance of CheckPV algorithm before 
+    all algorithms of the line are run, that requires at least one 
+    primary vertex in event. 
+
 !========================== StrippingConf v1r2 2009-07-16 ===================
 
 ! 2009-07-10 - Anton Poluektov

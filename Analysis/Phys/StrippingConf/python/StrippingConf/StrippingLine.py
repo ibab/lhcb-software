@@ -16,6 +16,7 @@ from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import DeterministicPrescaler as Scaler
 from Configurables import StrippingAlg
 from Configurables import LoKi__HDRFilter as HDRFilter
+from Configurables import CheckPV
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
 def filterName   ( line , level = 'Stripping') :
@@ -248,6 +249,7 @@ class StrippingLine(object):
                    stream = None    ,   # stream name
                    prescale  = 1    ,   # prescale factor
                    HLT       = None ,   # HltDecReports predicate
+                   checkPV   = True ,   # Check PV before running algos 
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    **args           ) : # other configuration parameters
@@ -265,6 +267,7 @@ class StrippingLine(object):
         self._prescale  = prescale
         
         self._HLT       = HLT
+        self._checkPV   = checkPV
         
         if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
@@ -289,6 +292,12 @@ class StrippingLine(object):
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
+        
+        # if needed, check Primary Vertex before running all algos
+        if checkPV : 
+    	    check = CheckPV("checkPV");
+    	    check.MinPVs = 1;
+    	    _members.insert(0, check);
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -383,6 +392,7 @@ class StrippingLine(object):
         __name       = deepcopy ( name        )
         __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __args       = deepcopy ( self._args  ) 
@@ -412,6 +422,7 @@ class StrippingLine(object):
         return StrippingLine ( name      = __name       ,
                                prescale  = __prescale   ,
                                HLT       = __HLT        ,
+                               checkPV   = __checkPV    ,
                                postscale = __postscale  ,
                                algos     = __algos      , 
                                stream	 = __stream	, 
