@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.11 2009-07-03 21:12:11 graven Exp $
+# $Id: HltReco.py,v 1.12 2009-07-31 15:05:22 pkoppenb Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -255,22 +255,9 @@ recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
                         , Members =
-                        [ trackRecoSequence
-                        # //,GaudiSequencer('HltCaloRecoSequence')  // In HltChargedProtoPAlg for the time being
-                        ] )
+                        [ trackRecoSequence ] )
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
-#// --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
-#// Options for Calo reconstruction
-importOptions( '$HLTCONFROOT/options/units.opts' )
-importOptions( '$CALORECOROOT/options/HltCaloSeq.opts' )
-GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') ] )
-
-#/// @todo This cannot work, as tracking must have been done to process the rest.
-#//recoSeq.IgnoreFilterPassed = True; // process both track and calo independently
-
-
-
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward , prepareForward ] )

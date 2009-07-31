@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -157,7 +157,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                                     , IgnoreFilterPassed = True) # do all 
         Hlt2.Members += [ SeqHlt2Particles ]
         SeqHlt2Particles.Members += [ self.hlt2Charged() ] # charged
-        SeqHlt2Particles.Members += [ self.hlt2Calo() ] # calo
+        from HltCaloReco import hlt2Calo # calo configurable
+        SeqHlt2Particles.Members += [ hlt2Calo( [ self.getProp("Hlt2Tracks") ] ) ] # list or strings
         SeqHlt2Particles.Members += [ self.hlt2Muon() ] # muon
         self.hlt2Protos(SeqHlt2Particles)          # protos
         
@@ -191,8 +192,16 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2ChargedProtoCombDLL')
         Hlt2ChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" 
         SeqHlt2Particles.Members += [ Hlt2ChargedProtoCombDLL ]
+
+        HltNeutralProtoPAlg = NeutralProtoPAlg('HltNeutralProtoPAlg')
+        # Overwrite some default offline settings with HLT special settings (taken from CaloReco.opts)
+        HltNeutralProtoPAlg.PhotonIDName = "HltPhotonPID"
+        from Configurables import CaloPhotonEstimatorTool
+        ToolSvc().addTool(CaloPhotonEstimatorTool, name="HltPhotonPID")
+        ToolSvc().HltPhotonPID.TableLocation = "Hlt/Calo/ClusterMatch"
+        importOptions( "$CALOPIDSROOT/options/HltPhotonPDF.opts" )
         
-        SeqHlt2Particles.Members += [ NeutralProtoPAlg('HltNeutralProtoPAlg') ]
+        SeqHlt2Particles.Members += [ HltNeutralProtoPAlg ]
 
         
 ###################################################################################
@@ -215,48 +224,6 @@ class Hlt2Conf(LHCbConfigurableUser):
 
         return HltMuonIDSeq
 
-###################################################################################
-#
-# Calo
-#
-    def hlt2Calo(self):
-        """
-        Calorimeter options
-        """
-        from Configurables import InSpdAcceptanceAlg, InPrsAcceptanceAlg, InEcalAcceptanceAlg, InHcalAcceptanceAlg, InBremAcceptanceAlg
-        from Configurables import ElectronMatchAlg, BremMatchAlg, PhotonMatchAlg
-        from Configurables import Track2SpdEAlg, Track2PrsEAlg, Track2EcalEAlg, Track2HcalEAlg
-        from Configurables import EcalChi22ID, BremChi22ID, ClusChi22ID
-
-        caloSeq = Sequence('HltRecoCALOSeq', Context = 'HLT', IgnoreFilterPassed = True ) 
-        ## Options for Calo reconstruction
-        ## @todo Translate from .opts
-        importOptions("$CALORECOROOT/options/HltCaloSeq.opts")
-        from HltConf.HltDecodeRaw import DecodeECAL, DecodeSPD, DecodePRS, DecodeHCAL
-        _m = caloSeq.Members
-        Sequence('HltRecoCALOSeq').Members = DecodeECAL.members() + DecodeSPD.members() + DecodePRS.members() + DecodeHCAL.members() + _m 
-
-        HltTracks = [ self.getProp("Hlt2Tracks") ] # takes a list
-        #
-        # @todo That's ugly
-        #
-        InSpdAcceptanceAlg('HltInSPD').Inputs   =     HltTracks
-        InPrsAcceptanceAlg('HltInPRS').Inputs   =     HltTracks
-        InEcalAcceptanceAlg('HltInECAL').Inputs =     HltTracks
-        InHcalAcceptanceAlg('HltInHCAL').Inputs =     HltTracks
-        InBremAcceptanceAlg('HltInBREM').Inputs =     HltTracks
-        ElectronMatchAlg('HltElectronMatch').Tracks = HltTracks
-        BremMatchAlg('HltBremMatch').Tracks =         HltTracks
-        PhotonMatchAlg('HltClusterMatch').Tracks =    HltTracks
-        Track2SpdEAlg('HltSpdE').Inputs =             HltTracks
-        Track2PrsEAlg('HltPrsE').Inputs =             HltTracks
-        Track2EcalEAlg('HltEcalE').Inputs =           HltTracks
-        Track2HcalEAlg('HltHcalE').Inputs =           HltTracks
-        EcalChi22ID('HltEcalChi22ID').Tracks =        HltTracks
-        BremChi22ID('HltBremChi22ID').Tracks =        HltTracks
-        ClusChi22ID('HltClusChi22ID').Tracks =        HltTracks
-        # return
-        return caloSeq 
 
 ###################################################################################
 #
