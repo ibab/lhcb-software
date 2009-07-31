@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.13 2009-07-24 07:35:13 jpalac Exp $
+!$Id: release.notes,v 1.14 2009-07-31 09:26:34 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-05-11 - Juan PALACIOS
+ - cmt/requirements
+  . Fix such that PhysMicroDST configurable is available via Configurables module.
+  . Increase version to v2r3p1
 
 !========================== MicroDSTConf v2r3 2009-07-24 ==================
 
