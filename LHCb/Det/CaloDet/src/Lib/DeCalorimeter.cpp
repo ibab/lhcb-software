@@ -1,22 +1,31 @@
-// $Id: DeCalorimeter.cpp,v 1.58 2009-05-06 15:59:13 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.59 2009-07-31 16:12:52 ibelyaev Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
+// ============================================================================
 // STL
+// ============================================================================
 #include <cmath>
 #include <algorithm>
+// ============================================================================
 // Gaudi
+// ============================================================================
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+// ============================================================================
 // DetDesc
+// ============================================================================
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
+// ============================================================================
 // Kernel
+// ============================================================================
 #include "Kernel/OSiterator.h"
+// ============================================================================
 // CaloDet
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
 #include "CaloDet/DeSubSubCalorimeter.h"
-
 // ============================================================================
 /** @file DeCalorimeter.cpp
  *
@@ -26,40 +35,30 @@
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
  */
 // ============================================================================
-
-// ============================================================================
-/** constructor
+/*  constructor
  *  @name object name (useless)
  */
+// ============================================================================
 DeCalorimeter::DeCalorimeter( const std::string& name )
   :  DetectorElement     ( name       )
   ,  m_caloIndex         ( -1         )
   ,  m_initialized       ( false      )
   ,  m_subCalos          () 
   ,  m_pinArea           ( -1         ){ 
-};
+}
 // ============================================================================
-
+// Destructor
 // ============================================================================
-/// Destructor
-DeCalorimeter::~DeCalorimeter() {};
-// ============================================================================
-
+DeCalorimeter::~DeCalorimeter() {}
 // ============================================================================
 // object identification
 // ============================================================================
 const CLID& DeCalorimeter::clID () const { return DeCalorimeter::classID() ; }
-
-
-
-
 // ============================================================================
 // intialization method
 // ============================================================================
 StatusCode DeCalorimeter::initialize() 
 {
-
-
   //======================
   /// initialize the base 
   //======================
@@ -67,13 +66,11 @@ StatusCode DeCalorimeter::initialize()
   if ( sc.isFailure() ) { return sc ; }  
 
   // naming
-  m_caloIndex =  CaloCellCode::CaloNumFromName( name() );
-  m_caloDet = CaloCellCode::CaloNameFromNum( m_caloIndex ) + "Det";
+  m_caloIndex = CaloCellCode::CaloNumFromName( name() );
+  m_caloDet   = CaloCellCode::CaloNameFromNum( m_caloIndex ) + "Det";
   MsgStream msg( msgSvc(), m_caloDet );
   msg << MSG::DEBUG << "'INITIALIZE DeCalorimeter "<< name() <<endmsg;
 
-
-  
   //=============================
   // collect the sub-calorimeters
   //=============================

@@ -1,26 +1,36 @@
-// $Id: DeCalorimeter.h,v 1.39 2009-05-06 15:59:13 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.40 2009-07-31 16:12:52 ibelyaev Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
 // ============================================================================
-/// from STL
+// STD & STL
+// ============================================================================
 #include <iostream>
 #include <vector>
-//From Kernel/LHCbDefintions
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
-/// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-/// from Det/DetDesc
+// ============================================================================
+// Det/DetDesc
+// ============================================================================
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
-// LHCbKernel
+// ============================================================================
+// Kernel/LHCbKernel
+// ============================================================================
 #include "Kernel/CaloCellID.h"
-/// from CaloKernel
+// ============================================================================
+// Calo/CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloException.h"
-/// from Det/CaloDet
+// ============================================================================
+// Det/CaloDet
+// ============================================================================
 #include "CaloDet/CaloCardParams.h"
 #include "CaloDet/CellParam.h"
 #include "CaloDet/CardParam.h"
@@ -28,31 +38,37 @@
 #include "CaloDet/CaloPin.h"
 #include "CaloDet/CaloLed.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
-
+// ============================================================================
 /// forward declarations
+// ============================================================================
 class MsgStream        ;
 class DeSubCalorimeter ;
 class DeSubSubCalorimeter ;
-
-
-namespace CaloPlane{
+// ============================================================================
+/// definition of calorimeter planes 
+namespace CaloPlane
+{
+  // ==========================================================================
+  /// definition of calorimeter planes  
   enum Plane {
     Front  = 0 , 
     Middle     ,
     ShowerMax  ,
     Back       
   } ;
-}
-
+  // ==========================================================================
+} //                                                 end of namespace CaloPlane 
+// ============================================================================
 /// Locations of DeCalorimeter detector elements in the TDS
-namespace DeCalorimeterLocation {
+namespace DeCalorimeterLocation 
+{
   static const std::string Spd  = "/dd/Structure/LHCb/DownstreamRegion/Spd"  ;
   static const std::string Prs  = "/dd/Structure/LHCb/DownstreamRegion/Prs"  ;
   static const std::string Ecal = "/dd/Structure/LHCb/DownstreamRegion/Ecal" ;
   static const std::string Hcal = "/dd/Structure/LHCb/DownstreamRegion/Hcal" ;
 }
-
-/** @class DeCalorimeter DeCalorimeter.h CaloDet/DeCalorimeter.h 
+// ============================================================================
+/** @class DeCalorimeter CaloDet/DeCalorimeter.h 
  *
  *  Calorimeter detector element class.
  *
@@ -92,8 +108,9 @@ public:
 
   // general
   //--------
-  std::string caloName(){ return m_caloDet; }
-
+  const std::string& caloName () const { return m_caloDet   ; }
+  /// calorimeter index, @see namespace CaloCellCode  
+  int                index    () const { return m_caloIndex ; }
   // accessing the geometry parameters
   //----------------------------------
   // get constant access to subcalorimeters 
