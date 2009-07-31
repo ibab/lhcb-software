@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.34 2009-07-31 12:18:58 graven Exp $
+$Id: release.notes,v 1.35 2009-07-31 13:30:36 aperezca Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-07-31 - Antonio Perez-Calero
+  - updated InclusiveMuon and InclusiveDiMuon .py files/configurables:
+  	* latest cuts for each line, including some prescales
+    * some changes in code to prepare lines for different trigger scenarios 
+	    (include lines slot and no hardwired prescale factors outside slots)
 
 ! 2009-07-31 - Gerhard Raven
  - minor tweaks to displaced vertex line, eg. rename the vertex 
