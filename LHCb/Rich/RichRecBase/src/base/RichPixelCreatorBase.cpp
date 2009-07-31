@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.35 2009-07-23 16:04:49 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.36 2009-07-31 12:00:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -30,7 +30,7 @@ namespace Rich
     PixelCreatorBase::PixelCreatorBase( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-      : RichRecToolBase ( type, name, parent ),
+      : Rich::Rec::ToolBase ( type, name, parent ),
         m_allDone       ( false ),
         m_richSys       ( NULL  ),
         m_hpdOcc        ( Rich::NRiches ),
@@ -83,7 +83,7 @@ namespace Rich
     StatusCode PixelCreatorBase::initialize()
     {
       // base class initilize
-      const StatusCode sc = RichRecToolBase::initialize();
+      const StatusCode sc = Rich::Rec::ToolBase::initialize();
       if ( sc.isFailure() ) { return sc; }
 
       if ( msgLevel(MSG::DEBUG) )
@@ -121,7 +121,7 @@ namespace Rich
       printStats();
 
       // base class finalize
-      return RichRecToolBase::finalize();
+      return Rich::Rec::ToolBase::finalize();
     }
 
     void PixelCreatorBase::printStats() const
@@ -187,7 +187,7 @@ namespace Rich
                                           );
 
           // set the corrected local positions
-          m_geomTool->setCorrLocalPos(pixel,id.rich());
+          geomTool()->setCorrLocalPos(pixel,id.rich());
 
           // save to TES container in tool
           savePixel( pixel );
@@ -256,7 +256,7 @@ namespace Rich
                                           );
 
           // set the corrected local positions
-          m_geomTool->setCorrLocalPos(pixel,id.rich());
+          geomTool()->setCorrLocalPos(pixel,id.rich());
 
           // save to TES container in tool
           savePixel( pixel );

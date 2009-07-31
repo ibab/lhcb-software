@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.25 2009-03-30 10:53:18 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.26 2009-07-31 12:00:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -204,6 +204,12 @@ namespace Rich
         if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, 0, true ); }
         return m_decoder;
       }
+
+      /// Access the geometry tool
+      inline const IGeomTool * geomTool() const
+      {
+        return m_geomTool;
+      } 
 
     protected: // data
 
