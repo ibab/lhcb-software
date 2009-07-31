@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.8 2009-07-09 09:38:45 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.9 2009-07-31 14:30:32 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -70,8 +70,10 @@ from Configurables import AlgorithmCorrelationsAlg, AlgorithmCorrelations
 TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
-TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay", 
-                               "Strip_10Hz_Bd2KstarMuMu", "Strip_Penguin_Jpsi2MuMu", "Strip_Penguin_Kstar2KPi" ]
+TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay",
+                               "StdLooseDiMuon", "StdLooseDetachedKst2Kpi", 
+                               "Strip_loose_Bd2KstarMuMu",
+                               "filter_Bd2KstarMuMu_10Hz" ]
 ###
 # DaVinci
 ###
@@ -79,7 +81,7 @@ TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay",
 from StrippingConf.Configuration import StrippingConf
 StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]   # does not work yet
 StrippingConf().OutputType = "NONE"
-StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/STEP09/StrippingSelections.py"
+StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py"
 
 from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ trueSeq ]
