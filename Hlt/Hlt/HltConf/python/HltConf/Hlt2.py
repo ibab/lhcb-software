@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -68,7 +68,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         hlttype           = self.getProp("HltType")
         # Dictionary of Hlt2 type
-        trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
+        trans = { 'Hlt2' : 'LEPT+TOPO+PHI+EXCL'  # @todo need express as well
                 }
         for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
         #
