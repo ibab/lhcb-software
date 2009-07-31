@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.33 2009-07-31 12:03:38 pkoppenb Exp $
+$Id: release.notes,v 1.34 2009-07-31 12:18:58 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-07-31 - Gerhard Raven
+ - minor tweaks to displaced vertex line, eg. rename the vertex 
+   search from Hlt2PatPV3D to Hlt2DisplVerticesV3D
 
 ! 2009-07-31 - Patrick Koppenburg
  - Bu2LLXLines : Make a three step selection:

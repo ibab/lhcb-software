@@ -34,12 +34,12 @@ import GaudiKernel.SystemOfUnits as units
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  "MinNbTracks"   : 0
-                   ,"RMin"          : 0.3 * units.mm
-                   ,"MinMass1"      : 9*units.GeV
-                   ,"MinMass2"      : 4*units.GeV
-                   ,"MinSumpt"      : 10.*units.GeV
-                   ,"RemVtxFromDet" : 1*units.mm
-                   }
+                ,  "RMin"          : 0.3 * units.mm
+                ,  "MinMass1"      : 9*units.GeV
+                ,  "MinMass2"      : 4*units.GeV
+                ,  "MinSumpt"      : 10.*units.GeV
+                ,  "RemVtxFromDet" : 1*units.mm
+                }
     
     
     def __apply_configuration__(self) :
@@ -49,24 +49,22 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
         
         # Run PatPV3D
-        Hlt2PatPV3D = PatPV3D("Hlt2PatPV3D")
+        Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         Hlt2PatPV3D.addTool(PVOfflineTool)
         Hlt2PatPV3D.PVOfflineTool.InputTracks = ["Hlt/Track/Velo"]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
-        Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool())
+        Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)
         Hlt2PatPV3D.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 0.2*units.mm
         Hlt2PatPV3D.PVOfflineTool.PVSeed3DTool.zMaxSpread = 1*units.mm
-        Hlt2PatPV3D.PVOfflineTool.addTool( LSAdaptPV3DFitter())
+        Hlt2PatPV3D.PVOfflineTool.addTool( LSAdaptPV3DFitter)
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
-        Hlt2PatPV3D.OutputVerticesName = "Rec/Vertices/Hlt2RV"
-        Hlt2PatPV3D.OutputLevel = 3
+        Hlt2PatPV3D.OutputVerticesName = "Rec/Vertices/Hlt2DisplVerticesV3D"
         
         #Run Hlt2DisplVertices
         Hlt2LineDisplVertices = Hlt2DisplVertices("Hlt2LineDisplVertices")
         Hlt2LineDisplVertices.InputLocations = [NoCutsPions.outputSelection()]
-        Hlt2LineDisplVertices.InputDisplacedVertices = "Rec/Vertices/Hlt2RV"
-        Hlt2LineDisplVertices.OutputLevel = 3
+        Hlt2LineDisplVertices.InputDisplacedVertices = Hlt2PatPV3D.OutputVerticesName 
         Hlt2LineDisplVertices.MinNbTracks = self.getProp('MinNbTracks')
         Hlt2LineDisplVertices.RMin = self.getProp('RMin')
         Hlt2LineDisplVertices.MinMass1 = self.getProp('MinMass1')
@@ -74,12 +72,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2LineDisplVertices.MinSumpt = self.getProp('MinSumpt')
         Hlt2LineDisplVertices.RemVtxFromDet = self.getProp('RemVtxFromDet')
         
-        
         # Define the Hlt2 Line
         line = Hlt2Line('DisplVertices'
-                        , prescale = 1
+                        , prescale = self.prescale
                         , algos = [Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
+                        , postscale = self.postscale
                         )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDecision" : 50280 } )
-        
