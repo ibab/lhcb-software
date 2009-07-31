@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.35 2009-07-31 13:30:36 aperezca Exp $
+$Id: release.notes,v 1.36 2009-07-31 17:57:41 mlieng Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-07-31 - Magnus Lieng
+  - InclusivePhi: removed hardcoded pre- and postscales
 
 ! 2009-07-31 - Antonio Perez-Calero
   - updated InclusiveMuon and InclusiveDiMuon .py files/configurables:

@@ -21,25 +21,39 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
     __used_configurables__ = [RichRecSysConf]
     
-    __slots__ = {  'KaonPT'              : 800      # MeV
-                  ,'KaonIP'              : 0.05     # mm
-                  ,'PhiMassWin'          : 12       # MeV
-                  ,'PhiMassWinSB'        : 30       # MeV
-                  ,'PhiPT'               : 1800     # MeV
-                  ,'PhiDOCA'             : 0.2      # mm
-                  ,'TFKaonPT'            : 0        # MeV
-                  ,'TFKaonIPS'           : 6        # dimensionless
-                  ,'TFPhiMassWin'        : 12       # MeV
-                  ,'TFPhiMassWinSB'      : 30       # MeV
-                  ,'TFPhiPT'             : 1800     # MeV
-                  ,'TFPhiVCHI2'          : 20       # dimensionless
-                  ,'TFKaonRichPID'       : 0        # dimensionless
-                  
-                  ,'IncludeLines'   :['IncPhi',
-                                      'IncPhiSidebands',
-                                      'IncPhiRobust',
-                                      'IncPhiTF'
-                                     ]
+    __slots__ = {  'KaonPT'             : 800      # MeV
+                  ,'KaonIP'             : 0.05     # mm
+                  ,'PhiMassWin'         : 12       # MeV
+                  ,'PhiMassWinSB'       : 30       # MeV
+                  ,'PhiPT'              : 1800     # MeV
+                  ,'PhiDOCA'            : 0.2      # mm
+                  ,'TFKaonPT'           : 0        # MeV
+                  ,'TFKaonIPS'          : 6        # dimensionless
+                  ,'TFPhiMassWin'       : 12       # MeV
+                  ,'TFPhiMassWinSB'     : 30       # MeV
+                  ,'TFPhiPT'            : 1800     # MeV
+                  ,'TFPhiVCHI2'         : 20       # dimensionless
+                  ,'TFKaonRichPID'      : 0        # dimensionless
+                  ,'Prescale'           : {'Hlt2IncPhiSidebands'  : 0.1
+                                          ,'Hlt2IncPhi'           : 1.0
+                                          ,'Hlt2IncPhiRobust'     : 0.001
+                                          ,'Hlt2IncPhiTF'         : 0.001
+                                          }
+                  ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 1.0
+                                          ,'Hlt2IncPhi'           : 1.0
+                                          ,'Hlt2IncPhiRobust'     : 1.0
+                                          ,'Hlt2IncPhiTF'         : 1.0
+                                          }
+                  ,'IncludeLines'       : {'IncPhi'           : True
+                                          ,'IncPhiSidebands'  : True
+                                          ,'IncPhiRobust'     : True
+                                          ,'IncPhiTF'         : True
+                                          }
+                  ,'HltANNSvcID'        : {'IncPhi'           : 50000
+                                          ,'IncPhiSidebands'  : 50003
+                                          ,'IncPhiRobust'     : 50001
+                                          ,'IncPhiTF'         : 50002
+                                          }
                   }
     
     
@@ -148,7 +162,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                               )
 
 
-
         ############################################################################
         #    Inclusive Phi selection Mass Sidebands, RICH PID
         ############################################################################
@@ -166,71 +179,68 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
 
 
-
-
         ############################################################################
         #    Inclusive Phi complete line
         ############################################################################
 
-        if 'IncPhi' in self.getProp('IncludeLines'):
+        if self.getProp('IncludeLines')['IncPhi']:
           line = Hlt2Line('IncPhi'
-                          , prescale = 1
+                          , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhi, 
                                       GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                       Hlt2InclusivePhiTF,
                                       GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
                                       Hlt2InclusivePhiRich]
-                          , postscale = 1
+                          , postscale = self.postscale
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : 50000} )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
 
  
         ############################################################################
         #    Inclusive Phi robust only line
         ############################################################################
-
-        if 'IncPhiRobust' in self.getProp('IncludeLines'):
-          line2 = Hlt2Line('IncPhiRobust'
-                          , prescale = 0.001
+        
+        if self.getProp('IncludeLines')['IncPhiRobust']:
+          line = Hlt2Line('IncPhiRobust'
+                          , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhi]
-                          , postscale = 1
+                          , postscale = self.postscale
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : 50001 } )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : self.getProp('HltANNSvcID')['IncPhiRobust'] } )
+
 
         ############################################################################
         #    Inclusive Phi robust and TF line
         ############################################################################
 
-        if 'IncPhiTF' in self.getProp('IncludeLines'):
-          line2 = Hlt2Line('IncPhiTF'
-                          , prescale = 0.001
+        if self.getProp('IncludeLines')['IncPhiTF']:
+          line = Hlt2Line('IncPhiTF'
+                          , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhi, 
                                       GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                       Hlt2InclusivePhiTF]
-                          , postscale = 1
+                          , postscale = self.postscale
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTFDecision" : 50002 } )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTFDecision" : self.getProp('HltANNSvcID')['IncPhiTF'] } )
 
 
-
-
-
-       ############################################################################
+        ############################################################################
         #    Inclusive Phi complete line for mass sidebands
         ############################################################################
 
-        if 'IncPhiSidebands' in self.getProp('IncludeLines'):
+        if self.getProp('IncludeLines')['IncPhiSidebands']:
           line = Hlt2Line('IncPhiSidebands'
-                          , prescale = 0.15
+                          , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhiSB, 
                                       GaudiSequencer("Hlt2IncPhiTFSBParticlesSeq"),
                                       Hlt2InclusivePhiTFSB,
                                       GaudiSequencer("Hlt2IncPhiRichSBParticlesSeq"),
                                       Hlt2InclusivePhiRichSB]
-                          , postscale = 1
+                          , postscale = self.postscale
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : 50003} )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
+          
