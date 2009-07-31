@@ -1,14 +1,19 @@
-$Id: release.notes,v 1.32 2009-07-31 11:41:57 pkoppenb Exp $
+$Id: release.notes,v 1.33 2009-07-31 12:03:38 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
+! 2009-07-31 - Patrick Koppenburg
+ - Bu2LLXLines : Make a three step selection:
+   1. Require a dimuon or dielectron
+   2. Full track fit
+   3. Build Bu->llK candidate 
+ - Does not work yet as Calo options are not compatible
 
 ! 2009-07-31 - Kim Vervink
  - Extra line in the Inclusive Phi stream: larger phi mass window and prescale 
-
 
 !========================== Hlt2Lines v1r4 2009-07-23 ===================
 
