@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.h,v 1.3 2009-08-02 15:33:22 gcowan Exp $
+// $Id: DaVinciFun.h,v 1.4 2009-08-02 15:56:06 gcowan Exp $
 #ifndef KERNEL_DAVINCIFUN_H 
 #define KERNEL_DAVINCIFUN_H 1
 
@@ -90,9 +90,9 @@ namespace DaVinci {
    *
    * 1. DEFINITIONS USED IN THESE FUNCTIONS:
    *
-   * > The Bcandidate decays to vector mesons mother1 and mother2.
-   * > mother1 decays to particles A and B.
-   * > mother2 decays to particles C and D.          
+   * * The Bcandidate decays to vector mesons mother1 and mother2.\n
+   * * mother1 decays to particles A and B.\n
+   * * mother2 decays to particles C and D.\n          
    *
    * 2. TRANSVERSITY BASIS
    *
@@ -112,13 +112,13 @@ namespace DaVinci {
    *
    * 2.2 Transversity Angle Definition:
    *
-   * > The defition is the same whether it is a Bcandidate or a BbarCandidate.
+   * > The defition is the same whether it is a Bcandidate or a BbarCandidate.\n
    * > theta_tr is the angle formed by particleA and the z-axis, in mother1's 
-   *   rest frame.
-   * > phi_tr is the azimuthal angle of particleA in mother1's rest frame. 
+   * rest frame.\n
+   * > phi_tr is the azimuthal angle of particleA in mother1's rest frame.\n 
    * > psi is the helicity angle between particleC and the opposite direction of 
-   *   mother1's momentum. This is the same angle as is defined in the HELICITY 
-   *   BASIS. 
+   * mother1's momentum. This is the same angle as is defined in the HELICITY 
+   * BASIS.\n 
    *
    * 3. HELICITY BASIS
    *
@@ -139,16 +139,16 @@ namespace DaVinci {
    * such as Bs->Jpsi(mumu)Phi(KK) at LHCb. In this case, the functions should be used 
    * as follows:
    *
-   * particleA -> positive muon
-   * particleB -> negative muon
-   * particleC -> positive kaon
-   * particleD -> negative kaon
+   * * particleA -> positive muon\n
+   * * particleB -> negative muon\n
+   * * particleC -> positive kaon\n
+   * * particleD -> negative kaon\n
    *
    * If this approach is followed then the calculated angles will be the same as those
    * defined in the beta_s roadmap document.
    *
    *  @author Greig COWAN
-   *  @date   2009-08-01
+   *  @date   2009-08-02
    */
   namespace P2VVAngles {
     double calculateThetaTr(const Gaudi::LorentzVector particleA,
