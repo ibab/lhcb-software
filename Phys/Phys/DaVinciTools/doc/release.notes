@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.446 2009-07-27 10:04:09 jpalac Exp $
+! $Id: release.notes,v 1.447 2009-08-02 17:01:44 gcowan Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-02 - Greig Cowan
+ - Modified Bs2JpsiPhiAngleCalculator.cpp to use the functions in the new 
+   P2VVAngles namespace. 
 
 ! 2009-07-27 - Juan PALACIOS
  - PhysDesktop: Add implementation for 

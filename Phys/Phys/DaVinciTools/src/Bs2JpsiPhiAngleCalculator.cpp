@@ -1,4 +1,4 @@
-// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.1 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.2 2009-08-02 16:59:08 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -11,11 +11,10 @@
 
 // local
 #include "Bs2JpsiPhiAngleCalculator.h"
-#include "Math/Boost.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : Bs2JpsiPhiAngleCalculator
 //
-// 2008-06-02 : Greig Cowan
+// 2008-06-02 :  Cowan
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -49,7 +48,6 @@ StatusCode Bs2JpsiPhiAngleCalculator::initialize() {
                                     << endmsg ;
   
   m_descendants = tool<IParticleDescendants>("ParticleDescendants ",this);
-  m_angle = tool<IP2VVAngleCalculator>("P2VVAngleCalculator",this);
 
   return sc ;
 }
@@ -101,21 +99,20 @@ StatusCode Bs2JpsiPhiAngleCalculator::calculateAngles(
     return StatusCode::FAILURE ;
   }
   
+  thetak = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+					 	   , particleKaonMinus->momentum()
+					 	   , particleLeptonPlus->momentum()
+                                         	   , particleLeptonMinus->momentum());
+ 
+  phi    = DaVinci::P2VVAngles::calculatePlaneAngle( particleLeptonPlus->momentum() 
+                                         	   , particleLeptonMinus->momentum()
+                                         	   , particleKaonPlus->momentum()
+                                         	   , particleKaonMinus->momentum() );
   
-  thetak = m_angle->calculatePolarAngle( particle->momentum() , 
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  thetak = Gaudi::Units::pi - thetak; // def of axis  
-
-  phi    = m_angle->calculatePlaneAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(), 
-                                         particleLeptonMinus->momentum(), 
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  
-  thetal = m_angle->calculatePolarAngle( particle->momentum(), 
-                                         particleLeptonPlus->momentum(),
-                                         particleLeptonMinus->momentum() );
+  thetal = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+                                         	   , particleLeptonMinus->momentum()
+					 	   , particleKaonPlus->momentum()
+                                         	   , particleKaonMinus->momentum());
 
   return StatusCode::SUCCESS ;
 }
@@ -166,23 +163,21 @@ StatusCode Bs2JpsiPhiAngleCalculator::calculateTransversityAngles(
     return StatusCode::FAILURE ;
   }
   
-  
-  Theta_tr = m_angle->calculateThetaTr( particleLeptonPlus->momentum(), 
-                                         particleLeptonMinus->momentum(),
-                                         particleKaonPlus->momentum(),
-                                         particleKaonMinus->momentum() );
-  
-  Phi_tr = m_angle->calculatePhiTr( particleLeptonPlus->momentum(), 
-                                     particleLeptonMinus->momentum(),
-                                     particleKaonPlus->momentum(),
-                                     particleKaonMinus->momentum() );
-  
-  Theta_V = m_angle->calculatePolarAngle( particle->momentum(), 
-                                          particleKaonPlus->momentum(),
-                                          particleKaonMinus->momentum() );
-  
+  Theta_tr = DaVinci::P2VVAngles::calculateThetaTr( particleLeptonPlus->momentum()
+                                                  , particleLeptonMinus->momentum()
+                                                  , particleKaonPlus->momentum()
+                                                  , particleKaonMinus->momentum());
 
-      
+  Phi_tr   = DaVinci::P2VVAngles::calculatePhiTr( particleLeptonPlus->momentum()
+                                                , particleLeptonMinus->momentum()
+                                                , particleKaonPlus->momentum()
+                                                , particleKaonMinus->momentum() );
+
+  Theta_V  = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+                                                     , particleKaonMinus->momentum()
+                                                     , particleLeptonPlus->momentum()
+                                                     , particleLeptonMinus->momentum());
+
   return StatusCode::SUCCESS ;
 }
 
@@ -221,13 +216,11 @@ double Bs2JpsiPhiAngleCalculator::calculatePhi( const LHCb::Particle* particle)
     Exception("Could not find required particles !");
   }
   
-  
-  double phi = m_angle->calculatePlaneAngle( particle->momentum(), 
-                                             particleLeptonPlus->momentum(), 
-                                             particleLeptonMinus->momentum(), 
-                                             particleKaonPlus->momentum(),
-                                             particleKaonMinus->momentum() );
-  
+  double phi = DaVinci::P2VVAngles::calculatePlaneAngle( particleLeptonPlus->momentum()
+                                                       , particleLeptonMinus->momentum()
+                                                       , particleKaonPlus->momentum()
+                                                       , particleKaonMinus->momentum() );
+
   return phi ;
 }
 
@@ -241,6 +234,8 @@ const LHCb::Particle* particle )
 
   const LHCb::Particle* particleLeptonPlus = 0;
   const LHCb::Particle* particleLeptonMinus = 0;
+  const LHCb::Particle* particleKaonPlus = 0;
+  const LHCb::Particle* particleKaonMinus = 0;
 
   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
            descendants.begin() ;
@@ -258,9 +253,11 @@ const LHCb::Particle* particle )
     Exception("Could not find required particles !");
   }
   
-  double thetal = m_angle->calculatePolarAngle( particle->momentum(), 
-                                                particleLeptonPlus->momentum(),
-                                                particleLeptonMinus->momentum() );
+  double thetal = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleLeptonPlus->momentum()
+         	                                          , particleLeptonMinus->momentum()
+                	                                  , particleKaonPlus->momentum()
+                        	                          , particleKaonMinus->momentum());
+
   return thetal ;
 }
 
@@ -270,6 +267,8 @@ double Bs2JpsiPhiAngleCalculator::calculateThetaK(
 {
   LHCb::Particle::ConstVector descendants=m_descendants->finalStates(particle);
   
+  const LHCb::Particle* particleLeptonPlus = 0;
+  const LHCb::Particle* particleLeptonMinus = 0;
   const LHCb::Particle* particleKaonPlus = 0;
   const LHCb::Particle* particleKaonMinus = 0;
   
@@ -289,10 +288,12 @@ double Bs2JpsiPhiAngleCalculator::calculateThetaK(
     Exception("Could not find required particles !");
   }
   
-  double thetak = m_angle->calculatePolarAngle( particle->momentum() , 
-                                                particleKaonPlus->momentum(), 
-                                                particleKaonMinus->momentum());
-  return Gaudi::Units::pi - thetak ;
+  double thetak = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+          	                                          , particleKaonMinus->momentum()
+                	                                  , particleLeptonPlus->momentum()
+                        	                          , particleLeptonMinus->momentum());
+
+  return thetak ;
 }
 
 double Bs2JpsiPhiAngleCalculator::calculateTransThetaTr( 
@@ -330,12 +331,11 @@ double Bs2JpsiPhiAngleCalculator::calculateTransThetaTr(
      Exception("Could not find required particles !");
    }
 
-  
-  double Theta_tr = m_angle->calculateThetaTr( particleLeptonPlus->momentum(), 
-					       particleLeptonMinus->momentum(),
-					       particleKaonPlus->momentum(),
-                                               particleKaonMinus->momentum() );
-  
+   double Theta_tr = DaVinci::P2VVAngles::calculateThetaTr( particleLeptonPlus->momentum()
+          	                                          , particleLeptonMinus->momentum()
+                  	                                  , particleKaonPlus->momentum()
+                          	                          , particleKaonMinus->momentum());
+
   return Theta_tr;
    
 }
@@ -375,12 +375,10 @@ double Bs2JpsiPhiAngleCalculator::calculateTransPhiTr(
        Exception("Could not find required particles !");
    }
   
-  
-  double Phi_tr = m_angle->calculatePhiTr( particleLeptonPlus->momentum(), 
-                                           particleLeptonMinus->momentum(),
-                                           particleKaonPlus->momentum(),
-                                           particleKaonMinus->momentum() );
-  
+  double Phi_tr = DaVinci::P2VVAngles::calculatePhiTr( particleLeptonPlus->momentum()
+                                                     , particleLeptonMinus->momentum()
+                                                     , particleKaonPlus->momentum()
+                                                     , particleKaonMinus->momentum() );
   return Phi_tr;
 
 }
@@ -391,6 +389,8 @@ double Bs2JpsiPhiAngleCalculator::calculateTransThetaV(
 
    LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle); //->daughtersVector() ;
   
+   const LHCb::Particle* particleLeptonPlus = 0;
+   const LHCb::Particle* particleLeptonMinus = 0;
    const LHCb::Particle* particleKaonPlus = 0;
    const LHCb::Particle* particleKaonMinus = 0;
   
@@ -411,12 +411,12 @@ double Bs2JpsiPhiAngleCalculator::calculateTransThetaV(
    if ( !particleKaonMinus || !particleKaonPlus){
         Exception("Could not find required particles !");
    }
-  
-  
-   double Theta_V = m_angle->calculatePolarAngle( particle->momentum(), 
-                                                  particleKaonPlus->momentum(),
-                                                  particleKaonMinus->momentum() );
-   
+ 
+  double Theta_V = DaVinci::P2VVAngles::calculateHelicityPolarAngle( particleKaonPlus->momentum()
+                 	                                   , particleKaonMinus->momentum()
+                        	                           , particleLeptonPlus->momentum()
+                                	                   , particleLeptonMinus->momentum());
+ 
    return Theta_V;
 }
 
