@@ -2,16 +2,16 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py</text>
-    <text>$APPCONFIGOPTS/Conditions/MC09-20090602-vc-md100.py</text>
+    <text>$GAUSSOPTS/Gauss-MC09.py</text>
     <text>$DECFILESROOT/options/10000000.opts</text>
     <text>$LBPYTHIAROOT/options/Pythia.opts</text>
-    <text>$GAUSSOPTS/GenStandAlone.opts</text>
+    <text>$GAUSSOPTS/GenStandAlone.py</text>
     <text>$GAUSSROOT/tests/options/testGauss-gen-10evts-defaults.py</text>
   </set></argument>
   <argument name="timeout"><integer>1800</integer></argument>
   <argument name="reference"><text>$GAUSSROOT/tests/refs/testGauss-gen-MC09-10000000.ref</text></argument>
   <argument name="error_reference"><text>$GAUSSROOT/tests/refs/testGauss-gen-MC09-err-10000000.ref</text></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
 preprocessor = normalizeExamples + \
     RegexpReplacer(when = "Connected to database",
