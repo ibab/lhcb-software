@@ -55,13 +55,10 @@ StatusCode L0Calo2CaloTool::initialize()
 }
 // ==========================================================================
 StatusCode L0Calo2CaloTool::clusterize
-( std::vector<LHCb::CaloCluster*>&      clusters, 
-  const LHCb::L0CaloCandidate*          candidate,
-  const unsigned int                    level     ) const
+  ( std::vector<LHCb::CaloCluster*>&      clusters ,
+    const LHCb::CaloCellID&               cellID,
+    const unsigned int                    level     ) const
 {
-  if ( ! isUsable( candidate ) ) return StatusCode::FAILURE;
-
-  const LHCb::CaloCellID& cellID = candidate->id();
   if ( ! isUsable( cellID ) ) return StatusCode::FAILURE;
 
   // Invoke the CaloDataProvider tool
@@ -73,6 +70,25 @@ StatusCode L0Calo2CaloTool::clusterize
   if ( sc.isFailure() ) return Error(" Failure from the CaloClusterizationTool!", sc );
 
   return putClustersOnTES( clusters );
+}
+// ==========================================================================                                                                         
+StatusCode L0Calo2CaloTool::clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters,
+    const LHCb::CaloCellID&               cellID   ) const
+{
+  return clusterize( clusters, cellID, m_neighbourLevel );
+}
+
+// ==========================================================================
+StatusCode L0Calo2CaloTool::clusterize
+( std::vector<LHCb::CaloCluster*>&      clusters, 
+  const LHCb::L0CaloCandidate*          candidate,
+  const unsigned int                    level     ) const
+{
+  if ( ! isUsable( candidate ) ) return StatusCode::FAILURE;
+
+  const LHCb::CaloCellID& cellID = candidate->id();
+  return clusterize(clusters, cellID, level);
 }
 // ==========================================================================
 StatusCode L0Calo2CaloTool::clusterize

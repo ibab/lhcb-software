@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.67 2009-07-31 17:15:22 dgolubko Exp $
+! $Id: release.notes,v 1.68 2009-08-02 18:35:31 dgolubko Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
@@ -9,6 +9,9 @@
  - Add a new tool to get a list of CaloClusters for the input L0CaloCandidate(s)
   L0Calo2CaloTool.cpp, L0Calo2CaloTool.h
  - cmt/requirements verison increment to v5r10
+
+! 2009-08-02 - Dmitry GOLUBKOV
+ - L0Calo2CaloTool.cpp: method to return CaloClusters around the CaloCellID
 
 !========================== CaloTools v5r9 2009-06-03 =========================
 ! 2009-06-03 - Marco Cattaneo

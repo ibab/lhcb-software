@@ -97,6 +97,32 @@ public:
   ( std::vector<LHCb::CaloCluster*>&      clusters, 
     const LHCb::L0CaloCandidates*         candidates  ) const { return clusterize(clusters, candidates, m_neighbourLevel); }
   // ==========================================================================
+  /** obtain CaloClusters around a CaloCellID
+   *
+   * Get a list of CaloClusters in the vicinity of the CaloCellID,
+   * if necessary invoke decoding and clusterization.
+   * 
+   * @param clusters (OUTPUT) vector of pointers of Calo clusters 
+   * @param cellID   (INPUT)  pointer to CaloCellID
+   * @param level    (INPUT)  number of neigbour levels around the cell for the ICaloClusterization tool
+   */
+  virtual StatusCode clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters , 
+    const LHCb::CaloCellID&               cellID, 
+    const unsigned int                    level     ) const ;
+  // ==========================================================================
+  /** obtain CaloClusters around a CaloCellID
+   *
+   * Get a list of CaloClusters in the vicinity of the CaloCellID,
+   * if necessary invoke decoding and clusterization.
+   * 
+   * @param clusters (OUTPUT) vector of pointers of Calo clusters 
+   * @param cellID   (INPUT)  pointer to CaloCellID
+   */
+  virtual StatusCode clusterize
+  ( std::vector<LHCb::CaloCluster*>&      clusters, 
+    const LHCb::CaloCellID&               cellID   ) const ;
+  // ==========================================================================
   /** Interface to ICaloClusterizationTool::iterations() */
   virtual unsigned int iterations() const { return m_clusterizationTool ? m_clusterizationTool->iterations() : 0; }
   // ==========================================================================
