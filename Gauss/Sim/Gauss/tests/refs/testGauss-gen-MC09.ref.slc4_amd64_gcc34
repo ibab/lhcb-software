@@ -1,396 +1,46 @@
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Gauss/MC09-b5TeV-md100.py'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.py'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/units.opts'
-# RndmGenSvc.Engine.SetSingleton   = true;
-# ApplicationMgr.EvtSel  = "NONE";
-# MessageSvc.OutputLevel         = 3;
-# ToolSvc.EvtGenTool.OutputLevel = 4;
-# SetDecayAlg.OutputLevel        = 4;
-# MessageSvc.setWarning += { "XmlGenericCnv" };
-# MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
-# EventDataSvc.ForceLeaves         = true;
-# EventPersistencySvc.CnvServices  = [];
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
-# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
-# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
-# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
-# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
-# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
-# PoolDbCacheSvc.OutputLevel       = 4;
-# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# ApplicationMgr.ExtSvc               += { "PoolDbCnvSvc/RunRecordCnvSvc" };
-# RunRecordPersistencySvc.CnvServices += { "RunRecordCnvSvc" };
-# RunRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# RunRecordCnvSvc.ShareFiles           = true;
-# RunRecordDataSvc.ForceLeaves         = true;
-# RunRecordDataSvc.EnableFaultHandler  = true;
-# RunRecordDataSvc.RootCLID            =    1;
-# PoolRootEvtCnvSvc.EnableIncident     =    1;
-# PoolRootKeyEvtCnvSvc.EnableIncident  =    1;
-# PoolRootTreeEvtCnvSvc.EnableIncident =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# ApplicationMgr.HistogramPersistency = "NONE";
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Common.opts'
-# ApplicationMgr.TopAlg += { "GaudiSequencer/Gauss" };
-# Gauss.Members         += { "GaudiSequencer/Generator"  };
-# Gauss.Members         += { "GaudiSequencer/Simulation" };
-# Generator.Members         = { "GenInit/GaussGen" };
-# Simulation.Members        = { "SimInit/GaussSim" };
-# GaussGen.FirstEventNumber = 1;
-# GaussGen.RunNumber        = 1;
-# EventClockSvc.FakeEventTime.StartTime = 0;
-# EventClockSvc.FakeEventTime.TimeStep  = 25*ns;
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Generator.opts'
-# Generator.Members += { "Generation" };
-# ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY.DEC";
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Generator.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Simulation.opts'
-# ApplicationMgr.ExtSvc += {  "GiGa"};
-# EventPersistencySvc.CnvServices += { "GiGaKine" };
-# Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
-# GiGaStore.ConversionServices = { "GiGaKine" };
-# Simulation.Members += { "GiGaInputStream/Geo" };
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimGeometry.opts'
-# Geo.ExecuteOnce          = true;
-# Geo.ConversionSvcName    = "GiGaGeo";
-# Geo.DataProviderSvcName  = "DetectorDataSvc";
-# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Rich1"};
-# Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeInMagnet"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/BcmDown"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
-# Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
-# Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
-# Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Calo.opts'
-# HistogramDataSvc.Input += {  "GaussCalo DATAFILE='$PARAMFILESROOT/data/gausscalo.root' TYP='ROOT'"};
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Spd.opts'
-# GiGaGeo.Spd.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Spd/Modules/InnCell"  ,  "/dd/Geometry/DownstreamRegion/Spd/Modules/MidCell"  ,  "/dd/Geometry/DownstreamRegion/Spd/Modules/OutCell"};
-# GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/DownstreamRegion/Spd/Installation/Spd";
-# GiGaGeo.Spd.CollectionName =  "SpdHits";
-# GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Spd";
-# GiGaGeo.Spd.zMin           =  12300. * mm;
-# GiGaGeo.Spd.zMax           =  15000. * mm;
-# GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo";
-# GiGaGeo.Spd.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns };
-# GiGaGeo.Spd.Histograms = {  "GaussCalo/SPDTIME/h1",  "GaussCalo/SPDTIME/h2",  "GaussCalo/SPDTIME/h3"};
-# GetSpdHits.MCHitsLocation = "/Event/MC/Spd/Hits";
-# GetSpdHits.CollectionName = "SpdHits";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Spd.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Prs.opts'
-# GiGaGeo.Prs.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Prs/Modules/InnCell"  ,  "/dd/Geometry/DownstreamRegion/Prs/Modules/MidCell"  ,  "/dd/Geometry/DownstreamRegion/Prs/Modules/OutCell"};
-# GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/DownstreamRegion/Prs/Installation/Prs";
-# GiGaGeo.Prs.CollectionName =  "PrsHits";
-# GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Prs";
-# GiGaGeo.Prs.zMin           =  12300. * mm;
-# GiGaGeo.Prs.zMax           =  15000. * mm;
-# GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo";
-# GiGaGeo.Prs.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns };
-# GiGaGeo.Prs.Histograms = {  "GaussCalo/PRSTIME/h1" ,  "GaussCalo/PRSTIME/h2" ,  "GaussCalo/PRSTIME/h3"};
-# GetPrsHits.MCHitsLocation = "/Event/MC/Prs/Hits";
-# GetPrsHits.CollectionName = "PrsHits";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Prs.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Ecal.opts'
-# GiGaGeo.Ecal.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell",  "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell",  "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell"};
-# GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal";
-# GiGaGeo.Ecal.CollectionName =  "EcalHits";
-# GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Ecal";
-# GiGaGeo.Ecal.zMin           =  12300. * mm;
-# GiGaGeo.Ecal.zMax           =  15000. * mm;
-# GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo";
-# GiGaGeo.Ecal.Histograms = {  "GaussCalo/ECALTIME/h1" ,  "GaussCalo/ECALTIME/h2"};
-# GetEcalHits.MCHitsLocation = "/Event/MC/Ecal/Hits";
-# GetEcalHits.CollectionName = "EcalHits";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Ecal.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Hcal.opts'
-# GiGaGeo.Hcal.StartVolumes = {  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile"  ,  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile"      ,  "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellScTile"};
-# GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal";
-# GiGaGeo.Hcal.CollectionName =  "HcalHits";
-# GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/DownstreamRegion/Hcal";
-# GiGaGeo.Hcal.zMin           =  12300. * mm;
-# GiGaGeo.Hcal.zMax           =  15000. * mm;
-# GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo";
-# GiGaGeo.Hcal.Histograms = {  "GaussCalo/HCALTIME/h1" ,  "GaussCalo/HCALTIME/h2"};
-# GetHcalHits.MCHitsLocation = "/Event/MC/Hcal/Hits";
-# GetHcalHits.CollectionName = "HcalHits";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Hcal.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/CaloSP.opts'
-# GiGaGeo.CaloSP.DetectorPath   =  "/LHCb/Calo";
-# GiGaGeo.CaloSP.CollectionName =  "CaloSPHits";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/CaloSP.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussCalo/options/Calo.opts'
-# GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
-# GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
-# GiGaGeo.FieldMgr.Global        = true;
-# GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
-# GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimGeometry.opts'
-# Simulation.Members += { "GenerationToSimulation" };
-# GenerationToSimulation.LookForUnknownParticles = true;
-# Simulation.Members += { "GiGaFlushAlgorithm" };
-# Simulation.Members += { "GiGaCheckEventStatus" };
-# Simulation.Members += { "SimulationToMCTruth" };
-# Simulation.Members += { "GaudiSequencer/DetectorsHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetVeloHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetPuVetoHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetTTHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetITHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetOTHits" };
-# DetectorsHits.Members += { "GetTrackerHitsAlg/GetMuonHits" };
-# DetectorsHits.Members += { "GetCaloHitsAlg/GetSpdHits" };
-# DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };
-# DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };
-# DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };
-# DetectorsHits.Members += { "GaudiSequencer/RichHits" };
-# RichHits.Members      += { "GetMCRichHitsAlg/GetRichHits" };
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussTracker/options/TrackersHits.opts'
-# GetVeloHits.CollectionName = "VeloSDet/Hits";
-# GetVeloHits.MCHitsLocation = "/Event/MC/Velo/Hits";
-# GetVeloHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
-# GetPuVetoHits.CollectionName = "VeloPuSDet/Hits";
-# GetPuVetoHits.MCHitsLocation = "/Event/MC/PuVeto/Hits";
-# GetPuVetoHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};
-# GetTTHits.CollectionName = "TTSDet/Hits";
-# GetTTHits.MCHitsLocation = "/Event/MC/TT/Hits";
-# GetTTHits.Detectors      = {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
-# GetITHits.CollectionName = "ITSDet/Hits";
-# GetITHits.MCHitsLocation = "/Event/MC/IT/Hits";
-# GetITHits.Detectors      = {"/dd/Structure/LHCb/AfterMagnetRegion/T/IT"};
-# GetOTHits.CollectionName = "OTSDet/Hits";
-# GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
-# GetOTHits.Detectors      = {"/dd/Structure/LHCb/AfterMagnetRegion/T/OT"};
-# GetMuonHits.CollectionName = "MuonSDet/Hits";
-# GetMuonHits.MCHitsLocation = "/Event/MC/Muon/Hits";
-# GetMuonHits.Detectors      = {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussTracker/options/TrackersHits.opts'
-# DetectorsHits.MeasureTime = true;
-# GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
-# GiGa.ModularPL.CutForElectron = 10000.0 * m;
-# GiGa.ModularPL.CutForPositron = 5.0 * mm;
-# GiGa.ModularPL.CutForGamma    = 10.0 * mm;
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/PhysList-LHEP.opts'
-# GiGa.ModularPL.PhysicsConstructors = {  "GiGaExtPhysics<G4EmStandardPhysics_option1>/EmOpt1Physics" };
-# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4EmExtraPhysics>/EmExtraPhysics" };
-# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4DecayPhysics>/DecayPhysics" };
-# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4HadronElasticPhysics>/ElasticPhysics" };
-# GiGa.ModularPL.PhysicsConstructors += { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" };
-# GiGa.ModularPL.PhysicsConstructors += {  "GiGaExtPhysics<G4IonPhysics>/IonPhysics" };
-# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorOp"  };
-# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorHpd" };
-# GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysUnknownParticles" };
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/PhysList-LHEP.opts'
-# GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq";
-# GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
-# GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" };
-# GiGa.RunSeq.RunCommand.BeginOfRunCommands  = {  "/tracking/verbose 0",  "/tracking/storeTrajectory  1",  "/process/eLoss/verbose -1"};
-# GiGa.EventAction            =   "GiGaEventActionSequence/EventSeq";
-# GiGa.EventSeq.Members      += { "GaussEventActionHepMC/HepMCEvent" };
-# GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq";
-# GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/Rich.opts'
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator=false;
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel=900;
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
-# GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" };
-# GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" };
-# GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" };
-# GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/Rich.opts'
-# GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" };
-# GiGa.TrackSeq.Members      += { "GaussTrackActionHepMC/HepMCTrack" };
-# GiGa.TrackSeq.PostTrack.StoreAll          = false;
-# GiGa.TrackSeq.PostTrack.StorePrimaries    = true;
-# GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
-# GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
-# GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true;
-# GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 100.0 * MeV;
-# GiGa.TrackSeq.PostTrack.StoreByChildProcess  = true;
-# GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"RichG4Cerenkov", "Decay"};
-# GiGa.TrackSeq.PostTrack.StoreByOwnProcess  = true;
-# GiGa.TrackSeq.PostTrack.StoredOwnProcesses = {"Decay"};
-# GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq";
-# GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" };
-# SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
-# GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
-# GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      };
-# GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/RichExtendedInfo.opts'
-# RichHits.Members += { "GetMCRichOpticalPhotonsAlg/GetRichPhotons",                      "GetMCRichSegmentsAlg/GetRichSegments",                      "GetMCRichTracksAlg/GetRichTracks" };
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichExtendedInfo.opts'
-# GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
-# GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" };
-# GiGa.StepSeq.Members  += { "RichG4StepAnalysis5/RichStepMirrorRefl" };
-# GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
-# GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
-# GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichExtendedInfo.opts'
-# RichHits.Members += { "Rich::MC::MCPartToMCRichTrackAlg/MCPartToMCRichTrack",                      "Rich::MC::MCRichHitToMCRichOpPhotAlg/MCRichHitToMCRichOpPhot" };
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/RichExtendedInfo.opts'
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Simulation.opts'
-# Generator.Members       += { "GaudiSequencer/GenMonitor" };
-# Simulation.Members      += { "GaudiSequencer/SimMonitor" };
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Monitor.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/RootHist.opts'
-# ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v26r3/GaudiConf/options/RootHist.opts'
-# RootHistCnv.ForceAlphaIds = true;
-# ApplicationMgr.ExtSvc += { "AuditorSvc"};
-# ApplicationMgr.AuditAlgorithms = True;
-# AuditorSvc.Auditors += {"TimingAuditor"};
-# GenMonitor.Members         += {"GenMonitorAlg"};
-# GenMonitorAlg.HistoProduce  = true;
-# SimMonitor.Members   += { "GiGaGetEventAlg" };
-# SimMonitor.Members   += { "MCTruthMonitor" };
-# GiGaGetEventAlg.Vertices = "";
-# SimMonitor.Members   += { "GiGaGetHitsAlg" };
-# SimMonitor.Members   += { "GaudiSequencer/DetectorsMonitor" };
-# DetectorsMonitor.Members += { "VeloGaussMoni" };
-# DetectorsMonitor.Members += { "MCHitMonitor/TTHitMonitor" };
-# TTHitMonitor.mcPathString = "/Event/MC/TT/Hits";
-# TTHitMonitor.zStations    = { 2350.0*mm, 2620.0*mm };
-# TTHitMonitor.xMax         = 150.0*cm;
-# TTHitMonitor.yMax         = 150.0*cm;
-# DetectorsMonitor.Members += { "MCHitMonitor/ITHitMonitor" };
-# ITHitMonitor.mcPathString = "/Event/MC/IT/Hits";
-# ITHitMonitor.zStations    = { 7780.0*mm, 8460.0*mm, 9115.0*mm };
-# ITHitMonitor.xMax         = 100.0*cm;
-# ITHitMonitor.yMax         = 100.0*cm;
-# DetectorsMonitor.Members += { "MCHitMonitor/OTHitMonitor" };
-# OTHitMonitor.mcPathString = "/Event/MC/OT/Hits";
-# OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichAnalysis.opts'
-# GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" };
-# GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" };
-# GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0;
-# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
-# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=true;
-# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
-# GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
-# GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
-# GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
-# GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
-# GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
-# GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
-# GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" };
-# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
-# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
-# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
-# GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Sim/GaussRICH/options/RichAnalysis.opts'
-# DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
-# DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" };
-# DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
-# DetectorsMonitor.Members  += { "MCCaloMonitor/HcalMonitor" };
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Calo/CaloMoniSim/options/MoniSim.opts'
-# SpdMonitor.Detector="Spd";
-# SpdMonitor.Regions = true;
-# SpdMonitor.MaximumEnergy=10.*MeV;
-# SpdMonitor.Threshold=1.5*MeV;
-# PrsMonitor.Detector="Prs";
-# PrsMonitor.Regions = true;
-# PrsMonitor.MaximumEnergy=10.*MeV;
-# PrsMonitor.Threshold=1.5*MeV;
-# EcalMonitor.Detector="Ecal";
-# EcalMonitor.Regions = true;
-# EcalMonitor.MaximumEnergy=1000.*MeV;
-# EcalMonitor.Threshold=10.*MeV;
-# HcalMonitor.Detector="Hcal";
-# HcalMonitor.Regions = true;
-# HcalMonitor.MaximumEnergy=1000.*MeV;
-# HcalMonitor.Threshold=5.*MeV;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Calo/CaloMoniSim/options/MoniSim.opts'
-# SpdMonitor.OutputLevel  = 4;
-# PrsMonitor.OutputLevel  = 4;
-# EcalMonitor.OutputLevel = 4;
-# HcalMonitor.OutputLevel = 4;
-# DetectorsMonitor.Members += { "MuonHitChecker" };
-# DetectorsMonitor.Members += { "MuonMultipleScatteringChecker" };
-# MuonHitChecker.FullDetail = true;
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Monitor.opts'
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimVeloGeometry.py'
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/SimVeloGeometry.py'
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Gauss/MC09-b5TeV-md100.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Conditions/MC09-20090602-vc-md100.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v2r7p2/options/Conditions/MC09-20090602-vc-md100.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r1/options/11144103.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r1/options/Gauss/MC09-b5TeV-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r1/options/Gauss/MC09-b5TeV-md100.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r1/options/Conditions/MC09-20090602-vc-md100.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r1/options/Conditions/MC09-20090602-vc-md100.py'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/Gauss-MC09.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r2/options/11144103.opts'
 # Generation.EventType = 11144103;
 # Generation.SampleGenerationTool = "SignalRepeatedHadronization";
 # Generation.SignalRepeatedHadronization.ProductionTool = "PythiaProduction";
 # ToolSvc.EvtGenDecay.UserDecayFile = "$DECFILESROOT/dkfiles/Bd_JpsiKS,mm=CPV,DecProdCut.dec";
 # Generation.SignalRepeatedHadronization.CutTool = "DaughtersInLHCb";
 # Generation.SignalRepeatedHadronization.SignalPIDList = {511,-511};
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r1/options/11144103.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Tue/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
-# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.opts'
-# Gauss.Members                  -= { "GaudiSequencer/Simulation" };
-# ApplicationMgr.ExtSvc          -= { "GiGa" };
-# EventPersistencySvc.CnvService -= { "GiGaKine "};
-# GaussTape.ItemList = {   "/Event/Gen/Header#1"  ,"/Event/Gen/Collisions#1"  ,"/Event/Gen/HepMCEvents#1"};
-# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v18r2/options/11144103.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb1/Fri/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.opts'
+# --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/options/GenStandAlone.py'
 # --> Including file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
-Gauss-1000ev-20090623
 # <-- End of file '/afs/cern.ch/user/s/silviam/cmtuser/Gauss_HEAD/Sim/Gauss/tests/options/testGauss-gen-defaults.py'
-# applying configuration of LHCbApp
-# /***** User LHCbApp/LHCbApp ************************************************************************
-# |-DataType   = '2008'
-# |-DDDBtag    = 'MC09-20090602'  (default: '')
-# |-SkipEvents = 0
-# |-EvtMax     = 1000  (default: -1)
-# |-Simulation = True  (default: False)
-# |-CondDBtag  = 'sim-20090402-vc-md100'  (default: '')
-# |-Monitors   = []  (default: [])
-# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
-# applying configuration of DDDBConf
-# /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2008'
-# |-DbRoot     = 'conddb:/lhcb.xml'
-# |-Simulation = True  (default: False)
-# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
-# applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/options/SQLDDDB.py'
-# /***** User CondDB/CondDB **************************************************************************
-# |-PartitionConnectionString = {}  (default: {})
-# |-LocalTags                 = {}  (default: {})
-# |-Tags                      = {}  (default: {})
-# |-Overrides                 = []  (default: [])
-# |-Simulation                = True  (default: False)
-# |-SQLiteLocalCopiesDir      = ''
-# |-UseOracle                 = False
-# |-LogFile                   = ''
-# |-OverwriteSQLiteLocalCopy  = False
-# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+# applying configuration of Gauss
+# WARNING: No simulation phase.
+# /***** User Gauss/Gauss ****************************************************************************
+# |-DatasetName       = 'Gauss'
+# |-PhysicsList       = 'LHEP'
+# |-GenStandAlone     = True  (default: False)
+# |-BeamBetaStar      = 2000.0  (default: 2000.0)
+# |-BeamEmittance     = 7.0400000000000006e-07  (default: 7.0400000000000006e-07)
+# |-CrossingRate      = 1.1245000000000002e-05  (default: 1.1245000000000002e-05)
+# |-Histograms        = 'Default'
+# |-InteractionSize   = [0.027, 0.027, 38.199999999999996]  (default: [0.027, 0.027, 38.199999999999996])
+# |-BeamCrossingAngle = 0.00032900000000000003  (default: 0.00032900000000000003)
+# |-SpilloverPaths    = []  (default: [])
+# |-Luminosity        = 1.16e+18  (default: 1.16e+18)
+# |-BeamSize          = [0.037999999999999999, 0.037999999999999999]
+# |                   (default: [0.037999999999999999, 0.037999999999999999])
+# |-TotalCrossSection = 9.7199999999999989e-24  (default: 9.7199999999999989e-24)
+# |-BeamMomentum      = 5000000.0  (default: 5000000.0)
+# \----- (End of User Gauss/Gauss) -------------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v37r2
-                                          running on lxplus226.cern.ch on Tue Jun 23 12:23:35 2009
+                                                   Welcome to Gauss version v37r3
+                                          running on lxbuild111.cern.ch on Fri Jul 31 14:06:05 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -402,17 +52,17 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
-Gauss                      INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
-Generator                  INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
+TimingAuditor.TIMER        INFO This machine has a speed about   1.77 times the speed of a 2.8 GHz Xeon.
+GaussSequencer             INFO Member list: GaudiSequencer/Generator
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+Generator                  INFO Member list: GaudiSequencer/GeneratorSlot
+GeneratorSlot              INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
 GaussGen                SUCCESS Requested to process 1000 events
 GaussGen                SUCCESS ==================================================================
 HistogramPersistencySvc    INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-1000ev-20090623-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-11144103-1000ev-20090731-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r0/data/gausscalo.root as GaussCalo
 Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity.
 Generation.FixedLumin...   INFO Luminosity (10^32 / cm^2 s): 0.00116
 Generation.FixedLumin...   INFO Bunch crossing rate (MHz): 0.011245
@@ -420,7 +70,7 @@ Generation.FixedLumin...   INFO Total cross section (mbarn): 97.2
 Generation.FixedLumin...   INFO Mean number of interaction/bunch = 1.00269
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r8/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v5r9/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "MC09-20090602"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 Generation.SignalRepe...SUCCESS ==================================================================
@@ -443,8 +93,7 @@ Generation.BeamSpotSm...   INFO  with sigma(X,Y,Z) = 0.027 mm, 0.027 mm, 38.2 mm
 Generation              SUCCESS ==================================================================
 Generation              SUCCESS Requested to generate EventType 11144103
 Generation              SUCCESS ==================================================================
-GenMonitor                 INFO Member list: GenMonitorAlg, GaussMonitor::CheckLifeTimeHepMC/Hepmclifetime
-GenMonitorAlg              INFO Monitor will be applied to all events in container Gen/HepMCEvents
+GenMonitor                 INFO Member list: GaussMonitor::CheckLifeTimeHepMC/HepMCLifeTime, GenMonitorAlg
 LoKiSvc                 SUCCESS
 
 
@@ -468,17 +117,18 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 
-EventPersistencySvc        INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'GiGaKine' ]
+GenMonitorAlg              INFO Monitor will be applied to all events in container /Event/Gen/HepMCEvents
+EventPersistencySvc        INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistencySvc        INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-1000ev-20090623.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='PFN:Gauss-11144103-1000ev-20090731.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'
 EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
-IODataManager              INFO Referring to dataset Gauss-1000ev-20090623.sim by its file ID:F27262F5-DF5F-DE11-AA89-000423D94890
-Gauss-1000ev-20090623...SUCCESS Root file version:51800
+IODataManager              INFO Referring to dataset Gauss-11144103-1000ev-20090731.sim by its file ID:8C804A94-CA7D-DE11-8A4A-00304879EE40
+Gauss-11144103-1000ev...SUCCESS Root file version:51800
 GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
 GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
@@ -516,6 +166,7 @@ GaussGen                   INFO Evt 35,  Run 1082,  Nr. in job = 35 with seeds [
 GaussGen                   INFO Evt 36,  Run 1082,  Nr. in job = 36 with seeds [1082, 36, 1568682495, 0]
 GaussGen                   INFO Evt 37,  Run 1082,  Nr. in job = 37 with seeds [1082, 37, 1110576483, 0]
 GaussGen                   INFO Evt 38,  Run 1082,  Nr. in job = 38 with seeds [1082, 38, 1340582094, 0]
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GaussGen                   INFO Evt 39,  Run 1082,  Nr. in job = 39 with seeds [1082, 39, 647316522, 0]
 GaussGen                   INFO Evt 40,  Run 1082,  Nr. in job = 40 with seeds [1082, 40, 345546801, 0]
 GaussGen                   INFO Evt 41,  Run 1082,  Nr. in job = 41 with seeds [1082, 41, 307207071, 0]
@@ -524,7 +175,6 @@ GaussGen                   INFO Evt 43,  Run 1082,  Nr. in job = 43 with seeds [
 GaussGen                   INFO Evt 44,  Run 1082,  Nr. in job = 44 with seeds [1082, 44, 954465055, 0]
 GaussGen                   INFO Evt 45,  Run 1082,  Nr. in job = 45 with seeds [1082, 45, 697785478, 0]
 GaussGen                   INFO Evt 46,  Run 1082,  Nr. in job = 46 with seeds [1082, 46, 348467938, 0]
-DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GaussGen                   INFO Evt 47,  Run 1082,  Nr. in job = 47 with seeds [1082, 47, 119773087, 0]
 GaussGen                   INFO Evt 48,  Run 1082,  Nr. in job = 48 with seeds [1082, 48, 1707004844, 0]
 GaussGen                   INFO Evt 49,  Run 1082,  Nr. in job = 49 with seeds [1082, 49, 309996848, 0]
@@ -866,7 +516,7 @@ GaussGen                   INFO Evt 384,  Run 1082,  Nr. in job = 384 with seeds
 GaussGen                   INFO Evt 385,  Run 1082,  Nr. in job = 385 with seeds [1082, 385, 1446476381, 0]
 GaussGen                   INFO Evt 386,  Run 1082,  Nr. in job = 386 with seeds [1082, 386, 688194602, 0]
 
-     Error type 4 has occured after   780078 PYEXEC calls:
+     Error type 4 has occured after   774293 PYEXEC calls:
      (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 387,  Run 1082,  Nr. in job = 387 with seeds [1082, 387, 1539860912, 0]
 GaussGen                   INFO Evt 388,  Run 1082,  Nr. in job = 388 with seeds [1082, 388, 1323749357, 0]
@@ -907,7 +557,7 @@ GaussGen                   INFO Evt 422,  Run 1082,  Nr. in job = 422 with seeds
 GaussGen                   INFO Evt 423,  Run 1082,  Nr. in job = 423 with seeds [1082, 423, 525280526, 0]
 GaussGen                   INFO Evt 424,  Run 1082,  Nr. in job = 424 with seeds [1082, 424, 816170939, 0]
 
-     Error type 9 has occured after   870264 PYEXEC calls:
+     Error type 9 has occured after   864085 PYEXEC calls:
      (PYPTIS:) Weight   1.7938E+00 above unity
 GaussGen                   INFO Evt 425,  Run 1082,  Nr. in job = 425 with seeds [1082, 425, 633922857, 0]
 GaussGen                   INFO Evt 426,  Run 1082,  Nr. in job = 426 with seeds [1082, 426, 453549209, 0]
@@ -985,7 +635,7 @@ GaussGen                   INFO Evt 496,  Run 1082,  Nr. in job = 496 with seeds
 GaussGen                   INFO Evt 497,  Run 1082,  Nr. in job = 497 with seeds [1082, 497, 733245332, 0]
 GaussGen                   INFO Evt 498,  Run 1082,  Nr. in job = 498 with seeds [1082, 498, 1137209196, 0]
 
-     Error type 4 has occured after  1042685 PYEXEC calls:
+     Error type 4 has occured after  1024792 PYEXEC calls:
      (PYSTRF:) caught in infinite loop
 GaussGen                   INFO Evt 499,  Run 1082,  Nr. in job = 499 with seeds [1082, 499, 839044065, 0]
 GaussGen                   INFO Evt 500,  Run 1082,  Nr. in job = 500 with seeds [1082, 500, 1140027326, 0]
@@ -1240,7 +890,6 @@ GaussGen                   INFO Evt 748,  Run 1082,  Nr. in job = 748 with seeds
 GaussGen                   INFO Evt 749,  Run 1082,  Nr. in job = 749 with seeds [1082, 749, 1658858398, 0]
 GaussGen                   INFO Evt 750,  Run 1082,  Nr. in job = 750 with seeds [1082, 750, 1419349777, 0]
 GaussGen                   INFO Evt 751,  Run 1082,  Nr. in job = 751 with seeds [1082, 751, 2059145115, 0]
-Generation.SignalRepe...   INFO Number of repetitions of hadronization exceeds the limit
 GaussGen                   INFO Evt 752,  Run 1082,  Nr. in job = 752 with seeds [1082, 752, 1142778525, 0]
 GaussGen                   INFO Evt 753,  Run 1082,  Nr. in job = 753 with seeds [1082, 753, 1068408061, 0]
 GaussGen                   INFO Evt 754,  Run 1082,  Nr. in job = 754 with seeds [1082, 754, 1832679448, 0]
@@ -1496,141 +1145,142 @@ GaussGen                SUCCESS 1000 events processed
 GaussGen                SUCCESS ==================================================================
 Generation                 INFO **************************************************
 Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
-Number of all events (including empty events) : 1010616
-Number of events with 0 interaction : 370187
+Number of all events (including empty events) : 993270
+Number of events with 0 interaction : 363882
 
 Generation                 INFO ***********   Generation counters   **************
-Number of generated events : 640429
-Number of generated interactions : 1015299
-Number of generated interactions with >= 1b : 7404
-Number of generated interactions with >= 3b : 96
-Number of generated interactions with 1 prompt B : 95
-Number of generated interactions with >= 1c : 66399
-Number of generated interactions with >= 3c : 9033
-Number of generated interactions with >= prompt C : 5869
-Number of generated interactions with b and c : 1408
+Number of generated events : 629388
+Number of generated interactions : 997651
+Number of generated interactions with >= 1b : 7311
+Number of generated interactions with >= 3b : 97
+Number of generated interactions with 1 prompt B : 96
+Number of generated interactions with >= 1c : 65226
+Number of generated interactions with >= 3c : 8849
+Number of generated interactions with >= prompt C : 5769
+Number of generated interactions with b and c : 1384
 Number of accepted events : 1000
-Number of interactions in accepted events : 2005
-Number of accepted interactions with >= 1b : 1008
+Number of interactions in accepted events : 2017
+Number of accepted interactions with >= 1b : 1007
 Number of accepted interactions with >= 3b : 14
 Number of accepted interactions with 1 prompt B : 0
-Number of accepted interactions with >= 1c : 264
-Number of accepted interactions with >= 3c : 44
+Number of accepted interactions with >= 1c : 268
+Number of accepted interactions with >= 3c : 49
 Number of accepted interactions with >= prompt C : 7
-Number of accepted interactions with b and c : 201
+Number of accepted interactions with b and c : 202
 
 Generation.SignalRepe...   INFO *************   Signal counters   ****************
-Number of events for generator level cut, before : 2756, after : 499
-Efficiency of the generator level cut : 0.18106 +/- 0.007335
-Number of z-inverted events : 501
+Number of events for generator level cut, before : 2726, after : 493
+Efficiency of the generator level cut : 0.18085 +/- 0.0073719
+Number of z-inverted events : 507
 
-Number of events for generator particle level cut, before : 1677, after : 330
-Efficiency of the generator particle level cut : 0.19678 +/- 0.0097083
-Number of events for generator anti-particle level cut, before : 1079, after : 169
-Efficiency of the generator anti-particle level cut : 0.15663 +/- 0.011065
+Number of events for generator particle level cut, before : 1661, after : 325
+Efficiency of the generator particle level cut : 0.19567 +/- 0.009734
+Number of events for generator anti-particle level cut, before : 1065, after : 168
+Efficiency of the generator anti-particle level cut : 0.15775 +/- 0.011169
 
-Number of signal B0 in sample : 634 [fraction : 0.634 +/- 0.015233]
-Number of signal B~0 in sample : 366 [fraction : 0.366 +/- 0.015233]
+Number of signal B0 in sample : 631 [fraction : 0.631 +/- 0.015259]
+Number of signal B~0 in sample : 369 [fraction : 0.369 +/- 0.015259]
 
-Number of accepted B0 : 139 [fraction : 0.36579 +/- 0.024708]
-Number of accepted B+ : 176 [fraction : 0.46316 +/- 0.02558]
-Number of accepted Bs0 : 32 [fraction : 0.084211 +/- 0.014246]
-Number of accepted b-Baryon : 33 [fraction : 0.086842 +/- 0.014446]
+Number of accepted B0 : 138 [fraction : 0.36031 +/- 0.024532]
+Number of accepted B+ : 178 [fraction : 0.46475 +/- 0.025485]
+Number of accepted Bs0 : 34 [fraction : 0.088773 +/- 0.014533]
+Number of accepted b-Baryon : 33 [fraction : 0.086162 +/- 0.014338]
 Number of accepted Bc+ : 0 [fraction : 0 +/- 0]
-Number of accepted anti-B0 : 261 [fraction : 0.40278 +/- 0.019267]
-Number of accepted B- : 258 [fraction : 0.39815 +/- 0.01923]
-Number of accepted anti-Bs0 : 58 [fraction : 0.089506 +/- 0.011214]
-Number of accepted anti-b-Baryon : 71 [fraction : 0.10957 +/- 0.01227]
+Number of accepted anti-B0 : 256 [fraction : 0.3969 +/- 0.019264]
+Number of accepted B- : 262 [fraction : 0.4062 +/- 0.019338]
+Number of accepted anti-Bs0 : 56 [fraction : 0.086822 +/- 0.011087]
+Number of accepted anti-b-Baryon : 71 [fraction : 0.11008 +/- 0.012324]
 Number of accepted Bc- : 0 [fraction : 0 +/- 0]
 Number of accepted (bb) : 1
 
-Number of accepted D0 : 336 [fraction : 0.53249 +/- 0.019863]
-Number of accepted D+ : 125 [fraction : 0.1981 +/- 0.015867]
-Number of accepted Ds+ : 80 [fraction : 0.12678 +/- 0.013246]
-Number of accepted c-Baryon : 90 [fraction : 0.14263 +/- 0.013921]
-Number of accepted anti-D0 : 267 [fraction : 0.48991 +/- 0.021413]
-Number of accepted D- : 128 [fraction : 0.23486 +/- 0.018158]
-Number of accepted Ds- : 94 [fraction : 0.17248 +/- 0.016183]
-Number of accepted anti-c-Baryon : 56 [fraction : 0.10275 +/- 0.013006]
-Number of accepted (cc) : 21
+Number of accepted D0 : 337 [fraction : 0.52656 +/- 0.019736]
+Number of accepted D+ : 125 [fraction : 0.19531 +/- 0.015671]
+Number of accepted Ds+ : 87 [fraction : 0.13594 +/- 0.013547]
+Number of accepted c-Baryon : 91 [fraction : 0.14219 +/- 0.013805]
+Number of accepted anti-D0 : 268 [fraction : 0.48639 +/- 0.021293]
+Number of accepted D- : 131 [fraction : 0.23775 +/- 0.018136]
+Number of accepted Ds- : 98 [fraction : 0.17786 +/- 0.016291]
+Number of accepted anti-c-Baryon : 54 [fraction : 0.098004 +/- 0.012666]
+Number of accepted (cc) : 22
 
 Number of accepted B : 238 [fraction : 0.238 +/- 0.013467]
-Number of accepted B* : 623 [fraction : 0.623 +/- 0.015326]
-Number of accepted B** : 139 [fraction : 0.139 +/- 0.01094]
+Number of accepted B* : 624 [fraction : 0.624 +/- 0.015317]
+Number of accepted B** : 138 [fraction : 0.138 +/- 0.010907]
 
 Number of accepted D : 0 [fraction : 0 +/- 0]
 Number of accepted D* : 1000 [fraction : 1 +/- 0]
 Number of accepted D** : 0 [fraction : 0 +/- 0]
 
+HepMCLifeTime             FATAL  >3   sigma deviation in lifetime for 'B0' 	Actual is 0.585597+-0.0136679(0.538625)	Nominal is 0.457183 [mm]
+HepMCLifeTime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >3 sigma deviation for 'B0' StatusCode=FAILURE
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'B+' 	Actual is 0.450949+-0.0217175(0.459673)	Nominal is 0.49106 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B+' StatusCode=FAILURE
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'B_s0' 	Actual is 0.498559+-0.0473657(0.44935)	Nominal is 0.441294 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B_s0' StatusCode=FAILURE
+HepMCLifeTime             FATAL  >3   sigma deviation in lifetime for 'B_c+' 	Actual is 0.10291+-0(0)	Nominal is 0.134907 [mm]
+HepMCLifeTime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >3 sigma deviation for 'B_c+' StatusCode=FAILURE
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'Lambda_b0' 	Actual is 0.479823+-0.0479605(0.467461)	Nominal is 0.413714 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'Lambda_b0' StatusCode=FAILURE
+HepMCLifeTime              INFO  <0.5 sigma deviation in lifetime for 'D0' 	Actual is 0.123575+-0.00377934(0.122465)	Nominal is 0.122945 [mm]
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'D+' 	Actual is 0.336268+-0.0173338(0.331615)	Nominal is 0.311784 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'D+' StatusCode=FAILURE
+HepMCLifeTime           WARNING  >1   sigma deviation in lifetime for 'D_s+' 	Actual is 0.13494+-0.0085014(0.131977)	Nominal is 0.149896 [mm]
+HepMCLifeTime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'D_s+' StatusCode=FAILURE
+HepMCLifeTime             FATAL  >3   sigma deviation in lifetime for 'Lambda_c+' 	Actual is 0.0466934+-0.00386846(0.0478503)	Nominal is 0.0599585 [mm]
+HepMCLifeTime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >3 sigma deviation for 'Lambda_c+' StatusCode=FAILURE
+HepMCLifeTime           SUCCESS Booked 9 Histogram(s) : 1D=9
+HepMCLifeTime           SUCCESS List of booked 1D histograms in directory         "Gen/HepMCLifeTime" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
+ | LifeTime B+               | "LifeTime B+"                                 |   448   |    0.45095 | 0.45967    |     2.2769 |     7.5477 |
+ | LifeTime D+               | "LifeTime D+"                                 |   366   |    0.33627 | 0.33162    |     1.8409 |     4.0611 |
+ | LifeTime Lambda_b0        | "LifeTime Lambda_b0"                          |    95   |    0.47982 | 0.46746    |      1.866 |     3.9033 |
+ | LifeTime Lambda_c+        | "LifeTime Lambda_c+"                          |   153   |   0.046693 | 0.04785    |     1.9443 |     4.2533 |
+ | LifeTime B_s0             | "LifeTime B_s0"                               |   133   |    0.33737 | 0.43705    |     1.5864 |     1.7606 |
+ | LifeTime B_c+             | "LifeTime B_c+"                               |    1    |    0.10291 | 0          |          0 |          0 |
+ | LifeTime D_s+             | "LifeTime D_s+"                               |   241   |    0.13494 | 0.13198    |     1.5297 |     2.1192 |
+ | LifeTime D0               | "LifeTime D0"                                 |   1050  |    0.12358 | 0.12246    |     1.8269 |     4.1599 |
+ | LifeTime B0               | "LifeTime B0"                                 |   1775  |    0.54922 | 0.53019    |     1.5651 |     2.9591 |
+HepMCLifeTime           SUCCESS Number of counters : 9
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "LifeTime B+"                                   |       448 |   202.0253 |    0.45095 |    0.45967 |   0.0041845 |      3.3496 |
+ | "LifeTime B0"                                   |      1553 |   909.4316 |    0.58560 |    0.53862 |  0.00027569 |      3.9463 |
+ | "LifeTime B_c+"                                 |         1 |  0.1029098 |    0.10291 |     0.0000 |     0.10291 |     0.10291 |
+ | "LifeTime B_s0"                                 |        90 |   44.87028 |    0.49856 |    0.44935 |  0.00031307 |      1.8543 |
+ | "LifeTime D+"                                   |       366 |    123.074 |    0.33627 |    0.33162 |  0.00020923 |      1.9020 |
+ | "LifeTime D0"                                   |      1050 |    129.754 |    0.12358 |    0.12246 |  0.00026340 |     0.77268 |
+ | "LifeTime D_s+"                                 |       241 |   32.52047 |    0.13494 |    0.13198 |   0.0013104 |     0.67394 |
+ | "LifeTime Lambda_b0"                            |        95 |   45.58321 |    0.47982 |    0.46746 |   0.0081756 |      2.3244 |
+ | "LifeTime Lambda_c+"                            |       153 |   7.144091 |   0.046693 |   0.047850 |  1.5212e-05 |     0.25800 |
+HepMCLifeTime           SUCCESS Exceptions/Errors/Warnings Statistics : 0/3/5
+HepMCLifeTime           SUCCESS  #ERRORS     = 1        Message = '>3 sigma deviation for 'B0''
+HepMCLifeTime           SUCCESS  #ERRORS     = 1        Message = '>3 sigma deviation for 'B_c+''
+HepMCLifeTime           SUCCESS  #ERRORS     = 1        Message = '>3 sigma deviation for 'Lambda_c+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B_s0''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'D+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'D_s+''
+HepMCLifeTime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'Lambda_b0''
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 779953
+= Number of particles generated: 781792
 = Number of events: 1000
-= Mean multiplicity: 779.953
+= Mean multiplicity: 781.792
 =                                                                 =
-= Number of pseudo stable particles generated: 658184
+= Number of pseudo stable particles generated: 659559
 = Number of events: 1000
-= Mean pseudo stable multiplicity: 658.184
+= Mean pseudo stable multiplicity: 659.559
 =                                                                 =
-= Number of charged stable particles generated: 197640
+= Number of charged stable particles generated: 198118
 = Number of events: 1000
-= Mean charged stable multiplicity: 197.64
+= Mean charged stable multiplicity: 198.118
 =                                                                 =
-= Number of charged stable particles in LHCb eta 47985
+= Number of charged stable particles in LHCb eta 48100
 = Number of events: 1000
-= Mean charged stable multiplicity in LHCb eta: 47.985
+= Mean charged stable multiplicity in LHCb eta: 48.1
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 19 Histogram(s) : 1D=19
-Hepmclifetime             FATAL  >3   sigma deviation in lifetime for 'B0' 	Actual is 0.580079+-0.0135276(0.53464)	Nominal is 0.457183 [mm]
-Hepmclifetime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >3 sigma deviation for 'B0' StatusCode=FAILURE
-Hepmclifetime           WARNING  >1   sigma deviation in lifetime for 'B+' 	Actual is 0.454636+-0.0219042(0.46155)	Nominal is 0.49106 [mm]
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B+' StatusCode=FAILURE
-Hepmclifetime           WARNING  >1   sigma deviation in lifetime for 'B_s0' 	Actual is 0.497865+-0.0460117(0.436505)	Nominal is 0.441294 [mm]
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'B_s0' StatusCode=FAILURE
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: No 'B_c+' Particles are found! StatusCode=FAILURE
-Hepmclifetime           WARNING  >1   sigma deviation in lifetime for 'Lambda_b0' 	Actual is 0.464049+-0.0470968(0.459043)	Nominal is 0.413714 [mm]
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'Lambda_b0' StatusCode=FAILURE
-Hepmclifetime              INFO  <0.5 sigma deviation in lifetime for 'D0' 	Actual is 0.121505+-0.00380759(0.122673)	Nominal is 0.122945 [mm]
-Hepmclifetime           WARNING  >1   sigma deviation in lifetime for 'D+' 	Actual is 0.333515+-0.0174605(0.336767)	Nominal is 0.311784 [mm]
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'D+' StatusCode=FAILURE
-Hepmclifetime           WARNING  >1   sigma deviation in lifetime for 'D_s+' 	Actual is 0.133187+-0.00894526(0.135662)	Nominal is 0.149896 [mm]
-Hepmclifetime           WARNING GaussMonitor::CheckLifeTimeHepMC:: >1 sigma deviation for 'D_s+' StatusCode=FAILURE
-Hepmclifetime             FATAL  >3   sigma deviation in lifetime for 'Lambda_c+' 	Actual is 0.0469285+-0.00394402(0.0487848)	Nominal is 0.0599585 [mm]
-Hepmclifetime             ERROR GaussMonitor::CheckLifeTimeHepMC:: >3 sigma deviation for 'Lambda_c+' StatusCode=FAILURE
-Hepmclifetime           SUCCESS Booked 9 Histogram(s) : 1D=9
-Hepmclifetime           SUCCESS List of booked 1D histograms in directory         "Gen/Hepmclifetime" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | LifeTime B+               | "LifeTime B+"                                 |   444   |    0.45464 | 0.46155    |     2.2619 |     7.4202 |
- | LifeTime D+               | "LifeTime D+"                                 |   372   |    0.33352 | 0.33677    |     1.9985 |     4.8216 |
- | LifeTime Lambda_b0        | "LifeTime Lambda_b0"                          |    95   |    0.46405 | 0.45904    |     1.9689 |     4.5018 |
- | LifeTime Lambda_c+        | "LifeTime Lambda_c+"                          |   153   |   0.046929 | 0.048785   |     1.9706 |     4.3156 |
- | LifeTime B_s0             | "LifeTime B_s0"                               |   133   |     0.3369 | 0.42798    |     1.5561 |     1.6267 |
- | LifeTime B_c+             | "LifeTime B_c+"                               |    0    |          0 | 0          |          0 |          0 |
- | LifeTime D_s+             | "LifeTime D_s+"                               |   230   |    0.13319 | 0.13566    |     1.7685 |     3.2618 |
- | LifeTime D0               | "LifeTime D0"                                 |   1038  |     0.1215 | 0.12267    |     1.8884 |     4.4152 |
- | LifeTime B0               | "LifeTime B0"                                 |   1778  |    0.54486 | 0.52653    |     1.5741 |     3.0291 |
-Hepmclifetime           SUCCESS Number of counters : 9
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "LifeTime B+"                                   |       444 |   201.8584 |    0.45464 |    0.46155 |   0.0041845 |      3.3496 |
- | "LifeTime B0"                                   |      1562 |   906.0827 |    0.58008 |    0.53464 |  0.00027569 |      3.9463 |
- | "LifeTime B_c+"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "LifeTime B_s0"                                 |        90 |   44.80782 |    0.49786 |    0.43651 |  0.00031307 |      1.6795 |
- | "LifeTime D+"                                   |       372 |   124.0677 |    0.33352 |    0.33677 |  0.00020923 |      1.9020 |
- | "LifeTime D0"                                   |      1038 |   126.1219 |    0.12150 |    0.12267 |  0.00026340 |     0.77268 |
- | "LifeTime D_s+"                                 |       230 |   30.63309 |    0.13319 |    0.13566 |   0.0013845 |     0.75099 |
- | "LifeTime Lambda_b0"                            |        95 |   44.08463 |    0.46405 |    0.45904 |   0.0081756 |      2.3244 |
- | "LifeTime Lambda_c+"                            |       153 |   7.180064 |   0.046929 |   0.048785 |  1.5212e-05 |     0.25800 |
-Hepmclifetime           SUCCESS Exceptions/Errors/Warnings Statistics : 0/2/6
-Hepmclifetime           SUCCESS  #ERRORS     = 1        Message = '>3 sigma deviation for 'B0''
-Hepmclifetime           SUCCESS  #ERRORS     = 1        Message = '>3 sigma deviation for 'Lambda_c+''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B+''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'B_s0''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'D+''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'D_s+''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = '>1 sigma deviation for 'Lambda_b0''
-Hepmclifetime           SUCCESS  #WARNINGS   = 1        Message = 'No 'B_c+' Particles are found!'
 GaussTape                  INFO Events output: 1000
 EventLoopMgr               INFO Histograms converted successfully according to request.
 LoKiSvc                 SUCCESS
@@ -1658,7 +1308,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 ToolSvc                    INFO Removing all tools created by ToolSvc
 GaussGen.GaussGenMemory SUCCESS Booked 2 Histogram(s) : 1D=2
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO ------------------------------------------------------------------------------------------------
@@ -1674,83 +1324,84 @@ ToolSvc.SequencerTime...   INFO ------------------------------------------------
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I      1015299      34928637 I  9.670E+01 I
- I  11 f + f' -> f + f' (QCD)       I       131681             0 I  1.254E+01 I
- I  12 f + fbar -> f' + fbar'       I          106             0 I  1.010E-02 I
- I  13 f + fbar -> g + g            I          102             0 I  9.716E-03 I
- I  28 f + g -> f + g               I       112762             0 I  1.074E+01 I
- I  53 g + g -> f + fbar            I         7096             0 I  6.759E-01 I
- I  68 g + g -> g + g               I       289585             0 I  2.758E+01 I
- I  91 Elastic scattering           I       217796        217796 I  2.079E+01 I
- I  92 Single diffractive (XB)      I        73178         73178 I  7.003E+00 I
- I  93 Single diffractive (AX)      I        73600         73600 I  7.003E+00 I
- I  94 Double  diffractive          I       102685        103653 I  9.693E+00 I
- I  95 Low-pT scattering            I            0        548049 I  0.000E+00 I
- I 421 g + g  -> cc~[3S1(1)] + g    I           54          2894 I  4.174E-03 I
- I 422 g + g  -> cc~[3S1(8)] + g    I          201         14448 I  2.021E-02 I
- I 423 g + g  -> cc~[1S0(8)] + g    I          141         16204 I  1.484E-02 I
- I 424 g + g  -> cc~[3PJ(8)] + g    I          346         41030 I  3.087E-02 I
- I 425 g + q  -> q + cc~[3S1(8)]    I           47          3190 I  4.350E-03 I
- I 426 g + q  -> q + cc~[1S0(8)]    I           32          3068 I  2.447E-03 I
- I 427 g + q  -> q + cc~[3PJ(8)]    I           53          7594 I  5.059E-03 I
+ I   0 All included subprocesses    I       997651      34317754 I  9.670E+01 I
+ I  11 f + f' -> f + f' (QCD)       I       129388             0 I  1.254E+01 I
+ I  12 f + fbar -> f' + fbar'       I          104             0 I  1.008E-02 I
+ I  13 f + fbar -> g + g            I          104             0 I  1.008E-02 I
+ I  28 f + g -> f + g               I       110778             0 I  1.074E+01 I
+ I  53 g + g -> f + fbar            I         6994             0 I  6.780E-01 I
+ I  68 g + g -> g + g               I       284537             0 I  2.758E+01 I
+ I  91 Elastic scattering           I       214011        214011 I  2.079E+01 I
+ I  92 Single diffractive (XB)      I        71915         71915 I  7.003E+00 I
+ I  93 Single diffractive (AX)      I        72379         72379 I  7.003E+00 I
+ I  94 Double  diffractive          I       100841        101788 I  9.694E+00 I
+ I  95 Low-pT scattering            I            0        538514 I  0.000E+00 I
+ I 421 g + g  -> cc~[3S1(1)] + g    I           54          2833 I  4.222E-03 I
+ I 422 g + g  -> cc~[3S1(8)] + g    I          201         14186 I  2.043E-02 I
+ I 423 g + g  -> cc~[1S0(8)] + g    I          139         15858 I  1.472E-02 I
+ I 424 g + g  -> cc~[3PJ(8)] + g    I          339         40445 I  3.094E-02 I
+ I 425 g + q  -> q + cc~[3S1(8)]    I           45          3148 I  4.297E-03 I
+ I 426 g + q  -> q + cc~[1S0(8)]    I           31          3035 I  2.422E-03 I
+ I 427 g + q  -> q + cc~[3PJ(8)]    I           51          7457 I  5.061E-03 I
  I 428 q + q~ -> g + cc~[3S1(8)]    I            1            29 I  1.909E-05 I
  I 429 q + q~ -> g + cc~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 430 q + q~ -> g + cc~[3PJ(8)]    I            0             2 I  1.603E-06 I
- I 431 g + g  -> cc~[3P0(1)] + g    I         1838        220684 I  1.736E-01 I
- I 432 g + g  -> cc~[3P1(1)] + g    I          987         90519 I  9.449E-02 I
- I 433 g + g  -> cc~[3P2(1)] + g    I         2059        250831 I  2.029E-01 I
- I 434 q + g  -> q + cc~[3P0(1)]    I          305         40755 I  2.771E-02 I
- I 435 q + g  -> q + cc~[3P1(1)]    I          175         18222 I  1.744E-02 I
- I 436 q + g  -> q + cc~[3P2(1)]    I          345         46344 I  3.443E-02 I
+ I 431 g + g  -> cc~[3P0(1)] + g    I         1808        216791 I  1.737E-01 I
+ I 432 g + g  -> cc~[3P1(1)] + g    I          969         88907 I  9.458E-02 I
+ I 433 g + g  -> cc~[3P2(1)] + g    I         2017        246609 I  2.028E-01 I
+ I 434 q + g  -> q + cc~[3P0(1)]    I          306         40007 I  2.766E-02 I
+ I 435 q + g  -> q + cc~[3P1(1)]    I          171         17928 I  1.729E-02 I
+ I 436 q + g  -> q + cc~[3P2(1)]    I          345         45584 I  3.437E-02 I
  I 437 q + q~ -> g + cc~[3P0(1)]    I            0             0 I  0.000E+00 I
- I 438 q + q~ -> g + cc~[3P1(1)]    I            0            33 I  2.219E-05 I
- I 439 q + q~ -> g + cc~[3P2(1)]    I            0            28 I  1.417E-05 I
- I 461 g + g  -> bb~[3S1(1)] + g    I            2            40 I  1.514E-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I            5           155 I  3.439E-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I            2            80 I  1.722E-04 I
+ I 438 q + q~ -> g + cc~[3P1(1)]    I            0            32 I  2.045E-05 I
+ I 439 q + q~ -> g + cc~[3P2(1)]    I            0            26 I  1.463E-05 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I            2            39 I  1.577E-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I            5           146 I  3.400E-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I            2            82 I  1.779E-04 I
  I 464 g + g  -> bb~[3PJ(8)] + g    I            0            19 I  2.709E-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I            4            54 I  1.404E-04 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I            4            50 I  1.505E-04 I
  I 466 g + q  -> q + bb~[1S0(8)]    I            0             9 I  1.907E-06 I
  I 467 g + q  -> q + bb~[3PJ(8)]    I            0             3 I  9.892E-06 I
  I 468 q + q~ -> g + bb~[3S1(8)]    I            0             0 I  0.000E+00 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000E+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000E+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I           22          1111 I  2.065E-03 I
- I 472 g + g  -> bb~[3P1(1)] + g    I           11           262 I  1.589E-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I           41          1463 I  3.299E-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I            3           297 I  3.396E-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I           23          1092 I  2.113E-03 I
+ I 472 g + g  -> bb~[3P1(1)] + g    I           10           253 I  1.625E-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I           43          1454 I  3.344E-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I            3           291 I  3.397E-04 I
  I 475 q + g  -> q + bb~[3P1(1)]    I            0            64 I  6.576E-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I            4           411 I  4.170E-04 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I            3           405 I  3.784E-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000E+00 I
  I 478 q + q~ -> g + bb~[3P1(1)]    I            0             0 I  0.000E+00 I
  I 479 q + q~ -> g + bb~[3P2(1)]    I            0             0 I  0.000E+00 I
- I 480 g + g  -> Psi(2S) + g        I           26          1130 I  2.183E-03 I
+ I 480 g + g  -> Psi(2S) + g        I           24          1112 I  2.148E-03 I
  I 481 g + g  -> Upsilon(2S) + g    I            0            23 I  8.151E-05 I
  I 482 g + g  -> Upsilon(3S) + g    I            2            15 I  1.324E-04 I
- I 483 g + g  -> Upsilon(4S) + g    I            2            27 I  8.809E-05 I
+ I 483 g + g  -> Upsilon(4S) + g    I            2            26 I  8.805E-05 I
  I                                  I                            I            I
  ==============================================================================
 
  ********* Total number of errors, excluding junctions =        0 *************
  ********* Total number of errors, including junctions =        3 *************
- ********* Total number of warnings =                       28919 *************
+ ********* Total number of warnings =                       28484 *************
  ********* Fraction of events that fail fragmentation cuts =  0.00001 *********
 
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.77 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |  2879.833 |  2891.929 |   13.019   17068.7 |    1000 |  2891.929 |
-TimingAuditor.TIMER        INFO  Gauss                        |  2872.029 |  2881.031 |   10.771   17062.8 |    1000 |  2881.031 |
-TimingAuditor.TIMER        INFO   Generator                   |  2872.024 |  2881.027 |   10.769   17062.8 |    1000 |  2881.027 |
-TimingAuditor.TIMER        INFO    GaussGen                   |     0.199 |     0.328 |    0.138       4.5 |    1000 |     0.328 |
-TimingAuditor.TIMER        INFO    Generation                 |  2870.855 |  2879.716 |   10.123   17061.5 |    1000 |  2879.716 |
-TimingAuditor.TIMER        INFO    GenMonitor                 |     0.958 |     0.969 |    0.250       4.8 |    1000 |     0.969 |
-TimingAuditor.TIMER        INFO     GenMonitorAlg             |     0.332 |     0.341 |    0.089       1.9 |    1000 |     0.341 |
-TimingAuditor.TIMER        INFO     Hepmclifetime             |     0.623 |     0.623 |    0.157       3.0 |    1000 |     0.623 |
-TimingAuditor.TIMER        INFO  GaussTape                    |     7.768 |    10.867 |    1.816    1031.4 |    1000 |    10.867 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    |  3605.201 |  3605.830 |   15.349   22043.0 |    1000 |  3605.830 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |  3596.906 |  3597.424 |   12.939   22036.3 |    1000 |  3597.424 |
+TimingAuditor.TIMER        INFO   Generator                   |  3596.901 |  3597.421 |   12.937   22036.3 |    1000 |  3597.421 |
+TimingAuditor.TIMER        INFO    GeneratorSlot              |  3596.896 |  3597.418 |   12.935   22036.3 |    1000 |  3597.418 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.190 |     0.203 |    0.130       1.4 |    1000 |     0.203 |
+TimingAuditor.TIMER        INFO     Generation                |  3595.505 |  3596.015 |   12.345   22035.0 |    1000 |  3596.015 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     1.179 |     1.188 |    0.292       4.6 |    1000 |     1.188 |
+TimingAuditor.TIMER        INFO      HepMCLifeTime            |     0.763 |     0.778 |    0.194       3.5 |    1000 |     0.778 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.408 |     0.404 |    0.093       1.5 |    1000 |     0.404 |
+TimingAuditor.TIMER        INFO  GaussTape                    |     8.262 |     8.379 |    1.649     830.4 |    1000 |     8.379 |
 TimingAuditor.TIMER        INFO ------------------------------------------------------------------------------------------------
-PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:F27262F5-DF5F-DE11-AA89-000423D94890[Gauss-1000ev-20090623.sim]
-XMLCatalog                 INFO File 'NewCatalog.xml' does not exist. New file created.
+PoolRootTreeEvtCnvSvc      INFO Disconnected data IO:8C804A94-CA7D-DE11-8A4A-00304879EE40[Gauss-11144103-1000ev-20090731.sim]
+XMLCatalog                 INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
