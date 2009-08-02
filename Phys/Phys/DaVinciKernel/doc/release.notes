@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.310 2009-07-28 08:53:15 cattanem Exp $
+!$Id: release.notes,v 1.311 2009-08-02 15:33:27 gcowan Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-02 - Greig Cowan
+ - Added DaVinci::P2VVAngles:: namespace to DaVinciFun.h. To be used for 
+   calculating helicity and transversity angles in P2VV decays like 
+   Bs2JpsiPhi. These only deal with kinematics and first boost all decay
+   products to the B rest frame before proceeding with the calculation.
 
 !======================== DaVinciKernel v8r0 2009-07-28 =====================
 ! 2009-07-28 - Juan PALACIOS
