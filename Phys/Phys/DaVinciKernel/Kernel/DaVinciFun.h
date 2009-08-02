@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.h,v 1.4 2009-08-02 15:56:06 gcowan Exp $
+// $Id: DaVinciFun.h,v 1.5 2009-08-02 17:13:27 gcowan Exp $
 #ifndef KERNEL_DAVINCIFUN_H 
 #define KERNEL_DAVINCIFUN_H 1
 
@@ -82,17 +82,21 @@ namespace DaVinci {
 
   /** @namespace DaVinci::P2VVAngles Kernel/DaVinciFun.h
    *  
-   * Collection of Tools to calculate the transversity and helicity angles in 
+   * Collection of functions to calculate the transversity and helicity angles in 
    * a P->VV decay. Particularly useful for decays such as Bs->JpsiPhi, 
    * Bd->JpsiKstar and Bd->KstarMuMu. In each function we perform consecutive 
    * boosts, first to the rest frame of the B and the to the rest frame of
-   * the appropriate mother particle.
+   * the appropriate mother particle. These functions deal only with the
+   * kinematics of the decays. The user is required to "unpack" the decay
+   * and order the particles according to charge and whichever convention
+   * they are using. Once ordered, these particles are passed to these 
+   * functions to perform the kinematic calculation. An example is given below. 
    *
    * 1. DEFINITIONS USED IN THESE FUNCTIONS:
    *
    * * The Bcandidate decays to vector mesons mother1 and mother2.\n
    * * mother1 decays to particles A and B.\n
-   * * mother2 decays to particles C and D.\n          
+   * * mother2 decays to particles C and D. 
    *
    * 2. TRANSVERSITY BASIS
    *
@@ -112,13 +116,13 @@ namespace DaVinci {
    *
    * 2.2 Transversity Angle Definition:
    *
-   * > The defition is the same whether it is a Bcandidate or a BbarCandidate.\n
-   * > theta_tr is the angle formed by particleA and the z-axis, in mother1's 
+   * * The defition is the same whether it is a Bcandidate or a BbarCandidate.\n
+   * * theta_tr is the angle formed by particleA and the z-axis, in mother1's 
    * rest frame.\n
-   * > phi_tr is the azimuthal angle of particleA in mother1's rest frame.\n 
-   * > psi is the helicity angle between particleC and the opposite direction of 
+   * * phi_tr is the azimuthal angle of particleA in mother1's rest frame.\n 
+   * * psi is the helicity angle between particleC and the opposite direction of 
    * mother1's momentum. This is the same angle as is defined in the HELICITY 
-   * BASIS.\n 
+   * BASIS.
    *
    * 3. HELICITY BASIS
    *
@@ -142,7 +146,7 @@ namespace DaVinci {
    * * particleA -> positive muon\n
    * * particleB -> negative muon\n
    * * particleC -> positive kaon\n
-   * * particleD -> negative kaon\n
+   * * particleD -> negative kaon
    *
    * If this approach is followed then the calculated angles will be the same as those
    * defined in the beta_s roadmap document.
@@ -151,10 +155,10 @@ namespace DaVinci {
    *  @date   2009-08-02
    */
   namespace P2VVAngles {
-    double calculateThetaTr(const Gaudi::LorentzVector particleA,
-                            const Gaudi::LorentzVector particleB,
-                            const Gaudi::LorentzVector particleC,
-                            const Gaudi::LorentzVector particleD)
+    double calculateThetaTr(const Gaudi::LorentzVector& particleA,
+                            const Gaudi::LorentzVector& particleB,
+                            const Gaudi::LorentzVector& particleC,
+                            const Gaudi::LorentzVector& particleD)
     {
       const Gaudi::LorentzVector mother1 = particleA + particleB; // i.e., Jpsi
       const Gaudi::LorentzVector mother2 = particleC + particleD; // i.e., phi
@@ -194,10 +198,10 @@ namespace DaVinci {
     }
 
     // Azimuthal angle
-    double calculatePhiTr(const Gaudi::LorentzVector particleA,
-                          const Gaudi::LorentzVector particleB,
-                          const Gaudi::LorentzVector particleC,
-                          const Gaudi::LorentzVector particleD)
+    double calculatePhiTr(const Gaudi::LorentzVector& particleA,
+                          const Gaudi::LorentzVector& particleB,
+                          const Gaudi::LorentzVector& particleC,
+                          const Gaudi::LorentzVector& particleD)
     {
       // Code here same as in thetaTr since we need to boost everything to the same 
       // frame.
