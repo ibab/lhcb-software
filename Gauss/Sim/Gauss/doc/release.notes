@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-08-02 - Silvia Miglioranzi
+ - Updated QMtests (gauss-gen-mc09.qmt, gauss-gen-mc09-10000000.qmt) using the 
+   new Gauss v37r3 settings. Reference files for the different platforms were 
+   updated.
+
 !======================= Gauss v37r3p1 2009-07-29 ============================
 ! 2009-07-29 - Silvia Miglioranzi
  - To allow DIRAC people to change the XML catalog name, the FileCatalog 
