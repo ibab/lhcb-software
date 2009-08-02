@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.312 2009-08-02 17:13:36 gcowan Exp $
+!$Id: release.notes,v 1.313 2009-08-02 19:02:37 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-02 - Juan PALACIOS
+ - Added src/Lib/DaVinciFun.cpp
+  . Has implementations of non-template methods in DaVinci and 
+    DaVInci::P2VVAngles
 
 ! 2009-08-02 - Greig Cowan
  - Arguments to all P2VV functions changed to be const references.
