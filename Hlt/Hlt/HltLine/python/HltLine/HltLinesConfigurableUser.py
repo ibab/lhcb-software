@@ -3,7 +3,7 @@
 #  @author Gerhard Raven  (Gerhard.Raven@nikhef.nl)
 #  @date   25/03/2009
 
-__version__ = "$Id: HltLinesConfigurableUser.py,v 1.5 2009-06-22 12:35:47 graven Exp $"
+__version__ = "$Id: HltLinesConfigurableUser.py,v 1.6 2009-08-03 08:37:31 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from LHCbKernel.Configuration import LHCbConfigurableUser
@@ -20,6 +20,16 @@ class HltLinesConfigurableUser(LHCbConfigurableUser):
     __slots__ = { 'Prescale'  : {} 
                 , 'Postscale' : {}
                 }
+    # what if derived class overrules this? Try to hook in __init__ instead...
+
+    #def initialize(self) :
+    #    self.Prescale = {}
+    #    self.Postscale = {}
+    #def __init__(self, *args, **kwargs )
+    #    self.Prescale = {}
+    #    self.Postscale = {}
+    #    apply(super(HltLinesConfigurableUser,self).__init__,(),args,kwargs)
+        
 
     def _scale(self,line,arg) :
         import re

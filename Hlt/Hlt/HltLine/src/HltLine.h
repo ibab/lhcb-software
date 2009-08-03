@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.4 2009-07-01 08:54:30 graven Exp $
+// $Id: HltLine.h,v 1.5 2009-08-03 08:37:31 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -150,8 +150,12 @@ private:
   bool m_measureTime;                    ///< Flag to measure time
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   bool m_acceptOnError;                  ///< Forces accept if error
+  bool m_acceptOnIncident;               ///< Forces accept if incident
+  bool m_acceptIfSlow;                   ///< Forces accept if event is slow
   bool m_caughtIncident;                 
   int  m_timer;                          ///< Timer number for the sequencer
+  int  m_maxAcceptOnError;               ///< quota to avoid runaway accepts in case of persistent errors..
+  int  m_nAcceptOnError;
   unsigned m_slowThreshold;
   double m_errorRate;                    ///< TODO: why double?
   double m_acceptRate;                   ///< TODO: why double?

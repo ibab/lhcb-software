@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.5 2009-07-01 08:54:30 graven Exp $
+// $Id: HltLine.cpp,v 1.6 2009-08-03 08:37:31 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -174,6 +174,9 @@ HltLine::HltLine( const std::string& name,
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
+  declareProperty( "AcceptOnIncident"     , m_acceptOnIncident = false );
+  declareProperty( "AcceptIfSlow"         , m_acceptIfSlow   = false );
+  declareProperty( "MaxAcceptOnError"     , m_maxAcceptOnError   = 1000 ); // -1: no quota # TODO: make this a throttelable rate...
   declareProperty( "FlagAsSlowThreshold"  , m_slowThreshold  = 500000, "microseconds"  );
   declareProperty( "IncidentsToBeFlagged" , m_incidents);
 
@@ -260,7 +263,7 @@ StatusCode HltLine::initialize() {
   //declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
   m_slowCounter = &counter("#slow events");
 
-
+  m_nAcceptOnError = 0;
   m_acceptRate=0;
   declareInfo("COUNTER_TO_RATE["+m_decision+"Accept]", m_acceptRate, m_decision + " Accept Rate");
 
@@ -268,6 +271,8 @@ StatusCode HltLine::initialize() {
   
   return StatusCode::SUCCESS;
 };
+
+//TODO: on a runchange, reset all counters like m_nAcceptOnError...
 
 //=============================================================================
 // Main execution
@@ -309,7 +314,7 @@ StatusCode HltLine::execute() {
   if (report.invalidIntDecisionID()) {
     warning() << " DecisionName=" << key->first << " has invalid intDecisionID=" << key->second << endmsg;
   } 
-  bool accept = !m_stages.empty();
+  bool accept = !m_stages.empty(); // make sure an empty line always rejects events...
   m_caughtIncident = false; // only interested in incidents during stages->execute...
   for (unsigned i=0;i<m_stages.size();++i) {
      result = m_stages[i]->execute();
@@ -319,7 +324,6 @@ StatusCode HltLine::execute() {
      }
      if (result.isFailure()) {
         report.setErrorBits(report.errorBits() | 0x01);
-        accept = m_acceptOnError; //TODO: don't allow infinite # of accepts on error...
         break;
      }
      accept = m_stages[i]->passed();
@@ -329,8 +333,15 @@ StatusCode HltLine::execute() {
   // plot the wall clock time spent...
   double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
   fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
-
   if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
+
+  // did not(yet) accept, but something bad happened...
+  if ( !accept && report.errorBits()!=0 && ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) ) {
+        accept =  ( m_acceptOnError    && ( report.errorBits()&0x01!=0) )
+               || ( m_acceptOnIncident && ( report.errorBits()&0x02!=0) )
+               || ( m_acceptIfSlow     && ( report.errorBits()&0x04!=0) );
+        if (accept) ++m_nAcceptOnError;
+  }
 
   report.setDecision(accept ? 1u : 0u);
   report.setNumberOfCandidates( m_selection != 0 ? m_selection->size() : 0 );
@@ -339,6 +350,7 @@ StatusCode HltLine::execute() {
 
   //TODO: allow insert at the beginning, and non-const access to update...
   reports->insert( key->first , report );
+
 
   // update monitoring
   *m_acceptCounter += accept;

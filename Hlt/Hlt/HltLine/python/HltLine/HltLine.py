@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.4 2009-06-30 14:34:29 graven Exp $ 
+# $Id: HltLine.py,v 1.5 2009-08-03 08:37:31 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -19,7 +19,7 @@ The module defines three major public symbols :
       simple class to create the proper 'Configurable' for Hlt1 'lines'
  - class    Hlt1Member  :
       helper class to represent the member of Hl1 'line'
- - function htl1Lines   :
+ - function hlt1Lines   :
       bookeeping routine which keeps the track of all created Hlt1 'lines'
  - function hlt1Decisions:
       simle function which returns decisions for all created Hlt lines
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -131,20 +131,32 @@ def decisionName   ( line, level = 'Hlt1' ) :
 _hlt_1_lines__ = []
 _hlt_2_lines__ = []
 
+def _ordered_lines( lines ) :
+    d = {}
+    for i in lines : 
+        priority = i.priority()
+        if not priority : priority = 127
+        if priority < 0 or priority > 255 :
+            raise AttributeError, 'Priority must by in [0,255], or None, line %s has %s' % (i.name(),i.priority() )
+        if priority in d : d[ priority ] += [ i ]
+        else             : d[ priority ]  = [ i ]
+    l = []
+    for i in sorted( d.keys() ) : l += d[i]
+    return l
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt1Lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2008-08-06
 def hlt1Lines () :
     """
-    Simple function which returns the (tuple) of all currently created Hlt1Lines
+    Simple function which returns the (list) of all currently created Hlt1Lines
     
     >>> lines = hlt1Lines()
     >>> print lines
     >>> for line in lines : print line
     
     """
-    return tuple(_hlt_1_lines__)
+    return _ordered_lines(_hlt_1_lines__)
 
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt2Lines
@@ -152,14 +164,15 @@ def hlt1Lines () :
 #  @date   2009-03-27
 def hlt2Lines () :
     """
-    Simple function which returns the (tuple) of all currently created Hlt2Lines
+    Simple function which returns the (list) of all currently created Hlt2Lines
     
     >>> lines = hl21Lines()
     >>> print lines
     >>> for line in lines : print line
     
     """
-    return tuple(_hlt_2_lines__)
+    return _ordered_lines(_hlt_2_lines__)
+
 
 # =============================================================================
 ## Simple function whcih returns the decisions for all created Hlt1 lines
@@ -286,6 +299,7 @@ def _add_to_hlt2_lines_( line ) :
     """
     Add the line into the local storage of created Hlt2Lines 
     """
+    # actually, want the equivalent of upper_bound on priority...
     _hlt_2_lines__.append ( line ) 
         
 # =============================================================================
@@ -306,7 +320,7 @@ _types_ = { TrackUpgrade  : 'TU'
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' ) 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -779,6 +793,7 @@ class Hlt1Line(object):
                    HLT       = None ,   # HltDecReports predicate
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
+                   priority  = None  ,   # ordering 'hint'
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -803,15 +818,14 @@ class Hlt1Line(object):
         
         # 2) save all parameters (needed for the proper cloning)
         self._name      = name
-        if callable(prescale) : prescale = prescale( self.name() )
+        if callable(prescale)  : prescale  = prescale(  self.name() )
         self._prescale  = prescale
-        
+        if callable(postscale) : postscale = postscale( self.name() )
+        self._postscale = postscale
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
-        
-        if callable(postscale) : postscale = postscale( self.name() )
-        self._postscale = postscale
+        self._priority  = priority
         self._algos     = algos
         self._args      = args
 
@@ -972,6 +986,10 @@ class Hlt1Line(object):
             return self._index.index(name) if name in self._index else None
         else :
             return self._index
+
+    # ordering hint
+    def priority( self ) :
+        return self._priority
     
     ## Clone the line  
     def clone ( self , name , **args ) :
@@ -1014,6 +1032,7 @@ class Hlt1Line(object):
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
+        __priority   = deepcopy ( args.get ( 'priority'  , self._priority  ) )
         __args       = deepcopy ( self._args  ) 
 
         # restore the original deepcopy behaviour...
@@ -1043,6 +1062,7 @@ class Hlt1Line(object):
                           L0DU      = __L0DU       ,
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
+                          priority  = __priority   ,
                           algos     = __algos      , **__args )
     
     
@@ -1196,6 +1216,7 @@ class Hlt2Line(object):
                    HLT       = None ,   # HltDecReports predicate
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
+                   priority  = None ,   # hint for ordering lines
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1222,13 +1243,12 @@ class Hlt2Line(object):
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
-        
+        if callable(postscale) : postscale = postscale( self.name() )
+        self._postscale = postscale
+        self._priority  = priority
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
-        
-        if callable(postscale) : postscale = postscale( self.name() )
-        self._postscale = postscale
         self._algos     = algos
         self._args      = args
 
@@ -1249,7 +1269,8 @@ class Hlt2Line(object):
         # bind members to line
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
-        
+
+
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
@@ -1266,6 +1287,10 @@ class Hlt2Line(object):
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
+            from Configurables import CombineParticles, FilterDesktop
+            knownLastMembers = [ CombineParticles, FilterDesktop ]
+            if last.getName() not in knownLastMembers :
+              print 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType()
             members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
                                                            , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
                                                            , OutputSelection = decisionName(line, 'Hlt2')) ]
@@ -1276,6 +1301,9 @@ class Hlt2Line(object):
 
         # fix numbering scheme of line members
         self._index = computeIndices( self._configurable )
+
+        # put upper limit on combinatorics
+        limitCombinatorics( self._configurable, maxCandidates = 2000  ) 
 
         ## finally assign the decision name!
         self._decision = decisionName ( line, 'Hlt2' )
@@ -1328,6 +1356,11 @@ class Hlt2Line(object):
     def index( self, name ) :
         return self._index.index(name) if name in self._index else None
 
+    # ordering hint -- WARNING: think twice before using this. Lines _must_ be selfcontained
+    # (with only a few exceptions). So do not assume any ordering when you write a line
+    def priority( self ) :
+        return self._priority
+
     ## Clone the line  
     def clone ( self , name , **args ) :
         """
@@ -1368,6 +1401,7 @@ class Hlt2Line(object):
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
+        __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __args       = deepcopy ( self._args  ) 
 
@@ -1398,6 +1432,7 @@ class Hlt2Line(object):
                           L0DU      = __L0DU       ,
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
+                          priority  = __priority   ,
                           algos     = __algos      , **__args )
     
 #
@@ -1425,6 +1460,28 @@ def computeIndices( configurable ) :
     list += [ configurable.name() ]
     return list
 
+def limitCombinatorics( configurable, maxCandidates, incidentName = 'ExceedsCombinatoricsLimit' ) :
+    val = False
+    from Configurables import CombineParticles
+    if hasattr( configurable, 'Members' ) :
+        for i in getattr( configurable, 'Members' ) : 
+            # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
+            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+        return val
+    elif type(configurable) == Line :
+        stages = [ 'Filter0','Filter1' ]
+        for i in [ getattr( configurable, j ) for j in stages if hasattr(configurable,j) ] :
+            # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
+            val = limitCombinatorics( i, maxCandidates, incidentName ) or val
+        if val : configurable.IncidentsToBeFlagged += [ incidentName ]
+        return val
+    elif type(configurable) == CombineParticles :
+        configurable.StopAtMaxCandidates = True
+        configurable.MaxCandidates       = maxCandidates
+        configurable.StopIncidentType    = incidentName
+        return True
+
+    
 # =============================================================================
 # Some useful decorations 
 # =============================================================================
