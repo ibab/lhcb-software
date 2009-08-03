@@ -6,8 +6,7 @@ from Gaudi.Configuration import EventSelector
 from GaudiPython.Bindings   import AppMgr
 from GaudiPython.Bindings import gbl, AppMgr, Helper
 #from GaudiPython.HistoUtils import HistoFile
-from MicroDSTExample.HistoUtils import book, fill , HistoFile
-from ROOT import TCanvas, TH1D, Double
+from AnalysisPython.HistoUtils import book, fill , HistoFile
 from GaudiKernel import SystemOfUnits, PhysicalConstants
 from Configurables import MCMatchObjP2MCRelator
 aida2root = gbl.Gaudi.Utils.Aida2ROOT.aida2root
