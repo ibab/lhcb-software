@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.6 2009-06-18 19:40:12 graven Exp $
+# $Id: requirements,v 1.7 2009-08-03 15:43:15 pkoppenb Exp $
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
 package           Hlt2SharedParticles
-version           v1r2p1
+version           v2r0
 
 # ============================================================================
 # ======= the structure ======================================================
@@ -12,10 +12,13 @@ include_path      none
 
 # ============================================================================
 # ======= the actual dependencies ============================================
-use HltConf              v*     Hlt
+use       GaudiPolicy v*                             
+use       Python      v* LCG_Interfaces 
+use       HltLine     v*  Hlt
 
 # ============================================================================
 # ======= the patterns =======================================================
+macro Hlt2SharedParticlesConfUserModules "Hlt2SharedParticles.Hlt2PID Hlt2SharedParticles.Hlt2CaloReco"
 apply_pattern install_python_modules
 #apply_pattern install_python_init
 #apply_pattern install_custom_python_modules

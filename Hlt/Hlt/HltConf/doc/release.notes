@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.292 2009-08-03 12:10:24 graven Exp $ 
+! $Id: release.notes,v 1.293 2009-08-03 15:46:08 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-03 - Patrick Koppenburg
+ - Move PID into lines :
+ - Moved HltCaloReco to Hlt2SharedParticles
+ - Moved Hlt2 PID methods to Hlt2SharedParticles.Hlt2PID
+ - Removed RichRecSys from dependencies (tentatively)
+ - Added Hlt2SharedParticles (tentatively)
+ - Requires today's Hlt2SharedParticles
 
 ! 2009-08-03 - Gerhard Raven
  - don't hardwire inputlocation in HltMuonIDAlg & HltInsertTrackErrParam
@@ -12,7 +20,6 @@
  - streamline end sequence configuration
  - change HltType decoding such that it works in cases where something more explcit
    than 'Hlt1+Hlt2', 'Hlt1', 'Hlt2', 'NONE' is specified
-
 
 ! 2009-08-03 - Patrick Koppenburg
  - Decode 'TOPO+EXCL+PHI+LEPT' such that only what's required is run

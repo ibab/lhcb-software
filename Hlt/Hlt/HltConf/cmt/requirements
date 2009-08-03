@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.41 2009-07-31 10:59:03 pkoppenb Exp $ 
+# $Id: requirements,v 1.42 2009-08-03 15:46:08 pkoppenb Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -13,8 +13,9 @@ use       HltCommon   v*  Hlt
 use       HltLine     v*  Hlt
 use       Hlt1Lines   v*  Hlt
 use       Hlt2Lines   v*  Hlt
+use       Hlt2SharedParticles v* Hlt
 
-use       RichRecSys  v*  Rich
+# use       RichRecSys  v*  Rich
 
 
 # =============================================================================
@@ -28,7 +29,7 @@ branches cmt doc options python tests
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro HltConfConfUserModules "HltConf.Hlt1 HltConf.Configuration"
+macro HltConfConfUserModules "HltConf.Hlt1 HltConf.Hlt2 HltConf.Configuration"
 apply_pattern install_python_modules
 # =============================================================================
 

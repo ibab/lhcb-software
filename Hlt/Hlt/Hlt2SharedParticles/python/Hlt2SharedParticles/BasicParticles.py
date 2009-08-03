@@ -11,6 +11,7 @@ from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
+from Configurables import Hlt2PID, Hlt2CaloReco
 from GaudiKernel.SystemOfUnits import MeV
 ##########################################################################
 # Make the pions
@@ -60,6 +61,35 @@ Hlt2Photons.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"
 Hlt2Photons.PhotonMaker.ConvertedPhotons = True  
 Hlt2Photons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 
+##########################################################################
+#
+# Now all PID
+# 
+##########################################################################
+#
+# Charged protoparticles
+#
+chargedProtos = Hlt2PID().hlt2ChargedProtos( )
+##########################################################################
+#
+# Charged protoparticles
+#
+neutralProtos = Hlt2PID().hlt2NeutralProtos()
+##########################################################################
+#
+# Calo reco
+#
+Hlt2CaloRecoSeq = Hlt2CaloReco().hlt2Calo()   # todo can I get that from Hlt2.py ?
+##########################################################################
+#
+# Muon reco
+#
+Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()  
+##########################################################################
+#
+# 
+#
+##########################################################################
 #
 # define exported symbols -- these are for available
 # for use in Hlt2 by adding:
@@ -69,9 +99,9 @@ Hlt2Photons.PhotonMaker.PtCut = 200.* MeV
 
 __all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
 
-NoCutsPions   = bindMembers( None, [ Hlt2NoCutsPions ] )
-NoCutsKaons   = bindMembers( None, [ Hlt2NoCutsKaons ] )
-Muons         = bindMembers( None, [ Hlt2Muons ] )
-Electrons     = bindMembers( None, [ Hlt2Electrons ] )
+NoCutsPions   = bindMembers( None, [                  chargedProtos, Hlt2NoCutsPions ] )
+NoCutsKaons   = bindMembers( None, [                  chargedProtos, Hlt2NoCutsKaons ] )
+Muons         = bindMembers( None, [ Hlt2MuonIDSeq,   chargedProtos, Hlt2Muons ] )
+Electrons     = bindMembers( None, [ Hlt2CaloRecoSeq, chargedProtos, Hlt2Electrons ] )
 RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!
-Photons       = bindMembers( None, [ Hlt2Photons ] )
+Photons       = bindMembers( None, [ Hlt2CaloRecoSeq, neutralProtos, Hlt2Photons ] )

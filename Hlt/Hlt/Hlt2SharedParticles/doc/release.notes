@@ -1,9 +1,23 @@
-$Id: release.notes,v 1.32 2009-06-22 16:28:33 pkoppenb Exp $
+$Id: release.notes,v 1.33 2009-08-03 15:43:15 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-03 - Patrick Koppenburg
+   Move PID into lines :
+ - Moved Hlt2CaloReco from HltConf.HltCaloReco
+ - Moved Hlt2PID from HltConf.Hlt2
+ - Made them to configurables
+ - Require appropriate PID reconstruction for variosu basic particles. e.g.:
+    
+    NoCutsPions   = bindMembers( None, [ chargedProtos, Hlt2NoCutsPions ] )
+    Electrons     = bindMembers( None, [ Hlt2CaloRecoSeq, chargedProtos, Hlt2Electrons ] )
+    Muons         = bindMembers( None, [ Hlt2MuonIDSeq, chargedProtos, Hlt2Muons ] )
+    Photons       = bindMembers( None, [ Hlt2CaloRecoSeq, neutralProtos, Hlt2Photons ] )
+ - Increment to v2r0
+ - Requires today's HltConf
 
 !========================== Hlt2SharedParticles v1r2p1 2009-06-22 ===================
 ! 2009-06-18 - Gerhard Raven

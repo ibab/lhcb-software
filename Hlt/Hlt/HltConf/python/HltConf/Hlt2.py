@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -26,7 +26,7 @@ from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
-from Configurables import RichRecSysConf
+from Configurables import Hlt2PID
 
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -59,7 +59,7 @@ def hlt2TypeDecoder(hlttype) :
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ RichRecSysConf ]
+    __used_configurables__ = [ Hlt2PID ]
     for (k,v) in _type2conf.iteritems() : __used_configurables__.extend( v )
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
@@ -147,108 +147,20 @@ class Hlt2Conf(LHCbConfigurableUser):
         #  Full reconstruction of all tracks 
         from HltConf.HltReco import HltRecoSequence
         Hlt2.Members += [ HltRecoSequence ]
-
-###################################################################################
-#
-# Particle making
-#
-    def hlt2Particles(self,Hlt2):
-        """
-        Hlt2 sequencing (was options/Hlt2Particles.py)
-        """
-        SeqHlt2Particles = Sequence('SeqHlt2Particles'
-                                    , MeasureTime = True 
-                                    , IgnoreFilterPassed = True) # do all 
-        Hlt2.Members += [ SeqHlt2Particles ]
-        SeqHlt2Particles.Members += [ self.hlt2Charged() ] # charged
-        from HltCaloReco import hlt2Calo # calo configurable
-        SeqHlt2Particles.Members += [ hlt2Calo( [ self.getProp("Hlt2Tracks") ] ) ] # list or strings
-        SeqHlt2Particles.Members += [ self.hlt2Muon() ] # muon
-        self.hlt2Protos(SeqHlt2Particles)          # protos
-        
-###################################################################################
-#
-# ProtoParticles
-#
-    def hlt2Protos(self,SeqHlt2Particles):
-        """
-        protoparticles 
-        """
-        from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, NeutralProtoPAlg, TrackSelector
-        Hlt2ChargedProtoPAlg = ChargedProtoPAlg('Hlt2ChargedProtoPAlg')
-        Hlt2ChargedProtoPAlg.InputTrackLocation = self.getProp("Hlt2Tracks")
-        Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged"
-        Hlt2ChargedProtoPAlg.addTool( TrackSelector, name="TrackSelector")
-        Hlt2ChargedProtoPAlg.TrackSelector.AcceptClones = False
-        Hlt2ChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
-        ## Calo PID
-        Hlt2ChargedProtoPAlg.UseCaloSpdPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloPrsPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloEcalPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloHcalPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloBremPID = True 
-        ##Hlt2ChargedProtoPAlg.UseRichPID = False  // Protos will NOT have any RICH information - HltRichPIDsKaons will not work
-        Hlt2ChargedProtoPAlg.UseRichPID = True     ## Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
-        Hlt2ChargedProtoPAlg.UseMuonPID = True 
-        Hlt2ChargedProtoPAlg.UseVeloPID = False 
-        SeqHlt2Particles.Members += [ Hlt2ChargedProtoPAlg ]
-
-        Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2ChargedProtoCombDLL')
-        Hlt2ChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" 
-        SeqHlt2Particles.Members += [ Hlt2ChargedProtoCombDLL ]
-
-        HltNeutralProtoPAlg = NeutralProtoPAlg('HltNeutralProtoPAlg')
-        # Overwrite some default offline settings with HLT special settings (taken from CaloReco.opts)
-        HltNeutralProtoPAlg.PhotonIDName = "HltPhotonPID"
-        from Configurables import CaloPhotonEstimatorTool
-        ToolSvc().addTool(CaloPhotonEstimatorTool, name="HltPhotonPID")
-        ToolSvc().HltPhotonPID.TableLocation = "Hlt/Calo/ClusterMatch"
-        importOptions( "$CALOPIDSROOT/options/HltPhotonPDF.opts" )
-        
-        SeqHlt2Particles.Members += [ HltNeutralProtoPAlg ]
-
-        
-###################################################################################
-#
-# MuonID
-#
-    def hlt2Muon(self):
-        """
-        Muon ID options
-        """
-        from MuonID import ConfiguredMuonIDs
-        from Configurables import MuonRec, MuonIDAlg
-        cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-        HltMuonIDAlg = cm.configureMuonIDAlg("HltMuonIDAlg")
-        HltMuonIDAlg.TrackLocation = self.getProp("Hlt2Tracks") 
-        HltMuonIDAlg.MuonIDLocation = "Hlt/Muon/MuonPID"
-        HltMuonIDAlg.MuonTrackLocation = "Hlt/Track/Muon"
-        HltMuonIDSeq = GaudiSequencer("HltMuonIDSeq")
-        HltMuonIDSeq.Members += ["MuonRec", HltMuonIDAlg]
-
-        return HltMuonIDSeq
-
+        HltRecoSequence.Members += [ self.hlt2Tracks() ] # charged
 
 ###################################################################################
 #
 # Charged Particle making
 #
-    def hlt2Charged(self):
+    def hlt2Tracks(self):
         """
         Charged particles
         """
-        from Configurables import NumberOfTracksFilter
         from Configurables import HltInsertTrackErrParam
         SeqHlt2Charged = Sequence('SeqHlt2Charged'
-                                        , MeasureTime = True
-                                        , IgnoreFilterPassed = False)        
-        #
-        # @todo TEMPORARY kill huge events
-        #
-        NumberOfTracksFilter =  NumberOfTracksFilter()
-        NumberOfTracksFilter.TrackLocations = [ self.getProp("Hlt2Tracks") ]
-        NumberOfTracksFilter.MaxTracks = 1000 
-        SeqHlt2Charged.Members += [ NumberOfTracksFilter ]
+                                  , MeasureTime = True
+                                  , IgnoreFilterPassed = False)        
         #
         # MC truth associated tracks
         #
@@ -257,7 +169,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         # Hacking of errors
         #
         HltInsertTrackErrParam = HltInsertTrackErrParam()
-        HltInsertTrackErrParam.InputLocation =self.getProp("Hlt2Tracks")
+        HltInsertTrackErrParam.InputLocation = self.getProp("Hlt2Tracks")
         SeqHlt2Charged.Members += [ HltInsertTrackErrParam ]
         return SeqHlt2Charged
        
@@ -283,6 +195,14 @@ class Hlt2Conf(LHCbConfigurableUser):
 
 ###################################################################################
 #
+# PID
+#
+    def configurePID(self):
+        Hlt2PID().DataType = self.getProp("DataType")
+        Hlt2PID().Hlt2Tracks = self.getProp("Hlt2Tracks")
+      
+###################################################################################
+#
 # Main configuration
 #
     def __apply_configuration__(self):
@@ -296,8 +216,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         # reco
         self.hlt2Reconstruction(Hlt2)
         importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
-        # reco
-        self.hlt2Particles(Hlt2)
+        # set Hlt2 PID
+        self.configurePID()
         # lines
         self.hlt2Lines(Hlt2)
         
