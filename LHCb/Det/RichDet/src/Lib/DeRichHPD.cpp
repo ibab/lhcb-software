@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.19 2009-07-26 18:13:18 jonrob Exp $
+ * $Id: DeRichHPD.cpp,v 1.20 2009-08-03 09:22:37 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -114,7 +114,7 @@ StatusCode DeRichHPD::initialize ( )
   if ( sc.isFailure() ) return sc;
 
   msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
-      << m_activeRadius << endreq;
+      << m_activeRadius << endmsg;
   msg << MSG::DEBUG << "DeMagFactor(0): " << m_deMagFactor[0]
       << " DeMagFactor(1): " << m_deMagFactor[1] << endmsg;
 
@@ -150,7 +150,7 @@ StatusCode DeRichHPD::initialize ( )
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
   if ( !siliconBox )
   {
-    msg << MSG::FATAL << " Failed to get SolidBox for silicon" << endreq;
+    msg << MSG::FATAL << " Failed to get SolidBox for silicon" << endmsg;
     return StatusCode::FAILURE;
   }
 

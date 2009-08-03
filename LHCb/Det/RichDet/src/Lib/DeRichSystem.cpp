@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.25 2009-07-30 09:24:00 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.26 2009-08-03 09:22:37 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -94,7 +94,7 @@ StatusCode DeRichSystem::initialize ( )
 //=========================================================================
 StatusCode DeRichSystem::buildHPDMappings()
 {
-  info() << "Update triggered for HPD numbering maps" << endreq;
+  info() << "Update triggered for HPD numbering maps" << endmsg;
 
   // clear maps and containers
   m_soft2hard.clear();
@@ -285,7 +285,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     {
       m_inactiveHardIDs.push_back  ( hardID );
       m_inactiveSmartIDs.push_back ( hpdID  );
-      info() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endreq;
+      info() << "HPD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
     }
   }
   std::sort( m_inactiveHardIDs.begin(),  m_inactiveHardIDs.end()  );
@@ -309,7 +309,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       const Rich::DAQ::Level1HardwareID hardID ( boost::lexical_cast<int>(data.substr(slash+1)) );
       const Rich::DetectorType rich = this->richDetector(hardID);
       debug() << rich << " L1 ID mapping : Logical=" << logID
-              << " Hardware=" << hardID << endreq;
+              << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;
     }
@@ -324,14 +324,14 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       const Rich::DAQ::Level1HardwareID hardID ( *iM );
       const Rich::DetectorType rich = this->richDetector(hardID);
       debug() << rich << " DC06 L1 ID mapping : Logical=" << logID
-              << " Hardware=" << hardID << endreq;
+              << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;
     }
   }
 
   info() << "Built mappings for " << boost::format("%2i") % (m_l1IDs.size()-saveL1size)
-         << " L1 and " << nHPDs << " HPDs in " << rich << endreq;
+         << " L1 and " << nHPDs << " HPDs in " << rich << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -567,9 +567,6 @@ DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
     return Rich::DAQ::HPDCopyNumber( cn );
   }
 }
-
-
-
 
 //=========================================================================
 //  l1HPDSmartIDs

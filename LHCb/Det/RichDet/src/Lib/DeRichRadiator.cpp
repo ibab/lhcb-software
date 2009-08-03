@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.18 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.19 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -58,7 +58,7 @@ StatusCode DeRichRadiator::initialize()
   const std::string::size_type pos = name().find("Rich");
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
 
-  debug() << "Starting initialisation" << endreq;
+  debug() << "Starting initialisation" << endmsg;
 
   if ( std::string::npos != name().find("Rich2") ) {
     m_radiatorID = Rich::Rich2Gas;
@@ -75,13 +75,13 @@ StatusCode DeRichRadiator::initialize()
         m_rich = Rich::Rich1;
       }
       else {
-        error() << "Cannot find radiator type for " << name() << endreq;
+        error() << "Cannot find radiator type for " << name() << endmsg;
         return StatusCode::FAILURE;
       }
     }
   }
 
-  debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endreq;
+  debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -89,7 +89,7 @@ StatusCode DeRichRadiator::initialize()
 StatusCode DeRichRadiator::initTabPropInterpolators()
 {
   MsgStream msg = msgStream( "DeRichRadiator" );
-  msg << MSG::DEBUG << "Initialising interpolators" << endreq;
+  msg << MSG::DEBUG << "Initialising interpolators" << endmsg;
 
   if ( m_refIndexTabProp )
   {
@@ -101,7 +101,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     {
       msg << MSG::ERROR
           << "Invalid RINDEX Rich::TabulatedProperty1D for " 
-          << m_refIndexTabProp->name() << endreq;
+          << m_refIndexTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -116,7 +116,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     {
       msg << MSG::ERROR
           << "Invalid RAYLEIGH Rich::TabulatedProperty1D for " 
-          << m_rayleighTabProp->name() << endreq;
+          << m_rayleighTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -131,7 +131,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     {
       msg << MSG::ERROR
           << "Invalid ABSORPTION Rich::TabulatedProperty1D for " 
-          << m_absorptionTabProp->name() << endreq;
+          << m_absorptionTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }

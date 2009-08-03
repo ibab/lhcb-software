@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.24 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.25 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -100,7 +100,7 @@ StatusCode DeRich::initialize ( )
     m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
     if ( !m_nominalHPDQuantumEff->valid() )
     {
-      error() << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endreq;
+      error() << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }

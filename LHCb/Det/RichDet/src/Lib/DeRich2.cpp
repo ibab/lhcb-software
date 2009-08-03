@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.38 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.39 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -92,7 +92,7 @@ StatusCode DeRich2::initialize()
           if ( !m_gasWinRefIndex->valid() )
           {
             error()
-              << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+              << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
@@ -102,7 +102,7 @@ StatusCode DeRich2::initialize()
           if ( !m_gasWinAbsLength->valid() )
           {
             error()
-              << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+              << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
@@ -151,7 +151,7 @@ StatusCode DeRich2::initialize()
     if ( !m_nominalSecMirrorRefl->valid() )
     {
       error()
-        << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endreq;
+        << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -213,7 +213,7 @@ StatusCode DeRich2::initialize()
   StatusCode upsc = StatusCode::SUCCESS;
   if ( needUpdate ) upsc = ums->update(this);
 
-  debug() << "Initialisation Complete. Update:" << upsc << endreq;
+  debug() << "Initialisation Complete. Update:" << upsc << endmsg;
   return upsc;
 }
 

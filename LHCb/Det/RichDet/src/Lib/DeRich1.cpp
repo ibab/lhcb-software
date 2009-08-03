@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.35 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.36 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -99,7 +99,7 @@ StatusCode DeRich1::initialize()
           m_gasWinRefIndex = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinRefIndex->valid() )
           {
-            error() << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+            error() << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
@@ -108,7 +108,7 @@ StatusCode DeRich1::initialize()
           m_gasWinAbsLength = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinAbsLength->valid() )
           {
-            error() << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
+            error() << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
@@ -160,7 +160,7 @@ StatusCode DeRich1::initialize()
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
-      error() << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endreq;
+      error() << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -218,7 +218,7 @@ StatusCode DeRich1::initialize()
   // of the radiator properties
   childIDetectorElements();
 
-  debug() << "Initialisation Complete" << endreq;
+  debug() << "Initialisation Complete" << endmsg;
   return upsc;
 }
 

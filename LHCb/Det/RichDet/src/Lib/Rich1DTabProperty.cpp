@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.11 2008-08-26 19:22:12 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.12 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -50,7 +50,7 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
   {
     MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
     msg << MSG::DEBUG << "Registering UMS dependency for "
-        << tabProperty()->name() << endreq;
+        << tabProperty()->name() << endmsg;
 
     // register update method
     try
@@ -63,7 +63,7 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
     catch ( const GaudiException & excp )
     {
       msg << MSG::WARNING
-          << tabProperty()->name() << " '" << excp.message() << "'" << endreq;
+          << tabProperty()->name() << " '" << excp.message() << "'" << endmsg;
     }
 
   }
@@ -100,7 +100,7 @@ StatusCode TabulatedProperty1D::updateTabProp()
 {
   // make a message object
   MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
-  msg << MSG::INFO << "Update triggered for " << tabProperty()->name() << endreq;
+  msg << MSG::INFO << "Update triggered for " << tabProperty()->name() << endmsg;
 
   // run the update
   m_OK = initInterpolator( tabProperty(), interType() );
@@ -108,7 +108,7 @@ StatusCode TabulatedProperty1D::updateTabProp()
   // check status of update
   if ( !m_OK )
   {
-    msg << MSG::ERROR << "Update FAILED for " << tabProperty()->name() << endreq;
+    msg << MSG::ERROR << "Update FAILED for " << tabProperty()->name() << endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;

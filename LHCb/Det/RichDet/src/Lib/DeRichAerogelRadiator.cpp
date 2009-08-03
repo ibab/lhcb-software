@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.12 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.13 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -92,11 +92,11 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )
   {
-    msg << MSG::ERROR << "First UMS update failed" << endreq;
+    msg << MSG::ERROR << "First UMS update failed" << endmsg;
     return sc;
   }
 
-  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
   m_firstUpdate = false;
 
   // return
@@ -109,7 +109,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 StatusCode DeRichAerogelRadiator::updateProperties ( )
 {
   if ( !m_firstUpdate )
-    info() << "Refractive index update triggered" << endreq;
+    info() << "Refractive index update triggered" << endmsg;
 
   // load various parameters
   const double photonEnergyLowLimit     = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");

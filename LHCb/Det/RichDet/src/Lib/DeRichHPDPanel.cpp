@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.71 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.72 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -98,7 +98,7 @@ StatusCode DeRichHPDPanel::initialize()
   if ( m_rich == Rich::InvalidDetector ||
        m_side == Rich::InvalidSide )
   {
-    msg << MSG::ERROR << "Error initializing HPD panel " << name() << endreq;
+    msg << MSG::ERROR << "Error initializing HPD panel " << name() << endmsg;
     return StatusCode::FAILURE;
   }
   bool rich1 = (m_rich == Rich::Rich1);
@@ -124,7 +124,7 @@ StatusCode DeRichHPDPanel::initialize()
 
   msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
       << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
-      << m_pixelColumns << endreq;
+      << m_pixelColumns << endmsg;
 
   m_HPDColumns = param<int>("HPDColumns");
   m_HPDNumInCol = param<int>("HPDNumberInColumn");
@@ -178,7 +178,7 @@ StatusCode DeRichHPDPanel::initialize()
   msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
       << " panelStartColPosOdd:" << m_panelStartColPosOdd
       << " m_panelStartColPos:" << m_panelStartColPos
-      << endreq;
+      << endmsg;
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
@@ -206,7 +206,7 @@ StatusCode DeRichHPDPanel::initialize()
   }
 
   const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
-  msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endreq;
+  msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
 
   // assume same size for all silicon detectors
@@ -224,7 +224,7 @@ StatusCode DeRichHPDPanel::initialize()
                         Gaudi::XYZVector ( 0.0, 0.0, 1.0 ),
                         windowTicks );
   if (windowTicksSize != 2) {
-    msg << MSG::FATAL << "Problem getting window radius" << endreq;
+    msg << MSG::FATAL << "Problem getting window radius" << endmsg;
     return StatusCode::FAILURE;
   }
   const double winR = windowTicks[0];
@@ -288,7 +288,7 @@ StatusCode DeRichHPDPanel::initialize()
   StatusCode update = updMgrSvc()->update(this);
   if ( !update ) return update;
 
-  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
   return StatusCode::SUCCESS;
 }
 

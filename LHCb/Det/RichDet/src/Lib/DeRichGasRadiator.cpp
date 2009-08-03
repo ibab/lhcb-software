@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.14 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.15 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -102,11 +102,11 @@ StatusCode DeRichGasRadiator::initialize ( )
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )
   {
-    msg << MSG::ERROR << "First UMS update failed" << endreq;
+    msg << MSG::ERROR << "First UMS update failed" << endmsg;
     return sc;
   }
 
-  msg << MSG::DEBUG << "Initialisation Complete" << endreq;
+  msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
   m_firstUpdate = false;
 
   // return

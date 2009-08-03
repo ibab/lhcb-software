@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.26 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.27 2009-08-03 09:22:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -45,7 +45,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   if ( initSC.isFailure() ) return initSC;
 
   debug() << "Starting initialisation for DeRichSingleSolidRadiator "
-          << name() << endreq;
+          << name() << endmsg;
 
   m_solid = geometry()->lvolume()->solid();
 
@@ -91,7 +91,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  debug() <<" Centre " << geometry()->toGlobal(zero) << endreq;
+  debug() <<" Centre " << geometry()->toGlobal(zero) << endmsg;
 
   return initSC;
 }
