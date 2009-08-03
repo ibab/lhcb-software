@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromAllMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.3 2009-07-31 12:47:18 jonrob Exp $
+ *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.4 2009-08-03 15:21:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -82,6 +82,9 @@ PixelCreatorFromAllMCRichHits::buildPixel( const LHCb::RichSmartID& id ) const
   // set the associated cluster
   pixel->setAssociatedCluster( Rich::HPDPixelCluster(id) );
 
+  // save original global hit position before MC cheating starts
+  const Gaudi::XYZPoint gPosOriginal = pixel->globalPosition();
+
   // Get MC hits
   const SmartRefVector<LHCb::MCRichHit>& mcRichHits = m_mcTool->mcRichHits( id );
 
@@ -96,19 +99,18 @@ PixelCreatorFromAllMCRichHits::buildPixel( const LHCb::RichSmartID& id ) const
     if ( !first ) savePixel( pix );
     // Is this a true CK photon ?
     const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
-    if ( mcPhot )
+    // Set global coordinates
+    pix->setGlobalPosition( mcPhot ? mcPhot->hpdQWIncidencePoint() : gPosOriginal );
+    // local position
+    pix->setLocalPosition( smartIDTool()->globalToPDPanel(pix->globalPosition()) );
+    // set the corrected local positions
+    geomTool()->setCorrLocalPos(pix,id.rich());
+    // some printout
+    if ( msgLevel(MSG::VERBOSE) )
     {
-      // Update coordinates with cheated info
-      pix->setGlobalPosition( mcPhot->hpdQWIncidencePoint() );
-      pix->setLocalPosition( smartIDTool()->globalToPDPanel(pix->globalPosition()) );
-      // set the corrected local positions
-      geomTool()->setCorrLocalPos(pix,id.rich());
-      // some printout
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << " -> MC cheated global pos " << pix->globalPosition() << endmsg;
-      }
+      verbose() << " -> MC cheated global pos " << pix->globalPosition() << endmsg;
     }
+    // no longer first ...
     first = false;
   }
 
