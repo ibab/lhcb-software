@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -68,7 +68,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         hlttype           = self.getProp("HltType")
         # Dictionary of Hlt2 type
-        trans = { 'Hlt2' : 'LEPT+TOPO+PHI+EXCL'  # @todo need express as well
+        trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
                 }
         for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
         #
@@ -91,8 +91,19 @@ class Hlt2Conf(LHCbConfigurableUser):
                                , Hlt2B2LLXLinesConf
                                , Hlt2DisplVerticesLinesConf ]
                       }
+        #
+        # Now, decode
+        #
+        usedType2conf = {}
+        for i in hlttype.split('+'):
+            if i == '' : continue # no operation...
+            if i == 'NONE' : continue # no operation...
+            if i == 'Hlt1' : continue # no operation...
+            if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
+            usedType2conf[i] = type2conf[i]
 
-        return type2conf
+#        print '# will use ', usedType2conf
+        return usedType2conf
         
 ###################################################################################
 #

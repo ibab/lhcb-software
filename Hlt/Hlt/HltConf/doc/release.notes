@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.289 2009-07-31 15:05:22 pkoppenb Exp $ 
+! $Id: release.notes,v 1.290 2009-08-03 07:23:54 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-03 - Patrick Koppenburg
+ - Decode 'TOPO+ECL+PHI+LEPT' such that only what's required is run
+   (allows to switch off lines easily)
 
 ! 2009-07-31 - Patrick Koppenburg
  - Convert HltCaloReco.opts into a configurable
