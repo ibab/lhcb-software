@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-03 - Patrick Koppenburg
+ - Bug fix : name of Truth sequencer was worng in all files.
+
 ! 2009-07-30 - Patrick Koppenburg
  - options/Hlt2EventTuple.py : add TupleToolTriggerRecoStats (requires today's
    head of DecayTreeTuple)

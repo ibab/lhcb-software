@@ -19,9 +19,9 @@ FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamm
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE  
+GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True  
 #
-# Overwrite input - uncomment to run HLT on TRUE signal only
+# Overwrite input - uncomment to run HLT on True signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 #

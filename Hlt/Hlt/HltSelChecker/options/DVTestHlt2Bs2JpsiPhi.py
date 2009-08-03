@@ -10,7 +10,7 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 #--------------------------------------------------------------
 signal = "Bs2JpsiPhi"
 #
-# True filter criterion - will only run HLT on TRUE signal
+# True filter criterion - will only run HLT on True signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder())
@@ -19,9 +19,9 @@ FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamm
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = True
+GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True
 #
-# Overwrite input - uncomment to run HLT on TRUE signal only
+# Overwrite input - uncomment to run HLT on True signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 #

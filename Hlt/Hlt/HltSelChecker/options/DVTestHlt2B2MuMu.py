@@ -29,9 +29,9 @@ FilterTrueTracks().MCDecayFinder.Decay =   "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -
 # fully reconstructed in the HLT
 #
 from Configurables import GaudiSequencer
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = True
+GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True
 #
-# Overwrite input - uncomment to run HLT on TRUE signal only
+# Overwrite input - uncomment to run HLT on True signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 ###

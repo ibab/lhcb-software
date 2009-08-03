@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.13 2009-07-06 13:43:45 pkoppenb Exp $
+### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.14 2009-08-03 16:16:41 pkoppenb Exp $
  #
  #  Test file for HLT Bs->KstarKstar selection
  #
@@ -23,9 +23,9 @@ FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (K*(892)0 -> ^K+ ^pi- {,gamm
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
-GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE  
+GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True  
 #
-# Overwrite input - uncomment to run HLT on TRUE signal only
+# Overwrite input - uncomment to run HLT on True signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 #

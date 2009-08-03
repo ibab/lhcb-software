@@ -18,7 +18,7 @@ ChargedProtoPAlg("Hlt2ChargedProtoPAlg").InputTrackLocation = "Hlt/Track/Signal"
 #
 # redo association
 #
-GaudiSequencer("SeqHlt2TruthFilter").Members += [ TESCheck("CheckSignalTracks"),
+GaudiSequencer("SeqTrueSignalTracks").Members += [ TESCheck("CheckSignalTracks"),
                                                   TrackAssociator("HltSignalTrackAssociator") ]
 
 TESCheck("CheckSignalTracks").Inputs = ["Hlt/Track/Signal"]

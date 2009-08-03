@@ -51,3 +51,8 @@ def noInit():
 
 appendPostConfigAction(noInit)
 
+#DaVinci().DataType = "DC06"
+#
+#EventSelector().Input = [
+#    "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Stripped-L0xHlt1-DC06/Mbias-24.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+#    "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Stripped-L0xHlt1-DC06/Mbias-15.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
