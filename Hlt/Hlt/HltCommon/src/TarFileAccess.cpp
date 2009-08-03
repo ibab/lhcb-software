@@ -197,7 +197,7 @@ TarFileAccess::open(const std::string &url) {
     // check if tarname already known; if not, open and index
     container_t::iterator tarFile =  m_tarFiles.find(what.str(1));
     if (tarFile == m_tarFiles.end() ) { 
-        tarFile = m_tarFiles.insert( tarFile, make_pair( what.str(1), new TarFileAccess_details::TarFile(what.str(1)) ) );
+        tarFile = m_tarFiles.insert( tarFile, std::make_pair( what.str(1), new TarFileAccess_details::TarFile(what.str(1)) ) );
         // TODO: keep access statistics on open files,
         // and if too many, close the oldest
         // also, maybe we want to move the most recently used
