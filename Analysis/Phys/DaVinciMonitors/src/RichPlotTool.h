@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.h,v 1.4 2009-02-16 14:24:37 jonrob Exp $
+// $Id: RichPlotTool.h,v 1.5 2009-08-03 09:14:25 jonrob Exp $
 #ifndef RichPlotTool_H
 #define RichPlotTool_H 1
 
@@ -49,7 +49,7 @@ private:
   IJobOptionsSvc* joSvc() const;
 
   /// Get the Rich type enum from the Particle properties object
-  const Rich::ParticleIDType pidType( const LHCb::ParticleProperty * prop ) const;
+  Rich::ParticleIDType pidType( const LHCb::ParticleProperty * prop ) const;
 
   /// Returns the PID tool instance for the given Particle Name
   const Rich::Rec::IPIDPlots * pidTool( const std::string & name ) const;

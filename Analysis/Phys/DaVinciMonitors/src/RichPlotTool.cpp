@@ -1,4 +1,4 @@
-// $Id: RichPlotTool.cpp,v 1.6 2009-05-14 11:25:57 jonrob Exp $
+// $Id: RichPlotTool.cpp,v 1.7 2009-08-03 09:14:25 jonrob Exp $
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -76,7 +76,7 @@ StatusCode RichPlotTool::fillImpl( const LHCb::Particle* p,
   return StatusCode::SUCCESS;
 }
 
-const Rich::ParticleIDType 
+Rich::ParticleIDType 
 RichPlotTool::pidType( const LHCb::ParticleProperty * prop ) const
 {
   Rich::ParticleIDType type = Rich::Unknown;

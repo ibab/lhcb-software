@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-08-03 - Chris Jones
+ - Fix SLC5 / gcc 4.3 compilation warnings from RichPlotTool
+
 !========================== DaVinciMonitors v1r5 2009-06-23 ===================
 ! 2009-06-23 - Patrick Koppenburg
  - Adapt DVMonitorWithBrunel.py to Brunel v35r2
