@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.447 2009-08-02 17:01:44 gcowan Exp $
+! $Id: release.notes,v 1.448 2009-08-03 07:39:52 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-03 - Juan PALACIOS
+ - Modifications to allow compilation against LHCb v27r5:
+ - Copy Kernel/DaFinciFun.cpp DaVinci:P2VVAngles functions to 
+   src/P2VVAnglesFun.h
+ - src/Bs2JpsiPhiAngleCalculator.cpp
+  . Use functions from src/P2VVAnglesFun.cpp
 
 ! 2009-08-02 - Greig Cowan
  - Modified Bs2JpsiPhiAngleCalculator.cpp to use the functions in the new 
