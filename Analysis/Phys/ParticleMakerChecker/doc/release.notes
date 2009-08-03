@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.19 2009-05-11 13:41:47 jpalac Exp $
+!$Id: release.notes,v 1.20 2009-08-03 09:09:29 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/ParticleMakerChecker
 ! Responsible : Chris Jones
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
+
+! 2009-08-03 - Chris Jones
+ - Fix warnings on SLC5 / gcc 4.3
 
 !========================== ParticleMakerChecker v1r3p1 2009-05-11 ========
 

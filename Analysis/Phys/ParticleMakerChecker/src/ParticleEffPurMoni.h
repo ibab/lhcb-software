@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.29 2008-12-06 16:40:23 ibelyaev Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.30 2009-08-03 09:09:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -263,12 +263,12 @@ private: // definitions
   {
   public:
     /// Constructor
-    HistoHandle() 
-      : m_effVp   (0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,50), 
+    HistoHandle()
+      : m_effVp   (0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,50),
         m_effVpt  (0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,50)
-        //m_effVpVpt(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
-        //           0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
-        //           20,20) 
+               //m_effVpVpt(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
+               //           0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
+               //           20,20)
     { }
   public:
     /// Fill all histos
@@ -436,22 +436,22 @@ private: // methods
   void printStats() const;
 
   /// Returns the momentum value for a given ProtoParticle
-  const double momentum( const LHCb::ProtoParticle * proto ) const
+  inline double momentum( const LHCb::ProtoParticle * proto ) const
   {
     // CRJ : Need to decide what to do for neutrals
     return ( NULL != proto->track() ? proto->track()->p() : 0 );
   }
 
   /// Returns the transverse momentum value for a given ProtoParticle
-  const double transverseMomentum( const LHCb::ProtoParticle * proto ) const
+  inline double transverseMomentum( const LHCb::ProtoParticle * proto ) const
   {
     // CRJ : Need to decide what to do for neutrals
     return ( NULL != proto->track() ? proto->track()->pt() : 0 );
   }
-  
+
   /// Returns the ParticleProperty object for a given ParticleID
   const LHCb::ParticleProperty * partProp( const LHCb::ParticleID& id ) const;
-  
+
   /// Access the Particle Linker appropriate for the given Particle
   Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const;
 
