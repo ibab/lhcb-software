@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -28,29 +28,43 @@ from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Configurables import RichRecSysConf
 
+# Define what categories stand for
+# There are the strings used in HltThresholdSettings
+
+_type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
+                         , Hlt2B2DXLinesConf ]
+              , 'LEPT' : [ Hlt2InclusiveDiMuonLinesConf
+                         , Hlt2InclusiveMuonLinesConf ]
+              , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
+              , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf # TODO: should be moved into B2JpsiXLines
+                         , Hlt2Bs2JpsiPhiLinesConf                     # TODO: should be moved into B2JpsiXLines
+                         , Hlt2Bd2JpsiKstarLinesConf                   # TODO: should be moved into B2JpsiXLines
+                         , Hlt2Bu2JpsiKLinesConf                       # TODO: should be moved into B2JpsiXLines
+                         , Hlt2B2JpsiXLinesConf
+                         , Hlt2B2PhiXLinesConf
+                         , Hlt2XGammaLinesConf
+                         , Hlt2B2HHLinesConf
+                         , Hlt2B2LLXLinesConf
+                         , Hlt2DisplVerticesLinesConf ]
+              }
+
+def hlt2TypeDecoder(hlttype) :
+      trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
+              }
+      for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
+      # split hlttype in known and unknown bits
+      known   = [ i for i in hlttype.split('+') if i in _type2conf.keys() ]
+      unknown = [ i for i in hlttype.split('+') if i not in known ]
+      return ( '+'.join(known), '+'.join(unknown) )
+
+
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ Hlt2B2DXLinesConf
-                             , Hlt2B2JpsiXLinesConf
-                             , Hlt2B2PhiXLinesConf
-                             , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf # TODO: must be moved into B2JpsiXLines
-                             , Hlt2Bs2JpsiPhiLinesConf
-          		             , Hlt2Bd2JpsiKstarLinesConf
-          		             , Hlt2Bu2JpsiKLinesConf  
-	                         , Hlt2InclusiveDiMuonLinesConf
-                             , Hlt2InclusiveMuonLinesConf
-                             , Hlt2InclusivePhiLinesConf
-                             , Hlt2TopologicalLinesConf
-                             , RichRecSysConf
-                             , Hlt2XGammaLinesConf
-                             , Hlt2B2HHLinesConf
-                             , Hlt2B2LLXLinesConf
-                             , Hlt2DisplVerticesLinesConf ]
+    __used_configurables__ = [ RichRecSysConf ]
+    for (k,v) in _type2conf.iteritems() : __used_configurables__.extend( v )
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-       , "HltType"                    : 'Hlt1+Hlt2' # only care about Hlt2
+       , "Hlt2Type"                   : ''  # Explicitly set by HltConf.Configuration
        , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
-       , "ActiveHlt2Lines"            : [] # list of lines to be added
-       , "HistogrammingLevel"         : 'None' # or 'Line'
        , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
        , "Hlt2Tracks"                 : "Hlt/Track/Long"
          }
@@ -64,43 +78,21 @@ class Hlt2Conf(LHCbConfigurableUser):
         Return a list of requested configurables
         """
         #
-        # 1) convert hlt type to trigger categories
+        # 1) convert hlt2 type to trigger categories
         #
-        hlttype           = self.getProp("HltType")
-        # Dictionary of Hlt2 type
-        trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
-                }
-        for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
+        hlt2type          = self.getProp("Hlt2Type")
         #
         # 2) define what categories stand for
         # There are the strings used in HltThresholdSettings
         #
-        type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
-                               , Hlt2B2DXLinesConf ]
-                    , 'LEPT' : [ Hlt2InclusiveDiMuonLinesConf
-                               , Hlt2InclusiveMuonLinesConf ]
-                    , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
-                    , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
-                               , Hlt2Bs2JpsiPhiLinesConf
-                               , Hlt2Bd2JpsiKstarLinesConf
-                               , Hlt2Bu2JpsiKLinesConf    
-                               , Hlt2B2JpsiXLinesConf
-                               , Hlt2B2PhiXLinesConf
-                               , Hlt2XGammaLinesConf
-                               , Hlt2B2HHLinesConf
-                               , Hlt2B2LLXLinesConf
-                               , Hlt2DisplVerticesLinesConf ]
-                      }
         #
         # Now, decode
         #
         usedType2conf = {}
-        for i in hlttype.split('+'):
-            if i in [ '', 'NONE', 'Hlt1' ] : continue # no operation...
-            if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
-            usedType2conf[i] = type2conf[i]
+        for i in hlt2type.split('+'):
+            if i not in _type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
+            usedType2conf[i] = _type2conf[i]
 
-#        print '# will use ', usedType2conf
         return usedType2conf
         
 ###################################################################################
@@ -125,6 +117,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         # Loop over thresholds
         #
         for i in type2conf :
+            if i == '' : continue
             #print '# TYPE2CONF', i
             for confs in type2conf[i] :
                 #print '# CONF', confs

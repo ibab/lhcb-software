@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.100 2009-08-03 08:47:22 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.101 2009-08-03 12:10:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,8 +15,8 @@ from HltLine.HltLine     import hlt1Lines
 from HltLine.HltLine     import hlt2Lines
 from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
-from HltConf.Hlt1             import Hlt1Conf
-from HltConf.Hlt2             import Hlt2Conf
+from HltConf.Hlt1             import Hlt1Conf, hlt1TypeDecoder
+from HltConf.Hlt2             import Hlt2Conf, hlt2TypeDecoder
 from RichRecSys.Configuration import *
 
 ##################################################################################
@@ -73,11 +73,11 @@ class HltConf(LHCbConfigurableUser):
         # 
         from Configurables import L0DUFromRawAlg
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                       , Members = #[ L0DUFromRawAlg()
+                       , Members = 
                        [ Sequence('Hlt1') 
-                         , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
-                         , Sequence('HltEndSequence') 
-                         ] )
+                       , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                       , Sequence('HltEndSequence') 
+                       ] )
         
         ThresholdSettings = None
         if self.getProp('ThresholdSettings'): 
@@ -87,18 +87,33 @@ class HltConf(LHCbConfigurableUser):
             ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
             log.info('# ThresholdSettings ' + str(ThresholdSettings) )
             
-        Hlt1Conf().ThresholdSettings = ThresholdSettings
-        Hlt1Conf().HltType = self.getProp("HltType")
-        
-        Hlt1Conf()
+
+        hlttype           = self.getProp("HltType")
+
         #
-        # Hlt2
+        # decode Hlt1 types
         #
-        if hlttype.find('Hlt2') != -1 :                
+        print 'HltType: %s' % hlttype
+        ( hlt1type, hlttype ) = hlt1TypeDecoder( hlttype )
+        print 'Hlt1 decoded into "%s" "%s" ' %( hlt1type,hlttype )
+        if hlt1type != '' :
+            Hlt1Conf().ThresholdSettings = ThresholdSettings
+            Hlt1Conf().Hlt1Type = hlt1type
+            Hlt1Conf()
+        #
+        # decode Hlt2 types
+        #
+        print 'HltType: %s' % hlttype
+        ( hlt2type, hlttype ) = hlt2TypeDecoder( hlttype )
+        print 'Hlt2 decoded into "%s" "%s" ' %( hlt2type,hlttype )
+        if hlt2type != '':
             Hlt2Conf().ThresholdSettings = ThresholdSettings
-            self.setOtherProps(Hlt2Conf(),["DataType","HltType","Hlt2Requires", "ActiveHlt2Lines",
-                                           "HistogrammingLevel"])
+            Hlt2Conf().Hlt2Type = hlt2type
+            self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires" ])
             Hlt2Conf()
+
+        if hlttype and hlttype not in [ '', 'NONE' ]:
+            raise AttributeError, "unknown HltType fragment '%s'"%hlttype
 
 ##################################################################################
     def configureRoutingBits(self) :

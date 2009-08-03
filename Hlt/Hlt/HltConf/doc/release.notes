@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.291 2009-08-03 08:47:22 graven Exp $ 
+! $Id: release.notes,v 1.292 2009-08-03 12:10:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -10,6 +10,9 @@
  - Move Hlt(1|2)Global from Configuration.py into Hlt(1|2).py, reduce postconfig
    action
  - streamline end sequence configuration
+ - change HltType decoding such that it works in cases where something more explcit
+   than 'Hlt1+Hlt2', 'Hlt1', 'Hlt2', 'NONE' is specified
+
 
 ! 2009-08-03 - Patrick Koppenburg
  - Decode 'TOPO+EXCL+PHI+LEPT' such that only what's required is run

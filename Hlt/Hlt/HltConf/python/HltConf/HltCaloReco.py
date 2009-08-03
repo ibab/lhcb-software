@@ -8,7 +8,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -133,6 +133,7 @@ def hltCaloRec():
     #
     # @todo : make that a configurable as well
     #
+    importOptions( "$HLTCONFROOT/options/units.opts" )
     importOptions( "$CALORECOOPTS/HltClusterSelection.opts"  )
     importOptions( "$CALORECOOPTS/HltMergedPi0Rec.opts" )
     importOptions( "$CALORECOOPTS/HltPhotonFromMergedRec.opts" )

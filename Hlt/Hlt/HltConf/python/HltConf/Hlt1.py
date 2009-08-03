@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.21 2009-08-03 08:47:22 graven Exp $
+# $Id: Hlt1.py,v 1.22 2009-08-03 12:10:25 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,62 +31,59 @@ from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
 from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
 from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
 
-class Hlt1Conf(LHCbConfigurableUser):
-   __used_configurables__ = [ # Hlt1 Lines
-                               HltCommissioningLinesConf
-                             , HltVeloLinesConf
-                             , HltLumiLinesConf
-                             , HltBeamGasLinesConf
-                             , HltL0LinesConf
-                             , HltMuonLinesConf
-                             , HltHadronLinesConf
-                             , HltElectronLinesConf
-                             , HltPhotonLinesConf
-                             , HltExpressLinesConf ]
+global _type2conf
+_type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
+              , 'LU' : HltLumiLinesConf
+              , 'BG' : HltBeamGasLinesConf
+              , 'L0' : HltL0LinesConf
+              , 'VE' : HltVeloLinesConf
+              , 'XP' : HltExpressLinesConf
+              , 'MU' : HltMuonLinesConf
+              , 'HA' : HltHadronLinesConf
+              , 'PH' : HltPhotonLinesConf
+              , 'EL' : HltElectronLinesConf
+              }
 
-   __slots__ = {"HltType"                      : 'Hlt1+Hlt2'  # can be PA as well, Hlt1 part irrelevant
-                , "LumiBankKillerAcceptFraction" : 0.0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
-                , "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
-                }
+def hlt1TypeDecoder(hlttype) :
+      trans = { 'Hlt1' : 'LU+L0+VE+XP+MU+HA+PH+EL'  }
+      for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
+      # split hlttype in known and unknown bits
+      known   = [ i for i in hlttype.split('+') if i in _type2conf.keys() ]
+      unknown = [ i for i in hlttype.split('+') if i not in known ]
+      return ( '+'.join(known), '+'.join(unknown) )
+
+
+
+class Hlt1Conf(LHCbConfigurableUser):
+   __used_configurables__ = []
+   global _type2conf
+   for (k,v) in _type2conf.iteritems() : __used_configurables__.append( v )
+
+   __slots__ = { "Hlt1Type"                     : ''  # Explicitly set by HltConf.Configuration
+               , "LumiBankKillerAcceptFraction" : 0.0 # fraction of lumi-only events where raw event is stripped down; online: 0.9999
+               , "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
+               }
 
    def confType(self) :
       """
       Hlt1 configuration
       """
-      hlttype           = self.getProp("HltType")
+      hlt1type          = self.getProp("Hlt1Type")
       ThresholdSettings = self.getProp("ThresholdSettings")
       
-      trans = { 'Hlt1'   : 'LU+L0+VE+XP+MU+HA+PH+EL'  
-              , 'DEFAULT': 'PA+LU+L0+VE+XP'
-                }
-      for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
-      type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
-                  , 'LU' : HltLumiLinesConf
-                  , 'BG' : HltBeamGasLinesConf
-                  , 'L0' : HltL0LinesConf
-                  , 'VE' : HltVeloLinesConf
-                  , 'XP' : HltExpressLinesConf
-                  , 'MU' : HltMuonLinesConf
-                  , 'HA' : HltHadronLinesConf
-                  , 'PH' : HltPhotonLinesConf
-                  , 'EL' : HltElectronLinesConf
-                  }
-      
-      from HltLine.HltLine     import Hlt1Line
-      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
-      for i in hlttype.split('+') :
-         if i in [ 'NONE', 'Hlt2' ] : continue # no operation...
-         if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
-         log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
+
+      for i in hlt1type.split('+') :
+         if i == '' : continue
+         if _type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
+         log.info( '# requested ' + i + ', importing ' + str(_type2conf[i])  )
          # FIXME: warning: the next is 'brittle': if someone outside 
          #        does eg. HltMuonLinesConf(), it will get activated
          #        regardless of whether we do it over here...
          #        So anyone configuring some part explictly will _always_ get
          #        that part of the Hlt run, even if it does not appear in HltType...
-         confs = type2conf[i]
          if ThresholdSettings:
             from HltThresholdSettings import SetThresholds
-            SetThresholds(ThresholdSettings,confs)
+            SetThresholds(ThresholdSettings, _type2conf[i])
 
                   
 ##################################################################################
@@ -106,3 +103,6 @@ class Hlt1Conf(LHCbConfigurableUser):
       
       ## finally, define the Hlt1 sequence!!
       Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
+
+      from HltLine.HltLine     import Hlt1Line
+      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
