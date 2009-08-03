@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.h,v 1.1 2009-07-06 15:42:07 dhcroft Exp $
+// $Id: PatVeloTraversingTracking.h,v 1.2 2009-08-03 09:10:39 mjohn Exp $
 #ifndef TF_PATVELOTRAVERSINGTRACKING_H 
 #define TF_PATVELOTRAVERSINGTRACKING_H 1
 
@@ -8,6 +8,7 @@
 #include "VeloDet/DeVelo.h"
 //track
 #include "Event/Track.h"
+#include "AIDA/IHistogram1D.h"
 // ============================================================================
 
 namespace Tf
@@ -54,6 +55,7 @@ namespace Tf
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   private:
+    AIDA::IHistogram1D* m_halfDistance;
 
   /** @class PatVeloTraversingTracking::TraversingTrackSet PatVeloTraversingTracking.h
    *

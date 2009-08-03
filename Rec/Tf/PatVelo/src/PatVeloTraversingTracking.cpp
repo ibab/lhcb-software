@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.cpp,v 1.1 2009-07-06 15:42:07 dhcroft Exp $
+// $Id: PatVeloTraversingTracking.cpp,v 1.2 2009-08-03 09:10:39 mjohn Exp $
 // Include files
 #include "PatVeloTraversingTracking.h"
 // from Gaudi
@@ -33,7 +33,7 @@ PatVeloTraversingTracking( const std::string& name,
   declareProperty( "InputTracksLocation" ,
 		   m_inputTracksLocation = LHCb::TrackLocation::Velo );
   //Output location of merged track
-  declareProperty( "outputTracksLocation" ,
+  declareProperty( "OutputTracksLocation" ,
 		   m_outputTracksLocation = "Rec/Track/Traversing" );
 }
 
@@ -50,6 +50,8 @@ StatusCode Tf::PatVeloTraversingTracking::initialize() {
 
   if(m_debugLevel) debug() << "==> Initialize" << endmsg;
   setHistoTopDir( "Velo/" );
+
+  m_halfDistance = book1D("HalfDistance", "distance between velo halfs", 0, 5, 100 );
 
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   return StatusCode::SUCCESS;
@@ -101,11 +103,16 @@ StatusCode Tf::PatVeloTraversingTracking::execute() {
 
   //Plot x-distance and save to TES:
   if(distance>-900){ // less than "magic" -999 number
+    if(m_debugLevel) debug() << "Distance " << distance << endmsg;
     if(m_makeHistogram) plot1D(distance, "x_distance",
 			       "Distance between velo halves [mm]",
 			       -1+0.05,20+0.05,210);
+    if(m_makeHistogram) m_halfDistance->fill(distance);
     saveTrackInTES(set.mergedTrack());
+    setFilterPassed(true);
   }
+
+  setFilterPassed(false);
 
   return StatusCode::SUCCESS;
 }
