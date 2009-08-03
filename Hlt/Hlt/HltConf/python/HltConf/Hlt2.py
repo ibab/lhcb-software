@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -32,11 +32,11 @@ class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt2B2DXLinesConf
                              , Hlt2B2JpsiXLinesConf
                              , Hlt2B2PhiXLinesConf
-          		     , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf
+                             , Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf # TODO: must be moved into B2JpsiXLines
                              , Hlt2Bs2JpsiPhiLinesConf
-          		     , Hlt2Bd2JpsiKstarLinesConf
-          		     , Hlt2Bu2JpsiKLinesConf  
-	                     , Hlt2InclusiveDiMuonLinesConf
+          		             , Hlt2Bd2JpsiKstarLinesConf
+          		             , Hlt2Bu2JpsiKLinesConf  
+	                         , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
                              , Hlt2InclusivePhiLinesConf
                              , Hlt2TopologicalLinesConf
@@ -61,7 +61,7 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
     def getHlt2Configurables(self):
         """
-        Return a dictionary of configurables
+        Return a list of requested configurables
         """
         #
         # 1) convert hlt type to trigger categories
@@ -96,9 +96,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         usedType2conf = {}
         for i in hlttype.split('+'):
-            if i == '' : continue # no operation...
-            if i == 'NONE' : continue # no operation...
-            if i == 'Hlt1' : continue # no operation...
+            if i in [ '', 'NONE', 'Hlt1' ] : continue # no operation...
             if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
             usedType2conf[i] = type2conf[i]
 
@@ -116,6 +114,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         The actual lines
         """
+        from HltLine.HltLine     import Hlt2Line
+        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255 )
         Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
         ThresholdSettings = self.getProp("ThresholdSettings")
         #print "# Hlt2 thresholds:", ThresholdSettings
@@ -227,7 +227,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         from Configurables import MuonRec, MuonIDAlg
         cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
         HltMuonIDAlg = cm.configureMuonIDAlg("HltMuonIDAlg")
-        HltMuonIDAlg.TrackLocation = "Hlt/Track/Long"
+        HltMuonIDAlg.TrackLocation = self.getProp("Hlt2Tracks") 
         HltMuonIDAlg.MuonIDLocation = "Hlt/Muon/MuonPID"
         HltMuonIDAlg.MuonTrackLocation = "Hlt/Track/Muon"
         HltMuonIDSeq = GaudiSequencer("HltMuonIDSeq")
@@ -264,7 +264,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         # Hacking of errors
         #
         HltInsertTrackErrParam = HltInsertTrackErrParam()
-        HltInsertTrackErrParam.InputLocation = "Hlt/Track/Long" 
+        HltInsertTrackErrParam.InputLocation =self.getProp("Hlt2Tracks")
         SeqHlt2Charged.Members += [ HltInsertTrackErrParam ]
         return SeqHlt2Charged
        

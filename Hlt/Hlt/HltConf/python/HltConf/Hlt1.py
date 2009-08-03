@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.20 2009-07-23 16:19:43 pkoppenb Exp $
+# $Id: Hlt1.py,v 1.21 2009-08-03 08:47:22 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -72,10 +72,10 @@ class Hlt1Conf(LHCbConfigurableUser):
                   , 'EL' : HltElectronLinesConf
                   }
       
+      from HltLine.HltLine     import Hlt1Line
+      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
       for i in hlttype.split('+') :
-         if i == 'NONE' : continue # no operation...
-         if i == 'Hlt2' : continue # we deal with this later...
-         if i not in type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
+         if i in [ 'NONE', 'Hlt2' ] : continue # no operation...
          if type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
          log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
          # FIXME: warning: the next is 'brittle': if someone outside 

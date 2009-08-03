@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.99 2009-07-27 10:05:53 kvervink Exp $"
+__version__ = "$Id: Configuration.py,v 1.100 2009-08-03 08:47:22 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -118,6 +118,8 @@ class HltConf(LHCbConfigurableUser):
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"  
                       , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
+                      # 64--96: Hlt2
+                      , 64 : "HLT_PASS('Hlt2Global')"
                       }
 
         ## and record the settings in the ANN service
@@ -154,9 +156,14 @@ class HltConf(LHCbConfigurableUser):
         HltANNSvc().Hlt1SelectionID.update( extraDecisions )
 
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
+        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
+        HltANNSvc().Hlt1SelectionID.update( extraSelections )
+        log.info( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
+        log.info( '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'  )
 
         if False :
             for i in hlt1Lines() :
+                print "checking " + i.name()
                 decisionName = i.name() + 'Decision'
                 if decisionName in HltANNSvc().Hlt1SelectionID :
                     id = HltANNSvc().Hlt1SelectionID[ decisionName ] 
@@ -164,18 +171,17 @@ class HltConf(LHCbConfigurableUser):
                     id = None
 
                 if id :
+                    print i.index()
                     for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
                         if key in hlt1Selections()['All'] :
-                            log.warning( ' selection %s in line %s should have ID %d:%d' % ( key,  i.name(), id, value) )
+                            # TODO: see if the selection is unique to this line...
+                            cur = HltANNSvc().Hlt1SelectionID[ key ] if key in HltANNSvc().Hlt1SelectionID else  None
+                            print ' selection %s in line %s should have ID %d:%d -- has %d' % ( key,  i.name(), id, value, cur) 
                         #else :
                         #    print ' line %s, algo %s does not have a selection? ' % (i.name(),key)
                 else :
                     log.warning( 'Hlt1Line %s not known to ANNSvc??' % i.name() )
 
-        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
-        HltANNSvc().Hlt1SelectionID.update( extraSelections )
-        log.info( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
-        log.info( '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'  )
 
 
 ##################################################################################
@@ -200,7 +206,6 @@ class HltConf(LHCbConfigurableUser):
                                   ("Velo"       , "Hlt1Velo.*Decision"),
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
-                                  ("IgnoreLumi" , ".*IgnoreLumi.*"),
                                   ("Lumi"       , "Hlt1Lumi.*Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("PA"         , "Hlt1(Random|Physics|Tell1Error)Decision"),
@@ -249,41 +254,28 @@ class HltConf(LHCbConfigurableUser):
 ##################################################################################
     def postConfigAction(self) : 
         """
-        ???
+        Add the configured lines into the Hlt1 and Hlt2 sequencers,
+        provided there is no reason not to do so...
         """
-        from HltLine.HltLine     import Hlt1Line
-        from HltLine.HltLine     import Hlt2Line
-
-        # make sure 'strings' is known...
-        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
-        HltFactory('ToolSvc.HltFactory').Modules += [ 'LoKiCore.functions' ]
-        HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions' ]
 
         ## Should find a more elegant way of doing this...
         ## there are too many implicit assumptions in this action...
         ##
-        ## finally, add the Hlt1Global line...
-        Hlt1Global = Hlt1Line('Global', HLT = 'HLT_DECISION' )
-
+        ## TODO: make 'ActiveHlt?Lines' take a list of regex-es
+        ##
         activeLines = self.getProp('ActiveHlt1Lines') 
-        lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines ) ]
-        if Hlt1Global not in lines1 : lines1 += [ Hlt1Global ]
-        log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines())  )
-        log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1)  )
-        Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ] # note : should verify order (?) -- global should be last hlt1line! 
+        lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt1Global' ] ) ]
+        log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
+        log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
+        Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
+        activeLines = self.getProp('ActiveHlt2Lines')
+        lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt2Global' ]) ]
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
-        activeLines = self.getProp('ActiveHlt2Lines') 
-        Hlt2Global = Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') " )
-
-        lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines ) ]
-        lines2 += [ Hlt2Global ]
+        log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
-        log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 ) )
-
 
         self.configureHltMonitoring(lines1)
-        self.configureRoutingBits()
         self.configureVertexPersistence()
         self.configureANNSelections()
 
@@ -314,22 +306,21 @@ class HltConf(LHCbConfigurableUser):
             self.EnableHltSelReports = False
             self.EnableHltVtxReports = False
             self.EnableLumiEventWriting = False
-            self.ActiveHlt1Lines = [ 'Hlt1Physics','Hlt1Random'] 
+            self.ActiveHlt1Lines = [ 'Hlt1Physics','Hlt1Random','Hlt1Tell1Error'] 
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
-        _list = ( ( "EnableHltGlobalMonitor" , HltGlobalMonitor  )
-                  , ( "EnableHltDecReports"    , HltDecReportsWriter )
-                  , ( "EnableHltSelReports"    , [HltSelReportsMaker, HltSelReportsWriter ] )
-                  , ( "EnableHltVtxReports"    , [HltVertexReportsMaker, HltVertexReportsWriter ] )
-                  , ( "EnableHltRoutingBits"   , HltRoutingBitsWriter )
-                  )
+        _list = ( ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
+                , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
+                , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
+                , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )
+                , ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
+                )
         
         End = Sequence( 'HltEndSequence', IgnoreFilterPassed = True )
         EndMembers = End.Members
-        for i in [ i for (k,i) in _list if self.getProp(k) ] :
-            if type(i) is not list : i = [ i ]
-            # make sure we only instantiate if we actually use it...
-            EndMembers += [ j() for j in i ]
+        # make sure we only instantiate if we actually use it...
+        for i in [ v for (k,v) in _list if self.getProp(k) ] :
+            EndMembers += [ c() for c in i ]
         if (self.getProp("EnableLumiEventWriting")) :
             EndMembers += [ HltLumiWriter()
                             , Sequence( 'LumiStripper' , Members = 
@@ -351,4 +342,10 @@ class HltConf(LHCbConfigurableUser):
         self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
         self.confType(self.getProp('HltType'))      
         self.endSequence(self.getProp('HltType'))
+        # make sure 'strings' is known...
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        HltFactory('ToolSvc.HltFactory').Modules += [ 'LoKiCore.functions' ]
+        HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions' ]
+        self.configureRoutingBits()
+
         appendPostConfigAction( self.postConfigAction )
