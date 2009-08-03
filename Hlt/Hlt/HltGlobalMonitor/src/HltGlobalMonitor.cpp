@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.40 2009-07-29 08:37:46 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.41 2009-08-03 12:51:38 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -166,14 +166,14 @@ StatusCode HltGlobalMonitor::initialize() {
   
   m_gpstimesec=0;
 
-  declareInfo("L0Accept",        "",&counter("L0Accept"),        0,std::string("L0Accept"));
+  declareInfo("COUNTER_TO_RATE[L0Accept]",&counter("L0Accept"),"L0Accept");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
-  declareInfo("#eventsHLT","",&counter("#events"),0,std::string("Events hlt1 input"));
-  declareInfo("#acceptHLT","",&counter("#accept"),0,std::string("Events hlt1 accepted"));
+  declareInfo("#eventsHLT",&counter("#events"),"Events hlt1 input");
+  declareInfo("#acceptHLT",&counter("#accept"),"Events hlt1 accepted");
 
   //klo1
-  for (long i=0; i!=m_GroupLabels.size();++i) {
+  for (unsigned i=0; i!=m_GroupLabels.size();++i) {
     m_allAlleyAcc.push_back(0);
     declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Acc]", m_allAlleyAcc.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Accepts");
     m_allAlleyCall.push_back(0);
@@ -264,8 +264,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   ///////////////////////////////////////////////////////////////////////////////
   std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
   unsigned nAcc = 0;
-  nAccAlley = (unsigned *)calloc(m_GroupLabels.size(),sizeof(unsigned));//klo
-  //for (long i=0; i<m_GroupLabels.size();++i) {nAccAlley[i]=0;}//klo
+  std::vector<unsigned> nAccAlley(m_GroupLabels.size(),unsigned(0));
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
@@ -280,7 +279,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
 
   //klo1
-  for (long i=0; i<m_GroupLabels.size();i++) {
+  for (unsigned i=0; i<m_GroupLabels.size();i++) {
     m_allAlleyCall[i]++;
     m_allAlleyAcc[i] += ( nAccAlley[i] > 0 );
   }
@@ -323,11 +322,9 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
   */
   //klo1
-  for (long
- i=0; i<m_GroupLabels.size();i++) {
+  for (unsigned i=0; i<m_GroupLabels.size();i++) {
     fill(m_hlt1alley,i,(nAccAlley[i]>0));
   }
-  std::free(nAccAlley);
   //klo2
 }
 
