@@ -69,12 +69,12 @@ Hlt2Photons.PhotonMaker.PtCut = 200.* MeV
 #
 # Charged protoparticles
 #
-chargedProtos = Hlt2PID().hlt2ChargedProtos( )
+ChargedProtoMaker = Hlt2PID().hlt2ChargedProtos( )
 ##########################################################################
 #
 # Charged protoparticles
 #
-neutralProtos = Hlt2PID().hlt2NeutralProtos()
+NeutralProtoMaker = Hlt2PID().hlt2NeutralProtos()
 ##########################################################################
 #
 # Calo reco
@@ -97,11 +97,15 @@ Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()
 # from Hlt2SharedParticles.BasicParticles import Muons
 #
 
-__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
+__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons',
+            'ChargedProtos', 'NeutralProtos' )
 
-NoCutsPions   = bindMembers( None, [                  chargedProtos, Hlt2NoCutsPions ] )
-NoCutsKaons   = bindMembers( None, [                  chargedProtos, Hlt2NoCutsKaons ] )
-Muons         = bindMembers( None, [ Hlt2MuonIDSeq,   chargedProtos, Hlt2Muons ] )
-Electrons     = bindMembers( None, [ Hlt2CaloRecoSeq, chargedProtos, Hlt2Electrons ] )
+ChargedProtos = bindMembers( None, [ Hlt2CaloRecoSeq, Hlt2MuonIDSeq, ChargedProtoMaker ] )
+NeutralProtos = bindMembers( None, [ Hlt2CaloRecoSeq, NeutralProtoMaker ] )
+
+NoCutsPions   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsPions ] )
+NoCutsKaons   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsKaons ] )
+Muons         = bindMembers( None, [ ChargedProtos, Hlt2Muons ] )
+Electrons     = bindMembers( None, [ ChargedProtos, Hlt2Electrons ] )
 RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!
-Photons       = bindMembers( None, [ Hlt2CaloRecoSeq, neutralProtos, Hlt2Photons ] )
+Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )

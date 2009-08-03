@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.33 2009-08-03 15:43:15 pkoppenb Exp $
+$Id: release.notes,v 1.34 2009-08-03 16:49:43 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -10,12 +10,17 @@ $Id: release.notes,v 1.33 2009-08-03 15:43:15 pkoppenb Exp $
  - Moved Hlt2CaloReco from HltConf.HltCaloReco
  - Moved Hlt2PID from HltConf.Hlt2
  - Made them to configurables
- - Require appropriate PID reconstruction for variosu basic particles. e.g.:
-    
-    NoCutsPions   = bindMembers( None, [ chargedProtos, Hlt2NoCutsPions ] )
-    Electrons     = bindMembers( None, [ Hlt2CaloRecoSeq, chargedProtos, Hlt2Electrons ] )
-    Muons         = bindMembers( None, [ Hlt2MuonIDSeq, chargedProtos, Hlt2Muons ] )
-    Photons       = bindMembers( None, [ Hlt2CaloRecoSeq, neutralProtos, Hlt2Photons ] )
+ - Require appropriate PID reconstruction for various basic particles. e.g.:
+
+ChargedProtos = bindMembers( None, [ Hlt2CaloRecoSeq, Hlt2MuonIDSeq, ChargedProtoMaker ] )
+NeutralProtos = bindMembers( None, [ Hlt2CaloRecoSeq, NeutralProtoMaker ] )
+
+NoCutsPions   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsPions ] )
+NoCutsKaons   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsKaons ] )
+Muons         = bindMembers( None, [ ChargedProtos, Hlt2Muons ] )
+Electrons     = bindMembers( None, [ ChargedProtos, Hlt2Electrons ] )
+Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
+ 
  - Increment to v2r0
  - Requires today's HltConf
 
