@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.12 2009-07-24 06:59:33 jpalac Exp $
+!$Id: release.notes,v 1.13 2009-08-03 09:17:08 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+! 2009-08-03 - Chris Jones
+ - Fix SLC5 / gcc 4.3 compilation warnings
 
 !========================== RichPIDQC v1r2p1 2009-07-24 ======================
 

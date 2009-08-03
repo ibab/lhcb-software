@@ -1,4 +1,4 @@
-// $Id: RichParticlePIDQCAlg.cpp,v 1.1.1.1 2009-02-12 12:58:14 jonrob Exp $
+// $Id: RichParticlePIDQCAlg.cpp,v 1.2 2009-08-03 09:17:08 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -101,7 +101,7 @@ StatusCode ParticlePIDQCAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-const Rich::ParticleIDType 
+Rich::ParticleIDType 
 ParticlePIDQCAlg::pidType( const LHCb::ParticleProperty * prop ) const
 {
   Rich::ParticleIDType type = Rich::Unknown;

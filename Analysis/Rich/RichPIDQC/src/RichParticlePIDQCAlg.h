@@ -1,4 +1,4 @@
-// $Id: RichParticlePIDQCAlg.h,v 1.1.1.1 2009-02-12 12:58:14 jonrob Exp $
+// $Id: RichParticlePIDQCAlg.h,v 1.2 2009-08-03 09:17:08 jonrob Exp $
 #ifndef RICHPIDQC_RICHPARTICLEPIDQCALG_H 
 #define RICHPIDQC_RICHPARTICLEPIDQCALG_H 1
 
@@ -64,7 +64,7 @@ namespace Rich
     const Rich::Rec::IPIDPlots * pidTool( const std::string & name ) const;
 
     // Get the Rich type enum from the Particle properties object
-    const Rich::ParticleIDType pidType( const LHCb::ParticleProperty * prop ) const;
+    Rich::ParticleIDType pidType( const LHCb::ParticleProperty * prop ) const;
 
   private: // data
 
