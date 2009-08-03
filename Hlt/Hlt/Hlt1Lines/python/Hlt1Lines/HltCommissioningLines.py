@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.5 2009-07-18 14:58:57 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.6 2009-08-03 13:00:07 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -59,4 +59,5 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
             , algos = [ HltIncidentFilter() ]
             , prescale = self.prescale
             , postscale = self.postscale
+            , priority = 254
             )
