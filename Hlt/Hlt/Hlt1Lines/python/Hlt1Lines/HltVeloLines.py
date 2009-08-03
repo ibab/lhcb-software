@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.6 2009-07-30 15:40:34 dhcroft Exp $
+# $Id: HltVeloLines.py,v 1.7 2009-08-03 08:50:46 mjohn Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 #
@@ -56,6 +56,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
                                       , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                                       , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
+                                    
             DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
                                         , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                                         , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
@@ -74,7 +75,10 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                            , OutputTracksLocation = 'Hlt/Track/' + side + 'Velo')
             PatVeloTrackTool( side + 'TrackTool'
                                 , RHitManagerName= side + "RHitManager"
-                                , PhiHitManagerName= side + "PhiHitManager")
+                                , PhiHitManagerName= side + "PhiHitManager"
+                                , TracksInHalfBoxFrame = True)
+ 
+
             PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
             PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
 
@@ -83,6 +87,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             pv3D.PVOfflineTool.InputTracks = ['Hlt/Track/' + side + 'Velo']
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
+
 
             from HltConf.HltDecodeRaw import DecodeVELO
             Line( 'Velo' + side
@@ -100,3 +105,49 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                 ]
                 , postscale = self.postscale
                 )
+
+class HltVeloTraverserConf(HltLinesConfigurableUser):
+   __slots__ = { 'Prescale'                   : { 'Hlt1Velo.Side' : 0.0001 }
+                 , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
+                                }
+
+   def __apply_configuration__(self):
+      # from Configurables import DecodeVeloRawBuffer
+      from Configurables import Tf__PatVeloTrackTool as PatVeloTrackTool
+      from Configurables import Tf__PatVeloGeneralTracking as PatVeloGeneralTracking
+      from Configurables import Tf__PatVeloTraversingTracking as PatVeloTraversingTracking
+      ### find traversing tracks across both sides                              
+
+      tgt = PatVeloGeneralTracking( 'Hlt1VeloGeneralTracking'
+                                    , TrackToolName = 'TrackTool'
+                                    , OutputTracksLocation = '/Event/Hlt/Track'
+                                    , OutputLevel = 3)
+      
+      PatVeloTrackTool( 'TrackTool'
+                        , TracksInHalfBoxFrame = True)
+      
+      
+      tt = PatVeloTraversingTracking('TraversingTracking'
+                                     , InputTracksLocation = '/Event/Hlt/Track'
+                                     , DistanceGuess = 0
+                                     , IncludeLuminousRegion = 'False'
+                                     , OutputTracksLocation = '/Event/Hlt/TraversingTrack'
+                                     )
+      
+      from HltConf.HltDecodeRaw import DecodeVELO
+      Line( 'VeloTrTr'
+            , ODIN = self.getProp('ODIN')
+            , prescale = self.prescale
+            , algos =
+            [ DecodeVELO, tgt, tt
+              , Member( 'TF' , 'Decision'
+                        , OutputSelection = '%Decision'
+                        , InputSelection  = 'TES:/Event/Hlt/TraversingTrack'
+                        , FilterDescriptor = ["NumberOfASideVeloHits,>,4", "NumberOfCSideVeloHits,>,4" ]
+                        , HistogramUpdatePeriod = 1
+                        #, HistoDescriptor = { "NumberOfASideVeloHits" : [ "NumberOfASideVeloHits",0.,100.,100],
+                        #                      "NumberOfCSideVeloHits" : [ "NumberOfCSideVeloHits",0.,100.,100] }
+                        )
+              ]
+            , postscale = self.postscale
+            )
