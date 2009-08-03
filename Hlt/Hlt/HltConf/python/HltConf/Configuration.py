@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.101 2009-08-03 12:10:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.102 2009-08-03 12:26:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -88,14 +88,14 @@ class HltConf(LHCbConfigurableUser):
             log.info('# ThresholdSettings ' + str(ThresholdSettings) )
             
 
+        #
+        # decode Hlt types
+        #
         hlttype           = self.getProp("HltType")
-
         #
         # decode Hlt1 types
         #
-        print 'HltType: %s' % hlttype
         ( hlt1type, hlttype ) = hlt1TypeDecoder( hlttype )
-        print 'Hlt1 decoded into "%s" "%s" ' %( hlt1type,hlttype )
         if hlt1type != '' :
             Hlt1Conf().ThresholdSettings = ThresholdSettings
             Hlt1Conf().Hlt1Type = hlt1type
@@ -103,9 +103,7 @@ class HltConf(LHCbConfigurableUser):
         #
         # decode Hlt2 types
         #
-        print 'HltType: %s' % hlttype
         ( hlt2type, hlttype ) = hlt2TypeDecoder( hlttype )
-        print 'Hlt2 decoded into "%s" "%s" ' %( hlt2type,hlttype )
         if hlt2type != '':
             Hlt2Conf().ThresholdSettings = ThresholdSettings
             Hlt2Conf().Hlt2Type = hlt2type
