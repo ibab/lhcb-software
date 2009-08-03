@@ -4,6 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-08-03 - Vanya BELYAEV
+
+ - NeutralPropPAlg 
+
+     add "LightMode" flag to skip all "additional info"
+     (very useful for calibration purposes)
+
+
 ! 2009-07-30 - Chris Jones
  - Replace all endreq with endmsg
 

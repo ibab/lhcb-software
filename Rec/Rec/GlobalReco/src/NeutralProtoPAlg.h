@@ -1,21 +1,28 @@
-// $Id: NeutralProtoPAlg.h,v 1.6 2007-02-19 14:14:33 cattanem Exp $
+// $Id: NeutralProtoPAlg.h,v 1.7 2009-08-03 09:10:29 ibelyaev Exp $
+// ============================================================================
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/IRelationWeighted.h"
+// ============================================================================
 // Event
+// ============================================================================
 #include "Event/Track.h"
 #include "Event/CaloHypo.h"
 #include "Event/CaloCluster.h"
 #include "Event/ProtoParticle.h"
+// ============================================================================
 // Calo
+// ============================================================================
 #include "CaloInterfaces/ICaloHypoLikelihood.h"
 #include "CaloUtils/ClusterFunctors.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
-
-
+// ============================================================================
 /** @class NeutralProtoPAlg NeutralProtoPAlg.h
  *
  *  Creator of the neutral ProtoParticles from CaloHypos
@@ -46,22 +53,43 @@
  *  @date   2006-06-09
  *  Adapted from NeutralPPsFromCPsAlg class (Vanya Belyaev Ivan.Belyaev@itep.ru)
  */
-
-class NeutralProtoPAlg : public GaudiAlgorithm {
+class NeutralProtoPAlg : public GaudiAlgorithm 
+{
+  // ==========================================================================
 public: 
+  // ==========================================================================  
   /// Standard constructor
-  NeutralProtoPAlg( const std::string& name, ISvcLocator* pSvcLocator );
-
+  NeutralProtoPAlg ( const std::string& name, ISvcLocator* pSvcLocator );
+  
   virtual ~NeutralProtoPAlg( ); ///< Destructor
-
+  
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
+  
 protected:
-
+  // ==========================================================================
+  /// locate the tool 
+  inline ICaloHypoLikelihood* spdprs() const 
+  {
+    if ( 0 == m_spdprs ) 
+    { m_spdprs   = tool< ICaloHypoLikelihood>( m_spdprsType   ,  m_spdprsName ) ; }
+    return m_spdprs ;
+  }
+  /// locate the tool 
+  inline ICaloHypoLikelihood* photonID() const 
+  {
+    if ( 0 == m_photonID ) 
+    { m_photonID = tool< ICaloHypoLikelihood>( m_photonIDType ,  m_photonIDName ) ; }
+    return m_photonID ;  
+  }  
+  /// use"light" node? ( suitable fo rcliabration purposes)
+  inline bool lightMode() const { return m_light_mode ; }
+  // ==========================================================================
 private:// method
-  double caloTrMatch   ( const LHCb::CaloHypo* hypo  , const LHCb::Calo2Track::IClusTrTable*     table )  const ;
+  
+  
+  double caloTrMatch   ( const LHCb::CaloHypo*  hypo  , const LHCb::Calo2Track::IClusTrTable*     table )  const ;
   double clusterMass   ( const LHCb::CaloHypo*  hypo  )  const ;
   double showerShape   ( const LHCb::CaloHypo*  hypo  )  const ;
   double caloDepositID ( const LHCb::CaloHypo*  hypo  )  const ;
@@ -71,24 +99,30 @@ private:// method
   double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ;
 
 private:// data
-  std::string               m_protoLocation;
-  std::vector<std::string>  m_hyposLocations ;
-  std::string               m_matchLocation  ;
+  // ==========================================================================
+  std::string               m_protoLocation     ;
+  std::vector<std::string>  m_hyposLocations    ;
+  std::string               m_matchLocation     ;
   std::string               m_spdprsType        ;
   std::string               m_spdprsName        ;
-  ICaloHypoLikelihood*      m_spdprs            ;
+  mutable ICaloHypoLikelihood*      m_spdprs            ;
   std::string               m_photonIDType      ;
   std::string               m_photonIDName      ;
-  ICaloHypoLikelihood*      m_photonID          ;
+  mutable ICaloHypoLikelihood*      m_photonID          ;
   double                    m_caloTrMatch_bad   ;
   double                    m_caloDepositID_bad ;
   double                    m_showerShape_bad   ;
   double                    m_clusterMass_bad   ;
   double                    m_photonID_bad      ;
   LHCb::ClusterFunctors::ClusterFromCalo         m_calo        ;  
-  
-  long m_nEvts  ;
-  std::map<  std::string, long  > m_counts ;
+
+  /// flag to indicate "light/calibration" mode 
+  bool  m_light_mode ;
+  // ==========================================================================
 };
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // GLOBALRECO_NEUTRALPROTOPALG_H
+// ============================================================================
 
