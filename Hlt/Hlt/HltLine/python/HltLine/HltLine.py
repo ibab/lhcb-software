@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.5 2009-08-03 08:37:31 graven Exp $ 
+# $Id: HltLine.py,v 1.6 2009-08-03 12:08:03 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1289,8 +1289,8 @@ class Hlt2Line(object):
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
             from Configurables import CombineParticles, FilterDesktop
             knownLastMembers = [ CombineParticles, FilterDesktop ]
-            if last.getName() not in knownLastMembers :
-              print 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType()
+            #if last.getName() not in knownLastMembers :
+            #  print 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType()
             members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
                                                            , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
                                                            , OutputSelection = decisionName(line, 'Hlt2')) ]
