@@ -3,7 +3,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestBu2LLK-2008.py</text>
+  <text>../options/DVTestBu2LLK-DC06.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
