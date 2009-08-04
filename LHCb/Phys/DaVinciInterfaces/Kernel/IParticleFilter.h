@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleFilter.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPARTICLEFILTER_H 
 #define DAVINCIKERNEL_IPARTICLEFILTER_H 1
 
@@ -8,8 +8,6 @@
 // Forward declarations
 // from Event
 #include "Event/Particle.h"
-
-static const InterfaceID IID_IParticleFilter("IParticleFilter", 1 , 2); 
 
 /** @class IParticleFilter IParticleFilter.h Kernel/IParticleFilter.h
  *  Interface Class for ParticleFilter. 
@@ -23,14 +21,11 @@ static const InterfaceID IID_IParticleFilter("IParticleFilter", 1 , 2);
  *  @date   16/12/2004  
  */
 
-class IParticleFilter : virtual public IAlgTool {
+class GAUDI_API IParticleFilter : virtual public IAlgTool {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() {
-    return IID_IParticleFilter;
-  }
+  DeclareInterfaceID(IParticleFilter, 2, 0);
 
   /// Filter
   virtual StatusCode filter( const LHCb::Particle::ConstVector&, 

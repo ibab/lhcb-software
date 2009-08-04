@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -15,8 +15,6 @@
 
 class IDistanceCalculator;
 
-static const InterfaceID IID_IRelatedPVFinder ( "IRelatedPVFinder", 2, 0 );
-
 /** @class IRelatedPVFinder IRelatedPVFinder.h Kernel/IRelatedPVFinder.h
  *  
  *  Fill a weighted relations table with the weighted relations between 
@@ -27,12 +25,11 @@ static const InterfaceID IID_IRelatedPVFinder ( "IRelatedPVFinder", 2, 0 );
  *
  *  @date   2008-09-29
  */
-class IRelatedPVFinder : virtual public IAlgTool {
+class GAUDI_API IRelatedPVFinder : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IRelatedPVFinder; }
-
+  DeclareInterfaceID(IRelatedPVFinder, 3, 0);
+  
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices

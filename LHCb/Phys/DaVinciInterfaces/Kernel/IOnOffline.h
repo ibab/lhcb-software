@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IOnOffline.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -8,8 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-static const InterfaceID IID_IOnOffline ( "IOnOffline", 3, 0 );
 
 /** @class IOnOffline IOnOffline.h Kernel/IOnOffline.h
  *  
@@ -22,12 +20,11 @@ static const InterfaceID IID_IOnOffline ( "IOnOffline", 3, 0 );
  *  @author Juan PALACIOS
  *  @date   2008-09-29
  */
-class IOnOffline : virtual public IAlgTool {
+class GAUDI_API IOnOffline : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IOnOffline; }
-
+  DeclareInterfaceID(IOnOffline, 4, 0);
+  
   /// On or Offline ?
   virtual bool online() const = 0 ;
 

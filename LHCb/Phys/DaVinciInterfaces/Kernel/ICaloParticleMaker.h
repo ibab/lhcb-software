@@ -1,4 +1,4 @@
-// $Id: ICaloParticleMaker.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ICaloParticleMaker.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_ICALOPARTICLEMAKER_H
 #define DAVINCIKERNEL_ICALOPARTICLEMAKER_H 1
 
@@ -17,8 +17,6 @@ namespace LHCb {
   class Vertex;
 }
 
-static const InterfaceID IID_ICaloParticleMaker("ICaloParticleMaker", 1 , 0);
-
 /** @class ICaloParticleMaker ICaloParticleMaker.h Kernel/ICaloParticleMaker.h
  *  Interface class to make Particles from other classes
  *  (e.g. ProtoParticles).
@@ -28,13 +26,12 @@ static const InterfaceID IID_ICaloParticleMaker("ICaloParticleMaker", 1 , 0);
  *  @date   22/04/2002
  */
 
-class ICaloParticleMaker : virtual public IAlgTool
+class GAUDI_API ICaloParticleMaker : virtual public IAlgTool
 {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_ICaloParticleMaker; }
+  DeclareInterfaceID(ICaloParticleMaker, 2, 0);
 
   /// Dispatch the making of particles
   virtual StatusCode makeParticles( LHCb::Particle::Vector & parts ) = 0;

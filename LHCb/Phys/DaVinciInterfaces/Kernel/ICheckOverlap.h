@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ICheckOverlap.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
@@ -17,9 +17,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-/// Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_ICheckOverlap("ICheckOverlap", 2, 1);
-// ============================================================================
 /** @class ICheckOverlap ICheckOverlap.h
  *  
  *  Tool to check if more than one particle originate 
@@ -28,12 +25,12 @@ static const InterfaceID IID_ICheckOverlap("ICheckOverlap", 2, 1);
  *  @author Jose Helder Lopes, redesigned by P. Koppenburg
  *  @date   28/06/2002
  */
-class ICheckOverlap : virtual public IAlgTool 
+class GAUDI_API ICheckOverlap : virtual public IAlgTool 
 {
   
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_ICheckOverlap; }
+
+  DeclareInterfaceID(ICheckOverlap, 3, 0);
   
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Argument: parts is a vector of pointers to particles.  

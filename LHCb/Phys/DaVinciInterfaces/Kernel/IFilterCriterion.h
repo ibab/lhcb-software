@@ -1,4 +1,4 @@
-// $Id: IFilterCriterion.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IFilterCriterion.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IFILTERCRITERION_H 
 #define DAVINCIKERNEL_IFILTERCRITERION_H 1
 
@@ -7,9 +7,10 @@
 
 // Forward declarations
 // from Event
-#include "Event/Particle.h"
-
-static const InterfaceID IID_IFilterCriterion("IFilterCriterion", 1 , 0); 
+namespace LHCb 
+{
+  class Particle;
+}
 
 /** @class IFilterCriterion IFilterCriterion.h Kernel/IFilterCriterion.h 
  *  Interface Class for FilterCriterion.
@@ -18,14 +19,11 @@ static const InterfaceID IID_IFilterCriterion("IFilterCriterion", 1 , 0);
  *  @date   14/03/2002
  */
 
-class IFilterCriterion : virtual public IAlgTool {
+class GAUDI_API IFilterCriterion : virtual public IAlgTool {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() {
-    return IID_IFilterCriterion;
-  }
+  DeclareInterfaceID(IFilterCriterion, 2, 0);
 
   /// Test if filter is satisfied
   virtual bool isSatisfied( const LHCb::Particle* const & ) = 0;

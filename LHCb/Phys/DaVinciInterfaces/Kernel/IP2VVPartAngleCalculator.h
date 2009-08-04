@@ -1,4 +1,4 @@
-// $Id: IP2VVPartAngleCalculator.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IP2VVPartAngleCalculator.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef IP2VVPARTANGLECALCULATOR_H 
 #define IP2VVPARTANGLECALCULATOR_H 1
 
@@ -10,7 +10,11 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IP2VVPartAngleCalculator ( "IP2VVPartAngleCalculator", 1, 1 );
+namespace LHCb 
+{
+  class Particle;
+}
+
 
 /** @class IP2VVPartAngleCalculator IP2VVPartAngleCalculator.h
  *
@@ -24,11 +28,10 @@ static const InterfaceID IID_IP2VVPartAngleCalculator ( "IP2VVPartAngleCalculato
  *  @date   2007-08-02
  *  @modified 2008-06-02
  */
-class IP2VVPartAngleCalculator : virtual public IAlgTool {
-public: 
+class GAUDI_API IP2VVPartAngleCalculator : virtual public IAlgTool {
+public:
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IP2VVPartAngleCalculator; }
+  DeclareInterfaceID(IP2VVPartAngleCalculator, 2, 0);
 
   /// get theta_L (angle of the L+ wrt B in dilepton frame)
   virtual double calculateThetaL( const LHCb::Particle* mother) = 0 ;
@@ -59,10 +62,6 @@ public:
                                                   double& Theta_tr, 
                                                   double& Phi_tr, 
                                                   double& Theta_V ) = 0 ;
-  
-protected:
-
-private:
 
 };
 #endif // IP2VVPARTANGLECALCULATOR_H

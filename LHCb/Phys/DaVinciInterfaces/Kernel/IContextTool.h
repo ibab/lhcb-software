@@ -1,4 +1,4 @@
-// $Id: IContextTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IContextTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_ICONTEXTTOOL_H 
 #define DAVINCIKERNEL_ICONTEXTTOOL_H 1
 
@@ -18,8 +18,6 @@ class IPhysDesktop;
 class IGeomDispCalculator;
 class IDistanceCalculator;
 
-static const InterfaceID IID_IContextTool ( "IContextTool", 1, 1 );
-
 /** @class IContextTool IContextTool.h Kernel/IContextTool.h
  *  
  *  Tool that tells the application if one runs in On or Offline Mode
@@ -28,12 +26,11 @@ static const InterfaceID IID_IContextTool ( "IContextTool", 1, 1 );
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
  */
-class IContextTool : virtual public IAlgTool {
+class GAUDI_API IContextTool : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IContextTool; }
-
+  DeclareInterfaceID(IContextTool, 2, 0);
+  
   /// Get primary vertices
   virtual const LHCb::RecVertex::Container* primaryVertices() const = 0 ;
   

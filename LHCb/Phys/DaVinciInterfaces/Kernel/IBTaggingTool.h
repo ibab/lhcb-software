@@ -8,7 +8,6 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/FlavourTag.h"
 #include "Event/RecVertex.h"
-static const InterfaceID IID_IBTaggingTool("IBTaggingTool", 1 , 0);
 
 /** @class IBTaggingTool IBTaggingTool.h
  *
@@ -17,12 +16,11 @@ static const InterfaceID IID_IBTaggingTool("IBTaggingTool", 1 , 0);
  *  @date   2004-12-14
  */
 
-class IBTaggingTool : virtual public IAlgTool {
+class GAUDI_API IBTaggingTool : virtual public IAlgTool {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IBTaggingTool; };
+  DeclareInterfaceID(IBTaggingTool, 2, 0);
 
   virtual StatusCode tag( LHCb::FlavourTag&, 
                           const LHCb::Particle* ) = 0;

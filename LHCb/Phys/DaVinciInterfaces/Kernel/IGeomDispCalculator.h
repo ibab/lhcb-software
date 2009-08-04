@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IGeomDispCalculator.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
@@ -16,9 +16,6 @@ namespace LHCb {
   class VertexBase;
 }
 
-
-static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 2); 
-
 /** @class IGeomDispCalculator IGeomDispCalculator.h Kernel/IGeomDispCalculator.h
  *  Interface for Geometrical Calculation Tool. 
  *
@@ -31,10 +28,10 @@ static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 2);
  *  @date   14/03/2002
  */
 
-class IGeomDispCalculator : virtual public IAlgTool {
+class GAUDI_API IGeomDispCalculator : virtual public IAlgTool {
  public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IGeomDispCalculator; }
+
+  DeclareInterfaceID(IGeomDispCalculator, 3, 0);
 
   /**
    * Calculate the Impact Parameter, and associated error,

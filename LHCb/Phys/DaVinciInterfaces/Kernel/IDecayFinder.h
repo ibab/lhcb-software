@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IDecayFinder.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -11,10 +11,6 @@
 #include "GaudiKernel/IAlgTool.h"
 
 #include "Event/Particle.h"
-//class Particle;
-
-// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IDecayFinder("IDecayFinder", 3, 0);
 
 /** @class IDecayFinder IDecayFinder.h Kernel/IDecayFinder.h
  *  
@@ -24,11 +20,11 @@ static const InterfaceID IID_IDecayFinder("IDecayFinder", 3, 0);
  *  @author Olivier Dormond
  *  @date   23/04/2002
  */
-class IDecayFinder : virtual public IAlgTool {
+class GAUDI_API IDecayFinder : virtual public IAlgTool {
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IDecayFinder; }
 
+  DeclareInterfaceID(IDecayFinder, 4, 0);
+  
   /// Get/Set the decay string to find
   virtual std::string decay( void ) = 0;
   virtual StatusCode setDecay( std::string decay ) = 0;

@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -20,9 +20,6 @@ namespace LHCb {
   class RecVertex;
   class HltObjectSummary;  
 };
-
-
-static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos", 2, 0 );
 
 /** @class ITriggerSelectionTisTos ITriggerSelectionTisTos.h
  *  
@@ -123,8 +120,10 @@ static const InterfaceID IID_ITriggerSelectionTisTos ( "ITriggerSelectionTisTos"
  *      bool tob = decision && (!tis) && (!tos);  
  *     @endcode
  */
-class ITriggerSelectionTisTos : virtual public IAlgTool {
+class GAUDI_API ITriggerSelectionTisTos : virtual public IAlgTool {
 public: 
+
+  DeclareInterfaceID(ITriggerSelectionTisTos, 3, 0);
 
   /// meaning of optional unsigned int input parameters for Tis/Tos requirements
   enum TisTosRequirement 
@@ -132,10 +131,6 @@ public:
 
   /// meaning of bool input parameter in case of multiple selection names passed to @c selectionTisTos()
   enum {kSelectionAND=0,kSelectionOR,kSelectionDefaultLogic=kSelectionOR};
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ITriggerSelectionTisTos; }
-
 
   class TisTosDecision 
   {

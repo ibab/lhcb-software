@@ -1,4 +1,4 @@
-// $Id: IParticleArrayFilter.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleArrayFilter.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IPARTICLEARRAYFILTER_H 
 #define KERNEL_IPARTICLEARRAYFILTER_H 1
 
@@ -12,8 +12,6 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleArrayFilter ( "IParticleArrayFilter", 1, 0 );
-
 /** @class IParticleArrayFilter IParticleArrayFilter.h Kernel/IParticleArrayFilter.h
  *  
  *  Apply a filter to an array of Particles and either remove those that 
@@ -21,12 +19,11 @@ static const InterfaceID IID_IParticleArrayFilter ( "IParticleArrayFilter", 1, 0
  *  @author Juan Palacios
  *  @date   2007-07-24
  */
-class IParticleArrayFilter : virtual public IAlgTool {
+class GAUDI_API IParticleArrayFilter : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IParticleArrayFilter; }
-
+  DeclareInterfaceID(IParticleArrayFilter, 2, 0);
+  
   /// Filter and put results into new array
   virtual StatusCode filter( const LHCb::Particle::ConstVector&, 
                              LHCb::Particle::ConstVector& ) const = 0;

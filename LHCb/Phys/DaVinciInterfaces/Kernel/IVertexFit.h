@@ -62,11 +62,13 @@
  *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
  *  @date   2004-12-19
  */
-class IVertexFit : 
-  virtual public IParticleCombiner ,
-  virtual public IParticleReFitter 
+class GAUDI_API IVertexFit : 
+  virtual public extend_interfaces2<IParticleCombiner ,
+                                    IParticleReFitter> 
 {
 public:
+ 
+  DeclareInterfaceID(IVertexFit, 2, 0);
   
   /** The vertex fitting method without creation of a Particle 
    *
@@ -408,10 +410,6 @@ public:
     tmp[2]=&daughter2;
     return fit( tmp, particle, vertex );    
   }  
-public: 
-  
-  /// Return the interface ID
-  static const InterfaceID& interfaceID() ;
   
 protected:
   

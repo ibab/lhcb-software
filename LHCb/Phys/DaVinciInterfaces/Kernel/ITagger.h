@@ -1,4 +1,4 @@
-// $Id: ITagger.h,v 1.3 2009-07-29 08:18:19 cattanem Exp $
+// $Id: ITagger.h,v 1.4 2009-08-04 09:45:31 jpalac Exp $
 #ifndef TAGGERMUONTOOL_ITAGGERMUONTOOL_H
 #define TAGGERMUONTOOL_ITAGGERMUONTOOL_H 1
 
@@ -17,8 +17,6 @@ namespace LHCb {
   class RecVertex;
 }
 
-static const InterfaceID IID_ITagger("ITagger", 1 , 0);
-
 /** @class ITagger ITagger.h
  *
  *  v1.2
@@ -26,12 +24,11 @@ static const InterfaceID IID_ITagger("ITagger", 1 , 0);
  *  @date   2005-06-30
  */
 
-class ITagger : virtual public IAlgTool {
+class GAUDI_API ITagger : virtual public IAlgTool {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_ITagger; };
+  DeclareInterfaceID(ITagger, 2, 0);
 
   virtual LHCb::Tagger tag( const LHCb::Particle*,
                             const LHCb::RecVertex*,

@@ -1,4 +1,4 @@
-// $Id: ICheckSelResults.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ICheckSelResults.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_ICHECKSELRESULTS_H 
 #define KERNEL_ICHECKSELRESULTS_H 1
@@ -23,10 +23,13 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
  *  @date   2005-07-22
  */
-class ICheckSelResults : 
-  virtual public IAlgTool 
+class GAUDI_API ICheckSelResults : virtual public IAlgTool 
 {
+
 public:
+
+  DeclareInterfaceID(ICheckSelResults, 2, 0);
+
   // the actual type of "Selections"
   typedef std::string            Selection  ;
   typedef std::vector<Selection> Selections ;
@@ -52,9 +55,6 @@ public:
   virtual bool isSelected ( const Selections & selections         , 
                             const bool         ANDMode    = false ) const = 0 ;
   
-public:
-  /// Return the unique interface identifier 
-  static const InterfaceID& interfaceID() ;
 protected:
   // virtual and protected destructor 
   virtual ~ICheckSelResults() ;

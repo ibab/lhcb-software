@@ -1,4 +1,4 @@
-// $Id: IFilterCriteriaTESTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IFilterCriteriaTESTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCITOOLS_IFILTERCRITERIATESTOOL_H
 #define DAVINCITOOLS_IFILTERCRITERIATESTOOL_H 1
 
@@ -9,14 +9,15 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+#include "Event/FilterCriterionResult.h"
 // from DaVinciTools
 class IFilterCriterion;
 
 // Event
-#include "Event/Particle.h"
-#include "Event/FilterCriterionResult.h"
-
-static const InterfaceID IID_IFilterCriteriaTESTool ( "IFilterCriteriaTESTool", 1, 0 );
+namespace LHCb
+{
+  class Particle;
+}
 
 /** @class IFilterCriteriaTESTool IFilterCriteriaTESTool.h DaVinciTools/IFilterCriteriaTESTool.h
  *
@@ -27,7 +28,7 @@ static const InterfaceID IID_IFilterCriteriaTESTool ( "IFilterCriteriaTESTool", 
  *  @date   2005-06-23
  */
 
-class IFilterCriteriaTESTool : virtual public IAlgTool {
+class GAUDI_API IFilterCriteriaTESTool : virtual public IAlgTool {
 
 public: // definitions
 
@@ -35,9 +36,8 @@ public: // definitions
 
 public:
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IFilterCriteriaTESTool; }
-
+  DeclareInterfaceID(IFilterCriteriaTESTool, 2, 0);
+  
   /// Save the given filter result to the TES container
   virtual bool saveFilterResult( IFilterCriterion * critTool,
                                  LHCb::Particle * part,

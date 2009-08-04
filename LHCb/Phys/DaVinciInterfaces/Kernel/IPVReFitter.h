@@ -6,30 +6,30 @@
 
 // Forward declarations
 class StatusCode;
-#include "Event/Particle.h"
-#include "Event/VertexBase.h"
 
-// Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_IPVReFitter("IPVReFitter", 1, 0);
-
+namespace LHCb 
+{
+  class Particle;
+  class VertexBase;
+}
 
 /** @class IPVReFitter IPVReFitter.h Kernel/IPVReFitter.h
  *  Interface for PVReFitter
  *  @author Yuehong Xie
  *  @date   17/08/2005
  */
-class IPVReFitter : virtual public IAlgTool {
+class GAUDI_API IPVReFitter : virtual public IAlgTool {
 
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IPVReFitter; }
 
- 
+  DeclareInterfaceID(IPVReFitter, 2, 0);
+  
   /// refit PV
   virtual StatusCode reFit(LHCb::VertexBase*) const = 0;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(const LHCb::Particle*,  LHCb::VertexBase*) const = 0;
+  virtual StatusCode remove(const LHCb::Particle*,  
+                            LHCb::VertexBase*) const = 0;
 
 };
 #endif // KERNEL_IPVREFITTER_H

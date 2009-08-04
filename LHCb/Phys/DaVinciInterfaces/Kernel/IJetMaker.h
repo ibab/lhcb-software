@@ -1,8 +1,11 @@
-// $Id: IJetMaker.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IJetMaker.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2009/07/22 20:54:51  jpalac
+// First import of Phys/DaVinciInterfaces
+//
 // Revision 1.5  2008/04/17 14:46:13  pkoppenb
 // PhysDestop save renamed to keep
 //
@@ -53,9 +56,12 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr 
  *  @date   2005-07-26
  */
-class IJetMaker : public virtual IAlgTool 
+class GAUDI_API IJetMaker : public virtual IAlgTool 
 {
 public: 
+
+  DeclareInterfaceID(IJetMaker, 2, 0);
+  
   /// the actual type of input data container 
   typedef LHCb::Particle::ConstVector   Input  ;  
   /// the actual type of output container of jets 
@@ -186,11 +192,6 @@ public:
     PARTICLE last  , 
     Jets&    jets  ) const 
   { return makeJets ( Input( first , last )  , jets ) ; }
-  
-public:
-  
-  /// Return the unique interface identifier 
-  static const InterfaceID& interfaceID() ;
   
 protected:
   /// virtual and protected destructor 

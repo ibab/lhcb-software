@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleTransporter.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IPARTICLETRANSPORTER_H 
 #define KERNEL_IPARTICLETRANSPORTER_H 1
 
@@ -7,8 +7,6 @@
 
 // from Event
 #include "Event/Particle.h"
-
-static const InterfaceID IID_IParticleTransporter("IParticleTransporter",3,0); 
 
 /** @class IParticleTransporter IParticleTransporter.h
  *  Kernel/IParticleTranporter.h
@@ -25,10 +23,10 @@ static const InterfaceID IID_IParticleTransporter("IParticleTransporter",3,0);
  *  @date   15/04/2008
  */
 
-class IParticleTransporter : virtual public IAlgTool {
+class GAUDI_API IParticleTransporter : virtual public IAlgTool {
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IParticleTransporter;}
+
+  DeclareInterfaceID(IParticleTransporter, 4, 0);
 
   /// Transport a Particle to specified z position.
   virtual StatusCode transport(const LHCb::Particle*, 

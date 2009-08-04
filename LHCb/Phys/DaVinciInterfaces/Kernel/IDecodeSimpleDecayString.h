@@ -1,4 +1,4 @@
-// $Id: IDecodeSimpleDecayString.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IDecodeSimpleDecayString.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_IDECODESIMPLEDECAYSTRING_H 
 #define KERNEL_IDECODESIMPLEDECAYSTRING_H 1
@@ -25,9 +25,12 @@ namespace Decays { class Decay ; }
  *  @author Patrick KOPPENBURG
  *  @date   2004-06-30
  */
-class IDecodeSimpleDecayString : virtual public IAlgTool 
+class GAUDI_API IDecodeSimpleDecayString : virtual public IAlgTool 
 {
 public:
+
+  DeclareInterfaceID(IDecodeSimpleDecayString, 4, 0);
+  
   // ==========================================================================
   virtual StatusCode  setDescriptor ( const std::string& ) = 0;
   virtual std::string getDescriptor () const = 0;
@@ -63,11 +66,6 @@ public:
    */
   virtual StatusCode getDecays 
   ( std::vector<Decays::Decay>& decays ) const = 0 ;
-  // ==========================================================================
-public:
-  // ==========================================================================
-  /// Return the unique interface ID
-  static const InterfaceID& interfaceID() ;
   // ==========================================================================
 protected:
   // ==========================================================================

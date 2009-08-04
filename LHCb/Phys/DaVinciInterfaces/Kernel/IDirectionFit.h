@@ -1,4 +1,4 @@
-// $Id: IDirectionFit.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IDirectionFit.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IDIRECTIONFIT_H 
 #define DAVINCIKERNEL_IDIRECTIONFIT_H 1
 // ============================================================================
@@ -52,9 +52,11 @@
  *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr  
  *  @date   2004-12-19
  */
-class IDirectionFit : virtual public IParticleReFitter 
+class GAUDI_API IDirectionFit : virtual public IParticleReFitter 
 {
 public:  
+
+  DeclareInterfaceID(IDirectionFit, 2, 0);
 
   /** perform a "direction" fit for the particle.
    *  The angle between the momentum of the particle 
@@ -90,11 +92,6 @@ public:
   ( const LHCb::VertexBase& primary ,
     LHCb::Particle&     particle ) const = 0 ;
 
-public: 
-  
-  /// Return the interface ID
-  static const InterfaceID& interfaceID() ;
-  
 protected:
   
   // virtual and protected destructor 

@@ -1,4 +1,4 @@
-// $Id: IProtoParticleFilter.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IProtoParticleFilter.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IProtoParticleFilter_H 
 #define DAVINCIKERNEL_IProtoParticleFilter_H 1
 
@@ -11,8 +11,6 @@ namespace LHCb
   class ProtoParticle;
 }
 
-static const InterfaceID IID_IProtoParticleFilter("IProtoParticleFilter", 1 , 0); 
-
 /** @class IProtoParticleFilter IProtoParticleFilter.h Kernel/IProtoParticleFilter.h 
  *
  *  Interface Class for ProtoParticle filter tools. Given a ProtoParticle, returns a 
@@ -22,14 +20,13 @@ static const InterfaceID IID_IProtoParticleFilter("IProtoParticleFilter", 1 , 0)
  *  @date   02/05/2006
  */
 
-class IProtoParticleFilter : virtual public IAlgTool
+class GAUDI_API IProtoParticleFilter : virtual public IAlgTool
 {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IProtoParticleFilter; }
-
+  DeclareInterfaceID(IProtoParticleFilter, 2, 0);
+  
   /// Test if filter is satisfied
   virtual bool isSatisfied( const LHCb::ProtoParticle* const & proto ) const = 0;
 

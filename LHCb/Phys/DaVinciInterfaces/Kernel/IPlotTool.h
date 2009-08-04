@@ -1,4 +1,4 @@
-// $Id: IPlotTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IPlotTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_IPLOTTOOL_H 
 #define KERNEL_IPLOTTOOL_H 1
@@ -17,9 +17,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-/// the unique interface identifier
-static const InterfaceID IID_IPlotTool ( "IPlotTool" , 2 , 1 ) ;
-// ============================================================================
 /** @class IPlotTool IPlotTool.h Kernel/IPlotTool.h
  *  
  *  Interface for tools making plots with particles
@@ -27,9 +24,11 @@ static const InterfaceID IID_IPlotTool ( "IPlotTool" , 2 , 1 ) ;
  *  @author Patrick KOPPENBURG
  *  @date   2005-01-05
  */
-class IPlotTool : virtual public IAlgTool 
+class GAUDI_API IPlotTool : virtual public IAlgTool 
 {
 public: 
+
+  DeclareInterfaceID(IPlotTool, 3, 0);
   
   /// Define plot directory
   virtual StatusCode setPath(const std::string&) = 0;
@@ -51,7 +50,7 @@ public:
    *  @return status code
    */
   template <class PARTICLE>
-  StatusCode fillPlots 
+  inline StatusCode fillPlots 
   ( PARTICLE           begin        , 
     PARTICLE           end          , 
     const std::string& trailer = "" ) 
@@ -65,12 +64,6 @@ public:
   }
   // ==========================================================================
   
-public:
-  
-  // Return the unique interface ID
-  static const InterfaceID& interfaceID() { return IID_IPlotTool; }
-
-private:
 
 };
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: IParticleTupleTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleTupleTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DECAYTUPLE_IPARTICLETUPLETOOL_H
 #define DECAYTUPLE_IPARTICLETUPLETOOL_H  1
 
@@ -8,8 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-static const InterfaceID IID_IParticleTupleTool ( "IParticleTupleTool", 1, 0 );
 
 namespace Tuples{
   class Tuple;
@@ -27,11 +25,12 @@ namespace LHCb {
  * @author Jeremie Borel
  * @date November 2007
  */
-class IParticleTupleTool : virtual public IAlgTool {
+class GAUDI_API IParticleTupleTool : virtual public IAlgTool {
  public:
+
+  DeclareInterfaceID(IParticleTupleTool, 2, 0);
+  
   virtual ~IParticleTupleTool(){};
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IParticleTupleTool; }
 
   //! Fill the tuple. 
 
@@ -40,9 +39,9 @@ class IParticleTupleTool : virtual public IAlgTool {
   //! - \b head : prefix for the tuple column name.
   //! - \b tuple: the tuple to fill
   virtual StatusCode fill( const LHCb::Particle* top
-			   , const LHCb::Particle* part
-			   , const std::string& head
-			   , Tuples::Tuple& tuple )=0;
+                           , const LHCb::Particle* part
+                           , const std::string& head
+                           , Tuples::Tuple& tuple )=0;
 };
 
 #endif // DECAYTUPLE_IPARTICLETUPLETOOL_H

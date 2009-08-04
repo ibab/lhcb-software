@@ -1,4 +1,4 @@
-// $Id: IRelatedPV.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IRelatedPV.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IRELATEDPV_H 
 #define KERNEL_IRELATEDPV_H 1
 
@@ -12,8 +12,6 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IRelatedPV ( "IRelatedPV", 1, 0 );
-
 /** @class IRelatedPV IRelatedPV.h Kernel/IRelatedPV.h
  *  
  *  Returns the related PV for a Particle.
@@ -24,12 +22,11 @@ static const InterfaceID IID_IRelatedPV ( "IRelatedPV", 1, 0 );
  *  @author Patrick Koppenburg
  *  @date   2006-09-12
  */
-class IRelatedPV : virtual public IAlgTool {
+class GAUDI_API IRelatedPV : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IRelatedPV; }
-
+  DeclareInterfaceID(IRelatedPV, 2, 0);
+  
   /// Returns the best related PV 
   virtual const LHCb::VertexBase* bestPV(const LHCb::Particle*) = 0 ;
   

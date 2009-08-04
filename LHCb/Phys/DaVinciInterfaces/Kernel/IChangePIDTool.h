@@ -1,4 +1,4 @@
-// $Id: IChangePIDTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IChangePIDTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_ICHANGEPIDTOOL_H 
 #define KERNEL_ICHANGEPIDTOOL_H 1
 
@@ -11,8 +11,6 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IChangePIDTool ( "IChangePIDTool", 1, 0 );
-
 /** @class IChangePIDTool IChangePIDTool.h Kernel/IChangePIDTool.h
  *   
  *  Interface for ChangePIDTool.
@@ -21,12 +19,11 @@ static const InterfaceID IID_IChangePIDTool ( "IChangePIDTool", 1, 0 );
  *  @author Patrick Spradlin
  *  @date   2006-12-13
  */
-class IChangePIDTool : virtual public IAlgTool {
+class GAUDI_API IChangePIDTool : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IChangePIDTool; }
-
+  DeclareInterfaceID(IChangePIDTool, 2, 0);
+  
   /// Change the PID of a single particle
   virtual LHCb::Particle changePID( const LHCb::Particle & ) = 0;
 

@@ -1,6 +1,6 @@
-// $Id: IParticleCombiner.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleCombiner.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $
 // ============================================================================
 // 
 // ============================================================================
@@ -28,9 +28,11 @@
  *  @author Vanya BELYAEV belyaev@lapp.lin2p3.fr
  *  @date   2004-12-19
  */
-class IParticleCombiner : virtual public IAlgTool 
+class GAUDI_API IParticleCombiner : virtual public IAlgTool 
 {
 public:
+
+  DeclareInterfaceID(IParticleCombiner, 2, 0);
   
   /** the actual type for containe rof daughter particles 
    *  Important: the daughters are considered to have "const" qualifier!
@@ -130,10 +132,6 @@ public:
     return combine( children , mother , vertex ) ;
   };
   
-public:
-  
-  /// unique interface identifier
-  static const InterfaceID& interfaceID() ; 
   
 protected:
   

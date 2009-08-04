@@ -1,4 +1,4 @@
-// $Id: IBremAdder.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IBremAdder.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IBREMADDER_H 
 #define KERNEL_IBREMADDER_H 1
 
@@ -10,8 +10,6 @@
 // from LHCb
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IBremAdder ( "IBremAdder", 1, 0 );
-
 /** @class IBremAdder IBremAdder.h Kernel/IBremAdder.h
  *  
  * Interface for BremStrahlung correction to electron particle
@@ -19,11 +17,11 @@ static const InterfaceID IID_IBremAdder ( "IBremAdder", 1, 0 );
  *  @author Olivier Deschamps
  *  @date   2006-10-25
  */
-class IBremAdder : virtual public IAlgTool {
+class GAUDI_API IBremAdder : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IBremAdder; }
+  DeclareInterfaceID(IBremAdder, 2, 0);
+
   // Add Brem
   virtual  bool addBrem( LHCb::Particle* particle ) const = 0 ;
   // Remove Brem

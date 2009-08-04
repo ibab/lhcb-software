@@ -1,4 +1,4 @@
-// $Id: IFilterParticles.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IFilterParticles.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef KERNEL_IFILTERPARTICLES_H 
 #define KERNEL_IFILTERPARTICLES_H 1
 
@@ -13,28 +13,21 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IFilterParticles ( "IFilterParticles", 1, 0 );
-
 /** @class IFilterParticles IFilterParticles.h Kernel/IFilterParticles.h
  *  
  *
  *  @author Juan Palacios
  *  @date   2007-07-20
  */
-class IFilterParticles : virtual public IAlgTool {
+class GAUDI_API IFilterParticles : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IFilterParticles; }
+  DeclareInterfaceID(IFilterParticles, 2, 0);
 
   /// Test if filter is satisfied on ensemble of particles
   virtual bool isSatisfied( const LHCb::Particle::ConstVector& ) const = 0;
   /// Test if filter is satisfied on ensemble of particles
   virtual bool operator()( const LHCb::Particle::ConstVector& ) const = 0;
-
-protected:
-
-private:
 
 };
 #endif // KERNEL_IFILTERPARTICLES_H

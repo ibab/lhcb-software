@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: ITriggerTisTos.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -21,9 +21,6 @@ namespace LHCb {
   class RecVertex;
   class HltObjectSummary;  
 };
-
-
-static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 2, 0 );
 
 /** @class ITriggerTisTos ITriggerTisTos.h
  *  
@@ -136,11 +133,10 @@ static const InterfaceID IID_ITriggerTisTos ( "ITriggerTisTos", 2, 0 );
  *      bool tob = decision && (!tis) && (!tos);  
  *     @endcode
  */
-class ITriggerTisTos : virtual public ITriggerSelectionTisTos {
+class GAUDI_API ITriggerTisTos : virtual public ITriggerSelectionTisTos {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ITriggerTisTos; }
+  DeclareInterfaceID(ITriggerTisTos, 3, 0);
 
   // -------------------------------------------------
   // ------------ basic interface (must be implemented)

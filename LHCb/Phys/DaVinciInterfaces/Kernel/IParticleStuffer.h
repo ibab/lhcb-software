@@ -1,4 +1,4 @@
-// $Id: IParticleStuffer.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IParticleStuffer.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPARTICLESTUFFER_H 
 #define DAVINCIKERNEL_IPARTICLESTUFFER_H 1
 
@@ -9,8 +9,6 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleStuffer("IParticleStuffer", 1 , 0); 
-
 /** @class IParticleStuffer IParticleStuffer.h 
  *  Interface Class for Filling a Particle. For expert use.
  *  Fill a particle given a vertex and list of daughters.
@@ -18,14 +16,11 @@ static const InterfaceID IID_IParticleStuffer("IParticleStuffer", 1 , 0);
  *  @date   14/03/2002
  */
 
-class IParticleStuffer : virtual public IAlgTool {
+class GAUDI_API IParticleStuffer : virtual public IAlgTool {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() {
-    return IID_IParticleStuffer;
-  }
+  DeclareInterfaceID(IParticleStuffer, 2, 0);
 
   /// Fill Composite Particle from Vertex and daughters (PID already known)
   virtual StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,

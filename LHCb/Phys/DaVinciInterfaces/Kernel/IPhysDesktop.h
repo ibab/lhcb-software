@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -10,10 +10,6 @@
 // Forward declarations
 class StatusCode;
 class IRelatedPVFinder;
-
-// Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 3);
-
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
  *
@@ -62,11 +58,11 @@ static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 3);
  *  @author Sandra Amato
  *  @date   18/02/2002
  */
-class IPhysDesktop : virtual public IAlgTool {
+class GAUDI_API IPhysDesktop : virtual public IAlgTool {
 
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IPhysDesktop; }
+
+  DeclareInterfaceID(IPhysDesktop, 2, 0);
 
   /// Load Input particles and vertices (in local data) from various input
   /// locations filled with previous processings and  

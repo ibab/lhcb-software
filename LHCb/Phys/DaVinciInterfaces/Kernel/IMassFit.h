@@ -1,4 +1,4 @@
-// $Id: IMassFit.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IMassFit.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_IMASSCONSTRAINEDFIT_H 
 #define KERNEL_IMASSCONSTRAINEDFIT_H 1
@@ -32,9 +32,12 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2008-01-09
  */
-class IMassFit : public virtual IParticleReFitter 
+class GAUDI_API IMassFit : public virtual IParticleReFitter 
 {
 public: 
+
+  DeclareInterfaceID(IMassFit, 2, 0);
+
   // ==========================================================================
   /** perform the mass-constrained fit of the particle into the specified mass
    *
@@ -235,9 +238,6 @@ public:
     return code ;
   } 
   // ==========================================================================
-public:
-  /// the unique interface identgifier 
-  static const InterfaceID& interfaceID() ;
 protected:
   // virtual and protected destructor  
   virtual ~IMassFit( ); ///< Destructor

@@ -1,4 +1,4 @@
-// $Id: IP2VVAngleCalculator.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IP2VVAngleCalculator.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef IP2VVANGLETOOL_H 
 #define IP2VVANGLETOOL_H 1
 
@@ -8,8 +8,6 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
-
-static const InterfaceID IID_IP2VVAngleCalculator ( "IP2VVAngleCalculator", 1, 1 );
 
 /** @class IP2VVAngleCalculator IP2VVAngleCalculator.h
  *  
@@ -21,40 +19,34 @@ static const InterfaceID IID_IP2VVAngleCalculator ( "IP2VVAngleCalculator", 1, 1
  *  @date   2007-08-22
  *  @modified 2008-06-02
  */
-class IP2VVAngleCalculator : virtual public IAlgTool {
+class GAUDI_API IP2VVAngleCalculator : virtual public IAlgTool {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IP2VVAngleCalculator; }
   
-
+  DeclareInterfaceID(IP2VVAngleCalculator, 2, 0);
+  
   /// calculate the angle between two planes in the rest frame of the mother particle
-  virtual double calculatePlaneAngle( const Gaudi::LorentzVector&, const Gaudi::LorentzVector&,
-                                      const Gaudi::LorentzVector&, const Gaudi::LorentzVector&,
+  virtual double calculatePlaneAngle( const Gaudi::LorentzVector&, 
+                                      const Gaudi::LorentzVector&,
+                                      const Gaudi::LorentzVector&, 
+                                      const Gaudi::LorentzVector&,
                                       const Gaudi::LorentzVector& ) = 0;
 
   /// calculate the polar angle in the rest frame of the mother particle
-  virtual double calculatePolarAngle( const Gaudi::LorentzVector&, const Gaudi::LorentzVector&, 
+  virtual double calculatePolarAngle( const Gaudi::LorentzVector&, 
+                                      const Gaudi::LorentzVector&, 
                                       const Gaudi::LorentzVector& ) = 0;
 
    /// calculate the angle of the L+ wrt z-axis in dilepton frame
    virtual double calculateThetaTr( const Gaudi::LorentzVector&, 
-                                     const Gaudi::LorentzVector&,
-                                     const Gaudi::LorentzVector&, 
-                                     const Gaudi::LorentzVector& ) = 0;
+                                    const Gaudi::LorentzVector&,
+                                    const Gaudi::LorentzVector&, 
+                                    const Gaudi::LorentzVector& ) = 0;
 
    /// calculate the azimuthal angle of the L+ in dilepton frame
    virtual double calculatePhiTr( const Gaudi::LorentzVector&, 
-                                   const Gaudi::LorentzVector&,
-                                   const Gaudi::LorentzVector&,
-                                   const Gaudi::LorentzVector& ) = 0;
-
- 
-
-
-protected:
-
-private:
+                                  const Gaudi::LorentzVector&,
+                                  const Gaudi::LorentzVector&,
+                                  const Gaudi::LorentzVector& ) = 0;
 
 };
 #endif // IB2LLXANGLETOOL_H

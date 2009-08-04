@@ -1,11 +1,9 @@
-// $Id: IEventTupleTool.h,v 1.1.1.1 2009-07-22 20:54:51 jpalac Exp $
+// $Id: IEventTupleTool.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
 #ifndef DECAYTUPLE_IEVENTTUPLETOOL_H
 #define DECAYTUPLE_IEVENTTUPLETOOL_H  1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-static const InterfaceID IID_IEventTupleTool ( "IEventTupleTool", 1, 0 );
 
 namespace Tuples{
   class Tuple;
@@ -23,11 +21,12 @@ namespace Tuples{
  * @author Jeremie Borel
  * @date November 2007
  */
-class IEventTupleTool : virtual public IAlgTool {
+class GAUDI_API IEventTupleTool : virtual public IAlgTool {
  public:
+
+  DeclareInterfaceID(IEventTupleTool, 2, 0);
+
   virtual ~IEventTupleTool(){};
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IEventTupleTool; }
 
   //! Fill the tuple. 
   virtual StatusCode fill( Tuples::Tuple& )=0;
