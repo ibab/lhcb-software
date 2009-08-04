@@ -36,8 +36,9 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBiasedBs2JpsiPhi.py")
 # Topological selections
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingTopo.py")
 
-# Andrew Powell's RICH calibration selection
+# Andrew Powell's RICH calibration selections
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingDstarNoPID.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingRICHLambdaNoPID.py")
 
 # Muon ID calibration selection
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingMuIDCalib.py")

@@ -4,6 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-August-05 - Patrick Spradlin and Andrew Powell
+ - Maintenance of stripping selections for RICH PID calibration:
+   . options/StrippingDstarNoPID.py
+       Improved selection cuts
+   + options/StrippingRICHLambdaNoPID.py
+       Defines a new stripping line for selecting Lambda decays for RICH
+       calibration.
+   . options/StrippingSelections.py
+       Updated to import the new RICHLambda line.
+
 ! 2009-07-26 - Anton Poluektov 
  - Added LiMing's B->Jpsi f0 selection
 
