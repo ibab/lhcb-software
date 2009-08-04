@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.293 2009-08-03 15:46:08 pkoppenb Exp $ 
+! $Id: release.notes,v 1.294 2009-08-04 21:10:06 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v4r1 2009-08-04 ===================
 
 ! 2009-08-03 - Patrick Koppenburg
  - Move PID into lines :
