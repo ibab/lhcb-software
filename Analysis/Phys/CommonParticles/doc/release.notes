@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.151 2009-07-21 08:59:46 jonrob Exp $
+!$Id: release.notes,v 1.152 2009-08-04 09:05:30 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2009-08-04 - Chris Jones
+ - Update Muon Selections to use new ProtoParticleFilter options to select
+   either IsMuon or IsMuonLoose candidates e.g.
+
+   fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
+   fltr.Selection = [ "RequiresDet='MUON' IsMuon=True" ]
 
 !========================= CommonParticles v6r0 2009-07-21 ===================
 
