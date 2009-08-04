@@ -3,6 +3,9 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+! 2009-08-03 - Gerhard Raven
+ - tentatively define Moore v7r3
+
 ! 2009-07-15 - Gerhard Raven
  - fixes for reading snapshots
  - replace custom fragment with apply_pattern

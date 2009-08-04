@@ -7,9 +7,16 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v7r2    Hlt
+use  Moore                  v7r3    Hlt
 
 ### Temporarily here...
+use Hlt1Lines               v1r3    Hlt
+use Hlt2Lines               v1r5    Hlt
+use HltCommon               v5r8p3  Hlt
+use HltLine                 v1r4    Hlt
+
+use HltConf                 v4r1    Hlt
+use Hlt2SharedParticles     v2r0    Hlt
 use TCKUtils                v1r2    Hlt
 
 
