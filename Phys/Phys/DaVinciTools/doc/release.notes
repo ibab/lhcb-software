@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.449 2009-08-04 10:25:02 gcowan Exp $
+! $Id: release.notes,v 1.450 2009-08-04 19:25:41 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-03 - Juan PALACIOS
+ - Removed RelatedPV tool
 
 ! 2009-08-04 - Greig Cowan
  - Added new helper function to P2VAnglesFun.cpp which is used in all angle 
