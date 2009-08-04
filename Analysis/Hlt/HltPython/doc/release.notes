@@ -4,6 +4,13 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2009-08-04- Gerhard Raven
+ - remove manipulations of PYTHONPATH from the requirements which add
+   four directories to it -- please use the 'normal' installation in 
+   the InstallArea instead, and fully specify any 'import' statement.
+   (done in order to limit the amount of files tried to open during
+   startup of the Hlt in the pit)
+
 ! 2009-07-24- Antonio Perez-Calero
  - in module descriptors.py change descriptors from strings to lists of strings, so 
  that it can be iterated over in case of a "cocktail sample" like B2hh, where signal may be 
