@@ -9,6 +9,7 @@
 This version uses Gaudi v21r3 and LCG_56b
 
 - Packages added:    DaVinciInterfaces - IAlgTools+IInterfaces from DaVinciKernel
+                     DaVinciTypes      - typedefs for Phys project.
 - Packages modified: CaloInterfaces v7r13, MDF v3r19, RichDet v12r1, STDet v4r12,
     VeloDet v13r8, DigiEvent v2r12, L0Event v17r7, RecEvent v2r21, 
     IOExample v3r1, GaudiConf v12r8, LHCbMath v3r11p1, PartProp v1r4,

@@ -85,6 +85,7 @@ use CondDBEntityResolver  v5r1   Tools   # Marco Clemencic
 use DaVinciInterfaces     v1r0    Phys    # Juan Palacios
 use DaVinciKernel         v8r0    Phys    # Juan Palacios
 use DaVinciMCKernel       v4r0    Phys    # Juan Palacios
+use DaVinciTypes          v1r0    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use HltInterfaces         v2r0   Kernel  # Patrick Koppenburg
 use LinkerInstances       v3r5    Event   # Thomas Ruf
