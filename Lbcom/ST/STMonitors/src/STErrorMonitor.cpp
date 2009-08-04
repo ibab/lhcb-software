@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.5 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.6 2009-08-04 13:52:39 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -108,8 +108,8 @@ StatusCode STErrorMonitor::execute()
           unsigned int errorType = (*errorIt) -> linkInfo(beetle, port, pcn);
           double portBin = double(port)/double(nports)+beetle+pp*nBeetlesPerPPx;
           plot2D(portBin, errorType, "error-types_$tell"+strTellNum, 
-	         "Error types tell"+strTellNum, 0, noptlinks, 0, 10, 
-		 nports*noptlinks, 10);
+                 "Error types tell"+strTellNum, 0, noptlinks, 0, 10, 
+                 nports*noptlinks, 10);
         }
       }
     }

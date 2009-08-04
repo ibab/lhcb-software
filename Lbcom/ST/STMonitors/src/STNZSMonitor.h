@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.4 2009-03-25 09:39:15 jvantilb Exp $
+// $Id: STNZSMonitor.h,v 1.5 2009-08-04 13:52:39 mtobin Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -40,11 +40,11 @@ public:
 
 private:
 
+  /// Book histograms
+  void bookHistograms();
+
   /// Fill the noise histograms (only called every N events and at finalize)
   void updateNoiseHistogram(int tell1ID);
-
-  /// Tell1 mapping from tell1 name to source ID.
-  const std::map<unsigned int, unsigned int>* m_TELL1Mapping;
 
   //const std::string   m_basenameNoiseHisto; 
   int                 m_evtNumber;
@@ -83,6 +83,9 @@ private:
   /// Number of events to be skipped. Useful when running over
   /// common-mode-subtracted data where the pedestals have not been calculated. 
   int m_skipEvents;
+
+  /// Map of noise histograms booked in initialize
+  std::map<int, AIDA::IHistogram1D*> m_noiseHistos;
 
 };
 

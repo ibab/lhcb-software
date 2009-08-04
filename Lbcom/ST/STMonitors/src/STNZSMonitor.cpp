@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.7 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.8 2009-08-04 13:52:39 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -57,7 +57,24 @@ StatusCode STNZSMonitor::initialize()
 
   m_evtNumber = 0;
 
+  bookHistograms();
   return StatusCode::SUCCESS;
+}
+
+void STNZSMonitor::bookHistograms() {
+
+  // Get the tell1 mapping from source ID to tell1 number
+  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+    int tellID = m_useSourceID ? (*itT).first : (*itT).second;
+    // Create a title for the histogram
+    std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+    HistoID histoID        = "noise_$tell" + strTellID;
+    std::string histoTitle = "Noise for Tell" + strTellID;
+    m_noiseHistos[tellID] = book1D(histoID, histoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+
+  }
+
 }
 
 StatusCode STNZSMonitor::execute()
@@ -100,6 +117,11 @@ StatusCode STNZSMonitor::execute()
     // Flag to check if histogram needs to be updated
     bool needToUpdate = false;
     
+    // Local vectors for given TELL1
+    std::vector<double>* meanTELL = &m_meanMap[tellID];
+    std::vector<double>* meanSqTELL = &m_meanSqMap[tellID];
+    std::vector<int>* nEvents = &m_nEvents[tellID];
+
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
     std::vector<unsigned int>::const_iterator iPP = sentPPs.begin();
@@ -107,11 +129,11 @@ StatusCode STNZSMonitor::execute()
       unsigned int pp = *iPP;
       
       // Count the number of events per PP
-      m_nEvents[tellID][pp]++;
+      (*nEvents)[pp]++;
 
       // Cumulative average up to m_followingPeriod; after that
       // exponential moving average
-      int nEvt = m_nEvents[tellID][pp];
+      int nEvt = (*nEvents)[pp];
       if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
         nEvt = m_followingPeriod;
     
@@ -129,18 +151,16 @@ StatusCode STNZSMonitor::execute()
           
           // Calculate the pedestal and the pedestal squared
           int strip = iStrip + beetle * LHCbConstants::nStripsInBeetle;
-          m_meanMap[tellID][strip] = (m_meanMap[tellID][strip]*(nEvt-1)
-                                      + value ) / nEvt;
-          m_meanSqMap[tellID][strip] = (m_meanSqMap[tellID][strip]*(nEvt-1) 
-                                        + gsl_pow_2(value) ) / nEvt;
+          (*meanTELL)[strip] = ((*meanTELL)[strip]*(nEvt-1) + value ) / nEvt;
+          (*meanSqTELL)[strip] = ((*meanSqTELL)[strip]*(nEvt-1) + gsl_pow_2(value) ) / nEvt;
         } // strip
       }  // beetle
-
+      
       // Resets the event counter
       if( m_resetRate > 0  && nEvt%m_resetRate == 0 ) {
-        m_nEvents[tellID][pp] = 0;
+        (*nEvents)[pp] = 0;
       }
-
+      
       // Check if at least one of the PPs requires to update the histogram
       if( m_updateRate > 0 && nEvt%m_updateRate == 0 && nEvt != 0 ) {
         needToUpdate = true;
@@ -149,7 +169,7 @@ StatusCode STNZSMonitor::execute()
     
     // Update the noise histogram
     if( needToUpdate ) updateNoiseHistogram( tellID );
-
+    
   } // boards
   return StatusCode::SUCCESS;
 }
@@ -168,26 +188,18 @@ StatusCode STNZSMonitor::finalize()
 
 void STNZSMonitor::updateNoiseHistogram(int tellID)
 {
-  // Create a title for the histogram
-  std::string strTellID  = boost::lexical_cast<std::string>(tellID);
-  HistoID histoID        = "noise_$tell" + strTellID;
-  std::string histoTitle = "Noise for Tell" + strTellID;
-
   // Get the histogram and reset it in case it is already booked. 
-  IHistogram1D* hist = histo1D( histoID ) ;
-  if ( hist ) {
+  IHistogram1D* hist = m_noiseHistos[tellID];
+  if(hist != 0) { 
     hist->reset();
-  }
   
-  // Loop over strips in tell1
-  for (unsigned int strip = 0u; strip < nStripsPerBoard; ++strip) {
-    double rms = sqrt( m_meanSqMap[tellID][strip] 
-                       - gsl_pow_2(m_meanMap[tellID][strip]));
-    if ( hist ) {
+    // Loop over strips in tell1
+    std::vector<double>* meanTELL = &m_meanMap[tellID];
+    std::vector<double>* meanSqTELL = &m_meanSqMap[tellID];
+    for (unsigned int strip = 0u; strip < nStripsPerBoard; ++strip) {
+      double rms = sqrt( (*meanSqTELL)[strip] 
+                         - gsl_pow_2((*meanTELL)[strip]));
       hist->fill( strip, rms );
-    } else {
-      plot1D( strip, histoID, histoTitle, 0, nStripsPerBoard, nStripsPerBoard, 
-              rms );
     }
-  }
+  } else Warning("No histogram booked for "+boost::lexical_cast<std::string>(tellID),50,StatusCode::SUCCESS).ignore();
 }
