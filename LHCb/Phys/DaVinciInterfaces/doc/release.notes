@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-08-04 - Juan Palacios
+ - All interfaces now use GAUDI_API.
+ - Remove all src/Lib/*.cpp files 
  - Move Kernel/Particle2Vertex.h to Phys/DaVinciTypes/Kernel
  - cmt/requirements
   . Use Phys/DaVinciTypes
