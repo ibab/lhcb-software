@@ -1,15 +1,17 @@
-/// ===========================================================================
-// $Id: CellParam.h,v 1.11 2009-05-06 15:59:13 odescham Exp $
+// $Id: CellParam.h,v 1.12 2009-08-04 20:48:00 ibelyaev Exp $
+// ============================================================================
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
-/// ===========================================================================
-
+// ============================================================================
 // Include files
+// ============================================================================
 #include "GaudiKernel/PhysicalConstants.h"
+#include "Kernel/CaloCellID.h"
+// ============================================================================
 class DeCalorimeter;
-
-typedef std::vector<LHCb::CaloCellID> CaloNeighbors ;
-
+// ============================================================================
+typedef LHCb::CaloCellID::Vector CaloNeighbors ;
+// ============================================================================
 /** @class  CellParam CellParam.h CaloDet/CellParam.h
  *
  *   Auxilliary class to store cell's information inside 
@@ -18,9 +20,12 @@ typedef std::vector<LHCb::CaloCellID> CaloNeighbors ;
  *   creator is needed for CaloVector...
  *
  */
-
-namespace CaloCellQuality{
-  enum Flag {
+// ============================================================================
+namespace CaloCellQuality
+{
+  // ==========================================================================
+  enum Flag 
+    {
     OK            = 0 , 
     Dead          = 1 ,
     Noisy         = 2 ,
@@ -29,21 +34,17 @@ namespace CaloCellQuality{
     VeryNoisy     = 16,
     VeryShifted   = 32
   } ;
+  // ==========================================================================
 }
-
+// ============================================================================
 class CellParam 
-{
-  
-  friend class DeCalorimeter;
-  
+{ 
+  friend class DeCalorimeter; 
 public:
-  
   /// standard constructor 
   CellParam( const LHCb::CaloCellID& id  = LHCb::CaloCellID() ) ;
-  
   /// destructor 
   ~CellParam();
-  
   bool                  valid         () const { return m_valid      ; }   
   LHCb::CaloCellID      cellID        () const { return m_cellID        ; }
   double                x             () const { return m_center.x()    ; }
@@ -158,6 +159,8 @@ private:
   double m_ledMoniRMS;
 };
 
-/// ===========================================================================
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // CALODET_CELLPARAM_H
-/// ===========================================================================
+// ============================================================================
