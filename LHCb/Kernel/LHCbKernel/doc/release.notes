@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-08-04 - Vanya BELYAEV
+
+ - add a typedef CaloCellID::Vector 
+
 ! 2009-07-30 - Vanya Belyaev
 
  - add the function CaloCellID::__hash__  to enable the usage 
