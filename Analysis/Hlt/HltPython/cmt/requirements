@@ -18,3 +18,5 @@ use     GaudiPython 	v*
 use	LinkerInstances v* Event
 
 #------------------------------------------------------------------------------
+apply_pattern install_python_modules
+
