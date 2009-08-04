@@ -1,5 +1,9 @@
-// $Id: DaVinciFun.cpp,v 1.1 2009-08-02 19:01:29 jpalac Exp $
+// $Id: DaVinciFun.cpp,v 1.2 2009-08-04 10:12:26 jpalac Exp $
 // Include files 
+// Gaudi
+#include "GaudiKernel/SmartIF.h"
+// DaVinciInterfaces
+#include "Kernel/ISetInputParticles.h"
 // local
 #include "Kernel/DaVinciFun.h"
 
@@ -222,5 +226,31 @@ namespace DaVinci
       return ( sinPhi > 0.0 ? phi : -phi );      
     }
   } // namespace P2VVangles
+
+
+  namespace Utils 
+  {
+    // ========================================================================
+    /*  set the input particles for some component
+     *  @param component the component inself
+     *  @param input the intut data 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-07-11
+     */
+    // ========================================================================
+    StatusCode setInput 
+    ( IInterface*                        component , 
+      const LHCb::Particle::ConstVector& input     ) 
+    {
+      if ( 0 == component ) { return StatusCode ( 300 ) ; }        // RETURN 
+      // get the interface 
+      SmartIF<ISetInputParticles> alg ( component ) ;
+      // valid ? 
+      if ( !alg           ) { return StatusCode ( 301 ) ; }        // RETURN  
+      // use the valid inyterface 
+      return alg->setInput ( input ) ;                             // RETURN 
+    }
+  } // namespace Utils
   
 } // namespace DaVinci 

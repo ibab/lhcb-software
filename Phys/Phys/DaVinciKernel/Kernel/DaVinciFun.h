@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.h,v 1.6 2009-08-02 19:01:59 jpalac Exp $
+// $Id: DaVinciFun.h,v 1.7 2009-08-04 10:12:26 jpalac Exp $
 #ifndef KERNEL_DAVINCIFUN_H 
 #define KERNEL_DAVINCIFUN_H 1
 
@@ -165,6 +165,28 @@ namespace DaVinci {
 
   } // namespace P2VVAngles
 
+
+  // ==========================================================================
+  namespace Utils
+  {
+    // ========================================================================
+    /** set the input particles for some component
+     *  @param component the component inself
+     *  @param input the intut data 
+     *  @return status code 
+     * 
+     *  - 300 : invalid component 
+     *  - 301 : no valid ISetInputParticles interface 
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-07-11
+     */
+    StatusCode setInput 
+    ( IInterface*                        component , 
+      const LHCb::Particle::ConstVector& input     ) ;
+    // ========================================================================
+  } // end of namespace Utils 
+  // ==========================================================================
 
 } // namespace DaVinci
 
