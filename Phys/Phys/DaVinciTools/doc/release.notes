@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.448 2009-08-03 07:39:52 jpalac Exp $
+! $Id: release.notes,v 1.449 2009-08-04 10:25:02 gcowan Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-04 - Greig Cowan
+ - Added new helper function to P2VAnglesFun.cpp which is used in all angle 
+   calculation functions.
+ - Bug fix in Bs2JpsiPhiAngleCalculator.cpp where arguments were in wrong
+   order for thetal.
 
 ! 2009-08-03 - Juan PALACIOS
  - Modifications to allow compilation against LHCb v27r5:
