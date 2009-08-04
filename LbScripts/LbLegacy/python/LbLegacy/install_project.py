@@ -205,6 +205,7 @@
  090602 - Moved to LbScripts v4r1
  090618 - fixed bootstrap order for the removal mode.
  090709 - Don't try to create a log file in check-mode.
+ 090804 - Moved the Compat project verson to v1r2 
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -214,11 +215,11 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090709'
+script_version = '090804'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r2"
-compat_version = "v1r0"
+compat_version = "v1r2"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
