@@ -3,6 +3,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-08-04 - Serena Oggero
+ - added DecodePileUpData, to decode PileUp banks (binary), both NZS and ZS.
+   The output is put in the TES using the VeloCluster container with an 
+   arbitrary value of 1 ADC per hit.
+
 !=========================  VeloDAQ v4r7 2009-06-17 =======================
 ! 2009-06-06 - Kurt Rinnert
  - more robustness in full cluster decoding. Duplicate channel IDs now only

@@ -13,10 +13,11 @@ include_path none
 #============================================================================
 use  VeloDet      v*  Det
 use  DAQEvent     v*  Event
-use  VeloEvent    v*  Event
-use  DigiEvent    v*  Event
-use  SiDAQ        v*  Si
-use  Tell1Kernel  v*  DAQ
+use  VeloEvent    v*  Event	-no_auto_imports
+use  DigiEvent    v*  Event	-no_auto_imports
+use  SiDAQ        v*  Si	-no_auto_imports
+use  Tell1Kernel  v*  DAQ  	-no_auto_imports
+
 
 # Component library building rule
 #============================================================================
