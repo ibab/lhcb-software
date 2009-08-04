@@ -2,6 +2,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2009-08-03 - Serena Oggero
+ - Add Tell1Kernel/PUTell1Core.h
+ 
 !====================== Tell1Kernel v1r6 2008-11-17 ======================
 ! 2008-10-17 - Tomasz Szumlak
  - add new part of the pedestal update engine interface compatible
