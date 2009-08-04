@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-08-04 - Silvia Miglioranzi
+ - Updated QMTests (and corresponding ref files) using the new Gauss v37r3 
+   settings:
+   - gauss-gen-mc09-14103000.qmt
+   - gauss-gen-mc09-22112000.qmt
+   - gauss-gen-mc09-42112000.qmt
+   - gauss-gen-mc09-60001008.qmt
+
 ! 2009-08-02 - Silvia Miglioranzi
  - Updated QMtests (gauss-gen-mc09.qmt, gauss-gen-mc09-10000000.qmt) using the 
    new Gauss v37r3 settings. Reference files for the different platforms were 
