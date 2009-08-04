@@ -1,4 +1,4 @@
-// $Id: ISetInputParticles.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: ISetInputParticles.h,v 1.3 2009-08-04 10:13:23 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_ISETINPUTPARTICLES_H 
 #define KERNEL_ISETINPUTPARTICLES_H 1
@@ -8,6 +8,9 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
+// ============================================================================
+// event
+#include "Event/Particle.h"
 // ============================================================================
 /** @class ISetInputParticles ISetInputParticles.h Kernel/ISetInputParticles.h
  *
