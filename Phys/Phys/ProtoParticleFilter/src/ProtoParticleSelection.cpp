@@ -5,7 +5,7 @@
  * Implementation file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.cpp,v 1.1 2009-07-22 11:36:23 jonrob Exp $
+ * $Id: ProtoParticleSelection.cpp,v 1.2 2009-08-04 09:02:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -30,9 +30,9 @@ ProtoParticleSelection::~ProtoParticleSelection()
 {
   // clean up
   for ( DetectorRequirements::Vector::iterator iR = m_detectors.begin();
-        iR != m_detectors.end(); ++iR ) { delete *iR; }
+        iR != m_detectors.end(); ++iR ) { delete *iR; *iR = NULL; }
   for ( Cut::Vector::iterator iC = m_cuts.begin();
-        iC != m_cuts.end(); ++iC )      { delete *iC; }
+        iC != m_cuts.end(); ++iC )      { delete *iC; *iC = NULL; }
 }
 
 ProtoParticleSelection::Cut * ProtoParticleSelection::DLLCut::clone() const

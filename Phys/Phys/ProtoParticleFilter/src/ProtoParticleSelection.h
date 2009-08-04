@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.1 2009-07-22 11:36:23 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.2 2009-08-04 09:02:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -45,12 +45,12 @@ public:
 
 public:
 
-  /// Disable copy constructor
+  /// Copy constructor
   ProtoParticleSelection( const ProtoParticleSelection & sel )
     : m_detectors ( sel.cloneDetReqs() ),
       m_cuts      ( sel.cloneCuts()    ) { }
 
-  /// Disable assignment operator
+  /// Assignment operator
   ProtoParticleSelection& operator = ( const ProtoParticleSelection & sel )
   {
     m_detectors = sel.cloneDetReqs();
