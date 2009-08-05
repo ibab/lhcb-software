@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.16 2009-08-04 20:06:37 graven Exp $
+! $Id: release.notes,v 1.17 2009-08-05 12:49:35 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Patrick Koppenburg
+ - Move HltDecodeRaw here !! TEMPORARY !!
+ - Increment to v1r4
 
 !========================== HltLine v1r4 2009-08-04 ===================
 ! 2009-08-03 - Gerhard Raven
