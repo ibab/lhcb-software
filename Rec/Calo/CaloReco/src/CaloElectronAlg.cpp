@@ -1,22 +1,33 @@
-// $Id: CaloElectronAlg.cpp,v 1.15 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloElectronAlg.cpp,v 1.16 2009-08-05 17:38:29 ibelyaev Exp $
 // ============================================================================
 // Include files
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
 #include <functional>
-// from Gaudi
+// ============================================================================
+// Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
+// ============================================================================
 // CaloDet 
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 // Event/CaloEvent 
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+// ============================================================================
 // CaloInterfaces
+// ============================================================================
 #include "CaloInterfaces/ICaloClusterSelector.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloElectronAlg.h"
-
 // ============================================================================
 /** @file
  * 
@@ -28,11 +39,9 @@
  *  @date 31/03/2002 
  */
 // ============================================================================
-
 DECLARE_ALGORITHM_FACTORY( CaloElectronAlg );
-
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name algorithm name 
  *  @param pSvc service locator 
  */
@@ -51,39 +60,73 @@ CaloElectronAlg::CaloElectronAlg
   , m_corrections2          () 
   , m_hypotoolsTypeNames2   ()
   , m_hypotools2            () 
-  , m_inputData  (LHCb::CaloClusterLocation::Ecal)
-  , m_outputData (LHCb::CaloHypoLocation::Electrons)
-  , m_detData    (DeCalorimeterLocation::Ecal)
+  , m_inputData  ( LHCb::CaloClusterLocation  :: Ecal      )
+  , m_outputData ( LHCb::CaloHypoLocation     :: Electrons )
+  , m_detData    ( DeCalorimeterLocation      :: Ecal      )
 {
-  declareProperty ( "SelectionTools"   , m_selectorsTypeNames    ) ;
-  declareProperty ( "CorrectionTools"  , m_correctionsTypeNames  ) ;
-  declareProperty ( "HypoTools"        , m_hypotoolsTypeNames    ) ;
-  declareProperty ( "CorrectionTools2" , m_correctionsTypeNames2 ) ;
-  declareProperty ( "HypoTools2"       , m_hypotoolsTypeNames2   ) ;
+  //
+  m_selectorsTypeNames.push_back 
+    ( "CaloSelectCluster/ElectronCluster"              ) ; 
+  m_selectorsTypeNames.push_back 
+    ( "CaloSelectChargedClusterWithSpd/ChargedWithSpd" ) ;
+  m_selectorsTypeNames.push_back 
+    ( "CaloSelectClusterWithPrs/ClusterWithPrs"        ) ;
+  m_selectorsTypeNames.push_back 
+    ( "CaloSelectorNOT/ChargedWithTracks"              ) ;
+  
+  declareProperty 
+    ( "SelectionTools"      , 
+      m_selectorsTypeNames  ,
+      "List of Cluster selector tools" ) ;
+  
+  declareProperty 
+    ( "CorrectionTools"       , 
+      m_correctionsTypeNames  ,
+      "List of primary correction tools" ) ;
+
+  m_hypotoolsTypeNames.push_back ( "CaloExraDigits/SpdPrsExtraE" ) ;
+  declareProperty 
+    ( "HypoTools"          , 
+      m_hypotoolsTypeNames ,
+      "List of generi Hypo-tools to apply for newly created hypos" ) ;
+  //
+  m_correctionsTypeNames2.push_back ( "CaloECorrection/ECorrection" ) ;
+  m_correctionsTypeNames2.push_back ( "CaloSCorrection/SCorrection" ) ;
+  m_correctionsTypeNames2.push_back ( "CaloLCorrection/LCorrection" ) ;
+  //
+  declareProperty 
+    ( "CorrectionTools2"      , 
+      m_correctionsTypeNames2 ,
+      "List of tools for 'fine-corrections" );
+                  
+  declareProperty 
+    ( "HypoTools2"            , 
+      m_hypotoolsTypeNames2   ,
+      "List of generi Hypo-tools to apply for corrected hypos" ) ;
+  //
   declareProperty ( "InputData"        , m_inputData             ) ;  
   declareProperty ( "OutputData"       , m_outputData            ) ;  
   declareProperty ( "Detector"         , m_detData               ) ;  
-
-  if("HLT"==context()){
+  
+  if("HLT"==context())
+  {
     m_inputData = LHCb::CaloClusterLocation::EcalHlt;
     m_outputData= LHCb::CaloHypoLocation::ElectronsHlt;
- }  
-};
+  }  
+  
+  setProperty ( "PropertiesPrint" , true ) ;
+  
+}
 // ============================================================================
-
+// destructor (protected and virtual)
 // ============================================================================
-/// destructor (protected and virtual)
+CaloElectronAlg::~CaloElectronAlg() {}
 // ============================================================================
-CaloElectronAlg::~CaloElectronAlg() {}; 
-// ============================================================================
-
-// ============================================================================
-/**  standard Algorithm initialization
+/*   standard Algorithm initialization
  *   @return status code 
  */
 // ============================================================================
-StatusCode
-CaloElectronAlg::initialize() 
+StatusCode CaloElectronAlg::initialize() 
 {
   // initialize  the base class 
   StatusCode sc = GaudiAlgorithm::initialize();
@@ -96,51 +139,63 @@ CaloElectronAlg::initialize()
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
          m_selectorsTypeNames.end() != item ; ++item )
     {
-      ICaloClusterSelector* selector   = tool<ICaloClusterSelector>( *item );
+      ICaloClusterSelector* selector   = 
+        tool<ICaloClusterSelector>( *item , this );
       m_selectors.push_back( selector );
     }
+    if ( m_selectors.empty() ) 
+    { Warning ( "No Cluster Selection     tools are specified!" ) ; }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames.begin() ;
          m_correctionsTypeNames.end() != item ; ++item )
     {
-      ICaloHypoTool*  correction       = tool<ICaloHypoTool>( *item );
+      ICaloHypoTool*  correction       = 
+        tool<ICaloHypoTool>( *item , this );
       m_corrections.push_back( correction );
     }
+    if ( m_corrections.empty() ) 
+    { Warning ( "No Hypo    Correction(1) tools are specified!" ) ; }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
          m_hypotoolsTypeNames.end() != item ; ++item )
     {
-      ICaloHypoTool*  hypotool         = tool<ICaloHypoTool>( *item );
+      ICaloHypoTool*  hypotool         = 
+        tool<ICaloHypoTool>( *item , this );
       m_hypotools.push_back(  hypotool  );
     }
+    if ( m_hypotools.empty() ) 
+    { Warning ( "No Hypo    Processing(1) tools are specified!" ) ; }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
          m_correctionsTypeNames2.end() != item ; ++item )
     {
-      ICaloHypoTool*  correction       = tool<ICaloHypoTool>( *item );
+      ICaloHypoTool*  correction       = 
+        tool<ICaloHypoTool>( *item , this );
       m_corrections2.push_back( correction );
     }
+    if ( m_corrections2.empty() ) 
+    { Warning ( "No Hypo    Correction(2) tools are specified!" ) ; }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;
          m_hypotoolsTypeNames2.end() != item ; ++item )
     {
-      ICaloHypoTool*  hypotool         = tool<ICaloHypoTool>( *item );
+      ICaloHypoTool*  hypotool         = 
+        tool<ICaloHypoTool>( *item , this );
       m_hypotools2.push_back(  hypotool  );
     }
+    if ( m_hypotools2.empty() ) 
+    { Warning ( "No Hypo    Processing(2) tools are specified!" ) ; }
   }
   
   ///
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/*
- *  simple utiliti to count digiyts from certain calorimeter 
+/* simple utility to count digits from certain calorimeter 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 31/03/2002 
  */
@@ -148,19 +203,16 @@ class DigitFromCalo
   : public std::unary_function<const LHCb::CaloDigit*,bool>
 { 
 public:
-
   /** constructor
    *  @param calo  calorimeter name 
    */
   explicit DigitFromCalo( const std::string& calo )
     : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
-  
   /** constructor
    *  @param calo  calorimeter index 
    */
   explicit DigitFromCalo( const int  calo )
     : m_calo(                                calo   ) {} ;
-  
   /** the only essential method
    *  @param digit pointer to CaloDigit object 
    *  @return true if digit belongs to the predefined calorimeter 
@@ -169,27 +221,23 @@ public:
   {
     if( 0 == digit ) { return false ; }
     return (int) digit->cellID().calo() == m_calo ;
-  };
-  
+  }
 private:
-  
+  // ==========================================================================
   /// default constructor is private 
   DigitFromCalo();
-  
+  // ==========================================================================
 private:
-  
+  // ==========================================================================
   int m_calo ;
-  
+  // ==========================================================================
 };
 // ============================================================================
-
-// ============================================================================
-/**  standard Algorithm finalization
+/*   standard Algorithm finalization
  *   @return status code 
  */
 // ============================================================================
-StatusCode 
-CaloElectronAlg::finalize() 
+StatusCode CaloElectronAlg::finalize() 
 {
   debug()<<"Finalize"<<endmsg;
   
@@ -206,11 +254,9 @@ CaloElectronAlg::finalize()
   m_hypotoolsTypeNames2   .clear () ;
   // finalize the base class 
   return GaudiAlgorithm::finalize() ; 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/**  standard Algorithm execution
+/*   standard Algorithm execution
  *   @return status code 
  */
 // ============================================================================
@@ -223,97 +269,99 @@ CaloElectronAlg::execute()
   typedef Clusters::iterator             iterator ;
   
   // get input clusters
-  Clusters* clusters = get<Clusters>( m_inputData );
+  Clusters* clusters = get<Clusters> ( m_inputData );
   
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
-  put( hypos , m_outputData );
+  put ( hypos , m_outputData );
   
   // loop over clusters 
-  for( iterator cluster = clusters->begin() ;clusters->end() != cluster ; ++cluster ){
-      bool select = true ;
-      // loop over all selectors 
-      for( Selectors::const_iterator selector = m_selectors.begin() ;
-           select && m_selectors.end() != selector ; ++selector ){ 
-          select = (**selector)( *cluster ); 
-        } 
-      
-      // cluster to be selected? 
-      if( !select ) { continue ; }
- 
-      // create "Hypo"/"Photon" object
-      LHCb::CaloHypo* hypo = new LHCb::CaloHypo() ;
-      // set parameters of newly created hypo 
-      hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
-      hypo->addToClusters( *cluster );
-      hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); // NEW OD 13/06/06
-
-      StatusCode sc( StatusCode::SUCCESS );
-      // loop over all corrections and apply corrections  
-      for( Corrections::const_iterator correction = m_corrections.begin() ;
-           sc.isSuccess() && m_corrections.end() != correction ; ++correction ){ 
-        sc = (**correction) ( hypo ); }
-      
-      if( sc.isFailure() ){
-          delete hypo ; hypo = 0  ;                            // ATTENTION !
-          Error("Error from Correction Tool, skip the cluster " , sc ).ignore(); 
-          continue ;                                           // CONTINUE 
-        }
-      
-
-      // loop over other hypo tools (e.g. add extra digits)
-      for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
-           sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool ){ 
-        sc = (**hypotool) ( hypo ); }
-      
-      if( sc.isFailure() ){
-          delete hypo ;                                // ATTENTION !
-          hypo   =  0 ;
-          Error("Error from Other Hypo Tool, skip the cluster " , sc ).ignore();
-          continue    ;                                // CONTINUE  !
-        }
-      
-      
-      // loop over all corrections and apply corrections  
-      for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
-           sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 ){ 
-        sc = (**cor2) ( hypo ); 
-      }
-      
-      if( sc.isFailure() ){
-          delete hypo ;                                // ATTENTION !
-          hypo = 0    ;
-          Error("Error from Correction Tool 2 , skip the cluster " , sc ).ignore();
-          continue  ;                                  // CONTINUE 
-        }
-      
-      // loop over other hypo tools (e.g. add extra digits)
-      for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
-           sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 ){ 
-        sc = (**hypotool2) ( hypo ); }
-      
-      if( sc.isFailure() ){
-          delete hypo ;                                // ATTENTION !
-          hypo = 0    ;
-          Error("Error from Other Hypo Tool 2 , skip the cluster " , sc ).ignore();
-          continue    ;
-        }
-
-      // set "correct" hypothesis
-      hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); /// final!
-
-      /// set new Z 
-      /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      
-      
-      /// add the hypo into container of hypos 
-      if( 0 != hypo ) { hypos->insert( hypo ); }
-      
-    } // end of the loop over all clusters
+  for ( iterator cluster = clusters->begin() ; clusters->end() != cluster ; ++cluster )
+  {
+    bool select = true ;
+    
+    // loop over all selectors 
+    for( Selectors::const_iterator selector = m_selectors.begin() ;
+         select && m_selectors.end() != selector ; ++selector )
+    { select = (**selector)( *cluster ); } 
+    
+    // cluster to be selected? 
+    if ( !select ) { continue ; }
+    
+    // create "Hypo"/"Photon" object
+    std::auto_ptr<LHCb::CaloHypo> hypo ( new LHCb::CaloHypo() ) ;
+    //
+    // set parameters of newly created hypo 
+    hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
+    hypo->addToClusters( *cluster );
+    // NEW OD 13/06/06
+    hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); 
+    
+    StatusCode sc( StatusCode::SUCCESS );
+    // loop over all corrections and apply corrections  
+    for ( Corrections::const_iterator correction = m_corrections.begin() ;
+          sc.isSuccess() && m_corrections.end() != correction ; ++correction )
+    { sc = (**correction) ( hypo.get() ) ; }
+    
+    if ( sc.isFailure() )
+    {
+      Error("Error from Correction Tool, skip the cluster " , sc ).ignore(); 
+      continue ;                                           // CONTINUE 
+    }
+    
+    // loop over other hypo tools (e.g. add extra digits)
+    for ( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
+          sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
+    { sc = (**hypotool) ( hypo.get() ) ; }
+    
+    if ( sc.isFailure() )
+    {
+      Error("Error from Other Hypo Tool, skip the cluster " , sc ).ignore();
+      continue    ;                                // CONTINUE  !
+    }
+    
+    // loop over all corrections and apply corrections  
+    for ( Corrections::const_iterator cor2 = m_corrections2.begin() ;
+          sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
+    { sc = (**cor2) ( hypo.get() ) ; }
+    
+    if ( sc.isFailure() )
+    {
+      Error("Error from Correction Tool 2 , skip the cluster " , sc ).ignore();
+      continue  ;                                  // CONTINUE 
+    }
+    
+    // loop over other hypo tools (e.g. add extra digits)
+    for ( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
+          sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
+    { sc = (**hypotool2) ( hypo.get() ) ; }
+    
+    if ( sc.isFailure() )
+    {
+      Error("Error from Other Hypo Tool 2 , skip the cluster " , sc ).ignore();
+      continue    ;
+    }
+    
+    // set "correct" hypothesis
+    hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); /// final!
+    
+    /// set new Z 
+    /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      
+    
+    /// add the hypo into container of hypos 
+    hypos->insert ( hypo.release() ) ;
+    
+  } // end of the loop over all clusters
   
   debug () << " # of created Electron Hypos is  " << hypos->size() << endmsg ;
   
+  counter ("#electrons") += hypos->size() ;
+  
   return StatusCode::SUCCESS;
-};
+}
+
+// ============================================================================
+// The END 
 // ============================================================================
 
 

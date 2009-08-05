@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.25 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.26 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -113,19 +113,19 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
 
 
-  if("HLT"==context()){
+  if ( "HLT"==context() )
+  {
     m_inputData = LHCb::CaloClusterLocation::EcalHlt;
     m_outputData = LHCb::CaloHypoLocation::MergedPi0sHlt;
     m_nameOfSplitPhotons = LHCb::CaloHypoLocation::SplitPhotonsHlt;
     m_nameOfSplitClusters = LHCb::CaloClusterLocation::EcalSplitHlt;
   }
   
-
-};
-
+  setProperty ( "PropertiesPrint" , true ) ;
+  
+}
 // ============================================================================
-/** destructor
- */
+// destructor
 // ============================================================================
 CaloMergedPi0Alg::~CaloMergedPi0Alg() {};
 
@@ -152,7 +152,7 @@ StatusCode CaloMergedPi0Alg::initialize()
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;
         m_toolTypeNames.end() != it ; ++it )
   {
-    ICaloHypoTool* t = tool<ICaloHypoTool>( *it );
+    ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this );
     if( 0 == t ) { return StatusCode::FAILURE ; }
     m_tools.push_back( t ) ;
   }
@@ -1063,6 +1063,10 @@ StatusCode CaloMergedPi0Alg::execute()
     debug() << " # of created Split Clusters  is  " << clusts -> size() << endmsg ;
     debug() << "post-processing cleaning" << endmsg;
   }
+
+  counter ( "#merged"  ) += pi0s   -> size() ;
+  counter ( "#photons" ) += phots  -> size() ;
+  counter ( "#clusters") += clusts -> size() ;
 
   // delete (empty) container* if not on TES 
   if(m_createClusterOnly){

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.68 2009-07-28 12:29:29 cattanem Exp $
+# $Id: requirements,v 1.69 2009-08-05 17:38:29 ibelyaev Exp $
 # =============================================================================
 package            CaloReco
-version            v4r21
+version            v5r0
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -11,12 +11,14 @@ use CaloInterfaces  v*	   Calo
 use CaloUtils       v*     Calo 
 use Relations       v*     Kernel 
 
-# ================ environment ================================================
-set CALORECOOPTS   $(CALORECOROOT)/options
-
 # ================ constituents ===============================================
 library            CaloReco    *.cpp
 
 # ================ standard patterns ==========================================
+apply_pattern      install_python_modules
 apply_pattern      component_library library=CaloReco
+# =============================================================================
+
+# =============================================================================
+# The END 
 # =============================================================================

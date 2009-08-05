@@ -1,32 +1,40 @@
+// $Id: TaggedCellFunctor.h,v 1.5 2009-08-05 17:38:30 ibelyaev Exp $
+// ============================================================================
 #ifndef CALOCA_TAGGEDCELLFUNCTOR_H
 #define CALOCA_TAGGEDCELLFUNCTOR_H 1 
+// ============================================================================
+// Include files 
+// ============================================================================
 // STL
+// ============================================================================
 #include <functional>
 #include <vector>
 #include <iostream>
+// ============================================================================
 // local 
+// ============================================================================
 #include "CelAutoTaggedCell.h"
-
-
+// ============================================================================
 /** @namespace TaggedCellFunctor TaggedCellFunctor.h CaloCA/TaggedCellFunctor.h
-
-    Algorithm of clustering  
-    Contain functors for use with STL algorithms
-    for one CaloTaggedCell*
-
-    @author  Nicole Brun 
-    @date    27/02/2001
-*/
-
-namespace TaggedCellFunctor {
+ *
+ * Algorithm of clustering  
+ * Contain functors for use with STL algorithms
+ * for one CaloTaggedCell*
+ *
+ *  @author  Nicole Brun 
+ *  @date    27/02/2001
+ */
+// ============================================================================
+namespace TaggedCellFunctor 
+{
   class isEdge;
   class isClustered;
   class isClusteredOrEdge;
   class isSeed;
   class isWithSeed;
   class setStatus;
-};
-
+}
+// ============================================================================
 class TaggedCellFunctor::isEdge :
 public std::unary_function<const CelAutoTaggedCell*, bool> {
 

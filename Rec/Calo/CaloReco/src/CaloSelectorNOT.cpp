@@ -1,15 +1,15 @@
-// $Id: CaloSelectorNOT.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSelectorNOT.cpp,v 1.7 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files 
-
-// from Gaudi
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
+// ============================================================================
 // local
 #include "CaloSelectorNOT.h"
-
-
 // ============================================================================
 /** @file 
  * 
@@ -19,11 +19,9 @@
  *  @date 27 Apr 2002 
  */
 // ============================================================================
-
 DECLARE_TOOL_FACTORY( CaloSelectorNOT );
-
 // ============================================================================
-/** StNOTard constructor
+/*  StNOTard constructor
  *  @see GaudiTool
  *  @see  AlgTool 
  *  @see IAlgTool 
@@ -42,17 +40,13 @@ CaloSelectorNOT::CaloSelectorNOT
 {
   declareInterface<ICaloClusterSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
-
+//  destructor (virtual NOT protected)
 // ============================================================================
-/// destructor (virtual NOT protected)
+CaloSelectorNOT::~CaloSelectorNOT(){} 
 // ============================================================================
-CaloSelectorNOT::~CaloSelectorNOT(){} ; 
-// ============================================================================
-
-// ============================================================================
-/** stNOTard initialization of the tool 
+/*  stNOTard initialization of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -69,16 +63,14 @@ StatusCode CaloSelectorNOT::initialize ()
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
   {
-    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it );
+    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it , this );
     m_selectors.push_back( selector );
   };     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** stNOTard finalization  of the tool 
+/*  stNOTard finalization  of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -92,11 +84,9 @@ StatusCode CaloSelectorNOT::finalize   ()
   m_selectorsTypeNames .clear() ;
   // finalize the base class 
   return GaudiTool::finalize () ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** "select"/"preselect" method 
+/*  "select"/"preselect" method 
  *  @see ICaloClusterSelector
  *  @param  cluster pointer to calo cluster object to be selected 
  *  @return true if cluster is selected
@@ -105,9 +95,7 @@ StatusCode CaloSelectorNOT::finalize   ()
 bool CaloSelectorNOT::select     
 ( const LHCb::CaloCluster* cluster ) const { return (*this) ( cluster ) ; }
 // ============================================================================
-
-// ============================================================================
-/** "select"/"preselect" method (functor interface)
+/* "select"/"preselect" method (functor interface)
  *  @see ICaloClusterSelector
  *  @param  cluster pointer to calo cluster object to be selected 
  *  @return true if cluster is selected
@@ -121,7 +109,9 @@ bool CaloSelectorNOT::operator() ( const LHCb::CaloCluster* cluster ) const
     { select = (**selector)( cluster ); }
   ///
   return !select ;
-};
+}
+// ============================================================================
+// The END 
 // ============================================================================
 
 

@@ -60,15 +60,18 @@ private:
 protected:
   
   
-  inline bool isLocMax( const LHCb::CaloDigit*     digit ,
-                        const DirVector&     hits  ,
-                        const DeCalorimeter* det   ) ;
+  inline bool isLocMax 
+  ( const LHCb::CaloDigit*            digit    ,
+    const DeCalorimeter*              detector , 
+    const LHCb::CaloDigit::Container& hits     ) ;
   
-  inline bool isLocMax( const CelAutoTaggedCell* taggedCell ,
-                        const DirVector&         hitsDirect ,
-                        const DeCalorimeter*     detector   ){
+  inline bool isLocMax 
+  ( const CelAutoTaggedCell*          taggedCell ,
+    const DeCalorimeter*              detector , 
+    const LHCb::CaloDigit::Container& hits     ) 
+  {
     if ( 0 == taggedCell ) { return false ; }
-    return isLocMax ( taggedCell->digit() , hitsDirect , detector ) ;
+    return isLocMax ( taggedCell->digit() , detector , hits ) ;
   }
   
   inline void appliRulesTagger( CelAutoTaggedCell*   taggedCell,

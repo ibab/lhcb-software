@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.17 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CellularAutomaton.cpp,v 1.18 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
@@ -29,24 +29,14 @@ DECLARE_ALGORITHM_FACTORY( CellularAutomaton );
 
 // ============================================================================
 inline bool CellularAutomaton::isLocMax
-( const LHCb::CaloDigit*                      digit ,
-  const CellularAutomaton::DirVector&   hits  ,
-  const DeCalorimeter*                  det   ){
-  const CaloNeighbors& ns = det->neighborCells( digit -> cellID() ) ;
-  double e = digit -> e() ;
-  for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ){
-    const CelAutoTaggedCell* cell = hits[*iN];
-    if ( 0 == cell   ) { continue     ; }  
-    const LHCb::CaloDigit* nd = cell->digit() ;
-    if ( 0 == nd     ) { continue     ; }
-    if ( nd->e() > e ) { return false ; }
-  }   
-  return true ;
-};
+( const LHCb::CaloDigit*                digit ,
+  const DeCalorimeter*                  det   , 
+  const LHCb::CaloDigit::Container&     hits  )
+{
+  return LHCb::CaloDataFunctor::isLocalMax ( digit , det , hits ) ;
+}
 // ============================================================================
-
-// ============================================================================
-/** Application of rules of tagging on one cell
+/*  Application of rules of tagging on one cell
  *  - No action if no clustered neighbor 
  *   - Clustered if only one clustered neighbor
  *   - Edge if more then one clustered neighbor 
@@ -223,8 +213,8 @@ StatusCode CellularAutomaton::execute()
   LHCb::ClusterFunctors::ZPosition zPosition( m_detector );
   
   // get input data (sequential and simultaneously direct access!)  
-  LHCb::CaloDigits* hits = get<LHCb::CaloDigits>( m_inputData );
-
+  const LHCb::CaloDigit::Container* hits = get<LHCb::CaloDigits>( m_inputData );
+  
   /** Create the container of clusters and  
    *  register it into the event data store
    */ 
@@ -259,11 +249,10 @@ StatusCode CellularAutomaton::execute()
   }
   
   // Find and mark the seeds (local maxima) 
-  for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag ){
-    if ( isLocMax ( (*itTag)->digit() , 
-                    taggedCellsDirect , 
-                    m_detector          ) ) { 
-      (*itTag)->setIsSeed(); } 
+  for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag )
+  {
+    if ( isLocMax ( (*itTag)->digit() , m_detector , *hits ) ) 
+    { (*itTag)->setIsSeed(); } 
   }
   
   /// Tag the cells which are not seeds

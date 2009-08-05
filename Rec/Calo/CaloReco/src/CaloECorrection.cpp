@@ -1,4 +1,4 @@
-// $Id: CaloECorrection.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloECorrection.cpp,v 1.8 2009-08-05 17:38:29 ibelyaev Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -22,7 +22,7 @@
 DECLARE_TOOL_FACTORY( CaloECorrection );
 
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @see GaudiTool 
  *  @see  AlgTool 
  *  @param type tool type (?)
@@ -84,17 +84,13 @@ CaloECorrection::CaloECorrection
 
   /// interafces 
   declareInterface<ICaloHypoTool> ( this ) ;  
-};
+}
 // ============================================================================
-
+// destructor
 // ============================================================================
-/// destructor
+CaloECorrection::~CaloECorrection () {} 
 // ============================================================================
-CaloECorrection::~CaloECorrection () {} ;
-// ============================================================================
-
-// ============================================================================
-/** finalization of the tool 
+/*  finalization of the tool 
  *  @see  GaudiTool 
  *  @see   AlgTool 
  *  @see  IAlgTool 
@@ -106,11 +102,9 @@ StatusCode CaloECorrection::finalize   ()
   m_hypos.clear();
   /// finalize the base class 
   return GaudiTool::finalize () ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** initialization of the tool 
+/*  initialization of the tool 
  *  @see  GaudiTool 
  *  @see   AlgTool 
  *  @see  IAlgTool 
@@ -171,22 +165,18 @@ StatusCode CaloECorrection::initialize ()
   { debug ()  <<  " -->" << *it  << endmsg ; };
   
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** The main processing method (functor interface)
+/* The main processing method (functor interface)
  *  @see ICaloHypoTool
  *  @param  hypo  pointer to CaloHypo object to be processed
  *  @return status code 
  */  
 // ============================================================================
 StatusCode CaloECorrection::operator() ( LHCb::CaloHypo* hypo  ) const 
-{ return process( hypo ); };
+{ return process( hypo ); }
 // ============================================================================
-
-// ============================================================================
-/** The main processing method
+/*  The main processing method
  *  @see ICaloHypoTool
  *  @param  hypo  pointer to CaloHypo object to be processed
  *  @return status code 
@@ -354,12 +344,10 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const
   LHCb::CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
   parameters ( LHCb::CaloPosition::E ) = Ecor ;
   //  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
-
-
   
   return StatusCode::SUCCESS ;
 
-};
+}
 // ============================================================================
 
 

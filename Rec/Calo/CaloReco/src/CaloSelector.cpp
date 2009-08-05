@@ -1,4 +1,4 @@
-// $Id: CaloSelector.cpp,v 1.8 2009-02-12 10:59:37 cattanem Exp $
+// $Id: CaloSelector.cpp,v 1.9 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -67,8 +67,8 @@ StatusCode CaloSelector::initialize()
   { return Error("Could not initialize the base class GaudiTool!",sc);}
   /// locate the tool 
   m_likelihood = m_lhName.empty() ?
-    tool<ICaloLikelihood>( m_lhType            ) :
-    tool<ICaloLikelihood>( m_lhType , m_lhName ) ;
+    tool<ICaloLikelihood>( m_lhType            , this ) :
+    tool<ICaloLikelihood>( m_lhType , m_lhName , this ) ;
   if( 0 == m_likelihood ) { return StatusCode::FAILURE ; }
   //
   return StatusCode::SUCCESS ;

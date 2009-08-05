@@ -1,23 +1,21 @@
-// $Id: CaloSelectNeutralClusterWithSpd.cpp,v 1.4 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CaloSelectChargedClusterWithSpd.cpp,v 1.1 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 // ============================================================================
-// Local 
-// ============================================================================
 #include "CaloSelectClusterWithSpd.h"
 // ============================================================================
-/** @class CaloSelectNsutralClusterWithSpd
+/** @class CaloSelectChargedClusterWithSpd
  *  Simple seleclton of newural clusters based on Spd information 
  *  @author Olivier Deschamps 
  *  @author Vanya BELYAEV 
  */
-class CaloSelectNeutralClusterWithSpd : public CaloSelectClusterWithSpd 
+class CaloSelectChargedClusterWithSpd : public CaloSelectClusterWithSpd 
 {
   // ==========================================================================
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectNeutralClusterWithSpd>;
+  friend class ToolFactory<CaloSelectChargedClusterWithSpd>;
   // ==========================================================================
 public:
   // ==========================================================================
@@ -32,35 +30,35 @@ public:
       return false ;                                                  // RETURN 
     }
     //
-    return cut() >= n_hit ( *cluster ) ;
+    return cut() < n_hit ( *cluster ) ;
   }
   // ==========================================================================
 protected:
   // ==========================================================================
   /// constructor 
-  CaloSelectNeutralClusterWithSpd
+  CaloSelectChargedClusterWithSpd
   ( const std::string& type   , 
     const std::string& name   ,
     const IInterface*  parent )
     : CaloSelectClusterWithSpd ( type , name , parent )
   {}
   /// virtual destructor 
-  virtual ~CaloSelectNeutralClusterWithSpd() {}
+  virtual ~CaloSelectChargedClusterWithSpd() {}
   // ==========================================================================
 private:  
   // ==========================================================================
   /// the default constructor is disabled 
-  CaloSelectNeutralClusterWithSpd(); // the default constructor is disabled 
+  CaloSelectChargedClusterWithSpd(); // the default constructor is disabled 
   /// the copy constructor is disabled 
-  CaloSelectNeutralClusterWithSpd
-  ( const CaloSelectNeutralClusterWithSpd& ); 
+  CaloSelectChargedClusterWithSpd
+  ( const CaloSelectChargedClusterWithSpd& ); 
   /// the assignement constructor is disabled 
-  CaloSelectNeutralClusterWithSpd& 
-  operator=(const CaloSelectNeutralClusterWithSpd& );
+  CaloSelectChargedClusterWithSpd& 
+  operator=(const CaloSelectChargedClusterWithSpd& );
   // ==========================================================================
 };
 // ============================================================================
-DECLARE_TOOL_FACTORY( CaloSelectNeutralClusterWithSpd );
+DECLARE_TOOL_FACTORY( CaloSelectChargedClusterWithSpd );
 // ============================================================================
 // The END 
 // ============================================================================

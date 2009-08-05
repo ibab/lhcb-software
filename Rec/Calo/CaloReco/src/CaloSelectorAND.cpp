@@ -1,16 +1,16 @@
-// $Id: CaloSelectorAND.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSelectorAND.cpp,v 1.7 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// Include files 
-
-// from Gaudi
+// Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
-
-// local
+// ============================================================================
+// Local
+// ============================================================================
 #include "CaloSelectorAND.h"
-
-
 // ============================================================================
 /** @file 
  * 
@@ -20,11 +20,9 @@
  *  @date 27 Apr 2002 
  */
 // ============================================================================
-
 DECLARE_TOOL_FACTORY( CaloSelectorAND );
-
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @see GaudiTool
  *  @see  AlgTool 
  *  @see IAlgTool 
@@ -43,17 +41,13 @@ CaloSelectorAND::CaloSelectorAND
 {
   declareInterface<ICaloClusterSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
-
+// destructor (virtual and protected)
 // ============================================================================
-/// destructor (virtual and protected)
+CaloSelectorAND::~CaloSelectorAND(){} 
 // ============================================================================
-CaloSelectorAND::~CaloSelectorAND(){} ; 
-// ============================================================================
-
-// ============================================================================
-/** standard initialization of the tool 
+/*  standard initialization of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -70,16 +64,14 @@ StatusCode CaloSelectorAND::initialize ()
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
   {
-    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it );
+    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it , this );
     m_selectors.push_back( selector );
-  };     
+  }     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** standard finalization  of the tool 
+/*  standard finalization  of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -125,7 +117,9 @@ bool CaloSelectorAND::operator() ( const LHCb::CaloCluster* cluster ) const
     { select = (**selector)( cluster ); }
   ///
   return select ;
-};
+}
+// ============================================================================
+// The END 
 // ============================================================================
 
 

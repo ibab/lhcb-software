@@ -1,18 +1,26 @@
-// $Id: CaloHypoAlg.cpp,v 1.8 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloHypoAlg.cpp,v 1.9 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
-
 // Include files
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
+// ============================================================================
 // CaloInterfaces 
+// ============================================================================
 #include "CaloInterfaces/ICaloHypoTool.h" 
+// ============================================================================
 // CaloEvent/Event
+// ============================================================================
 #include "Event/CaloHypo.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloHypoAlg.h"
-
 // ============================================================================
 /** @file CaloHypoAlg.cpp
  * 
@@ -23,11 +31,9 @@
  *  @date 02/09/2002
  */
 // ============================================================================
-
 DECLARE_ALGORITHM_FACTORY( CaloHypoAlg );
-
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param   name   algorithm name 
  *  @param   svcloc pointer to service locator 
  */
@@ -36,23 +42,25 @@ CaloHypoAlg::CaloHypoAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
   : GaudiAlgorithm ( name , svcloc ) 
-    , m_names () // default empty list of tools  
-    , m_inputData()
+    , m_names      () // default empty list of tools  
+    , m_inputData  ()
 {
   // list of tools to be applied 
-  declareProperty( "Tools" , m_names );
-  declareProperty( "InputData" , m_inputData);
-};
+  declareProperty 
+    ( "Tools" , 
+      m_names ,
+      "the list of generic Hypo-tools to be applied" ) ;
+  
+  declareProperty ( "InputData" , m_inputData );
+  
+  setProperty ( "PropertiesPrint" , true ) ;
+}
 // ============================================================================
-
+// destructor
 // ============================================================================
-/** destructor
- */
+CaloHypoAlg::~CaloHypoAlg() {}
 // ============================================================================
-CaloHypoAlg::~CaloHypoAlg() {};
-
-// ============================================================================
-/** standard algorithm initialization 
+/*  standard algorithm initialization 
  *  @see CaloAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
@@ -63,22 +71,26 @@ StatusCode CaloHypoAlg::initialize()
 {  
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
-  { return Error("CouGld not initialize the base class CaloAlgorithm",sc);}
+  { return Error("Could not initialize the base class CaloAlgorithm",sc);}
+  
+  if ( m_inputData.empty() ) 
+  { return Error ( "Empty 'InptuData'"  ) ; }
+  //
   
   for( Names::const_iterator it = m_names.begin() ; 
        m_names.end() != it ; ++it ) 
   {
-    ICaloHypoTool* t = tool<ICaloHypoTool>( *it ) ;
+    ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this ) ;
     if( 0 == t ) { return Error("Could not locate the tool!"); }
     m_tools.push_back( t );
-  };
-  
+  }
+  //
+  if ( m_tools.empty()     ) { Warning ( "Empty list of tools") ; }
+  //   
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** standard algorithm finalization 
+/*  standard algorithm finalization 
  *  @see CaloAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
@@ -91,11 +103,9 @@ StatusCode CaloHypoAlg::finalize()
   m_tools.clear();  
   /// finalize the base class 
   return GaudiAlgorithm::finalize();
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** standard algorithm execution 
+/*  standard algorithm execution 
  *  @see CaloAlgorithm
  *  @see     Algorithm
  *  @see    IAlgorithm
@@ -123,8 +133,10 @@ StatusCode CaloHypoAlg::execute()
     if( sc.isFailure() ) 
     { Error("Error from the Tool! skip hypo!",sc).ignore() ; continue ; }  
   }
-  
+  //
   return StatusCode::SUCCESS ;
-};
+}
+// ============================================================================
+// The END 
 // ============================================================================
 

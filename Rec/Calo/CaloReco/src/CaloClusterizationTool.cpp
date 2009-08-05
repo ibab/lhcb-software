@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.6 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.7 2009-08-05 17:38:29 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -33,11 +33,11 @@ DECLARE_TOOL_FACTORY( CaloClusterizationTool );
 
 // ============================================================================
 inline bool CaloClusterizationTool::isLocMax
-( const LHCb::CaloDigit*                      digit ,
+( const LHCb::CaloDigit*                     digit ,
   const CaloClusterizationTool::DirVector&   hits  ,
-  const DeCalorimeter*                  det   ) 
+  const DeCalorimeter*                       det   ) 
 {
-
+ 
   const CaloNeighbors& ns = det->neighborCells( digit -> cellID() ) ;
   double e = digit -> e() ;
   
@@ -47,35 +47,34 @@ inline bool CaloClusterizationTool::isLocMax
 
   if ( m_withET ) { eT = et ( digit ) ; }
   
-  
   for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ){
     const CelAutoTaggedCell* cell = hits[*iN];
     if ( 0 == cell   ) { continue     ; }  
     const LHCb::CaloDigit* nd = cell->digit() ;
     if ( 0 == nd     ) { continue     ; }
     
-    if ( m_withET ) { eT += et ( nd ) ; }
-    
     if ( nd->e() > e ) { return false ; }
+    
+    if ( m_withET ) { eT += et ( nd ) ; }
   }
 
   if ( m_withET && eT < m_ETcut ) { return false ; }
   
   return true ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** Application of rules of tagging on one cell
- *  - No action if no clustered neighbor 
+/* Application of rules of tagging on one cell
+ *   - No action if no clustered neighbor 
  *   - Clustered if only one clustered neighbor
  *   - Edge if more then one clustered neighbor 
  */
 // ============================================================================
 inline void 
-CaloClusterizationTool::appliRulesTagger( CelAutoTaggedCell*             cell ,
-                                          CaloClusterizationTool::DirVector&  hits ,
-                                          const DeCalorimeter*           det  ){
+CaloClusterizationTool::appliRulesTagger
+( CelAutoTaggedCell*             cell ,
+  CaloClusterizationTool::DirVector&  hits ,
+  const DeCalorimeter*           det  )
+{
   
   // Find in the neighbors cells tagged before, the clustered neighbors cells
   const LHCb::CaloCellID&    cellID = cell->cellID() ;
@@ -150,9 +149,7 @@ inline void CaloClusterizationTool::setEXYCluster
   else 
   { Error( " E,X and Y of cluster could not be evaluated!",sc).ignore(); }
   ///
-};
-// ============================================================================
-
+}
 // ============================================================================
 // Looking neigbours around cell
 // ============================================================================
@@ -166,10 +163,9 @@ void CaloClusterizationTool::look_neig( std::set<LHCb::CaloCellID> in_cells ,
     out_cells.insert( nei.begin(), nei.end() );
   }
 }
-
-//=============================================================================
+// ============================================================================
 // Standard constructor, initializes variables
-//=============================================================================
+// ============================================================================
 CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
@@ -183,10 +179,9 @@ CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
   declareProperty ( "CellSelectorForEnergy" , m_used = "3x3");
 
   declareInterface<ICaloClusterization>(this);
-};
-
+}
 // ============================================================================
-/// initialization
+// initialization
 // ============================================================================
 StatusCode CaloClusterizationTool::initialize() 
 {
@@ -198,11 +193,13 @@ StatusCode CaloClusterizationTool::initialize()
 }
 
 template <class TYPE>
-StatusCode CaloClusterizationTool::_clusterize(std::vector<LHCb::CaloCluster*>&     clusters   ,
-                                        const TYPE& hits, const DeCalorimeter* m_detector, 
-                                        const std::vector<LHCb::CaloCellID>&  _cell_list, 
-                                        const unsigned int m_neig_level){
-
+StatusCode CaloClusterizationTool::_clusterize
+( std::vector<LHCb::CaloCluster*>&       clusters     ,
+  const TYPE& hits, const DeCalorimeter* m_detector   , 
+  const std::vector<LHCb::CaloCellID>&   _cell_list   , 
+  const unsigned int                     m_neig_level )
+{
+  
   //
   m_cellSelector.setSelector(m_used);  
   m_cellSelector.setDet(m_detector);
@@ -436,9 +433,8 @@ StatusCode CaloClusterizationTool::_clusterize(std::vector<LHCb::CaloCluster*>& 
 
 
 
-//=============================================================================
+// ============================================================================
 // Destructor
-//=============================================================================
-CaloClusterizationTool::~CaloClusterizationTool() {} 
-
-//=============================================================================
+// ============================================================================
+CaloClusterizationTool::~CaloClusterizationTool() {}
+// ============================================================================

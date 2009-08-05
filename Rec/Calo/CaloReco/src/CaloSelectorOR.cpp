@@ -1,16 +1,16 @@
-// $Id: CaloSelectorOR.cpp,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSelectorOR.cpp,v 1.7 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // Include files 
-
-// from Gaudi
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloSelectorOR.h"
-
-
 // ============================================================================
 /** @file 
  * 
@@ -20,11 +20,9 @@
  *  @date 27 Apr 2002 
  */
 // ============================================================================
-
 DECLARE_TOOL_FACTORY( CaloSelectorOR );
-
 // ============================================================================
-/** StORard constructor
+/*  StORard constructor
  *  @see GaudiTool
  *  @see  AlgTool 
  *  @see IAlgTool 
@@ -43,17 +41,13 @@ CaloSelectorOR::CaloSelectorOR
 {
   declareInterface<ICaloClusterSelector> (this);
   declareProperty( "SelectorTools" , m_selectorsTypeNames );
-};
+}
 // ============================================================================
-
+// destructor (virtual OR protected)
 // ============================================================================
-/// destructor (virtual OR protected)
+CaloSelectorOR::~CaloSelectorOR(){} 
 // ============================================================================
-CaloSelectorOR::~CaloSelectorOR(){} ; 
-// ============================================================================
-
-// ============================================================================
-/** stORard initialization of the tool 
+/*  stORard initialization of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -70,16 +64,14 @@ StatusCode CaloSelectorOR::initialize ()
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
   {
-    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it );
+    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it , this );
     m_selectors.push_back( selector );
-  };     
+  }     
   ///
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** stORard finalization  of the tool 
+/*  stORard finalization  of the tool 
  *  @see IAlgTool 
  *  @see AlgTool 
  *  @see GaudiTool 
@@ -93,11 +85,9 @@ StatusCode CaloSelectorOR::finalize   ()
   m_selectorsTypeNames .clear() ;
   // finalize the base class 
   return GaudiTool::finalize () ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** "select"/"preselect" method 
+/*  "select"/"preselect" method 
  *  @see ICaloClusterSelector
  *  @param  cluster pointer to calo cluster object to be selected 
  *  @return true if cluster is selected
@@ -105,8 +95,6 @@ StatusCode CaloSelectorOR::finalize   ()
 // ============================================================================
 bool CaloSelectorOR::select     
 ( const LHCb::CaloCluster* cluster ) const { return (*this) ( cluster ) ; }
-// ============================================================================
-
 // ============================================================================
 /** "select"/"preselect" method (functor interface)
  *  @see ICaloClusterSelector
@@ -120,13 +108,10 @@ bool CaloSelectorOR::operator() ( const LHCb::CaloCluster* cluster ) const
   bool select = false ;
   for( Selectors::const_iterator selector = m_selectors.begin() ;
        !select && m_selectors.end() != selector ; ++selector )
-    { select = (**selector)( cluster ); }
+  { select = (**selector)( cluster ); }
   ///
   return select ;
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 // The END 
 // ============================================================================

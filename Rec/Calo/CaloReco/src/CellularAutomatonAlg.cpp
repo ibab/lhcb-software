@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.5 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.6 2009-08-05 17:38:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,17 +42,19 @@ DECLARE_ALGORITHM_FACTORY( CellularAutomatonAlg );
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-CellularAutomatonAlg::CellularAutomatonAlg( const std::string& name,
-                          ISvcLocator* pSvcLocator)
+CellularAutomatonAlg::CellularAutomatonAlg
+( const std::string& name        ,
+  ISvcLocator*       pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_sort             ( true  )
-    , m_sortByET         ( false )
-    , m_tool(0)
+  , m_sort             ( true  )
+  , m_sortByET         ( false )
+  , m_tool(0)
 {
-  declareProperty("InputData" , m_inputData = LHCb::CaloDigitLocation::Ecal);
-  declareProperty("Detector"  , m_detData   = DeCalorimeterLocation::Ecal ) ;
-  declareProperty("Level"     , m_neig_level = 0) ;
-  declareProperty("OutputData", m_outputData=  LHCb::CaloClusterLocation::Ecal);  
+  
+  declareProperty ( "InputData" , m_inputData = LHCb::CaloDigitLocation::Ecal);
+  declareProperty ( "Detector"  , m_detData   = DeCalorimeterLocation::Ecal ) ;
+  declareProperty ( "Level"     , m_neig_level = 0) ;
+  declareProperty ( "OutputData", m_outputData=  LHCb::CaloClusterLocation::Ecal);  
   // sort the clusters ? 
   declareProperty ( "Sort"     , m_sort     ) ;
   declareProperty ( "SortByET" , m_sortByET ) ;
@@ -61,14 +63,14 @@ CellularAutomatonAlg::CellularAutomatonAlg( const std::string& name,
   // set default data as a function of detector
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
   std::string det = name.substr( index, 4 );
-  if(det == "Ecal")
+  if ( det == "Ecal" )
   {
     m_inputData=   LHCb::CaloDigitLocation::Ecal;
     m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
       LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
     m_detData= DeCalorimeterLocation::Ecal;
   }
-  else if( det == "Hcal")
+  else if ( det == "Hcal")
   {
     m_inputData=   LHCb::CaloDigitLocation::Hcal;
     m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
@@ -187,7 +189,7 @@ StatusCode CellularAutomatonAlg::execute()
   if(m_tool->iterations() < m_passMin)m_passMin = m_tool->iterations();
   if(m_tool->iterations() > m_passMax)m_passMax = m_tool->iterations();
   
-  counter( "#Clusters") += output->size() ;
+  counter ( "#clusters") += output->size() ;
   
   if ( msgLevel( MSG::DEBUG) )
   {
