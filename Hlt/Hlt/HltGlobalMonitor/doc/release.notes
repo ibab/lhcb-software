@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.45 2009-08-03 12:51:38 graven Exp $
+!$Id: release.notes,v 1.46 2009-08-05 19:56:28 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
 
 
+!========================== HltGlobalMonitor v2r6 2009-08-05 ===================
 
 ! 2009-08-01 - Gerhard Raven
  - change long to uint to silence warnings in nightly
