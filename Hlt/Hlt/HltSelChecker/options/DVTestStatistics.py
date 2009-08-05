@@ -44,6 +44,7 @@ DaVinci().Simulation = True
 DaVinci().TupleFile =  "Hlt12-StatsTuple.root"
 # DaVinci().HistogramFile = "DVHlt2stats.root"
 DaVinci().MoniSequence += [ moni, statseq ]
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 def noInit():
     GaudiSequencer("PhysInitSeq").Members = []
