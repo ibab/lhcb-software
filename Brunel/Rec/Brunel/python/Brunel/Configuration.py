@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.89 2009-07-06 15:02:15 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.90 2009-08-05 14:33:26 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -457,6 +457,8 @@ class Brunel(LHCbConfigurableUser):
 
         # Expert histograms
         if expert:
+            if "RICH" in moniSeq :
+                RichRecQCConf().setProp( "ExpertHistos", True )
             if "TT" in moniSeq :
                 from Configurables import ST__STClusterMonitor
                 clusMoni = ST__STClusterMonitor("TTClusterMonitor")
