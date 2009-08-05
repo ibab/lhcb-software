@@ -591,6 +591,30 @@ def make(slotName, projectName, minusj):
         configuration.system(fullCmd)
         install(slotName, projectName)
     else:
+        if os.path.exists(os.sep.join(['..','..', 'Makefile'])) and minusj > 1:
+            os.chdir(os.sep.join(['..']*2))
+            if 'use-distcc' in os.environ.get('CMTEXTRATAGS', '') or 'force-distcc' in os.environ.get('CMTEXTRATAGS', ''):
+                usedistcc = '-j'
+            else:
+                usedistcc = ''
+            configuration.system('make %s -k -l%d > make.%s.log' % (usedistcc, minusj, os.environ['CMTCONFIG']) )
+            os.chdir(generatePath(slot, project, 'TAG', projectName))
+            logFiles = []
+            for r, d, f in os.walk("."):
+                if r == ".": continue
+                elif "cmt" in d: d[:] = ["cmt"]
+                else:
+                    if "build.%(CMTCONFIG)s.log" % os.environ in f:
+                        logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
+            logFiles.sort()
+            for x in logFiles:
+                print "-"*80
+                print "Logfile:", x[1]
+                print "-"*80
+                print file(x[1], 'r').read()
+            print '*'*80
+            print 'Build finished:', time.strftime('%c', time.localtime())
+            return
         makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
         if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
         if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
