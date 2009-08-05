@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.294 2009-08-04 21:10:06 graven Exp $ 
+! $Id: release.notes,v 1.295 2009-08-05 08:03:29 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Patrick Koppenburg
+ - Add Miriam's thresholds for effective scenario
+ - Increment to v4r2
 
 !========================== HltConf v4r1 2009-08-04 ===================
 

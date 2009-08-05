@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-05 - Patrick Koppenburg
+ - Add file for effective scenario
+
 ! 2009-08-03 - Patrick Koppenburg
  - Bug fix : name of Truth sequencer was worng in all files.
 
