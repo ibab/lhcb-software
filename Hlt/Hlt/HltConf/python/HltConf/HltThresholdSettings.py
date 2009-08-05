@@ -9,8 +9,8 @@ __all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType',
             'Hlt2_Leptonic', 'Hlt2_Hadronic', 'Hlt2_Charming', 'Hlt2_Effective' )
 
 def SettingsForDataType( x ) :
-    _dataType2Settings = { 'DC06' : Hlt2_Optimised ,
-                           'MC09' : Miriam_20090430 }  # temporary
+    _dataType2Settings = { 'DC06' : {} ,  # development is default
+                           'MC09' : {} }  # development is default
     return _dataType2Settings[x] if x in _dataType2Settings else None
 
 #########################################################################################
