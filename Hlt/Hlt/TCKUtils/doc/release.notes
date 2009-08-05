@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-08-04 - Gerhard Raven
+ - add functions from Klaus for TCK visualizer 
+
 !========================== TCKUtils v1r2 2009-07-03 ===================
 ! 2009-06-30 - Gerhard Raven
  - add a comment reminding to rewrite sandbox using processing module...

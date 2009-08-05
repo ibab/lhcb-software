@@ -406,6 +406,42 @@ def getRoutingBits( id , cas = ConfigAccessSvc() ) :
             continue
     return None
 
+## TODO:  is a string the best thing to return???
+def getAlgorithms( id, cas = ConfigFileAccessSvc() ) :
+    tree =  execInSandbox( _getConfigTree, id, cas )
+    tempstr = ''
+    for i in tree :
+       if i.leaf and i.leaf.kind =='IAlgorithm':
+          s =  i.depth*3*' ' + i.leaf.name
+          tempstr = tempstr + s + (80-len(s))*' ' + str(i.leaf.digest) + '\n'
+    return tempstr
+
+def getProperties( id, algname='',property='',cas = ConfigFileAccessSvc() ) :
+    identLine=''
+    retlist=[]
+    tree = execInSandbox( _getConfigTree, id, cas )
+    import re
+    if algname :
+        reqNode = re.compile(algname)
+        matchNode = lambda x : reqNode.match(x.leaf.name)
+    else :
+        matchNode = None
+    if property :
+        reqProp = re.compile(property)
+        matchProp = lambda x : reqProp.match(x)
+    else :
+        matchProp = None
+    for i in tree :
+       if not i.leaf or (matchNode and not matchNode(i)) : continue
+       first = True
+       for (k,v) in i.leaf.properties().iteritems() :
+          if matchProp and not matchProp(k) : continue
+          if first :
+            identLine =  i.leaf.fullyQualifiedName
+            first = False
+          retlist.append((identLine, v))
+    return retlist
+
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(_getProperty(id,'Hlt1','Members',cas))
