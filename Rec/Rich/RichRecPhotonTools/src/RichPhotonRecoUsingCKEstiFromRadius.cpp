@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.8 2009-07-30 11:20:00 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.9 2009-08-05 10:49:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -75,9 +75,8 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   for ( Rich::Radiators::const_iterator irad = Rich::radiators().begin();
         irad != Rich::radiators().end(); ++irad )
   {
-    const Rich::RadiatorType rad = *irad;
-    // scale factor
-    m_scale[rad] = m_ckThetaMax[rad] / m_sepGMax[rad];
+    // scale factor for each
+    m_scale[*irad] = m_ckThetaMax[*irad] / m_sepGMax[*irad];
   }
 
   return sc;
