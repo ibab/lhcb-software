@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.37 2009-08-04 13:51:14 graven Exp $
+$Id: release.notes,v 1.38 2009-08-05 10:56:06 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-05 - Patrick Koppenburg
+ - Remove RichRecSys from all dependencies
+ - Increment to v1r6
 
 !========================== Hlt2Lines v1r5 2009-08-04 ===================
 

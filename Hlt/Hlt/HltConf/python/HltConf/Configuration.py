@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.102 2009-08-03 12:26:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.103 2009-08-05 10:58:13 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -17,7 +17,6 @@ from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
 from HltConf.Hlt1             import Hlt1Conf, hlt1TypeDecoder
 from HltConf.Hlt2             import Hlt2Conf, hlt2TypeDecoder
-from RichRecSys.Configuration import *
 
 ##################################################################################
 class HltConf(LHCbConfigurableUser):

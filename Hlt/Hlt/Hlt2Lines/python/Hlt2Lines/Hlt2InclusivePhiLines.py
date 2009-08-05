@@ -15,11 +15,8 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line
 from HltLine.HltLine import Hlt2Member
-from Configurables import RichRecSysConf
 
 class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
-
-    __used_configurables__ = [RichRecSysConf]
     
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIP'             : 0.05     # mm

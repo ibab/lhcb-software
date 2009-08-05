@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.295 2009-08-05 08:03:29 pkoppenb Exp $ 
+! $Id: release.notes,v 1.296 2009-08-05 10:58:13 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2009-08-05 - Patrick Koppenburg
  - Add Miriam's thresholds for effective scenario
+ - Remove dependency of RICH
  - Increment to v4r2
 
 !========================== HltConf v4r1 2009-08-04 ===================
