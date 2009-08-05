@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.298 2009-08-05 14:10:08 pkoppenb Exp $ 
+! $Id: release.notes,v 1.299 2009-08-05 19:50:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v4r1 2009-08-04 ===================
 
 ! 2009-08-05 - Patrick Koppenburg
  - Move HltReco.py to HltLine
@@ -14,9 +16,7 @@
 ! 2009-08-05 - Patrick Koppenburg
  - Add Miriam's thresholds for effective scenario
  - Remove dependency of RICH
- - Increment to v4r2
 
-!========================== HltConf v4r1 2009-08-04 ===================
 
 ! 2009-08-03 - Patrick Koppenburg
  - Move PID into lines :
