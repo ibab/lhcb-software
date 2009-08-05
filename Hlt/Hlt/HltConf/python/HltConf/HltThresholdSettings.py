@@ -6,7 +6,7 @@ Threshold settings for various trigger configurations
 """
 
 __all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType',
-            'Hlt2_Leptonic', 'Hlt2_Hadronic', 'Hlt2_Charming', 'Hlt2_Optimised' )
+            'Hlt2_Leptonic', 'Hlt2_Hadronic', 'Hlt2_Charming', 'Hlt2_Effective' )
 
 def SettingsForDataType( x ) :
     _dataType2Settings = { 'DC06' : Hlt2_Optimised ,
