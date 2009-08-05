@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.17 2009-08-05 12:49:35 pkoppenb Exp $
+! $Id: release.notes,v 1.18 2009-08-05 20:06:56 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v1r4 2009-08-05 ===================
 ! 2009-08-05 - Patrick Koppenburg
  - Move HltDecodeRaw here !! TEMPORARY !!
  - Increment to v1r4
 
-!========================== HltLine v1r4 2009-08-04 ===================
 ! 2009-08-03 - Gerhard Raven
  - add a 'priority' to HltLines (expert use only!)
  - configure HltLine to flag incidents received in HltDecReport
