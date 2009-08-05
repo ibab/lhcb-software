@@ -5,4 +5,4 @@
  #  @date 2009-07-20
  #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'Hlt2_Charming'  # just an example
+DaVinci().HltThresholdSettings = 'Charming_Nominal'  # just an example

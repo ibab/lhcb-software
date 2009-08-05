@@ -21,6 +21,7 @@
 
 ! 2009-08-05 - Patrick Koppenburg
  - Add file for effective scenario
+ - Rename scenarions to Effective_Nominal, etc
 
 ! 2009-08-03 - Patrick Koppenburg
  - Bug fix : name of Truth sequencer was worng in all files.

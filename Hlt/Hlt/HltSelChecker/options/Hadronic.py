@@ -5,4 +5,4 @@
  #  @date 2009-07-20
  #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'Hlt2_Hadronic'  # just an example
+DaVinci().HltThresholdSettings = 'Hadronic_Nominal'  # just an example
