@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.233 2009-07-31 12:02:36 jonrob Exp $
+! $Id: release.notes,v 1.234 2009-08-05 12:56:26 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-08-05 - Chris Jones
+ - Remove ICameraTool.h - Now part of Online/Camera
 
 ! 2009-07-31 - Chris Jones
  - Add new pixelCreator type "AllMCRichHits" to RichTools() Configurable.
