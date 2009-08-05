@@ -1,7 +1,18 @@
-! $Id: release.notes,v 1.126 2009-05-25 12:20:30 cattanem Exp $
+! $Id: release.notes,v 1.127 2009-08-05 17:33:00 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-08-05 - Vanya BELYAEV
+
+ - CaloDataFunctor
+
+      remove duplicated functors 
+      add isLocalMax 
+
+ - CaloNeighbours - helpe function to get proper neighbours 
+ - cmt/requirements 
+    version increment to v8r6 
 
 !========================== CaloUtils v8r5 2009-05-25 =========================
 ! 2009-05-21 - Olivier Deschamps

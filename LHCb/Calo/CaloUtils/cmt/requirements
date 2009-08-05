@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.61 2009-05-18 16:28:38 ibelyaev Exp $
+# $Id: requirements,v 1.62 2009-08-05 17:33:00 ibelyaev Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v8r5
+version             v8r6
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -29,14 +29,18 @@ apply_pattern install_more_includes more=CaloUtils
 # ================= constituents: linker library ==============================
 library             CaloUtils  -import=AIDA  *.cpp
 
-# ============== Produce LCG dictionary =======================================
-apply_pattern    reflex_dictionary                                     \
-                 dictionary=CaloUtils                                  \
-                 headerfiles=$(CALOUTILSROOT)/dict/CaloUtilsDict.h     \
-                 selectionfile=$(CALOUTILSROOT)/dict/CaloUtils.xml     \
-                 options=" -U__MINGW32__ "
+# ================= Produce LCG dictionary ====================================
+apply_pattern       reflex_dictionary                                     \
+                    dictionary=CaloUtils                                  \
+                    headerfiles=$(CALOUTILSROOT)/dict/CaloUtilsDict.h     \
+                    selectionfile=$(CALOUTILSROOT)/dict/CaloUtils.xml     \
+                    options=" -U__MINGW32__ "
 
 # ================= patterns ==================================================
 apply_pattern       linker_library library=CaloUtils
 
 macro_append CaloUtils_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
+
+# ============================================================================
+# The END 
+# ============================================================================
