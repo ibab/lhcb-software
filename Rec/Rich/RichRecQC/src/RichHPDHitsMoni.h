@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
  *  CVS Log :-
- *  $Id: RichHPDHitsMoni.h,v 1.5 2008-02-01 14:19:11 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -38,44 +38,40 @@ namespace Rich
 {
   namespace Rec
   {
-    namespace MC
+    //-----------------------------------------------------------------------------
+    /** @class HPDHitsMoni RichHPDHitsMoni.h
+     *
+     *  Simple monitor for the hits in each HPD
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   05/04/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class HPDHitsMoni : public Rich::Rec::HistoAlgBase
     {
 
-      //-----------------------------------------------------------------------------
-      /** @class HPDHitsMoni RichHPDHitsMoni.h
-       *
-       *  Simple monitor for the hits in each HPD
-       *
-       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-       *  @date   05/04/2002
-       */
-      //-----------------------------------------------------------------------------
+    public:
 
-      class HPDHitsMoni : public Rich::Rec::HistoAlgBase
-      {
+      /// Standard constructor
+      HPDHitsMoni( const std::string& name,
+                   ISvcLocator* pSvcLocator );
 
-      public:
+      virtual ~HPDHitsMoni( ); ///< Destructor
 
-        /// Standard constructor
-        HPDHitsMoni( const std::string& name,
-                     ISvcLocator* pSvcLocator );
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
 
-        virtual ~HPDHitsMoni( ); ///< Destructor
+    private: // data
 
-        virtual StatusCode initialize();    // Algorithm initialization
-        virtual StatusCode execute   ();    // Algorithm execution
+      /// Raw Buffer Decoding tool
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
 
-      private: // data
+      /// Pointer to RICH system detector element
+      const DeRichSystem * m_richSys;
 
-        /// Raw Buffer Decoding tool
-        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+    };
 
-        /// Pointer to RICH system detector element
-        const DeRichSystem * m_richSys;
-
-      };
-
-    }
   }
 }
 

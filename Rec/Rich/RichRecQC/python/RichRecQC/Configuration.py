@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.38 2009-07-23 17:26:44 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.39 2009-08-05 23:14:59 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -43,7 +43,7 @@ class RichRecQCConf(RichConfigurableUser):
                            ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
        ,"ExpertHistos" : False  # set to True to write out expert histos
-       ,"ExpertTests" : [ "RichPixelPositions",
+       ,"ExpertTests" : [ "RichPixelPositions", "HPDHitPlots",
                           "RichTrackGeometry","RichGhostTracks","RichCKThetaResolution",
                           "RichTrackResolution","RichPhotonSignal","RichTrackCKResolutions",
                           "RichPhotonGeometry","PhotonRecoEfficiency","RichPhotonTrajectory",
@@ -311,6 +311,12 @@ class RichRecQCConf(RichConfigurableUser):
             from Configurables import Rich__Rec__MC__PixelPositionMonitor
             seq = self.newSeq(sequence,check)
             seq.Members += [Rich__Rec__MC__PixelPositionMonitor("RiRecPixelPosMoni")]
+
+        check = "HPDHitPlots"
+        if check in checks :
+            from Configurables import Rich__Rec__HPDHitsMoni
+            seq = self.newSeq(sequence,check)
+            seq.Members += [Rich__Rec__HPDHitsMoni("HPDHitsMoni")]
 
         check = "RichTrackGeometry"
         if check in checks :

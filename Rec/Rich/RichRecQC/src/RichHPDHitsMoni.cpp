@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.9 2009-06-03 09:20:26 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.10 2009-08-05 23:14:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -21,7 +21,7 @@
 #include "RichHPDHitsMoni.h"
 
 // namespace
-using namespace Rich::Rec::MC;
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
@@ -80,6 +80,10 @@ StatusCode HPDHitsMoni::execute()
         // inhibited HPD ?
         if ( (*iHPD).second.header().inhibit() ) { continue; }
 
+        // ZS or not ?
+        const std::string& ZS = ( (*iHPD).second.header().zeroSuppressed() ?
+                                  "/ZS/" : "/NonZS/" );
+
         // HPD info
         const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
         const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
@@ -94,12 +98,12 @@ StatusCode HPDHitsMoni::execute()
         HPD1 << "Number hits in HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
         HPD2 << "Hit Map for HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
 
-        // Alice or LHCb mode ? Use to define number of pixel rows
+        // Alice or LHCb mode ? Use to define number of pixel rows for plots
         const int nPixRows = ( (*iHPD).second.header().aliceMode() ? 
                                Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
 
         plot1D( rawIDs.size(),
-                hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(),
+                hid(rich,"NumHits"+ZS+(std::string)l0ID), HPD1.str(),
                 -0.5,100.5,101 );
 
         // Loop over raw RichSmartIDs
@@ -114,7 +118,7 @@ StatusCode HPDHitsMoni::execute()
 
           // fill plot
           plot2D( (*iR).pixelCol(), row,
-                  hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(),
+                  hid(rich,"HitMaps"+ZS+(std::string)l0ID), HPD2.str(),
                   -0.5,Rich::DAQ::NumPixelColumns-0.5,
                   -0.5,nPixRows-0.5,
                   Rich::DAQ::NumPixelColumns,nPixRows );

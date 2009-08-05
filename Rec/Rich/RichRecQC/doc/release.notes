@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-08-05 - Chris Jones
+ - Add HPD hit monitor to expert checks.
+ - Update HPD hit monitor to make seperate plots for ZS and non-ZS data.
+
 ! 2009-07-30 - Chris Jones
  - Convert all endreq to endmsg
 
