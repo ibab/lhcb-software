@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.68 2009-08-05 09:02:54 graven Exp $
+# $Id: requirements,v 1.69 2009-08-05 19:59:42 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -45,13 +45,13 @@ use RecSys              v*         -no_auto_imports
 #-- HLT packages 
 ### Temporarily here...
 use Hlt2SharedParticles v2r0    Hlt
-use Hlt1Lines           v1r3    Hlt
+use Hlt1Lines           v1r2p1  Hlt
 use Hlt2Lines           v1r5    Hlt
 use HltCommon           v5r8p3  Hlt
 use HltLine             v1r4    Hlt
 use HltConf             v4r1    Hlt
 use HltGlobalMonitor    v2r6    Hlt
-use TCKUtils            v1r2    Hlt
+use TCKUtils            v1r3    Hlt
 #use HltSys		v*	     -no_auto_imports
 #######################
 use HltBase             v6r5p1  Hlt   # Gerhard Raven
