@@ -1,28 +1,12 @@
-// $Id: CaloPi0Monitor.cpp,v 1.8 2009-03-05 15:52:51 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.9 2009-08-05 17:40:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2009/02/20 18:03:24  odescham
-// prepare for DQ
-//
-// Revision 1.6  2008/09/12 09:50:34  odescham
-// fix compilation warning
-//
-// Revision 1.5  2008/09/09 15:37:24  odescham
-// review
-//
-// Revision 1.4  2007/07/25 19:49:13  odescham
-// major release : see doc
-//
-// Revision 1.3  2005/11/07 12:16:38  odescham
-// v2r0 - adapt to the new Track Event Model
-//
-// Revision 1.2  2005/05/08 09:58:25  ibelyaev
-//  remove associators, update options
-//
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <vector>
 // ============================================================================
 // Event
 // ============================================================================

@@ -1,4 +1,10 @@
+// $Id: CaloDigitMonitor.cpp,v 1.8 2009-08-05 17:40:24 ibelyaev Exp $ 
+// ============================================================================
 // Include files
+// ============================================================================
+// STD & STL 
+// ============================================================================
+#include <vector>
 // ============================================================================
 // Event
 // ============================================================================
@@ -12,13 +18,12 @@
 // ============================================================================
 #include  "CaloMoniAlg.h"
 // ============================================================================
-
 /** @class CaloDigitMonitor CaloDigitMonitor.cpp
  *
  *  The algorithm for trivial monitoring of "CaloDigit" containers.
  *  The algorithm produces the following histograms:
  *   1. CaloDigit multiplicity
- *   2. CaloDigit ocupancy 2D plot per area
+ *   2. CaloDigit occupancy 2D plot per area
  *   3. CaloDigit energy 2D plot per area
  *  The same set of histograms, but with cut on Et (or E), is produced if specified
  *
@@ -34,7 +39,6 @@
  *  @author Konstantin Belous Konstantin.Beloous@itep.ru
  *  @date   21/06/2007
  */
-
 class CaloDigitMonitor : public CaloMoniAlg
 {
   /// friend factory for instantiation
