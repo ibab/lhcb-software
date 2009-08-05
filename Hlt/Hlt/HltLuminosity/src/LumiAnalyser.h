@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.10 2009-02-25 09:01:42 graven Exp $
+// $Id: LumiAnalyser.h,v 1.11 2009-08-05 09:47:03 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -65,11 +65,14 @@ protected:
   // counter with all the events with fine inputs
   std::string m_DataName;                        // input location of summary data
   bool m_rawHistos;                              // flag to store raw histos of R
+  bool m_inHistos;                               // flag to store input histos
 
   std::vector< std::string > m_Variables;        // list of variables to look at
   std::vector< std::string > m_Averages;         // list of averages to look at
+  std::vector<int> m_MaxBins;                    // number of bins in the histos
   std::vector<int> m_Thresholds;                 // thresholds to apply
-  int m_MaxBin;                                  // default maximum bin number
+  int m_MaxBin;                                  // default maximum bin
+  int m_NumBin;                                  // default number of bins
   int m_Threshold;                               // default threshold
   std::vector< std::string > m_BXTypes;          // list of bunch crossing types to look at
   std::vector< std::string > m_addBXTypes;       // list of bunch crossing types to be added
@@ -85,6 +88,7 @@ protected:
   typedef std::map< std::string, AIDA::IHistogram1D* > histoMap;  // simple map of histos
   typedef std::map< std::string, histoMap* > histoStore;          // map of maps
   histoStore m_histoStore;                                        // main store for raw histos
+  AIDA::IHistogram1D* m_bxHisto;                                  // BX types histo
   histoMap m_trendMap;                                            // trends
   long m_trendSize;                                               // size of trend histos
   long m_trendInterval;                                           // interval for trending (gpsTime seconds)

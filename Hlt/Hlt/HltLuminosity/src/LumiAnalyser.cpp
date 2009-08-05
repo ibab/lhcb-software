@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.10 2009-07-10 15:52:45 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.11 2009-08-05 09:47:03 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -31,8 +31,11 @@ LumiAnalyser::LumiAnalyser( const std::string& name,
   declareProperty("InputVariables",         m_Variables );
   declareProperty("Thresholds",             m_Thresholds );
   declareProperty("Threshold",              m_Threshold = 5 );
+  declareProperty("MaxBins",                m_MaxBins );
   declareProperty("MaxBin",                 m_MaxBin = 500 );
+  declareProperty("NumBin",                 m_NumBin = 50 );
   declareProperty("RawHistos",              m_rawHistos = true );
+  declareProperty("InHistos",               m_inHistos = true );
   declareProperty("TrendSize"             , m_trendSize = 100 );
   declareProperty("TrendInterval"         , m_trendInterval = 100 );
   declareProperty("ForceTrend"            , m_forceTrend = false );
@@ -55,14 +58,14 @@ StatusCode LumiAnalyser::initialize() {
 
   // initialize lists
   if (m_BXTypes.empty()) {
-      m_BXTypes.push_back("BeamCrossing");
+      m_BXTypes.push_back("NoBeam");
       m_BXTypes.push_back("Beam1");
       m_BXTypes.push_back("Beam2");
-      m_BXTypes.push_back("NoBeam");
+      m_BXTypes.push_back("BeamCrossing");
   }
   if (m_addBXTypes.empty()) {
-      m_addBXTypes.push_back("BeamCrossing");
       m_addBXTypes.push_back("NoBeam");
+      m_addBXTypes.push_back("BeamCrossing");
   }
   if (m_subtractBXTypes.empty()) {
       m_subtractBXTypes.push_back("Beam1");
@@ -78,6 +81,10 @@ StatusCode LumiAnalyser::initialize() {
   // ------------------------------------------
   m_call_counter = 0;
 
+  if (m_Variables.size()!=m_MaxBins.size() && !m_MaxBins.empty()) {
+    error() << "wrong numer of histogram maximum bin values" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if (m_Variables.size()!=m_Thresholds.size() && !m_Thresholds.empty()) {
     error() << "wrong numer of threshold values" << endmsg;
     return StatusCode::FAILURE;
@@ -115,10 +122,11 @@ StatusCode LumiAnalyser::initialize() {
     std::string name  = *ivar;
     // announce the values
     if (m_publishToDIM ) {
-      declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
-      declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
+      //declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
+      //declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
       declareInfo(name+"_mean", m_means[k], "mean of "+name);
-      info() << "counter " << name << " declared at " << k << " with threshold " << m_Thresholds[k] << endmsg;
+      declareInfo(name+"_threshold", m_thresholds[k], "fraction over threshold of "+name);
+      info() << "counter " << name << " declared to DIM (" << k << ") with threshold " << m_Thresholds[k] << endmsg;
     }
   }
 
@@ -189,7 +197,11 @@ StatusCode LumiAnalyser::finalize() {
 void LumiAnalyser::setupStore() {
   debug() << "LumiAnalyser::setupStore()0" << endmsg;
 
+  // hard-wired BX types histo
+  m_bxHisto = initializeHisto("BXTypes", 0, 4, 4);
+
   // set up store of pairs for averaging and for raw R histos
+  bool useMaxBins = (m_Variables.size()==m_MaxBins.size());
   for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx) {
     std::string bx=*iBx;
     iiMap *theMap = new iiMap();
@@ -198,12 +210,37 @@ void LumiAnalyser::setupStore() {
     m_prevStore[bx] = prevMap;
     histoMap* hMap=new histoMap();     // create storage for the existing histograms 
     m_histoStore[bx]=hMap;
-    for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
+    int i=0;
+    for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar, ++i) {
       std::string var=*iVar;
       iiPair *thePair = new iiPair();
       iiPair *prevPair = new iiPair();
       (*theMap)[var] = thePair;
       (*prevMap)[var] = prevPair;
+
+      // the input histos
+      if ( m_inHistos ) {
+        std::string prefix="In_";
+        // defaults for threshold histos
+        double x_min = 0;
+        double x_max = 1.;
+        unsigned int nbin = m_NumBin;
+        if ( var.find("_threshold") == std::string::npos ) {
+          // direct counters - add a bin for negatives
+	  int bins = m_MaxBin;
+	  if (useMaxBins) {
+	    bins = m_MaxBins[i];
+	  }
+	  double x0 = -0.5;
+	  x_max = bins + x0;
+          int n = std::min(m_NumBin, bins);
+	  double width = (double) bins/n;
+          x_min = x0 - width;
+          nbin = n+1;
+        }
+        AIDA::IHistogram1D* theHisto = initializeHisto(prefix+var+'_'+bx, x_min, x_max, nbin);
+        (*hMap)[prefix+var]=theHisto;  // store in map
+      }
 
       // the raw histos for R
       if ( m_rawHistos ) {
@@ -211,12 +248,19 @@ void LumiAnalyser::setupStore() {
         // defaults for threshold histos
         double x_min = 0;
         double x_max = 1.;
-        unsigned int nbin = 100;
+        unsigned int nbin = m_NumBin;
         if ( var.find("_threshold") == std::string::npos ) {
           // direct R
-          x_min = -0.5;
-          x_max = m_MaxBin-x_min;
-          nbin = m_MaxBin;
+	  int bins = m_MaxBin;
+	  if (useMaxBins) {
+	    bins = m_MaxBins[i];
+	  }
+	  double x0 = -0.5;
+	  x_max = bins + x0;
+          int n = std::min(m_NumBin, bins);
+	  double width = (double) bins/n;
+          x_min = x0 - width;
+          nbin = n+1;
         }
         AIDA::IHistogram1D* theHisto = initializeHisto(prefix+var+'_'+bx, x_min, x_max, nbin);
         (*hMap)[var]=theHisto;  // store in map
@@ -256,10 +300,22 @@ StatusCode LumiAnalyser::accumulate() {
   sbxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   std::string bxType = sbxType.str();
 
+  // protection
+  if (m_theStore.find(bxType) == m_theStore.end() ) {
+    warning() << "unknown BX Type: " << bxType << endmsg;    
+    return StatusCode::SUCCESS;  
+  }
+  int ib = 0;
+  for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx, ++ib) {
+    std::string bx=*iBx;
+    if ( bx == bxType ) m_bxHisto->fill((double) ib);
+  }
+
   // use the storage belonging to the bxType
   iiMap *theMap = m_theStore[bxType];
   
   int i = 0;
+  std::string prefix="In_";
   for (std::vector<std::string>::iterator iVar = m_Variables.begin(); iVar != m_Variables.end(); ++iVar,++i) {
     std::string var=*iVar;
     int counter = LHCb::LumiCounters::counterKeyToType(var);
@@ -275,8 +331,10 @@ StatusCode LumiAnalyser::accumulate() {
         if ( ivalue > m_Thresholds[i] ) {
           ((*theMap)[var+"_threshold"])->second += 1;
         }
-	//warning() << "LumiAnalyser::accumulate()" << bxType << " " << var << " " 
-	//	  << counter << " " << ivalue << endmsg;
+      }
+      // fill the input histos
+      if ( m_inHistos ) {
+        ((*(m_histoStore[bxType]))[prefix+var])->fill((double) ivalue);
       }
     }
   }
