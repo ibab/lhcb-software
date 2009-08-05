@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.22 2009-08-05 14:10:41 pkoppenb Exp $
+! $Id: release.notes,v 1.23 2009-08-05 18:59:03 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Gerhard Raven
+ - minor changes to the traversing track trigger for Velo closing
+ - disable use of traversing track trigger, as it leaks memory
 
 ! 2009-08-05 - Patrick Koppenburg
  - Moved HltDecodeRaw and HltReco to HltLine
