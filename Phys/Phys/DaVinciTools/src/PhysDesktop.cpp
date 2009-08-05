@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.67 2009-07-27 09:55:16 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.68 2009-08-05 15:36:37 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -920,7 +920,8 @@ StatusCode
 PhysDesktop::setP2PVInputLocations ( const std::vector<std::string>& location) {
 
   if (location.empty()) {
-    return Error("Attempting to set empty P->PV locations");
+    return Warning("Attempting to set empty P->PV locations", 
+                   StatusCode::SUCCESS, 1);
   }
   m_p2PVInputLocations = location;
 
