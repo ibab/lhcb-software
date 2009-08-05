@@ -18,7 +18,7 @@ use   processing  v*  LCG_Interfaces
 # HltCommon is needed because of configurables used
 use   HltCommon      v*  Hlt
 # this is where the data lives..
-use   HltTCK        v* TCK
+use   HltTCK        v* TCK -no_auto_imports
 
 apply_pattern application_path
 apply_pattern install_python_modules

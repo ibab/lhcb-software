@@ -5,8 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r3 2009-08-05 ===================
 ! 2009-08-04 - Gerhard Raven
  - add functions from Klaus for TCK visualizer 
+ - fix build problem by adding -no_auto_import on use HltTCK 
 
 !========================== TCKUtils v1r2 2009-07-03 ===================
 ! 2009-06-30 - Gerhard Raven
