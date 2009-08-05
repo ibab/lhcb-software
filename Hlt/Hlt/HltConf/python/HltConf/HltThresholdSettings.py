@@ -95,6 +95,7 @@ from Hlt2Lines.Hlt2InclusiveMuonLines import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
+from Hlt2Lines.Hlt2XGammaLines import Hlt2XGammaLinesConf
 ####
 # Phi cuts first, as one uses the same for leptonic and charm
 # 200 Hz runs with default cuts
@@ -204,13 +205,13 @@ Hlt2_Charming.update(Miriam_20090430)   # append Hlt1 cuts
 # Effective scenario
 # @author miriam.gandelman@cern.ch
 #
-Hlt2_Effective = { Hlt2InclusiveMuonLinesConf : {  'SingleMuonPt' : 5550  
-                                                   , 'SingleMuonIP' : 0.73        
-                                                   , 'MuTrackMuPt ' : 1500        
-                                                   , 'MuTrackTrPt ' : 950       
-                                                   , 'MuTrackMuIP ' : 0.1        
-                                                   , 'MuTrackTrIP ' : 0.17        
-                                                   , 'MuTrackPoint' : 0.96    }
+Hlt2_Effective = { Hlt2InclusiveMuonLinesConf : { 'SingleMuonPt' : 5550  
+                                                  , 'SingleMuonIP' : 0.73        
+                                                  , 'MuTrackMuPt' : 1500        
+                                                  , 'MuTrackTrPt' : 950       
+                                                  , 'MuTrackMuIP' : 0.1        
+                                                  , 'MuTrackTrIP' : 0.17        
+                                                  , 'MuTrackPoint' : 0.96    }
                    
                  , Hlt2InclusiveDiMuonLinesConf : { 'BiasedTMass' : 3000
                                                     , 'BiasedSingleMuonTIP' : 0.08
@@ -223,26 +224,26 @@ Hlt2_Effective = { Hlt2InclusiveMuonLinesConf : {  'SingleMuonPt' : 5550
                                                     , 'UnbiasedBmmMinMass' : 5050
                                                     , 'UnbiasedBmmVertexChi2' : 25  }
                    
-                   , Hlt2InclusivePhiLinesConf : { 'KaonIP' : 0.06
-                                                   , 'PhiPT' : 1800
-                                                   , 'TFKaonIPS' : 7
-                                                   , 'TFPhiPT' : 1800
-                                                   , 'TFKaonRichPID' : 0.453  }
+                 , Hlt2InclusivePhiLinesConf : { 'KaonIP' : 0.06
+                                                 , 'PhiPT' : 1800
+                                                 , 'TFKaonIPS' : 7
+                                                 , 'TFPhiPT' : 1800
+                                                 , 'TFKaonRichPID' : 0.453  }
                    
-                   , Hlt2XGammaLinesConf : {  'BsDirAngle' : 0.998
-                                              , 'B0DirAngle' : 0.996
-                                              , 'BsPVIPchi2' : 20
-                                              , 'B0PVIPchi2' : 20  }
+                 , Hlt2XGammaLinesConf : {  'BsDirAngle' : 0.998
+                                            , 'B0DirAngle' : 0.996
+                                            , 'BsPVIPchi2' : 20
+                                            , 'B0PVIPchi2' : 20  }
                    
-                   , Hlt2TopologicalLinesConf : {  'ComRobAllTrkPtLL' : 850
-                                                   , 'ComRobAllTrkPVIPLL' : 0.12
-                                                   , 'ComRobPairMinDocaUL' : 0.50
-                                                   , 'ComRobTrkMaxPtLL' : 1600
-                                                   , 'ComTFVtxPVDispChi2LL' : 67
-                                                   , 'RobustPointingUL' : 0.284
-                                                   , 'TFPointUL' : 0.163
-                                                   , 'CharmRobustPointUL' : 0.032
-                                                   , 'CharmTFPointUL' : 0.032  }
+                 , Hlt2TopologicalLinesConf : {  'ComRobAllTrkPtLL' : 850
+                                                 , 'ComRobAllTrkPVIPLL' : 0.12
+                                                 , 'ComRobPairMinDocaUL' : 0.50
+                                                 , 'ComRobTrkMaxPtLL' : 1600
+                                                 , 'ComTFVtxPVDispChi2LL' : 67
+                                                 , 'RobustPointingUL' : 0.284
+                                                 , 'TFPointUL' : 0.163
+                                                 , 'CharmRobustPointUL' : 0.032
+                                                 , 'CharmTFPointUL' : 0.032  }
                    }
 Hlt2_Effective.update(Miriam_20090430)  # append Hlt1 cuts
 
