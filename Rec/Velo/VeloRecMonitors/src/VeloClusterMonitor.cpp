@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.21 2009-06-23 12:49:26 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.22 2009-08-05 15:00:44 krinnert Exp $
 // Include files 
 // -------------
 
@@ -6,7 +6,6 @@
 
 /// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiUtils/Aida2ROOT.h"
 
 // from VeloDet
 #include "VeloDet/DeVeloSensor.h"
@@ -43,7 +42,6 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
     ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
   , m_nClustersPerSensor(256,0)
-, m_occupancyDenom(0)
 {
   m_rSensorNumbers = boost::assign::list_of(1)(3)(5)(7)(9)(20)(24)(26)(28)(30);
   m_phiSensorNumbers = boost::assign::list_of(65)(67)(69)(71)(73)(84)(88)(90)(92)(94);
@@ -54,8 +52,6 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
   declareProperty( "PhiSensorNumbersForPlots", m_phiSensorNumbers );
   declareProperty( "RCorrelationPlots", m_rCorrelationPlots=false );
   declareProperty( "PerSensorPlots", m_perSensorPlots=false );
-  declareProperty( "OccupancyPlots", m_occupancyPlots=false );
-  declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
 }
 
 //=============================================================================
@@ -133,34 +129,6 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
     }
   }
   
-  if ( m_occupancyPlots ) {
-    m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
-    m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
-
-    for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
-        si != m_veloDet->sensorsEnd();
-        ++si ) {
-        unsigned int s = (*si)->sensorNumber();
-      
-        boost::format fmtName ( "OccPerStripSens%d" ) ;
-        fmtName % s;
-        boost::format fmtTitle ( "Strip Occupancy, Sensor %d, " ) ;
-        fmtTitle % s;
-
-        m_stripOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str()+m_tae, -0.5, 2047.5, 2048)); 
-        
-        boost::format fmtNameCh ( "OccPerChannelSens%d" ) ;
-        fmtNameCh % s;
-        boost::format fmtTitleCh ( "Channel Occupancy, Sensor %d, " ) ;
-        fmtTitleCh % s;
-
-        m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), fmtTitleCh.str()+m_tae, -0.5, 2047.5, 2048)); 
-    }
-    m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
-    m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
-    m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
-  }
-
   return StatusCode::SUCCESS;
 }
 
@@ -172,32 +140,6 @@ StatusCode Velo::VeloClusterMonitor::execute() {
   // Count the number of events monitored
   // ------------------------------------
   counter( "# events" ) += 1;
-
-  // Increment the occpancy denominator, reset at configurable
-  // frequency
-  if ( m_occupancyPlots ) {
-    if ( 0 == m_occupancyDenom % m_occupancyResetFreq ) {
-      m_occupancyDenom = 1;
-      for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
-          si != m_veloDet->sensorsEnd();
-          ++si ) {
-        unsigned int s = (*si)->sensorNumber();
-        m_stripOccupancyHistPerSensor[s]->Reset();
-        m_channelOccupancyHistPerSensor[s]->Reset();
-      }
-      m_histOccSpectAll->Reset();
-      m_histOccSpectLow->Reset();
-    } else {
-      ++m_occupancyDenom;
-      for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
-          si != m_veloDet->sensorsEnd();
-          ++si ) {
-        unsigned int s = (*si)->sensorNumber();
-        m_stripOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
-        m_channelOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
-      }
-    }
-  }
 
   monitorClusters();
 
@@ -331,18 +273,6 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     unsigned int activeLink = chipChannel/32;
     m_hActiveLinkSens->fill(sensorNumber, activeLink);
 
-    // Produce occupancy plots
-    // -----------------------
-    if ( m_occupancyPlots ) {
-      TH1D* occHist = 0;
-      TH1D* occHistCh = 0;
-      occHist = m_stripOccupancyHistPerSensor[sensorNumber];
-      occHistCh = m_channelOccupancyHistPerSensor[sensorNumber];
-      double occ = occHist->GetBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom);
-      occHist->SetBinContent(stripNumber+1,occ*100.0);
-      occHistCh->SetBinContent(chipChannel+1,occ*100.0);
-    }    
-
     // Produce the R correlation plots
     // -------------------------------
     if ( m_rCorrelationPlots && m_rSensorNumbers.end()
@@ -357,39 +287,11 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     }
   }
     
-  // Produce occupancy spectra
-  // -------------------------
-  if ( m_occupancyPlots ) {
-    m_histOccSpectAll->Reset();
-    m_histOccSpectLow->Reset();
-    for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
-        si != m_veloDet->sensorsEnd();
-        ++si ) {
-      unsigned int sens = (*si)->sensorNumber();
-      for ( unsigned int strip=1; strip<2049; ++strip) {
-        double occ = m_stripOccupancyHistPerSensor[sens]->GetBinContent(strip); 
-        m_histOccSpectAll->Fill(occ);
-        if ( occ <= 20.0 ) {
-          m_histOccSpectLow->Fill(occ);
-        }
-      }
-    }
-  }    
-
   // plot number of clusters seperately for each sensor
   if ( m_perSensorPlots ) {
     for (unsigned int s=0; s<m_nClustersPerSensor.size(); ++s) {
       if ( 0 == m_nClustersPerSensor[s] ) continue;
       m_hNCluSens[s]->fill(m_nClustersPerSensor[s]);
-    }
-  }
-
-  if ( m_occupancyPlots ) {
-    for ( unsigned int s=0;  s<m_stripOccupancyHistPerSensor.size(); ++s ) {
-      TH1D* h = m_stripOccupancyHistPerSensor[s];
-      if ( 0 != h ) {
-        m_histAvrgSensor->SetBinContent(s + 1, h->Integral()/h->GetNbinsX());
-      }
     }
   }
 

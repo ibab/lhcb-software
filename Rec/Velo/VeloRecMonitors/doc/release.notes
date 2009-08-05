@@ -4,16 +4,20 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-08-05 - Kurt Rinnert
+ - moved occupancy monitoring to separate algorithm
+ - added optional output of strip mask condition XML to occupancy monitoring.
+
 !======================= VeloRecMonitors v1r11 2009-07-28 ====================
 !2009-07-27 Silvia Borghi
 - VeloTrackMonitor
   - change the plot of phi coordinate of the plot, one histogram per half,
     transform phi coordinate for the C side in the range -90,90.
-	  Top part of both halves has phi between (0,90) and the botton between 
+     Top part of both halves has phi between (0,90) and the botton between 
     (-90,0)
 
 ! 2009-07-23 - Silvia Borghi
-	-VeloTrackMonitor: 
+   -VeloTrackMonitor: 
      - Add histogram of the efficiency evaluated by interpolation
      - Change the pseudoefficiency versus Sensor number by the efficiency 
        evaluated by interpolation
@@ -34,23 +38,23 @@
 
 ! 2009-07-09 - Michael Alexander
   -VeloIPResolutionMonitor:
-		 - bug fix in IP_Z resolution calculation
-		 - added histos of signed 3D and signed 3D with phase space correction
-			 IP resolutions
-		 - added option to use a log scale on x axis
+       - bug fix in IP_Z resolution calculation
+       - added histos of signed 3D and signed 3D with phase space correction
+          IP resolutions
+       - added option to use a log scale on x axis
 
 ! 2009-07-07 - Silvia Borghi
-	-VeloTrackMonitor: 
+   -VeloTrackMonitor: 
      - fixes for warning in compilation;
      - remove one 2d histogram
      - uncomment histograms for measurement number for pos. and neg. tracks
 
 ! 2009-07-02 - Marianna Fontana
-	-VeloTrackMonitor: 
+   -VeloTrackMonitor: 
      - added new histograms Pseudoefficiency vs sensorID;
      - added new histograms for adc distributions for r and 
        phi clusters associated to the tracks;
-		 - bug fix in number of measurements per tracks
+       - bug fix in number of measurements per tracks
 
 ! 2009-07-01 - Michael Alexander
  - Removed warnings from VeloIPResolutionMonitor

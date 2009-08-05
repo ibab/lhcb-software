@@ -1,10 +1,9 @@
-// $Id: VeloClusterMonitor.h,v 1.11 2009-06-23 12:49:26 krinnert Exp $
+// $Id: VeloClusterMonitor.h,v 1.12 2009-08-05 15:00:44 krinnert Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
 // Include files
 // -------------
-#include "TH1D.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
@@ -84,22 +83,12 @@ namespace Velo
     std::map<unsigned int, AIDA::IHistogram1D*> m_hRDiff; 
     std::map<unsigned int, AIDA::IHistogram2D*> m_hRCorr; 
     
-    TH1D* m_histOccSpectAll;
-    TH1D* m_histOccSpectLow;
-    TH1D* m_histAvrgSensor;
-    std::vector< TH1D* > m_stripOccupancyHistPerSensor;
-    std::vector< TH1D* > m_channelOccupancyHistPerSensor;
-    unsigned int m_occupancyDenom;
-    
-    
     // Job options
     std::string m_clusterCont;
     std::vector<unsigned int> m_rSensorNumbers;
     std::vector<unsigned int> m_phiSensorNumbers;
     bool m_rCorrelationPlots;
     bool m_perSensorPlots;
-    bool m_occupancyPlots;
-    unsigned int m_occupancyResetFreq;	
   };
 }
 
