@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.5 2009-08-05 12:56:36 pkoppenb Exp $
+# $Id: HltPhotonLines.py,v 1.6 2009-08-05 14:10:41 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
 # =============================================================================
 
 
@@ -41,7 +41,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
         from Configurables import HltAntiEleConf
         from Configurables import L0ConfirmWithT
         from Configurables import PatConfirmTool
-        from HltConf.HltReco import RZVelo, Velo, PV2D
+        from HltLine.HltReco import RZVelo, Velo, PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeECAL
 
         TRACK_PT_CUT = str(self.getProp('Track_PtCut'))

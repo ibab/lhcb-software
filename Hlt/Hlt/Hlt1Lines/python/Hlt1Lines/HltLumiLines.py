@@ -60,7 +60,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         debugOPL = self.getProp('OutputLevel')
         debugging = self.getProp('Debug')
         fullReco = self.getProp('FullReco')
-        from HltConf.HltReco import PV2D
+        from HltLine.HltReco import PV2D
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'

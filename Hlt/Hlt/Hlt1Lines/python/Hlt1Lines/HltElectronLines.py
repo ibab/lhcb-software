@@ -24,7 +24,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
-        from HltConf.HltReco import RZVelo, Velo, PV2D
+        from HltLine.HltReco import RZVelo, Velo, PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         
         COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))

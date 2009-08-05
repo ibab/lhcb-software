@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.13 2009-08-05 13:34:06 pkoppenb Exp $
+# $Id: HltReco.py,v 1.1 2009-08-05 14:11:29 pkoppenb Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction

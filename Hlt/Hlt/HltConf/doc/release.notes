@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.297 2009-08-05 13:55:40 graven Exp $ 
+! $Id: release.notes,v 1.298 2009-08-05 14:10:08 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Patrick Koppenburg
+ - Move HltReco.py to HltLine
 
 ! 2009-08-05 - Gerhard Raven
  - update FEST to be 'on top of' Effective

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.103 2009-08-05 10:58:13 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.104 2009-08-05 14:10:08 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,8 +15,8 @@ from HltLine.HltLine     import hlt1Lines
 from HltLine.HltLine     import hlt2Lines
 from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
-from HltConf.Hlt1             import Hlt1Conf, hlt1TypeDecoder
-from HltConf.Hlt2             import Hlt2Conf, hlt2TypeDecoder
+from HltConf.Hlt1        import Hlt1Conf, hlt1TypeDecoder
+from HltConf.Hlt2        import Hlt2Conf, hlt2TypeDecoder
 
 ##################################################################################
 class HltConf(LHCbConfigurableUser):
@@ -281,8 +281,10 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
-        activeLines = self.getProp('ActiveHlt2Lines')
+        activeLines = Hlt2Conf().hlt2ActiveLines()
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt2Global' ]) ]
+        print '# All Hlt2 lines: ', str(hlt2Lines())
+        print '# Added Hlt2 lines: ', str( lines2 )
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 

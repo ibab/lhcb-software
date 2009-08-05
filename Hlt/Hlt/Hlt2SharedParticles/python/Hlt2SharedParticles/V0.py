@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Hlt2SharedParticles.BasicParticles import NoCutsPions
 from Configurables import GaudiSequencer, CreateHltVzero, HltV0ParticleMakerAlg
 from HltLine.HltLine import bindMembers
-from HltConf.HltReco import Seed, SeedKF
+from HltLine.HltReco import Seed, SeedKF
 from HltKshort.HltKshort import createHltV0DD, createHltV0LL
 
 #---------------------------------------------------------------------

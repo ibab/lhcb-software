@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.5 2009-08-05 12:56:36 pkoppenb Exp $
+# $Id: HltHadronLines.py,v 1.6 2009-08-05 14:10:41 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -70,7 +70,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                 }
     
     def __apply_configuration__(self) : 
-        from HltConf.HltReco import RZVelo, PV2D
+        from HltLine.HltReco import RZVelo, PV2D
 
         ## alias to get the slot associated to a name
         _cut = lambda x: str(self.getProp(x))

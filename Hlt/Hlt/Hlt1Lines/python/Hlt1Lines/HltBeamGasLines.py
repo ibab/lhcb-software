@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.7 2009-07-30 15:40:34 dhcroft Exp $
+# $Id: HltBeamGasLines.py,v 1.8 2009-08-05 14:10:41 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -174,7 +174,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 		  
     
     def __apply_configuration__(self) : 
-        from HltConf.HltReco import RZVelo
+        from HltLine.HltReco import RZVelo
 
 	linesToConfig = self.getProp('BXTypes')
 	
