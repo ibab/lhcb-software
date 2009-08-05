@@ -64,23 +64,6 @@ Miriam_20090430 = { HltHadronLinesConf : { 'SingleHadron_PTCut' : 4450
                                        , 'MuTrackTrChi2'      : 10 
                                        }
                   }
-#
-# FEST settings Gerhard.Raven@nikhef.nl
-# @author Gerhard.Raven@nikhef.nl
-#
-FEST = {}
-FEST.update(  { HltVeloLinesConf : { 'Prescale' : { '.*'            : 1 } }
-              , HltExpressLinesConf : { 'Prescale' : { 'Hlt1XPress'    : 0.0025
-                                                     , 'Hlt1VeloAlign' : 1 } 
-                                      }
-              , HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1Physics'    : 1 
-                                                           , 'Hlt1Random'     : 1 # @OnlineEnv.AcceptRate
-                                                           , 'Hlt1Tell1Error' : 0
-                                                           }
-                                            }
-              }
-           )
-
 #########################################################################################
 # HLT2 for 2*10^32 @ 40 MHz, done on DC06 MC
 #
@@ -246,6 +229,25 @@ Hlt2_Effective = { Hlt2InclusiveMuonLinesConf : { 'SingleMuonPt' : 5550
                                                  , 'CharmTFPointUL' : 0.032  }
                    }
 Hlt2_Effective.update(Miriam_20090430)  # append Hlt1 cuts
+
+
+#
+# FEST settings Gerhard.Raven@nikhef.nl
+# @author Gerhard.Raven@nikhef.nl
+#
+FEST = {}
+FEST.update( Hlt2_Effective )
+FEST.update(  { HltVeloLinesConf : { 'Prescale' : { '.*'            : 1 } }
+              , HltExpressLinesConf : { 'Prescale' : { 'Hlt1XPress'    : 0.0025
+                                                     , 'Hlt1VeloAlign' : 1 } 
+                                      }
+              , HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1Physics'    : 1 
+                                                           , 'Hlt1Random'     : 1 # @OnlineEnv.AcceptRate
+                                                           , 'Hlt1Tell1Error' : 0
+                                                           }
+                                            }
+              }
+           )
 
 
 #########################################################################################

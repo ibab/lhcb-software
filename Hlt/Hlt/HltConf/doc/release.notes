@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.296 2009-08-05 10:58:13 pkoppenb Exp $ 
+! $Id: release.notes,v 1.297 2009-08-05 13:55:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Gerhard Raven
+ - update FEST to be 'on top of' Effective
 
 ! 2009-08-05 - Patrick Koppenburg
  - Add Miriam's thresholds for effective scenario
