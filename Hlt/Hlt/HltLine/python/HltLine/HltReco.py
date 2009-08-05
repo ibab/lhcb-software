@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.1 2009-08-05 14:11:29 pkoppenb Exp $
+# $Id: HltReco.py,v 1.2 2009-08-05 14:32:26 pkoppenb Exp $
 # =============================================================================
-## @file HltConf/HltReco.py
+## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date 2009-04-03
@@ -11,7 +11,7 @@
 # the (ordered) list of (configurables corresponding to the) algorithms needed to 
 # obtain the Hlt1 selection 'PV2D' can be obtained by doing 
 #
-#   from HltConf.HltReco import PV2D
+#   from HltLine.HltReco import PV2D
 #   PV2D.members() 
 #
 # in addition, the 'outputselection' of the last member can be 
