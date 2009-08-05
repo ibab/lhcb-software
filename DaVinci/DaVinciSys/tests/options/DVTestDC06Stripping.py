@@ -1,6 +1,6 @@
-## $Id: DVTestAllPreselections.py,v 1.6 2009-07-09 09:38:45 pkoppenb Exp $
+## $Id: DVTestDC06Stripping.py,v 1.1 2009-08-05 11:03:52 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 ## ============================================================================
 from Gaudi.Configuration import *
 importOptions("$STDOPTS/PreloadUnits.opts")
