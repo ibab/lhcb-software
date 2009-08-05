@@ -1,4 +1,4 @@
-C $Id: setbeam.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+C $Id: setbeam.F,v 1.1.1.2 2009-08-05 09:43:37 ngueissa Exp $
       SUBROUTINE SETBEAM(P1X,P1Y,P1Z,P2X,P2Y,P2Z) 
       IMPLICIT NONE
 

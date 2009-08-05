@@ -1,4 +1,4 @@
-// $Id: Pydat3.cpp,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: Pydat3.cpp,v 1.1.1.2 2009-08-05 09:43:37 ngueissa Exp $
 // access pythia common Pydat3
 #include "LbPythia/Pydat3.h"
 

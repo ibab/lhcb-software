@@ -1,4 +1,4 @@
-C $Id: gpyssmt.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+C $Id: gpyssmt.F,v 1.1.1.2 2009-08-05 09:43:37 ngueissa Exp $
       INTEGER*4 FUNCTION PYSSMT_ADDRESS() 
       IMPLICIT NONE
 
