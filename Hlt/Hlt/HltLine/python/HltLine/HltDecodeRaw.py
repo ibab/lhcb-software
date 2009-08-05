@@ -3,7 +3,7 @@
 #
 from Configurables import DataOnDemandSvc
 from GaudiKernel.ProcessJobOptions import importOptions
-from HltLine.HltLine import bindMembers
+from HltLine import bindMembers
 importOptions('$STDOPTS/DecodeRawEvent.py')
 _map = DataOnDemandSvc().AlgMap
 

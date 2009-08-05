@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.2 2009-08-05 14:32:26 pkoppenb Exp $
+# $Id: HltReco.py,v 1.3 2009-08-05 18:15:44 pkoppenb Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -57,7 +57,7 @@ from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
-from HltLine.HltLine import bindMembers
+from HltLine import bindMembers
 from Configurables import TrackEventFitter, TrackMasterFitter, TrackKalmanFilter, TrackMasterExtrapolator  #@gk for TrackFit
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 from Configurables import PatSeeding, PatSeedingTool, PatMatch, CreateFastTrackCollection #@gk for PatSeeding
@@ -184,7 +184,7 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
 # Define the reconstruction sequence 
 #############################################################################################
 
-from HltLine.HltDecodeRaw import DecodeVELO
+from HltDecodeRaw import DecodeVELO
 # first define sequencers for velo tracking
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
                                          , Members = DecodeVELO.members() +  [ patVeloR ] )
@@ -210,7 +210,7 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
 
 #if only Forward is run, we can write directly to Hlt/Track/Long
 # Otherwise we just have to add our stuff
-from HltLine.HltDecodeRaw import DecodeTT, DecodeIT
+from HltDecodeRaw import DecodeTT, DecodeIT
 if not RunSeeding:
                     recoCopy.InputLocations = ["Hlt/Track/Forward"]
                     trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoCopy]

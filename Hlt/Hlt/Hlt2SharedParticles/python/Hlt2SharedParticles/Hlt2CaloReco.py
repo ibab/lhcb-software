@@ -8,7 +8,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -38,9 +38,9 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         caloSeq = Sequence('HltRecoCALOSeq', Context = 'HLT', IgnoreFilterPassed = True ) 
         #------- Decoding
         #
-        # @todo FIXME : This should not be in HltLines. TEMPORARY
+        # @todo FIXME : This should not be in HltLine. TEMPORARY
         #
-        from HltLines.HltDecodeRaw import DecodeECAL, DecodeSPD, DecodePRS, DecodeHCAL
+        from HltLine.HltDecodeRaw import DecodeECAL, DecodeSPD, DecodePRS, DecodeHCAL
         caloSeq.Members = DecodeECAL.members() + DecodeSPD.members() + DecodePRS.members() + DecodeHCAL.members() 
         
         ## Options for Calo reconstruction
