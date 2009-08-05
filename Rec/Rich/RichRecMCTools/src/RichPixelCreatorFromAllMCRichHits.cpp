@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromAllMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.4 2009-08-03 15:21:38 jonrob Exp $
+ *  $Id: RichPixelCreatorFromAllMCRichHits.cpp,v 1.5 2009-08-05 10:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -70,6 +70,7 @@ PixelCreatorFromAllMCRichHits::buildPixel( const Rich::HPDPixelCluster& cluster 
 LHCb::RichRecPixel *
 PixelCreatorFromAllMCRichHits::buildPixel( const LHCb::RichSmartID& id ) const
 {
+  // Note : This method actually builds more than one pixel ...
 
   if ( msgLevel(MSG::VERBOSE) )
   {
