@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.18 2009-08-05 20:06:56 graven Exp $
+! $Id: release.notes,v 1.19 2009-08-05 21:04:26 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltLine v1r4 2009-08-05 ===================
+! 2009-08-05 - Gerhard Raven
+ - fix publishing of StatEntities to monitoring svc
+
 ! 2009-08-05 - Patrick Koppenburg
  - Move HltDecodeRaw here !! TEMPORARY !!
  - Increment to v1r4

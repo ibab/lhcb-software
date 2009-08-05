@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.6 2009-08-03 08:37:31 graven Exp $
+// $Id: HltLine.cpp,v 1.7 2009-08-05 21:04:26 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -162,7 +162,6 @@ HltLine::HltLine( const std::string& name,
   , m_errorCounter(0)
   , m_slowCounter(0)
   , m_selection(0)
-  , m_acceptRate(0)
 {
   for (unsigned i=0; i<m_stages.size(); ++i) {
     m_stages[i] = new HltStage(*this, transition(stage(i)));
@@ -258,14 +257,12 @@ StatusCode HltLine::initialize() {
 
   //== and the counters
   m_acceptCounter = &counter("#accept");
-  declareInfo("#accept","",m_acceptCounter,0,std::string("Events accepted by ") + m_decision);
+  declareInfo("COUNTER_TO_RATE[#accept]",m_acceptCounter,std::string("Events accepted by ") + m_decision);
   m_errorCounter = &counter("#errors"); // do not export to DIM -- we have a histogram for this..
-  //declareInfo("#errors","",&counter("#errors"),0,std::string("Errors seen by ") + m_decision);
-  m_slowCounter = &counter("#slow events");
+  //declareInfo("#errors",&counter("#errors"),std::string("Errors seen by ") + m_decision);
+  m_slowCounter = &counter("#slow events");// do not export to DIM -- we have a histogram for this..
 
   m_nAcceptOnError = 0;
-  m_acceptRate=0;
-  declareInfo("COUNTER_TO_RATE["+m_decision+"Accept]", m_acceptRate, m_decision + " Accept Rate");
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
   
@@ -354,7 +351,6 @@ StatusCode HltLine::execute() {
 
   // update monitoring
   *m_acceptCounter += accept;
-  if (accept) ++m_acceptRate;
   // don't flag slow events as error, so mask the bit
   *m_errorCounter += ( (report.errorBits()&~0x4)!=0) ;
   *m_slowCounter += ( (report.errorBits() & 0x4)!=0 );

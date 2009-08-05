@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.5 2009-08-03 08:37:31 graven Exp $
+// $Id: HltLine.h,v 1.6 2009-08-05 21:04:26 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -157,7 +157,5 @@ private:
   int  m_maxAcceptOnError;               ///< quota to avoid runaway accepts in case of persistent errors..
   int  m_nAcceptOnError;
   unsigned m_slowThreshold;
-  double m_errorRate;                    ///< TODO: why double?
-  double m_acceptRate;                   ///< TODO: why double?
 };
 #endif // HltLine_H
