@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.7 2009-08-03 08:50:46 mjohn Exp $
+# $Id: HltVeloLines.py,v 1.8 2009-08-05 12:56:36 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 #
@@ -89,7 +89,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
 
-            from HltConf.HltDecodeRaw import DecodeVELO
+            from HltLine.HltDecodeRaw import DecodeVELO
             Line( 'Velo' + side
                 , ODIN = self.getProp('ODIN')
                 , prescale = self.prescale
@@ -134,7 +134,7 @@ class HltVeloTraverserConf(HltLinesConfigurableUser):
                                      , OutputTracksLocation = '/Event/Hlt/TraversingTrack'
                                      )
       
-      from HltConf.HltDecodeRaw import DecodeVELO
+      from HltLine.HltDecodeRaw import DecodeVELO
       Line( 'VeloTrTr'
             , ODIN = self.getProp('ODIN')
             , prescale = self.prescale

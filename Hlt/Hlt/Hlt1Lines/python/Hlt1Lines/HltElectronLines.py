@@ -25,7 +25,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
         from HltConf.HltReco import RZVelo, Velo, PV2D
-        from HltConf.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
+        from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         
         COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))
         SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))

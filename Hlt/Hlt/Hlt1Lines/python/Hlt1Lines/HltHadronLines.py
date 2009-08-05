@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.4 2009-07-03 10:14:42 graven Exp $
+# $Id: HltHadronLines.py,v 1.5 2009-08-05 12:56:36 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -95,7 +95,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                            , HistoDescriptor  = histosfilter('L0ET',1500.,5100.,200)
                            )
                     )    
-            from HltConf.HltDecodeRaw import DecodeIT
+            from HltLine.HltDecodeRaw import DecodeIT
             conf += [ RZVelo
                     , PV2D.ignoreOutputSelection()
                     , Member ( 'TF' ,'RZVelo'

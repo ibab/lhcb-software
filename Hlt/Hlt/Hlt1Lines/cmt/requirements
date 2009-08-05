@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2009-08-04 13:48:32 graven Exp $
+# $Id: requirements,v 1.6 2009-08-05 12:56:36 pkoppenb Exp $
 # =============================================================================
 # The helper package for configuration of Hlt1
 # =============================================================================
@@ -17,9 +17,6 @@ use       GaudiPolicy v*
 use       Python      v*  LCG_Interfaces 
 # need to have HltLine.HltLinesConfigurableUser build 'before' us...
 use       HltLine     v*  Hlt
-# temporary 
-use       HltConf     v*  Hlt
-
 
 # =============================================================================
 

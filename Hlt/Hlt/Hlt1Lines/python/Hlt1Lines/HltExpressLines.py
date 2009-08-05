@@ -12,7 +12,7 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) : 
         from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
-        from HltConf.HltDecodeRaw import DecodeVELO
+        from HltLine.HltDecodeRaw import DecodeVELO
         Line( 'AlignVelo' # do _not_ start with Velo, as those are assumed to be closing lines...
             , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
             , prescale = self.prescale

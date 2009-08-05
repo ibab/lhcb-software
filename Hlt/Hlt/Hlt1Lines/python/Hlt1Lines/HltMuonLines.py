@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.5 2009-07-03 10:14:42 graven Exp $
+# $Id: HltMuonLines.py,v 1.6 2009-08-05 12:56:36 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 
@@ -114,7 +114,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 
         ### Matching Confirmed T Tracks with VELO
         from Configurables import PatMatchTool
-        from HltConf.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
+        from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
         TMatchV = [ DecodeIT
                   , Member ('TU', 'TConf' , RecoName = 'TMuonConf')
                   , Member ('TF', 'DeltaP' 

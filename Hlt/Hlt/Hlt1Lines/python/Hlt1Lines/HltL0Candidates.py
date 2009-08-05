@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.3 2009-08-03 13:00:08 graven Exp $
+# $Id: HltL0Candidates.py,v 1.4 2009-08-05 12:56:36 pkoppenb Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -58,7 +58,7 @@ def _name(i) :
     return 'Hlt1L0'+i+'Candidates' if i.startswith('All') else 'Hlt1L0'+i+'Decision'
 
 def _muon( channel ) :
-    from HltConf.HltDecodeRaw import DecodeL0MUON
+    from HltLine.HltDecodeRaw import DecodeL0MUON
     from Configurables import HltL0MuonCandidates,L0MuonCandidatesFromRaw
     name = _name(channel)
     #note: explicitly set the OutputSelection so we can pick it up downstream...
@@ -66,7 +66,7 @@ def _muon( channel ) :
     return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
 
 def _calo( channel ) :
-    from HltConf.HltDecodeRaw import DecodeL0CALO
+    from HltLine.HltDecodeRaw import DecodeL0CALO
     from Configurables import HltL0CaloCandidates
     from Configurables import HadronSeedTool, ElectronSeedTool
     name = _name(channel)
