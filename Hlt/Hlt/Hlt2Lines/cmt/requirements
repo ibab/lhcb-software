@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.10 2009-08-05 10:56:06 pkoppenb Exp $
+# $Id: requirements,v 1.11 2009-08-05 19:46:42 graven Exp $
 # Created    : 2009/05/19
 # Maintainer : 
 
 package           Hlt2Lines
-version           v1r6
+version           v1r5
 
 # ============================================================================
 # ======= the structure ======================================================
@@ -12,11 +12,9 @@ include_path      none
 
 # ============================================================================
 # ======= the actual dependencies ============================================
-#TODO: the HltLines infrastructure should move out of HltConf... (HltCommon?
-#      dedicated package?)
-#use HltConf              v*     Hlt
 # 
 use Hlt2SharedParticles  v*     Hlt
+use HltLine              v*     Hlt
 
 # ============================================================================
 # ======= the patterns =======================================================
