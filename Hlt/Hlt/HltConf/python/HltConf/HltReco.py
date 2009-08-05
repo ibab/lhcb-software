@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.12 2009-07-31 15:05:22 pkoppenb Exp $
+# $Id: HltReco.py,v 1.13 2009-08-05 13:34:06 pkoppenb Exp $
 # =============================================================================
 ## @file HltConf/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -184,7 +184,7 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
 # Define the reconstruction sequence 
 #############################################################################################
 
-from HltConf.HltDecodeRaw import DecodeVELO
+from HltLine.HltDecodeRaw import DecodeVELO
 # first define sequencers for velo tracking
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
                                          , Members = DecodeVELO.members() +  [ patVeloR ] )
@@ -210,7 +210,7 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
 
 #if only Forward is run, we can write directly to Hlt/Track/Long
 # Otherwise we just have to add our stuff
-from HltConf.HltDecodeRaw import DecodeTT, DecodeIT
+from HltLine.HltDecodeRaw import DecodeTT, DecodeIT
 if not RunSeeding:
                     recoCopy.InputLocations = ["Hlt/Track/Forward"]
                     trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoCopy]
