@@ -5,13 +5,53 @@ Threshold settings for various trigger configurations
 @date 2009-07-21
 """
 
-__all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType',
-            'Hlt2_Leptonic', 'Hlt2_Hadronic', 'Hlt2_Charming', 'Hlt2_Effective' )
-
 def SettingsForDataType( x ) :
     _dataType2Settings = { 'DC06' : Miriam_20090430 ,  # development is default
                            'MC09' : Miriam_20090430  }  # development is default
     return _dataType2Settings[x] if x in _dataType2Settings else None
+
+#########################################################################################
+# Utility function for setting thresholds both in Hlt1 and 2
+#
+# @author Moved by Patrick.Koppenburg@cern.ch
+#
+####
+def SetThresholds(ThresholdSettings,confs):
+    """
+    Look in ThresholdSettings for configurable confs
+    and set the appropriate settings
+
+    @author G. Raven, P. Koppenburg
+    @date 23/7/2009 (moved)
+    """
+    conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
+    if confs in ThresholdSettings : 
+ #       print '# Found', conf.name()
+        for (k,v) in ThresholdSettings[confs].iteritems() :
+            # configurables have an exception for list and dict: 
+            #   even if not explicitly set, if you ask for them, you get one...
+            #   this is done to make foo().somelist += ... work.
+            # hence we _assume_ that, even if we have an attr, but it matches the
+            # default, it wasn't set explicitly, and we overrule it...
+            if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
+                log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+            else :
+                if ( type(v) == type({})): # special case for dictionaries (needed in topo)
+                    val = conf.getProp(k)
+                    val.update(v)                                
+#                    print '# SETTING dictionary', conf.name(), val
+                    setattr(conf,k,val)
+                else :
+#                    print '# SETTING           ', conf.name(), v
+                    setattr(conf,k,v)
+
+#
+#
+#  O B S O L E T E !!!!
+#
+#
+__all__ = ( 'Miriam_20090430', 'FEST', 'SettingsForDataType',
+            'Hlt2_Leptonic', 'Hlt2_Hadronic', 'Hlt2_Charming', 'Hlt2_Effective' )
 
 #########################################################################################
 # HLT1
@@ -250,37 +290,3 @@ FEST.update(  { HltVeloLinesConf : { 'Prescale' : { '.*'            : 1 } }
            )
 
 
-#########################################################################################
-# Utility function for setting thresholds both in Hlt1 and 2
-#
-# @author Moved by Patrick.Koppenburg@cern.ch
-#
-####
-def SetThresholds(ThresholdSettings,confs):
-    """
-    Look in ThresholdSettings fr configurable confs
-    and set the appropriate settings
-
-    @author G. Raven, P. Koppenburg
-    @date 23/7/2009 (moved)
-    """
-    conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
-    if confs in ThresholdSettings : 
-        #print '# Found', conf.name()
-        for (k,v) in ThresholdSettings[confs].iteritems() :
-            # configurables have an exception for list and dict: 
-            #   even if not explicitly set, if you ask for them, you get one...
-            #   this is done to make foo().somelist += ... work.
-            # hence we _assume_ that, even if we have an attr, but it matches the
-            # default, it wasn't set explicitly, and we overrule it...
-            if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
-                log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
-            else :
-                if ( type(v) == type({})): # special case for dictionaries (needed in topo)
-                    val = conf.getProp(k)
-                    val.update(v)                                
-#                    print '# SETTING dictionary', conf.name(), val
-                    setattr(conf,k,val)
-                else :
-#                    print '# SETTING           ', conf.name(), v
-                    setattr(conf,k,v)

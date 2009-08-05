@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -200,13 +200,6 @@ class Hlt2Conf(LHCbConfigurableUser):
     def configurePID(self):
         Hlt2PID().DataType = self.getProp("DataType")
         Hlt2PID().Hlt2Tracks = self.getProp("Hlt2Tracks")
-      
-###################################################################################
-#
-# Return active lines
-#
-    def hlt2ActiveLines(self):
-        return []
       
 ###################################################################################
 #

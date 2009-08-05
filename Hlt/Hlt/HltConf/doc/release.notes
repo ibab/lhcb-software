@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.299 2009-08-05 19:50:00 graven Exp $ 
+! $Id: release.notes,v 1.300 2009-08-05 20:03:50 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-05 - Patrick Koppenburg
+ - Split HltThresholdSettings in small classes
+ - Run only active lines
+ - Proof of principle implemented for Effective_Nominal
+   -> Other scenarios to be done (they are now broken)
+ - Increment to v4r2
 
 !========================== HltConf v4r1 2009-08-04 ===================
 

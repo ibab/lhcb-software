@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.104 2009-08-05 14:10:08 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.105 2009-08-05 20:03:50 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,8 +15,9 @@ from HltLine.HltLine     import hlt1Lines
 from HltLine.HltLine     import hlt2Lines
 from HltLine.HltLine     import hlt1Selections
 from HltLine.HltLine     import hlt1Decisions
-from HltConf.Hlt1        import Hlt1Conf, hlt1TypeDecoder
-from HltConf.Hlt2        import Hlt2Conf, hlt2TypeDecoder
+from Hlt1                import Hlt1Conf, hlt1TypeDecoder
+from Hlt2                import Hlt2Conf, hlt2TypeDecoder
+from Effective_Nominal   import Effective_Nominal 
 
 ##################################################################################
 class HltConf(LHCbConfigurableUser):
@@ -31,8 +32,6 @@ class HltConf(LHCbConfigurableUser):
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
                 , "LumiBankKillerAcceptFraction" : 0. # fraction of lumi-only events where raw event is stripped down
-                , "ActiveHlt1Lines"            : [] # list of lines to be added
-                , "ActiveHlt2Lines"            : [] # list of lines to be added
                 , "HistogrammingLevel"         : 'None' # or 'Line'
                 , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Miriam_20090430' or 'FEST'
                 , "EnableHltGlobalMonitor"       : True
@@ -62,6 +61,16 @@ class HltConf(LHCbConfigurableUser):
 
 
 ##################################################################################
+    def settings(self) :
+        """
+        Get the class that contains the thresholds, etc
+        """
+        print '# Thresholds ', self.getProp('ThresholdSettings')
+        thresName  = self.getProp('ThresholdSettings')   # the name
+        thresClass = eval(thresName+"()")                # the class
+        return thresClass
+        
+##################################################################################
     def confType(self,hlttype) :
         """
         Decoding fo configuration. That's where Hlt1 and 2 configurations are called.
@@ -79,11 +88,13 @@ class HltConf(LHCbConfigurableUser):
                        ] )
         
         ThresholdSettings = None
-        if self.getProp('ThresholdSettings'): 
-            exec "from HltThresholdSettings import %s as ThresholdSettings" % self.getProp('ThresholdSettings')
+
+        if self.getProp('ThresholdSettings'):
+            thresClass = self.settings()
+            ThresholdSettings = thresClass.Thresholds() 
         else :
-            from HltThresholdSettings import SettingsForDataType
-            ThresholdSettings = SettingsForDataType( self.getProp('DataType') )
+            print '# No Thresholds defined'
+            ThresholdSettings = self.settingsForDataType( self.getProp('DataType') )
             log.info('# ThresholdSettings ' + str(ThresholdSettings) )
             
 
@@ -106,11 +117,54 @@ class HltConf(LHCbConfigurableUser):
         if hlt2type != '':
             Hlt2Conf().ThresholdSettings = ThresholdSettings
             Hlt2Conf().Hlt2Type = hlt2type
-            self.setOtherProps(Hlt2Conf(),["DataType","Hlt2Requires" ])
+            self.setOtherProps(Hlt2Conf(),[ "DataType","Hlt2Requires" ])
             Hlt2Conf()
 
         if hlttype and hlttype not in [ '', 'NONE' ]:
             raise AttributeError, "unknown HltType fragment '%s'"%hlttype
+
+#########################################################################################
+# Utility function for setting thresholds both in Hlt1 and 2
+#
+    def settingsForDataType( self, x ) :
+        """
+        Defaults per datatype
+        """
+        _dataType2Settings = { 'DC06' : Miriam_20090430 ,  # development is default
+                               'MC09' : Miriam_20090430  }  # development is default
+        return _dataType2Settings[x] if x in _dataType2Settings else None
+    
+#########################################################################################
+# Utility function for setting thresholds both in Hlt1 and 2
+#
+    def setThresholds(self,ThresholdSettings,confs):
+        """
+        Look in ThresholdSettings for configurable confs
+        and set the appropriate settings
+        
+        @author G. Raven, P. Koppenburg
+        @date 23/7/2009 (moved)
+        """
+        conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
+        if confs in ThresholdSettings : 
+            #       print '# Found', conf.name()
+            for (k,v) in ThresholdSettings[confs].iteritems() :
+                # configurables have an exception for list and dict: 
+                #   even if not explicitly set, if you ask for them, you get one...
+                #   this is done to make foo().somelist += ... work.
+                # hence we _assume_ that, even if we have an attr, but it matches the
+                # default, it wasn't set explicitly, and we overrule it...
+                if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
+                    log.warning('# WARNING: %s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+                else :
+                    if ( type(v) == type({})): # special case for dictionaries (needed in topo)
+                        val = conf.getProp(k)
+                        val.update(v)                                
+                        #                    print '# SETTING dictionary', conf.name(), val
+                        setattr(conf,k,val)
+                    else :
+                        #                    print '# SETTING           ', conf.name(), v
+                        setattr(conf,k,v)
 
 ##################################################################################
     def configureRoutingBits(self) :
@@ -275,15 +329,20 @@ class HltConf(LHCbConfigurableUser):
         ##
         ## TODO: make 'ActiveHlt?Lines' take a list of regex-es
         ##
-        activeLines = self.getProp('ActiveHlt1Lines') 
+        activeLines = self.settings().ActiveLines()
+        print '# active lines', activeLines
+        
+        for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
+        
         lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt1Global' ] ) ]
+        print '# Added Hlt1 lines: ', str( lines1 )
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
-        activeLines = Hlt2Conf().hlt2ActiveLines()
+        for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
+        
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt2Global' ]) ]
-        print '# All Hlt2 lines: ', str(hlt2Lines())
         print '# Added Hlt2 lines: ', str( lines2 )
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
