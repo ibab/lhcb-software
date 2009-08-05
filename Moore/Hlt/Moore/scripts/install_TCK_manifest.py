@@ -6,15 +6,12 @@ import  subprocess
 import string
 import sys
 
-cmt = subprocess.Popen(['cmt','show','version'],stdout=subprocess.PIPE)
-version = string.strip(cmt.communicate()[0],'\n')
-
-### use TCKUtils to generate the right TCK manifest, and copy it 
-### directly into InstallArea...
-manifest = environ['HLTTCKROOT'] + '/manifest/MOORE_' + version
-target_dir = dirname( sys.argv[1] )
+### use the TCKUtils generated manifest for this version, and copy it 
+### directly into InstallArea... (if it exists)
+manifest = sys.argv[1]
+target_dir = dirname( sys.argv[2] )
 if exists( manifest)        : 
-    print 'copying ' + manifest + ' to ' + sys.argv[1]
+    print 'copying ' + manifest + ' to ' + sys.argv[2]
     if not exists( target_dir ) : makedirs( target_dir )
     copy2( manifest,  sys.argv[1] )
 else:

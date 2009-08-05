@@ -3,6 +3,9 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+! 2009-08-05 - Gerhard Raven
+ - improve manifest installation
+
 ! 2009-08-03 - Gerhard Raven
  - tentatively define Moore v7r3
 

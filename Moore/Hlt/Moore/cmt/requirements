@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.69 2009-08-05 19:59:42 graven Exp $
+# $Id: requirements,v 1.70 2009-08-05 20:21:00 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -106,7 +106,7 @@ apply_pattern CallCommand  target=Create_RunMooreOnline
 
 # copy the TCK manifest for the _current_ release to the install area...
 macro Install_TCK_Manifest_output  "$(CMTINSTALLAREA)/TCK/manifest"
-macro Install_TCK_Manifest_command "python ../scripts/install_TCK_manifest.py $(Install_TCK_Manifest_output)"
+macro Install_TCK_Manifest_command "python ../scripts/install_TCK_manifest.py $(HLTTCKROOT)/manifest/MOORE_$(version) $(Install_TCK_Manifest_output)"
 apply_pattern CallCommand  target=Install_TCK_Manifest
 
 
