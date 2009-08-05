@@ -1,4 +1,6 @@
-
+#
+# @todo Move me to LHCB !
+#
 from Configurables import DataOnDemandSvc
 from GaudiKernel.ProcessJobOptions import importOptions
 from HltLine.HltLine import bindMembers
