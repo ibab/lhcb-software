@@ -1,8 +1,11 @@
-// $Id: PhotonMatchAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: PhotonMatchAlg.cpp,v 1.5 2009-08-05 17:35:34 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.3  2007/08/24 21:25:19  odescham
 // fix uncheck. StatusCodes
 //
@@ -39,12 +42,17 @@
 // ============================================================================
 class PhotonMatchAlg : public CaloTrackMatchAlg 
 {
-  // friend factory for instantiation
+  // ==========================================================================
+  /// friend factory for instantiation
   friend class AlgFactory<PhotonMatchAlg> ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// execution of the algorithm
   virtual StatusCode execute () ;  
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard (protected) constructor 
   PhotonMatchAlg
   ( const std::string& name , 
@@ -64,9 +72,8 @@ protected:
       _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal       ) ;
     }
     
-
-    _setProperty ( "Tool"      , "CaloPhotonMatch/PhotonMatch:PUBLIC" ) ;
-    _setProperty ( "Threshold" , "1000"                             ) ;
+    _setProperty ( "Tool"      , "CaloPhotonMatch/PhotonMatch" ) ;
+    _setProperty ( "Threshold" , "1000"                        ) ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                    ( LHCb::Track::Long,
@@ -75,17 +82,20 @@ protected:
   }
   /// virtual and protected destrcutror
   virtual ~PhotonMatchAlg() {}
+  // ==========================================================================
 private:
+  // ==========================================================================
   PhotonMatchAlg() ;
   PhotonMatchAlg           ( const PhotonMatchAlg& ) ;
   PhotonMatchAlg& operator=( const PhotonMatchAlg& ) ;
+  // ==========================================================================
 };
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( PhotonMatchAlg );
 // ============================================================================
-/// Standard execution of the algorithm
+// Standard execution of the algorithm
 // ============================================================================
 StatusCode PhotonMatchAlg::execute () 
 {
@@ -101,4 +111,7 @@ StatusCode PhotonMatchAlg::execute ()
   
   // perform the actual jobs 
   return doTheJob<LHCb::CaloCluster,Table>( table ) ;
-} ;
+} 
+// ============================================================================
+// The END 
+// ============================================================================

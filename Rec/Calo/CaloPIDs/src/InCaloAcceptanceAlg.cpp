@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.5 2009-05-15 12:53:38 cattanem Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.6 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -37,20 +37,15 @@ InCaloAcceptanceAlg::InCaloAcceptanceAlg
   declareProperty ( "Output"      , m_output   ) ;
   declareProperty ( "Tool"        , m_toolName ) ;
   //
-  _setProperty     ( "StatPrint"   , "false"    ) ;
-
-
-  if( "HLT" == context() ){
+  if( "HLT" == context() )
+  {
     m_inputs.clear();
     m_inputs.push_back(  LHCb::TrackLocation::HltForward );
     //m_inputs.push_back( "Hlt/Track/ForwardCLEANED" );
   }
-  
-
-
-};
+}
 // ============================================================================
-/// algorithm initialization 
+// algorithm initialization 
 // ============================================================================
 StatusCode InCaloAcceptanceAlg::initialize() 
 {
@@ -63,9 +58,9 @@ StatusCode InCaloAcceptanceAlg::initialize()
   m_tool = tool<IInAcceptance> ( m_toolName , this ) ;
   //
   return StatusCode::SUCCESS;
-} ;
+} 
 // ============================================================================
-/// algorithm execution  
+// algorithm execution  
 // ============================================================================
 StatusCode InCaloAcceptanceAlg::execute() 
 {
@@ -102,13 +97,15 @@ StatusCode InCaloAcceptanceAlg::execute()
       // fill the relation table 
       table -> i_push ( track , result ) ;   // ATTENTION: i-push is used 
     }
-  } ;
+  } 
+  
   if ( 0 == nTracks ) { Warning("No good tracks have been selected").ignore() ; }
   // MANDATORY: i_sort after i_push
   table -> i_sort () ;
   
   // a bit of statistics 
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) )
+  {
     counter ( "#tracks" ) += nTracks ;
     counter ( "#accept" ) += nAccept ;
     counter ( "#links"  ) += table->i_relations().size() ;
@@ -116,3 +113,6 @@ StatusCode InCaloAcceptanceAlg::execute()
   
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+// The END 
+// ============================================================================

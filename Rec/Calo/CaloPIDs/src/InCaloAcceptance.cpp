@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptance.cpp,v 1.8 2009-05-15 12:53:38 cattanem Exp $
+// $Id: InCaloAcceptance.cpp,v 1.9 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,8 +26,6 @@
 // ============================================================================
 #include "InCaloAcceptance.h"
 // ============================================================================
-
-// ============================================================================
 /** @file 
  *  Implementation file for class InCaloAcceptance
  *  @see InAccpetance 
@@ -37,13 +35,11 @@
  *  @date   2006-05-28
  */
 // ============================================================================
-
-// ============================================================================
-/// Declaration of the Tool Factory
+// Declaration of the Tool Factory
 // ============================================================================
 DECLARE_TOOL_FACTORY( InCaloAcceptance );
 // ============================================================================
-///  Standard constructor, initializes variables
+//  Standard constructor, initializes variables
 // ============================================================================
 InCaloAcceptance::InCaloAcceptance
 ( const std::string& type,
@@ -57,11 +53,11 @@ InCaloAcceptance::InCaloAcceptance
   declareProperty ( "UseFiducial" , m_fiducial ) ;
   //
   _setProperty     ( "Extrapolator" , 
-                     "TrackMasterExtrapolator/Master:PUBLIC" ) ; 
+                     "TrackMasterExtrapolator/Master" ) ; 
   //
-};
+}
 // ============================================================================
-/// initialization @see IAlgTool
+// initialization @see IAlgTool
 // ============================================================================
 StatusCode InCaloAcceptance::initialize() 
 {
@@ -104,9 +100,9 @@ StatusCode InCaloAcceptance::initialize()
            << m_loc << "'" << endmsg ;
   }
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-/// check the track is in acceptance of the given calorimeter 
+// check the track is in acceptance of the given calorimeter 
 // ============================================================================
 bool InCaloAcceptance::inAcceptance ( const LHCb::Track* track) const 
 {
@@ -119,9 +115,10 @@ bool InCaloAcceptance::inAcceptance ( const LHCb::Track* track) const
     Calo::CaloTrackTool::state ( *track , m_loc ) ;
   if ( 0 == state ) 
   {
-    // if there is no porper state - add it into the track! 
+    // if there is no proper state - add it into the track! 
     StatusCode sc = propagate ( *track , plane() , m_state ) ;
-    if ( sc.isFailure() ){ 
+    if ( sc.isFailure() )
+    { 
       Error ( "failure from propagate()", sc ).ignore() ; 
       return false ;     // RETURN 
     }
@@ -131,9 +128,7 @@ bool InCaloAcceptance::inAcceptance ( const LHCb::Track* track) const
   }
   // check the point 
   return  ok ( state->position() ) ;  
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/// The END 
+// The END 
 // ============================================================================

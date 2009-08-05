@@ -1,16 +1,13 @@
-# $Id: requirements,v 1.41 2009-05-15 12:53:38 cattanem Exp $
+# $Id: requirements,v 1.42 2009-08-05 17:35:32 ibelyaev Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r17
+version           v5r0
 
 # =============== structure ===================================================
-branches          cmt doc src options 
-
-# =============== environment =================================================
-set CALOPIDSOPTS   $(CALOPIDSROOT)/options 
+branches          cmt doc src python
 
 # =============== dependencies ================================================
 use               GaudiAlg        v*  
@@ -30,6 +27,9 @@ include_path      none
 library           CaloPIDs    ../src/*.cpp 
 
 # =============== patterns/rules ==============================================
+apply_pattern     install_python_modules
 apply_pattern     component_library library=CaloPIDs
 
+# =============================================================================
+# The END 
 # =============================================================================

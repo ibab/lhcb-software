@@ -1,4 +1,4 @@
-// $Id: Track2EcalEAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: Track2EcalEAlg.cpp,v 1.5 2009-08-05 17:35:34 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -15,8 +15,11 @@
  */
 class Track2EcalEAlg : public CaloTrack2IDAlg
 {
+  // ==========================================================================
   friend class AlgFactory<Track2EcalEAlg> ;
+  // ==========================================================================
 protected:  
+  // ==========================================================================
   /// Standard protected constructor
   Track2EcalEAlg
   ( const std::string& name , 
@@ -30,21 +33,22 @@ protected:
       _setProperty ( "Output" , LHCb::CaloIdLocation::EcalE   ) ;
       _setProperty ( "Filter" , LHCb::CaloIdLocation::InEcal  ) ;
     }
-    _setProperty ( "Tool"   , "EcalEnergyForTrack/EcalE:PUBLIC"  ) ;
-  } ;
+    _setProperty ( "Tool"   , "EcalEnergyForTrack/EcalE"  ) ;
+  } 
   /// virtual protected destructor 
-  virtual ~Track2EcalEAlg(){} ;  
+  virtual ~Track2EcalEAlg(){} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   Track2EcalEAlg() ;
   Track2EcalEAlg           ( const Track2EcalEAlg& ) ;
   Track2EcalEAlg& operator=( const Track2EcalEAlg& ) ;
+  // ==========================================================================
 } ;
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( Track2EcalEAlg );
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

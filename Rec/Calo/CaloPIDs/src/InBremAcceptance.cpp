@@ -1,4 +1,4 @@
-// $Id: InBremAcceptance.cpp,v 1.7 2009-05-15 12:53:38 cattanem Exp $
+// $Id: InBremAcceptance.cpp,v 1.8 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,17 +24,22 @@
  */
 // ============================================================================
 class InBremAcceptance : public InCaloAcceptance 
-{  
+{ 
+  // ==========================================================================
   /// friend factory for instantiation 
   friend class ToolFactory<InBremAcceptance> ; 
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** check the track is in acceptance of given calorimeter 
    *  @see IInAcceptance
    *  @param  track track to be checked
    *  @return true if the track is in acceptance
    */
   virtual bool inAcceptance ( const LHCb::Track* track ) const ;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard protected constructor 
   InBremAcceptance
   ( const std::string& type   ,
@@ -42,22 +47,25 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    _setProperty ( "Extrapolator" , "TrackLinearExtrapolator/Linear:PUBLIC" ) ;
+    _setProperty ( "Extrapolator" , "TrackLinearExtrapolator/Linear" ) ;
     _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
-  } ;
+  } 
   /// virtual and protected destructor 
-  virtual ~InBremAcceptance(){} ;
+  virtual ~InBremAcceptance(){} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   InBremAcceptance() ;
   InBremAcceptance            ( const InBremAcceptance& ) ;
   InBremAcceptance& operator= ( const InBremAcceptance& ) ;  
+  // ==========================================================================
 } ;
 // ============================================================================
-/// Declaration of the Tool Factory
+// Declaration of the Tool Factory
 // ============================================================================
 DECLARE_TOOL_FACTORY( InBremAcceptance ) ;
 // ============================================================================
-/// check the expected bremstrahlung photon is in acceptance of Ecal 
+// check the expected bremstrahlung photon is in acceptance of Ecal 
 // ============================================================================
 bool InBremAcceptance::inAcceptance ( const LHCb::Track* track) const 
 { 
@@ -94,8 +102,7 @@ bool InBremAcceptance::inAcceptance ( const LHCb::Track* track) const
   Gaudi::Math::intersection ( l , plane() , point , mu ) ;
   //
   return ok ( point ) ;
-} ;
-
+}
 // ============================================================================
 // The END 
 // ============================================================================

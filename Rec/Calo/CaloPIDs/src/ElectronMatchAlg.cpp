@@ -1,8 +1,11 @@
-// $Id: ElectronMatchAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: ElectronMatchAlg.cpp,v 1.5 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.3  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -40,12 +43,17 @@
 // ============================================================================
 class ElectronMatchAlg : public CaloTrackMatchAlg 
 {
-  // friend factory for instantiation
+  // ==========================================================================
+  /// friend factory for instantiation
   friend class AlgFactory<ElectronMatchAlg> ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// execution of the algorithm
   virtual StatusCode execute () ;  
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard (protected) constructor 
   ElectronMatchAlg
   ( const std::string& name , 
@@ -64,10 +72,8 @@ protected:
       _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatch ) ;
       _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal        ) ;
    }
-
-    
-
-    _setProperty ( "Tool"      , "CaloElectronMatch/ElectronMatch:PUBLIC") ;
+    //
+    _setProperty ( "Tool"      , "CaloElectronMatch/ElectronMatch" ) ;
     _setProperty ( "Threshold" , "10000"                             ) ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
@@ -77,17 +83,20 @@ protected:
   }
   /// virtual and protected destrcutror
   virtual ~ElectronMatchAlg() {}
+  // ==========================================================================
 private:
+  // ==========================================================================
   ElectronMatchAlg() ;
   ElectronMatchAlg           ( const ElectronMatchAlg& ) ;
   ElectronMatchAlg& operator=( const ElectronMatchAlg& ) ;
+  // ==========================================================================
 };
 // ============================================================================
-/// Declaration of the Algorithm Factory
+// Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( ElectronMatchAlg );
 // ============================================================================
-/// Standard execution of the algorithm
+// Standard execution of the algorithm
 // ============================================================================
 StatusCode ElectronMatchAlg::execute () 
 {
@@ -104,4 +113,7 @@ StatusCode ElectronMatchAlg::execute ()
   
   //  perform the actual jobs 
   return doTheJob<LHCb::CaloHypo,Table>( table ) ;  
-} ;
+} 
+// ============================================================================
+// The END 
+// ============================================================================

@@ -1,4 +1,4 @@
-// $Id: CaloBremMatch.cpp,v 1.6 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloBremMatch.cpp,v 1.7 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,8 +24,6 @@
 // ============================================================================
 #include "Linear.h"
 // ============================================================================
-
-// ============================================================================
 /** @file 
  *  Implementation file for class CaloBremMatch
  *  @date 2006-05-29 
@@ -36,9 +34,12 @@ class CaloBremMatch
   : public virtual ICaloTrackMatch 
   , public          CaloTrackMatch 
 {
-  // friend factory for instantiation ;
+  // ==========================================================================
+  /// friend factory for instantiation ;
   friend class ToolFactory<CaloBremMatch> ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// initialize the tool 
   virtual StatusCode initialize () 
   {
@@ -46,8 +47,10 @@ public:
     if ( sc.isFailure() ) { return sc ; }
     m_showerMax = calo()->plane( CaloPlane::ShowerMax ) ;
     return StatusCode::SUCCESS ;
-  } ;
+  } 
+  // ==========================================================================
 public:
+  // ==========================================================================
   /** the main matching method  
    *  @see ICaloTrackMatch 
    *  @param caloObj  pointer to "calorimeter" object (position)
@@ -72,15 +75,17 @@ public:
     double chi2 ;
     StatusCode sc =  match ( caloObj , trObj , chi2 ) ;
     return std::make_pair( sc , chi2 ) ;
-  } ;
+  } 
   /** extract the TrState which was actually used for last matching
    *  @attention TrState is owned by the tool itself 
    *  The better solution could be to return the pointer 
    *  to TrStateP 
    *  @return pointer to the state actually used for last matching
    */
-  virtual const LHCb::State* state   () const { return &_state() ; } ;
+  virtual const LHCb::State* state   () const { return &_state() ; } 
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard constructor 
   CaloBremMatch
   ( const std::string& type   , // ? 
@@ -101,10 +106,12 @@ protected:
     _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal );
     _setProperty ( "Tolerance"    , "10" ) ; // 10 millimeters
     _setProperty ( "zForFastExtrapolator" , "0" ); // 0  meters 
-  } ;
+  } 
   /// virtual and protected destructor 
-  virtual ~CaloBremMatch(){} ;
+  virtual ~CaloBremMatch(){} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   typedef CaloTrackMatch::Match_<2> Match ;
   //
   const LHCb::CaloPosition* m_position   ;
@@ -114,6 +121,7 @@ private:
   Gaudi::Plane3D            m_showerMax  ;
   const LHCb::CaloPosition* m_cBad       ;
   const LHCb::Track*        m_tBad       ;  
+  // ==========================================================================
 } ;
 // ============================================================================
 DECLARE_TOOL_FACTORY(CaloBremMatch) ;
@@ -194,9 +202,7 @@ StatusCode CaloBremMatch::match
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;
   
   return StatusCode::SUCCESS ;
-} ;
-// ============================================================================
-
+} 
 // ============================================================================
 /// The END 
 // ============================================================================

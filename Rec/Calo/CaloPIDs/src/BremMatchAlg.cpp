@@ -1,4 +1,4 @@
-// $Id: BremMatchAlg.cpp,v 1.8 2009-05-15 12:53:38 cattanem Exp $
+// $Id: BremMatchAlg.cpp,v 1.9 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,12 +26,17 @@
 // ============================================================================
 class BremMatchAlg : public CaloTrackMatchAlg 
 {
-  // friend factory for instantiation
+  // ==========================================================================
+  /// friend factory for instantiation
   friend class AlgFactory<BremMatchAlg> ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// execution of the algorithm
   virtual StatusCode execute () ;  
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// standard (protected) constructor 
   BremMatchAlg
   ( const std::string& name , 
@@ -51,8 +56,7 @@ protected:
       _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
     }
     
-
-    _setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
+    _setProperty ( "Tool"      , "CaloBremMatch/BremMatch"    ) ;
     setProperty ( "Threshold" , 10000                               ).ignore() ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
@@ -62,17 +66,20 @@ protected:
   }
   /// virtual and protected destrcutror
   virtual ~BremMatchAlg() {}
+  // ==========================================================================
 private:
+  // ==========================================================================
   BremMatchAlg() ;
   BremMatchAlg           ( const BremMatchAlg& ) ;
   BremMatchAlg& operator=( const BremMatchAlg& ) ;
+  // ==========================================================================
 };
 // ============================================================================
-/// Declaration of the Algorithm Factory
+// Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( BremMatchAlg );
 // ============================================================================
-/// Standard execution of the algorithm
+// Standard execution of the algorithm
 // ============================================================================
 StatusCode BremMatchAlg::execute () 
 {
@@ -90,4 +97,7 @@ StatusCode BremMatchAlg::execute ()
   
   // perform the actual jobs 
   return doTheJob<LHCb::CaloHypo,Table>( table ) ;
-} ;
+} 
+// ============================================================================
+// The END 
+// ============================================================================

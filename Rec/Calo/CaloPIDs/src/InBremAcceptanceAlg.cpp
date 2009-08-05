@@ -1,8 +1,11 @@
-// $Id: InBremAcceptanceAlg.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
+// $Id: InBremAcceptanceAlg.cpp,v 1.4 2009-08-05 17:35:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.2  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -23,42 +26,45 @@
 #include "GaudiKernel/System.h"
 class InBremAcceptanceAlg : public InCaloAcceptanceAlg 
 {
+  // ==========================================================================
   /// friend factory for instantiation
   friend class AlgFactory<InBremAcceptanceAlg>;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// Standard protected constructor
   InBremAcceptanceAlg 
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
     : InCaloAcceptanceAlg ( name , pSvc ) 
   {
-     if( "HLT" == context() ){
+    if( "HLT" == context() ){
       _setProperty ( "Output" , LHCb::CaloIdLocation::InBremHlt    ) ;
     }else{ 
       _setProperty ( "Output" , LHCb::CaloIdLocation::InBrem     ) ;
     }     
-    _setProperty ( "Tool"   , "InBremAcceptance/InBrem:PUBLIC" ) ;
+    _setProperty ( "Tool"   , "InBremAcceptance/InBrem" ) ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                    ( LHCb::Track::Velo     ,
                      LHCb::Track::Long     ,
                      LHCb::Track::Upstream ) ) ;
     //
-  } ;
+  } 
   /// virtual proected destructor 
-  virtual ~InBremAcceptanceAlg() {} ; 
+  virtual ~InBremAcceptanceAlg() {} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   InBremAcceptanceAlg() ;
   InBremAcceptanceAlg           ( const InBremAcceptanceAlg& );
   InBremAcceptanceAlg& operator=( const InBremAcceptanceAlg& );
+  // ==========================================================================
 } ;
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( InBremAcceptanceAlg );
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

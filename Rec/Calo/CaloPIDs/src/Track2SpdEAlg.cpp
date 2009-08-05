@@ -1,4 +1,4 @@
-// $Id: Track2SpdEAlg.cpp,v 1.5 2008-06-30 15:37:34 odescham Exp $
+// $Id: Track2SpdEAlg.cpp,v 1.6 2009-08-05 17:35:34 ibelyaev Exp $
 // ============================================================================
 // Local
 // ============================================================================
@@ -15,8 +15,11 @@
  */
 class Track2SpdEAlg : public CaloTrack2IDAlg
 {
+  // ==========================================================================
   friend class AlgFactory<Track2SpdEAlg> ;
+  // ==========================================================================
 protected:  
+  // ==========================================================================
   /// Standard protected constructor
   Track2SpdEAlg
   ( const std::string& name , 
@@ -30,24 +33,22 @@ protected:
       _setProperty ( "Output" , LHCb::CaloIdLocation::SpdE  ) ;
       _setProperty ( "Filter" , LHCb::CaloIdLocation::InSpd  ) ;     
     }
-      
-
-
-    _setProperty ( "Tool"   , "SpdEnergyForTrack/SpdE:PUBLIC"   ) ;
-  } ;
+    _setProperty ( "Tool"   , "SpdEnergyForTrack/SpdE"   ) ;
+  } 
   /// virtual protected destructor 
-  virtual ~Track2SpdEAlg(){} ;  
+  virtual ~Track2SpdEAlg(){} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   Track2SpdEAlg() ;
   Track2SpdEAlg           ( const Track2SpdEAlg& ) ;
   Track2SpdEAlg& operator=( const Track2SpdEAlg& ) ;
+  // ==========================================================================
 } ;
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( Track2SpdEAlg );
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

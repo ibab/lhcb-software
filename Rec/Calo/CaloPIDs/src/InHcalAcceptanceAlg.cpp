@@ -1,8 +1,11 @@
-// $Id: InHcalAcceptanceAlg.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
+// $Id: InHcalAcceptanceAlg.cpp,v 1.4 2009-08-05 17:35:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.2  2007/08/24 21:25:19  odescham
 // fix uncheck. StatusCodes
 //
@@ -22,41 +25,44 @@
 // ============================================================================
 class InHcalAcceptanceAlg : public InCaloAcceptanceAlg 
 {
+  // ==========================================================================
   /// friend factory for instantiation
   friend class AlgFactory<InHcalAcceptanceAlg>;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /// Standard protected constructor
   InHcalAcceptanceAlg 
   ( const std::string& name , 
     ISvcLocator*       pSvc ) 
     : InCaloAcceptanceAlg ( name , pSvc ) 
   {
-     if( "HLT" == context() ){
+    if( "HLT" == context() ){
       _setProperty ( "Output" , LHCb::CaloIdLocation::InHcalHlt    ) ;
     }else{ 
       _setProperty ( "Output" , LHCb::CaloIdLocation::InHcal     ) ;
     }
-    _setProperty ( "Tool"   , "InHcalAcceptance/InHcal:PUBLIC" ) ;
+    _setProperty ( "Tool"   , "InHcalAcceptance/InHcal" ) ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                    ( LHCb::Track::Long       , 
                      LHCb::Track::Downstream ,
                      LHCb::Track::Ttrack     ) ) ;
-  } ;
+  } 
   /// virtual proected destructor 
   virtual ~InHcalAcceptanceAlg() {} ; 
+  // ==========================================================================
 private:
+  // ==========================================================================
   InHcalAcceptanceAlg() ;
   InHcalAcceptanceAlg           ( const InHcalAcceptanceAlg& );
   InHcalAcceptanceAlg& operator=( const InHcalAcceptanceAlg& );
+  // ==========================================================================
 } ;
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY( InHcalAcceptanceAlg );
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================
