@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -145,7 +145,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         Reconstruction
         """
         #  Full reconstruction of all tracks 
-        from HltConf.HltReco import HltRecoSequence
+        from HltLine.HltReco import HltRecoSequence
         Hlt2.Members += [ HltRecoSequence ]
         HltRecoSequence.Members += [ self.hlt2Tracks() ] # charged
 
