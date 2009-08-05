@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-08-05 - Gareth Rogers
+ - Added the missing file TClient which is used on Windows instead of client.h.
+
 ! 2009-06-11 - Gareth Rogers
  - Renamed runCamServ.sh to runCameraServers.sh and stopped calling newCameraLog.sh.
    Replaced it with a call to newDataDirectory.sh with the date instead.
