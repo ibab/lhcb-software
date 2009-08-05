@@ -1,15 +1,14 @@
-$Id: release.notes,v 1.36 2009-08-05 12:46:37 pkoppenb Exp $
+$Id: release.notes,v 1.37 2009-08-05 19:48:07 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v2r0 2009-08-05 =====================
 ! 2009-08-05 - Patrick Koppenburg
  - Move Decoding to HltLines
- - Increment to v2r1
 
-!========================== Hlt2SharedParticles v2r0 2009-08-04 =====================
 ! 2009-08-03 - Patrick Koppenburg
    Move PID into lines :
  - Moved Hlt2CaloReco from HltConf.HltCaloReco
