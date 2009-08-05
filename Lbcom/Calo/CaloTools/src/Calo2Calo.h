@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.h,v 1.5 2009-04-17 11:43:51 odescham Exp $
+// $Id: Calo2Calo.h,v 1.6 2009-08-05 17:41:46 ibelyaev Exp $
 #ifndef CALO2CALO_H 
 #define CALO2CALO_H 1
 
@@ -25,29 +25,44 @@ public:
   virtual ~Calo2Calo( ); ///< Destructor
   StatusCode initialize();
   // setting
-  void setCalos(std::string fromCalo,std::string toCalo);
+  void setCalos ( const std::string& fromCalo , 
+                  const std::string& toCalo   ) ;
   // CaloCellIDs
-  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo);
-  const std::vector<LHCb::CaloCellID>& cellIDs(LHCb::CaloCellID  fromId     , std::string toCalo, bool init=true);
+  const std::vector<LHCb::CaloCellID>& 
+  cellIDs ( const LHCb::CaloCluster& fromCluster , 
+            const std::string&       toCalo      ) ;
+  const std::vector<LHCb::CaloCellID>& 
+  cellIDs ( const LHCb::CaloCellID&  fromId     , 
+            const std::string&       toCalo, bool init=true);
   const std::vector<LHCb::CaloCellID>& cellIDs(){return m_cells;};
   // Digits
-  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCellID   fromId     , std::string toCalo);
-  const std::vector<LHCb::CaloDigit*>& digits(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  const std::vector<LHCb::CaloDigit*>& digits
+  ( const LHCb::CaloCellID& fromId     , 
+    const std::string&      toCalo     ) ;
+  const std::vector<LHCb::CaloDigit*>& digits
+  ( const LHCb::CaloCluster& fromCluster , 
+    const std::string&       toCalo    ) ;
   const std::vector<LHCb::CaloDigit*>& digits(){return m_digits;};
   // Energy
-  double energy(LHCb::CaloCellID   fromId     , std::string toCalo);
-  double energy(LHCb::CaloCluster  fromCluster, std::string toCalo);
-  double energy(){return m_energy;};
+  double energy ( const LHCb::CaloCellID&  fromId , 
+                  const std::string&       toCalo );
+  double energy ( const LHCb::CaloCluster& fromCluster ,
+                  const std::string&       toCalo );
+  double energy (){return m_energy;};
   // multiplicity
-  int multiplicity(LHCb::CaloCellID   fromId     , std::string toCalo);
-  int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo);
+  int multiplicity( const LHCb::CaloCellID&  fromId ,
+                    const std::string&       toCalo ) ;
+  int multiplicity( const LHCb::CaloCluster& fromCluster ,
+                    const std::string&       toCalo ) ;
   int multiplicity(){return m_count;};
   // Additional
-  bool isLocalMax(LHCb::CaloDigit digit);
+  bool isLocalMax ( const LHCb::CaloDigit& digit);
 
 protected:
+  // 
   void reset();
-  const std::vector<LHCb::CaloCellID>& addCell( LHCb::CaloCellID id, std::string toCalo);
+  const std::vector<LHCb::CaloCellID>& addCell
+  ( const LHCb::CaloCellID& id, const std::string& toCalo);
   // Calo Maps
   std::map<std::string,DeCalorimeter*> m_det;
   std::map<std::string,std::string> m_loc;

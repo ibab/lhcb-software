@@ -1,21 +1,30 @@
-// $Id: Calo2Calo.cpp,v 1.6 2009-05-19 13:48:22 cattanem Exp $
+// $Id: Calo2Calo.cpp,v 1.7 2009-08-05 17:41:46 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h" 
-
+// ============================================================================
 #include "Kernel/CaloCellCode.h"
+// ============================================================================
+// CaloUtils
+// ============================================================================
+#include "CaloUtils/CaloDataFunctor.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "Calo2Calo.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : Calo2Calo
-//
-// 2007-05-29 : Olivier Deschamps
-//-----------------------------------------------------------------------------
-
+// ============================================================================
+/** @file 
+ *  Implementation file for class : Calo2Calo
+ *  @date 2007-05-29 
+ *  @author Olivier Deschamps
+ */
+// ============================================================================
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( Calo2Calo );
+// ============================================================================
 
 
 //=============================================================================
@@ -44,10 +53,11 @@ Calo2Calo::Calo2Calo( const std::string& type,
 //=============================================================================
 Calo2Calo::~Calo2Calo() {}
 //=============================================================================
-StatusCode Calo2Calo::initialize(){
+StatusCode Calo2Calo::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   debug() << "Initialize Calo2Calo tool " << endmsg;
-
+  
   // get getter tool
   m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName);
 
@@ -85,7 +95,10 @@ void Calo2Calo::reset(){
   m_count  = 0;
 }
 
-void Calo2Calo::setCalos(std::string fromCalo,std::string toCalo){ 
+void Calo2Calo::setCalos
+( const std::string& fromCalo ,
+  const std::string& toCalo   )
+{ 
   m_fromCalo = fromCalo;
   m_toCalo   = toCalo;
   m_fromDet  = m_det[m_fromCalo];
@@ -96,31 +109,38 @@ void Calo2Calo::setCalos(std::string fromCalo,std::string toCalo){
   m_toLoc    = m_loc[ m_toCalo ];
  }
 //=======================================================================================================
-const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
-
+const std::vector<LHCb::CaloCellID>& 
+Calo2Calo::cellIDs ( const LHCb::CaloCluster& fromCluster , 
+                     const std::string&       toCalo      )
+{
+  
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
-
+  
   for(LHCb::CaloCluster::Entries::const_iterator ent = fromCluster.entries().begin();
-      ent != fromCluster.entries().end(); ++ent){
-    SmartRef<LHCb::CaloDigit> digit = (*ent).digit();
-    cellIDs( (*digit).cellID() , toCalo, false );
+      ent != fromCluster.entries().end(); ++ent)
+  {
+    const LHCb::CaloDigit* digit = ent->digit();
+    if ( 0 == digit ) { continue ; }
+    cellIDs( digit->cellID() , toCalo, false );
   }
   return m_cells;
 }
 //=======================================================================================================
-const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell( LHCb::CaloCellID id, std::string toCalo){
+const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell
+( const LHCb::CaloCellID& id     , 
+  const std::string&      toCalo )
+{
   // consistency check
   if( CaloCellCode::CaloNameFromNum(id.calo()) != m_toCalo || toCalo != m_toCalo ){
     Warning("CellID is not consistent with Calo setting").ignore();
     return m_cells;
   }
   // check duplicate
-  for(std::vector<LHCb::CaloCellID>::const_iterator icel = m_cells.begin(); icel != m_cells.end();++icel){
-    if( id == (*icel) )return m_cells;
-  }
+  if ( m_cells.end() != std::find ( m_cells.begin() , m_cells.end() , id ) ) { return m_cells ; }
+  
   // add the cells
   m_cells.push_back( id );
   LHCb::CaloDigit* digit = m_digs->object( id );
@@ -134,8 +154,11 @@ const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell( LHCb::CaloCellID id, st
 
 
 //=======================================================================================================
-const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::string toCalo , bool init){
-
+const std::vector<LHCb::CaloCellID>& 
+Calo2Calo::cellIDs ( const LHCb::CaloCellID& fromId , 
+                     const std::string&      toCalo , bool init )
+{
+  
   if( init )reset();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( fromId.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
@@ -150,7 +173,6 @@ const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCellID fromId,
     return addCell( toId , m_toCalo);
   }
   
-
   // ---- Else use the actual geometry to connet detectors
   double scale = 1.;
   Gaudi::XYZPoint  center = m_fromDet->cellCenter( fromId );
@@ -201,52 +223,67 @@ const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs(LHCb::CaloCellID fromId,
 
 
 // Digits
-const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits(LHCb::CaloCellID fromId, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits
+( const LHCb::CaloCellID& fromId ,
+  const std::string& toCalo )
+{  
   m_digs     = m_getter->digits( m_toLoc );  
-  cellIDs( fromId, toCalo);
+  cellIDs( fromId, toCalo ) ;
   return m_digits;
 }
-const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits
+( const LHCb::CaloCluster& fromCluster , 
+  const std::string& toCalo ) 
+{  
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs( fromCluster, toCalo);
   return m_digits;
 }  
 // Energy
-double Calo2Calo::energy(LHCb::CaloCellID fromId, std::string toCalo){
+double Calo2Calo::energy 
+( const LHCb::CaloCellID& fromId , 
+  const std::string&      toCalo )
+{
   m_digs     = m_getter->digits( m_toLoc );  
-  cellIDs(fromId, toCalo);
+  cellIDs ( fromId , toCalo );
   return m_energy;
 }
-int Calo2Calo::multiplicity(LHCb::CaloCellID fromId, std::string toCalo){
+int Calo2Calo::multiplicity
+( const LHCb::CaloCellID& fromId , 
+  const std::string&      toCalo )
+{
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromId, toCalo);
   return m_count;
 }
-double Calo2Calo::energy(LHCb::CaloCluster fromCluster, std::string toCalo){
+double Calo2Calo::energy
+( const LHCb::CaloCluster& fromCluster , 
+  const std::string&  toCalo )
+{
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromCluster, toCalo);
   return m_energy;
 }
-int Calo2Calo::multiplicity(LHCb::CaloCluster fromCluster, std::string toCalo){
+int Calo2Calo::multiplicity
+( const LHCb::CaloCluster& fromCluster , 
+  const std::string& toCalo )
+{
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromCluster, toCalo);
   return m_count;
 }
 
-
+// ============================================================================
 // Additional method : isLocalMax
-bool Calo2Calo::isLocalMax(LHCb::CaloDigit digit){
-  LHCb::CaloCellID id = digit.cellID();
-  std::string calo = CaloCellCode::CaloNameFromNum( id.calo() );
-   DeCalorimeter* det   = m_det[ calo ];
-   std::vector<LHCb::CaloCellID> neighbors = det->neighborCells( id );
-   for(std::vector<LHCb::CaloCellID>::iterator iid = neighbors.begin(); iid!=neighbors.end();++iid){
-     LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ calo ] );
-     LHCb::CaloDigit* neighbor = digits->object( *iid );
-     if( NULL == neighbor )continue;
-     if( digit.e() <= neighbor->e() )return false;
-   }
-   return true;   
+bool Calo2Calo::isLocalMax ( const LHCb::CaloDigit& digit)
+{
+  const LHCb::CaloCellID& id = digit.cellID();
+  std::string    calo = CaloCellCode::CaloNameFromNum( id.calo() );
+  DeCalorimeter* det  = m_det[ calo ];
+  const LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ calo ] );
+  //
+  return LHCb::CaloDataFunctor::isLocalMax ( &digit , det , digits ) ;
 }
-
-
+// ============================================================================
+// the END 
+// ============================================================================
