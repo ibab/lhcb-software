@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.450 2009-08-04 19:25:41 jpalac Exp $
+! $Id: release.notes,v 1.451 2009-08-05 15:36:48 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-05 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . setP2PVInputLocations: Be more gentle about empty input locations being 
+    set. Issue ONE warning, return StatusCode::SUCCESS.
 
 ! 2009-08-03 - Juan PALACIOS
  - Removed RelatedPV tool
