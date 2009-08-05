@@ -1,4 +1,4 @@
-// $Id: BestPV.h,v 1.1 2009-08-05 15:27:30 jpalac Exp $
+// $Id: BestPV.h,v 1.2 2009-08-05 15:30:39 jpalac Exp $
 #ifndef KERNEL_BESTPV_H 
 #define KERNEL_BESTPV_H 1
 
@@ -96,5 +96,5 @@ namespace DaVinci {
 
   };
   typedef _BestPV<GaudiTool> BestPV; ///< The most useful specialization
-}
+} // namespace DaVinci
 #endif // KERNEL_BESTPV_H
