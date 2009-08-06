@@ -14,7 +14,7 @@ signal = "Bd2eeKstar"
 #
 from Configurables import FilterTrueTracks, MCDecayFinder
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]nos => ^K+ ^pi- ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}]cc}"
 #
 from Configurables import GaudiSequencer

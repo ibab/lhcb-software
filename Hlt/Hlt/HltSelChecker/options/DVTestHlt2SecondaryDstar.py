@@ -21,7 +21,7 @@ importOptions( "$STDOPTS/PreloadUnits.opts")
 # True filter criterion 
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "{[D*(2010)+ -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc, [D*(2010)+ -> (D0 -> ^K+ ^K- {,gamma}{,gamma}{,gamma}) ^pi+  {,gamma}{,gamma}]cc}"
 #
 # Set the following to false if you want only events with a signal

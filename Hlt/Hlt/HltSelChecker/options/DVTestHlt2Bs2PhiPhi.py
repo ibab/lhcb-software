@@ -13,7 +13,7 @@ signal = "Bs2PhiPhi"
 # True filter criterion
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma})(phi(1020) -> ^K+ ^K- {,gamma}{,gamma})]cc" 
 #
 # Set the following to false if you want only events with a signal

@@ -16,7 +16,7 @@ signal = "Bd2MuMukstar"
 # True filter criterion - will only run HLT on True signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc}"
 #
 # Set the following to false if you want only events with a signal

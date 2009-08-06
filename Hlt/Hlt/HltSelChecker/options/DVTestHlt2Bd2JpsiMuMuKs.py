@@ -13,7 +13,7 @@ signal = "Bd2JpsiMuMuKsBiased"
 # True filter criterion - will only run HLT on True signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]os -> (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (KS0 -> ^pi+ ^pi-)]cc,[[B0]nos -> (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (KS0 -> ^pi+ ^pi-)]cc}"
 
 #

@@ -14,7 +14,7 @@ signal = "Bs2JpsieePhi"
 # True filter criterion - will only run HLT on True signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma}) (J/psi(1S) -> ^e+ ^e- {,gamma}{,gamma})]cc"
 #
 # Set the following to false if you want only events with a signal

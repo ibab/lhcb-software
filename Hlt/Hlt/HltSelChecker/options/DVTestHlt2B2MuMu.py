@@ -22,7 +22,7 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 from Configurables import FilterTrueTracks, MCDecayFinder
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =   "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}"
 #
 # Set the following to false if you want only events with a signal

@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2B2HH.py,v 1.18 2009-08-03 16:16:40 pkoppenb Exp $
+### $Id: DVTestHlt2B2HH.py,v 1.19 2009-08-06 08:02:58 pkoppenb Exp $
  #
  #  Test file for HLT B->hh selection
  #
@@ -13,7 +13,7 @@ signal = "B2HH"
 # True filter criterion
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "{[B0 -> ^pi- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]nos -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]os -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [B_s0 -> ^K- ^K+ {,gamma}{,gamma}{,gamma}]cc}"
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT

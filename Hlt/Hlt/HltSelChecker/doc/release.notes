@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-06 - Patrick Koppenburg
+ - Correct all addTool(MCDecayFinder()) to addTool(MCDecayFinder)
+
 ! 2009-08-05 - Patrick Koppenburg
  - Add file for effective scenario
  - Rename scenarions to Effective_Nominal, etc

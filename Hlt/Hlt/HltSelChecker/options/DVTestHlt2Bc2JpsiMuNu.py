@@ -14,7 +14,7 @@ signal = "Bc2JpsiMuNu"
 #
 from Configurables import FilterTrueTracks, MCDecayFinder
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "[B_c+ -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) ^mu+ nu_mu {,gamma} {,gamma}]cc"
 #
 from Configurables import GaudiSequencer

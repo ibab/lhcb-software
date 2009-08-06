@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.13 2009-08-03 16:16:41 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsDD.py,v 1.14 2009-08-06 08:02:58 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -13,7 +13,7 @@ signal = "Bu2D0K_KsDD"
 # True filter criterion
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder())
+FilterTrueTracks().addTool(MCDecayFinder)
 FilterTrueTracks().MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" 
 #
 # Set the following to false if you want only events with a signal
