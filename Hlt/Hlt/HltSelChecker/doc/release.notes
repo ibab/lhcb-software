@@ -21,6 +21,8 @@
 
 ! 2009-08-06 - Patrick Koppenburg
  - Correct all addTool(MCDecayFinder()) to addTool(MCDecayFinder)
+ - Allow FilterTrueTracks not to write out tracks
+   . Split find tracks functionality and write out
 
 ! 2009-08-05 - Patrick Koppenburg
  - Add file for effective scenario

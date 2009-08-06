@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.7 2009-07-09 10:17:33 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.8 2009-08-06 09:03:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
 {
   
   declareProperty( "TracksPath", m_tracksPath );
-  declareProperty( "OutputPath", m_outputPath = "Undefined" );
+  declareProperty( "OutputPath", m_outputPath = "" );
   declareProperty( "MCParticlePath", m_mcParticlePath = LHCb::MCParticleLocation::Default);
   declareProperty( "VetoSignal", m_filterOut = false );
 
@@ -65,36 +65,56 @@ StatusCode FilterTrueTracks::initialize() {
   m_mcDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
   m_selResult = tool<IWriteSelResult>("WriteSelResult", this);
 
-  if ( m_outputPath == "Undefined" ){
-    err() << "You must set the OutputPath " << endmsg ;
-    return StatusCode::FAILURE;
+  if ( "" == m_outputPath ){
+    warning() << "Nothing will be written out" << endmsg ;
   }  
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode FilterTrueTracks::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   setFilterPassed(false);
-
   MCParts mcparts = finalStates();
+
   if ( msgLevel (MSG::DEBUG)) debug() << "Found " << mcparts.size() 
                                       << " true daughters" << endmsg ;
   counter("Signal particles") += mcparts.size();
-  
-  LHCb::Track::Container* newTracks = new LHCb::Track::Container() ;
-  put( newTracks, m_outputPath);
 
-  int nT = 0 ;
+  LHCb::Track::ConstVector tracks = signalTracks(mcparts) ;
+  bool foundall = (!tracks.empty()) ;
+  for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
+    std::string pname = m_ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
+    counter("Found "+pname)+=(m->second) ;
+    //    if (m->second) info() << "Found the " << pname <<  endmsg ;
+    foundall = (foundall && m->second) ;
+  }
+  counter("Found all") += foundall ;
+  setFilterPassed(foundall);
+
+  counter("Found Tracks") += tracks.size() ;
+
+  if ( !m_outputPath.empty() ) save(tracks);
+
+  return m_selResult->write(name(), filterPassed());
+}
+
+
+//=============================================================================
+// Get signal tracks
+//=============================================================================
+LHCb::Track::ConstVector FilterTrueTracks::signalTracks(MCParts& mcparts) const {
+  
+  LHCb::Track::ConstVector tracks ;
+
   for ( std::vector<std::string>::const_iterator p = m_tracksPath.begin() ;
         p!=m_tracksPath.end() ; ++p) {
-   
+    
     if ( !exist<LHCb::Track::Container>(*p)){
       Warning("No tracks at "+(*p),1);
     } else {
@@ -105,10 +125,8 @@ StatusCode FilterTrueTracks::execute() {
       const Table* table = assoc.direct();
       if ( NULL==table) {
         Warning("NO association Table for "+*p,StatusCode::FAILURE,1) ;
-        return StatusCode::SUCCESS ;
       }
-
-      if (msgLevel(MSG::DEBUG)) nT += inTracks->size();
+      
       counter("All Tracks") += inTracks->size();
       for ( LHCb::Track::Container::const_iterator t = inTracks->begin() ;
             t != inTracks->end() ; ++t){
@@ -119,34 +137,31 @@ StatusCode FilterTrueTracks::execute() {
         if ( isSignal(mcparts, range) ) {
           if (msgLevel(MSG::DEBUG)) debug() << "Track " << (*t)->key() 
                                             << " is associated to truth " << endmsg ;
-          
-          LHCb::Track* newT = (*t)->clone();
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key() 
-                                                << endmsg ;
-          newTracks->insert(newT);
-        }
-      } 
+          tracks.push_back(*t);
+        }    
+      }
     } 
   } 
-  if (msgLevel(MSG::DEBUG)) debug() << "Saved " << newTracks->size() << " Tracks from "
-                                    << nT << endmsg ;
-
-  counter("Saved Tracks") += newTracks->size() ;
-  bool foundall = true ;
-
-  for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
-    std::string pname = m_ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
-    counter("Found "+pname)+=(m->second) ;
-    //    if (m->second) info() << "Found the " << pname <<  endmsg ;
-    foundall = (foundall && m->second) ;
-  }
-  counter("Found all")+= foundall ;
-
-  if ( !newTracks->empty()) setFilterPassed(foundall);
-
-  return m_selResult->write(name(), filterPassed());
+  return tracks ;
 }
+//=============================================================================
+// save tracks
+//=============================================================================
+StatusCode FilterTrueTracks::save(const LHCb::Track::ConstVector& tracks) const {
+  
+  LHCb::Track::Container* newTracks = new LHCb::Track::Container() ;
+  put( newTracks, m_outputPath);
+  
+  for ( LHCb::Track::ConstVector::const_iterator t = tracks.begin() ; t!= tracks.end() ; ++t){
+    
+    LHCb::Track* newT = (*t)->clone();
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Cloned Track " << (*t)->key() 
+                                          << endmsg ;
+    newTracks->insert(newT);
+  }
 
+  return StatusCode::SUCCESS ;
+}
 //=========================================================================
 //  get interesting MC Particles
 //=========================================================================
@@ -180,7 +195,7 @@ MCParts FilterTrueTracks::finalStates ( ) const {
 //=========================================================================
 //  is it a signal track ?
 //=========================================================================
-bool FilterTrueTracks::isSignal( MCParts& mc, const Range& range) const {
+bool FilterTrueTracks::isSignal(MCParts& mc, const Range& range) const {
 
   for ( MCParts::iterator m = mc.begin() ; m != mc.end() ; ++m){
     for ( iter rel = range.begin() ; rel != range.end() ; ++rel ){

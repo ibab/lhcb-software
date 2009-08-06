@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.h,v 1.3 2008-07-11 08:53:08 pkoppenb Exp $
+// $Id: FilterTrueTracks.h,v 1.4 2009-08-06 09:03:11 pkoppenb Exp $
 #ifndef FILTERTRUETRACKS_H 
 #define FILTERTRUETRACKS_H 1
 
@@ -25,6 +25,7 @@ typedef std::vector<std::pair<const LHCb::MCParticle*,bool> > MCParts ;
  */
 class IMCDecayFinder;
 class IWriteSelResult ;
+#include "Event/Track.h"
 
 class FilterTrueTracks : public GaudiAlgorithm {
 public: 
@@ -40,8 +41,10 @@ public:
 protected:
 
 private:
-  MCParts finalStates() const;
-  bool isSignal( MCParts&, const Range&) const;
+  MCParts finalStates( ) const;
+  bool isSignal(MCParts&, const Range&) const;
+  LHCb::Track::ConstVector signalTracks(MCParts&) const ;
+  StatusCode save(const LHCb::Track::ConstVector&) const ;
 
 private:
   IMCDecayFinder* m_mcDecFinder ;        ///<  MCDecayFinder
