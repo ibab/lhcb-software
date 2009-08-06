@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.14 2009-02-20 10:20:23 evh Exp $
+// $Id: GaudiExample.cpp,v 1.15 2009-08-06 13:01:30 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -61,6 +61,8 @@ StatusCode GaudiExample::initialize() {
   
   counter1=0;   	// "All events"
   counter2=0;   	// "Event of type 1"
+  count_rate_1=0;
+  count_rate_2=0;
   efficiency1 = 0;	// "Ratio counter2/counter1"
   aboveRef = false;	// "true if efficiency > 0.55"
   efficiency2=0.0;	// "3090 < mass < 310"
@@ -117,8 +119,8 @@ StatusCode GaudiExample::initialize() {
   
   // This is only for counters which will be monitorated as rates
   // Obs: the description should be "COUNTER_TO_RATE"
-  declareInfo("COUNTER_TO_RATE[count1]", count_rate_1, "Counter number 1");
-  declareInfo("COUNTER_TO_RATE[count2]", count_rate_2, "Counter number 2");
+  declareInfo("COUNTER_TO_RATE[count_rate_1]", count_rate_1, "Counter number 1");
+  declareInfo("COUNTER_TO_RATE[count_rate_2]", count_rate_2, "Counter number 2");
  // declareInfo("count2", count_rate_2);
   
   // For histograms, either declare explicitly here using  histosvc, or 
@@ -145,7 +147,7 @@ StatusCode GaudiExample::initialize() {
   if ( !sc.isSuccess() ) {
     return sc;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -159,7 +161,9 @@ StatusCode GaudiExample::execute() {
   
   int eventtype;
   counter1++;
-  
+  count_rate_1++;
+  count_rate_2++;
+  count_rate_2++;
   time(&time_new);
   msg << MSG::DEBUG << "Current event: " << counter1 << " Current time: " <<
     time_new << endreq;
@@ -327,8 +331,7 @@ StatusCode GaudiExample::execute() {
   
   msg << MSG::DEBUG << "******************************************" << endreq;
   
-  count_rate_1 = counter1;
-  count_rate_2 = counter2;
+
     
   return StatusCode::SUCCESS;
 }

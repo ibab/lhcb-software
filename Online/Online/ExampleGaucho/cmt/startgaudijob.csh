@@ -47,10 +47,9 @@
 
 if ( $1 == "" ) then 
   setenv UTGID "test"
-  else {
+  else 
     setenv UTGID $1
     shift
-  }
 endif
 
 
@@ -64,14 +63,14 @@ endif
 
 echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 
-setenv LHCBHOME /afs/cern.ch/lhcb
-source $LHCBHOME/scripts/CMT.csh
+#setenv LHCBHOME /afs/cern.ch/lhcb
+#source $LHCBHOME/scripts/CMT.csh
 setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
 
-SetupProject Online v4r19
+SetupProject Online v4r25
 
 
-cd /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r19/Online/ExampleGaucho/cmt
+cd /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r25/Online/ExampleGaucho/cmt
 source setup.csh
 
 echo EXAMPLEGAUCHOROOT = $EXAMPLEGAUCHOROOT

@@ -101,7 +101,7 @@ StatusCode MonObjectTextPrinter::execute() {
       msg << MSG::WARNING << "No Service Found ==> " << m_svcname << endreq;
     }
   }
-  sleep(100);
+  sleep(10);
   return StatusCode::SUCCESS;
 }
 

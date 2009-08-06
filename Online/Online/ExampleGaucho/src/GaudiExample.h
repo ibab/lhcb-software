@@ -71,8 +71,8 @@ private:
   std::vector<double> m_vectDouble;
   
   // counters into rates test
-  double count_rate_1;
-  double count_rate_2;
+  int count_rate_1;
+  int count_rate_2;
     
   int nbinEntries;
   double sumOfWeights;
