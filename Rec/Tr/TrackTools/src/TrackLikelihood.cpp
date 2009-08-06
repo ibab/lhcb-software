@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.8 2009-07-02 10:43:49 mneedham Exp $
+// $Id: TrackLikelihood.cpp,v 1.9 2009-08-06 18:19:10 smenzeme Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -67,7 +67,6 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
   declareProperty("useTT", m_useTT = true);
   declareProperty("useIT", m_useIT = true);
   declareProperty("useOT", m_useOT = true);
-  declareProperty("addExpectedFlags", m_addExpectedFlags = true);
   declareProperty("chiWeight", m_chiWeight = 1.0);  
 
   declareInterface<ITrackManipulator>(this);
@@ -116,10 +115,7 @@ StatusCode TrackLikelihood::execute(LHCb::Track& aTrack) const{
   }
 
   // add the likelihood to track (overwrites previous value)
-  if (aTrack.hasInfo(LHCb::Track::Likelihood) == true ) {
-    aTrack.eraseInfo(LHCb::Track::Likelihood);
-  }
-  aTrack.addInfo(LHCb::Track::Likelihood, lik);
+   aTrack.setLikelihood(lik);
 
   return StatusCode::SUCCESS;
 }
@@ -188,8 +184,6 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   double prob2 = log(gsl_ran_binomial_pdf(nHigh, m_veloHighEff2, veloRHits.size() + veloPhiHits.size()));
   lik += gsl_max(prob1,prob2);
 
-  if (m_addExpectedFlags == true) aTrack.addInfo(LHCb::Track::nExpectedVelo, expectedVelo.nR + expectedVelo.nPhi);
-
   return lik;
 }
 
@@ -225,7 +219,6 @@ double TrackLikelihood::addTT(LHCb::Track& aTrack) const{
     lik += log(spillprob);
   }
 
-  if (m_addExpectedFlags == true) aTrack.addInfo(LHCb::Track::nExpectedTT,nExpectedTT);
 
   return lik;
 }
@@ -244,7 +237,6 @@ double TrackLikelihood::addOT(LHCb::Track& aTrack) const{
     IHitExpectation::Info otInfo = m_otExpectation->expectation(aTrack); 
     lik += binomialTerm(otHits.size(),otInfo.nExpected, m_otEff);
     lik += otInfo.likelihood;
-    if (m_addExpectedFlags == true) aTrack.addInfo(LHCb::Track::nExpectedOT,otInfo.nExpected);
   }
 
   return lik;
@@ -265,8 +257,7 @@ double TrackLikelihood::addIT(LHCb::Track& aTrack) const{
   if (itHits.size() > 0u) {
     unsigned int nIT = m_itExpectation->nExpected(aTrack); 
     lik += binomialTerm(itHits.size(),nIT, m_itEff);
-    if (m_addExpectedFlags == true) aTrack.addInfo(LHCb::Track::nExpectedIT,nIT);
-
+   
     // spillover information for IT
     std::vector<LHCb::Measurement*> itHits; itHits.reserve(meas.size());
     LoKi::select(meas.begin(), meas.end(), std::back_inserter(itHits), 

@@ -12,8 +12,8 @@ namespace TrackMonitorMaps{
   typedef std::map<std::string,LHCb::Track::Types> TypeMap; 
   const TypeMap& typeDescription() ;
 
-  typedef std::map<std::string,LHCb::Track::AdditionalInfo> InfoMap; 
-  const InfoMap& infoDescription() ;
+  //typedef std::map<std::string,LHCb::Track::AdditionalInfo> InfoMap; 
+  //const InfoMap& infoDescription() ;
 
   class HistoRange{
     public:

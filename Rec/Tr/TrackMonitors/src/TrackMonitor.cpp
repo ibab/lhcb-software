@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.14 2009-06-15 12:55:21 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.15 2009-08-06 18:18:10 smenzeme Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -60,6 +60,8 @@ StatusCode TrackMonitor::initialize()
   StatusCode sc = TrackMonitorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
   m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
+  m_otDet   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+  
   return StatusCode::SUCCESS;
 }
 
@@ -272,23 +274,23 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     }
     
     // compare to what we expected
-    if (track.hasInfo(LHCb::Track::nExpectedOT) == true){
-      plot(nOTHits  - track.info(LHCb::Track::nExpectedOT,9999.), type+"/120", "# OT missed",  -10.5, 10.5 ,21);
+    if (track.expectedHitPattern().numOTHits() > 0 ){
+      plot(nOTHits  - track.expectedHitPattern().numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
-    if (track.hasInfo(LHCb::Track::nExpectedIT) == true){
-      plot(nITHits  - track.info(LHCb::Track::nExpectedIT, 9999.), type+"/121", "# IT missed",  -10.5, 10.5 ,21);
+    if (track.expectedHitPattern().numITHits() > 0){
+      plot(nITHits  - track.expectedHitPattern().numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
-    if (track.hasInfo(LHCb::Track::nExpectedTT) == true){
-      plot(nTTHits - track.info(LHCb::Track::nExpectedTT, 9999.), type+"/122","# TT missed" , -10.5, 10.5 ,21);
+    if (track.expectedHitPattern().numTTHits() > 0){
+      plot(nTTHits - track.expectedHitPattern().numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
-    if (track.hasInfo(LHCb::Track::nExpectedVelo) == true){
-      plot(nVeloHits - track.info(LHCb::Track::nExpectedVelo, 9999.), type+"/123","# Velo missed" ,-10.5, 10.5 ,21);
+    if (track.expectedHitPattern().numVeloClusters() > 0){
+      plot(nVeloHits - track.expectedHitPattern().numVeloClusters(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
     }
 
     const LHCb::Track::ExtraInfo& info = track.extraInfo();
@@ -306,7 +308,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     } // iterInfo
   }
    
-  LHCb::HitPattern hitpattern( track.lhcbIDs() ) ;
+  LHCb::HitPattern hitpattern( track.lhcbIDs(), m_otDet ) ;
   plot( hitpattern.numVeloStations(),
 	type+"/NumVeloStations", "Number of traversed stations in Velo", -0.5,21.5, 22) ;
   plot( hitpattern.numVeloStationsOverlap(), 

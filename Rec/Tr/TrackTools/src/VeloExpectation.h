@@ -1,4 +1,4 @@
-//  $Id: VeloExpectation.h,v 1.6 2009-07-06 18:29:28 jonrob Exp $
+//  $Id: VeloExpectation.h,v 1.7 2009-08-06 18:19:10 smenzeme Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
@@ -39,6 +39,7 @@ public:
   /// Tool initialization
   virtual StatusCode initialize();
 
+
   /** Returns number of hits expected, from zFirst to endVelo
    *
    *  @param aTrack Reference to the Track to test
@@ -48,24 +49,33 @@ public:
   virtual int nExpected ( const LHCb::Track& aTrack ) const;
 
 
-  /** Returns number of hits expected, from zFirst to endVelo
+  /** Returns info on expected hits and fill bitmap for hit pattern
    *
    *  @param aTrack Reference to the Track to test
+   *  @return Info
+   */ 
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<23> velo[4] ) const;
+
+
+  /** Returns info on expected hits
    *
-   *  @return number of hits expected
-   */
+   *  @param aTrack Reference to the Track to test
+   *  @return Info
+   */ 
   virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack ) const;
 
+  
   /** Returns number of hits expected, from zStart to zStop
    *
    *  @param aTrack Reference to the Track to test
    *  @param zStart --> start of scan range
    *  @param zStop --> end of scan range
-   *  @return number of hits expected
-   */
+   *  @return Info
+   */ 
   virtual int nExpected ( const LHCb::Track& aTrack , const double zStart, const double zStop) const;
 
-  /** Returns number of hits expected, from zStart to zStop
+
+  /** Returns expected hits info, from zStart to zStop
    *
    *  @param aTrack Reference to the Track to test
    *  @param zStart --> start of scan range
@@ -73,6 +83,18 @@ public:
    *  @return Info
    */
   virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const;
+
+
+   /** Returns expected hits info, from zStart to zStop and hit pattern
+   *
+   *  @param aTrack Reference to the Track to test
+   *  @param zStart --> start of scan range
+   *  @param zStop --> end of scan range
+   *  @return Info
+   */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop, 
+						std::bitset<23> velo[4]) const;
+
 
   /** Returns number of hits missed, from zBeamLine to firstHit
    *
@@ -90,7 +112,7 @@ public:
    *
    *  @return number of hits missed before first hit
    */
-  virtual int nMissed( const LHCb::Track& aTrack, const double z ) const;
+  virtual int nMissed( const LHCb::Track& aTrack, const double z) const;
 
 
   /** Returns true if track passses through a working strip in the sensor
@@ -104,10 +126,12 @@ public:
   bool isInside(const LHCb::Track& aTrack,
                 const unsigned int sensorNum) const;
 
+                                                                                     
+
 private:
 
   IVeloExpectation::Info scan(const LHCb::Track& aTrack,
-                              const double zStart, const double zStop) const;
+                              const double zStart, const double zStop,std::bitset<23> velo[4] ) const;
 
   bool isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine,
                 const Tf::Tsa::Line& yLine, const double z) const;

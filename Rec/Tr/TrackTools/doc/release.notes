@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-08-05 Stephanie Hansmann-Menzemer
+ - adapt to changes in Track.xml class
 
 !======================== TrackTools v3r20 2009-07-28 ========================
 ! 2009-07-19 M Needham

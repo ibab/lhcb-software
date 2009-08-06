@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.40 2009-07-08 14:14:52 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.41 2009-08-06 18:19:10 smenzeme Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -108,6 +108,7 @@ StatusCode MeasurementProvider::initialize()
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) const
 { 
+
   const std::vector<LHCbID>& ids = track.lhcbIDs();
 
   std::vector<LHCbID> newids ;
@@ -116,6 +117,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
     const LHCbID& id = *it;
 	 // First look if the Measurement corresponding to this LHCbID
 	 // is already in the Track, i.e. whether it has already been loaded!
+
     if ( track.isMeasurementOnTrack( id ) ) {
       Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0) ;
       if( msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) )
@@ -133,7 +135,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
   // create all measurements for selected IDs
   LHCb::Track::MeasurementContainer newmeasurements ;
   addToMeasurements(newids,newmeasurements,reftraj) ;
-  
+
   // remove all zeros, just in case.
   LHCb::Track::MeasurementContainer::iterator newend 
     = std::remove_if(newmeasurements.begin(),newmeasurements.end(),
@@ -146,6 +148,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
   // add the measurements to the track
   track.addToMeasurements( newmeasurements ) ;
   
+
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
   

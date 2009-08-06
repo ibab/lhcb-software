@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2009-08-04 - Stephanie Hansmann-Menzemer
+ - ITGenericTracking: remove filling of LHCb::Track::nExpectedIT
 
 ======================= TsaAlgorithms v3r11 2009-07-14 =====================
 ! 2009-07-14 - Marco Cattaneo

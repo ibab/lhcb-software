@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.12 2009-07-03 13:34:28 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.13 2009-08-06 18:12:29 smenzeme Exp $
 
 #include <algorithm>
 
@@ -263,7 +263,7 @@ StatusCode ITGenericTracking::execute()
     
           if (fullDetail() ) plot(faults , "nFaults", -10.5, 10.5, 21);
           if (faults < m_maxFaults ) {
-            aTrack->addInfo(LHCb::Track::nExpectedIT, itExpected);
+            //aTrack->addInfo(LHCb::Track::nExpectedIT, itExpected);
             tmpTracks.push_back(aTrack);
             setFilterPassed(true);
           }

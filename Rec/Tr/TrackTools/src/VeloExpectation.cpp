@@ -5,7 +5,7 @@
  *  Implementation file for reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.7 2009-07-06 18:29:28 jonrob Exp $
+ *  $Id: VeloExpectation.cpp,v 1.8 2009-08-06 18:19:10 smenzeme Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -58,12 +58,31 @@ StatusCode VeloExpectation::initialize()
   return sc;
 }
 
+
 int VeloExpectation::nExpected ( const Track& aTrack ) const
 {
   // velo expectation from zFirst to endVelo
   IVeloExpectation::Info expectedHits = expectedInfo(aTrack);
   return expectedHits.nR + expectedHits.nPhi;
 }
+
+IVeloExpectation::Info VeloExpectation::expectedInfo ( const Track& aTrack, std::bitset<23> velo[4] ) const{
+
+  // work out the first and last z on the track
+  double zStart; double zStop;
+  if (aTrack.checkFlag( Track::Backward) == false){
+    // forward track
+    zStart = zMin(aTrack)  - 1e-3; 
+    zStop = 9999.0; 
+  } else {
+    //backward track
+    zStart = -9999.; 
+    zStop = zMax(aTrack)+ 1e-3;
+  } 
+
+  return expectedInfo(aTrack, zStart, zStop, velo);
+}
+
 
 IVeloExpectation::Info VeloExpectation::expectedInfo ( const Track& aTrack ) const{
 
@@ -90,9 +109,17 @@ int VeloExpectation::nExpected(const LHCb::Track& aTrack,
   return expectedHits.nR + expectedHits.nPhi;
 }
 
+
+IVeloExpectation::Info VeloExpectation::expectedInfo(const LHCb::Track& aTrack, 
+                               const double zStart, const double zStop,std::bitset<23> velo[4]) const{
+  return scan(aTrack,zStart, zStop, velo);
+}
+
 IVeloExpectation::Info VeloExpectation::expectedInfo(const LHCb::Track& aTrack, 
                                const double zStart, const double zStop) const{
-  return scan(aTrack,zStart, zStop);
+
+  std::bitset<23> velo[4];
+  return scan(aTrack,zStart, zStop, velo);
 }
 
 bool VeloExpectation::isInside(const LHCb::Track& aTrack, 
@@ -125,8 +152,10 @@ int VeloExpectation::nMissed ( const Track& aTrack ) const
     zStop = zBeamLine(aTrack);
   }
 
+  
   // number expected...
-  IVeloExpectation::Info expectedHits = scan(aTrack,zStart,zStop);
+  std::bitset<23> velo[4];
+  IVeloExpectation::Info expectedHits = scan(aTrack,zStart,zStop,velo);
 
   return expectedHits.nR + expectedHits.nPhi - nFound(aTrack,zStart,zStop);
 }
@@ -145,13 +174,14 @@ int VeloExpectation::nMissed( const Track& aTrack, const double z ) const{
   }
 
   // number expected...
-  IVeloExpectation::Info expectedHits = scan(aTrack, zStart, zStop);
+  std::bitset<23> velo[4];
+  IVeloExpectation::Info expectedHits = scan(aTrack, zStart, zStop, velo);
 
   return expectedHits.nPhi + expectedHits.nR - nFound(aTrack,zStart,zStop);
 }
 
 IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack, 
-                          const double zStart, const double zStop) const {
+                          const double zStart, const double zStop, std::bitset<23> velo[4]) const {
 
   IVeloExpectation::Info nHits;
   nHits.nR = 0; nHits.nPhi = 0;
@@ -165,6 +195,15 @@ IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack,
       param(aTrack,z,xLine,yLine);        
       if (isInside(*iterV,xLine,yLine,z) == true){
         (*iterV)->isR() ? ++nHits.nR : ++nHits.nPhi; 
+
+	unsigned int station = ((*iterV)->sensorNumber()%64)/2 ; 
+	unsigned int side    = ((*iterV)->sensorNumber()%2) ; 
+	unsigned int type    = ((*iterV)->sensorNumber()/64) ;
+    
+	station += 2*(1-type/2) ;
+	type     = type%2 ;
+	velo[side+2*type].set(station) ;
+      
       }
     } // if 
   } // iterV
@@ -269,3 +308,5 @@ double VeloExpectation::zBeamLine(const Track& aTrack) const{
   }
   return z;
 }
+
+                                                                              

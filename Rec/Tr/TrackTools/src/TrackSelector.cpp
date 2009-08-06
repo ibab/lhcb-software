@@ -5,7 +5,7 @@
  *  Implementation file for reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.24 2009-07-06 18:29:28 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.25 2009-08-06 18:19:10 smenzeme Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -143,32 +143,19 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     return false;
   }
 
-  // Likelihood
-  LHCb::Track::ExtraInfo::const_iterator iClone = aTrack.extraInfo().find( LHCb::Track::Likelihood );
-  if ( iClone == aTrack.extraInfo().end() )
-  {
-    Warning( "Track does not have Likelihood info", StatusCode::FAILURE, 0 ).ignore();
-    //return false; // disable until all tracks have this variable
-  }
-  else if ( iClone->second < m_minLikCut || iClone->second > m_maxLikCut )
+  if ( aTrack.likelihood() < m_minLikCut || aTrack.likelihood() > m_maxLikCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track Likelihood " << iClone->second << " failed cut"
+      verbose() << " -> Track Likelihood " << aTrack.likelihood() << " failed cut"
                 << endmsg;
     return false;
   }
 
   // GhostProbability
-  LHCb::Track::ExtraInfo::const_iterator iGhost = aTrack.extraInfo().find( LHCb::Track::GhostProbability );
-  if ( iGhost == aTrack.extraInfo().end() )
-  {
-    Warning( "Track does not have GhostProbability info", StatusCode::FAILURE, 0 ).ignore();
-    //return false; // disable until all tracks have this variable
-  }
-  else if ( iGhost->second < m_minGhostProb || iGhost->second > m_maxGhostProb )
+ if ( aTrack.ghostProbability() < m_minGhostProb || aTrack.ghostProbability() > m_maxGhostProb )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track GhostProbability " << iGhost->second << " failed cut"
+      verbose() << " -> Track GhostProbability " << aTrack.ghostProbability() << " failed cut"
                 << endmsg;
     return false;
   }

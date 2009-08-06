@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackUtils
-! Responsible : Eduardo Rodrigues
+! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2009-08-04 - Stephanie Hansmann-Menzemer
+- Add algorithm to fill expected hit information
+- Add algorithm to clean track extra info
 
 !========================== TrackUtils v1r28 2009-07-14 ======================
 ! 2009-07-14 - Marco Cattaneo

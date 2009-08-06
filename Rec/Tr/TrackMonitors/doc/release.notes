@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackMonitors
-! Responsible : Wouter Hulsbergen, Stephanie Menzemer
+! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2009-08-05 Stephanie Hansmann-Menzemer
+- adapt to changes in track class 
 
 !============================ TrackMonitors v1r12 2009-07-28 =================
 ! 2009-07-28 - Marco Cattaneo

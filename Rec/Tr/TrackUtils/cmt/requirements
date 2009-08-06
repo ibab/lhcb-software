@@ -23,6 +23,7 @@ use   TrackInterfaces    v*    Tr
 use   LHCbMath           v*    Kernel
 use   PartProp           v*    Kernel
 use   STDet              v*    Det
+use   OTDet              v*    Det
 
 include_path      none
 #============================================================================

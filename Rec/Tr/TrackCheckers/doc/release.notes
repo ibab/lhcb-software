@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackCheckers
-! Responsible : Edwin Bos
+! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2009-08-04 - Stephanie Hansmann-Menzemer
+ - addapt to changes in LHCb::Track class
 
 !======================= TrackCheckers v4r7 2009-07-14 =======================
 ! 2009-07-10 - Marco Cattaneo

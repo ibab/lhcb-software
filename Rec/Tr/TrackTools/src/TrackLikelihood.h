@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.h,v 1.2 2008-10-18 10:39:03 mneedham Exp $
+// $Id: TrackLikelihood.h,v 1.3 2009-08-06 18:19:10 smenzeme Exp $
 #ifndef _TrackLikelihood_H
 #define _TrackLikelihood_H
 
@@ -69,7 +69,6 @@ class TrackLikelihood: public GaudiTool,
   bool m_useOT;
   bool m_useIT;
   bool m_useTT;
-  bool m_addExpectedFlags;
   double m_chiWeight;
 
  

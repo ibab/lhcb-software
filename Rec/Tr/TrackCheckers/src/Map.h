@@ -14,7 +14,7 @@ namespace TrackMaps{
   const TypeMap& typeDescription() ;
 
   typedef std::map<std::string,LHCb::Track::AdditionalInfo> InfoMap; 
-  const InfoMap& infoDescription() ;
+  // const InfoMap& infoDescription() ;
 
   typedef std::map<std::string,IMCReconstructible::RecCategory> RecMap;
   const RecMap& recDescription();

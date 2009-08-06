@@ -19,7 +19,8 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackStateInitAlg,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
-                            TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec
+                            TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
+                            TrackComputeExpectedHits, TrackEraseExtraInfo
                            )
 
 ## Start TransportSvc, needed by track fit
@@ -215,6 +216,10 @@ if len(extraInfos) > 0 :
       cloneCleaner.CloneCut = 5e3
       trackClones.Members += [ cloneTable, cloneCleaner ]
 
+   ## Add expected hit information   
+   if "ExpectedHits" in extraInfos :
+      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackComputeExpectedHits() ]
+
    ## Add the likelihood information
    if "TrackLikelihood" in extraInfos :
       trackAddLikelihood = TrackAddLikelihood()
@@ -227,6 +232,11 @@ if len(extraInfos) > 0 :
       GaudiSequencer("TrackAddExtraInfoSeq").Members += [ NeuralNetTmva() ]
       importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
 
+track.DetectorList += ["EraseExtraInformation"]
+
+GaudiSequencer("TrackEraseExtraInformationSeq").Members += [ TrackEraseExtraInfo() ]
+
+      
 ## Muon alignment tracks
 if "MuonAlign" in trackAlgs :
    track.DetectorList += ["MuonRec"]
@@ -236,3 +246,4 @@ if "MuonAlign" in trackAlgs :
    if TrackSys().fieldOff():
       AlignMuonRec("AlignMuonRec").BField = False;
       importOptions( "$STDOPTS/DstContentMuonAlign.opts" )
+
