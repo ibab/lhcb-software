@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+ - addpat to changes in LHCb::Track 
 
 ! 2009-08-05 - Chris Jones
  - Add HPD hit monitor to expert checks.

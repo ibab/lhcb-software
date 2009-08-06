@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.6 2009-06-12 15:27:36 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.7 2009-08-06 18:10:57 smenzeme Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -203,36 +203,25 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   // Likelihood
   if ( m_likelihoodCutEnabled )
-  {
-    LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::Likelihood );
-    if ( i == track->extraInfo().end() )
     {
-      Warning( "Track does not have Likelihood info", StatusCode::FAILURE, 0 ).ignore();
-      //return false; // disable until all tracks have this variable
-    }
-    else if ( i->second < m_minLL || i->second > m_maxLL )
-    {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track Likelihood " << i->second << " failed cut "
-                  << m_minLL << " -> " << m_maxLL
-                  << endmsg;
-      return false;
+      
+      if ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL )
+	{
+	  if ( msgLevel(MSG::VERBOSE) )
+	    verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
+		      << m_minLL << " -> " << m_maxLL
+		      << endmsg;
+	  return false;
     }
   }
 
   // GhostProbability
   if ( m_ghostProbCutEnabled )
   {
-    LHCb::Track::ExtraInfo::const_iterator i = track->extraInfo().find( LHCb::Track::GhostProbability );
-    if ( i == track->extraInfo().end() )
-    {
-      Warning( "Track does not have GhostProbability info", StatusCode::FAILURE, 0 ).ignore();
-      //return false; // disable until all tracks have this variable
-    }
-    else if ( i->second < m_minGhostProb || i->second > m_maxGhostProb )
+   if ( track->ghostProbability() < m_minGhostProb || track->ghostProbability() > m_maxGhostProb )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track GhostProbability " << i->second << " failed cut "
+        verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
                   << m_minGhostProb << " -> " << m_maxGhostProb
                   << endmsg;
       return false;

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.7 2009-07-29 12:35:07 jonrob Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.8 2009-08-06 18:13:45 smenzeme Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -165,14 +165,14 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
   richProfile1D( tkClass+"effVP"  )         -> fill ( track->p(),  richEff );
   richProfile1D( tkClass+"effVPt" )         -> fill ( track->pt(), richEff );
   richProfile1D( tkClass+"effVChi2PDOF" )   -> fill ( track->chi2PerDoF(), richEff );
-  richProfile1D( tkClass+"effVLikelihood" ) -> fill ( track->info(LHCb::Track::Likelihood,0), richEff );
-  richProfile1D( tkClass+"effVGhostProb" )  -> fill ( track->info(LHCb::Track::GhostProbability,999999), richEff );
+  richProfile1D( tkClass+"effVLikelihood" ) -> fill ( track->likelihood(), richEff );
+  richProfile1D( tkClass+"effVGhostProb" )  -> fill ( track->ghostProbability(), richEff );
 
   // plot selection variables
   const std::string tag = ( rTrack != NULL ? tkClass+"Selected/" : tkClass+"Rejected/" );
   richHisto1D( tag+"P"  ) -> fill ( track->p()  );
   richHisto1D( tag+"Pt" ) -> fill ( track->pt() );
   richHisto1D( tag+"Chi2PDOF" ) -> fill ( track->chi2PerDoF() );
-  richHisto1D( tag+"Likelihood" ) -> fill ( track->info(LHCb::Track::Likelihood,0) );
-  richHisto1D( tag+"GhostProb"  ) -> fill ( track->info(LHCb::Track::GhostProbability,-1) );
+  richHisto1D( tag+"Likelihood" ) -> fill ( track->likelihood() );
+  richHisto1D( tag+"GhostProb"  ) -> fill ( track->ghostProbability() );
 }
