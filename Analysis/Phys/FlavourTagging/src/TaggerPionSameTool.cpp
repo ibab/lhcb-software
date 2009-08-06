@@ -125,7 +125,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( lcs > m_lcs_cut ) continue;
     if( track->type() != Track::Long ) continue;
 
-    double tsa = track->info(Track::Likelihood, 9999.);
+    double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
 
     //accept candidate

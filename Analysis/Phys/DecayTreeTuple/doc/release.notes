@@ -7,6 +7,8 @@
 ! Use $DAVINCISYSROOT/tests/options/DVTestDecayTreeTuple.py for tests
 !
 !----------------------------------------------------------------------------
+! 2009-08-05 - Stephanie Hansmann-Menzemer - ! 
+- remove filling of track-extra info, according to changes in Track.xml class
 
 ! 2009-07-30 - Patrick Koppenburg
  - Added TupleToolTriggerRecoStats that fills some stats about number

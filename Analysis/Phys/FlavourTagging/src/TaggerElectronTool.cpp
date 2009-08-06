@@ -92,7 +92,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(track->type() != Track::Long 
        && track->type() != Track::Upstream) continue;
 
-    double tsa = track->info(Track::Likelihood, 9999.);
+    double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
     double eOverP  = -999;

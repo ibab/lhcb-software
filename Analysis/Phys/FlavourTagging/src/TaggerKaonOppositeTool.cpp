@@ -80,7 +80,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
        - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
        < m_PIDkp_extracut ) continue;
 
-    double tsa= (*ipart)->proto()->track()->info(Track::Likelihood, 9999.);
+    double tsa= (*ipart)->proto()->track()->likelihood();
     if(tsa < m_ghost_cut) continue;
 
     double Pt = (*ipart)->pt();

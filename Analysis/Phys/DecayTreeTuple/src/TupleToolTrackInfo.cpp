@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.8 2009-06-12 16:15:46 pkoppenb Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.9 2009-08-06 18:24:09 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -69,7 +69,11 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
             test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",-1.);
             test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
           }
-          test &= tuple->column( head+"_TRACK_GhostProb", track->info(LHCb::Track::GhostProbability, -1.) );
+	  double ghostProbability = -1.0;
+	  if (track->ghostProbability() != 0)
+	    ghostProbability = track->ghostProbability();
+
+          test &= tuple->column( head+"_TRACK_GhostProb",ghostProbability);
           test &= tuple->column( head+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
         }
       }
