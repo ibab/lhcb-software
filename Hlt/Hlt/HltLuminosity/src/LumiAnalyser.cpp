@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.11 2009-08-05 09:47:03 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.12 2009-08-06 21:53:18 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -130,6 +130,20 @@ StatusCode LumiAnalyser::initialize() {
     }
   }
 
+  // BXType counting
+  m_sizeBxTypes = m_BXTypes.size();
+  m_countBxTypes = new double[m_sizeBxTypes];     // create a fixed location for DIM to look at
+  int ib = 0;
+  for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx, ++ib) {
+    std::string bx=*iBx;
+    if (m_publishToDIM ) {
+      declareInfo(bx, m_countBxTypes[ib], "number of "+bx);
+    }
+  }
+  m_allBxTypes = 0;
+  if (m_publishToDIM ) {
+    declareInfo("allBXTypes", m_allBxTypes, "all BX Types");
+  }
   
   debug() << "Initialised Lumi Analyser" << endmsg ;
   return sc;
@@ -189,6 +203,7 @@ StatusCode LumiAnalyser::finalize() {
   // release storage
   delete[] m_means;
   delete[] m_thresholds;
+  delete[] m_countBxTypes;
 
   return HltBaseAlg::finalize();
 }
@@ -299,6 +314,7 @@ StatusCode LumiAnalyser::accumulate() {
   std::stringstream sbxType("");
   sbxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   std::string bxType = sbxType.str();
+  ++m_allBxTypes;  // count all types
 
   // protection
   if (m_theStore.find(bxType) == m_theStore.end() ) {
@@ -308,7 +324,10 @@ StatusCode LumiAnalyser::accumulate() {
   int ib = 0;
   for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx, ++ib) {
     std::string bx=*iBx;
-    if ( bx == bxType ) m_bxHisto->fill((double) ib);
+    if ( bx == bxType ) {
+      m_bxHisto->fill((double) ib);
+      ++m_countBxTypes[ib];
+    }
   }
 
   // use the storage belonging to the bxType

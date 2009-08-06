@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.11 2009-08-05 09:47:03 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.12 2009-08-06 21:53:18 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -99,6 +99,9 @@ protected:
   unsigned int m_size;
   double *m_means;
   double *m_thresholds;
+  unsigned int m_sizeBxTypes;
+  double *m_countBxTypes;
+  double m_allBxTypes;
 
 };
 #endif // LUMIANALYSER_H
