@@ -105,6 +105,7 @@ class Hlt1_Nominal :
                  'Hlt1XPress',
                  'Hlt1NonRandomODIN',
                  'Hlt1RandomODIN',
-                 'Hlt1Tell1Error' ]
+                 'Hlt1Tell1Error' ,
+                 'Hlt1Incident']
     
     

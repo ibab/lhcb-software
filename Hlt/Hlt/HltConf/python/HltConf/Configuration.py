@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.106 2009-08-06 14:44:41 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.107 2009-08-06 21:15:00 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -354,7 +354,7 @@ class HltConf(LHCbConfigurableUser):
             self.EnableHltSelReports = False
             self.EnableHltVtxReports = False
             self.EnableLumiEventWriting = False
-            self.ActiveHlt1Lines = [ 'Hlt1Physics','Hlt1Random','Hlt1Tell1Error'] 
+            self.ActiveHlt1Lines = [ 'Hlt1NonRandomODIN','Hlt1RandomODIN','Hlt1Tell1Error'] 
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         _list = ( ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
