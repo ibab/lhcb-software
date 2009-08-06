@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestBd2KstarMuMu.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+================================================================================
+                     TestCorrelations.AlgorithmCorrelations
+================================================================================
+    Algorithm                   Eff.      1      2      3      4      5  
+--------------------------------------------------------------------------------
+  1 FilterTrueTracks           80.0% |  #####  86.2%  80.1% 100.0% 100.0%
+  2 StdLooseDiMuon             63.6% |  68.5%  #####  64.2% 100.0% 100.0%
+  3 StdLooseDetachedKst2Kpi    96.6% |  96.8%  97.5%  ##### 100.0% 100.0%
+  4 Strip_loose_Bd2KstarMuMu    0.8% |   1.0%   1.3%   0.8%  ##### 100.0%
+  5 filter_Bd2KstarMuMu_10Hz    0.4% |   0.5%   0.6%   0.4%  50.0%  #####
+================================================================================
+""", stdout, result, causes, signature_offset = 1)
+</text></argument>
+</extension>

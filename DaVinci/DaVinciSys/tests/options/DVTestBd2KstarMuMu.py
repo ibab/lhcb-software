@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.9 2009-07-31 14:30:32 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.10 2009-08-06 09:04:24 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -22,47 +22,10 @@ trueSeq.IgnoreFilterPassed = True
 ##------------------------------------------------------------------------------##
 ## Truth filter No PID
 ##
-from Configurables import OldFilterDesktop, ByPIDFilterCriterion, TrueMCFilterCriterion, MCDecayFinder
-SelectTrueNoPIDsDecay = OldFilterDesktop("SelectTrueNoPIDsDecay")
-trueSeq.Members += [ SelectTrueNoPIDsDecay ]
-SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion"
-SelectTrueNoPIDsDecay.InputLocations = [ "StdNoPIDsMuons",
-                                         "StdNoPIDsKaons",
-                                         "StdNoPIDsPions"]
-SelectTrueNoPIDsDecay.addTool(ByPIDFilterCriterion("Filter"))
-SelectTrueNoPIDsDecay.Filter.Selections =  [ "K+ : TrueMCFilterCriterion/Decay",
-                                             "mu+ : TrueMCFilterCriterion/Decay",
-                                             "pi+ : TrueMCFilterCriterion/Decay" ]
-##
-## The decay descriptor is the only part that requires some thinking...
-##
-SelectTrueNoPIDsDecay.Filter.addTool(TrueMCFilterCriterion("Decay"))
-SelectTrueNoPIDsDecay.Filter.Decay.addTool(MCDecayFinder()) 
-SelectTrueNoPIDsDecay.Filter.Decay.MCDecayFinder.Decay = "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc"
-##
-## Dummy MakeResonances to check that all tracks are there
-##
-from Configurables import CombineParticles
-AllTrueNoPIDsDecay = CombineParticles("AllTrueNoPIDsDecay")
-trueSeq.Members += [ AllTrueNoPIDsDecay ]
-AllTrueNoPIDsDecay.MotherCut = "ALL"
-AllTrueNoPIDsDecay.InputLocations = [ "SelectTrueNoPIDsDecay" ]
-AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> mu- mu+ K+ pi-]cc"  ## all particles need to be there
-##----------------------------------------------------------------------------------------------------
-##
-## Truth filter for Loose PID : copy of above with NoPIDs -> Loose 
-##
-SelectTrueLooseDecay = SelectTrueNoPIDsDecay.clone("SelectTrueLooseDecay")
-trueSeq.Members += [ SelectTrueLooseDecay ]
-SelectTrueLooseDecay.InputLocations = [ "StdLooseMuons",
-                                        "StdLooseKaons",
-                                        "StdLoosePions"]
-##
-## Dummy MakeResonances to check that all tracks are there
-##
-AllTrueLooseDecay = AllTrueNoPIDsDecay.clone("AllTrueLooseDecay")
-AllTrueLooseDecay.InputLocations = [ "SelectTrueLooseDecay" ]
-trueSeq.Members += [ AllTrueLooseDecay  ]
+from Configurables import  FilterTrueTracks, MCDecayFinder
+trueSeq.Members += [ FilterTrueTracks() ]
+FilterTrueTracks().addTool(MCDecayFinder)
+FilterTrueTracks().MCDecayFinder.Decay = "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc"
 ##
 ## Correlations
 ##
@@ -70,7 +33,7 @@ from Configurables import AlgorithmCorrelationsAlg, AlgorithmCorrelations
 TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
-TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay",
+TestCorrelations.Algorithms = ["FilterTrueTracks", 
                                "StdLooseDiMuon", "StdLooseDetachedKst2Kpi", 
                                "Strip_loose_Bd2KstarMuMu",
                                "filter_Bd2KstarMuMu_10Hz" ]
@@ -79,7 +42,7 @@ TestCorrelations.Algorithms = ["AllTrueNoPIDsDecay", "AllTrueLooseDecay",
 ###
 ## Preselection
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]   # does not work yet
+StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]  
 StrippingConf().OutputType = "NONE"
 StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py"
 
@@ -94,17 +57,12 @@ DaVinci().MoniSequence = [ TestCorrelations ]
 ##-- For Event Type = 11114001 / Data type = DST 1
 
 DaVinci().Input = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004871/0000/00004871_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-
-DaVinci().EvtMax = 100 
+DaVinci().EvtMax = 500
 DaVinci().SkipEvents = 0 
-DaVinci().PrintFreq = 1 
-DaVinci().DataType = "DC06"
+DaVinci().PrintFreq = 10
+DaVinci().DataType = "MC09"
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
