@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.70 2009-08-05 20:21:00 graven Exp $
+# $Id: requirements,v 1.71 2009-08-06 06:58:09 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -47,7 +47,7 @@ use RecSys              v*         -no_auto_imports
 use Hlt2SharedParticles v2r0    Hlt
 use Hlt1Lines           v1r2p1  Hlt
 use Hlt2Lines           v1r5    Hlt
-use HltCommon           v5r8p3  Hlt
+use HltCommon           v5r8p4  Hlt
 use HltLine             v1r4    Hlt
 use HltConf             v4r1    Hlt
 use HltGlobalMonitor    v2r6    Hlt
