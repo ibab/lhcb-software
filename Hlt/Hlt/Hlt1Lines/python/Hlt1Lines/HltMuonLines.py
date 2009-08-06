@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.7 2009-08-05 14:10:41 pkoppenb Exp $
+# $Id: HltMuonLines.py,v 1.8 2009-08-06 19:41:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 
@@ -123,7 +123,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                   , Member ('TF', 'RZVelo'
                              , FilterDescriptor = ['RZVeloTMatch_%TFDeltaP,||<,'+str(self.getProp('Muon_VeloTMatchCut'))] )
                   , Member ('TU', 'Velo' , RecoName = 'Velo' )
-                  , DecodeVELO, DecodeTT
+                  , DecodeTT
                   , Member ('TM', 'VeloT'
                              , InputSelection1 = '%TUVelo'
                              , InputSelection2 = '%TFDeltaP'

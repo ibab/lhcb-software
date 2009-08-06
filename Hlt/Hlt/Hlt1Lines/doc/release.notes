@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.24 2009-08-06 14:46:52 pkoppenb Exp $
+! $Id: release.notes,v 1.25 2009-08-06 19:41:55 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-06 - Gerhard Raven
+ - remove redundant DecodeVelo in muon lines
 
 ! 2009-08-06 - Patrick Koppenburg
  - Better name of lines, and default prescales
