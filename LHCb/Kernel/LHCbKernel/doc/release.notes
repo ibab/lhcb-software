@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+ - modify HitPattern class to count OT monolayers seperately
+   merge IT AC and IT TopBottom in one bitmap
 
 ! 2009-08-04 - Vanya BELYAEV
 

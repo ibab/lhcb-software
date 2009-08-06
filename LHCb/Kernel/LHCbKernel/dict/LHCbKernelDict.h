@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.16 2008-09-04 09:56:47 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.17 2009-08-06 18:08:40 smenzeme Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -39,6 +39,7 @@
 #include "Kernel/TTNames.h"
 #include "Kernel/ITNames.h"
 #include "Kernel/Inspectors.h"
+#include "Kernel/HitPattern.h"
 
 // end include files
 
