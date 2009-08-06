@@ -18,7 +18,7 @@ namespace fs = boost::filesystem;
 namespace {
 
     struct DefaultFilenameSelector {
-        bool operator()(const std::string& fname) const { return true; }
+        bool operator()(const std::string& /*fname*/) const { return true; }
     };
 
     struct PrefixFilenameSelector {

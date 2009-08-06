@@ -8,7 +8,7 @@
 namespace {
 
     struct DefaultFilenameSelector {
-        bool operator()(const std::string& fname) const { return true; }
+        bool operator()(const std::string& /*fname*/) const { return true; }
     };
 
     struct PrefixFilenameSelector {
@@ -60,6 +60,11 @@ namespace TarFileAccess_details {
             index();
         }
         bool fillStream(const std::string& name,std::ostream& os) {
+            //TODO: see if name is empty --> return all filenames in tarball (1)
+            //                  ends in / --> return filenames in specified directory (1)
+            //                  matches file --> return contents of file
+            //                  unknown -> return false
+            // (1): do equiv of join('\n',filenames)
             std::map<std::string,Info>::const_iterator i = m_index.find(name);
             if (i==m_index.end()) return false;
             m_file.seekg(i->second.offset);
@@ -119,45 +124,45 @@ namespace TarFileAccess_details {
     };
 
     bool TarFile::interpretHeader(const posix_header& header, Info& info) {
-                if (!strncmp(header.magic,"ustar",6)) return false;
-                long chksum       = getOctal(header.chksum,sizeof(header.chksum));
-                /* Check the checksum */
-                long sum=0;
-                unsigned char *s = (unsigned char *)&header;
-                for (int i = sizeof(header); i-- != 0;) sum += *s++;
-                /* Remove the effects of the checksum field (replace 
-                 * with blanks for the purposes of the checksum) */
-                for (int i = sizeof header.chksum; i-- != 0;) {
-                     sum -= (unsigned char) header.chksum[i];
-                }
-                sum += ' ' * sizeof header.chksum;
-                if (sum!=chksum) return false;
-                info.name  = header.name;
-                info.type  = TarFileType(header.typeflag);
-                info.size  = getOctal(header.size,sizeof(header.size));
-                return true;
+        if (!strncmp(header.magic,"ustar",6)) return false;
+        long chksum       = getOctal(header.chksum,sizeof(header.chksum));
+        /* Check the checksum */
+        long sum=0;
+        unsigned char *s = (unsigned char *)&header;
+        for (int i = sizeof(header); i-- != 0;) sum += *s++;
+        /* Remove the effects of the checksum field (replace 
+         * with blanks for the purposes of the checksum) */
+        for (int i = sizeof header.chksum; i-- != 0;) {
+             sum -= (unsigned char) header.chksum[i];
+        }
+        sum += ' ' * sizeof header.chksum;
+        if (sum!=chksum) return false;
+        info.name  = header.name;
+        info.type  = TarFileType(header.typeflag);
+        info.size  = getOctal(header.size,sizeof(header.size));
+        return true;
     }
 
     bool TarFile::index() {
-            posix_header header;
-            while (m_file.read( (char*) &header, sizeof(header) )) {
-                Info info(m_file.tellg());
-                if (!interpretHeader( header, info))  return false;
-                if (info.name.empty()) break;
-                // skip directories and CVS (sub)trees...
-                if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
-                   && info.name[ info.name.size()-1 ] != '/' 
-                   && info.name.find("/CVS/") == std::string::npos )  {
-                    m_index.insert(make_pair(info.name,info));
-                }
-                // round up size to block size, and skip to next header...
-                size_t skip = info.size;
-                size_t padding = skip % 512;
-                if (padding!=0 ) skip += 512 - padding;
-                m_file.seekg(skip,std::ios::cur);
+        posix_header header;
+        while (m_file.read( (char*) &header, sizeof(header) )) {
+            Info info(m_file.tellg());
+            if (!interpretHeader( header, info))  return false;
+            if (info.name.empty()) break;
+            // skip directories and CVS (sub)trees...
+            if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
+               && info.name[ info.name.size()-1 ] != '/' 
+               && info.name.find("/CVS/") == std::string::npos )  {
+                m_index.insert(make_pair(info.name,info));
             }
-            m_file.seekg(0, std::ios::beg);
-            return true;
+            // round up size to block size, and skip to next header...
+            size_t skip = info.size;
+            size_t padding = skip % 512;
+            if (padding!=0 ) skip += 512 - padding;
+            m_file.seekg(skip,std::ios::cur);
+        }
+        m_file.seekg(0, std::ios::beg);
+        return true;
     };
 }
 
@@ -183,17 +188,20 @@ TarFileAccess::protocols() const {
     return s_proto;
 }
 
+
 std::auto_ptr<std::istream> 
 TarFileAccess::open(const std::string &url) {
     std::auto_ptr<std::istream> stream;
     // parse tarfile:/foo/bar/xxx.tar/some/file 
     //                                ^       ^ file name inside tar file
     //               ^              ^ tar name
-    static boost::regex re("^[tT]ar[fF]ile:(.*.tar)/(.*)$");
+    static boost::regex tar("^[tT]ar[fF]ile:(.*.tar)(.*)$");
     boost::smatch what;
-    if(!boost::regex_match(url, what, re)) {
+    if(!boost::regex_match(url, what, tar)) {
+        // could not parse url, invalid url
         return stream;
     }
+
     // check if tarname already known; if not, open and index
     container_t::iterator tarFile =  m_tarFiles.find(what.str(1));
     if (tarFile == m_tarFiles.end() ) { 
