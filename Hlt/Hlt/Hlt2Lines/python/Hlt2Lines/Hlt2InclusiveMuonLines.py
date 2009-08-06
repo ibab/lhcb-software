@@ -30,7 +30,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                              ,'Hlt2IncMuTrack4Jpsi' : 0.1
                                              }
                   
-                  ,'SingleMuonPt'         : 3600      # MeV
+                  ,'SingleMuonPt'        : 3600      # MeV
                   ,'SingleMuonIP'        : 0.220     # mm
                   
                   ,'MuTrackMuPt'         : 1000      # MeV
