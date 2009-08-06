@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.16 2009-07-02 11:54:07 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.17 2009-08-06 06:55:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -72,8 +72,9 @@ StatusCode HltL0CaloCandidates::initialize() {
                     ? (ICaloSeedTool*)0
                     :tool<ICaloSeedTool>(m_caloMakerName));
 
+  counter("#input");
   // force creation of counters, and declare them to monitoring...
-  declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
+  //declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
   
   m_et    = book("Et");
   m_etMax = book("EtMax");

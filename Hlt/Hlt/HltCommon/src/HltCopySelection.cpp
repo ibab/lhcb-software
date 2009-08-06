@@ -1,4 +1,4 @@
-// $Id: HltCopySelection.cpp,v 1.3 2009-07-02 11:54:07 graven Exp $
+// $Id: HltCopySelection.cpp,v 1.4 2009-08-06 06:55:53 graven Exp $
 // Include files 
 #include <algorithm>
 #include <iterator>
@@ -52,7 +52,8 @@ HltCopySelection<T>::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   m_selection.retrieveSelections();
   m_selection.registerSelection();
-  declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
+  counter("#input");
+  // declareInfo("#input",&counter("#input"),std::string("Candidates seen by ") + name());
   return sc;
 }
 

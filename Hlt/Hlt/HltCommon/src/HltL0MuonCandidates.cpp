@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.10 2009-03-03 21:23:51 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.11 2009-08-06 06:55:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -62,9 +62,13 @@ StatusCode HltL0MuonCandidates::initialize() {
   m_selection.registerSelection();
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
-  declareInfo("#accept","",&counter("#accept"),0,std::string("Events accepted by ") + name());
-  declareInfo("#input","",&counter("#input"),0,std::string("Candidates seen by ") + name());
-  declareInfo("#candidates accepted","",&counter("#candidates accepted"),0,std::string("Candidates accepted by ") + name());
+  // make sure counters exist
+  counter("#accept");
+  counter("#input");
+  counter("#candidates accepted");
+  //declareInfo("#accept",&counter("#accept"),std::string("Events accepted by ") + name());
+  //declareInfo("#input",&counter("#input"),std::string("Candidates seen by ") + name());
+  //declareInfo("#candidates accepted",&counter("#candidates accepted"),std::string("Candidates accepted by ") + name());
   m_pt    = book("Pt");
   m_ptMax = book("PtMax");
 
