@@ -13,7 +13,7 @@ use  Moore                  v7r3    Hlt
 use Hlt2SharedParticles     v2r0    Hlt
 use Hlt1Lines               v1r2p1  Hlt
 use Hlt2Lines               v1r5    Hlt
-use HltCommon               v5r8p3  Hlt
+use HltCommon               v5r8p4  Hlt
 use HltLine                 v1r4    Hlt
 use HltGlobalMonitor    v2r6    Hlt
 
