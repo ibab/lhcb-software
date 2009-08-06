@@ -158,7 +158,7 @@ const State* Track::stateAt( const LHCb::State::Location& location ) const
 {
   StateContainer::const_iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
-                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
+                 TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
   return iter == m_states.end() ? 0 : *iter ;
 }
@@ -404,6 +404,7 @@ void Track::reset()
   std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
   std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
   std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
+  m_expectedHitPattern.reset();
   m_states.clear();
   m_measurements.clear();
   m_nodes.clear();
@@ -443,7 +444,8 @@ void Track::copy( const Track& track )
   setFlags( track.flags() );
   setLhcbIDs( track.lhcbIDs() );
   setExtraInfo( track.extraInfo() );
-  
+  setExpectedHitPattern ( track.expectedHitPattern() );
+
   // copy the states
   m_states.reserve( track.states().size() ) ;
   for( std::vector<State*>::const_iterator istate = track.states().begin() ;

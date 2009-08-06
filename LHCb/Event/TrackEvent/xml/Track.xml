@@ -51,6 +51,7 @@
       <import name='GaudiKernel/Plane3DTypes' />
       <import name='GaudiKernel/GenericMatrixTypes' />
       <import name="GaudiKernel/VectorMap"/>
+      <import name="Kernel/HitPattern"/>
 
       <enum
         name   = 'History'
@@ -151,18 +152,14 @@
         strTypConv = 'TRUE'
         unknownValue = 'AdditionalInfoUnknown'
         access = "PUBLIC" >
+
         <enumval name = "AdditionalInfoUnknown" value = "0" desc=""/>
-        <enumval name = "Likelihood" value = "1" desc="The Likelihood the track is real"/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
 	<enumval name = "Cand1stQPat"      value = "3"  desc=" Quality of the first candidate"/>
 	<enumval name = "Cand2ndQPat"      value = "4"  desc=" Quality of the second candidate"/>
         <enumval name = "NCandCommonHits"  value = "5"  desc=" NCand with common hits"/>
         <enumval name = "Cand1stChi2Mat"   value = "6"  desc=" Chi2 of the first candidate"/>
         <enumval name = "Cand2ndChi2Mat"   value = "7"  desc=" Chi2 of the second candidate"/>
-        <enumval name = "nExpectedVelo" value = "10" desc="number of expected Velo hits"/>
-        <enumval name = "nExpectedTT" value = "11" desc="number of expected TT hits"/>
-        <enumval name = "nExpectedIT" value = "12" desc="number of expected IT hits"/>
-        <enumval name = "nExpectedOT" value = "13" desc="number of expected OT hits"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
         <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFit)"/>
         <enumval name = "FitVeloNDoF"  value = "18" desc="NDoF of the velo segment chisq"/>
@@ -171,19 +168,9 @@
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
 	<enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
-        <enumval name = "GhostProbability" value = "102" desc=" gives the NN ghost probability"/>
-
         <enumval name = "nPRVeloRZExpect" value = "103" desc="Number of expected Velo clusters from VELO RZ pattern recognition"/>
         <enumval name = "nPRVelo3DExpect" value = "104" desc="Number of expected Velo clusters from VELO 3D pattern recognition"/>
         
-        <enumval name = "CaloMatchChi2"  value = "201" desc="Chi2 from the 2D Ecal-Hcal matching (cosmics tracks)"/>
-        <enumval name = "CaloTimeInfo"   value = "202" desc="Time info from Calo "/>
-        <enumval name = "IsMuon"   value = "300" desc="Probability of been a muon according with the hits distribution in the muon stations and its momentum"/>
-        <enumval name = "IsMuonLoose"   value = "301" desc="Probability of been a loose muon according with the hits distribution in the muon stations and momentum"/>
-        <enumval name = "MuonQuality"   value = "302" desc="Quality of the muon (chi2 in the muon stations)"/>
-        <enumval name = "MuonCL"   value = "303" desc="Confidence level to be a muon"/>
-        <enumval name = "MuonDLL"   value = "304" desc="Delta log likelihood between a muon and no muon hipothesis"/>
-
        </enum>
 
    <typedef
@@ -225,7 +212,9 @@
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), 
+                    m_likelihood(0), m_ghostProbability(0),  
+                    m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       </constructor>
 
   <constructor 
@@ -235,7 +224,9 @@
                     std::vector&lt;LHCb::LHCbID&gt; ids,
                     const LHCb::State&amp; aState"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), 
+                    m_likelihood(0), m_ghostProbability(0), 
+                    m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       <code>
       addToStates(aState);
       setHistory(history);
@@ -250,7 +241,9 @@
 	argList  = "const LHCb::Track::History&amp; history, const LHCb::Track::Types&amp; trackType,
                     const LHCb::Track::PatRecStatus&amp; patStatus"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), 
+                    m_likelihood(0), m_ghostProbability(0), 
+                    m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       <code>
       setHistory(history);
       setType(trackType);
@@ -271,7 +264,7 @@
         type   = 'double'
         name   = 'chi2PerDoF'
         desc   = 'Chi^2 per degree of freedom of the track'
-        access = 'PROTECTED' />
+        access = 'PROTECTED' /> 
 
       <attribute
         type   = 'int'
@@ -279,6 +272,26 @@
         desc   = 'Number of degrees of freedom of the track'
         access = 'PROTECTED' />
 
+      <attribute
+        type   = 'double'
+        name   = 'likelihood'
+        desc   = 'Likelihood variable'
+        init   = '-999'
+        access = 'PROTECTED' />
+
+       <attribute
+        type   = 'double'
+        name   = 'ghostProbability'
+        desc   = 'ghost probability variable'
+        init   = '-999'
+        access = 'PROTECTED' />
+
+      <attribute
+       type = 'LHCb::HitPattern '
+       name = 'expectedHitPattern'
+       desc = 'Expected hits in the tracking stations'
+       access = 'PROTECTED' />
+    
      <attribute
        type    = 'bitfield'
        name    = 'flags'
@@ -972,7 +985,6 @@
         </code>
       </method>
 
-
       <method
         type    = 'unsigned int'
         name    = 'nMeasurementsRemoved'
@@ -1047,6 +1059,7 @@
         argList = "const int key"
         type    = "Track::ExtraInfo::size_type"
        />
+
 
     </class>
 
