@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!========================== HltCommon v5r8p4 2009-08-06 ===================
 ! 2009-08-06 - Gerhard Raven
  - fixes for declaration of StatEntities in declareInfo
 
