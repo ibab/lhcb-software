@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.314 2009-08-05 15:30:39 jpalac Exp $
+!$Id: release.notes,v 1.315 2009-08-06 11:59:03 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-06 - Juan PALACIOS
+ - Kernel/Particle2VertexAsct.h
+  . Removed. Obsolete and not used anywhere.
 
 ! 2009-08-05 - Juan PALACIOS
  - Added Kernel/BestPV.h
