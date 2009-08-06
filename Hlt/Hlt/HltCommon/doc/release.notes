@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-08-06 - Gerhard Raven
+ - HltConfigSvc now adds task ID + 16 lower bits of IP addr to HltDecReports
+
 !========================== HltCommon v5r8p4 2009-08-06 ===================
 ! 2009-08-06 - Gerhard Raven
  - fixes for declaration of StatEntities in declareInfo

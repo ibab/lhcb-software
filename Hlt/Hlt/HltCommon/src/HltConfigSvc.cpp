@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.31 2009-07-09 08:35:09 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.32 2009-08-06 12:41:52 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -7,6 +7,7 @@
 #include "boost/foreach.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include "boost/regex.hpp"
 namespace bl=boost::lambda;
 
 // from Gaudi
@@ -20,6 +21,12 @@ namespace bl=boost::lambda;
 
 // local
 #include "HltConfigSvc.h"
+
+//TODO: check for IEEE 1003.1 compliance instead of Linux...
+#if linux
+#include <netdb.h>
+#include <unistd.h>
+#endif
 
 using namespace std;
 using boost::lexical_cast;
@@ -43,7 +50,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_evtSvc(0)
   , m_incidentSvc(0)
   , m_decodeOdin("ODINDecodeTool",this)
-  , m_taskNumber(~0u)
+  , m_id(~0u)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
   //TODO: Already done -- called propertyhandler...[:w
@@ -92,16 +99,25 @@ StatusCode HltConfigSvc::finalize() {
 StatusCode HltConfigSvc::initialize() {
   // see if we're running online... HLTXYY_ZZZZ_#
   std::string taskName( System::argv()[0] );
-#if 0
-  if (match) { 
-    m_taskNumber = ...;
+  static boost::regex expr("^HLT.*_(.*)_([0-9]+)");
+  boost::smatch what;
+  if (boost::regex_match(taskName,what,expr)) {
+        bool found = false;
+        m_id = boost::lexical_cast<unsigned int>( what[2] );
 #if linux
-    stuct hostent* host = gethostent()
-
-    m_host = gethostent()
-#endif
-#endif
-  
+        char name[HOST_NAME_MAX]; size_t len;
+        if (!gethostname(name,len)) {
+            struct hostent *x = gethostbyname(name);
+            if (x) {
+                unsigned char *addr = (unsigned char*)(x->h_addr+x->h_length-2);
+                m_id = m_id << 8 | *addr++;
+                m_id = m_id << 8 | *addr++;
+                found = true;
+            }
+        } 
+#endif  
+        if (!found) m_id = m_id <<16;
+  }
 
 
   StatusCode status = PropertyConfigSvc::initialize();
@@ -278,10 +294,9 @@ void HltConfigSvc::checkOdin() {
         }
     }
 
-    //TODO: put HltDecReports into event with current TCK...
     std::auto_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
     hdr->setConfiguredTCK(m_configuredTCK.uint());
-    // hdr->setTaskNumber(...);
+    hdr->setTaskID(m_id);
     m_evtSvc->registerObject(m_outputContainerName,hdr.release());
 }
 

@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.14 2009-07-09 08:35:09 graven Exp $
+// $Id: HltConfigSvc.h,v 1.15 2009-08-06 12:41:52 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -65,7 +65,7 @@ private:
   bool                         m_decodeOdinOnDemand;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
-  unsigned int                 m_taskNumber;
+  unsigned int                 m_id;
 
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(TCKrep tck) const;
