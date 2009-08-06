@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.10 2009-05-19 13:48:22 cattanem Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.11 2009-08-06 18:07:06 smenzeme Exp $
 // Include files 
 
 // From std
@@ -171,7 +171,8 @@ StatusCode CaloCosmicsTrackTool::processing() {
   // Update track info
   if( timed() ){
     m_track.setFlag( LHCb::Track::Selected , true );
-    m_track.addInfo( LHCb::Track::CaloTimeInfo, m_time );
+    // not stored anymore in Track class SHM
+    //m_track.addInfo( LHCb::Track::CaloTimeInfo, m_time );
   }  
 
 
@@ -487,7 +488,8 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
     m_track.addToStates( hState );
   }
 
-  m_track.addInfo( LHCb::Track::CaloMatchChi2, m_chi2);
+  // not stored anymore in Track class
+  //m_track.addInfo( LHCb::Track::CaloMatchChi2, m_chi2);
   if( !forward())m_track.setFlag( LHCb::Track::Backward, true );
 
 
