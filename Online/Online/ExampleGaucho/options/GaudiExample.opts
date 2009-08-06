@@ -7,14 +7,14 @@ ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
 
 ApplicationMgr.EvtMax = -1;
 ApplicationMgr.OutputLevel = 10;
-MessageSvc.OutputLevel=1;
-MonitorSvc.OutputLevel=1;
+MessageSvc.OutputLevel=3;
+MonitorSvc.OutputLevel=3;
 UpdateAndReset.OutputLevel=3;
-UpdateAndReset.desiredDeltaTCycle=20;  // in seconds
+UpdateAndReset.desiredDeltaTCycle=10;  // in seconds
 UpdateAndReset.disableReadOdin=1;
-UpdateAndReset.saveHistograms=1;
-UpdateAndReset.saverCycle=20;
-UpdateAndReset.saveSetDir="~/w0";
+//UpdateAndReset.saveHistograms=1;
+//UpdateAndReset.saverCycle=20;
+//UpdateAndReset.saveSetDir="~/w0";
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 //---------------------------------------------------------------------------
@@ -23,7 +23,7 @@ ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;   
 ApplicationMgr.ExtSvc += { "MonitorSvc" };
 
-GaudiExample.SleepTime = 10;  // in seconds
+GaudiExample.SleepTime = 5;  // in seconds
 
 
 // Modify Message Format to print algorithm name with 20 characters

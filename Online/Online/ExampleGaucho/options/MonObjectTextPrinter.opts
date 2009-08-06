@@ -19,8 +19,8 @@ ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 
-MonObjectTextPrinter.svcname="MonH1F/test/GaudiExample/1Da0";
-MonObjectTextPrinter.svcname="MonH1F/test/GaudiExample/1Da1";
+MonObjectTextPrinter.svcname="MonR/HLTA0101_GauchoJob_1/MonitorSvc/monRate";
+//MonObjectTextPrinter.svcname="MonH1F/test/GaudiExample/1Da1";
 //MonObjectTextPrinter.svcname="MonH1F/HLTC06_Adder_1/GauchoJob/HltGlobalMonitor/m_histoodinentry";
 //MonObjectTextPrinter.svcname="MonR/node00101_Test_1/MonitorSvc/monRate";
 //MonObjectTextPrinter.svcname="MonH1F/HLTC0601_GauchoJob_1/HltGlobalMonitor/m_histoodintype";
