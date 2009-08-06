@@ -67,8 +67,6 @@ class Hlt1_Nominal :
         return [ 'Hlt1SingleHadron',
                  'Hlt1DiHadron',
                  'Hlt1SoftDiHadron',
-                 'Hlt1AlignVelo',
-                 'Hlt1XPress',
                  'Hlt1SingleMuonNoIPL0',
                  'Hlt1SingleMuonIPCL0',
                  'Hlt1DiMuonNoIPL0Di',
@@ -102,6 +100,11 @@ class Hlt1_Nominal :
                  'Hlt1Photon',
                  'Hlt1PhotonFromEle',
                  'Hlt1VeloASide',
-                 'Hlt1VeloCSide' ]
+                 'Hlt1VeloCSide',
+                 'Hlt1AlignVelo',
+                 'Hlt1XPress',
+                 'Hlt1NonRandomODIN',
+                 'Hlt1RandomODIN',
+                 'Hlt1Tell1Error' ]
     
     

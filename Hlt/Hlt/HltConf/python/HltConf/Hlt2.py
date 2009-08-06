@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -122,15 +122,9 @@ class Hlt2Conf(LHCbConfigurableUser):
             for confs in type2conf[i] :
                 #print '# CONF', confs
                 if confs not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
-                log.info( '# requested ' + i + ', importing ' + str(type2conf[i])  )
-                # FIXME: warning: the next is 'brittle': if someone outside 
-                #        does eg. HltMuonLinesConf(), it will get activated
-                #        regardless of whether we do it over here...
-                #        So anyone configuring some part explictly will _always_ get
-                #        that part of the Hlt run, even if it does not appear in HltType...
-                if ThresholdSettings:
-                    from HltThresholdSettings import SetThresholds
-                    SetThresholds(ThresholdSettings,confs)
+                log.info( '# requested ' + i + ', importing ' + str( type2conf[i])  )
+                from ThresholdUtils import setThresholds
+                setThresholds(ThresholdSettings,confs)
                     
         #
         # Obsolete. This is now commented out.

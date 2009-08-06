@@ -21,8 +21,10 @@ class Effective_Nominal :
         from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
         from Hlt2Lines.Hlt2XGammaLines import Hlt2XGammaLinesConf
     
+        # Hlt thresholds
         from Hlt1_Nominal import Hlt1_Nominal
         d = Hlt1_Nominal().Thresholds()
+        # Remaining
         d.update(  { Hlt2InclusiveMuonLinesConf : { 'SingleMuonPt' : 5550  
                                                   , 'SingleMuonIP' : 0.73        
                                                   , 'MuTrackMuPt' : 1500        
@@ -32,39 +34,43 @@ class Effective_Nominal :
                                                   , 'MuTrackPoint' : 0.96    }
                    
                    , Hlt2InclusiveDiMuonLinesConf : { 'BiasedTMass' : 3000
-                                                      , 'BiasedSingleMuonTIP' : 0.08
-                                                      , 'BiasedLTimeT' : 0.16
-                                                      , 'BiasedSingleIPTChi2' : 65
-                                                      , 'BiasedPVDistanceTChi2' : 154
-                                                      , 'UnbiasedJPsiPt' : 250
-                                                      , 'UnbiasedJPsiMuPt' : 550
-                                                      , 'UnbiasedJPsiVertexChi2' : 22
-                                                      , 'UnbiasedBmmMinMass' : 5050
-                                                      , 'UnbiasedBmmVertexChi2' : 25  }
+                                                    , 'BiasedSingleMuonTIP' : 0.08
+                                                    , 'BiasedLTimeT' : 0.16
+                                                    , 'BiasedSingleIPTChi2' : 65
+                                                    , 'BiasedPVDistanceTChi2' : 154
+                                                    , 'UnbiasedJPsiPt' : 250
+                                                    , 'UnbiasedJPsiMuPt' : 550
+                                                    , 'UnbiasedJPsiVertexChi2' : 22
+                                                    , 'UnbiasedBmmMinMass' : 5050
+                                                    , 'UnbiasedBmmVertexChi2' : 25  }
                    
                    , Hlt2InclusivePhiLinesConf : { 'KaonIP' : 0.06
-                                                   , 'PhiPT' : 1800
-                                                   , 'TFKaonIPS' : 7
-                                                   , 'TFPhiPT' : 1800
-                                                   , 'TFKaonRichPID' : 0.453  }
+                                                 , 'PhiPT' : 1800
+                                                 , 'TFKaonIPS' : 7
+                                                 , 'TFPhiPT' : 1800
+                                                 , 'TFKaonRichPID' : 0.453  }
                    
                    , Hlt2XGammaLinesConf : {  'BsDirAngle' : 0.998
-                                              , 'B0DirAngle' : 0.996
-                                              , 'BsPVIPchi2' : 20
-                                              , 'B0PVIPchi2' : 20  }
+                                            , 'B0DirAngle' : 0.996
+                                            , 'BsPVIPchi2' : 20
+                                            , 'B0PVIPchi2' : 20  }
                    
                    , Hlt2TopologicalLinesConf : {  'ComRobAllTrkPtLL' : 850
-                                                   , 'ComRobAllTrkPVIPLL' : 0.12
-                                                   , 'ComRobPairMinDocaUL' : 0.50
-                                                   , 'ComRobTrkMaxPtLL' : 1600
-                                                   , 'ComTFVtxPVDispChi2LL' : 67
-                                                   , 'RobustPointingUL' : 0.284
-                                                   , 'TFPointUL' : 0.163
-                                                   , 'CharmRobustPointUL' : 0.032
-                                                   , 'CharmTFPointUL' : 0.032  }
+                                                 , 'ComRobAllTrkPVIPLL' : 0.12
+                                                 , 'ComRobPairMinDocaUL' : 0.50
+                                                 , 'ComRobTrkMaxPtLL' : 1600
+                                                 , 'ComTFVtxPVDispChi2LL' : 67
+                                                 , 'RobustPointingUL' : 0.284
+                                                 , 'TFPointUL' : 0.163
+                                                 , 'CharmRobustPointUL' : 0.032
+                                                 , 'CharmTFPointUL' : 0.032  }
                    })
         return d 
     
+######################################################################################################
+    #
+    # Active Lines
+    #
     def ActiveLines(self) :
         """
         Returns a list of active lines
@@ -73,6 +79,9 @@ class Effective_Nominal :
         from Hlt1_Nominal import Hlt1_Nominal
         
         list = Hlt1_Nominal().ActiveLines()
+##
+## topo : whole list
+##
         list.extend( [ 'Hlt2Topo2BodySA',
                        'Hlt2Topo4BodySA',
                        'Hlt2Topo3BodySA',
@@ -87,8 +96,11 @@ class Effective_Nominal :
                        'Hlt2TopoTF3BodyReq2Yes',
                        'Hlt2TopoTF2BodyReq4Yes',
                        'Hlt2TopoTF2BodyReq3Yes',
-                       'Hlt2TopoTF2BodyReq2Yes',
-                       'Hlt2Topo3BodyCharmSA',
+                       'Hlt2TopoTF2BodyReq2Yes' ] )
+##
+## charm : whole list
+##
+        list.extend( [ 'Hlt2Topo3BodyCharmSA',
                        'Hlt2Topo2BodyCharmSA',
                        'Hlt2Topo4BodyCharmSA',
                        'Hlt2TopoTF2BodyCharmSignal',
@@ -98,52 +110,33 @@ class Effective_Nominal :
                        'Hlt2TopoTF3BodyCharmWideMass',
                        'Hlt2TopoTF4BodyCharmWideMass',
                        'Hlt2DX3BodyCopKsDD',
-                       'Hlt2DX3BodyCopNoKs',
-                       'Hlt2Bs2JpsiPhi',
-                       'Hlt2Bs2JpsiPhiSignal',
-# Not in effective                       'Hlt2Bu2eeK',
-# Not in effective                       'Hlt2Bu2eeKSignal',
-# Not in effective                       'Hlt2Bu2eeKJpsi',
-# Not in effective                       'Hlt2Bu2eeKHighMass',
-# Not in effective                       'Hlt2Bu2MuMuK',
-# Not in effective                       'Hlt2Bu2MuMuKSignal',
-# Not in effective                       'Hlt2Bu2MuMuKJpsi',
-# Not in effective                       'Hlt2Bu2MuMuKHighMass',
-# Not in effective                       'Hlt2Bd2JpsiKstar',
-# Not in effective                       'Hlt2Bd2JpsiKstarSignal',
-# Not in effective                       'Hlt2Bs2PhiPhi',
-# Not in effective                       'Hlt2DisplVertices',
-# Not in effective                       'Hlt2Bd2JpsiMuMuKsLLBiased',
-# Not in effective                       'Hlt2Bd2JpsiMuMuKsDDBiased',
-# Not in effective                       'Hlt2Bd2JpsiMuMuKsLLUnbiased',
-# Not in effective                       'Hlt2Bd2JpsiMuMuKsDDUnbiased',
-# Not in effective                       'Hlt2B2JpsiX_MuMu',
-# Not in effective                       'Hlt2Bu2JpsiK',
-# Not in effective                       'Hlt2Bu2JpsiKSignal',
-                       'Hlt2IncPhi',
-                       'Hlt2IncPhiRobust',
-                       'Hlt2IncPhiTF',
-                       'Hlt2IncPhiSidebands',
-                       'Hlt2PhiGamma',
-                       'Hlt2KstGamma',
-                       'Hlt2Bs2JpsiPhiPrescaled',
-                       'Hlt2Bs2JpsiPhiDetached',
-                       'Hlt2UnbiasedDiMuon',
-                       'Hlt2UnbiasedJPsi',
+                       'Hlt2DX3BodyCopNoKs' ] )
+##
+## (di)muons : whole default list
+##
+        list.extend( [ 'Hlt2UnbiasedJPsi',
                        'Hlt2UnbiasedPsi2S',
                        'Hlt2UnbiasedBmm',
                        'Hlt2UnbiasedJPsiLow',
-                       'Hlt2BiasedDiMuonRobust',
-                       'Hlt2BiasedDiMuonRefined',
                        'Hlt2BiasedDiMuonMass',
-                       'Hlt2BiasedDiMuonIP',
-                       'Hlt2B2HH',
-                       'Hlt2SingleMuonMid',
-                       'Hlt2SingleMuonLow',
-                       'Hlt2SingleHighPTMuon',
-                       'Hlt2IncMuTrackMid',
-                       'Hlt2IncMuTrack4Jpsi' ])
-        
+                       'Hlt2BiasedDiMuonIP',                      
+                       'Hlt2SingleMuonMid', 
+                       'Hlt2SingleMuonLow', 
+                       'Hlt2SingleHighPTMuon', 
+                       'Hlt2IncMuTrackMid', 
+                       'Hlt2IncMuTrack4Jpsi' ] )
+##
+## phi : whole list
+##
+        list.extend( [ 'Hlt2IncPhi',
+                       'Hlt2IncPhiRobust',
+                       'Hlt2IncPhiTF',
+                       'Hlt2IncPhiSidebands' ])
+##
+## exclusive : whole list
+##
+        from Exclusive_Nominal import Exclusive_Nominal
+        list.extend( Exclusive_Nominal().ActiveLines() )
         return list
     
     

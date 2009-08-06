@@ -1,9 +1,30 @@
-! $Id: release.notes,v 1.300 2009-08-05 20:03:50 pkoppenb Exp $ 
+! $Id: release.notes,v 1.301 2009-08-06 14:44:40 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-06 - Patrick Koppenburg
+ - Implement the proof of principle below. 
+ - New files:
+   . python/HltConf/Charming_Nominal.py  : 2e32 settings for Charming scenario
+   . python/HltConf/Hadronic_Nominal.py  : 2e32 settings for Hadronic scenario
+   . python/HltConf/Leptonic_Nominal.py  : 2e32 settings for Leptonic scenario
+   . python/HltConf/Effective_Nominal.py : 2e32 settings for Effective scenario
+   . python/HltConf/FEST_FEST.py         : FEST settings
+   . python/HltConf/Exclusive_Nominal.py : Helper settings for exclusive (don't use)
+   . python/HltConf/Phi_Nominal.py       : Helper settings for phi (don't use)
+   . python/HltConf/ThresholdUtils.py    : Some utils
+ - Removed files :
+   . HltThresholdSettings.py : now obsolete
+ - Changed files :
+   . Configuration, Hlt1, Hlt2 : use the above
+ Warning : Use
+   HltConf().ThresholdSettings = 'Effective_Nominal' or any other valid
+ or
+   DaVinci().HltThresholdSettings = 'Effective_Nominal' or any other valid 
+ or you will get a warning and use the default cuts for all lines.
 
 ! 2009-08-05 - Patrick Koppenburg
  - Split HltThresholdSettings in small classes

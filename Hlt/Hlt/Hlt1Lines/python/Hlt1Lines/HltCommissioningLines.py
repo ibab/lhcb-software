@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.6 2009-08-03 13:00:07 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.7 2009-08-06 14:46:53 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -21,17 +21,17 @@ from HltLine.HltLine import Hlt1Member as Member
 
 class HltCommissioningLinesConf(HltLinesConfigurableUser):
 
-   __slots__ = { 'Prescale' : { 'Hlt1Physics'  : 1
-                              , 'Hlt1Random'   : 0.000001 # @OnlineEnv.AcceptRate
-                              , 'Hlt1Tell1Error' : 0
+   __slots__ = { 'Prescale' : { 'Hlt1NonRandomODIN'  : 0.000001
+                              , 'Hlt1RandomODIN'     : 0.000001 # @OnlineEnv.AcceptRate
+                              , 'Hlt1Tell1Error'     : 0
                               }
                }
    def __apply_configuration__(self):
-        Line('Physics' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
+        Line('NonRandomODIN' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('Random' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
+        Line('RandomODIN' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
             , prescale = self.prescale
             , postscale = self.postscale
             )

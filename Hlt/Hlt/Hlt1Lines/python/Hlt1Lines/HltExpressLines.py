@@ -6,7 +6,7 @@ from HltLine.HltLine import Hlt1Line as Line
 class HltExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
-                               , 'Hlt1AlignVelo' : 0.0 #  0.000001 
+                               , 'Hlt1AlignVelo' : 0.000001 
                                }
                 } 
 

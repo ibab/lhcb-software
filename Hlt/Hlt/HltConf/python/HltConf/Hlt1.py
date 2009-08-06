@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.22 2009-08-03 12:10:25 graven Exp $
+# $Id: Hlt1.py,v 1.23 2009-08-06 14:44:41 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -45,7 +45,7 @@ _type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was con
               }
 
 def hlt1TypeDecoder(hlttype) :
-      trans = { 'Hlt1' : 'LU+L0+VE+XP+MU+HA+PH+EL'  }
+      trans = { 'Hlt1' : 'PA+LU+L0+VE+XP+MU+HA+PH+EL'  }
       for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
       # split hlttype in known and unknown bits
       known   = [ i for i in hlttype.split('+') if i in _type2conf.keys() ]
@@ -71,19 +71,17 @@ class Hlt1Conf(LHCbConfigurableUser):
       hlt1type          = self.getProp("Hlt1Type")
       ThresholdSettings = self.getProp("ThresholdSettings")
       
-
       for i in hlt1type.split('+') :
          if i == '' : continue
          if _type2conf[i] not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
-         log.info( '# requested ' + i + ', importing ' + str(_type2conf[i])  )
+         log.info( '# requested ' + i + ', importing ' + str( _type2conf[i])  )
          # FIXME: warning: the next is 'brittle': if someone outside 
          #        does eg. HltMuonLinesConf(), it will get activated
          #        regardless of whether we do it over here...
          #        So anyone configuring some part explictly will _always_ get
          #        that part of the Hlt run, even if it does not appear in HltType...
-         if ThresholdSettings:
-            from HltThresholdSettings import SetThresholds
-            SetThresholds(ThresholdSettings, _type2conf[i])
+         from ThresholdUtils import setThresholds
+         setThresholds(ThresholdSettings,_type2conf[i])
 
                   
 ##################################################################################
