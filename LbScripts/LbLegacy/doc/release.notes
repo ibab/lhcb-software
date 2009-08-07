@@ -1,3 +1,7 @@
+2009-08-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: doesn't try to self-update for the check option.
+
 2009-08-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r2

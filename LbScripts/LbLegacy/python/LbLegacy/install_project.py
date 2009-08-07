@@ -1212,8 +1212,9 @@ def getBootScripts():
     global LbConfiguration
     log = logging.getLogger()
     here = os.getcwd()
-    getMySelf()
-    cleanBootScripts()
+    if not check_only :
+        getMySelf()
+        cleanBootScripts()
     scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
     if isInstalled(scripttar) :
         log.debug("LbScripts %s is already installed" % lbscripts_version)
