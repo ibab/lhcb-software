@@ -8,17 +8,18 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from HltLine.HltLine import bindMembers
+from RichRecSys.Configuration import RichRecSysConf
 ###################################################################################
 #
 # Hlt2 PID
 #
 class Hlt2PID(LHCbConfigurableUser):
-    __used_configurables__ = [  ]
+    __used_configurables__ = [  RichRecSysConf ]
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
        , "Hlt2Tracks"                 : "Hlt/Track/Long"

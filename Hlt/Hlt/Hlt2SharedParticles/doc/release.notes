@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.37 2009-08-05 19:48:07 graven Exp $
+$Id: release.notes,v 1.38 2009-08-07 09:50:56 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-07 - Patrick Koppenburg
+ - Restore dependency on RICH :-(
 
 !========================== Hlt2SharedParticles v2r0 2009-08-05 =====================
 ! 2009-08-05 - Patrick Koppenburg
