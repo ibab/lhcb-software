@@ -36,9 +36,9 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple
 ###
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2DsDsCombine"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (D_s+ -> ^K+ ^K- ^pi+ ) (D_s- => ^K+ ^K- ^pi- )]cc"
+#importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2DsDsCombine"]
+#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (D_s+ -> ^K+ ^K- ^pi+ ) (D_s- => ^K+ ^K- ^pi- )]cc"
 #
 # Configuration
 #

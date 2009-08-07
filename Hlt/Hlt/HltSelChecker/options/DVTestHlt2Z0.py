@@ -17,6 +17,9 @@ moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2UnbiasedBmm"] # probably not optimal
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #
 # various instances of Z0 checker
 #

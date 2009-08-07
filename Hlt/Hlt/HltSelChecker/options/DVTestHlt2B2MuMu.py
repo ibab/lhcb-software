@@ -39,7 +39,7 @@ GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True
 ###
 from Configurables import DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2BiasedDiMuonFilter"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2BiasedDiMuonMassRefinedDiMuon"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #
 # Configuration

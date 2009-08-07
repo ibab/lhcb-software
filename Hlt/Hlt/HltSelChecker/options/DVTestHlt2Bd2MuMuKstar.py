@@ -39,18 +39,9 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple
 ###
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bd2MuMuKstarCombine"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
-# special for head
-DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
-  "Head" : "[B0]cc : [B0 -> (J/psi(1S) => mu+ mu-) (K*(892)0 -> K+ pi-)]cc" 
-}
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolDecay("Head"))
-DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV" ]
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolTrigger())
-DecayTreeTuple("Hlt2DecayTreeTuple").TupleToolTrigger.VerboseL0 = True
-DecayTreeTuple("Hlt2DecayTreeTuple").ToolList += [ "TupleToolTISTOS" ]
+#importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bd2MuMuKstarCombine"]
+#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 #
 # Configuration
 #

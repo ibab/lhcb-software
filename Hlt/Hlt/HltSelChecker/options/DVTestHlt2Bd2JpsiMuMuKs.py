@@ -38,32 +38,8 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bd2JpsiMuMuKsLLBiasedCombine", "Hlt2Bd2JpsiMuMuKsDDBiasedCombine"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^KS0 => ^pi+ ^pi-) (^J/psi(1S) => ^mu+ ^mu-)]cc"
-# special for head
-DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
-"kshort"  : "[B0 -> (^KS0 =>  pi+  pi-) ( J/psi(1S) =>  mu+  mu-)]cc"
-,"jpsi"   : "[B0 -> ( KS0 =>  pi+  pi-) (^J/psi(1S) =>  mu+  mu-)]cc"
-,"muon"   : "[B0 -> ( KS0 =>  pi+  pi-) ( J/psi(1S) => ^mu+ ^mu-)]cc"
-,"pion"   : "[B0 -> ( KS0 => ^pi+ ^pi-) ( J/psi(1S) =>  mu+  mu-)]cc"
-,"B0"     : "[B0]cc : [B0 -> ( KS0 =>  pi+  pi-) ( J/psi(1S) =>  mu+  mu-)]cc"
- 
-}
-DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolDecay("Head"))
-DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV"
-, "TupleToolTrigger"
-, "TupleToolMCTruth"
-, "TupleToolMCBackgroundInfo"
-, "TupleToolGeometry"
-, "TupleToolKinematic"
-, "TupleToolPropertime"
-, "TupleToolPrimaries"
-, "TupleToolEventInfo"
-, "TupleToolMCHierarchy"
-, "TupleToolPid"
-, "TupleToolTrackInfo"
-, "TupleToolVtxIsoln"
-]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2UnbiasedJPsi"] # probably not optimal
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #
 # Configuration
 #

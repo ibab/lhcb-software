@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-07 - Patrick Koppenburg
+ - Fix (?) DecayTreeTuple or switch it off
+
 ! 2009-08-06 - Patrick Koppenburg
  - Correct all addTool(MCDecayFinder()) to addTool(MCDecayFinder)
  - Allow FilterTrueTracks not to write out tracks

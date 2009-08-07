@@ -41,7 +41,7 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
 from Configurables import DecayTreeTuple
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2MuMuKSignalCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2MuMuKSignalBu"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+]cc"
 #
 # Configuration

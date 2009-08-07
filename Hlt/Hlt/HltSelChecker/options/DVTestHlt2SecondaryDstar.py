@@ -44,9 +44,9 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 # Tuple tool
 #
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2DstarFilter"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[D*(2010)+ -> (^D0 -> ^K- ^pi+) ^pi+]cc" # only Cabibbo-favoured ? 
+#importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2DstarFilter"]
+#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[D*(2010)+ -> (^D0 -> ^K- ^pi+) ^pi+]cc" # only Cabibbo-favoured ? 
 #
 # Configuration
 #

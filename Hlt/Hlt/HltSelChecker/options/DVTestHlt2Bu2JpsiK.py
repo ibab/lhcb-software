@@ -37,8 +37,8 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bu2MuMuKJpsiCombineBu"] # probably not optimal
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+]cc"
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2UnbiasedJPsi"] # probably not optimal
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
 #
 # Configuration
 #
