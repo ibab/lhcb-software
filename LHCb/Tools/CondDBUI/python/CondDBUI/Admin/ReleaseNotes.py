@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.6 2009-08-06 17:20:10 ishapova Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.7 2009-08-07 17:23:59 ishapova Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -42,6 +42,8 @@ class ReleaseNotes(object):
         self.filename = filename
         # load XML
         self.tree = ET.parse(self.filename)
+        import logging
+        log = logging.getLogger()
         
     def _setDescription(self, node, description, patch = None):
         """
@@ -85,7 +87,7 @@ class ReleaseNotes(object):
         
     def _checkDuplications(self,contributor,date,tag):
         """
-        This internal function does look-up in release_note.xml file for previously added global tags "tag" for any partitions.
+        This internal function does look-up in release_note.xml file for previously added global tags entries with "tag" name for any partitions.
         
         contributor: person providing the changes
         tag: the name of the global tag
@@ -102,36 +104,22 @@ class ReleaseNotes(object):
         partitionList = [] # list of partitions found already containing proposed global tag name
         
         for element in rootelement:
-            if counter > 0: print "Most recent global tag entry duplication found. Stopped looking further.";break
+            if counter > 0: break
             bingo = 0
-            if element.tag == "{http://lhcb.cern.ch}global_tag":
+            if element.tag == _xel("global_tag"):
                 for subelement in element:
-                    if bingo == 3 and subelement.tag == "{http://lhcb.cern.ch}partition":
+                    if bingo == 3 and subelement.tag == _xel("partition"):
                         counter += 1
                         for subsubelement in subelement:
-                            if subsubelement.tag == "{http://lhcb.cern.ch}name": partitionList.append(subsubelement.text)
+                            if subsubelement.tag == _xel("name"): partitionList.append(subsubelement.text)
                     if subelement.text == contributor or subelement.text == date or subelement.text == tag: bingo += 1
                                                
         if counter == 0:
-            print "Proposed global tag name wasn't used before for another partitions! Going on ..."
             flag = False #to be returned from the checkDuplications()
         else:
-            print "Specified global tag name \"%s\"" % tag, "is already used in the CondDB for %d" % counter, "partition: %s" % partitionList,"\nMerging will be done on current entry for global tag \"%s\" to create new global tag for another partition..." % tag
+            log.info('Specified global tag name "%s" is found to be used in the CondDB for %d partition(s): %s' % (tag,counter,partitionList))
+            log.info('Merging will be done in release notes for homogeneous entries for global tag "%s" ...' % tag)
             flag = True #to be returned from the checkDuplications()
-        
-            ans = None
-            while ans is None:
-                ans = raw_input("Do you really want to continue (Yes,[No])? ")
-                if not ans: ans = "No"
-                if ans not in [ "Yes", "No" ]:
-                    print "You have to type exactly 'Yes' or 'No'"
-                    ans = None
-            
-            if ans == "No":
-                print "...\nThe changes were not committed."
-                return 0
-            else:
-                print "...\nYOU said that! We are going further..."
                 
         return flag
                 
@@ -162,7 +150,7 @@ class ReleaseNotes(object):
         
         self._prependEntry(note)
         
-    def addGlobalTag(self, contributor, tag, partitions, description = None, date = None, patch = None):
+    def addGlobalTag(self, contributor, tag, partitions, description = None, date = None, patch = None, forceNewGT = False):
         """
         And an entry for a global tag to the release notes.
         
@@ -174,17 +162,18 @@ class ReleaseNotes(object):
         patch: numeric id of the patch (on savannah)
         """
         
-        flag = self._checkDuplications(contributor,date,tag)
-        if flag == False:
+        found_GT = self._checkDuplications(contributor,date,tag)
+        if forceNewGT or not found_GT:
             global_tag = self._makeEntry("global_tag", contributor, date)
             ET.SubElement(global_tag,_xel("tag")).text = tag
             self._setDescription(global_tag, description, patch)
-        elif flag == True:
+            # Adding new global tag entry to the root element of release_notes.xml tree
+            self._prependEntry(global_tag)
+        elif found_GT == True:
+            # Adding new subelement for found global tag entry for another partition case
             global_tag = self.tree.getroot().find(_xel("global_tag"))
-        else:
-            import sys
-            sys.exit()
         
+        # Attaching subsubelements to new global tag entry  
         for part in partitions:
             base_tag, tags = partitions[part]
             part_el = ET.SubElement(global_tag,_xel("partition"))
@@ -192,10 +181,7 @@ class ReleaseNotes(object):
             ET.SubElement(part_el,_xel("base")).text = base_tag
             tags = list(tags)
             for t in tags:
-                ET.SubElement(part_el,_xel("tag")).text = t
-        
-        self._prependEntry(global_tag)
-        
+                ET.SubElement(part_el,_xel("tag")).text = t      
         
     def write(self, filename = None , encoding = "utf-8"):
         if filename is None:
