@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.39 2009-08-05 19:46:42 graven Exp $
+$Id: release.notes,v 1.40 2009-08-07 12:10:08 mlieng Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-07 - Magnus Lieng & Kim Vervink
+ - Inclusive Phi code cleanup
+ - IncPhiTF line renamed to IncPhiTrackFit. 
+   Reason: Two algs ended up with same name.
+   'Hlt2' + 'IncPhi' + 'TFCombine' == 'Hlt2' + 'IncPhiTF' + 'Combine'
 
 !========================== Hlt2Lines v1r5 2009-08-04 ===================
 

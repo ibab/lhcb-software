@@ -15,8 +15,11 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Line
 from HltLine.HltLine import Hlt2Member
+from Configurables import RichRecSysConf
 
 class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
+
+    __used_configurables__ = [RichRecSysConf]
     
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIP'             : 0.05     # mm
@@ -69,112 +72,82 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         #    Inclusive Phi selection, robust cuts
         ############################################################################
-
+        
         kaonPtCut = "(PT>"+str(self.getProp('KaonPT'))+"*MeV)"
         kaonIpCut = "(MIPDV(PRIMARY)>"+str(self.getProp('KaonIP'))+")"
         phiMassCut = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWin'))+"*MeV)"
+        phiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWin'))+"*MeV)"
         phiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<"+str(self.getProp('PhiDOCA'))+")"
         phiPtCut = "(PT>"+str(self.getProp('PhiPT'))+"*MeV)"
         Hlt2InclusivePhi = Hlt2Member( CombineParticles
-                              , "Combine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : kaonPtCut+" & "+kaonIpCut }
-                              , CombinationCut =  phiMassCut+" & "+phiDocaCut
-                              , MotherCut = phiPtCut
-                              , InputLocations  = [ GoodKaons ]
-                              )
-
-
+                                       , "Combine"
+                                       , DecayDescriptors = decayDesc
+                                       , DaughtersCuts = { "K+" : kaonPtCut+" & "+kaonIpCut }
+                                       , CombinationCut =  phiMassCut+" & "+phiDocaCut
+                                       , MotherCut = phiPtCut
+                                       , InputLocations  = [ GoodKaons ]
+                                       )
+        Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
+                                         , "CombineSB"
+                                         , DecayDescriptors = decayDesc
+                                         , DaughtersCuts = { "K+" : kaonPtCut+" & "+kaonIpCut }
+                                         , CombinationCut =  phiMassCutSB+" & "+phiDocaCut
+                                         , MotherCut = phiPtCut
+                                         , InputLocations  = [ GoodKaons ]
+                                         )
+        
+        
         ############################################################################
         #    Inclusive Phi selection, Track fitted
         ############################################################################
-
+        
         TfKaonPtCut = "(PT>"+str(self.getProp('TFKaonPT'))+"*MeV)"
         TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TFKaonIPS'))+")"
         TfPhiMassCut = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWin'))+"*MeV)"
+        TfPhiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWin'))+"*MeV)"
         TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('TFPhiVCHI2'))+")"
         TfPhiPtCut = "(PT>"+str(self.getProp('TFPhiPT'))+"*MeV)"
         Hlt2InclusivePhiTF = Hlt2Member( CombineParticles
-                              , "TFCombine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
-                              , CombinationCut = TfPhiMassCut 
-                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                              , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
-                              )
-
+                                         , "TFCombine"
+                                         , DecayDescriptors = decayDesc
+                                         , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
+                                         , CombinationCut = TfPhiMassCut 
+                                         , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                                         , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
+                                         )
+        Hlt2InclusivePhiTFSB = Hlt2Member( CombineParticles
+                                           , "TFCombineSB"
+                                           , DecayDescriptors = decayDesc
+                                           , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
+                                           , CombinationCut = TfPhiMassCutSB 
+                                           , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                                           , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
+                                           )
+        
         ############################################################################
         #    Inclusive Phi selection, RICH PID
         ############################################################################
-
+        
         TfKaonRichPidTf = "(PIDK>"+str(self.getProp('TFKaonRichPID'))+")"
         Hlt2InclusivePhiRich = Hlt2Member( CombineParticles
-                              , "RichCombine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
-                              , CombinationCut = TfPhiMassCut
-                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                              , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
-                              )
-
-
-
-############################ Extra line with larger mass window ####################
-
-        ############################################################################
-        #    Inclusive Phi selection Mass Sidebands, robust cuts
-        ############################################################################
-
-        kaonPtCut = "(PT>"+str(self.getProp('KaonPT'))+"*MeV)"
-        kaonIpCut = "(MIPDV(PRIMARY)>"+str(self.getProp('KaonIP'))+")"
-        phiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWinSB'))+"*MeV)"
-        phiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<"+str(self.getProp('PhiDOCA'))+")"
-        phiPtCut = "(PT>"+str(self.getProp('PhiPT'))+"*MeV)"
-        Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
-                              , "Combine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : kaonPtCut+" & "+kaonIpCut }
-                              , CombinationCut =  phiMassCutSB+" & "+phiDocaCut
-                              , MotherCut = phiPtCut
-                              , InputLocations  = [ GoodKaons ]
-                              )
-
-
-        ############################################################################
-        #    Inclusive Phi selection Mass Sidebands, Track fitted
-        ############################################################################
-
-        TfKaonPtCut = "(PT>"+str(self.getProp('TFKaonPT'))+"*MeV)"
-        TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TFKaonIPS'))+")"
-        TfPhiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWinSB'))+"*MeV)"
-        TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('TFPhiVCHI2'))+")"
-        TfPhiPtCut = "(PT>"+str(self.getProp('TFPhiPT'))+"*MeV)"
-        Hlt2InclusivePhiTFSB = Hlt2Member( CombineParticles
-                              , "TFCombine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
-                              , CombinationCut = TfPhiMassCutSB 
-                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                              , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
-                              )
-
-
-        ############################################################################
-        #    Inclusive Phi selection Mass Sidebands, RICH PID
-        ############################################################################
-
-        TfKaonRichPidTf = "(PIDK>"+str(self.getProp('TFKaonRichPID'))+")"
+                                           , "RichCombine"
+                                           , DecayDescriptors = decayDesc
+                                           , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
+                                           , CombinationCut = TfPhiMassCut
+                                           , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                                           , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
+                                           )
         Hlt2InclusivePhiRichSB = Hlt2Member( CombineParticles
-                              , "RichCombine"
-                              , DecayDescriptors = decayDesc
-                              , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
-                              , CombinationCut = TfPhiMassCutSB
-                              , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                              , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
-                              )
-
-
-
+                                             , "RichCombineSB"
+                                             , DecayDescriptors = decayDesc
+                                             , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
+                                             , CombinationCut = TfPhiMassCutSB
+                                             , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
+                                             , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
+                                             )
+        
+        
+        
 
         ############################################################################
         #    Inclusive Phi complete line
@@ -213,7 +186,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         ############################################################################
 
         if self.getProp('IncludeLines')['IncPhiTF']:
-          line = Hlt2Line('IncPhiTF'
+          line = Hlt2Line('IncPhiTrackFit'
                           , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhi, 
@@ -233,9 +206,9 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                           , prescale = self.prescale
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhiSB, 
-                                      GaudiSequencer("Hlt2IncPhiTFSBParticlesSeq"),
+                                      GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                       Hlt2InclusivePhiTFSB,
-                                      GaudiSequencer("Hlt2IncPhiRichSBParticlesSeq"),
+                                      GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
                                       Hlt2InclusivePhiRichSB]
                           , postscale = self.postscale
                           )
