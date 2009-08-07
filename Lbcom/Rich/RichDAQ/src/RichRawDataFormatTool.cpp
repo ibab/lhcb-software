@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.88 2009-06-11 19:45:19 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.89 2009-08-07 12:15:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -35,7 +35,7 @@ namespace
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichToolBase    ( type, name , parent  ),
+  : Rich::ToolBase  ( type, name , parent  ),
     m_richSys       ( NULL                 ),
     m_timeTool      ( NULL                 ),
     m_evtCount      ( 0                    ),
@@ -63,12 +63,12 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
 }
 
 // Destructor
-RawDataFormatTool::~RawDataFormatTool() {}
+RawDataFormatTool::~RawDataFormatTool() { }
 
 StatusCode RawDataFormatTool::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // RichDet
@@ -136,7 +136,7 @@ StatusCode RawDataFormatTool::finalize()
   }
 
   // base class finalize
-  return RichToolBase::finalize();
+  return Rich::ToolBase::finalize();
 }
 
 void
@@ -238,7 +238,7 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
 {
 
   // pointer to HPD data block
-  HPDDataBank * dataBank = 0;
+  HPDDataBank * dataBank = NULL;
 
   // Check bank is not empty
   if ( smartIDs.empty() )

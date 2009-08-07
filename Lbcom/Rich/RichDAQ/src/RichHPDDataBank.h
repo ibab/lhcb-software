@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.24 2009-06-11 19:30:59 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.25 2009-08-07 12:15:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -321,6 +321,12 @@ namespace Rich
               const ShortType value = 1 ) const
       {
         data |= value<<pos;
+      }
+
+      /// Test if a LongType is even or odd
+      inline bool isEven( const LongType data ) const
+      {
+        return ( (data & 0x1) == 0 );
       }
 
       /** Dump the raw header and data block to message stream

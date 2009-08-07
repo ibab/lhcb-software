@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.8 2007-07-09 16:27:07 cattanem Exp $
+ *  $Id: RichZSPacked_V2.h,v 1.9 2009-08-07 12:15:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -62,9 +62,9 @@ namespace Rich
 
         // shift registers
         static const ShortType ShiftField0    = 0;
-        static const ShortType ShiftAddress0  = ShiftField0 + BitsField;
+        static const ShortType ShiftAddress0  = ShiftField0   + BitsField;
         static const ShortType ShiftField1    = ShiftAddress0 + BitsAddress;
-        static const ShortType ShiftAddress1  = ShiftField1 + BitsField;
+        static const ShortType ShiftAddress1  = ShiftField1   + BitsField;
 
         // The masks
         static const LongType  MaskField0   = ((1 << BitsField)-1)   << ShiftField0;
@@ -225,7 +225,7 @@ namespace Rich
         inline ShortType subPixelFromAddress( const ShortType address ) const
         {
           return ( aliceMode() ?
-                   NumAlicePixelsPerLHCbPixel - 1 - (address%(4*NumAlicePixelsPerLHCbPixel))/4
+                   NumAlicePixelsPerLHCbPixel - 1 - ( address % (4*NumAlicePixelsPerLHCbPixel) ) / 4
                    : 0 );
         }
 
