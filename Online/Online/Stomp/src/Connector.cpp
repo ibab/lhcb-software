@@ -1,4 +1,4 @@
-// $Id: Connector.cpp,v 1.2 2009-07-28 20:44:43 frankb Exp $
+// $Id: Connector.cpp,v 1.3 2009-08-07 20:27:56 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.2 2009-07-28 20:44:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.3 2009-08-07 20:27:56 frankb Exp $
 
 #include "Stomp/Commands.h"
 #include "Stomp/Connector.h"
@@ -35,8 +35,8 @@ Connector::Connector(const std::string& tag, bool may_remove, Interactor* target
   m_mayRemove(may_remove)
 {
   string t = tag;
-  for(size_t i=0; i<t.length(); ++i)
-    if ( t[i] == '.' ) t[i] = '/';
+  //for(size_t i=0; i<t.length(); ++i)
+  //  if ( t[i] == '.' ) t[i] = '/';
   m_id = ::dic_info_service((char*)t.c_str(),MONITORED,0,0,0,infoHandler,(long)this,(void*)DEAD_TAG,5);
   log() << "Mapping data tag " << tag << " to DIM service " << t << endl;
 }

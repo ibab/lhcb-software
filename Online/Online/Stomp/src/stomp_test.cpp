@@ -14,7 +14,7 @@ namespace {
         const char* cmd  = (char*)ev.data;
         const char* chan = ev.device;
         const char* body = ev.buffer_ptr;
-        ::fprintf(stdout, "Response: %s, %s  %s",cmd,chan,body);
+        ::fprintf(stdout, "Response: %s, %s  %s\n",cmd,chan,body);
         if ( strncmp(body,"quit",4)==0 ) {
           StompSensor::Message* m = (StompSensor::Message*)ev.message;
           m->sensor->remove(this,0);
@@ -68,7 +68,7 @@ extern "C" int test_stomp(int /*argc*/, char** /*argv*/)    {
      apr_pool_t *rpool = 0;
      StompSensor::Frame *frame = 0;
      rc = sensor.read(frame, rpool);
-     fprintf(stdout, "Response: %s, %s", frame->command, frame->body);
+     fprintf(stdout, "Response: %s, %s\n", frame->command, frame->body);
      if ( strncmp(frame->body,"quit",4)==0 ) break;
      sensor.destroyPool(rpool);	   
    }     
