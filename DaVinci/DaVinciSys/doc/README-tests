@@ -1,4 +1,4 @@
-To run the tests:
+	To run the tests:
 
 In cmt/ do 
 
@@ -16,9 +16,9 @@ cmt qmtest_run davincisys.davincisys
 cmt qmtest_run davincisys.io.test_decaytreetuple
 cmt qmtest_run davincisys.io.test_dst
 cmt qmtest_run davincisys.io.test_read
-cmt qmtest_run davincisys.preselections.test_bbstripping
-cmt qmtest_run davincisys.preselections.test_bd2kstarmumu
-cmt qmtest_run davincisys.preselections.test_bu2llk2008
+cmt qmtest_run davincisys.preselections.test_dc06stripping
+cmt qmtest_run davincisys.preselections.test_bd2kstarmumu_mc09
+cmt qmtest_run davincisys.preselections.test_bu2llk_dc06
 cmt qmtest_run davincisys.preselections.test_stripping
 cmt qmtest_run davincisys.preselections.test_stripping_read
 cmt qmtest_run davincisys.tag.test_tag
