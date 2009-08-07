@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.117 2009-07-30 14:00:42 jpalac Exp $
+# $Id: requirements,v 1.118 2009-08-07 12:22:27 jpalac Exp $
 package AnalysisSys
 version v3r8
 
@@ -10,7 +10,7 @@ branches doc cmt
 use  AnalysisConf               v1r3     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v6r0     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v8r7     Phys   # Marco Musy
+use  FlavourTagging             v8r8     Phys   # Marco Musy
 use  DaVinciFilter              v6r12    Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r5     Phys   # Patrick Koppenburg
@@ -27,7 +27,7 @@ use  FlavourTaggingChecker      v3r7     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p2   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 #use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v2r3p3   Phys   # Rob Lambert
+use  DecayTreeTuple             v2r4     Phys   # Rob Lambert
 ####################################################################
 #
 use PhysSelPython               v1r0     PhysSel
@@ -45,7 +45,7 @@ use StrippingSelections         v1r3     Phys   # Anton Poluektov
 ####################################################################
 use  MicroDSTBase        	v1r5    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r3    MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r5  MicroDST          # Juan Palacios
+use  MicroDSTTools      	v1r5    MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r7    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r3    MicroDST          # Juan Palacios
 
