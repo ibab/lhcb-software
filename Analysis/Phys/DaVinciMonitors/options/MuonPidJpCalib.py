@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: MuonPidJpCalib.py,v 1.3 2009-05-29 17:30:19 pkoppenb Exp $
+# $Id: MuonPidJpCalib.py,v 1.4 2009-08-07 08:46:46 pkoppenb Exp $
 #
 # Author Alessio Sarti <Alessio.Sarti@lnf.infn.it>
 #
@@ -10,7 +10,6 @@ muonPIDJpSeq = GaudiSequencer("MuonPIDJpsiSequence")
 
 JpsiCalibName = "MuonJpsiCalib"
 JpsiCalib = CombineParticles(JpsiCalibName)
-JpsiCalib.addTool(PhysDesktop())
 JpsiCalib.InputLocations  = [ "StdNoPIDsMuons" ]
 JpsiCalib.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
 JpsiCalib.CombinationCut = "(ADAMASS('J/psi(1S)')<300*MeV)"
@@ -27,7 +26,6 @@ JpsiCalib.MotherCut = "(VFASPF(VCHI2/VDOF)<3) & " + childcuts
 muonPIDJpSeq.Members += [ JpsiCalib ]
 
 plotJPsiPr = ParticleMonitor("MuonJpsiPromptMoni")
-plotJPsiPr.addTool(PhysDesktop())
 plotJPsiPr.InputLocations = [ JpsiCalibName ]
 plotJPsiPr.PeakCut = "(ADMASS('J/psi(1S)')<50*MeV)"
 plotJPsiPr.SideBandCut = "(ADMASS('J/psi(1S)')>100*MeV)"
