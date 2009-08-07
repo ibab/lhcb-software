@@ -29,6 +29,8 @@ def fixNative(filename):
         tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
     if os.environ.has_key("CMTBIN") :
         tobereplaced["CMTBIN"] = os.environ["CMTBIN"]
+    if os.environ.has_key("CMTVERS") :
+        tobereplaced["CMTVERS"] = os.environ["CMTVERS"]
     if os.environ.has_key("CMTCONFIG") :
         cmtconf =  os.environ["CMTCONFIG"]
         if cmtconf in binary_list :

@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.47 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.48 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -487,6 +487,7 @@ class LbLoginScript(Script):
         if not os.path.isdir(ev["CMTROOT"]) :
             ev["CMTROOT"] = self._currentcmtroot
         
+        ev["CMTVERS"] = opts.cmtvers
         log.debug("The CMT version is %s" % opts.cmtvers)
         self.setCMTInternals()
 #-----------------------------------------------------------------------------------
