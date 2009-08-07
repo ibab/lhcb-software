@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.9 2009-03-27 14:05:29 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.10 2009-08-07 00:39:32 ryoung Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -354,28 +354,32 @@ namespace Rich
   // Returns a 'global' pixel column number
   inline int SmartIDGlobalOrdering::globalPixelX() const
   {
-    return ( Rich::Rich1 == smartID().rich() ?
-             // Rich1
-             ( _pixelRowNum() +
-               (_numInCol()*_nPixelRowsPerHPD()) +
-               (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) ) :
-             // Rich2
-             ( smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD()) )
-             );
+    if ( Rich::Rich1 == smartID().rich() )
+  {
+    return ( (Rich::bottom  == smartID().panel() ? (_nPixelRowsPerHPD() - _pixelRowNum()) : _pixelRowNum()) +
+             (_numInCol()*_nPixelRowsPerHPD()) +
+             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) );
+  }
+     else 
+  {
+    return ( smartID().pixelCol() + (_hpdCol()*_nPixelColsPerHPD()) );
+  }    
   }
 
   // Returns a 'global' pixel row number
   inline int SmartIDGlobalOrdering::globalPixelY() const
   {
-    return ( Rich::Rich1 == smartID().rich() ?
-             // RICH1
-             ( smartID().pixelCol() +
-               (_hpdCol()*_nPixelColsPerHPD()) ) :
-             // RICH2
-             ( _pixelRowNum() +
-               (_numInCol()*_nPixelRowsPerHPD()) +
-               (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) )
-             );
+    if ( Rich::Rich1 == smartID().rich() )
+  {
+    return ( (Rich::bottom  == smartID().panel() ? (_nPixelColsPerHPD() - smartID().pixelCol()) : smartID().pixelCol()) +
+             (_hpdCol()*_nPixelColsPerHPD()) );
+  }
+  else
+  {
+    return ( _pixelRowNum() +
+             (_numInCol()*_nPixelRowsPerHPD()) +
+             (int)(globalHpdNumInColOffset()*_nPixelRowsPerHPD()) );
+  }      
   }
 
   // Returns a 'global' pixel X coordinate number from a given local coordinate and size of X HPD direction.

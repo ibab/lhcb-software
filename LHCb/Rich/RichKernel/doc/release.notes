@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.234 2009-08-05 12:56:26 jonrob Exp $
+! $Id: release.notes,v 1.235 2009-08-07 00:39:32 ryoung Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-08-07 - Ross Young
+ - globalPixelX() and globalPixelY() in RichSmartIDCnv.h updated to display 
+	 correct hitmaps
 
 ! 2009-08-05 - Chris Jones
  - Remove ICameraTool.h - Now part of Online/Camera
