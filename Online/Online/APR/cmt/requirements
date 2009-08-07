@@ -2,7 +2,8 @@ package APR
 version v1r0
 
 branches  cmt
-use GaudiPolicy v*
+use LCG_Configuration v*
+use LCG_Settings      v*
 
 include_path none
 
@@ -14,6 +15,5 @@ macro APR_linkopts "-L$(APR_home)/lib -lapr-1 " \
       target-winxp "/LIBPATH:$(APR_home)\lib apr-1.lib "
 
 macro  APR_cppflags ' -DAPR_DECLARE_EXPORT '
-
-apply_pattern set_lib_path
-macro APR_export_paths " $(APR_home)/lib $(APR_base)/include" 
+path_remove LD_LIBRARY_PATH '/apr/'
+path_append LD_LIBRARY_PATH $(APR_home)/lib
