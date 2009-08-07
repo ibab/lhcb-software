@@ -1,6 +1,6 @@
-class FEST_FEST :
+class Effective_FEST :
     """
-    Threshold settings for Hlt1 and 2 in nominal conditions (FEST/FEST (pun intended))
+    Threshold settings for Hlt1 and 2 in nominal conditions (Effective/FEST)
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     

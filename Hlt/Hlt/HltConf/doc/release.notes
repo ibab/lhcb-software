@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.302 2009-08-06 21:15:00 graven Exp $ 
+! $Id: release.notes,v 1.303 2009-08-07 07:36:54 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-07 - Gerhard Raven
+ - rename FEST_FEST to Effective_FEST
 
 ! 2009-08-06 - Gerhard Raven
  - follow rename of Hlt1Random, Hlt1Physics
