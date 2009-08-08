@@ -52,6 +52,10 @@ StatusCode DeITSector::initialize() {
     const STChannelID parentID = m_parent->elementID();
     setElementID(parentID);
     m_nickname = ITNames().UniqueSectorToString(parentID);
+        
+    // see if stereo
+    m_isStereo = false;
+    if (elementID().layer() == ITNames::V || elementID().layer() == ITNames::U) m_isStereo = true;
 
     // build the id
     setID(parentID.sector());

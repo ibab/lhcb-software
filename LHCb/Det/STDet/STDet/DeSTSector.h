@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.41 2009-07-20 11:18:13 mneedham Exp $
+// $Id: DeSTSector.h,v 1.42 2009-08-08 10:44:59 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -82,12 +82,6 @@ public:
    * @return double noise of the strip
    */
   double noise(const LHCb::STChannelID& aChannel) const;
-
-  /** get the noise of the corresponding strip
-   * @param aStrip strip number
-   * @return double noise of the strip
-   */
-  double noise(const unsigned int& aStrip) const;
 
   /** get the average noise in the sector
    * @return double average noise
@@ -226,6 +220,9 @@ public:
 
   /** @return cosine of stereo angle */
   double cosAngle() const;
+
+  /** @return check if is a stereo ladder */
+  bool isStereo() const;
 
   /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
   unsigned int beetle(const LHCb::STChannelID& chan) const;
@@ -378,6 +375,7 @@ private:
   void setStatusCondition( const std::string& type, const unsigned int entry, 
                            const DeSTSector::Status& newStatus );
 
+
   unsigned int m_firstStrip;
   unsigned int m_firstBeetle;
   unsigned int m_id;
@@ -411,6 +409,11 @@ private:
   std::string m_noiseString;
   std::vector< double > m_noiseValues;
   std::vector< double > m_electronsPerADC;
+
+ protected:
+
+  bool m_isStereo;
+
 };
 
 inline unsigned int DeSTSector::id() const{
@@ -471,6 +474,10 @@ inline double DeSTSector::sinAngle() const {
 
 inline double DeSTSector::cosAngle() const {
   return m_cosAngle;
+}
+
+inline bool DeSTSector::isStereo() const{
+  return m_isStereo;
 }
 
 inline void DeSTSector::trajectory(unsigned int strip,
@@ -538,6 +545,7 @@ inline DeSTSector::Status DeSTSector::stripStatus(const LHCb::STChannelID& chan)
   } 
   return theStatus;
 }
+
 
 inline bool DeSTSector::isOKStrip(const LHCb::STChannelID& chan) const{
   return (stripStatus(chan) == DeSTSector::OK ? true : false);

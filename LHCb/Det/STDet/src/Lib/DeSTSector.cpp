@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.57 2009-07-20 11:18:14 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.58 2009-08-08 10:44:59 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -147,27 +147,28 @@ StatusCode DeSTSector::initialize() {
 
 double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
 {
-  return noise(aChannel.strip() - 1);
+  // check strip is valid
+  if (!isStrip(aChannel.strip())) return 999; 
+
+  const Status theStatus = stripStatus(aChannel);
+
+  // take ok strips
+  if (theStatus == DeSTSector::OK) return m_noiseValues[aChannel.strip()-1u];
+
+  // and pinholes...
+  if (theStatus == DeSTSector::Pinhole) return m_noiseValues[aChannel.strip()-1u]; 
+
+  return 999;
 }
 
-double DeSTSector::noise(const unsigned int& aStrip) const
-{
-  const std::vector<DeSTSector::Status> statusVector = stripStatus();
-
-  if ( aStrip > nStrip() || (statusVector[aStrip] != DeSTSector::OK &&
-                             statusVector[aStrip] != DeSTSector::Pinhole) )
-    return 999.99;
-  else
-    return m_noiseValues[aStrip];
-}
 
 double DeSTSector::sectorNoise() const
 {
   const std::vector<DeSTSector::Status> statusVector = stripStatus();
 
-  double sum(0.), number(0.);
+  double sum(0.0), number(0.0);
 
-  for (unsigned int chan(0); chan < m_nStrip; chan++)
+  for (unsigned int chan(0); chan < m_nStrip; ++chan)
   {
     if ( statusVector[chan] == DeSTSector::OK ||
          statusVector[chan] == DeSTSector::Pinhole )
@@ -517,9 +518,7 @@ StatusCode DeSTSector::updateNoiseCondition()
     return StatusCode::FAILURE; 
   }
 
-  std::vector< double > tmpNoise, tmpElectrons;
-
-  tmpNoise = aCon -> param<std::vector< double > >("SectorNoise");
+  std::vector<double > tmpNoise = aCon -> param<std::vector< double > >("SectorNoise");
 
   if (tmpNoise.size() == m_nStrip)
     m_noiseValues.assign(tmpNoise.begin(), tmpNoise.end());
@@ -530,7 +529,7 @@ StatusCode DeSTSector::updateNoiseCondition()
     return StatusCode::FAILURE;
   }
   
-  tmpElectrons = aCon -> param<std::vector< double > >("electronsPerADC");
+  std::vector<double > tmpElectrons = aCon -> param<std::vector< double > >("electronsPerADC");
  
   if (tmpElectrons.size() == m_nStrip)
     m_electronsPerADC.assign(tmpElectrons.begin(), tmpElectrons.end());

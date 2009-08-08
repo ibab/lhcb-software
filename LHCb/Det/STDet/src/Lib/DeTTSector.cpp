@@ -92,6 +92,11 @@ StatusCode DeTTSector::initialize() {
     // get the nickname
     m_nickname = TTNames().UniqueSectorToString(chan); 
 
+    // see if stereo
+    const unsigned int layer = chan.layer();
+    m_isStereo = false;
+    if ((chan.station() == TTNames::TTa && layer == 2) || (chan.station() == TTNames::TTb && layer == 1))  m_isStereo = true; 
+
     // get the attached sensors
     std::vector<DeTTSensor*> sensors = getChildren<DeTTSector>();
     std::sort(sensors.begin(),sensors.end(),STDetFun::SortByY());
